@@ -6,3 +6,13 @@
 .tab-content .output-block {
     border-top: none;
 }
+
+.submitted-report-message {
+    background-color: #25aed6;
+    color: white;
+    border: 1px solid #269abc;
+    padding: 15px;
+    font-weight: normal;
+    font-size: larger;
+    text-shadow: none;
+}

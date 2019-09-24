@@ -501,7 +501,7 @@ function Documents(options) {
 
     self.documents = ko.observableArray();
     self.documentFilter = ko.observable('');
-    self.documentFilterFieldOptions = [{ label: 'Name', fun: 'name'}, { label: 'Attribution', fun: 'attribution' }, { label: 'Type', fun: 'type' }];
+    self.documentFilterFieldOptions = [{ label: 'Role', fun: 'role'}, { label: 'Name', fun: 'name'}, { label: 'Attribution', fun: 'attribution' }, { label: 'Type', fun: 'type' }];
     self.documentFilterField = ko.observable(self.documentFilterFieldOptions[0]);
 
     self.selectedDocument = ko.observable();
@@ -568,7 +568,7 @@ function Documents(options) {
     }).extend({async: ''});
 
     self.filteredDocuments = ko.pureComputed(function() {
-        var lcFilter = self.documentFilter().trim().toLowerCase();
+        var lcFilter = (self.documentFilter() || '').trim().toLowerCase();
         var field = self.documentFilterField();
         return ko.utils.arrayFilter(self.documents(), function(doc) {
             return (doc[field.fun]() || '').toLowerCase().indexOf(lcFilter) !== -1;

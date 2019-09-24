@@ -111,3 +111,17 @@
 .report-header .header-label {
     font-weight: bold;
 }
+
+#nav-buttons label.checkbox {
+    margin-left: 40px;
+}
+#form-actions-anchor {
+    text-align: center;
+}
+#floating-save {
+    height: 50px;
+}
+#floating-save div {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}

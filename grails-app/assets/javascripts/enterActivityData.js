@@ -1,4 +1,5 @@
 //= require forms-manifest.js
+//= require jquery.appear/jquery.appear.js
 //= require_self
 function validateDateField(dateField) {
     var date = stringToDate($(dateField).val());
@@ -477,4 +478,44 @@ function ActivityHeaderViewModel (activity, site, project, metaModel, themes, co
             }
         }
     };
+};
+
+/** Responsible for navigation at the bottom of report forms */
+var ReportNavigationViewModel = function(reportMaster, activityViewModel, options) {
+    var self = this;
+
+    var anchor = $(options.anchorElementSelector);
+    var navContent = $(options.navContentSelector);
+    var floatingDiv = $(options.floatingNavSelector);
+
+    anchor.appear({interval:100}).on('appear', function() {
+        floatingDiv.fadeOut();
+        navContent.appendTo(anchor);
+    }).on("disappear", function() {
+        navContent.appendTo(floatingDiv);
+        floatingDiv.fadeIn();
+    });
+
+
+    self.activity = activityViewModel;
+
+    self.save = function() {
+        reportMaster.save();
+    };
+    self.saveAndExit = function() {
+        reportMaster.save(function() {
+            self.return();
+        });
+    };
+
+    self.cancel = function() {
+        reportMaster.deleteSavedData();
+        self.return();
+    };
+    self.return = function() {
+        window.location.href = options.returnUrl;
+    };
+
+    self.navElementPosition = options.navElementPosition;
+    self.dirtyFlag = reportMaster.dirtyFlag;
 };

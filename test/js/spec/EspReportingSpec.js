@@ -3,7 +3,7 @@ describe("The ESP reporting process works slightly differently to the normal MER
     beforeAll(function() {
         window.fcConfig = {
             imageLocation:'/'
-        }
+        };
         window.ecodata = { forms: {} };
     });
     afterAll(function() {
@@ -104,6 +104,125 @@ describe("The ESP reporting process works slightly differently to the normal MER
 
         });
 
+
+    });
+
+    it("will not attempt to submit the form if the form validation fails", function() {
+        var project = buildEspProject();
+        // Setup the Zone report and Species report as completed.
+        project.activities[0].progress = 'finished';
+        project.activities[1].progress = 'finished';
+
+        var config = {
+            activityUpdateUrl:"/activity/ajaxUpdate"
+        };
+        var saveCalled = false;
+        ecodata.forms.a3 = {
+            save:function(callback) {
+                saveCalled = true;
+                callback(false, {});
+            }
+        };
+        var viewModel = new SimplifiedReportingViewModel(project, config);
+
+
+        var ajaxParamsForAnnualReportActivity;
+        spyOn($, 'ajax').and.callFake(function(params) {
+            ajaxParamsForAnnualReportActivity = params;
+            return $.Deferred().resolve({'text':'this a a fake response'}).promise();
+        });
+
+        var declarationModalShown = false;
+        spyOn(ko, 'applyBindings').and.returnValue(undefined);
+        $.fn.modal = function() {
+            declarationModalShown = true;
+            return {on:function() {}};
+        };
+
+        viewModel.submitReport();
+        expect(saveCalled).toBeTruthy();
+        expect(declarationModalShown).toBeFalsy();
+    });
+
+    it("will submit the form if the form validation succeeds", function() {
+        var project = buildEspProject();
+        // Setup the Zone report and Species report as completed.
+        project.activities[0].progress = 'finished';
+        project.activities[1].progress = 'finished';
+
+        var config = {
+            activityUpdateUrl:"/activity/ajaxUpdate"
+        };
+        var saveCalled = false;
+        ecodata.forms.a3 = {
+            save:function(callback) {
+                saveCalled = true;
+                callback(true, {});
+            }
+        };
+        var viewModel = new SimplifiedReportingViewModel(project, config);
+
+
+        var ajaxParamsForAnnualReportActivity;
+        spyOn($, 'ajax').and.callFake(function(params) {
+            ajaxParamsForAnnualReportActivity = params;
+            return $.Deferred().resolve({'text':'this a a fake response'}).promise();
+        });
+
+        var declarationModalShown = false;
+        spyOn(ko, 'applyBindings').and.returnValue(undefined);
+        $.fn.modal = function() {
+            declarationModalShown = true;
+            return {on:function() {}};
+        };
+
+        viewModel.submitReport();
+        expect(saveCalled).toBeTruthy();
+        expect(declarationModalShown).toBeTruthy();
+    });
+
+    it("will always return a progress of finished for an activity when saving it", function() {
+        var registeredModelInstanceName, registeredGetMethod, registeredIsDirtyMethod, registeredResetMethod, registeredSaveCallback;
+
+        // Sub an implementation of the Master object with the register method.
+        ecodata.forms.a1 = {
+            register: function(modelInstanceName, getMethod, isDirtyMethod, resetMethod, saveCallback) {
+                registeredModelInstanceName = modelInstanceName;
+                registeredGetMethod = getMethod;
+                registeredIsDirtyMethod = isDirtyMethod;
+                registeredResetMethod = resetMethod;
+                registeredSaveCallback = saveCallback;
+            }
+        };
+        var activity = {
+            activityId:'a1',
+            plannedStartDate:'2018-06-30T14:00:00Z',
+            plannedEndDate:'2019-06-30T14:00:00Z',
+
+        };
+        initialiseESPActivity(activity);
+
+        expect(registeredGetMethod()).toEqual(
+            {
+                activityId:activity.activityId,
+                startDate:activity.plannedStartDate,
+                endDate:activity.plannedEndDate,
+                progress:'finished'
+            });
+        expect(registeredIsDirtyMethod()).toBeTruthy();
+
+        // The save will overwrite the progress with "started" if the form fails validation, but we still want
+        // the getMethod to return "finished" the next time it is called.
+        var result = registeredGetMethod();
+        result.progress = 'started';
+
+        expect(registeredGetMethod()).toEqual(
+            {
+                activityId:activity.activityId,
+                startDate:activity.plannedStartDate,
+                endDate:activity.plannedEndDate,
+                progress:'finished'
+            });
 
     });
 

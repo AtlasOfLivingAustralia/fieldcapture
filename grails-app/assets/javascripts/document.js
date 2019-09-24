@@ -1,4 +1,5 @@
 
+var documentRoles = [{id: 'information', name: 'Information'}, {id:'embeddedVideo', name:'Embedded Video'}, {id: 'programmeLogic', name: 'Programme Logic'}, {id:'projectAssurance', name:'Project Assurance'}];
 /**
  * A view model to capture metadata about a document and manage progress / feedback as a file is uploaded.
  *
@@ -15,7 +16,7 @@ function DocumentViewModel (doc, owner, settings) {
 
     var defaults = {
         //Information is the default option.
-        roles:  [{id: 'information', name: 'Information'}, {id:'embeddedVideo', name:'Embedded Video'}, {id: 'programmeLogic', name: 'Programme Logic'}],
+        roles: documentRoles,
         stages:[],
         showSettings: true,
         thirdPartyDeclarationTextSelector:'#thirdPartyDeclarationText',
@@ -524,7 +525,9 @@ function initialiseDocumentTable(containerSelector) {
                 {"type": "alt-string", "targets": 0},
                 {"width":"6em", orderData:[4], "targets": [3]},
                 {"width":"3em", "targets": [2]},
-                {"visible":false, "targets": [4]}
+                {"visible":false, "targets": [4]},
+                {"visible":false, "targets": [5]},
+
             ],
             "order":[[2, 'desc'], [3, 'desc']],
             "dom":
@@ -539,13 +542,16 @@ function initialiseDocumentTable(containerSelector) {
         $(e.currentTarget).addClass("info");
     });
 
-    function searchStage(searchString) {
-        table.columns(2).search(searchString, true).draw();
+    function searchStage(column, searchString) {
+        table.columns(column).search(searchString, true).draw();
     }
 
-    $(containerSelector + " input[name='stage-filter']").click(function(e) {
+    $(containerSelector + " input[name='doc-filter']").click(function(e) {
         var searchString = '';
-        $(containerSelector + " input[name='stage-filter']").each(function(val) {
+        var input = $(this);
+        var column = parseInt(input.data('column'));
+
+        input.parents('.document-filter-group').find("input[name='doc-filter']").each(function(val) {
             var $el = $(this);
 
             if ($el.is(":checked")) {
@@ -556,12 +562,11 @@ function initialiseDocumentTable(containerSelector) {
                 searchString += $el.val();
             }
         });
-
-        searchStage(searchString);
+        searchStage(column, searchString);
 
     });
 
-    var filterSelector = containerSelector + ' #filter-by-stage';
+    var filterSelector = containerSelector + ' .document-filter-group';
     $(filterSelector + ' a').on('click', function (event) {
         if (event.target == this) {
             event.preventDefault();
