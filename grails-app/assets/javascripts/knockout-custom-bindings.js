@@ -300,3 +300,51 @@ ko.extenders.withPrevious = function (target) {
   // Return modified observable
   return target;
 };
+
+/**
+ * This binding displays a warning based on the value of an observable.
+ */
+ko.bindingHandlers.warningPopup = {
+  init: function(element, valueAccessor) {
+    var target = valueAccessor();
+
+    var $element = $(element);
+    ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
+      if (target.popoverInitialised) {
+        $element.popover("destroy");
+      }
+    });
+  },
+  update: function(element, valueAccessor) {
+    var $element = $(element);
+    if ($element.prop("disabled")) {
+      return;
+    }
+    var target = valueAccessor();
+    var valid = target();
+    if (!valid) {
+      if (!target.popoverInitialised) {
+        var popoverWarningOptions = {
+          placement:'top',
+          trigger:'manual',
+          template: '<div class="popover warning"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+        };
+        var warning = $element.data('warningmessage');
+        $element.popover(_.extend({content:warning}, popoverWarningOptions));
+        $element.data('popover').tip().click(function() {
+          $element.popover('hide');
+        });
+        target.popoverInitialised = true;
+      }
+      setTimeout(function() {
+        $element.popover('show');
+      }, 1);
+
+    }
+    else {
+      if (target.popoverInitialised) {
+        $element.popover('hide');
+      }
+    }
+  }
+};

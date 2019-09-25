@@ -34,6 +34,7 @@ module.exports = function (config) {
             'test/js/util/*.js',
             'grails-app/assets/vendor/knockout/3.5.0/knockout.js',
             'grails-app/assets/vendor/knockout/3.5.0/knockout.mapping-latest.js',
+            'grails-app/assets/vendor/jquery.validationEngine/jquery.validationEngine.js',
             'grails-app/assets/vendor/underscorejs/1.8.3/underscore.js',
             'grails-app/assets/vendor/wmd/showdown.js',
             'grails-app/assets/vendor/wmd/wmd.js',

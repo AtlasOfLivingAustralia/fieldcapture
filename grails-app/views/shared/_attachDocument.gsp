@@ -66,7 +66,7 @@
                         <label class="control-label" for="public">Settings</label>
                         <div class="controls">
                             <label class="checkbox" for="public">
-                                <input id="public" type="checkbox" data-bind="checked:public, disable: role() =='programmeLogic'"/>
+                                <input id="public" type="checkbox" data-bind="checked:public, enable: hasPublicRole"/>
                                 make this document public on the project documents tab
                             </label>
                         </div>

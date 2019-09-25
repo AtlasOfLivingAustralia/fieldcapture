@@ -167,16 +167,6 @@ table tr.header th {
     width:100%;
 }
 
-.meri-plan #minimumTargetsValid {
-    margin-bottom: 0;
-    margin-top: -1px;
-    border: 0;
-    padding: 0;
-    width:1px;
-    height: 1px;
-    float:right;
-}
-
 span.helphover {
     border: 2px;
     background-clip:content-box;
