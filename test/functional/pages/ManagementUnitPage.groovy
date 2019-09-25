@@ -12,11 +12,16 @@ class ManagementUnitPage extends Page {
     static content = {
         name {$('div#managementUnitName h2')}
         grantIdsTable{$('td.grantId')}
+        projectLinksTd{$('td.grantId a')}
         gotoProgramLinks{$('a.gotoProgram')}
     }
 
     List grantIds() {
         grantIdsTable.collect{it.text()}
+    }
+
+    List projectLinks(){
+        projectLinksTd.collect{it.attr('href')}
     }
 
     List gotoProgram(){

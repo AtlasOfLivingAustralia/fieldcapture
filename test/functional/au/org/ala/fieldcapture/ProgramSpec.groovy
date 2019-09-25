@@ -1,6 +1,5 @@
 package au.org.ala.fieldcapture
 
-import pages.ManagementUnitPage
 import pages.RLPProgramPage
 
 class ProgramSpec extends StubbedCasSpec {
@@ -22,7 +21,15 @@ class ProgramSpec extends StubbedCasSpec {
 
         then:
         waitFor {at RLPProgramPage}
-        grantIds().containsAll(['RLP-Test-Program-Project-1','RLP-Test-Program-Project-2','RLP-Test-Program-Project-3'])
+
+        when:
+        interact {
+            moveToElement(grantIdsTable.first())
+        }
+
+        then:
+        //grantIds().containsAll(['RLP-Test-Program-Project-1','RLP-Test-Program-Project-2','RLP-Test-Program-Project-3'])
+        grantIds().size()==3
         muInStates().containsAll(['test mu', 'test mu 2'])
     }
 
