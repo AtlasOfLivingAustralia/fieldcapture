@@ -175,3 +175,22 @@
 	margin-top: 20px;
 	margin-left: 10px;
 }
+
+.popover.warning {
+	background-color: yellow;
+	color: black;
+	cursor: pointer;
+}
+.popover.warning .popover-content {
+	padding: 4px 10px 4px 10px;
+	font-size: 12px;
+}
+
+.popover.warning .arrow:after {
+	border-right-color: yellow;
+}
+
+.popover.warning.top .arrow:after {
+	border-top-color: yellow;
+	border-right-color: transparent;
+}

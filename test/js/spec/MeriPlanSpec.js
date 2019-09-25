@@ -197,6 +197,33 @@ describe("Loading the MERI plan is handled correctly", function () {
 
     });
 
+    it("should trigger a warning when the sum of the annual targets is greater than the overall target", function() {
+        var project = {
+            plannedStartDate:'2018-07-01T00:00:00Z',
+            plannedEndDate:'2021-06-30T00:00:00Z'
+        };
+        var projectService = new ProjectService(project, {});
+
+        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'});
+
+        var serviceTarget = {
+            serviceId:1,
+            scoreId:1,
+            target:100,
+            periodTargets:[
+                {period:'2018/2019', target:1},
+                {period:'2019/2020', target:2},
+                {period:'2020/2021', target:3}
+            ]
+        };
+
+        var row = viewModel.meriPlan().services.addServiceTarget(serviceTarget);
+        expect(row.minimumTargetsValid()).toBeTruthy();
+
+        row.target(1);
+        expect(row.minimumTargetsValid()).toBeFalsy();
+    });
+
 
 })
 ;
