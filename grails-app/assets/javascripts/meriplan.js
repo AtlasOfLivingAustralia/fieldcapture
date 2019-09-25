@@ -617,7 +617,7 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
                     sum += Number(periodTarget.target());
                 }
             });
-            return sum <= (target.target() || 0) ? 'valid' : '';
+            return sum <= (target.target() || 0);
         });
 
         target.updateTargets = function () {

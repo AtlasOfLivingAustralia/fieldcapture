@@ -261,7 +261,7 @@ var SimplifiedReportingViewModel = function(project, config) {
     };
 
     function showSaveError() {
-        bootbox.error("There was an error submitting your report.  Please reload your page and try again.  If the error persists, please contact: ESPmonitoring@environment.gov.au");
+        bootbox.alert("There was an error submitting your report.  Please reload your page and try again.  If the error persists, please contact: ESPmonitoring@environment.gov.au");
     }
 
 
@@ -270,9 +270,10 @@ var SimplifiedReportingViewModel = function(project, config) {
             if (valid && data && !data.error) {
                 currentStage.submitReport();
             }
-            else {
+            else if (valid) {
                 showSaveError();
             }
+            // If the data isn't valid a message will already have been shown to the user.
         });
     }
 
@@ -344,14 +345,16 @@ initialiseESPActivity = function(activity) {
     var master = null;
 
     function registerModel(modelMaster) {
-        var activityData = {
-            activityId:activity.activityId,
-            startDate:activity.plannedStartDate,
-            endDate:activity.plannedEndDate,
-            progress:'finished'
+        var activityData = function() {
+            return {
+                activityId: activity.activityId,
+                startDate: activity.plannedStartDate,
+                endDate: activity.plannedEndDate,
+                progress: 'finished'
+            };
         };
 
-        modelMaster.register('activityModel', function() { return activityData; }, function() { return true }, function(){}, false);
+        modelMaster.register('activityModel', activityData, function() { return true }, function(){}, false);
     };
 
     // The ESP activity is loaded via ajax onto a tab, and there appears to be
