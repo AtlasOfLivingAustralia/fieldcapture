@@ -12,7 +12,7 @@
                 </ul>
 
             </div>
-            <g:if test="${fc.userIsSiteAdmin()}">
+            <g:if test="${user?.isAdmin}">
             <div id="filter-by-role" class="document-filter-group btn-group pull-right">
                 <a class="btn dropdown-toggle" href="#">
                     <i class="fa fa-filter"></i> Filter by type
