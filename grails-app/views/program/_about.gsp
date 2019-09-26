@@ -87,7 +87,7 @@
         <g:each var="project" in="${projects}">
             <tr>
                 <td class="grantId"><a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}" >${project.externalId ?: project.grantId}</a></td>
-                <td class="name">${project.name}</td>
+                <td class="projectName">${project.name}</td>
                 <td class="description">${project.description}</td>
                 <g:if test="${project.custom?.details?.outcomes?.primaryOutcome}">
                       <g:set var="primaryOutcome" value="${project.custom.details.outcomes.primaryOutcome}" />

@@ -25,6 +25,7 @@ class RLPProgramPage extends Page{
     static content= {
         name {$('h2')}
         grantIdsTable{$('td.grantId')}
+        projectNameTable{$('td.projectName')}
         muInStatesTable{$('div[id^=state-mu-] li a')}
         showAllStatesMuButton {$('#showAllStatesMu')}
     }
@@ -32,6 +33,10 @@ class RLPProgramPage extends Page{
 
     List grantIds() {
         grantIdsTable.collect{it.text()}
+    }
+
+    List projectNames() {
+        projectNameTable.collect{it.text()}
     }
 
     List muInStates(){

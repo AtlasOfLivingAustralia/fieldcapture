@@ -24,11 +24,14 @@ class ProgramSpec extends StubbedCasSpec {
 
         when:
         interact {
-            moveToElement(grantIdsTable.first())
+            moveToElement(grantIdsTable.last())
         }
 
         then:
-        //grantIds().containsAll(['RLP-Test-Program-Project-1','RLP-Test-Program-Project-2','RLP-Test-Program-Project-3'])
+        //waitFor {10 !projectNameTable.first().text().isEmpty()}
+
+        projectNames().size() == 3
+        grantIds().containsAll(['RLP-Test-Program-Project-1','RLP-Test-Program-Project-2','RLP-Test-Program-Project-3'])
         grantIds().size()==3
         muInStates().containsAll(['test mu', 'test mu 2'])
     }
