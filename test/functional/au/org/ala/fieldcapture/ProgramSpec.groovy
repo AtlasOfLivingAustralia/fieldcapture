@@ -28,7 +28,7 @@ class ProgramSpec extends StubbedCasSpec {
         }
 
         then:
-        //waitFor {10 !projectNameTable.first().text().isEmpty()}
+        waitFor {10 projectNameTable.first().text() != ''}
 
         projectNames().size() == 3
         grantIds().containsAll(['RLP-Test-Program-Project-1','RLP-Test-Program-Project-2','RLP-Test-Program-Project-3'])
