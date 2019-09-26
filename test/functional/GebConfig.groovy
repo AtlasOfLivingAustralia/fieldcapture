@@ -51,7 +51,7 @@ environments {
         driver = {
             ChromeOptions o = new ChromeOptions()
             o.addArguments('headless')
-            o.addArguments('disable-dev-shm-usage')
+            o.addArguments('--disable-dev-shm-usage')
             new ChromeDriver(o)
         }
     }
