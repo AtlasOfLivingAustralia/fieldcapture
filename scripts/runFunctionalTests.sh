@@ -4,7 +4,7 @@ MERIT_DIR=$PWD
 
 GEB_ENV=$1
 if [ -z $GEB_ENV ]; then
-    GEB_ENV=chromeHeadless
+    GEB_ENV=chrome
 fi
 
 if [[ $GEB_ENV = "phantomjs" ]]
