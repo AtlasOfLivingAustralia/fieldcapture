@@ -163,7 +163,7 @@ class HomeController {
             render searchService.allProjectsWithSites(params) as JSON
         } else {
             Map resp = searchService.allProjects(params)
-            resp?.hits?.hits?.collect { Map hit ->
+            resp?.hits?.hits?.each { Map hit ->
                 if (hit && hit._source) {
                     hit._source = [
                             name:hit._source.name,
