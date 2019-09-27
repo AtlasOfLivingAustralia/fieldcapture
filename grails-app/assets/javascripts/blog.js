@@ -63,11 +63,14 @@ var BlogEntryViewModel = function(blogEntry) {
 
 var EditableBlogEntryViewModel = function(blogEntry, options) {
 
-    var storyType ="Project Stories";
+    var storyType ="Site Stories";
     if (blogEntry.programId)
         storyType ="Program Stories"
     else if ( blogEntry.managementUnitId)
         storyType ="Management Unit Stories"
+    else if (blogEntry.projectId)
+        storyType = 'Site Stories'
+
 
     var defaults = {
         validationElementSelector:'.validationEngineContainer',

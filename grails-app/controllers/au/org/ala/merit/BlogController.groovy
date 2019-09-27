@@ -25,6 +25,8 @@ class BlogController {
             render view: 'create', model: [blogEntry: [programId: params.programId]]
         }else if (params.managementUnitId) {
             render view: 'create', model: [blogEntry: [managementUnitId: params.managementUnitId]]
+        }else{
+            render view: 'create'
         }
     }
 
@@ -70,6 +72,13 @@ class BlogController {
                 }
             } else {
                 Map blogEntry = blogService.get(managementUnitId, id, BlogType.MANAGEMENTUNIT)
+                render view: 'edit', model: [blogEntry: blogEntry]
+            }
+        }else{
+            if (!authorizedSite()) {
+                render status: SC_UNAUTHORIZED, text: "No permission"
+            } else {
+                Map blogEntry = blogService.get(null, id, BlogType.SITE)
                 render view: 'edit', model: [blogEntry: blogEntry]
             }
         }
@@ -149,7 +158,10 @@ class BlogController {
             if (!authorizedSite()) {
                 render status: SC_UNAUTHORIZED, text: "No permission"
             } else {
-                throw new UnsupportedOperationException('Function has not been implemented!')
+                blogEntry = updateImage(blogEntry)
+                def result = blogService.update(id, blogEntry)
+                Map response = [status: result.status]
+                render response as JSON
             }
         }
     }
