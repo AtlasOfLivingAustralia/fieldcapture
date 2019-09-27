@@ -26,7 +26,7 @@ var BlogEntryViewModel = function(blogEntry) {
         else if(self.managementUnitId())
             return "MANAGEMENTUNIT"
         else
-            return "SITE"
+            return "MERIT"
     });
     self.title = ko.observable(blogEntry.title || '');
     self.date = ko.observable(blogEntry.date || now).extend({simpleDate:false});
