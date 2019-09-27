@@ -318,6 +318,13 @@ var ManagementUnitPageViewModel = function(props, options) {
                 //create a empty map.
                 var map = createMap({
                     useAlaMap:true,
+                    zoomControl:false,
+                    defaultLayersControl:false,
+                    allowSearchLocationByAddress: false,
+                    allowSearchRegionByAddress: false,
+                    showFitBoundsToggle:false,
+                    useMyLocation:false,
+
                     mapContainerId:'managementUnitSiteMap',
                     width: '100%',
                     styles: {
@@ -328,6 +335,8 @@ var ManagementUnitPageViewModel = function(props, options) {
                         }
                     }
                 });
+
+
 
                 if (self.managementUnitSiteId){
                     if (!self.mapFeatures()) {
