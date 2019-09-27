@@ -50,7 +50,7 @@
 
 <g:if test="${program.outcomes}">
     <div class="well">
-        <div class="well-title">The Service Provider is addressing these RLP outcomes</div>
+        <div class="well-title">The following outcomes are being addressed by this program</div>
         <div class="row outcomes no-gutters">
             <g:each in="${program.outcomes}" var="outcome" >
                 <g:set var="outcomeClass" value="${outcome.targeted ? 'targeted' : 'disabled'}"/>
@@ -168,7 +168,7 @@
     <div id="services-dashboard">
 
         <g:if test="${servicesDashboard.planning}">
-            <b>Please note this project is currently in a planning phase so delivery against the targets below has not yet begun</b>
+            <b>Please note this program is currently in a planning phase so delivery against the targets below has not yet begun</b>
         </g:if>
         <g:each in="${servicesDashboard.services}" var="service" status="i">
 
