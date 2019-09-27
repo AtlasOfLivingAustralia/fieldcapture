@@ -21,7 +21,7 @@
                         <label class="control-label" for="documentAttribution">Attribution</label>
 
                         <div class="controls">
-                            <input id="documentAttribution" type="text" data-bind="value:attribution"/>
+                            <input id="documentAttribution" type="text" data-bind="enable: hasPublicRole, value:attribution"/>
 
                         </div>
                     </div>
@@ -47,7 +47,7 @@
                         <label class="control-label" for="documentLicense">License</label>
 
                         <div class="controls">
-                            <input id="documentLicense" type="text" data-bind="value:license"/>
+                            <input id="documentLicense" type="text" data-bind="enable: hasPublicRole, value:license"/>
                         </div>
                     </div>
 
