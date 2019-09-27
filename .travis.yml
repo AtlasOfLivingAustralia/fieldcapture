@@ -13,6 +13,7 @@ services:
   - mongodb
 addons:
   chrome: stable
+  hosts: devt.ala.org.au
 cache:
   directories:
     - $HOME/.m2

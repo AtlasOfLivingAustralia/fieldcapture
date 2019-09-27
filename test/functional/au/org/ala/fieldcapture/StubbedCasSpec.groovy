@@ -1,10 +1,12 @@
 package au.org.ala.fieldcapture
 
+import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.common.ConsoleNotifier
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer
 import com.github.tomakehurst.wiremock.junit.WireMockRule
 import geb.Browser
-import org.junit.Rule
+
+import spock.lang.Shared
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.*
 import static com.github.tomakehurst.wiremock.client.WireMock.*
@@ -15,13 +17,31 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*
  */
 class StubbedCasSpec extends FieldcaptureFunctionalTest {
 
-    @Rule
-    WireMockRule wireMockRule = new WireMockRule(
-            options()
-                    .port(testConfig.wiremock.port)
-                    .usingFilesUnderDirectory(getMappingsPath())
-                    .extensions(new ResponseTemplateTransformer(false))
-                    .notifier(new ConsoleNotifier(true)))
+    @Shared WireMockServer wireMockServer
+    def setupSpec() {
+        wireMockServer = new WireMockServer(options()
+                .port(testConfig.wiremock.port)
+                .usingFilesUnderDirectory(getMappingsPath())
+                .extensions(new ResponseTemplateTransformer(false))
+                .notifier(new ConsoleNotifier(true)))
+
+        wireMockServer.start()
+
+        // Configure the client
+        configureFor("localhost", testConfig.wiremock.port)
+    }
+
+    def cleanupSpec() {
+        wireMockServer.stop()
+    }
+//    @ClassRule
+//    @Shared
+//    WireMockRule wireMockRule = new WireMockRule(
+//            options()
+//                    .port(testConfig.wiremock.port)
+//                    .usingFilesUnderDirectory(getMappingsPath())
+//                    .extensions(new ResponseTemplateTransformer(false))
+//                    .notifier(new ConsoleNotifier(true)))
 
     private String getMappingsPath() {
         new File(getClass().getResource("/resources/wiremock").toURI())
