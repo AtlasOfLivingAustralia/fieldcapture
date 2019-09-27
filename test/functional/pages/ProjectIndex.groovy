@@ -100,45 +100,7 @@ class DashboardTab extends Module {
 
 }
 
-class AdminTab extends Module {
-    static content = {
 
-        projectSettingsTab {$('#settings-tab')}
-        meriPlanTab {$('#projectDetails-tab')}
-        newsAndEventsTab {$('#editNewsAndEvents-tab')}
-        projectStoriesTab {$('#editProjectStories-tab')}
-        projectAccessTab {$('#permissions-tab')}
-        speciesOfInterestTab { $('#species-tab') }
-        documentsTab { $('#edit-documents-tab') }
-
-        documents { module AdminDocumentsTab }
-        projectSettings { module AdminProjectSettingsTab }
-
-    }
-}
-
-class AdminDocumentsTab extends Module {
-    static content = {
-
-        attachDocumentButton { $('#doAttach') }
-
-        documents {
-            $('#adminDocumentList .media').collect {
-                module DocumentSummary, it
-            }
-        }
-
-        attachDocumentDialog { module DocumentDialog, $('#attachDocument') }
-    }
-
-
-}
-
-class AdminProjectSettingsTab extends Module {
-    static content = {
-
-    }
-}
 
 class DocumentSummary extends Module {
 

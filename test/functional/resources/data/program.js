@@ -2,6 +2,29 @@ var programDefaults = {
   create: function(){
       return {
           "config": {
+              "visibility": "public",
+              "requiresActivityLocking": true,
+              "navigationMode": "returnToProject",
+              "projectTemplate": "rlp",
+              "activityPeriodDescriptor": "Outputs report #",
+              "supportsMeriPlanHistory": true,
+              "emailTemplates": {
+                  "reportSubmittedEmailTemplate": "RLP_REPORT_SUBMITTED_EMAIL_TEMPLATE",
+                  "reportReturnedEmailTemplate": "RLP_REPORT_RETURNED_EMAIL_TEMPLATE",
+                  "planApprovedEmailTemplate": "RLP_PLAN_APPROVED_EMAIL_TEMPLATE",
+                  "planReturnedEmailTemplate": "RLP_PLAN_RETURNED_EMAIL_TEMPLATE",
+                  "reportApprovedEmailTemplate": "RLP_REPORT_APPROVED_EMAIL_TEMPLATE",
+                  "planSubmittedEmailTemplate": "RLP_PLAN_SUBMITTED_EMAIL_TEMPLATE"
+              },
+              "meriPlanTemplate": "rlpMeriPlan",
+              "riskAndThreatTypes": [
+                  "Performance",
+                  "Work Health and Safety",
+                  "People resources",
+                  "Financial",
+                  "External stakeholders",
+                  "Natural Environment"
+              ],
               "programReports": [
                   {
                       "reportType": "Administrative",
