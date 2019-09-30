@@ -30,7 +30,7 @@
                         <label class="control-label" for="documentRole">Document type</label>
 
                         <div class="controls">
-                            <select style="width: 97%;" data-bind="options:roles, optionsText: 'name', optionsValue: 'id', value:role, event: {change: onRoleChange}"></select>
+                            <select id="documentRole" style="width: 97%;" data-bind="options:roles, optionsText: 'name', optionsValue: 'id', value:role, event: {change: onRoleChange}"></select>
                         </div>
                     </div>
 
@@ -88,8 +88,8 @@
                         <div class="control-group"  data-bind="visible:false">
                             <label class="control-label" for="documentFile">Image settings</label>
                             <div class="controls">
-                                <label class="checkbox" for="documentRole">
-                                    <input id="documentRole" type="checkbox" data-bind="enable:type() == 'image' && public() && role() =='information', checked: isPrimaryProjectImage"/>
+                                <label class="checkbox" for="mainImage">
+                                    <input id="mainImage" type="checkbox" data-bind="enable:type() == 'image' && public() && role() =='information', checked: isPrimaryProjectImage"/>
                                     use as the main project image
                                 </label>
                             </div>

@@ -12,19 +12,6 @@
                 </ul>
 
             </div>
-            <g:if test="${user?.isAdmin}">
-            <div id="filter-by-role" class="document-filter-group btn-group pull-right">
-                <a class="btn dropdown-toggle" href="#">
-                    <i class="fa fa-filter"></i> Filter by type
-                    <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu" data-bind="foreach:documentRoles">
-                    <li><a href="#"><label class="checkbox"> <input data-column="5" name="doc-filter" class="checkbox" type="checkbox" data-bind="attr:{value:$data.id}"> <span data-bind="text:$data.name"></span></label></a> </li>
-                </ul>
-
-            </div>
-            </g:if>
-
 
         </div>
         <div></div>
@@ -43,7 +30,7 @@
 
             </thead>
             <tbody data-bind="foreach: filteredDocuments">
-                <!-- ko if:(role() == '${filterBy}' || 'all' == '${filterBy}') && role() != '${ignore}' && role() != 'variation' -->
+                <!-- ko if:(role() == '${filterBy}' || 'all' == '${filterBy}') && !(_.contains(${ignore as grails.converters.JSON}, role())) && role() != 'variation' -->
                 <tr data-bind="click: $parent.selectDocument">
                     <td>
                         <!-- ko if:embeddedVideo() -->
