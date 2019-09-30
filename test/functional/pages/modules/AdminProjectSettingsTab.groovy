@@ -6,4 +6,8 @@ class AdminProjectSettingsTab extends Module {
     static content = {
         regenerateReportsButton {$('#regenerateReports')}
     }
+
+    def regenerateReports() {
+        regenerateReportsButton.click()
+    }
 }

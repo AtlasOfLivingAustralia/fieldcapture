@@ -1,8 +1,7 @@
 package pages.modules
 
 import geb.Module
-import pages.DocumentDialog
-import pages.DocumentSummary
+import pages.modules.DocumentSummary
 
 class AdminDocumentsTab extends Module {
     static content = {
@@ -10,11 +9,12 @@ class AdminDocumentsTab extends Module {
         attachDocumentButton { $('#doAttach') }
 
         documents {
-            $('#adminDocumentList .media').collect {
-                module DocumentSummary, it
+            $('#adminDocumentList [data-bind*=documentEditTemplate]').collect {
+                module DocumentSummary
             }
         }
 
-        attachDocumentDialog { module DocumentDialog, $('#attachDocument') }
+        attachDocumentDialog { module DocumentDialog }
     }
+
 }

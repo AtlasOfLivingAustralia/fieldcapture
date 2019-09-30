@@ -19,4 +19,11 @@ class ProjectAdminTab extends Module {
         projectSettings { module AdminProjectSettingsTab }
 
     }
+
+    def attachDocument() {
+        documentsTab.click()
+        waitFor { documents.displayed }
+        documents.attachDocumentButton.click()
+        documents.attachDocumentDialog
+    }
 }
