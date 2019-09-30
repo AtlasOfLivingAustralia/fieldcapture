@@ -69,7 +69,7 @@
     <g:if test="${!printView}">
         <!-- ko stopBinding: true -->
         <div id="report-navigation">
-        <div id="floating-save">
+        <div id="floating-save" style="display:none;">
             <div class="transparent-background"></div>
             <div id="nav-buttons">
                 <button class="right btn btn-success" data-bind="enable:dirtyFlag.isDirty(), click: save">Save changes</button>
@@ -258,7 +258,7 @@
             anchorElementSelector:"#form-actions-anchor",
             navContentSelector:"#nav-buttons",
             floatingNavSelector:"#floating-save"
-        }
+        };
         ko.applyBindings(new ReportNavigationViewModel(master, viewModel, options), navElement);
 
         $('.helphover').popover({animation: true, trigger: 'hover'});

@@ -495,7 +495,12 @@ var ReportNavigationViewModel = function(reportMaster, activityViewModel, option
         navContent.appendTo(floatingDiv);
         floatingDiv.fadeIn();
     });
-
+    if (!anchor.is(":appeared")) {
+        anchor.trigger('disappear');
+    }
+    else {
+        anchor.trigger("appear");
+    }
 
     self.activity = activityViewModel;
 
@@ -503,7 +508,7 @@ var ReportNavigationViewModel = function(reportMaster, activityViewModel, option
         reportMaster.save();
     };
     self.saveAndExit = function() {
-        reportMaster.save(function() {
+        reportMaster.save(function(valid) {
             self.return();
         });
     };
@@ -513,7 +518,7 @@ var ReportNavigationViewModel = function(reportMaster, activityViewModel, option
         self.return();
     };
     self.return = function() {
-        window.location.href = options.returnUrl;
+        window.location.href = options.returnTo;
     };
 
     self.navElementPosition = options.navElementPosition;
