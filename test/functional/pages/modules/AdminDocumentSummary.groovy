@@ -3,7 +3,7 @@ package pages.modules
 import geb.Module
 
 
-class DocumentSummary extends Module {
+class AdminDocumentSummary extends Module {
 
     static content = {
         deleteButton { $('[data-bind*=deleteDocument]')}

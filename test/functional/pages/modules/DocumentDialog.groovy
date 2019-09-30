@@ -11,7 +11,7 @@ class DocumentDialog extends Module {
         publiclyViewable { $('#public') }
         privacyDeclaration { $('#thirdPartyConsentCheckbox') }
         file { $('#documentFile') }
-        mainProjectImage { $('#documentRole') }
+        mainProjectImage { $('#mainImage') }
         saveButton { $('#attachDocument [data-bind*=save]') }
         cancelButton { $('#attachDocument [data-bind*=cancel]') }
 

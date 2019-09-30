@@ -2,6 +2,7 @@ package pages
 
 
 import geb.Page
+import pages.modules.DocumentsTab
 import pages.modules.ProjectAdminTab
 import pages.modules.RlpOverviewTab
 
@@ -24,6 +25,8 @@ class RlpProjectPage extends Page {
 
         overview { module RlpOverviewTab }
         adminContent(required: false) { module ProjectAdminTab }
+        documents { module DocumentsTab }
+
     }
 
     def openDocumentDialog() {
