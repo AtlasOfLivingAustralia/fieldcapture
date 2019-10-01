@@ -129,17 +129,16 @@ var Master = function (activityId, config) {
             return undefined;
         }
         if (!activityData) {
-            activityData = {};
+            activityData = {
+                progress:self.activityData().progress,
+                activityId:self.activityData().activityId
+            };
         }
         activityData.outputs = outputs;
 
         // We can't allow an activity that failed validation to be marked as finished.
         if (valid === false) {
-            if (!activityData.progress || activityData.progress === 'finished') {
-                activityData.progress = 'started';
-                // This is needed to ensure the progress field is saved.
-                activityData.activityId = activityData.activityId || self.activityData().activityId;
-            }
+            activityData.progress = 'started';
         }
 
         return activityData;
@@ -505,10 +504,12 @@ var ReportNavigationViewModel = function(reportMaster, activityViewModel, option
     self.activity = activityViewModel;
 
     self.save = function() {
-        reportMaster.save();
+        reportMaster.save(function() {
+            $.unblockUI();
+        });
     };
     self.saveAndExit = function() {
-        reportMaster.save(function(valid) {
+        reportMaster.save(function() {
             self.return();
         });
     };
