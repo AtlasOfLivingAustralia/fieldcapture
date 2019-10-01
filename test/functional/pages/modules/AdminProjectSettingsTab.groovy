@@ -4,7 +4,7 @@ import geb.Module
 
 class AdminProjectSettingsTab extends Module {
     static content = {
-        regenerateReportsButton {$('#regenerateReports')}
+        regenerateReportsButton {$('button[data-bind*=regenerateStageReports]')}
     }
 
     def regenerateReports() {

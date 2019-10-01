@@ -3,6 +3,8 @@ print("Current working dir: "+pwd());
 load('../data_common/loadMeritHub.js');
 load('../data_common/insertData.js');
 
+loadActivityForms();
+
 createProgram({});
 createMu({});
 

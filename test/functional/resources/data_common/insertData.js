@@ -1,7 +1,8 @@
 load('../data/projectDefaults.js');
 load('../data/program.js');
 load('../data/managementUnit.js');
-load('../data/siteDefaults.js')
+load('../data/siteDefaults.js');
+load('../data/activityForms/RLPOutputReport.js');
 
 function createProject(projectProperties) {
     // var project = Object.assign({}, projectDefaults);
@@ -40,6 +41,11 @@ function createSite(siteProperties) {
     assign(siteProperties,site)
     db.site.insert(site);
 }
+
+function loadActivityForms() {
+    db.activityForm.insert(rlpOutputReport);
+}
+
 
 /**
  * Be aware of copying Date may lose turn it to String

@@ -4,6 +4,7 @@ package pages
 import geb.Page
 import pages.modules.DocumentsTab
 import pages.modules.ProjectAdminTab
+import pages.modules.ProjectReports
 import pages.modules.RlpOverviewTab
 
 class RlpProjectPage extends Page {
@@ -26,6 +27,7 @@ class RlpProjectPage extends Page {
         overview { module RlpOverviewTab }
         adminContent(required: false) { module ProjectAdminTab }
         documents { module DocumentsTab }
+        projectReports(required: false) { module ProjectReports }
 
     }
 

@@ -41,7 +41,7 @@ class RlpDocumentsSpec extends StubbedCasSpec {
         dialog.save()
 
         then: "the file will be uploaded and the page will be reloaded with the new document displayed in the list"
-        waitFor(timeout:10000) { adminContent.documents.documentSummaryList().size() == 1 }
+        waitFor(10) { adminContent.documents.documentSummaryList().size() == 1 }
         def document = adminContent.documents.documents[0]
 
         and:
@@ -84,7 +84,7 @@ class RlpDocumentsSpec extends StubbedCasSpec {
         dialog.save()
 
         then: "the file will be uploaded and the page will be reloaded with the new document displayed in the list"
-        waitFor(timeout:10000) { adminContent.documents.documentSummaryList().size() == 1 }
+        waitFor(10) { adminContent.documents.documentSummaryList().size() == 1 }
 
         when: "The list can be filtered to only show contract assurance documents"
         adminContent.documents.documentTypeFilter = 'information'
