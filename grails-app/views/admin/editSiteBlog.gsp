@@ -19,7 +19,7 @@
 </head>
 
 <body>
-<h3>Edit Site Blog</h3>
+<h3 class="editSiteBlog">Edit Site Blog</h3>
 
 <g:render template="/blog/blogSummary"/>
 

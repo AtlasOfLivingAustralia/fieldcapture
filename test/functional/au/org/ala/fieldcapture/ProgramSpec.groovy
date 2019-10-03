@@ -17,7 +17,11 @@ class ProgramSpec extends StubbedCasSpec {
 
         and:
         //MUST show hidden div first, otherwise WebBrowser selector cannot find hidden elements
-        showAllStatesMuButton.click()
+        interact {
+            moveToElement(showAllStatesMuButton.first())
+            showAllStatesMuButton.click()
+        }
+
 
         then:
         waitFor {at RLPProgramPage}
