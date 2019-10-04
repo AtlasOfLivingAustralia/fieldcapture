@@ -107,7 +107,7 @@ class ManagementUnitController {
                                   hasManagementUnitStories:  hasManagementUnitStories,
                                   hasPhotos: hasPhotos
                     ],
-                    servicesDashboard:[visible: managementUnitVisible, planning:false]
+                    servicesDashboard:[visible: managementUnitVisible]
                     ],
          sites   : [label: 'Sites', visible: canViewNonPublicTabs, stopBinding: true, type:'tab'],
          projects: [label: 'MU Reporting', visible: canViewNonPublicTabs, stopBinding: false, type:'tab', mu:mu, reports: mu.reports, reportOrder:reportOrder, hideDueDate:true],
