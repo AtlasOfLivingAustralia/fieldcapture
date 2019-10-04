@@ -150,14 +150,14 @@
                     </tbody>
                 </table>
 
-                <g:if test="${servicesDashboard.visible}">
+                <g:if test="${servicesDashboard.visible && servicesDashboard.services}">
                     <div>
                         <hr/>
                         <div class="well-title">Dashboard</div>
                         <g:set var="services" value="${program.servicesWithScores}"/>
 
                         <g:if test="${services.planning}">
-                            <b>Please note this project is currently in a planning phase so delivery against the targets below has not yet begun</b>
+                            <b>Please note projects being delivered in this management unit are currently in a planning phase so delivery against the targets below has not yet begun</b>
                         </g:if>
 
                         <g:each in="${services}" var="service_detail" >

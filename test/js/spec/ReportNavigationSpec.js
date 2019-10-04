@@ -1,4 +1,13 @@
-describe("The ESP reporting process works slightly differently to the normal MERIT stage report submission", function () {
+describe("Activity reports have specific navigation behaviour", function () {
+
+    var originalUnblockUI;
+    beforeEach(function() {
+        originalUnblockUI = $.unblockUI;
+        $.unblockUI = function() {};
+    });
+    afterEach(function() {
+        $.unblockUI = originalUnblockUI;
+    });
 
     it("delegates most functions to the reportMaster and activityViewModel", function() {
         var saveCalled = false;

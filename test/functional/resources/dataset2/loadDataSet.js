@@ -3,6 +3,8 @@ print("Current working dir: "+pwd());
 load('../data_common/loadMeritHub.js');
 load('../data_common/insertData.js');
 
+loadActivityForms();
+
 createProgram({});
 createMu({});
 
@@ -14,6 +16,7 @@ for (var i=1; i<10; i++) {
     createProject({name:'Project '+id, projectId:id});
     if (i < 4) {
         db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:id, userId:'1', accessLevel:'admin'});
+        db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:id, userId:'10', accessLevel:'editor'});
     }
 }
 

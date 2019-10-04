@@ -330,7 +330,7 @@ environments {
         app.default.hub='merit'
         runWithNoExternalConfig = true
         wiremock.port = 8018
-        def casBaseUrl = "http://localhost:${wiremock.port}"
+        def casBaseUrl = "http://devt.ala.org.au:${wiremock.port}"
 
         security.cas.appServerName="${serverName}"
         security.cas.contextPath="/${appName}"
@@ -342,8 +342,8 @@ environments {
         userDetailsSingleUrl = "${userDetailsUrl}getUserDetails"
         userDetailsUrl = "${userDetatails.url}getUserListFull"
         logging.dir = '.'
-        ecodata.baseUrl = 'http://localhost:8080/ecodata/ws/'
-        ecodata.service.url = 'http://localhost:8080/ecodata/ws'
+        ecodata.baseUrl = 'http://devt.ala.org.au:8080/ecodata/ws/'
+        ecodata.service.url = 'http://devt.ala.org.au:8080/ecodata/ws'
         api_key='testapikey'
         grails.cache.config = {
             diskStore {

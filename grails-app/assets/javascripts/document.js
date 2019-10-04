@@ -1,5 +1,5 @@
 
-var documentRoles = [{id: 'information', name: 'Information', isPublicRole:true}, {id:'embeddedVideo', name:'Embedded Video', isPublicRole:true}, {id: 'programmeLogic', name: 'Programme Logic', isPublicRole:false}, {id:'contractAssurance', name:'Contract Assurance', isPublicRole:false}];
+var documentRoles = [{id: 'information', name: 'Information', isPublicRole:true}, {id:'embeddedVideo', name:'Embedded Video', isPublicRole:true}, {id: 'programmeLogic', name: 'Program Logic', isPublicRole:false}, {id:'contractAssurance', name:'Contract Assurance', isPublicRole:false}];
 /**
  * A view model to capture metadata about a document and manage progress / feedback as a file is uploaded.
  *
