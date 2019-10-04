@@ -6,6 +6,7 @@ import geb.Page
 class BlogPageModule extends Module {
     static content = {
         name {$('div h2')}
+
         blogEntryTable{$('div.blog-entry')}
         newBlogBtn{$('a.newBlog')}
         //click to blog admin panel
@@ -39,6 +40,7 @@ class ProjectBlogPage extends Page {
     static content = {
         name {$('div h2')}
         blogModule  { module BlogPageModule}
+        overviewBtn{$('a#overview-tab', 0)}
         editProjectBlogPane{$('div#editProjectBlog')}
     }
 }
@@ -101,6 +103,12 @@ class EditSiteBlogPage extends Page {
         newBlogBtn{$('button#new')}
         editBtn{$('a.editThisBlog')}
         delBtn{$('a.delThisBlog')}
+        blogDivs{$('div#site-blog')}
+    }
+
+    def blogs(){
+       def lis = blogDivs.find('li')
+       lis? lis: []
     }
 
     def title(){

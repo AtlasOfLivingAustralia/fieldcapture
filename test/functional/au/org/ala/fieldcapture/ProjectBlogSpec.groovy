@@ -8,7 +8,9 @@ class ProjectBlogSpec extends StubbedCasSpec {
     def setup() {
         useDataSet('dataset_mu')
     }
-
+    def cleanup() {
+        logout(browser)
+    }
 
     def "As a user, I can view blogs/create/delete in a given project "() {
         setup:
@@ -16,6 +18,10 @@ class ProjectBlogSpec extends StubbedCasSpec {
 
         when:
         to ProjectBlogPage
+
+        and:
+        //force to overview tab
+        overviewBtn().click()
 
         then:
         waitFor {at ProjectBlogPage}
@@ -52,39 +58,44 @@ class ProjectBlogSpec extends StubbedCasSpec {
 
         then:
         waitFor { editProjectBlogPane().isDisplayed()}
-        blogModule.blogs().size() == 1
+        blogModule.deleteBlogBtn.size() == 1
     }
 
-//    def "As an admin, I can enter edit mode "(){
-//        setup:
-//        login([userId:'1', role:"ROLE_USER", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
-//
-//        when:
-//        to ProjectBlogPage
-//
-//        then:
-//        waitFor {at ProjectBlogPage}
-//        blogModule.blogs().size == 1
-//
-//        when:
-//        blogModule.gotoBlogEditBtn.click()
-//
-//        then:
-//        blogModule.editBlogPanelTitle() == 'Edit Project Blog'
-//        blogModule.editBlogBtn.size() == 1
-//
-//        when:
-//        blogModule.editBlogBtn.click()
-//
-//        then:
-//        waitFor {at NewBlogEntryPage}
-//
-//        //Do not need to test 'save', rely on test case of 'create blog'
-//
-//        when:
-//        cancelBtn.click()
-//
-//        then:
-//        waitFor {at ProjectBlogPage}
-//    }
+    def "As an admin, I can enter edit mode "(){
+        setup:
+        login([userId:'1', role:"ROLE_USER", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
+
+        when:
+        to ProjectBlogPage
+
+        then:
+        waitFor {at ProjectBlogPage}
+
+        and:
+        //Force to nav to overview page
+        overviewBtn().click()
+        blogModule.blogs().size == 1
+
+
+        when:
+        blogModule.gotoBlogEditBtn.click()
+
+        then:
+        blogModule.editBlogPanelTitle() == 'Edit Project Blog'
+        blogModule.editBlogBtn.size() == 1
+
+        when:
+        blogModule.editBlogBtn.click()
+
+        then:
+        waitFor {at NewBlogEntryPage}
+
+        //Do not need to test 'save', rely on test case of 'create blog'
+
+        when:
+        cancelBtn.click()
+
+        then:
+        waitFor {at ProjectBlogPage}
+    }
 }

@@ -8,6 +8,10 @@ class ProgramSpec extends StubbedCasSpec {
         useDataSet('dataset_mu')
     }
 
+    def cleanup() {
+        logout(browser)
+    }
+
     def "As a user, I can view a RLP program "() {
         setup:
         login([userId:'1', role:"ROLE_USER", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
@@ -16,6 +20,8 @@ class ProgramSpec extends StubbedCasSpec {
         to RLPProgramPage
 
         and:
+        //force to overview tab
+        overviewTab().click()
         //MUST show hidden div first, otherwise WebBrowser selector cannot find hidden elements
         interact {
             moveToElement(showAllStatesMuButton.first())
@@ -24,7 +30,7 @@ class ProgramSpec extends StubbedCasSpec {
 
 
         then:
-        waitFor {at RLPProgramPage}
+        waitFor(10d,{at RLPProgramPage})
 
         when:
         interact {
