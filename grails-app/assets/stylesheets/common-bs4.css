@@ -101,3 +101,7 @@ table td.report-end, table th.report-end {
 table td.report-status, table th.report-status {
     width:15%;
 }
+
+#editor-button-bar .wmd-button-row {
+    box-sizing: initial;
+}

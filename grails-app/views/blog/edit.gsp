@@ -26,7 +26,9 @@
         <g:if test="${params.projectId}">
             <g:link controller="project" id="${params.projectId}">Project </g:link>  <span class="divider"> / </span></li>
         </g:if>
-        <li class="active">Edit blog entry</li>
+        <li class="active">
+            Edit blog entry
+        </li>
     </ul>
 
     <g:render template="editBlogEntry"/>

@@ -12,7 +12,7 @@
           <g:textArea name="editorInput" id="editorInput" data-bind="value:initialValue" rows="16"
                       cols="120" style="width:100%;margin:0;"></g:textArea>
         </div>
-        <div class="hide"><input type="text" name="editorOutput" id="editorOutput" class="hide"></div>
+        <div class="hide"><input type="text" name="editorOutput" id="editorOutput" class="hide" style="display:none;"></div>
 
       </div>
       <div class="modal-footer control-group">

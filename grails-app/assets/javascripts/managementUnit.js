@@ -43,7 +43,7 @@ ManagementUnitViewModel = function (props, options) {
     };
 
     self.editDescription = function () {
-        editWithMarkdown('Edit organisation description', self.description);
+        editWithMarkdown('Edit management unit description', self.description);
     };
 
     self.editOrganisation = function () {
@@ -119,7 +119,7 @@ ManagementUnitViewModel = function (props, options) {
         {
             healthCheckUrl: config.healthCheckUrl,
             blockUIOnSave: true,
-            blockUISaveMessage: 'Saving the management Unit....',
+            blockUISaveMessage: 'Saving the management unit....',
             serializeModel: function () {
                 return self.modelAsJSON(true);
             }
