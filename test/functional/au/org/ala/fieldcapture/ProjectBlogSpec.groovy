@@ -50,8 +50,9 @@ class ProjectBlogSpec extends StubbedCasSpec {
         blogModule.gotoBlogEditBtn.click()
 
         then:
+        waitFor {blogModule.deleteBlogBtn.size() == 2}
         blogModule.editBlogPanelTitle() == 'Edit Project Blog'
-        blogModule.deleteBlogBtn.size() == 2
+
 
         when:
         blogModule.deleteBlogBtn[1].click()
