@@ -57,14 +57,14 @@ class ProgramBlogPage extends Page {
         editProgramBlogTab{$('a#editProgramBlog-tab')}
     }
 
-    def editProgramBlogTab() {
-        def epbTabs
-        try {
-            epbTabs = $('a#editProgramBlog-tab')
-        }
-        catch (StaleElementReferenceException e) {}
-       epbTabs
-    }
+//    def editProgramBlogTab() {
+//        def epbTabs
+//        try {
+//            epbTabs = $('a#editProgramBlog-tab')
+//        }
+//        catch (StaleElementReferenceException e) {}
+//       epbTabs
+//    }
 }
 
 
