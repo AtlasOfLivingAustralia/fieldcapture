@@ -125,7 +125,7 @@
     <div class="well-title">Program blog</div>
     <g:if test="${blog.editable}">
         <p>
-            <a href="${g.createLink(controller: 'blog', action: 'create', params:[programId: program.programId, returnTo:g.createLink(controller: 'program', action:'index', id:program.programId)])}"><button class="btn"><i class="fa fa-newspaper-o"></i> New Entry</button></a>
+            <a class="newBlog" href="${g.createLink(controller: 'blog', action: 'create', params:[programId: program.programId, returnTo:g.createLink(controller: 'program', action:'index', id:program.programId)])}"><button class="btn"><i class="fa fa-newspaper-o"></i> New Entry</button></a>
             <button id="gotoEditBlog" class="btn"><i class="fa fa-edit"></i> Edit</button>
             </a>
         </p>

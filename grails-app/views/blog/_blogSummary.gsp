@@ -9,8 +9,8 @@
                     <div class="row-fluid">
                         <strong data-bind="text:title"></strong>
                         <div class="pull-right">
-                            <a href data-bind="click:$parent.editBlogEntry">Edit</a> |
-                            <a href data-bind="click:$parent.deleteBlogEntry">Delete</a>
+                            <a class="editThisBlog" href data-bind="click:$parent.editBlogEntry">Edit</a> |
+                            <a class="delThisBlog" href data-bind="click:$parent.deleteBlogEntry">Delete</a>
                         </div>
                     </div>
                     <p data-bind="text:shortContent"></p>

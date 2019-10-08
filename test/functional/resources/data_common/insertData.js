@@ -56,6 +56,10 @@ function assign(src, des){
     for(var prop in src){
         if(src.hasOwnProperty(prop)){
             if(isObject(src[prop])) {
+                if ( Array.isArray(src[prop]))
+                    des[prop] = []
+                else
+                    des[prop] ={}
                 assign(src[prop],des[prop])
             }else{
                 des[prop] = src[prop]

@@ -30,10 +30,10 @@
 <g:if test="${blog.editable || blog.hasNewsAndEvents || blog.hasProgramStories || blog.hasPhotos}">
     <div class="row-fluid">
         <hr/>
-        <div class="well-title">Management Unit Blog</div>
+        <div class="well-title muBlogContent">Management Unit Blog</div>
         <g:if test="${blog.editable}">
             <p>
-                <a href="${g.createLink(controller: 'blog', action: 'create', params:[managementUnitId: mu.managementUnitId, returnTo:g.createLink(controller: 'managementUnit', action:'index', id:mu.managementUnitId)])}"><button class="btn"><i class="fa fa-newspaper-o"></i> New Entry</button></a>
+                <a class="newBlog" href="${g.createLink(controller: 'blog', action: 'create', params:[managementUnitId: mu.managementUnitId, returnTo:g.createLink(controller: 'managementUnit', action:'index', id:mu.managementUnitId)])}"><button class="btn"><i class="fa fa-newspaper-o"></i> New Entry</button></a>
             <button id="gotoEditBlog" class="btn"><i class="fa fa-edit"></i> Edit</button>
             </a>
         </p>

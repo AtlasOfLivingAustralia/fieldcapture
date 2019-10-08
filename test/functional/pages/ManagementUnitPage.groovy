@@ -11,9 +11,16 @@ class ManagementUnitPage extends Page {
 
     static content = {
         name {$('div#managementUnitName h2')}
+        overviewBtn{$('a#about-tab', 0)}
         grantIdsTable{$('td.grantId')}
         projectLinksTd{$('td.grantId a')}
         gotoProgramLinks{$('a.gotoProgram')}
+
+        blogContentDiv {$('div.muBlogContent')}
+        blogModule {module BlogPageModule}
+        editManagementUnitBlogPane{$('div#editManagementUnitBlog')}
+        adminTabPane {$('div#admin')}
+        editMUBlogTab{$('a#editManagementUnitBlog-tab')}
     }
 
     List grantIds() {

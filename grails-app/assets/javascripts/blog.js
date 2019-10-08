@@ -26,7 +26,7 @@ var BlogEntryViewModel = function(blogEntry) {
         else if(self.managementUnitId())
             return "MANAGEMENTUNIT"
         else
-            return "SITE"
+            return "MERIT"
     });
     self.title = ko.observable(blogEntry.title || '');
     self.date = ko.observable(blogEntry.date || now).extend({simpleDate:false});
@@ -63,11 +63,14 @@ var BlogEntryViewModel = function(blogEntry) {
 
 var EditableBlogEntryViewModel = function(blogEntry, options) {
 
-    var storyType ="Project Stories";
+    var storyType ="Site Stories";
     if (blogEntry.programId)
         storyType ="Program Stories"
     else if ( blogEntry.managementUnitId)
         storyType ="Management Unit Stories"
+    else if (blogEntry.projectId)
+        storyType = 'Site Stories'
+
 
     var defaults = {
         validationElementSelector:'.validationEngineContainer',

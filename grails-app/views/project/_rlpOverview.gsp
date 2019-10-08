@@ -178,7 +178,7 @@
 
     <h2>Project blog</h2>
     <g:if test="${user?.isEditor}">
-        <a href="${g.createLink(controller: 'blog', action: 'create', params: [projectId: project.projectId, returnTo: g.createLink(controller: 'project', action: 'index', id: project.projectId)])}"><button
+        <a class="newBlog" href="${g.createLink(controller: 'blog', action: 'create', params: [projectId: project.projectId, returnTo: g.createLink(controller: 'project', action: 'index', id: project.projectId)])}"><button
                 class="btn"><i class="fa fa-newspaper-o"></i> New Entry</button></a>
         <button id="gotoEditBlog" class="btn"><i class="fa fa-edit"></i> Edit</button>
         </a>

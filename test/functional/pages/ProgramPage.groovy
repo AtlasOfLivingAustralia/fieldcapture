@@ -28,6 +28,7 @@ class RLPProgramPage extends Page{
         projectNameTable{$('td.projectName')}
         muInStatesTable{$('div[id^=state-mu-] li a')}
         showAllStatesMuButton {$('#showAllStatesMu')}
+        overviewTab{$('a#about-tab',0)}
     }
 
 
