@@ -22,8 +22,7 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
         wireMockServer = new WireMockServer(options()
                 .port(testConfig.wiremock.port)
                 .usingFilesUnderDirectory(getMappingsPath())
-                .extensions(new ResponseTemplateTransformer(false))
-                .notifier(new ConsoleNotifier(true)))
+                .extensions(new ResponseTemplateTransformer(false)))
 
         wireMockServer.start()
 

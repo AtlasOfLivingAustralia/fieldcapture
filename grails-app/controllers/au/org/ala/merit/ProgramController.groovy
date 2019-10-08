@@ -70,9 +70,12 @@ class ProgramController {
             servicesWithScores = programService.serviceScores(program.programId, !hasAdminAccess)
         }
 
-        String[] muIds = projects.clone().unique{it.managementUnitId}?.managementUnitId
-        List managementUnits = managementUnitService.get(muIds)
-        program.managementUnits = managementUnits
+        // Find the management units that contain projects for this program.
+        String[] muIds = projects.collect{it.managementUnitId}.unique()
+        if (muIds) {
+            List managementUnits = managementUnitService.get(muIds)
+            program.managementUnits = managementUnits
+        }
 
         //Aggregate all targeted outcomes of projects
         for(Map project in projects){
