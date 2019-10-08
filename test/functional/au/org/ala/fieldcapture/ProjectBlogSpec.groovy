@@ -58,8 +58,8 @@ class ProjectBlogSpec extends StubbedCasSpec {
         blogModule.deleteBlogBtn[1].click()
 
         then:
-        waitFor { editProjectBlogPane().isDisplayed()}
-        blogModule.deleteBlogBtn.size() == 1
+        waitFor {blogModule.deleteBlogBtn.size() == 1 && editProjectBlogPane().isDisplayed()}
+
     }
 
     def "As an admin, I can enter edit mode "(){
