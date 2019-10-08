@@ -4,6 +4,7 @@ import pages.NewBlogEntryPage
 import pages.NewProgramBlogPage
 import pages.ProgramBlogPage
 
+
 class ProgramBlogSpec extends StubbedCasSpec {
 
     def setup() {
@@ -44,8 +45,9 @@ class ProgramBlogSpec extends StubbedCasSpec {
         blogModule.gotoBlogEditBtn.click()
 
         then:
+        waitFor {  blogModule.deleteBlogBtn.size() == 2}
         blogModule.editBlogPanelTitle() == 'Edit Blog'
-        blogModule.deleteBlogBtn.size() == 2
+
 
         when:
         interact{
@@ -62,7 +64,7 @@ class ProgramBlogSpec extends StubbedCasSpec {
             editProgramBlogTab().click()
         }
         then:
-        blogModule.blogs().size() == 1
+        waitFor {blogModule.blogs().size() == 1 }
 
     }
 
