@@ -2,6 +2,7 @@ package pages
 
 import geb.Module
 import geb.Page
+import org.openqa.selenium.StaleElementReferenceException
 
 class BlogPageModule extends Module {
     static content = {
@@ -54,6 +55,15 @@ class ProgramBlogPage extends Page {
         blogModule  { module BlogPageModule}
         adminTabPane {$('div#admin')}
         editProgramBlogTab{$('a#editProgramBlog-tab')}
+    }
+
+    def editProgramBlogTab() {
+        def epbTabs
+        try {
+            epbTabs = $('a#editProgramBlog-tab')
+        }
+        catch (StaleElementReferenceException e) {}
+       epbTabs
     }
 }
 
