@@ -55,6 +55,7 @@ class ProgramBlogPage extends Page {
         blogModule  { module BlogPageModule}
         adminTabPane {$('div#admin')}
         editProgramBlogTab{$('a#editProgramBlog-tab')}
+        editProgramButton(required:false) { $('#edit-program-details .admin-action')}
     }
 
 //    def editProgramBlogTab() {
