@@ -21,7 +21,7 @@
             geoSearchUrl: "${createLink(controller: 'home', action:'geoService')}",
             projectUrl: "${createLink(controller: "project", action:'index')}",
             siteUrl: "${createLink(controller: "site", action:'index')}",
-
+            managementUnitFeaturesUrl: "${createLink(controller:'managementUnit', action:'managementUnitFeatures')}",
             createBlogEntryUrl: "${createLink(controller: 'blog', action:'create', params:[managementUnitId:managementUnit.managementUnitId, returnTo:createLink(controller: 'managementUnit', action: 'index', id: managementUnit.managementUnitId, fragment: 'admin')])}",
             editBlogEntryUrl: "${createLink(controller: 'blog', action:'edit', params:[managementUnitId:managementUnit.managementUnitId, returnTo:createLink(controller: 'managementUnit', action: 'index', id: managementUnit.managementUnitId, fragment: 'admin')])}",
             deleteBlogEntryUrl: "${createLink(controller: 'blog', action:'delete', params:[managementUnitId:managementUnit.managementUnitId])}"

@@ -11,6 +11,12 @@ class ProgramBlogSpec extends StubbedCasSpec {
         useDataSet('dataset_mu')
     }
 
+    def cleanup() {
+        logout(browser)
+    }
+
+
+
     def "As a admin, I can view/edit/create/delete blogs in a given program "() {
         setup:
         login([userId:'1', role:"ROLE_USER", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)

@@ -293,6 +293,34 @@ var ManagementUnitPageViewModel = function(props, options) {
 
     };
 
+     self.createHeatmapOfSites = function(map){
+         var searchUrl = fcConfig.geoSearchUrl +"?max=10000&geo=true&markBy=false"
+             + "&fq=managementUnitId:" +self.managementUnitId;
+         $.getJSON(searchUrl, function(data) {
+             var heatMapPoints = []
+            $.each(data.projects, function(j, project) {
+                if (project.geo && project.geo.length > 0) {
+                    $.each(project.geo, function(k, el) {
+                        var lat = parseFloat(el.loc.lat);
+                        var lon = parseFloat(el.loc.lon);
+
+                        var latLng = new google.maps.LatLng(lat,lon);
+                        heatMapPoints.push(latLng);
+                    })
+                }
+            })
+
+             var heatMap = new google.maps.visualization.HeatmapLayer({
+                 data: heatMapPoints,
+                 dissipating: true,
+                 maxIntensity: 10
+             });
+
+             heatMap.setMap(map)
+         })
+    };
+
+
     var tabs = {
         'about': {
             initialiser: function () {
@@ -315,34 +343,30 @@ var ManagementUnitPageViewModel = function(props, options) {
                 $("[id^=projectOverviewList-]").DataTable({displayLength:25, order:[[2, 'asc'], [3, 'asc']]});
                 $("[id^=projectList-]").DataTable({displayLength:25, order:[[2, 'asc'], [3, 'asc']]});
 
-                //create a empty map.
-                var map = createMap({
-                    useAlaMap:true,
-                    zoomControl:false,
-                    defaultLayersControl:false,
-                    allowSearchLocationByAddress: false,
-                    allowSearchRegionByAddress: false,
-                    showFitBoundsToggle:false,
-                    useMyLocation:false,
 
-                    mapContainerId:'managementUnitSiteMap',
-                    width: '100%',
-                    styles: {
-                        circle: {
-                            color: '#f00',
-                            fillOpacity: 0.2,
-                            weight: 3
-                        }
-                    }
+                //self.asyncLoadProjectSitesInManagementUnit(heatMapPoints);
+
+                var map = new google.maps.Map(document.getElementById('managementUnitSiteMap'), {
+                    zoom: 3,
+                    center: new google.maps.LatLng(-28.5, 133.5),
+                    panControl: false,
+                    streetViewControl: false,
+                    mapTypeControl: false,
+                    mapTypeId: google.maps.MapTypeId.TERRAIN,
+                    zoomControl: false
                 });
+
+                self.createHeatmapOfSites(map);
+
 
                 if (self.managementUnitSiteId){
                     if (!self.mapFeatures()) {
                         console.log("There was a problem obtaining management unit site data");
                     } else{
-                        map.addFeature(self.mapFeatures())
+                         map.data.addGeoJson(self.mapFeatures())
                     }
                 }
+
             }
         },
         'projects': {
