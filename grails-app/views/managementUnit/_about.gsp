@@ -102,7 +102,6 @@
                                     <div class="outcome-wrapper h-100">
                                         <div class="h-100 outcome ${outcomeClass}">
                                             ${outcome.shortDescription}
-                                            <g:if test ="${outcome.targeted}"><span class="fa fa-check-circle"></span></g:if>
                                         </div>
                                     </div>
                                 </div>
