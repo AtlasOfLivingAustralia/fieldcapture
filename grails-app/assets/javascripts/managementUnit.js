@@ -6,6 +6,8 @@
 //= require reporting
 //= require leaflet-manifest
 //= require blog
+//= require leaflet-heatmap/heatmap.js
+//= require leaflet-heatmap/leaflet-heatmap.js
 
 
 
@@ -297,28 +299,44 @@ var ManagementUnitPageViewModel = function(props, options) {
          var searchUrl = fcConfig.geoSearchUrl +"?max=10000&geo=true&markBy=false"
              + "&fq=managementUnitId:" +self.managementUnitId;
          $.getJSON(searchUrl, function(data) {
-             var heatMapPoints = []
+            var heatMapPoints = []
             $.each(data.projects, function(j, project) {
                 if (project.geo && project.geo.length > 0) {
                     $.each(project.geo, function(k, el) {
                         var lat = parseFloat(el.loc.lat);
                         var lon = parseFloat(el.loc.lon);
-
-                        var latLng = new google.maps.LatLng(lat,lon);
-                        heatMapPoints.push(latLng);
+                        heatMapPoints.push({lat:lat,lon:lon,count:1});
                     })
                 }
             })
 
-             var heatMap = new google.maps.visualization.HeatmapLayer({
-                 data: heatMapPoints,
-                 dissipating: true,
-                 maxIntensity: 10
-             });
+            var data = {
+                data: heatMapPoints
+            }
+            createHeatMap(map,data)
 
-             heatMap.setMap(map)
          })
     };
+
+   var createHeatMap = function(map,heatPoints){
+        var cfg = {
+            "radius": 1,
+            "maxOpacity": .8,
+            // scales the radius based on map zoom
+            "scaleRadius": true,
+            "useLocalExtrema": true,
+            latField: 'lat',
+            lngField: 'lon',
+            valueField: 'count'
+        };
+
+        var heatmapLayer = new HeatmapOverlay(cfg);
+
+        map.featureLayer.addLayer(heatmapLayer)
+
+        heatmapLayer.setData(heatPoints);
+
+    }
 
 
     var tabs = {
@@ -343,30 +361,28 @@ var ManagementUnitPageViewModel = function(props, options) {
                 $("[id^=projectOverviewList-]").DataTable({displayLength:25, order:[[2, 'asc'], [3, 'asc']]});
                 $("[id^=projectList-]").DataTable({displayLength:25, order:[[2, 'asc'], [3, 'asc']]});
 
+                //create a empty map.
+                var map = createMap({
+                    useAlaMap:true,
+                    zoomControl:false,
+                    defaultLayersControl:false,
+                    allowSearchLocationByAddress: false,
+                    allowSearchRegionByAddress: false,
+                    showFitBoundsToggle:false,
+                    useMyLocation:false,
+                    mapContainerId:'managementUnitSiteMap',
+                    width: '100%'
 
-                //self.asyncLoadProjectSitesInManagementUnit(heatMapPoints);
-
-                var map = new google.maps.Map(document.getElementById('managementUnitSiteMap'), {
-                    zoom: 3,
-                    center: new google.maps.LatLng(-28.5, 133.5),
-                    panControl: false,
-                    streetViewControl: false,
-                    mapTypeControl: false,
-                    mapTypeId: google.maps.MapTypeId.TERRAIN,
-                    zoomControl: false
                 });
-
-                self.createHeatmapOfSites(map);
-
-
                 if (self.managementUnitSiteId){
                     if (!self.mapFeatures()) {
                         console.log("There was a problem obtaining management unit site data");
                     } else{
-                         map.data.addGeoJson(self.mapFeatures())
+                         map.addFeature(self.mapFeatures())
                     }
                 }
 
+                self.createHeatmapOfSites(map);
             }
         },
         'projects': {
