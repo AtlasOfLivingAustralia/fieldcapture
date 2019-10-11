@@ -60,10 +60,10 @@ class ProgramBlogSpec extends StubbedCasSpec {
             blogModule.deleteBlogBtn[1].click()
         }
         //bug in program admin page.
-        //Deleting a blog won't jump to edit page
-
+        // When the page is reloaded the admin tab will be displayed but it will revert to the
+        // "Edit" section, we can use that to detect the page has reloaded
         then:
-        waitFor {adminTabPane().isDisplayed()}
+        waitFor(10d, {editProgramButton.displayed})
 
         when:
         interact{

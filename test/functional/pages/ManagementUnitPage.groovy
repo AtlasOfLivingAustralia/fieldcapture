@@ -21,6 +21,7 @@ class ManagementUnitPage extends Page {
         editManagementUnitBlogPane{$('div#editManagementUnitBlog')}
         adminTabPane {$('div#admin')}
         editMUBlogTab{$('a#editManagementUnitBlog-tab')}
+        editManagementUnitButton(required:false) { $('#edit-managementUnit-details .admin-action')}
     }
 
     List grantIds() {

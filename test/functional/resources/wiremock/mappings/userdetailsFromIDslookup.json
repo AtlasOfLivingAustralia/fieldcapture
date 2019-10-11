@@ -4,10 +4,11 @@
     "method": "ANY"
   },
   "response": {
+    "transformers": ["response-template"],
     "status": 200,
     "headers": {
       "Content-Type": "application/json"
     },
-    "body": "{\"userName\":\"A User\", \"userId\":\"1\"}"
+    "body": "{\"success\":true, \"users\":[]}"
   }
 }

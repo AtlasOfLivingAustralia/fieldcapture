@@ -291,12 +291,21 @@ var ProgramPageViewModel = function(props, options) {
 
     };
 
+    function popupContent(managementUnitFeature) {
+        return "<a href="+options.viewManagementUnitUrl +"/" +managementUnitFeature.properties.managementUnitId+">"+ managementUnitFeature.properties.name + "</a>";
+    }
+
     self.loadManagementUnits = function(map) {
         //find sites of related projects.
         var searchUrl = options.managementUnitFeaturesUrl;
         $.getJSON(searchUrl, function(data) {
             if (data.resp) {
                 $.each(data.resp.features, function(j, feature) {
+
+                    if (!feature.properties) {
+                        feature.properties = {};
+                    }
+                    feature.properties.popupContent = popupContent(feature);
                     map.addFeature(feature);
                 });
             }

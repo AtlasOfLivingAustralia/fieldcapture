@@ -109,8 +109,8 @@ class ManagementUnitController {
                     ],
                     servicesDashboard:[visible: managementUnitVisible]
                     ],
-         sites   : [label: 'Sites', visible: canViewNonPublicTabs, stopBinding: true, type:'tab'],
          projects: [label: 'MU Reporting', visible: canViewNonPublicTabs, stopBinding: false, type:'tab', mu:mu, reports: mu.reports, reportOrder:reportOrder, hideDueDate:true],
+         sites   : [label: 'MU Sites', visible: canViewNonPublicTabs, stopBinding: true, type:'tab'],
          admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab', mu:mu, blog: [editable: hasEditAccessOfBlog]]
         ]
 
