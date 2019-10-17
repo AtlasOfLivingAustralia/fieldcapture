@@ -506,7 +506,7 @@ var ReportNavigationViewModel = function(reportMaster, activityViewModel, option
     else {
         anchor.trigger("appear");
     }
-
+    self.dirtyFlag = reportMaster.dirtyFlag;
     self.activity = activityViewModel;
 
     self.save = function() {
@@ -523,10 +523,10 @@ var ReportNavigationViewModel = function(reportMaster, activityViewModel, option
         }, false);
     };
     self.saveAndExitButtonClass = ko.computed(function() {
-        return reportMaster.dirtyFlag.isDirty() ? 'btn-danger' : 'btn-info';
+        return self.dirtyFlag.isDirty() ? 'btn-danger' : 'btn-info';
     });
     self.exitReport = function() {
-        if (reportMaster.isDirty()) {
+        if (self.dirtyFlag.isDirty()) {
             var message = "<b>Unsaved data found</b>"+
                 "<p>The form you are working on has unsaved changes. Please confirm if you would like to:</p>";
             bootbox.dialog(message,[
@@ -549,7 +549,7 @@ var ReportNavigationViewModel = function(reportMaster, activityViewModel, option
             ]);
         }
         else {
-            reportMaster.deleteSavedData();
+            reportMaster.cancelAutosave();
             self.return();
         }
     };
@@ -564,5 +564,5 @@ var ReportNavigationViewModel = function(reportMaster, activityViewModel, option
     };
 
     self.navElementPosition = options.navElementPosition;
-    self.dirtyFlag = reportMaster.dirtyFlag;
+
 };

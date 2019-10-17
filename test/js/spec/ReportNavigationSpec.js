@@ -11,7 +11,9 @@ describe("Activity reports have specific navigation behaviour", function () {
 
     it("delegates most functions to the reportMaster and activityViewModel", function() {
         var saveCalled = false;
-        var deleteSavedDataCalled = false;
+        var cancelAutoSaveCalled = false;
+        var testDirtyFlag = false;
+        var testMarkAsFinished = false;
         var reportMaster = {
             save:function(callback) {
                 saveCalled = true;
@@ -19,12 +21,23 @@ describe("Activity reports have specific navigation behaviour", function () {
                     callback(true);
                 }
             },
-            deleteSavedData:function () {
-                deleteSavedDataCalled = true;
+            dirtyFlag: {
+                isDirty: function() {
+                    return testDirtyFlag;
+                }
+            },
+            cancelAutosave: function() {
+                cancelAutoSaveCalled = true;
             }
+
         };
         var activityViewModel = {
-            progress:ko.observable('started')
+            progress:ko.observable('started'),
+            transients: {
+                markedAsFinished: function() {
+                    return testMarkAsFinished;
+                }
+            }
         };
         var reportNavigationViewModel = new ReportNavigationViewModel(reportMaster, activityViewModel, {});
         var returnCalled = false;
@@ -35,24 +48,28 @@ describe("Activity reports have specific navigation behaviour", function () {
         reportNavigationViewModel.save();
         expect(saveCalled).toBeTruthy();
         expect(returnCalled).toBeFalsy();
-        expect(deleteSavedDataCalled).toBeFalsy();
+        expect(cancelAutoSaveCalled).toBeFalsy();
 
         saveCalled = false;
         returnCalled = false;
-        deleteSavedDataCalled = false;
+        cancelAutoSaveCalled = false;
         reportNavigationViewModel.saveAndExit();
         expect(saveCalled).toBeTruthy();
         expect(returnCalled).toBeTruthy();
-        expect(deleteSavedDataCalled).toBeFalsy();
+        expect(cancelAutoSaveCalled).toBeFalsy();
 
         saveCalled = false;
         returnCalled = false;
-        deleteSavedDataCalled = false;
+        cancelAutoSaveCalled = false;
         reportNavigationViewModel.cancel();
-
         expect(saveCalled).toBeFalsy();
         expect(returnCalled).toBeTruthy();
-        expect(deleteSavedDataCalled).toBeTruthy();
+        expect(cancelAutoSaveCalled).toBeTruthy();
+
+        reportNavigationViewModel.exitReport();
+        expect(saveCalled).toBeFalsy();
+        expect(returnCalled).toBeTruthy();
+        expect(cancelAutoSaveCalled).toBeTruthy();
 
     });
 });
