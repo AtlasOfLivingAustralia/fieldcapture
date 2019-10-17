@@ -125,3 +125,7 @@
     padding-top: 10px;
     padding-bottom: 10px;
 }
+
+.bootbox.modal a.btn.btn-success, .bootbox.modal a.btn.btn-info, .bootbox.modal a.btn.btn-warning {
+    color:white;
+}

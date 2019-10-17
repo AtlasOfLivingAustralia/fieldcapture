@@ -9,22 +9,15 @@ class ReportPage extends Page {
     }
 
     static content = {
-
-        saveButton { $('#nav-buttons button[data-bind$=saveAndExit') }
-        saveAndExitButton { $('#nav-buttons button[data-bind*=saveAndExit') }
-        cancelButton { $('#nav-buttons button[data-bind*=cancel]') }
+        saveButton { $('#nav-buttons button[data-bind$=save') }
+        exitButton { $('#nav-buttons button[data-bind*=exitReport') }
     }
 
     def save() {
         saveButton.click()
     }
 
-    def saveAndExit() {
-        saveAndExitButton.click()
+    def exitReport() {
+        exitButton.click()
     }
-
-    def cancel() {
-        cancelButton.click()
-    }
-
 }

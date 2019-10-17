@@ -73,8 +73,7 @@
             <div class="transparent-background"></div>
             <div id="nav-buttons">
                 <button class="right btn btn-success" data-bind="enable:dirtyFlag.isDirty(), click: save">Save changes</button>
-                <button class="right btn btn-success" data-bind="enable:dirtyFlag.isDirty(), click: saveAndExit">Save and exit</button>
-                <button class="right btn btn-danger" data-bind="click: cancel">Cancel</button>
+                <button class="right btn" data-bind="click: exitReport, class: saveAndExitButtonClass">Exit report</button>
                 <label class="checkbox inline" data-bind="visible:activity.progress() != 'corrected'">
                         <input data-bind="checked:activity.transients.markedAsFinished" type="checkbox"> Mark this report as complete.
                 </label>

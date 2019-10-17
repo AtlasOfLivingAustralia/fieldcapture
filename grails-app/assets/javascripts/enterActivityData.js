@@ -162,6 +162,26 @@ var Master = function (activityId, config) {
         bootbox.alert(errorText);
     };
 
+    function handleSessionTimeout(localStorageFailed) {
+
+        if (!localStorageFailed) {
+
+            var unloadHandler = window.onbeforeunload;
+            window.onbeforeunload = null;
+            bootbox.alert($(options.timeoutMessageSelector).html(),
+                function() {
+                    window.onbeforeunload = unloadHandler;
+                });
+        }
+        else {
+            // We weren't able to save the page so we can't give the reload the page instructions.
+            // This is relying on the logout detection in the page template
+            $('#logout-warning').show();
+            bootbox.alert(" <b>Please do not leave this page</b><br/>Your save failed due to a network error or login timeout.  Please open a new tab and log back into MERIT, then attempt to save this data again.");
+        }
+
+    };
+
     /**
      * Makes an ajax call to save any sections that have been modified. This includes the activity
      * itself and each output.
@@ -173,29 +193,15 @@ var Master = function (activityId, config) {
      *
      * Validates the entire page before saving.
      */
-    self.save = function (saveCallback) {
+    self.save = function (saveCallback, validate) {
 
-        function handleSessionTimeout(localStorageFailed) {
-
-            if (!localStorageFailed) {
-
-                var unloadHandler = window.onbeforeunload;
-                window.onbeforeunload = null;
-                bootbox.alert($(options.timeoutMessageSelector).html(),
-                    function() {
-                        window.onbeforeunload = unloadHandler;
-                    });
-            }
-            else {
-                // We weren't able to save the page so we can't give the reload the page instructions.
-                // This is relying on the logout detection in the page template
-                $('#logout-warning').show();
-                bootbox.alert(" <b>Please do not leave this page</b><br/>Your save failed due to a network error or login timeout.  Please open a new tab and log back into MERIT, then attempt to save this data again.");
-            }
-
-        };
-
-        var valid = self.validate();
+        if (_.isUndefined(validate)) {
+            validate = true;
+        }
+        var valid = false;
+        if (validate) {
+            valid = self.validate();
+        }
 
         var jsData = self.modelAsJS(valid);
 
@@ -234,7 +240,7 @@ var Master = function (activityId, config) {
                     blockUIWithMessage("Activity data saved.");
                     amplify.store(activityStorageKey, null);
 
-                    if (!valid) {
+                    if (validate && !valid) {
                         $.unblockUI();
                         var message = 'Your changes have been saved and you can remain in this activity form, or you can exit this page without losing data. Please note that you cannot mark this activity as finished until all mandatory fields have been completed.';
                         bootbox.alert(message, function () {
@@ -504,18 +510,53 @@ var ReportNavigationViewModel = function(reportMaster, activityViewModel, option
     self.activity = activityViewModel;
 
     self.save = function() {
+        var markAsFinished = activityViewModel.transients.markedAsFinished();
+        // Only attempt to validate if the user wants to mark the activity as
+        // complete.
         reportMaster.save(function() {
             $.unblockUI();
-        });
+        }, markAsFinished);
     };
     self.saveAndExit = function() {
         reportMaster.save(function() {
             self.return();
-        });
+        }, false);
+    };
+    self.saveAndExitButtonClass = ko.computed(function() {
+        return reportMaster.dirtyFlag.isDirty() ? 'btn-danger' : 'btn-info';
+    });
+    self.exitReport = function() {
+        if (reportMaster.isDirty()) {
+            var message = "<b>Unsaved data found</b>"+
+                "<p>The form you are working on has unsaved changes. Please confirm if you would like to:</p>";
+            bootbox.dialog(message,[
+                {
+                    label:'Save and exit',
+                    class:'btn-success',
+                    callback: self.saveAndExit
+                },
+                {
+                    label:'Exit without saving',
+                    class:'btn-warning',
+                    callback: self.cancel
+                },
+                {
+                    label:'Return to reporting form',
+                    class:'btn-info',
+                    // do nothing, just close the dialog
+                    callback:function() {}
+                }
+            ]);
+        }
+        else {
+            reportMaster.deleteSavedData();
+            self.return();
+        }
     };
 
+
     self.cancel = function() {
-        reportMaster.deleteSavedData();
+        reportMaster.cancelAutosave();
         self.return();
     };
     self.return = function() {
