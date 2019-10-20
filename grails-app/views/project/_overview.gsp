@@ -20,7 +20,7 @@
     </div>
     <div class="clearfix" data-bind="visible:associatedProgram()">
         <h4>
-            Programme:
+            Program:
             <span data-bind="text:associatedProgram"></span>
             <span data-bind="text:associatedSubProgram"></span>
         </h4>

@@ -6,18 +6,13 @@
             <div class="row-fluid">
 
                 <div class="span12">
-
-                    <g:if test="${config.program.parent}">
-                        <div class="row-fluid">
-                            <div class="span4 header-label">Program</div>
-
-                            <div class="span8">${config.program.parent.name}</div>
-                        </div>
-                    </g:if>
                     <div class="row-fluid">
                         <div class="span4 header-label">Program</div>
-                        <div class="span8"><g:link controller="program" action="index"
-                                                   id="${config.program.programId}">${config.program.name}</g:link></div>
+
+%{--                        This is temporarily commented out until #1829 is released.
+                            <div class="span8"><g:link controller="program" action="index"--}%
+%{--                                         id="${config.program.programId}">${config.program.name}</g:link></div>--}%
+                            <div class="span8">${config.program.name}</div>
                     </div>
                     <div class="row-fluid">
                         <div class="span4 header-label">Management Unit</div>

@@ -4,8 +4,8 @@
     <g:set var="programs" value="${mu.programs}" />
 
     <g:if test="${programs}">
-        <g:each var="program" status="i" in="${programs}">
-            <div class="well-title">Project reporting in program: <a href="${g.createLink(controller: 'program', action: 'index',id:program.programId)}">${program.name}</a>   </div>
+       <g:each var="program" status="i" in="${programs}">
+            <div class="well-title">Project reporting in program: ${program.name} %{--  <a href="${g.createLink(controller: 'program', action: 'index',id:program.programId)}">${program.name}</a> --}% </div>
             <table id="projectList-${i}" class="table table-striped table-bordered">
                 <thead class="thead-light">
                 <th class="projectId">Project ID</th>
