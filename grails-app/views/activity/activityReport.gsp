@@ -258,11 +258,15 @@
             navContentSelector:"#nav-buttons",
             floatingNavSelector:"#floating-save"
         };
-        ko.applyBindings(new ReportNavigationViewModel(master, viewModel, options), navElement);
+        var navigator = new ReportNavigationViewModel(master, viewModel, options);
+        ko.applyBindings(navigator, navElement);
 
         $('.helphover').popover({animation: true, trigger: 'hover'});
 
-        $('#validation-container').validationEngine('attach', {scroll: true});
+        var $validationContainer = $('#validation-container');
+        $validationContainer.validationEngine('attach', {scroll: true});
+
+        navigator.initialiseScrollPosition($validationContainer, activity.progress);
 
         $('.imageList a[target="_photo"]').attr('rel', 'gallery').fancybox({
             type: 'image',
@@ -271,7 +275,6 @@
             preload: 0,
             'prevEffect': 'fade'
         });
-
     });
 </script>
 <asset:deferredScripts/>

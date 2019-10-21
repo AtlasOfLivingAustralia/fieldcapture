@@ -22,3 +22,10 @@
 //= require pagination
 //= require healthCheck
 
+ActivityProgress = {
+    planned: 'planned',
+    started: 'started',
+    finished: 'finished',
+    deferred: 'deferred',
+    cancelled:'cancelled',
+};

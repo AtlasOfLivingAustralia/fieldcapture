@@ -565,4 +565,17 @@ var ReportNavigationViewModel = function(reportMaster, activityViewModel, option
 
     self.navElementPosition = options.navElementPosition;
 
+    /**
+     * For started activities, scroll the page to the first invalid field so the user can continue working.
+     * @param validationContainer a jquery object wrapping the element that the jquery validation engine was
+     * attached to.
+     */
+    self.initialiseScrollPosition = function(validationContainer, progress) {
+        if (!progress) {
+            progress = self.activity.progress();
+        }
+        if (progress == ActivityProgress.started) {
+            scrollToFirstInvalidField(validationContainer);
+        }
+    }
 };
