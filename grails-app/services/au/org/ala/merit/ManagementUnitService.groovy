@@ -299,4 +299,28 @@ class ManagementUnitService {
         // the controller.
         webService.getJson2(url, 30000)
     }
+    /**
+     * Download reports of a management unit
+     * @param id
+     * @return
+     */
+    def downloadReports(String id){
+        String url = "${grailsApplication.config.ecodata.baseUrl}" + "managementunit/"+id+"/report"
+        webService.getJson(url)
+    }
+    /**
+     * Download [all] management unit reports in a given period
+     * @param startDate
+     * @param endDate
+     * @param emails for sending email to user
+     * @return
+     */
+    def generateReports(String startDate, String endDate, Map emails = null){
+
+        String url = "${grailsApplication.config.ecodata.baseUrl}" + "managementunit/generateReportsInPeriod?startDate=${startDate}&endDate=${endDate}"
+        if(emails)
+            url += '&' + emails.collect { k,v -> "$k=$v" }.join('&')
+        def resp = webService.getJson(url)
+        return resp
+    }
 }

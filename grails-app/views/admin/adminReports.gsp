@@ -8,7 +8,9 @@
             performanceComparisonReportUrl: "${g.createLink(controller: 'report', action: 'performanceAssessmentComparisonReport')}",
             dashboardUrl: "${g.createLink(controller: 'report', action: 'loadReport')}",
             organisationDataDownloadUrl: "${g.createLink(controller:'search', action:'downloadOrganisationData')}",
-            userDownloadUrl: "${g.createLink(controller:'search', action:'downloadUserData')}"
+            userDownloadUrl: "${g.createLink(controller:'search', action:'downloadUserData')}",
+            muReportDownloadUrl: "${g.createLink(controller:'managementUnit', action:'downloadReports')}",
+            generateMUReportInPeriodUrl: "${g.createLink(controller:'managementUnit', action:'generateReportsInPeriod')}"
 
         }
     </script>
@@ -22,6 +24,19 @@
 <h4>Organisation data download:</h4>
 
 <a id="orgDataDownload" class="btn" href="#">Download Organisation Report Data</a>
+
+<h4>Management unit report download:</h4>
+<div class="control-group">
+    <label class="control-label">Select reporting period: </label>
+    <div class="controls">
+        <select id="reportPeriodOfManagementUnit">
+            <g:each var="financialYear" in="${reportsPeriodsOfManagementUnit}">
+                <option value="startDate=01/07/${financialYear}&endDate=30/06/${financialYear+1}">01 July ${financialYear} - 30 June ${financialYear+1} </option>
+            </g:each>
+        </select>
+    </div>
+</div>
+<a id="muReportDownload" class="btn" href="#">Download Management Unit Report</a>
 
 <h4>User Report</h4>
 
@@ -102,6 +117,13 @@
         $('#userDownload').click(function () {
             $.get(fcConfig.userDownloadUrl).done(function (data) {
                 bootbox.alert("Your download will be emailed to you when it is complete.");
+            });
+        });
+
+        $('#muReportDownload').click(function () {
+            var selectPeriod = $('select#reportPeriodOfManagementUnit').val()
+            $.get(fcConfig.generateMUReportInPeriodUrl +"?" + selectPeriod).done(function (data) {
+                bootbox.alert(data['message']);
             });
         });
 

@@ -35,6 +35,7 @@ class AdminController {
     def outputService
     def documentService
     def organisationService
+    def reportService
 
     def index() {}
 
@@ -676,7 +677,10 @@ class AdminController {
 
         command.approvedActivitiesOnly = false
         List reefReports = command.reportSummary()
-        [reports:[[name: 'performanceAssessmentComparison', label: 'Performance Assessment Comparison']], reef2050Reports:reefReports]
+
+        int[] reportsPeriodsOfManagementUnit = reportService.findReportPeriodsOfManagmentUnit()
+
+        [reports:[[name: 'performanceAssessmentComparison', label: 'Performance Assessment Comparison']], reef2050Reports:reefReports, reportsPeriodsOfManagementUnit:reportsPeriodsOfManagementUnit]
     }
 
     def cacheManagement() {

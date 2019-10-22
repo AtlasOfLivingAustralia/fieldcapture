@@ -455,6 +455,34 @@ class ManagementUnitController {
         render featureCollection as JSON
     }
 
+    def generateReportsInPeriod(){
+        String startDate = params.startDate
+        String endDate = params.endDate
+        String dateFormat = "dd/MM/yyyy"
+        try{
+            Date.parse(dateFormat,startDate)
+            Date.parse(dateFormat,endDate)
+        }catch (Exception e){
+            def message = [message: 'Error: You need to provide startDate and endDate in the format of dd/MM/yyyy ']
+            response.setContentType("application/json")
+            render message as JSON
+        }
+
+        def user = userService.getUser()
+        def emails =[:]
+        if(user){
+            String email = user.userName
+            emails.put("systemEmail", grailsApplication.config.fieldcapture.system.email.address)
+            emails.put("senderEmail", grailsApplication.config.fieldcapture.system.email.address)
+            emails.put("email", email)
+        }
+
+        def resp = managementUnitService.generateReports(startDate, endDate,emails)
+        response.setContentType("application/json")
+        render resp as JSON
+    }
+
+
 
 
 }
