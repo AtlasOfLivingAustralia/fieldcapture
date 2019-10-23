@@ -95,7 +95,7 @@ class WebService {
 
         def headers = [HttpHeaders.CONTENT_DISPOSITION]
         def resp = [status:conn.responseCode]
-        if (conn.responseCode == 200) {
+        if (resp.status == 200) {
             response.setContentType(conn.getContentType())
             response.setContentLength(conn.getContentLength())
 
@@ -107,7 +107,10 @@ class WebService {
             response.outputStream << conn.inputStream
         }
         else {
-            resp.error = conn.inputStream?.text ?: 'An error occurred'
+            if (resp.status >= 400)
+                resp.error = conn.errorStream?.text ?: 'An error occurred'
+            else
+                resp.error = conn.inputStream?.text ?: 'An error occurred'
         }
         return resp
     }

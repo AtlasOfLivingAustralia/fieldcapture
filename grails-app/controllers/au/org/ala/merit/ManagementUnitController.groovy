@@ -22,6 +22,9 @@ class ManagementUnitController {
     PdfGenerationService pdfGenerationService
     BlogService blogService
 
+    def grailsApplication
+    def grailsLinkGenerator
+
     def index(String id) {
         def mu = managementUnitService.get(id)
 
@@ -469,20 +472,19 @@ class ManagementUnitController {
         }
 
         def user = userService.getUser()
-        def emails =[:]
+        def extras =[:]
         if(user){
             String email = user.userName
-            emails.put("systemEmail", grailsApplication.config.fieldcapture.system.email.address)
-            emails.put("senderEmail", grailsApplication.config.fieldcapture.system.email.address)
-            emails.put("email", email)
+            extras.put("systemEmail", grailsApplication.config.fieldcapture.system.email.address)
+            extras.put("senderEmail", grailsApplication.config.fieldcapture.system.email.address)
+            extras.put("email", email)
         }
 
-        def resp = managementUnitService.generateReports(startDate, endDate,emails)
+        String reportDownloadBaseUrl= grailsLinkGenerator.link(controller:'download',action:'get', absolute: true)
+        extras.put("reportDownloadBaseUrl", reportDownloadBaseUrl)
+
+        def resp = managementUnitService.generateReports(startDate, endDate,extras)
         response.setContentType("application/json")
         render resp as JSON
     }
-
-
-
-
 }

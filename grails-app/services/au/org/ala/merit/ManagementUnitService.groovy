@@ -315,11 +315,11 @@ class ManagementUnitService {
      * @param emails for sending email to user
      * @return
      */
-    def generateReports(String startDate, String endDate, Map emails = null){
+    def generateReports(String startDate, String endDate, Map extras = null){
 
         String url = "${grailsApplication.config.ecodata.baseUrl}" + "managementunit/generateReportsInPeriod?startDate=${startDate}&endDate=${endDate}"
-        if(emails)
-            url += '&' + emails.collect { k,v -> "$k=$v" }.join('&')
+
+        url += '&' + extras.collect { k,v -> "$k=$v" }.join('&')
         def resp = webService.getJson(url)
         return resp
     }
