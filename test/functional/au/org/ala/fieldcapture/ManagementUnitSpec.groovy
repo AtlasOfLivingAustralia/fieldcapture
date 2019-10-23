@@ -115,4 +115,21 @@ class ManagementUnitSpec extends StubbedCasSpec {
         blogModule.blogs().size() == 1
     }
 
+    def "As an site admin, I can get report periods"(){
+        setup:
+        login([userId:'1', role:"ROLE_USER", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
+
+        when:
+        to ManagementUnitPage
+
+        then:
+        waitFor {at ManagementUnitPage}
+
+        and:
+        administrationBtn.click()
+
+
+
+    }
+
 }
