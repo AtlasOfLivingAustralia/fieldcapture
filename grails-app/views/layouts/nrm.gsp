@@ -197,17 +197,6 @@
             }); // end document ready
 
         </script>
-
-        <g:if test="${grailsApplication.config.bugherd.integration}">
-            <script>
-                (function (d, t) {
-                    var bh = d.createElement(t), s = d.getElementsByTagName(t)[0];
-                    bh.type = 'text/javascript';
-                    bh.src = '//www.bugherd.com/sidebarv2.js?apikey=cqoc7xdguryihxalktg0mg';
-                    s.parentNode.insertBefore(bh, s);
-                })(document, 'script');
-            </script>
-        </g:if>
     <!-- current env = ${grails.util.Environment.getCurrent().name} -->
         <g:if test="${ grails.util.Environment.getCurrent().name =~ /test|prod/ }">
             <script type="text/javascript">
