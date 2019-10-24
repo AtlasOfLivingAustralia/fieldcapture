@@ -37,4 +37,6 @@ class ManagementUnitPage extends Page {
         gotoProgramLinks.collect{it}
     }
 
+    public getPageUrl
+
 }

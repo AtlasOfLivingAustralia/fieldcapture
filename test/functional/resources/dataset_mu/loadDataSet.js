@@ -63,8 +63,7 @@ db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'pro
 db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entityId:'test_mu_2', userId:'1', accessLevel:'admin'});
 db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entityId:'test_mu', userId:'1', accessLevel:'admin'});
 
-db.Report.insert(report1);
-db.Activity.insert(activity1);
+
 
 var site1 = {
     "dateCreated" : ISODate("2013-12-16T00:48:29.045Z"),
@@ -126,16 +125,16 @@ var report1 = {
         "managementUnitId" : "test_mu",
         "activityType" : "RLP Core Services report",
         "category" : "Core Services Reporting",
-        "dateCreated" : "2019-08-27T01:13:26.944Z",
+        "dateCreated" : ISODate("2019-08-27T01:13:26.944Z"),
         "description" : "Core services report 1 for Test MU",
-        "fromDate" : "2018-06-30T14:00:00.000Z",
-        "lastUpdated" : "2019-09-04T05:38:41.463Z",
+        "fromDate" : ISODate("2018-06-30T14:00:00.000Z"),
+        "lastUpdated" : ISODate("2019-09-04T05:38:41.463Z"),
         "name" : "Core services report 1",
         "publicationStatus" : "unpublished",
         "reportId" : "a02a527a-4377-40f0-86de-77ceabe6d72f",
         "status" : "active",
-        "submissionDate" : "2018-07-31T14:00:00.000Z",
-        "toDate" : "2018-07-31T14:00:00.000Z",
+        "submissionDate" : ISODate("2018-07-31T14:00:00.000Z"),
+        "toDate" : ISODate("2018-07-31T14:00:00.000Z"),
         "type" : "Administrative",
         "activityId" : "d17254bf-b4fe-481c-9324-6d65d9c7c0d8",
         "progress" : "started"
@@ -144,14 +143,14 @@ var report1 = {
 var activity1 = {
     "activityId" : "d17254bf-b4fe-481c-9324-6d65d9c7c0d8",
     "assessment" : false,
-    "dateCreated" : "2019-08-27T01:13:26.961Z",
+    "dateCreated" : ISODate("2019-08-27T01:13:26.961Z"),
     "description" : "Core services report 1",
-    "endDate" : "2018-07-31T14:00:00.000Z",
-    "lastUpdated" : "2019-09-04T05:38:41.470Z",
-    "plannedEndDate" : "2018-07-31T14:00:00.000Z",
-    "plannedStartDate" : "2018-06-30T14:00:00.000Z",
+    "endDate" : ISODate("2018-07-31T14:00:00.000Z"),
+    "lastUpdated" : ISODate("2019-09-04T05:38:41.470Z"),
+    "plannedEndDate" : ISODate("2018-07-31T14:00:00.000Z"),
+    "plannedStartDate" : ISODate("2018-06-30T14:00:00.000Z"),
     "progress" : "started",
-    "startDate" : "2018-06-30T14:00:00.000Z",
+    "startDate" : ISODate("2018-06-30T14:00:00.000Z"),
     "status" : "active",
     "type" : "RLP Core Services report",
     "formVersion" : 1,
@@ -159,5 +158,8 @@ var activity1 = {
     "siteId" : "",
     "mainTheme" : ""
 }
+
+db.report.insert(report1);
+db.activity.insert(activity1);
 
 

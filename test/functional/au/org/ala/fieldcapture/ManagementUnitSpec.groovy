@@ -4,6 +4,7 @@ import pages.ManagementUnitPage
 import pages.NewBlogEntryPage
 import pages.ProgramBlogPage
 import pages.ProgramPage
+import pages.AdminReportsPage
 
 class ManagementUnitSpec extends StubbedCasSpec {
 
@@ -117,16 +118,21 @@ class ManagementUnitSpec extends StubbedCasSpec {
 
     def "As an site admin, I can get report periods"(){
         setup:
-        login([userId:'1', role:"ROLE_USER", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
+        login([userId:'1', role:"ROLE_ADMIN", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
 
         when:
-        to ManagementUnitPage
+        to AdminReportsPage
 
         then:
-        waitFor {at ManagementUnitPage}
+        waitFor {at AdminReportsPage}
+        selectedPeriod() =="startDate=01/07/2018&endDate=30/06/2019"
 
-        and:
-        administrationBtn.click()
+//        when:
+//        interact {
+//            downloadReportBtn().click()
+//        }
+//
+//        then
 
 
 
