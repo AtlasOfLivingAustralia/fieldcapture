@@ -296,7 +296,7 @@ var ManagementUnitPageViewModel = function(props, options) {
     };
 
      self.createHeatmapOfSites = function(map){
-         var searchUrl = fcConfig.geoSearchUrl +"?max=10000&geo=true&markBy=false"
+         var searchUrl = fcConfig.geoSearchUrl +"?max=10000&geo=true&markBy=false&heatmap=true"
              + "&fq=managementUnitId:" +self.managementUnitId;
          $.getJSON(searchUrl, function(data) {
             var heatMapPoints = []
@@ -305,14 +305,22 @@ var ManagementUnitPageViewModel = function(props, options) {
                     $.each(project.geo, function(k, el) {
                         var lat = parseFloat(el.loc.lat);
                         var lon = parseFloat(el.loc.lon);
-                        heatMapPoints.push({lat:lat,lon:lon,count:1});
-                    })
+                        var point = _.find(heatMapPoints, function(latLon) {
+                            return (latLon.lat == lat && latLon.lon == lon);
+                        });
+                        if (point) {
+                            point.count++;
+                        }
+                        else {
+                            heatMapPoints.push({lat:lat,lon:lon,count:1});
+                        }
+                    });
                 }
-            })
+            });
 
             var data = {
                 data: heatMapPoints
-            }
+            };
             createHeatMap(map,data)
 
          })
@@ -320,10 +328,8 @@ var ManagementUnitPageViewModel = function(props, options) {
 
    var createHeatMap = function(map,heatPoints){
         var cfg = {
-            "radius": 1,
-            "maxOpacity": .8,
-            // scales the radius based on map zoom
-            "scaleRadius": true,
+            "radius": 25,
+            "gradient": { 0.25: "rgb(0,0,255)", 0.4: "rgb(0,255,0)", 0.7: "yellow", 0.9: "rgb(255,0,0)"},
             "useLocalExtrema": true,
             latField: 'lat',
             lngField: 'lon',
@@ -335,8 +341,7 @@ var ManagementUnitPageViewModel = function(props, options) {
         map.featureLayer.addLayer(heatmapLayer)
 
         heatmapLayer.setData(heatPoints);
-
-    }
+    };
 
 
     var tabs = {

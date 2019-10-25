@@ -54,18 +54,31 @@ class HomeControllerSpec extends Specification {
 
     def "The geoservice method delegates to SearchService.allProjectsWithSites if the geo param is present"() {
         setup:
-        Map searchResponse = [
-                hits: [
-                        hits: [[]]
-                ]
-        ]
+        Map searchResponse = [projects:[[geo:[]]]]
 
         when:
         params.geo = true
         controller.geoService()
 
         then:
-        1 * searchService.allProjectsWithSites(params) >> searchResponse
+        1 * searchService.allProjectsWithSites(params, null, false) >> searchResponse
+
+        and:
+        Map response = response.json
+        response == searchResponse
+    }
+
+    def "The geoservice method accepts a heatmap parameter to optionally reduce data precision"() {
+        setup:
+        Map searchResponse = [projects:[[geo:[]]]]
+
+        when:
+        params.geo = true
+        params.heatmap = true
+        controller.geoService()
+
+        then:
+        1 * searchService.allProjectsWithSites(params, null, true) >> searchResponse
 
         and:
         Map response = response.json
