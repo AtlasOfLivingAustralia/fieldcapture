@@ -10,7 +10,9 @@ class AdminReportsPage extends Page {
 
     static content = {
         period {$('select#reportPeriodOfManagementUnit',0)}
-        downloadReportBtn {$('button#muReportDownload')}
+        downloadReportBtn(required:false) {$('a#muReportDownload')}
+        showDownloadDetailsIcon(required:false) { $('i.showDownloadDetailsIcon')}
+        muReportDownloadLink(required:false) {$('a#muReportDownloadLink')}
     }
 
     def selectedPeriod(){

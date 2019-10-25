@@ -116,7 +116,7 @@ class ManagementUnitSpec extends StubbedCasSpec {
         blogModule.blogs().size() == 1
     }
 
-    def "As an site admin, I can get report periods"(){
+    def "As an site admin, I can get report periods and request to generate reports"(){
         setup:
         login([userId:'1', role:"ROLE_ADMIN", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
 
@@ -127,12 +127,21 @@ class ManagementUnitSpec extends StubbedCasSpec {
         waitFor {at AdminReportsPage}
         selectedPeriod() =="startDate=01/07/2018&endDate=30/06/2019"
 
+        when:
+        interact {
+            downloadReportBtn().click()
+        }
+
+        then:
+        waitFor{showDownloadDetailsIcon().isDisplayed()}
+
 //        when:
 //        interact {
-//            downloadReportBtn().click()
+//            showDownloadDetailsIcon().click()
 //        }
 //
-//        then
+//        then:
+//        waitFor{muReportDownloadLink().isDisplayed()}
 
 
 

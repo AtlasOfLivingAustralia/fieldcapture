@@ -9,8 +9,8 @@
             dashboardUrl: "${g.createLink(controller: 'report', action: 'loadReport')}",
             organisationDataDownloadUrl: "${g.createLink(controller:'search', action:'downloadOrganisationData')}",
             userDownloadUrl: "${g.createLink(controller:'search', action:'downloadUserData')}",
-            muReportDownloadUrl: "${g.createLink(controller:'managementUnit', action:'downloadReports')}",
-            generateMUReportInPeriodUrl: "${g.createLink(controller:'managementUnit', action:'generateReportsInPeriod')}"
+            generateMUReportInPeriodUrl: "${g.createLink(controller:'managementUnit', action:'generateReportsInPeriod')}",
+            muReportDownloadUrl: "${g.createLink(controller:"download",action:"get")}"
 
         }
     </script>
@@ -123,7 +123,11 @@
         $('#muReportDownload').click(function () {
             var selectPeriod = $('select#reportPeriodOfManagementUnit').val()
             $.get(fcConfig.generateMUReportInPeriodUrl +"?" + selectPeriod).done(function (data) {
-                bootbox.alert(data['message']);
+                var details = data['details']
+                var message = data['message']
+                var detailsIcon = ' <i class="fa fa-info-circle showDownloadDetailsIcon btn" data-toggle="collapse" href="#downloadDetails"></i>'
+                var detailsPanel = '<div class="collapse" id="downloadDetails"><a id="muReportDownloadLink" href='+fcConfig.muReportDownloadUrl +'/' + details+'>Try this link, if you cannot get an email confirmation</a></div>'
+                bootbox.alert(message + detailsIcon + detailsPanel)
             });
         });
 
