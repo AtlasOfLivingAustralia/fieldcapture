@@ -328,8 +328,8 @@ var ManagementUnitPageViewModel = function(props, options) {
 
    var createHeatMap = function(map,heatPoints){
         var cfg = {
-            "radius": 25,
-            "gradient": { 0.25: "rgb(0,0,255)", 0.4: "rgb(0,255,0)", 0.7: "yellow", 0.9: "rgb(255,0,0)"},
+            "radius": 15,
+            "gradient": { 0.25: "rgb(0,0,255)", 0.4: "rgb(0,255,0)", 0.7: "rgb(0,255,0)", 0.9: "rgb(0,255,0)"},
             "useLocalExtrema": true,
             latField: 'lat',
             lngField: 'lon',
