@@ -129,3 +129,10 @@
 .bootbox.modal a.btn.btn-success, .bootbox.modal a.btn.btn-info, .bootbox.modal a.btn.btn-warning {
     color:white;
 }
+
+#nav-buttons .mark-complete {
+    background-color: #f5f5f599;
+    padding: 5px;
+    padding-left: 30px;
+    border-radius: 5px;
+}
