@@ -94,7 +94,7 @@
             <div class="tab-pane ${active}" id="${program.programId}_projects" >
                 <g:if test="${program.outcomes}">
                     <div class="well">
-                        <div class="well-title">The Service Provider is addressing these RLP outcomes</div>
+                        <div class="well-title">The Service Provider is addressing these ${program.acronym ?: program.name} outcomes</div>
                         <div class="row outcomes no-gutters">
                             <g:each in="${program.outcomes}" var="outcome" >
                                 <g:set var="outcomeClass" value="${outcome.targeted ? 'targeted' :''}"/>
