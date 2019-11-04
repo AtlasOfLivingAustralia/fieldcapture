@@ -10,7 +10,7 @@
                     <g:if test="${user?.isAdmin}">To add a document use the Documents section of the Admin tab.</g:if>
                 </div>
                 <g:render template="/shared/listDocuments"
-                          model="[useExistingModel: true, editable: false, filterBy: 'all', ignore: ['programmeLogic', 'contractAssurance', 'variation'], imageUrl:assetPath(src:'/'),containerId:'overviewDocumentList']"/>
+                          model="[useExistingModel: true, editable: false, filterBy: 'all', ignore: ['programmeLogic', 'contractAssurance', 'variation', 'approval'], imageUrl:assetPath(src:'/'),containerId:'overviewDocumentList']"/>
             </div>
         </div>
 
