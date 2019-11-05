@@ -523,7 +523,7 @@ var ReportNavigationViewModel = function(reportMaster, activityViewModel, option
         }, false);
     };
     self.saveAndExitButtonClass = ko.computed(function() {
-        return self.dirtyFlag.isDirty() ? 'btn-danger' : 'btn-info';
+        return self.dirtyFlag.isDirty() ? 'btn-info' : '';
     });
     self.exitReport = function() {
         if (self.dirtyFlag.isDirty()) {
