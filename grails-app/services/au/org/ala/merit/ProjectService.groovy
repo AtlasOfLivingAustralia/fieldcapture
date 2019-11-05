@@ -1639,6 +1639,13 @@ class ProjectService  {
                             referenceDocument:content.referenceDocument,
                             reason:content.reason
                     ]
+                }else{
+                   doc = [
+                       documentId:it.documentId,
+                       date: it.lastUpdated,
+                       referenceDocument: it.filename,
+                       reason: "Error: "+it.name +" document is missing or damaged!"
+                   ]
                 }
                 doc
             }
