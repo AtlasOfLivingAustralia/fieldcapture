@@ -38,7 +38,7 @@
             <g:render template="/admin/addPermissions"
                       model="[addUserUrl: g.createLink(controller: ' managementUnit', action: 'addUserAsRoleToManagementUnit'), entityType: 'au.org.ala.ecodata.ManagementUnit', entityId: mu.managementUnitId]"/>
 
-            <h4>Current Program Permissions</h4>
+            <h4>Current Management Unit Permissions</h4>
             <g:render template="/admin/permissionTable" model="[
                     loadPermissionsUrl: g.createLink(controller: 'user', action: 'getMembersOfManagementUnit', id: mu.managementUnitId),
                     removeUserUrl     : g.createLink(controller: ' managementUnit', action: 'removeUserWithRoleFromManagementUnit', id:mu.managementUnitId),
