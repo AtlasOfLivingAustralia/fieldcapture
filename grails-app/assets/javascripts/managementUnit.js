@@ -390,6 +390,9 @@ var ManagementUnitPageViewModel = function(props, options) {
                 self.createHeatmapOfSites(map);
             }
         },
+        'blog' : {
+            initialiser: function() {}
+        },
         'projects': {
             initialiser: function() {
                 $.fn.dataTable.moment( 'dd-MM-yyyy' );

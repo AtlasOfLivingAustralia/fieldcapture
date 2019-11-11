@@ -15,7 +15,7 @@ class ManagementUnitPage extends Page {
         grantIdsTable{$('td.grantId')}
         projectLinksTd{$('td.grantId a')}
         gotoProgramLinks{$('a.gotoProgram')}
-
+        blogTab{$('#blog-tab')}
         blogContentDiv {$('div.muBlogContent')}
         blogModule {module BlogPageModule}
         editManagementUnitBlogPane{$('div#editManagementUnitBlog')}

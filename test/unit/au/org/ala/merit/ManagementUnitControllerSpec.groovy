@@ -52,7 +52,7 @@ class ManagementUnitControllerSpec extends Specification {
         model.reportHeaderTemplate == '/managementUnit/managementUnitReportHeader'
     }
 
-    def "unauthenticated users should only see the management unit overview"() {
+    def "unauthenticated users should only see the management unit overview and blog"() {
         setup:
         String managementUnitId = 'p1'
         userService.getUser() >> null
@@ -65,8 +65,9 @@ class ManagementUnitControllerSpec extends Specification {
         Map model = controller.index(managementUnitId)
 
         then:
-        model.content.size() == 4
+        model.content.size() == 5
         model.content.about.visible == true
+        model.content.blog.visible == true
         model.content.projects.visible == false
         model.content.sites.visible == false
         model.content.admin.visible == false
@@ -87,8 +88,9 @@ class ManagementUnitControllerSpec extends Specification {
         1 * userService.canEditManagementUnitBlog("u1", managementUnitId) >> true
         1 * userService.canUserEditManagementUnit("u1", managementUnitId) >> true
 
-        model.content.size() == 4
+        model.content.size() == 5
         model.content.about.visible == true
+        model.content.blog.visible == true
         model.content.projects.visible == true
         model.content.sites.visible == true
         model.content.admin.visible == true
