@@ -6,8 +6,8 @@
 //= require bootbox/4.4.0/bootbox.min.js
 //= require knockout/3.5.0/knockout
 //= require knockout/3.5.0/knockout.mapping-latest
-//= require jquery.validationEngine/jquery.validationEngine
-//= require jquery.validationEngine/jquery.validationEngine-en
+//= require jquery.validationEngine/3.1.0/jquery.validationEngine
+//= require jquery.validationEngine/3.1.0/jquery.validationEngine-en
 //= require jquery.blockUI/jquery.blockUI
 //= require momentjs/2.24.0/moment.min.js
 //= require momentjs/2.24.0/locales/en-au.js
