@@ -73,7 +73,9 @@ class ManagementUnitController {
         if(projects){
             programIds = projects.clone().unique{project->project.programId}?.programId
             List programs = programService.get(programIds)
-            mu.programs = programs
+            // This reverse alphabetical order is to satisfy a request to always
+            // display the RLP first.
+            mu.programs = programs?.sort{it.name}?.reverse()
             mu.projects = projects
         }
 
