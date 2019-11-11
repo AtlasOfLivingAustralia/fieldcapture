@@ -125,11 +125,11 @@ class ProjectConfigurationServiceSpec extends Specification {
         mu.outcomes = [[name:"outcome 2"]]
         config = service.getProjectConfiguration(project)
 
-        then: "The management unit outcomes and priorities are used"
+        then: "The program unit outcomes and management unit priorities are used"
         1 * programService.get(programId) >> programConfig
         1 * managementUnitService.get(muId) >> mu
         config.priorities == mu.priorities
-        config.outcomes == mu.outcomes
+        config.outcomes == programConfig.outcomes
 
     }
 
