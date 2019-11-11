@@ -73,7 +73,7 @@
 
 <div class="projects-wrapper d-none d-md-block">
     <hr/>
-    <div class="well-title">Programs in this management unit</div>
+    <div class="well-title">Programs</div>
     <g:set var="projects" value="${mu.projects}" />
     <g:set var="programs" value="${mu.programs}" />
 
