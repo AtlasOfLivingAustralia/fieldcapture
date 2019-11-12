@@ -16,7 +16,7 @@
     var imageLocation = "${imageUrl}",
         useExistingModel = ${useExistingModel};
 
-    $(window).load(function () {
+    $(function () {
 
         if (!useExistingModel) {
 
