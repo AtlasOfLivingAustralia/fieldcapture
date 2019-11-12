@@ -316,8 +316,11 @@ class ManagementUnitService {
      * @return
      */
     def generateReports(String startDate, String endDate, Map extras = null){
+        // Convert to ISO 8601 date format
+        String isoStartDate = DateUtils.displayToIsoFormat(Date.parse("yyyy-MM-dd",startDate).format('dd-MM-yyyy'))
+        String isoEndDate = DateUtils.displayToIsoFormat(Date.parse("yyyy-MM-dd",endDate).format('dd-MM-yyyy'))
 
-        String url = "${grailsApplication.config.ecodata.baseUrl}" + "managementunit/generateReportsInPeriod?startDate=${startDate}&endDate=${endDate}"
+        String url = "${grailsApplication.config.ecodata.baseUrl}" + "managementunit/generateReportsInPeriod?startDate=${isoStartDate}&endDate=${isoEndDate}"
 
         url += '&' + extras.collect { k,v -> "$k=$v" }.join('&')
         def resp = webService.getJson(url)

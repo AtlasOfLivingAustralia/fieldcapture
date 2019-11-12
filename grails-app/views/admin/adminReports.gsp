@@ -31,7 +31,7 @@
     <div class="controls">
         <select id="reportPeriodOfManagementUnit">
             <g:each var="financialYear" in="${reportsPeriodsOfManagementUnit}">
-                <option value="startDate=01/07/${financialYear}&endDate=30/06/${financialYear+1}">01 July ${financialYear} - 30 June ${financialYear+1} </option>
+                <option value="startDate=${financialYear}-07-01&endDate=${financialYear+1}-06-30">01 July ${financialYear} - 30 June ${financialYear+1} </option>
             </g:each>
         </select>
     </div>
@@ -125,7 +125,7 @@
             $.get(fcConfig.generateMUReportInPeriodUrl +"?" + selectPeriod).done(function (data) {
                 var details = data['details']
                 var message = data['message']
-                var detailsIcon = ' <i class="fa fa-info-circle showDownloadDetailsIcon btn" data-toggle="collapse" href="#downloadDetails"></i>'
+                var detailsIcon = ' <i class="fa fa-info-circle showDownloadDetailsIcon" data-toggle="collapse" href="#downloadDetails"></i>'
                 var detailsPanel = '<div class="collapse" id="downloadDetails"><a id="muReportDownloadLink" href='+fcConfig.muReportDownloadUrl +'/' + details+'>Try this link, if you cannot get an email confirmation</a></div>'
                 bootbox.alert(message + detailsIcon + detailsPanel)
             });

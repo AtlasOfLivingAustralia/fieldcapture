@@ -5,6 +5,8 @@ import grails.converters.JSON
 import org.apache.http.HttpStatus
 import org.springframework.cache.annotation.Cacheable
 
+import java.text.SimpleDateFormat
+
 import static ReportService.ReportMode
 
 /**
@@ -461,12 +463,12 @@ class ManagementUnitController {
     def generateReportsInPeriod(){
         String startDate = params.startDate
         String endDate = params.endDate
-        String dateFormat = "dd/MM/yyyy"
+        String dateFormat = "yyyy-MM-dd"
         try{
             Date.parse(dateFormat,startDate)
             Date.parse(dateFormat,endDate)
         }catch (Exception e){
-            def message = [message: 'Error: You need to provide startDate and endDate in the format of dd/MM/yyyy ']
+            def message = [message: 'Error: You need to provide startDate and endDate in the format of yyyy-MM-dd ']
             response.setContentType("application/json")
             render message as JSON
         }
@@ -484,7 +486,6 @@ class ManagementUnitController {
         extras.put("reportDownloadBaseUrl", reportDownloadBaseUrl)
 
         def resp = managementUnitService.generateReports(startDate, endDate,extras)
-        response.setContentType("application/json")
         render resp as JSON
     }
 }
