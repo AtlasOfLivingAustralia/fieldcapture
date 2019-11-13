@@ -15,7 +15,8 @@ class UrlMappings {
 			}
 		}
 
-        "/$controller/$action?/$id?" {
+        "/$controller/$action?/$id?"{
+
         }
 
         "/$hub/$controller/$id?"(parseRequest:true) {
@@ -28,10 +29,6 @@ class UrlMappings {
         "/$controller/$id?"(parseRequest:true) {
             action = [GET: "get", POST: "upload", PUT: "upload", DELETE: "delete"]
         }
-
-//        "/$controller/$id?(.$format)?" {
-//            action = [GET: 'get', PUT:'update', DELETE:'delete', POST:'update']
-//        }
 
         "/$hub/"(controller: 'home', action: 'index') {
             constraints {

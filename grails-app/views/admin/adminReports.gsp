@@ -122,13 +122,18 @@
 
         $('#muReportDownload').click(function () {
             var selectPeriod = $('select#reportPeriodOfManagementUnit').val()
-            $.get(fcConfig.generateMUReportInPeriodUrl +"?" + selectPeriod).done(function (data) {
-                var details = data['details']
-                var message = data['message']
-                var detailsIcon = ' <i class="fa fa-info-circle showDownloadDetailsIcon" data-toggle="collapse" href="#downloadDetails"></i>'
-                var detailsPanel = '<div class="collapse" id="downloadDetails"><a id="muReportDownloadLink" href='+fcConfig.muReportDownloadUrl +'/' + details+'>Try this link, if you cannot get an email confirmation</a></div>'
-                bootbox.alert(message + detailsIcon + detailsPanel)
-            });
+            $.get(fcConfig.generateMUReportInPeriodUrl +"?" + selectPeriod)
+                .done(function (data) {
+                    if (data.error){
+                        bootbox.alert(data.error)
+                    }else{
+                        var details = data['details']
+                        var message = data['message']
+                        var detailsIcon = ' <i class="fa fa-info-circle showDownloadDetailsIcon" data-toggle="collapse" href="#downloadDetails"></i>'
+                        var detailsPanel = '<div class="collapse" id="downloadDetails"><a id="muReportDownloadLink" href='+fcConfig.muReportDownloadUrl +'/' + details+'>Try this link, if you cannot get an email confirmation</a></div>'
+                        bootbox.alert(message + detailsIcon + detailsPanel)
+                    }
+                })
         });
 
         var reportConfig = ${reef2050Reports as grails.converters.JSON};
