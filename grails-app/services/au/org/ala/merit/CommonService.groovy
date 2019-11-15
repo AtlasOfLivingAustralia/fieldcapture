@@ -2,6 +2,7 @@ package au.org.ala.merit
 
 import grails.converters.JSON
 import org.codehaus.groovy.grails.web.mapping.LinkGenerator
+import org.springframework.context.MessageSource
 
 import javax.xml.bind.DatatypeConverter
 import java.text.SimpleDateFormat
@@ -9,6 +10,7 @@ import java.text.SimpleDateFormat
 class CommonService {
 
     LinkGenerator grailsLinkGenerator
+    MessageSource messageSource
 
     def buildUrlParamsFromMap(map) {
         if (!map) return ''
@@ -43,5 +45,17 @@ class CommonService {
             featuresMap.features << feature
         }
         return featuresMap as JSON
+    }
+
+    def i18n(type) {
+        def name = "messages" + (type == "default" ? "" : "_" + type)
+        def defaultFile = "/grails-app/i18n/${name}.properties"
+        def properties = new Properties()
+        def text = getClass().getResourceAsStream("$defaultFile")?.text
+            if (text) {
+            properties.load(new StringReader(text))
+        }
+
+        properties
     }
 }

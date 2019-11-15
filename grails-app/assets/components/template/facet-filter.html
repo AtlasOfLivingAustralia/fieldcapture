@@ -1,0 +1,56 @@
+<div data-bind="template: {afterRender: intHandlersAfterRender}">
+<!-- ko foreach: {data: facetsList, as: 'fn', noChildContext: true} -->
+    <!-- ko with: $parent.results.facets[fn.facet], as: 'f', noChildContext: true -->
+        <!-- ko if: fn.facet != 'class' && $component.getFacetTermsLength(fn.facet) > 0 -->
+            <div>
+                <h4 data-bind="attr: {id: 'facet-list-' + fnIndex() + '-header'}, html: fn.displayname" style="display:inline-block"></h4>
+                <a class="accordian-toggle pointer" data-toggle="collapse"
+                data-bind="attr: {'data-target': '#facet-list-' + fnIndex()}"><i
+                style="float:right; margin-top:10px;" class="fa fa-plus"></i></a>
+            </div>
+            <div data-bind="attr: {'id': 'facet-list-' + fnIndex(), 'data-name': fn.facet}" class="collapse">
+                <ul role="group" data-bind="attr: {'aria-labelledby': 'facet-list-' + fnIndex() + '-header'}" style="list-style-type: none;" class="facetValues">
+                    <!-- ko foreach: {data: f.terms, as: 't', noChildContext: true} -->
+                        <!-- ko if: tIndex() < max && t.term -->
+                            <li>
+                                <input type="checkbox" class="facetSelection" name="facetSelection" data-bind="value: getFQForTerm(fn.facet, t.term), checked: t.selected, attr: {'aria-label': t.term}">
+                                <a data-bind="text: t.displayname, attr: {href: generateFQLink(fn.facet, t.term)}"></a> <!-- ko text: t.count --><!-- /ko -->
+                            </li>
+                        <!-- /ko -->
+                    <!-- /ko -->
+                </ul>
+
+                <!-- ko if: f.terms.length > max -->
+                    <a data-bind="attr: { href: '#' + fn.facet + 'Modal'}" role="button" class="moreFacets tooltips" data-toggle="modal" title="View full list of values"><i class="fa fa-hand-o-right"></i> choose more...</a>
+                    <div data-bind="attr: { id: fn.facet + 'Modal'}" class="modal hide fade">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h3 data-bind="html: 'Filter by ' + fn.displayname()"></h3>
+                        </div>
+                        <div class="modal-body">
+                            <ul style="list-style-type: none;" class="facetValues">
+                                <!-- ko foreach: {data: f.terms, as: 't', noChildContext: true} -->
+                                    <li data-bind="attr: {'data-sortalpha': t.term.toLowerCase().trim(), 'data-sortcount':t.count}">
+                                        <input type="checkbox" class="facetSelection" name="facetSelection" data-bind="value: getFQForTerm(fn, t.term), checked: t.selected, attr: {'aria-label': t.term}">
+                                        <a data-bind="text:  t.displayname, attr: {href: generateFQLink(fn, t.term)}"></a> (<span class="fcount"><!-- ko text: t.count --><!-- /ko --></span>)
+                                    </li>
+                                <!-- /ko -->
+                            </ul>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="pull-left">
+                                <button class="btn btn-small facetSearch"><i class="icon-filter"></i>Refine</button>
+                                <button class="btn btn-small sortAlpha"><i class="icon-filter"></i> Sort by name</button>
+                                <button class="btn btn-small sortCount"><i class="icon-filter"></i> Sort by count</button>
+                            </div>
+                            <a href="#" class="btn" data-dismiss="modal">Close</a>
+                        </div>
+
+                    </div>
+                <!-- /ko -->
+            </div>
+        <!-- /ko -->
+    <!-- /ko -->
+<!-- /ko -->
+</div>
+
