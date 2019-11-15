@@ -12,17 +12,3 @@
 </div>
 
 <g:render template="/shared/documentTemplate"></g:render>
-<asset:script>
-    var imageLocation = "${imageUrl}",
-        useExistingModel = ${useExistingModel};
-
-    $(function () {
-
-        if (!useExistingModel) {
-
-            var docListViewModel = new DocListViewModel(${documents ?: []});
-            ko.applyBindings(docListViewModel, document.getElementById('${containerId}'));
-        }
-    });
-
-</asset:script>
