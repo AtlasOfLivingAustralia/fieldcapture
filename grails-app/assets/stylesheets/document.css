@@ -1,0 +1,17 @@
+#adminDocumentList .media {
+    width: 100%;
+}
+#adminDocumentList .document-edit-buttons {
+    margin-right: 10px;
+}
+
+#adminDocumentList .media-body-template {
+    width: 100%;
+}
+
+#adminDocumentList .media-object {
+    margin-right: 10px;
+    width: 35px;
+    height: 35px;
+    border-radius: 3px;
+}

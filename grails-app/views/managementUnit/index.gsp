@@ -24,7 +24,9 @@
             managementUnitFeaturesUrl: "${createLink(controller:'managementUnit', action:'managementUnitFeatures')}",
             createBlogEntryUrl: "${createLink(controller: 'blog', action:'create', params:[managementUnitId:managementUnit.managementUnitId, returnTo:createLink(controller: 'managementUnit', action: 'index', id: managementUnit.managementUnitId, fragment: 'admin')])}",
             editBlogEntryUrl: "${createLink(controller: 'blog', action:'edit', params:[managementUnitId:managementUnit.managementUnitId, returnTo:createLink(controller: 'managementUnit', action: 'index', id: managementUnit.managementUnitId, fragment: 'admin')])}",
-            deleteBlogEntryUrl: "${createLink(controller: 'blog', action:'delete', params:[managementUnitId:managementUnit.managementUnitId])}"
+            deleteBlogEntryUrl: "${createLink(controller: 'blog', action:'delete', params:[managementUnitId:managementUnit.managementUnitId])}",
+            documentUpdateUrl: "${createLink(controller: 'document', action:'documentUpdate')}",
+            documentDeleteUrl: "${createLink(controller: 'document', action:'deleteDocument')}"
         };
     </script>
     <asset:stylesheet src="common-bs4.css"/>
