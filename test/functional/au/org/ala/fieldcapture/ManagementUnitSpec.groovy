@@ -125,7 +125,7 @@ class ManagementUnitSpec extends StubbedCasSpec {
 
         then:
         waitFor {at AdminReportsPage}
-        selectedPeriod() =="startDate=01/07/2018&endDate=30/06/2019"
+        selectedPeriod() =="startDate=2018-07-01&endDate=2019-06-30"
 
         when:
         interact {
@@ -135,13 +135,18 @@ class ManagementUnitSpec extends StubbedCasSpec {
         then:
         waitFor{showDownloadDetailsIcon().isDisplayed()}
 
+        when:
+        interact {
+            showDownloadDetailsIcon().click()
+        }
+
+        then:
+        waitFor{muReportDownloadLink().isDisplayed()}
+
 //        when:
-//        interact {
-//            showDownloadDetailsIcon().click()
+//        interact{
+//            muReportDownloadLink()[1].click()
 //        }
-//
-//        then:
-//        waitFor{muReportDownloadLink().isDisplayed()}
 
 
 
