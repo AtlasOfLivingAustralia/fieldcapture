@@ -44,7 +44,7 @@
     <h4 class="block-header"><g:message code="managementUnit.images.header"/></h4>
 
     <div class="form-group row">
-        <label class="col-form-label col-sm-3" for="logo">Program Logo: <fc:iconHelp><g:message
+        <label class="col-form-label col-sm-3" for="logo">Management Unit Logo: <fc:iconHelp><g:message
                 code="managementUnit.logo.help"/></fc:iconHelp>:</label>
 
         <div class="col-sm-6" style="text-align:center;background:white">
@@ -60,8 +60,8 @@
             <span class="btn fileinput-button pull-right"
                   data-url="${createLink(controller: 'image', action: 'upload')}"
                   data-role="logo"
-                  data-owner-type="programId"
-                  data-owner-id="${program?.programId}"
+                  data-owner-type="managementUnitId"
+                  data-owner-id="${managementUnit?.managementUnitId}"
                   data-bind="stagedImageUpload:documents, visible:!logoUrlProvided()"><i class="icon-plus"></i> <input
                     id="logo" type="file" name="files"><span>Attach</span></span>
 
