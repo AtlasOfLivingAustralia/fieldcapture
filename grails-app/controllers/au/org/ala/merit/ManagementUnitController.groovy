@@ -76,7 +76,9 @@ class ManagementUnitController {
         if(projects){
             programIds = projects.clone().unique{project->project.programId}?.programId
             List programs = programService.get(programIds)
-            mu.programs = programs
+            // This reverse alphabetical order is to satisfy a request to always
+            // display the RLP first.
+            mu.programs = programs?.sort{it.name}?.reverse()
             mu.projects = projects
         }
 
@@ -105,13 +107,15 @@ class ManagementUnitController {
 
         [about   : [label: 'Management Unit Overview',visible: true, stopBinding: false, type: 'tab',
                     mu: mu,
-                    blog: [blogs: blogs?:[], editable: hasEditAccessOfBlog,
-                                  hasNewsAndEvents: hasNewsAndEvents,
-                                  hasManagementUnitStories:  hasManagementUnitStories,
-                                  hasPhotos: hasPhotos
-                    ],
                     servicesDashboard:[visible: managementUnitVisible]
                     ],
+         blog: [label: 'MU Blog', visible:true, stopBinding: false, type:'tab', editable: hasEditAccessOfBlog,
+                mu:mu,
+                blogs: blogs?:[],
+                hasNewsAndEvents: hasNewsAndEvents,
+                hasManagementUnitStories:  hasManagementUnitStories,
+                hasPhotos: hasPhotos
+         ],
          projects: [label: 'MU Reporting', visible: canViewNonPublicTabs, stopBinding: false, type:'tab', mu:mu, reports: mu.reports, reportOrder:reportOrder, hideDueDate:true],
          sites   : [label: 'MU Sites', visible: canViewNonPublicTabs, stopBinding: true, type:'tab'],
          admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab', mu:mu, blog: [editable: hasEditAccessOfBlog]]

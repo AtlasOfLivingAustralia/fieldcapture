@@ -15,8 +15,7 @@ class ManagementUnitPage extends Page {
         grantIdsTable{$('td.grantId')}
         projectLinksTd{$('td.grantId a')}
         gotoProgramLinks{$('a.gotoProgram')}
-        administrationBtn {$('button.btnAdministration')}
-
+        blogTab{$('#blog-tab')}
         blogContentDiv {$('div.muBlogContent')}
         blogModule {module BlogPageModule}
         editManagementUnitBlogPane{$('div#editManagementUnitBlog')}
@@ -36,7 +35,5 @@ class ManagementUnitPage extends Page {
     List gotoProgram(){
         gotoProgramLinks.collect{it}
     }
-
-    public getPageUrl
 
 }

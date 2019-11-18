@@ -17,15 +17,6 @@
                         </div>
                     </div>
 
-                    <div class="control-group">
-                        <label class="control-label" for="documentAttribution">Attribution</label>
-
-                        <div class="controls">
-                            <input id="documentAttribution" type="text" data-bind="enable: hasPublicRole, value:attribution"/>
-
-                        </div>
-                    </div>
-
                     <div class="control-group" data-bind="visible:roles.length > 1">
                         <label class="control-label" for="documentRole">Document type</label>
 
@@ -42,6 +33,15 @@
                         </div>
                     </div>
                     <!-- /ko -->
+
+                    <div class="control-group">
+                        <label class="control-label" for="documentAttribution">Attribution</label>
+
+                        <div class="controls">
+                            <input id="documentAttribution" type="text" data-bind="enable: hasPublicRole, value:attribution"/>
+
+                        </div>
+                    </div>
 
                     <div class="control-group">
                         <label class="control-label" for="documentLicense">License</label>

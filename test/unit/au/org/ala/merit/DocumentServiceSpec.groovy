@@ -75,6 +75,34 @@ class DocumentServiceSpec extends Specification {
         2 * userService.canUserEditProgramReport(userId, 'p2') >> true
     }
 
+    def "only management unit members can edit or delete management unit documents"() {
+        setup:
+        Map document = [documentId:'d1', managementUnitId:'m1']
+        String userId = '1234'
+
+        when:
+        boolean canEdit = service.canEdit(document)
+        boolean canDelete = service.canDelete(document.documentId)
+
+        then:
+        canEdit == false
+        canDelete == false
+        2 * webService.getJson(_) >> [documentId:'d1', managementUnitId: 'm2']
+        2 * userService.getCurrentUserId() >> userId
+        2 * userService.canUserEditManagementUnit(userId, 'm2') >> false
+
+        when:
+        canEdit = service.canEdit(document)
+        canDelete = service.canDelete(document.documentId)
+
+        then:
+        canEdit == true
+        canDelete == true
+        2 * webService.getJson(_) >> [documentId:'d1', managementUnitId:'p2']
+        2 * userService.getCurrentUserId() >> userId
+        2 * userService.canUserEditManagementUnit(userId, 'p2') >> true
+    }
+
     def "only organisation members can edit or delete an organisation document"() {
         setup:
         Map document = [documentId:'d1', organisationId:'o1']

@@ -27,53 +27,9 @@
     </div>
 </div>
 
-<g:if test="${blog.editable || blog.hasNewsAndEvents || blog.hasProgramStories || blog.hasPhotos}">
-    <div class="row-fluid">
-        <hr/>
-        <div class="well-title muBlogContent">Management Unit Blog</div>
-        <g:if test="${blog.editable}">
-            <p>
-                <a class="newBlog" href="${g.createLink(controller: 'blog', action: 'create', params:[managementUnitId: mu.managementUnitId, returnTo:g.createLink(controller: 'managementUnit', action:'index', id:mu.managementUnitId)])}"><button class="btn"><i class="fa fa-newspaper-o"></i> New Entry</button></a>
-            <button id="gotoEditBlog" class="btn"><i class="fa fa-edit"></i> Edit</button>
-            </a>
-        </p>
-        </g:if>
-
-
-        <g:if test="${blog.hasNewsAndEvents}">
-            <div class="row-fluid">
-                <div class="well-title">News and Events</div>
-                <div class="blog-section">
-                    <g:render template="/shared/blog" model="${[blog:blog.blogs, type:'News and Events']}"/>
-                </div>
-            </div>
-        </g:if>
-
-        <g:if test="${blog.hasManagementUnitStories}">
-            <div class="row-fluid">
-                <div class="well-title">Program stories</div>
-                <div class="blog-section">
-                    <g:render template="/shared/blog" model="${[blog:blog.blogs, type:'Management Unit Stories']}"/>
-                </div>
-            </div>
-        </g:if>
-
-        <g:if test="${blog.hasPhotos}">
-            <div class="row-fluid">
-                <div class="well-title">Photos</div>
-                <div class="blog-section">
-                    <g:render template="/shared/blog" model="${[blog:blog.blogs, type:'Photo']}"/>
-                </div>
-            </div>
-        </g:if>
-
-    </div>
-</g:if>
-
-
 <div class="projects-wrapper d-none d-md-block">
     <hr/>
-    <div class="well-title">Programs in this management unit</div>
+    <div class="well-title">Programs</div>
     <g:set var="projects" value="${mu.projects}" />
     <g:set var="programs" value="${mu.programs}" />
 
@@ -94,7 +50,7 @@
             <div class="tab-pane ${active}" id="${program.programId}_projects" >
                 <g:if test="${program.outcomes}">
                     <div class="well">
-                        <div class="well-title">The Service Provider is addressing these RLP outcomes</div>
+                        <div class="well-title">The Service Provider is addressing these ${program.acronym ?: program.name} outcomes</div>
                         <div class="row outcomes no-gutters">
                             <g:each in="${program.outcomes}" var="outcome" >
                                 <g:set var="outcomeClass" value="${outcome.targeted ? 'targeted' :''}"/>

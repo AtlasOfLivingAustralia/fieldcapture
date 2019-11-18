@@ -38,7 +38,7 @@
             <g:render template="/admin/addPermissions"
                       model="[addUserUrl: g.createLink(controller: ' managementUnit', action: 'addUserAsRoleToManagementUnit'), entityType: 'au.org.ala.ecodata.ManagementUnit', entityId: mu.managementUnitId]"/>
 
-            <h4>Current Programme Permissions</h4>
+            <h4>Current Management Unit Permissions</h4>
             <g:render template="/admin/permissionTable" model="[
                     loadPermissionsUrl: g.createLink(controller: 'user', action: 'getMembersOfManagementUnit', id: mu.managementUnitId),
                     removeUserUrl     : g.createLink(controller: ' managementUnit', action: 'removeUserWithRoleFromManagementUnit', id:mu.managementUnitId),
@@ -93,7 +93,7 @@
             <form class="utilities">
                 <h3>Regenerate reports</h3>
                 <p>This may need to be done if the report configuration is edited.</p>
-                <h4>managementUnit report categories</h4>
+                <h4>Management Unit report categories</h4>
                 <ul class="list-unstyled" data-bind="foreach:managementUnitReportCategories">
                     <li><label class="checkbox"><input type="checkbox" data-bind="value:$data, checked:$parent.selectedManagementUnitReportCategories"> <span data-bind="text:$data"></span></label></li>
                 </ul>

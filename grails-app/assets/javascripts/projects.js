@@ -442,7 +442,7 @@ function ProjectViewModel(project, isUserEditor, organisations) {
     var docDefaults = newDocumentDefaults(project);
     self.addDocument = function(doc) {
         // check permissions
-        if ((isUserEditor && doc.role !== 'approval') ||  doc.public) {
+        if (isUserEditor ||  doc.public) {
             doc.maxStages = docDefaults.maxStages;
             self.documents.push(new DocumentViewModel(doc));
         }

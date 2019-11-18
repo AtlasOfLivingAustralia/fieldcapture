@@ -85,7 +85,7 @@ class RlpReportingSpec extends StubbedCasSpec {
         waitFor { at ReportPage }
 
         when:
-        exit()
+        exitReport()
 
         then:
         waitFor { at RlpProjectPage }

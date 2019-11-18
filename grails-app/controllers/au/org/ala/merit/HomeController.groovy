@@ -2,9 +2,11 @@ package au.org.ala.merit
 
 import au.org.ala.merit.hub.HubSettings
 import grails.converters.JSON
+import groovy.json.JsonSlurper
 import org.apache.commons.lang.StringUtils
 
 import javax.servlet.http.Cookie
+import java.math.RoundingMode
 
 class HomeController {
 
@@ -160,7 +162,9 @@ class HomeController {
         params.max = params.max?:9999
         if(params.geo){
             params.facets = StringUtils.join(SettingService.getHubConfig().availableFacets, ',')
-            render searchService.allProjectsWithSites(params) as JSON
+            boolean reducePrecision = params.getBoolean('heatmap')
+            Map geoData  = searchService.allProjectsWithSites(params, null, reducePrecision)
+            render geoData as JSON
         } else {
             params.include = ['name', 'description', 'lastUpdated', 'organisationName']
             Map resp = searchService.allProjects(params)

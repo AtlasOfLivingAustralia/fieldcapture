@@ -54,6 +54,8 @@
         var outcomes = ${config.outcomes?:[]};
         project.outcomes = outcomes;
         config.useRlpTemplate = services.length > 0;
+        var programName = '${(config.program?.name?:project.associatedSubProgram) ?: project.associatedProgram}';
+        config.programName = programName;
         var viewModel = new ReadOnlyMeriPlan(project, new ProjectService(project, config), config);
         viewModel.name = project.name;
         viewModel.description = project.description;

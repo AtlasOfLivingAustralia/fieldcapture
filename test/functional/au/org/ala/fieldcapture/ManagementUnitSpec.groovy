@@ -63,12 +63,10 @@ class ManagementUnitSpec extends StubbedCasSpec {
         waitFor {at ManagementUnitPage}
 
         when:
-        interact{
-            overviewBtn().click()
-            moveToElement(blogContentDiv)
-        }
+        blogTab.click()
 
         then:
+        waitFor {blogModule.displayed}
         blogModule.blogs().size() ==1
         blogModule.blogTitles() == ['BlogTest']
 

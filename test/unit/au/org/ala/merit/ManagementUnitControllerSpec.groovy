@@ -14,6 +14,7 @@ class ManagementUnitControllerSpec extends Specification {
     ActivityService activityService = Mock(ActivityService)
     RoleService roleService = Mock(RoleService)
     BlogService blogService = Mock(BlogService)
+    ProgramService programService = Mock(ProgramService)
 
 
     String adminUserId = 'admin'
@@ -28,6 +29,7 @@ class ManagementUnitControllerSpec extends Specification {
         controller.userService = userService
         controller.blogService = blogService
         controller.managementUnitService = managementUnitService
+        controller.programService = programService
 
         roleService.getRoles() >> []
     }
@@ -50,7 +52,7 @@ class ManagementUnitControllerSpec extends Specification {
         model.reportHeaderTemplate == '/managementUnit/managementUnitReportHeader'
     }
 
-    def "unauthenticated users should only see the management unit overview"() {
+    def "unauthenticated users should only see the management unit overview and blog"() {
         setup:
         String managementUnitId = 'p1'
         userService.getUser() >> null
@@ -63,8 +65,9 @@ class ManagementUnitControllerSpec extends Specification {
         Map model = controller.index(managementUnitId)
 
         then:
-        model.content.size() == 4
+        model.content.size() == 5
         model.content.about.visible == true
+        model.content.blog.visible == true
         model.content.projects.visible == false
         model.content.sites.visible == false
         model.content.admin.visible == false
@@ -77,7 +80,6 @@ class ManagementUnitControllerSpec extends Specification {
         managementUnitService.get(managementUnitId) >> [managementUnitId:managementUnitId, name:"test"]
         userService.getMembersOfManagementUnit(managementUnitId) >> [members:[[userId:'u1', role:'admin']]]
         managementUnitService.getProjects(managementUnitId) >>[projects:[]]
-        managementUnitService.get(managementUnitId) >> []
 
         when:
         Map model = controller.index(managementUnitId)
@@ -86,11 +88,39 @@ class ManagementUnitControllerSpec extends Specification {
         1 * userService.canEditManagementUnitBlog("u1", managementUnitId) >> true
         1 * userService.canUserEditManagementUnit("u1", managementUnitId) >> true
 
-        model.content.size() == 4
+        model.content.size() == 5
         model.content.about.visible == true
+        model.content.blog.visible == true
         model.content.projects.visible == true
         model.content.sites.visible == true
         model.content.admin.visible == true
+    }
+
+    def "programs should be sorted in reverse alphabetical order so the RLP appears first"() {
+
+        setup:
+        String managementUnitId = 'p1'
+        userService.getUser() >> null
+        managementUnitService.get(managementUnitId) >> [managementUnitId:managementUnitId, name:"test"]
+        userService.getMembersOfManagementUnit(managementUnitId) >> [members:[[userId:'u1', role:'admin']]]
+
+        when: "There are no projects running in the management unit"
+        params.id = managementUnitId
+        Map model = controller.index()
+
+        then:
+        model.managementUnit.programs == null
+        1 * managementUnitService.getProjects(managementUnitId) >> [projects:[]]
+        0 * programService.get(_)
+
+        when:
+        model = controller.index()
+
+        then:
+        1 * managementUnitService.getProjects(managementUnitId) >> [projects:[[programId:'p1'], [programId:'p2'], [programId:'p3']]]
+        1 * programService.get(['p1', 'p2', 'p3'] as String[]) >> [[name:'Program 1', programId:'p1'], [name:'Program 2', programId:'p2'], [name:'Program 3', programId:'p3']]
+        1 * managementUnitService.serviceScores(managementUnitId, ['p1', 'p2', 'p3'] as String[], true) >> [:]
+        model.managementUnit.programs.collect{it.name} == ['Program 3', 'Program 2', 'Program 1']
     }
 
     def "when editing a management unit report, the model will be customized for management unit reporting"() {
@@ -145,7 +175,7 @@ class ManagementUnitControllerSpec extends Specification {
         view == '/activity/activityReport'
     }
 
-    def "report data shouldn't be saved if the project id of the report doesn't match the project id checked by the annotation"() {
+    def "report data shouldn't be saved if the managementUnitId of the report doesn't match the managementUnitId checked by the annotation"() {
         setup:
         Map props = [
                 activityId:'a1',

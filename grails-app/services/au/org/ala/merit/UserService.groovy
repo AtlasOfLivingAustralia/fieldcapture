@@ -376,8 +376,8 @@ class UserService {
         if (userIsSiteAdmin()) {
             userCanEdit = true
         } else {
-            Map programRole = getEntityRole(userId, managementUnitId)
-            userCanEdit = (programRole != null) // Any assigned role on the management unit allows editing
+            Map managementUnitRole = getEntityRole(userId, managementUnitId)
+            userCanEdit = (managementUnitRole != null) // Any assigned role on the management unit allows editing
         }
 
         userCanEdit
