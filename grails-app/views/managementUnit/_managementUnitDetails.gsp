@@ -65,7 +65,7 @@
                   data-bind="stagedImageUpload:documents, visible:!logoUrlProvided()"><i class="icon-plus"></i> <input
                     id="logo" type="file" name="files"><span>Attach</span></span>
 
-            <button class="btn main-image-button" data-bind="click:removeLogoImage, visible:logoUrlProvided()"><i
+            <button class="btn main-image-button float-right" data-bind="click:removeLogoImage, visible:logoUrlProvided()"><i
                     class="icon-minus"></i> Remove</button>
         </span>
     </div>
@@ -88,7 +88,7 @@
                   data-bind="stagedImageUpload:documents, visible:!mainImageUrl()"><i class="icon-plus"></i> <input
                     id="mainImage" type="file" name="files"><span>Attach</span></span>
 
-            <button class="btn main-image-button" data-bind="click:removeMainImage,  visible:mainImageUrl()"><i
+            <button class="btn main-image-button float-right" data-bind="click:removeMainImage,  visible:mainImageUrl()"><i
                     class="icon-minus"></i> Remove</button>
         </span>
     </div>
