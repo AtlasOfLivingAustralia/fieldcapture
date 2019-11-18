@@ -23,16 +23,23 @@ class ManagementUnitService {
     Map get(String id) {
         String url = "${grailsApplication.config.ecodata.baseUrl}managementUnit/$id"
         Map mu = webService.getJson(url)
-        //Todo
-        Map results = documentService.search(managementUnitId:id)
+
+        boolean isAdmin = userService.isUserAdminForManagementUnit(userService.getCurrentUserId(), id)
+        Map documentSearchParameters = [managementUnitId:id]
+        if (!isAdmin) {
+            documentSearchParameters['public'] = true
+        }
+        else {
+            mu.reports = reportService.findReportsForManagementUnit(id)
+        }
+
+        Map results = documentService.search(documentSearchParameters)
         if (results && results.documents) {
             List categorisedDocs = results.documents.split{it.type == DocumentService.TYPE_LINK}
 
             mu.links = new JSONArray(categorisedDocs[0])
             mu.documents = new JSONArray(categorisedDocs[1])
         }
-        mu.reports = reportService.findReportsForManagementUnit(id)
-
         mu
     }
 
