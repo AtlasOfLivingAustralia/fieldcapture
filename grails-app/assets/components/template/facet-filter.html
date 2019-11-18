@@ -32,7 +32,7 @@
                                 <!-- ko foreach: {data: f.terms, as: 't', noChildContext: true} -->
                                     <li data-bind="attr: {'data-sortalpha': t.term.toLowerCase().trim(), 'data-sortcount':t.count}">
                                         <input type="checkbox" class="facetSelection" name="facetSelection" data-bind="value: getFQForTerm(fn, t.term), checked: t.selected, attr: {'aria-label': t.term}">
-                                        <a data-bind="text:  t.displayname, attr: {href: generateFQLink(fn, t.term)}"></a> (<span class="fcount"><!-- ko text: t.count --><!-- /ko --></span>)
+                                        <a data-bind="text:  t.displayname, attr: {href: generateFQLink(fn.facet, t.term)}"></a> (<span class="fcount"><!-- ko text: t.count --><!-- /ko --></span>)
                                     </li>
                                 <!-- /ko -->
                             </ul>

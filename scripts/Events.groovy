@@ -1,4 +1,4 @@
-eventCompileStart = { kind ->
+eventCompileEnd = { kind ->
     def assetPipelineConfigHolder = classLoader.loadClass('asset.pipeline.AssetPipelineConfigHolder')
     def templateFileAssetResolver = classLoader.loadClass('au.org.ala.merit.TemplateFileAssetResolver').newInstance('templates', 'grails-app/assets/components', false, '/compile/templates.js', '/template')
 
