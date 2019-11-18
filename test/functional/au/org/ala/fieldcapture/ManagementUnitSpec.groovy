@@ -42,14 +42,6 @@ class ManagementUnitSpec extends StubbedCasSpec {
         projectLinks().size()>=1
         gotoProgram().size() >= 1
 
-        //Cannot click on invisible element - phantomjs
-//        when:
-//        gotoProgram()[0].click()
-//
-//        then:
-//        at ProgramPage
-
-
     }
 
     def "As an admin, I can view/create/edit/delete a blog for program"(){
@@ -133,20 +125,13 @@ class ManagementUnitSpec extends StubbedCasSpec {
         then:
         waitFor{showDownloadDetailsIcon().isDisplayed()}
 
-        when:
-        interact {
-            showDownloadDetailsIcon().click()
-        }
-
-        then:
-        waitFor{muReportDownloadLink().isDisplayed()}
-
 //        when:
-//        interact{
-//            muReportDownloadLink()[1].click()
+//        interact {
+//            showDownloadDetailsIcon().click()
 //        }
-
-
+//
+//        then:
+//        waitFor{muReportDownloadLink().isDisplayed()}
 
     }
 
