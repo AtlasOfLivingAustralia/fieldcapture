@@ -418,7 +418,8 @@ var ManagementUnitPageViewModel = function(props, options) {
                     },
                     modalSelector: '#attachDocument',
                     documentUpdateUrl: options.documentUpdateUrl,
-                    documentDeleteUrl: options.documentDeleteUrl
+                    documentDeleteUrl: options.documentDeleteUrl,
+                    imageLocation: options.imageLocation
                 };
                 var viewModel = new EditableDocumentsViewModel(documentViewModelOptions);
                 viewModel.loadDocuments(props.documents);

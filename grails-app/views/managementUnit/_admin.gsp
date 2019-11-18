@@ -2,8 +2,8 @@
     <div class="nav flex-column nav-pills col-3">
         <a class="nav-link active" data-toggle="pill" href="#edit-managementUnit-details" role="tab">Edit</a>
         <a class="nav-link" data-toggle="pill" href="#managementUnit-permissions" role="tab">Permissions</a>
-        <a class="nav-link" data-toggle="pill" href="#editManagementUnitBlog" id="editManagementUnitBlog-tab" role="tab">Edit Blog</a>
-        <a class="nav-link" data-toggle="pill" href="#edit-documents" role="tab">Documents</a>
+        <a id="editManagementUnitBlog-tab" class="nav-link" data-toggle="pill" href="#editManagementUnitBlog" role="tab">Edit Blog</a>
+        <a id="edit-documents-tab" class="nav-link" data-toggle="pill" href="#edit-documents" role="tab">Documents</a>
         <g:if test="${fc.userIsSiteAdmin()}">
                 <a class="nav-link" data-toggle="pill" href="#reporting" role="tab">Reporting</a>
         </g:if>
@@ -145,7 +145,7 @@
         </g:if>
         <g:if test="${fc.userIsAlaOrFcAdmin()}">
         <div class="tab-pane" id="config">
-            <h4 style="display:inline-block">Managment Unit configuration</h4> <button class="btn btn-success float-right" data-bind="click:saveManagementUnitConfiguration">Save Configuration</button>
+            <h4 style="display:inline-block">Management Unit configuration</h4> <button class="btn btn-success float-right" data-bind="click:saveManagementUnitConfiguration">Save Configuration</button>
 
             <textarea rows="80" style="width:100%" data-bind="value:config">
 

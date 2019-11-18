@@ -26,7 +26,8 @@
             editBlogEntryUrl: "${createLink(controller: 'blog', action:'edit', params:[managementUnitId:managementUnit.managementUnitId, returnTo:createLink(controller: 'managementUnit', action: 'index', id: managementUnit.managementUnitId, fragment: 'admin')])}",
             deleteBlogEntryUrl: "${createLink(controller: 'blog', action:'delete', params:[managementUnitId:managementUnit.managementUnitId])}",
             documentUpdateUrl: "${createLink(controller: 'document', action:'documentUpdate')}",
-            documentDeleteUrl: "${createLink(controller: 'document', action:'deleteDocument')}"
+            documentDeleteUrl: "${createLink(controller: 'document', action:'deleteDocument')}",
+            imageLocation:"${assetPath(src:'/')}"
         };
     </script>
     <asset:stylesheet src="common-bs4.css"/>
