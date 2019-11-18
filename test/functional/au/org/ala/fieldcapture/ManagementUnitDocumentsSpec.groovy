@@ -1,7 +1,6 @@
 package au.org.ala.fieldcapture
 
 import pages.ManagementUnitPage
-import pages.RlpProjectPage
 import spock.lang.Stepwise
 
 @Stepwise
