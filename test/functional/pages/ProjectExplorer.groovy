@@ -21,6 +21,9 @@ class ProjectExplorer extends Page {
         projectPagination(required:false) { $('#paginationInfo')}
         projects(required:false) { $('#projectTable tbody tr').moduleList(ProjectsList) }
         map(required:false) { $('#map') }
+        facets(required: false) { $('#facetsContent input') }
+        chooseMoreFacetTerms(required: false) { $('#facetsContent .moreFacets') }
+        facetTerms(required: false) { $("#facetsContent .facetValues a") }
     }
 
     /** When we reindex the index is destroyed and project explorer shows an error message about no data */

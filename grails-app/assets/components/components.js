@@ -1,7 +1,7 @@
 //= require i18n.js
 //= require_self
 //= require compile/templates.js
-//= require_tree component
+//= require_tree javascript
 
 var componentService = function () {
     var cache = {};

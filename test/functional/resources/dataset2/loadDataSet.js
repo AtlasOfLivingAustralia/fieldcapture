@@ -13,7 +13,8 @@ db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entity
 
 for (var i=1; i<10; i++) {
     var id = ''+i;
-    createProject({name:'Project '+id, projectId:id});
+    var orgNames = ["org 1", "org 2"];
+    createProject({name:'Project '+id, projectId:id, organisationName: i % 2 ? orgNames[0] : orgNames[1]});
     if (i < 4) {
         db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:id, userId:'1', accessLevel:'admin'});
         db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:id, userId:'10', accessLevel:'editor'});
