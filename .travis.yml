@@ -28,8 +28,8 @@ before_script:
 - export DETECT_CHROMEDRIVER_VERSION=true
 - npm install
 script:
+- grails clean; grails refresh-dependencies --non-interactive; grails compile
 - node_modules/karma/bin/karma start karma.conf.js --single-run --browsers PhantomJS
-- grails clean; grails refresh-dependencies --non-interactive
 - cd scripts
 - chmod +x *.sh
 - ./runFunctionalTests.sh chromeHeadless
