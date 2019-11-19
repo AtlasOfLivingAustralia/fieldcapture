@@ -33,7 +33,7 @@ describe("Facet filter component unit tests", function () {
         mockElement.id = 'facetContent';
         var facetFilter = document.createElement('facet-filter');
         facetFilter.setAttribute('params',"facetsList : facetsList, results:  results, fqLink: fqLink, baseUrl: baseUrl, projectExplorerUrl: projectExplorerUrl, max: max" );
-        mockElement.append(facetFilter);
+        mockElement.appendChild(facetFilter);
         ko.applyBindings(vm, mockElement);
     });
 
