@@ -333,7 +333,6 @@
             planViewModel.refreshGantChart();
         });
 
-
         $('#outputTargetsContainer').validationEngine('attach', {scroll:false});
 
     });

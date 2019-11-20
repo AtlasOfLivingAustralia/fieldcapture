@@ -130,6 +130,58 @@ var SimplifiedReportingViewModel = function(project, config) {
         return stage.toDate == currentReport.toDate;
     });
 
+    // self.stageToReport = ko.computed(function(){
+    //     var currentProjectStage = planViewModel.currentProjectStage
+    //     var stages = planViewModel.stages
+    //     if (currentProjectStage == 'unknown' && stages && stages.length > 0) {
+    //         var defaultStage  = stages[stages.length-1]
+    //         return {financialYear: isoDateToFinancialYear(defaultStage.toDate), "stage":defaultStage.label};
+    //     }else{
+    //         var currentStage = _.find(stages,function(stage){return stage.label == currentProjectStage})
+    //         return {financialYear: isoDateToFinancialYear(currentStage.toDate), "stage":currentStage.label}
+    //     }
+    // });
+
+
+    var defaultReportStage = planViewModel.currentProjectStage;
+    if (defaultReportStage == 'unknown' && planViewModel.stages && planViewModel.stages.length > 0) {
+        defaultReportStage = planViewModel.stages[planViewModel.stages.length-1].label;
+    }
+
+    self.stageToReport = ko.observable(defaultReportStage)
+
+    self.reportableStages = ko.computed(function() {
+        var stages = [];
+
+        var theLastAvailableReportIdx = planViewModel.stages.length
+        $.each( planViewModel.stages || [], function(i, stage) {
+            if(self.stageToReport() == stage.label)
+                theLastAvailableReportIdx = i
+            if (i <= theLastAvailableReportIdx)
+                stages.push({financialYear: isoDateToFinancialYear(stage.toDate), "stage":stage.label});
+        });
+        return stages;
+    });
+
+
+    self.orientation = ko.observable('portrait');
+    self.generateProjectReport = function(url) {
+        var url = url + '?fromStage='+self.stageToReport()+'&toStage='+self.stageToReport();
+        url+='&sections=Progress against activities'
+        url+='&orientation='+self.orientation();
+        window.open(url,'project-report');
+    };
+    self.generateProjectReportHTML = function() {
+        self.generateProjectReport(fcConfig.projectReportUrl);
+    };
+    self.generateProjectReportPDF = function() {
+        self.generateProjectReport(fcConfig.projectReportPDFUrl);
+    };
+
+    self.configureProjectReport = function() {
+        $('#projectReportOptions').modal({backdrop:'static'});
+    };
+
     var OPTIONAL_REPORT_TYPE = config.sightingsActivityType || 'ESP Species';
     var ADMIN_REPORT_TYPE = config.adminActivityType || 'ESP Overview';
     function isAdminActivity(activity) {

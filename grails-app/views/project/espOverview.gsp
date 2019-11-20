@@ -43,7 +43,9 @@
         excelOutputTemplateUrl: "${createLink(controller: 'activity', action:'excelOutputTemplate')}",
         excelDataUploadUrl: "${createLink(controller:'activity', action:'ajaxUpload')}",
         saveReportingDatesUrl:"${createLink(controller:'project', action:'ajaxUpdate', id:project.projectId)}",
-        returnTo: "${createLink(controller: 'project', action: 'espOverview', id: project.projectId)}"
+        returnTo: "${createLink(controller: 'project', action: 'espOverview', id: project.projectId)}",
+        projectReportUrl:"${createLink(controller:'project', action:'projectReport', id:project.projectId)}",
+        projectReportPDFUrl:"${createLink(controller:'project', action:'projectReportPDF', id:project.projectId)}"
 
     },
         here = window.location.href;
@@ -115,6 +117,7 @@
         <li><a href="#photographs-tab">Photographs</a></li>
         <li><a href="#documents-tab">Documents</a></li>
         <li><a id="annual-submission-report-tab" href="#reporting-tab">Annual Report Submission</a></li>
+        <li><a id="stage-report-pdf-tab" href="#stage-report-pdf">Download Report</a></li>
     </ul>
 
     <div id="saved-nav-message-holder"></div>
@@ -206,6 +209,39 @@
             </div>
 
         </div>
+
+        <div class="tab-pane " id="stage-report-pdf">
+            <div>
+                <h4 class="modal-title">Download Report</h4>
+                <p>Select the financial year of the report you want to download then press the "Generate Report (PDF)" button</p>
+                <hr/>
+
+                <form class="form-horizontal" id = "stageReportPDF">
+                    <div class="control-group">
+                        <label class="control-label" for="stageToReport">Report of financial year: </label>
+                        <div class="controls">
+                            <select id="stageToReport" data-bind="value:stageToReport, options:reportableStages, optionsText: 'financialYear', optionsValue: 'stage' " ></select>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">PDF Orientation: <fc:iconHelp>If your PDF includes activities with wide tables, the Landscape setting may improve the result.  This setting has no effect on the HTML view. </fc:iconHelp></label>
+                        <div class="controls">
+                            <select data-bind="value:orientation">
+                                <option value="portrait">Portrait</option>
+                                <option value="landscape">Landscape</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+                <div class="control-group">
+                        <button type="button" class="btn btn-success"
+                             data-bind="click:generateProjectReportHTML">Generate Report (HTML)</button>
+                         <button type="button" class="btn btn-success"
+                            data-bind="click:generateProjectReportPDF">Generate Report (PDF)</button>
+                 </div>
+            </div>
+        </div>
     </div>
 
 </div>
@@ -216,7 +252,6 @@
             <div class="modal-header">
                 <h4 class="modal-title" id="title">Please enter your reporting dates</h4>
             </div>
-
             <div class="modal-body">
                 <p>
                     As this your first time reporting into the Monitoring, Evaluation, Reporting, Improvement Tool (MERIT), please input the dates for the period against which you are reporting activity.
@@ -342,6 +377,11 @@
                     documentsModel.documents(docs);
                     ko.applyBindings(documentsModel, $(selector)[0]);
                     initialiseDocumentTable(selector);
+                }
+            },
+            'stage-report-pdf-tab': {
+                initialiser: function(){
+
                 }
             }
         };
