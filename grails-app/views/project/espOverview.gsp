@@ -8,6 +8,7 @@
     <script>
     var fcConfig = {
         serverUrl: "${grailsApplication.config.grails.serverURL}",
+        espSupportEmail: "${grailsApplication.config.espSupportEmail}",
         activityEditUrl: "${createLink(controller: 'activity', action: 'edit')}",
         activityEnterDataUrl: "${createLink(controller: 'activity', action: 'enterData')}",
         activityUpdateUrl: "${createLink(controller: 'activity', action: 'ajaxUpdate')}",
@@ -272,7 +273,7 @@
                     </div>
 
                     <p>
-                        If you do not know or are having any issues with this, please email: <a href="mailto:ESPmonitoring@environment.gov.au">ESPmonitoring@environment.gov.au</a>
+                        If you do not know or are having any issues with this, please email: <a href="mailto:${grailsApplication.config.espSupportEmail}">${grailsApplication.config.espSupportEmail}</a>
                     </p>
                 </form>
             </div>

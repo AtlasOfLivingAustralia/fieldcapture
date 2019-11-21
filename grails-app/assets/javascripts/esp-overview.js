@@ -130,18 +130,6 @@ var SimplifiedReportingViewModel = function(project, config) {
         return stage.toDate == currentReport.toDate;
     });
 
-    // self.stageToReport = ko.computed(function(){
-    //     var currentProjectStage = planViewModel.currentProjectStage
-    //     var stages = planViewModel.stages
-    //     if (currentProjectStage == 'unknown' && stages && stages.length > 0) {
-    //         var defaultStage  = stages[stages.length-1]
-    //         return {financialYear: isoDateToFinancialYear(defaultStage.toDate), "stage":defaultStage.label};
-    //     }else{
-    //         var currentStage = _.find(stages,function(stage){return stage.label == currentProjectStage})
-    //         return {financialYear: isoDateToFinancialYear(currentStage.toDate), "stage":currentStage.label}
-    //     }
-    // });
-
 
     var defaultReportStage = planViewModel.currentProjectStage;
     if (defaultReportStage == 'unknown' && planViewModel.stages && planViewModel.stages.length > 0) {
@@ -313,7 +301,7 @@ var SimplifiedReportingViewModel = function(project, config) {
     };
 
     function showSaveError() {
-        bootbox.alert("There was an error submitting your report.  Please reload your page and try again.  If the error persists, please contact: ESPmonitoring@environment.gov.au");
+        bootbox.alert("There was an error submitting your report.  Please reload your page and try again.  If the error persists, please contact: "+fcConfig.espSupportEmail);
     }
 
 

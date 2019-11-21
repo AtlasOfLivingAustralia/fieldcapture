@@ -17,8 +17,8 @@ describe("The ESP reporting process works slightly differently to the normal MER
             projectId:'p1',
             name:"ESP test project",
             status:'active',
-            plannedStartDate:'2018-01-31T13:00:00Z',
-            plannedEndDate:'2019-01-31T13:00:00Z',
+            plannedStartDate:'2017-01-31T13:00:00Z',
+            plannedEndDate:'2020-01-31T13:00:00Z',
             custom: {
                 reportingPeriodStart:'2018-01-31T13:00:00Z',
                 reportindPeriodEnd:'2019-01-31T13:00:00Z'
@@ -32,6 +32,11 @@ describe("The ESP reporting process works slightly differently to the normal MER
                 publicationStatus:'not published',
                 fromDate:'2018-01-31T13:00:00Z',
                 toDate:'2019-01-31T13:00:00Z'
+            },
+            {
+                    publicationStatus:'published',
+                    fromDate:'2019-01-31T13:00:00Z',
+                    toDate:'2020-01-31T13:00:00Z'
             }],
             activities:[{
                 activityId:'a1',
@@ -68,8 +73,16 @@ describe("The ESP reporting process works slightly differently to the normal MER
         expect(viewModel.canViewSubmissionReport()).toBeFalsy();
 
         project.activities[0].progress = 'finished';
+        //project.reports[0].publicationStatus = 'published'
         viewModel = new SimplifiedReportingViewModel(project, config);
+
         expect(viewModel.canViewSubmissionReport()).toBeTruthy();
+
+        console.log( JSON.stringify(viewModel.currentReport));
+        console.log(JSON.stringify(viewModel.stageToReport));
+        expect(viewModel.reportableStages.length).toEqual(4)
+
+
 
     });
 
