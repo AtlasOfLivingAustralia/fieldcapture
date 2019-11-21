@@ -29,11 +29,13 @@ describe("The ESP reporting process works slightly differently to the normal MER
             }],
             documents:[],
             reports:[{
+                name: 'Stage 1',
                 publicationStatus:'not published',
                 fromDate:'2018-01-31T13:00:00Z',
                 toDate:'2019-01-31T13:00:00Z'
             },
             {
+                    name: 'Stage 2',
                     publicationStatus:'published',
                     fromDate:'2019-01-31T13:00:00Z',
                     toDate:'2020-01-31T13:00:00Z'
@@ -75,12 +77,7 @@ describe("The ESP reporting process works slightly differently to the normal MER
         project.activities[0].progress = 'finished';
         //project.reports[0].publicationStatus = 'published'
         viewModel = new SimplifiedReportingViewModel(project, config);
-
         expect(viewModel.canViewSubmissionReport()).toBeTruthy();
-
-        console.log( JSON.stringify(viewModel.currentReport));
-        console.log(JSON.stringify(viewModel.stageToReport));
-        expect(viewModel.reportableStages.length).toEqual(4)
 
 
 
@@ -238,5 +235,20 @@ describe("The ESP reporting process works slightly differently to the normal MER
             });
 
     });
+
+    it("Test an ESP project report stages.", function() {
+
+        var project = buildEspProject();
+        var config = {showEmptyStages:true };
+        var viewModel = new SimplifiedReportingViewModel(project, config);
+
+        console.log(JSON.stringify(viewModel.stageToReport()));
+        expect(viewModel.stageToReport()).toEqual("Stage 1")
+        expect(viewModel.reportableStages().length).toEqual(1)
+
+    });
+
+
+
 
 });

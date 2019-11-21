@@ -130,13 +130,7 @@ var SimplifiedReportingViewModel = function(project, config) {
         return stage.toDate == currentReport.toDate;
     });
 
-
-    var defaultReportStage = planViewModel.currentProjectStage;
-    if (defaultReportStage == 'unknown' && planViewModel.stages && planViewModel.stages.length > 0) {
-        defaultReportStage = planViewModel.stages[planViewModel.stages.length-1].label;
-    }
-
-    self.stageToReport = ko.observable(defaultReportStage)
+    self.stageToReport = ko.observable(currentStage.label)
 
     self.reportableStages = ko.computed(function() {
         var stages = [];
