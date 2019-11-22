@@ -14,9 +14,8 @@ class ManagementUnitController {
 
     static allowedMethods = [regenerateManagementUnitReports: "POST", ajaxDelete: "POST", delete: "POST", ajaxUpdate: "POST", saveReport: "POST", ajaxSubmitReport: "POST", ajaxApproveReport: "POST", ajaxRejectReport: "POST"]
 
-    def managementUnitService, programService, searchService, documentService, userService, roleService, commonService, webService, siteService
+    def managementUnitService, programService, documentService, userService, roleService, commonService, webService, siteService
 
-    ProjectService projectService
     ReportService reportService
     ActivityService activityService
     PdfGenerationService pdfGenerationService

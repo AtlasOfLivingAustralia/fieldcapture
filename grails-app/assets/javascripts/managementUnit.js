@@ -2,7 +2,7 @@
 //= require slider-pro-master/js/jquery.sliderPro.min.js
 //= require mapWithFeatures.js
 //= require sites
-//= require document
+//= require attach-document-no-ui
 //= require reporting
 //= require leaflet-manifest
 //= require blog
@@ -299,8 +299,8 @@ var ManagementUnitPageViewModel = function(props, options) {
          var searchUrl = fcConfig.geoSearchUrl +"?max=10000&geo=true&markBy=false&heatmap=true"
              + "&fq=managementUnitId:" +self.managementUnitId;
          $.getJSON(searchUrl, function(data) {
-            var heatMapPoints = []
-            $.each(data.projects, function(j, project) {
+             var heatMapPoints = [];
+             _.each(data.projects, function(project) {
                 if (project.geo && project.geo.length > 0) {
                     $.each(project.geo, function(k, el) {
                         var lat = parseFloat(el.loc.lat);
@@ -316,15 +316,14 @@ var ManagementUnitPageViewModel = function(props, options) {
                         }
                     });
                 }
-            });
+             });
 
-            var data = {
+             var data = {
                 data: heatMapPoints
-            };
-            createHeatMap(map,data)
-
-         })
-    };
+             };
+             createHeatMap(map,data);
+         });
+     };
 
    var createHeatMap = function(map,heatPoints){
         var cfg = {
@@ -342,7 +341,6 @@ var ManagementUnitPageViewModel = function(props, options) {
 
         heatmapLayer.setData(heatPoints);
     };
-
 
     var tabs = {
         'about': {
@@ -408,6 +406,27 @@ var ManagementUnitPageViewModel = function(props, options) {
             initialiser: function () {
                 populatePermissionsTable();
                 $(options.reportingConfigSelector).validationEngine();
+
+                var reports = _.map(props.reports || [], function(report) {
+                    return {reportId:report.reportId, name:report.name};
+                });
+                var documentViewModelOptions = {
+                    reports: reports,
+                    owner: {
+                        managementUnitId:props.managementUnitId
+                    },
+                    documentDefaults: {
+                        role: DOCUMENT_CONTRACT_ASSURANCE,
+                        public: false
+                    },
+                    modalSelector: '#attachDocument',
+                    documentUpdateUrl: options.documentUpdateUrl,
+                    documentDeleteUrl: options.documentDeleteUrl,
+                    imageLocation: options.imageLocation
+                };
+                var viewModel = new EditableDocumentsViewModel(documentViewModelOptions);
+                viewModel.loadDocuments(props.documents);
+                ko.applyBindings(viewModel, document.getElementById('edit-documents'))
             }
         }
     };

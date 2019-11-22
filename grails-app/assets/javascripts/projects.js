@@ -71,7 +71,25 @@ function isValid(p, a) {
 
 
 function ProjectViewModel(project, isUserEditor, organisations) {
-    var self = $.extend(this, new Documents());
+    var self = this;
+    // documents
+    var docDefaults = newDocumentDefaults(project);
+
+    var documentSettings = {
+        maxStages: docDefaults.maxStages,
+        stages: [],
+        owner: {
+            projectId: project.projectId
+        },
+        documentUpdateUrl: fcConfig.documentUpdateUrl,
+        documentDeleteUrl: fcConfig.documentDeleteUrl
+    };
+    //Associate project document to stages.
+    for(var i = 0; i < docDefaults.maxStages; i++){
+        documentSettings.stages.push((i+1))
+    }
+
+    _.extend(self, new EditableDocumentsViewModel(documentSettings));
 
     if (isUserEditor === undefined) {
         isUserEditor = false;
@@ -438,46 +456,10 @@ function ProjectViewModel(project, isUserEditor, organisations) {
         return JSON.stringify(self.toJS());
     };
 
-    // documents
-    var docDefaults = newDocumentDefaults(project);
-    self.addDocument = function(doc) {
-        // check permissions
-        if (isUserEditor ||  doc.public) {
-            doc.maxStages = docDefaults.maxStages;
-            self.documents.push(new DocumentViewModel(doc));
-        }
-    };
-    self.attachDocument = function() {
-        showDocumentAttachInModal(fcConfig.documentUpdateUrl, new DocumentViewModel(docDefaults, {key:'projectId', value:project.projectId}), '#attachDocument')
-            .done(function(result){
-                self.documents.push(new DocumentViewModel(result));
-                window.location.href = here;
-            });
-    };
-    self.editDocumentMetadata = function(document) {
-        if (!document.maxStages) {
-            document.maxStages = docDefaults.maxStages;
-        }
-        var url = fcConfig.documentUpdateUrl + "/" + document.documentId;
-        showDocumentAttachInModal( url, document, '#attachDocument')
-            .done(function(result){
-                window.location.href = here; // The display doesn't update properly otherwise.
-            });
-    };
-    self.deleteDocument = function(document) {
-        var url = fcConfig.documentDeleteUrl+'/'+document.documentId;
-        $.post(url, {}, function() {self.documents.remove(document);});
-
-    };
-
     if (project.documents) {
-        $.each(project.documents, function(i, doc) {
-            if (doc.role === "logo") doc.public = true; // for backward compatibility
-            self.addDocument(doc);
-        });
+        self.loadDocuments(project.documents);
     }
 
-    // links
     if (project.links) {
         $.each(project.links, function(i, link) {
             self.addLink(link.role, link.url);

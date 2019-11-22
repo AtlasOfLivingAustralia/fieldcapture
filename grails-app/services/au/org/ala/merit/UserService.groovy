@@ -347,22 +347,22 @@ class UserService {
     }
 
 
-    boolean isUserAdminForManagementUnit(String userId, String programId) {
+    boolean isUserAdminForManagementUnit(String userId, String managementUnitId) {
         if (userIsSiteAdmin()) {
             return true
         }
-        Map programRole = getEntityRole(userId, programId)
-        return programRole && programRole.role == RoleService.PROJECT_ADMIN_ROLE
+        Map managementUnitRole = getEntityRole(userId, managementUnitId)
+        return managementUnitRole && managementUnitRole.role == RoleService.PROJECT_ADMIN_ROLE
     }
 
-    boolean isUserEditorForManagementUnit(String userId, String programId) {
-        Map programRole = getEntityRole(userId, programId)
-        return programRole && programRole.role == RoleService.PROJECT_EDITOR_ROLE
+    boolean isUserEditorForManagementUnit(String userId, String managementUnitId) {
+        Map managementUnitRole = getEntityRole(userId, managementUnitId)
+        return managementUnitRole && managementUnitRole.role == RoleService.PROJECT_EDITOR_ROLE
     }
 
-    boolean isUserGrantManagerForManagementUnit(String userId, String programId) {
-        Map programRole = getEntityRole(userId, programId)
-        return programRole && programRole.role == RoleService.GRANT_MANAGER_ROLE
+    boolean isUserGrantManagerForManagementUnit(String userId, String managementUnitId) {
+        Map managementUnitRole = getEntityRole(userId, managementUnitId)
+        return managementUnitRole && managementUnitRole.role == RoleService.GRANT_MANAGER_ROLE
     }
 
     private Map getEntityRole(String userId, String entityId) {
