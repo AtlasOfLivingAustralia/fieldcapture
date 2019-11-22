@@ -44,14 +44,14 @@
 </script>
 
 <script id="objDocEditTmpl" type="text/html">
-<div class="btn-group pull-left float-left" style="margin-top:4px;">
+<div class="btn-group pull-left document-edit-buttons">
     <button class="btn btn-mini" type="button" data-bind="enable:!readOnly,click:$root.deleteDocument"><i class="fa fa-remove"></i></button>
     <button class="btn btn-mini" type="button" data-bind="enable:!readOnly,click:$root.editDocumentMetadata"><i class="fa fa-edit"></i></button>
 </div>
 <a class="pull-left float-left" data-bind="attr:{href:url}">
     <img class="media-object" data-bind="attr:{src:filetypeImg(), alt:name}" alt="document icon">
 </a>
-<div data-bind="template:'mediaBody'"></div>
+<div data-bind="template:'mediaBody'" class="media-body-template"></div>
 </script>
 
 <script id="embeddedVideoEditTmpl" type="text/html">
