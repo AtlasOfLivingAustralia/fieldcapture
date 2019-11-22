@@ -399,7 +399,7 @@ function showDocumentAttachInModal(uploadUrl, documentViewModel, modalSelector, 
 
     // Decorate the model so it can handle the button presses and close the modal window.
     documentViewModel.cancel = function() {
-        result.reject();
+        result.resolve();
         closeModal();
     };
     documentViewModel.close = function() {
@@ -649,8 +649,11 @@ var EditableDocumentsViewModel = function(options) {
     self.attachDocument = function() {
         var newDocument = new DocumentViewModel(settings.documentDefaults, settings.owner, documentViewModelSettings);
 
-        showDocumentAttachInModal(settings.documentUpdateUrl, newDocument, settings.modalSelector).done(function() {
-            window.location.reload();
+        showDocumentAttachInModal(settings.documentUpdateUrl, newDocument, settings.modalSelector).done(function(document) {
+            // Pressing cancel will resolve the promise with an undefined document.
+            if (document) {
+                window.location.reload();
+            }
         }).fail(function() {
             bootbox.alert("An error occurred while attaching the document.  Please try again, or contact support", function() {
                 window.location.reload();
