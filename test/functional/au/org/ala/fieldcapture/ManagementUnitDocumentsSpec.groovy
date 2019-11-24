@@ -39,6 +39,9 @@ class ManagementUnitDocumentsSpec extends StubbedCasSpec {
             dialog.saveEnabled()
         }
         dialog.save()
+        waitFor {
+            hasBeenReloaded()
+        }
 
         then: "the file will be uploaded and the page will be reloaded with the new document displayed in the list"
         waitFor(10) {

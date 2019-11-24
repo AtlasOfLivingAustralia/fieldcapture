@@ -4,7 +4,7 @@ import geb.Page
 import pages.modules.ManagementUnitAdminTab
 
 
-class ManagementUnitPage extends Page {
+class ManagementUnitPage extends ReloadablePage {
 
     static url = 'managementUnit/index/test_mu'
 
