@@ -32,7 +32,10 @@ script:
 - node_modules/karma/bin/karma start karma.conf.js --single-run --browsers PhantomJS
 - cd scripts
 - chmod +x *.sh
-- ./runFunctionalTests.sh chromeHeadless
+# Chrome-driver has a bug in headless mode which prevents element from being clicked under certain conditions.
+# It is fixed in chrome-driver 79.0.3945.16. But npm package for chrome-driver is using an older version.
+# Hence switching to phantomjs.
+- ./runFunctionalTests.sh phantomjs
 - cd ..
 - grails clean; grails refresh-dependencies --non-interactive && grails test-app -clover.on :unit --non-interactive --stacktrace && ala_travis_grails_build
 

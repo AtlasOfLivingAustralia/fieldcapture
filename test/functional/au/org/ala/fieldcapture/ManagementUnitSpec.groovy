@@ -2,8 +2,6 @@ package au.org.ala.fieldcapture
 
 import pages.ManagementUnitPage
 import pages.NewBlogEntryPage
-import pages.ProgramBlogPage
-import pages.ProgramPage
 
 class ManagementUnitSpec extends StubbedCasSpec {
 
@@ -84,6 +82,7 @@ class ManagementUnitSpec extends StubbedCasSpec {
 
         then:
         waitFor {at ManagementUnitPage}
+        waitFor { blogModule.blogs()?.getAt(1)?.displayed }
         blogModule.blogs().size() ==2
 
         ['BlogTest','Testing blog of management unit'].any{blogModule.blogTitles().contains(it)}

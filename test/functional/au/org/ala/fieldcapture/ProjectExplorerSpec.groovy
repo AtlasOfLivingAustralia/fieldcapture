@@ -67,6 +67,10 @@ class ProjectExplorerSpec extends StubbedCasSpec {
 
         when:
         facetAccordion.eq(1).click()
+        waitFor {
+            facetTerms.eq(0).displayed
+        }
+
         facetTerms.eq(0).click()
 
         then:

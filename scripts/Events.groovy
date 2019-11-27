@@ -5,7 +5,7 @@ eventCompileEnd = {
 
 
     def assetPipelineConfigHolder = classLoader.loadClass('asset.pipeline.AssetPipelineConfigHolder')
-    def templateFileAssetResolver = classLoader.loadClass('au.org.ala.merit.TemplateFileAssetResolver').newInstance('templates', 'grails-app/assets/components', false, '/compile/templates.js', '/template')
+    def templateFileAssetResolver = classLoader.loadClass('au.org.ala.ecodata.forms.TemplateFileAssetResolver').newInstance('templates', 'grails-app/assets/components', false, '/compile/templates.js', '/template')
 
     File file = new File("${basedir}/grails-app/assets/components/compile/templates.js")
     templateFileAssetResolver.generateTemplateFile(file)
