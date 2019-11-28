@@ -2,7 +2,6 @@
     <div class="nav flex-column nav-pills col-3">
         <a class="nav-link active" data-toggle="pill" href="#edit-managementUnit-details" role="tab">Edit</a>
         <a class="nav-link" data-toggle="pill" href="#managementUnit-permissions" role="tab">Permissions</a>
-        <a id="editManagementUnitBlog-tab" class="nav-link" data-toggle="pill" href="#editManagementUnitBlog" role="tab">Edit Blog</a>
         <a id="edit-documents-tab" class="nav-link" data-toggle="pill" href="#edit-documents" role="tab">Documents</a>
         <g:if test="${fc.userIsSiteAdmin()}">
                 <a class="nav-link" data-toggle="pill" href="#reporting" role="tab">Reporting</a>
@@ -46,15 +45,6 @@
                     entityId          : mu.managementUnitId, user: user]"/>
 
         </div>
-
-        <g:if test="${fc.userIsAlaOrFcAdmin() || blog.editable}">
-            <div class="tab-pane" id="editManagementUnitBlog">
-                <div id="editProjectBlog" class="pill-pane">
-                    <h3>Edit Blog</h3>
-                    <g:render template="/blog/blogSummary" model="${[blog:mu.blog?:[]]}"/>
-                </div>
-            </div>
-        </g:if>
 
         <!-- DOCUMENTS -->
 
