@@ -242,7 +242,7 @@ var Master = function (activityId, config) {
 
                     if (validate && !valid) {
                         $.unblockUI();
-                        var message = 'Your changes have been saved and you can remain in this activity form, or you can exit this page without losing data. Please note that you cannot mark this activity as finished until all mandatory fields have been completed.';
+                        var message = 'Your changes have been saved. Please note, this report has required fields that are incomplete. You will not be able to submit this report (on the Reporting Tab) until all required fields have been completed.';
                         bootbox.alert(message, function () {
                             self.validate();
                         });
@@ -513,8 +513,12 @@ var ReportNavigationViewModel = function(reportMaster, activityViewModel, option
         var markAsFinished = activityViewModel.transients.markedAsFinished();
         // Only attempt to validate if the user wants to mark the activity as
         // complete.
-        reportMaster.save(function() {
+        reportMaster.save(function(valid) {
             $.unblockUI();
+            if (!valid) {
+                activityViewModel.transients.markedAsFinished(false);
+            }
+
         }, markAsFinished);
     };
     self.saveAndExit = function() {
