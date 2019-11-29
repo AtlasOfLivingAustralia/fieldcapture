@@ -1,3 +1,4 @@
+
 <form class="validationEngineContainer">
 
     <h4 class="block-header"><g:message code="managementUnit.details.header"/></h4>
@@ -38,6 +39,25 @@
     </div>
     <g:render template="/shared/editSocialMediaLinks"
               model="${[entity: 'program', imageUrl: assetPath(src: 'filetypes')]}"/>
+
+    <div class="form-group row">
+        <label class="col-form-label col-sm-3" for="serviceProviderName">Service provider organisation name: <fc:iconHelp><g:message
+                code="managementUnit.webUrl.help"/></fc:iconHelp></label>
+
+        <div class="controls col-sm-4">
+            <input type="text" class="form-control" readonly="readonly" data-bind="value: associatedOrganisations()[0].name" id="serviceProviderName">
+            %{--this custom binding cannot deal with observableArray transients.selectServiceProviderOrganisation--}%
+            <input type="text" class="input-xlarge form-control hidden" id="organisationSelection" placeholder="Search organisations..."
+                   data-bind="elasticSearchAutocomplete:{url:fcConfig.organisationSearchUrl, value:'name', label:'name',result:transients.selectServiceProviderOrganisation, callback:applyServiceProviderSelection}"/>
+
+        </div>
+        <div class="controls col-sm-1">
+          <button class="btn" type="button" id="editServiceProvider">Edit</button>
+        </div>
+
+
+</div>
+
 
 
 
@@ -83,8 +103,8 @@
             <span class="btn fileinput-button pull-right"
                   data-url="${createLink(controller: 'image', action: 'upload')}"
                   data-role="mainImage"
-                  data-owner-type="programId"
-                  data-owner-id="${program?.programId}"
+                  data-owner-type="managementUnitId"
+                  data-owner-id="${managementUnit?.managementUnitId}"
                   data-bind="stagedImageUpload:documents, visible:!mainImageUrl()"><i class="icon-plus"></i> <input
                     id="mainImage" type="file" name="files"><span>Attach</span></span>
 
@@ -96,3 +116,25 @@
 </form>
 <g:render template="/shared/attachDocument"/>
 <g:render template="/shared/markdownEditorModal"/>
+
+<asset:script>
+
+    function applyServiceProviderSelection(){
+       $('button#editServiceProvider').click()
+    };
+
+   $('button#editServiceProvider').click(function(e){
+     if (e.target.textContent == 'Edit'){
+         $('input#organisationSelection').removeClass('hidden')
+         $('input#serviceProviderName').addClass('hidden')
+         e.target.textContent = 'Cancel'
+     }else if (e.target.textContent == 'Cancel'){
+         $('input#organisationSelection').addClass('hidden')
+         $('input#serviceProviderName').removeClass('hidden')
+         e.target.textContent = 'Edit'
+     }
+   })
+
+
+
+</asset:script>

@@ -35,6 +35,11 @@ ManagementUnitViewModel = function (props, options) {
     self.mapFeatures =  ko.observable(props.mapFeatures);
     self.projects = props.projects;
 
+    if(props.associatedOrganisations.length == 0 || props.associatedOrganisations[0].description != "Service Provider"){
+        props.associatedOrganisations.push({name:'', description: ''})
+    }
+    self.associatedOrganisations = ko.observableArray(props.associatedOrganisations);
+
     self.deleteManagementUnit = function () {
         if (window.confirm("Delete this managementUnit?  Are you sure?")) {
             $.post(config.managementUnitDeleteUrl).complete(function () {
@@ -53,6 +58,19 @@ ManagementUnitViewModel = function (props, options) {
     };
 
     self.transients = self.transients || {};
+
+    /**
+     * Custom autocomplete binding cannot handle observable array. So it needs a transient var to update organisation array
+     */
+    self.transients.selectServiceProviderOrganisation = ko.observable()
+
+    self.transients.selectServiceProviderOrganisation.subscribe(function(org) {
+        if (org && org.source.organisationId) {
+            var provider = {name: org.label, organisationId: org.source.organisationId, description:"Service Provider"}
+            self.associatedOrganisations.unshift(provider)
+            self.associatedOrganisations.splice(1,1)
+        }
+    });
 
     self.toJS = function (includeDocuments) {
         var ignore = self.ignore.concat(['projects', 'reports']);

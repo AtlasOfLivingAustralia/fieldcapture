@@ -228,6 +228,7 @@ ko.bindingHandlers.elasticSearchAutocomplete = {
     var valueProp = ko.utils.unwrapObservable(param.value);
     var labelProp = ko.utils.unwrapObservable(param.label);
     var result = param.result;
+    var callback = param.callback;
 
     var options = {};
 
@@ -261,6 +262,11 @@ ko.bindingHandlers.elasticSearchAutocomplete = {
     options.select = function(event, ui) {
       result(ui.item);
       $(this).val(""); // Clear the search field
+
+      if(callback && typeof callback === "function"){
+        callback()
+      }
+
     };
 
     $(element).autocomplete(options);

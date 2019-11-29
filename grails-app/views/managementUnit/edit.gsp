@@ -12,7 +12,8 @@
             programViewUrl: "${createLink(action:'index')}",
             documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
             noImageUrl: "${assetPath(src:'nophoto.png')}",
-            returnToUrl: "${params.returnTo ?: createLink(action:'index', id:mu.managementUnitId)}"
+            returnToUrl: "${params.returnTo ?: createLink(action:'index', id:mu.managementUnitId)}",
+            organisationSearchUrl: "${createLink(controller: 'organisation', action: 'search')}"
         };
     </script>
     <asset:stylesheet src="common-bs4.css"/>
@@ -56,7 +57,7 @@
 
 
 </asset:script>
-<asset:javascript src="common-bs4.js"/>
+<asset:javascript src="common.js"/>
 <asset:javascript src="managementUnit.js"/>
 <asset:deferredScripts/>
 

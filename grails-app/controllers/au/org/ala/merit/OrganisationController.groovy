@@ -264,7 +264,6 @@ class OrganisationController {
     }
 
     def search(Integer offset, Integer max, String searchTerm, String sort) {
-
         render organisationService.search(offset, max, searchTerm, sort) as JSON
     }
 
