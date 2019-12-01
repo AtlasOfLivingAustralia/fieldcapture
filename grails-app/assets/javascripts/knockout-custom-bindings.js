@@ -266,7 +266,6 @@ ko.bindingHandlers.elasticSearchAutocomplete = {
       if(callback && typeof callback === "function"){
         callback()
       }
-
     };
 
     $(element).autocomplete(options);

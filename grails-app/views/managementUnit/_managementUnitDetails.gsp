@@ -51,8 +51,9 @@
                    data-bind="elasticSearchAutocomplete:{url:fcConfig.organisationSearchUrl, value:'name', label:'name',result:transients.selectServiceProviderOrganisation, callback:applyServiceProviderSelection}"/>
 
         </div>
-        <div class="controls col-sm-1">
+        <div class="controls col-sm-2">
           <button class="btn" type="button" id="editServiceProvider">Edit</button>
+          <button class="btn" type="button" id="resetServiceProvider">Clear</button>
         </div>
 
 
@@ -132,6 +133,23 @@
          $('input#organisationSelection').addClass('hidden')
          $('input#serviceProviderName').removeClass('hidden')
          e.target.textContent = 'Edit'
+     }
+   })
+
+   $('button#resetServiceProvider').click(function(e){
+        $('input#serviceProviderName').val('')
+        $('input#organisationSelection').val('')
+        $('input#organisationSelection').addClass('hidden')
+        $('input#serviceProviderName').removeClass('hidden')
+   })
+
+   $(function () {
+
+     //init service provider editting
+     //Enable editting if init value is empty
+
+     if($('input#serviceProviderName').val() == ''){
+        $('button#editServiceProvider').click()
      }
    })
 
