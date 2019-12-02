@@ -156,7 +156,7 @@ class ProjectControllerSpec extends Specification {
         def projectId = '1234'
         Map project = project(projectId)
         project.planStatus = ProjectService.PLAN_APPROVED // The announcements menu items shows only for approved projects
-        projectService.getProgramConfiguration(_) >> new ProgramConfig([template: ProjectController.RLP_TEMPLATE])
+        projectService.getProgramConfiguration(_) >> new ProgramConfig([projectTemplate: ProjectController.RLP_TEMPLATE])
         Map userDetails = stubProjectAdmin('1234', projectId)
 
 
@@ -171,10 +171,30 @@ class ProjectControllerSpec extends Specification {
         model.projectContent.admin.showAnnouncementsTab == false
     }
 
+    def "Only grant managers can request to view a template in the non-configured project view"() {
+        setup:
+        String projectId = '1234'
+        userServiceStub.userIsSiteAdmin() >> false
+        Map project = project(projectId)
+
+        Map userDetails = stubProjectAdmin('1234', projectId)
+        String projectTemplate = 'esp'
+
+        when:
+        params.template='index'
+        controller.index(projectId)
+
+        then:
+        1 *  projectService.get(projectId, userDetails, _) >> project
+        1 * projectService.getProgramConfiguration(project) >> new ProgramConfig([projectTemplate: projectTemplate])
+        view == "/project/espOverview"
+        !model.showAlternateTemplate
+    }
 
     def "if a template is requested that is different to the project default, provide navigation back to the default template view"() {
         setup:
         String projectId = '1234'
+        userServiceStub.userIsSiteAdmin() >> true
         Map project = project(projectId)
 
         Map userDetails = stubGrantManager('1234', projectId)
@@ -186,7 +206,7 @@ class ProjectControllerSpec extends Specification {
 
         then:
         1 *  projectService.get(projectId, userDetails, _) >> project
-        1 * projectService.getProgramConfiguration(project) >> new ProgramConfig([template: projectTemplate])
+        1 * projectService.getProgramConfiguration(project) >> new ProgramConfig([projectTemplate: projectTemplate])
         model.showAlternateTemplate == true
     }
 
@@ -204,7 +224,7 @@ class ProjectControllerSpec extends Specification {
 
         then:
         1 * projectService.get(projectId, userDetails, _) >> project
-        1 * projectService.getProgramConfiguration(project) >> new ProgramConfig([template: projectTemplate])
+        1 * projectService.getProgramConfiguration(project) >> new ProgramConfig([projectTemplate: projectTemplate])
         model.showAlternateTemplate == false
     }
 
@@ -497,13 +517,13 @@ class ProjectControllerSpec extends Specification {
     }
 
     private Map stubGrantManager(userId, projectId) {
-        stubUserPermissions(userId, projectId, false, false, true, true)
-        ['userName':null, 'userId':userId, 'class':UserDetails, 'displayName':null, 'isAdmin':false, 'isCaseManager':true, 'isEditor':false, 'hasViewAccess':true]
+        stubUserPermissions(userId, projectId, true, false, true, true)
+        ['userName':null, 'userId':userId, 'class':UserDetails, 'displayName':null, 'isAdmin':false, 'isCaseManager':true, 'isEditor':true, 'hasViewAccess':true]
     }
 
     private Map stubProjectAdmin(userId, projectId) {
-        stubUserPermissions(userId, projectId, false, true, false, true)
-        ['userName':null, 'userId':userId, 'class':UserDetails, 'displayName':null, 'isAdmin':true, 'isCaseManager':false, 'isEditor':false, 'hasViewAccess':true]
+        stubUserPermissions(userId, projectId, true, true, false, true)
+        ['userName':null, 'userId':userId, 'class':UserDetails, 'displayName':null, 'isAdmin':true, 'isCaseManager':false, 'isEditor':true, 'hasViewAccess':true]
     }
 
     private Map stubProjectEditor(userId, projectId) {

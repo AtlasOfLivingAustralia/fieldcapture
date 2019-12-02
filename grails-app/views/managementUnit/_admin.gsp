@@ -2,7 +2,7 @@
     <div class="nav flex-column nav-pills col-3">
         <a class="nav-link active" data-toggle="pill" href="#edit-managementUnit-details" role="tab">Edit</a>
         <a class="nav-link" data-toggle="pill" href="#managementUnit-permissions" role="tab">Permissions</a>
-        <a class="nav-link" data-toggle="pill" href="#editManagementUnitBlog" id="editManagementUnitBlog-tab" role="tab">Edit Blog</a>
+        <a id="edit-documents-tab" class="nav-link" data-toggle="pill" href="#edit-documents" role="tab">Documents</a>
         <g:if test="${fc.userIsSiteAdmin()}">
                 <a class="nav-link" data-toggle="pill" href="#reporting" role="tab">Reporting</a>
         </g:if>
@@ -38,7 +38,7 @@
             <g:render template="/admin/addPermissions"
                       model="[addUserUrl: g.createLink(controller: ' managementUnit', action: 'addUserAsRoleToManagementUnit'), entityType: 'au.org.ala.ecodata.ManagementUnit', entityId: mu.managementUnitId]"/>
 
-            <h4>Current Program Permissions</h4>
+            <h4>Current Management Unit Permissions</h4>
             <g:render template="/admin/permissionTable" model="[
                     loadPermissionsUrl: g.createLink(controller: 'user', action: 'getMembersOfManagementUnit', id: mu.managementUnitId),
                     removeUserUrl     : g.createLink(controller: ' managementUnit', action: 'removeUserWithRoleFromManagementUnit', id:mu.managementUnitId),
@@ -46,14 +46,39 @@
 
         </div>
 
-        <g:if test="${fc.userIsAlaOrFcAdmin() || blog.editable}">
-            <div class="tab-pane" id="editManagementUnitBlog">
-                <div id="editProjectBlog" class="pill-pane">
-                    <h3>Edit Blog</h3>
-                    <g:render template="/blog/blogSummary" model="${[blog:mu.blog?:[]]}"/>
+        <!-- DOCUMENTS -->
+
+    <!-- ko stopBinding:true -->
+        <div id="edit-documents" class="tab-pane">
+            <div class="attachDocumentModal">
+                <div class="row">
+                    <h3 class="col-3 d-inline-block">Documents</h3>
+                    <form class="col-9 form-inline justify-content-end">
+
+                        <label class="col-auto col-form-label">Filter documents:
+                            <select class="form-control" data-bind="optionsCaption:'No filter', options:documentRoles, optionsText:'name', optionsValue:'id', value:documentFilter"></select>
+                        </label>
+                        <button class="btn btn-info form-control" id="doAttach" data-bind="click:attachDocument">Attach Document</button>
+
+                    </form>
                 </div>
             </div>
-        </g:if>
+            <div class="clearfix"></div>
+            <hr/>
+            <div class="row-fluid">
+                <div class="span10">
+
+                    <g:render template="/shared/editDocuments"
+                              model="[useExistingModel: true, documents: mu.documents, editable:true, filterBy: 'all', ignore: '', imageUrl:assetPath(src:'filetypes'),containerId:'adminDocumentList']"/>
+
+                </div>
+            </div>
+            %{--The modal view containing the contents for a modal dialog used to attach a document--}%
+            <g:render template="/shared/attachDocument"/>
+
+        </div>
+    <!-- /ko -->
+
 
         <g:if test="${fc.userIsSiteAdmin()}">
         <div class="tab-pane" id="reporting">
@@ -110,7 +135,7 @@
         </g:if>
         <g:if test="${fc.userIsAlaOrFcAdmin()}">
         <div class="tab-pane" id="config">
-            <h4 style="display:inline-block">Managment Unit configuration</h4> <button class="btn btn-success float-right" data-bind="click:saveManagementUnitConfiguration">Save Configuration</button>
+            <h4 style="display:inline-block">Management Unit configuration</h4> <button class="btn btn-success float-right" data-bind="click:saveManagementUnitConfiguration">Save Configuration</button>
 
             <textarea rows="80" style="width:100%" data-bind="value:config">
 

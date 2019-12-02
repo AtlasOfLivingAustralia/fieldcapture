@@ -261,6 +261,7 @@
             var themes = ${config.themes?:[]};
             config.themes = themes;
             var services = ${config.services?:[]};
+
             config.useAlaMap = ${Boolean.valueOf(projectContent.site.useAlaMap)};
             config.showSiteType = ${Boolean.valueOf(projectContent.site.showSiteType)};
             config.services = services;
@@ -274,6 +275,8 @@
 
             config.autoSaveIntervalInSeconds = ${grailsApplication.config.fieldcapture.autoSaveIntervalInSeconds?:60};
             config.riskAndThreatTypes = ${config.riskAndThreatTypes ?: 'null'};
+            var programName = '${(config.program?.name?:project.associatedSubProgram) ?: project.associatedProgram}';
+            config.programName = programName;
 
             var viewModel = new ProjectPageViewModel(
                 project,

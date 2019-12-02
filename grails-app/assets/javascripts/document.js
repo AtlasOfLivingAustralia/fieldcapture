@@ -1,5 +1,18 @@
 
-var documentRoles = [{id: 'information', name: 'Information', isPublicRole:true}, {id:'embeddedVideo', name:'Embedded Video', isPublicRole:true}, {id: 'programmeLogic', name: 'Program Logic', isPublicRole:false}, {id:'contractAssurance', name:'Contract Assurance', isPublicRole:false}];
+var DOCUMENT_INFORMATION = 'information';
+var DOCUMENT_EMBEDDED_VIDEO = 'embeddedVideo';
+var DOCUMENT_PROGRAM_LOGIC = 'programmeLogic';
+var DOCUMENT_CONTRACT_ASSURANCE = 'contractAssurance';
+var DOCUMENT_AUDITABLE_OUTPUTS = 'auditableOutputs';
+
+var documentRoles =
+    [
+        {id: DOCUMENT_INFORMATION, name: 'Information', isPublicRole:true},
+        {id: DOCUMENT_EMBEDDED_VIDEO, name:'Embedded Video', isPublicRole:true},
+        {id: DOCUMENT_PROGRAM_LOGIC, name: 'Program Logic', isPublicRole:false},
+        {id: DOCUMENT_CONTRACT_ASSURANCE, name:'Contract Assurance', isPublicRole:false},
+        {id: DOCUMENT_AUDITABLE_OUTPUTS, name:'Auditable Outputs', isPublicRole:false}
+        ];
 /**
  * A view model to capture metadata about a document and manage progress / feedback as a file is uploaded.
  *
@@ -24,11 +37,6 @@ function DocumentViewModel (doc, owner, settings) {
     };
     this.settings = $.extend({}, defaults, settings);
 
-    //Associate project document to stages.
-    this.maxStages = doc.maxStages;
-    for(i = 0; i < this.maxStages; i++){
-        this.settings.stages.push((i+1))
-    }
     this.stage = ko.observable(doc ? doc.stage : 0);
     this.stages = this.settings.stages;
 
@@ -106,6 +114,7 @@ function DocumentViewModel (doc, owner, settings) {
         }
         $("#thirdPartyConsentCheckbox").closest('form').validationEngine("updatePromptsPosition")
     });
+    this.reportId = ko.observable();
     this.thirdPartyConsentDeclarationRequired = ko.computed(function() {
         return (self.type() == 'image' ||  self.role() == 'embeddedVideo')  && self.public();
     });
@@ -363,7 +372,6 @@ function showDocumentAttachInModal(uploadUrl, documentViewModel, modalSelector, 
     }
     var $fileUpload = $(fileUploadSelector);
     var $modal = $(modalSelector);
-    //var documentViewModel = new DocumentViewModel(document?document:{}, owner);
 
     function validateReportAssociation(field, rules, i, options) {
         var role = ko.utils.unwrapObservable(documentViewModel.role);
@@ -391,7 +399,7 @@ function showDocumentAttachInModal(uploadUrl, documentViewModel, modalSelector, 
 
     // Decorate the model so it can handle the button presses and close the modal window.
     documentViewModel.cancel = function() {
-        result.reject();
+        result.resolve();
         closeModal();
     };
     documentViewModel.close = function() {
@@ -401,16 +409,17 @@ function showDocumentAttachInModal(uploadUrl, documentViewModel, modalSelector, 
 
     // Close the modal and tidy up the bindings.
     var closeModal = function() {
-        $modal.modal('hide');
+        $modal.modal('hide').on('hidden hidden.bs.modal', function() {
+            ko.cleanNode($fileUpload[0]);
+        });
         $fileUpload.find(previewSelector).empty();
-        ko.cleanNode($fileUpload[0]);
     };
 
     ko.applyBindings(documentViewModel, $fileUpload[0]);
 
     // Do the binding from the model to the view?  Or assume done already?
     $modal.modal({backdrop:'static'});
-    $modal.on('shown', function() {
+    $modal.on('shown shown.bs.modal', function() {
         $modal.find('form').validationEngine({'custom_error_messages': {
             '#thirdPartyConsentCheckbox': {
                 'required': {'message':'The privacy declaration is required for images viewable by everyone'}
@@ -591,3 +600,88 @@ function initialiseDocumentTable(containerSelector) {
         }
     });
 }
+
+
+/**
+ * Responsible for a list of documents and the ability to add, edit and delete them.
+ * @param {Object} options
+ * @Param {Object} options.owner an object to attach to new documents to define the document owner association.  E.g. {projectId:'1234'}
+ * @param {Object} options.documentUpdateUrl the URL to POST document create/edit requests to
+ * @param {Object} options.documentDeleteUrl the URL to POST document delete requests to
+ * @param {Object} options.documentDefaults [{}] properties in this object will be applied to a new document created by the attachDocument method
+ * @param {Array}  options.reports an array of objects with properties {name: , reportId}.  If supplied, the attach and edit document dialogs will allow selection from this array
+ * @param {string} options.modalSelector [#attachDocument] a css selector that will select the element containing the HTML for the modal dialog
+ * @constructor
+ */
+var EditableDocumentsViewModel = function(options) {
+    var self = this;
+
+    var defaults = {
+        documentDefaults: {},
+        reports: [],
+        modalSelector: '#attachDocument'
+    };
+
+    var settings = _.defaults(options, defaults);
+
+    if (!settings.documentUpdateUrl) {
+        console.log("Warning - missing setting: documentUpdateUrl");
+    }
+    if (!settings.documentDeleteUrl) {
+        console.log("Warning - missing setting: documentUpdateUrl");
+    }
+    if (!settings.owner) {
+        console.log("Warning - missing setting: owner")
+    }
+
+    var documentViewModelSettings  = {
+        reports: settings.reports
+    };
+
+    _.extend(self, new Documents(settings));
+
+    self.loadDocuments = function(documents) {
+        _.each(documents || [], function(document) {
+            self.documents.push(new DocumentViewModel(document, settings.owner, documentViewModelSettings));
+        })
+    };
+
+    self.attachDocument = function() {
+        var newDocument = new DocumentViewModel(settings.documentDefaults, settings.owner, documentViewModelSettings);
+
+        showDocumentAttachInModal(settings.documentUpdateUrl, newDocument, settings.modalSelector).done(function(document) {
+            // Pressing cancel will resolve the promise with an undefined document.
+            if (document) {
+                window.location.reload();
+            }
+        }).fail(function() {
+            bootbox.alert("An error occurred while attaching the document.  Please try again, or contact support", function() {
+                window.location.reload();
+            })
+        });
+    };
+
+    self.deleteDocument = function(document) {
+        var url = settings.documentDeleteUrl+'/'+document.documentId;
+        $.post(url).done(function() {
+            window.location.reload();
+        }).fail(function() {
+            bootbox.alert("An error occurred while deleting the document.  Please try again, or contact support", function() {
+                window.location.reload();
+            })
+        });
+
+    };
+
+    self.editDocumentMetadata = function(document) {
+
+        var url = options.documentUpdateUrl + "/" + document.documentId;
+        showDocumentAttachInModal( url, document, settings.modalSelector).done(function() {
+            window.location.reload();
+        }).fail(function() {
+            bootbox.alert("An error occurred while editing the document.  Please try again, or contact support", function() {
+                window.location.reload();
+            })
+        });
+    };
+};

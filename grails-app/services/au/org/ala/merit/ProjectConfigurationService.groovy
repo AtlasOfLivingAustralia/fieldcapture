@@ -52,9 +52,8 @@ class ProjectConfigurationService {
             if (managementUnit.priorities) {
                 programConfig.priorities = managementUnit.priorities
             }
-            // this is a bit dubious as outcomes are logically defined by the
-            // program, but will work for backwards compatibility for the moment.
-            if (managementUnit.outcomes) {
+            // If the program doesn't define outcomes, use ones for the management unit.
+            if (!programConfig.outcomes && managementUnit.outcomes) {
                 programConfig.outcomes = managementUnit.outcomes
             }
 

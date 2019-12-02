@@ -3,7 +3,7 @@
     <table class="table">
         <thead>
         <tr>
-            <th class="outcome-priority">Primary Regional Land Partnerships outcome</th>
+            <th class="outcome-priority">Primary <span data-bind="text:details.programName"></span> outcome</th>
             <th class="primary-outcome priority">Primary Investment Priority</th>
         </tr>
         </thead>
@@ -33,7 +33,7 @@
         <thead>
 
         <tr>
-            <th class="outcome-priority">Secondary Regional Land Partnerships outcome(s)</th>
+            <th class="outcome-priority">Secondary <span data-bind="text:details.programName"></span> outcome(s)</th>
             <th class="priority">Secondary Investment Priorities</th>
         </tr>
         </thead>

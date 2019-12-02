@@ -57,7 +57,6 @@
 
 </asset:script>
 <asset:javascript src="common-bs4.js"/>
-<asset:javascript src="attach-document-no-ui.js"/>
 <asset:javascript src="managementUnit.js"/>
 <asset:deferredScripts/>
 

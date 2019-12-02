@@ -1,5 +1,6 @@
 /*
 *= require slider-pro-master/css/slider-pro.min.css
+*= require document
 *= require_self
 */
 
@@ -90,4 +91,9 @@ form #start-date, form #end-date {
 }
 .projects-wrapper {
     margin-top: 10px;
+}
+
+#admin .tab-content {
+    border-right: none;
+    border-bottom: none;
 }

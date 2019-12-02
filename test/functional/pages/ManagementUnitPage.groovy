@@ -1,9 +1,10 @@
 package pages
 
 import geb.Page
+import pages.modules.ManagementUnitAdminTab
 
 
-class ManagementUnitPage extends Page {
+class ManagementUnitPage extends ReloadablePage {
 
     static url = 'managementUnit/index/test_mu'
 
@@ -15,13 +16,14 @@ class ManagementUnitPage extends Page {
         grantIdsTable{$('td.grantId')}
         projectLinksTd{$('td.grantId a')}
         gotoProgramLinks{$('a.gotoProgram')}
-
+        blogTab{$('#blog-tab')}
         blogContentDiv {$('div.muBlogContent')}
         blogModule {module BlogPageModule}
         editManagementUnitBlogPane{$('div#editManagementUnitBlog')}
-        adminTabPane {$('div#admin')}
+        adminTabPane(required: false) { module ManagementUnitAdminTab }
         editMUBlogTab{$('a#editManagementUnitBlog-tab')}
         editManagementUnitButton(required:false) { $('#edit-managementUnit-details .admin-action')}
+        adminTab(required:false) { $('#admin-tab') }
     }
 
     List grantIds() {
@@ -34,6 +36,12 @@ class ManagementUnitPage extends Page {
 
     List gotoProgram(){
         gotoProgramLinks.collect{it}
+    }
+
+    void openDocumentDialog() {
+        adminTab.click()
+        waitFor { adminTabPane.displayed }
+        adminTabPane.attachDocument()
     }
 
 }

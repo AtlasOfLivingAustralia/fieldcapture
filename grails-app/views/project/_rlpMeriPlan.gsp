@@ -3,7 +3,7 @@
     <table class="table">
         <thead>
         <tr class="header">
-            <th class="outcome-priority required">Primary Regional Land Partnerships outcome</th>
+            <th class="outcome-priority required">Primary <span data-bind="text:details.programName"></span> outcome</th>
             <th class="primary-outcome priority required">Primary Investment Priority <fc:iconHelp html="true" container="body">Enter the primary investment priority/ies for the primary outcome. (drop down list in MERIT) <br/>For outcomes 1-4, only one primary investment priority can be selected.<br/>For outcomes 5-6, select one or a maximum of two primary investment priorities</fc:iconHelp></th>
             <th class="remove"></th>
         </tr>
@@ -41,7 +41,7 @@
         <thead>
 
         <tr class="header">
-            <th class="outcome-priority">Secondary Regional Land Partnerships outcome(s)</th>
+            <th class="outcome-priority">Secondary <span data-bind="text:details.programName"></span> outcome(s)</th>
             <th class="priority">Secondary Investment Priorities <fc:iconHelp container="body">Other investment priorities that will benefit from the project.  Delete the row if there are no secondary outcomes.</fc:iconHelp></th>
             <th class="remove"></th>
         </tr>

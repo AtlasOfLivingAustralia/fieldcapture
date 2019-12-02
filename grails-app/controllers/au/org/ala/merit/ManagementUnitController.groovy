@@ -14,9 +14,8 @@ class ManagementUnitController {
 
     static allowedMethods = [regenerateManagementUnitReports: "POST", ajaxDelete: "POST", delete: "POST", ajaxUpdate: "POST", saveReport: "POST", ajaxSubmitReport: "POST", ajaxApproveReport: "POST", ajaxRejectReport: "POST"]
 
-    def managementUnitService, programService, searchService, documentService, userService, roleService, commonService, webService, siteService
+    def managementUnitService, programService, documentService, userService, roleService, commonService, webService, siteService
 
-    ProjectService projectService
     ReportService reportService
     ActivityService activityService
     PdfGenerationService pdfGenerationService
@@ -60,20 +59,15 @@ class ManagementUnitController {
         Map result = managementUnitService.getProjects(mu.managementUnitId)
         List projects = result?.projects
 
-        List blogs = blogService.getBlog(mu)
-        def hasNewsAndEvents = blogs.find { it.type == 'News and Events' }
-        def hasManagementUnitStories = blogs.find { it.type == 'Management Unit Stories' }
-        def hasPhotos = blogs.find { it.type == 'Photo' }
-
-
-
         // Clone to avoid change on projects
         // Fetch related programs
         String[] programIds =[]
         if(projects){
             programIds = projects.clone().unique{project->project.programId}?.programId
             List programs = programService.get(programIds)
-            mu.programs = programs
+            // This reverse alphabetical order is to satisfy a request to always
+            // display the RLP first.
+            mu.programs = programs?.sort{it.name}?.reverse()
             mu.projects = projects
         }
 
@@ -102,11 +96,6 @@ class ManagementUnitController {
 
         [about   : [label: 'Management Unit Overview',visible: true, stopBinding: false, type: 'tab',
                     mu: mu,
-                    blog: [blogs: blogs?:[], editable: hasEditAccessOfBlog,
-                                  hasNewsAndEvents: hasNewsAndEvents,
-                                  hasManagementUnitStories:  hasManagementUnitStories,
-                                  hasPhotos: hasPhotos
-                    ],
                     servicesDashboard:[visible: managementUnitVisible]
                     ],
          projects: [label: 'MU Reporting', visible: canViewNonPublicTabs, stopBinding: false, type:'tab', mu:mu, reports: mu.reports, reportOrder:reportOrder, hideDueDate:true],
