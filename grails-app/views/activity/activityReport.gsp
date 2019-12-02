@@ -67,18 +67,22 @@
     <g:render template="/activity/activityFormContents"/>
 
     <g:if test="${!printView}">
-        <div class="form-actions">
-            <button type="button" id="save" class="btn btn-primary">Save changes</button>
-            <button type="button" id="cancel" class="btn">Cancel</button>
-            <label class="checkbox inline" data-bind="visible:progress() != 'corrected'">
-                <input data-bind="checked:transients.markedAsFinished"
-                       type="checkbox"> Mark this report as complete.
-            </label>
+        <!-- ko stopBinding: true -->
+        <div id="report-navigation">
+        <div id="floating-save" style="display:none;">
+            <div class="transparent-background"></div>
+            <div id="nav-buttons">
+                <button class="right btn btn-success" data-bind="enable:dirtyFlag.isDirty(), click: save">Save changes</button>
+                <button class="right btn" data-bind="click: exitReport, class: saveAndExitButtonClass">Exit report</button>
+                <label class="checkbox inline mark-complete" data-bind="visible:activity.progress() != 'corrected'">
+                        <input data-bind="checked:activity.transients.markedAsFinished" type="checkbox"> Mark this report as complete.
+                </label>
+            </div>
         </div>
-
-        <g:render template="/activity/navigation"></g:render>
+        <div id="form-actions-anchor" class="form-actions"></div>
+        </div>
+        <!-- /ko -->
     </g:if>
-
 </div>
 
 <g:render template="/shared/timeoutMessage"
@@ -212,9 +216,6 @@
         options.activityNavSelector = '#activity-nav';
         options.savedNavMessageSelector = '#saved-nav-message-holder';
 
-        var navigationMode = '${navigationMode}';
-        var activityNavigationModel = new ActivityNavigationViewModel(navigationMode, projectId, activityId, siteId, options);
-
         var outputModelConfig = {
             activityId: activityId,
             projectId: projectId,
@@ -239,9 +240,9 @@
 
         config = _.extend({}, outputModelConfig, config);
 
-        var viewModel = ecodata.forms.initialiseOutputViewModel(blockId, config.model.dataModel, output, config, context);
+        var outputViewModel = ecodata.forms.initialiseOutputViewModel(blockId, config.model.dataModel, output, config, context);
         // register with the master controller so this model can participate in the save cycle
-        master.register(viewModel, viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
+        master.register(outputViewModel, outputViewModel.modelForSaving, outputViewModel.dirtyFlag.isDirty, outputViewModel.dirtyFlag.reset);
 
         </g:if>
         </g:each>
@@ -250,20 +251,22 @@
             config.featureCollection.loadComplete();
         }
 
-        ko.applyBindings(activityNavigationModel, document.getElementById('activity-nav'));
+        var navElement = document.getElementById('report-navigation');
+        var options = {
+            returnTo:returnTo,
+            anchorElementSelector:"#form-actions-anchor",
+            navContentSelector:"#nav-buttons",
+            floatingNavSelector:"#floating-save"
+        };
+        var navigator = new ReportNavigationViewModel(master, viewModel, options);
+        ko.applyBindings(navigator, navElement);
 
         $('.helphover').popover({animation: true, trigger: 'hover'});
 
-        $('#save').click(function () {
-            master.save(activityNavigationModel.afterSave);
-        });
+        var $validationContainer = $('#validation-container');
+        $validationContainer.validationEngine('attach', {scroll: true});
 
-        $('#cancel').click(function () {
-            master.deleteSavedData();
-            activityNavigationModel.cancel();
-        });
-
-        $('#validation-container').validationEngine('attach', {scroll: true});
+        navigator.initialiseScrollPosition($validationContainer, activity.progress);
 
         $('.imageList a[target="_photo"]').attr('rel', 'gallery').fancybox({
             type: 'image',
@@ -272,7 +275,6 @@
             preload: 0,
             'prevEffect': 'fade'
         });
-
     });
 </script>
 <asset:deferredScripts/>

@@ -1,5 +1,6 @@
-dist: xenial
+dist: trusty
 language: groovy
+sudo: true
 jdk:
 - openjdk8
 branches:
@@ -8,6 +9,12 @@ branches:
   - dev
   - /^feature\/.*$/
   - /^hotfix\/.*$/
+services:
+  - mongodb
+addons:
+  chrome: stable
+  hosts: devt.ala.org.au
+
 before_install:
 - export TZ=Australia/Canberra
 - wget -q https://raw.githubusercontent.com/AtlasOfLivingAustralia/travis-build-configuration/master/ala_common.sh
@@ -15,10 +22,17 @@ before_install:
 - source ./ala_common.sh
 - ala_travis_grails_setup_env
 before_script:
+- export DETECT_CHROMEDRIVER_VERSION=true
 - npm install
 script:
 - node_modules/karma/bin/karma start karma.conf.js --single-run --browsers PhantomJS
+- grails clean; grails refresh-dependencies --non-interactive
+- cd scripts
+- chmod +x *.sh
+- ./runFunctionalTests.sh chromeHeadless
+- cd ..
 - grails clean; grails refresh-dependencies --non-interactive && grails test-app -clover.on :unit --non-interactive --stacktrace && ala_travis_grails_build
+
 env:
   global:
   - secure: cWYm92Lwc8jyxwd4eYDEEtXJhF5SrFD/eN+e2d6V3Vk22qTlCZDOzKY3XEg5O5KAM0htYdSVcif47fpFJh6GFnvO0C2AiSoWLeqMXwiTijQK/nfc/WirqRK71UtGvQYTVjNn3Si8XETsFB3jwYuqV5T20cJ/13bZxxWCc6cU6M4=

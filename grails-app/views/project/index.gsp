@@ -107,15 +107,25 @@
         <li>
             <g:link controller="home">Home</g:link> <span class="divider">/</span>
         </li>
-        <li>
-        <g:if test="${config?.program}">
-            <g:link controller="program" action="index" id="${config.program.programId}"> ${config.program.name} </g:link>
+        <g:if test="${config?.program || project.managementUnitId}">
+            <g:if test="${project.managementUnitId}">
+                <li>
+                <g:link controller="managementUnit" action="index"
+                        id="${project.managementUnitId}">${project.managementUnitName}</g:link> <span class="divider">/</span>
+                </li>
+            </g:if>
+            <g:if test="${config?.program?.name.equals('Regional Land Partnerships') || config?.program?.name.equals('Environmental Restoration Fund')}">
+                <li>
+                    ${config.program.name}
+%{--                <g:link controller="program" action="index" id="${config.program.programId}">${config.program.name}</g:link> --}%
+                    <span class="divider">/</span>
+                </li>
+            </g:if>
         </g:if>
         <g:else>
             Projects
         </g:else>
-        <span class="divider"> / </span>
-        </li>
+
         <li class="active" data-bind="text:name"></li>
     </ul>
 
@@ -252,6 +262,7 @@
             var themes = ${config.themes?:[]};
             config.themes = themes;
             var services = ${config.services?:[]};
+
             config.useAlaMap = ${Boolean.valueOf(projectContent.site.useAlaMap)};
             config.showSiteType = ${Boolean.valueOf(projectContent.site.showSiteType)};
             config.services = services;
@@ -265,6 +276,8 @@
 
             config.autoSaveIntervalInSeconds = ${grailsApplication.config.fieldcapture.autoSaveIntervalInSeconds?:60};
             config.riskAndThreatTypes = ${config.riskAndThreatTypes ?: 'null'};
+            var programName = '${(config.program?.name?:project.associatedSubProgram) ?: project.associatedProgram}';
+            config.programName = programName;
 
             var viewModel = new ProjectPageViewModel(
                 project,

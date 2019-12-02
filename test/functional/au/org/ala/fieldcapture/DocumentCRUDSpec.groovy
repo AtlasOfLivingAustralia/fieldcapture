@@ -8,14 +8,14 @@ import spock.lang.Shared
 import spock.lang.Stepwise
 
 @Stepwise
-public class DocumentCRUDSpec extends FieldcaptureFunctionalTest {
+public class DocumentCRUDSpec extends CasIntegrationTest {
 
     def setupSpec() {
         logout(browser)
         loginAsProjectAdmin(browser)
     }
     def projectId = "cb5497a9-0f36-4fef-9f6a-9ea832c5b68c"
-
+/*
     def "Add a document"() {
 
         when: "go to the admin tab of the project index page"
@@ -92,6 +92,6 @@ public class DocumentCRUDSpec extends FieldcaptureFunctionalTest {
             admin.documents.documents.size() == (docCount -1)
         }
     }
-
+*/
 }
 

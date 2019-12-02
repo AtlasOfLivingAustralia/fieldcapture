@@ -1,0 +1,14 @@
+{
+  "request": {
+    "urlPath": "/userdetails/userDetails/getUserDetailsFromIdList",
+    "method": "ANY"
+  },
+  "response": {
+    "transformers": ["response-template"],
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{\"success\":true, \"users\":[]}"
+  }
+}

@@ -18,6 +18,7 @@ class ProgramController {
     ActivityService activityService
     PdfGenerationService pdfGenerationService
     BlogService blogService
+    ManagementUnitService managementUnitService
 
     def index(String id) {
         def program = programService.get(id)
@@ -69,6 +70,13 @@ class ProgramController {
             servicesWithScores = programService.serviceScores(program.programId, !hasAdminAccess)
         }
 
+        // Find the management units that contain projects for this program.
+        String[] muIds = projects.collect{it.managementUnitId}.unique()
+        if (muIds) {
+            List managementUnits = managementUnitService.get(muIds)
+            program.managementUnits = managementUnits
+        }
+
         //Aggregate all targeted outcomes of projects
         for(Map project in projects){
             //Verify project.outcomes (from program config) with primaryOutcome and secondaryOutcomes in project.custom.details.outcomes
@@ -82,21 +90,23 @@ class ProgramController {
             }
         }
 
-        [about   : [label: 'Management Unit Overview',visible: true, stopBinding: false, type: 'tab',
+        [about   : [label: 'Overview',visible: true, stopBinding: false, type: 'tab',
+                    program: program,
                     blog: [blogs: blogs?:[], editable: hasEditAccessOfBlog,
                            hasNewsAndEvents: hasNewsAndEvents,
                            hasProgramStories:  hasProgramStories,
                            hasPhotos: hasPhotos
                           ],
                     servicesDashboard:[visible: programVisible, planning:false, services:servicesWithScores]],
-         projects: [label: 'MU Reporting', visible: canViewNonPublicTabs, stopBinding: false, type:'tab', projects:projects, reports:program.reports?:[], reportOrder:reportOrder, hideDueDate:true],
-         sites   : [label: 'MU Sites', visible: canViewNonPublicTabs, stopBinding: true, type:'tab'],
-         admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab',
+         projects: [label: 'Reporting', visible: canViewNonPublicTabs, stopBinding: false, type:'tab', projects:projects, reports:program.reports?:[], reportOrder:reportOrder, hideDueDate:true],
+         sites   : [label: 'Sites', visible: canViewNonPublicTabs, stopBinding: true, type:'tab'],
+         admin   : [label: 'Admin', visible: hasAdminAccess, type: 'tab',
                     blog: [
                       editable: hasEditAccessOfBlog
                       ]
                    ]]
     }
+
 
     @PreAuthorise(accessLevel='siteAdmin')
     def create() {

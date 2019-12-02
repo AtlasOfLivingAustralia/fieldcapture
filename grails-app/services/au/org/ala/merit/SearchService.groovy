@@ -5,6 +5,8 @@ import groovy.json.JsonSlurper
 import org.apache.commons.lang.StringUtils
 
 import javax.annotation.PostConstruct
+import java.math.RoundingMode
+
 /**
  * Service for ElasticSearch running on ecodata
  */
@@ -12,6 +14,7 @@ class SearchService {
     def webService, commonService, cacheService, metadataService, projectService, documentService
     def grailsApplication
     def elasticBaseUrl
+    def userService
 
     private static final int FACET_LIMIT = 1500
 
@@ -66,18 +69,37 @@ class SearchService {
         //def url = elasticBaseUrl + commonService.buildUrlParamsFromMap(params)
         def url = grailsApplication.config.ecodata.baseUrl + 'search/elasticHome' + commonService.buildUrlParamsFromMap(params)
         log.debug "url = $url"
-        webService.getJson(url)
+        webService.getJson2(url)
     }
 
-    def allProjectsWithSites(params, String searchTerm = null) {
-        configureProjectQuery(params)
+    def allProjectsWithSites(searchParams, String searchTerm = null, boolean reducePrecision) {
+        configureProjectQuery(searchParams)
         if (searchTerm) {
-            params.query += " AND " + searchTerm
+            searchParams.query += " AND " + searchTerm
         }
 
-        def url = grailsApplication.config.ecodata.baseUrl + 'search/elasticGeo' + commonService.buildUrlParamsFromMap(params)
+        def url = grailsApplication.config.ecodata.baseUrl + 'search/elasticGeo' + commonService.buildUrlParamsFromMap(searchParams)
         log.debug "url = $url"
-        webService.getJson(url)
+        Map result = webService.getJson2(url)
+
+        Map geoData = result.resp
+        // Reduce precision of coordinates to 1 decimal place.
+        if (reducePrecision) {
+            reducePrecisionOfPoints(1, geoData)
+        }
+        geoData
+    }
+
+    private void reducePrecisionOfPoints(int numberOfDecimalPlaces, Map geoData) {
+        geoData?.projects?.each {
+            it.geo?.each { site ->
+                if (site.loc) {
+                    // Truncate precision to 1 decimal place.
+                    site.loc.lon = (site.loc.lon as BigDecimal).setScale(numberOfDecimalPlaces, RoundingMode.HALF_UP)
+                    site.loc.lat = (site.loc.lat as BigDecimal).setScale(numberOfDecimalPlaces, RoundingMode.HALF_UP)
+                }
+            }
+        }
     }
 
     def allSites(params) {

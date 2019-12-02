@@ -25,7 +25,9 @@ class GmsMapperSpec extends Specification {
     def activitiesModel
     def setup() {
         activitiesModel = JSON.parse(new InputStreamReader(getClass().getResourceAsStream('/resources/activities-model.json')))
-        gmsMapper = new GmsMapper(activitiesModel, [:], [], scores)
+        Map programModel = [programs:[[name:'Green Army']]]
+        List organisations = [[name:'Test org 1']]
+        gmsMapper = new GmsMapper(activitiesModel, programModel, organisations, scores)
     }
 
     /**
@@ -100,7 +102,7 @@ class GmsMapperSpec extends Specification {
 
     }
 
-    def "a seperate activity will be created per distinct type description and dates"() {
+    def "a separate activity will be created per distinct type description and dates"() {
 
         setup:
         CSVMapReader reader = new CSVMapReader(new InputStreamReader(getClass().getResourceAsStream('/resources/gmsMappingTestData2.csv'), 'cp1252'))
@@ -180,6 +182,80 @@ class GmsMapperSpec extends Specification {
 
     }
 
+    def "Management units will be mapped from the supplied name"() {
+        setup:
+        gmsMapper.managementUnits = ["MU1Name":"mu1id", "MU2Name":"mu2id"]
 
+        when:
+        Map result = gmsMapper.mapProject([[MANAGEMENT_UNIT:'MU2Name']])
+
+        then:
+        result.project.managementUnitId == "mu2id"
+
+        and: "The mapped property managementUnitName is not assigned to the result as it is not a valid property of a project"
+        result.project.managementUnitName == null
+    }
+
+    def "An error will be raised if a supplied management unit name cannot be found"() {
+        setup:
+        gmsMapper.managementUnits = ["MU1Name":"mu1id", "MU2Name":"mu2id"]
+
+        when:
+        Map result = gmsMapper.mapProject([[MANAGEMENT_UNIT:'MissingMUName']])
+
+        then:
+        result.project.managementUnitId == null
+        result.errors.find{it == "No management unit exists with name MissingMUName"}
+    }
+
+    def "Management unit is not a compulsory field for a project load"() {
+        when:
+        Map result = gmsMapper.mapProject([[APP_ID:'g1', PROGRAM_NM:"Green Army", ORG_TRADING_NAME:'Test org 1', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']])
+
+        then:
+        !result.errors
+    }
+
+    def "Programs can be mapped from the supplied name via the program map"() {
+        setup:
+        gmsMapper.programs = ["Program name 1":"p1id", "Program name 2":"p2id"]
+        Map projectData = [APP_ID:'g1', ORG_TRADING_NAME:'Test org 1', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
+
+        when:
+        Map result = gmsMapper.mapProject([ projectData + [PROGRAM_NM: 'Program name 2'] ])
+
+        then:
+        result.project.programId == "p2id"
+        !result.errors
+    }
+
+    def "Programs can be mapped from the programs model as a fallback if they aren't mapped in the program map"() {
+        gmsMapper.programs = ["Program name 1":"p1id", "Program name 2":"p2id"]
+        Map projectData = [APP_ID:'g1', ORG_TRADING_NAME:'Test org 1', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
+
+        when:
+        Map result = gmsMapper.mapProject([ projectData + [PROGRAM_NM: 'Green Army'] ])
+
+        then:
+        result.project.associatedProgram == "Green Army"
+        !result.errors
+    }
+
+    def "An error will be raised if the program is unable to be mapped or missing"() {
+        gmsMapper.programs = ["Program name 1":"p1id", "Program name 2":"p2id"]
+        Map projectData = [APP_ID:'g1', ORG_TRADING_NAME:'Test org 1', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
+
+        when:
+        Map result = gmsMapper.mapProject([ projectData + [PROGRAM_NM: 'Missing program'] ])
+
+        then:
+        result.errors.size() == 1
+
+        when: "No program is supplied"
+        result = gmsMapper.mapProject([ projectData] )
+
+        then:
+        result.errors.size() == 1
+    }
 
 }

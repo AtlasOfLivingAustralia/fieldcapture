@@ -230,7 +230,6 @@ if (!grails.cache.ehcache) {
             ehcache {
                 cacheManagerName = appName + '-ehcache'
                 reloadable = true
-                diskStore = '/data/${appName}/ehcache'
             }
         }
     }
@@ -321,6 +320,7 @@ environments {
         emailFilter = /[A-Z0-9._%-]+@csiro\.au|chris\.godwin\.ala@gmail.com/
         logging.dir = '.'
         ecodata.service.url = 'http://devt.ala.org.au:8080/ecodata/ws'
+        espSupportEmail='ESPmonitoring@environment.gov.au'
     }
     test {
         server.port = "8087"
@@ -330,18 +330,30 @@ environments {
         layout.skin = "nrm"
         app.default.hub='merit'
         runWithNoExternalConfig = true
-        def casBaseUrl = "https://auth.ala.org.au"
+        wiremock.port = 8018
+        def casBaseUrl = "http://devt.ala.org.au:${wiremock.port}"
+
         security.cas.appServerName="${serverName}"
         security.cas.contextPath="/${appName}"
         security.cas.casServerName="${casBaseUrl}"
         security.cas.casServerUrlPrefix="${casBaseUrl}/cas"
         security.cas.loginUrl="${security.cas.casServerUrlPrefix}/login"
         security.cas.casLoginUrl="${security.cas.casServerUrlPrefix}/login"
+        userDetails.url = "${casBaseUrl}/userdetails/userDetails/"
+        userDetailsSingleUrl = "${userDetailsUrl}getUserDetails"
+        userDetailsUrl = "${userDetatails.url}getUserListFull"
         logging.dir = '.'
         ecodata.baseUrl = 'http://devt.ala.org.au:8080/ecodata/ws/'
         ecodata.service.url = 'http://devt.ala.org.au:8080/ecodata/ws'
-        api_key=System.getenv('API_KEY')
-
+        api_key='testapikey'
+        grails.cache.config = {
+            diskStore {
+                path '/tmp'
+            }
+            defaultCache {
+                overflowToDisk false
+            }
+        }
     }
     production {
         grails.logging.jul.usebridge = false
@@ -447,7 +459,6 @@ log4j = {
                     'grails.app.taglib.au.org.ala.fieldcapture',
                     'grails.app.conf.au.org.ala.fieldcapture',
                     'grails.app.filters.au.org.ala.fieldcapture',
-                    'au.org.ala.cas.client',
                     'au.org.ala.merit.SessionLogger'
                     ]
         }
@@ -469,12 +480,8 @@ log4j = {
             'grails.app.filters.au.org.ala.fieldcapture'
     ]
 
-    debug 'grails.app.controllers.au.org.ala',
-            'ala','au.org.ala.web',
+    debug 'grails.app.controllers.au.org.ala.merit',
             'au.org.ala.merit'
-            //'au.org.ala.cas.client'
-            //'grails.plugin.cache',
-            //'net.sf.ehcache'
 
     error  'org.codehaus.groovy.grails.web.servlet',        // controllers
            'org.codehaus.groovy.grails.web.pages',          // GSP

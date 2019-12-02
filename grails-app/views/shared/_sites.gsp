@@ -41,7 +41,7 @@
 
         markBy =  (markBy === undefined) || markBy == "-1" ? "" : "&markBy="+markBy;
 
-        var url = "${createLink(controller:'nocas', action:'geoService')}?max=10000&geo=true"+markBy;
+        var url = "${createLink(controller:'nocas', action:'geoService')}?max=30000&geo=true"+markBy;
 
         if (facetList && facetList.length > 0) {
             url += "&fq=" + facetList.join("&fq=");
@@ -186,7 +186,7 @@
 
                     }
                 };
-                var ZOOM_THRESHOLD = 4;
+                var ZOOM_THRESHOLD = 8;
 
                 alaMap.hideMarkers = function() {
                     toggleMarkers(alaMap.featureIndex, null);

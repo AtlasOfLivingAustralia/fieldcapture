@@ -963,3 +963,28 @@ function getNestedValue(obj, path) {
     }
     return current;
 }
+
+/**
+ * Used when reopening an incomplete form, this method will scroll the form to the first invalid field so the
+ * user can continue editing.
+ * @param $validator a jquery object wrapping the element that contains the jquery validation engine configuration
+ * for the page.
+ */
+function scrollToFirstInvalidField($validator) {
+    var currentOptions = $validator.data('jqv');
+
+    var scrollOptions = _.extend({}, currentOptions, {
+        showPrompts:false,
+        showOneMessage: true,
+        focusFirstField: true,
+        scroll: true
+    });
+
+    $validator.data('jqv', scrollOptions);
+    try {
+        $validator.validationEngine('validate');
+    }
+    finally {
+        $validator.data('jqv', currentOptions);
+    }
+};

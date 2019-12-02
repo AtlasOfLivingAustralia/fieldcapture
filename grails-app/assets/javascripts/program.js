@@ -291,38 +291,25 @@ var ProgramPageViewModel = function(props, options) {
 
     };
 
-    self.loadProjectSites = function(map) {
-        //find sites of related projects.
-        var searchUrl = options.geoSearchUrl +"?max=10000&geo=true&markBy=false";
-        searchUrl = searchUrl + "&fq=programId:" +self.programId;
-        $.getJSON(searchUrl, function(data) {
-            $.each(data.projects, function(j, project) {
-                var projectName = project.name;
-                if (project.geo && project.geo.length > 0) {
-                    $.each(project.geo, function(k, el) {
-                        var lat = parseFloat(el.loc.lat);
-                        var lon = parseFloat(el.loc.lon);
-                        var mf = {
-                            geometry: {
-                                coordinates: [lon,lat],
-                                type: "Point"
+    function popupContent(managementUnitFeature) {
+        return "<a href="+options.viewManagementUnitUrl +"/" +managementUnitFeature.properties.managementUnitId+">"+ managementUnitFeature.properties.name + "</a>";
+    }
 
-                            },
-                            properties:{
-                                name: projectName,
-                                //work around with leaflet circle - ref maps.js
-                                point_type: 'Circle',
-                                radius: 0, //Need to have a value,but overwritten somewhere
-                                type: "circle",
-                                popupContent: "Project: <a href="+fcConfig.projectUrl +"/" +project.projectId+">"+ projectName + "</a>" +
-                                    "<br/>Site: " + el.siteName
-                            },
-                            type: "Feature"
-                        };
-                        map.addFeature(mf);
-                    });
-                };
-            });
+    self.loadManagementUnits = function(map) {
+        //find sites of related projects.
+        var searchUrl = options.managementUnitFeaturesUrl;
+        $.getJSON(searchUrl, function(data) {
+            if (data.resp) {
+                $.each(data.resp.features, function(j, feature) {
+
+                    if (!feature.properties) {
+                        feature.properties = {};
+                    }
+                    feature.properties.popupContent = popupContent(feature);
+                    map.addFeature(feature);
+                });
+            }
+
         });
     };
 
@@ -346,31 +333,29 @@ var ProgramPageViewModel = function(props, options) {
                 $.fn.dataTable.moment( 'dd-MM-yyyy' );
                 $('#projectOverviewList').DataTable({displayLength:25, order:[[2, 'asc'], [3, 'asc']]});
 
+                var colours = ['#e41a1c',
+                    '#377eb8',
+                    '#4daf4a',
+                    '#984ea3',
+                    '#ff7f00'];
+                var styles = {};
+                for (var i=0 ; i<colours.length; i++) {
+                    styles[i+1] = {
+                        color:colours[i],
+                        fillOpacity:0.8,
+                        weight: 1
+                    }
+                }
+
                 //create a empty map.
                 var map = createMap({
                     useAlaMap:true,
-                    mapContainerId:'programSiteMap',
+                    mapContainerId:'muMap',
                     width: '100%',
-                    styles: {
-                        circle: {
-                            color: '#f00',
-                            fillOpacity: 0.2,
-                            weight: 3
-                        }
-                    }
+                    styles: styles
                 });
 
-                if (self.programSiteId){
-                    if (!self.mapFeatures()) {
-                        console.log("There was a problem obtaining program site data");
-                    }
-                    else {
-                        map.addFeature(self.mapFeatures())
-                    }
-                }
-                // Temporarily disabled until we can reduce the precision of the site information.
-                //self.loadProjectSites(map);
-
+                self.loadManagementUnits(map);
             }
         },
         'projects': {

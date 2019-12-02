@@ -11,7 +11,7 @@
             <div class="well well-small">
                 <label><b>MERI attachments:</b></label>
                 <g:render template="/shared/listDocuments"
-                          model="[useExistingModel: true,editable:false, filterBy: 'programmeLogic', ignore: '', imageUrl:assetPath(src:'/'),containerId:'meriPlanDocumentList']"/>
+                          model="[useExistingModel: true,editable:false, filterBy: 'programmeLogic', ignore: [], imageUrl:assetPath(src:'/'),containerId:'meriPlanDocumentList']"/>
             </div>
         </div>
     </div>

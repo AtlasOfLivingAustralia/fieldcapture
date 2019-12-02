@@ -6,34 +6,54 @@
 
 
 import org.openqa.selenium.chrome.ChromeDriver
+import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.firefox.FirefoxDriver
+import org.openqa.selenium.phantomjs.PhantomJSDriver
+
 
 baseUrl = 'http://devt.ala.org.au:8087/fieldcapture/'
-reportsDir = 'target/geb-reports'
-
-// Use htmlunit as the default
-// See: http://code.google.com/p/selenium/wiki/HtmlUnitDriver
-driver = {
-    System.setProperty('webdriver.chrome.driver', '/opt/webdrivers/chromedriver')
-
-    new ChromeDriver()
-}
-
 environments {
 
-    // run as �grails -Dgeb.env=chrome test-app�
-    // See: http://code.google.com/p/selenium/wiki/ChromeDriver
+
+
+    reportsDir = 'target/geb-reports'
+
+    // run as grails -Dgeb.env=chrome test-app
     chrome {
-        System.setProperty('webdriver.chrome.driver', '/opt/webdrivers/chromedriver')
-        driver = {
-            new ChromeDriver()
+        if (!System.getProperty("webdriver.chrome.driver")) {
+            System.setProperty("webdriver.chrome.driver", "node_modules/chromedriver/bin/chromedriver")
         }
+        driver = { new ChromeDriver() }
     }
 
-    // run as �grails -Dgeb.env=firefox test-app�
-    // See: http://code.google.com/p/selenium/wiki/FirefoxDriver
     firefox {
         driver = { new FirefoxDriver() }
+    }
+
+    phantomjs {
+        if (!System.getProperty("phantomjs.binary.path")) {
+            String phantomjsPath = "node_modules/phantomjs-prebuilt/lib/phantom/bin/phantomjs"
+            if (!new File(phantomjsPath).exists()) {
+                throw new RuntimeException("Please install node modules before running functional tests")
+            }
+
+            System.setProperty("phantomjs.binary.path", phantomjsPath)
+        }
+
+        driver = { new PhantomJSDriver() }
+    }
+
+    chromeHeadless {
+
+        if (!System.getProperty("webdriver.chrome.driver")) {
+            System.setProperty("webdriver.chrome.driver", "node_modules/chromedriver/bin/chromedriver")
+        }
+        driver = {
+            ChromeOptions o = new ChromeOptions()
+            o.addArguments('headless')
+            o.addArguments('--disable-dev-shm-usage')
+            new ChromeDriver(o)
+        }
     }
 
 }

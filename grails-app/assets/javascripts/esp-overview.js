@@ -130,6 +130,40 @@ var SimplifiedReportingViewModel = function(project, config) {
         return stage.toDate == currentReport.toDate;
     });
 
+    self.stageToReport = ko.observable(currentStage.label)
+
+    self.reportableStages = ko.computed(function() {
+        var stages = [];
+
+        var theLastAvailableReportIdx = planViewModel.stages.length
+        $.each( planViewModel.stages || [], function(i, stage) {
+            if(self.stageToReport() == stage.label)
+                theLastAvailableReportIdx = i
+            if (i <= theLastAvailableReportIdx)
+                stages.push({financialYear: isoDateToFinancialYear(stage.toDate), "stage":stage.label});
+        });
+        return stages;
+    });
+
+
+    self.orientation = ko.observable('portrait');
+    self.generateProjectReport = function(url) {
+        var url = url + '?fromStage='+self.stageToReport()+'&toStage='+self.stageToReport();
+        url+='&sections=Progress against activities'
+        url+='&orientation='+self.orientation();
+        window.open(url,'project-report');
+    };
+    self.generateProjectReportHTML = function() {
+        self.generateProjectReport(fcConfig.projectReportUrl);
+    };
+    self.generateProjectReportPDF = function() {
+        self.generateProjectReport(fcConfig.projectReportPDFUrl);
+    };
+
+    self.configureProjectReport = function() {
+        $('#projectReportOptions').modal({backdrop:'static'});
+    };
+
     var OPTIONAL_REPORT_TYPE = config.sightingsActivityType || 'ESP Species';
     var ADMIN_REPORT_TYPE = config.adminActivityType || 'ESP Overview';
     function isAdminActivity(activity) {
@@ -261,7 +295,7 @@ var SimplifiedReportingViewModel = function(project, config) {
     };
 
     function showSaveError() {
-        bootbox.alert("There was an error submitting your report.  Please reload your page and try again.  If the error persists, please contact: ESPmonitoring@environment.gov.au");
+        bootbox.alert("There was an error submitting your report.  Please reload your page and try again.  If the error persists, please contact: "+fcConfig.espSupportEmail);
     }
 
 

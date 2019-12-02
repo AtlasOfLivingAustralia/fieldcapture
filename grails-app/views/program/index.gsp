@@ -22,7 +22,8 @@
             geoSearchUrl: "${createLink(controller: 'home', action:'geoService')}",
             projectUrl: "${createLink(controller: "project", action:'index')}",
             siteUrl: "${createLink(controller: "site", action:'index')}",
-
+            managementUnitFeaturesUrl: "${createLink(controller:'managementUnit', action:'managementUnitFeatures')}",
+            viewManagementUnitUrl: "${createLink(controller:'managementUnit', action:'index')}",
             ///Todo checck the purpose of 'fragment'
             createBlogEntryUrl: "${createLink(controller: 'blog', action:'create', params:[programId:program.programId, returnTo:createLink(controller: 'program', action: 'index', id: program.programId, fragment: 'admin')])}",
             editBlogEntryUrl: "${createLink(controller: 'blog', action:'edit', params:[programId:program.programId, returnTo:createLink(controller: 'program', action: 'index', id: program.programId, fragment: 'admin')])}",
@@ -42,7 +43,7 @@
             <li class="breadcrumb-item">
                 <g:link controller="home">Home</g:link>
             </li>
-            <li class="breadcrumb-item">Management Units</li>
+            <li class="breadcrumb-item">Programs</li>
             <li class="breadcrumb-item active">${program.name}</li>
         </ol>
 
@@ -133,6 +134,17 @@
     $('#gotoEditBlog').click(function () {
             amplify.store('program-admin-tab-state', '#editProgramBlog');
             $('#admin-tab').tab('show');
+    });
+
+    $('#showAllStatesMu').click(function(event){
+       event.preventDefault();
+       //:has(*)  - only show has content: managementunit
+       $("div[id^='state-mu'] .collapse:has(*)").addClass('show')
+    });
+
+    $('#hideAllStatesMu').click(function(event){
+       event.preventDefault();
+       $("div[id^='state-mu'] .collapse").removeClass('show')
     });
 
 </asset:script>

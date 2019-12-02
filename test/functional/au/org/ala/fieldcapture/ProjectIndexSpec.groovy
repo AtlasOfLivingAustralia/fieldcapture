@@ -8,7 +8,7 @@ import spock.lang.Stepwise
 public class ProjectIndexSpec extends GebReportingSpec {
 
     def projectId = "cb5497a9-0f36-4fef-9f6a-9ea832c5b68c"
-
+/*
     def "project information should be displayed correctly"() {
         given: "go to project index page"
         to ProjectIndex, projectId
@@ -22,6 +22,6 @@ public class ProjectIndexSpec extends GebReportingSpec {
 
 
     }
-
+*/
 }
 

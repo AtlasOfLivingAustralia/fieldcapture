@@ -40,11 +40,11 @@ module.exports = function (config) {
             'grails-app/assets/vendor/wmd/wmd.js',
             'grails-app/assets/vendor/datatables/1.10.16/js/jquery.dataTables.js',
             'grails-app/assets/vendor/jquery-ui/jquery-ui-1.9.2.custom.js',
-            'grails-app/assets/vendor/momentjs/moment.min.js',
             'grails-app/assets/vendor/jquery.appear/jquery.appear.js',
             'grails-app/assets/vendor/amplifyjs/amplify.min.js',
+            'grails-app/assets/vendor/vkbeautify/vkbeautify.0.99.00.beta.js',
             "node_modules/moment/moment.js",
-            "node_modules/moment-timezone/moment-timezone.js",
+            "node_modules/moment-timezone/builds/moment-timezone-with-data.js",
             'grails-app/assets/javascripts/*.js',
             'test/js/spec/**/*.js'
         ],
@@ -71,7 +71,7 @@ module.exports = function (config) {
             'type':"text",
             check: {
                 global: {
-                    lines: 22
+                    lines: 24.0
                 }
             }
         },

@@ -448,6 +448,18 @@ class ReportService {
         return []
     }
 
+    def findReportsForManagementUnit(String managementUnitId) {
+
+        def reports = webService.doPost(grailsApplication.config.ecodata.baseUrl+"managementUnit/${managementUnitId}/reports", [:])
+
+        if (reports.resp && !reports.error) {
+            return reports.resp
+        }
+        return []
+    }
+
+
+
     /**
      * Returns the report that spans the period including the supplied date
      * @param isoDate an ISO8601 formatted date string.
@@ -697,7 +709,8 @@ class ReportService {
                 labels:'hp-y'
         ]
 
-        def count = documentService.search(criteria).count
+        def count = documentService.search(criteria).count?: max
+
         criteria.offset = (int)Math.floor(Math.random()*count)
         criteria.max = max
         criteria.offset = Math.min(criteria.offset, count-max)

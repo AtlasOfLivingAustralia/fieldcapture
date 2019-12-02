@@ -24,11 +24,6 @@ class UserController {
         } else {
             log.debug('Viewing my dashboard :  ' + user)
             def userData = assembleUserData(user)
-            if (userData.recentEdits?.error) {
-                flash.message = "User Profile Error: There was an error obtaining ."
-                redirect(controller: 'home', model: [error: flash.message])
-                return
-            }
             return userData
         }
     }
@@ -38,12 +33,14 @@ class UserController {
         def memberProjects = userService.getProjectsForUserId(user.userId)
         def starredProjects = userService.getStarredProjectsForUserId(user.userId)
         def programs = userService.getProgramsForUserId(user.userId)?.sort({it.name})
+        def managementUnits = userService.getManagementUnitsForUserId(user.userId)?.sort({it.name})
 
         Map userData = [
                 user: user,
                 memberProjects: memberProjects,
                 memberOrganisations:memberOrganisations,
                 memberPrograms:programs,
+                memberManagementUnits:managementUnits,
                 starredProjects: starredProjects]
 
         def reportsByProject = reportService.findReportsForUser(user.userId)
@@ -183,6 +180,26 @@ class UserController {
         if (id && userId) {
             if (userService.userIsSiteAdmin() || userService.isUserAdminForProgram(userId, id) || userService.isUserGrantManagerForProgram(userId, id)) {
                 Map result = userService.getMembersOfProgram(id)
+                List members = result?.members ?: []
+                render members as JSON
+            } else {
+                render status: 403, text: 'Permission denied'
+            }
+        } else if (userId) {
+            render status: 400, text: 'Required params not provided: id'
+        } else if (id) {
+            render status: 403, text: 'User not logged-in or does not have permission'
+        } else {
+            render status: 500, text: 'Unexpected error'
+        }
+    }
+
+    def getMembersOfManagementUnit(String id) {
+        String userId = userService.getCurrentUserId()
+
+        if (id && userId) {
+            if (userService.userIsSiteAdmin() || userService.isUserAdminForManagementUnit(userId, id) || userService.isUserGrantManagerForManagementUnit(userId, id)) {
+                Map result = userService.getMembersOfManagementUnit(id)
                 List members = result?.members ?: []
                 render members as JSON
             } else {

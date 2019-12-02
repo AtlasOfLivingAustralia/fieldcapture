@@ -16,21 +16,41 @@
 </div>
 
 <div class="row">
-    <div class="col-md-12 ">
-        <div class="well-title ">Description</div>
-    </div>
-    <div class="col-md-8" >
+    <div class="col-md-4" >
+        <h3>Description</h3>
         <span data-bind="html:description.markdownToHtml()"></span>
     </div>
-    <div data-bind="visible:programSiteId" class="col-md-4">
-        <m:map id="programSiteMap" width="100%" height="300px"></m:map>
+    <div class="col-md-8">
+        <m:map id="muMap" width="100%" height="500px"></m:map>
+    </div>
+
+    <div class="col-md-12" id="state-mu">
+        <div class="well">Click on a heading or <a id="showAllStatesMu" href="#">Show all</a>  | <a id="hideAllStatesMu"  href="#">Hide all</a> management units</div>
+        <div class="panel panel-default">
+            <g:set var="states" value="${['Australia Capital Territory','New South Wales', 'Northern Territory', 'Queensland', 'South Australia', 'Tasmania', 'Victoria', 'Western Australia']}"></g:set>
+            <g:set var="statesAcronyms" value="${['ACT','NSW', 'NT', 'Queensland', 'SA', 'Tasmania', 'Victoria', 'WA']}"></g:set>
+            <g:each in="${states}" status="i" var="state" >
+                <div class="card">
+                    <div class="card-header">
+                        <a class="state-mu-toggle collapsed" data-toggle="collapse" data-parent="#state-mu" href="#state-mu-${i}">
+                            ${state}
+                        </a>
+                    </div>
+                    <div id="state-mu-${i}" class="collapse col-md-offset-1 col-md-11 card-body">
+                        <g:findAll in="${program.managementUnits}" expr="it.state?.startsWith(state) || it.state?.startsWith(statesAcronyms[i])">
+                            <li><a href="${g.createLink(controller: 'managementUnit', action: 'index',id:it.managementUnitId)}">${it.name}</a></li>
+                        </g:findAll>
+                    </div>
+                </div>
+            </g:each>
+        </div>
     </div>
 </div>
 
 
 <g:if test="${program.outcomes}">
     <div class="well">
-        <div class="well-title">The Service Provider is addressing these RLP outcomes</div>
+        <div class="well-title">The following outcomes are being addressed by this program</div>
         <div class="row outcomes no-gutters">
             <g:each in="${program.outcomes}" var="outcome" >
                 <g:set var="outcomeClass" value="${outcome.targeted ? 'targeted' : 'disabled'}"/>
@@ -46,13 +66,16 @@
     </div>
 </g:if>
 
+
+
+
 <div class="projects-wrapper d-none d-md-block">
 <g:set var="projects" value="${content.projects.projects}" />
 <g:if test="${projects}">
     <div class="well-title">Projects</div>
     <table id="projectOverviewList" class="table table-striped table-bordered">
         <thead class="thead-light">
-        <th class="projectId">Project ID</th>
+        <th class="grantId">Grant ID</th>
         <th class="name">Name</th>
         <th class="description">Description</th>
         <th class="outcomes">Outcome</th>
@@ -63,8 +86,8 @@
         <tbody>
         <g:each var="project" in="${projects}">
             <tr>
-                <td class="projectId"><a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}" >${project.externalId ?: project.grantId}</a></td>
-                <td class="name">${project.name}</td>
+                <td class="grantId"><a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}" >${project.externalId ?: project.grantId}</a></td>
+                <td class="projectName">${project.name}</td>
                 <td class="description">${project.description}</td>
                 <g:if test="${project.custom?.details?.outcomes?.primaryOutcome}">
                       <g:set var="primaryOutcome" value="${project.custom.details.outcomes.primaryOutcome}" />
@@ -102,7 +125,7 @@
     <div class="well-title">Program blog</div>
     <g:if test="${blog.editable}">
         <p>
-            <a href="${g.createLink(controller: 'blog', action: 'create', params:[programId: program.programId, returnTo:g.createLink(controller: 'program', action:'index', id:program.programId)])}"><button class="btn"><i class="fa fa-newspaper-o"></i> New Entry</button></a>
+            <a class="newBlog" href="${g.createLink(controller: 'blog', action: 'create', params:[programId: program.programId, returnTo:g.createLink(controller: 'program', action:'index', id:program.programId)])}"><button class="btn"><i class="fa fa-newspaper-o"></i> New Entry</button></a>
             <button id="gotoEditBlog" class="btn"><i class="fa fa-edit"></i> Edit</button>
             </a>
         </p>
@@ -145,7 +168,7 @@
     <div id="services-dashboard">
 
         <g:if test="${servicesDashboard.planning}">
-            <b>Please note this project is currently in a planning phase so delivery against the targets below has not yet begun</b>
+            <b>Please note this program is currently in a planning phase so delivery against the targets below has not yet begun</b>
         </g:if>
         <g:each in="${servicesDashboard.services}" var="service" status="i">
 

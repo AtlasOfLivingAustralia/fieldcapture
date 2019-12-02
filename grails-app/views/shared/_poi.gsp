@@ -25,15 +25,17 @@
 </div>
 <asset:script>
     $(function() {
-        $( '#poi-slider' ).sliderPro({
-            arrows: false,
-            buttons: false,
-            fade: true,
-            //autoHeight:true,
-            autoplay: true,
-            imageScaleMode:'cover',
-            touchSwipe:true,
-            buttons:true
-        });
+        if ($('#poi-slider .sp-image').length > 0) {
+            $( '#poi-slider' ).sliderPro({
+                arrows: false,
+                buttons: false,
+                fade: true,
+                //autoHeight:true,
+                autoplay: true,
+                imageScaleMode:'cover',
+                touchSwipe:true,
+                buttons:true
+            });
+        }
     });
 </asset:script>

@@ -9,6 +9,7 @@ import spock.lang.Specification
 class ProgramControllerSpec extends Specification {
 
     ProgramService programService = Mock(ProgramService)
+    ManagementUnitService managementUnitService = Mock(ManagementUnitService)
     ReportService reportService = Mock(ReportService)
     UserService userService = Mock(UserService)
     ActivityService activityService = Mock(ActivityService)
@@ -27,6 +28,7 @@ class ProgramControllerSpec extends Specification {
         controller.activityService = activityService
         controller.userService = userService
         controller.blogService = blogService
+        controller.managementUnitService = managementUnitService
 
         roleService.getRoles() >> []
     }
@@ -54,7 +56,9 @@ class ProgramControllerSpec extends Specification {
         String programId = 'p1'
         userService.getUser() >> null
         programService.get(programId) >> [programId:programId, name:"test"]
+        programService.getProgramProjects(programId) >>[projects:[]]
         userService.getMembersOfProgram(programId) >> [members:[]]
+        managementUnitService.get(programId) >> []
 
         when:
         Map model = controller.index(programId)
@@ -73,6 +77,8 @@ class ProgramControllerSpec extends Specification {
         userService.getUser() >> [userId:'u1']
         programService.get(programId) >> [programId:programId, name:"test"]
         userService.getMembersOfProgram(programId) >> [members:[[userId:'u1', role:'admin']]]
+        programService.getProgramProjects(programId) >>[projects:[]]
+        managementUnitService.get(programId) >> []
 
         when:
         Map model = controller.index(programId)
@@ -156,7 +162,7 @@ class ProgramControllerSpec extends Specification {
         SaveReportDataCommand cmd = new SaveReportDataCommand(props)
 
         when:
-        params.projectId = 'p1'
+        params.id = 'p1'
         controller.saveReport(cmd)
 
         then:
@@ -209,6 +215,10 @@ class ProgramControllerSpec extends Specification {
 
         programService.get(programId) >> program
         blogService.getBlog(program) >> program["blog"]
+        programService.getProgramProjects(programId) >>[projects:[]]
+        managementUnitService.get(programId) >> []
+
+
 
         def userId = adminUserId
         Map user = [userId:userId]

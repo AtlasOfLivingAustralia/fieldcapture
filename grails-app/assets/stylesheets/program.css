@@ -100,3 +100,15 @@ form #start-date, form #end-date {
 #programSiteMap .leaflet-control-container {
     display:none;
 }
+
+.state-mu-toggle:after {
+    /* symbol for "opening" panels */
+    font-family: 'FontAwesome';
+    content: "\f077";    /* adjust as needed, taken from bootstrap.css */
+    float: right;        /* adjust as needed */
+    color: grey;         /* adjust as needed */
+}
+.state-mu-toggle.collapsed:after {
+    /* symbol for "collapsed" panels */
+    content: "\f078";    /* adjust as needed, taken from bootstrap.css */
+}

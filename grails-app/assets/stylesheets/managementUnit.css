@@ -1,0 +1,99 @@
+/*
+*= require slider-pro-master/css/slider-pro.min.css
+*= require document
+*= require_self
+*/
+
+table#projectList th {
+    white-space: normal;
+}
+table#projectList .projectId {
+    width: 10%;
+}
+table#projectList .workOrderId {
+    width: 10%;
+}
+table#projectList .name {
+    width: 45%;
+}
+table#projectList .startDate {
+    width: 10%;
+    min-width:4em;
+}
+table#projectList .endDate {
+    width: 10%;
+    min-width:4em;
+}
+table#projectList .statusCol {
+    width: 15%;
+}
+
+#addSocialMedia {
+    margin-left: -5px; /* offset table cell padding */
+}
+
+/** Get rid of extra padding inside tabs when dataTables is applied */
+.dataTables_wrapper.container-fluid {
+    padding-left:0;
+    padding-right:0;
+}
+
+form #start-date, form #end-date {
+    width: 12em;
+    display:inline-block;
+}
+
+.progress {
+    background-color: #f7f7f7;
+    height:20px;
+    margin-bottom: 20px;
+    border: 1px solid #bfbfbf;
+    margin-top: 5px;
+}
+
+.progress .bar {
+    background-image: none;
+    background-color: #02baf2;
+}
+
+.progress-info .bar,.progress .bar-info {
+    background-image: none;
+    background-color: #02baf2;
+}
+
+.program-organisation {
+    padding-left: 5px;
+    margin-bottom: 5px;
+}
+
+.header-text h2 {
+    padding-left: 3px;
+}
+
+.outcomes .outcome-wrapper {
+    padding-left: 2px;
+    padding-right: 2px;
+}
+.outcome {
+    border: 1px solid lightgrey;
+    border-radius:4px;
+    width: 100%;
+    padding: 10px;
+
+}
+
+.outcome.targeted {
+    background: #D9EDF6;
+}
+
+#projectOverviewList th {
+    white-space: normal;
+}
+.projects-wrapper {
+    margin-top: 10px;
+}
+
+#admin .tab-content {
+    border-right: none;
+    border-bottom: none;
+}

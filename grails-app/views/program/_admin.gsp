@@ -21,7 +21,7 @@
                             class="fa fa-edit"></i> Edit</a>
                 </div>
 
-                <div class="col-sm-10">Edit the programme details and content</div>
+                <div class="col-sm-10">Edit the program details and content</div>
             </div>
 
         </div>
@@ -32,13 +32,13 @@
 
             <div class="row-fluid">
                 <div class="span6 alert alert-info">
-                    Any user access assigned to this programme will automatically be applied to all projects run under this programme.
+                    Any user access assigned to this program will automatically be applied to all projects run under this program.
                 </div>
             </div>
             <g:render template="/admin/addPermissions"
                       model="[addUserUrl: g.createLink(controller: 'program', action: 'addUserAsRoleToProgram'), entityType: 'au.org.ala.ecodata.Program', entityId: program.programId]"/>
 
-            <h4>Current Programme Permissions</h4>
+            <h4>Current Program Permissions</h4>
             <g:render template="/admin/permissionTable" model="[
                     loadPermissionsUrl: g.createLink(controller: 'user', action: 'getMembersOfProgram', id: program.programId),
                     removeUserUrl     : g.createLink(controller: 'program', action: 'removeUserWithRoleFromProgram', id:program.programId),

@@ -1,4 +1,5 @@
 //= require forms-manifest.js
+//= require jquery.appear/jquery.appear.js
 //= require_self
 function validateDateField(dateField) {
     var date = stringToDate($(dateField).val());
@@ -128,17 +129,16 @@ var Master = function (activityId, config) {
             return undefined;
         }
         if (!activityData) {
-            activityData = {};
+            activityData = {
+                progress:self.activityData().progress,
+                activityId:self.activityData().activityId
+            };
         }
         activityData.outputs = outputs;
 
         // We can't allow an activity that failed validation to be marked as finished.
         if (valid === false) {
-            if (!activityData.progress || activityData.progress === 'finished') {
-                activityData.progress = 'started';
-                // This is needed to ensure the progress field is saved.
-                activityData.activityId = activityData.activityId || self.activityData().activityId;
-            }
+            activityData.progress = 'started';
         }
 
         return activityData;
@@ -162,6 +162,26 @@ var Master = function (activityId, config) {
         bootbox.alert(errorText);
     };
 
+    function handleSessionTimeout(localStorageFailed) {
+
+        if (!localStorageFailed) {
+
+            var unloadHandler = window.onbeforeunload;
+            window.onbeforeunload = null;
+            bootbox.alert($(options.timeoutMessageSelector).html(),
+                function() {
+                    window.onbeforeunload = unloadHandler;
+                });
+        }
+        else {
+            // We weren't able to save the page so we can't give the reload the page instructions.
+            // This is relying on the logout detection in the page template
+            $('#logout-warning').show();
+            bootbox.alert(" <b>Please do not leave this page</b><br/>Your save failed due to a network error or login timeout.  Please open a new tab and log back into MERIT, then attempt to save this data again.");
+        }
+
+    };
+
     /**
      * Makes an ajax call to save any sections that have been modified. This includes the activity
      * itself and each output.
@@ -173,29 +193,15 @@ var Master = function (activityId, config) {
      *
      * Validates the entire page before saving.
      */
-    self.save = function (saveCallback) {
+    self.save = function (saveCallback, validate) {
 
-        function handleSessionTimeout(localStorageFailed) {
-
-            if (!localStorageFailed) {
-
-                var unloadHandler = window.onbeforeunload;
-                window.onbeforeunload = null;
-                bootbox.alert($(options.timeoutMessageSelector).html(),
-                    function() {
-                        window.onbeforeunload = unloadHandler;
-                    });
-            }
-            else {
-                // We weren't able to save the page so we can't give the reload the page instructions.
-                // This is relying on the logout detection in the page template
-                $('#logout-warning').show();
-                bootbox.alert(" <b>Please do not leave this page</b><br/>Your save failed due to a network error or login timeout.  Please open a new tab and log back into MERIT, then attempt to save this data again.");
-            }
-
-        };
-
-        var valid = self.validate();
+        if (_.isUndefined(validate)) {
+            validate = true;
+        }
+        var valid = false;
+        if (validate) {
+            valid = self.validate();
+        }
 
         var jsData = self.modelAsJS(valid);
 
@@ -225,19 +231,18 @@ var Master = function (activityId, config) {
                 contentType: 'application/json'
 
             }).done(function (data) {
-
                 if (data.error || data.errors) {
                     $.unblockUI();
-                    self.displayErrors(data.errors || [data.error]);
+                    self.displayErrors(data.errors || [{name:'Activity', error: data.error}]);
                 } else {
                     self.cancelAutosave();
                     self.dirtyFlag.reset();
                     blockUIWithMessage("Activity data saved.");
                     amplify.store(activityStorageKey, null);
 
-                    if (!valid) {
+                    if (validate && !valid) {
                         $.unblockUI();
-                        var message = 'Your changes have been saved and you can remain in this activity form, or you can exit this page without losing data. Please note that you cannot mark this activity as finished until all mandatory fields have been completed.';
+                        var message = 'Your changes have been saved. Please note, this report has required fields that are incomplete. You will not be able to submit this report (on the Reporting Tab) until all required fields have been completed.';
                         bootbox.alert(message, function () {
                             self.validate();
                         });
@@ -478,4 +483,103 @@ function ActivityHeaderViewModel (activity, site, project, metaModel, themes, co
             }
         }
     };
+};
+
+/** Responsible for navigation at the bottom of report forms */
+var ReportNavigationViewModel = function(reportMaster, activityViewModel, options) {
+    var self = this;
+
+    var anchor = $(options.anchorElementSelector);
+    var navContent = $(options.navContentSelector);
+    var floatingDiv = $(options.floatingNavSelector);
+
+    anchor.appear({interval:100}).on('appear', function() {
+        floatingDiv.fadeOut();
+        navContent.appendTo(anchor);
+    }).on("disappear", function() {
+        navContent.appendTo(floatingDiv);
+        floatingDiv.fadeIn();
+    });
+    if (!anchor.is(":appeared")) {
+        anchor.trigger('disappear');
+    }
+    else {
+        anchor.trigger("appear");
+    }
+    self.dirtyFlag = reportMaster.dirtyFlag;
+    self.activity = activityViewModel;
+
+    self.save = function() {
+        var markAsFinished = activityViewModel.transients.markedAsFinished();
+        // Only attempt to validate if the user wants to mark the activity as
+        // complete.
+        reportMaster.save(function(valid) {
+            $.unblockUI();
+            if (!valid) {
+                activityViewModel.transients.markedAsFinished(false);
+            }
+
+        }, markAsFinished);
+    };
+    self.saveAndExit = function() {
+        reportMaster.save(function() {
+            self.return();
+        }, false);
+    };
+    self.saveAndExitButtonClass = ko.computed(function() {
+        return self.dirtyFlag.isDirty() ? 'btn-info' : '';
+    });
+    self.exitReport = function() {
+        if (self.dirtyFlag.isDirty()) {
+            var message = "<b>Unsaved data found</b>"+
+                "<p>The form you are working on has unsaved changes. Please confirm if you would like to:</p>";
+            bootbox.dialog(message,[
+                {
+                    label:'Save and exit',
+                    class:'btn-success',
+                    callback: self.saveAndExit
+                },
+                {
+                    label:'Exit without saving',
+                    class:'btn-warning',
+                    callback: self.cancel
+                },
+                {
+                    label:'Return to reporting form',
+                    class:'btn-info',
+                    // do nothing, just close the dialog
+                    callback:function() {}
+                }
+            ]);
+        }
+        else {
+            reportMaster.cancelAutosave();
+            self.return();
+        }
+    };
+
+
+    self.cancel = function() {
+        reportMaster.cancelAutosave();
+        self.return();
+    };
+    self.return = function() {
+        window.location.href = options.returnTo;
+    };
+
+    self.navElementPosition = options.navElementPosition;
+
+    /**
+     * For started activities, scroll the page to the first invalid field so the user can continue working.
+     * @param validationContainer a jquery object wrapping the element that the jquery validation engine was
+     * attached to.
+     */
+    self.initialiseScrollPosition = function(validationContainer, progress) {
+        if (!progress) {
+            progress = self.activity.progress();
+        }
+        if (progress == ActivityProgress.started) {
+            scrollToFirstInvalidField(validationContainer);
+        }
+    }
 };

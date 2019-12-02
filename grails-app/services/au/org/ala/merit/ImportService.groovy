@@ -45,6 +45,7 @@ class ImportService {
     def roleAdmin = "admin"
     def roleGrantManager = "caseManager"
     def programService
+    def managementUnitService
 
     /**
      * Looks for columns "Grant ID","Sub-project ID","Recipient email 1","Recipient email 2","Grant manager email" and
@@ -568,7 +569,11 @@ class ImportService {
             Map program = programService.getByName(name)
             program?.programId
         }
-        def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel(), metadataService.organisationList()?.list, metadataService.getOutputTargetScores(), programs)
+        Map managementUnits = [:].withDefault{name ->
+            Map mu = managementUnitService.getByName(name)
+            mu?.managementUnitId
+        }
+        def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel(), metadataService.organisationList()?.list, metadataService.getOutputTargetScores(), programs, managementUnits)
 
         def action = preview?{rows -> mapProjectRows(rows, status, mapper)}:{rows -> importAll(rows, status, mapper)}
 
@@ -660,8 +665,8 @@ class ImportService {
             addUser(editorEmail2, roleEditor, projectId, projectDetails.errors)
 
             // Apply any program permission to the new project if required.
-            if (projectDetails.project.programId) {
-                List members = programService.getMembersOfProgram(projectDetails.project.programId)
+            if (projectDetails.project.managementUnitId) {
+                List members = managementUnitService.getMembersOfManagementUnit(projectDetails.project.managementUnitId)
                 members?.each { member ->
                     userService.addUserAsRoleToProject(member.userId, projectId, member.role)
                 }
@@ -781,7 +786,7 @@ class ImportService {
 
 
         def activitiesModel = metadataService.activitiesModel()
-        def mapper = new GmsMapper(activitiesModel, [:], [], metadataService.getOutputTargetScores(), [:], true)
+        def mapper = new GmsMapper(activitiesModel, [:], [], metadataService.getOutputTargetScores(), [:], [:], true)
         def projectDetails = mapper.mapProject(projectRows)
 
         //errors.addAll(projectDetails.errors)

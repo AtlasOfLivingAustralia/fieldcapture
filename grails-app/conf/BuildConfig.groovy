@@ -5,8 +5,8 @@ grails.project.class.dir = "target/classes"
 grails.project.test.class.dir = "target/test-classes"
 grails.project.test.reports.dir = "target/test-reports"
 grails.project.work.dir = "target/work"
-grails.project.target.level = 1.6
-grails.project.source.level = 1.6
+grails.project.target.level = 1.8
+grails.project.source.level = 1.8
 //grails.project.war.file = "target/${appName}-${appVersion}.war"
 
 grails.project.fork = [
@@ -56,7 +56,7 @@ clover {
                 }
             }
         }
-        ant.'clover-check'(target: "25%", haltOnFailure: true) { }
+        ant.'clover-check'(target: "26.9%", haltOnFailure: true) { }
 
     }
 }
@@ -106,6 +106,13 @@ grails.project.dependency.resolution = {
         compile "org.apache.pdfbox:pdfbox:2.0.4"
         build "com.google.guava:guava:21.0"
         test 'org.openclover:clover:4.3.0'
+        test 'com.github.tomakehurst:wiremock-jre8-standalone:2.24.1'
+        test "org.gebish:geb-spock:1.0"
+        test "org.seleniumhq.selenium:selenium-support:2.53.1"
+        test "org.seleniumhq.selenium:selenium-firefox-driver:2.53.1"
+        test "org.seleniumhq.selenium:selenium-chrome-driver:2.53.1"
+        test "com.codeborne:phantomjsdriver:1.3.0"
+        test "net.sourceforge.nekohtml:nekohtml:1.9.22"
     }
 
     plugins {
@@ -144,8 +151,10 @@ grails.project.dependency.resolution = {
 
         test 'org.grails.plugins:clover:4.3.0'
 
+        test "org.grails.plugins:geb:1.0"
+
         if (Environment.current != Environment.DEVELOPMENT) {
-            compile (":ecodata-client-plugin:1.11.2")
+            compile (":ecodata-client-plugin:1.12")
         }
 
     }

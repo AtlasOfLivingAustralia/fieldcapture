@@ -178,4 +178,15 @@ class UserServiceSpec extends Specification {
 
     }
 
+    def "We can retrieve a list of management units a user has roles associated with"() {
+        setup:
+        String userId = 'u1'
+
+        when:
+        service.getManagementUnitsForUserId(userId)
+
+        then:
+        1 * webService.getJson("/managementUnit/findAllForUser/${userId}")
+    }
+
 }

@@ -34,6 +34,18 @@ class ProgramService {
         program
     }
 
+    List get(String[] ids) {
+        String url = "${grailsApplication.config.ecodata.baseUrl}programs"
+        Map result  = webService.doPost(url,[programIds:ids])
+        List programs
+        if(result.resp){
+            programs = result.resp
+        }else if(result.error){
+            log.error(result.error)
+        }
+        programs
+    }
+
     Map getByName(String name) {
 
         String encodedName = URLEncoder.encode(name, 'UTF-8')

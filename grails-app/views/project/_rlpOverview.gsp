@@ -6,19 +6,18 @@
             <div class="row-fluid">
 
                 <div class="span12">
+                    <div class="row-fluid">
+                        <div class="span4 header-label">Program</div>
 
-                    <g:if test="${config.program.parent}">
-                        <div class="row-fluid">
-                            <div class="span4 header-label">Program</div>
-
-                            <div class="span8">${config.program.parent.name}</div>
-                        </div>
-                    </g:if>
+%{--                        This is temporarily commented out until #1829 is released.
+                            <div class="span8"><g:link controller="program" action="index"--}%
+%{--                                         id="${config.program.programId}">${config.program.name}</g:link></div>--}%
+                            <div class="span8">${config.program.name}</div>
+                    </div>
                     <div class="row-fluid">
                         <div class="span4 header-label">Management Unit</div>
-
-                        <div class="span8"><g:link controller="program" action="index"
-                                                   id="${config.program.programId}">${config.program.name}</g:link></div>
+                        <div class="span8"><g:link controller="managementUnit" action="index"
+                                                   id="${project.managementUnitId}">${project.managementUnitName}</g:link></div>
                     </div>
 
                     <div class="row-fluid">
@@ -114,7 +113,7 @@
                             </g:if>
                             <g:else>
                                 <g:each in="${p_outcome.assets}" var="p_asset">
-                                    <li>${p_asset}</li>
+                                    ${p_asset}
                                 </g:each>
                             </g:else>
                         </td>
@@ -174,7 +173,7 @@
 
     <h2>Project blog</h2>
     <g:if test="${user?.isEditor}">
-        <a href="${g.createLink(controller: 'blog', action: 'create', params: [projectId: project.projectId, returnTo: g.createLink(controller: 'project', action: 'index', id: project.projectId)])}"><button
+        <a class="newBlog" href="${g.createLink(controller: 'blog', action: 'create', params: [projectId: project.projectId, returnTo: g.createLink(controller: 'project', action: 'index', id: project.projectId)])}"><button
                 class="btn"><i class="fa fa-newspaper-o"></i> New Entry</button></a>
         <button id="gotoEditBlog" class="btn"><i class="fa fa-edit"></i> Edit</button>
         </a>

@@ -1,11 +1,3 @@
-ActivityProgress = {
-    planned: 'planned',
-    started: 'started',
-    finished: 'finished',
-    deferred: 'deferred',
-    cancelled:'cancelled',
-};
-
 var PlannedActivity = function (act, isFirst, project, stage, options) {
 
     function lookupSiteName (siteId, siteList) {

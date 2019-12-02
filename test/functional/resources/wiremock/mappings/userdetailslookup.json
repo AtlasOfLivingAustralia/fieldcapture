@@ -1,0 +1,13 @@
+{
+  "request": {
+    "urlPath": "/userdetails/userDetails/getUserDetails",
+    "method": "ANY"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{\"userName\":\"A User\", \"userId\":\"1\"}"
+  }
+}

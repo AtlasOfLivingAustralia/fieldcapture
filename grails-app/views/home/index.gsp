@@ -4,7 +4,7 @@
 <head>
     <g:set var="containerType" scope="request" value="container"/>
     <meta name="layout" content="${hubConfig.skin}"/>
-    <title>Home | Field Capture</title>
+    <title>Explore | MERIT</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}&libraries=visualization"></script>
     <script>
     var fcConfig = {

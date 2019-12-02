@@ -934,7 +934,9 @@ var createMap = function(options) {
         options.draggableMarkers = false;
         options.singleMarker = false;
         options.singleDraw = false;
-        options.showFitBoundsToggle = true;
+        options.showFitBoundsToggle? options.showFitBoundsToggle : true;
+        options.useMyLocation? options.useMyLocation:true;
+
         if (options.leafletIconPath) {
             L.Icon.Default.imagePath = options.leafletIconPath;
         }
