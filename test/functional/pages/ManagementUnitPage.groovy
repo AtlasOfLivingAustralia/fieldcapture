@@ -24,6 +24,9 @@ class ManagementUnitPage extends ReloadablePage {
         editMUBlogTab{$('a#editManagementUnitBlog-tab')}
         editManagementUnitButton(required:false) { $('#edit-managementUnit-details .admin-action')}
         adminTab(required:false) { $('#admin-tab') }
+        serviceProviderName(required:false){$('input#serviceProviderName', 0)}
+
+
     }
 
     List grantIds() {
@@ -42,6 +45,10 @@ class ManagementUnitPage extends ReloadablePage {
         adminTab.click()
         waitFor { adminTabPane.displayed }
         adminTabPane.attachDocument()
+    }
+
+    String currentServiceProviderName(){
+        serviceProviderName.value()
     }
 
 }

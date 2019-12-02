@@ -40,77 +40,61 @@ class ManagementUnitSpec extends StubbedCasSpec {
         grantIds().size() ==1
         projectLinks().size()>=1
         gotoProgram().size() >= 1
-
-        //Cannot click on invisible element - phantomjs
-//        when:
-//        gotoProgram()[0].click()
-//
-//        then:
-//        at ProgramPage
-
-
     }
 
-    def "As an admin, I can view/create/edit/delete a blog for program"(){
+    def "As an admin, I edit a management unit"() {
         setup:
-        login([userId:'1', role:"ROLE_USER", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
+        login([userId: '1', role: "ROLE_ADMIN", email: 'user@nowhere.com', firstName: "MERIT", lastName: 'User'], browser)
 
         when:
         to ManagementUnitPage
 
         then:
-        waitFor {at ManagementUnitPage}
-
-        when:
-        blogTab.click()
-
-        then:
-        waitFor {blogModule.displayed}
-        blogModule.blogs().size() ==1
-        blogModule.blogTitles() == ['BlogTest']
-
-        when:
-        blogModule.newBlogBtn.click()
-
-        then:
-        waitFor {at NewBlogEntryPage}
-
-        when:
-        blogDetails.title = 'Testing blog of management unit'
-        blogDetails.description = 'Description of blog'
-        submit()
-
-        then:
-        waitFor {at ManagementUnitPage}
-        blogModule.blogs().size() ==2
-
-        ['BlogTest','Testing blog of management unit'].any{blogModule.blogTitles().contains(it)}
-
-        //Enter edit mode again
-        when:
-        blogModule.gotoBlogEditBtn.click()
-
-        then:
-        waitFor{editManagementUnitBlogPane().isDisplayed()}
-        blogModule.editBlogPanelTitle() == 'Edit Blog'
-        blogModule.deleteBlogBtn.size() == 2
+        waitFor { at ManagementUnitPage }
 
         when:
         interact{
-            blogModule.deleteBlogBtn[1].click()
+            adminTab.click()
         }
-        //bug in program admin page.
-        // When the page is reloaded the admin tab will be displayed but it will revert to the
-        // "Edit" section, we can use that to detect the page has reloaded
+
         then:
-        waitFor(10d, {editManagementUnitButton.displayed})
+        waitFor { $('div#admin').isDisplayed() }
 
         when:
         interact{
-            editMUBlogTab().click()
+            $('[href="#edit-managementUnit-details"]').click()
         }
+
         then:
-        blogModule.blogs().size() == 1
+        waitFor {editManagementUnitButton.isDisplayed()}
+
+        when:
+        interact{
+            $('a.admin-action').click()
+        }
+
+        then:
+        waitFor {$('form.validationEngineContainer').isDisplayed()}
+        //$('input#serviceProviderName').val() == "Test Org"
+        currentServiceProviderName() == "Test Org"
+
+        when:
+        interact{
+            $('button#resetServiceProvider').click()
+        }
+
+        then:
+        currentServiceProviderName() == ""
+
+        when:
+        interact{
+            $('button#editServiceProvider').click()
+        }
+
+        then:
+        $('input#organisationSelection').isDisplayed()
+
     }
+
 
 }
