@@ -47,7 +47,7 @@
         <div class="controls col-sm-4">
             <input type="text" class="form-control" readonly="readonly" data-bind="value: associatedOrganisations()[0].name" id="serviceProviderName">
             %{--this custom binding cannot deal with observableArray transients.selectServiceProviderOrganisation--}%
-            <input type="text" class="input-xlarge form-control hidden" id="organisationSelection" placeholder="Search organisations..."
+            <input type="text" class="input-xlarge form-control d-none" id="organisationSelection" placeholder="Search organisations..."
                    data-bind="elasticSearchAutocomplete:{url:fcConfig.organisationSearchUrl, value:'name', label:'name',result:transients.selectServiceProviderOrganisation, callback:applyServiceProviderSelection}"/>
 
         </div>
@@ -121,26 +121,27 @@
 <asset:script>
 
     function applyServiceProviderSelection(){
-       $('button#editServiceProvider').click()
+       $('button#editServiceProvider').click();
     };
 
    $('button#editServiceProvider').click(function(e){
      if (e.target.textContent == 'Edit'){
-         $('input#organisationSelection').removeClass('hidden')
-         $('input#serviceProviderName').addClass('hidden')
+         $('input#organisationSelection').removeClass('d-none');
+         $('input#serviceProviderName').addClass('d-none');
          e.target.textContent = 'Cancel'
      }else if (e.target.textContent == 'Cancel'){
-         $('input#organisationSelection').addClass('hidden')
-         $('input#serviceProviderName').removeClass('hidden')
-         e.target.textContent = 'Edit'
+         $('input#organisationSelection').addClass('d-none');
+         $('input#serviceProviderName').removeClass('d-none');
+         e.target.textContent = 'Edit';
      }
    })
 
    $('button#resetServiceProvider').click(function(e){
-        $('input#serviceProviderName').val('')
-        $('input#organisationSelection').val('')
-        $('input#organisationSelection').addClass('hidden')
-        $('input#serviceProviderName').removeClass('hidden')
+        $('input#serviceProviderName').val('');
+        $('input#organisationSelection').val('');
+        $('input#organisationSelection').addClass('d-none');
+        $('input#serviceProviderName').removeClass('d-none');
+        $('button#editServiceProvider').text('Edit');
    })
 
    $(function () {
@@ -149,7 +150,9 @@
      //Enable editting if init value is empty
 
      if($('input#serviceProviderName').val() == ''){
-        $('button#editServiceProvider').click()
+         $('input#organisationSelection').addClass('d-none');
+         $('input#serviceProviderName').removeClass('d-none');
+         $('button#editServiceProvider').text('Edit');
      }
    })
 

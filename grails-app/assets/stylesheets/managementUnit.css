@@ -98,7 +98,3 @@ form #start-date, form #end-date {
     border-bottom: none;
 }
 
-.hidden {
-    display: none !important;
-    visibility: hidden !important;
-}
