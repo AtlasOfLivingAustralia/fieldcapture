@@ -59,13 +59,6 @@ class ManagementUnitController {
         Map result = managementUnitService.getProjects(mu.managementUnitId)
         List projects = result?.projects
 
-        List blogs = blogService.getBlog(mu)
-        def hasNewsAndEvents = blogs.find { it.type == 'News and Events' }
-        def hasManagementUnitStories = blogs.find { it.type == 'Management Unit Stories' }
-        def hasPhotos = blogs.find { it.type == 'Photo' }
-
-
-
         // Clone to avoid change on projects
         // Fetch related programs
         String[] programIds =[]
@@ -105,13 +98,6 @@ class ManagementUnitController {
                     mu: mu,
                     servicesDashboard:[visible: managementUnitVisible]
                     ],
-         blog: [label: 'MU Blog', visible:true, stopBinding: false, type:'tab', editable: hasEditAccessOfBlog,
-                mu:mu,
-                blogs: blogs?:[],
-                hasNewsAndEvents: hasNewsAndEvents,
-                hasManagementUnitStories:  hasManagementUnitStories,
-                hasPhotos: hasPhotos
-         ],
          projects: [label: 'MU Reporting', visible: canViewNonPublicTabs, stopBinding: false, type:'tab', mu:mu, reports: mu.reports, reportOrder:reportOrder, hideDueDate:true],
          sites   : [label: 'MU Sites', visible: canViewNonPublicTabs, stopBinding: true, type:'tab'],
          admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab', mu:mu, blog: [editable: hasEditAccessOfBlog]]

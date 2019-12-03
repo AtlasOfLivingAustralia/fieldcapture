@@ -35,9 +35,12 @@ class ManagementUnitDocumentsSpec extends StubbedCasSpec {
         when:
         dialog.title = "Test doc"
         dialog.attachFile("/resources/testDocument.txt")
+
         waitFor {
+            dialog.saveButton.displayed
             dialog.saveEnabled()
         }
+
         dialog.save()
         waitFor {
             hasBeenReloaded()
