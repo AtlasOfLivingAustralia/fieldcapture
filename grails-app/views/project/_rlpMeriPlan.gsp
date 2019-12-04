@@ -1,9 +1,9 @@
 <div class="meri-plan"  data-bind="let:{details:meriPlan()}">
-    <h4>Program Outcome</h4>
+    <h4><span data-bind="text:details.programName"></span> Outcome</h4>
     <table class="table">
         <thead>
         <tr class="header">
-            <th class="outcome-priority required">Primary <span data-bind="text:details.programName"></span> outcome</th>
+            <th class="outcome-priority required">Primary outcome</th>
             <th class="primary-outcome priority required">Primary Investment Priority <fc:iconHelp html="true" container="body">Enter the primary investment priority/ies for the primary outcome. (drop down list in MERIT) <br/>For outcomes 1-4, only one primary investment priority can be selected.<br/>For outcomes 5-6, select one or a maximum of two primary investment priorities</fc:iconHelp></th>
             <th class="remove"></th>
         </tr>
