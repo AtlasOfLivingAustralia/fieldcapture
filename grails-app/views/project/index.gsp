@@ -276,7 +276,7 @@
 
             config.autoSaveIntervalInSeconds = ${grailsApplication.config.fieldcapture.autoSaveIntervalInSeconds?:60};
             config.riskAndThreatTypes = ${config.riskAndThreatTypes ?: 'null'};
-            var programName = '${(config.program?.name?:project.associatedSubProgram) ?: project.associatedProgram}';
+            var programName = '${(config.program?.acronym?:project.associatedSubProgram) ?: project.associatedProgram}';
             config.programName = programName;
 
             var viewModel = new ProjectPageViewModel(
