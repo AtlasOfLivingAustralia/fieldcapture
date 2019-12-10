@@ -464,6 +464,17 @@ class UserService {
                     default:
                         return false
                 }
+            case MANAGEMENTUNIT:
+                switch (role) {
+                    case RoleService.GRANT_MANAGER_ROLE:
+                        return isUserGrantManagerForManagementUnit(userId, id)
+                    case RoleService.PROJECT_ADMIN_ROLE:
+                        return isUserAdminForManagementUnit(userId, id)
+                    case RoleService.PROJECT_EDITOR_ROLE:
+                        return isUserAdminForManagementUnit(userId, id) || isUserEditorForManagementUnit(userId, id)
+                    default:
+                        return false
+                }
             default: // PROJECT is the default
                 switch (role) {
                     case RoleService.GRANT_MANAGER_ROLE:
