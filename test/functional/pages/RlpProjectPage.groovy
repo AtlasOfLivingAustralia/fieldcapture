@@ -7,7 +7,7 @@ import pages.modules.ProjectAdminTab
 import pages.modules.ProjectReports
 import pages.modules.RlpOverviewTab
 
-class RlpProjectPage extends Page {
+class RlpProjectPage extends ReloadablePage {
 
     static url = 'project/index' // requires a project id parameter
     static at = { title.endsWith('| Project | Field Capture')}
@@ -35,5 +35,13 @@ class RlpProjectPage extends Page {
         adminTab.click()
         waitFor { adminContent.displayed }
         adminContent.attachDocument()
+    }
+
+    def regenerateReports() {
+        adminTab.click()
+        waitFor { adminContent.displayed }
+        adminContent.projectSettingsTab.click()
+        waitFor { adminContent.projectSettings.displayed }
+        adminContent.projectSettings.regenerateReports()
     }
 }

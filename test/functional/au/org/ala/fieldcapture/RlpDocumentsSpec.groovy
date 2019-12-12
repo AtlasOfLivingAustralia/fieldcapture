@@ -5,14 +5,19 @@ import spock.lang.Stepwise
 
 @Stepwise
 class RlpDocumentsSpec extends StubbedCasSpec {
-    def setup() {
+    def setupSpec() {
         useDataSet('dataset2')
+
+        // Ensure reports exist for the project
+        String projectId = '1'
+        login([userId: '1', role: "ROLE_FC_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+        to RlpProjectPage, projectId
+        regenerateReports()
     }
 
     def cleanup() {
         logout(browser)
     }
-
 
     def "the project details are displayed correctly on the overview tab"() {
 
@@ -26,11 +31,16 @@ class RlpDocumentsSpec extends StubbedCasSpec {
 
         waitFor { adminContent.documents.attachDocumentDialog.title.displayed }
 
+        then: "Ensure the output reports are available for selection"
+        dialog.availableStages().size() == 21 // 20 reports and a "please select" option
+
+        when: "We enter data for the document"
         dialog.title = "Test doc"
         dialog.type = "information"
         dialog.attribution = "the tester"
         dialog.license = "CC-BY"
         dialog.publiclyViewable = true
+        dialog.stage = '1'
         dialog.attachFile("/resources/testImage.png")
 
         then: "We cannot save a public image without ticking the privacy declaration"
@@ -41,7 +51,8 @@ class RlpDocumentsSpec extends StubbedCasSpec {
         dialog.save()
 
         then: "the file will be uploaded and the page will be reloaded with the new document displayed in the list"
-        waitFor(10) { adminContent.documents.documentSummaryList().size() == 1 }
+        waitFor { hasBeenReloaded() }
+        adminContent.documents.documentSummaryList().size() == 1
         def document = adminContent.documents.documents[0]
 
         and:
@@ -84,18 +95,19 @@ class RlpDocumentsSpec extends StubbedCasSpec {
         dialog.save()
 
         then: "the file will be uploaded and the page will be reloaded with the new document displayed in the list"
-        waitFor(10) { adminContent.documents.documentSummaryList().size() == 1 }
+        waitFor { hasBeenReloaded() }
+        adminContent.documents.documentSummaryList().size() == 2
 
         when: "The list can be filtered to only show contract assurance documents"
         adminContent.documents.documentTypeFilter = 'information'
 
-        then:
-        waitFor { adminContent.documents.documents.size() == 0 }
+        then: "Only the document we attached in the previous step will be shown"
+        waitFor { adminContent.documents.documents.size() == 1 }
 
-        when:
+        when: "We select the contract assurance filter"
         adminContent.documents.documentTypeFilter = 'contractAssurance'
 
-        then:
+        then: "Only the contract assurance document will be displayed"
         waitFor { adminContent.documents.documents.size() == 1 }
         def assuranceDoc = adminContent.documents.documents[0]
 
