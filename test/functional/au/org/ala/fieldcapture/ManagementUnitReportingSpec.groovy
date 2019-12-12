@@ -81,6 +81,7 @@ class ManagementUnitReportingSpec extends StubbedCasSpec {
         field("whsRequirementsMet").value('Met requirements')
         markAsComplete()
         save()
+        waitFor { exitButton.displayed } // The save will popup a screen blocking save message
         exitReport()
 
         then:
@@ -120,6 +121,30 @@ class ManagementUnitReportingSpec extends StubbedCasSpec {
     }
 
     def "A user with the MU grant manager role can approve and return MU reports"() {
-        // TODO
+        setup:
+        String managementUnitId = 'test_mu'
+        login([userId: '3', role: "ROLE_FC_OFFICER", email: 'fc_officer@nowhere.com', firstName: "MERIT", lastName: 'FC_OFFICER'], browser)
+
+        when: "Display the reporting tab"
+        to ManagementUnitPage
+        reportsTab.click()
+        waitFor { reportsTabPane.displayed }
+
+        then: "The first report is marked as submitted"
+        reportsTabPane.reports[0].isSubmitted()
+
+        when:
+        reportsTabPane.reports[0].approve()
+
+        then:
+        waitFor {hasBeenReloaded()}
+
+        when:
+        reportsTab.click()
+        waitFor { reportsTabPane.displayed }
+
+        then:
+        reportsTabPane.reports[0].isApproved()
+
     }
 }
