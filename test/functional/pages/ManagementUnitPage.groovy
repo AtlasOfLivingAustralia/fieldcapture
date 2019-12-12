@@ -1,7 +1,7 @@
 package pages
 
-import geb.Page
 import pages.modules.ManagementUnitAdminTab
+import pages.modules.ManagementUnitReports
 
 
 class ManagementUnitPage extends ReloadablePage {
@@ -22,8 +22,10 @@ class ManagementUnitPage extends ReloadablePage {
         editManagementUnitBlogPane{$('div#editManagementUnitBlog')}
         adminTabPane(required: false) { module ManagementUnitAdminTab }
         editMUBlogTab{$('a#editManagementUnitBlog-tab')}
-        editManagementUnitButton(required:false) { $('#edit-managementUnit-details .admin-action')}
-        adminTab(required:false) { $('#admin-tab') }
+        editManagementUnitButton(required: false) { $('#edit-managementUnit-details .admin-action')}
+        adminTab(required: false) { $('#admin-tab') }
+        reportsTab(required: false) { $('#projects-tab') }
+        reportsTabPane(required: false) { module ManagementUnitReports }
     }
 
     List grantIds() {
