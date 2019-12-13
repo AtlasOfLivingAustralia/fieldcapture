@@ -69,7 +69,12 @@ class SearchService {
         //def url = elasticBaseUrl + commonService.buildUrlParamsFromMap(params)
         def url = grailsApplication.config.ecodata.baseUrl + 'search/elasticHome' + commonService.buildUrlParamsFromMap(params)
         log.debug "url = $url"
-        webService.getJson2(url)
+        Map response = webService.getJson2(url)
+        // For compatibility of the return value with getJson which the client is expecting.
+        if (response?.resp) {
+            response = response.resp
+        }
+        response
     }
 
     def allProjectsWithSites(searchParams, String searchTerm = null, boolean reducePrecision) {

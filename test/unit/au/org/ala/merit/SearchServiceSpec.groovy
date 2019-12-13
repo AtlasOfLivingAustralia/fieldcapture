@@ -23,11 +23,21 @@ class SearchServiceSpec extends Specification {
         setup:
         Map params = [:]
         when:
-        service.allProjects(params)
+        Map response = service.allProjects(params)
 
         then:
         1 * commonService.buildUrlParamsFromMap(params) >> "?test"
-        1 * webService.getJson2({it.endsWith("/search/elasticHome?test")})
+        1 * webService.getJson2({it.endsWith("/search/elasticHome?test")}) >> [statusCode:HttpStatus.SC_OK, resp:[test:"value"]]
+        and: "The response from the webService is modified to maintain compatibility with the getJson method"
+        response == [test:"value"]
+
+        when: "The web service returns an error"
+        response = service.allProjects(params)
+
+        then: "Details of the error are returned"
+        1 * commonService.buildUrlParamsFromMap(params) >> "?test"
+        1 * webService.getJson2({it.endsWith("/search/elasticHome?test")}) >> [statusCode:HttpStatus.SC_INTERNAL_SERVER_ERROR, error:"an exception was thrown"]
+        response == [statusCode:HttpStatus.SC_INTERNAL_SERVER_ERROR, error:"an exception was thrown"]
     }
 
     void "The search service can optionally reduce the precision of site data"() {

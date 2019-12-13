@@ -6,6 +6,8 @@ class ReloadablePage extends Page {
 
     private long atCheckTime = 0l
 
+    static content = {}
+
     /**
      * Extends the standard at check to set a javascript variable that can later be
      * checked to detect a pageload.

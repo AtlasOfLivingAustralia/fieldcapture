@@ -168,17 +168,6 @@ class HomeController {
         } else {
             params.include = ['name', 'description', 'lastUpdated', 'organisationName']
             Map resp = searchService.allProjects(params)
-            resp?.hits?.hits?.each { Map hit ->
-                if (hit && hit._source) {
-                    hit._source = [
-                            name:hit._source.name,
-                            lastUpdated:hit._source.lastUpdated,
-                            description:hit._source.description,
-                            organisationName:hit._source.organisationName
-                    ]
-                }
-
-            }
             render resp as JSON
         }
     }
