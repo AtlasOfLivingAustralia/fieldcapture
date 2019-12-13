@@ -12,6 +12,7 @@ class DocumentDialog extends Module {
         privacyDeclaration { $('#thirdPartyConsentCheckbox') }
         file { $('#documentFile') }
         mainProjectImage { $('#mainImage') }
+        stage { $('#documentStage') }
         saveButton { $('#attachDocument [data-bind*=save]') }
         cancelButton { $('#attachDocument [data-bind*=cancel]') }
 
@@ -28,6 +29,10 @@ class DocumentDialog extends Module {
 
     def saveEnabled() {
         !saveButton.@disabled
+    }
+
+    def availableStages() {
+        stage.find('option')
     }
 
 

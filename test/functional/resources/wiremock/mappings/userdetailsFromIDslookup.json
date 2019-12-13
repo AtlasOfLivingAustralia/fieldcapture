@@ -9,6 +9,6 @@
     "headers": {
       "Content-Type": "application/json"
     },
-    "body": "{\"success\":true, \"users\":[]}"
+    "body": "{\"success\":true, \"users\":{}}}"
   }
 }

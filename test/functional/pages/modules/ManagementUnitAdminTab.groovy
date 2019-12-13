@@ -7,6 +7,9 @@ class ManagementUnitAdminTab extends Module {
     static content = {
         documentsTab { $('#edit-documents-tab') }
         documents { module AdminDocumentsTab }
+
+        reportingSectionTab(required:false) { $('[href="#reporting"]') }
+        reportingSection(required:false) { $('#reporting').module ManagementUnitAdminReportSection }
     }
 
     def attachDocument() {
@@ -14,5 +17,13 @@ class ManagementUnitAdminTab extends Module {
         waitFor { documents.displayed }
         documents.attachDocumentButton.click()
         documents.attachDocumentDialog
+    }
+
+    def viewReportingSection() {
+        reportingSectionTab.click()
+        waitFor {
+            reportingSection.displayed
+        }
+        reportingSection
     }
 }

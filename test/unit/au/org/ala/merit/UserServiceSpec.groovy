@@ -27,25 +27,69 @@ class UserServiceSpec extends Specification {
         authService.userInRole(_) >> false
     }
 
-    def "ACL checks should be delegated to appropriate web service calls"(String role, String entityType, String url) {
+    def "ACL project checks should be delegated to appropriate web service calls"(String role, String url) {
 
         setup:
         String userId = '1'
         String entityId = '2'
 
         when:
-        service.checkRole(userId, role, entityId, entityType)
+        service.checkRole(userId, role, entityId, UserService.PROJECT )
 
         then:
         1 * webService.getJson(url) >> [:]
 
         where:
-        role                           | entityType          | url
-        RoleService.PROJECT_ADMIN_ROLE | UserService.PROGRAM | "/permissions/getUserRolesForUserId/1"
-        RoleService.GRANT_MANAGER_ROLE | UserService.PROGRAM | "/permissions/getUserRolesForUserId/1"
-        RoleService.GRANT_MANAGER_ROLE | UserService.PROJECT | "/permissions/isUserCaseManagerForProject?projectId=2&userId=1"
-        RoleService.PROJECT_ADMIN_ROLE | UserService.PROJECT | "/permissions/isUserAdminForProject?projectId=2&userId=1"
-        RoleService.PROJECT_EDITOR_ROLE | UserService.PROJECT | "/permissions/canUserEditProject?projectId=2&userId=1"
+        role                            | url
+        RoleService.GRANT_MANAGER_ROLE  | "/permissions/isUserCaseManagerForProject?projectId=2&userId=1"
+        RoleService.PROJECT_ADMIN_ROLE  | "/permissions/isUserAdminForProject?projectId=2&userId=1"
+        RoleService.PROJECT_EDITOR_ROLE | "/permissions/canUserEditProject?projectId=2&userId=1"
+    }
+
+    def "ACL checks for management units should be delegated to appropriate web service calls for management units and programs"(String role, String entityType, String userRole, boolean expectedResult) {
+
+        setup:
+        String userId = '1'
+        String entityId = '2'
+        Map result = [roles:[]]
+        if (userRole) {
+            result.roles << [role:userRole, entityId:entityId, entityType:entityType]
+        }
+        int expectedNumberOfCalls = (role == RoleService.PROJECT_EDITOR_ROLE && userRole != RoleService.PROJECT_ADMIN_ROLE) ? 2 : 1
+
+        when:
+        boolean actualResult = service.checkRole(userId, role, entityId, entityType)
+
+        then:
+        expectedNumberOfCalls * webService.getJson("/permissions/getUserRolesForUserId/${userId}") >> result
+        actualResult == expectedResult
+
+        where:
+        role                            | entityType                 | userRole                        | expectedResult
+        RoleService.PROJECT_ADMIN_ROLE  | UserService.MANAGEMENTUNIT | null                            | false
+        RoleService.PROJECT_EDITOR_ROLE | UserService.MANAGEMENTUNIT | null                            | false
+        RoleService.GRANT_MANAGER_ROLE  | UserService.MANAGEMENTUNIT | null                            | false
+        RoleService.PROJECT_ADMIN_ROLE  | UserService.MANAGEMENTUNIT | RoleService.PROJECT_EDITOR_ROLE | false
+        RoleService.PROJECT_EDITOR_ROLE | UserService.MANAGEMENTUNIT | RoleService.PROJECT_EDITOR_ROLE | true
+        RoleService.GRANT_MANAGER_ROLE  | UserService.MANAGEMENTUNIT | RoleService.PROJECT_EDITOR_ROLE | false
+        RoleService.PROJECT_ADMIN_ROLE  | UserService.MANAGEMENTUNIT | RoleService.PROJECT_ADMIN_ROLE  | true
+        RoleService.PROJECT_EDITOR_ROLE | UserService.MANAGEMENTUNIT | RoleService.PROJECT_ADMIN_ROLE  | true
+        RoleService.GRANT_MANAGER_ROLE  | UserService.MANAGEMENTUNIT | RoleService.PROJECT_ADMIN_ROLE  | false
+        RoleService.PROJECT_ADMIN_ROLE  | UserService.MANAGEMENTUNIT | RoleService.GRANT_MANAGER_ROLE  | false
+        RoleService.PROJECT_EDITOR_ROLE | UserService.MANAGEMENTUNIT | RoleService.GRANT_MANAGER_ROLE  | false
+        RoleService.GRANT_MANAGER_ROLE  | UserService.MANAGEMENTUNIT | RoleService.GRANT_MANAGER_ROLE  | true
+        RoleService.PROJECT_ADMIN_ROLE  | UserService.PROGRAM        | null                            | false
+        RoleService.PROJECT_EDITOR_ROLE | UserService.PROGRAM        | null                            | false
+        RoleService.GRANT_MANAGER_ROLE  | UserService.PROGRAM        | null                            | false
+        RoleService.PROJECT_ADMIN_ROLE  | UserService.PROGRAM        | RoleService.PROJECT_EDITOR_ROLE | false
+        RoleService.PROJECT_EDITOR_ROLE | UserService.PROGRAM        | RoleService.PROJECT_EDITOR_ROLE | true
+        RoleService.GRANT_MANAGER_ROLE  | UserService.PROGRAM        | RoleService.PROJECT_EDITOR_ROLE | false
+        RoleService.PROJECT_ADMIN_ROLE  | UserService.PROGRAM        | RoleService.PROJECT_ADMIN_ROLE  | true
+        RoleService.PROJECT_EDITOR_ROLE | UserService.PROGRAM        | RoleService.PROJECT_ADMIN_ROLE  | true
+        RoleService.GRANT_MANAGER_ROLE  | UserService.PROGRAM        | RoleService.PROJECT_ADMIN_ROLE  | false
+        RoleService.PROJECT_ADMIN_ROLE  | UserService.PROGRAM        | RoleService.GRANT_MANAGER_ROLE  | false
+        RoleService.PROJECT_EDITOR_ROLE | UserService.PROGRAM        | RoleService.GRANT_MANAGER_ROLE  | false
+        RoleService.GRANT_MANAGER_ROLE  | UserService.PROGRAM        | RoleService.GRANT_MANAGER_ROLE  | true
 
     }
 

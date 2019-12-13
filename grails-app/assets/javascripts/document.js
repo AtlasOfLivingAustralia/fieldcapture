@@ -114,7 +114,7 @@ function DocumentViewModel (doc, owner, settings) {
         }
         $("#thirdPartyConsentCheckbox").closest('form').validationEngine("updatePromptsPosition")
     });
-    this.reportId = ko.observable();
+    this.reportId = ko.observable(doc.reportId);
     this.thirdPartyConsentDeclarationRequired = ko.computed(function() {
         return (self.type() == 'image' ||  self.role() == 'embeddedVideo')  && self.public();
     });
@@ -635,7 +635,8 @@ var EditableDocumentsViewModel = function(options) {
     }
 
     var documentViewModelSettings  = {
-        reports: settings.reports
+        reports: settings.reports,
+        stages: settings.stages
     };
 
     _.extend(self, new Documents(settings));
