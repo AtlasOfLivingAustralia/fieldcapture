@@ -449,7 +449,6 @@
         </table>
     </g:if>
     <g:render template="/shared/documentTemplate"/>
-    <g:render template="/output/formsTemplates" plugin="ecodata-client-plugin"/>
 
 </div>
 <asset:script>

@@ -1,9 +1,6 @@
 package au.org.ala.fieldcapture
 
 import pages.ManagementUnitPage
-import pages.NewBlogEntryPage
-import pages.ProgramBlogPage
-import pages.ProgramPage
 
 class ManagementUnitSpec extends StubbedCasSpec {
 
