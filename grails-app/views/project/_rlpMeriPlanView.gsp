@@ -1,9 +1,9 @@
 <div class="meri-plan" data-bind="let:{details:meriPlan()}">
-    <h4>Program Outcome</h4>
+    <h4><span data-bind="text:details.programName"></span>  Outcome</h4>
     <table class="table">
         <thead>
         <tr>
-            <th class="outcome-priority">Primary <span data-bind="text:details.programName"></span> outcome</th>
+            <th class="outcome-priority">Primary outcome</th>
             <th class="primary-outcome priority">Primary Investment Priority</th>
         </tr>
         </thead>
@@ -33,7 +33,7 @@
         <thead>
 
         <tr>
-            <th class="outcome-priority">Secondary <span data-bind="text:details.programName"></span> outcome(s)</th>
+            <th class="outcome-priority">Secondary outcome(s)</th>
             <th class="priority">Secondary Investment Priorities</th>
         </tr>
         </thead>

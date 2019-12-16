@@ -36,13 +36,6 @@ class ProjectService  {
     def webService, grailsApplication, siteService, activityService, emailService, documentService, userService, metadataService, settingService, reportService, auditService, speciesService, commonService
     ProjectConfigurationService projectConfigurationService
 
-    def list(brief = false, citizenScienceOnly = false) {
-        def params = brief ? '?brief=true' : ''
-        if (citizenScienceOnly) params += (brief ? '&' : '?') + 'citizenScienceOnly=true'
-        def resp = webService.getJson(grailsApplication.config.ecodata.baseUrl + 'project/' + params, 30000)
-        resp.list
-    }
-
     def get(id, levelOfDetail = "", includeDeleted = false) {
 
         def params = '?'

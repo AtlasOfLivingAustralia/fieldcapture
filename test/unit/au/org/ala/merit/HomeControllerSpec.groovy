@@ -25,8 +25,7 @@ class HomeControllerSpec extends Specification {
                                         name:"project 1",
                                         description:"project 1 description",
                                         organsationName:"Org1",
-                                        lastUpdated:"2019-07-01T00:00:00Z",
-                                        extraInfo:"Extra info 1"
+                                        lastUpdated:"2019-07-01T00:00:00Z"
                                 ]
                         ]]
                 ]

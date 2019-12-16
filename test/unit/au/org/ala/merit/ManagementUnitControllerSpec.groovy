@@ -52,7 +52,7 @@ class ManagementUnitControllerSpec extends Specification {
         model.reportHeaderTemplate == '/managementUnit/managementUnitReportHeader'
     }
 
-    def "unauthenticated users should only see the management unit overview and blog"() {
+    def "unauthenticated users should only see the management unit overview"() {
         setup:
         String managementUnitId = 'p1'
         userService.getUser() >> null
@@ -65,9 +65,8 @@ class ManagementUnitControllerSpec extends Specification {
         Map model = controller.index(managementUnitId)
 
         then:
-        model.content.size() == 5
+        model.content.size() == 4
         model.content.about.visible == true
-        model.content.blog.visible == true
         model.content.projects.visible == false
         model.content.sites.visible == false
         model.content.admin.visible == false
@@ -88,9 +87,8 @@ class ManagementUnitControllerSpec extends Specification {
         1 * userService.canEditManagementUnitBlog("u1", managementUnitId) >> true
         1 * userService.canUserEditManagementUnit("u1", managementUnitId) >> true
 
-        model.content.size() == 5
+        model.content.size() == 4
         model.content.about.visible == true
-        model.content.blog.visible == true
         model.content.projects.visible == true
         model.content.sites.visible == true
         model.content.admin.visible == true
@@ -226,49 +224,6 @@ class ManagementUnitControllerSpec extends Specification {
 
         then:
         1 * reportService.overrideLock('r1', {it.endsWith('managementUnit/viewReport/p1?reportId=r1')})
-    }
-
-    def "Get a blog of management unit"() {
-
-        def managementUnitId = 'test_mu'
-        Map managementUnit = [managementUnitId:managementUnitId]
-        managementUnit["blog"] = [[
-                                   "date" : "2019-08-07T14:00:00Z",
-                                   "keepOnTop" : false,
-                                   "blogEntryId" : "0",
-                                   "title" : "This is a test",
-                                   "type" : "Program Stories",
-                                   "managementUnitId" : "test_program",
-                                   "content" : "This is a blog test",
-                                   "stockIcon" : "fa-newspaper-o"
-                           ]]
-
-        managementUnitService.get(managementUnitId) >> managementUnit
-        blogService.getBlog(managementUnit) >> managementUnit["blog"]
-        managementUnitService.getProjects(managementUnitId) >>[projects:[]]
-        managementUnitService.get(managementUnitId) >> []
-
-
-
-        def userId = adminUserId
-        Map user = [userId:userId]
-        userService.getUser() >> user
-
-        userService.getMembersOfManagementUnit(managementUnitId) >> [members:[
-                [userId:adminUserId, role:RoleService.PROJECT_ADMIN_ROLE],
-                [userId:editorUserId, role:RoleService.PROJECT_EDITOR_ROLE],
-                [userId:grantManagerUserId, role:RoleService.GRANT_MANAGER_ROLE]
-        ]]
-
-
-        when: "Get a program model"
-
-        Map model = controller.index(managementUnitId)
-
-        then: "Should be true"
-
-        model.managementUnit.blog[0].managementUnitId == "test_program"
-
     }
 
     def "The controller delegates report submission to the management unit service"() {

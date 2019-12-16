@@ -18,6 +18,9 @@ class DocumentService {
 
     public static final String TYPE_LINK = "link"
     public static final String ROLE_LOGO = "logo"
+    public static final String ROLE_MAIN_IMAGE = "mainImage"
+
+    public static final List PUBLIC_ROLES = [ROLE_MAIN_IMAGE, ROLE_LOGO]
 
     WebService webService
     GrailsApplication grailsApplication
@@ -108,6 +111,11 @@ class DocumentService {
             document.remove('url')
             File file = new File(grailsApplication.config.upload.images.path, document.filename)
             if (file.exists()) {
+                // Documents used as logos or banner images should be made public or they won't appear
+                // on view pages.
+                if (document.role in PUBLIC_ROLES) {
+                    document['public'] = true
+                }
                 // Create a new document, supplying the file that was uploaded to the ImageController.
                 result = updateDocument(document, document.filename, document.contentType, new FileInputStream(file))
                 if (!result.error) {

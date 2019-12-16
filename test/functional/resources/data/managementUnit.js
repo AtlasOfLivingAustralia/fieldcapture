@@ -8,7 +8,7 @@ var muDefaults = {
             }
         ],
             "config": {
-            "programReports": [
+            "managementUnitReports": [
                 {
                     "reportType": "Administrative",
                     "firstReportingPeriodEnd": "2018-08-31T14:00:00Z",

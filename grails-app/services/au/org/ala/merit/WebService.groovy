@@ -95,15 +95,14 @@ class WebService {
 
         def headers = [HttpHeaders.CONTENT_DISPOSITION]
         def resp = [status:conn.responseCode]
-        if (resp.status == 200) {
+
+        response.status = conn.responseCode
+        if (conn.responseCode == 200) {
             response.setContentType(conn.getContentType())
             response.setContentLength(conn.getContentLength())
-
             headers.each { header ->
                 response.setHeader(header, conn.getHeaderField(header))
             }
-            response.status = conn.responseCode
-
             response.outputStream << conn.inputStream
         }
         else {

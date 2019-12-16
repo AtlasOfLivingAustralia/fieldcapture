@@ -153,7 +153,6 @@
 
 <!-- templates -->
 <g:render template="/shared/documentTemplate"/>
-<g:render template="/output/formsTemplates" plugin="ecodata-client-plugin"/>
 
 <asset:javascript src="common.js"/>
 <asset:javascript src="forms-manifest.js"/>
