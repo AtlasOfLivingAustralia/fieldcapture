@@ -35,7 +35,7 @@ class ReportPage extends Page {
             $('.blockOverlay').displayed
         }
         waitFor {
-            !($('blockOverlay').displayed)
+            !($('.blockOverlay').displayed)
         }
     }
 
