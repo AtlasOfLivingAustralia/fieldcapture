@@ -14,7 +14,7 @@
                         <!-- ko if: tIndex() < max && t.term -->
                             <li>
                                 <input type="checkbox" class="facetSelection" name="facetSelection" data-bind="value: getFQForTerm(fn.facet, t.term), checked: t.selected, attr: {'aria-label': t.term}">
-                                <a data-bind="text: t.displayname, attr: {href: generateFQLink(fn.facet, t.term)}"></a> <!-- ko text: t.count --><!-- /ko -->
+                                <a data-bind="text: t.displayname, attr: {href: generateFQLink(fn.facet, t.term)}"></a> (<!-- ko text: t.count --><!-- /ko -->)
                             </li>
                         <!-- /ko -->
                     <!-- /ko -->
