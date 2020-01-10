@@ -59,7 +59,7 @@ class ProjectExplorerSpec extends StubbedCasSpec {
             println(projects.size())
             projects.size() == 9
 
-            facets.size() == 6
+            facets.size() == 13
             chooseMoreFacetTerms.size() == 0
         }
 
