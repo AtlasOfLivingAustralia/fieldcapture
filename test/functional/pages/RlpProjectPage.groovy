@@ -1,11 +1,10 @@
 package pages
 
-
-import geb.Page
 import pages.modules.DocumentsTab
 import pages.modules.ProjectAdminTab
 import pages.modules.ProjectReports
 import pages.modules.RlpOverviewTab
+import pages.modules.RlpSitesTab
 
 class RlpProjectPage extends ReloadablePage {
 
@@ -28,6 +27,7 @@ class RlpProjectPage extends ReloadablePage {
         adminContent(required: false) { module ProjectAdminTab }
         documents { module DocumentsTab }
         projectReports(required: false) { module ProjectReports }
+        sitesTabContent(required:false) { module RlpSitesTab }
 
     }
 

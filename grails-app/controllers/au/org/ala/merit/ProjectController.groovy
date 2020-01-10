@@ -825,7 +825,7 @@ class ProjectController {
         }
     }
 
-    @PreAuthorise
+    @PreAuthorise(accessLevel = 'editor')
     def ajaxProjectSites(String id) {
         Map result = projectService.projectSites(id)
 
