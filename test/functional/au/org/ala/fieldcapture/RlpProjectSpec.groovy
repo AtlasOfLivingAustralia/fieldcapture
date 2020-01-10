@@ -166,6 +166,28 @@ class RlpProjectSpec extends StubbedCasSpec {
         adminTab.displayed == true
     }
 
+    def "The project sites are displayed on the sites tab and are visible to editors"() {
+        setup: "user 10 is an editor for project 1"
+        String projectId = '1'
+        login([userId: '10', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'Admin'], browser)
+
+        when:
+        to RlpProjectPage, projectId
+
+        then:
+        waitFor { at RlpProjectPage }
+
+        when:
+        sitesTab.click()
+        waitFor { sitesTabContent.map.displayed }
+
+        then:
+        sitesTabContent.sites.size() == 1
+        sitesTabContent.sites[0].name == "Test site 1"
+        waitFor { sitesTabContent.markerCount() == 1 } // The map is initialised asynchronously
+
+    }
+
 
 
 }
