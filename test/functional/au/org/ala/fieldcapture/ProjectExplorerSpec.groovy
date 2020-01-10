@@ -58,9 +58,23 @@ class ProjectExplorerSpec extends StubbedCasSpec {
 
             println(projects.size())
             projects.size() == 9
+
+            facets.size() == 13
+            chooseMoreFacetTerms.size() == 0
         }
 
         new HashSet(projects.collect{it.name}) == new HashSet((1..9).collect{"Project $it"})
+
+        when:
+        facetAccordion.eq(1).click()
+        waitFor {
+            facetTerms.eq(0).displayed
+        }
+
+        facetTerms.eq(0).click()
+
+        then:
+        waitFor {at ProjectExplorer}
 
     }
 }
