@@ -62,6 +62,9 @@ db.userPermission.insert({entityType:'au.org.ala.ecodata.Program', entityId:'tes
 db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_1', userId:'1', accessLevel:'admin'});
 db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entityId:'test_mu_2', userId:'1', accessLevel:'admin'});
 db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entityId:'test_mu', userId:'1', accessLevel:'admin'});
+db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entityId:'test_mu', userId:'3', accessLevel:'caseManager'});
+db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entityId:'test_mu', userId:'4', accessLevel:'editor'});
+
 
 
 
@@ -118,7 +121,9 @@ var site1 = {
     ],
     "siteId" : "test_site_1",
     "status" : "active"
-}
+};
+
+loadActivityForms();
 
 
 var report1 = {

@@ -92,6 +92,7 @@ class ManagementUnitServiceSpec extends Specification {
 
         then:
         1 * webService.getJson({it.endsWith("/managementUnit/$managementUnitId")}) >> managementUnit
+        1 * userService.isUserAdminForManagementUnit(_, managementUnitId) >> true
         1 * reportService.findReportsForManagementUnit(managementUnitId) >> managementUnit.reports
         0 * reportService.regenerateReports(_, _, {it.id.managementUnitId == managementUnitId})
 
@@ -111,6 +112,7 @@ class ManagementUnitServiceSpec extends Specification {
 
         then:
         1 * webService.getJson({it.endsWith("/managementUnit/$managementUnitId")}) >> managementUnit
+        1 * userService.isUserAdminForManagementUnit(_, managementUnitId) >> true
         1 * reportService.findReportsForManagementUnit(managementUnitId) >> managementUnit.reports
         1 * reportService.regenerateReports(_, {it.category == 'c2'}, {it.id.managementUnitId == managementUnitId})
         0 * reportService.regenerateReports(_, _, {it.id.managementUnitId == managementUnitId})
@@ -137,6 +139,7 @@ class ManagementUnitServiceSpec extends Specification {
 
         then:
         1 * webService.getJson({it.endsWith("/managementUnit/$managementUnitId")}) >> managementUnit
+        1 * userService.isUserAdminForManagementUnit(_, managementUnitId) >> true
         1 * reportService.findReportsForManagementUnit(managementUnitId) >> managementUnit.reports
         0 * reportService.regenerateReports(_, _, {it.id.managementUnitId == managementUnitId})
 
@@ -150,6 +153,22 @@ class ManagementUnitServiceSpec extends Specification {
 
         then:
         1 * webService.getJson2({it.endsWith(ManagementUnitService.MU_MAP_PATH)}, _)
+    }
+
+    def "Users without admin permissions should only see public documents and no reports"() {
+        setup:
+        String muId = 'mu1'
+        String userId = 'u1'
+
+        when:
+        service.get(muId)
+
+        then:
+        1 * userService.getCurrentUserId() >> userId
+        1 * userService.isUserAdminForManagementUnit(userId, muId) >> false
+        1 * webService.getJson({it.endsWith("/managementUnit/${muId}")}) >> [managementUnitId: muId]
+        1 * documentService.search([managementUnitId: muId, public: true]) >> [documents:[], count:0]
+        0 * reportService.findReportsForManagementUnit(muId)
     }
 
 }

@@ -320,6 +320,7 @@ environments {
         emailFilter = /[A-Z0-9._%-]+@csiro\.au|chris\.godwin\.ala@gmail.com/
         logging.dir = '.'
         ecodata.service.url = 'http://devt.ala.org.au:8080/ecodata/ws'
+        espSupportEmail='ESPmonitoring@environment.gov.au'
     }
     test {
         server.port = "8087"

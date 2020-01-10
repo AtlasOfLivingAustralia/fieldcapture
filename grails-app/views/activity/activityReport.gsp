@@ -93,8 +93,6 @@
 %{--The modal view containing the contents for a modal dialog used to attach a document--}%
 <g:render template="/shared/attachDocument"/>
 
-<g:render template="/output/formsTemplates" plugin="ecodata-client-plugin"/>
-
 <asset:javascript src="common.js"/>
 <asset:javascript src="enterActivityData.js"/>
 

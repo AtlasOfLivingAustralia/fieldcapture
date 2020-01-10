@@ -42,6 +42,14 @@ class ManagementUnitSpec extends StubbedCasSpec {
         projectLinks().size()>=1
         gotoProgram().size() >= 1
 
+        //Cannot click on invisible element - phantomjs
+//        when:
+//        gotoProgram()[0].click()
+//
+//        then:
+//        at ProgramPage
+
+
     }
 
     def "As an admin, I can view/create/edit/delete a blog for program"(){

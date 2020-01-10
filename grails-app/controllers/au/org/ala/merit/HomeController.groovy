@@ -2,11 +2,9 @@ package au.org.ala.merit
 
 import au.org.ala.merit.hub.HubSettings
 import grails.converters.JSON
-import groovy.json.JsonSlurper
 import org.apache.commons.lang.StringUtils
 
 import javax.servlet.http.Cookie
-import java.math.RoundingMode
 
 class HomeController {
 
@@ -21,6 +19,7 @@ class HomeController {
     def documentService
     def statisticsFactory
     def blogService
+    def commonService
 
     def index() {
         HubSettings hubSettings = SettingService.hubConfig
@@ -168,17 +167,6 @@ class HomeController {
         } else {
             params.include = ['name', 'description', 'lastUpdated', 'organisationName']
             Map resp = searchService.allProjects(params)
-            resp?.hits?.hits?.each { Map hit ->
-                if (hit && hit._source) {
-                    hit._source = [
-                            name:hit._source.name,
-                            lastUpdated:hit._source.lastUpdated,
-                            description:hit._source.description,
-                            organisationName:hit._source.organisationName
-                    ]
-                }
-
-            }
             render resp as JSON
         }
     }
@@ -215,6 +203,13 @@ class HomeController {
         } else {
             response.sendError(404)
             return
+        }
+    }
+
+    def i18n() {
+        if (request.isGet()) {
+            Map props = commonService.i18n(params.lang)
+            render props as JSON
         }
     }
 

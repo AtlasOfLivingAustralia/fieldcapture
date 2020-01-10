@@ -33,7 +33,7 @@
     <g:set var="projects" value="${mu.projects}" />
     <g:set var="programs" value="${mu.programs}" />
 
-    <ul class="nav nav-tabs" id="projects-tab" >
+    <ul class="nav nav-tabs" id="programs-tab" >
         <g:each in="${programs}" var="program" status="i">
             <li class="nav-item">
                 <g:set var="active" value="${i==0?'active':''}"/>
@@ -44,7 +44,7 @@
 
     </ul>
 
-    <div class="tab-content" id="projects-TabContent">
+    <div class="tab-content" id="programs-TabContent">
         <g:each in="${programs}" var="program" status="i">
             <g:set var="active" value="${i==0?'active':''}"/>
             <div class="tab-pane ${active}" id="${program.programId}_projects" >

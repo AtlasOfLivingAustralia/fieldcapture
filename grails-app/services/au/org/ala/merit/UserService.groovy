@@ -347,22 +347,22 @@ class UserService {
     }
 
 
-    boolean isUserAdminForManagementUnit(String userId, String programId) {
+    boolean isUserAdminForManagementUnit(String userId, String managementUnitId) {
         if (userIsSiteAdmin()) {
             return true
         }
-        Map programRole = getEntityRole(userId, programId)
-        return programRole && programRole.role == RoleService.PROJECT_ADMIN_ROLE
+        Map managementUnitRole = getEntityRole(userId, managementUnitId)
+        return managementUnitRole && managementUnitRole.role == RoleService.PROJECT_ADMIN_ROLE
     }
 
-    boolean isUserEditorForManagementUnit(String userId, String programId) {
-        Map programRole = getEntityRole(userId, programId)
-        return programRole && programRole.role == RoleService.PROJECT_EDITOR_ROLE
+    boolean isUserEditorForManagementUnit(String userId, String managementUnitId) {
+        Map managementUnitRole = getEntityRole(userId, managementUnitId)
+        return managementUnitRole && managementUnitRole.role == RoleService.PROJECT_EDITOR_ROLE
     }
 
-    boolean isUserGrantManagerForManagementUnit(String userId, String programId) {
-        Map programRole = getEntityRole(userId, programId)
-        return programRole && programRole.role == RoleService.GRANT_MANAGER_ROLE
+    boolean isUserGrantManagerForManagementUnit(String userId, String managementUnitId) {
+        Map managementUnitRole = getEntityRole(userId, managementUnitId)
+        return managementUnitRole && managementUnitRole.role == RoleService.GRANT_MANAGER_ROLE
     }
 
     private Map getEntityRole(String userId, String entityId) {
@@ -461,6 +461,17 @@ class UserService {
                         return isUserAdminForProgram(userId, id)
                     case RoleService.PROJECT_EDITOR_ROLE:
                         return isUserAdminForProgram(userId, id) || isUserEditorForProgram(userId, id)
+                    default:
+                        return false
+                }
+            case MANAGEMENTUNIT:
+                switch (role) {
+                    case RoleService.GRANT_MANAGER_ROLE:
+                        return isUserGrantManagerForManagementUnit(userId, id)
+                    case RoleService.PROJECT_ADMIN_ROLE:
+                        return isUserAdminForManagementUnit(userId, id)
+                    case RoleService.PROJECT_EDITOR_ROLE:
+                        return isUserAdminForManagementUnit(userId, id) || isUserEditorForManagementUnit(userId, id)
                     default:
                         return false
                 }

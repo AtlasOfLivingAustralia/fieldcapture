@@ -51,6 +51,11 @@
 	min-width: 32px;
 	height: 32px;
 }
+#adminDocumentList .media-object {
+	width:32px;
+	min-width: 32px;
+	height: 32px;
+}
 #filter-by-stage {
 	margin-bottom: 5px;
 }

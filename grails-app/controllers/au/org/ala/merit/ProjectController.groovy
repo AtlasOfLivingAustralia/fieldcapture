@@ -251,10 +251,10 @@ class ProjectController {
     }
 
     private String projectTemplate(Map config, String template) {
-        if (template) {
+        // Allow FC_OFFICERS and above to select a different reporting template
+        if (template && userService.userIsSiteAdmin()) {
             return template
         }
-
         return config.projectTemplate
     }
     /**

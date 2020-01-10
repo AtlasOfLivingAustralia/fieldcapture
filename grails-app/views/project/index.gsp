@@ -172,7 +172,6 @@
     <g:render template="/shared/timeoutMessage" model="${[url:grailsApplication.config.security.cas.loginUrl+'?service='+createLink(action:'index', id:project.projectId, absolute: true)]}"/>
     <g:render template="/shared/unsavedChanges" model="${[id:'meriPlanUnsavedChanges', unsavedData:'MERI Plan']}"/>
     <g:render template="/shared/unsavedChanges" model="${[id:'risksUnsavedChanges', unsavedData:'Risks & Threats']}"/>
-    <g:render template="/output/formsTemplates" plugin="ecodata-client-plugin"/>
 
 </div>
 <g:if test="${user?.isEditor && projectContent.admin?.visible}">
@@ -276,7 +275,7 @@
 
             config.autoSaveIntervalInSeconds = ${grailsApplication.config.fieldcapture.autoSaveIntervalInSeconds?:60};
             config.riskAndThreatTypes = ${config.riskAndThreatTypes ?: 'null'};
-            var programName = '${(config.program?.name?:project.associatedSubProgram) ?: project.associatedProgram}';
+            var programName = '${(config.program?.acronym?:project.associatedSubProgram) ?: project.associatedProgram}';
             config.programName = programName;
 
             var viewModel = new ProjectPageViewModel(
