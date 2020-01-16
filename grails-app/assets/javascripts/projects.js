@@ -78,6 +78,7 @@ function ProjectViewModel(project, isUserEditor, organisations) {
     var documentSettings = {
         maxStages: docDefaults.maxStages,
         stages: [],
+        reports: [],
         owner: {
             projectId: project.projectId
         },
@@ -88,6 +89,11 @@ function ProjectViewModel(project, isUserEditor, organisations) {
     for(var i = 0; i < docDefaults.maxStages; i++){
         documentSettings.stages.push((i+1))
     }
+
+    _.sortBy(project.reports,function(report){return report.name})
+        .forEach(function(report){
+            documentSettings.reports.push( {name: report.name, reportId:report.reportId })}
+        )
 
     _.extend(self, new EditableDocumentsViewModel(documentSettings));
 
