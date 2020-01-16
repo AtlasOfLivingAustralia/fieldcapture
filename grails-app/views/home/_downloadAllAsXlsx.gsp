@@ -24,7 +24,7 @@
 
     <strong>MERI Plan</strong>
     <ul class="unstyled">
-        <g:each in="${['Outcomes', 'Monitoring', 'Project Partnerships', 'Project Implementation', 'Key Evaluation Question', 'Priorities', 'Budget', 'Risks and Threats', 'WHS and Case Study', 'Attachments', 'Baseline', 'Event']}" var="name">
+        <g:each in="${['Outcomes', 'Monitoring', 'Project Partnerships', 'Project Implementation', 'Key Evaluation Question', 'Priorities', 'Budget', 'Risks and Threats', 'WHS and Case Study', 'Attachments', 'Baseline', 'Event', "Approvals"]}" var="name">
             <li><label class="checkbox"><input type="checkbox" name="tabs" value="MERI_${name}" data-validation-engine="validate[minCheckbox[1]]">${name}</label></li>
         </g:each>
          <!-- RLP project -->
