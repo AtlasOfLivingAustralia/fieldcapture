@@ -107,7 +107,8 @@ class DashboardTab extends Module {
 }
 class AdminTab extends Module {
     static content = {
-        attached_document {$('div.attached_document')}
+        attached_documents {$('div.attached_document a.downloadDocument')}
+        deleteDocumentBtns {$('div.document-edit-buttons button').has('i.fa-remove')}
         editDocumentTab {$('a#edit-documents-tab')}
         attachDocumentBtn {$('button.project-document-action#doAttach')}
     }
@@ -121,7 +122,7 @@ class AttachDocumentForm extends Module {
 
         reportSelect {$('select#associatedReport', 0)}
         documentNameInput {$('input#documentName', 0)}
-        uploadingFile {$('input#fileLabel', 0)}
+        uploadingFile {$('input#documentFile', 0)}
         saveBtn {$('button.btn[name=uploadingDocument]')}
 
     }

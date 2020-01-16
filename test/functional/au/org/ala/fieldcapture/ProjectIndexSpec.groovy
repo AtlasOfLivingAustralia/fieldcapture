@@ -38,7 +38,8 @@ public class ProjectIndexSpec extends StubbedCasSpec {
         admin.editDocumentTab.click()
 
         then:
-        admin.attached_document.text().trim() == 'test 1'
+        admin.attached_documents.size() == 1
+        admin.attached_documents[0].text() == 'test 1'
 
         when:
         admin.attachDocumentBtn.click()
@@ -48,14 +49,28 @@ public class ProjectIndexSpec extends StubbedCasSpec {
         editDocumentForm.reportOptions.size() == 2
         //editDocumentForm.firstReportOption.text() == 'Core services report 1'
 
-//        when:
-//        editDocumentForm.reportSelect = 'report_1'
-//        editDocumentForm.documentNameInput = 'test 2'
-//        editDocumentForm.uploadingFile =('test2.doc')
-//        editDocumentForm.saveBtn.click()
-//
-//        then:
-//        waitFor {admin.editDocumentTab}
+
+        when:
+        File outputFile = File.createTempFile('test', '.txt')
+        String filename = outputFile.absolutePath
+        editDocumentForm.reportSelect = 'report_1'
+        editDocumentForm.documentNameInput = 'test 2'
+        editDocumentForm.uploadingFile =(filename)
+        editDocumentForm.saveBtn.click()
+
+        then:
+        waitFor {admin.editDocumentTab}
+        admin.attached_documents.size() == 2
+        admin.attached_documents[1].text() == 'test 2'
+        admin.deleteDocumentBtns.size() == 2
+
+        when:
+        admin.deleteDocumentBtns[1].click()
+
+        then:
+        waitFor {admin.editDocumentTab}
+        admin.attached_documents.size() == 1
+
 
 
 
