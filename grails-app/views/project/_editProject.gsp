@@ -75,6 +75,13 @@
         </div>
     </div>
 
+    <div class="control-group span4">
+        <label class="control-label" for="tags">Disaster relief categories</label>
+        <div class="controls">
+            <select multiple="multiple" id="tags" data-bind="options:transients.defaultTags, multiSelect2:{value:tags, placeholder:''}" class="select input-xlarge"></select>
+        </div>
+    </div>
+
 </div>
 
 <g:if test="${!hidePrograms}">
