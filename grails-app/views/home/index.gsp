@@ -17,7 +17,7 @@
         viewProjectUrl: "${g.createLink(controller: 'project', action:'index')}",
         dashboardUrl: "${g.createLink(controller: 'report', action: 'loadReport', params: params+[showOrganisations:true])}",%{--// Hack for the announcements report to distinguish it from the report on the org page.--}%
         dashboardCategoryUrl: "${g.createLink(controller: 'report', action: 'activityOutputs', params: params+[showOrganisations:true])}",
-        i18nURL: "${g.createLink(controller: 'home', action: 'i18n', params: [lang: grailsApplication.config.i18n?.region?:"default"])}"
+        i18nURL: "${g.createLink(controller: 'home', action: 'i18n'}"
         };
     </script>
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
