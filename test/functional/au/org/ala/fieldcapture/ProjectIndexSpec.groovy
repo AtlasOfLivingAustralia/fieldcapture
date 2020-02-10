@@ -11,7 +11,6 @@ public class ProjectIndexSpec extends StubbedCasSpec {
 
     def setup() {
         useDataSet('dataset_project')
-
     }
 
     def cleanup() {
@@ -70,9 +69,6 @@ public class ProjectIndexSpec extends StubbedCasSpec {
         then:
         waitFor {admin.editDocumentTab}
         admin.attached_documents.size() == 1
-
-
-
 
     }
 

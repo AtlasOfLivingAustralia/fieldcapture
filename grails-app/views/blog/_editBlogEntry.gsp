@@ -61,7 +61,7 @@
             <!-- ko if:type() !== 'Photo' -->
             <p data-bind="visible:!image() && !stockIcon()">Select or attach an image</p>
 
-            <select data-bind="visible:!image(), value:stockIcon">
+            <select data-bind="visible:!image(), value:stockIcon" name="docCategory">
                 <option/>
                 <option value="fa-warning">Important<i class="fa fa-warning fa-3x"></i></option>
                 <option value="fa-newspaper-o">News<i class="fa fa-newspaper-o fa-3x"></i></option>
@@ -77,7 +77,7 @@
                   data-owner-type="blogEntryId"
                   data-owner-id="${blogEntry?.blogEntryId}"
                   data-bind="stagedImageUpload:documents, visible:!image() && !stockIcon()"><i class="icon-plus"></i> <input
-                    id="image" type="file" name="files"><span>Attach</span></div>
+                    id="image" type="file" name="files" ><span>Attach</span></div>
 
             <button class="btn main-image-button" data-bind="click:removeBlogImage, visible:image()"><i
                     class="icon-minus"></i> Remove</button>
