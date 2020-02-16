@@ -24,7 +24,7 @@ public class ProjectIndexSpec extends StubbedCasSpec {
         when:
         to ProjectIndex, projectId
 
-        expect:
+        then:
         at ProjectIndex
 
         when:
