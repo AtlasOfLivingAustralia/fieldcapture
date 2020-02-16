@@ -24,8 +24,8 @@ public class ProjectIndexSpec extends StubbedCasSpec {
         when:
         to ProjectIndex, projectId
 
-        then:
-        projectName.text() == 'project 1'
+        expect:
+        at ProjectIndex
 
         when:
         adminTab.click()
@@ -71,6 +71,5 @@ public class ProjectIndexSpec extends StubbedCasSpec {
         admin.attached_documents.size() == 1
 
     }
-
 }
 

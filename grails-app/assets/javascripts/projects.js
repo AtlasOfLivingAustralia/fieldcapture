@@ -108,6 +108,7 @@ function ProjectViewModel(project, isUserEditor, organisations) {
         organisationsMap[org.organisationId] = org;
     });
     self.transients = self.transients || {};
+    self.transients.defaultTags = ["Fires", "Flood", "Cyclone", "Drought", "Storm", "Wind"];
 
     self.name = ko.observable(project.name);
     self.aim = ko.observable(project.aim);
@@ -180,6 +181,7 @@ function ProjectViewModel(project, isUserEditor, organisations) {
     self.projectType = ko.observable(project.projectType);
     self.scienceType = ko.observable(project.scienceType);
     self.task = ko.observable(project.task);
+    self.tags = ko.observableArray(project.tags || []);
     self.urlWeb = ko.observable(project.urlWeb).extend({url:true});
     self.contractStartDate = ko.observable(project.contractStartDate).extend({simpleDate: false});
     self.contractEndDate = ko.observable(project.contractEndDate).extend({simpleDate: false});
@@ -881,6 +883,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             associatedSubProgram: self.associatedSubProgram(),
             funding: new Number(self.funding()),
             status: self.status(),
+            tags: self.tags(),
             promoteOnHomepage: self.promoteOnHomepage(),
             options: {
                 changeActivityDates: self.changeActivityDates(),

@@ -5,3 +5,4 @@
 //= require mapWithFeatures.js
 //= require forms-knockout-bindings.js
 //= require reef2050Report.js
+//= require components.js
