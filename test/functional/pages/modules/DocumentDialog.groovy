@@ -12,7 +12,7 @@ class DocumentDialog extends Module {
         privacyDeclaration { $('#thirdPartyConsentCheckbox') }
         file { $('#documentFile') }
         mainProjectImage { $('#mainImage') }
-        stage { $('#documentStage') }
+        stage { $('select#associatedReport') }
         saveButton { $('#attachDocument [data-bind*=save]') }
         cancelButton { $('#attachDocument [data-bind*=cancel]') }
 

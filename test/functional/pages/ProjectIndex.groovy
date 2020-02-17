@@ -18,13 +18,14 @@ class ProjectIndex extends Page {
         activitiesTab {$('#plan-tab')}
         sitesTab {$('#site-tab')}
         dashboardTab {$('#dashboard-tab')}
-
+        adminTab {$('#admin-tab')}
 
         projectName { $('h1') }
         overview { module OverviewTab }
         plansAndReports(wait:true) { module PlansAndReportsTab }
         sites { module SitesTab }
         dashboard { module DashboardTab }
+        admin { module AdminTab }
 
         iAmSure(wait: true) { $('.modal a', text:'OK') }
 
@@ -107,23 +108,10 @@ class DashboardTab extends Module {
 }
 class AdminTab extends Module {
     static content = {
-        attached_document {$('div.attached_document')}
+        attached_documents {$('div.attached_document')}
         editDocumentTab {$('a#edit-documents-tab')}
         attachDocumentBtn {$('button.project-document-action#doAttach')}
     }
 }
 
-class AttachDocumentForm extends Module {
-    static at = {$('div#attachDocument')}
-    static content = {
-        reportOptions {$('select#associatedReport option')}
-        firstReportOption {$('select#associatedReport option',1)}
-
-        reportSelect {$('select#associatedReport', 0)}
-        documentNameInput {$('input#documentName', 0)}
-        uploadingFile {$('input#fileLabel', 0)}
-        saveBtn {$('button.btn[name=uploadingDocument]')}
-
-    }
-}
 
