@@ -255,7 +255,7 @@ class ManagementUnitController {
             return
         }
 
-        Map model = activityReportModel(id, reportId, ReportMode.EDIT, params.getInt('formVersion', null))
+        Map model = activityReportModel(id, reportId, ReportMode.EDIT, params.getDouble('formVersion', null))
 
         if (!model.editable) {
             redirect action:'viewReport', id:id, params:[reportId:reportId, attemptedEdit:true]

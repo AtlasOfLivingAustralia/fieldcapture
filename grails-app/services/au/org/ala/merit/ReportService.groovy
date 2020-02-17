@@ -865,7 +865,7 @@ class ReportService {
         Map report = get(reportId)
 
         Map activity = activityService.get(report.activityId)
-        Map model = activityService.getActivityMetadata(activity.type, formVersion ?: activity.formVersion)
+        Map model = activityService.getActivityMetadata(activity.type, formVersion ?: activity.formVersion ? (int) activity.formVersion : 1)
         model.report = report
         model.activity = activity
         model.themes = []
