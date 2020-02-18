@@ -115,3 +115,16 @@ class AdminTab extends Module {
 }
 
 
+class AttachDocumentForm extends Module {
+    static at = {$('div#attachDocument')}
+    static content = {
+        reportOptions {$('select#associatedReport option')}
+        firstReportOption {$('select#associatedReport option',1)}
+
+        reportSelect {$('select#associatedReport', 0)}
+        documentNameInput {$('input#documentName', 0)}
+        uploadingFile {$('input#fileLabel', 0)}
+        saveBtn {$('button.btn[name=uploadingDocument]')}
+
+    }
+}
