@@ -113,6 +113,9 @@
                                     <td class="td1">
                                         <a href="#" class="projectTitle" id="a_" data-id="" title="click to show/hide details">
                                             <span class="showHideCaret">&#9658;</span> <span class="projectTitleName">$name</span></a>
+                                        <a href="#" class="managementUnitLine">
+                                            <small><i class="managementUnitName pull-right"></i></small>
+                                        </a>
                                         <div class="hide projectInfo" id="proj_$id">
                                             <div class="homeLine">
                                                 <i class="fa fa-home"></i>
@@ -120,6 +123,10 @@
                                             </div>
                                             <div class="orgLine">
                                                 <i class="fa fa-user"></i>
+                                            </div>
+                                            <div class="associatedProgramLine">
+                                                <i class="fa fa-bookmark"></i>
+                                                <a href=""></a>
                                             </div>
                                             <div class="descLine">
                                                 <i class="fa fa-info"></i>
@@ -809,6 +816,15 @@
             var $tr = $('#projectRowTempl tr').clone(); // template
             $tr.find('.td1 > a').attr("id", "a_" + id).data("id", id);
             $tr.find('.td1 .projectTitleName').text(src.name); // projectTitleName
+            if(src.managementUnitName){
+                $tr.find('.td1 .managementUnitName').text(src.managementUnitName);
+                $tr.find('.td1 a.managementUnitLine').attr("href", "${createLink(controller: 'managementUnit')}/" + src.managementUnitId);
+            }
+            if(src.associatedProgram){
+                $tr.find('.td1 .associatedProgramLine a').text(src.associatedProgram);
+                $tr.find('.td1 .associatedProgramLine a').attr("href", "${createLink(controller: 'program')}/" + src.programId);
+            }
+
             $tr.find('.projectInfo').attr("id", "proj_" + id);
             $tr.find('.homeLine a').attr("href", "${createLink(controller: 'project')}/" + id);
             $tr.find('a.zoom-in').data("id", id);

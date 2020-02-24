@@ -165,7 +165,7 @@ class HomeController {
             Map geoData  = searchService.allProjectsWithSites(params, null, reducePrecision)
             render geoData as JSON
         } else {
-            params.include = ['name', 'description', 'lastUpdated', 'organisationName']
+            params.include = ['name', 'description', 'lastUpdated', 'organisationName', 'managementUnitName','managementUnitId', 'programId', 'associatedProgram']
             Map resp = searchService.allProjects(params)
             render resp as JSON
         }
