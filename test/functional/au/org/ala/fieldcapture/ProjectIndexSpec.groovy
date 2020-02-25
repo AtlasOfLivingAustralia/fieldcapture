@@ -42,24 +42,24 @@ public class ProjectIndexSpec extends StubbedCasSpec {
 
         when:
         admin.attachDocumentBtn.click()
-        def dialog = openDocumentDialog()
+
 
         then:
-
-        dialog.title == "Contract assurance document"
         waitFor {editDocumentForm}
         editDocumentForm.reportOptions.size() == 2
         //editDocumentForm.firstReportOption.text() == 'Core services report 1'
 
 
         when:
+        File outputFile = File.createTempFile('test', '.txt')
+        String filename = outputFile.absolutePath
         editDocumentForm.reportSelect = 'report_1'
         editDocumentForm.documentNameInput = 'test 2'
         editDocumentForm.uploadingFile =(filename)
         editDocumentForm.saveBtn.click()
 
         then:
-        waitFor {admin.editDocumentTab}
+        waitFor {admin.editDocumentBtns.size() == 2}
         admin.attached_documents.size() == 2
         admin.attached_documents[1].text() == 'test 2'
         admin.deleteDocumentBtns.size() == 2

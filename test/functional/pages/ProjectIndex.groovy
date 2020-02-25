@@ -111,6 +111,8 @@ class AdminTab extends Module {
         attached_documents {$('div.attached_document')}
         editDocumentTab {$('a#edit-documents-tab')}
         attachDocumentBtn {$('button.project-document-action#doAttach')}
+        editDocumentBtns {$('.document-edit-buttons')}
+        deleteDocumentBtns {$('button.deleteDocument')}
     }
 }
 
@@ -123,7 +125,7 @@ class AttachDocumentForm extends Module {
 
         reportSelect {$('select#associatedReport', 0)}
         documentNameInput {$('input#documentName', 0)}
-        uploadingFile {$('input#fileLabel', 0)}
+        uploadingFile {$('input#documentFile', 0)}
         saveBtn {$('button.btn[name=uploadingDocument]')}
 
     }
