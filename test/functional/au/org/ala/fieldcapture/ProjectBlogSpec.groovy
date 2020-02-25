@@ -35,15 +35,23 @@ class ProjectBlogSpec extends StubbedCasSpec {
         waitFor {at NewBlogEntryPage}
 
         when:
-        blogDetails.title = 'Testing blog of site'
-        blogDetails.description = 'Description of blog'
+        blogDetails.title = 'uploading photo to blog'
+        blogDetails.description = 'uploading photo to blog'
+        blogDetails.uploadingFile = new File('./test/functional/resources/testImage.png').canonicalPath
+
+        then:
+        waitFor {blogDetails.privacy.displayed}
+
+        when:
+        blogDetails.privacy = true
         submit()
 
         then:
         waitFor {at ProjectBlogPage}
         blogModule.blogs().size() ==2
+        blogModule.images()[0].endsWith('testImage.png')
 
-        ['BlogTest','Testing blog of site'].any{blogModule.blogTitles().contains(it)}
+        ['BlogTest','uploading photo to blog'].any{blogModule.blogTitles().contains(it)}
 
         //Enter edit mode again
         when:
@@ -55,7 +63,7 @@ class ProjectBlogSpec extends StubbedCasSpec {
 
 
         when:
-        blogModule.deleteBlogBtn[1].click()
+        blogModule.deleteBlogBtn[0].click()
 
         then:
         waitFor {blogModule.deleteBlogBtn.size() == 1 && editProjectBlogPane().isDisplayed()}

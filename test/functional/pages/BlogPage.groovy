@@ -16,10 +16,15 @@ class BlogPageModule extends Module {
         editBlogBtn{$('a.editThisBlog')}
         deleteBlogBtn{$('a.delThisBlog')}
         editBlogPanelHeader{$('div#editProjectBlog h3',0)}
+        blogImages {$('img.blog-image')}
     }
 
     List blogs() {
         blogEntryTable.collect{it}
+    }
+
+    List images() {
+        blogImages.collect{it.attr('src')}
     }
 
     List blogTitles() {
@@ -100,6 +105,7 @@ class BlogDetails extends Module {
         docSelect {$('select[name=docCategory]')}
 
         uploadingFile {$('input#image[name=files]', 0)}
+        privacy {$('input#declaration')}
         saveBtn {$('button.btn[name=uploadingDocument]')}
     }
 }
