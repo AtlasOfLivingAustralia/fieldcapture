@@ -72,7 +72,7 @@ class ProjectBlogSpec extends StubbedCasSpec {
 
     def "As an admin, I can enter edit mode "(){
         setup:
-        login([userId:'1', role:"ROLE_USER", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
+        login([userId:'1', role:"ROLE_ADMIN", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
 
         when:
         to ProjectBlogPage

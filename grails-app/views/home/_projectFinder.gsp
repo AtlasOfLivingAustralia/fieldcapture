@@ -122,12 +122,14 @@
                                                 <a href="">View project page</a>
                                             </div>
                                             <div class="orgLine">
-                                                <i class="fa fa-user"></i>
+                                                <i class="fa fa-user" data-toggle="tooltip"  title="Organisation"></i>
                                             </div>
                                             <div class="associatedProgramLine">
-                                                <i class="fa fa-bookmark"></i>
+                                                <i class="fa fa-bookmark" data-toggle="tooltip"  title="Associated program / sub program"></i>
                                                 <a href=""></a>
+                                                <i class="associatedSubProgram"></i>
                                             </div>
+
                                             <div class="descLine">
                                                 <i class="fa fa-info"></i>
                                             </div>
@@ -821,8 +823,18 @@
                 $tr.find('.td1 a.managementUnitLine').attr("href", "${createLink(controller: 'managementUnit')}/" + src.managementUnitId);
             }
             if(src.associatedProgram){
-                $tr.find('.td1 .associatedProgramLine a').text(src.associatedProgram);
-                $tr.find('.td1 .associatedProgramLine a').attr("href", "${createLink(controller: 'program')}/" + src.programId);
+
+                if (src.programId){
+                    $tr.find('.td1 .associatedProgramLine a').text(src.associatedProgram);
+                    $tr.find('.td1 .associatedProgramLine a').attr("href", "${createLink(controller: 'program')}/" + src.programId);
+                    }
+                else{
+                    //$tr.find('.td1 .associatedProgramLine a').attr("href", "#");
+                    $tr.find('.td1 .associatedProgramLine a').replaceWith('<span>'+ src.associatedProgram +'</span>')
+                }
+
+                if (src.associatedSubProgram)
+                    $tr.find('.td1 .associatedProgramLine i.associatedSubProgram').text( " - "+src.associatedSubProgram )
             }
 
             $tr.find('.projectInfo').attr("id", "proj_" + id);
