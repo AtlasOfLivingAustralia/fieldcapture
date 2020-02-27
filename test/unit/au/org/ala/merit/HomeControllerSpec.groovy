@@ -38,7 +38,7 @@ class HomeControllerSpec extends Specification {
         1 * searchService.allProjects(params) >> searchResponse
 
         and: "The query is limited to the data we need to display"
-        params.include == ['name', 'description', 'lastUpdated', 'organisationName']
+        params.include == ['name', 'description', 'lastUpdated', 'organisationName', 'managementUnitName','managementUnitId', 'programId', 'associatedProgram', 'associatedSubProgram']
 
         and:
         Map response = response.json

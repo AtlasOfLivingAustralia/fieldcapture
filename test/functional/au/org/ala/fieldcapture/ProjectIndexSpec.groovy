@@ -68,7 +68,7 @@ public class ProjectIndexSpec extends StubbedCasSpec {
         admin.deleteDocumentBtns[1].click()
 
         then:
-        waitFor {admin.editDocumentTab}
+        waitFor {admin.attached_documents.isDisplayed()}
         admin.attached_documents.size() == 1
 
     }

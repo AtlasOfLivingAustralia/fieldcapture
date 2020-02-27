@@ -37,7 +37,8 @@ class ProjectBlogSpec extends StubbedCasSpec {
         when:
         blogDetails.title = 'uploading photo to blog'
         blogDetails.description = 'uploading photo to blog'
-        blogDetails.uploadingFile = new File('./test/functional/resources/testImage.png').canonicalPath
+        File toAttach = new File(getClass().getResource('/resources/testImage.png').toURI())
+        blogDetails.uploadingFile =toAttach.canonicalPath
 
         then:
         waitFor {blogDetails.privacy.displayed}
