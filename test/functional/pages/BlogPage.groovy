@@ -105,7 +105,7 @@ class BlogDetails extends Module {
         docSelect {$('select[name=docCategory]')}
 
         uploadingFile {$('input#image[name=files]', 0)}
-        privacy {$('input#declaration')}
+        privacy(required:false) {$('input#declaration')  }
         saveBtn {$('button.btn[name=uploadingDocument]')}
     }
 }

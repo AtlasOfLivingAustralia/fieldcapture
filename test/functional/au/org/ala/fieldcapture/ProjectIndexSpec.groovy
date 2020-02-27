@@ -51,11 +51,10 @@ public class ProjectIndexSpec extends StubbedCasSpec {
 
 
         when:
-        File outputFile = File.createTempFile('test', '.txt')
-        String filename = outputFile.absolutePath
+        File toAttach = new File(getClass().getResource('/resources/testImage.png').toURI())
         editDocumentForm.reportSelect = 'report_1'
         editDocumentForm.documentNameInput = 'test 2'
-        editDocumentForm.uploadingFile =(filename)
+        editDocumentForm.uploadingFile =(toAttach.canonicalPath)
         editDocumentForm.saveBtn.click()
 
         then:
