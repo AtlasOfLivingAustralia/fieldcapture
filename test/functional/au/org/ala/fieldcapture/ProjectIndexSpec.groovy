@@ -54,7 +54,7 @@ public class ProjectIndexSpec extends StubbedCasSpec {
         File toAttach = new File(getClass().getResource('/resources/testImage.png').toURI())
         editDocumentForm.reportSelect = 'report_1'
         editDocumentForm.documentNameInput = 'test 2'
-        editDocumentForm.uploadingFile =(toAttach.canonicalPath)
+        editDocumentForm.uploadingFile =(toAttach.absolutePath)
         editDocumentForm.saveBtn.click()
 
         then:
@@ -67,7 +67,7 @@ public class ProjectIndexSpec extends StubbedCasSpec {
         admin.deleteDocumentBtns[1].click()
 
         then:
-        waitFor {admin.attached_documents.isDisplayed()}
+        waitFor {admin.fist_attached_document.isDisplayed()}
         admin.attached_documents.size() == 1
 
     }

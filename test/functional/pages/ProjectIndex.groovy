@@ -108,6 +108,7 @@ class DashboardTab extends Module {
 }
 class AdminTab extends Module {
     static content = {
+        fist_attached_document {$('div.attached_document', 0 )}
         attached_documents {$('div.attached_document')}
         editDocumentTab {$('a#edit-documents-tab')}
         attachDocumentBtn {$('button.project-document-action#doAttach')}
