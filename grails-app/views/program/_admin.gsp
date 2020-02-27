@@ -8,6 +8,7 @@
         </g:if>
         <g:if test="${fc.userIsAlaOrFcAdmin()}">
             <a class="nav-link" data-toggle="pill" href="#config" role="tab">Configuration</a>
+            <a class="nav-link" data-toggle="pill" href="#outcomes" role="tab">Outcomes</a>
         </g:if>
     </div>
 
@@ -113,6 +114,14 @@
             <h4 style="display:inline-block">Program configuration</h4> <button class="btn btn-success float-right" data-bind="click:saveProgramConfiguration">Save Configuration</button>
 
             <textarea rows="80" style="width:100%" data-bind="value:config">
+
+            </textarea>
+        </div>
+
+        <div class="tab-pane" id="outcomes">
+            <h4 style="display:inline-block">Program outcomes</h4> <button class="btn btn-success float-right" data-bind="click:saveProgramOutcomes">Save Outcomes</button>
+
+            <textarea rows="80" style="width:100%" data-bind="value:outcomes">
 
             </textarea>
         </div>

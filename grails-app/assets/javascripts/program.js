@@ -133,8 +133,10 @@ var ProgramPageViewModel = function(props, options) {
     _.extend(self, new ProgramViewModel(props, options));
 
     var config = props.config || {};
+    var outcomes = props.outcomes || [];
 
     self.config = ko.observable(vkbeautify.json(config));
+    self.outcomes = ko.observable(vkbeautify.json(outcomes));
 
     var projectOutputReportCategory = 'Outputs Reporting';
     /**
@@ -238,6 +240,10 @@ var ProgramPageViewModel = function(props, options) {
             startDate:self.startDate(),
             endDate:self.endDate()
         };
+        return saveProgram(json);
+    };
+
+    var saveProgram = function(json) {
         return $.ajax({
             url: options.programSaveUrl,
             type: 'POST',
@@ -289,6 +295,19 @@ var ProgramPageViewModel = function(props, options) {
             bootbox.alert("Program configuration saved");
         });
 
+    };
+
+    self.saveProgramOutcomes = function() {
+        try {
+            outcomes = JSON.parse(self.outcomes());
+        }
+        catch (e) {
+            bootbox.alert("Invalid JSON");
+            return;
+        }
+        saveProgram({outcomes:outcomes}).done(function() {
+            bootbox.alert("Program outcomes saved!");
+        });
     };
 
     function popupContent(managementUnitFeature) {
