@@ -6,7 +6,7 @@ import geb.Page
 /**
  * Represents a project index page.
  */
-class ProjectIndex extends Page {
+class ProjectIndex extends ReloadablePage {
     static url = 'project/index' // requires a project id parameter
     static at = { title.endsWith('| Project | Field Capture')}
 

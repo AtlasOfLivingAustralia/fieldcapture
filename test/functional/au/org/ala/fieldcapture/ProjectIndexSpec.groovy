@@ -58,6 +58,9 @@ public class ProjectIndexSpec extends StubbedCasSpec {
         editDocumentForm.saveBtn.click()
 
         then:
+        waitFor{hasBeenReloaded()}
+        at ProjectIndex // Do another at check or the next call to "hasBeenReloaded" will return regardless of whether the page has been reloaded again.
+
         waitFor {admin.editDocumentBtns.size() == 2}
         admin.attached_documents.size() == 2
         admin.attached_documents[1].text() == 'test 2'
@@ -67,6 +70,7 @@ public class ProjectIndexSpec extends StubbedCasSpec {
         admin.deleteDocumentBtns[1].click()
 
         then:
+        waitFor {hasBeenReloaded()}
         waitFor {admin.fist_attached_document.isDisplayed()}
         admin.attached_documents.size() == 1
 
