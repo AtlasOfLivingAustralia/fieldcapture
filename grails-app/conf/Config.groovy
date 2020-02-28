@@ -343,6 +343,7 @@ environments {
         userDetailsSingleUrl = "${userDetailsUrl}getUserDetails"
         userDetailsUrl = "${userDetatails.url}getUserListFull"
         logging.dir = '.'
+        upload.images.path = '/tmp'
         ecodata.baseUrl = 'http://devt.ala.org.au:8080/ecodata/ws/'
         ecodata.service.url = 'http://devt.ala.org.au:8080/ecodata/ws'
         api_key='testapikey'

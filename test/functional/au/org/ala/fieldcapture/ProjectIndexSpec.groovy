@@ -43,32 +43,36 @@ public class ProjectIndexSpec extends StubbedCasSpec {
         when:
         admin.attachDocumentBtn.click()
 
+
         then:
-        waitFor {editDocumentForm}
+        waitFor {editDocumentForm.displayed}
         editDocumentForm.reportOptions.size() == 2
         //editDocumentForm.firstReportOption.text() == 'Core services report 1'
 
 
-//        when:
-//        File outputFile = File.createTempFile('test', '.txt')
-//        String filename = outputFile.absolutePath
-//        editDocumentForm.reportSelect = 'report_1'
-//        editDocumentForm.documentNameInput = 'test 2'
-//        editDocumentForm.uploadingFile =(filename)
-//        editDocumentForm.saveBtn.click()
-//
-//        then:
-//        waitFor {admin.editDocumentTab}
-//        admin.attached_documents.size() == 2
-//        admin.attached_documents[1].text() == 'test 2'
-//        admin.deleteDocumentBtns.size() == 2
-//
-//        when:
-//        admin.deleteDocumentBtns[1].click()
-//
-//        then:
-//        waitFor {admin.editDocumentTab}
-//        admin.attached_documents.size() == 1
+        when:
+        File toAttach = new File(getClass().getResource('/resources/testImage.png').toURI())
+        editDocumentForm.reportSelect = 'report_1'
+        editDocumentForm.documentNameInput = 'test 2'
+        editDocumentForm.uploadingFile =(toAttach.absolutePath)
+        editDocumentForm.saveBtn.click()
+
+        then:
+        waitFor{hasBeenReloaded()}
+        at ProjectIndex // Do another at check or the next call to "hasBeenReloaded" will return regardless of whether the page has been reloaded again.
+
+        waitFor {admin.editDocumentBtns.size() == 2}
+        admin.attached_documents.size() == 2
+        admin.attached_documents[1].text() == 'test 2'
+        admin.deleteDocumentBtns.size() == 2
+
+        when:
+        admin.deleteDocumentBtns[1].click()
+
+        then:
+        waitFor {hasBeenReloaded()}
+        waitFor {admin.fist_attached_document.isDisplayed()}
+        admin.attached_documents.size() == 1
 
     }
 }

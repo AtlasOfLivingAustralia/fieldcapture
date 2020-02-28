@@ -6,7 +6,7 @@ import geb.Page
 /**
  * Represents a project index page.
  */
-class ProjectIndex extends Page {
+class ProjectIndex extends ReloadablePage {
     static url = 'project/index' // requires a project id parameter
     static at = { title.endsWith('| Project | Field Capture')}
 
@@ -108,9 +108,12 @@ class DashboardTab extends Module {
 }
 class AdminTab extends Module {
     static content = {
+        fist_attached_document {$('div.attached_document', 0 )}
         attached_documents {$('div.attached_document')}
         editDocumentTab {$('a#edit-documents-tab')}
         attachDocumentBtn {$('button.project-document-action#doAttach')}
+        editDocumentBtns {$('.document-edit-buttons')}
+        deleteDocumentBtns {$('button.deleteDocument')}
     }
 }
 
@@ -123,7 +126,7 @@ class AttachDocumentForm extends Module {
 
         reportSelect {$('select#associatedReport', 0)}
         documentNameInput {$('input#documentName', 0)}
-        uploadingFile {$('input#fileLabel', 0)}
+        uploadingFile {$('input#documentFile', 0)}
         saveBtn {$('button.btn[name=uploadingDocument]')}
 
     }
