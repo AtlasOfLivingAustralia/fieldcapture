@@ -948,5 +948,35 @@ class FCTagLib {
 
     }
 
+    def programFullName = { Map attrs ->
+        if (!attrs.program) {
+            throw new IllegalAccessException("No program attribute was supplied")
+        }
+        String separator = attrs.separator ?: '-'
+        Map program = attrs.program
+        Deque<Map> parents = new LinkedList<Map>()
+        while(program != null) {
+            parents.push(program)
+            program = program.parent
+        }
+
+        StringBuffer result = new StringBuffer()
+
+        while (parents.peekLast() != null) {
+            program = parents.pop()
+            if (result.length()) {
+                result.append(" ").append(separator).append(" ")
+            }
+            if (attrs.useAcronyms && !parents && program.acronym) {
+                result.append(program.acronym)
+            }
+            else {
+                result.append(program.name)
+            }
+        }
+
+        out << result.toString()
+    }
+
     def displayDate = {}
 }

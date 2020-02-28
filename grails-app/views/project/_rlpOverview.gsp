@@ -12,13 +12,15 @@
 %{--                        This is temporarily commented out until #1829 is released.
                             <div class="span8"><g:link controller="program" action="index"--}%
 %{--                                         id="${config.program.programId}">${config.program.name}</g:link></div>--}%
-                            <div class="span8">${config.program.name}</div>
+                            <div class="span8"><fc:programFullName program="${config.program}"/></div>
                     </div>
+                    <g:if test="${project.managementUnitId}">
                     <div class="row-fluid">
                         <div class="span4 header-label">Management Unit</div>
                         <div class="span8"><g:link controller="managementUnit" action="index"
                                                    id="${project.managementUnitId}">${project.managementUnitName}</g:link></div>
                     </div>
+                    </g:if>
 
                     <div class="row-fluid">
                         <div class="span4 header-label">Service Provider</div>
@@ -84,8 +86,7 @@
         </div>
     </div>
 
-
-    <h4>RLP outcomes addressed</h4>
+    <h4>Program outcomes addressed</h4>
 
     <div class="row-fluid">
         <div class="span12 value">
