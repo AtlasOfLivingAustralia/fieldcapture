@@ -126,7 +126,7 @@
                                             </div>
                                             <div class="associatedProgramLine">
                                                 <i class="fa fa-bookmark" data-toggle="tooltip"  title="Associated program / sub program"></i>
-                                                <a href=""></a>
+                                                <span></span>
                                                 <i class="associatedSubProgram"></i>
                                             </div>
 
@@ -823,10 +823,9 @@
                 $tr.find('.td1 a.managementUnitLine').attr("href", "${createLink(controller: 'managementUnit')}/" + src.managementUnitId);
             }
             if(src.associatedProgram){
-
                 if (src.programId){
-                    $tr.find('.td1 .associatedProgramLine a').text(src.associatedProgram);
-                    $tr.find('.td1 .associatedProgramLine a').attr("href", "${createLink(controller: 'program')}/" + src.programId);
+                    $tr.find('.td1 .associatedProgramLine span').text(src.associatedProgram);
+                    //$tr.find('.td1 .associatedProgramLine a').attr("href", "${createLink(controller: 'program')}/" + src.programId);
                     }
                 else{
                     //$tr.find('.td1 .associatedProgramLine a').attr("href", "#");
