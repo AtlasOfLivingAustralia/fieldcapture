@@ -1,4 +1,4 @@
-<div data-bind="let:{details:meriPlan()}">
+<div class="meri-plan" data-bind="let:{details:meriPlan()}">
 
 <g:each var="template" in="${config?.meriPlanContents}">
     <div class="row-fluid">

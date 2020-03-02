@@ -127,7 +127,7 @@
         </g:if>
 
         <g:if test="${risksAndThreatsVisible}">
-            <g:render template="risksAndThreatsReadOnly"/>
+            <g:render template="meriPlanReadOnly/risksAndThreats"/>
         </g:if>
 
 
