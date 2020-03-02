@@ -8,7 +8,7 @@
                     id="overall-risk"></select>
         </span>
     </div>
-    <table>
+    <table class="table">
         <thead>
         <tr>
             <th class="risk-type required">Type of threat / risk </th>
@@ -18,7 +18,7 @@
             <th class="risk-rating">Risk rating</th>
             <th class="risk-control required">Current control / <br/>Contingency strategy </th>
             <th class="residual-risk required">Residual risk </th>
-            <th class="risk-actions"></th>
+            <th class="risk-actions remove"></th>
         </tr>
         </thead>
         <tbody data-bind="foreach : risks.rows">
@@ -51,8 +51,8 @@
                 <select data-validation-engine="validate[required]"
                         data-bind="options: $parent.ratingOptions, value: residualRisk, optionsCaption: 'Please select', disable:$parent.risksDisabled"></select>
             </td>
-            <td class="risk-actions">
-                <span data-bind="if: $index() && !$parent.risksDisabled()"><i class="icon-remove" data-bind="click: $parent.removeRisk"></i>
+            <td class="risk-actions remove">
+                <span data-bind="if: $index() && !$parent.risksDisabled()"><i class="fa fa-remove" data-bind="click: $parent.removeRisk"></i>
                 </span>
             </td>
         </tr>
