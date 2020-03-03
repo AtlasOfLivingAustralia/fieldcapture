@@ -62,4 +62,34 @@ describe("ProgramPageViewModel Spec", function () {
         expect(bootbox.alert).toHaveBeenCalledWith("Program outcomes saved!");
 
     });
+
+    it("Program priorities can be saved", function() {
+        var options = {programSaveUrl:'/test/url'};
+        var program = { name: 'Test program', programId:"p1" };
+        var model = new ProgramPageViewModel(program, options);
+
+        spyOn($, 'ajax').and.callFake(function () {
+            var d = $.Deferred();
+            // resolve using our mock data
+            d.resolve({success:true});
+            return d.promise();
+        });
+
+
+        spyOn(bootbox, 'alert');
+
+        var prioritiesFromJSONEditor = JSON.stringify([{category:'Test', priority: 'Test priority'}]);
+        model.priorities(prioritiesFromJSONEditor);
+        model.saveProgramPriorities();
+        var expected = {
+            url: options.programSaveUrl,
+            type: 'POST',
+            data: '{"priorities":[{"category":"Test","priority":"Test priority"}]}',
+            dataType: 'json',
+            contentType: 'application/json'
+        };
+        expect($.ajax).toHaveBeenCalledWith(expected);
+        expect(bootbox.alert).toHaveBeenCalledWith("Program priorities saved!");
+
+    });
 });

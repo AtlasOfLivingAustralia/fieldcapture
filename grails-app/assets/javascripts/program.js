@@ -134,9 +134,11 @@ var ProgramPageViewModel = function(props, options) {
 
     var config = props.config || {};
     var outcomes = props.outcomes || [];
+    var priorities = props.priorities || [];
 
     self.config = ko.observable(vkbeautify.json(config));
     self.outcomes = ko.observable(vkbeautify.json(outcomes));
+    self.priorities = ko.observable(vkbeautify.json(priorities));
 
     var projectOutputReportCategory = 'Outputs Reporting';
     /**
@@ -283,7 +285,6 @@ var ProgramPageViewModel = function(props, options) {
     };
 
     self.saveProgramConfiguration = function() {
-
         try {
             config = JSON.parse(self.config());
         }
@@ -298,6 +299,7 @@ var ProgramPageViewModel = function(props, options) {
     };
 
     self.saveProgramOutcomes = function() {
+        var outcomes;
         try {
             outcomes = JSON.parse(self.outcomes());
         }
@@ -307,6 +309,20 @@ var ProgramPageViewModel = function(props, options) {
         }
         saveProgram({outcomes:outcomes}).done(function() {
             bootbox.alert("Program outcomes saved!");
+        });
+    };
+
+    self.saveProgramPriorities = function() {
+        var priorities;
+        try {
+            priorities = JSON.parse(self.priorities());
+        }
+        catch (e) {
+            bootbox.alert("Invalid JSON");
+            return;
+        }
+        saveProgram({priorities:priorities}).done(function() {
+            bootbox.alert("Program priorities saved!");
         });
     };
 
