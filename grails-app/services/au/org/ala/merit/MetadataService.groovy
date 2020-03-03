@@ -250,15 +250,13 @@ class MetadataService {
         })
     }
 
-    def getReportCategories() {
+    LinkedHashSet getReportCategories() {
         return cacheService.get('report-categories',{
-            def categories = new LinkedHashSet()
-            activitiesModel().outputs.each { output ->
-                output.scores.each { score ->
-                    def cat = score.category?.trim()
-                    if (cat) {
-                        categories << cat
-                    }
+            Set categories = new LinkedHashSet()
+            getScores(false).each { score ->
+                def cat = score.category?.trim()
+                if (cat) {
+                    categories << cat
                 }
             }
             categories
