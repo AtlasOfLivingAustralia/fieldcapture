@@ -154,7 +154,7 @@ grails.project.dependency.resolution = {
         test "org.grails.plugins:geb:1.0"
 
         if (Environment.current != Environment.DEVELOPMENT) {
-            compile (":ecodata-client-plugin:1.13-SNAPSHOT")
+            compile (":ecodata-client-plugin:1.13")
         }
 
     }
