@@ -10,6 +10,8 @@
             <a class="nav-link" data-toggle="pill" href="#config" role="tab">Configuration</a>
             <a class="nav-link" data-toggle="pill" href="#outcomes" role="tab">Outcomes</a>
             <a class="nav-link" data-toggle="pill" href="#priorities" role="tab">Priorities</a>
+            <a class="nav-link" data-toggle="pill" href="#themes" role="tab">Priority Areas / Themes</a>
+
         </g:if>
     </div>
 
@@ -131,6 +133,14 @@
             <h4 style="display:inline-block">Program priorities</h4> <button class="btn btn-success float-right" data-bind="click:saveProgramPriorities">Save Priorities</button>
 
             <textarea rows="80" style="width:100%" data-bind="value:priorities">
+
+            </textarea>
+        </div>
+
+        <div class="tab-pane" id="themes">
+            <h4 style="display:inline-block">Program priority areas / themes</h4> <button class="btn btn-success float-right" data-bind="click:saveProgramThemes">Save Themes</button>
+
+            <textarea rows="80" style="width:100%" data-bind="value:themes">
 
             </textarea>
         </div>

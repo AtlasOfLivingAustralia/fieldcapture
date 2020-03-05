@@ -92,4 +92,34 @@ describe("ProgramPageViewModel Spec", function () {
         expect(bootbox.alert).toHaveBeenCalledWith("Program priorities saved!");
 
     });
+
+    it("Program themes can be saved", function() {
+        var options = {programSaveUrl:'/test/url'};
+        var program = { name: 'Test program', programId:"p1" };
+        var model = new ProgramPageViewModel(program, options);
+
+        spyOn($, 'ajax').and.callFake(function () {
+            var d = $.Deferred();
+            // resolve using our mock data
+            d.resolve({success:true});
+            return d.promise();
+        });
+
+
+        spyOn(bootbox, 'alert');
+
+        var themesFromJSONEditor = JSON.stringify(["Theme 1", "Theme 2"]);
+        model.themes(themesFromJSONEditor);
+        model.saveProgramThemes();
+        var expected = {
+            url: options.programSaveUrl,
+            type: 'POST',
+            data: '{"themes":["Theme 1","Theme 2"]}',
+            dataType: 'json',
+            contentType: 'application/json'
+        };
+        expect($.ajax).toHaveBeenCalledWith(expected);
+        expect(bootbox.alert).toHaveBeenCalledWith("Program themes saved!");
+
+    });
 });

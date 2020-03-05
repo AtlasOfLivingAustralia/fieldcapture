@@ -135,10 +135,12 @@ var ProgramPageViewModel = function(props, options) {
     var config = props.config || {};
     var outcomes = props.outcomes || [];
     var priorities = props.priorities || [];
+    var themes = props.themes || [];
 
     self.config = ko.observable(vkbeautify.json(config));
     self.outcomes = ko.observable(vkbeautify.json(outcomes));
     self.priorities = ko.observable(vkbeautify.json(priorities));
+    self.themes = ko.observable(vkbeautify.json(themes));
 
     var projectOutputReportCategory = 'Outputs Reporting';
     /**
@@ -323,6 +325,19 @@ var ProgramPageViewModel = function(props, options) {
         }
         saveProgram({priorities:priorities}).done(function() {
             bootbox.alert("Program priorities saved!");
+        });
+    };
+    self.saveProgramThemes = function() {
+        var themes;
+        try {
+            themes = JSON.parse(self.themes());
+        }
+        catch (e) {
+            bootbox.alert("Invalid JSON");
+            return;
+        }
+        saveProgram({themes:themes}).done(function() {
+            bootbox.alert("Program themes saved!");
         });
     };
 
