@@ -53,58 +53,9 @@
                     <div><button data-bind="click:clearDates, enable:fromDate() || toDate()" class="btn" style="margin-left:4em;"><i class="fa fa-remove"></i> Clear dates</button></div>
 
                 </div>
-                <g:each var="fn" in="${facetsList}" status="j">
-                    <g:set var="f" value="${results.facets.get(fn)}"/>
-                    <g:set var="max" value="${5}"/>
-                    <g:if test="${fn != 'class' && f?.terms?.size() > 0}">
-                        <g:set var="fName"><g:message code="label.${fn}" default="${fn?.capitalize()}"/></g:set>
-                        <div><h4 id="facet-list-${j}-header" style="display:inline-block">${fName}</h4><a class="accordian-toggle pointer" data-toggle="collapse" data-target="#facet-list-${j}"><i style="float:right; margin-top:10px;" class="fa fa-plus"></i></a></div>
-                        <div id="facet-list-${j}" data-name="${fn}" class="collapse">
-                            <ul role="group" aria-labelledby="facet-list-${j}-header" style="list-style-type: none;" class="facetValues">
-                                <g:each var="t" in="${f.terms}" status="i">
-                                    <g:if test="${i < max && t.term}">
-                                        <g:set var="termLabel" value="${g.message(code:"label."+t.term.capitalize(), default:t.term.capitalize())}"/>
-                                        <li>
-                                            <input type="checkbox" class="facetSelection" name="facetSelection" value="fq=${fn.encodeAsURL()}:${t.term.encodeAsURL()}" aria-label="${termLabel}">
-                                            <a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term.encodeAsURL()}">${termLabel}</a> (${t.count})
-                                        </li>
-                                    </g:if>
-                                </g:each>
-                            </ul>
-
-                            <g:if test="${f?.terms?.size() > max}">
-                                <a href="#${fn}Modal" role="button" class="moreFacets tooltips" data-toggle="modal" title="View full list of values"><i class="fa fa-hand-o-right"></i> choose more...</a>
-                                <div id="${fn}Modal" class="modal hide fade">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                        <h3>Filter by ${fName}</h3>
-                                    </div>
-                                    <div class="modal-body">
-                                        <ul style="list-style-type: none;" class="facetValues">
-                                            <g:each var="t" in="${f.terms}">
-
-                                                <li data-sortalpha="${t.term.toLowerCase().trim()}" data-sortcount="${t.count}">
-                                                    <input type="checkbox" class="facetSelection" name="facetSelection" value="fq=${fn.encodeAsURL()}:${t.term.encodeAsURL()}">
-                                                    <a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term.encodeAsURL()}"><g:message
-                                                            code="label.${t.term}" default="${t.term?:'[empty]'}"/></a> (<span class="fcount">${t.count}</span>)
-                                                </li>
-                                            </g:each>
-                                        </ul>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <div class="pull-left">
-                                            <button class="btn btn-small facetSearch"><i class="icon-filter"></i>Refine</button>
-                                            <button class="btn btn-small sortAlpha"><i class="icon-filter"></i> Sort by name</button>
-                                            <button class="btn btn-small sortCount"><i class="icon-filter"></i> Sort by count</button>
-                                        </div>
-                                        <a href="#" class="btn" data-dismiss="modal">Close</a>
-                                    </div>
-
-                                </div>
-                            </g:if>
-                        </div>
-                    </g:if>
-                </g:each>
+                <div id="facet-list">
+                    <facet-filter params="'facetsList' : facetsList, results:  results, fqLink: fqLink, baseUrl: baseUrl, projectExplorerUrl: projectExplorerUrl"></facet-filter>
+                </div>
             </div>
         </div>
         <div class="span12">
@@ -162,14 +113,23 @@
                                     <td class="td1">
                                         <a href="#" class="projectTitle" id="a_" data-id="" title="click to show/hide details">
                                             <span class="showHideCaret">&#9658;</span> <span class="projectTitleName">$name</span></a>
+                                        <a href="#" class="managementUnitLine">
+                                            <small><i class="managementUnitName pull-right"></i></small>
+                                        </a>
                                         <div class="hide projectInfo" id="proj_$id">
                                             <div class="homeLine">
                                                 <i class="fa fa-home"></i>
                                                 <a href="">View project page</a>
                                             </div>
                                             <div class="orgLine">
-                                                <i class="fa fa-user"></i>
+                                                <i class="fa fa-user" data-toggle="tooltip"  title="Organisation"></i>
                                             </div>
+                                            <div class="associatedProgramLine">
+                                                <i class="fa fa-bookmark" data-toggle="tooltip"  title="Associated program / sub program"></i>
+                                                <span></span>
+                                                <i class="associatedSubProgram"></i>
+                                            </div>
+
                                             <div class="descLine">
                                                 <i class="fa fa-info"></i>
                                             </div>
@@ -326,21 +286,14 @@
     var selectedReport = reportMapping['${params.subsection?:''}'];
 
     var projectListIds = [], facetList = [], mapDataHasChanged = false, mapBounds, projectSites; // globals
-
+    var facetModelViewArgs = {
+        facetsList : ${(facetsList as grails.converters.JSON).toString()},
+        results: ${(results as grails.converters.JSON).toString()},
+        fqLink: "${fqLink}",
+        baseUrl: "${baseUrl}",
+        projectExplorerUrl: "${g.createLink(controller:'home', action:'projectExplorer')}"
+    };
     $(function () {
-        $.fn.clicktoggle = function(a, b) {
-            return this.each(function() {
-                var clicked = false;
-                $(this).click(function() {
-                    if (clicked) {
-                        clicked = false;
-                        return b.apply(this, arguments);
-                    }
-                    clicked = true;
-                    return a.apply(this, arguments);
-                });
-            });
-        };
         var delay = (function(){
             var timer = 0;
             return function(callback, ms){
@@ -445,30 +398,6 @@
         }
         $('#project-display-options '+storedTab).collapse({parent:'#project-display-options'});
         $('#project-display-options '+storedTab).collapse('show');
-
-        // Remember facet toggle state.
-        $('#facetsContent').on('shown', function (e) {
-            var facetName = $(e.target).data('name');
-            var index = expandedToggles.indexOf(facetName);
-            if (index < 0) {
-                expandedToggles.push(facetName);
-                amplify.store('facetToggleState', expandedToggles);
-            }
-
-            $('[data-target="#'+e.target.id+'"] i').removeClass('fa-plus').addClass('fa-minus');
-        });
-
-        $('#facetsContent').on('hidden', function (e) {
-            var facetName = $(e.target).data('name');
-            var index = expandedToggles.indexOf(facetName);
-            if (index >= 0) {
-                expandedToggles.splice(index, 1);
-                amplify.store('facetToggleState', expandedToggles);
-            }
-
-            $('[data-target="#'+e.target.id+'"] i').removeClass('fa-minus').addClass('fa-plus');
-
-        });
 
         // project list filter
         $('.filterinput').keyup(function() {
@@ -636,42 +565,9 @@
             }
         });
 
-        // sort facets in popups by term
-        $(".sortAlpha").clicktoggle(function(el) {
-            var $list = $(this).closest(".modal").find(".facetValues");
-            sortList($list, "sortalpha", ">");
-            $(this).find("i").removeClass("icon-flipped180");
-        }, function(el) {
-            var $list = $(this).closest(".modal").find(".facetValues");
-            sortList($list, "sortalpha", "<");
-            $(this).find("i").addClass("icon-flipped180");
-        });
-
         var projectExplorerUrl = '${g.createLink(controller:'home', action:'projectExplorer')}';
         $(".clearFacet").click(function(e){
        	 window.location.href = projectExplorerUrl;
-        });
-
-        $(".facetSearch").click(function(e){
-        	var data = [];
-        	$('input[type="checkbox"][name="facetSelection"]').each(function(i){
-		        if(this.checked){
-		            data.push(this.value);
-		        }
-		    });
-			var url = "${baseUrl?:"?"}";
-		    window.location.href = projectExplorerUrl + url + "&" + data.join('&');
-        });
-
-        // sort facets in popups by count
-        $(".sortCount").clicktoggle(function(el) {
-            var $list = $(this).closest(".modal").find(".facetValues");
-            sortList($list, "sortcount", "<");
-            $(this).find("i").removeClass("icon-flipped180");
-        }, function(el) {
-            var $list = $(this).closest(".modal").find(".facetValues");
-            sortList($list, "sortcount", ">");
-            $(this).find("i").addClass("icon-flipped180");
         });
 
         $('#shapefile-download').click(function(e) {
@@ -788,6 +684,15 @@
             });
         };
         ko.applyBindings(new DatePickerModel(), document.getElementById('facet-dates'));
+
+        function FacetFilterViewModel (params) {
+            this.facetsList = params.facetsList;
+            this.results = params.results;
+            this.fqLink = params.fqLink;
+            this.baseUrl = params.baseUrl;
+            this.projectExplorerUrl = params.projectExplorerUrl;
+        }
+        ko.applyBindings(new FacetFilterViewModel(facetModelViewArgs), document.getElementById('facet-list'));
         $('#facet-dates').validationEngine('attach', {scroll:false});
 
         $('.helphover').popover({animation: true, trigger:'hover', container:'body'});
@@ -913,6 +818,24 @@
             var $tr = $('#projectRowTempl tr').clone(); // template
             $tr.find('.td1 > a').attr("id", "a_" + id).data("id", id);
             $tr.find('.td1 .projectTitleName').text(src.name); // projectTitleName
+            if(src.managementUnitName){
+                $tr.find('.td1 .managementUnitName').text(src.managementUnitName);
+                $tr.find('.td1 a.managementUnitLine').attr("href", "${createLink(controller: 'managementUnit')}/" + src.managementUnitId);
+            }
+            if(src.associatedProgram){
+                if (src.programId){
+                    $tr.find('.td1 .associatedProgramLine span').text(src.associatedProgram);
+                    //$tr.find('.td1 .associatedProgramLine a').attr("href", "${createLink(controller: 'program')}/" + src.programId);
+                    }
+                else{
+                    //$tr.find('.td1 .associatedProgramLine a').attr("href", "#");
+                    $tr.find('.td1 .associatedProgramLine a').replaceWith('<span>'+ src.associatedProgram +'</span>')
+                }
+
+                if (src.associatedSubProgram)
+                    $tr.find('.td1 .associatedProgramLine i.associatedSubProgram').text( " - "+src.associatedSubProgram )
+            }
+
             $tr.find('.projectInfo').attr("id", "proj_" + id);
             $tr.find('.homeLine a').attr("href", "${createLink(controller: 'project')}/" + id);
             $tr.find('a.zoom-in').data("id", id);

@@ -31,6 +31,7 @@ function DocumentViewModel (doc, owner, settings) {
         //Information is the default option.
         roles: documentRoles,
         stages:[],
+        reports: [],
         showSettings: true,
         thirdPartyDeclarationTextSelector:'#thirdPartyDeclarationText',
         imageLocation: fcConfig.imageLocation
@@ -39,6 +40,9 @@ function DocumentViewModel (doc, owner, settings) {
 
     this.stage = ko.observable(doc ? doc.stage : 0);
     this.stages = this.settings.stages;
+
+    this.attachToReport = ko.observable(doc? doc.attachDocument : '');
+    this.reports = this.settings.reports;
 
     // NOTE that attaching a file is optional, ie you can have a document record without a physical file
     this.filename = ko.observable(doc ? doc.filename : '');
@@ -71,6 +75,20 @@ function DocumentViewModel (doc, owner, settings) {
     this.url = doc.url;
     this.thumbnailUrl = doc.thumbnailUrl ? doc.thumbnailUrl : doc.url;
     this.documentId = doc.documentId;
+
+    this.reportId = ko.observable(doc.reportId);
+    this.reportName = ko.computed(function(){
+        var name = ''
+        if(doc.reportId){
+           var assignToReprot = _.find(self.reports, function(report){
+                return report.reportId == doc.reportId;
+            })
+           if (assignToReprot)
+               name = assignToReprot.name;
+        }
+        return name;
+    })
+
     this.hasPreview = ko.observable(false);
     this.error = ko.observable();
     this.progress = ko.observable(0);
@@ -114,7 +132,7 @@ function DocumentViewModel (doc, owner, settings) {
         }
         $("#thirdPartyConsentCheckbox").closest('form').validationEngine("updatePromptsPosition")
     });
-    this.reportId = ko.observable(doc.reportId);
+
     this.thirdPartyConsentDeclarationRequired = ko.computed(function() {
         return (self.type() == 'image' ||  self.role() == 'embeddedVideo')  && self.public();
     });
@@ -248,7 +266,7 @@ function DocumentViewModel (doc, owner, settings) {
     };
 
     this.modelForSaving = function() {
-        var result =  ko.mapping.toJS(self, {'ignore':['embeddedVideoVisible','iframe','helper', 'progress', 'hasPreview', 'error', 'fileLabel', 'file', 'complete', 'fileButtonText', 'roles', 'stages','maxStages', 'settings', 'thirdPartyConsentDeclarationRequired', 'saveEnabled', 'saveHelp', 'fileReady', 'hasPublicRole']});
+        var result =  ko.mapping.toJS(self, {'ignore':['embeddedVideoVisible','iframe','helper', 'progress', 'hasPreview', 'error', 'fileLabel', 'file', 'complete', 'fileButtonText', 'roles', 'stages','reports','reportName','maxStages', 'settings', 'thirdPartyConsentDeclarationRequired', 'saveEnabled', 'saveHelp', 'fileReady', 'hasPublicRole']});
         if (result.stage === undefined) {
             result.stage = null;
         }

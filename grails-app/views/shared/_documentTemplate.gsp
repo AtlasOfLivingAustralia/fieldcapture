@@ -34,8 +34,8 @@
 
 <script id="imageDocEditTmpl" type="text/html">
 <div class="btn-group pull-left document-edit-buttons">
-    <button class="btn btn-mini" type="button" data-bind="enable:!readOnly,click:$root.deleteDocument"><i class="fa fa-remove"></i></button>
-    <button class="btn btn-mini" type="button" data-bind="enable:!readOnly,click:$root.editDocumentMetadata"><i class="fa fa-edit"></i></button>
+    <button class="btn btn-mini deleteDocument" type="button" data-bind="enable:!readOnly,click:$root.deleteDocument"><i class="fa fa-remove"></i></button>
+    <button class="btn btn-mini editDocument" type="button" data-bind="enable:!readOnly,click:$root.editDocumentMetadata"><i class="fa fa-edit"></i></button>
 </div>
 <a class="pull-left" data-bind="attr:{href:url}" target="_blank">
     <img class="media-object img-rounded span1" data-bind="attr:{src:thumbnailUrl, alt:name}"  alt="image preview icon">
@@ -45,8 +45,8 @@
 
 <script id="objDocEditTmpl" type="text/html">
 <div class="btn-group pull-left document-edit-buttons">
-    <button class="btn btn-mini" type="button" data-bind="enable:!readOnly,click:$root.deleteDocument"><i class="fa fa-remove"></i></button>
-    <button class="btn btn-mini" type="button" data-bind="enable:!readOnly,click:$root.editDocumentMetadata"><i class="fa fa-edit"></i></button>
+    <button class="btn btn-mini deleteDocument" type="button" data-bind="enable:!readOnly,click:$root.deleteDocument"><i class="fa fa-remove"></i></button>
+    <button class="btn btn-mini editDocument" type="button" data-bind="enable:!readOnly,click:$root.editDocumentMetadata"><i class="fa fa-edit"></i></button>
 </div>
 <a class="pull-left float-left" data-bind="attr:{href:url}">
     <img class="media-object" data-bind="attr:{src:filetypeImg(), alt:name}" alt="document icon">
@@ -56,8 +56,8 @@
 
 <script id="embeddedVideoEditTmpl" type="text/html">
 <div class="btn-group pull-left float-left" style="margin-top:4px;">
-    <button class="btn btn-mini" type="button" data-bind="enable:!readOnly,click:$root.deleteDocument"><i class="fa fa-remove"></i></button>
-    <button class="btn btn-mini" type="button" data-bind="enable:!readOnly,click:$root.editDocumentMetadata"><i class="fa fa-edit"></i></button>
+    <button class="btn btn-mini deleteDocument" type="button" data-bind="enable:!readOnly,click:$root.deleteDocument"><i class="fa fa-remove"></i></button>
+    <button class="btn btn-mini editDocument" type="button" data-bind="enable:!readOnly,click:$root.editDocumentMetadata"><i class="fa fa-edit"></i></button>
 </div>
     <i class="fa fa-file-video-o fa-2x"></i>
     <span data-bind="text:name() || 'embedded video'"></span> <i class="fa fa-question-circle" data-bind="popover:{content:'Embedded videos are not downloadable.  Please use the Documents tab to view the video.'}"></i>
@@ -68,7 +68,7 @@
 </script>
 
 <script id="mediaBody" type="text/html">
-<div class="media-body">
+<div class="media-body attached_document ">
     <a class="pull-right float-right" data-bind="attr:{href:url}" target="_blank">
         <i class="fa fa-download"></i>
     </a>

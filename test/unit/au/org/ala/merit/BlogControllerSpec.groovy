@@ -14,6 +14,7 @@ class BlogControllerSpec extends Specification {
     def blogService = Mock(BlogService)
     def userService = Mock(UserService)
     def programService = Mock(ProgramService)
+    def documentService = Mock(DocumentService)
 
 
     public setup() {
@@ -21,6 +22,7 @@ class BlogControllerSpec extends Specification {
         controller.blogService = blogService
         controller.userService = userService
         controller.programService = programService
+        controller.documentService = documentService
     }
 
     void "Non project members cannot edit project blogs"() {
@@ -163,6 +165,43 @@ class BlogControllerSpec extends Specification {
 
         response.status == HttpStatus.SC_OK
     }
+
+    void "Project admins can update the blog with images"() {
+        setup:
+        String userId = "u1"
+        String projectId = "p1"
+        String documentId = 'd1'
+
+        Map blog = [
+            "date" : "2019-08-07T14:00:00Z",
+            "keepOnTop" : false,
+            "blogEntryId" : "0",
+            "title" : "This is a test",
+            "type" : "Program Stories",
+            "projectId" : projectId,
+            "content" : "This is a blog test",
+            "blogOf": "PROJECT",
+            "image": [
+                    "contentType":"image/png",
+                    "filename":"test image",
+                    "type":"image"
+            ]
+        ]
+        Map expectedBlog = blog + [imageId:documentId] - [image:blog.image]
+
+        when:
+        request.method = "POST"
+        request.JSON = blog
+        controller.update('0')
+
+        then:
+        userService.getUser() >> [userId:userId]
+        1 * projectService.canUserEditProject(userId, projectId) >> true
+        1 * documentService.saveStagedImageDocument(blog.image + [projectId:projectId, public:true, name:blog.title]) >> [statusCode:HttpStatus.SC_OK, resp:[documentId:documentId]]
+        1 * blogService.update('0', expectedBlog) >> [status:200]
+        response.status == HttpStatus.SC_OK
+    }
+
 
 
 }

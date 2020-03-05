@@ -4,11 +4,11 @@
         <div class="row-fluid">
             <div id="filter-by-stage" class="document-filter-group btn-group pull-right">
                 <a class="btn dropdown-toggle" href="#">
-                    <i class="fa fa-filter"></i> Filter by stage
+                    <i class="fa fa-filter"></i> Filter by report
                     <span class="caret"></span>
                 </a>
-                <ul class="dropdown-menu" data-bind="foreach:distinctDocumentProperty('stage')">
-                    <li><a href="#"><label class="checkbox"> <input data-column="2" name="doc-filter" class="checkbox" type="checkbox" data-bind="attr:{value:$data}"> Stage <span data-bind="text:$data"></span></label></a> </li>
+                <ul class="dropdown-menu" data-bind="foreach:distinctDocumentProperty('reportName')">
+                    <li><a href="#"><label class="checkbox"> <input data-column="2" name="doc-filter" class="checkbox" type="checkbox" data-bind="attr:{value:$data}"> <span data-bind="text:$data"></span></label></a> </li>
                 </ul>
 
             </div>
@@ -20,8 +20,8 @@
             <thead>
             <tr>
                 <th style="width:35px"></th>
-                <th style="width:50%">Name</th>
-                <th style="width:20%; min-width:60px;">${activityPeriodDescriptor ?: 'Stage'}</th>
+                <th style="width:40%">Name</th>
+                <th style="width:30%; min-width:60px;">Related report</th>
                 <th style="width:20%">Date last updated</th>
                 <th></th>
                 <th></th>
@@ -44,8 +44,9 @@
                          <span data-bind="text:name() || filename()"></span>
                     </td>
                     <td>
-                        <span data-bind="text:stage"></span>
+                        <span data-bind="text:reportName()"></span>
                     </td>
+
                     <td>
                         <span data-bind="text:uploadDate.formattedDate()"></span>
                     </td>
