@@ -866,6 +866,32 @@ function ObjectiveViewModel(o) {
     self.rows1 = ko.observableArray($.map(row1, function (obj, i) {
         return new OutcomeRowViewModel(obj);
     }));
+
+    /**
+     * This pure computed observable provides a mapping from a simple array of selected program objectives to
+     * the structure used to store the objectives in the database.
+     */
+    self.simpleObjectives = ko.pureComputed({
+        read:function() {
+            return _.map(self.rows(), function(row) {
+                return row.data1();
+            });
+        },
+        write: function(values) {
+            while (self.rows().length > values.length) {
+                self.rows.splice(self.rows.length-1, 1);
+            }
+
+            for (var i=0; i<values.length; i++) {
+                if (self.rows().length <= i) {
+                    self.rows.push(new GenericRowViewModel({data1:values[i]}));
+                }
+                else {
+                    self.rows()[i].data1(values[i]);
+                }
+            }
+        }
+    });
 };
 
 /**
