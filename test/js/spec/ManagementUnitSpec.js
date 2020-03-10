@@ -2,6 +2,9 @@ describe("ManagmentUnitViewModel Spec", function () {
     beforeAll(function() {
         window.fcConfig = {
             imageLocation:'/'
+        };
+        if (!window.bootbox) {
+            window.bootbox = {alert:function(){}}
         }
         // These are defined in the ecodata-client-plugin which doesn't package javascript as a node module so
         // getting them for testing purposes is a bit messy, so they are just being stubbed.
