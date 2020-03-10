@@ -86,6 +86,7 @@
         </div>
     </div>
 
+    <g:if test="${outcomes}">
     <h4>Program outcomes addressed</h4>
 
     <div class="row-fluid">
@@ -144,6 +145,21 @@
             </g:else>
         </div>
     </div>
+    </g:if>
+
+    <g:if test="${objectives}">
+        <h4>Program objectives addressed</h4>
+        <g:if test="${project.custom?.details?.objectives?.rows}">
+            <ul>
+            <g:each in="${project.custom.details.objectives.rows}" var="objective">
+                <li>${objective.data1}</li>
+            </g:each>
+            </ul>
+        </g:if>
+        <g:else>
+            The MERI Plan is currently being developed. These details will be made available as soon as possible.
+        </g:else>
+    </g:if>
 
     <h4>Project Description</h4>
     <div class="row-fluid">
