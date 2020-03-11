@@ -878,6 +878,8 @@ function ObjectiveViewModel(o) {
             });
         },
         write: function(values) {
+            // Ignore empty and null values, such as the one pre-populated in the default row above.
+            values = values.filter(function(value) { return value && value != ''});
             while (self.rows().length > values.length) {
                 self.rows.splice(self.rows.length-1, 1);
             }
@@ -892,6 +894,10 @@ function ObjectiveViewModel(o) {
             }
         }
     });
+
+    self.toJSON = function() {
+        return ko.mapping.toJS(self, {ignore:['simpleObjectives']});
+    };
 };
 
 /**
