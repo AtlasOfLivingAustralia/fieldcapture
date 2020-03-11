@@ -233,4 +233,14 @@ class UserServiceSpec extends Specification {
         1 * webService.getJson("/managementUnit/findAllForUser/${userId}")
     }
 
+    def "The user service can test if the logged in user is an ALA admin"() {
+
+        when:
+        service.userIsAlaAdmin()
+
+        then:
+        1 * authService.userInRole(service.grailsApplication.config.security.cas.alaAdminRole)
+
+    }
+
 }

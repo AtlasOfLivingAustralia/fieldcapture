@@ -9,10 +9,15 @@
                     <div class="row-fluid">
                         <div class="span4 header-label">Program</div>
 
-%{--                        This is temporarily commented out until #1829 is released.
-                            <div class="span8"><g:link controller="program" action="index"--}%
-%{--                                         id="${config.program.programId}">${config.program.name}</g:link></div>--}%
+%{--                        This is temporarily not public until #1829 is released.--}%
+                        <g:if test="${fc.userIsAlaAdmin()}">
+                            <div class="span8"><g:link controller="program" action="index"
+                                         id="${config.program.programId}"><fc:programFullName program="${config.program}"/></g:link></div>
+                        </g:if>
+                        <g:else>
                             <div class="span8"><fc:programFullName program="${config.program}"/></div>
+                        </g:else>
+
                     </div>
                     <g:if test="${project.managementUnitId}">
                     <div class="row-fluid">

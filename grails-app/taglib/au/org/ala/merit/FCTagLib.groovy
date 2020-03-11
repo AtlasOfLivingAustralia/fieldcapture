@@ -514,6 +514,13 @@ class FCTagLib {
         }
     }
 
+    /** evaluates to true if the logged in user has the ALA_ADMIN role.  used for conditional content on GSPs */
+    def userIsAlaAdmin = { attrs ->
+        if (userService.userIsAlaAdmin()) {
+            out << true
+        }
+    }
+
     def userHasReadOnlyAccess = {
         if (userService.userHasReadOnlyAccess()) {
             out << true
