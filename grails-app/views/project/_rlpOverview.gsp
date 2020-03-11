@@ -28,7 +28,7 @@
                     </g:if>
 
                     <div class="row-fluid">
-                        <div class="span4 header-label">Service Provider</div>
+                        <div class="span4 header-label">${config.program?.config?.organisationRelationship ?: "Service Provider"}</div>
 
                         <div class="span8">
                             <a data-bind="visible:organisationId(),attr:{href:fcConfig.organisationLinkBaseUrl+'/'+organisationId()}">
