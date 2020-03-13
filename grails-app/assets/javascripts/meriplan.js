@@ -514,6 +514,7 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
             }
         }
     }
+    self.activities = ko.observableArray(o.activities);
     self.status = ko.observable(o.status);
     self.obligations = ko.observable(o.obligations);
     self.policies = ko.observable(o.policies);
