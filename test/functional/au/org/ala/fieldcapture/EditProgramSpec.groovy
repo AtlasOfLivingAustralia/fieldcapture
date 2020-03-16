@@ -1,0 +1,34 @@
+package au.org.ala.fieldcapture
+
+import pages.EditProgram
+import pages.RLPProgramPage
+
+class EditProgramSpec extends StubbedCasSpec {
+
+    def setup() {
+        useDataSet('dataset_mu')
+    }
+
+    def cleanup() {
+        logout(browser)
+    }
+
+    def "As a user with admin permissions, I can edit a program"() {
+        setup: "log in as userId=1 who is a program admin for the program with programId=test_program"
+        login([userId:'1', role:"ROLE_USER", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
+
+        when:
+        to RLPProgramPage
+
+        and:
+        edit()
+
+        then:
+        waitFor { at EditProgram }
+
+        // when: "Modify the program details and press save"
+        // then: "at RLPProgramPage"
+        // and: "The program details have been updated"
+    }
+
+}

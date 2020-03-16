@@ -9,6 +9,6 @@ class EditProgram extends Page {
     static at = { title.startsWith('Edit | Management Unit')}
 
     static content = {
-        module AddOrEditProgram
+        details { module AddOrEditProgram }
     }
 }
