@@ -40,8 +40,17 @@ grails test-app
 
 * Javascript user tests are run using npm/karma.
 ```
+npm test
+```
+Or, to run the tests in a debugging environment using chrome:
+```
+npm run-script debug
+```
+Or, directly using karma:
+```
 node_modules/karma/bin/karma start karma.conf.js
 ```
+
 (if you installed karma globally you won't need the full path)
 
 
