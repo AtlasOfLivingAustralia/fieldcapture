@@ -1,6 +1,7 @@
 package pages
 
 import pages.modules.DocumentsTab
+import pages.modules.EditableMeriPlan
 import pages.modules.ProjectAdminTab
 import pages.modules.ProjectReports
 import pages.modules.RlpOverviewTab
@@ -43,5 +44,15 @@ class RlpProjectPage extends ReloadablePage {
         adminContent.projectSettingsTab.click()
         waitFor { adminContent.projectSettings.displayed }
         adminContent.projectSettings.regenerateReports()
+    }
+
+    def openAdminTab() {
+        adminTab.click()
+        waitFor { adminContent.displayed }
+    }
+
+    def openMeriPlanEditTab() {
+        openAdminTab()
+        adminContent.openMeriPlan()
     }
 }

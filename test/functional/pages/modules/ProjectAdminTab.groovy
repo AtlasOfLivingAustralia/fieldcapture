@@ -17,6 +17,7 @@ class ProjectAdminTab extends Module {
 
         documents { module AdminDocumentsTab }
         projectSettings { module AdminProjectSettingsTab }
+        meriPlan { module EditableMeriPlan }
 
     }
 
@@ -25,5 +26,12 @@ class ProjectAdminTab extends Module {
         waitFor { documents.displayed }
         documents.attachDocumentButton.click()
         documents.attachDocumentDialog
+    }
+
+    def openMeriPlan() {
+        meriPlanTab.click()
+        waitFor { meriPlan.displayed }
+
+        return meriPlan
     }
 }
