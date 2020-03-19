@@ -26,6 +26,23 @@ class EditProgramSpec extends StubbedCasSpec {
         then:
         waitFor { at EditProgram }
 
+        when:
+        details.description= "Testing"
+        details.url = "http://ala.org.au"
+        details.save()
+
+
+        then:
+        at RLPProgramPage
+        overviewTab.click()
+        overviewTab.displayed
+        description.text() == "Testing"
+        visitUs.text() == "http://ala.org.au"
+
+        and:
+        "The program details have been updated"
+
+
         // when: "Modify the program details and press save"
         // then: "at RLPProgramPage"
         // and: "The program details have been updated"

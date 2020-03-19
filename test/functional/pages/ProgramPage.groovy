@@ -32,6 +32,8 @@ class RLPProgramPage extends Page{
         overviewTab{$('a#about-tab',0)}
         adminTab { $('a#admin-tab') }
         adminTabContent { module ProgramAdminTab }
+        visitUs {$('#weburl span')}
+        description {$('.row .col-md-4 span[data-bind*="html:description"] p')}
     }
 
 
