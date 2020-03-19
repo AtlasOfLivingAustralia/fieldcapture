@@ -41,11 +41,6 @@ class EditProgramSpec extends StubbedCasSpec {
 
         and:
         "The program details have been updated"
-
-
-        // when: "Modify the program details and press save"
-        // then: "at RLPProgramPage"
-        // and: "The program details have been updated"
     }
 
 }
