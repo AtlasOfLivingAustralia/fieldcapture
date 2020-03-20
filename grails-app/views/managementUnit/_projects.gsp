@@ -1,10 +1,8 @@
 
 <div class="projects-wrapper d-none d-md-block">
-    <g:set var="projects" value="${mu.projects}" />
-    <g:set var="programs" value="${mu.programs}" />
-
-    <g:if test="${programs}">
-       <g:each var="program" status="i" in="${programs}">
+    <g:if test="${displayedPrograms}">
+       <g:each var="programDetails" status="i" in="${displayedPrograms}">
+           <g:set var="program" value="${programDetails.program}"/>
             <div class="well-title">Project reporting in program: ${program.name} %{--  <a href="${g.createLink(controller: 'program', action: 'index',id:program.programId)}">${program.name}</a> --}% </div>
             <table id="projectList-${i}" class="table table-striped table-bordered">
                 <thead class="thead-light">
@@ -16,17 +14,15 @@
                 <th class="statusCol">Status</th>
                 </thead>
                 <tbody>
-                <g:each var="project" in="${projects}">
-                    <g:if test="${project.programId == program.programId}">
-                        <tr>
-                            <td class="projectId"><a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}" >${project.externalId ?: project.grantId}</a></td>
-                            <td class="workOrderId">${project.workOrderId}</td>
-                            <td class="name">${project.name}</td>
-                            <td class="startDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedStartDate)}</td>
-                            <td class="endDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedEndDate)}</td>
-                            <td class="statusCol"><fc:status status="${project.status}"/></td>
-                        </tr>
-                    </g:if>
+                <g:each var="project" in="${programDetails.projects}">
+                    <tr>
+                        <td class="projectId"><a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}" >${project.externalId ?: project.grantId}</a></td>
+                        <td class="workOrderId">${project.workOrderId}</td>
+                        <td class="name">${project.name}</td>
+                        <td class="startDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedStartDate)}</td>
+                        <td class="endDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedEndDate)}</td>
+                        <td class="statusCol"><fc:status status="${project.status}"/></td>
+                    </tr>
                 </g:each>
                 </tbody>
             </table>

@@ -514,6 +514,13 @@ class FCTagLib {
         }
     }
 
+    /** evaluates to true if the logged in user has the ALA_ADMIN role.  used for conditional content on GSPs */
+    def userIsAlaAdmin = { attrs ->
+        if (userService.userIsAlaAdmin()) {
+            out << true
+        }
+    }
+
     def userHasReadOnlyAccess = {
         if (userService.userHasReadOnlyAccess()) {
             out << true
@@ -946,6 +953,36 @@ class FCTagLib {
 
         out << status
 
+    }
+
+    def programFullName = { Map attrs ->
+        if (!attrs.program) {
+            throw new IllegalAccessException("No program attribute was supplied")
+        }
+        String separator = attrs.separator ?: '-'
+        Map program = attrs.program
+        Deque<Map> parents = new LinkedList<Map>()
+        while(program != null) {
+            parents.push(program)
+            program = program.parent
+        }
+
+        StringBuffer result = new StringBuffer()
+
+        while (parents.peekLast() != null) {
+            program = parents.pop()
+            if (result.length()) {
+                result.append(" ").append(separator).append(" ")
+            }
+            if (attrs.useAcronyms && !parents && program.acronym) {
+                result.append(program.acronym)
+            }
+            else {
+                result.append(program.name)
+            }
+        }
+
+        out << result.toString()
     }
 
     def displayDate = {}

@@ -45,7 +45,7 @@ public class ProjectIndexSpec extends StubbedCasSpec {
 
 
         then:
-        waitFor {editDocumentForm.displayed}
+        waitFor {editDocumentForm.displayed && editDocumentForm.reportSelect.displayed}
         editDocumentForm.reportOptions.size() == 2
         //editDocumentForm.firstReportOption.text() == 'Core services report 1'
 

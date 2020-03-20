@@ -9,12 +9,12 @@ table tr.header th {
 }
 
 
-.meri-plan td textarea, .meri-plan td select {
+.meri-plan td textarea, .meri-plan td select, .announcements-table td select, .announcements-table td textarea {
     box-sizing: border-box;
     width: 100%;
 }
 
-.meri-plan td input:not([type=checkbox]) {
+.meri-plan td input:not([type=checkbox]), .announcements-table td input {
     width: 100%;
     box-sizing: border-box;
     height: 30px;
@@ -163,6 +163,37 @@ table tr.header th {
      width: 1em;
 }
 
+.meri-plan .original-outcomes {
+    width: 54%;
+}
+
+.meri-plan .original-assets {
+    width: 46%;
+}
+
+.meri-plan .partner-name {
+    width: 20%;
+}
+
+.meri-plan .partnership-nature {
+    width: 55%;
+}
+
+.meri-plan .partner-organisation-type {
+    width: 20%;
+}
+
+.meri-plan .budget-category {
+    width: 10%;
+}
+.meri-plan .budget-description {
+    width: 30%;
+}
+.meri-plan .budget-amount {
+    width: 10%;
+    text-align: center;
+}
+
 #project-risks-threats table {
     width:100%;
 }
@@ -208,3 +239,39 @@ a.meri-history-toggle {
     color: white;
 }
 
+
+.announcements-table td.index {
+    background-color: #f5f5f5;
+}
+
+.announcements-table .remove {
+    min-width: 1em;
+    width: 1em;
+}
+
+.announcements-table tfoot td {
+    text-align: right;
+}
+
+.announcements-table .event {
+    width: 12%;
+}
+
+.announcements-table .event-type {
+    width: 18%;
+}
+
+.announcements-table .event-date {
+    width: 12%;
+}
+.announcements-table .grant-date {
+    width: 12%;
+}
+
+.announcements-table .amount {
+    width: 12%;
+}
+
+.announcements-table .information {
+    width:28%;
+}

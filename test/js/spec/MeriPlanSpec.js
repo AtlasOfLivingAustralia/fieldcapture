@@ -224,6 +224,63 @@ describe("Loading the MERI plan is handled correctly", function () {
         expect(row.minimumTargetsValid()).toBeFalsy();
     });
 
+    it("should provide a simplified objectives model for selecting program objectives from a list", function() {
+        var project = {
+            plannedStartDate:'2018-07-01T00:00:00Z',
+            plannedEndDate:'2021-06-30T00:00:00Z'
+        };
+        var projectService = new ProjectService(project, {});
+
+        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'});
+
+        var objectivesModel = viewModel.meriPlan().objectives;
+
+        objectivesModel.simpleObjectives(["objective 1", "objective 2"]);
+        expect(objectivesModel.rows().length).toBe(2);
+        expect(objectivesModel.rows()[0].data1()).toBe("objective 1");
+        expect(objectivesModel.rows()[1].data1()).toBe("objective 2");
+
+        expect(objectivesModel.simpleObjectives()).toEqual(["objective 1", "objective 2"]);
+
+
+        objectivesModel.simpleObjectives(["objective 2"]);
+        expect(objectivesModel.rows().length).toBe(1);
+        expect(objectivesModel.rows()[0].data1()).toBe("objective 2");
+
+        objectivesModel.simpleObjectives([]);
+        expect(objectivesModel.rows().length).toBe(0);
+
+        objectivesModel.simpleObjectives(["objective 1", "objective 2"]);
+        expect(objectivesModel.rows().length).toBe(2);
+        expect(objectivesModel.rows()[0].data1()).toBe("objective 1");
+        expect(objectivesModel.rows()[1].data1()).toBe("objective 2");
+
+        // Empty values should be ignored
+        objectivesModel.simpleObjectives(["", null, "objective 1", "objective 2"]);
+        expect(objectivesModel.rows().length).toBe(2);
+        expect(objectivesModel.rows()[0].data1()).toBe("objective 1");
+        expect(objectivesModel.rows()[1].data1()).toBe("objective 2");
+
+    });
+
+    it("should not serialize the simpleobjectives computed observable", function() {
+        var project = {
+            plannedStartDate:'2018-07-01T00:00:00Z',
+            plannedEndDate:'2021-06-30T00:00:00Z'
+        };
+        var projectService = new ProjectService(project, {});
+        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'});
+
+        var objectivesModel = viewModel.meriPlan().objectives;
+        objectivesModel.simpleObjectives(["objective 1", "objective 2"]);
+
+
+        var expectedResult = {
+            rows:[{data1:'objective 1'}, {data1:'objective 2'}],
+            rows1:[{assets:[]}]
+        };
+        expect(JSON.parse(JSON.stringify(objectivesModel))).toEqual(expectedResult);
+    });
 
 })
 ;

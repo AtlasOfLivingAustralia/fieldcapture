@@ -117,7 +117,7 @@ class ManagementUnitControllerSpec extends Specification {
         then:
         1 * managementUnitService.getProjects(managementUnitId) >> [projects:[[programId:'p1'], [programId:'p2'], [programId:'p3']]]
         1 * programService.get(['p1', 'p2', 'p3'] as String[]) >> [[name:'Program 1', programId:'p1'], [name:'Program 2', programId:'p2'], [name:'Program 3', programId:'p3']]
-        1 * managementUnitService.serviceScores(managementUnitId, ['p1', 'p2', 'p3'] as String[], true) >> [:]
+        1 * managementUnitService.serviceScores(managementUnitId, _, true) >> [:]
         model.managementUnit.programs.collect{it.name} == ['Program 3', 'Program 2', 'Program 1']
     }
 
@@ -293,6 +293,38 @@ class ManagementUnitControllerSpec extends Specification {
         and:
         response.json.type == 'FeatureCollection'
         response.json.features == []
+    }
+
+    def "The management unit can specify the program groupings for producing the aggregate displays of outcomes, projects and dashboards"() {
+        setup:
+        Map p1 = [programId:'p1']
+        Map p2 = [programId:'p2', parent:p1]
+        Map p3 = [programId:'p3']
+        Map p4 = [programId:'p4'] // This program will be uncategorized as it doesn't fall into the p1 or p3 hierarchy
+
+        List projects = [[projectId:'p1', programId:'p1'], [projectId:'p2', programId:'p2'], [projectId:'p3', programId:'p3'], [projectId:'p4', programId:'p4']]
+
+
+        when: "We group the programs by the configured groupings"
+        Map<String, List> groupedPrograms = controller.groupPrograms([p1, p2, p3, p4], [p1.programId, p3.programId])
+
+        then:
+        1 * programService.isInProgramHierarchy(p1, 'p1') >> true
+        1 * programService.isInProgramHierarchy(p2, 'p1') >> true
+        1 * programService.isInProgramHierarchy(p3, 'p1') >> false
+        1 * programService.isInProgramHierarchy(p3, 'p3') >> true
+        1 * programService.isInProgramHierarchy(p4, 'p1') >> false
+        1 * programService.isInProgramHierarchy(p4, 'p3') >> false
+
+        and:
+        groupedPrograms == ['p1':[p1, p2], 'p3':[p3], 'p4':[p4]]
+
+        when: "We group the projects by the configured groupings"
+        Map<String, List> groupedProjects = controller.groupProjects(projects, groupedPrograms)
+
+        then:
+        groupedProjects == ['p1':[projects[0], projects[1]], 'p3':[projects[2]], 'p4':[projects[3]]]
+
     }
 
     private Map testManagementUnit(String id, boolean includeReports) {

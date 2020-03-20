@@ -135,13 +135,15 @@ class ManagementUnitService {
      * @param approvedActivitiesOnly
      * @return [programId: serviceScores]
      */
-    Map serviceScores(String managementUnitId, String[] programIds, boolean approvedActivitiesOnly = true) { List<Map> allServices = metadataService.getProjectServices()
+    Map serviceScores(String managementUnitId, Map programGroups, boolean approvedActivitiesOnly = true) { List<Map> allServices = metadataService.getProjectServices()
         List scoreIds = allServices.collect{it.scores?.collect{score -> score.scoreId}}.flatten()
 
         def results = [:]
 
-        for(String programId in programIds){
-            Map scoreResults = reportService.targetsForScoreIds(scoreIds, ["managementUnitId:${managementUnitId}","programId:${programId}"], approvedActivitiesOnly)
+        for(Map.Entry programGroup in programGroups) {
+            List programIdFacets = programGroup.value.collect{"programId:${it.programId}"}
+            List facets = ["managementUnitId:${managementUnitId}"] + programIdFacets
+            Map scoreResults = reportService.targetsForScoreIds(scoreIds, facets, approvedActivitiesOnly)
 
             List deliveredServices = []
             allServices.each { Map service ->
@@ -168,7 +170,7 @@ class ManagementUnitService {
 
             }
 
-            results[programId]=deliveredServices
+            results[programGroup.key]=deliveredServices
         }
         results
 

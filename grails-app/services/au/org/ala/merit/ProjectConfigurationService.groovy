@@ -31,7 +31,9 @@ class ProjectConfigurationService {
     private Map buildConfigFromProgram(Map project) {
         Map program = programService.get(project.programId)
         Map programConfig = new ProgramConfig(program.inheritedConfig ?: [:])
-        programConfig.services = metadataService.getProjectServices()
+        if (!programConfig.activityBasedReporting) {
+            programConfig.services = metadataService.getProjectServices()
+        }
         // Outcomes are defined by the program
         programConfig.outcomes = program.outcomes ?: []
         programConfig.priorities = program.priorities ?: []
@@ -107,6 +109,7 @@ class ProjectConfigurationService {
                         reportDescriptionFormat: "Stage %1d for ${project.name}"
                 ]
         ]
+        programConfig.activities = config.activities
         programConfig
     }
 

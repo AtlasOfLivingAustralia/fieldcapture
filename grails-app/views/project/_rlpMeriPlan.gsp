@@ -1,5 +1,5 @@
 <div class="meri-plan"  data-bind="let:{details:meriPlan()}">
-    <h4><span data-bind="text:details.programName"></span> Outcome</h4>
+    <h4>Program Outcome</h4>
     <table class="table">
         <thead>
         <tr class="header">
@@ -321,52 +321,7 @@
         </tbody>
     </table>
 
-
-
-    <h4>Relevant national and regional plans</h4>
-
-    <table class="table">
-        <thead>
-        <tr>
-            <th class="index"></th>
-            <th class="document-name required">Document name <fc:iconHelp
-                    title="Document name">List the name of the National or Regional plan the project is addressing.</fc:iconHelp></th>
-            <th class="section required">Relevant section <fc:iconHelp
-                    title="Relevant section">What section (target/outcomes/objective etc) of the plan is being addressed?</fc:iconHelp></th>
-            <th class="alignment required">Explanation of strategic alignment <fc:iconHelp
-                    title="Explanation of strategic alignment">Explain how the project design and delivery align with the relevant section of the document</fc:iconHelp></th>
-            <th class="remove"></th>
-        </tr>
-        </thead>
-        <tbody data-bind="foreach : details.priorities.rows">
-        <tr>
-            <td class="index"><span data-bind="text:$index()+1"></span></td>
-            <td class="document-name"><textarea style="width: 97%;" class="input-xlarge" data-validation-engine="validate[required]"
-                                                data-bind="value: data1, disable: $parent.isProjectDetailsLocked()"
-                                                rows="3"></textarea></td>
-            <td class="section"><textarea style="width: 97%;" class="input-xlarge" data-validation-engine="validate[required]"
-                                          data-bind="value: data2, disable: $parent.isProjectDetailsLocked()"
-                                          rows="5"></textarea></td>
-            <td class="alignment"><textarea style="width: 97%;" class="input-xlarge" data-validation-engine="validate[required]"
-                                            data-bind="value: data3, disable: $parent.isProjectDetailsLocked()"
-                                            rows="5"></textarea></td>
-            <td class="remove">
-                <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()"><i class="icon-remove"
-                                                                                       data-bind="click: $parent.removeNationalAndRegionalPriorities"></i>
-                </span>
-            </td>
-        </tr>
-        </tbody>
-        <tfoot>
-        <tr>
-
-            <td colspan="5">
-                <button type="button" class="btn btn-small"
-                        data-bind="disable: isProjectDetailsLocked(), click: addNationalAndRegionalPriorities">
-                    <i class="fa fa-plus"></i> Add a row</button></td>
-        </tr>
-        </tfoot>
-    </table>
+    <g:render template="meriPlan/nationalAndRegionalPlans"/>
 
     <div class="row-fluid">
         <div class="span12">
@@ -375,7 +330,7 @@
     </div>
 
     <h4 class="header-with-help">Project risks & threats <span style="color: red;"><b>*</b></span> </h4><fc:iconHelp>Please enter the details of risks and threats to the project and the mitigation strategies being used to address them.</fc:iconHelp>
-    <g:render template="risksAndThreats"/>
+    <g:render template="meriPlan/risksAndThreats"/>
 
     <h4>MERI Attachments</h4>
     <p>
