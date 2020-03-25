@@ -110,11 +110,25 @@ class ProgramController {
 
     @PreAuthorise(accessLevel='siteAdmin')
     def create() {
-        [program: [:], isNameEditable:true]
+        String id = params.parentProgramId
+        if (id !=null){
+            Map program = programService.get(id)
+            if (!program || program.error){
+                programNotFound(id, program)
+            }else{
+                [program: [programId: program.programId,
+                           parentProgram: program.name]]
+            }
+        }else{
+            [program: [:], isNameEditable: true]
+        }
+
+
     }
 
     @PreAuthorise(accessLevel='admin')
-    def edit(String id) {
+    def edit() {
+        String id = params.id
         Map program = programService.get(id)
 
         if (!program || program.error) {

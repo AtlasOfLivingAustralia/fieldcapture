@@ -2,14 +2,41 @@
 
     <h4 class="block-header"><g:message code="program.details.header"/></h4>
 
-    <div class="form-group row required">
+    <g:if test="${fc.userIsAlaOrFcAdmin() && params.id}">
+        <div class="form-group row">
+            <label for="parentProgram" class="col-form-label col-sm-3">
+                Parent Program:
+            </label>
+            <div class="col-sm-9">
+                <select name="parentProgram" id="parentProgram" data-bind="value:parentProgram" class="form-control"
+                        data-validation-engine="validate[required]">
+                    <option>No parent</option>
+                    <option>${program.name}</option>
+                </select>
+            </div>
+        </div>
+    </g:if>
+    <g:elseif test="${params.parentProgramId != null}">
+    <div class="form-group row">
+        <label for="parentProgramsub" class="col-form-label col-sm-3">
+            Parent Program:
+        </label>
+        <div class="col-sm-9">
+            <select name="parentProgram" id="parentProgramsub" data-bind="value:parentProgram" class="form-control"
+                    data-validation-engine="validate[required]" disabled="disabled">
+                <option value="${program.parentProgram}">${program.parentProgram}</option>
+            </select>
+        </div>
+    </div>
+</g:elseif>
+      <div class="form-group row required">
         <label class="col-form-label col-sm-3" for="name">Name: <fc:iconHelp><g:message
                 code="program.name.help"/></fc:iconHelp></label>
 
         <div class="col-sm-9">
             <input type="text" id="name" class="form-control" data-bind="value:name"
                    data-validation-engine="validate[required]"
-                   placeholder="${g.message(code: 'program.name.placeholder')}" ${!isNameEditable ? 'readonly="readonly"' : ''}>
+                   placeholder="${g.message(code: 'program.name.placeholder')}">
         </div>
     </div>
 

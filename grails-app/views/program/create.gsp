@@ -25,9 +25,9 @@
             <li class="breadcrumb-item">
                 <g:link controller="home">Home</g:link>
             </li>
-            <li class="breadcrumb-item"><g:link controller="program" action="list">Programmes</g:link></li>
-            <li class="breadcrumb-item active"> ${program.name}</li>
-            <li class="breadcrumb-item active"><g:message code="program.breadcrumb.create"/></li>
+            <li class="breadcrumb-item"> Regional Landcare Program </li>
+            <li class="breadcrumb-item active"><g:link controller="program" action="index" id="${program.programId}">${program.parentProgram}</g:link> </li>
+            <li class="breadcrumb-item active">Add sub-program</li>
         </ol>
 
     </nav>
