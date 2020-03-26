@@ -12,7 +12,7 @@
             programViewUrl: "${createLink(action:'index')}",
             documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
             noImageUrl: "${assetPath(src:'nophoto.png')}",
-            returnToUrl: "${params.returnTo}"
+            returnToUrl: "${params.returnTo ?: createLink(action:'index', id:program.programId)}"
         };
     </script>
     <asset:stylesheet src="common-bs4.css"/>
