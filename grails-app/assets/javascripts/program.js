@@ -24,6 +24,7 @@ ProgramViewModel = function (props, options) {
     var config = _.extend({}, defaults, options);
 
     self.programId = props.programId;
+    self.parentProgramId = props.parentProgramId;
     self.name = ko.observable(props.name);
     self.description = ko.observable(props.description).extend({markdown: true});
     self.url = ko.observable(props.url);

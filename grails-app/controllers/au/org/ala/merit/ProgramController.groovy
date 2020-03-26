@@ -117,7 +117,8 @@ class ProgramController {
                 programNotFound(id, program)
             }else{
                 [program: [programId: program.programId,
-                           parentProgram: program.name]]
+                           parentProgram: program.name,
+                           parentProgramId: program.programId]]
             }
         }else{
             [program: [:], isNameEditable: true]

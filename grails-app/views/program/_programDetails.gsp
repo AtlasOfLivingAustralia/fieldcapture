@@ -18,11 +18,11 @@
     </g:if>
     <g:elseif test="${params.parentProgramId != null}">
     <div class="form-group row">
-        <label for="parentProgramsub" class="col-form-label col-sm-3">
+        <label for="parentProgram" class="col-form-label col-sm-3">
             Parent Program:
         </label>
         <div class="col-sm-9">
-            <select name="parentProgram" id="parentProgramsub" data-bind="value:parentProgram" class="form-control"
+            <select name="parentProgram" id="parentProgram" data-bind="value:parentProgram" class="form-control"
                     data-validation-engine="validate[required]" disabled="disabled">
                 <option value="${program.parentProgram}">${program.parentProgram}</option>
             </select>
