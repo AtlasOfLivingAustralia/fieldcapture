@@ -14,7 +14,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         logout(browser)
     }
 
-    def "something something meri plan"() {
+    def "The MERI Plan can be completed and saved"() {
 
         setup:
         String projectId = '1'

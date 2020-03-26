@@ -1,4 +1,4 @@
-<div id="keq" class="well well-small">
+<div class="meri-budget-view" class="well well-small">
     <h4>Project Budget</h4>
     <table class="table">
         <thead>

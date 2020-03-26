@@ -1,4 +1,4 @@
-<div id="project-partnership" class="well well-small">
+<div id="project-partnership-view" class="well well-small">
     <h4>Project partnerships</h4>
     <table class="table">
         <thead>

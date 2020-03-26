@@ -6,6 +6,24 @@ load('../data_common/insertData.js');
 loadActivityForms();
 
 createProgram({});
+var config = {
+    projectTemplate: "rlp",
+    meriPlanTemplate : "configurableMeriPlan",
+    meriPlanContents : [
+        "objectivesList",
+        "monitoringIndicators",
+        "projectImplementation",
+        "projectPartnerships",
+        "keq",
+        "meriBudget"
+    ],
+    objectives:[
+        "objective 1",
+        "objective 2",
+        "objective 3"
+    ]
+};
+createProgram({programId:"configurable_meri_plan", name:"Configurable MERI Plan Program", description: "", config: config});
 createMu({});
 
 db.userPermission.insert({entityType:'au.org.ala.ecodata.Program', entityId:'test_program', userId:'1', accessLevel:'admin'});
@@ -20,6 +38,9 @@ for (var i=1; i<10; i++) {
         db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:id, userId:'10', accessLevel:'editor'});
     }
 }
+
+createProject({projectId:"meri1", name:"Configurable MERI plan project", programId:"configurable_meri_plan"});
+db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:"meri1", userId:'1', accessLevel:'admin'});
 
 
 

@@ -6,28 +6,68 @@ class OutcomeRow extends Module {
     static content = {
         outcome { $('select[data-bind*="value:description"]') }
         priority { $('select[data-bind*="value:asset"]') }
+        remove { $('i.icon-remove') }
     }
 }
+
+class ThreatRow extends Module {
+    static content = {
+        threat { $('textarea[data-bind*=threat]') }
+        intervention { $('textarea[data-bind*=intervention]') }
+        remove { $('i.icon-remove') }
+    }
+}
+
+class BaselineRow extends Module {
+    static content = {
+        baseline { $('.baseline textarea[data-bind*=baseline]') }
+        method { $('.baseline-method textarea[data-bind*=method') }
+        remove { $('i.icon-remove') }
+    }
+
+}
+
+class MonitoringIndictorRow extends Module {
+    static content = {
+        indicator { $('textarea[data-bind*=data1]') }
+        approach { $('textarea[data-bind*=data2]' ) }
+        remove { $('i.icon-remove') }
+    }
+}
+
+class PlanRow extends Module {
+    static content = {
+        name { $('.document-name textarea') }
+        section { $('.section textarea') }
+        alignment { $('.alignment textarea') }
+        remove { $('i.icon-remove') }
+    }
+}
+
 class EditableMeriPlan extends Module {
 
 
     static content = {
-        primaryOutcome { $('.outcome-priority select[data-bind*="primaryOutcome.description"]') }
-        primaryPriority { $('select[data-bind*="primaryOutcome.asset"]') }
-        secondaryOutcomes { $('table.secondary-outcome').moduleList(OutcomeRow) }
-        shortTermOutcomes { $('tbody[data-bind*="shortTermOutcomes"] textarea') }
-        mediumTermOutcomes {  $('tbody[data-bind*="midTermOutcomes"] textarea') }
-        projectName {}
-        projectDescription {}
-        keyThreats {}
-        projectMethodology {}
-        projectBaseline {}
-        monitoringIndicators {}
-        reviewMethodology {}
-        nationalAndRegionalPlans {}
-        projectServices {}
-        risksAndThreats {}
-
+        primaryOutcome(required: false) { $('.outcome-priority select[data-bind*="primaryOutcome.description"]') }
+        primaryPriority(required: false) { $('select[data-bind*="primaryOutcome.asset"]') }
+        secondaryOutcomes(required: false) { $('table.secondary-outcome').moduleList(OutcomeRow) }
+        shortTermOutcomes(required: false) { $('tbody[data-bind*="shortTermOutcomes"] textarea') }
+        mediumTermOutcomes(required: false) {  $('tbody[data-bind*="midTermOutcomes"] textarea') }
+        projectName(required: false) { $('input[data-bind*="details.name"]') }
+        projectDescription(required: false) { $('textarea[data-bind*="details.description"]') }
+        rationale(required: false) { $('textarea[data-bind*="details.rationale"]') }
+        keyThreats(required: false) { $('table.threats').moduleList(ThreatRow) }
+        projectMethodology(required: false) { $('table.methodology textarea[data-bind*="implementation.description"]') }
+        projectImplementation(required: false) { $('#project-implementation textarea') }
+        projectBaseline(required: false) { $('table.baseline').moduleList(BaselineRow) }
+        monitoringIndicators(required: false) { $('.meri-monitoring-indicators table').moduleList(MonitoringIndictorRow) }
+        reviewMethodology(required: false) { $('textarea[data-bind*="projectEvaluationApproach"]') }
+        nationalAndRegionalPlans(required: false) { $('table.plans').moduleList(PlanRow) }
+        projectServices(required: false) { $('table.service-targets') }
+        objectivesList(required: false) { $('#objectives-list') }
+        projectPartnerships(required: false) { $('#project-partnership') }
+        keq(required:false) { $('#keq') }
+        budget(required:false) { $('.meri-budget') }
         floatingSaveButton { $('#floating-save [data-bind*="saveProjectDetails"]') }
         saveButton { $('.form-actions [data-bind*="saveProjectDetails"]').first() }
     }
