@@ -17,7 +17,7 @@ class MyProjectsSpec extends StubbedCasSpec {
 
         then:
         waitFor {at MyProjects}
-        projectNames() == ['Project 1', 'Project 2', 'Project 3']
+        projectNames() == ['Project 1', 'Project 2', 'Project 3', 'Configurable MERI plan project']
         managementUnitNames() == ['Test management unit']
         programNames() == ['Test program']
     }
