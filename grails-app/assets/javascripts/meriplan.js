@@ -874,23 +874,23 @@ function ObjectiveViewModel(o) {
      */
     self.simpleObjectives = ko.pureComputed({
         read:function() {
-            return _.map(self.rows(), function(row) {
-                return row.data1();
+            return _.map(self.rows1(), function(row) {
+                return row.description();
             });
         },
         write: function(values) {
             // Ignore empty and null values, such as the one pre-populated in the default row above.
             values = values.filter(function(value) { return value && value != ''});
-            while (self.rows().length > values.length) {
-                self.rows.splice(self.rows.length-1, 1);
+            while (self.rows1().length > values.length) {
+                self.rows1.splice(self.rows1.length-1, 1);
             }
 
             for (var i=0; i<values.length; i++) {
-                if (self.rows().length <= i) {
-                    self.rows.push(new GenericRowViewModel({data1:values[i]}));
+                if (self.rows1().length <= i) {
+                    self.rows1.push(new OutcomeRowViewModel({description:values[i]}));
                 }
                 else {
-                    self.rows()[i].data1(values[i]);
+                    self.rows1()[i].description(values[i]);
                 }
             }
         }

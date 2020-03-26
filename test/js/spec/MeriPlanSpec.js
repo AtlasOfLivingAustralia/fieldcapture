@@ -236,30 +236,30 @@ describe("Loading the MERI plan is handled correctly", function () {
         var objectivesModel = viewModel.meriPlan().objectives;
 
         objectivesModel.simpleObjectives(["objective 1", "objective 2"]);
-        expect(objectivesModel.rows().length).toBe(2);
-        expect(objectivesModel.rows()[0].data1()).toBe("objective 1");
-        expect(objectivesModel.rows()[1].data1()).toBe("objective 2");
+        expect(objectivesModel.rows1().length).toBe(2);
+        expect(objectivesModel.rows1()[0].description()).toBe("objective 1");
+        expect(objectivesModel.rows1()[1].description()).toBe("objective 2");
 
         expect(objectivesModel.simpleObjectives()).toEqual(["objective 1", "objective 2"]);
 
 
         objectivesModel.simpleObjectives(["objective 2"]);
-        expect(objectivesModel.rows().length).toBe(1);
-        expect(objectivesModel.rows()[0].data1()).toBe("objective 2");
+        expect(objectivesModel.rows1().length).toBe(1);
+        expect(objectivesModel.rows1()[0].description()).toBe("objective 2");
 
         objectivesModel.simpleObjectives([]);
-        expect(objectivesModel.rows().length).toBe(0);
+        expect(objectivesModel.rows1().length).toBe(0);
 
         objectivesModel.simpleObjectives(["objective 1", "objective 2"]);
-        expect(objectivesModel.rows().length).toBe(2);
-        expect(objectivesModel.rows()[0].data1()).toBe("objective 1");
-        expect(objectivesModel.rows()[1].data1()).toBe("objective 2");
+        expect(objectivesModel.rows1().length).toBe(2);
+        expect(objectivesModel.rows1()[0].description()).toBe("objective 1");
+        expect(objectivesModel.rows1()[1].description()).toBe("objective 2");
 
         // Empty values should be ignored
         objectivesModel.simpleObjectives(["", null, "objective 1", "objective 2"]);
-        expect(objectivesModel.rows().length).toBe(2);
-        expect(objectivesModel.rows()[0].data1()).toBe("objective 1");
-        expect(objectivesModel.rows()[1].data1()).toBe("objective 2");
+        expect(objectivesModel.rows1().length).toBe(2);
+        expect(objectivesModel.rows1()[0].description()).toBe("objective 1");
+        expect(objectivesModel.rows1()[1].description()).toBe("objective 2");
 
     });
 
@@ -276,8 +276,8 @@ describe("Loading the MERI plan is handled correctly", function () {
 
 
         var expectedResult = {
-            rows:[{data1:'objective 1'}, {data1:'objective 2'}],
-            rows1:[{assets:[]}]
+            rows1:[{description:'objective 1', assets:[]}, {description:'objective 2', assets:[]}],
+            rows: [{}]
         };
         expect(JSON.parse(JSON.stringify(objectivesModel))).toEqual(expectedResult);
     });
