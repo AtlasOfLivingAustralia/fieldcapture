@@ -44,6 +44,33 @@ class PlanRow extends Module {
     }
 }
 
+class PartnershipRow extends Module {
+    static content = {
+        name { $('.partner-name textarea') }
+        partnership { $('.partnership-nature textarea') }
+        orgType { $('.partner-organisation-type select') }
+        remove { $('i.icon-remove') }
+    }
+}
+
+class KeqRow extends Module {
+    static content = {
+        question { $('.baseline textarea') }
+        monitoring { $('.baseline-method textarea') }
+        remove { $('i.icon-remove') }
+    }
+}
+
+class BudgetRow extends Module {
+    static content = {
+        area { $('.budget-category select') }
+        description { $('.budget-description textarea') }
+        budgetAmounts { $('.budget-amount input') }
+        total { $('.budget-amount span') }
+        remove { $('i.icon-remove') }
+    }
+}
+
 class EditableMeriPlan extends Module {
 
 
@@ -65,9 +92,9 @@ class EditableMeriPlan extends Module {
         nationalAndRegionalPlans(required: false) { $('table.plans').moduleList(PlanRow) }
         projectServices(required: false) { $('table.service-targets') }
         objectivesList(required: false) { $('#objectives-list') }
-        projectPartnerships(required: false) { $('#project-partnership') }
-        keq(required:false) { $('#keq') }
-        budget(required:false) { $('.meri-budget') }
+        projectPartnerships(required: false) { $('#project-partnership').moduleList(PartnershipRow) }
+        keq(required:false) { $('#keq tbody tr').moduleList(KeqRow) }
+        budget(required:false) { $('.meri-budget').moduleList(BudgetRow) }
         floatingSaveButton { $('#floating-save [data-bind*="saveProjectDetails"]') }
         saveButton { $('.form-actions [data-bind*="saveProjectDetails"]').first() }
     }
@@ -85,4 +112,18 @@ class EditableMeriPlan extends Module {
         }
         waitFor { !$('.blockMsg').displayed }
     }
+
+    List availableObjectives() {
+        objectivesList.find('input[type="checkbox"]').collect{it.attr("value")}
+    }
+
+    void checkObjective(String value) {
+        objectivesList.find("input[value=\"${value}\"]").click()
+    }
+
+    List checkedObjectives() {
+        objectivesList.find('input:checked').collect{it.attr("value")}
+    }
+
+
 }

@@ -49,7 +49,6 @@ class MeriPlanSpec extends StubbedCasSpec {
 
         when:
         meriPlan = openMeriPlanEditTab()
-        println meriPlan.primaryOutcome.value()
 
         then:
         meriPlan.primaryOutcome.value().contains("Ramsar") // Direct comparison fails due to &nbsp in the HTML due to the length of the options
