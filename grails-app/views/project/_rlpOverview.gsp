@@ -154,10 +154,10 @@
 
     <g:if test="${objectives}">
         <h4>Program objectives addressed</h4>
-        <g:if test="${project.custom?.details?.objectives?.rows}">
+        <g:if test="${project.custom?.details?.objectives?.rows1}">
             <ul>
-            <g:each in="${project.custom.details.objectives.rows}" var="objective">
-                <li>${objective.data1}</li>
+            <g:each in="${project.custom.details.objectives.rows1}" var="objective">
+                <li>${objective.description}</li>
             </g:each>
             </ul>
         </g:if>
