@@ -12,7 +12,7 @@
             programViewUrl: "${createLink(action:'index')}",
             documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
             noImageUrl: "${assetPath(src:'nophoto.png')}",
-            returnToUrl: "${params.returnTo ?: createLink(action:'index', id:program.programId)}"
+            returnToUrl: "${params.returnTo}"
         };
     </script>
     <asset:stylesheet src="common-bs4.css"/>
@@ -27,7 +27,7 @@
             </li>
             <li class="breadcrumb-item"> Regional Landcare Program </li>
             <li class="breadcrumb-item active"><g:link controller="program" action="index" id="${program.programId}">${program.parentProgram}</g:link> </li>
-            <li class="breadcrumb-item active">Add sub-program</li>
+            <li class="breadcrumb-item active">Add program</li>
         </ol>
 
     </nav>
