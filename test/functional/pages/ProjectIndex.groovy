@@ -114,28 +114,6 @@ class SitesTab extends Module {
 class DashboardTab extends Module {
 
 }
-class AdminDocumentsTab extends Module {
-    static content = {
-        fist_attached_document {$('div.attached_document', 0 )}
-        attached_documents {$('div.attached_document')}
-        editDocumentTab {$('a#edit-documents-tab')}
-        attachDocumentBtn {$('button.project-document-action#doAttach')}
-        editDocumentBtns {$('.document-edit-buttons')}
-        deleteDocumentBtns {$('button.deleteDocument')}
-    }
-}
 
 
-class AttachDocumentForm extends Module {
-    static at = {$('div#attachDocument')}
-    static content = {
-        reportOptions {$('select#associatedReport option')}
-        firstReportOption {$('select#associatedReport option',1)}
 
-        reportSelect {$('select#associatedReport', 0)}
-        documentNameInput {$('input#documentName', 0)}
-        uploadingFile {$('input#documentFile', 0)}
-        saveBtn {$('button.btn[name=uploadingDocument]')}
-
-    }
-}
