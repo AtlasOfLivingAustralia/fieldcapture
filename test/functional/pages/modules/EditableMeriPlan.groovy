@@ -86,7 +86,7 @@ class EditableMeriPlan extends Module {
         keyThreats(required: false) { $('table.threats').moduleList(ThreatRow) }
         projectMethodology(required: false) { $('table.methodology textarea[data-bind*="implementation.description"]') }
         projectImplementation(required: false) { $('#project-implementation textarea') }
-        projectBaseline(required: false) { $('table.baseline').moduleList(BaselineRow) }
+        projectBaseline(required: false) { $('table.monitoring-baseline').moduleList(BaselineRow) }
         monitoringIndicators(required: false) { $('.meri-monitoring-indicators table').moduleList(MonitoringIndictorRow) }
         reviewMethodology(required: false) { $('textarea[data-bind*="projectEvaluationApproach"]') }
         nationalAndRegionalPlans(required: false) { $('table.plans').moduleList(PlanRow) }
