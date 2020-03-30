@@ -2,6 +2,8 @@ package pages
 
 import geb.Module
 import geb.Page
+import pages.modules.ProjectAdminTab
+import pages.modules.RisksAndThreats
 
 /**
  * Represents a project index page.
@@ -25,16 +27,22 @@ class ProjectIndex extends ReloadablePage {
         plansAndReports(wait:true) { module PlansAndReportsTab }
         sites { module SitesTab }
         dashboard { module DashboardTab }
-        admin { module AdminTab }
+        admin { module ProjectAdminTab }
 
         iAmSure(wait: true) { $('.modal a', text:'OK') }
 
-
-        adminTab {$('#admin-tab')}
-        admin {module AdminTab}
-
         editDocumentForm {module AttachDocumentForm}
 
+    }
+
+    void openActivitiesTab() {
+        activitiesTab.click()
+        waitFor { plansAndReports.displayed }
+    }
+
+    void openAdminTab() {
+        adminTab.click()
+        waitFor { admin.displayed }
     }
 }
 
@@ -71,7 +79,7 @@ class PlansAndReportsTab extends Module {
             }
             activities
         }
-        risksAndThreats(required:false) { $('#risk-validation')}
+        risksAndThreats(required:false) { $('#risk-validation').module(RisksAndThreats)}
     }
 }
 
@@ -106,7 +114,7 @@ class SitesTab extends Module {
 class DashboardTab extends Module {
 
 }
-class AdminTab extends Module {
+class AdminDocumentsTab extends Module {
     static content = {
         fist_attached_document {$('div.attached_document', 0 )}
         attached_documents {$('div.attached_document')}

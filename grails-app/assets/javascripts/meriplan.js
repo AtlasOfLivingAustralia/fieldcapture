@@ -474,8 +474,7 @@ function ReadOnlyMeriPlan(project, projectService, config) {
         return projectService.isProjectDetailsLocked();
     });
     var riskModel;
-    if (config.useRlpTemplate) {
-        disableFlag = self.isProjectDetailsLocked;
+    if (config.useRlpRisksModel) {
         riskModel = rlpRiskModel();
     } else {
         riskModel = meritRiskModel();
@@ -551,7 +550,6 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
         // are in the MERI plan.
         if (config.useRlpTemplate) {
             var serviceData = tmp.details.services.toJSON();
-            jsData.risks = ko.mapping.toJS(risks);
 
             jsData.outputTargets = serviceData.targets;
             jsData.description = self.description();
@@ -787,7 +785,6 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
                 if (serviceScore.scoreId == outputTargets[i].scoreId) {
                     score = serviceScore;
                 }
-                ;
                 return score;
             })
         });
