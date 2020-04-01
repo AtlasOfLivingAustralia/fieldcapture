@@ -47,6 +47,38 @@
     </div>
 </div>
 
+<g:if test="${displaySubProgram}">
+    <div class="projects-wrapper d-none d-md-block">
+        <hr/>
+        <div class="well-title">Sub Programs</div>
+        <ul class="nav nav-tabs" id="programs-tabs">
+            <g:each var="displayProgram" in="${displaySubProgram}" status="i">
+                <li class="nav-item">
+                    <g:set var="active" value="${i==0?'active':''}"/>
+                    <a class="nav-link ${active}"  data-toggle="tab" href="#${displayProgram.programId}_subPrograms" role="tab">${displayProgram.name}</a>
+                </li>
+            </g:each>
+        </ul>
+        <div class="tab-content" id="programs-TabContent">
+            <g:each var="subDescriptions" in="${displaySubProgram}" status="i">
+                <g:set var="active" value="${i==0?'active':''}"/>
+                <div class="tab-pane ${active}" id="${subDescriptions.programId}_subPrograms">
+                    <div class="well">
+                        <div><p><strong>Name:</strong> <a href="${g.createLink(controller:'program', action:'index', id:subDescriptions.programId)}" >${subDescriptions.name}</a></p></div>
+                        <br/>
+                        <div>
+                            <p><strong>Description: </strong> ${subDescriptions.description}</p>
+                        </div>
+                    </div>
+                </div>
+            </g:each>
+
+        </div>
+
+    </div>
+
+</g:if>
+
 
 <g:if test="${program.outcomes}">
     <div class="well">

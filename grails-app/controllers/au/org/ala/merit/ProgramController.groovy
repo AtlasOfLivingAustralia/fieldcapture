@@ -90,8 +90,12 @@ class ProgramController {
             }
         }
 
+        Map displaySubProgram = programService.get(program.programId)
+        Map displaySubPrograms = [subProgram: displaySubProgram.subPrograms]
+
         [about   : [label: 'Overview',visible: true, stopBinding: false, type: 'tab',
                     program: program,
+                    displaySubProgram: displaySubPrograms.subProgram,
                     blog: [blogs: blogs?:[], editable: hasEditAccessOfBlog,
                            hasNewsAndEvents: hasNewsAndEvents,
                            hasProgramStories:  hasProgramStories,
