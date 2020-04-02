@@ -329,9 +329,6 @@
         </div>
     </div>
 
-    <h4 class="header-with-help">Project risks & threats <span style="color: red;"><b>*</b></span> </h4><fc:iconHelp>Please enter the details of risks and threats to the project and the mitigation strategies being used to address them.</fc:iconHelp>
-    <g:render template="meriPlan/risksAndThreats"/>
-
     <h4>MERI Attachments</h4>
     <p>
         Please attach programme logic to your MERI plan using the documents function on the Admin tab.  A "Document type" of "Programme Logic" should be selected when uploading the document.

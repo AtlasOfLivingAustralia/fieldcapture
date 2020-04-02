@@ -13,8 +13,13 @@ class DocumentDialog extends Module {
         file { $('#documentFile') }
         mainProjectImage { $('#mainImage') }
         stage { $('select#associatedReport') }
+        report { $('select#associatedReport') }
         saveButton { $('#attachDocument [data-bind*=save]') }
         cancelButton { $('#attachDocument [data-bind*=cancel]') }
+
+        reportOptions {$('select#associatedReport option')}
+        firstReportOption {$('select#associatedReport option',1)}
+
 
     }
 
