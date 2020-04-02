@@ -327,7 +327,6 @@ function MERIPlan(project, projectService, config) {
 
     // Save project details
     self.saveMeriPlan = function(enableSubmit){
-        var valid =  $('#project-details-validation').validationEngine('validate');
 
         var meriPlan = self.meriPlan();
         meriPlan.status('active');
@@ -336,6 +335,7 @@ function MERIPlan(project, projectService, config) {
         meriPlan.saveWithErrorDetection(function() {
 
             if(enableSubmit) {
+                var valid =  $('#project-details-validation').validationEngine('validate');
                 if (valid) {
                     blockUIWithMessage("Submitting MERI Plan...");
                     self.submitChanges();
