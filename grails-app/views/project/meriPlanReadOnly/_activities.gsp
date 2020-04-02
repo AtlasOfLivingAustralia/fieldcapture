@@ -5,5 +5,5 @@
         <li data-bind="text:$data"></li>
     </ul>
 
-    <span data-bind="visible:!details.activities()">No activities have been nominated for this project</span>
+    <span data-bind="visible:details.activities().length == 0">No activities have been nominated for this project</span>
 </div>
