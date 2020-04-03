@@ -96,4 +96,59 @@ class MeriPlanSpec extends StubbedCasSpec {
 
     }
 
+    def "The MERI Plan can be recover from a save failure due to login timeout"() {
+        setup:
+        String projectId = '1'
+        login([userId: '2', role: "ROLE_FC_OFFICER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+
+        when:
+        to RlpProjectPage, projectId
+
+        then:
+        waitFor { at RlpProjectPage }
+
+        when: "Make an edit after the session times out and attempt to save"
+        def meriPlan = openMeriPlanEditTab()
+
+        meriPlan.projectMethodology == "Project methodology"
+        simulateTimeout(browser)
+
+        meriPlan.save()
+
+        then: "The save will fail an a dialog is displayed to explain the situation"
+        waitFor {timeoutModal.displayed}
+
+        when: "Click the re-login link and log back in"
+        timeoutModal.loginLink.click()
+        // Our stubs are automatically logging us in here.
+
+        then: "The page is reloaded and the edits are still there"
+        waitFor { at RlpProjectPage }
+
+        and: "A dialog is displayed to say there are unsaved edits"
+        waitFor {unsavedEdits.displayed}
+
+        when:
+        okBootbox()
+        meriPlan = adminContent.meriPlan
+
+        then: "the unsaved edits are present"
+        meriPlan.projectMethodology == "Project methodology"
+
+        when:
+        meriPlan.save()
+
+        def previousLoad = getAtCheckTime()
+        to RlpProjectPage, projectId
+
+        then:
+        waitFor { getAtCheckTime() > previousLoad }
+
+        when:
+        meriPlan = openMeriPlanEditTab()
+
+        then:
+        meriPlan.projectMethodology == "Project methodology"
+    }
+
 }

@@ -6,6 +6,7 @@ import pages.modules.ProjectAdminTab
 import pages.modules.ProjectReports
 import pages.modules.RlpOverviewTab
 import pages.modules.RlpSitesTab
+import pages.modules.TimeoutModal
 
 class RlpProjectPage extends ReloadablePage {
 
@@ -30,6 +31,8 @@ class RlpProjectPage extends ReloadablePage {
         projectReports(required: false) { module ProjectReports }
         sitesTabContent(required:false) { module RlpSitesTab }
 
+        timeoutModal(required:false) { $('div.bootbox.modal').module TimeoutModal }
+        unsavedEdits(required:false) { $('.unsaved-changes') }
     }
 
     def openDocumentDialog() {

@@ -33,6 +33,26 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
     def cleanupSpec() {
         wireMockServer.stop()
     }
+
+    /**
+     * Opens a new window and logs out.  This will cause the next
+     * request to be unauthenticated which is a reasonable simulation of
+     * a session timeout.
+     */
+    def simulateTimeout(Browser browser) {
+        withNewWindow({
+            js.exec("window.open('.');")},
+                {logout(browser); return true})
+    }
+
+    /** Presses the OK button on a displayed bootbox modal */
+    def okBootbox() {
+        $('.bootbox .btn-primary').each {
+            if (it.displayed) {
+                it.click()
+            }
+        }
+    }
 //    @ClassRule
 //    @Shared
 //    WireMockRule wireMockRule = new WireMockRule(
