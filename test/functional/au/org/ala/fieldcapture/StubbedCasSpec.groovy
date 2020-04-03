@@ -50,6 +50,7 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
         $('.bootbox .btn-primary').each {
             if (it.displayed) {
                 it.click()
+                waitFor {!it}
             }
         }
     }
