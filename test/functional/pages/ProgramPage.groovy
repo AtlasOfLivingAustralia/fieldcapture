@@ -34,6 +34,11 @@ class RLPProgramPage extends Page{
         adminTabContent { module ProgramAdminTab }
         visitUs {$('#weburl span')}
         description {$('.row .col-md-4 span[data-bind*="html:description"] p')}
+        subProgramTab{$('a#subProgramTab', 0)}
+        subProgramName {$('a#subProgramName')}
+        subProgramDescription{$('p#subProgramDescription')}
+
+
     }
 
 
@@ -53,8 +58,16 @@ class RLPProgramPage extends Page{
         adminTab.click()
         waitFor { adminTabContent.displayed }
         adminTabContent.editTab.click()
-        waitFor { adminTabContent.editButton.displayed }
+        waitFor { adminTabContent.editButton.displayed}
         adminTabContent.editButton.click()
+    }
+
+    void addSubProgram() {
+        adminTab.click()
+        waitFor { adminTabContent.displayed }
+        adminTabContent.editTab.click()
+        waitFor { adminTabContent.addSubProgramButton.displayed }
+        adminTabContent. addSubProgramButton.click()
     }
 
 }

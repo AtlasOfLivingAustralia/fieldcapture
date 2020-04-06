@@ -55,7 +55,7 @@
             <g:each var="displayProgram" in="${displaySubProgram}" status="i">
                 <li class="nav-item">
                     <g:set var="active" value="${i==0?'active':''}"/>
-                    <a class="nav-link ${active}"  data-toggle="tab" href="#${displayProgram.programId}_subPrograms" role="tab">${displayProgram.name}</a>
+                    <a class="nav-link ${active}"  id="subProgramTab" data-toggle="tab" href="#${displayProgram.programId}_subPrograms" role="tab">${displayProgram.name}</a>
                 </li>
             </g:each>
         </ul>
@@ -64,10 +64,10 @@
                 <g:set var="active" value="${i==0?'active':''}"/>
                 <div class="tab-pane ${active}" id="${subDescriptions.programId}_subPrograms">
                     <div class="well">
-                        <div><p><strong>Name:</strong> <a href="${g.createLink(controller:'program', action:'index', id:subDescriptions.programId)}" >${subDescriptions.name}</a></p></div>
+                        <div><p><strong>Name:</strong> <a id="subProgramName" href="${g.createLink(controller:'program', action:'index', id:subDescriptions.programId)}" >${subDescriptions.name}</a></p></div>
                         <br/>
                         <div>
-                            <p><strong>Description: </strong> ${subDescriptions.description}</p>
+                            <strong>Description: </strong><p id="subProgramDescription">${subDescriptions.description}</p>
                         </div>
                     </div>
                 </div>
