@@ -3,6 +3,35 @@
  */
 function MERIPlan(project, projectService, config) {
     var self = this;
+
+    if (config.meriStorageKey) {
+        var savedProjectCustomDetails = amplify.store(config.meriStorageKey);
+        if (savedProjectCustomDetails) {
+            var serverUpdate = project.custom.details.lastUpdated;
+            var restored = JSON.parse(savedProjectCustomDetails);
+            var localSave = amplify.store(config.meriStorageKey + "-updated");
+            $('#restoredData').show();
+            if (restored.custom) {
+                project.custom.details = restored.custom.details;
+            }
+            if (restored.outputTargets) {
+                project.outputTargets = restored.outputTargets;
+            }
+            if (restored.risks) {
+                project.risks = restored.risks;
+            }
+
+
+            var message = "<span class='unsaved-changes label label-warning'>Important</span><p>You have unsaved MERI Plan changes for this project.</p>";
+            if (localSave && serverUpdate) {
+                var saved = moment(localSave);
+                message += "<p>Your unsaved changes were made on <b>" + saved.format("LLLL") + "</b></p><p>The changes we loaded from the server when this page was refreshed were made at <b>" + moment(serverUpdate).format("LLLL") + "</b></p>";
+            }
+            message += "<p>Please review the changes then press the 'Save changes' button at the bottom of the page if you want to keep your unsaved changes or the 'Cancel' button if you want to discard your changes.</p>";
+
+            bootbox.alert(message);
+        }
+    }
     ReadOnlyMeriPlan.apply(this, [project, projectService, config]);
 
     self.approvedPlans = ko.observableArray();
@@ -194,35 +223,6 @@ function MERIPlan(project, projectService, config) {
         document.location.reload(true);
     };
 
-    if (config.meriStorageKey) {
-        var savedProjectCustomDetails = amplify.store(config.meriStorageKey);
-        if (savedProjectCustomDetails) {
-            var serverUpdate = project.custom.details.lastUpdated;
-            var restored = JSON.parse(savedProjectCustomDetails);
-            var localSave = amplify.store(config.meriStorageKey + "-updated");
-            $('#restoredData').show();
-            if (restored.custom) {
-                project.custom.details = restored.custom.details;
-            }
-            if (restored.outputTargets) {
-                project.outputTargets = restored.outputTargets;
-            }
-            if (restored.risks) {
-                project.risks = restored.risks;
-            }
-
-
-            var message = "<span class='label label-warning'>Important</span><p>You have unsaved MERI Plan changes for this project.</p>";
-            if (localSave && serverUpdate) {
-                var saved = moment(localSave);
-                message += "<p>Your unsaved changes were made on <b>" + saved.format("LLLL") + "</b></p><p>The changes we loaded from the server when this page was refreshed were made at <b>" + moment(serverUpdate).format("LLLL") + "</b></p>";
-            }
-            message += "<p>Please review the changes then press the 'Save changes' button at the bottom of the page if you want to keep your unsaved changes or the 'Cancel' button if you want to discard your changes.</p>";
-
-            bootbox.alert(message);
-        }
-    }
-
     self.isProjectDetailsSaved = ko.computed(function () {
         return (project['custom']['details'].status == 'active');
     });
@@ -327,7 +327,6 @@ function MERIPlan(project, projectService, config) {
 
     // Save project details
     self.saveMeriPlan = function(enableSubmit){
-        var valid =  $('#project-details-validation').validationEngine('validate');
 
         var meriPlan = self.meriPlan();
         meriPlan.status('active');
@@ -336,6 +335,7 @@ function MERIPlan(project, projectService, config) {
         meriPlan.saveWithErrorDetection(function() {
 
             if(enableSubmit) {
+                var valid =  $('#project-details-validation').validationEngine('validate');
                 if (valid) {
                     blockUIWithMessage("Submitting MERI Plan...");
                     self.submitChanges();
@@ -474,8 +474,7 @@ function ReadOnlyMeriPlan(project, projectService, config) {
         return projectService.isProjectDetailsLocked();
     });
     var riskModel;
-    if (config.useRlpTemplate) {
-        disableFlag = self.isProjectDetailsLocked;
+    if (config.useRlpRisksModel) {
         riskModel = rlpRiskModel();
     } else {
         riskModel = meritRiskModel();
@@ -514,6 +513,7 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
             }
         }
     }
+    self.activities = ko.observableArray(o.activities);
     self.status = ko.observable(o.status);
     self.obligations = ko.observable(o.obligations);
     self.policies = ko.observable(o.policies);
@@ -550,7 +550,6 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
         // are in the MERI plan.
         if (config.useRlpTemplate) {
             var serviceData = tmp.details.services.toJSON();
-            jsData.risks = ko.mapping.toJS(risks);
 
             jsData.outputTargets = serviceData.targets;
             jsData.description = self.description();
@@ -786,7 +785,6 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
                 if (serviceScore.scoreId == outputTargets[i].scoreId) {
                     score = serviceScore;
                 }
-                ;
                 return score;
             })
         });
@@ -866,6 +864,38 @@ function ObjectiveViewModel(o) {
     self.rows1 = ko.observableArray($.map(row1, function (obj, i) {
         return new OutcomeRowViewModel(obj);
     }));
+
+    /**
+     * This pure computed observable provides a mapping from a simple array of selected program objectives to
+     * the structure used to store the objectives in the database.
+     */
+    self.simpleObjectives = ko.pureComputed({
+        read:function() {
+            return _.map(self.rows1(), function(row) {
+                return row.description();
+            });
+        },
+        write: function(values) {
+            // Ignore empty and null values, such as the one pre-populated in the default row above.
+            values = values.filter(function(value) { return value && value != ''});
+            while (self.rows1().length > values.length) {
+                self.rows1.splice(self.rows1.length-1, 1);
+            }
+
+            for (var i=0; i<values.length; i++) {
+                if (self.rows1().length <= i) {
+                    self.rows1.push(new OutcomeRowViewModel({description:values[i]}));
+                }
+                else {
+                    self.rows1()[i].description(values[i]);
+                }
+            }
+        }
+    });
+
+    self.toJSON = function() {
+        return ko.mapping.toJS(self, {ignore:['simpleObjectives']});
+    };
 };
 
 /**

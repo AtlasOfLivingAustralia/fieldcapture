@@ -56,7 +56,7 @@ class RlpReportingSpec extends StubbedCasSpec {
         and: "The new reports are displayed"
 
         waitFor {
-            projectReports.reports.size() == 11
+            projectReports.reports.size() == 12
         }
 
     }

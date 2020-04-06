@@ -9,19 +9,26 @@
                     <div class="row-fluid">
                         <div class="span4 header-label">Program</div>
 
-%{--                        This is temporarily commented out until #1829 is released.
-                            <div class="span8"><g:link controller="program" action="index"--}%
-%{--                                         id="${config.program.programId}">${config.program.name}</g:link></div>--}%
-                            <div class="span8">${config.program.name}</div>
+%{--                        This is temporarily not public until #1829 is released.--}%
+                        <g:if test="${fc.userIsAlaAdmin()}">
+                            <div class="span8"><g:link controller="program" action="index"
+                                         id="${config.program.programId}"><fc:programFullName program="${config.program}"/></g:link></div>
+                        </g:if>
+                        <g:else>
+                            <div class="span8"><fc:programFullName program="${config.program}"/></div>
+                        </g:else>
+
                     </div>
+                    <g:if test="${project.managementUnitId}">
                     <div class="row-fluid">
                         <div class="span4 header-label">Management Unit</div>
                         <div class="span8"><g:link controller="managementUnit" action="index"
                                                    id="${project.managementUnitId}">${project.managementUnitName}</g:link></div>
                     </div>
+                    </g:if>
 
                     <div class="row-fluid">
-                        <div class="span4 header-label">Service Provider</div>
+                        <div class="span4 header-label">${config.program?.config?.organisationRelationship ?: "Service Provider"}</div>
 
                         <div class="span8">
                             <a data-bind="visible:organisationId(),attr:{href:fcConfig.organisationLinkBaseUrl+'/'+organisationId()}">
@@ -84,8 +91,8 @@
         </div>
     </div>
 
-
-    <h4>RLP outcomes addressed</h4>
+    <g:if test="${outcomes}">
+    <h4>Program outcomes addressed</h4>
 
     <div class="row-fluid">
         <div class="span12 value">
@@ -143,6 +150,21 @@
             </g:else>
         </div>
     </div>
+    </g:if>
+
+    <g:if test="${objectives}">
+        <h4>Program objectives addressed</h4>
+        <g:if test="${project.custom?.details?.objectives?.rows1}">
+            <ul>
+            <g:each in="${project.custom.details.objectives.rows1}" var="objective">
+                <li>${objective.description}</li>
+            </g:each>
+            </ul>
+        </g:if>
+        <g:else>
+            The MERI Plan is currently being developed. These details will be made available as soon as possible.
+        </g:else>
+    </g:if>
 
     <h4>Project Description</h4>
     <div class="row-fluid">

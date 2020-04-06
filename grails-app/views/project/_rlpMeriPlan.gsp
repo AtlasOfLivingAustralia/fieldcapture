@@ -1,5 +1,5 @@
 <div class="meri-plan"  data-bind="let:{details:meriPlan()}">
-    <h4><span data-bind="text:details.programName"></span> Outcome</h4>
+    <h4>Program Outcome</h4>
     <table class="table">
         <thead>
         <tr class="header">
@@ -183,7 +183,7 @@
 
     <!-- ko if:!isAgricultureProject() -->
     <!-- ko with:details.threats -->
-    <table class="table">
+    <table class="table threats">
         <thead>
         <th class="index"></th>
         <th class="threat required">Key threat(s) and/or key threatening processes <fc:iconHelp>Describe the key threats (or key threatening processes) to the primary investment priority</fc:iconHelp></th>
@@ -220,7 +220,7 @@
     <!-- /ko -->
     <!-- /ko -->
 
-    <table class="table">
+    <table class="table methodology">
         <thead>
         <tr class="header required">
             <th class="required">Project methodology (4000 character limit [approx 650 words]) <fc:iconHelp>Describe the methodology that will be used to achieve the project outcomes. To help demonstrate best practice delivery approaches and cost effectiveness of methodologies used, include details of the specific delivery mechanisms to leverage change (e.g. delivery method, approach and justification, and any assumptions).</fc:iconHelp></th>
@@ -235,7 +235,7 @@
 
     <h4 class="header-with-help">Monitoring methodology</h4><fc:iconHelp>Describe the project baseline(s) units of measure or data which will be used to report progress towards this project's outcomes (short-term, medium-term and 5 year program outcome), and the monitoring design. Refer to the Regional Land Partnerships Evaluation Plan, which provides guidance on baselines and the monitoring indicators for each RLP outcome. Note, other monitoring indicators can also be used.</fc:iconHelp>
     <!-- ko with:details.baseline -->
-    <table class="table">
+    <table class="table monitoring-baseline">
         <thead>
         <th class="index"></th>
         <th class="baseline required">Project baseline</th>
@@ -271,7 +271,7 @@
     </table>
     <!-- /ko -->
 
-    <table class="table">
+    <table class="table monitoring">
         <thead>
         <tr>
             <th class="index"></th>
@@ -321,61 +321,13 @@
         </tbody>
     </table>
 
-
-
-    <h4>Relevant national and regional plans</h4>
-
-    <table class="table">
-        <thead>
-        <tr>
-            <th class="index"></th>
-            <th class="document-name required">Document name <fc:iconHelp
-                    title="Document name">List the name of the National or Regional plan the project is addressing.</fc:iconHelp></th>
-            <th class="section required">Relevant section <fc:iconHelp
-                    title="Relevant section">What section (target/outcomes/objective etc) of the plan is being addressed?</fc:iconHelp></th>
-            <th class="alignment required">Explanation of strategic alignment <fc:iconHelp
-                    title="Explanation of strategic alignment">Explain how the project design and delivery align with the relevant section of the document</fc:iconHelp></th>
-            <th class="remove"></th>
-        </tr>
-        </thead>
-        <tbody data-bind="foreach : details.priorities.rows">
-        <tr>
-            <td class="index"><span data-bind="text:$index()+1"></span></td>
-            <td class="document-name"><textarea style="width: 97%;" class="input-xlarge" data-validation-engine="validate[required]"
-                                                data-bind="value: data1, disable: $parent.isProjectDetailsLocked()"
-                                                rows="3"></textarea></td>
-            <td class="section"><textarea style="width: 97%;" class="input-xlarge" data-validation-engine="validate[required]"
-                                          data-bind="value: data2, disable: $parent.isProjectDetailsLocked()"
-                                          rows="5"></textarea></td>
-            <td class="alignment"><textarea style="width: 97%;" class="input-xlarge" data-validation-engine="validate[required]"
-                                            data-bind="value: data3, disable: $parent.isProjectDetailsLocked()"
-                                            rows="5"></textarea></td>
-            <td class="remove">
-                <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()"><i class="icon-remove"
-                                                                                       data-bind="click: $parent.removeNationalAndRegionalPriorities"></i>
-                </span>
-            </td>
-        </tr>
-        </tbody>
-        <tfoot>
-        <tr>
-
-            <td colspan="5">
-                <button type="button" class="btn btn-small"
-                        data-bind="disable: isProjectDetailsLocked(), click: addNationalAndRegionalPriorities">
-                    <i class="fa fa-plus"></i> Add a row</button></td>
-        </tr>
-        </tfoot>
-    </table>
+    <g:render template="meriPlan/nationalAndRegionalPlans"/>
 
     <div class="row-fluid">
         <div class="span12">
             <g:render template="serviceTargets"/>
         </div>
     </div>
-
-    <h4 class="header-with-help">Project risks & threats <span style="color: red;"><b>*</b></span> </h4><fc:iconHelp>Please enter the details of risks and threats to the project and the mitigation strategies being used to address them.</fc:iconHelp>
-    <g:render template="risksAndThreats"/>
 
     <h4>MERI Attachments</h4>
     <p>

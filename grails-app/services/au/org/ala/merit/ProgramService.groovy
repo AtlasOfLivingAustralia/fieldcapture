@@ -259,4 +259,20 @@ class ProgramService {
         }
     }
 
+    /**
+     * Returns true if a Program is either equal to or a child of another program.
+     * @param program The Program to check.
+     * @param programId The Program to compare against.
+     */
+    boolean isInProgramHierarchy(Map program, String programId) {
+        if (program.programId == programId) {
+            return true
+        }
+        Map parent = program.parent
+        while (parent && parent.programId != programId) {
+            parent = parent.parent
+        }
+        parent && parent.programId == programId
+    }
+
 }
