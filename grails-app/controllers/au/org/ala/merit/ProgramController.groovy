@@ -114,21 +114,21 @@ class ProgramController {
 
     @PreAuthorise(accessLevel='siteAdmin')
     def create() {
-        String id = params.parentProgramId
-        if (id !=null){
+        [program: [:], isNameEditable: true]
+    }
+
+    @PreAuthorise(accessLevel='admin')
+    def addSubProgram(String id){
+        if (id !=null) {
             Map program = programService.get(id)
-            if (!program || program.error){
+            if (!program || program.error) {
                 programNotFound(id, program)
-            }else{
-                [program: [programId: program.programId,
-                           parentProgram: program.name,
+            } else {
+                [program: [programId      : program.programId,
+                           parentProgram  : program.name,
                            parentProgramId: program.programId]]
             }
-        }else{
-            [program: [:], isNameEditable: true]
         }
-
-
     }
 
     @PreAuthorise(accessLevel='admin')
@@ -167,25 +167,33 @@ class ProgramController {
 
     @PreAuthorise(accessLevel = 'admin')
     def ajaxUpdate(String id) {
+
         def programDetails = request.JSON
+        String parentProgramId = programDetails.parentProgramId
 
         def documents = programDetails.remove('documents')
         def links = programDetails.remove('links')
 
-        String programId = id ?: ''
-        Map result = programService.update(programId, programDetails)
+        Map result
+        String programId =''
+        if (parentProgramId){
+            result = programService.update(programId, programDetails)
+        }else{
+            programId = id ?: ''
+            result = programService.update(programId, programDetails)
 
-        programId = programId ?: result.resp?.programId
-        if (documents && !result.error) {
-            documents.each { doc ->
-                doc.programId = programId
-                documentService.saveStagedImageDocument(doc)
+            programId = programId ?: result.resp?.programId
+            if (documents && !result.error) {
+                documents.each { doc ->
+                    doc.programId = programId
+                    documentService.saveStagedImageDocument(doc)
+                }
             }
-        }
-        if (links && !result.error) {
-            links.each { link ->
-                link.programId = programId
-                documentService.saveLink(link)
+            if (links && !result.error) {
+                links.each { link ->
+                    link.programId = programId
+                    documentService.saveLink(link)
+                }
             }
         }
 

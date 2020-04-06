@@ -16,7 +16,7 @@
             </div>
         </div>
     </g:if>
-    <g:elseif test="${params.parentProgramId != null}">
+    <g:elseif test="${program.parentProgramId != null}">
     <div class="form-group row">
         <label for="parentProgram" class="col-form-label col-sm-3">
             Parent Program:

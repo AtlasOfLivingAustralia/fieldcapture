@@ -21,7 +21,7 @@
 
             <div class="row">
                 <div class="col-sm-2">
-                    <a class="btn btn-info btn-small admin-action" href="${g.createLink(action: 'edit', params: [ id:program.programId])}"><i
+                    <a class="btn btn-info btn-small admin-action editBtnAction" href="${g.createLink(action: 'edit', id:program.programId)}"><i
                             class="fa fa-edit"></i> Edit</a>
                 </div>
 
@@ -30,7 +30,7 @@
             <br/>
             <div class="row">
                 <div class="col-sm-2">
-                    <a class="btn btn-info btn-small admin-action" href="${g.createLink(action: 'create',  params: [ parentProgramId : program.programId])}">
+                    <a class="btn btn-info btn-small admin-action addSubProgramButton" href="${g.createLink(action: 'addSubProgram',   id:  program.programId)}">
                         <i class="fa fa-plus"> Add Sub-Program</i>
                     </a>
                 </div>
