@@ -38,6 +38,7 @@ class AddSubProgramSpec extends StubbedCasSpec {
         overviewTab.click()
         overviewTab.displayed
         waitFor( 10,{subProgramTabContent.displayed})
+        subProgramTabContent.subProgramTitle.click()
 
         subProgramTabContent.subProgramName.text() == "A test program"
         subProgramTabContent.subProgramDescription.text() == "A test description"
@@ -46,4 +47,3 @@ class AddSubProgramSpec extends StubbedCasSpec {
         "The program details have been updated"
     }
 }
-
