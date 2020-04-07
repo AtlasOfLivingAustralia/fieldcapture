@@ -44,21 +44,21 @@ class AddSubProgramSpec extends StubbedCasSpec {
         waitFor{overviewTab.displayed}
 
         when:
-        def subContent = subProgramTabContent[0]
+        def subContent = subProgramTabContent
 
         then:
         subContent !=null
-        waitFor {subContent.subProgramTitle.text() == "A test program"}
+        waitFor {subContent[0].subProgramTitle.text() == "A test program"}
 
         when:
-        subContent.subProgramTitle.click()
+        subContent[0].subProgramTitle.click()
 
         then:
         waitFor( 10,{subContent.displayed})
 
         and:
-        subContent.subProgramName.text() == "A test program"
-        subContent.subProgramDescription.text() == "A test description"
+        subContent[0].subProgramName.text() == "A test program"
+        subContent[0].subProgramDescription.text() == "A test description"
 
     }
 }
