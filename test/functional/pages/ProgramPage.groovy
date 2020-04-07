@@ -2,6 +2,7 @@ package pages
 
 import geb.Page
 import pages.modules.ProgramAdminTab
+import pages.modules.subProgramContent
 
 class ProgramPage extends Page {
 
@@ -34,9 +35,9 @@ class RLPProgramPage extends Page{
         adminTabContent { module ProgramAdminTab }
         visitUs {$('#weburl span')}
         description {$('.row .col-md-4 span[data-bind*="html:description"] p')}
-        subProgramTab(required:false){$('a#subProgramTab', 0)}
-        subProgramName(required:false){$('a#subProgramName')}
-        subProgramDescription(required:false){$('p#subProgramDescription')}
+        subProgramTab{$('a#subProgramTab')}
+        subProgramTabContent { module subProgramContent}
+
 
 
     }

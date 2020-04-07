@@ -37,12 +37,12 @@ class AddSubProgramSpec extends StubbedCasSpec {
         at RLPProgramPage
         overviewTab.click()
         overviewTab.displayed
-        waitFor( 10, {subProgramTab.click()})
+        subProgramTab.click()
 
-        waitFor( 10,{subProgramTab.displayed})
+        waitFor( 10,{subProgramTabContent.displayed})
 
-        subProgramName.text() == "A test program"
-        subProgramDescription.text() == "A test description"
+        subProgramTabContent.subProgramName.text() == "A test program"
+        subProgramTabContent.subProgramDescription.text() == "A test description"
 
         and:
         "The program details have been updated"
