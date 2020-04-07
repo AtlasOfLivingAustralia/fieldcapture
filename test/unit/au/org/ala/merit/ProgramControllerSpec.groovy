@@ -241,7 +241,22 @@ class ProgramControllerSpec extends Specification {
 
     }
 
+    def "Testing Add New Sub Program Passing programId"() {
+        setup:
+        setupProgramAdmin()
+        def id = "test_program"
+        Map program = createPrograms(id)
+        Map expected = [program: [programId:program.programId, parentProgram:program.name, parentProgramId:program.programId]]
 
+        when:
+        Map actual = controller.addSubProgram(id)
+
+        then:
+        1 * programService.get(id) >> program
+
+        expect:
+        expected == actual
+    }
 
     private Map testProgram(String id, boolean includeReports) {
         Map program = [programId:id, name:'name', config:[:], inheritedConfig:[:]]
@@ -272,4 +287,7 @@ class ProgramControllerSpec extends Specification {
         userService.userIsAlaOrFcAdmin() >> false
     }
 
+    private static Map createPrograms(String id){
+        return [id:id, programId: id, name: "Testing Program Name", description: "Testing Program Description"]
+    }
 }
