@@ -25,7 +25,7 @@ class AddSubProgramSpec extends StubbedCasSpec {
         addSubProgram()
 
         then:
-        waitFor 10, { at AddSubProgram } // This has occasionally timed out.
+        waitFor( 10, { at AddSubProgram }) // This has occasionally timed out.
 
         when:
         program.name = "A test program"
@@ -37,9 +37,9 @@ class AddSubProgramSpec extends StubbedCasSpec {
         at RLPProgramPage
         overviewTab.click()
         overviewTab.displayed
-        subProgramTab.click()
+        waitFor( 10, {subProgramTab.click()})
 
-        waitFor 10,{subProgramTab.displayed}
+        waitFor( 10,{subProgramTab.displayed})
 
         subProgramName.text() == "A test program"
         subProgramDescription.text() == "A test description"
