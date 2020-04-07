@@ -1,6 +1,6 @@
 <h4>Relevant national and regional plans</h4>
 <p>Explain how the project aligns with all applicable national and regional priorities, plans and strategies.</p>
-<table class="table">
+<table class="table plans">
     <thead>
     <tr>
         <th class="index"></th>

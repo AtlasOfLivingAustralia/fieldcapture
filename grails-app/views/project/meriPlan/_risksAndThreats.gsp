@@ -1,3 +1,7 @@
+<h4>Project risks & threats </h4>
+<g:render template="/shared/restoredData"
+          model="[id: 'restoredRiskData', saveButton: 'Save risks & threats', cancelButton: 'Cancel edits to risks & threats']"/>
+<p>Please enter the details of risks and threats to the project and the mitigation strategies being used to address them. These should be updated at each reporting period:</p>
 
 <div id="project-risks-threats" class="well well-small">
 
