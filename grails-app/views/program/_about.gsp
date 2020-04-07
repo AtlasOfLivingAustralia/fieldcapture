@@ -48,14 +48,14 @@
 </div>
 
 <g:if test="${displaySubProgram}">
-    <div class="projects-wrapper d-none d-md-block">
+    <div class="projects-wrapper d-none d-md-block" id="subProgramWrapper">
         <hr/>
         <div class="well-title">Sub Programs</div>
         <ul class="nav nav-tabs" id="programs-tabs">
             <g:each var="displayProgram" in="${displaySubProgram}" status="i">
                 <li class="nav-item">
                     <g:set var="active" value="${i==0?'active':''}"/>
-                    <a class="nav-link ${active}"  id="subProgramTab" data-toggle="tab" href="#${displayProgram.programId}_subPrograms" role="tab">${displayProgram.name}</a>
+                    <a class="nav-link ${active}"  id="subProgramTitleTab" data-toggle="tab" href="#${displayProgram.programId}_subPrograms" role="tab">${displayProgram.name}</a>
                 </li>
             </g:each>
         </ul>
