@@ -12,7 +12,7 @@ branches:
 services:
   - mongodb
 node_js:
-  - lts/*
+  - 12
 addons:
   chrome: stable
   hosts: devt.ala.org.au
