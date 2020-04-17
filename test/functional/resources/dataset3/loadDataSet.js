@@ -17,12 +17,24 @@ var config = {
     projectTemplate: "rlp",
     meriPlanTemplate : "configurableMeriPlan",
     meriPlanContents : [
-        "objectivesList",
-        "monitoringIndicators",
-        "projectImplementation",
-        "projectPartnerships",
-        "keq",
-        "meriBudget"
+        {
+            "template": "objectivesList"
+        },
+        {
+            "template": "monitoringIndicators"
+        },
+        {
+            "template": "projectImplementation"
+        },
+        {
+            "template": "projectPartnerships"
+        },
+        {
+            "template":"keq"
+        },
+        {
+            "template": "meriBudget"
+        }
     ],
     objectives:[
         "objective 1",
