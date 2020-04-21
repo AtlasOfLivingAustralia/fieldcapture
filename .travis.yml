@@ -11,6 +11,8 @@ branches:
   - /^hotfix\/.*$/
 services:
   - mongodb
+node_js:
+  - 12
 addons:
   chrome: stable
   hosts: devt.ala.org.au

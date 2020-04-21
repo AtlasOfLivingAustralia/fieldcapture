@@ -17,12 +17,24 @@ var config = {
     projectTemplate: "rlp",
     meriPlanTemplate : "configurableMeriPlan",
     meriPlanContents : [
-        "objectivesList",
-        "monitoringIndicators",
-        "projectImplementation",
-        "projectPartnerships",
-        "keq",
-        "meriBudget"
+        {
+            "template": "objectivesList"
+        },
+        {
+            "template": "monitoringIndicators"
+        },
+        {
+            "template": "projectImplementation"
+        },
+        {
+            "template": "projectPartnerships"
+        },
+        {
+            "template":"keq"
+        },
+        {
+            "template": "meriBudget"
+        }
     ],
     objectives:[
         "objective 1",
@@ -46,6 +58,50 @@ db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:"p2"
 createProject({projectId:"p3", name:"Configurable MERI project", programId:"configurable_meri_plan"});
 db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:"p3", userId:'1', accessLevel:'admin'});
 
+config = {
+    projectTemplate: "rlp",
+    meriPlanTemplate: "configurableMeriPlan",
+    meriPlanContents: [
+        {
+            "template": "assets"
+        },
+        {
+            "template": "objectivesList"
+        },
+        {
+            "template": "outcomeStatements"
+        },
+        {
+            "template": "description"
+        },
+        {
+            "template": "monitoringIndicators"
+        },
+        {
+            "template": "projectPartnerships"
+        },
+        {
+            "template": "activities"
+        }
+    ],
+    "objectives": [
+        "objective 1",
+        "objective 2",
+        "objective 3"
+    ],
+    "activities": [
+        "activity 1",
+        "activity 2"
+    ]
+};
+createProgram({programId: "state_intervention", name: "State Intervention", description: "", config: config});
 
+createProject({projectId: "meri2", name: "State intervention project", programId: "state_intervention"});
+db.userPermission.insert({
+    entityType: 'au.org.ala.ecodata.Project',
+    entityId: "meri2",
+    userId: '1',
+    accessLevel: 'admin'
+});
 
 
