@@ -53,7 +53,7 @@
         ko.applyBindings(programViewModel);
         $('.validationEngineContainer').validationEngine();
 
-         $('.editParentProgramId').select2();
+         $('.newParentProgramId').select2();
     });
 
 </asset:script>
