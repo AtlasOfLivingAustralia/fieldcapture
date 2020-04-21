@@ -10,7 +10,7 @@ import static ReportService.ReportMode
  */
 class ProgramController {
 
-    static allowedMethods = [regenerateProgramReports: "POST", ajaxDelete: "POST", delete: "POST", ajaxUpdate: "POST"]
+    static allowedMethods = [regenerateProgramReports: "POST", listOfAllPrograms:'GET' ,ajaxDelete: "POST", delete: "POST", ajaxUpdate: "POST"]
 
     def programService, searchService, documentService, userService, roleService, commonService, webService, siteService
     ProjectService projectService
@@ -132,14 +132,16 @@ class ProgramController {
     }
 
     @PreAuthorise(accessLevel='admin')
-    def edit() {
-        String id = params.id
+    def edit(String id) {
         Map program = programService.get(id)
+
+        List<Map> allProgramList = programService.listOfAllPrograms()
+        List<Map> listOfPrograms = allProgramList.findAll({it.programId != id})
 
         if (!program || program.error) {
             programNotFound(id, program)
         } else {
-            [program: program, isNameEditable:userService.userIsAlaOrFcAdmin()]
+            [program: program, editProgramId: program.programId, allProgram: listOfPrograms, isNameEditable:userService.userIsAlaOrFcAdmin()]
         }
     }
 
@@ -169,7 +171,7 @@ class ProgramController {
     def ajaxUpdate(String id) {
 
         def programDetails = request.JSON
-        String parentProgramId = programDetails.parentProgramId
+        String parentProgramId = programDetails.parentProgramId // this parent Program Id coming from Create Sub Program page
 
         def documents = programDetails.remove('documents')
         def links = programDetails.remove('links')

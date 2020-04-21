@@ -2,27 +2,26 @@
 
     <h4 class="block-header"><g:message code="program.details.header"/></h4>
 
-    <g:if test="${fc.userIsAlaOrFcAdmin() && params.id}">
+    <g:if test="${fc.userIsAlaOrFcAdmin() && editProgramId != null}">
         <div class="form-group row">
-            <label for="parentProgram" class="col-form-label col-sm-3">
+            <label for="editParentProgramId" class="col-form-label col-sm-3">
                 Parent Program:
             </label>
-            <div class="col-sm-9">
-                <select name="parentProgram" id="parentProgram" data-bind="value:parentProgram" class="form-control"
-                        data-validation-engine="validate[required]">
-                    <option>No parent</option>
-                    <option>${program.name}</option>
-                </select>
+            <div class="col-md-9">
+                <span class="select2">
+                   <g:select class="editParentProgramId" style="width: 100%" from="${allProgram}" data-bind="value:editParentProgramId" optionKey="programId" name="name" id="editParentProgramId" optionValue="name" noSelection="${['null' : 'No Parent']}"/>
+                </span>
             </div>
+
         </div>
     </g:if>
     <g:elseif test="${program.parentProgramId != null}">
     <div class="form-group row">
-        <label for="parentProgram" class="col-form-label col-sm-3">
+        <label for="parentProgramId" class="col-form-label col-sm-3">
             Parent Program:
         </label>
         <div class="col-sm-9">
-            <select name="parentProgram" id="parentProgram" data-bind="value:parentProgram" class="form-control"
+            <select name="parentProgram" id="parentProgramId" data-bind="value:parentProgramId" class="form-control"
                     data-validation-engine="validate[required]" disabled="disabled">
                 <option value="${program.parentProgram}">${program.parentProgram}</option>
             </select>

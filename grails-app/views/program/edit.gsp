@@ -17,6 +17,7 @@
     </script>
     <asset:stylesheet src="common-bs4.css"/>
     <asset:stylesheet src="program.css"/>
+    <asset:stylesheet src="select2/4.0.3/css/select2.css"/>
 
 
 </head>
@@ -44,7 +45,6 @@
 </div>
 
 <asset:script>
-
     $(function () {
         var program = <fc:modelAsJavascript model="${program}"/>;
 
@@ -52,13 +52,16 @@
 
         ko.applyBindings(programViewModel);
         $('.validationEngineContainer').validationEngine();
-    });
 
+         $('.editParentProgramId').select2();
+    });
 
 </asset:script>
 <asset:javascript src="common-bs4.js"/>
 <asset:javascript src="attach-document-no-ui.js"/>
 <asset:javascript src="program.js"/>
+<asset:javascript src="forms-knockout-bindings.js"/>
+<asset:javascript src="select2/4.0.3/js/select2.full"/>
 <asset:deferredScripts/>
 
 </body>

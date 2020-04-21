@@ -275,4 +275,8 @@ class ProgramService {
         parent && parent.programId == programId
     }
 
+    List<Map> listOfAllPrograms(){
+        return webService.getJson("${grailsApplication.config.ecodata.baseUrl}program/listOfAllPrograms?view=flat")
+    }
+
 }
