@@ -4,7 +4,7 @@
 function MERIPlan(project, projectService, config) {
     var self = this;
 
-    if (config.meriStorageKey) {
+    if (config.meriStorageKey && project.custom && project.custom.details) {
         var savedProjectCustomDetails = amplify.store(config.meriStorageKey);
         if (savedProjectCustomDetails) {
             var serverUpdate = project.custom.details.lastUpdated;
@@ -315,7 +315,12 @@ function MERIPlan(project, projectService, config) {
         self.meriPlan().outcomes.shortTermOutcomes.remove(outcome);
     };
 
-
+    self.addAsset = function() {
+        self.meriPlan().assets.push(new AssetViewModel());
+    };
+    self.removeAsset = function(asset) {
+        self.meriPlan().assets.remove(asset);
+    };
 
     self.saveAndSubmitChanges = function(){
         self.saveMeriPlan(true);
@@ -533,8 +538,11 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
 
     var row = [];
     o.events ? row = o.events : row.push(ko.mapping.toJS(new EventsRowViewModel()));
-    self.events = ko.observableArray($.map(row, function (obj, i) {
+    self.events = ko.observableArray(_.map(row, function (obj, i) {
         return new EventsRowViewModel(obj);
+    }));
+    self.assets = ko.observableArray(_.map(o.assets || [{}], function(asset) {
+        return new AssetViewModel(asset);
     }));
 
     self.modelAsJSON = function () {
@@ -989,6 +997,14 @@ function OutcomeRowViewModel(o) {
     if (!o.assets) o.assets = [];
     self.assets = ko.observableArray(o.assets);
 };
+
+function AssetViewModel(asset) {
+    var self = this;
+    if (!asset) {
+        asset = {};
+    }
+    self.description = ko.observable(asset.description);
+}
 
 function SingleAssetOutcomeViewModel(o) {
     var self = this;

@@ -282,5 +282,35 @@ describe("Loading the MERI plan is handled correctly", function () {
         expect(JSON.parse(JSON.stringify(objectivesModel))).toEqual(expectedResult);
     });
 
+    it("Should allow assets to be recorded", function() {
+        var project = {
+            plannedStartDate:'2018-07-01T00:00:00Z',
+            plannedEndDate:'2021-06-30T00:00:00Z',
+            custom: {
+                details: {
+                    assets:[{description:'asset 1'}]
+                }
+            }
+        };
+        var projectService = new ProjectService(project, {});
+        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'});
+        var meriPlan = viewModel.meriPlan();
+
+        expect(meriPlan.assets().length).toEqual(1);
+        expect(meriPlan.assets()[0].description()).toEqual('asset 1')
+
+        viewModel.addAsset();
+        expect(meriPlan.assets().length).toBe(2);
+
+        meriPlan.assets()[1].description('asset 2');
+
+        var serialized = JSON.parse(meriPlan.modelAsJSON());
+        expect(serialized.custom.details.assets).toEqual([{description:'asset 1'}, {description:'asset 2'}]);
+
+        viewModel.removeAsset(meriPlan.assets()[0]);
+        expect(meriPlan.assets().length).toBe(1);
+
+    });
+
 })
 ;

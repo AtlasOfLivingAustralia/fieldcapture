@@ -72,6 +72,12 @@ class BudgetRow extends Module {
     }
 }
 
+class AssetRow extends Module {
+    static content = {
+        description { $('.asset textarea') }
+        remove { $('i.icon-remove') }
+    }
+}
 class ServiceTargetRow extends Module {
     static content = {
         service { $('.service select') }
@@ -107,6 +113,9 @@ class EditableMeriPlan extends Module {
         projectPartnerships(required: false) { $('#project-partnership').moduleList(PartnershipRow) }
         keq(required:false) { $('#keq tbody tr').moduleList(KeqRow) }
         budget(required:false) { $('.meri-budget').moduleList(BudgetRow) }
+        activities(required:false) { $('#activity-list') }
+        assets(required:false) { $('table.assets tr').moduleList(AssetRow) }
+
         floatingSaveButton { $('#floating-save [data-bind*="saveProjectDetails"]') }
         saveButton { $('.form-actions [data-bind*="saveProjectDetails"]').first() }
     }
