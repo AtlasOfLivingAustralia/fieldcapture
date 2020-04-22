@@ -312,5 +312,56 @@ describe("Loading the MERI plan is handled correctly", function () {
 
     });
 
+    it("The services should be serialized to an array of ids", function() {
+        var project = {
+            plannedStartDate:'2018-07-01T00:00:00Z',
+            plannedEndDate:'2021-06-30T00:00:00Z',
+            custom: {
+                details: {
+                }
+            }
+        };
+        var services = [
+            {id:1, name:"Service 1", scores:[{scoreId:1}]}, {id:2, name:"Service 2", scores:[{scoreId:2}]}
+        ];
+        var projectService = new ProjectService(project, {});
+        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'});
+        var serialized = JSON.parse(viewModel.meriPlan().modelAsJSON());
+
+        var savedMeriPlan = serialized.custom.details;
+        expect(savedMeriPlan.serviceIds).toEqual([]);
+
+        project.custom.details.serviceIds = [1,2];
+        project.outputTargets = [{scoreId:1}, {scoreId:2}];
+        viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing', services:services});
+        serialized = JSON.parse(viewModel.meriPlan().modelAsJSON());
+        savedMeriPlan = serialized.custom.details;
+        expect(savedMeriPlan.serviceIds).toEqual([1,2]);
+
+
+    });
+
+    it("should remove null outcomes when serialized", function() {
+        var project = {
+            plannedStartDate:'2018-07-01T00:00:00Z',
+            plannedEndDate:'2021-06-30T00:00:00Z',
+            custom: {
+                details: {
+                }
+            }
+        };
+
+        var projectService = new ProjectService(project, {});
+        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'});
+
+        expect(viewModel.meriPlan().outcomes.primaryOutcome.description()).toBeNull();
+
+        var serialized = JSON.parse(viewModel.meriPlan().modelAsJSON());
+
+        var savedMeriPlan = serialized.custom.details;
+        expect(savedMeriPlan.outcomes.primaryOutcome).toBeNull();
+
+    });
+
 })
 ;

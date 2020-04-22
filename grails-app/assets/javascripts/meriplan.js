@@ -811,10 +811,14 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
     };
 
     self.toJSON = function () {
+        var serviceIds = _.unique(_.map(self.services(), function (service) {
+            return service.serviceId();
+        }));
+        serviceIds = _.filter(serviceIds, function(id) {
+            return id != null;
+        });
         return {
-            serviceIds: _.unique(_.map(self.services(), function (service) {
-                return service.serviceId()
-            })),
+            serviceIds: serviceIds,
             targets: self.outputTargets()
         }
     };
@@ -968,7 +972,6 @@ function OutcomesViewModel(outcomes, config) {
         return new SingleAssetOutcomeViewModel(outcome)
     }));
     self.midTermOutcomes = ko.observableArray(_.map(outcomes.midTermOutcomes || [], outcomeToViewModel));
-
 }
 
 
@@ -1029,6 +1032,9 @@ function SingleAssetOutcomeViewModel(o) {
         self.assets([]);
     });
     self.toJSON = function () {
+        if (!self.description() && self.assets.length == 0) {
+            return {};
+        }
         return {
             description: self.description(),
             assets: self.assets()
