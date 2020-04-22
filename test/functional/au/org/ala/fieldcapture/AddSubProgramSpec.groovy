@@ -16,7 +16,7 @@ class AddSubProgramSpec extends StubbedCasSpec {
     def "I can create a Sub program as an FC_ADMIN"() {
 
         setup: "log in as userId=1 who is a program admin for the program with programId=test_program"
-        login([userId: '1', role: "ROLE_USER", email: 'user@nowhere.com', firstName: "MERIT", lastName: 'User'], browser)
+        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
 
         when:
         to RLPProgramPage

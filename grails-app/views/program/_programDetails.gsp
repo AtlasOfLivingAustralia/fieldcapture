@@ -21,9 +21,9 @@
             Parent Program:
         </label>
         <div class="col-sm-9">
-            <select name="parentProgram" id="parentProgramId" data-bind="value:parentProgramId" class="form-control"
+            <select name="parentProgramId" id="parentProgramId" data-bind="value:parentProgramId" class="form-control"
                     data-validation-engine="validate[required]" disabled="disabled">
-                <option value="${program.parentProgram}">${program.parentProgram}</option>
+                <option value="${program.parentProgramId}">${program.parentProgram}</option>
             </select>
         </div>
     </div>
