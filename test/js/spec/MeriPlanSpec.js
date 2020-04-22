@@ -359,7 +359,7 @@ describe("Loading the MERI plan is handled correctly", function () {
         var serialized = JSON.parse(viewModel.meriPlan().modelAsJSON());
 
         var savedMeriPlan = serialized.custom.details;
-        expect(savedMeriPlan.outcomes.primaryOutcome).toBeNull();
+        expect(savedMeriPlan.outcomes.primaryOutcome).toEqual({});
 
     });
 
