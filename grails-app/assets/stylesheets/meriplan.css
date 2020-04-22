@@ -194,6 +194,17 @@ table tr.header th {
     text-align: center;
 }
 
+.meri-plan #adaptive-management textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.meri-plan .project-description textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
 #project-risks-threats table {
     width:100%;
 }

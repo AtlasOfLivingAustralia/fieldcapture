@@ -531,7 +531,7 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
     self.partnership = new GenericViewModel(o.partnership);
     self.lastUpdated = o.lastUpdated ? o.lastUpdated : moment().format();
     self.budget = new BudgetViewModel(o.budget, period);
-
+    self.adaptiveManagement = ko.observable(o.adaptiveManagement);
     self.rationale = ko.observable(o.rationale);
     self.baseline = new GenericViewModel(o.baseline, ['baseline', 'method']);
     self.threats = new GenericViewModel(o.threats, ['threat', 'intervention']);

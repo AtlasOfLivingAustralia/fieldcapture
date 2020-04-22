@@ -220,18 +220,7 @@
     <!-- /ko -->
     <!-- /ko -->
 
-    <table class="table methodology">
-        <thead>
-        <tr class="header required">
-            <th class="required">Project methodology (4000 character limit [approx 650 words]) <fc:iconHelp>Describe the methodology that will be used to achieve the project outcomes. To help demonstrate best practice delivery approaches and cost effectiveness of methodologies used, include details of the specific delivery mechanisms to leverage change (e.g. delivery method, approach and justification, and any assumptions).</fc:iconHelp></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td><textarea rows="5" data-validation-engine="validate[required,maxSize[5000]]" data-bind="value:details.implementation.description, disable: isProjectDetailsLocked()"></textarea></td>
-        </tr>
-        </tbody>
-    </table>
+    <g:render template="meriPlan/projectMethodology"/>
 
     <h4 class="header-with-help">Monitoring methodology</h4><fc:iconHelp>Describe the project baseline(s) units of measure or data which will be used to report progress towards this project's outcomes (short-term, medium-term and 5 year program outcome), and the monitoring design. Refer to the Regional Land Partnerships Evaluation Plan, which provides guidance on baselines and the monitoring indicators for each RLP outcome. Note, other monitoring indicators can also be used.</fc:iconHelp>
     <!-- ko with:details.baseline -->
