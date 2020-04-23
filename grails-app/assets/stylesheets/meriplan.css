@@ -203,7 +203,17 @@ table tr.header th {
     width: 100%;
     box-sizing: border-box;
 }
+.meri-plan #activity-list input[type=text] {
+    width:100%;
+    box-sizing: border-box;
+    height: 30px;
+}
 
+.meri-plan #objectives-list input[type=text] {
+    width:100%;
+    box-sizing: border-box;
+    height: 30px;
+}
 
 #project-risks-threats table {
     width:100%;
