@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat
 class ImportService {
 
     static int INSTITUTION_DIFFERENCE_THRESHOLD = 4
-    public static final List CSV_HEADERS = ['Program', 'Round Name', 'GMS Round Name', 'Grant ID', 'Grant External ID', 'Sub-project ID', 'Grant Name', 'Grant Description', 'Grantee Organisation Legal Name', 'Grant Original Approved Amount', 'Grant Current Grant Funding (Ex. GST)', 'Start', 'Finish', 'Location Description']
+    public static final List CSV_HEADERS = ['Program', 'Round Name', 'GMS Round Name', 'Grant ID', 'Grant External ID', 'Sub-project ID', 'Grant Name', 'Grant Description', 'Grantee Organisation Legal Name','Australian Business NUmber', 'Grant Original Approved Amount', 'Grant Current Grant Funding (Ex. GST)', 'Start', 'Finish', 'Location Description']
 
     private static final String PROJECTS_CACHE_KEY = 'ImportService-AllProjects'
 
@@ -309,6 +309,11 @@ class ImportService {
         }
         else {
             project.organisationName = "Not specified"
+        }
+        if (projectDetails['Australian Business Number']){
+            project.abn = projectDetails['Australian Business Number']
+        }else{
+            project.abn = "Not specified"
         }
 
         def startDate = projectDetails['Start']

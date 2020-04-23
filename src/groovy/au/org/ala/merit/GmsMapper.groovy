@@ -61,6 +61,7 @@ class GmsMapper {
             ROUND_NM:[name:'associatedSubProgram', type:'string'],
             EXTERNAL_ID:[name:'externalId', type:'string'],
             ORG_TRADING_NAME:[name:'organisationName', type:'string'],
+            ABN:[name: 'abn', type: 'string'],
             START_DT:[name:'plannedStartDate', type:'date', mandatory:true],
             FINISH_DT:[name:'plannedEndDate', type:'date', mandatory:true],
             CONTRACT_START_DT:[name:'contractStartDate', type:'date'],
@@ -197,13 +198,18 @@ class GmsMapper {
             }
         }
 
-        def organisation = organisations.find{it.name == project.organisationName}
-        if (organisation) {
-            project.organisationId = organisation.organisationId
+        def organisation
+        if (project.organisationName || project.abn){
+             organisation = organisations.find{it.organisationName == project.organisationName ||  it.abn == project.abn }
+            if (organisation){
+                project.organisationId = organisation.organisationId
+            }else {
+                errors << "No organisation exists with abn  ${project.abn} number and organisation name ${project.organisationName}"
+            }
+        }else{
+            errors << "No organisation exists with abn  ${project.abn} number and organisation name ${project.organisationName}"
         }
-        else {
-            errors << "No organisation exists with name ${project.organisationName}"
-        }
+
         if (project.serviceProviderName) {
             def serviceProviderOrganisation = organisations.find{it.name == project.serviceProviderName}
             if (serviceProviderOrganisation) {
@@ -227,7 +233,6 @@ class GmsMapper {
         [project:project, sites:sites, activities:activities, errors:errors]
 
     }
-
     private def mapSites(projectRows, project, errors) {
         // TODO more than one location row?
         def siteRows = projectRows.findAll{it[DATA_TYPE_COLUMN] == LOCATION_DATA_TYPE}
