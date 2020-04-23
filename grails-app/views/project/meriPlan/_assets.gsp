@@ -11,7 +11,7 @@
 <tr>
     <td class="index" data-bind="text:$index()+1"></td>
     <td class="asset">
-        <textarea data-validation-engine="validate[required]" data-bind="value:description, disable: $parent.isProjectDetailsLocked()"></textarea>
+        <textarea placeholder="${placeHolder}" data-validation-engine="validate[required]" data-bind="value:description, disable: $parent.isProjectDetailsLocked()"></textarea>
     </td>
     <td class="remove">
         <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()"><i class="fa fa-remove"

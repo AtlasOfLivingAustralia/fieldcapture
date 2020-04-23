@@ -881,7 +881,7 @@ function ObjectiveViewModel(o) {
      * This pure computed observable provides a mapping from a simple array of selected program objectives to
      * the structure used to store the objectives in the database.
      */
-    self.simpleObjectives = ko.pureComputed({
+    self.simpleObjectives = ko.computed({
         read:function() {
             return _.map(self.rows1(), function(row) {
                 return row.description();
@@ -890,6 +890,9 @@ function ObjectiveViewModel(o) {
         write: function(values) {
             // Ignore empty and null values, such as the one pre-populated in the default row above.
             values = values.filter(function(value) { return value && value != ''});
+            if (self.simpleObjectives.otherChecked()) {
+                values.push(self.simpleObjectives.otherValue());
+            }
             while (self.rows1().length > values.length) {
                 self.rows1.splice(self.rows1.length-1, 1);
             }
@@ -904,6 +907,8 @@ function ObjectiveViewModel(o) {
             }
         }
     });
+    self.simpleObjectives.otherChecked = ko.observable();
+    self.simpleObjectives.otherValue = ko.observable();
 
     self.toJSON = function() {
         return ko.mapping.toJS(self, {ignore:['simpleObjectives']});
