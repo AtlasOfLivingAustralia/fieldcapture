@@ -13,8 +13,8 @@ class EditOrganisationSpec extends StubbedCasSpec {
         logout(browser)
     }
 
-    def "As a user with admin permissions, I can edit a program"() {
-        setup: "log in as userId=1 who is a program admin for the program with programId=test_program"
+    def "As a user with admin permissions, I can edit a organisation"() {
+        setup: "log in as userId=1 who is a  admin for the organisation with organisationId=test_program"
         login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
 
         when:
@@ -35,5 +35,4 @@ class EditOrganisationSpec extends StubbedCasSpec {
         details.save()
 
     }
-
 }
