@@ -520,7 +520,7 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
             }
         }
     }
-    self.activities = ko.observableArray(o.activities);
+    self.activities = new ActivitiesViewModel(o.activities, config.programActivities || []);
     self.status = ko.observable(o.status);
     self.obligations = ko.observable(o.obligations);
     self.policies = ko.observable(o.policies);
@@ -924,8 +924,6 @@ function ObjectiveViewModel(o, programObjectives) {
                 self.simpleObjectives.otherValue(undefined);
             }
         });
-
-
     }
     self.toJSON = function () {
         var js = ko.mapping.toJS(self, {ignore:['simpleObjectives']});
@@ -1173,6 +1171,36 @@ function FloatViewModel(o) {
     if (!o) o = {};
     self.dollar = ko.observable(o.dollar ? o.dollar : 0.0).extend({numericString: 2}).extend({currency: {}});
 };
+
+function ActivitiesViewModel(activities, programActivities) {
+    var self = this;
+
+    if (!activities) {
+        activities = {activities:[]};
+    }
+    var matchingActivities = _.filter(activities.activities, function(activity) {
+        return activity && activity != '' &&  programActivities.indexOf(activity) >= 0;
+    });
+    var otherActivities =_.filter(activities.activities, function(activity) {
+        return activity && activity != '' &&  programActivities.indexOf(activity) < 0;
+    });
+    self.activities = ko.observableArray(matchingActivities);
+    self.activities.otherChecked = ko.observable(otherActivities.length > 0);
+    self.activities.otherValue = ko.observable( otherActivities.length > 0 ? otherActivities[0] : undefined);
+    self.activities.otherChecked.subscribe(function(value) {
+        if (!value) {
+            self.activities.otherValue(undefined);
+        }
+    });
+
+    self.toJSON = function () {
+        var js = ko.mapping.toJS(self);
+        if (self.activities.otherChecked() && self.activities.otherValue()) {
+            js.activities.push(self.activities.otherValue());
+        }
+        return js;
+    };
+}
 
 function limitText(field, maxChar) {
     $(field).attr('maxlength', maxChar);
