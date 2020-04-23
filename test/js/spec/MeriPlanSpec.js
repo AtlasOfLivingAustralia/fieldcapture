@@ -231,7 +231,7 @@ describe("Loading the MERI plan is handled correctly", function () {
         };
         var projectService = new ProjectService(project, {});
 
-        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'});
+        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing', programObjectives:['objective 1', 'objective 2']});
 
         var objectivesModel = viewModel.meriPlan().objectives;
 
@@ -269,7 +269,7 @@ describe("Loading the MERI plan is handled correctly", function () {
             plannedEndDate:'2021-06-30T00:00:00Z'
         };
         var projectService = new ProjectService(project, {});
-        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'});
+        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing', programObjectives:['objective 1', 'objective 2']});
 
         var objectivesModel = viewModel.meriPlan().objectives;
         objectivesModel.simpleObjectives(["objective 1", "objective 2"]);
@@ -280,6 +280,19 @@ describe("Loading the MERI plan is handled correctly", function () {
             rows: [{}]
         };
         expect(JSON.parse(JSON.stringify(objectivesModel))).toEqual(expectedResult);
+
+        objectivesModel.simpleObjectives.otherChecked(true);
+        objectivesModel.simpleObjectives.otherValue("Other objective");
+
+        var expectedResultWithOther = {
+            rows1:[{description:'objective 1', assets:[]}, {description:'objective 2', assets:[]}, {description:'Other objective', assets:[]}],
+            rows: [{}]
+        };
+        expect(JSON.parse(JSON.stringify(objectivesModel))).toEqual(expectedResultWithOther);
+
+        objectivesModel.simpleObjectives.otherChecked(false);
+        expect(JSON.parse(JSON.stringify(objectivesModel))).toEqual(expectedResult);
+
     });
 
     it("Should allow assets to be recorded", function() {

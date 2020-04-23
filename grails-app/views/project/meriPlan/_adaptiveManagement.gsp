@@ -1,6 +1,13 @@
 <div id="adaptive-management" class="row-fluid">
     <div class="span12">
-    <p>Outline the methods and processes that will enable adaptive management during the lifetime of this project</p>
+        <g:if test="${title}">
+            <h4>${title}</h4>
+            <g:if test="${explanation}">
+                <p>
+                    ${explanation}
+                </p>
+            </g:if>
+        </g:if>
     <textarea placeholder="[Free text (3000 character limit [approx. 500 words])"
               maxlength="3000"
               data-validation-engine="validate[required,maxSize[3000]"

@@ -10,8 +10,7 @@
     <thead>
     <tr class="header">
         <th class="index"></th>
-        <th class="outcome required">${subtitle ?: ""} <g:if test="${helpText}"><fc:iconHelp html="true" container="body">Outcomes should be expressed as a SMART statement. SMART stands for Specific, Measurable, Attainable, Realistic, and Time-bound. Ensure the outcomes are measurable with consideration to the baseline and proposed monitoring regime.</li>
-        </fc:iconHelp></g:if> </th>
+        <th class="outcome required">${subtitle ?: ""} <g:if test="${helpText}"><fc:iconHelp html="true" container="body">${helpText}</fc:iconHelp></g:if> </th>
         <th class="remove"></th>
     </tr>
     </thead>
