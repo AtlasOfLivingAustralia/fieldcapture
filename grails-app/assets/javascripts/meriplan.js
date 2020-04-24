@@ -234,6 +234,8 @@ function MERIPlan(project, projectService, config) {
     self.projectThemes.push("MERI & Admin");
     self.projectThemes.push("Others");
 
+    self.programObjectives = config.programObjectives || [];
+
     self.obligationOptions = ['Yes', 'No'];
     var defaultRiskAndThreats = ['Blow-out in cost of project materials', 'Changes to regional boundaries affecting the project area', 'Co-investor withdrawal / investment reduction',
         'Lack of delivery partner capacity', 'Lack of delivery partner / landholder interest in project activities', 'Organisational restructure / loss of corporate knowledge', 'Organisational risk (strategic, operational, resourcing and project levels)',
@@ -518,13 +520,13 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
             }
         }
     }
-    self.activities = ko.observableArray(o.activities);
+    self.activities = new ActivitiesViewModel(o.activities, config.programActivities || []);
     self.status = ko.observable(o.status);
     self.obligations = ko.observable(o.obligations);
     self.policies = ko.observable(o.policies);
     self.caseStudy = ko.observable(o.caseStudy ? o.caseStudy : false);
     self.keq = new GenericViewModel(o.keq);
-    self.objectives = new ObjectiveViewModel(o.objectives); // Used in original MERI plan template
+    self.objectives = new ObjectiveViewModel(o.objectives, config.programObjectives || []); // Used in original MERI plan template
     self.outcomes = new OutcomesViewModel(o.outcomes, {outcomes:project.outcomes, priorities:project.priorities}); // Use in new MERI plan template
     self.priorities = new GenericViewModel(o.priorities);
     self.implementation = new ImplementationViewModel(o.implementation);
@@ -861,19 +863,19 @@ function GenericRowViewModel(o, propertyNames) {
     }
 };
 
-function ObjectiveViewModel(o) {
+function ObjectiveViewModel(o, programObjectives) {
     var self = this;
     if (!o) o = {};
 
     var row = [];
     o.rows ? row = o.rows : row.push(ko.mapping.toJS(new GenericRowViewModel()));
-    self.rows = ko.observableArray($.map(row, function (obj, i) {
+    self.rows = ko.observableArray(_.map(row, function (obj, i) {
         return new GenericRowViewModel(obj);
     }));
 
     var row1 = [];
     o.rows1 ? row1 = o.rows1 : row1.push(ko.mapping.toJS(new OutcomeRowViewModel()));
-    self.rows1 = ko.observableArray($.map(row1, function (obj, i) {
+    self.rows1 = ko.observableArray(_.map(row1, function (obj, i) {
         return new OutcomeRowViewModel(obj);
     }));
 
@@ -881,15 +883,18 @@ function ObjectiveViewModel(o) {
      * This pure computed observable provides a mapping from a simple array of selected program objectives to
      * the structure used to store the objectives in the database.
      */
-    self.simpleObjectives = ko.pureComputed({
+    self.simpleObjectives = ko.computed({
         read:function() {
-            return _.map(self.rows1(), function(row) {
+            return _.filter(_.map(self.rows1(), function(row) {
                 return row.description();
+            }), function(value) {
+                return value && value != '' &&  programObjectives.indexOf(value) >= 0;
             });
         },
         write: function(values) {
             // Ignore empty and null values, such as the one pre-populated in the default row above.
-            values = values.filter(function(value) { return value && value != ''});
+            values = values.filter(function(value) { return value && value != '' &&  programObjectives.indexOf(value) >= 0;});
+
             while (self.rows1().length > values.length) {
                 self.rows1.splice(self.rows1.length-1, 1);
             }
@@ -905,8 +910,27 @@ function ObjectiveViewModel(o) {
         }
     });
 
-    self.toJSON = function() {
-        return ko.mapping.toJS(self, {ignore:['simpleObjectives']});
+    if (programObjectives) {
+
+        var otherObjectives =_.filter(_.map(self.rows1(), function(row) {
+            return row.description();
+        }), function(value) {
+            return value && value != '' &&  programObjectives.indexOf(value) < 0;
+        });
+        self.simpleObjectives.otherChecked = ko.observable(otherObjectives.length > 0);
+        self.simpleObjectives.otherValue = ko.observable( otherObjectives.length > 0 ? otherObjectives[0] : undefined);
+        self.simpleObjectives.otherChecked.subscribe(function(value) {
+            if (!value) {
+                self.simpleObjectives.otherValue(undefined);
+            }
+        });
+    }
+    self.toJSON = function () {
+        var js = ko.mapping.toJS(self, {ignore:['simpleObjectives']});
+        if (self.simpleObjectives.otherChecked && self.simpleObjectives.otherChecked() && self.simpleObjectives.otherValue()) {
+            js.rows1.push({description:self.simpleObjectives.otherValue(), assets:[]});
+        }
+        return js;
     };
 };
 
@@ -993,7 +1017,7 @@ function EventsRowViewModel(o) {
     self.grantAnnouncementDate = ko.observable(o.grantAnnouncementDate);
 };
 
-function OutcomeRowViewModel(o) {
+function OutcomeRowViewModel(o, programObjectives) {
     var self = this;
     if (!o) o = {};
     self.description = ko.observable(o.description);
@@ -1147,6 +1171,36 @@ function FloatViewModel(o) {
     if (!o) o = {};
     self.dollar = ko.observable(o.dollar ? o.dollar : 0.0).extend({numericString: 2}).extend({currency: {}});
 };
+
+function ActivitiesViewModel(activities, programActivities) {
+    var self = this;
+
+    if (!activities) {
+        activities = {activities:[]};
+    }
+    var matchingActivities = _.filter(activities.activities, function(activity) {
+        return activity && activity != '' &&  programActivities.indexOf(activity) >= 0;
+    });
+    var otherActivities =_.filter(activities.activities, function(activity) {
+        return activity && activity != '' &&  programActivities.indexOf(activity) < 0;
+    });
+    self.activities = ko.observableArray(matchingActivities);
+    self.activities.otherChecked = ko.observable(otherActivities.length > 0);
+    self.activities.otherValue = ko.observable( otherActivities.length > 0 ? otherActivities[0] : undefined);
+    self.activities.otherChecked.subscribe(function(value) {
+        if (!value) {
+            self.activities.otherValue(undefined);
+        }
+    });
+
+    self.toJSON = function () {
+        var js = ko.mapping.toJS(self);
+        if (self.activities.otherChecked() && self.activities.otherValue()) {
+            js.activities.push(self.activities.otherValue());
+        }
+        return js;
+    };
+}
 
 function limitText(field, maxChar) {
     $(field).attr('maxlength', maxChar);

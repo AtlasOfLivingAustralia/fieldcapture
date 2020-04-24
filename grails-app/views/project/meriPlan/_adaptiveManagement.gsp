@@ -1,8 +1,16 @@
 <div id="adaptive-management" class="row-fluid">
     <div class="span12">
-    <label><b>Project monitoring indicators</b></label>
-    <p>Outline the methods and processes that will enable adaptive management during the lifetime of this project</p>
-    <textarea maxlength="3000"
+        <g:if test="${title}">
+            <h4>${title}</h4>
+            <g:if test="${explanation}">
+                <p>
+                    ${explanation}
+                </p>
+            </g:if>
+        </g:if>
+    <textarea placeholder="[Free text (3000 character limit [approx. 500 words])"
+              maxlength="3000"
+              data-validation-engine="validate[required,maxSize[3000]"
               data-bind="value:details.adaptiveManagement, disable: isProjectDetailsLocked()"
               class="input-xlarge" rows="5" ></textarea>
     </div>

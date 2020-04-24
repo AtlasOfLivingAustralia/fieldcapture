@@ -231,7 +231,7 @@ describe("Loading the MERI plan is handled correctly", function () {
         };
         var projectService = new ProjectService(project, {});
 
-        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'});
+        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing', programObjectives:['objective 1', 'objective 2']});
 
         var objectivesModel = viewModel.meriPlan().objectives;
 
@@ -269,7 +269,7 @@ describe("Loading the MERI plan is handled correctly", function () {
             plannedEndDate:'2021-06-30T00:00:00Z'
         };
         var projectService = new ProjectService(project, {});
-        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'});
+        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing', programObjectives:['objective 1', 'objective 2']});
 
         var objectivesModel = viewModel.meriPlan().objectives;
         objectivesModel.simpleObjectives(["objective 1", "objective 2"]);
@@ -280,6 +280,19 @@ describe("Loading the MERI plan is handled correctly", function () {
             rows: [{}]
         };
         expect(JSON.parse(JSON.stringify(objectivesModel))).toEqual(expectedResult);
+
+        objectivesModel.simpleObjectives.otherChecked(true);
+        objectivesModel.simpleObjectives.otherValue("Other objective");
+
+        var expectedResultWithOther = {
+            rows1:[{description:'objective 1', assets:[]}, {description:'objective 2', assets:[]}, {description:'Other objective', assets:[]}],
+            rows: [{}]
+        };
+        expect(JSON.parse(JSON.stringify(objectivesModel))).toEqual(expectedResultWithOther);
+
+        objectivesModel.simpleObjectives.otherChecked(false);
+        expect(JSON.parse(JSON.stringify(objectivesModel))).toEqual(expectedResult);
+
     });
 
     it("Should allow assets to be recorded", function() {
@@ -360,6 +373,45 @@ describe("Loading the MERI plan is handled correctly", function () {
 
         var savedMeriPlan = serialized.custom.details;
         expect(savedMeriPlan.outcomes.primaryOutcome).toEqual({});
+
+    });
+
+    it("should be able to support activity selection, including 'Other'", function() {
+        var project = {
+            plannedStartDate:'2018-07-01T00:00:00Z',
+            plannedEndDate:'2021-06-30T00:00:00Z',
+            custom: {
+                details: {
+                    activities: {
+                        activities:['activity 1']
+                    }
+                }
+            }
+        };
+        var programActivities = ['activity 1', 'activity 2', 'activity 3'];
+        var projectService = new ProjectService(project, {});
+        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing', programActivities: programActivities});
+
+        expect(viewModel.meriPlan().activities.activities()).toEqual(['activity 1']);
+        viewModel.meriPlan().activities.activities(['activity 2']);
+        var serialized = JSON.parse(viewModel.meriPlan().modelAsJSON());
+        var savedMeriPlan = serialized.custom.details;
+        expect(savedMeriPlan.activities.activities).toEqual(['activity 2']);
+
+        viewModel.meriPlan().activities.activities.otherChecked(true);
+        viewModel.meriPlan().activities.activities.otherValue("Other");
+
+        serialized = JSON.parse(viewModel.meriPlan().modelAsJSON());
+        savedMeriPlan = serialized.custom.details;
+        expect(savedMeriPlan.activities.activities).toEqual(['activity 2', 'Other']);
+
+        viewModel.meriPlan().activities.activities.otherChecked(false);
+        expect(viewModel.meriPlan().activities.activities.otherValue()).toBeFalsy();
+
+        serialized = JSON.parse(viewModel.meriPlan().modelAsJSON());
+        savedMeriPlan = serialized.custom.details;
+        expect(savedMeriPlan.activities.activities).toEqual(['activity 2']);
+
 
     });
 
