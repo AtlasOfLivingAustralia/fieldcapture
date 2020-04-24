@@ -15,8 +15,8 @@
         <tbody data-bind="foreach : details.partnership.rows">
         <tr>
             <td class="index"> <span data-bind="text:$index()+1"></span></td>
-            <td class="partner-name"> <textarea class="input-xlarge"  data-bind="value: data1, disable: $parent.isProjectDetailsLocked()" rows="3"></textarea> </td>
-            <td class="partnership-nature"><textarea class="input-xlarge" data-bind="value: data2, disable: $parent.isProjectDetailsLocked()"  rows="5"></textarea></td>
+            <td class="partner-name"> <textarea placeholder="${namePlaceHolder}" class="input-xlarge"  data-bind="value: data1, disable: $parent.isProjectDetailsLocked()" rows="3"></textarea> </td>
+            <td class="partnership-nature"><textarea placeholder="${partnershipPlaceHolder}" class="input-xlarge" data-bind="value: data2, disable: $parent.isProjectDetailsLocked()"  rows="5"></textarea></td>
             <td class="partner-organisation-type"><select class="input-xlarge" data-bind="options: $parent.organisations, value:data3,optionsCaption: 'Please select',disable: $parent.isProjectDetailsLocked()"></select></td>
             <td class="remove">
                 <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()" ><i class="fa fa-remove" data-bind="click: $parent.removePartnership"></i></span>

@@ -1,9 +1,9 @@
 <div class="meri-plan" data-bind="let:{details:meriPlan()}">
 
-<g:each var="template" in="${config?.meriPlanContents}">
+<g:each var="content" in="${config?.meriPlanContents}">
     <div class="row-fluid">
         <div class="span12">
-            <g:render template="meriPlan/${template}"/>
+            <g:render template="meriPlan/${content.template}" model="${content.model}"/>
         </div>
     </div>
 </g:each>

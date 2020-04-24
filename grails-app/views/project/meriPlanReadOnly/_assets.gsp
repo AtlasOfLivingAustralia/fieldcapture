@@ -1,14 +1,12 @@
-<g:if test="${title}">
-    <h4>${title}</h4>
-</g:if>
+<h4>Project assets</h4>
 <table class="table">
     <thead>
     <tr>
         <th class="index"></th>
-        <th class="outcome">Outcome statement/s</th>
+        <th class="asset">Species, ecological community or environmental asset(s) the project is targeting</th>
     </tr>
     </thead>
-    <tbody data-bind="foreach:details.outcomes.shortTermOutcomes">
+    <tbody data-bind="foreach:details.assets">
     <tr>
         <td class="index" data-bind="text:$index()+1"></td>
         <td class="outcome">
