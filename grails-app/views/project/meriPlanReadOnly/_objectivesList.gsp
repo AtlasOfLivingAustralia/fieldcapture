@@ -1,5 +1,7 @@
 <div id="objectives-list-view" class="well well-small">
-    <h4>Program objectives</h4>
+    <g:if test="${title}">
+    <h4>${title}s</h4>
+    </g:if>
     <ul data-bind="visible:details.objectives.simpleObjectives().length > 0, foreach:details.objectives.simpleObjectives">
         <li><span data-bind="text:$data"></span></li>
     </ul>
