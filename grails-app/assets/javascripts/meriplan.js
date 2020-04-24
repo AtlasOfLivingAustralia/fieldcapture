@@ -912,14 +912,14 @@ function ObjectiveViewModel(o, programObjectives) {
 
     if (programObjectives) {
 
-        var otherObjectives =_.filter(_.map(self.rows1(), function(row) {
+        var otherObjectives = _.filter(_.map(self.rows1(), function (row) {
             return row.description();
-        }), function(value) {
-            return value && value != '' &&  programObjectives.indexOf(value) < 0;
+        }), function (value) {
+            return value && value != '' && programObjectives.indexOf(value) < 0;
         });
         self.simpleObjectives.otherChecked = ko.observable(otherObjectives.length > 0);
-        self.simpleObjectives.otherValue = ko.observable( otherObjectives.length > 0 ? otherObjectives[0] : undefined);
-        self.simpleObjectives.otherChecked.subscribe(function(value) {
+        self.simpleObjectives.otherValue = ko.observable(otherObjectives.length > 0 ? otherObjectives[0] : undefined);
+        self.simpleObjectives.otherChecked.subscribe(function (value) {
             if (!value) {
                 self.simpleObjectives.otherValue(undefined);
             }
