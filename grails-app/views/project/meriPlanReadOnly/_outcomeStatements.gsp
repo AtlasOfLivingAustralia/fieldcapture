@@ -1,4 +1,6 @@
-<h4>Project outcomes</h4>
+<g:if test="${title}">
+    <h4>${title}</h4>
+</g:if>
 <table class="table">
     <thead>
     <tr>

@@ -275,6 +275,8 @@
             config.riskAndThreatTypes = ${config.riskAndThreatTypes ?: 'null'};
             var programName = '${(config.program?.acronym?:project.associatedSubProgram) ?: project.associatedProgram}';
             config.programName = programName;
+            config.programObjectives = ${config.program?.config?.objectives ?: '[]'};
+            config.programActivities = ${config.program?.config?.activities ?: '[]'};
 
             var viewModel = new ProjectPageViewModel(
                 project,

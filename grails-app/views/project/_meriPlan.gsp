@@ -37,7 +37,12 @@
                 </tfoot>
             </table>
             <br/>
-            <g:render template="meriPlan/monitoringIndicators"/>
+            <g:render template="meriPlan/monitoringIndicators"
+                      model="${[indicatorHeading:"Monitoring indicator",
+                                indicatorHelpText:"List the indicators of project success that will be monitored. Add a new row for each indicator, e.g. ground cover condition, increased abundance of a particular species, increased engagement of community in delivery of on-ground works.",
+                                approachHeading:"Monitoring approach",
+                                approachHelpText:"How will this indicator be monitored? Briefly describe the method to be used to monitor the indicator."
+                      ]}"/>
         </div>
     </div>
 </div>

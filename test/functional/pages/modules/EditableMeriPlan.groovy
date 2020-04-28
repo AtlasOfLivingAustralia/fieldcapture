@@ -74,7 +74,7 @@ class BudgetRow extends Module {
 
 class AssetRow extends Module {
     static content = {
-        description { $('.asset textarea') }
+        description { $('td.asset textarea') }
         remove { $('i.icon-remove') }
     }
 }
@@ -114,7 +114,10 @@ class EditableMeriPlan extends Module {
         keq(required:false) { $('#keq tbody tr').moduleList(KeqRow) }
         budget(required:false) { $('.meri-budget').moduleList(BudgetRow) }
         activities(required:false) { $('#activity-list') }
-        assets(required:false) { $('table.assets tr').moduleList(AssetRow) }
+        assets(required:false) { $('table.assets tbody tr').moduleList(AssetRow) }
+        adaptiveManagement(required:false) { $('#adaptive-management textarea') }
+        otherObjective(required:false) { $('#objectives-list input[type=text]') }
+        otherActivity(required:false) { $('#activity-list input[type=text]') }
 
         floatingSaveButton { $('#floating-save [data-bind*="saveProjectDetails"]') }
         saveButton { $('.form-actions [data-bind*="saveProjectDetails"]').first() }
@@ -155,6 +158,18 @@ class EditableMeriPlan extends Module {
 
     List checkedObjectives() {
         objectivesList.find('input:checked').collect{it.attr("value")}
+    }
+
+    List availableActivities() {
+        activities.find('input[type="checkbox"]').collect{it.attr("value")}
+    }
+
+    void checkActivity(String value) {
+        activities.find("input[value=\"${value}\"]").click()
+    }
+
+    List checkedActivities() {
+        activities.find('input:checked').collect{it.attr("value")}
     }
 
     void addMediumTermOutcome(String outcome) {
