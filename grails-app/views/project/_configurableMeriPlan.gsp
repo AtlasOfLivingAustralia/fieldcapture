@@ -3,7 +3,7 @@
 <g:each var="content" in="${config?.meriPlanContents}">
     <div class="row-fluid">
         <div class="span12">
-            <g:render template="meriPlan/${content.template}" model="${content.model}"/>
+            <g:render template="/project/meriPlan/${content.template}" model="${content.model}"/>
         </div>
     </div>
 </g:each>
