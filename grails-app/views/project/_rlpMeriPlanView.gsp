@@ -152,7 +152,7 @@
     <!-- /ko -->
     <!-- /ko -->
 
-    <g:render template="meriPlanReadOnly/projectMethodology"/>
+    <g:render template="/project/meriPlanReadOnly/projectMethodology"/>
 
     <h4>Monitoring methodology</h4>
     <!-- ko with:details.baseline -->
@@ -282,7 +282,7 @@
     <!-- /ko -->
 
     <g:if test="${risksAndThreatsVisible}">
-        <g:render template="meriPlanReadOnly/risksAndThreats"/>
+        <g:render template="/project/meriPlanReadOnly/risksAndThreats"/>
     </g:if>
 
 </div>

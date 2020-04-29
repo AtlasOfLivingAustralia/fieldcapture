@@ -37,7 +37,7 @@
                 </tfoot>
             </table>
             <br/>
-            <g:render template="meriPlan/monitoringIndicators"
+            <g:render template="/project/meriPlan/monitoringIndicators"
                       model="${[indicatorHeading:"Monitoring indicator",
                                 indicatorHelpText:"List the indicators of project success that will be monitored. Add a new row for each indicator, e.g. ground cover condition, increased abundance of a particular species, increased engagement of community in delivery of on-ground works.",
                                 approachHeading:"Monitoring approach",
@@ -49,34 +49,34 @@
 
 
 <div class="row-fluid space-after">
-    <g:render template="meriPlan/nationalAndRegionalPlans"/>
+    <g:render template="/project/meriPlan/nationalAndRegionalPlans"/>
 </div>
 
 
 <div class="row-fluid space-after">
-    <g:render template="meriPlan/projectImplementation"/>
+    <g:render template="/project/meriPlan/projectImplementation"/>
 </div>
 
 <div class="row-fluid space-after">
-    <g:render template="meriPlan/projectPartnerships"/>
+    <g:render template="/project/meriPlan/projectPartnerships"/>
 </div>
 
 <div class="row-fluid space-after">
-    <g:render template="meriPlan/keq"/>
+    <g:render template="/project/meriPlan/keq"/>
 </div>
 
 
 <div class="row-fluid space-after">
     <div id="announcements">
 
-        <g:render template="announcementsTable" model="${[disableConditionPrefix:'']}"/>
+        <g:render template="/project/announcementsTable" model="${[disableConditionPrefix:'']}"/>
 
     </div>
 </div>
 
 <!-- Budget table -->
 <div class="row-fluid space-after">
-   <g:render template="meriPlan/meriBudget"/>
+   <g:render template="/project/meriPlan/meriBudget"/>
 </div>
 
 <div class="row-fluid space-after">
