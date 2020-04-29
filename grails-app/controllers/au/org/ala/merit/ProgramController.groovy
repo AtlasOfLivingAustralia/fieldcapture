@@ -130,7 +130,6 @@ class ProgramController {
         Map program = programService.get(id)
 
         List<Map> listOfPrograms = programService.listOfAllPrograms().findAll({it.programId != id})
-       // List<Map> listOfPrograms = allProgramList
 
         if (!program || program.error) {
             programNotFound(id, program)

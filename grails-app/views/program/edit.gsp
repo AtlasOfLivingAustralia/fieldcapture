@@ -8,7 +8,7 @@
     <script disposition="head">
         var fcConfig = {
             serverUrl: "${grailsApplication.config.grails.serverURL}",
-            programSaveUrl: "${createLink(action:'ajaxUpdate')}",
+            programSaveUrl: "${createLink(action:'ajaxUpdate', id:program.programId)}",
             programViewUrl: "${createLink(action:'index')}",
             documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
             noImageUrl: "${assetPath(src:'nophoto.png')}",
