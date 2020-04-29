@@ -176,7 +176,7 @@ table tr.header th {
 }
 
 .meri-plan .partnership-nature {
-    width: 55%;
+    width: 60%;
 }
 
 .meri-plan .partner-organisation-type {
@@ -192,6 +192,27 @@ table tr.header th {
 .meri-plan .budget-amount {
     width: 10%;
     text-align: center;
+}
+
+.meri-plan #adaptive-management textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.meri-plan .project-description textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+.meri-plan #activity-list input[type=text] {
+    width:100%;
+    box-sizing: border-box;
+    height: 30px;
+}
+
+.meri-plan #objectives-list input[type=text] {
+    width:100%;
+    box-sizing: border-box;
+    height: 30px;
 }
 
 #project-risks-threats table {

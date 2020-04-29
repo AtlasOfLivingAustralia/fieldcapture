@@ -152,18 +152,7 @@
     <!-- /ko -->
     <!-- /ko -->
 
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Project methodology</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td><span data-bind="text:details.implementation.description"></span></td>
-        </tr>
-        </tbody>
-    </table>
+    <g:render template="meriPlanReadOnly/projectMethodology"/>
 
     <h4>Monitoring methodology</h4>
     <!-- ko with:details.baseline -->

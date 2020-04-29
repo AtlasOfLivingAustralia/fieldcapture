@@ -115,7 +115,6 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         !meriPlan.secondaryOutcomes.displayed
         !meriPlan.mediumTermOutcomes.displayed
         !meriPlan.projectName.displayed
-        !meriPlan.projectMethodology.displayed
         !meriPlan.projectBaseline.displayed
         !meriPlan.reviewMethodology.displayed
         !meriPlan.nationalAndRegionalPlans.displayed
@@ -126,11 +125,62 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlan.assets.displayed
         meriPlan.objectivesList.displayed
         meriPlan.shortTermOutcomes.displayed
+        meriPlan.projectMethodology.displayed
         meriPlan.projectDescription.displayed
         meriPlan.monitoringIndicators.displayed
+        meriPlan.adaptiveManagement.displayed
         meriPlan.projectPartnerships.displayed
         meriPlan.activities.displayed
 
+        meriPlan.availableObjectives() == ['objective 1', 'objective 2', 'objective 3', 'Other']
+
+        when:
+        meriPlan.assets[0].description = "asset 1"
+        meriPlan.checkObjective("objective 2")
+        meriPlan.checkObjective("Other")
+        waitFor{!meriPlan.otherObjective.@readonly}
+        meriPlan.otherObjective = "Other objective"
+        meriPlan.shortTermOutcomes[0].value("outcome 1")
+        meriPlan.projectDescription = 'Project description'
+        meriPlan.projectMethodology = 'Project Methodology'
+        meriPlan.monitoringIndicators[0].indicator.value("Indicator 1")
+        meriPlan.monitoringIndicators[0].approach.value('Approach 1')
+        meriPlan.adaptiveManagement = 'Adaptive management'
+        meriPlan.projectPartnerships[0].name = 'partner name'
+        meriPlan.projectPartnerships[0].partnership = 'partnership'
+        meriPlan.projectPartnerships[0].orgType = 'Trust'
+        meriPlan.hideFloatingSave() // if we don't do that we can't click on the activity
+
+        meriPlan.checkActivity('activity 1')
+        meriPlan.checkActivity('Other')
+        waitFor{!meriPlan.otherActivity.@readonly}
+        meriPlan.otherActivity = 'Other activity'
+        meriPlan.save()
+
+        def previousLoad = getAtCheckTime()
+        to RlpProjectPage, projectId
+
+        then:
+        waitFor { getAtCheckTime() > previousLoad }
+
+        when:
+        meriPlan = openMeriPlanEditTab()
+
+        then:
+        meriPlan.assets[0].description == "asset 1"
+        meriPlan.checkedObjectives() == ["objective 2", 'Other']
+        meriPlan.otherObjective == "Other objective"
+        meriPlan.shortTermOutcomes[0].value() == "outcome 1"
+        meriPlan.projectDescription == 'Project description'
+        meriPlan.projectMethodology == 'Project Methodology'
+        meriPlan.monitoringIndicators[0].indicator.value() == "Indicator 1"
+        meriPlan.monitoringIndicators[0].approach.value() == 'Approach 1'
+        meriPlan.adaptiveManagement == 'Adaptive management'
+        meriPlan.projectPartnerships[0].name == 'partner name'
+        meriPlan.projectPartnerships[0].partnership == 'partnership'
+        meriPlan.projectPartnerships[0].orgType == 'Trust'
+        meriPlan.checkedActivities() == ["activity 1", 'Other']
+        meriPlan.otherActivity == "Other activity"
     }
 
 }
