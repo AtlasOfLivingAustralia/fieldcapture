@@ -47,12 +47,12 @@
     </div>
 </div>
 
-<g:if test="${displaySubProgram}">
+<g:if test="${program.subPrograms}">
     <div class="projects-wrapper d-none d-md-block" id="subProgramWrapper">
         <hr/>
         <div class="well-title">Sub Programs</div>
         <ul class="nav nav-tabs" id="programs-tabs">
-            <g:each var="displayProgram" in="${displaySubProgram}" status="i">
+            <g:each var="displayProgram" in="${program.subPrograms}" status="i">
                 <li class="nav-item">
                     <g:set var="active" value="${i==0?'active':''}"/>
                     <a class="nav-link ${active}"  id="subProgramTitleTab" data-toggle="tab" href="#${displayProgram.programId}_subPrograms" role="tab">${displayProgram.name}</a>
@@ -60,7 +60,7 @@
             </g:each>
         </ul>
         <div class="tab-content" id="programs-TabContent">
-            <g:each var="subDescriptions" in="${displaySubProgram}" status="i">
+            <g:each var="subDescriptions" in="${program.subPrograms}" status="i">
                 <g:set var="active" value="${i==0?'active':''}"/>
                 <div class="tab-pane ${active}" id="${subDescriptions.programId}_subPrograms">
                     <div class="well">

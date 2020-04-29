@@ -246,7 +246,7 @@ class ProgramControllerSpec extends Specification {
         setupProgramAdmin()
         def id = "test_program"
         Map program = createPrograms(id)
-        Map expected = [program: [programId:program.programId, parentProgram:program.name, parentProgramId:program.programId]]
+        Map expected = [program: [parentProgramId:program.programId, parentProgramName:program.name]]
 
         when:
         Map actual = controller.addSubProgram(id)

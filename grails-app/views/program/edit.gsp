@@ -8,11 +8,11 @@
     <script disposition="head">
         var fcConfig = {
             serverUrl: "${grailsApplication.config.grails.serverURL}",
-            programSaveUrl: "${createLink(action:'ajaxUpdate', id:program.programId)}",
+            programSaveUrl: "${createLink(action:'ajaxUpdate')}",
             programViewUrl: "${createLink(action:'index')}",
             documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
             noImageUrl: "${assetPath(src:'nophoto.png')}",
-            returnToUrl: "${params.returnTo ?: createLink(action:'index', id:program.programId)}"
+            returnToUrl: "${params.returnTo ?: createLink(controller: 'program',action:'index', id:program.programId)}"
         };
     </script>
     <asset:stylesheet src="common-bs4.css"/>
@@ -28,14 +28,11 @@
             <li class="breadcrumb-item">
                 <g:link controller="home">Home</g:link>
             </li>
-            <li class="breadcrumb-item"> Regional Landcare Program </li>
             <li class="breadcrumb-item active"><g:link controller="program" action="index" id="${program.programId}">${program.name}</g:link> </li>
             <li class="breadcrumb-item active"><g:message code="program.breadcrumb.edit"/></li>
         </ol>
 
     </nav>
-
-
     <g:render template="programDetails"/>
 
     <div class="form-actions">
@@ -53,7 +50,7 @@
         ko.applyBindings(programViewModel);
         $('.validationEngineContainer').validationEngine();
 
-         $('.newParentProgramId').select2();
+         $('.parentProgramId').select2();
     });
 
 </asset:script>
