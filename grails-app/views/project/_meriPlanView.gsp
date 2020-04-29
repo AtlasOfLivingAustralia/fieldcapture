@@ -36,18 +36,18 @@
                         </tbody>
                     </table>
 
-                    <g:render template="meriPlanReadOnly/monitoringIndicators"/>
+                    <g:render template="/project/meriPlanReadOnly/monitoringIndicators"/>
                 </div>
             </div>
 
             <div class="span6">
-                <g:render template="meriPlanReadOnly/projectPartnerships"/>
+                <g:render template="/project/meriPlanReadOnly/projectPartnerships"/>
             </div>
         </div>
 
         <div class="row-fluid space-after">
             <div class="span6">
-                <g:render template="meriPlanReadOnly/projectImplementation"/>
+                <g:render template="/project/meriPlanReadOnly/projectImplementation"/>
             </div>
 
             <div class="span6">
@@ -91,7 +91,7 @@
         </g:if>
 
         <div class="row-fluid space-after">
-            <g:render template="meriPlanReadOnly/keq"/>
+            <g:render template="/project/meriPlanReadOnly/keq"/>
         </div>
 
         <div class="row-fluid space-after">
@@ -121,13 +121,13 @@
         <g:if test="${user?.isAdmin}">
             <div class="row-fluid space-after">
                 <div class="required">
-                    <g:render template="meriPlanReadOnly/meriBudget"/>
+                    <g:render template="/project/meriPlanReadOnly/meriBudget"/>
                 </div>
             </div>
         </g:if>
 
         <g:if test="${risksAndThreatsVisible}">
-            <g:render template="meriPlanReadOnly/risksAndThreats"/>
+            <g:render template="/project/meriPlanReadOnly/risksAndThreats"/>
         </g:if>
 
 
