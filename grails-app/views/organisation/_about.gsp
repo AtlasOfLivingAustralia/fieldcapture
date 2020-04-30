@@ -19,8 +19,8 @@
     <div class="span12 well">
         <div class="well-title">About ${organisation.name}</div>
 
-        <span id="orgdescription" data-bind="html:description.markdownToHtml()"></span>
-        
-        <p>ABN: <span id="abn">${organisation.abn}</span></p>
+        <span id="orgDescription" data-bind="html:description.markdownToHtml()"></span>
+
+        <p>ABN: <span id="orgAbn">${organisation.abn}</span></p>
     </div>
 </div>

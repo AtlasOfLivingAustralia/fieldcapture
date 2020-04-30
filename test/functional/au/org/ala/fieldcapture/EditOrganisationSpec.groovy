@@ -33,12 +33,11 @@ class EditOrganisationSpec extends StubbedCasSpec {
         details.save()
 
         then:
-        waitFor 30, {at Organisation}
+        waitFor { at Organisation}
         aboutTab.click()
-        aboutTab.displayed
-
-        orgname.text() == "Test Organisation Test 2"
-        orgdescription.text() == "Test Organisation Description test"
-        orgabn.text() == "12345678910"
+        orgName.text() == "Test Organisation Test 2"
+        waitFor {orgDescription.displayed }
+        orgDescription.text() == "Test Organisation Description test"
+        orgAbn.text() == "12345678910"
     }
 }

@@ -13,15 +13,15 @@ class Organisation extends Page{
         aboutTab{$('a#about-tab',0)}
         adminTab{$('a#admin-tab')}
         adminTabContent { module OrganisationAdminTab }
-        orgname { $('.header-text') }
-        orgdescription { $('#orgdescription') }
-        orgabn {$('#abn')}
+        orgName { $('.header-text') }
+        orgDescription { $('span#orgDescription') }
+        orgAbn {$('span#orgAbn')}
     }
 
     void edit() {
         adminTab.click()
-        waitFor 10,{ adminTabContent.displayed }
-        waitFor 10,{ adminTabContent.editButton.displayed }
+        waitFor { adminTabContent.displayed }
+        waitFor { adminTabContent.editButton.displayed }
         adminTabContent.editButton.click()
     }
 
