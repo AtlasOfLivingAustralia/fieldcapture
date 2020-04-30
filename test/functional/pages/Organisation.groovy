@@ -13,6 +13,9 @@ class Organisation extends Page{
         aboutTab{$('a#about-tab',0)}
         adminTab{$('a#admin-tab')}
         adminTabContent { module OrganisationAdminTab }
+        orgname { $('.header-text') }
+        orgdescription { $('#orgdescription') }
+        orgabn {$('#abn')}
     }
 
     void edit() {
@@ -26,7 +29,7 @@ class Organisation extends Page{
 class EditOrganisation extends Page{
     static url = 'organisation/edit' // requires a program id parameter
 
-    static at = { title.startsWith('Edit | Test Organisation | Field Capture')}
+    static at = { title.startsWith('Edit')}
 
     static content = {
         details { module AddOrEditOrganisation }

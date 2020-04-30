@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat
  */
 class GmsMapper {
 
-    public static final List GMS_COLUMNS = ['PROGRAM_NM',	'ROUND_NM',	'APP_ID', 'EXTERNAL_ID', 'APP_NM', 'APP_DESC',	'START_DT',	'FINISH_DT', 'FUNDING',	'APPLICANT_NAME', 'ORG_TRADING_NAME', 'MANAGEMENT_UNIT', 'APPLICANT_EMAIL', 'AUTHORISEDP_CONTACT_TYPE', 'AUTHORISEDP_EMAIL', 'GRANT_MGR_EMAIL', 'GRANT_MGR_EMAIL_2','DATA_TYPE', 'ENV_DATA_TYPE',	'PGAT_PRIORITY', 'PGAT_GOAL_CATEGORY',	'PGAT_GOALS', 'PGAT_OTHER_DETAILS','PGAT_PRIMARY_ACTIVITY','PGAT_ACTIVITY_DELIVERABLE_GMS_CODE','PGAT_ACTIVITY_DELIVERABLE','PGAT_ACTIVITY_TYPE','PGAT_ACTIVITY_UNIT','PGAT_ACTIVITY_DESCRIPTION','PGAT_UOM', 'UNITS_COMPLETED', 'EDITOR_EMAIL', 'EDITOR_EMAIL_2', 'TAGS']
+    public static final List GMS_COLUMNS = ['PROGRAM_NM',	'ROUND_NM',	'APP_ID', 'EXTERNAL_ID', 'APP_NM', 'APP_DESC',	'START_DT',	'FINISH_DT', 'FUNDING',	'APPLICANT_NAME', 'ORG_TRADING_NAME','ABN','MANAGEMENT_UNIT', 'APPLICANT_EMAIL', 'AUTHORISEDP_CONTACT_TYPE', 'AUTHORISEDP_EMAIL', 'GRANT_MGR_EMAIL', 'GRANT_MGR_EMAIL_2','DATA_TYPE', 'ENV_DATA_TYPE',	'PGAT_PRIORITY', 'PGAT_GOAL_CATEGORY',	'PGAT_GOALS', 'PGAT_OTHER_DETAILS','PGAT_PRIMARY_ACTIVITY','PGAT_ACTIVITY_DELIVERABLE_GMS_CODE','PGAT_ACTIVITY_DELIVERABLE','PGAT_ACTIVITY_TYPE','PGAT_ACTIVITY_UNIT','PGAT_ACTIVITY_DESCRIPTION','PGAT_UOM', 'UNITS_COMPLETED', 'EDITOR_EMAIL', 'EDITOR_EMAIL_2', 'TAGS']
 
     // These identify the data contained in the row.
     static final LOCATION_DATA_TYPE = 'Location Data'
@@ -200,7 +200,7 @@ class GmsMapper {
 
         def organisation
         if (project.organisationName || project.abn){
-             organisation = organisations.find{it.organisationName == project.organisationName ||  it.abn == project.abn }
+             organisation = organisations.find{  it.abn == project.abn || it.organisationName == project.organisationName}
             if (organisation){
                 project.organisationId = organisation.organisationId
             }else {

@@ -29,10 +29,16 @@ class EditOrganisationSpec extends StubbedCasSpec {
         when:
         details.name= "Test Organisation Test 2"
         details.abn = "12345678910"
-        details.description = "Test  Organisation Description test"
-
-        then:
+        details.description = "Test Organisation Description test"
         details.save()
 
+        then:
+        waitFor 30, {at Organisation}
+        aboutTab.click()
+        aboutTab.displayed
+
+        orgname.text() == "Test Organisation Test 2"
+        orgdescription.text() == "Test Organisation Description test"
+        orgabn.text() == "12345678910"
     }
 }

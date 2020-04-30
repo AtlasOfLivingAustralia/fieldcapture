@@ -13,7 +13,7 @@
             <div class="control-group">
                 <label for="abn" class="control-label span3"> ABN: <fc:iconHelp><g:message code="organisation.abn.help"/></fc:iconHelp> </label>
                 <div class="controls span9">
-                    <input type="text" id="abn" data-bind="value:abn" class="input-xxlarge" maxlength="11" placeholder="Enter ABN Number"/>
+                    <input type="text" id="abn" data-bind="value:abn" data-validation-engine="validate[custom[number],minSize[11],maxSize[11]" data-validation-error-message="Please enter an 11 digit ABN" class="input-xxlarge" maxlength="11" placeholder="Enter ABN Number"/>
                 </div>
             </div>
             %{--Commenting out the type until we can come up with some better options and include them in the collectory--}%
