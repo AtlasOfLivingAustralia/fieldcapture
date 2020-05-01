@@ -26,7 +26,7 @@ class GmsMapperSpec extends Specification {
     def setup() {
         activitiesModel = JSON.parse(new InputStreamReader(getClass().getResourceAsStream('/resources/activities-model.json')))
         Map programModel = [programs:[[name:'Green Army']]]
-        List organisations = [[name:'Test org 1']]
+        List organisations = [[name:'Test org 1', abn:'12345678901']]
         gmsMapper = new GmsMapper(activitiesModel, programModel, organisations, scores)
     }
 
@@ -53,6 +53,7 @@ class GmsMapperSpec extends Specification {
         'Test Project Description' == project.description
         'Test Organisation 2' == project.organisationName
         'Green Army' == project.associatedProgram
+
         'Green Army Round 1' == project.associatedSubProgram
         expectedStartDate == project.plannedStartDate
         expectedEndDate == project.plannedEndDate
@@ -210,7 +211,7 @@ class GmsMapperSpec extends Specification {
 
     def "Management unit is not a compulsory field for a project load"() {
         when:
-        Map result = gmsMapper.mapProject([[APP_ID:'g1', PROGRAM_NM:"Green Army", ORG_TRADING_NAME:'Test org 1', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']])
+        Map result = gmsMapper.mapProject([[APP_ID:'g1', PROGRAM_NM:"Green Army", ORG_TRADING_NAME:'Test org 1', ABN:'12345678901',  START_DT:'2019/07/01', FINISH_DT:'2020/07/01']])
 
         then:
         !result.errors
@@ -219,7 +220,7 @@ class GmsMapperSpec extends Specification {
     def "Programs can be mapped from the supplied name via the program map"() {
         setup:
         gmsMapper.programs = ["Program name 1":"p1id", "Program name 2":"p2id"]
-        Map projectData = [APP_ID:'g1', ORG_TRADING_NAME:'Test org 1', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
+        Map projectData = [APP_ID:'g1', ORG_TRADING_NAME:'Test org 1', ABN:'12345678901', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
 
         when:
         Map result = gmsMapper.mapProject([ projectData + [PROGRAM_NM: 'Program name 2'] ])
@@ -231,7 +232,7 @@ class GmsMapperSpec extends Specification {
 
     def "Programs can be mapped from the programs model as a fallback if they aren't mapped in the program map"() {
         gmsMapper.programs = ["Program name 1":"p1id", "Program name 2":"p2id"]
-        Map projectData = [APP_ID:'g1', ORG_TRADING_NAME:'Test org 1', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
+        Map projectData = [APP_ID:'g1', ORG_TRADING_NAME:'Test org 1', ABN: '12345678901', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
 
         when:
         Map result = gmsMapper.mapProject([ projectData + [PROGRAM_NM: 'Green Army'] ])
@@ -243,7 +244,7 @@ class GmsMapperSpec extends Specification {
 
     def "An error will be raised if the program is unable to be mapped or missing"() {
         gmsMapper.programs = ["Program name 1":"p1id", "Program name 2":"p2id"]
-        Map projectData = [APP_ID:'g1', ORG_TRADING_NAME:'Test org 1', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
+        Map projectData = [APP_ID:'g1', ORG_TRADING_NAME:'Test org 1',ABN:  '12345678901', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
 
         when:
         Map result = gmsMapper.mapProject([ projectData + [PROGRAM_NM: 'Missing program'] ])
@@ -260,7 +261,7 @@ class GmsMapperSpec extends Specification {
 
     def "Tags can be mapped by the GMS mapper"() {
         gmsMapper.programs = ["Program name 1":"p1id", "Program name 2":"p2id"]
-        Map projectData = [APP_ID:'g1',PROGRAM_NM:'Program name 1', ORG_TRADING_NAME:'Test org 1', START_DT:'2019/07/01', FINISH_DT:'2020/07/01', TAGS:"Fires, Flood, Test"]
+        Map projectData = [APP_ID:'g1',PROGRAM_NM:'Program name 1', ORG_TRADING_NAME:'Test org 1', ABN: '12345678901', START_DT:'2019/07/01', FINISH_DT:'2020/07/01', TAGS:"Fires, Flood, Test"]
 
         when:
         Map result = gmsMapper.mapProject([ projectData ])
