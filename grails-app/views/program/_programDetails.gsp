@@ -4,12 +4,12 @@
 
     <g:if test="${fc.userIsAlaOrFcAdmin() && editProgramId != null}">
         <div class="form-group row">
-            <label for="newParentProgramId" class="col-form-label col-sm-3">
+            <label for="parentProgramId" class="col-form-label col-sm-3">
                 Parent Program:
             </label>
             <div class="col-md-9">
                 <span class="select2">
-                   <g:select class="newParentProgramId" style="width: 100%" from="${allProgram}" data-bind="value:newParentProgramId" optionKey="programId" name="name" id="newParentProgramId" optionValue="name" noSelection="${['null' : 'No Parent']}"/>
+                   <g:select class="parentProgramId" style="width: 100%" from="${allProgram}" data-bind="value:parentProgramId" optionKey="programId" name="name" id="parentProgramId" optionValue="name" noSelection="${['null' : 'No Parent']}"/>
                 </span>
             </div>
 
@@ -23,7 +23,7 @@
         <div class="col-sm-9">
             <select name="parentProgramId" id="parentProgramId" data-bind="value:parentProgramId" class="form-control"
                     data-validation-engine="validate[required]" disabled="disabled">
-                <option value="${program.parentProgramId}">${program.parentProgram}</option>
+                <option value="${program.parentProgramId}">${program.parentProgramName}</option>
             </select>
         </div>
     </div>

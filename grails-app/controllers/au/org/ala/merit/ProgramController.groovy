@@ -89,13 +89,8 @@ class ProgramController {
                 }
             }
         }
-
-        Map displaySubProgram = programService.get(program.programId)
-        Map displaySubPrograms = [subProgram: displaySubProgram.subPrograms]
-
         [about   : [label: 'Overview',visible: true, stopBinding: false, type: 'tab',
                     program: program,
-                    displaySubProgram: displaySubPrograms.subProgram,
                     blog: [blogs: blogs?:[], editable: hasEditAccessOfBlog,
                            hasNewsAndEvents: hasNewsAndEvents,
                            hasProgramStories:  hasProgramStories,
@@ -124,9 +119,8 @@ class ProgramController {
             if (!program || program.error) {
                 programNotFound(id, program)
             } else {
-                [program: [programId      : program.programId,
-                           parentProgram  : program.name,
-                           parentProgramId: program.programId]]
+                [program: [parentProgramId      : program.programId,
+                           parentProgramName  : program.name]]
             }
         }
     }
@@ -135,8 +129,7 @@ class ProgramController {
     def edit(String id) {
         Map program = programService.get(id)
 
-        List<Map> allProgramList = programService.listOfAllPrograms()
-        List<Map> listOfPrograms = allProgramList.findAll({it.programId != id})
+        List<Map> listOfPrograms = programService.listOfAllPrograms().findAll({it.programId != id})
 
         if (!program || program.error) {
             programNotFound(id, program)
@@ -171,34 +164,26 @@ class ProgramController {
     def ajaxUpdate(String id) {
 
         def programDetails = request.JSON
-        String parentProgramId = programDetails.parentProgramId // this parent Program Id coming from Create Sub Program page
 
         def documents = programDetails.remove('documents')
         def links = programDetails.remove('links')
 
         Map result
-        String programId =''
-        if (parentProgramId){
-            result = programService.update(programId, programDetails)
-        }else{
-            programId = id ?: ''
-            result = programService.update(programId, programDetails)
-
-            programId = programId ?: result.resp?.programId
+        String programId = id ?: ''
+        result = programService.update(programId, programDetails)
+        programId = programId ?: result.resp?.programId
             if (documents && !result.error) {
                 documents.each { doc ->
                     doc.programId = programId
                     documentService.saveStagedImageDocument(doc)
                 }
             }
-            if (links && !result.error) {
-                links.each { link ->
-                    link.programId = programId
-                    documentService.saveLink(link)
-                }
+        if (links && !result.error) {
+            links.each { link ->
+                link.programId = programId
+                documentService.saveLink(link)
             }
         }
-
         if (result.error) {
             render result as JSON
         } else {
