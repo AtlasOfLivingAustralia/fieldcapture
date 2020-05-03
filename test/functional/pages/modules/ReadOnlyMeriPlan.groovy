@@ -3,118 +3,110 @@ package pages.modules
 import geb.Module
 import org.openqa.selenium.StaleElementReferenceException
 
-class OutcomeRow extends Module {
+class ReadOnlyOutcomeRow extends Module {
     static content = {
-        outcome { $('.outcome-priority select') }
-        priority { $('.priority select') }
-        remove { $('i.icon-remove') }
+        outcome { $('.outcome-priority span') }
+        priority { $('.priority span') }
     }
 }
 
-class ThreatRow extends Module {
+class ReadOnlyThreatRow extends Module {
     static content = {
-        threat { $('textarea[data-bind*=threat]') }
-        intervention { $('textarea[data-bind*=intervention]') }
-        remove { $('i.icon-remove') }
+        threat { $('span[data-bind*=threat]') }
+        intervention { $('span[data-bind*=intervention]') }
     }
 }
 
-class BaselineRow extends Module {
+class ReadOnlyBaselineRow extends Module {
     static content = {
-        baseline { $('.baseline textarea[data-bind*=baseline]') }
-        method { $('.baseline-method textarea[data-bind*=method') }
-        remove { $('i.icon-remove') }
+        baseline { $('.baseline span[data-bind*=baseline]') }
+        method { $('.baseline-method span') }
     }
 
 }
 
-class MonitoringIndictorRow extends Module {
+class ReadOnlyMonitoringIndictorRow extends Module {
     static content = {
-        indicator { $('textarea[data-bind*=data1]') }
-        approach { $('textarea[data-bind*=data2]' ) }
-        remove { $('i.icon-remove') }
+        indicator { $('span[data-bind*=data1]') }
+        approach { $('span[data-bind*=data2]' ) }
     }
 }
 
-class PlanRow extends Module {
+class ReadOnlyPlanRow extends Module {
     static content = {
-        name { $('.document-name textarea') }
-        section { $('.section textarea') }
-        alignment { $('.alignment textarea') }
-        remove { $('i.icon-remove') }
+        name { $('.document-name span') }
+        section { $('.section span') }
+        alignment { $('.alignment span') }
     }
 }
 
-class PartnershipRow extends Module {
+class ReadOnlyPartnershipRow extends Module {
     static content = {
-        name { $('.partner-name textarea') }
-        partnership { $('.partnership-nature textarea') }
-        orgType { $('.partner-organisation-type select') }
-        remove { $('i.icon-remove') }
+        name { $('.partner-name span') }
+        partnership { $('.partnership-nature span') }
+        orgType { $('.partner-organisation-type span') }
     }
 }
 
-class KeqRow extends Module {
+class ReadOnlyKeqRow extends Module {
     static content = {
-        question { $('.baseline textarea') }
-        monitoring { $('.baseline-method textarea') }
-        remove { $('i.icon-remove') }
+        question { $('.baseline span') }
+        monitoring { $('.baseline-method span') }
     }
 }
 
-class BudgetRow extends Module {
+class ReadOnlyBudgetRow extends Module {
     static content = {
-        area { $('.budget-category select') }
-        description { $('.budget-description textarea') }
-        budgetAmounts { $('.budget-amount input') }
+        area { $('.budget-category span') }
+        description { $('.budget-description span') }
+        budgetAmounts { $('.budget-amount span') }
         total { $('.budget-amount span') }
-        remove { $('i.icon-remove') }
     }
 }
 
-class AssetRow extends Module {
+class ReadOnlyAssetRow extends Module {
     static content = {
-        description { $('td.asset textarea') }
-        remove { $('i.icon-remove') }
-    }
-}
-class ServiceTargetRow extends Module {
-    static content = {
-        service { $('.service select') }
-        score { $('.score select') }
-        targets { $('.budget-cell input') }
+        description { $('td.asset span') }
     }
 }
 
-class EditableMeriPlan extends Module {
+class ReadOnlyServiceTargetRow extends Module {
+    static content = {
+        service { $('.service span') }
+        score { $('.score span') }
+        targets { $('.budget-cell span') }
+    }
+}
+
+class ReadOnlyMeriPlan extends Module {
 
 
     static content = {
-        primaryOutcome(required: false) { $('.outcome-priority select[data-bind*="primaryOutcome.description"]') }
-        primaryPriority(required: false) { $('select[data-bind*="primaryOutcome.asset"]') }
-        secondaryOutcomes(required: false) { $('table.secondary-outcome tbody tr').moduleList(OutcomeRow) }
+        primaryOutcome(required: false) { $('.primary-outcome .outcome-priority span') }
+        primaryPriority(required: false) { $('.primary-outcome span[data-bind*=asset]') }
+        secondaryOutcomes(required: false) { $('table.secondary-outcome tbody tr').moduleList(ReadOnlyOutcomeRow) }
         shortTermOutcomes(required: false) { $('tbody[data-bind*="shortTermOutcomes"] textarea') }
         mediumTermOutcomes(required: false) {  $('tbody[data-bind*="midTermOutcomes"] textarea') }
         addMediumTermOutcomeButton(required:false) { $('button[data-bind*="addMidTermOutcome"') }
         projectName(required: false) { $('input[data-bind*="details.name"]') }
         projectDescription(required: false) { $('textarea[data-bind*="details.description"]') }
         rationale(required: false) { $('textarea[data-bind*="details.rationale"]') }
-        keyThreats(required: false) { $('table.threats tbody tr').moduleList(ThreatRow) }
-        projectMethodology(required: false) { $('table.methodology textarea[data-bind*="implementation.description"]') }
-        projectImplementation(required: false) { $('#project-implementation textarea') }
-        projectBaseline(required: false) { $('table.monitoring-baseline tbody tr').moduleList(BaselineRow) }
-        monitoringIndicators(required: false) { $('.meri-monitoring-indicators  table tbody tr').moduleList(MonitoringIndictorRow) }
-        rlpMonitoringIndicators(required: false) { $('table.monitoring tbody tr').moduleList(MonitoringIndictorRow) }
+        keyThreats(required: false) { $('table.threats-view tbody tr').moduleList(ReadOnlyThreatRow) }
+        projectMethodology(required: false) { $('table span[data-bind*="implementation.description"]') }
+        projectImplementation(required: false) { $('#project-implementation span') }
+        projectBaseline(required: false) { $('table.baseline-view tbody tr').moduleList(ReadOnlyBaselineRow) }
+        monitoringIndicators(required: false) { $('.meri-monitoring-indicators  table tbody tr').moduleList(ReadOnlyMonitoringIndictorRow) }
+        rlpMonitoringIndicators(required: false) { $('table.monitoring-indicators-view tbody tr').moduleList(ReadOnlyMonitoringIndictorRow) }
 
-        reviewMethodology(required: false) { $('textarea[data-bind*="projectEvaluationApproach"]') }
-        nationalAndRegionalPlans(required: false) { $('table.plans tbody tr').moduleList(PlanRow) }
-        projectServices(required: false) { $('table.service-targets tbody tr').moduleList(ServiceTargetRow) }
+        reviewMethodology(required: false) { $('span[data-bind*="projectEvaluationApproach"]') }
+        nationalAndRegionalPlans(required: false) { $('table.plans-view tbody tr').moduleList(ReadOnlyPlanRow) }
+        projectServices(required: false) { $('table.service-targets-view tbody tr').moduleList(ReadOnlyServiceTargetRow) }
         objectivesList(required: false) { $('#objectives-list') }
-        projectPartnerships(required: false) { $('#project-partnership').moduleList(PartnershipRow) }
-        keq(required:false) { $('#keq tbody tr').moduleList(KeqRow) }
-        budget(required:false) { $('.meri-budget').moduleList(BudgetRow) }
+        projectPartnerships(required: false) { $('#project-partnership').moduleList(ReadOnlyPartnershipRow) }
+        keq(required:false) { $('#keq tbody tr').moduleList(ReadOnlyKeqRow) }
+        budget(required:false) { $('.meri-budget').moduleList(ReadOnlyBudgetRow) }
         activities(required:false) { $('#activity-list') }
-        assets(required:false) { $('table.assets tbody tr').moduleList(AssetRow) }
+        assets(required:false) { $('table.assets tbody tr').moduleList(ReadOnlyAssetRow) }
         adaptiveManagement(required:false) { $('#adaptive-management textarea') }
         otherObjective(required:false) { $('#objectives-list input[type=text]') }
         otherActivity(required:false) { $('#activity-list input[type=text]') }

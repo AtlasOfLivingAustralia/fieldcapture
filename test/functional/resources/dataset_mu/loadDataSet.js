@@ -39,6 +39,14 @@ var blog_program = {
 
 createProgram({name:'Regional Land Partnerships', programId:'test_program', blog:[blog_program]})
 
+createOrganisation({
+    name:'Test Organisation',
+    organisationId:'test_organisation',
+    status:'active', abn:'12345678901',
+    url:'http://www.ala.org.au',
+    acronym:'TSTORG'
+})
+
 var blog_mu = {
     "content": "blog test",
     "keepOnTop" : true,

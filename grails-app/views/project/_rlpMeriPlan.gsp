@@ -220,7 +220,7 @@
     <!-- /ko -->
     <!-- /ko -->
 
-    <g:render template="meriPlan/projectMethodology" model="${[tableHeading:'Project methodology (4000 character limit [approx 650 words])', helpText:"Describe the methodology that will be used to achieve the project outcomes. To help demonstrate best practice delivery approaches and cost effectiveness of methodologies used, include details of the specific delivery mechanisms to leverage change (e.g. delivery method, approach and justification, and any assumptions)."]}"/>
+    <g:render template="/project/meriPlan/projectMethodology" model="${[tableHeading:'Project methodology (4000 character limit [approx 650 words])', helpText:"Describe the methodology that will be used to achieve the project outcomes. To help demonstrate best practice delivery approaches and cost effectiveness of methodologies used, include details of the specific delivery mechanisms to leverage change (e.g. delivery method, approach and justification, and any assumptions)."]}"/>
 
     <h4 class="header-with-help">Monitoring methodology</h4><fc:iconHelp>Describe the project baseline(s) units of measure or data which will be used to report progress towards this project's outcomes (short-term, medium-term and 5 year program outcome), and the monitoring design. Refer to the Regional Land Partnerships Evaluation Plan, which provides guidance on baselines and the monitoring indicators for each RLP outcome. Note, other monitoring indicators can also be used.</fc:iconHelp>
     <!-- ko with:details.baseline -->
@@ -310,11 +310,11 @@
         </tbody>
     </table>
 
-    <g:render template="meriPlan/nationalAndRegionalPlans"/>
+    <g:render template="/project/meriPlan/nationalAndRegionalPlans"/>
 
     <div class="row-fluid">
         <div class="span12">
-            <g:render template="serviceTargets"/>
+            <g:render template="/project/serviceTargets"/>
         </div>
     </div>
 
