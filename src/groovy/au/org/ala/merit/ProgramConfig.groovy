@@ -20,7 +20,7 @@ class ProgramConfig implements Map {
     private Logger log = Logger.getLogger(ProgramConfig.class)
 
     /** Items that can be omitted or included in the default project view */
-    enum OptionalContent { MERI_PLAN, RISKS_AND_THREATS }
+    enum ProjectContent { MERI_PLAN, RISKS_AND_THREATS, SITES, DASHBOARD, DOCUMENTS }
 
     /** Different project views */
     enum ProjectTemplate {
@@ -112,6 +112,10 @@ class ProgramConfig implements Map {
 
     boolean activitiesRequireLocking
     String activityNavigationMode // stay on page or return
+
+    boolean includesContent(ProjectContent content) {
+        !config.excludes || !config.excludes.contains(content.toString())
+    }
 
 }
 

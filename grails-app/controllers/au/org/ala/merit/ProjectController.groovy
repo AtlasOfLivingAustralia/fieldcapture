@@ -60,7 +60,7 @@ class ProjectController {
             user.hasViewAccess = projectService.canUserViewProject(user.userId, id) ?: false
         }
         def project = projectService.get(id, user,'all')
-        Map config
+        ProgramConfig config
         if (project && !project.error) {
             config = projectService.getProgramConfiguration(project)
         }
@@ -120,7 +120,7 @@ class ProjectController {
         organisations
     }
 
-    protected Map projectContent(Map project, user, String template, Map config) {
+    protected Map projectContent(Map project, user, String template, ProgramConfig config) {
         project.themes = new JSONArray(config.themes ?: [])
         project.assets = config.assets ?: []
         project.priorities = new JSONArray(config.priorities ?: [])
@@ -128,8 +128,8 @@ class ProjectController {
         project.hasApprovedOrSubmittedReports = reportService.includesSubmittedOrApprovedReports(project.reports)
 
 
-        def meriPlanVisible = metadataService.isOptionalContent('MERI Plan', config)
-        def risksAndThreatsVisible = metadataService.isOptionalContent('Risks and Threats', config) && user?.hasViewAccess
+        def meriPlanVisible = config.includesContent(ProgramConfig.ProjectContent.MERI_PLAN)
+        def risksAndThreatsVisible = config.includesContent(ProgramConfig.ProjectContent.RISKS_AND_THREATS) && user?.hasViewAccess
         def canViewRisks = risksAndThreatsVisible && (user?.hasViewAccess || user?.isEditor)
         def meriPlanEnabled = user?.hasViewAccess || ((project.associatedProgram == 'National Landcare Programme' && project.associatedSubProgram == 'Regional Funding'))
         def meriPlanVisibleToUser = project.planStatus == 'approved' || user?.isAdmin || user?.isCaseManager
@@ -160,11 +160,11 @@ class ProjectController {
         boolean showMeriPlanHistory = config.supportsMeriPlanHistory && userService.userIsSiteAdmin()
 
         def model = [overview       : [label: 'Overview', visible: true, default: true, type: 'tab', publicImages: imagesModel, displayOutcomes: false, blog: blog, hasNewsAndEvents: hasNewsAndEvents, hasProjectStories: hasProjectStories, canChangeProjectDates: canChangeProjectDates, outcomes:project.outcomes, objectives:config.program?.config?.objectives],
-                     documents      : [label: 'Documents', visible: true, type: 'tab', user:user, template:'docs', activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage'],
+                     documents      : [label: 'Documents', visible: config.includesContent(ProgramConfig.ProjectContent.DOCUMENTS), type: 'tab', user:user, template:'docs', activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage'],
                      details        : [label: 'MERI Plan', default: false, disabled: !meriPlanEnabled, visible: meriPlanVisible, meriPlanVisibleToUser: meriPlanVisibleToUser, risksAndThreatsVisible: canViewRisks, announcementsVisible: true, project:project, type: 'tab', template:'viewMeriPlan', meriPlanTemplate:MERI_PLAN_TEMPLATE+'View', config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage'],
                      plan           : [label: 'Activities', visible: true, disabled: !user?.hasViewAccess, type: 'tab', template:'projectActivities', grantManagerSettingsVisible:user?.isCaseManager, project:project, reports: project.reports, scores: scores, risksAndThreatsVisible: risksAndThreatsVisible],
-                     site           : [label: 'Sites', visible: true, disabled: !user?.hasViewAccess, editable:user?.isEditor, type: 'tab', template:'projectSites'],
-                     dashboard      : [label: 'Dashboard', visible: true, disabled: !user?.hasViewAccess, type: 'tab'],
+                     site           : [label: 'Sites', visible: config.includesContent(ProgramConfig.ProjectContent.SITES), disabled: !user?.hasViewAccess, editable:user?.isEditor, type: 'tab', template:'projectSites'],
+                     dashboard      : [label: 'Dashboard', visible: config.includesContent(ProgramConfig.ProjectContent.DASHBOARD), disabled: !user?.hasViewAccess, type: 'tab'],
                      admin          : [label: 'Admin', visible: adminTabVisible, user:user, type: 'tab', template:'projectAdmin', project:project, canChangeProjectDates: canChangeProjectDates, minimumProjectEndDate:minimumProjectEndDate, showMERIActivityWarning:true, showAnnouncementsTab: showAnnouncementsTab, showSpecies:true, meriPlanTemplate:MERI_PLAN_TEMPLATE, showMeriPlanHistory:showMeriPlanHistory, requireMeriPlanApprovalReason:Boolean.valueOf(config.supportsMeriPlanHistory),  config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage']]
 
         if (template == MERI_ONLY_TEMPLATE) {
@@ -190,8 +190,8 @@ class ProjectController {
 
             model.site.useAlaMap = true
             model.site.showSiteType = true
-            model.site.visible = userHasViewAccess
-            model.details.visible = userHasViewAccess
+            model.site.visible = model.site.visible && userHasViewAccess
+            model.details.visible = model.details.visible && userHasViewAccess
 
             Map reportingTab = [label: 'Reporting', visible:userHasViewAccess, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true, services: config.services, scores:scores, hideDueDate:true, isAdmin:user?.isAdmin, isGrantManager:user?.isCaseManager]
             if (reportingTab.visible) {

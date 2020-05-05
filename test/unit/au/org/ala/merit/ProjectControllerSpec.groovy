@@ -64,12 +64,14 @@ class ProjectControllerSpec extends Specification {
         setup:
         def projectId = '1234'
         projectService.get(projectId, _, _) >> project(projectId)
-        projectService.programsModel() >> [programs:[[name:'Test', optionalProjectContent:[]]]]
 
-        when: "something"
+        when: "we view a project homepage of a project run under a program configured to exclude the MERI Plan and Risks and Threats"
         controller.index(projectId)
 
-        then: "something"
+        then:
+        1 * projectService.getProgramConfiguration(_) >> new ProgramConfig([name:'Test', excludes:['MERI_PLAN', 'RISKS_AND_THREATS']])
+
+        and: "The MERI plan and risks and threats content is not visible"
         view == '/project/index'
         model.projectContent.details.visible == false
         model.projectContent.plan.risksAndThreatsVisible == false
@@ -80,7 +82,7 @@ class ProjectControllerSpec extends Specification {
         setup:
         def projectId = '1234'
         projectService.get(projectId, null, _) >> project(projectId)
-        projectService.programsModel() >> [programs:[[name:'Test', optionalProjectContent:['Risks and Threats', 'MERI Plan']]]]
+        projectService.programsModel() >> new ProgramConfig([programs:[[name:'Test']]])
         userServiceStub.getUser() >> null
 
         when: "retrieving the project index page"
@@ -509,6 +511,33 @@ class ProjectControllerSpec extends Specification {
 
         then:
         1 * reportService.overrideLock('r1', {it.endsWith('project/viewReport/p1?reportId=r1')})
+    }
+
+    def "The program configuration can customize the project template by excluding content"() {
+        setup:
+        def projectId = '1234'
+        projectService.get(projectId, _, _) >> project(projectId)
+        stubProjectAdmin('1234', projectId)
+
+        when: "retrieving the project index page"
+        controller.index(projectId)
+
+        then: "Only the overview and documents tabs are enabled"
+        1 * projectService.getProgramConfiguration(_) >> new ProgramConfig(
+                [name:"Test Program", excludes:[
+                        ProgramConfig.ProjectContent.SITES.toString(),
+                        ProgramConfig.ProjectContent.DOCUMENTS.toString(),
+                        ProgramConfig.ProjectContent.RISKS_AND_THREATS.toString(),
+                        ProgramConfig.ProjectContent.MERI_PLAN.toString(),
+                        ProgramConfig.ProjectContent.DASHBOARD.toString()]])
+
+        view == '/project/index'
+        !model.projectContent.overview.disabled
+        model.projectContent.documents.visible == false
+        model.projectContent.plan.visible == true
+        model.projectContent.details.visible == false
+        model.projectContent.site.visible == false
+        model.projectContent.dashboard.visible == false
     }
 
     private Map stubPublicUser() {
