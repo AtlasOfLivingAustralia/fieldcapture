@@ -14,7 +14,7 @@ services:
 node_js:
   - 12
 addons:
-  chrome: beta
+  chrome: stable
   hosts: devt.ala.org.au
 
 before_install:
