@@ -24,8 +24,8 @@ before_install:
 - source ./ala_common.sh
 - ala_travis_grails_setup_env
 before_script:
-- export DETECT_CHROMEDRIVER_VERSION=true
-- npm install Node@12
+- nvm install 12.14.1
+- nvm use 12.14.1
 - node -v
 - npm install
 script:
