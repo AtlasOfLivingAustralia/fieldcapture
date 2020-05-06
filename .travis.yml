@@ -1,4 +1,4 @@
-dist: xenial
+dist: trusty
 language: groovy
 sudo: true
 jdk:
@@ -28,7 +28,7 @@ before_script:
 - npm install
 script:
 - grails clean; grails refresh-dependencies --non-interactive; grails prod compile
-- node_modules/karma/bin/karma start karma.conf.js --single-run --browsers PhantomJS
+- node_modules/karma/bin/karma start karma.conf.js --single-run --browsers ChromeHeadless
 - cd scripts
 - chmod +x *.sh
 - ./runFunctionalTests.sh chromeHeadless
