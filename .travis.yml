@@ -25,6 +25,7 @@ before_install:
 - ala_travis_grails_setup_env
 before_script:
 - export DETECT_CHROMEDRIVER_VERSION=true
+- npm install Node@12
 - node -v
 - npm install
 script:
