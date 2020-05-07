@@ -34,6 +34,13 @@ class ProjectContentConfigurationSpec extends StubbedCasSpec {
         reportingTab.displayed == true
         adminTab.displayed == true
 
+        when:
+        adminTab.click()
+
+        then:
+        waitFor { adminContent.displayed }
+        adminContent.risksAndThreats.displayed == false
+
     }
 
 

@@ -212,7 +212,7 @@ class ProjectController {
             rlpModel.admin.showSpecies = false
             rlpModel.admin.hidePrograms = true
             rlpModel.admin.showAnnouncementsTab = false
-            rlpModel.admin.risksAndThreatsVisible = true
+            rlpModel.admin.risksAndThreatsVisible = risksAndThreatsVisible
 
             model = buildRLPTargetsModel(rlpModel, project)
         }
