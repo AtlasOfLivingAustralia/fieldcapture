@@ -40,7 +40,10 @@ class RlpProjectSpec extends StubbedCasSpec {
 
         and: "The content on the overview tab is correct"
         name.text() == 'Project 1'
-        overview.description.text() == 'Project 1 description'
+        // This is initialised via knockoutjs so we need to wait for the script to run.
+        waitFor {
+            overview.description.text() == 'Project 1 description'
+        }
         overview.program.text() == 'Test program'
         overview.managementUnit.text() == 'Test management unit'
         overview.serviceProvider.text() == 'Test Org'
