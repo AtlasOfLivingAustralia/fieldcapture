@@ -19,6 +19,7 @@ class Organisation extends Page{
     }
 
     void edit() {
+        waitFor {adminTab.displayed}
         adminTab.click()
         waitFor 10, { adminTabContent.displayed }
         waitFor 10, { adminTabContent.editButton.displayed }
