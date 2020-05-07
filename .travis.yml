@@ -37,12 +37,7 @@ before_script:
 - sudo apt-get install mongodb-org -y
 - sudo systemctl start mongod
 - sleep 15
-- sudo ls -la /var/log/mongodb
-- sudo ls -al /var/lib/mongodb
-- sudo cat /var/log/mongodb/mongod.log
 - sudo systemctl status mongod
-- sudo mongo -version
-
 
 script:
 - grails clean; grails refresh-dependencies --non-interactive; grails prod compile
