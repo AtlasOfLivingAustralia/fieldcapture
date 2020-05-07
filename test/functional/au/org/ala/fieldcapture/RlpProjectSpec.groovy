@@ -38,7 +38,12 @@ class RlpProjectSpec extends StubbedCasSpec {
         reportingTab.displayed == true
         adminTab.displayed == true
 
-        and: "The content on the overview tab is correct"
+        when:
+        overviewTab.click()
+
+        then: "The content on the overview tab is correct"
+        waitFor { overview.displayed }
+
         name.text() == 'Project 1'
         // This is initialised via knockoutjs so we need to wait for the script to run.
         waitFor {
