@@ -35,8 +35,8 @@ before_script:
 - sudo apt-get install mongodb-org -y
 - sudo systemctl start mongod
 - sleep 15
-- cat /var/log/mongodb.log
-- sudo ls -al /var/lib/mongodb
+- sudo ls -la /var/log/
+- sudo ls -al /var/lib/
 - sudo systemctl status mongod
 - sudo mongo -version
 
