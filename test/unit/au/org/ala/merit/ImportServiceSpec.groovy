@@ -134,7 +134,7 @@ class ImportServiceSpec extends Specification {
         Map result = importService.gmsImport(csv, status, true)
 
         then:
-        1 * metadataService.organisationList() >> [list:[[name:"Test Organisation 2", organisationId:'org2Id']]]
+        1 * metadataService.organisationList() >> [list:[[name:"Test Organisation 2", organisationId:'org2Id', abn:'12345678901']]]
         1 * metadataService.programsModel() >> [programs:[[name:'Green Army', subprograms:[[name:"Green Army Round 1"]]]]]
         1 * managementUnitService.getByName("ACT") >> [managementUnitId:"actId", name:"ACT"]
         1 * programService.getByName("Green Army") >> null
@@ -159,7 +159,7 @@ class ImportServiceSpec extends Specification {
         Map result = importService.gmsImport(csv, status, false)
 
         then:
-        1 * metadataService.organisationList() >> [list:[[name:"Test Organisation 2", organisationId:'org2Id']]]
+        1 * metadataService.organisationList() >> [list:[[name:"Test Organisation 2", organisationId:'org2Id', abn:'12345678901']]]
         1 * metadataService.programsModel() >> [programs:[[name:'Green Army', subprograms:[[name:"Green Army Round 1"]]]]]
         1 * managementUnitService.getByName("ACT") >> [managementUnitId:"actId", name:"ACT"]
         1 * programService.getByName("Green Army") >> null

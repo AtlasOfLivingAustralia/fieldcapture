@@ -43,6 +43,7 @@ OrganisationViewModel = function (props) {
     self.name = ko.observable(props.name);
     self.acronym = ko.observable(props.acronym);
     self.description = ko.observable(props.description).extend({markdown:true});
+    self.abn = ko.observable(props.abn);
     self.url = ko.observable(props.url);
     self.newsAndEvents = ko.observable(props.newsAndEvents).extend({markdown:true});;
     self.collectoryInstitutionId = props.collectoryInstitutionId;

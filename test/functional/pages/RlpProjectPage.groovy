@@ -17,7 +17,7 @@ class RlpProjectPage extends ReloadablePage {
 
         name { $('h1[data-bind*=name]') }
         overviewTab { $('#overview-tab') }
-        documentsTab { $('#documents-tab') }
+        documentsTab(required:false) { $('#documents-tab') }
         dashboardTab(required:false) { $('#serviceDelivery-tab') }
 
         meriPlanTab(required:false) { $('#details-tab') }
@@ -27,7 +27,7 @@ class RlpProjectPage extends ReloadablePage {
 
         overview { module RlpOverviewTab }
         adminContent(required: false) { module ProjectAdminTab }
-        documents { module DocumentsTab }
+        documents(required:false) { module DocumentsTab }
         projectReports(required: false) { module ProjectReports }
         sitesTabContent(required:false) { module RlpSitesTab }
 

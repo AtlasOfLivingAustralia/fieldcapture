@@ -1,15 +1,17 @@
 package au.org.ala.fieldcapture
 
 import com.github.tomakehurst.wiremock.WireMockServer
-import com.github.tomakehurst.wiremock.common.ConsoleNotifier
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer
-import com.github.tomakehurst.wiremock.junit.WireMockRule
 import geb.Browser
-
 import spock.lang.Shared
+import wiremock.com.github.jknack.handlebars.EscapingStrategy
+import wiremock.com.github.jknack.handlebars.Handlebars
+import wiremock.com.github.jknack.handlebars.Helper
+import wiremock.com.github.jknack.handlebars.Options
+import wiremock.com.google.common.collect.ImmutableMap
 
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.*
 import static com.github.tomakehurst.wiremock.client.WireMock.*
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
 
 
 /**
@@ -19,10 +21,21 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
 
     @Shared WireMockServer wireMockServer
     def setupSpec() {
+
+        Handlebars handlebars = new Handlebars()
+        handlebars.escapingStrategy = EscapingStrategy.NOOP
+
+        // This is done so we can use a custom handlebars with a NOOP escaping strategy - the default escapes HTML
+        // which breaks the redirect URL returned by the PDF generation stub.
+        Helper noop = new Helper() {
+            Object apply(Object context, Options options) throws IOException {
+                return context[0]
+            }
+        }
         wireMockServer = new WireMockServer(options()
                 .port(testConfig.wiremock.port)
                 .usingFilesUnderDirectory(getMappingsPath())
-                .extensions(new ResponseTemplateTransformer(false)))
+                .extensions(new ResponseTemplateTransformer(false, handlebars, ImmutableMap.of("noop", noop), null)))
 
         wireMockServer.start()
 
@@ -54,14 +67,6 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
             }
         }
     }
-//    @ClassRule
-//    @Shared
-//    WireMockRule wireMockRule = new WireMockRule(
-//            options()
-//                    .port(testConfig.wiremock.port)
-//                    .usingFilesUnderDirectory(getMappingsPath())
-//                    .extensions(new ResponseTemplateTransformer(false))
-//                    .notifier(new ConsoleNotifier(true)))
 
     private String getMappingsPath() {
         new File(getClass().getResource("/resources/wiremock").toURI())

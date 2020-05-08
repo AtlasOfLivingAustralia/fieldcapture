@@ -14,8 +14,8 @@ class ProjectConfigurationService {
     MetadataService metadataService
     ManagementUnitService managementUnitService
 
-    Map getProjectConfiguration(Map project) {
-        Map programConfig
+    ProgramConfig getProjectConfiguration(Map project) {
+        ProgramConfig programConfig
 
         if (project.programId) {
             programConfig = buildConfigFromProgram(project)
@@ -28,9 +28,9 @@ class ProjectConfigurationService {
         programConfig
     }
 
-    private Map buildConfigFromProgram(Map project) {
+    private ProgramConfig buildConfigFromProgram(Map project) {
         Map program = programService.get(project.programId)
-        Map programConfig = new ProgramConfig(program.inheritedConfig ?: [:])
+        ProgramConfig programConfig = new ProgramConfig(program.inheritedConfig ?: [:])
         if (!programConfig.activityBasedReporting) {
             programConfig.services = metadataService.getProjectServices()
         }
@@ -84,9 +84,9 @@ class ProjectConfigurationService {
     /**
      * This creates a configuration from the legacy MERIT programsModel.
      */
-    private Map buildDefaultConfig(Map project) {
+    private ProgramConfig buildDefaultConfig(Map project) {
         Map config = metadataService.getProgramConfiguration(project.associatedProgram, project.associatedSubProgram)
-        Map programConfig = new ProgramConfig(config)
+        ProgramConfig programConfig = new ProgramConfig(config)
         programConfig.activityBasedReporting = true
 
         // Default configuration for project stage reports.
@@ -109,6 +109,12 @@ class ProjectConfigurationService {
                         reportDescriptionFormat: "Stage %1d for ${project.name}"
                 ]
         ]
+        // The original MERIT project template required content be included (excluded by default) but we've
+        // moved to an included by default model.
+        programConfig.excludes = [ProgramConfig.ProjectContent.MERI_PLAN, ProgramConfig.ProjectContent.RISKS_AND_THREATS]
+        if (config.optionalProjectContent) {
+            programConfig.excludes = programConfig.excludes.findAll{!it in config.optionalProjectContent}
+        }
         programConfig.activities = config.activities
         programConfig
     }

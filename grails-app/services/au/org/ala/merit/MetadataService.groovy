@@ -229,7 +229,7 @@ class MetadataService {
         return cacheService.get('organisations',{
             Map result = webService.getJson(grailsApplication.config.ecodata.baseUrl + "organisation")
 
-            List reducedList = result?.list?.collect {[name:it.name, organisationId:it.organisationId]}
+            List reducedList = result?.list?.collect {[name:it.name, organisationId:it.organisationId, abn:it.abn]}
             [list:reducedList?:[]]
         })
     }
