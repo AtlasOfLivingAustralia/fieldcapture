@@ -38,6 +38,7 @@ class EditOrganisationSpec extends StubbedCasSpec {
         orgName.text() == "Test Organisation Test 2"
         waitFor {orgDescription.displayed }
         orgDescription.text() == "Test Organisation Description test"
+        waitFor {orgAbn.displayed }
         orgAbn.text() == "12345678910"
     }
 }
