@@ -12,11 +12,12 @@
             programViewUrl: "${createLink(action:'index')}",
             documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
             noImageUrl: "${assetPath(src:'nophoto.png')}",
-            returnToUrl: "${params.returnTo ?: createLink(action:'index', id:program.programId)}"
+            returnToUrl: "${params.returnTo ?: createLink(controller: 'program',action:'index', id:program.programId)}"
         };
     </script>
     <asset:stylesheet src="common-bs4.css"/>
     <asset:stylesheet src="program.css"/>
+    <asset:stylesheet src="select2/4.0.3/css/select2.css"/>
 
 
 </head>
@@ -27,14 +28,11 @@
             <li class="breadcrumb-item">
                 <g:link controller="home">Home</g:link>
             </li>
-            <li class="breadcrumb-item"> Regional Landcare Program </li>
             <li class="breadcrumb-item active"><g:link controller="program" action="index" id="${program.programId}">${program.name}</g:link> </li>
             <li class="breadcrumb-item active"><g:message code="program.breadcrumb.edit"/></li>
         </ol>
 
     </nav>
-
-
     <g:render template="programDetails"/>
 
     <div class="form-actions">
@@ -44,7 +42,6 @@
 </div>
 
 <asset:script>
-
     $(function () {
         var program = <fc:modelAsJavascript model="${program}"/>;
 
@@ -52,13 +49,16 @@
 
         ko.applyBindings(programViewModel);
         $('.validationEngineContainer').validationEngine();
-    });
 
+         $('.parentProgramId').select2();
+    });
 
 </asset:script>
 <asset:javascript src="common-bs4.js"/>
 <asset:javascript src="attach-document-no-ui.js"/>
 <asset:javascript src="program.js"/>
+<asset:javascript src="forms-knockout-bindings.js"/>
+<asset:javascript src="select2/4.0.3/js/select2.full"/>
 <asset:deferredScripts/>
 
 </body>
