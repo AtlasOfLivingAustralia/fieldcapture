@@ -177,3 +177,12 @@ db.userPermission.insert({
 });
 
 
+config.excludes = ["DASHBOARD", "SITES", "MERI_PLAN", "RISKS_AND_THREATS", "DOCUMENTS"];
+createProgram({programId: "excluded_content", name: "Excluded content program", description: "", config: config});
+createProject({projectId: "excludedContent", name: "Excluded content project", programId: "excluded_content"});
+db.userPermission.insert({
+    entityType: 'au.org.ala.ecodata.Project',
+    entityId: "meri2",
+    userId: '1',
+    accessLevel: 'admin'
+});
