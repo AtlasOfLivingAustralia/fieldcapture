@@ -3,6 +3,7 @@ package au.org.ala.merit
 import au.org.ala.merit.command.SaveReportDataCommand
 import grails.test.mixin.TestFor
 import org.apache.http.HttpStatus
+import org.codehaus.groovy.util.ListHashMap
 import spock.lang.Specification
 
 @TestFor(ProgramController)
@@ -255,6 +256,28 @@ class ProgramControllerSpec extends Specification {
         1 * programService.get(id) >> program
 
         expect:
+        expected == actual
+    }
+
+    def "Testing Edit Program giving me list of program"(){
+        setup:
+        setupProgramAdmin()
+        def newProgram = "test_program"
+        Map program = createPrograms(newProgram)
+
+        List<Map> listOfProgram = [[id: 4, programId: 4, name:"Testing 4", description: "Description 4"]]
+        Map expected = [program:program, editProgramId:newProgram, allProgram:[[id: 4, programId: 4, name:"Testing 4", description: "Description 4"]],isNameEditable:false]
+
+        when:
+        Map actual = controller.edit(newProgram)
+
+        then:
+        1 * programService.get(newProgram) >> program
+        1 * programService.listOfAllPrograms() >> listOfProgram
+
+        and:
+        println(expected)
+        println(actual)
         expected == actual
     }
 

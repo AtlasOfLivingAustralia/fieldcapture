@@ -346,6 +346,7 @@ environments {
         upload.images.path = '/tmp'
         ecodata.baseUrl = 'http://devt.ala.org.au:8080/ecodata/ws/'
         ecodata.service.url = 'http://devt.ala.org.au:8080/ecodata/ws'
+        pdfgen.baseURL = "http://devt.ala.org.au:${wiremock.port}/"
         api_key='testapikey'
         grails.cache.config = {
             diskStore {

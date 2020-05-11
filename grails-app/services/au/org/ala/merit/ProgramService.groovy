@@ -277,7 +277,7 @@ class ProgramService {
     }
 
     List<Map> listOfAllPrograms(){
-        return webService.getJson("${grailsApplication.config.ecodata.baseUrl}program/listOfAllPrograms?view=flat")
+        return webService.getJson("${grailsApplication.config.ecodata.baseUrl}program/listOfAllPrograms")
     }
 
 }

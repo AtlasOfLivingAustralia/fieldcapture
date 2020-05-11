@@ -1,6 +1,6 @@
 <div class="meri-plan" data-bind="let:{details:meriPlan()}">
     <h4><span data-bind="text:details.programName"></span>  Outcome</h4>
-    <table class="table">
+    <table class="table primary-outcome">
         <thead>
         <tr>
             <th class="outcome-priority">Primary outcome</th>
@@ -129,7 +129,7 @@
 
     <!-- ko if:!isAgricultureProject() -->
     <!-- ko with:details.threats -->
-    <table class="table">
+    <table class="table threats-view">
         <thead>
         <th class="index"></th>
         <th class="threat required">Key threat(s) and/or key threatening processes</th>
@@ -152,11 +152,11 @@
     <!-- /ko -->
     <!-- /ko -->
 
-    <g:render template="meriPlanReadOnly/projectMethodology"/>
+    <g:render template="/project/meriPlanReadOnly/projectMethodology"/>
 
     <h4>Monitoring methodology</h4>
     <!-- ko with:details.baseline -->
-    <table class="table">
+    <table class="table baseline-view">
         <thead>
         <th class="index"></th>
         <th class="baseline required">Project baseline</th>
@@ -178,7 +178,7 @@
     </table>
     <!-- /ko -->
 
-    <table class="table">
+    <table class="table monitoring-indicators-view">
         <thead>
         <tr>
             <th class="index"></th>
@@ -215,7 +215,7 @@
 
     <h4>Relevant national and regional plans</h4>
 
-    <table class="table">
+    <table class="table plans-view">
         <thead>
         <tr>
             <th class="index"></th>
@@ -241,7 +241,7 @@
     <!-- ko with:details.services -->
     <h4>Project services and minimum targets</h4>
 
-    <table class="table budget-table">
+    <table class="table service-targets-view">
         <thead>
         <tr>
             <th class="index" rowspan="2"></th>
@@ -282,7 +282,7 @@
     <!-- /ko -->
 
     <g:if test="${risksAndThreatsVisible}">
-        <g:render template="meriPlanReadOnly/risksAndThreats"/>
+        <g:render template="/project/meriPlanReadOnly/risksAndThreats"/>
     </g:if>
 
 </div>

@@ -24,6 +24,10 @@ function createProgram(programProperties) {
     db.program.insert(program);
 }
 
+function createOrganisation(organisationProperties){
+    db.organisation.insert(organisationProperties)
+}
+
 function createMu(muProperties) {
     // var mu = Object.assign({}, muDefaults);
     // Object.assign(mu, muProperties || {});
