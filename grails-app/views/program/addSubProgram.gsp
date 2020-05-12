@@ -3,16 +3,16 @@
 <html>
 <head>
     <meta name="layout" content="nrm_bs4"/>
-    <title>Create | Program | MERIT</title>
+    <title>Add | Sub Program | MERIT</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
     <script disposition="head">
         var fcConfig = {
             serverUrl: "${grailsApplication.config.grails.serverURL}",
-            programSaveUrl: "${createLink(action:'ajaxUpdate')}",
+            programSaveUrl: "${createLink(action:'ajaxUpdate', id: program.programId)}",
             programViewUrl: "${createLink(action:'index')}",
             documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
             noImageUrl: "${assetPath(src:'nophoto.png')}",
-            returnToUrl: "${params.returnTo}"
+            returnToUrl: "${params.returnTo ?: createLink(controller: 'program',action:'index', id:program.parentProgramId)}"
         };
     </script>
     <asset:stylesheet src="common-bs4.css"/>
@@ -25,8 +25,8 @@
             <li class="breadcrumb-item">
                 <g:link controller="home">Home</g:link>
             </li>
-            <li class="breadcrumb-item">Programs</li>
-            <li class="breadcrumb-item active"><g:message code="program.breadcrumb.create"/></li>
+            <li class="breadcrumb-item active"><g:link controller="program" action="index" id="${program.parentProgramId}">${program.parentProgramName}</g:link> </li>
+            <li class="breadcrumb-item active"><g:message code="program.breadcrumb.addSubProgram"/></li>
         </ol>
 
     </nav>

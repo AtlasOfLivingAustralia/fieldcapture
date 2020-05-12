@@ -5,6 +5,7 @@ import au.org.ala.merit.reports.ReportGenerationOptions
 import au.org.ala.merit.reports.ReportOwner;
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.codehaus.groovy.grails.web.json.JSONArray
+import org.codehaus.groovy.util.ListHashMap
 
 class ProgramService {
 
@@ -273,6 +274,10 @@ class ProgramService {
             parent = parent.parent
         }
         parent && parent.programId == programId
+    }
+
+    List<Map> listOfAllPrograms(){
+        return webService.getJson("${grailsApplication.config.ecodata.baseUrl}program/listOfAllPrograms")
     }
 
 }
