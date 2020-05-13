@@ -202,15 +202,13 @@ class GmsMapper {
 
         def organisation
         def abnLookup
-        def abnDetails
         if (project.organisationName || project.abn){
              organisation = organisations.find{  it.abn == project.abn || it.organisationName == project.organisationName}
             if (organisation){
                 project.organisationId = organisation.organisationId
             }else {
                 String abn = project.abn
-                 abnDetails = abnLookupService.lookupOrganisationNameByABN(abn)
-                 abnLookup = abnDetails.findAll{abnDetails.Abn == project.abn}
+                abnLookup = abnLookupService.lookupOrganisationNameByABN(abn)
                 if (abnLookup){
                     organisation = organisations.find{it.organisationName == abnLookup.EntityName}
                     if (organisation){

@@ -22,7 +22,8 @@ class AbnLookupService {
 
         JsonSlurper slurper = new JsonSlurper()
         Map map  = slurper.parseText(results)
-        return map
+        Map result = map.findAll {map.Abn == organisationABN}
+        return result
     }
 
     def removeCallback(String resp){
