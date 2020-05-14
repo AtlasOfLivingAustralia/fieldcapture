@@ -18,6 +18,7 @@
     <asset:stylesheet src="common-bs4.css"/>
     <asset:stylesheet src="program.css"/>
     <asset:stylesheet src="select2/4.0.3/css/select2.css"/>
+    <asset:stylesheet src="select2-bootstrap4/select2-bootstrap4.css"/>
 
 
 </head>
@@ -50,7 +51,7 @@
         ko.applyBindings(programViewModel);
         $('.validationEngineContainer').validationEngine();
 
-         $('.parentProgramId').select2();
+         $('.parentProgramId').select2({theme: "bootstrap4"});
     });
 
 </asset:script>
