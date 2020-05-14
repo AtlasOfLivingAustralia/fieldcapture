@@ -65,9 +65,10 @@
                 </div>
                 <g:if test="${risksAndThreatsVisible}">
                   <div id="risks" class="pill-pane">
-                    <div class="validationEngineContainer meri-plan" id="risk-validation" data-bind="with:meriPlan">
-                        <g:render template="riskTable" model="[project:project]"/>
-                    </div>
+                      <g:render template="riskReporting" model="[project:project]"/>
+                      <div class="validationEngineContainer meri-plan" id="risk-validation" data-bind="with:meriPlan">
+                          <g:render template="riskTable" model="[project:project]"/>
+                      </div>
                   </div>
                 </g:if>
 

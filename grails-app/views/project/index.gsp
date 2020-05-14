@@ -84,6 +84,8 @@
         leafletIconPath:"${assetPath(src:'leaflet-0.7.7/images')}",
         approvedMeriPlanHistoryUrl:"${createLink(action:"approvedMeriPlanHistory", id:project.projectId)}",
         viewHistoricalMeriPlanUrl:"${createLink(action:"viewMeriPlan", id:project.projectId)}",
+        riskChangesReportHtmlUrl:"${createLink(controller:'project', action:'projectReport', id:project.projectId)}",
+        riskChangesReportPdfUrl:"${createLink(controller:'project', action:'projectReportPDF', id:project.projectId)}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 
     },
@@ -252,7 +254,10 @@
                 documentDeleteUrl: fcConfig.documentDeleteUrl,
                 meriStorageKey:PROJECT_DETAILS_KEY,
                 activityBasedReporting: ${Boolean.valueOf(projectContent.admin.config.activityBasedReporting)},
-                minimumProjectEndDate: ${projectContent.admin.minimumProjectEndDate?'"'+projectContent.admin.minimumProjectEndDate+'"':'null'}
+                minimumProjectEndDate: ${projectContent.admin.minimumProjectEndDate?'"'+projectContent.admin.minimumProjectEndDate+'"':'null'},
+                riskChangesReportElementId: 'risk-changes-report',
+                riskChangesReportHtmlUrl: fcConfig.riskChangesReportHtmlUrl,
+                riskChangesReportPdfUrl: fcConfig.riskChangesReportPdfUrl
             };
 
             var programs = <fc:modelAsJavascript model="${programs}"/>;

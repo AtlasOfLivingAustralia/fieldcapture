@@ -31,11 +31,21 @@ class ProjectSummaryReportCommand {
     String id
     String fromStage
     String toStage
+    String fromDate
+    String toDate
     List<String> sections
 
 
-    public Map call() {
-        projectReportModel(id, fromStage, toStage, sections)
+    Map call() {
+        Map project = projectService.get(id, 'all')
+
+        if (fromStage && !fromDate) {
+            fromDate = project.reports?.find { it.name == fromStage }?.fromDate
+        }
+        if (toStage && !toDate) {
+            toDate = project.reports?.find { it.name == toStage }?.toDate
+        }
+        projectReportModel(project, fromDate, toDate, sections)
     }
 
     private List<Map> blog(Map project, String fromDate, String toDate) {
@@ -99,13 +109,9 @@ class ProjectSummaryReportCommand {
         [latestStageReport:latestStageReport, stageReportModel: stageReportModel]
     }
 
-    Map projectReportModel(String id, String fromStage, String toStage, List contentToInclude) {
-        Map project = projectService.get(id, 'all')
-        Map model = [project:project, role:getUserRole(), content:contentToInclude]
+    Map projectReportModel(Map project, String fromDate, String toDate, List contentToInclude) {
 
-        // Determine date range for data to include.
-        String fromDate = project.reports?.find { it.name == fromStage }?.fromDate
-        String toDate = project.reports?.find { it.name == toStage }?.toDate
+        Map model = [project:project, role:getUserRole(), content:contentToInclude]
 
         List reportedStages = []
 
