@@ -38,16 +38,8 @@ class AbnLookupServiceSpec extends Specification {
                 "             \"EntityTypeName\":\"Commonwealth Government Entity\",\n" +
                 "             \"Gst\":\"2000-07-01\",\"Message\":\"\"})"
 
-        Map expected = [Abn            :"41687119230",
-                        AbnStatus      :"Active", Acn:"",
-                        AddressDate    :"2017-05-22",
-                        AddressPostcode:"2601",
-                        AddressState   :"ACT",
-                        BusinessName   :["DEEP SPACE CAFE","CSIRO","CENTRE FOR LIVEABILITY REAL ESTATE","DATA61"],
-                        EntityName     : "COMMONWEALTH SCIENTIFIC AND INDUSTRIAL RESEARCH ORGANISATION",
-                        EntityTypeCode :"CGE", EntityTypeName:"Commonwealth Government Entity",
-                        Gst            :"2000-07-01",
-                        Message        :""]
+        Map expected = [abn:"41687119230", entityName: "COMMONWEALTH SCIENTIFIC AND INDUSTRIAL RESEARCH ORGANISATION",
+                       ]
 
 
 
@@ -65,7 +57,7 @@ class AbnLookupServiceSpec extends Specification {
     }
 
 
-    void "Providing a Wrong ABN NUmber"() {
+    void "Providing a Wrong ABN Number"() {
         setup:
         String abn = "41687119231"
         String abnValue = "callback({\"Abn\":\"\",\n" +
@@ -90,7 +82,8 @@ class AbnLookupServiceSpec extends Specification {
         1 * webService.get(abnLookupUrlString) >> abnValue
 
         expect:
-        actual.size()==0
+        actual.abn == ""
+        actual.entityName == ""
     }
 
 }

@@ -1,16 +1,22 @@
 package au.org.ala.merit
 
 import groovy.json.JsonSlurper
+import org.codehaus.groovy.grails.commons.GrailsApplication
+
+/**
+ * Using ABN: ABR Web Services API to get abn details
+ */
 
 class AbnLookupService {
 
-    def grailsApplication, webService
+    GrailsApplication grailsApplication
+    WebService webService
 
 /**
  * This method will return abn details based abn number provided.
  * this method is used my GMSMapper
  * @param organisationABN
- * @return
+ * @return abnDetails
  */
     Map lookupOrganisationNameByABN(String organisationABN){
         String abnLookupToken = grailsApplication.config.abnLookupToken
@@ -22,11 +28,11 @@ class AbnLookupService {
 
         JsonSlurper slurper = new JsonSlurper()
         Map map  = slurper.parseText(results)
-        Map result = map.findAll {map.Abn == organisationABN}
-        return result
+        Map abnDetails = [abn: map.Abn, entityName: map.EntityName]
+        return abnDetails
     }
 
-    def removeCallback(String resp){
+    private static String removeCallback(String resp){
         def result
         def callback ='callback('
         def endBracket = ')'
