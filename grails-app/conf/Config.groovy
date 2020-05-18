@@ -217,6 +217,12 @@ if(!app.default.hub) {
 if (!pdfgen.baseURL){
     pdfgen.baseURL="http://pdfgen.ala.org.au/"
 }
+if (!abn.baseURL){
+    abn.baseURL="https://abr.business.gov.au/json/AbnDetails.aspx?abn="
+}
+if (!abn.abnLookupToken){
+    abn.abnLookupToken=grails.config.abnLookupToken
+}
 if (!userDetailsById.path) {
     userDetailsById.path = "getUserDetails"
 }
@@ -347,6 +353,8 @@ environments {
         ecodata.baseUrl = 'http://devt.ala.org.au:8080/ecodata/ws/'
         ecodata.service.url = 'http://devt.ala.org.au:8080/ecodata/ws'
         pdfgen.baseURL = "http://devt.ala.org.au:${wiremock.port}/"
+        abn.baseURL= "http://localhost:${wiremock.port}/json/AbnDetails.aspx?abn="
+        abn.abnLookupToken = "123456"
         api_key='testapikey'
         grails.cache.config = {
             diskStore {

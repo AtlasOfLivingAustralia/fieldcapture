@@ -44,7 +44,7 @@ class GmsMapper {
     private def programModel
 
     private def organisations
-    private def abnLookupService
+    private AbnLookupService abnLookupService
 
     private List<Map> scores
 
