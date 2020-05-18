@@ -11,7 +11,7 @@ import spock.lang.Specification
 class AbnLookupServiceSpec extends Specification {
     WebService webService = Mock(WebService)
     GrailsApplication grailsApplication = Mock(GrailsApplication)
-    Map config = ['abnLookupToken':"1234"]
+    Map config = [abnLookupToken:"1234"]
 
 
     def setup() {
@@ -50,7 +50,7 @@ class AbnLookupServiceSpec extends Specification {
         Map actual = service.lookupOrganisationNameByABN(abn)
 
         then:
-        1 * webService.get(abnLookupUrlString) >> abnValue
+        1* webService.get(abnLookupUrlString) >> abnValue
 
         expect:
         expected == actual

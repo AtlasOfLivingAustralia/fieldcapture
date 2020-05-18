@@ -22,10 +22,13 @@ class AbnLookupService {
 
         String abnLookupToken = grailsApplication.config.abn.abnLookupToken
 
-        if (abnLookupToken.equalsIgnoreCase( "[:]")){
+        if (abnLookupToken==( "[:]")){
             abnLookupToken = grailsApplication.config.abnLookupToken
         }
         String url = grailsApplication.config.abn.baseURL
+        if (url==("[:]")){
+            url = "https://abr.business.gov.au/json/AbnDetails.aspx?abn="
+        }
         String abnLookupUrlString =  url + organisationABN + "&guid=" + abnLookupToken
         String resp = webService.get(abnLookupUrlString)
 
