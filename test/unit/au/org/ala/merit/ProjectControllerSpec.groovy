@@ -540,6 +540,22 @@ class ProjectControllerSpec extends Specification {
         model.projectContent.dashboard.visible == false
     }
 
+    def "The controller delegates to the projectService to list project priorities and returns a JSON encoded response"() {
+        setup:
+        List expected = ['p1', 'p2', 'p3']
+        String projectId = 'p1'
+
+        when:
+        controller.listProjectInvestmentPriorities(projectId)
+
+        then:
+        1 * projectService.listProjectInvestmentPriorities(projectId) >> expected
+
+        and:
+        response.json == expected
+
+    }
+
     private Map stubPublicUser() {
         userServiceStub.getUser() >> null
         null

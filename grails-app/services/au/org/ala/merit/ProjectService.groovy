@@ -1661,4 +1661,17 @@ class ProjectService  {
 
         scoreData
     }
+
+    /**
+     * This method combines investment priorities listed in the primary and secondary outcome sections of the
+     * RLP MERI plan into a single list for the purposes of pre-popluating one of the RLP outcomes reporting forms.
+     * @param projectId the project of interest
+     * @return a List of outcomes selected in the project MERI plan
+     */
+    List listProjectInvestmentPriorities(String projectId) {
+        Map project = get(projectId,'flat')
+        List primaryOutcomes = project?.custom?.details?.outcomes?.primaryOutcome?.assets ?: []
+        List secondaryOutcomes = project?.custom?.details?.outcomes?.secondaryOutcomes?.collect{it.assets}?.flatten() ?: []
+        primaryOutcomes + secondaryOutcomes
+    }
 }
