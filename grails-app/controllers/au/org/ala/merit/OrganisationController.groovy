@@ -2,6 +2,7 @@ package au.org.ala.merit
 
 import au.org.ala.merit.DateUtils
 import grails.converters.JSON
+import groovy.json.JsonSlurper
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.Sheet
@@ -16,6 +17,7 @@ import org.joda.time.Interval
 import org.joda.time.Period
 import org.joda.time.Weeks
 import org.joda.time.format.DateTimeFormat
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.multipart.MultipartHttpServletRequest
 import pl.touk.excel.export.WebXlsxExporter
 import pl.touk.excel.export.XlsxExporter
@@ -27,10 +29,11 @@ import java.text.SimpleDateFormat
  */
 class OrganisationController {
 
-    static allowedMethods = [ajaxDelete: "POST", delete:"POST", ajaxUpdate: "POST"]
+    static allowedMethods = [ajaxDelete: "POST", delete:"POST", ajaxUpdate: "POST", prepopulateAbn:"GET"]
 
     def organisationService, searchService, documentService, userService, roleService, commonService, webService
     def activityService, metadataService, projectService, excelImportService, reportService, pdfConverterService, authService
+    AbnLookupService abnLookupService
 
     def list() {}
 
@@ -96,6 +99,19 @@ class OrganisationController {
 
     def create() {
         [organisation:[:], isNameEditable: true]
+    }
+    {}
+    def prepopulateAbn(){
+        Map requestParameter = params
+        String abnNumber = requestParameter.abn
+        Map prePopulateAbn = abnLookupService.lookupOrganisationNameByABN(abnNumber)
+     //   Map findABNMatch = prePopulateAbn.find {it.abn == abnNumber}
+        if (prePopulateAbn.isEmpty()){
+            flash.message = 'Please Enter the valid Abn Number'
+        }else{
+           Map result =  [abn: prePopulateAbn.abn, name: prePopulateAbn.entityName]
+            render result as JSON
+        }
     }
 
     def edit(String id) {

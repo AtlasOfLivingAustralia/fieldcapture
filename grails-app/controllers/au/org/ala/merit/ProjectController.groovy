@@ -16,6 +16,7 @@ import static ReportService.ReportMode
 
 class ProjectController {
 
+    static allowedMethods =  [listProjectInvestmentPriorities: 'GET']
     static defaultAction = "index"
     static ignore = ['action', 'controller', 'id']
     static String ESP_TEMPLATE = "esp"
@@ -26,7 +27,6 @@ class ProjectController {
 
     def projectService, metadataService, organisationService, commonService, activityService, userService, webService, roleService, grailsApplication
     def siteService, documentService, reportService, blogService, pdfGenerationService
-
 
     private def espOverview(Map project, Map user) {
 
@@ -999,6 +999,17 @@ class ProjectController {
                 render status: HttpStatus.SC_NOT_FOUND
             }
         }
+    }
+
+    /**
+     * This method returns the investment priorities listed in the primary and secondary outcome sections of the
+     * RLP MERI plan into a single list for the purposes of pre-populating one of the RLP outcomes reporting forms.
+     * @param id the project id of the project of interest
+     * @return a List of outcomes selected in the project MERI plan
+     */
+    @PreAuthorise(accessLevel = 'editor')
+    def listProjectInvestmentPriorities(String id) {
+        render projectService.listProjectInvestmentPriorities(id) as JSON
     }
 
     private def error(String message, String projectId) {

@@ -15,7 +15,7 @@
             </tbody>
             <tfoot data-bind="visible:transients.socialMediaUnspecified().length > 0">
             <tr><td colspan="3">
-                <select id="addSocialMedia" class="form-control"
+                <select id="addSocialMedia" class="form-control enableDisabled"
                         data-bind="options:transients.socialMediaUnspecified,optionsText:'name',optionsValue:'role',value:transients.socialMediaToAdd,optionsCaption:'Add social media link...'"></select>
             </td></tr>
             </tfoot>

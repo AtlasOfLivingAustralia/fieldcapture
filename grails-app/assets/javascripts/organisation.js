@@ -111,6 +111,33 @@ OrganisationViewModel = function (props) {
         }
     };
 
+    self.prepopulateFromABN = function() {
+        if ($('#abnSelector').validationEngine()) {
+            var abn = self.abn()
+            $.get(fcConfig.prepopulateAbn, {abn:abn, contentType:'application/json'}).done(function (orgDetails) {
+                if (orgDetails && !orgDetails.error){
+                    if (orgDetails.name === ""){
+                        self.name(orgDetails.name)
+                        bootbox.alert("Abn Number is invalid");
+                        $(".enableDisabled").prop("disabled", true);
+                        $("#save").prop("disabled", true);
+                    }else{
+                        self.name(orgDetails.name)
+                        $(".enableDisabled").prop("disabled", false);
+                        $("#save").prop("disabled", false);
+                    }
+
+
+                }else{
+                    bootbox.alert(error)
+                }
+            }).fail(function () {
+
+            });
+
+        }
+    };
+
     if (props.documents !== undefined && props.documents.length > 0) {
         $.each(['logo', 'banner', 'mainImage'], function(i, role){
             var document = self.findDocumentByRole(props.documents, role);
