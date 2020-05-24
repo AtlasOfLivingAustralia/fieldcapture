@@ -6,12 +6,13 @@ class AddOrEditOrganisation extends Module {
     static content = {
         name { $('#name') }
         acronym{$('#acronym')}
-        abn{$('#abn')}
+        abn{$('#abnSelector')}
         description { $('#description') }
         url { $('#url') }
         socialMediaDropdown { $('#addSocialMedia') }
         attachProgramLogoButton { $('[data-role=logo]') }
         attachFeatureGraphicFileInput { $('[data-role=mainImage]') }
+        prePopulateABN { $("#prepopulateFromABN") }
 
         saveButton { $('#save') }
         cancelButton { $('#cancel') }

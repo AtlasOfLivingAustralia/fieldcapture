@@ -105,7 +105,7 @@ class OrganisationController {
         Map requestParameter = params
         String abnNumber = requestParameter.abn
         Map prePopulateAbn = abnLookupService.lookupOrganisationNameByABN(abnNumber)
-     //   Map findABNMatch = prePopulateAbn.find {it.abn == abnNumber}
+
         if (prePopulateAbn.isEmpty()){
             flash.message = 'Please Enter the valid Abn Number'
         }else{
