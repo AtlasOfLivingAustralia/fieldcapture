@@ -62,20 +62,19 @@ class OrganisationService {
     Map getOrgByAbn(String abnNumber){
         return list().list.find({ it.abn == abnNumber }) as Map
     }
-    String checkExistingAbnNumber(String programId, String abnNumber){
+
+    String checkExistingAbnNumber(String organisationId, String abnNumber){
         String error = null
-        boolean creating = !programId
+        boolean creating = !organisationId
 
         Map orgList = getOrgByAbn(abnNumber)
 
         if (!creating){
             if (orgList == null){
                 error
-            }else if(orgList.programId == programId && orgList.abn == abnNumber) {
+            }else if(orgList.organisationId == organisationId && orgList.abn == abnNumber) {
                 error
-            }else if (orgList.programId == programId && orgList.abn != abnNumber) {
-                error
-            }else if (orgList.programId != programId && orgList.abn == abnNumber) {
+            }else if (orgList.organisationId != organisationId && orgList.abn == abnNumber) {
                 error = "Abn Number is not unique"
             }
         }else{
