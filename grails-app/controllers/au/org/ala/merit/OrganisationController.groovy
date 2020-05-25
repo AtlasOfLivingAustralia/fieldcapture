@@ -100,7 +100,7 @@ class OrganisationController {
     def create() {
         [organisation:[:], isNameEditable: true]
     }
-    {}
+
     def prepopulateAbn(){
         Map requestParameter = params
         String abnNumber = requestParameter.abn
