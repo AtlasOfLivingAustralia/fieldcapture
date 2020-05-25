@@ -38,8 +38,7 @@ class AbnLookupServiceSpec extends Specification {
                 "             \"EntityTypeName\":\"Commonwealth Government Entity\",\n" +
                 "             \"Gst\":\"2000-07-01\",\"Message\":\"\"})"
 
-        Map expected = [abn:"41687119230", entityName: "COMMONWEALTH SCIENTIFIC AND INDUSTRIAL RESEARCH ORGANISATION",
-                       ]
+        Map expected = [abn:"41687119230", entityName: "COMMONWEALTH SCIENTIFIC AND INDUSTRIAL RESEARCH ORGANISATION"]
 
 
 

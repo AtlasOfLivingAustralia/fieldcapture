@@ -104,14 +104,8 @@ class OrganisationController {
     def prepopulateAbn(){
         Map requestParameter = params
         String abnNumber = requestParameter.abn
-        Map prePopulateAbn = abnLookupService.lookupOrganisationNameByABN(abnNumber)
-
-        if (prePopulateAbn.isEmpty()){
-            flash.message = 'Please Enter the valid Abn Number'
-        }else{
-           Map result =  [abn: prePopulateAbn.abn, name: prePopulateAbn.entityName]
-            render result as JSON
-        }
+        Map result = organisationService.getAbnDetails(abnNumber)
+        render result as JSON
     }
 
     def edit(String id) {

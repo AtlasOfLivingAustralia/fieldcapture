@@ -13,6 +13,7 @@ class OrganisationService {
 
 
     def grailsApplication,webService, metadataService, projectService, userService, searchService, activityService, emailService, reportService, documentService
+    AbnLookupService abnLookupService
 
     private static def APPROVAL_STATUS = ['unpublished', 'pendingApproval', 'published']
 
@@ -311,6 +312,17 @@ class OrganisationService {
             return [success:false, error:resp.error]
         }
         return [success:true]
+    }
+
+    Map getAbnDetails(String abnNumber){
+        Map result
+        result = abnLookupService.lookupOrganisationNameByABN(abnNumber)
+        if (result.abn == ''){
+            result.error = "invalid"
+        }else{
+            result = [abn: result.abn, name: result.entityName]
+        }
+        return result
     }
 
 }

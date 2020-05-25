@@ -115,9 +115,8 @@ OrganisationViewModel = function (props) {
         if ($('#abnSelector').validationEngine()) {
             var abn = self.abn()
             $.get(fcConfig.prepopulateAbn, {abn:abn, contentType:'application/json'}).done(function (orgDetails) {
-                if (orgDetails && !orgDetails.error){
-                    if (orgDetails.name === ""){
-                        self.name(orgDetails.name)
+                if (orgDetails){
+                    if (orgDetails.error === "invalid"){
                         bootbox.alert("Abn Number is invalid");
                         $(".enableDisabled").prop("disabled", true);
                         $("#save").prop("disabled", true);
