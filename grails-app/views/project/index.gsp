@@ -276,7 +276,7 @@
             var programName = '${(config.program?.acronym?:project.associatedSubProgram) ?: project.associatedProgram}';
             config.programName = programName;
             config.programObjectives = ${config.program?.config?.objectives ?: '[]'};
-            config.programActivities = ${config.program?.config?.activities ?: '[]'};
+            config.programActivities = <fc:modelAsJavascript model="${config.program?.config?.activities?.collect{it.name} ?: []}"/>
 
             var viewModel = new ProjectPageViewModel(
                 project,

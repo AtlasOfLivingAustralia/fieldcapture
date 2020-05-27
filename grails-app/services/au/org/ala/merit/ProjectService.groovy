@@ -1374,6 +1374,11 @@ class ProjectService  {
         projectServices
     }
 
+    /** Returns a list of activity types that have been selected for implementation by a project in the MERI plan */
+    List<String> getProjectActivities(Map project) {
+        project?.custom?.details?.activities?.activities
+    }
+
 
     /**
      * Returns a the List of services being delivered by this project with target information for each score.
