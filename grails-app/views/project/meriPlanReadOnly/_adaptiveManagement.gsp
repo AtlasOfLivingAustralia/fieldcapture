@@ -3,5 +3,5 @@
     <h4>${title}</h4>
 </g:if>
     <p>Methods and processes that will enable adaptive management during the lifetime of this project</p>
-    <span data-bind="value:details.adaptiveManagement"></span>
+    <span data-bind="text:details.adaptiveManagement"></span>
 </div>

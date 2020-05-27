@@ -1,6 +1,6 @@
 package au.org.ala.fieldcapture
 
-
+import pages.MeriPlanPDFPage
 import pages.RlpProjectPage
 
 class ConfigurableMeriPlanSpec extends StubbedCasSpec {
@@ -107,7 +107,6 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         when:
         def meriPlan = openMeriPlanEditTab()
 
-        then:
         then: "Only the sections of the MERI plan configured in the program will be displayed"
         meriPlan != null
         !meriPlan.primaryOutcome.displayed
@@ -183,4 +182,39 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlan.otherActivity == "Other activity"
     }
 
+
+    def "A MERI plan PDF can be produced from a configurable MERI plan"() {
+        setup:
+        String projectId = 'meri2'
+        login([userId: '1', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'USER'], browser)
+
+        when:
+        to RlpProjectPage, projectId
+
+        then:
+        waitFor { at RlpProjectPage }
+
+        when:
+        def editableMeriPlan = openMeriPlanEditTab()
+        editableMeriPlan.generatePDF()
+
+        then:
+        withWindow([page:MeriPlanPDFPage], "meri-plan-report", {
+
+            meriPlan.assets[0].description.text() == "asset 1"
+            meriPlan.objectives() == ["objective 2", "Other objective"]
+            meriPlan.shortTermOutcomes[0].text() == "outcome 1"
+            meriPlan.projectDescription == 'Project description'
+            meriPlan.projectMethodology == 'Project Methodology'
+            meriPlan.monitoringIndicators[0].indicator.text() == "Indicator 1"
+            meriPlan.monitoringIndicators[0].approach.text() == 'Approach 1'
+            meriPlan.adaptiveManagement == 'Adaptive management'
+            meriPlan.projectPartnerships[0].name == 'partner name'
+            meriPlan.projectPartnerships[0].partnership == 'partnership'
+            meriPlan.projectPartnerships[0].orgType == 'Trust'
+            meriPlan.activities() == ["activity 1", 'Other']
+        })
+
+
+    }
 }
