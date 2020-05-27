@@ -35,15 +35,24 @@ class ProjectBlogSpec extends StubbedCasSpec {
         waitFor {at NewBlogEntryPage}
 
         when:
-        blogDetails.title = 'Testing blog of site'
-        blogDetails.description = 'Description of blog'
+        blogDetails.title = 'uploading photo to blog'
+        blogDetails.description = 'uploading photo to blog'
+        File toAttach = new File(getClass().getResource('/resources/testImage.png').toURI())
+        blogDetails.uploadingFile =toAttach.absolutePath
+
+        then:
+        waitFor {blogDetails.privacy.displayed}
+
+        when:
+        blogDetails.privacy = true
         submit()
 
         then:
         waitFor {at ProjectBlogPage}
         blogModule.blogs().size() ==2
+        blogModule.images()[0].endsWith('testImage.png')
 
-        ['BlogTest','Testing blog of site'].any{blogModule.blogTitles().contains(it)}
+        ['BlogTest','uploading photo to blog'].any{blogModule.blogTitles().contains(it)}
 
         //Enter edit mode again
         when:
@@ -55,7 +64,7 @@ class ProjectBlogSpec extends StubbedCasSpec {
 
 
         when:
-        blogModule.deleteBlogBtn[1].click()
+        blogModule.deleteBlogBtn[0].click()
 
         then:
         waitFor {blogModule.deleteBlogBtn.size() == 1 && editProjectBlogPane().isDisplayed()}
@@ -64,7 +73,7 @@ class ProjectBlogSpec extends StubbedCasSpec {
 
     def "As an admin, I can enter edit mode "(){
         setup:
-        login([userId:'1', role:"ROLE_USER", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
+        login([userId:'1', role:"ROLE_ADMIN", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
 
         when:
         to ProjectBlogPage

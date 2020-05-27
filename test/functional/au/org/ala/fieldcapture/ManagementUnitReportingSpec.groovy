@@ -81,7 +81,6 @@ class ManagementUnitReportingSpec extends StubbedCasSpec {
         field("whsRequirementsMet").value('Met requirements')
         markAsComplete()
         save()
-        waitFor { exitButton.displayed } // The save will popup a screen blocking save message
         exitReport()
 
         then:

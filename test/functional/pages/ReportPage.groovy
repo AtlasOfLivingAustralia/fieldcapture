@@ -31,6 +31,12 @@ class ReportPage extends Page {
 
     def save() {
         saveButton.click()
+        waitFor {
+            $('.blockOverlay').displayed
+        }
+        waitFor {
+            !($('.blockOverlay').displayed)
+        }
     }
 
     def exitReport() {

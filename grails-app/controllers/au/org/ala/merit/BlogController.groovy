@@ -169,7 +169,8 @@ class BlogController {
     private Map updateImage(Map blog){
         Map image = blog.remove('image')
         if (image) {
-            switch (blog.blogOf){
+            BlogType blogType = BlogType.lookup(blog.blogOf)
+            switch (blogType){
                 case BlogType.MANAGEMENTUNIT:
                     image.managementUnitId = blog.managementUnitId
                     break

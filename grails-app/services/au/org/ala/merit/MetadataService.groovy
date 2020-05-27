@@ -229,7 +229,7 @@ class MetadataService {
         return cacheService.get('organisations',{
             Map result = webService.getJson(grailsApplication.config.ecodata.baseUrl + "organisation")
 
-            List reducedList = result?.list?.collect {[name:it.name, organisationId:it.organisationId]}
+            List reducedList = result?.list?.collect {[name:it.name, organisationId:it.organisationId, abn:it.abn]}
             [list:reducedList?:[]]
         })
     }
@@ -250,15 +250,13 @@ class MetadataService {
         })
     }
 
-    def getReportCategories() {
+    LinkedHashSet getReportCategories() {
         return cacheService.get('report-categories',{
-            def categories = new LinkedHashSet()
-            activitiesModel().outputs.each { output ->
-                output.scores.each { score ->
-                    def cat = score.category?.trim()
-                    if (cat) {
-                        categories << cat
-                    }
+            Set categories = new LinkedHashSet()
+            getScores(false).each { score ->
+                def cat = score.category?.trim()
+                if (cat) {
+                    categories << cat
                 }
             }
             categories

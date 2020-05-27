@@ -1,9 +1,7 @@
 package au.org.ala.fieldcapture
 
 import pages.ManagementUnitPage
-import pages.NewBlogEntryPage
-import pages.ProgramBlogPage
-import pages.ProgramPage
+import pages.AdminReportsPage
 
 class ManagementUnitSpec extends StubbedCasSpec {
 
@@ -41,14 +39,38 @@ class ManagementUnitSpec extends StubbedCasSpec {
         projectLinks().size()>=1
         gotoProgram().size() >= 1
 
-        //Cannot click on invisible element - phantomjs
-//        when:
-//        gotoProgram()[0].click()
-//
-//        then:
-//        at ProgramPage
-
 
     }
+
+
+
+/*    def "As an site admin, I can get report periods and request to generate reports"(){
+        setup:
+        login([userId:'1', role:"ROLE_ADMIN", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
+
+        when:
+        to AdminReportsPage
+
+        then:
+        waitFor {at AdminReportsPage}
+        selectedPeriod() =="startDate=2018-07-01&endDate=2019-06-30"
+
+        when:
+        interact {
+            downloadReportBtn().click()
+        }
+
+        then:
+        waitFor{showDownloadDetailsIcon().isDisplayed()}
+
+//        when:
+//        interact {
+//            showDownloadDetailsIcon().click()
+//        }
+//
+//        then:
+//        waitFor{muReportDownloadLink().isDisplayed()}
+
+    }*/
 
 }

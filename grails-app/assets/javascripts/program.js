@@ -133,8 +133,14 @@ var ProgramPageViewModel = function(props, options) {
     _.extend(self, new ProgramViewModel(props, options));
 
     var config = props.config || {};
+    var outcomes = props.outcomes || [];
+    var priorities = props.priorities || [];
+    var themes = props.themes || [];
 
     self.config = ko.observable(vkbeautify.json(config));
+    self.outcomes = ko.observable(vkbeautify.json(outcomes));
+    self.priorities = ko.observable(vkbeautify.json(priorities));
+    self.themes = ko.observable(vkbeautify.json(themes));
 
     var projectOutputReportCategory = 'Outputs Reporting';
     /**
@@ -238,6 +244,10 @@ var ProgramPageViewModel = function(props, options) {
             startDate:self.startDate(),
             endDate:self.endDate()
         };
+        return saveProgram(json);
+    };
+
+    var saveProgram = function(json) {
         return $.ajax({
             url: options.programSaveUrl,
             type: 'POST',
@@ -277,7 +287,6 @@ var ProgramPageViewModel = function(props, options) {
     };
 
     self.saveProgramConfiguration = function() {
-
         try {
             config = JSON.parse(self.config());
         }
@@ -289,6 +298,47 @@ var ProgramPageViewModel = function(props, options) {
             bootbox.alert("Program configuration saved");
         });
 
+    };
+
+    self.saveProgramOutcomes = function() {
+        var outcomes;
+        try {
+            outcomes = JSON.parse(self.outcomes());
+        }
+        catch (e) {
+            bootbox.alert("Invalid JSON");
+            return;
+        }
+        saveProgram({outcomes:outcomes}).done(function() {
+            bootbox.alert("Program outcomes saved!");
+        });
+    };
+
+    self.saveProgramPriorities = function() {
+        var priorities;
+        try {
+            priorities = JSON.parse(self.priorities());
+        }
+        catch (e) {
+            bootbox.alert("Invalid JSON");
+            return;
+        }
+        saveProgram({priorities:priorities}).done(function() {
+            bootbox.alert("Program priorities saved!");
+        });
+    };
+    self.saveProgramThemes = function() {
+        var themes;
+        try {
+            themes = JSON.parse(self.themes());
+        }
+        catch (e) {
+            bootbox.alert("Invalid JSON");
+            return;
+        }
+        saveProgram({themes:themes}).done(function() {
+            bootbox.alert("Program themes saved!");
+        });
     };
 
     function popupContent(managementUnitFeature) {

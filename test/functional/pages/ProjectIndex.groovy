@@ -2,11 +2,13 @@ package pages
 
 import geb.Module
 import geb.Page
+import pages.modules.ProjectAdminTab
+import pages.modules.RisksAndThreats
 
 /**
  * Represents a project index page.
  */
-class ProjectIndex extends Page {
+class ProjectIndex extends ReloadablePage {
     static url = 'project/index' // requires a project id parameter
     static at = { title.endsWith('| Project | Field Capture')}
 
@@ -25,9 +27,22 @@ class ProjectIndex extends Page {
         plansAndReports(wait:true) { module PlansAndReportsTab }
         sites { module SitesTab }
         dashboard { module DashboardTab }
-        admin { module AdminTab }
+        admin { module ProjectAdminTab }
 
         iAmSure(wait: true) { $('.modal a', text:'OK') }
+
+        editDocumentForm {module AttachDocumentForm}
+
+    }
+
+    void openActivitiesTab() {
+        activitiesTab.click()
+        waitFor { plansAndReports.displayed }
+    }
+
+    void openAdminTab() {
+        adminTab.click()
+        waitFor { admin.displayed }
     }
 }
 
@@ -64,7 +79,7 @@ class PlansAndReportsTab extends Module {
             }
             activities
         }
-        risksAndThreats(required:false) { $('#risk-validation')}
+        risksAndThreats(required:false) { $('#risk-validation').module(RisksAndThreats)}
     }
 }
 
@@ -99,5 +114,6 @@ class SitesTab extends Module {
 class DashboardTab extends Module {
 
 }
+
 
 

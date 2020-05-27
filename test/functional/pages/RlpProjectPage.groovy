@@ -1,10 +1,12 @@
 package pages
 
 import pages.modules.DocumentsTab
+import pages.modules.EditableMeriPlan
 import pages.modules.ProjectAdminTab
 import pages.modules.ProjectReports
 import pages.modules.RlpOverviewTab
 import pages.modules.RlpSitesTab
+import pages.modules.TimeoutModal
 
 class RlpProjectPage extends ReloadablePage {
 
@@ -15,7 +17,7 @@ class RlpProjectPage extends ReloadablePage {
 
         name { $('h1[data-bind*=name]') }
         overviewTab { $('#overview-tab') }
-        documentsTab { $('#documents-tab') }
+        documentsTab(required:false) { $('#documents-tab') }
         dashboardTab(required:false) { $('#serviceDelivery-tab') }
 
         meriPlanTab(required:false) { $('#details-tab') }
@@ -25,10 +27,12 @@ class RlpProjectPage extends ReloadablePage {
 
         overview { module RlpOverviewTab }
         adminContent(required: false) { module ProjectAdminTab }
-        documents { module DocumentsTab }
+        documents(required:false) { module DocumentsTab }
         projectReports(required: false) { module ProjectReports }
         sitesTabContent(required:false) { module RlpSitesTab }
 
+        timeoutModal(required:false) { $('div.bootbox.modal').module TimeoutModal }
+        unsavedEdits(required:false) { $('.unsaved-changes') }
     }
 
     def openDocumentDialog() {
@@ -43,5 +47,15 @@ class RlpProjectPage extends ReloadablePage {
         adminContent.projectSettingsTab.click()
         waitFor { adminContent.projectSettings.displayed }
         adminContent.projectSettings.regenerateReports()
+    }
+
+    def openAdminTab() {
+        adminTab.click()
+        waitFor { adminContent.displayed }
+    }
+
+    def openMeriPlanEditTab() {
+        openAdminTab()
+        adminContent.openMeriPlan()
     }
 }

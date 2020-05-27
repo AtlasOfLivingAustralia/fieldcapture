@@ -1,7 +1,7 @@
 <!-- ko with:details.services -->
 <h4>Project services and minimum targets</h4>
 
-<table class="table budget-table">
+<table class="table service-targets">
     <thead>
     <tr>
         <th class="index" rowspan="2"></th>

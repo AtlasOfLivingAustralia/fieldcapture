@@ -56,7 +56,7 @@ class RlpReportingSpec extends StubbedCasSpec {
         and: "The new reports are displayed"
 
         waitFor {
-            projectReports.reports.size() >= 10 // Reports from the project start up to the current period are shown, so more reports will be shown as time moves on as our project dates are fixed.
+            projectReports.reports.size() == 12
         }
 
     }

@@ -57,13 +57,17 @@ class ManagementUnitController {
         boolean canViewNonPublicTabs = userService.canUserEditManagementUnit(userService.getUser()?.userId, mu.managementUnitId)
 
         Map result = managementUnitService.getProjects(mu.managementUnitId)
-        List projects = result?.projects
+        List projects = result?.projects ?: []
 
-        // Clone to avoid change on projects
+        // This is a configuration option that controls how we group and display the projects on the
+        // management unit page.
+        List programGroups = mu.config?.programGroups ?: []
+
         // Fetch related programs
-        String[] programIds =[]
-        if(projects){
-            programIds = projects.clone().unique{project->project.programId}?.programId
+        if (projects) {
+            // We may be aggregating on a parent program that doesn't directly have any projects (for example
+            // all of the projects are under a sub-program)
+            String[] programIds = (projects.collect{it.programId} + programGroups).unique()
             List programs = programService.get(programIds)
             // This reverse alphabetical order is to satisfy a request to always
             // display the RLP first.
@@ -71,43 +75,82 @@ class ManagementUnitController {
             mu.projects = projects
         }
 
-        //Aggregate outputs of programs
-        for(program in mu.programs) {
-            List projectsInProgram = mu.projects.findAll{it.programId==program.programId}
-            if(projectsInProgram) {
-                calProgramOutput(program, projectsInProgram)
-            }
-        }
-
-        List reportOrder = mu.config?.managementUnitReports?.collect{[category:it.category, description:it.description]} ?: []
+        LinkedHashMap programsByCategory = groupPrograms(mu.programs, programGroups)
+        // Now group the projects according to the program configuration.
+        Map projectsByCategory = groupProjects(mu.projects, programsByCategory)
 
         // If the program is not visible, there is no point showing the dashboard or sites as both of these rely on
         // data in the search index to produce.
         boolean managementUnitVisible = mu.config?.visibility != 'private'
 
-        Map servicesWithScores = null
+        Map servicesWithScores = [:]
         if (managementUnitVisible) {
-            servicesWithScores = managementUnitService.serviceScores(mu.managementUnitId, programIds, !hasAdminAccess)
-            mu.programs?.each{
-                it['servicesWithScores'] = servicesWithScores[it.programId]
-            }
+            // Produce aggregate dashboards for each of the configured program groups
+            servicesWithScores = managementUnitService.serviceScores(mu.managementUnitId, programsByCategory, !hasAdminAccess)
         }
 
+        List displayedPrograms = []
+        // Aggregate the outcomes addressed by all projects in each program group
+        projectsByCategory.each { String programId, List projectsInProgramGroup ->
+            Map program = mu.programs.find{it.programId == programId}
+
+            aggregateOutcomes(program, projectsInProgramGroup)
+            displayedPrograms << [program:program, projects: projectsInProgramGroup, servicesWithScores:servicesWithScores[programId]]
+        }
+
+        List reportOrder = mu.config?.managementUnitReports?.collect{[category:it.category, description:it.description]} ?: []
 
         [about   : [label: 'Management Unit Overview',visible: true, stopBinding: false, type: 'tab',
                     mu: mu,
-                    servicesDashboard:[visible: managementUnitVisible]
+                    servicesDashboard:[visible: managementUnitVisible],
+                    displayedPrograms:displayedPrograms
                     ],
-         projects: [label: 'MU Reporting', visible: canViewNonPublicTabs, stopBinding: false, type:'tab', mu:mu, reports: mu.reports, reportOrder:reportOrder, hideDueDate:true],
+         projects: [label: 'MU Reporting', visible: canViewNonPublicTabs, stopBinding: false, type:'tab', mu:mu, reports: mu.reports, reportOrder:reportOrder, hideDueDate:true, displayedPrograms:displayedPrograms],
          sites   : [label: 'MU Sites', visible: canViewNonPublicTabs, stopBinding: true, type:'tab'],
          admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab', mu:mu, blog: [editable: hasEditAccessOfBlog]]
         ]
 
     }
 
+    /**
+     * This method will group programs based on whether they or a parent program falls into
+     * one of the configured program groups.
+     * Programs that don't fall into a group will result in the creation of a new group.
+     */
+    private LinkedHashMap<String, List> groupPrograms(List programs, List programGroups) {
+        Map programsByCategory = new LinkedHashMap().withDefault{[]} // LinkedHashMap is to preserve the order specified by programGroups
+        // Group programs according to their hierarchy under the configured groups.
+        programs?.each { Map program ->
+            boolean categorized = false
+            programGroups.each { String programId ->
+                if (programService.isInProgramHierarchy(program, programId)) {
+                    programsByCategory[programId] << program
+                    categorized = true
+                }
+            }
+            // This project doesn't fall into a group specified by the config so create a new group for it.
+            if (!categorized) {
+                programsByCategory[program.programId] << program
+            }
+        }
+        programsByCategory
+    }
+
+    private Map<String, List> groupProjects(List projects, Map programsByCategory) {
+
+        Map projectsByCategory = [:].withDefault{[]}
+        projects.each { Map project ->
+            Map.Entry categoryGroup = programsByCategory.find{ String k, List v ->
+                v && v.find{project.programId == it.programId}
+            }
+            projectsByCategory[categoryGroup.key] << project
+        }
+        projectsByCategory
+    }
+
 
     //Aggregate all targeted outcomes of projects in the given program
-    private def calProgramOutput(Map program, List projects){
+    private def aggregateOutcomes(Map program, List projects){
         for(Map project in projects){
             //Verify project.outcomes (from program config) with primaryOutcome and secondaryOutcomes in project.custom.details.outcomes
             Map primaryOutcome = project.custom?.details?.outcomes?.primaryOutcome

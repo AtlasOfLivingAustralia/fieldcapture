@@ -144,4 +144,17 @@ class ProgramServiceSpec extends Specification {
         0 * projectService.generateProjectReports(_, _, _)
     }
 
+    def "Programs can be found in the hierarchy"() {
+        setup:
+        Map p1 = [programId:'p1']
+        Map p2 = [programId:'p2', parent:p1]
+        Map p3 = [programId:'p3']
+
+        expect:
+        service.isInProgramHierarchy(p1, p1.programId) == true
+        service.isInProgramHierarchy(p2, p1.programId) == true
+        service.isInProgramHierarchy(p3, p1.programId) == false
+        service.isInProgramHierarchy(p1, p2.programId) == false
+    }
+
 }

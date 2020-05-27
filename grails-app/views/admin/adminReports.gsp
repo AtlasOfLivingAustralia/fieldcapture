@@ -8,7 +8,9 @@
             performanceComparisonReportUrl: "${g.createLink(controller: 'report', action: 'performanceAssessmentComparisonReport')}",
             dashboardUrl: "${g.createLink(controller: 'report', action: 'loadReport')}",
             organisationDataDownloadUrl: "${g.createLink(controller:'search', action:'downloadOrganisationData')}",
-            userDownloadUrl: "${g.createLink(controller:'search', action:'downloadUserData')}"
+            userDownloadUrl: "${g.createLink(controller:'search', action:'downloadUserData')}",
+            generateMUReportInPeriodUrl: "${g.createLink(controller:'managementUnit', action:'generateReportsInPeriod')}",
+            muReportDownloadUrl: "${g.createLink(controller:"download",action:"get")}"
 
         }
     </script>
@@ -22,6 +24,19 @@
 <h4>Organisation data download:</h4>
 
 <a id="orgDataDownload" class="btn" href="#">Download Organisation Report Data</a>
+
+<h4>Management unit report download:</h4>
+<div class="control-group">
+    <label class="control-label">Select reporting period: </label>
+    <div class="controls">
+        <select id="reportPeriodOfManagementUnit">
+            <g:each var="financialYear" in="${reportsPeriodsOfManagementUnit}">
+                <option value="startDate=${financialYear}-07-01&endDate=${financialYear+1}-06-30">01 July ${financialYear} - 30 June ${financialYear+1} </option>
+            </g:each>
+        </select>
+    </div>
+</div>
+<a id="muReportDownload" class="btn" href="#">Download Management Unit Report</a>
 
 <h4>User Report</h4>
 

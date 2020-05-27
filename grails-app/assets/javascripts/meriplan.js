@@ -3,6 +3,35 @@
  */
 function MERIPlan(project, projectService, config) {
     var self = this;
+
+    if (config.meriStorageKey && project.custom && project.custom.details) {
+        var savedProjectCustomDetails = amplify.store(config.meriStorageKey);
+        if (savedProjectCustomDetails) {
+            var serverUpdate = project.custom.details.lastUpdated;
+            var restored = JSON.parse(savedProjectCustomDetails);
+            var localSave = amplify.store(config.meriStorageKey + "-updated");
+            $('#restoredData').show();
+            if (restored.custom) {
+                project.custom.details = restored.custom.details;
+            }
+            if (restored.outputTargets) {
+                project.outputTargets = restored.outputTargets;
+            }
+            if (restored.risks) {
+                project.risks = restored.risks;
+            }
+
+
+            var message = "<span class='unsaved-changes label label-warning'>Important</span><p>You have unsaved MERI Plan changes for this project.</p>";
+            if (localSave && serverUpdate) {
+                var saved = moment(localSave);
+                message += "<p>Your unsaved changes were made on <b>" + saved.format("LLLL") + "</b></p><p>The changes we loaded from the server when this page was refreshed were made at <b>" + moment(serverUpdate).format("LLLL") + "</b></p>";
+            }
+            message += "<p>Please review the changes then press the 'Save changes' button at the bottom of the page if you want to keep your unsaved changes or the 'Cancel' button if you want to discard your changes.</p>";
+
+            bootbox.alert(message);
+        }
+    }
     ReadOnlyMeriPlan.apply(this, [project, projectService, config]);
 
     self.approvedPlans = ko.observableArray();
@@ -194,35 +223,6 @@ function MERIPlan(project, projectService, config) {
         document.location.reload(true);
     };
 
-    if (config.meriStorageKey) {
-        var savedProjectCustomDetails = amplify.store(config.meriStorageKey);
-        if (savedProjectCustomDetails) {
-            var serverUpdate = project.custom.details.lastUpdated;
-            var restored = JSON.parse(savedProjectCustomDetails);
-            var localSave = amplify.store(config.meriStorageKey + "-updated");
-            $('#restoredData').show();
-            if (restored.custom) {
-                project.custom.details = restored.custom.details;
-            }
-            if (restored.outputTargets) {
-                project.outputTargets = restored.outputTargets;
-            }
-            if (restored.risks) {
-                project.risks = restored.risks;
-            }
-
-
-            var message = "<span class='label label-warning'>Important</span><p>You have unsaved MERI Plan changes for this project.</p>";
-            if (localSave && serverUpdate) {
-                var saved = moment(localSave);
-                message += "<p>Your unsaved changes were made on <b>" + saved.format("LLLL") + "</b></p><p>The changes we loaded from the server when this page was refreshed were made at <b>" + moment(serverUpdate).format("LLLL") + "</b></p>";
-            }
-            message += "<p>Please review the changes then press the 'Save changes' button at the bottom of the page if you want to keep your unsaved changes or the 'Cancel' button if you want to discard your changes.</p>";
-
-            bootbox.alert(message);
-        }
-    }
-
     self.isProjectDetailsSaved = ko.computed(function () {
         return (project['custom']['details'].status == 'active');
     });
@@ -233,6 +233,8 @@ function MERIPlan(project, projectService, config) {
     });
     self.projectThemes.push("MERI & Admin");
     self.projectThemes.push("Others");
+
+    self.programObjectives = config.programObjectives || [];
 
     self.obligationOptions = ['Yes', 'No'];
     var defaultRiskAndThreats = ['Blow-out in cost of project materials', 'Changes to regional boundaries affecting the project area', 'Co-investor withdrawal / investment reduction',
@@ -315,7 +317,12 @@ function MERIPlan(project, projectService, config) {
         self.meriPlan().outcomes.shortTermOutcomes.remove(outcome);
     };
 
-
+    self.addAsset = function() {
+        self.meriPlan().assets.push(new AssetViewModel());
+    };
+    self.removeAsset = function(asset) {
+        self.meriPlan().assets.remove(asset);
+    };
 
     self.saveAndSubmitChanges = function(){
         self.saveMeriPlan(true);
@@ -327,7 +334,6 @@ function MERIPlan(project, projectService, config) {
 
     // Save project details
     self.saveMeriPlan = function(enableSubmit){
-        var valid =  $('#project-details-validation').validationEngine('validate');
 
         var meriPlan = self.meriPlan();
         meriPlan.status('active');
@@ -336,6 +342,7 @@ function MERIPlan(project, projectService, config) {
         meriPlan.saveWithErrorDetection(function() {
 
             if(enableSubmit) {
+                var valid =  $('#project-details-validation').validationEngine('validate');
                 if (valid) {
                     blockUIWithMessage("Submitting MERI Plan...");
                     self.submitChanges();
@@ -474,8 +481,7 @@ function ReadOnlyMeriPlan(project, projectService, config) {
         return projectService.isProjectDetailsLocked();
     });
     var riskModel;
-    if (config.useRlpTemplate) {
-        disableFlag = self.isProjectDetailsLocked;
+    if (config.useRlpRisksModel) {
         riskModel = rlpRiskModel();
     } else {
         riskModel = meritRiskModel();
@@ -514,27 +520,31 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
             }
         }
     }
+    self.activities = new ActivitiesViewModel(o.activities, config.programActivities || []);
     self.status = ko.observable(o.status);
     self.obligations = ko.observable(o.obligations);
     self.policies = ko.observable(o.policies);
     self.caseStudy = ko.observable(o.caseStudy ? o.caseStudy : false);
     self.keq = new GenericViewModel(o.keq);
-    self.objectives = new ObjectiveViewModel(o.objectives); // Used in original MERI plan template
+    self.objectives = new ObjectiveViewModel(o.objectives, config.programObjectives || []); // Used in original MERI plan template
     self.outcomes = new OutcomesViewModel(o.outcomes, {outcomes:project.outcomes, priorities:project.priorities}); // Use in new MERI plan template
     self.priorities = new GenericViewModel(o.priorities);
     self.implementation = new ImplementationViewModel(o.implementation);
     self.partnership = new GenericViewModel(o.partnership);
     self.lastUpdated = o.lastUpdated ? o.lastUpdated : moment().format();
     self.budget = new BudgetViewModel(o.budget, period);
-
+    self.adaptiveManagement = ko.observable(o.adaptiveManagement);
     self.rationale = ko.observable(o.rationale);
     self.baseline = new GenericViewModel(o.baseline, ['baseline', 'method']);
     self.threats = new GenericViewModel(o.threats, ['threat', 'intervention']);
 
     var row = [];
     o.events ? row = o.events : row.push(ko.mapping.toJS(new EventsRowViewModel()));
-    self.events = ko.observableArray($.map(row, function (obj, i) {
+    self.events = ko.observableArray(_.map(row, function (obj, i) {
         return new EventsRowViewModel(obj);
+    }));
+    self.assets = ko.observableArray(_.map(o.assets || [{}], function(asset) {
+        return new AssetViewModel(asset);
     }));
 
     self.modelAsJSON = function () {
@@ -550,7 +560,6 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
         // are in the MERI plan.
         if (config.useRlpTemplate) {
             var serviceData = tmp.details.services.toJSON();
-            jsData.risks = ko.mapping.toJS(risks);
 
             jsData.outputTargets = serviceData.targets;
             jsData.description = self.description();
@@ -786,7 +795,6 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
                 if (serviceScore.scoreId == outputTargets[i].scoreId) {
                     score = serviceScore;
                 }
-                ;
                 return score;
             })
         });
@@ -805,10 +813,14 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
     };
 
     self.toJSON = function () {
+        var serviceIds = _.unique(_.map(self.services(), function (service) {
+            return service.serviceId();
+        }));
+        serviceIds = _.filter(serviceIds, function(id) {
+            return id != null;
+        });
         return {
-            serviceIds: _.unique(_.map(self.services(), function (service) {
-                return service.serviceId()
-            })),
+            serviceIds: serviceIds,
             targets: self.outputTargets()
         }
     };
@@ -851,21 +863,75 @@ function GenericRowViewModel(o, propertyNames) {
     }
 };
 
-function ObjectiveViewModel(o) {
+function ObjectiveViewModel(o, programObjectives) {
     var self = this;
     if (!o) o = {};
 
     var row = [];
     o.rows ? row = o.rows : row.push(ko.mapping.toJS(new GenericRowViewModel()));
-    self.rows = ko.observableArray($.map(row, function (obj, i) {
+    self.rows = ko.observableArray(_.map(row, function (obj, i) {
         return new GenericRowViewModel(obj);
     }));
 
     var row1 = [];
     o.rows1 ? row1 = o.rows1 : row1.push(ko.mapping.toJS(new OutcomeRowViewModel()));
-    self.rows1 = ko.observableArray($.map(row1, function (obj, i) {
+    self.rows1 = ko.observableArray(_.map(row1, function (obj, i) {
         return new OutcomeRowViewModel(obj);
     }));
+
+    /**
+     * This pure computed observable provides a mapping from a simple array of selected program objectives to
+     * the structure used to store the objectives in the database.
+     */
+    self.simpleObjectives = ko.computed({
+        read:function() {
+            return _.filter(_.map(self.rows1(), function(row) {
+                return row.description();
+            }), function(value) {
+                return value && value != '' &&  programObjectives.indexOf(value) >= 0;
+            });
+        },
+        write: function(values) {
+            // Ignore empty and null values, such as the one pre-populated in the default row above.
+            values = values.filter(function(value) { return value && value != '' &&  programObjectives.indexOf(value) >= 0;});
+
+            while (self.rows1().length > values.length) {
+                self.rows1.splice(self.rows1.length-1, 1);
+            }
+
+            for (var i=0; i<values.length; i++) {
+                if (self.rows1().length <= i) {
+                    self.rows1.push(new OutcomeRowViewModel({description:values[i]}));
+                }
+                else {
+                    self.rows1()[i].description(values[i]);
+                }
+            }
+        }
+    });
+
+    if (programObjectives) {
+
+        var otherObjectives = _.filter(_.map(self.rows1(), function (row) {
+            return row.description();
+        }), function (value) {
+            return value && value != '' && programObjectives.indexOf(value) < 0;
+        });
+        self.simpleObjectives.otherChecked = ko.observable(otherObjectives.length > 0);
+        self.simpleObjectives.otherValue = ko.observable(otherObjectives.length > 0 ? otherObjectives[0] : undefined);
+        self.simpleObjectives.otherChecked.subscribe(function (value) {
+            if (!value) {
+                self.simpleObjectives.otherValue(undefined);
+            }
+        });
+    }
+    self.toJSON = function () {
+        var js = ko.mapping.toJS(self, {ignore:['simpleObjectives']});
+        if (self.simpleObjectives.otherChecked && self.simpleObjectives.otherChecked() && self.simpleObjectives.otherValue()) {
+            js.rows1.push({description:self.simpleObjectives.otherValue(), assets:[]});
+        }
+        return js;
+    };
 };
 
 /**
@@ -930,7 +996,6 @@ function OutcomesViewModel(outcomes, config) {
         return new SingleAssetOutcomeViewModel(outcome)
     }));
     self.midTermOutcomes = ko.observableArray(_.map(outcomes.midTermOutcomes || [], outcomeToViewModel));
-
 }
 
 
@@ -952,13 +1017,21 @@ function EventsRowViewModel(o) {
     self.grantAnnouncementDate = ko.observable(o.grantAnnouncementDate);
 };
 
-function OutcomeRowViewModel(o) {
+function OutcomeRowViewModel(o, programObjectives) {
     var self = this;
     if (!o) o = {};
     self.description = ko.observable(o.description);
     if (!o.assets) o.assets = [];
     self.assets = ko.observableArray(o.assets);
 };
+
+function AssetViewModel(asset) {
+    var self = this;
+    if (!asset) {
+        asset = {};
+    }
+    self.description = ko.observable(asset.description);
+}
 
 function SingleAssetOutcomeViewModel(o) {
     var self = this;
@@ -983,6 +1056,9 @@ function SingleAssetOutcomeViewModel(o) {
         self.assets([]);
     });
     self.toJSON = function () {
+        if (!self.description() && self.assets.length == 0) {
+            return {};
+        }
         return {
             description: self.description(),
             assets: self.assets()
@@ -1095,6 +1171,36 @@ function FloatViewModel(o) {
     if (!o) o = {};
     self.dollar = ko.observable(o.dollar ? o.dollar : 0.0).extend({numericString: 2}).extend({currency: {}});
 };
+
+function ActivitiesViewModel(activities, programActivities) {
+    var self = this;
+
+    if (!activities) {
+        activities = {activities:[]};
+    }
+    var matchingActivities = _.filter(activities.activities, function(activity) {
+        return activity && activity != '' &&  programActivities.indexOf(activity) >= 0;
+    });
+    var otherActivities =_.filter(activities.activities, function(activity) {
+        return activity && activity != '' &&  programActivities.indexOf(activity) < 0;
+    });
+    self.activities = ko.observableArray(matchingActivities);
+    self.activities.otherChecked = ko.observable(otherActivities.length > 0);
+    self.activities.otherValue = ko.observable( otherActivities.length > 0 ? otherActivities[0] : undefined);
+    self.activities.otherChecked.subscribe(function(value) {
+        if (!value) {
+            self.activities.otherValue(undefined);
+        }
+    });
+
+    self.toJSON = function () {
+        var js = ko.mapping.toJS(self);
+        if (self.activities.otherChecked() && self.activities.otherValue()) {
+            js.activities.push(self.activities.otherValue());
+        }
+        return js;
+    };
+}
 
 function limitText(field, maxChar) {
     $(field).attr('maxlength', maxChar);

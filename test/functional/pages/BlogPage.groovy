@@ -16,10 +16,15 @@ class BlogPageModule extends Module {
         editBlogBtn{$('a.editThisBlog')}
         deleteBlogBtn{$('a.delThisBlog')}
         editBlogPanelHeader{$('div#editProjectBlog h3',0)}
+        blogImages {$('img.blog-image')}
     }
 
     List blogs() {
         blogEntryTable.collect{it}
+    }
+
+    List images() {
+        blogImages.collect{it.attr('src')}
     }
 
     List blogTitles() {
@@ -78,6 +83,7 @@ class NewBlogEntryPage extends Page {
         loaded {$('button#save')}
         blogDetails { module BlogDetails }
         cancelBtn {$('button#cancel')}
+        saveBtn {$('button#save')}
     }
 
     def submit() {
@@ -93,6 +99,14 @@ class BlogDetails extends Module {
         saveButton() {
             $("button#save")
         }
+
+        docOptions {$('select[name=docCategory] option', 2)}
+
+        docSelect {$('select[name=docCategory]')}
+
+        uploadingFile {$('input#image[name=files]', 0)}
+        privacy(required:false) {$('input#declaration')  }
+        saveBtn {$('button.btn[name=uploadingDocument]')}
     }
 }
 

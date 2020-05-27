@@ -172,7 +172,6 @@
     <g:render template="/shared/timeoutMessage" model="${[url:grailsApplication.config.security.cas.loginUrl+'?service='+createLink(action:'index', id:project.projectId, absolute: true)]}"/>
     <g:render template="/shared/unsavedChanges" model="${[id:'meriPlanUnsavedChanges', unsavedData:'MERI Plan']}"/>
     <g:render template="/shared/unsavedChanges" model="${[id:'risksUnsavedChanges', unsavedData:'Risks & Threats']}"/>
-    <g:render template="/output/formsTemplates" plugin="ecodata-client-plugin"/>
 
 </div>
 <g:if test="${user?.isEditor && projectContent.admin?.visible}">
@@ -267,17 +266,17 @@
             config.showSiteType = ${Boolean.valueOf(projectContent.site.showSiteType)};
             config.services = services;
             config.useRlpTemplate = services.length > 0;
-            if (!config.useRlpTemplate) {
-               // The RLP template includes Risks in the MERI plan so having separate local storage causes
-               // Issues as it's not cleared on save.
-               config.risksStorageKey = PROJECT_RISKS_KEY;
-            }
+            config.useRlpRisksModel = config.useRlpTemplate;
+            config.risksStorageKey = PROJECT_RISKS_KEY;
+
             config.requireMeriApprovalReason = ${projectContent.admin.requireMeriPlanApprovalReason};
 
             config.autoSaveIntervalInSeconds = ${grailsApplication.config.fieldcapture.autoSaveIntervalInSeconds?:60};
             config.riskAndThreatTypes = ${config.riskAndThreatTypes ?: 'null'};
             var programName = '${(config.program?.acronym?:project.associatedSubProgram) ?: project.associatedProgram}';
             config.programName = programName;
+            config.programObjectives = ${config.program?.config?.objectives ?: '[]'};
+            config.programActivities = ${config.program?.config?.activities ?: '[]'};
 
             var viewModel = new ProjectPageViewModel(
                 project,
@@ -291,25 +290,22 @@
             ko.applyBindings(viewModel);
             window.validateProjectEndDate = viewModel.validateProjectEndDate;
 
+            autoSaveModel(
+                viewModel.meriPlan.risks,
+                fcConfig.projectUpdateUrl,
+                {
+                    storageKey:PROJECT_RISKS_KEY,
+                    autoSaveIntervalInSeconds:${grailsApplication.config.fieldcapture.autoSaveIntervalInSeconds?:60},
+                    restoredDataWarningSelector:'#restoredRisksData',
+                    resultsMessageSelector:'#summary-result-placeholder',
+                    timeoutMessageSelector:'#timeoutMessage',
+                    errorMessage:"Failed to save risks details: ",
+                    successMessage: 'Successfully saved',
+                    defaultDirtyFlag:ko.dirtyFlag,
+                    healthCheckUrl:fcConfig.healthCheckUrl,
+                    preventNavigationIfDirty: true
+                });
 
-
-            if (config.risksStorageKey) {
-
-                autoSaveModel(
-                    viewModel.meriPlan.risks,
-                    fcConfig.projectUpdateUrl,
-                    {
-                        storageKey:PROJECT_RISKS_KEY,
-                        autoSaveIntervalInSeconds:${grailsApplication.config.fieldcapture.autoSaveIntervalInSeconds?:60},
-                        restoredDataWarningSelector:'#restoredRisksData',
-                        resultsMessageSelector:'#summary-result-placeholder',
-                        timeoutMessageSelector:'#timeoutMessage',
-                        errorMessage:"Failed to save risks details: ",
-                        successMessage: 'Successfully saved',
-                        defaultDirtyFlag:ko.dirtyFlag,
-                        healthCheckUrl:fcConfig.healthCheckUrl
-                    });
-            }
 
             function initialiseOverview() {
                 $( '#public-images-slider' ).mThumbnailScroller({});
@@ -415,7 +411,7 @@
                     bootbox.alert($('#risksUnsavedChanges').html());
                 }
                 else {
-                    risksVisible = (e.target.hash  == '#plan');
+                    risksVisible = (e.target.hash  == '#plan' || e.target.hash == '#risks');
                 }
             });
 

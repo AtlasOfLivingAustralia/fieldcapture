@@ -5,23 +5,72 @@ import pages.ProjectIndex
 import spock.lang.Stepwise
 
 @Stepwise
-public class ProjectIndexSpec extends GebReportingSpec {
+public class ProjectIndexSpec extends StubbedCasSpec {
 
-    def projectId = "cb5497a9-0f36-4fef-9f6a-9ea832c5b68c"
-/*
-    def "project information should be displayed correctly"() {
-        given: "go to project index page"
+    def projectId = "project_1"
+
+    def setup() {
+        useDataSet('dataset_project')
+    }
+
+    def cleanup() {
+        logout(browser)
+    }
+
+    def "document should be displayed / uploaded correctly"() {
+        setup:
+        login([userId:'1', role:"ROLE_USER", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
+
+        when:
         to ProjectIndex, projectId
 
-        expect:
+        then:
         at ProjectIndex
 
-        and:
-        projectName.text() == 'MERIT project 1'
-        overview.associatedProgram.text() == 'Test'
+        when:
+        adminTab.click()
+
+        then:
+        waitFor {admin.documentsTab}
+
+        when:
+        admin.documentsTab.click()
+
+        then:
+        admin.documents.documentSummaryList().size() == 1
+        admin.documents.documentSummaryList()[0].name == 'test 1'
+
+        when:
+        admin.documents.attachDocumentButton.click()
+
+
+        then:
+        waitFor { admin.documents.attachDocumentDialog.title.displayed &&  admin.documents.attachDocumentDialog.report.displayed}
+        admin.documents.attachDocumentDialog.reportOptions.size() == 2
+
+        when:
+        File toAttach = new File(getClass().getResource('/resources/testImage.png').toURI())
+        admin.documents.attachDocumentDialog.report = 'report_1'
+        admin.documents.attachDocumentDialog.title = 'test 2'
+        admin.documents.attachDocumentDialog.file =(toAttach.absolutePath)
+        admin.documents.attachDocumentDialog.save()
+
+        then:
+        waitFor{hasBeenReloaded()}
+        at ProjectIndex // Do another at check or the next call to "hasBeenReloaded" will return regardless of whether the page has been reloaded again.
+
+        waitFor {admin.documents.documentSummaryList().size() == 2}
+        admin.documents.documentSummaryList().size() == 2
+        admin.documents.documentSummaryList()[1].name == 'test 2'
+
+        when:
+        admin.documents.documentSummaryList()[1].deleteButton.click()
+
+        then:
+        waitFor {hasBeenReloaded()}
+        waitFor {admin.documents.documentSummaryList().size() == 1}
 
 
     }
-*/
 }
 

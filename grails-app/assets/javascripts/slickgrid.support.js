@@ -1,5 +1,6 @@
 
 
+
 //---- taken from jqueryValidationEngine with minor modifications ------
 var ValidationSupport = function() {
 
@@ -872,7 +873,7 @@ function ComboBoxEditor(args) {
         $select.remove();
         $comboboxWrapper.remove();
         combobox.$menu.remove();
-        delete combobox;
+        combobox = null;
     };
 
     this.loadValue = function (item) {

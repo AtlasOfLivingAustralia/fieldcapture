@@ -46,6 +46,9 @@ module.exports = function (config) {
             "node_modules/moment/moment.js",
             "node_modules/moment-timezone/builds/moment-timezone-with-data.js",
             'grails-app/assets/javascripts/*.js',
+            'grails-app/assets/components/components.js',
+            'grails-app/assets/components/compile/*.js',
+            'grails-app/assets/components/javascript/*.js',
             'test/js/spec/**/*.js'
         ],
 
@@ -71,7 +74,7 @@ module.exports = function (config) {
             'type':"text",
             check: {
                 global: {
-                    lines: 24.0
+                    lines: 27
                 }
             }
         },
@@ -95,7 +98,7 @@ module.exports = function (config) {
 
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        browsers: ['Chrome','Firefox','PhantomJS'],
+        browsers: ['Chrome','Firefox','ChromeHeadless'],
 
 
         // Continuous Integration mode
