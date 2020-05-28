@@ -2,7 +2,9 @@ package au.org.ala.fieldcapture
 
 import pages.MeriPlanPDFPage
 import pages.RlpProjectPage
+import spock.lang.Stepwise
 
+@Stepwise
 class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
     def setupSpec() {
@@ -199,21 +201,24 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         editableMeriPlan.generatePDF()
 
         then:
-        withWindow([page:MeriPlanPDFPage], "meri-plan-report", {
+        driver.switchTo().window("meri-plan-report")
+        waitFor { at MeriPlanPDFPage }
 
-            meriPlan.assets[0].description.text() == "asset 1"
-            meriPlan.objectives() == ["objective 2", "Other objective"]
-            meriPlan.shortTermOutcomes[0].text() == "outcome 1"
-            meriPlan.projectDescription == 'Project description'
-            meriPlan.projectMethodology == 'Project Methodology'
-            meriPlan.monitoringIndicators[0].indicator.text() == "Indicator 1"
-            meriPlan.monitoringIndicators[0].approach.text() == 'Approach 1'
-            meriPlan.adaptiveManagement == 'Adaptive management'
-            meriPlan.projectPartnerships[0].name == 'partner name'
-            meriPlan.projectPartnerships[0].partnership == 'partnership'
-            meriPlan.projectPartnerships[0].orgType == 'Trust'
-            meriPlan.activities() == ["activity 1", 'Other']
-        })
+        def meriPlan2 = meriPlan
+        meriPlan2.assets[0].description.text() == "asset 1"
+        waitFor { meriPlan2.objectives() == ["objective 2", "Other objective"] }
+
+        meriPlan2.shortTermOutcomes[0].text() == "outcome 1"
+        meriPlan2.projectDescription.text() == 'Project description'
+        meriPlan2.projectMethodology.text() == 'Project Methodology'
+        meriPlan2.monitoringIndicators[0].indicator.text() == "Indicator 1"
+        meriPlan2.monitoringIndicators[0].approach.text() == 'Approach 1'
+        meriPlan2.adaptiveManagement.text() == 'Adaptive management'
+        meriPlan2.projectPartnerships[0].name == 'partner name'
+        meriPlan2.projectPartnerships[0].partnership == 'partnership'
+        meriPlan2.projectPartnerships[0].orgType == 'Trust'
+        meriPlan2.activities() == ["activity 1", 'Other activity']
+
 
 
     }

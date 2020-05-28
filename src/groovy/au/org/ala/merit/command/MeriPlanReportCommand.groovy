@@ -59,7 +59,6 @@ class MeriPlanReportCommand {
             model = [statusCode: HttpStatus.SC_NOT_FOUND, error:getErrors()]
         }
         else {
-            println project
             Map config = projectService.getProgramConfiguration(project)
             String meriPlanTemplate = config.meriPlanTemplate ?: 'meriPlan'
 

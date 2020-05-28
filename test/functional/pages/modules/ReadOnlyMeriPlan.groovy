@@ -42,9 +42,9 @@ class ReadOnlyPlanRow extends Module {
 
 class ReadOnlyPartnershipRow extends Module {
     static content = {
-        name { $('.partner-name span') }
-        partnership { $('.partnership-nature label') }
-        orgType { $('.partner-organisation-type label') }
+        name { $('.partner-name span').text() }
+        partnership { $('.partnership-nature label').text() }
+        orgType { $('.partner-organisation-type label').text() }
     }
 }
 
@@ -85,11 +85,10 @@ class ReadOnlyMeriPlan extends Module {
         primaryOutcome(required: false) { $('.primary-outcome .outcome-priority span') }
         primaryPriority(required: false) { $('.primary-outcome span[data-bind*=asset]') }
         secondaryOutcomes(required: false) { $('table.secondary-outcome tbody tr').moduleList(ReadOnlyOutcomeRow) }
-        shortTermOutcomes(required: false) { $('tbody[data-bind*="shortTermOutcomes"] textarea') }
-        mediumTermOutcomes(required: false) {  $('tbody[data-bind*="midTermOutcomes"] textarea') }
-        addMediumTermOutcomeButton(required:false) { $('button[data-bind*="addMidTermOutcome"') }
+        shortTermOutcomes(required: false) { $('tbody[data-bind*="shortTermOutcomes"] span') }
+        mediumTermOutcomes(required: false) {  $('tbody[data-bind*="midTermOutcomes"] span') }
         projectName(required: false) { $('input[data-bind*="details.name"]') }
-        projectDescription(required: false) { $('textarea[data-bind*="details.description"]') }
+        projectDescription(required: false) { $('span[data-bind*="details.description"]') }
         rationale(required: false) { $('textarea[data-bind*="details.rationale"]') }
         keyThreats(required: false) { $('table.threats-view tbody tr').moduleList(ReadOnlyThreatRow) }
         projectMethodology(required: false) { $('table span[data-bind*="implementation.description"]') }
@@ -107,15 +106,15 @@ class ReadOnlyMeriPlan extends Module {
         budget(required:false) { $('.meri-budget').moduleList(ReadOnlyBudgetRow) }
         activities(required:false) { $('#activity-list') }
         assets(required:false) { $('table.assets-view tbody tr').moduleList(ReadOnlyAssetRow) }
-        adaptiveManagement(required:false) { $('#adaptive-management textarea') }
+        adaptiveManagement(required:false) { $('#adaptive-management-view span') }
     }
 
     List objectives() {
-        $('objectives-list-view li').collect{it.text()}
+        $('#objectives-list-view li').collect{it.text()}
     }
 
     List activities() {
-        $('activity-list-view li').collect{it.text()}
+        $('#activity-list-view li').collect{it.text()}
     }
 
 }
