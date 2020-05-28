@@ -295,6 +295,41 @@ describe("Loading the MERI plan is handled correctly", function () {
 
     });
 
+    it("should pre-populate the program and other objectives from saved data", function() {
+        var project = {
+            plannedStartDate:'2018-07-01T00:00:00Z',
+            plannedEndDate:'2021-06-30T00:00:00Z',
+            custom: {
+                details: {
+                    objectives: {
+                        rows1: [{
+                            description:'objective 1'
+                        },
+                        {
+                            description:'other objective'
+                        }]
+                    }
+                }
+            }
+        };
+        var projectService = new ProjectService(project, {});
+        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing', programObjectives:['objective 1', 'objective 2']});
+
+        var objectivesModel = viewModel.meriPlan().objectives;
+        expect(objectivesModel.simpleObjectives.otherChecked()).toBeTrue();
+        expect(objectivesModel.simpleObjectives.otherValue()).toEqual('other objective');
+        expect(objectivesModel.simpleObjectives()).toEqual(['objective 1']);
+
+        objectivesModel.simpleObjectives.otherChecked(false);
+        expect(objectivesModel.simpleObjectives.otherValue()).toBeUndefined();
+
+        var expectedResult = {
+            rows1:[{description:'objective 1', assets:[]}],
+            rows: [{}]
+        };
+        expect(JSON.parse(JSON.stringify(objectivesModel))).toEqual(expectedResult);
+    });
+
     it("Should allow assets to be recorded", function() {
         var project = {
             plannedStartDate:'2018-07-01T00:00:00Z',

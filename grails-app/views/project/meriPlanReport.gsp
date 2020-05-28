@@ -56,6 +56,8 @@
         config.useRlpTemplate = services.length > 0;
         var programName = '${(config.program?.acronym?:project.associatedSubProgram) ?: project.associatedProgram}';
         config.programName = programName;
+        config.programObjectives = ${config.program?.config?.objectives ?: '[]'};
+        config.programActivities = ${config.program?.config?.activities ?: '[]'};
         var viewModel = new ReadOnlyMeriPlan(project, new ProjectService(project, config), config);
         viewModel.name = project.name;
         viewModel.description = project.description;
