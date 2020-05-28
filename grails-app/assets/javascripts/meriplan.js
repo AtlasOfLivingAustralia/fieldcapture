@@ -921,6 +921,7 @@ function ObjectiveViewModel(o, programObjectives) {
         self.simpleObjectives.otherValue = ko.observable(otherObjectives.length > 0 ? otherObjectives[0] : undefined);
         self.simpleObjectives.otherChecked.subscribe(function (value) {
             if (!value) {
+                self.simpleObjectives(self.simpleObjectives()); // This clears the other value.
                 self.simpleObjectives.otherValue(undefined);
             }
         });

@@ -1,4 +1,4 @@
-<div id="activity-list">
+<div id="activity-list-view">
 <g:if test="${title}">
     <h4>${title}</h4>
 </g:if>
