@@ -359,47 +359,6 @@ class AdminController {
         render(view:'import', model:[:])
     }
 
-    /**
-     * Accepts a CSV file (as a multipart file upload) and validates and loads project, site & institution data from it.
-     * @return an error message if the CSV file is invalid, otherwise writes a CSV file describing any validation
-     * errors that were encountered.
-     */
-    def importProjectData() {
-
-        if (params.newFormat) {
-            gmsImport()
-            return
-        }
-        if (request instanceof MultipartHttpServletRequest) {
-            def file = request.getFile('projectData')
-
-            if (file) {
-
-                def results = importService.importProjectsByCsv(file.inputStream, params.importWithErrors)
-
-                if (results.error) {
-                    render contentType: 'text/json', status:400, text:"""{"error":"${results.error}"}"""
-                }
-                else {
-                    // Make sure the new projects are re-indexed.
-                    //adminService.reIndexAll()
-                }
-
-                // The validation results are current returned as a CSV file so that it can easily be sent back to
-                // be corrected at the source.  It's not great usability at the moment.
-                response.setContentType("text/csv")
-                PrintWriter pw = new PrintWriter(response.outputStream)
-                results.validationErrors.each {
-                    pw.println('"'+it.join('","')+'"')
-                }
-                pw.flush()
-                return null
-            }
-
-        }
-
-        render contentType: 'text/json', status:400, text:'{"error":"No file supplied"}'
-    }
 
     def gmsImport() {
 
@@ -441,59 +400,6 @@ class AdminController {
 
     def importStatus() {
         render session.status as JSON
-    }
-
-    /**
-     * Accepts a CSV file (as a multipart file upload) and validates and bulk loads activity plan data for multiple projects.
-     * @return an error message if the CSV file is invalid, otherwise writes a CSV file describing any validation
-     * errors that were encountered.
-     */
-    def importPlanData() {
-        if (request instanceof MultipartHttpServletRequest) {
-            def file = request.getFile('planData')
-
-            if (file) {
-
-                def results = importService.importPlansByCsv(file.inputStream, params.overwriteActivities)
-
-                render results as JSON
-            }
-
-        }
-
-        render contentType: 'text/json', status:400, text:'{"error":"No file supplied"}'
-    }
-
-
-    def populateAggregrateProjectData() {
-        def result = [:]
-        if (request instanceof MultipartHttpServletRequest) {
-            def file = request.getFile('activityData')
-
-            if (file) {
-                result = importService.populateAggregrateProjectData(file.inputStream, params.preview)
-            }
-        }
-
-        def resultJSON = result as JSON
-        // Write to file as the request will likely time out for a large load
-        new File('/data/fieldcapture/biofundload.json').withWriter {it << resultJSON.toString(true)}
-
-        render resultJSON
-    }
-
-    def nlpMigrate() {
-
-        def results = []
-        if (request instanceof MultipartHttpServletRequest) {
-            def file = request.getFile('nlpData')
-            if (file) {
-                def preview = params.preview == 'on'
-                results = importService.doNlpMigration(file.inputStream, preview)
-            }
-
-        }
-        render results as JSON
     }
 
     def generateProjectReports() {
@@ -706,83 +612,6 @@ class AdminController {
             flash.message = 'No shapefile attached'
             render view:'tools'
         }
-    }
-
-
-    def importOutcomes() {
-        if (request.respondsTo('getFile')) {
-            def f = request.getFile('pdf')
-
-            Workbook workbook = WorkbookFactory.create(f.inputStream)
-
-            Map sheetConfig = [
-                    "Ramsar Wetlands":[1, 1],
-                    "TE Communities":[1, 1],
-                    "World Heritage":[1, 1],
-                    "Soil Priorities":[2, 1],
-                    "TSS Species ":[1, 5]
-            ]
-            sheetConfig.each {k, v ->
-                Sheet sheet = workbook.getSheet(k)
-
-                printOutStuffAboutSheet(sheet, v[0], v[1])
-                println ""
-
-            }
-
-
-            Map result = [message:'ok']
-            flash.message = result.message
-            render view:'tools'
-
-
-        } else {
-            flash.message = 'No shapefile attached'
-            render view:'tools'
-        }
-    }
-
-    private void printOutStuffAboutSheet(Sheet sheet, int startRow, int startColForMu) {
-        Row header = sheet.getRow(startRow)
-        List mus = []
-        int col = 0
-        while (col < header.getLastCellNum()) {
-            if (col > 0) {
-                mus << header.getCell(col)
-            }
-            col++
-        }
-
-        List priorities = []
-        Map prioritiesByMu = [:].withDefault{[]}
-        int rowNum = startRow+1
-        Row row = sheet.getRow(rowNum)
-        String ramsar
-        while (row != null) {
-
-            col = 0
-            while (col < row.getLastCellNum()) {
-
-                String value = row.getCell(col)
-                if (col == 0) {
-                    ramsar = value
-                    priorities << ramsar
-                }
-                else if (col >= startColForMu) {
-                    String mu = mus[col-1]
-                    if (value && value.trim() != '-') {
-                        prioritiesByMu[mu] << ramsar
-                    }
-                }
-                col++
-            }
-            rowNum++
-            row = sheet.getRow(rowNum)
-        }
-
-        println priorities as JSON
-        println mus
-        println prioritiesByMu as JSON
     }
 
     def buildScore(String output, String label, String method, String property, String filterProperty, String filterValue) {
