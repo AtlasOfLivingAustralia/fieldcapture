@@ -955,13 +955,14 @@ class ProjectServiceSpec extends Specification {
         List activities = service.getProjectActivities(project)
 
         then:
-        activities == project.custom.details.activities.activities
+        1 * projectConfigurationService.getProjectConfiguration(project) >> [activities:[[name:'a1', output:'o1'],[name:'a2', output:'o2']]]
+        activities == [[name:'a1', output:'o1'],[name:'a2', output:'o2']]
 
         when:
         activities = service.getProjectActivities([:])
 
         then:
-        activities == null
+        activities == []
     }
 
     private Map buildApprovalDocument(int i, String projectId) {
