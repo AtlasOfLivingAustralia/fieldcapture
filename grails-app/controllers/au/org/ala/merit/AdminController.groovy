@@ -342,23 +342,9 @@ class AdminController {
         [message: results?.message, compare: compare?.message, userDetails: userDetails.user]
     }
 
-    @PreAuthorise(accessLevel = 'alaAdmin', redirectController = "admin")
-    def migratePhotoPoints() {
-        if (params.outputId) {
-            def output = outputService.get(params.outputId)
-            adminService.migratePhotoPoints([output])
-        }
-        else {
-            adminService.migratePhotoPoints()
-        }
-        render text:'ok'
-    }
-
-
     def gmsProjectImport() {
         render(view:'import', model:[:])
     }
-
 
     def gmsImport() {
 
