@@ -931,16 +931,18 @@ class ProjectController {
             selectedForProject = projectService.getProjectServices(project)
 
             if (!selectedForProject) {
-                selectedForProject = projectService.getProjectActivities(project)
+
                 allServices = projectService.getProgramConfiguration(project).activities
+                selectedForProject = projectService.getProjectActivities(project)
             }
             else {
-                allServices = metadataService.getProjectServices()?.collect{it.output}
-                selectedForProject = selectedForProject.collect{it.output}
+                allServices = metadataService.getProjectServices()
             }
 
             if (selectedForProject) {
-                filteredModel = filterActivityModel(activityModel, existingActivityData, allServices, selectedForProject)
+                List serviceOutputs = allServices.collect{it.output}
+                List projectOutputs = selectedForProject.collect{it.output}
+                filteredModel = filterActivityModel(activityModel, existingActivityData, serviceOutputs, projectOutputs)
             }
         }
         filteredModel

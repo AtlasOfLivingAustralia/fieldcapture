@@ -221,7 +221,7 @@ if (!userDetailsById.path) {
     userDetailsById.path = "getUserDetails"
 }
 esp.activities.admin = 'ESP Annual Report Submission'
-reports.filterableActivityTypes = ['RLP Output Report']
+reports.filterableActivityTypes = ['RLP Output Report', 'Wildlife Recovery Progress Report - WRR']
 
 if (!grails.cache.ehcache) {
     grails {
