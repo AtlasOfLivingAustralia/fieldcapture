@@ -214,7 +214,12 @@ class GmsMapper {
                     if (organisation){
                         project.organisationId = organisation.organisationId
                     }else{
-                        project.organisationName = abnLookup.entityName
+                        if(abnLookup.entityName == ""){
+                            errors << "${project.abn} is invalid abn number. Please Enter the correct one"
+                        }else{
+                            project.organisationName = abnLookup.entityName
+                        }
+
                     }
                 }else{
                     errors << "${project.abn} is invalid. Please Enter the correct one"

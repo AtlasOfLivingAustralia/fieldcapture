@@ -35,7 +35,7 @@ class ImportService {
     def roleGrantManager = "caseManager"
     def programService
     def managementUnitService
-    def abnLookupService
+    AbnLookupService abnLookupService
 
     /**
      * Looks for columns "Grant ID","Sub-project ID","Recipient email 1","Recipient email 2","Grant manager email" and
