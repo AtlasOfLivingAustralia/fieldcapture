@@ -5,13 +5,20 @@ import geb.Module
 class ReportSummaryLine extends Module {
 
     static content = {
-        name { $('.report-name span').text() }
+        name { $('.report-name a span').text() }
+        fromDate { $('.report-start').text() }
+        toDate { $('.report-end').text() }
         editLink { $('td.report-actions [data-bind*=editUrl]')}
         submitButton { $('button[data-bind*="submitReport"]') }
         approveButton { $('button[data-bind*=approveReport]') }
         returnButton { $('button[data-bind*=rejectReport]') }
     }
 
+    def printname() {
+        println $('.report-name span')
+
+        return true
+    }
 
     def edit() {
         editLink.click()
