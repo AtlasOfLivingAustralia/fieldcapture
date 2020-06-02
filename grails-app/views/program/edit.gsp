@@ -44,7 +44,9 @@
 
 <asset:script>
     $(function () {
+
         var program = <fc:modelAsJavascript model="${program}"/>;
+        program.parentProgramId = "${program.parent.programId}"
 
         var programViewModel = new ProgramViewModel(program, fcConfig);
 

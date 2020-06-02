@@ -112,3 +112,9 @@ form #start-date, form #end-date {
     /* symbol for "collapsed" panels */
     content: "\f078";    /* adjust as needed, taken from bootstrap.css */
 }
+#select2-parentProgramId-container{
+    font-size: 1rem;
+}
+.select2-container--bootstrap4 .select2-results__option{
+    font-size: 1rem;
+}
