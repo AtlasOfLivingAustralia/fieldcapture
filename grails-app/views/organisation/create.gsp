@@ -31,7 +31,7 @@
     <g:render template="organisationDetails"/>
 
     <div class="form-actions">
-        <button type="button" id="save" data-bind="click:save" class="btn btn-primary">Create</button>
+        <button type="button" id="save" data-bind="click:save, disable: !(name())" class="btn btn-primary">Create</button>
         <button type="button" id="cancel" class="btn">Cancel</button>
     </div>
 </div>
@@ -40,6 +40,7 @@
 
     $(function () {
         var organisation = <fc:modelAsJavascript model="${organisation}"/>;
+        abn = ko.observable('');
         var organisationViewModel = new OrganisationViewModel(organisation);
         autoSaveModel(organisationViewModel, fcConfig.organisationSaveUrl,
             {
@@ -80,12 +81,6 @@
 
         $("#cancel").on("click", function() {
             document.location.href = "${createLink(action:'list')}";
-        });
-
-        $('#save').prop("disabled", true);
-        $(".enableDisabled").prop("disabled", true);
-        $("#abnSelector").keyup(function(){
-            $("#prepopulateFromABN").attr("disabled", !$("#abnSelector").val());
         });
     });
 

@@ -118,15 +118,9 @@ OrganisationViewModel = function (props) {
                 if (orgDetails){
                     if (orgDetails.error === "invalid"){
                         bootbox.alert("Abn Number is invalid");
-                        $(".enableDisabled").prop("disabled", true);
-                        $("#save").prop("disabled", true);
                     }else{
                         self.name(orgDetails.name)
-                        $(".enableDisabled").prop("disabled", false);
-                        $("#save").prop("disabled", false);
                     }
-
-
                 }else{
                     bootbox.alert(error)
                 }

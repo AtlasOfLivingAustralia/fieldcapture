@@ -1,29 +1,9 @@
 package au.org.ala.merit
 
-import au.org.ala.merit.DateUtils
 import grails.converters.JSON
-import groovy.json.JsonSlurper
-import org.apache.poi.ss.usermodel.Cell
-import org.apache.poi.ss.usermodel.Row
-import org.apache.poi.ss.usermodel.Sheet
-import org.apache.poi.ss.usermodel.Workbook
-import org.apache.poi.ss.usermodel.WorkbookFactory
-import org.apache.poi.ss.util.CellReference
-import org.grails.plugins.csv.CSVMapReader
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
 import org.joda.time.Duration
-import org.joda.time.Interval
 import org.joda.time.Period
 import org.joda.time.Weeks
-import org.joda.time.format.DateTimeFormat
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.multipart.MultipartHttpServletRequest
-import pl.touk.excel.export.WebXlsxExporter
-import pl.touk.excel.export.XlsxExporter
-
-import java.text.SimpleDateFormat
-
 /**
  * Extends the plugin OrganisationController to support Green Army project reporting.
  */
@@ -33,7 +13,6 @@ class OrganisationController {
 
     def organisationService, searchService, documentService, userService, roleService, commonService, webService
     def activityService, metadataService, projectService, excelImportService, reportService, pdfConverterService, authService
-    AbnLookupService abnLookupService
 
     def list() {}
 
@@ -100,11 +79,20 @@ class OrganisationController {
     def create() {
         [organisation:[:], isNameEditable: true]
     }
-
+    /**
+     * this is for the create and edit organisation.  this method will go and get the abn number
+     * and name using abn web service.
+     * @render result as json format.
+     */
     def prepopulateAbn(){
+        Map result=[:]
         Map requestParameter = params
         String abnNumber = requestParameter.abn
-        Map result = organisationService.getAbnDetails(abnNumber)
+        if (abnNumber == null){
+            result.error = "invalid"
+        }else{
+             result = organisationService.getAbnDetails(abnNumber)
+        }
         render result as JSON
     }
 

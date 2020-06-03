@@ -90,11 +90,7 @@
         $('.validationEngineContainer').validationEngine();
          $("#cancel").on("click", function() {
             document.location.href = fcConfig.returnTo;
-        });
-         $("#prepopulateFromABN").prop("disabled", true);
-        $('#abnSelector').on('keyup change', function() {
-            this.value ? $("#prepopulateFromABN").prop("disabled", false) : $("#prepopulateFromABN").prop("disabled", true);
-        }).change();
+         });
     });
 
 

@@ -110,33 +110,33 @@
             <div class="control-group required">
                 <label class="control-label span3" for="name">Name: <fc:iconHelp><g:message code="organisation.name.help"/></fc:iconHelp> </label>
                 <div class="controls span9">
-                    <input type="text" id="name" class="input-xxlarge enableDisabled" data-bind="value:name" data-validation-engine="validate[required]" placeholder="Organisation name" ${!isNameEditable?'readonly="readonly"':''}>
+                    <input type="text" id="name" class="input-xxlarge" data-bind="value:name, disable: !(name())" data-validation-engine="validate[required]" placeholder="Organisation name" ${!isNameEditable?'readonly="readonly"':''}>
                 </div>
             </div>
             <div class="control-group">
-                <label for="abn" class="control-label span3"> ABN: <fc:iconHelp><g:message code="organisation.abn.help"/></fc:iconHelp> </label>
+                <label for="abnSelector" class="control-label span3"> ABN: <fc:iconHelp><g:message code="organisation.abn.help"/></fc:iconHelp> </label>
                 <div class="controls span9">
-                    <input type="text" id="abnSelector" data-bind="value:abn" data-validation-engine="validate[custom[number],minSize[11],maxSize[11]" data-validation-error-message="Please enter an 11 digit ABN" class="input-xxlarge" maxlength="11" placeholder="Enter ABN Number"/>
-                    <button type="button" id="prepopulateFromABN" data-bind="click:prepopulateFromABN" class="btn btn-primary" disabled="disabled">Pre Populate From ABN</button>
+                    <input type="text" id="abnSelector" data-bind="value:abn, valueUpdate: 'input'" data-validation-engine="validate[custom[number],minSize[11],maxSize[11]" data-validation-error-message="Please enter an 11 digit ABN" class="input-xxlarge" maxlength="11" placeholder="Enter ABN Number"/>
+                    <button type="button" id="prepopulateFromABN" data-bind="click:prepopulateFromABN, disable: !(abn())" class="btn btn-primary" disabled="disabled">Pre Populate From ABN</button>
                 </div>
             </div>
             <div class="control-group">
                 <label class="control-label span3" for="name">Acronym: <fc:iconHelp><g:message code="organisation.acronym.help"/></fc:iconHelp> </label>
                 <div class="controls span9">
-                    <input type="text" id="acronym" class="input-xxlarge enableDisabled" data-bind="value:acronym">
+                    <input type="text" id="acronym" class="input-xxlarge" data-bind="value:acronym">
                 </div>
             </div>
             <div class="control-group required">
                 <label class="control-label span3" for="description">Description: <fc:iconHelp><g:message code="organisation.description.help"/></fc:iconHelp></label>
                 <div class="controls span9">
-                    <textarea rows="3" class="input-xxlarge enableDisabled" data-bind="value:description" data-validation-engine="validate[required]" id="description" placeholder="A description of the organisation"></textarea>
-                    <br/><button class="btn popup-edit enableDisabled" data-bind="click:editDescription"><i class="icon-edit"></i> Edit with Markdown Editor</button>
+                    <textarea rows="3" class="input-xxlarge" data-bind="value:description" data-validation-engine="validate[required]" id="description" placeholder="A description of the organisation"></textarea>
+                    <br/><button class="btn popup-edit" data-bind="click:editDescription"><i class="icon-edit"></i> Edit with Markdown Editor</button>
                 </div>
             </div>
             <div class="control-group">
                 <label class="control-label span3" for="url">Web Site URL: <fc:iconHelp><g:message code="organisation.webUrl.help"/></fc:iconHelp></label>
                 <div class="controls span9">
-                    <input type="text" class="input-xxlarge enableDisabled" id="url" data-bind="value:url" data-validation-engine="validate[custom[url]]" placeholder="link to your organisations website">
+                    <input type="text" class="input-xxlarge" id="url" data-bind="value:url" data-validation-engine="validate[custom[url]]" placeholder="link to your organisations website">
                 </div>
             </div>
             <g:render template="/shared/editSocialMediaLinks"
@@ -163,8 +163,9 @@
                           data-role="logo"
                           data-owner-type="organisationId"
                           data-owner-id="${organisation?.organisationId}"
-                          data-bind="stagedImageUpload:documents, visible:!logoUrl()"><i class="icon-plus"></i> <input
-                            id="logo" class="enableDisabled" type="file" name="files"><span>Attach</span></span>
+                          data-bind="stagedImageUpload:documents, visible:!logoUrl()"><i class="icon-plus"></i>
+                        <input id="logo" type="file" name="files"><span>Attach</span></span>
+
 
                     <button class="btn main-image-button" data-bind="click:removeLogoImage, visible:logoUrl()"><i class="icon-minus"></i> Remove</button>
                 </span>
@@ -177,14 +178,14 @@
                         <img style="width:100%" alt="No image provided" data-bind="attr:{src:mainImageUrl}">
                     </div>
                 </div>
-                <span class="span3 enableDisabled">
+                <span class="span3">
                     <span class="btn fileinput-button pull-right"
                           data-url="${createLink(controller: 'image', action: 'upload')}"
                           data-role="mainImage"
                           data-owner-type="organisationId"
                           data-owner-id="${organisation?.organisationId}"
                           data-bind="stagedImageUpload:documents, visible:!mainImageUrl()"><i class="icon-plus"></i> <input
-                            id="mainImage" class="enableDisabled" type="file" name="files"><span>Attach</span></span>
+                            id="mainImage" type="file" name="files"><span>Attach</span></span>
 
                     <button class="btn main-image-button" data-bind="click:removeMainImage,  visible:mainImageUrl()"><i class="icon-minus"></i> Remove</button>
                 </span>
