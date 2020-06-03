@@ -1,5 +1,5 @@
 <h4>Project assets</h4>
-<table class="table">
+<table class="table assets-view">
     <thead>
     <tr>
         <th class="index"></th>
@@ -9,7 +9,7 @@
     <tbody data-bind="foreach:details.assets">
     <tr>
         <td class="index" data-bind="text:$index()+1"></td>
-        <td class="outcome">
+        <td class="asset">
             <span data-bind="text:description"></span>
         </td>
     </tr>
