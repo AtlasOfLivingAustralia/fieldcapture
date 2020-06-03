@@ -8,7 +8,7 @@
         </g:if>
     </g:if>
 
-    <g:each var="activity" in="${config.program?.config?.activities ?: []}">
+    <g:each var="activity" in="${config.program?.config?.activities?.collect{it.name} ?: []}">
         <label class="checkbox"><input type="checkbox" data-bind="checked:details.activities.activities, disable: isProjectDetailsLocked()" value="${activity}">${activity}</label>
     </g:each>
     <g:if test="${includeOther}">

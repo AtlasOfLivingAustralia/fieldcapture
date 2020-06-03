@@ -947,6 +947,24 @@ class ProjectServiceSpec extends Specification {
         priorities == []
     }
 
+    def "The service can return a list of activity types nominated by the project"() {
+        setup:
+        Map project = [custom:[details:[activities:[activities:['a1', 'a2']]]]]
+
+        when:
+        List activities = service.getProjectActivities(project)
+
+        then:
+        1 * projectConfigurationService.getProjectConfiguration(project) >> [activities:[[name:'a1', output:'o1'],[name:'a2', output:'o2']]]
+        activities == [[name:'a1', output:'o1'],[name:'a2', output:'o2']]
+
+        when:
+        activities = service.getProjectActivities([:])
+
+        then:
+        activities == []
+    }
+
     private Map buildApprovalDocument(int i, String projectId) {
         Map approval = [
                 dateApproved:"2019-07-01T00:00:0${i}Z",
