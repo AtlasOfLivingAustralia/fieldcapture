@@ -23,14 +23,23 @@ class AbnLookupService {
         String abnLookupToken = grailsApplication.config.abnLookupToken
         String url = grailsApplication.config.abnUrl
         String abnLookupUrlString =  url + organisationABN + "&guid=" + abnLookupToken
-        String resp = webService.get(abnLookupUrlString)
+        String resp
+        Map abnDetails
+
+        try{
+            resp = webService.get(abnLookupUrlString)
+        }catch(Exception e){
+            abnDetails.error = "Failed calling web service"
+            abnDetails.details = e
+            return abnDetails
+        }
 
         String results = removeCallback(resp)
 
         JsonSlurper slurper = new JsonSlurper()
         Map map  = slurper.parseText(results)
 
-        Map abnDetails = [abn: map.Abn, entityName: map.EntityName]
+         abnDetails = [abn: map.Abn, entityName: map.EntityName]
 
         return abnDetails
     }

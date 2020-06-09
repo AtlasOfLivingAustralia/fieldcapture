@@ -113,17 +113,16 @@ OrganisationViewModel = function (props) {
 
     self.prepopulateFromABN = function() {
         if ($('#abnSelector').validationEngine()) {
-            var abn = self.abn()
+            var abn = self.abn
             $.get(fcConfig.prepopulateAbn, {abn:abn, contentType:'application/json'}).done(function (orgDetails) {
-                if (orgDetails){
                     if (orgDetails.error === "invalid"){
                         bootbox.alert("Abn Number is invalid");
+                    }else if (orgDetails.error === "Failed calling web service"){
+                        bootbox.alert("Abn Web Service is failed to lookup abn name. Please press ok to continue to create organisation");
+                        self.name(orgDetails.name);
                     }else{
-                        self.name(orgDetails.name)
+                        self.name(orgDetails.name);
                     }
-                }else{
-                    bootbox.alert(error)
-                }
             }).fail(function () {
 
             });
