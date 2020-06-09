@@ -70,19 +70,19 @@ class OrganisationService {
 
         Map orgList = getOrgByAbn(abnNumber)
 
-        if (!creating){
-            if (orgList == null){
-                error
-            }else if(orgList.organisationId == organisationId && orgList.abn == abnNumber) {
-                error
-            }else if (orgList.organisationId != organisationId && orgList.abn == abnNumber) {
-                error = "Abn Number is not unique"
-            }
+        if (orgList == null){
+            error
         }else{
-            if (orgList == null){
-                error
-            }else if (orgList.abn == abnNumber){
-                error = "Abn Number is not unique"
+            if (!creating){
+                if(orgList.organisationId == organisationId && orgList.abn == abnNumber) {
+                    error
+                }else if (orgList.organisationId != organisationId && orgList.abn == abnNumber) {
+                    error = "Abn Number is not unique"
+                }
+            }else{
+                if (orgList.abn == abnNumber){
+                    error = "Abn Number is not unique"
+                }
             }
         }
         return error

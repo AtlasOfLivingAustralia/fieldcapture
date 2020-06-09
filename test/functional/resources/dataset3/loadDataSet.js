@@ -162,8 +162,12 @@ config = {
         "objective 3"
     ],
     "activities": [
-        "activity 1",
-        "activity 2"
+        {
+            "name": "activity 1"
+        },
+        {
+            "name":"activity 2"
+        }
     ]
 };
 createProgram({programId: "state_intervention", name: "State Intervention", description: "", config: config});

@@ -19,6 +19,7 @@ class OrganisationServiceSpec extends Specification {
 	def reportService = Stub(ReportService)
 	def userService = Mock(UserService)
 	def metadataService = Mock(MetadataService)
+	AbnLookupService abnLookupService = Mock(AbnLookupService)
 
 	def setup() {
         service.projectService = projectService
@@ -27,6 +28,7 @@ class OrganisationServiceSpec extends Specification {
 		service.reportService = reportService
 		service.userService = userService
 		service.metadataService = metadataService
+		service.abnLookupService = abnLookupService
 	}
 
 
@@ -190,6 +192,72 @@ class OrganisationServiceSpec extends Specification {
 		and:
 		message == "Abn Number is not unique"
 	}
+
+	def "create new organisation and empty org list"(){
+		setup:
+		String abn = "12345678911"
+		Map list1 = [:]
+		def reducedList = []
+		reducedList.add(list1)
+		def list = [list:reducedList?:[]]
+
+
+		when:
+		def message = service.checkExistingAbnNumber('', abn)
+
+		then:
+		1 * metadataService.organisationList() >> list
+
+		and:
+		message == null
+	}
+
+	def "when user enter a valid abn number return a abn details"(){
+		setup:
+		String abn = "11111111111"
+		Map expected = [ abn: "11111111111", entityName: "Test abn"]
+
+		when:
+		Map abnDetails = service.getAbnDetails(abn)
+
+		then:
+		1 * abnLookupService.lookupOrganisationNameByABN(abn) >> expected
+
+		and:
+		abnDetails.abn == "11111111111"
+		abnDetails.name == "Test abn"
+	}
+
+	def "When user provide an invalid abn number return an error message"(){
+		setup:
+		String abn = "11111111111"
+		Map expected = [ abn: "", entityName: ""]
+
+		when:
+		Map abnDetails = service.getAbnDetails(abn)
+
+		then:
+		1 * abnLookupService.lookupOrganisationNameByABN(abn) >> expected
+
+		and:
+		abnDetails.error == "invalid"
+	}
+
+	def "When abn fail calling web services"(){
+		setup:
+		String abn = "11111111111"
+		Map expected = [error:"Failed calling web service"]
+
+		when:
+		Map abnDetails = service.getAbnDetails(abn)
+
+		then:
+		1 * abnLookupService.lookupOrganisationNameByABN(abn) >> expected
+
+		and:
+		abnDetails.error == "Failed calling web service"
+	}
+
 
 
 
