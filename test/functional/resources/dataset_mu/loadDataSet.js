@@ -37,7 +37,9 @@ var blog_program = {
     "stockIcon" : ""
 }
 
-createProgram({name:'Regional Land Partnerships', programId:'test_program', blog:[blog_program]})
+createProgram({name:'New Test Program', parent:null ,programId:'new_test_Program'})
+createProgram({name:'New Second Test program', parent:null ,programId:'second_test_program'})
+createProgram({name:'Regional Land Partnerships', parent:null ,programId:'test_program', blog:[blog_program]})
 
 createOrganisation({
     name:'Test Organisation',
