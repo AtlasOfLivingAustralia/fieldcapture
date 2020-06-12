@@ -165,7 +165,14 @@ class HomeController {
             Map geoData  = searchService.allProjectsWithSites(params, null, reducePrecision)
             render geoData as JSON
         } else {
-            params.include = ['name', 'description', 'lastUpdated', 'organisationName', 'managementUnitName','managementUnitId', 'programId', 'associatedProgram', 'associatedSubProgram']
+
+            if (userService.userIsAlaOrFcAdmin()){
+                params.include = ['name', 'managementUnitName', 'managementUnitId', 'programId', 'description', 'associatedProgram', 'associatedSubProgram','lastUpdated',
+                                  'funding', 'organisationName', 'externalId', 'plannedEndDate', 'plannedStartDate', 'activities.siteId','activities.type','sites.siteId', 'sites.projects', 'sites.extent.geometry']
+
+            }else{
+                params.include = ['name', 'description', 'lastUpdated', 'organisationName', 'managementUnitName','managementUnitId', 'programId', 'associatedProgram', 'associatedSubProgram']
+            }
             Map resp = searchService.allProjects(params)
             render resp as JSON
         }
