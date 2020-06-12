@@ -35,6 +35,7 @@ class ImportService {
     def roleGrantManager = "caseManager"
     def programService
     def managementUnitService
+    AbnLookupService abnLookupService
 
     /**
      * Looks for columns "Grant ID","Sub-project ID","Recipient email 1","Recipient email 2","Grant manager email" and
@@ -339,7 +340,7 @@ class ImportService {
             Map mu = managementUnitService.getByName(name)
             mu?.managementUnitId
         }
-        def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel(), metadataService.organisationList()?.list, metadataService.getOutputTargetScores(), programs, managementUnits)
+        def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel(), metadataService.organisationList()?.list, abnLookupService, metadataService.getOutputTargetScores(), programs, managementUnits)
 
         def action = preview?{rows -> mapProjectRows(rows, status, mapper)}:{rows -> importAll(rows, status, mapper)}
 

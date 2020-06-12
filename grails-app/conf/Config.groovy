@@ -347,6 +347,8 @@ environments {
         ecodata.baseUrl = 'http://devt.ala.org.au:8080/ecodata/ws/'
         ecodata.service.url = 'http://devt.ala.org.au:8080/ecodata/ws'
         pdfgen.baseURL = "http://devt.ala.org.au:${wiremock.port}/"
+        abnUrl= "http://localhost:${wiremock.port}/json/AbnDetails.aspx?abn="
+        abnLookupToken = "123456"
         api_key='testapikey'
         grails.cache.config = {
             diskStore {

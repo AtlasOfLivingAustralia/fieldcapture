@@ -29,6 +29,7 @@ class ImportServiceSpec extends Specification {
     ManagementUnitService managementUnitService = Mock(ManagementUnitService)
     MetadataService metadataService = Mock(MetadataService)
     ProgramService programService = Mock(ProgramService)
+    AbnLookupService abnLookupService = Mock(AbnLookupService)
 
     def setup() {
         importService = new ImportService()
@@ -39,6 +40,7 @@ class ImportServiceSpec extends Specification {
         importService.managementUnitService = managementUnitService
         importService.metadataService = metadataService
         importService.programService = programService
+        importService.abnLookupService = abnLookupService
 
         metadataService.activitiesModel() >> activitiesModel
         metadataService.getOutputTargetScores() >> [[externalId:'RVA', scoreId:1, label:'label 1']]
@@ -63,7 +65,7 @@ class ImportServiceSpec extends Specification {
 
     def "The import service can create projects that have been loaded and mapped via CSV"() {
         setup:
-        GmsMapper mapper = new GmsMapper(activitiesModel, [:], [], scores, [:])
+        GmsMapper mapper = new GmsMapper(activitiesModel, [:], [],abnLookupService, scores, [:])
         List projectRows = [[
             APP_ID:'Grant 1',
             MANAGEMENT_UNIT:'Test MU',

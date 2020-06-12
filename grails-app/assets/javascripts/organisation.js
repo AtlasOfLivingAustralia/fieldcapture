@@ -111,6 +111,25 @@ OrganisationViewModel = function (props) {
         }
     };
 
+    self.prepopulateFromABN = function() {
+        if ($('#abnSelector').validationEngine()) {
+            var abn = self.abn
+            $.get(fcConfig.prepopulateAbn, {abn:abn, contentType:'application/json'}).done(function (orgDetails) {
+                    if (orgDetails.error === "invalid"){
+                        bootbox.alert("Abn Number is invalid");
+                    }else if (orgDetails.error === "Failed calling web service"){
+                        bootbox.alert("Abn Web Service is failed to lookup abn name. Please press ok to continue to create organisation");
+                        self.name(orgDetails.name);
+                    }else{
+                        self.name(orgDetails.name);
+                    }
+            }).fail(function () {
+
+            });
+
+        }
+    };
+
     if (props.documents !== undefined && props.documents.length > 0) {
         $.each(['logo', 'banner', 'mainImage'], function(i, role){
             var document = self.findDocumentByRole(props.documents, role);

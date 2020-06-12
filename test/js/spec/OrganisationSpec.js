@@ -2,6 +2,11 @@ describe("OrganisationViewModel Spec", function () {
     beforeAll(function() {
         window.fcConfig = {
             imageLocation:'/'
+        };
+        if (!window.bootbox) {
+            window.bootbox = {alert:function(orgDetails){
+                    console.log("OrgDetails Test: " + orgDetails);
+                }}
         }
     });
     afterAll(function() {
@@ -21,5 +26,69 @@ describe("OrganisationViewModel Spec", function () {
         expect(JSON.parse(json)).toEqual(expectedJS);
 
     });
+
+    function ajax_response(response) {
+        var deferred = $.Deferred().resolve(response);
+        return deferred.promise();
+    }
+
+    // first unit test
+    it('should get name based on the abn provided', function () {
+        let url = {prepopulateAbn: "test/url"};
+
+        let abnDetails = {abn: "11111111111", name: "test org"}
+        let organisation = {organisationId: "1234", name: "OrgName"}
+
+        spyOn($, 'get').and.returnValue(
+            ajax_response(abnDetails)
+        );
+
+        var model = new OrganisationViewModel(organisation);
+        model.abn = "11111111111";
+        model.prepopulateFromABN();
+
+        expect(model.name()).toEqual(abnDetails.name);
+    });  // end it
+
+
+    it('should return alert when abn number is invalid - provided', function () {
+
+        let abnDetails = {abn: "", name: "", error: "invalid"}
+        let organisation = {organisationId: "1234", name: "OrgName"}
+
+        spyOn($, 'get').and.returnValue(
+            ajax_response(abnDetails)
+        );
+
+        spyOn(bootbox, 'alert');
+
+        var model = new OrganisationViewModel(organisation);
+        model.abn = "11111111111";
+        model.prepopulateFromABN();
+
+        expect(bootbox.alert).toHaveBeenCalledWith('Abn Number is invalid');
+    });
+
+
+    it('should return alert when we service is failed', function () {
+
+        let abnDetails = {abn: "", name: "", error:"Failed calling web service"}
+        let organisation = {organisationId: "12345", name: "OrgName"}
+
+        spyOn($, 'get').and.returnValue(
+            ajax_response(abnDetails)
+        );
+
+        spyOn(bootbox, 'alert');
+
+        var model = new OrganisationViewModel(organisation);
+        model.abn = "";
+        model.prepopulateFromABN();
+
+       // expect(bootbox.alert).toHaveBeenCalledWith('Abn Web Service is failed to lookup abn name. Please press ok to continue to create organisation');
+        expect(model.name()).toEqual(abnDetails.name);
+    });
+
+
 
 });

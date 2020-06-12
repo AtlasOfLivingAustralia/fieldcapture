@@ -18,6 +18,8 @@ class OrganisationServiceSpec extends Specification {
 	def webService = Stub(WebService)
 	def reportService = Stub(ReportService)
 	def userService = Mock(UserService)
+	def metadataService = Mock(MetadataService)
+	AbnLookupService abnLookupService = Mock(AbnLookupService)
 
 	def setup() {
         service.projectService = projectService
@@ -25,6 +27,8 @@ class OrganisationServiceSpec extends Specification {
 		service.webService = webService
 		service.reportService = reportService
 		service.userService = userService
+		service.metadataService = metadataService
+		service.abnLookupService = abnLookupService
 	}
 
 
@@ -128,6 +132,134 @@ class OrganisationServiceSpec extends Specification {
 		1 * userService.removeUserWithRole('8', userId, 'admin')
 		0 * userService._
 	}
+
+	def "Checking if abn already exist in db"(){
+		setup:
+		String ordId = "123"
+		String abn = "12345678901"
+		Map list1 = [organisationId: "123", abn:"12345678901"]
+		def reducedList = []
+		reducedList.add(list1)
+		def list = [list:reducedList?:[]]
+
+
+		when:
+		def message = service.checkExistingAbnNumber(ordId, abn)
+
+		then:
+		1 * metadataService.organisationList() >> list
+
+		and:
+		message == null
+	}
+
+	// user tends to update abn number for the existing organisation. saving details without any errors message
+	def "processing without any error with new abn number if organisation id matches"(){
+		setup:
+		String ordId = "123"
+		String abn = "12345678911"
+		Map list1 = [organisationId: "1234", abn:"12345678911"]
+		def reducedList = []
+		reducedList.add(list1)
+		def list = [list:reducedList?:[]]
+
+
+		when:
+		def message = service.checkExistingAbnNumber(ordId, abn)
+
+		then:
+		1 * metadataService.organisationList() >> list
+
+		and:
+		message == "Abn Number is not unique"
+	}
+
+	def "creating new organisation with existing abn number that saved in db"(){
+		setup:
+		String abn = "12345678911"
+		Map list1 = [organisationId: "1234", abn:"12345678911"]
+		def reducedList = []
+		reducedList.add(list1)
+		def list = [list:reducedList?:[]]
+
+
+		when:
+		def message = service.checkExistingAbnNumber('', abn)
+
+		then:
+		1 * metadataService.organisationList() >> list
+
+		and:
+		message == "Abn Number is not unique"
+	}
+
+	def "create new organisation and empty org list"(){
+		setup:
+		String abn = "12345678911"
+		Map list1 = [:]
+		def reducedList = []
+		reducedList.add(list1)
+		def list = [list:reducedList?:[]]
+
+
+		when:
+		def message = service.checkExistingAbnNumber('', abn)
+
+		then:
+		1 * metadataService.organisationList() >> list
+
+		and:
+		message == null
+	}
+
+	def "when user enter a valid abn number return a abn details"(){
+		setup:
+		String abn = "11111111111"
+		Map expected = [ abn: "11111111111", entityName: "Test abn"]
+
+		when:
+		Map abnDetails = service.getAbnDetails(abn)
+
+		then:
+		1 * abnLookupService.lookupOrganisationNameByABN(abn) >> expected
+
+		and:
+		abnDetails.abn == "11111111111"
+		abnDetails.name == "Test abn"
+	}
+
+	def "When user provide an invalid abn number return an error message"(){
+		setup:
+		String abn = "11111111111"
+		Map expected = [ abn: "", entityName: ""]
+
+		when:
+		Map abnDetails = service.getAbnDetails(abn)
+
+		then:
+		1 * abnLookupService.lookupOrganisationNameByABN(abn) >> expected
+
+		and:
+		abnDetails.error == "invalid"
+	}
+
+	def "When abn fail calling web services"(){
+		setup:
+		String abn = "11111111111"
+		Map expected = [error:"Failed calling web service"]
+
+		when:
+		Map abnDetails = service.getAbnDetails(abn)
+
+		then:
+		1 * abnLookupService.lookupOrganisationNameByABN(abn) >> expected
+
+		and:
+		abnDetails.error == "Failed calling web service"
+	}
+
+
+
 
 	def organisationActivities(organisation) {
 

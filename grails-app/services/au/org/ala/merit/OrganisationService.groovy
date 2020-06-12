@@ -12,7 +12,8 @@ import org.joda.time.Period
 class OrganisationService {
 
 
-    def grailsApplication, webService, metadataService, projectService, userService, searchService, activityService, emailService, reportService, documentService
+    def grailsApplication,webService, metadataService, projectService, userService, searchService, activityService, emailService, reportService, documentService
+    AbnLookupService abnLookupService
 
     private static def APPROVAL_STATUS = ['unpublished', 'pendingApproval', 'published']
 
@@ -59,15 +60,52 @@ class OrganisationService {
     def list() {
         metadataService.organisationList()
     }
+    Map getOrgByAbn(String abnNumber){
+        return list().list.find({ it.abn == abnNumber }) as Map
+    }
+
+    String checkExistingAbnNumber(String organisationId, String abnNumber){
+        String error = null
+        boolean creating = !organisationId
+
+        Map orgList = getOrgByAbn(abnNumber)
+
+        if (orgList == null){
+            error
+        }else{
+            if (!creating){
+                if(orgList.organisationId == organisationId && orgList.abn == abnNumber) {
+                    error
+                }else if (orgList.organisationId != organisationId && orgList.abn == abnNumber) {
+                    error = "Abn Number is not unique"
+                }
+            }else{
+                if (orgList.abn == abnNumber){
+                    error = "Abn Number is not unique"
+                }
+            }
+        }
+        return error
+    }
 
     def update(id, organisation) {
+        def result = [:]
+        String abn = organisation.abn
+        String orgId = organisation.organisationId
+        def error = checkExistingAbnNumber(orgId,abn)
+        if (error){
+            result.error = error
+            result.detail = error
+        }else{
+            def url = "${grailsApplication.config.ecodata.baseUrl}organisation/$id"
+            result = webService.doPost(url, organisation)
+            metadataService.clearOrganisationList()
+            result
 
-        def url = "${grailsApplication.config.ecodata.baseUrl}organisation/$id"
-        def result = webService.doPost(url, organisation)
-        metadataService.clearOrganisationList()
-        result
-
+        }
+        return result
     }
+
 
     def isUserAdminForOrganisation(organisationId) {
         def userIsAdmin
@@ -274,6 +312,19 @@ class OrganisationService {
             return [success:false, error:resp.error]
         }
         return [success:true]
+    }
+
+    Map getAbnDetails(String abnNumber){
+        Map result
+        result = abnLookupService.lookupOrganisationNameByABN(abnNumber)
+        if (result.abn == ''){
+            result.error = "invalid"
+        }else if (result.error == "Failed calling web service"){
+            result.error = result.error
+        }else{
+            result = [abn: result.abn, name: result.entityName]
+        }
+        return result
     }
 
 }

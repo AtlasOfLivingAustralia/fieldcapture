@@ -14,6 +14,7 @@
             organisationDeleteUrl: '${g.createLink(action:"ajaxDelete", id:"${organisation.organisationId}")}',
             organisationEditUrl: '${g.createLink(action:"edit", id:"${organisation.organisationId}")}',
             organisationViewUrl: '${g.createLink(action:"index")}',
+            prepopulateAbn:"${createLink(action:'prepopulateAbn')}",
             organisationListUrl: '${g.createLink(action:"list")}',
             organisationSaveUrl: "${createLink(action:'ajaxUpdate')}",
             imageUploadUrl: "${createLink(controller: 'image', action:'upload')}",
@@ -89,8 +90,7 @@
         $('.validationEngineContainer').validationEngine();
          $("#cancel").on("click", function() {
             document.location.href = fcConfig.returnTo;
-        });
-
+         });
     });
 
 

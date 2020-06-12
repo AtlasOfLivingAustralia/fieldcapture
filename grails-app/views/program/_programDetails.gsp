@@ -9,7 +9,7 @@
             </label>
             <div class="col-md-9">
                 <span class="select2">
-                   <g:select class="parentProgramId" style="width: 100%" from="${allProgram}" data-bind="value:parentProgramId" optionKey="programId" name="name" id="parentProgramId" optionValue="name" noSelection="${['null' : 'No Parent']}"/>
+                   <g:select class="parentProgramId form-control" style="width: 100%;font-size:1rem" from="${allProgram}" data-bind="value:parentProgramId" optionKey="programId" name="name" id="parentProgramId" optionValue="name" noSelection="${['null' : 'No Parent']}"/>
                 </span>
             </div>
 

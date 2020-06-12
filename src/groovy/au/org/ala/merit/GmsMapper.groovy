@@ -44,6 +44,7 @@ class GmsMapper {
     private def programModel
 
     private def organisations
+    private AbnLookupService abnLookupService
 
     private List<Map> scores
 
@@ -123,7 +124,7 @@ class GmsMapper {
         includeProgress = false
     }
 
-    public GmsMapper(activitiesModel, programModel, organisations, List<Map> scores, Map programs = [:], Map managementUnits = [:], includeProgress = false) {
+    public GmsMapper(activitiesModel, programModel, organisations, abnLookup, List<Map> scores, Map programs = [:], Map managementUnits = [:], includeProgress = false) {
         this.activitiesModel = activitiesModel
         this.programModel = programModel
         this.includeProgress = includeProgress
@@ -131,6 +132,7 @@ class GmsMapper {
         this.scores = scores
         this.programs = programs
         this.managementUnits = managementUnits
+        this.abnLookupService = abnLookup
     }
 
     def validateHeaders(projectRows) {
@@ -199,12 +201,29 @@ class GmsMapper {
         }
 
         def organisation
+        Map abnLookup
         if (project.organisationName || project.abn){
              organisation = organisations.find{  it.abn == project.abn || it.organisationName == project.organisationName}
             if (organisation){
                 project.organisationId = organisation.organisationId
             }else {
-                errors << "No organisation exists with abn  ${project.abn} number and organisation name ${project.organisationName}"
+                String abn = project.abn
+                abnLookup = abnLookupService.lookupOrganisationNameByABN(abn)
+                if (abnLookup){
+                    organisation = organisations.find{it.organisationName == abnLookup.entityName}
+                    if (organisation){
+                        project.organisationId = organisation.organisationId
+                    }else{
+                        if(abnLookup.entityName == ""){
+                            errors << "${project.abn} is invalid abn number. Please Enter the correct one"
+                        }else{
+                            project.organisationName = abnLookup.entityName
+                        }
+
+                    }
+                }else{
+                    errors << "${project.abn} is invalid. Please Enter the correct one"
+                }
             }
         }else{
             errors << "No organisation exists with abn  ${project.abn} number and organisation name ${project.organisationName}"

@@ -27,7 +27,8 @@ class GmsMapperSpec extends Specification {
         activitiesModel = JSON.parse(new InputStreamReader(getClass().getResourceAsStream('/resources/activities-model.json')))
         Map programModel = [programs:[[name:'Green Army']]]
         List organisations = [[name:'Test org 1', abn:'12345678901']]
-        gmsMapper = new GmsMapper(activitiesModel, programModel, organisations, scores)
+        AbnLookupService abnLookupService = Mock(AbnLookupService)
+        gmsMapper = new GmsMapper(activitiesModel, programModel, organisations, abnLookupService,scores)
     }
 
     /**

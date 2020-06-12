@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="java.nio.file.Files" contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,6 +9,7 @@
         var fcConfig = {
             serverUrl: "${grailsApplication.config.grails.serverURL}",
             organisationSaveUrl: "${createLink(action:'ajaxUpdate')}",
+            prepopulateAbn:"${createLink(action:'prepopulateAbn')}",
             organisationViewUrl: "${createLink(action:'index')}",
             documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
             returnTo: "${params.returnTo}"
@@ -30,7 +31,7 @@
     <g:render template="organisationDetails"/>
 
     <div class="form-actions">
-        <button type="button" id="save" data-bind="click:save" class="btn btn-primary">Create</button>
+        <button type="button" id="save" data-bind="click:save, disable: !(name())" class="btn btn-primary">Create</button>
         <button type="button" id="cancel" class="btn">Cancel</button>
     </div>
 </div>
@@ -39,6 +40,7 @@
 
     $(function () {
         var organisation = <fc:modelAsJavascript model="${organisation}"/>;
+        abn = ko.observable('');
         var organisationViewModel = new OrganisationViewModel(organisation);
         autoSaveModel(organisationViewModel, fcConfig.organisationSaveUrl,
             {
@@ -80,9 +82,7 @@
         $("#cancel").on("click", function() {
             document.location.href = "${createLink(action:'list')}";
         });
-
     });
-
 
 </asset:script>
 <asset:javascript src="common.js"/>
