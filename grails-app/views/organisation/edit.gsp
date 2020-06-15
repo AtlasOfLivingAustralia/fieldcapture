@@ -51,7 +51,18 @@
 
    $(function () {
         var organisation = <fc:modelAsJavascript model="${organisation}"/>;
-        var organisationViewModel = new OrganisationViewModel(organisation, fcConfig);
+        var options = {prepopulateAbnUrl: fcConfig.prepopulateAbnUrl, abnSelector: '#abnSelector',
+                       organisationSaveUrl:fcConfig.organisationSaveUrl,
+                       viewProjectUrl: fcConfig.viewProjectUrl, serverUrl: fcConfig.serverUrl,
+                       organisationViewUrl: fcConfig.organisationViewUrl,
+                       documentUpdateUrl: fcConfig.documentUpdateUrl,
+                       documentDeleteUrl: fcConfig.documentDeleteUrl,
+                       organisationEditUrl: fcConfig.organisationEditUrl,
+                       organisationListUrl: fcConfig.organisationListUrl,
+                       organisationDeleteUrl: fcConfig.organisationDeleteUrl,
+                       imageUploadUrl: fcConfig.imageUploadUrl, returnTo: fcConfig.returnTo }
+
+        var organisationViewModel = new OrganisationViewModel(organisation, options);
         autoSaveModel(organisationViewModel, fcConfig.organisationSaveUrl,
             {
                 blockUIOnSave:true,

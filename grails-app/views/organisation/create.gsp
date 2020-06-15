@@ -41,8 +41,9 @@
     $(function () {
         var organisation = <fc:modelAsJavascript model="${organisation}"/>;
         abn = ko.observable('');
-        fcConfig.abnSelector = "#abnSelector";
-        var organisationViewModel = new OrganisationViewModel(organisation, fcConfig);
+        var options = {prepopulateAbnUrl: fcConfig.prepopulateAbnUrl, abnSelector: '#abnSelector', organisationSaveUrl:fcConfig.organisationSaveUrl, serverUrl: fcConfig.serverUrl, organisationViewUrl: fcConfig.organisationViewUrl, returnTo: fcConfig.returnTo}
+
+        var organisationViewModel = new OrganisationViewModel(organisation, options);
         autoSaveModel(organisationViewModel, fcConfig.organisationSaveUrl,
             {
                 blockUIOnSave:true,

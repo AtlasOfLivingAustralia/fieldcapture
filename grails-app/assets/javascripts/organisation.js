@@ -11,7 +11,6 @@ OrganisationViewModel = function (props, options) {
 
     var defaults = {
         validationContainerSelector: '.validationEngineContainer',
-        abnSelector: "#abnSelector"
     };
 
     var config = _.extend({}, defaults, options);
