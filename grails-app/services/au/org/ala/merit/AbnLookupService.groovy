@@ -20,8 +20,8 @@ class AbnLookupService {
  */
     Map lookupOrganisationNameByABN(String organisationABN){
 
-        String abnLookupToken = grailsApplication.config.abn.abnLookupTokens
-        String url = grailsApplication.config.abn.abnUrls
+        String abnLookupToken = grailsApplication.config.abn.abnLookupToken
+        String url = grailsApplication.config.abn.abnUrl
         String abnLookupUrlString =  url + organisationABN + "&guid=" + abnLookupToken
 
         String resp  = webService.get(abnLookupUrlString)
