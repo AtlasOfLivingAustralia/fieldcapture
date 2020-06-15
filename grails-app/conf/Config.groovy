@@ -221,7 +221,7 @@ if (!userDetailsById.path) {
     userDetailsById.path = "getUserDetails"
 }
 abn.abnLookupToken = "Insert abn Token here"
-abn.abnUrl = "Insert abn url here"
+abn.abnUrl= "https://abr.business.gov.au/json/AbnDetails.aspx?abn="
 
 esp.activities.admin = 'ESP Annual Report Submission'
 reports.filterableActivityTypes = ['RLP Output Report', 'Wildlife Recovery Progress Report - WRR']
