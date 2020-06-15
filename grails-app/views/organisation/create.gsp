@@ -9,7 +9,7 @@
         var fcConfig = {
             serverUrl: "${grailsApplication.config.grails.serverURL}",
             organisationSaveUrl: "${createLink(action:'ajaxUpdate')}",
-            prepopulateAbn:"${createLink(action:'prepopulateAbn')}",
+            prepopulateAbnUrl:"${createLink(action:'prepopulateAbn')}",
             organisationViewUrl: "${createLink(action:'index')}",
             documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
             returnTo: "${params.returnTo}"
@@ -41,7 +41,8 @@
     $(function () {
         var organisation = <fc:modelAsJavascript model="${organisation}"/>;
         abn = ko.observable('');
-        var organisationViewModel = new OrganisationViewModel(organisation);
+        fcConfig.abnSelector = "#abnSelector";
+        var organisationViewModel = new OrganisationViewModel(organisation, fcConfig);
         autoSaveModel(organisationViewModel, fcConfig.organisationSaveUrl,
             {
                 blockUIOnSave:true,

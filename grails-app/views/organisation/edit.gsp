@@ -14,7 +14,7 @@
             organisationDeleteUrl: '${g.createLink(action:"ajaxDelete", id:"${organisation.organisationId}")}',
             organisationEditUrl: '${g.createLink(action:"edit", id:"${organisation.organisationId}")}',
             organisationViewUrl: '${g.createLink(action:"index")}',
-            prepopulateAbn:"${createLink(action:'prepopulateAbn')}",
+            prepopulateAbnUrl:"${createLink(action:'prepopulateAbn')}",
             organisationListUrl: '${g.createLink(action:"list")}',
             organisationSaveUrl: "${createLink(action:'ajaxUpdate')}",
             imageUploadUrl: "${createLink(controller: 'image', action:'upload')}",
@@ -51,7 +51,7 @@
 
    $(function () {
         var organisation = <fc:modelAsJavascript model="${organisation}"/>;
-        var organisationViewModel = new OrganisationViewModel(organisation);
+        var organisationViewModel = new OrganisationViewModel(organisation, fcConfig);
         autoSaveModel(organisationViewModel, fcConfig.organisationSaveUrl,
             {
                 blockUIOnSave:true,

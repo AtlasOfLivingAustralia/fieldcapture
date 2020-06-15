@@ -34,7 +34,7 @@ describe("OrganisationViewModel Spec", function () {
 
     // first unit test
     it('should get name based on the abn provided', function () {
-        let url = {prepopulateAbn: "test/url"};
+        let options = {prepopulateAbnUrl: "test/url"};
 
         let abnDetails = {abn: "11111111111", name: "test org"}
         let organisation = {organisationId: "1234", name: "OrgName"}
@@ -43,7 +43,7 @@ describe("OrganisationViewModel Spec", function () {
             ajax_response(abnDetails)
         );
 
-        var model = new OrganisationViewModel(organisation);
+        var model = new OrganisationViewModel(organisation,options);
         model.abn = "11111111111";
         model.prepopulateFromABN();
 
@@ -52,7 +52,7 @@ describe("OrganisationViewModel Spec", function () {
 
 
     it('should return alert when abn number is invalid - provided', function () {
-
+        let options = {prepopulateAbnUrl: "test/url"};
         let abnDetails = {abn: "", name: "", error: "invalid"}
         let organisation = {organisationId: "1234", name: "OrgName"}
 
@@ -62,7 +62,7 @@ describe("OrganisationViewModel Spec", function () {
 
         spyOn(bootbox, 'alert');
 
-        var model = new OrganisationViewModel(organisation);
+        var model = new OrganisationViewModel(organisation, options);
         model.abn = "11111111111";
         model.prepopulateFromABN();
 
@@ -72,21 +72,21 @@ describe("OrganisationViewModel Spec", function () {
 
     it('should return alert when we service is failed', function () {
 
-        let abnDetails = {abn: "", name: "", error:"Failed calling web service"}
+        let options = {prepopulateAbnUrl: "test/url"};
         let organisation = {organisationId: "12345", name: "OrgName"}
 
-        spyOn($, 'get').and.returnValue(
-            ajax_response(abnDetails)
-        );
+        spyOn($, 'get').and.callFake(function () {
+            return $.Deferred().reject().promise();
+        });
 
         spyOn(bootbox, 'alert');
 
-        var model = new OrganisationViewModel(organisation);
-        model.abn = "";
+        var model = new OrganisationViewModel(organisation, options);
+        model.abn = "12345678901";
         model.prepopulateFromABN();
 
-       // expect(bootbox.alert).toHaveBeenCalledWith('Abn Web Service is failed to lookup abn name. Please press ok to continue to create organisation');
-        expect(model.name()).toEqual(abnDetails.name);
+        expect(bootbox.alert).toHaveBeenCalledWith('Abn Web Service is failed to lookup abn name. Please press ok to continue to create organisation');
+        expect(model.name()).toEqual(" ");
     });
 
 

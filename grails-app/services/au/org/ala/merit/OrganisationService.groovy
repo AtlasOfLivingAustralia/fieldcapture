@@ -319,8 +319,6 @@ class OrganisationService {
         result = abnLookupService.lookupOrganisationNameByABN(abnNumber)
         if (result.abn == ''){
             result.error = "invalid"
-        }else if (result.error == "Failed calling web service"){
-            result.error = result.error
         }else{
             result = [abn: result.abn, name: result.entityName]
         }
