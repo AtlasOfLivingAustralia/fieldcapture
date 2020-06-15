@@ -220,8 +220,8 @@ if (!pdfgen.baseURL){
 if (!userDetailsById.path) {
     userDetailsById.path = "getUserDetails"
 }
-abn.abnLookupToken = grails.config.abn.abnLookupToken
-abn.abnUrl = grails.config.abn.abnUrl
+abn.abnLookupToken = "Insert abn Token here"
+abn.abnUrl = "Insert abn url here"
 
 esp.activities.admin = 'ESP Annual Report Submission'
 reports.filterableActivityTypes = ['RLP Output Report', 'Wildlife Recovery Progress Report - WRR']
