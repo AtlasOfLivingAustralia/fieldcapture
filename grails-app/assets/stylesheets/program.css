@@ -118,3 +118,8 @@ form #start-date, form #end-date {
 .select2-container--bootstrap4 .select2-results__option{
     font-size: 1rem;
 }
+
+.parentProgramId{
+    width: 100%;
+    font-size:1rem;
+}

@@ -11,7 +11,7 @@ import spock.lang.Specification
 class AbnLookupServiceSpec extends Specification {
     WebService webService = Mock(WebService)
     GrailsApplication grailsApplication = Mock(GrailsApplication)
-    Map config = [abnLookupToken:"1234", abnUrl:"https://abr.business.gov.au/json/AbnDetails.aspx?abn="]
+    Map config = [abn:[abnLookupToken:"1234", abnUrl:"https://abr.business.gov.au/json/AbnDetails.aspx?abn="]]
 
 
     def setup() {
@@ -42,8 +42,8 @@ class AbnLookupServiceSpec extends Specification {
 
 
 
-        String abnLookupToken = grailsApplication.config.abnLookupToken
-        String url = grailsApplication.config.abnUrl
+        String abnLookupToken = grailsApplication.config.abn.abnLookupToken
+        String url = grailsApplication.config.abn.abnUrl
         String abnLookupUrlString = url + abn + "&guid=" + abnLookupToken
 
         when:
@@ -72,8 +72,8 @@ class AbnLookupServiceSpec extends Specification {
                 "             \"EntityTypeName\":\"\",\n" +
                 "             \"Gst\":\"\",\"Message\":\"\"})"
 
-        String abnLookupToken = grailsApplication.config.abnLookupToken
-        String url = grailsApplication.config.abnUrl
+        String abnLookupToken = grailsApplication.config.abn.abnLookupToken
+        String url = grailsApplication.config.abn.abnUrl
         String abnLookupUrlString = url + abn + "&guid=" + abnLookupToken
 
         when:

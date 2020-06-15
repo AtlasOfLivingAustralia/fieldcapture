@@ -14,7 +14,7 @@
             organisationDeleteUrl: '${g.createLink(action:"ajaxDelete", id:"${organisation.organisationId}")}',
             organisationEditUrl: '${g.createLink(action:"edit", id:"${organisation.organisationId}")}',
             organisationViewUrl: '${g.createLink(action:"index")}',
-            prepopulateAbn:"${createLink(action:'prepopulateAbn')}",
+            prepopulateAbnUrl:"${createLink(action:'prepopulateAbn')}",
             organisationListUrl: '${g.createLink(action:"list")}',
             organisationSaveUrl: "${createLink(action:'ajaxUpdate')}",
             imageUploadUrl: "${createLink(controller: 'image', action:'upload')}",
@@ -51,7 +51,18 @@
 
    $(function () {
         var organisation = <fc:modelAsJavascript model="${organisation}"/>;
-        var organisationViewModel = new OrganisationViewModel(organisation);
+        var options = {prepopulateAbnUrl: fcConfig.prepopulateAbnUrl, abnSelector: '#abnSelector',
+                       organisationSaveUrl:fcConfig.organisationSaveUrl,
+                       viewProjectUrl: fcConfig.viewProjectUrl, serverUrl: fcConfig.serverUrl,
+                       organisationViewUrl: fcConfig.organisationViewUrl,
+                       documentUpdateUrl: fcConfig.documentUpdateUrl,
+                       documentDeleteUrl: fcConfig.documentDeleteUrl,
+                       organisationEditUrl: fcConfig.organisationEditUrl,
+                       organisationListUrl: fcConfig.organisationListUrl,
+                       organisationDeleteUrl: fcConfig.organisationDeleteUrl,
+                       imageUploadUrl: fcConfig.imageUploadUrl, returnTo: fcConfig.returnTo }
+
+        var organisationViewModel = new OrganisationViewModel(organisation, options);
         autoSaveModel(organisationViewModel, fcConfig.organisationSaveUrl,
             {
                 blockUIOnSave:true,

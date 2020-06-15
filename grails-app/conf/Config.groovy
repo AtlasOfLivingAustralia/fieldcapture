@@ -44,18 +44,18 @@ grails.project.groupId = "au.org.ala" // change this to alter the default packag
 grails.mime.file.extensions = true // enables the parsing of file extensions from URLs into the request format
 grails.mime.use.accept.header = false
 grails.mime.types = [
-    all:           '*/*',
-    atom:          'application/atom+xml',
-    css:           'text/css',
-    csv:           'text/csv',
-    form:          'application/x-www-form-urlencoded',
-    html:          ['text/html','application/xhtml+xml'],
-    js:            'text/javascript',
-    json:          ['application/json', 'text/json'],
-    multipartForm: 'multipart/form-data',
-    rss:           'application/rss+xml',
-    text:          'text/plain',
-    xml:           ['text/xml', 'application/xml']
+        all:           '*/*',
+        atom:          'application/atom+xml',
+        css:           'text/css',
+        csv:           'text/csv',
+        form:          'application/x-www-form-urlencoded',
+        html:          ['text/html','application/xhtml+xml'],
+        js:            'text/javascript',
+        json:          ['application/json', 'text/json'],
+        multipartForm: 'multipart/form-data',
+        rss:           'application/rss+xml',
+        text:          'text/plain',
+        xml:           ['text/xml', 'application/xml']
 ]
 
 // URL Mapping Cache Max Size, defaults to 5000
@@ -203,7 +203,7 @@ if (!user.registration.url) {
 }
 // If true, no-cache headers will be added to all responses.
 if(!app.view.nocache){
-	app.view.nocache = false
+    app.view.nocache = false
 }
 if(!merit.support.email) {
     merit.support.email = 'MERIT@environment.gov.au'
@@ -220,6 +220,9 @@ if (!pdfgen.baseURL){
 if (!userDetailsById.path) {
     userDetailsById.path = "getUserDetails"
 }
+abn.abnLookupToken = "Insert abn Token here"
+abn.abnUrl= "https://abr.business.gov.au/json/AbnDetails.aspx?abn="
+
 esp.activities.admin = 'ESP Annual Report Submission'
 reports.filterableActivityTypes = ['RLP Output Report', 'Wildlife Recovery Progress Report - WRR']
 
@@ -347,8 +350,8 @@ environments {
         ecodata.baseUrl = 'http://devt.ala.org.au:8080/ecodata/ws/'
         ecodata.service.url = 'http://devt.ala.org.au:8080/ecodata/ws'
         pdfgen.baseURL = "http://devt.ala.org.au:${wiremock.port}/"
-        abnUrl= "http://localhost:${wiremock.port}/json/AbnDetails.aspx?abn="
-        abnLookupToken = "123456"
+        abn.abnUrl= "http://localhost:${wiremock.port}/json/AbnDetails.aspx?abn="
+        abn.abnLookupToken = "123456"
         api_key='testapikey'
         grails.cache.config = {
             diskStore {
@@ -358,7 +361,6 @@ environments {
                 overflowToDisk false
             }
         }
-        reports.filterableActivityTypes = ['RLP Output Report', 'Wildlife Recovery Progress Report - WRR', 'Progress Report']
     }
     production {
         grails.logging.jul.usebridge = false
@@ -465,7 +467,7 @@ log4j = {
                     'grails.app.conf.au.org.ala.fieldcapture',
                     'grails.app.filters.au.org.ala.fieldcapture',
                     'au.org.ala.merit.SessionLogger'
-                    ]
+            ]
         }
         production {
             all additivity: false, sessionActivity: [
@@ -489,15 +491,15 @@ log4j = {
             'au.org.ala.merit'
 
     error  'org.codehaus.groovy.grails.web.servlet',        // controllers
-           'org.codehaus.groovy.grails.web.pages',          // GSP
-           'org.codehaus.groovy.grails.web.sitemesh',       // layouts
-           'org.codehaus.groovy.grails.web.mapping.filter', // URL mapping
-           'org.codehaus.groovy.grails.web.mapping',        // URL mapping
-           'org.codehaus.groovy.grails.commons',            // core / classloading
-           'org.codehaus.groovy.grails.plugins',            // plugins
-           'org.codehaus.groovy.grails.orm.hibernate',      // hibernate integration
-           'org.springframework',
-           'org.hibernate',
-           'net.sf.ehcache.hibernate',
-           'org.xhtmlrenderer'
+            'org.codehaus.groovy.grails.web.pages',          // GSP
+            'org.codehaus.groovy.grails.web.sitemesh',       // layouts
+            'org.codehaus.groovy.grails.web.mapping.filter', // URL mapping
+            'org.codehaus.groovy.grails.web.mapping',        // URL mapping
+            'org.codehaus.groovy.grails.commons',            // core / classloading
+            'org.codehaus.groovy.grails.plugins',            // plugins
+            'org.codehaus.groovy.grails.orm.hibernate',      // hibernate integration
+            'org.springframework',
+            'org.hibernate',
+            'net.sf.ehcache.hibernate',
+            'org.xhtmlrenderer'
 }

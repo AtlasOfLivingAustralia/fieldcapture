@@ -1,10 +1,20 @@
 /**
  * Knockout view model for organisation pages.
  * @param props JSON/javascript representation of the organisation.
+ * @param options an object specifying the following options:
+ * validationContainerSelector, organisationDeleteUrl,organisationListUrl, returnToUrl, organisationSaveUrl, organisationEditUrl
+ * viewProjectUrl, documentUpdateUrl, documentDeleteUrl, prepopulateAbnUrl
  * @constructor
  */
-OrganisationViewModel = function (props) {
-    var self = $.extend(this, new Documents());
+OrganisationViewModel = function (props, options) {
+    var self = $.extend(this, new Documents(options));
+
+    var defaults = {
+        validationContainerSelector: '.validationEngineContainer',
+    };
+
+    var config = _.extend({}, defaults, options);
+
     var orgTypesMap = {
     aquarium:'Aquarium',
     archive:'Archive',
@@ -55,7 +65,7 @@ OrganisationViewModel = function (props) {
 
     self.deleteOrganisation = function() {
         if (window.confirm("Delete this organisation?  Are you sure?")) {
-            $.post(fcConfig.organisationDeleteUrl).complete(function() {
+            $.post(config.organisationDeleteUrl).complete(function() {
                     window.location = fcConfig.organisationListUrl;
                 }
             );
@@ -96,13 +106,13 @@ OrganisationViewModel = function (props) {
         if ($('.validationEngineContainer').validationEngine('validate')) {
 
             var orgData = self.modelAsJSON(true);
-            $.ajax(fcConfig.organisationSaveUrl, {type:'POST', data:orgData, contentType:'application/json'}).done( function(data) {
+            $.ajax(config.organisationSaveUrl, {type:'POST', data:orgData, contentType:'application/json'}).done( function(data) {
                 if (data.errors) {
 
                 }
                 else {
                     var orgId = self.organisationId?self.organisationId:data.organisationId;
-                    window.location = fcConfig.organisationViewUrl+'/'+orgId;
+                    window.location = config.organisationViewUrl+'/'+orgId;
                 }
 
             }).fail( function() {
@@ -112,19 +122,17 @@ OrganisationViewModel = function (props) {
     };
 
     self.prepopulateFromABN = function() {
-        if ($('#abnSelector').validationEngine()) {
-            var abn = self.abn
-            $.get(fcConfig.prepopulateAbn, {abn:abn, contentType:'application/json'}).done(function (orgDetails) {
+        if ($(config.abnSelector).validationEngine()) {
+            var abn = self.abn;
+            $.get(config.prepopulateAbnUrl, {abn:abn, contentType:'application/json'}).done(function (orgDetails) {
                     if (orgDetails.error === "invalid"){
                         bootbox.alert("Abn Number is invalid");
-                    }else if (orgDetails.error === "Failed calling web service"){
-                        bootbox.alert("Abn Web Service is failed to lookup abn name. Please press ok to continue to create organisation");
-                        self.name(orgDetails.name);
                     }else{
                         self.name(orgDetails.name);
                     }
             }).fail(function () {
-
+                bootbox.alert("Abn Web Service is failed to lookup abn name. Please press ok to continue to create organisation");
+                 self.name(" ");
             });
 
         }
