@@ -163,16 +163,31 @@ config = {
     ],
     "activities": [
         {
-            "name": "activity 1"
+            "name": "activity 1",
+            "output": "Output 1"
         },
         {
-            "name":"activity 2"
+            "name":"activity 2",
+            "output": "Output 2"
         }
+    ],
+    projectReports:[
+        {
+            "reportType": "Activity",
+            "firstReportingPeriodEnd": "2018-09-30T14:00:00Z",
+            "reportDescriptionFormat": "Year %5$s - %6$s %7$d Progress Report",
+            "reportNameFormat": "Year %5$s - %6$s %7$d Progress Report",
+            "reportingPeriodInMonths": 6,
+            "description": "",
+            "category": "Progress Reporting",
+            "activityType": "Progress Report",
+            "canSubmitDuringReportingPeriod": true
+        },
     ]
 };
 createProgram({programId: "state_intervention", name: "State Intervention", description: "", config: config});
 
-createProject({projectId: "meri2", name: "State intervention project", programId: "state_intervention"});
+createProject({projectId: "meri2", name: "State intervention project", programId: "state_intervention", managementUnitId:null});
 db.userPermission.insert({
     entityType: 'au.org.ala.ecodata.Project',
     entityId: "meri2",
@@ -190,3 +205,5 @@ db.userPermission.insert({
     userId: '1',
     accessLevel: 'admin'
 });
+
+loadActivityForms();

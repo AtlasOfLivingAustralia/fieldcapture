@@ -358,6 +358,7 @@ environments {
                 overflowToDisk false
             }
         }
+        reports.filterableActivityTypes = ['RLP Output Report', 'Wildlife Recovery Progress Report - WRR', 'Progress Report']
     }
     production {
         grails.logging.jul.usebridge = false

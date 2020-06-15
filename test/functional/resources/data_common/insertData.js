@@ -4,6 +4,8 @@ load('../data/managementUnit.js');
 load('../data/siteDefaults.js');
 load('../data/activityForms/RLPOutputReport.js');
 load('../data/activityForms/CoreServicesReport.js');
+load('../data/activityForms/ProgressReport.js');
+
 
 function createProject(projectProperties) {
     // var project = Object.assign({}, projectDefaults);
@@ -50,6 +52,7 @@ function createSite(siteProperties) {
 function loadActivityForms() {
     db.activityForm.insert(rlpOutputReport);
     db.activityForm.insert(coreServicesReport);
+    db.activityForm.insert(progressReport);
 }
 
 
