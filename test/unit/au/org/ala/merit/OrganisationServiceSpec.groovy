@@ -243,24 +243,6 @@ class OrganisationServiceSpec extends Specification {
 		abnDetails.error == "invalid"
 	}
 
-	def "When abn fail calling web services"(){
-		setup:
-		String abn = "11111111111"
-		Map expected = [error:"Failed calling web service"]
-
-		when:
-		Map abnDetails = service.getAbnDetails(abn)
-
-		then:
-		1 * abnLookupService.lookupOrganisationNameByABN(abn) >> expected
-
-		and:
-		abnDetails.error == "Failed calling web service"
-	}
-
-
-
-
 	def organisationActivities(organisation) {
 
 		def activities = []
