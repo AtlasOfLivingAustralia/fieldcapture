@@ -13,6 +13,23 @@ class MeriPlanSpec extends StubbedCasSpec {
         logout(browser)
     }
 
+    def "Primary and secondary outcome selection lists can be different"() {
+        setup:
+        String projectId = '1'
+        login([userId: '2', role: "ROLE_FC_OFFICER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+
+        when:
+        to RlpProjectPage, projectId
+        waitFor { at RlpProjectPage }
+        def meriPlan = openMeriPlanEditTab()
+
+        then:
+        meriPlan != null
+        meriPlan.selectablePrimaryOutcomes().size() == 7
+        meriPlan.selectableSecondaryOutcomes().size() == 8
+        meriPlan.selectableSecondaryOutcomes()[7] == 'Secondary'
+    }
+
     def "The MERI Plan can be completed and saved"() {
 
         setup:
