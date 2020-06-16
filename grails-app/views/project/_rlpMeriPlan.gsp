@@ -11,7 +11,7 @@
         <tbody>
         <tr>
             <td class="outcome-priority">
-                <select data-validation-engine="validate[required]" data-bind="options:details.outcomes.selectableOutcomes, value:details.outcomes.primaryOutcome.description, optionsCaption: 'Please select', disable: isProjectDetailsLocked()" >
+                <select data-validation-engine="validate[required]" data-bind="options:details.outcomes.selectablePrimaryOutcomes, value:details.outcomes.primaryOutcome.description, optionsCaption: 'Please select', disable: isProjectDetailsLocked()" >
                 </select>
 
             </td>
@@ -49,7 +49,7 @@
         <tbody data-bind="foreach:details.outcomes.secondaryOutcomes">
         <tr>
             <td class="outcome-priority"><select data-validation-engine="validate[required]"
-                                                 data-bind="value:description, options: details.outcomes.selectableOutcomes, optionsCaption: 'Please select', disable: $parent.isProjectDetailsLocked()"></select>
+                                                 data-bind="value:description, options: details.outcomes.selectableSecondaryOutcomes, optionsCaption: 'Please select', disable: $parent.isProjectDetailsLocked()"></select>
             </td>
             <td class="priority">
                 <select data-bind="value:asset, options: details.outcomes.outcomePriorities(description()), optionsCaption: 'Please select', select2:{}, disable: $parent.isProjectDetailsLocked()" class="input-large asset"></select>
