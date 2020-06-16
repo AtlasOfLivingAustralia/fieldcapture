@@ -450,5 +450,22 @@ describe("Loading the MERI plan is handled correctly", function () {
 
     });
 
+    it("should filter selectable outcomes from the program based on the type of the outcome (primary or secondary)", function() {
+
+        var options = {
+            outcomes: [
+                { outcome:"Outcome 1", "type": 'primary'},
+                { outcome:"Outcome 2", "type": 'primary'},
+                { outcome:"Outcome 3"},
+                { outcome:"Outcome 4", "type": 'secondary'},
+            ]
+        };
+
+        var viewModel = new OutcomesViewModel([], options);
+        expect(viewModel.selectablePrimaryOutcomes).toEqual(["Outcome 1", "Outcome 2", "Outcome 3"]);
+        expect(viewModel.selectableSecondaryOutcomes).toEqual(["Outcome 3", "Outcome 4"]);
+
+    });
+
 })
 ;
