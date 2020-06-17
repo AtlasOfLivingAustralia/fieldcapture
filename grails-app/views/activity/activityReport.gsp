@@ -134,7 +134,11 @@
             // Workaround for problems with IE11 and leaflet draw
             L.Browser.touch = false;
 
-            var mapOptions = {useGoogleBaseMap: fcConfig.useGoogleBaseMap};
+
+            var mapOptions = {};
+            if (fcConfig.useGoogleBaseMap) {
+                mapOptions.baseLayersName = 'Google'; // Default is Open Street Maps
+            }
             var planningSitesCategory = 'Planning Sites';
             if (features && _.isArray(features)) {
                 var planningFeatures = [];

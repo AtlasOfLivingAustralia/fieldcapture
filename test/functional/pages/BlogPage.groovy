@@ -60,7 +60,7 @@ class ProgramBlogPage extends Page {
         blogModule  { module BlogPageModule}
         adminTabPane {$('div#admin')}
         editProgramBlogTab{$('a#editProgramBlog-tab')}
-        editProgramButton(required:false) { $('#edit-program-details .admin-action')}
+        editProgramButton(required:false) { $('a.editBtnAction')}
     }
 
 //    def editProgramBlogTab() {

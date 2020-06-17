@@ -62,7 +62,7 @@
         rejectReportUrl: "${createLink(controller: 'project', action: 'ajaxRejectReport', id:project.projectId)}/",
         resetReportUrl: "${createLink(controller:'project', action:'resetReport', id:project.projectId)}",
         adjustReportUrl: "${createLink(controller:'project', action:'adjustReport', id:project.projectId)}",
-        reportOwner: {projectId:'${project.projectId}'},
+        reportOwner: {projectId:'${project.projectId}', endDate:'${project.plannedEndDate}'},
         reportCreateUrl: '${g.createLink( action:'createReport', id:project.projectId)}',
         viewReportUrl:'${createLink(action:"viewReport", id:project.projectId)}',
         editReportUrl:"${createLink(action:"editReport", id:project.projectId)}",
@@ -276,7 +276,7 @@
             var programName = '${(config.program?.acronym?:project.associatedSubProgram) ?: project.associatedProgram}';
             config.programName = programName;
             config.programObjectives = ${config.program?.config?.objectives ?: '[]'};
-            config.programActivities = ${config.program?.config?.activities ?: '[]'};
+            config.programActivities = <fc:modelAsJavascript model="${config.program?.config?.activities?.collect{it.name} ?: []}"/>
 
             var viewModel = new ProjectPageViewModel(
                 project,

@@ -94,8 +94,8 @@ class ProgramConfig implements Map {
 
     String projectTemplate
 
-
-    List<String> activityTypes
+    /** A list of activities that can be undertaken by projects run under this program */
+    List<String> activities
     String speciesConfiguration
 
 

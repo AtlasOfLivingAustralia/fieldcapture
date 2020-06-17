@@ -16,6 +16,7 @@ import static ReportService.ReportMode
 
 class ProjectController {
 
+    static allowedMethods =  [listProjectInvestmentPriorities: 'GET']
     static defaultAction = "index"
     static ignore = ['action', 'controller', 'id']
     static String ESP_TEMPLATE = "esp"
@@ -26,7 +27,6 @@ class ProjectController {
 
     def projectService, metadataService, organisationService, commonService, activityService, userService, webService, roleService, grailsApplication
     def siteService, documentService, reportService, blogService, pdfGenerationService
-
 
     private def espOverview(Map project, Map user) {
 
@@ -922,26 +922,48 @@ class ProjectController {
     private Map filterOutputModel(Map activityModel, Map project, Map existingActivityData) {
 
         Map filteredModel = activityModel
-        if (activityModel?.name == grailsApplication.config.rlp.servicesReport) {
+        if (isFilterable(activityModel)) {
 
-            List projectServices = projectService.getProjectServices(project)
-            List allServices = metadataService.getProjectServices()
-            if (projectServices) {
+            List allServices
+            List selectedForProject
 
-                List projectServiceOutputs = projectServices.collect{it.output}
+            // The values to be filtered can come from either project services or activities in the MERI plan.
+            selectedForProject = projectService.getProjectServices(project)
 
-                filteredModel = new JSONObject(activityModel)
-                List existingOutputs = existingActivityData?.outputs?.collect{it.name}
-                filteredModel.outputs = activityModel.outputs.findAll({ String output ->
-                    boolean isServiceOutput = allServices.find{it.output == output}
+            if (!selectedForProject) {
 
-                    // Include this output if it's not associated with a service,
-                    // Or if it's associated by a service delivered by this project
-                    // Or it has previously had data recorded against it (this can happen if the services change after the report has been completed)
-                    !isServiceOutput || output in projectServiceOutputs || output in existingOutputs
-                })
+                allServices = projectService.getProgramConfiguration(project).activities
+                selectedForProject = projectService.getProjectActivities(project)
+            }
+            else {
+                allServices = metadataService.getProjectServices()
+            }
+
+            if (selectedForProject) {
+                List serviceOutputs = allServices.collect{it.output}
+                List projectOutputs = selectedForProject.collect{it.output}
+                filteredModel = filterActivityModel(activityModel, existingActivityData, serviceOutputs, projectOutputs)
             }
         }
+        filteredModel
+    }
+
+    private boolean isFilterable(Map activityModel) {
+        List filterableActivityTypes = grailsApplication.config.reports.filterableActivityTypes
+        return activityModel?.name in filterableActivityTypes
+    }
+
+    private Map filterActivityModel(Map activityModel, Map existingActivityData, List filterableSections, List sectionsToInclude) {
+        Map filteredModel = new JSONObject(activityModel)
+        List existingOutputs = existingActivityData?.outputs?.collect{it.name}
+        filteredModel.outputs = activityModel.outputs.findAll({ String output ->
+            boolean isFilterable = filterableSections.find{it == output}
+
+            // Include this output if it's not associated with a service,
+            // Or if it's associated by a service delivered by this project
+            // Or it has previously had data recorded against it (this can happen if the services change after the report has been completed)
+            !isFilterable || output in sectionsToInclude || output in existingOutputs
+        })
         filteredModel
     }
 
@@ -999,6 +1021,17 @@ class ProjectController {
                 render status: HttpStatus.SC_NOT_FOUND
             }
         }
+    }
+
+    /**
+     * This method returns the investment priorities listed in the primary and secondary outcome sections of the
+     * RLP MERI plan into a single list for the purposes of pre-populating one of the RLP outcomes reporting forms.
+     * @param id the project id of the project of interest
+     * @return a List of outcomes selected in the project MERI plan
+     */
+    @PreAuthorise(accessLevel = 'editor')
+    def listProjectInvestmentPriorities(String id) {
+        render projectService.listProjectInvestmentPriorities(id) as JSON
     }
 
     private def error(String message, String projectId) {

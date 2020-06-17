@@ -171,6 +171,6 @@
     var reportOwner = fcConfig.reportOwner;
     var order = <fc:modelAsJavascript model="${reportOrder}"/>;
     var config = _.extend(fcConfig, {adjustmentInstructionsSelector:'#adjustment-instructions'});
-    ko.applyBindings(new CategorisedReportsViewModel(reports, order, fcConfig.projects, addHocReportTypes, reportOwner, config), document.getElementById('reporting-content'));
+    ko.applyBindings(new CategorisedReportsViewModel(reports, order, addHocReportTypes, reportOwner, config), document.getElementById('reporting-content'));
 });
 </asset:script>

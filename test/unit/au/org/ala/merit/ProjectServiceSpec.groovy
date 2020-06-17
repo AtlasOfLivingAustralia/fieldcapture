@@ -909,6 +909,62 @@ class ProjectServiceSpec extends Specification {
 
     }
 
+    def "The project service can return a list of investment priorities from the MERI plan"() {
+        setup:
+        String projectId = 'p1'
+        List secondaryOutcomes = [ [ "assets" : [ "Investment priority 1" ], "description" : "Outcome 2" ] ]
+        Map primaryOutcome = [:]
+        Map project = [projectId:projectId, custom:[details:[outcomes:[secondaryOutcomes:secondaryOutcomes, primaryOutcome:primaryOutcome]]]]
+
+        when:
+        List priorities = service.listProjectInvestmentPriorities(projectId)
+
+        then:
+        1 * webService.getJson({it.contains("project/"+projectId)}) >> project
+
+        and:
+        priorities == ['Investment priority 1']
+
+        when:
+        project.custom.details.outcomes.primaryOutcome = [assets:['Investment Priority 2', 'Investment Priority 3'], description:"Outcome 1"]
+        priorities = service.listProjectInvestmentPriorities(projectId)
+
+        then:
+        then:
+        1 * webService.getJson({it.contains("project/"+projectId)}) >> project
+
+        and:
+        priorities == ['Investment Priority 2', 'Investment Priority 3', 'Investment priority 1']
+
+        when:
+        project.custom.details.outcomes = null
+        priorities = service.listProjectInvestmentPriorities(projectId)
+
+        then:
+        1 * webService.getJson({it.contains("project/"+projectId)}) >> project
+
+        and:
+        priorities == []
+    }
+
+    def "The service can return a list of activity types nominated by the project"() {
+        setup:
+        Map project = [custom:[details:[activities:[activities:['a1', 'a2']]]]]
+
+        when:
+        List activities = service.getProjectActivities(project)
+
+        then:
+        1 * projectConfigurationService.getProjectConfiguration(project) >> [activities:[[name:'a1', output:'o1'],[name:'a2', output:'o2']]]
+        activities == [[name:'a1', output:'o1'],[name:'a2', output:'o2']]
+
+        when:
+        activities = service.getProjectActivities([:])
+
+        then:
+        activities == []
+    }
+
     private Map buildApprovalDocument(int i, String projectId) {
         Map approval = [
                 dateApproved:"2019-07-01T00:00:0${i}Z",

@@ -10,7 +10,7 @@ import static ReportService.ReportMode
  */
 class ProgramController {
 
-    static allowedMethods = [regenerateProgramReports: "POST", ajaxDelete: "POST", delete: "POST", ajaxUpdate: "POST"]
+    static allowedMethods = [regenerateProgramReports: "POST", listOfAllPrograms:'GET' ,ajaxDelete: "POST", delete: "POST", ajaxUpdate: "POST"]
 
     def programService, searchService, documentService, userService, roleService, commonService, webService, siteService
     ProjectService projectService
@@ -89,7 +89,6 @@ class ProgramController {
                 }
             }
         }
-
         [about   : [label: 'Overview',visible: true, stopBinding: false, type: 'tab',
                     program: program,
                     blog: [blogs: blogs?:[], editable: hasEditAccessOfBlog,
@@ -110,17 +109,32 @@ class ProgramController {
 
     @PreAuthorise(accessLevel='siteAdmin')
     def create() {
-        [program: [:], isNameEditable:true]
+        [program: [:], isNameEditable: true]
+    }
+
+    @PreAuthorise(accessLevel='admin')
+    def addSubProgram(String id){
+        if (id !=null) {
+            Map program = programService.get(id)
+            if (!program || program.error) {
+                programNotFound(id, program)
+            } else {
+                [program: [parentProgramId      : program.programId,
+                           parentProgramName  : program.name]]
+            }
+        }
     }
 
     @PreAuthorise(accessLevel='admin')
     def edit(String id) {
         Map program = programService.get(id)
 
+        List<Map> listOfPrograms = programService.listOfAllPrograms().findAll({it.programId != id})
+
         if (!program || program.error) {
             programNotFound(id, program)
         } else {
-            [program: program, isNameEditable:userService.userIsAlaOrFcAdmin()]
+            [program: program, editProgramId: program.programId, allProgram: listOfPrograms, isNameEditable:userService.userIsAlaOrFcAdmin()]
         }
     }
 
@@ -148,28 +162,28 @@ class ProgramController {
 
     @PreAuthorise(accessLevel = 'admin')
     def ajaxUpdate(String id) {
+
         def programDetails = request.JSON
 
         def documents = programDetails.remove('documents')
         def links = programDetails.remove('links')
 
+        Map result
         String programId = id ?: ''
-        Map result = programService.update(programId, programDetails)
-
+        result = programService.update(programId, programDetails)
         programId = programId ?: result.resp?.programId
-        if (documents && !result.error) {
-            documents.each { doc ->
-                doc.programId = programId
-                documentService.saveStagedImageDocument(doc)
+            if (documents && !result.error) {
+                documents.each { doc ->
+                    doc.programId = programId
+                    documentService.saveStagedImageDocument(doc)
+                }
             }
-        }
         if (links && !result.error) {
             links.each { link ->
                 link.programId = programId
                 documentService.saveLink(link)
             }
         }
-
         if (result.error) {
             render result as JSON
         } else {

@@ -15,7 +15,7 @@ class EditProgramSpec extends StubbedCasSpec {
 
     def "As a user with admin permissions, I can edit a program"() {
         setup: "log in as userId=1 who is a program admin for the program with programId=test_program"
-        login([userId:'1', role:"ROLE_USER", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
+        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
 
         when:
         to RLPProgramPage
@@ -27,6 +27,8 @@ class EditProgramSpec extends StubbedCasSpec {
         waitFor { at EditProgram }
 
         when:
+        details.newParentProgramId.click()
+        details.newParentProgramId.find("span").find{it.text() == "No Parent"}.click()
         details.description= "Testing"
         details.url = "http://ala.org.au"
         details.save()

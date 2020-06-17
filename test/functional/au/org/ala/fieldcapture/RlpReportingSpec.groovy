@@ -57,7 +57,16 @@ class RlpReportingSpec extends StubbedCasSpec {
 
         waitFor {
             projectReports.reports.size() == 12
+            projectReports.reports[1].name != ""
         }
+        projectReports.reports[0].name == "Year 2018/2019 - Quarter 1 Outputs Report"
+        projectReports.reports[0].fromDate == "01-07-2018"
+        projectReports.reports[0].toDate == "30-09-2018"
+
+        and: "The end date of the report finishing on the same day of the project is not the day before like other reports"
+        projectReports.reports[11].name == "Outcomes Report 2 for Project 1"
+        projectReports.reports[11].fromDate == "01-07-2018"
+        projectReports.reports[11].toDate == "01-07-2023"
 
     }
 

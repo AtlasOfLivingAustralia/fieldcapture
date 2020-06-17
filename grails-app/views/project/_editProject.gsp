@@ -16,7 +16,7 @@
     </div>
     <div class="control-group span6">
         <label class="control-label">Organisation name</label>
-        <input class="input-xlarge" readonly="readonly" data-bind="value:organisationName" id="organisationName"/>
+        <input type="text" class="input-xlarge" readonly="readonly" data-bind="value:organisationName" id="organisationName"/>
     </div>
 </div>
 <div class="row-fluid">
@@ -27,7 +27,7 @@
     </div>
     <div class="control-group span6">
         <label class="control-label">Service provider organisation name</label>
-        <input class="input-xlarge" readonly="readonly" data-bind="value:serviceProviderName" id="serviceProviderName"/>
+        <input type="text" class="input-xlarge" readonly="readonly" data-bind="value:serviceProviderName" id="serviceProviderName"/>
     </div>
 </div>
 <div class="row-fluid">

@@ -48,7 +48,7 @@ class ProjectControllerSpec extends Specification {
 
         projectService.getMembersForProjectId(_) >> []
         projectService.getProgramConfiguration(_) >> new ProgramConfig([requiresActivityLocking: true])
-        projectService.getProjectServices(_) >> { project -> println(project); realProjectService.getProjectServices(project)}
+        projectService.getProjectServices(_) >> { project -> realProjectService.getProjectServices(project)}
         metadataServiceStub.organisationList() >> [list:[]]
         userServiceStub.getOrganisationIdsForUserId(_) >> []
         userServiceStub.isProjectStarredByUser(_, _) >> [isProjectStarredByUser:true]
@@ -419,7 +419,7 @@ class ProjectControllerSpec extends Specification {
         setup:
         Map activityModel = setupMockServices()
 
-        grailsApplication.config = [rlp:[servicesReport:'output']]
+        grailsApplication.config = [reports:[filterableActivityTypes:['output']]]
         Map project = [custom:[details:[serviceIds:[1,2,4]]]]
 
         Map activityData = [:]
@@ -438,7 +438,7 @@ class ProjectControllerSpec extends Specification {
         Map activityModel = setupMockServices()
         activityModel.outputs << 'non service'
 
-        grailsApplication.config = [rlp:[servicesReport:'output']]
+        grailsApplication.config = [reports:[filterableActivityTypes:['output']]]
         Map project = [custom:[details:[serviceIds:[1,2,4]]]]
 
         Map activityData = [:]
@@ -538,6 +538,22 @@ class ProjectControllerSpec extends Specification {
         model.projectContent.details.visible == false
         model.projectContent.site.visible == false
         model.projectContent.dashboard.visible == false
+    }
+
+    def "The controller delegates to the projectService to list project priorities and returns a JSON encoded response"() {
+        setup:
+        List expected = ['p1', 'p2', 'p3']
+        String projectId = 'p1'
+
+        when:
+        controller.listProjectInvestmentPriorities(projectId)
+
+        then:
+        1 * projectService.listProjectInvestmentPriorities(projectId) >> expected
+
+        and:
+        response.json == expected
+
     }
 
     private Map stubPublicUser() {

@@ -187,40 +187,6 @@
     </tr>
 
     <tr>
-        <td><button disabled id="btnLoadActivityData" class="btn btn-small btn-info" title="Load project aggregrate data">Load Summary Activity Data from CSV</button>
-        </td>
-        <td>
-            Loads (or reloads) activity information from a csv file.
-        <p><g:uploadForm class="loadActivityData" controller="admin" action="populateAggregrateProjectData">
-            <div><input id="activityData" type="file" accept="text/csv" name="activityData"/></div>
-            <div><input type="checkbox" name="preview">Preview errors only, don't actually modify anything</div>
-        </g:uploadForm>
-
-        </p>
-        </td>
-    </tr>
-    <tr>
-        <td><button disabled id="btnNlpData" class="btn btn-small btn-info" title="Load project aggregrate data">Perform NLP migration on selected projects (CSV)</button>
-        </td>
-        <td>
-            End dates C4oC projects and creates new NLP projects for the projects specified on a supplied CSV
-        <p><g:uploadForm class="nlpData" controller="admin" action="nlpMigrate">
-            <div><input id="nlpData" type="file" accept="text/csv" name="nlpData"/></div>
-            <div><input type="checkbox" name="preview" checked="checked">Preview errors only, don't actually modify anything</div>
-        </g:uploadForm>
-
-        </p>
-        </td>
-    </tr>
-    <tr>
-        <td><button disabled id="btnLoadPlanData" class="btn btn-small btn-info" title="Load project data">Load Plans from CSV</button>
-        </td>
-        <td>
-            Loads (or reloads) project plan information from a csv file.
-            <p><g:uploadForm class="loadPlanData" controller="admin" action="importPlanData"><input id="planData" type="file" accept="text/csv" name="planData"/><input type="checkbox" name="overwriteActivities">Replace existing activities</g:uploadForm></p>
-        </td>
-    </tr>
-    <tr>
         <td>
             <a style="color:white" class="btn btn-small btn-info" href="${createLink(controller:'admin', action:'bulkLoadUserPermissions')}">Bulk Load Permissions</a>
         </td>
@@ -280,19 +246,6 @@
             Bulk creates organisations and updates projects.
         <p><g:uploadForm class="createOrgs" action="createMissingOrganisations">
             <div><input id="createOrgs" type="file" name="orgData"/></div>
-
-        </g:uploadForm>
-
-        </p>
-        </td>
-    </tr>
-    <tr>
-        <td><button disabled id="btnImportFromPDF" class="btn btn-small btn-info" title="Import a project from PDF">Import from PDF</button>
-        </td>
-        <td>
-            Imports a project from a PDF file.
-        <p><g:uploadForm class="importFromPDF" action="importOutcomes">
-            <div><input id="importFromPDF" type="file" name="pdf"/></div>
 
         </g:uploadForm>
 

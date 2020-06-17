@@ -91,8 +91,9 @@ class FieldcaptureFunctionalTest extends GebReportingSpec {
         def dataSetPath = getClass().getResource("/resources/"+dataSetName+"/").getPath()
 
         log.info("Using dataset from: ${dataSetPath}")
-
-        int exitCode = "./scripts/loadFunctionalTestData.sh ${dataSetPath}".execute().waitFor()
+        def userName = System.getProperty('grails.mongo.username') ?: ""
+        def password = System.getProperty('grails.mongo.password') ?: ""
+        int exitCode = "./scripts/loadFunctionalTestData.sh ${dataSetPath} ${userName} ${password}".execute().waitFor()
         if (exitCode != 0) {
             throw new RuntimeException("Loading data set ${dataSetPath} failed.  Exit code: ${exitCode}")
         }
