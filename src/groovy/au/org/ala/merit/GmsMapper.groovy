@@ -208,22 +208,28 @@ class GmsMapper {
                 project.organisationId = organisation.organisationId
             }else {
                 String abn = project.abn
-                abnLookup = abnLookupService.lookupOrganisationNameByABN(abn)
-                if (abnLookup){
-                    organisation = organisations.find{it.organisationName == abnLookup.entityName}
-                    if (organisation){
-                        project.organisationId = organisation.organisationId
-                    }else{
-                        if(abnLookup.entityName == ""){
-                            errors << "${project.abn} is invalid abn number. Please Enter the correct one"
-                        }else{
-                            project.organisationName = abnLookup.entityName
-                        }
-
+                if (!abn){
+                    if (!organisation && project.organisationName){
+                        errors << "No organisation exists with organisation name ${project.organisationName}"
                     }
                 }else{
-                    errors << "${project.abn} is invalid. Please Enter the correct one"
+                    abnLookup = abnLookupService.lookupOrganisationNameByABN(abn)
+                    if (abnLookup){
+                        organisation = organisations.find{it.organisationName == abnLookup.entityName}
+                        if (organisation){
+                            project.organisationId = organisation.organisationId
+                        }else{
+                            if(abnLookup.entityName == ""){
+                                errors << "${project.abn} is invalid abn number. Please Enter the correct one"
+                            }else{
+                                project.organisationName = abnLookup.entityName
+                            }
+                        }
+                    }else{
+                        errors << "${project.abn} is invalid. Please Enter the correct one"
+                    }
                 }
+
             }
         }else{
             errors << "No organisation exists with abn  ${project.abn} number and organisation name ${project.organisationName}"
