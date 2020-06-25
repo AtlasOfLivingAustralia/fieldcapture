@@ -47,15 +47,7 @@ class CommonService {
         return featuresMap as JSON
     }
 
-    def i18n(type) {
-        def name = "messages" + (type == "default" ? "" : "_" + type)
-        def defaultFile = "/grails-app/i18n/${name}.properties"
-        def properties = new Properties()
-        def text = getClass().getResourceAsStream("$defaultFile")?.text
-            if (text) {
-            properties.load(new StringReader(text))
-        }
-
-        properties
+    def i18n(Locale locale) {
+        messageSource.getMergedProperties(locale)?.properties
     }
 }

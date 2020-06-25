@@ -25,14 +25,14 @@
                         </div>
                     </div>
 
-                    <!-- ko if:stages && stages.length -->
-                    <div class="control-group form-group row">
-                        <label class="control-label col-form-label col-4" for="documentStage">Associate to ${activityPeriodDescriptor ?: 'Stage'}</label>
-                        <div class="controls col-8">
-                            <select id="documentStage" class="form-control" data-bind="options:stages, optionsCaption: 'Please select', value:stage" data-validation-engine="validate[funcCall[validateReportAssociation],required]"></select>
-                        </div>
-                    </div>
-                    <!-- /ko -->
+                    %{--<!-- ko if:stages && stages.length -->--}%
+                    %{--<div class="control-group form-group row">--}%
+                        %{--<label class="control-label col-form-label col-4" for="documentStage">Associate to ${activityPeriodDescriptor ?: 'Stage'}</label>--}%
+                        %{--<div class="controls col-8">--}%
+                            %{--<select id="documentStage" class="form-control" data-bind="options:stages, optionsCaption: 'Please select', value:stage" data-validation-engine="validate[funcCall[validateReportAssociation],required]"></select>--}%
+                        %{--</div>--}%
+                    %{--</div>--}%
+                    %{--<!-- /ko -->--}%
 
                     <!-- ko if:settings.reports && settings.reports.length -->
                     <div class="control-group form-group row">
@@ -162,7 +162,7 @@
             </div>
             <div class="modal-footer control-group">
                 <div class="controls">
-                    <button type="button" class="btn btn-success"
+                    <button type="button" class="btn btn-success" name="uploadingDocument"
                             data-bind="enable:saveEnabled, click:save, visible:!complete(), attr:{'title':saveHelp}">Save</button>
                     <button class="btn" data-bind="click:cancel, visible:!complete()">Cancel</button>
                     <button class="btn" data-bind="click:close, visible:complete()">Close</button>

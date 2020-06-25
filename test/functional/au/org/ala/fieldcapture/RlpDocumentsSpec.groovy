@@ -32,7 +32,7 @@ class RlpDocumentsSpec extends StubbedCasSpec {
         waitFor { adminContent.documents.attachDocumentDialog.title.displayed }
 
         then: "Ensure the output reports are available for selection"
-        dialog.availableStages().size() == 21 // 20 reports and a "please select" option
+        dialog.availableStages().size() == 28 // 20 reports and a "please select" option
 
         when: "We enter data for the document"
         dialog.title = "Test doc"
@@ -40,7 +40,7 @@ class RlpDocumentsSpec extends StubbedCasSpec {
         dialog.attribution = "the tester"
         dialog.license = "CC-BY"
         dialog.publiclyViewable = true
-        dialog.stage = '1'
+        dialog.stage = 'Outcomes Report 1'
         dialog.attachFile("/resources/testImage.png")
 
         then: "We cannot save a public image without ticking the privacy declaration"

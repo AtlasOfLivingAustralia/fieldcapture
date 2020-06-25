@@ -78,6 +78,7 @@ function ProjectViewModel(project, isUserEditor, organisations) {
     var documentSettings = {
         maxStages: docDefaults.maxStages,
         stages: [],
+        reports: [],
         owner: {
             projectId: project.projectId
         },
@@ -88,6 +89,11 @@ function ProjectViewModel(project, isUserEditor, organisations) {
     for(var i = 0; i < docDefaults.maxStages; i++){
         documentSettings.stages.push((i+1))
     }
+
+    _.sortBy(project.reports,function(report){return report.name})
+        .forEach(function(report){
+            documentSettings.reports.push( {name: report.name, reportId:report.reportId })}
+        )
 
     _.extend(self, new EditableDocumentsViewModel(documentSettings));
 
@@ -102,6 +108,7 @@ function ProjectViewModel(project, isUserEditor, organisations) {
         organisationsMap[org.organisationId] = org;
     });
     self.transients = self.transients || {};
+    self.transients.defaultTags = ["Fires", "Flood", "Cyclone", "Drought", "Storm", "Wind"];
 
     self.name = ko.observable(project.name);
     self.aim = ko.observable(project.aim);
@@ -174,6 +181,7 @@ function ProjectViewModel(project, isUserEditor, organisations) {
     self.projectType = ko.observable(project.projectType);
     self.scienceType = ko.observable(project.scienceType);
     self.task = ko.observable(project.task);
+    self.tags = ko.observableArray(project.tags || []);
     self.urlWeb = ko.observable(project.urlWeb).extend({url:true});
     self.contractStartDate = ko.observable(project.contractStartDate).extend({simpleDate: false});
     self.contractEndDate = ko.observable(project.contractEndDate).extend({simpleDate: false});
@@ -875,6 +883,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             associatedSubProgram: self.associatedSubProgram(),
             funding: new Number(self.funding()),
             status: self.status(),
+            tags: self.tags(),
             promoteOnHomepage: self.promoteOnHomepage(),
             options: {
                 changeActivityDates: self.changeActivityDates(),

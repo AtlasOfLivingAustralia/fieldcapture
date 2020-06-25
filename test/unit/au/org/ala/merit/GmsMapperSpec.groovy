@@ -258,4 +258,16 @@ class GmsMapperSpec extends Specification {
         result.errors.size() == 1
     }
 
+    def "Tags can be mapped by the GMS mapper"() {
+        gmsMapper.programs = ["Program name 1":"p1id", "Program name 2":"p2id"]
+        Map projectData = [APP_ID:'g1',PROGRAM_NM:'Program name 1', ORG_TRADING_NAME:'Test org 1', START_DT:'2019/07/01', FINISH_DT:'2020/07/01', TAGS:"Fires, Flood, Test"]
+
+        when:
+        Map result = gmsMapper.mapProject([ projectData ])
+
+        then:
+        result.project.tags == ["Fires", "Flood", "Test"]
+        !result.errors
+    }
+
 }

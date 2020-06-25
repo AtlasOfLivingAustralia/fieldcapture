@@ -137,11 +137,14 @@ var SimplifiedReportingViewModel = function(project, config) {
 
         var theLastAvailableReportIdx = planViewModel.stages.length
         $.each( planViewModel.stages || [], function(i, stage) {
-            if(self.stageToReport() == stage.label)
+            //DO NOT use self.stageToReport - it changes
+            if(currentStage.label == stage.label)
                 theLastAvailableReportIdx = i
-            if (i <= theLastAvailableReportIdx)
-                stages.push({financialYear: isoDateToFinancialYear(stage.toDate), "stage":stage.label});
+            if (i <= theLastAvailableReportIdx) {
+                stages.push({financialYear: isoDateToFinancialYear(stage.toDate), "stage": stage.label});
+            }
         });
+
         return stages;
     });
 

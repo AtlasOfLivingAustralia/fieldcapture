@@ -78,6 +78,7 @@ class NewBlogEntryPage extends Page {
         loaded {$('button#save')}
         blogDetails { module BlogDetails }
         cancelBtn {$('button#cancel')}
+        saveBtn {$('button#save')}
     }
 
     def submit() {
@@ -93,6 +94,13 @@ class BlogDetails extends Module {
         saveButton() {
             $("button#save")
         }
+
+        docOptions {$('select[name=docCategory] option', 2)}
+
+        docSelect {$('select[name=docCategory]')}
+
+        uploadingFile {$('input#image[name=files]', 0)}
+        saveBtn {$('button.btn[name=uploadingDocument]')}
     }
 }
 

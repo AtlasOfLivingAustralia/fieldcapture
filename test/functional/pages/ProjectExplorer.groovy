@@ -8,7 +8,7 @@ class ProjectExplorer extends Page {
     static url = "home/projectExplorer"
 
     static at = {
-       waitFor { title == 'Explore | MERIT' }
+        waitFor { title == 'Explore | MERIT' }
     }
 
     static content = {

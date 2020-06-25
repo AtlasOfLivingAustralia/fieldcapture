@@ -68,11 +68,11 @@
 </script>
 
 <script id="mediaBody" type="text/html">
-<div class="media-body">
+<div class="media-body attached_document ">
     <a class="pull-right float-right" data-bind="attr:{href:url}" target="_blank">
         <i class="fa fa-download"></i>
     </a>
-    <a data-bind="attr:{href:url}" target="_blank">
+    <a data-bind="attr:{href:url}" target="_blank" class="downloadDocument">
         <span class="media-heading" data-bind="text:name() || filename()"></span>
     </a>
     <span class="muted" data-bind="if:$data.attribution">

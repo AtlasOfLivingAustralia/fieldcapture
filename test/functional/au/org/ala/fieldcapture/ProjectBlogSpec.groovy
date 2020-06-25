@@ -12,7 +12,7 @@ class ProjectBlogSpec extends StubbedCasSpec {
         logout(browser)
     }
 
-    def "As a user, I can view blogs/create/delete in a given project "() {
+/*    def "As a user, I can view blogs/create/delete in a given project "() {
         setup:
         login([userId:'1', role:"ROLE_USER", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
 
@@ -53,16 +53,14 @@ class ProjectBlogSpec extends StubbedCasSpec {
         waitFor {blogModule.deleteBlogBtn.size() == 2}
         blogModule.editBlogPanelTitle() == 'Edit Project Blog'
 
-
         when:
         blogModule.deleteBlogBtn[1].click()
 
         then:
         waitFor {blogModule.deleteBlogBtn.size() == 1 && editProjectBlogPane().isDisplayed()}
+    }*/
 
-    }
-
-    def "As an admin, I can enter edit mode "(){
+    def "As an user, I can enter edit mode "(){
         setup:
         login([userId:'1', role:"ROLE_USER", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
 
@@ -94,7 +92,10 @@ class ProjectBlogSpec extends StubbedCasSpec {
         //Do not need to test 'save', rely on test case of 'create blog'
 
         when:
-        cancelBtn.click()
+        File outputFile = File.createTempFile('test', '.png')
+        String filename = outputFile.absolutePath
+        blogDetails.uploadingFile =(filename)
+        saveBtn.click()
 
         then:
         waitFor {at ProjectBlogPage}

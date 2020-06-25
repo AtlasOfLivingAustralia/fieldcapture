@@ -6,7 +6,6 @@
 //= require bootbox/bootbox.min.js
 //= require knockout/3.5.0/knockout.debug.js
 //= require knockout/3.5.0/knockout.mapping-latest
-//= require components.js
 //= require jquery.validationEngine/jquery.validationEngine
 //= require jquery.validationEngine/jquery.validationEngine-en
 //= require jquery.blockUI/jquery.blockUI
