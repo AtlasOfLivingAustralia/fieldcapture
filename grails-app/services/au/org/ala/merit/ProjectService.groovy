@@ -1683,4 +1683,12 @@ class ProjectService  {
         List secondaryOutcomes = project?.custom?.details?.outcomes?.secondaryOutcomes?.collect{it.assets}?.flatten() ?: []
         primaryOutcomes + secondaryOutcomes
     }
+
+    /**
+     * Returns the primary outcome specified in the project MERI plan, null if none is specified.
+     * @param project the project of interest
+     */
+    String getPrimaryOutcome(Map project) {
+        project?.custom?.details?.outcomes?.primaryOutcome?.description
+    }
 }

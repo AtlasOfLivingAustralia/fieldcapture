@@ -15,7 +15,7 @@ class ManagementUnitControllerSpec extends Specification {
     RoleService roleService = Mock(RoleService)
     BlogService blogService = Mock(BlogService)
     ProgramService programService = Mock(ProgramService)
-
+    ProjectService projectService = Mock(ProjectService)
 
     String adminUserId = 'admin'
     String editorUserId = 'editor'
@@ -30,6 +30,7 @@ class ManagementUnitControllerSpec extends Specification {
         controller.blogService = blogService
         controller.managementUnitService = managementUnitService
         controller.programService = programService
+        controller.projectService = projectService
 
         roleService.getRoles() >> []
     }
@@ -324,6 +325,28 @@ class ManagementUnitControllerSpec extends Specification {
 
         then:
         groupedProjects == ['p1':[projects[0], projects[1]], 'p3':[projects[2]], 'p4':[projects[3]]]
+
+    }
+
+    def "The management unit controller supports the display of program outcomes that are targeted by projects in that management unit"() {
+        String managementUnitId = 'mu1'
+        userService.getUser() >> [userId:'u1']
+        managementUnitService.get(managementUnitId) >> [managementUnitId:managementUnitId, name:"test"]
+        userService.getMembersOfManagementUnit(managementUnitId) >> [members:[[userId:'u1', role:'admin']]]
+        managementUnitService.getProjects(managementUnitId) >> [projects:[[projectId:'p1', programId:"program1"]]]
+        managementUnitService.serviceScores(managementUnitId, _, _) >> [:]
+        projectService.getPrimaryOutcome(_) >> "Outcome 1"
+        programService.get("program1") >> [[programId:'program1', outcomes:[[outcome:"Outcome 1", shortDescription:"o1"], [outcome:"Outcome 2", shortDescription:"o2"]]]]
+
+        when:
+        Map model = controller.index(managementUnitId)
+
+        then:
+        1 * userService.canEditManagementUnitBlog("u1", managementUnitId) >> true
+        1 * userService.canUserEditManagementUnit("u1", managementUnitId) >> true
+
+        model.content.about.displayedPrograms.size() == 1
+        model.content.about.displayedPrograms[0].primaryOutcomes == [[outcome:"Outcome 1", shortDescription:"o1", targeted:true], [outcome:"Outcome 2", shortDescription:"o2"]]
 
     }
 
