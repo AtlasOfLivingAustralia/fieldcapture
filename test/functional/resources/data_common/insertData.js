@@ -5,6 +5,9 @@ load('../data/siteDefaults.js');
 load('../data/activityForms/RLPOutputReport.js');
 load('../data/activityForms/CoreServicesReport.js');
 load('../data/activityForms/ProgressReport.js');
+load('../data/scoreDefaults.js');
+load('../data/activityDefaults.js');
+load('../data/outputDefaults.js');
 
 
 function createProject(projectProperties) {
@@ -37,6 +40,36 @@ function createMu(muProperties) {
     var mu = muDefaults.create()
     assign(muProperties,mu)
     db.managementUnit.insert(mu);
+}
+
+function createScoreWeedHaDefaults(weedsProperties) {
+    var weedHa = scoreWeedHaDefaults.create();
+    assign(weedsProperties, weedHa);
+    db.score.insert(weedHa);
+
+}
+
+function createActivities(activities){
+    var activity = activityDefaults.create();
+    assign(activities, activity);
+    db.activity.insert(activity);
+}
+
+function createOutput(outputs) {
+    var out = outputDefaults.create();
+    assign(outputs, out);
+    db.output.insert(out);
+}
+
+function createPestOutDataDefaults(pestData){
+    var pestOutput =pestOutDataDefaults.create();
+    assign(pestData, pestOutput);
+    db.output.insert(pestOutput);
+}
+function createScoreInvasiveSpecies(invasiveSpecies){
+    var species = scoreInvasiveSpeciesDefaults.create();
+    assign(invasiveSpecies, species);
+    db.score.insert(species);
 }
 
 
