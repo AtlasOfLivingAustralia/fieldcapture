@@ -1467,7 +1467,7 @@ var RisksReportViewModel = function(project, options) {
     self.orientation = ko.observable('portrait');
 
     function displayReport(url) {
-        var paramString= '?fromDate'+self.fromDate()+'&toStage='+self.toDate();
+        var paramString= '?fromDate'+self.fromDate()+'&toDate='+self.toDate();
         paramString+='&sections=Project+risks+changes';
         paramString+='&orientation='+self.orientation();
 

@@ -80,9 +80,9 @@ describe("", function () {
                     suppliedName = name;
                 };
                 viewModel.generateRisksReportHTML();
-                expect(suppliedUrl).toEqual("/html?fromDate2018-10-01T14:00:00Z&toStage=2019-01-01T13:00:00Z&sections=Project+risks+changes&orientation=portrait");
+                expect(suppliedUrl).toEqual("/html?fromDate2018-10-01T14:00:00Z&toDate=2019-01-01T13:00:00Z&sections=Project+risks+changes&orientation=portrait");
                 viewModel.generateRisksReportPDF();
-                expect(suppliedUrl).toEqual("/pdf?fromDate2018-10-01T14:00:00Z&toStage=2019-01-01T13:00:00Z&sections=Project+risks+changes&orientation=portrait");
+                expect(suppliedUrl).toEqual("/pdf?fromDate2018-10-01T14:00:00Z&toDate=2019-01-01T13:00:00Z&sections=Project+risks+changes&orientation=portrait");
             }
             finally {
                 window.open = previous;

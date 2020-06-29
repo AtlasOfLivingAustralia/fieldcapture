@@ -155,7 +155,10 @@ class ProjectSummaryReportCommand {
                     activity.reason = document?.notes
                 }
                 Map activityModel = activitiesModel.activities.find{it.name == activity.type}
-                activityModels << activityModel
+                if (activityModel) {
+                    activityModels << activityModel
+                }
+
                 Map report = reportService.findReportForDate(activity.plannedEndDate, project.reports)
                 if (report && report.name) {
                     activitiesByStage[report.name] << activity

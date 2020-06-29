@@ -8,7 +8,8 @@
             <g:if test="${user.isAdmin || user.isCaseManager}">
                 <li><a href="#projectDetails" id="projectDetails-tab" data-toggle="tab"><i class="icon-chevron-right"></i> MERI Plan</a></li>
                 <g:if test="${risksAndThreatsVisible}">
-                <li><a href="#risks" id="risks-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Risks and threats</a></li>
+                    <li><a href="#risks" id="risks-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Risks and threats</a></li>
+                    <li><a href="#risks-reporting-section" id="risks-reporting-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Risks and threats changes</a></li>
                 </g:if>
             </g:if>
 
@@ -65,10 +66,12 @@
                 </div>
                 <g:if test="${risksAndThreatsVisible}">
                   <div id="risks" class="pill-pane">
-                      <g:render template="riskReporting" model="[project:project]"/>
                       <div class="validationEngineContainer meri-plan" id="risk-validation" data-bind="with:meriPlan">
                           <g:render template="riskTable" model="[project:project]"/>
                       </div>
+                  </div>
+                  <div id="risks-reporting-section" class="pill-pane">
+                      <g:render template="riskReporting" model="[project:project]"/>
                   </div>
                 </g:if>
 
