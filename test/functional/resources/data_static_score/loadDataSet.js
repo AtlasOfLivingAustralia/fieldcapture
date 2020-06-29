@@ -499,3 +499,83 @@ createPestOutDataDefaults({activityId:"activity_6", outputId:"output_6"});
 
 loadActivityForms();
 
+//inserting setting homepage static 6 box only
+
+var staticValue = "{\n" +
+    "  \"statistics\": {\n" +
+    "    \"ts1\": {\n" +
+    "      \"config\": \"5\",\n" +
+    "      \"title\": \"Threatened Species Strategy\",\n" +
+    "      \"label\": \"Protecting threatened species\",\n" +
+    "      \"units\": \"Projects\",\n" +
+    "      \"type\": \"projectCount\",\n" +
+    "      \"projectFilter\": [\n" +
+    "        \"meriPlanAssetFacet:Threatened Species\"\n" +
+    "      ]\n" +
+    "    },\n" +
+    "    \"nlp1\": {\n" +
+    "      \"config\": \"5\",\n" +
+    "      \"title\": \"National Landcare Programme\",\n" +
+    "      \"label\": \"Supporting sustainable agriculture\",\n" +
+    "      \"units\": \"Projects\",\n" +
+    "      \"type\": \"investmentProjectCount\",\n" +
+    "      \"projectFilter\": [\n" +
+    "        \"associatedProgramFacet:National Landcare Programme\"\n" +
+    "      ],\n" +
+    "      \"investmentTypeFilter\": \"Farmers and fishers are increasing their long term returns through better management of the natural resource base\"\n" +
+    "    },\n" +
+    "    \"nlp7\": {\n" +
+    "      \"config\": \"6\",\n" +
+    "      \"title\": \"National Landcare Programme\",\n" +
+    "      \"label\": \"That support World Heritage Areas\",\n" +
+    "      \"units\": \"Projects\",\n" +
+    "      \"type\": \"projectCount\",\n" +
+    "      \"projectFilter\": [\n" +
+    "        \"associatedProgramFacet:National Landcare Programme\",\n" +
+    "        \"meriPlanAssetFacet:World Heritage area\"\n" +
+    "      ]\n" +
+    "    },\n" +
+    "    \"nlp9\": {\n" +
+    "      \"config\": \"2\",\n" +
+    "      \"title\": \"National Landcare Programme\",\n" +
+    "      \"label\": \"Targeted for weed control\",\n" +
+    "      \"units\": \"Ha\",\n" +
+    "      \"type\": \"outputTarget\",\n" +
+    "      \"projectFilter\": [\n" +
+    "        \"associatedProgramFacet:National Landcare Programme\"\n" +
+    "      ],\n" +
+    "      \"scoreLabel\":\"Total new area treated for weeds (Ha)\"\n" +
+    "    },\n" +
+    "    \"nlp13\": {\n" +
+    "      \"config\": \"6\",\n" +
+    "      \"title\": \"National Landcare Programme\",\n" +
+    "      \"label\": \"Targeted for pest animal control\",\n" +
+    "      \"units\": \"Ha\",\n" +
+    "      \"type\": \"outputTarget\",\n" +
+    "      \"projectFilter\": [\n" +
+    "        \"associatedProgramFacet:National Landcare Programme\"\n" +
+    "      ],\n" +
+    "      \"scoreLabel\": \"Area covered (Ha) by pest treatment actions\"\n" +
+    "    },\n" +
+    "    \"all1\": {\n" +
+    "      \"config\": \"3\",\n" +
+    "      \"title\": \"All programmes\",\n" +
+    "      \"label\": \"Managed for invasive weeds\",\n" +
+    "      \"units\": \"Ha\",\n" +
+    "      \"type\": \"score\",\n" +
+    "      \"scoreLabel\": \"Total new area treated for weeds (Ha)\"\n" +
+    "    }\n" +
+    "  },\n" +
+    "  \"groups\": [\n" +
+    "    [\n" +
+    "      \"ts1\",\n" +
+    "      \"nlp1\",\n" +
+    "      \"nlp7\",\n" +
+    "      \"nlp9\",\n" +
+    "      \"nlp13\",\n" +
+    "      \"all1\"\n" +
+    "    ]\n" +
+    "  ]\n" +
+    "}"
+
+db.setting.insert({"key":"meritstatistics.config","value":staticValue, version: 3})
