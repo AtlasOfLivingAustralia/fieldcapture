@@ -48,11 +48,11 @@
             <g:set var="program" value="${programDetails.program}"/>
             <g:set var="active" value="${i==0?'active':''}"/>
             <div class="tab-pane ${active}" id="${program.programId}_projects" >
-                <g:if test="${program.outcomes}">
+                <g:if test="${programDetails.primaryOutcomes}">
                     <div class="well">
                         <div class="well-title">The Service Provider is addressing these ${program.acronym ?: program.name} outcomes</div>
                         <div class="row outcomes no-gutters">
-                            <g:each in="${program.outcomes}" var="outcome" >
+                            <g:each in="${programDetails.primaryOutcomes}" var="outcome" >
                                 <g:set var="outcomeClass" value="${outcome.targeted ? 'targeted' :''}"/>
                                 <div class="col-md">
                                     <div class="outcome-wrapper h-100">

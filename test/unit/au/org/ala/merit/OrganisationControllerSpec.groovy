@@ -372,6 +372,28 @@ class OrganisationControllerSpec extends Specification {
         response.contentType == 'application/vnd.ms-excel'
         // Spreadsheet contents is tested in the AnnouncementsMapperSpec
     }
+    def "Populate abn name if the user provide the correct abn number otherwise it will return invalid"(){
+        setup:
+        params.method="GET"
+        params.abn = "11111111111"
+        String abn = params.abn
+        controller.prepopulateAbn() >> params
+        Map map = [abn:"11111111111", name:"Test Name"]
+
+        when:
+        controller.prepopulateAbn()
+
+
+        then:
+        1 * organisationService.getAbnDetails(abn) >> map
+
+        and:
+        response.status == 200
+        response.contentType == 'application/json;charset=UTF-8'
+        response.getJson().name == "Test Name"
+        response.getJson().abn == "11111111111"
+
+    }
 
 
     def "announcements can be bulk uploaded"() {

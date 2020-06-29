@@ -149,6 +149,14 @@ class EditableMeriPlan extends Module {
         }
     }
 
+    List selectablePrimaryOutcomes() {
+        primaryOutcome.find('option').collect{it.attr("value")}
+    }
+
+    List selectableSecondaryOutcomes() {
+        secondaryOutcomes[0].outcome.find('option').collect{it.attr("value")}
+    }
+
     List availableObjectives() {
         objectivesList.find('input[type="checkbox"]').collect{it.attr("value")}
     }

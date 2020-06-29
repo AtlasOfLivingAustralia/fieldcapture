@@ -174,6 +174,17 @@ var programDefaults = {
                   ],
                   "category": "agriculture",
                   "shortDescription": "Climate / Weather Adaption"
+              },
+              {
+                  "outcome": "Secondary",
+                  "priorities": [
+                      {
+                          "category":"None"
+                      }
+                  ],
+                  "type":"secondary",
+                  "category": "agriculture",
+                  "shortDescription": "Climate / Weather Adaption"
               }
           ],
           "priorities": [

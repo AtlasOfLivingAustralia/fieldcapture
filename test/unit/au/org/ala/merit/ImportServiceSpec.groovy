@@ -29,6 +29,7 @@ class ImportServiceSpec extends Specification {
     ManagementUnitService managementUnitService = Mock(ManagementUnitService)
     MetadataService metadataService = Mock(MetadataService)
     ProgramService programService = Mock(ProgramService)
+    AbnLookupService abnLookupService = Mock(AbnLookupService)
 
     def setup() {
         importService = new ImportService()
@@ -39,42 +40,10 @@ class ImportServiceSpec extends Specification {
         importService.managementUnitService = managementUnitService
         importService.metadataService = metadataService
         importService.programService = programService
+        importService.abnLookupService = abnLookupService
 
         metadataService.activitiesModel() >> activitiesModel
         metadataService.getOutputTargetScores() >> [[externalId:'RVA', scoreId:1, label:'label 1']]
-    }
-
-    def "MERIT should be able to load summary activity score information into a project using CSV formatted data"() {
-
-        setup:
-        def score = [externalId:'RVA', scoreId:1, label:'label 1']
-        def project = buildTestProject()
-        projectService.get(_,_) >> project
-        projectService.search(_) >> [resp:[projects:[project]]]
-
-        def data = "${project.grantId},${project.externalId},${GmsMapper.ACTIVITY_DATA_TYPE},${GmsMapper.ACTIVITY_DATA_SUB_TYPE},RVA,2000"
-        def input = new ByteArrayInputStream((HEADER_ROW+"\n"+data).getBytes('UTF-8'))
-
-        when: "loading data containing progress towards a single output target"
-        def results = importService.populateAggregrateProjectData(input, true, 'UTF-8')
-
-        then: "we create a single activity containing a single output that records progress towards the specified target"
-        results.activities.size() == 1
-        def activity = results.activities[0]
-        activity.type == ImportService.SUMMARY_ACTIVITY_NAME
-        activity.plannedStartDate == project.plannedStartDate
-        activity.plannedEndDate == project.plannedEndDate
-        activity.startDate == project.plannedStartDate
-        activity.endDate == project.plannedEndDate
-        activity.outputs.size() == 1
-
-        def output = activity.outputs[0]
-        output.name == ImportService.SUMMARY_OUTPUT_NAME
-        output.data.scores.size() == 1
-        output.data.scores[0].scoreId == score.scoreId
-        output.data.scores[0].scoreLabel == score.label
-        output.data.scores[0].score == 2000
-
     }
 
     def "The import service can bulk import sites for a set of projects"() {
@@ -96,7 +65,7 @@ class ImportServiceSpec extends Specification {
 
     def "The import service can create projects that have been loaded and mapped via CSV"() {
         setup:
-        GmsMapper mapper = new GmsMapper(activitiesModel, [:], [], scores, [:])
+        GmsMapper mapper = new GmsMapper(activitiesModel, [:], [],abnLookupService, scores, [:])
         List projectRows = [[
             APP_ID:'Grant 1',
             MANAGEMENT_UNIT:'Test MU',

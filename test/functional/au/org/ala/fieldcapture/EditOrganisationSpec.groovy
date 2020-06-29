@@ -27,8 +27,12 @@ class EditOrganisationSpec extends StubbedCasSpec {
         waitFor  {at EditOrganisation}
 
         when:
+
+        details.abn = "11111111111"
+        waitFor {details.prePopulateABN.displayed}
+        details.prePopulateABN.click()
+        waitFor { details.name.displayed}
         details.name= "Test Organisation Test 2"
-        details.abn = "12345678910"
         details.description = "Test Organisation Description test"
         details.save()
 
@@ -39,6 +43,6 @@ class EditOrganisationSpec extends StubbedCasSpec {
         waitFor {orgDescription.displayed }
         orgDescription.text() == "Test Organisation Description test"
         waitFor {orgAbn.displayed }
-        orgAbn.text() == "12345678910"
+        orgAbn.text() == "11111111111"
     }
 }

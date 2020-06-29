@@ -19,7 +19,9 @@ createProject({name:'project 1', projectId:"project_1", programId:'test_program'
 createProject({name:'project 2', projectId:"project_2", programId:'test_program',managementUnitId:"test_mu_2",siteId:'test_site_2', grantId:"RLP-Test-Program-Project-2"})
 createProject({name:'project in ACT', projectId:"project_3", programId:'test_program',managementUnitId:"test_mu_3",siteId:'test_site_3', grantId:"RLP-Test-Program-Project-3"})
 
+createProgram({name:'A test program', programId:'test_programId'})
 
+db.userPermission.insert({entityType:'au.org.ala.ecodata.Program', entityId:'test_programId', userId:'1', accessLevel:'admin'});
 
 
 createSite(site1)
@@ -37,7 +39,9 @@ var blog_program = {
     "stockIcon" : ""
 }
 
-createProgram({name:'Regional Land Partnerships', programId:'test_program', blog:[blog_program]})
+createProgram({name:'New Test Program', parent:null, programId:'new_test_Program'})
+createProgram({name:'New Second Test program', parent:null ,programId:'second_test_program'})
+createProgram({name:'Regional Land Partnerships', parent: null ,programId:'test_program', blog:[blog_program]})
 
 createOrganisation({
     name:'Test Organisation',

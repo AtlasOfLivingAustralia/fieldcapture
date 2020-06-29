@@ -42,9 +42,9 @@ class ReadOnlyPlanRow extends Module {
 
 class ReadOnlyPartnershipRow extends Module {
     static content = {
-        name { $('.partner-name span') }
-        partnership { $('.partnership-nature span') }
-        orgType { $('.partner-organisation-type span') }
+        name { $('.partner-name span').text() }
+        partnership { $('.partnership-nature label').text() }
+        orgType { $('.partner-organisation-type label').text() }
     }
 }
 
@@ -85,102 +85,36 @@ class ReadOnlyMeriPlan extends Module {
         primaryOutcome(required: false) { $('.primary-outcome .outcome-priority span') }
         primaryPriority(required: false) { $('.primary-outcome span[data-bind*=asset]') }
         secondaryOutcomes(required: false) { $('table.secondary-outcome tbody tr').moduleList(ReadOnlyOutcomeRow) }
-        shortTermOutcomes(required: false) { $('tbody[data-bind*="shortTermOutcomes"] textarea') }
-        mediumTermOutcomes(required: false) {  $('tbody[data-bind*="midTermOutcomes"] textarea') }
-        addMediumTermOutcomeButton(required:false) { $('button[data-bind*="addMidTermOutcome"') }
+        shortTermOutcomes(required: false) { $('tbody[data-bind*="shortTermOutcomes"] span') }
+        mediumTermOutcomes(required: false) {  $('tbody[data-bind*="midTermOutcomes"] span') }
         projectName(required: false) { $('input[data-bind*="details.name"]') }
-        projectDescription(required: false) { $('textarea[data-bind*="details.description"]') }
+        projectDescription(required: false) { $('span[data-bind*="details.description"]') }
         rationale(required: false) { $('textarea[data-bind*="details.rationale"]') }
         keyThreats(required: false) { $('table.threats-view tbody tr').moduleList(ReadOnlyThreatRow) }
         projectMethodology(required: false) { $('table span[data-bind*="implementation.description"]') }
         projectImplementation(required: false) { $('#project-implementation span') }
         projectBaseline(required: false) { $('table.baseline-view tbody tr').moduleList(ReadOnlyBaselineRow) }
-        monitoringIndicators(required: false) { $('.meri-monitoring-indicators  table tbody tr').moduleList(ReadOnlyMonitoringIndictorRow) }
+        monitoringIndicators(required: false) { $('table.meri-monitoring-indicators tbody tr').moduleList(ReadOnlyMonitoringIndictorRow) }
         rlpMonitoringIndicators(required: false) { $('table.monitoring-indicators-view tbody tr').moduleList(ReadOnlyMonitoringIndictorRow) }
 
         reviewMethodology(required: false) { $('span[data-bind*="projectEvaluationApproach"]') }
         nationalAndRegionalPlans(required: false) { $('table.plans-view tbody tr').moduleList(ReadOnlyPlanRow) }
         projectServices(required: false) { $('table.service-targets-view tbody tr').moduleList(ReadOnlyServiceTargetRow) }
         objectivesList(required: false) { $('#objectives-list') }
-        projectPartnerships(required: false) { $('#project-partnership').moduleList(ReadOnlyPartnershipRow) }
+        projectPartnerships(required: false) { $('#project-partnership-view tbody tr').moduleList(ReadOnlyPartnershipRow) }
         keq(required:false) { $('#keq tbody tr').moduleList(ReadOnlyKeqRow) }
         budget(required:false) { $('.meri-budget').moduleList(ReadOnlyBudgetRow) }
         activities(required:false) { $('#activity-list') }
-        assets(required:false) { $('table.assets tbody tr').moduleList(ReadOnlyAssetRow) }
-        adaptiveManagement(required:false) { $('#adaptive-management textarea') }
-        otherObjective(required:false) { $('#objectives-list input[type=text]') }
-        otherActivity(required:false) { $('#activity-list input[type=text]') }
-
-        floatingSaveButton { $('#floating-save [data-bind*="saveProjectDetails"]') }
-        saveButton { $('.form-actions [data-bind*="saveProjectDetails"]').first() }
-        pdfButton { $('.btn[data-bind*="meriPlanPDF"').first() }
+        assets(required:false) { $('table.assets-view tbody tr').moduleList(ReadOnlyAssetRow) }
+        adaptiveManagement(required:false) { $('#adaptive-management-view span') }
     }
 
-    void hideFloatingSave() {
-        js.exec("\$('#floating-save').css('display', 'none');")
+    List objectives() {
+        $('#objectives-list-view li').collect{it.text()}
     }
 
-    void save() {
-        saveButton.click()
-        // There is a chance of a race condition here if the save
-        // finishes before this check runs, hence catching the assertion
-        try {
-            waitFor(3, 0.1) { $('.blockMsg').displayed }
-        }
-        catch (Throwable e) {
-            // Don't care, we just need the save to finish, the 3 second
-            // timeout will allow this to happen.
-        }
-        waitFor {
-            try {
-                !$('.blockMsg').displayed
-            }
-            catch (StaleElementReferenceException e) {
-                return true // This indicates a page reload
-            }
-        }
+    List activities() {
+        $('#activity-list-view li').collect{it.text()}
     }
-
-    List availableObjectives() {
-        objectivesList.find('input[type="checkbox"]').collect{it.attr("value")}
-    }
-
-    void checkObjective(String value) {
-        objectivesList.find("input[value=\"${value}\"]").click()
-    }
-
-    void generatePDF() {
-        pdfButton.click()
-    }
-
-    List checkedObjectives() {
-        objectivesList.find('input:checked').collect{it.attr("value")}
-    }
-
-    List availableActivities() {
-        activities.find('input[type="checkbox"]').collect{it.attr("value")}
-    }
-
-    void checkActivity(String value) {
-        activities.find("input[value=\"${value}\"]").click()
-    }
-
-    List checkedActivities() {
-        activities.find('input:checked').collect{it.attr("value")}
-    }
-
-    void addMediumTermOutcome(String outcome) {
-        // If we don't do this, the click will hit the floating save instead of the
-        // button.
-        hideFloatingSave()
-
-        int midTermOutcomeCount = mediumTermOutcomes.size()
-
-        addMediumTermOutcomeButton.click()
-        waitFor{ mediumTermOutcomes.size() > midTermOutcomeCount }
-
-        mediumTermOutcomes[midTermOutcomeCount].value(outcome)
-    }
-
 
 }

@@ -295,6 +295,41 @@ describe("Loading the MERI plan is handled correctly", function () {
 
     });
 
+    it("should pre-populate the program and other objectives from saved data", function() {
+        var project = {
+            plannedStartDate:'2018-07-01T00:00:00Z',
+            plannedEndDate:'2021-06-30T00:00:00Z',
+            custom: {
+                details: {
+                    objectives: {
+                        rows1: [{
+                            description:'objective 1'
+                        },
+                        {
+                            description:'other objective'
+                        }]
+                    }
+                }
+            }
+        };
+        var projectService = new ProjectService(project, {});
+        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing', programObjectives:['objective 1', 'objective 2']});
+
+        var objectivesModel = viewModel.meriPlan().objectives;
+        expect(objectivesModel.simpleObjectives.otherChecked()).toBeTrue();
+        expect(objectivesModel.simpleObjectives.otherValue()).toEqual('other objective');
+        expect(objectivesModel.simpleObjectives()).toEqual(['objective 1']);
+
+        objectivesModel.simpleObjectives.otherChecked(false);
+        expect(objectivesModel.simpleObjectives.otherValue()).toBeUndefined();
+
+        var expectedResult = {
+            rows1:[{description:'objective 1', assets:[]}],
+            rows: [{}]
+        };
+        expect(JSON.parse(JSON.stringify(objectivesModel))).toEqual(expectedResult);
+    });
+
     it("Should allow assets to be recorded", function() {
         var project = {
             plannedStartDate:'2018-07-01T00:00:00Z',
@@ -412,6 +447,23 @@ describe("Loading the MERI plan is handled correctly", function () {
         savedMeriPlan = serialized.custom.details;
         expect(savedMeriPlan.activities.activities).toEqual(['activity 2']);
 
+
+    });
+
+    it("should filter selectable outcomes from the program based on the type of the outcome (primary or secondary)", function() {
+
+        var options = {
+            outcomes: [
+                { outcome:"Outcome 1", "type": 'primary'},
+                { outcome:"Outcome 2", "type": 'primary'},
+                { outcome:"Outcome 3"},
+                { outcome:"Outcome 4", "type": 'secondary'},
+            ]
+        };
+
+        var viewModel = new OutcomesViewModel([], options);
+        expect(viewModel.selectablePrimaryOutcomes).toEqual(["Outcome 1", "Outcome 2", "Outcome 3"]);
+        expect(viewModel.selectableSecondaryOutcomes).toEqual(["Outcome 3", "Outcome 4"]);
 
     });
 

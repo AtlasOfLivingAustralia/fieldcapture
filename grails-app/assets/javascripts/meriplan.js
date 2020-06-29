@@ -550,8 +550,13 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
     self.modelAsJSON = function () {
         var tmp = {};
         tmp.details = ko.mapping.toJS(self);
-        if (tmp.details.outcomes && tmp.details.outcomes.selectableOutcomes) {
-            delete tmp.details.outcomes.selectableOutcomes; // This is for dropdown population and shouldn't be saved.
+        if (tmp.details.outcomes) {
+            if (tmp.details.outcomes.selectablePrimaryOutcomes) {
+                delete tmp.details.outcomes.selectablePrimaryOutcomes; // This is for dropdown population and shouldn't be saved.
+            }
+            if (tmp.details.outcomes.selectableSecondaryOutcomes) {
+                delete tmp.details.outcomes.selectableSecondaryOutcomes; // This is for dropdown population and shouldn't be saved.
+            }
         }
 
         var jsData = {"custom": tmp};
@@ -921,6 +926,7 @@ function ObjectiveViewModel(o, programObjectives) {
         self.simpleObjectives.otherValue = ko.observable(otherObjectives.length > 0 ? otherObjectives[0] : undefined);
         self.simpleObjectives.otherChecked.subscribe(function (value) {
             if (!value) {
+                self.simpleObjectives(self.simpleObjectives()); // This clears the other value.
                 self.simpleObjectives.otherValue(undefined);
             }
         });
@@ -964,9 +970,24 @@ function OutcomesViewModel(outcomes, config) {
         }]
     }
 
-    self.selectableOutcomes = _.map(config.outcomes, function (outcome) {
-        return outcome.outcome;
-    });
+    /**
+     * Filters the program outcomes specified in config.outcomes based on the outcome type.
+     * Outcomes can be optionally 'primary' or 'secondary'.  Outcomes with no type are both
+     * primary and secondary.
+     *
+     * @param outcomes the list of available outcomes to be filtered.  Outcomes are defined by a program.
+     * @param type the type to filter.  Outcomes matching the supplied type will be returned
+     * @returns {Array} an array of strings (outcome descriptions) filtered from the supplied list.
+     */
+    function filterByType(outcomes, type) {
+        return _.map(_.filter(outcomes, function (outcome) {
+            return !outcome.type || outcome.type == type;
+        }), function (outcome) {
+            return outcome.outcome;
+        });
+    }
+    self.selectablePrimaryOutcomes = filterByType(config.outcomes, 'primary');
+    self.selectableSecondaryOutcomes = filterByType(config.outcomes, 'secondary');
 
     self.outcomePriorities = function (outcomeText) {
 

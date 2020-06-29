@@ -25,10 +25,10 @@ class AddSubProgramSpec extends StubbedCasSpec {
         addSubProgram()
 
         then:
-        waitFor( 10, { at AddSubProgram }) // This has occasionally timed out.
+        waitFor{ at AddSubProgram } // This has occasionally timed out.
 
         when:
-        program.name = "A test program"
+        program.name = "add new sub program"
         program.description = "A test description"
         program.save()
 
@@ -48,7 +48,7 @@ class AddSubProgramSpec extends StubbedCasSpec {
 
         then:
         subContent !=null
-        waitFor {subContent[0].subProgramTitle.text() == "A test program"}
+        waitFor {subContent[0].subProgramTitle.text() == "add new sub program"}
 
         when:
         subContent[0].subProgramTitle.click()
@@ -57,7 +57,7 @@ class AddSubProgramSpec extends StubbedCasSpec {
         waitFor( 10,{subContent.displayed})
 
         and:
-        subContent[0].subProgramName.text() == "A test program"
+        subContent[0].subProgramName.text() == "add new sub program"
         subContent[0].subProgramDescription.text() == "A test description"
 
     }

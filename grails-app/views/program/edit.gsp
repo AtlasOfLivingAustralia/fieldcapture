@@ -18,6 +18,7 @@
     <asset:stylesheet src="common-bs4.css"/>
     <asset:stylesheet src="program.css"/>
     <asset:stylesheet src="select2/4.0.3/css/select2.css"/>
+    <asset:stylesheet src="select2-bootstrap4/select2-bootstrap4.css"/>
 
 
 </head>
@@ -43,14 +44,16 @@
 
 <asset:script>
     $(function () {
+
         var program = <fc:modelAsJavascript model="${program}"/>;
+        program.parentProgramId = "${program.parent?.programId}"
 
         var programViewModel = new ProgramViewModel(program, fcConfig);
 
         ko.applyBindings(programViewModel);
         $('.validationEngineContainer').validationEngine();
 
-         $('.parentProgramId').select2();
+         $('.parentProgramId').select2({theme: "bootstrap4"});
     });
 
 </asset:script>

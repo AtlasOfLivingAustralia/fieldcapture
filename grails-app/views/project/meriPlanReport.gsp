@@ -56,6 +56,8 @@
         config.useRlpTemplate = services.length > 0;
         var programName = '${(config.program?.acronym?:project.associatedSubProgram) ?: project.associatedProgram}';
         config.programName = programName;
+        config.programObjectives = ${config.program?.config?.objectives ?: '[]'};
+        config.programActivities = <fc:modelAsJavascript model="${config.program?.config?.activities?.collect{it.name} ?: []}"/>
         var viewModel = new ReadOnlyMeriPlan(project, new ProjectService(project, config), config);
         viewModel.name = project.name;
         viewModel.description = project.description;

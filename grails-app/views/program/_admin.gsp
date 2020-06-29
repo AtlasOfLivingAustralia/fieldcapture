@@ -30,9 +30,8 @@
             <br/>
             <div class="row">
                 <div class="col-sm-2">
-                    <a class="btn btn-info btn-small admin-action addSubProgramButton" href="${g.createLink(action: 'addSubProgram',   id:  program.programId)}">
-                        <i class="fa fa-plus"> Add Sub-Program</i>
-                    </a>
+                    <a class="btn btn-info btn-small admin-action addSubProgramButton" href="${g.createLink(action: 'addSubProgram',   id:  program.programId)}"><i
+                            class="fa fa-plus"></i> Add sub-program</a>
                 </div>
             </div>
 

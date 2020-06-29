@@ -20,6 +20,7 @@ class ManagementUnitController {
     ActivityService activityService
     PdfGenerationService pdfGenerationService
     BlogService blogService
+    ProjectService projectService
 
     def index(String id) {
         def mu = managementUnitService.get(id)
@@ -94,8 +95,8 @@ class ManagementUnitController {
         projectsByCategory.each { String programId, List projectsInProgramGroup ->
             Map program = mu.programs.find{it.programId == programId}
 
-            aggregateOutcomes(program, projectsInProgramGroup)
-            displayedPrograms << [program:program, projects: projectsInProgramGroup, servicesWithScores:servicesWithScores[programId]]
+            List outcomes = findTargetedPrimaryOutcomes(program, projectsInProgramGroup)
+            displayedPrograms << [program:program, projects: projectsInProgramGroup, servicesWithScores:servicesWithScores[programId], primaryOutcomes:outcomes]
         }
 
         List reportOrder = mu.config?.managementUnitReports?.collect{[category:it.category, description:it.description]} ?: []
@@ -149,19 +150,24 @@ class ManagementUnitController {
     }
 
 
-    //Aggregate all targeted outcomes of projects in the given program
-    private def aggregateOutcomes(Map program, List projects){
+    /**
+     * Returns a list of program primary outcomes, with an extra entry (targeted) specifying whether any project
+     * has targeted that outcome as the primary outcome of the project.
+     * @param program the program.
+     * @param projects all projects run under the program in the management unit
+     */
+    private List findTargetedPrimaryOutcomes(Map program, List projects) {
+        List outcomes = program.outcomes.findAll {it.type != 'secondary'}.collect{[outcome:it.outcome, shortDescription:it.shortDescription]}
         for(Map project in projects){
-            //Verify project.outcomes (from program config) with primaryOutcome and secondaryOutcomes in project.custom.details.outcomes
-            Map primaryOutcome = project.custom?.details?.outcomes?.primaryOutcome
+            String primaryOutcome = projectService.getPrimaryOutcome(project)
             if (primaryOutcome){
-                Map oc =  program.outcomes.find {oc -> oc.outcome == primaryOutcome.description}
+                Map oc =  outcomes.find {it.outcome == primaryOutcome}
                 if (oc) {
-                    oc['targeted'] = true //set program outcomes
-                    primaryOutcome.shortDescription = oc['shortDescription']
+                    oc['targeted'] = true // at least on project is targeting this outcome as the primary outcome.
                 }
             }
         }
+        outcomes
     }
 
 
