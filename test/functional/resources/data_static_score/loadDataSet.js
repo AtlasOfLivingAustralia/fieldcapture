@@ -39,6 +39,9 @@ createProject({name:'project 3', projectId:"project_3", programId:'program_3',ma
 
 
 createProject({name:'project 4', projectId:"project_4", programId:'program_1',managementUnitId:"mu_1", grantId:"RLP-Test-Program-Project-1",
+    associatedProgram: "National Landcare Programme",
+    associatedSubProgram: "Regional Funding",
+    planStatus: "approved",
     outputTargets:[
         {"outputLabel":"Pest Management Details",
             "target":"600",
@@ -48,61 +51,131 @@ createProject({name:'project 4', projectId:"project_4", programId:'program_1',ma
             "unit":"Ha",
         }
     ],
-    custom:{"details":{"objectives" : {
-                "rows1" : [
+    custom:{"details":
+            {
+                "objectives":
                     {
-                        "assets" : [
-                            "Natural/Cultural assets managed",
-                            "Threatened Species",
-                            "Threatened Ecological Communities",
-                            "World Heritage area",
-                            "Community awareness/participation in NRM",
-                            "Remnant Vegetation"
-                        ],
-                        "description" : "By June 2018, engage 170 individuals (including Indigenous members) towards NRM awareness and skills relating to Ramsar and World Heritage areas, EPBC species and communities as measured by engagement evaluations (Strategic Objective 3)\n"
+                        "rows1": [
+                            {
+                                "assets": [
+                                    "Natural/Cultural assets managed",
+                                    "Threatened Species",
+                                    "Threatened Ecological Communities",
+                                    "World Heritage area",
+                                    "Community awareness/participation in NRM",
+                                    "Remnant Vegetation"
+                                ],
+                                "description": "By June 2018, engage 170 individuals (including Indigenous members) towards NRM awareness and skills relating to Ramsar and World Heritage areas, EPBC species and communities as measured by engagement evaluations (Strategic Objective 3)\n"
+                            },
+                            {
+                                "assets": [
+                                    "Natural/Cultural assets managed",
+                                    "Threatened Species",
+                                    "Threatened Ecological Communities",
+                                    "World Heritage area",
+                                    "Community awareness/participation in NRM",
+                                    "Remnant Vegetation"
+                                ],
+                                "description": "By 2018, implement actions towards 30 Ha of improved habitat in 1 inland Ramsar site and World Heritage areas, and implement recovery actions for 10 EPBC listed flora species or communities as measured by partner evaluations and Natural Values Atlas data entry. (Strategic objective 4)"
+                            }
+                        ]
                     },
-                    {
-                        "assets" : [
-                            "Natural/Cultural assets managed",
-                            "Threatened Species",
-                            "Threatened Ecological Communities",
-                            "World Heritage area",
-                            "Community awareness/participation in NRM",
-                            "Remnant Vegetation"
-                        ],
-                        "description" : "By 2018, implement actions towards 30 Ha of improved habitat in 1 inland Ramsar site and World Heritage areas, and implement recovery actions for 10 EPBC listed flora species or communities as measured by partner evaluations and Natural Values Atlas data entry. (Strategic objective 4)"
-                    }
-                ]}},
-        "budget" : {"headers" : [],
-            "columnTotal" : [],
-            "rows" : [
-                {
-                    "shortLabel" : "Farmers and fishers are increasing their long term returns through better management of the natural resource base",
-                    "description" : "Community grants",
-                    "rowTotal" : 212500,
-                    "costs" : [
+                "status": "active",
+                "budget": {
+                    "overallTotal" : 566668,
+                    "headers" : [
                         {
-                            "dollar" : "25000"
+                            "data" : "2014/2015"
                         },
                         {
-                            "dollar" : "62500"
+                            "data" : "2015/2016"
                         },
                         {
-                            "dollar" : "62500"
+                            "data" : "2016/2017"
                         },
                         {
-                            "dollar" : "62500"
+                            "data" : "2017/2018"
+                        }
+                    ],
+                    "rows" : [
+                        {
+                            "costs" : [
+                                {
+                                    "dollar" : "38626"
+                                },
+                                {
+                                    "dollar" : "79616"
+                                },
+                                {
+                                    "dollar" : "83470"
+                                },
+                                {
+                                    "dollar" : "85557"
+                                }
+                            ],
+                            "rowTotal" : 287269,
+                            "description" : "RLF - Project Implementation - facilitate and coordinate the sharing of skills between the Board and farming groups, schools, and community groups.  Provide feedback to the Australian Government on emerging issues",
+                            "shortLabel" : "Farmers and fishers are increasing their long term returns through better management of the natural resource base"
                         },
                         {
-                            "dollar" : "0"
+                            "costs" : [
+                                {
+                                    "dollar" : "21374"
+                                },
+                                {
+                                    "dollar" : "70384"
+                                },
+                                {
+                                    "dollar" : "66530"
+                                },
+                                {
+                                    "dollar" : "64443"
+                                }
+                            ],
+                            "rowTotal" : 222731,
+                            "description" : "RLF - Project Implementation - Assist and develop community Landcare and production groups; Contributes to farming system tours and crop walks with farming groups",
+                            "shortLabel" : "Communities are involved in caring for their environment"
+                        },
+                        {
+                            "costs" : [
+                                {
+                                    "dollar" : "6667"
+                                },
+                                {
+                                    "dollar" : "16667"
+                                },
+                                {
+                                    "dollar" : "16667"
+                                },
+                                {
+                                    "dollar" : "16667"
+                                }
+                            ],
+                            "rowTotal" : 56668,
+                            "description" : "MERI & Admin - Monitoring activities, Admin Support, data compilation and distribution, field based assessments, interpreting effectiveness of the practices; evaluation of project participants at trial sites and workshops",
+                            "shortLabel" : "MERI & Admin"
+                        }
+                    ],
+                    "columnTotal" : [
+                        {
+                            "data" : 66667
+                        },
+                        {
+                            "data" : 166667
+                        },
+                        {
+                            "data" : 166667
+                        },
+                        {
+                            "data" : 166667
                         }
                     ]
-                }]}},
-    associatedProgram : "National Landcare Programme",
-    associatedSubProgram : "Regional Funding",
-    planStatus: "approved"
-});
+                }
+            }}});
 createProject({name:'project 5', projectId:"project_5", programId:'program_1',managementUnitId:"mu_1", grantId:"RLP-Test-Program-Project-1",
+    associatedProgram: "National Landcare Programme",
+    associatedSubProgram: "Regional Funding",
+    planStatus: "approved",
     outputTargets:[
         {"outputLabel":"Pest Management Details",
             "target":"600",
@@ -111,61 +184,132 @@ createProject({name:'project 5', projectId:"project_5", programId:'program_1',ma
             "scoreName":"totalAreaTreatedHa",
             "unit":"Ha",
         }
-    ],    custom:{"details":{"objectives" : {
-                "rows1" : [
+    ],
+    custom:{"details":
+            {
+                "objectives":
                     {
-                        "assets" : [
-                            "Natural/Cultural assets managed",
-                            "Threatened Species",
-                            "Threatened Ecological Communities",
-                            "World Heritage area",
-                            "Community awareness/participation in NRM",
-                            "Remnant Vegetation"
-                        ],
-                        "description" : "By June 2018, engage 170 individuals (including Indigenous members) towards NRM awareness and skills relating to Ramsar and World Heritage areas, EPBC species and communities as measured by engagement evaluations (Strategic Objective 3)\n"
+                        "rows1": [
+                            {
+                                "assets": [
+                                    "Natural/Cultural assets managed",
+                                    "Threatened Species",
+                                    "Threatened Ecological Communities",
+                                    "World Heritage area",
+                                    "Community awareness/participation in NRM",
+                                    "Remnant Vegetation"
+                                ],
+                                "description": "By June 2018, engage 170 individuals (including Indigenous members) towards NRM awareness and skills relating to Ramsar and World Heritage areas, EPBC species and communities as measured by engagement evaluations (Strategic Objective 3)\n"
+                            },
+                            {
+                                "assets": [
+                                    "Natural/Cultural assets managed",
+                                    "Threatened Species",
+                                    "Threatened Ecological Communities",
+                                    "World Heritage area",
+                                    "Community awareness/participation in NRM",
+                                    "Remnant Vegetation"
+                                ],
+                                "description": "By 2018, implement actions towards 30 Ha of improved habitat in 1 inland Ramsar site and World Heritage areas, and implement recovery actions for 10 EPBC listed flora species or communities as measured by partner evaluations and Natural Values Atlas data entry. (Strategic objective 4)"
+                            }
+                        ]
                     },
-                    {
-                        "assets" : [
-                            "Natural/Cultural assets managed",
-                            "Threatened Species",
-                            "Threatened Ecological Communities",
-                            "World Heritage area",
-                            "Community awareness/participation in NRM",
-                            "Remnant Vegetation"
-                        ],
-                        "description" : "By 2018, implement actions towards 30 Ha of improved habitat in 1 inland Ramsar site and World Heritage areas, and implement recovery actions for 10 EPBC listed flora species or communities as measured by partner evaluations and Natural Values Atlas data entry. (Strategic objective 4)"
-                    }
-                ]}},
-        "budget" : {"headers" : [],
-            "columnTotal" : [],
-            "rows" : [
-                {
-                    "shortLabel" : "Farmers and fishers are increasing their long term returns through better management of the natural resource base",
-                    "description" : "Community grants",
-                    "rowTotal" : 212500,
-                    "costs" : [
+                "status": "active",
+                "budget": {
+                    "overallTotal" : 566668,
+                    "headers" : [
                         {
-                            "dollar" : "25000"
+                            "data" : "2014/2015"
                         },
                         {
-                            "dollar" : "62500"
+                            "data" : "2015/2016"
                         },
                         {
-                            "dollar" : "62500"
+                            "data" : "2016/2017"
                         },
                         {
-                            "dollar" : "62500"
+                            "data" : "2017/2018"
+                        }
+                    ],
+                    "rows" : [
+                        {
+                            "costs" : [
+                                {
+                                    "dollar" : "38626"
+                                },
+                                {
+                                    "dollar" : "79616"
+                                },
+                                {
+                                    "dollar" : "83470"
+                                },
+                                {
+                                    "dollar" : "85557"
+                                }
+                            ],
+                            "rowTotal" : 287269,
+                            "description" : "RLF - Project Implementation - facilitate and coordinate the sharing of skills between the Board and farming groups, schools, and community groups.  Provide feedback to the Australian Government on emerging issues",
+                            "shortLabel" : "Farmers and fishers are increasing their long term returns through better management of the natural resource base"
                         },
                         {
-                            "dollar" : "0"
+                            "costs" : [
+                                {
+                                    "dollar" : "21374"
+                                },
+                                {
+                                    "dollar" : "70384"
+                                },
+                                {
+                                    "dollar" : "66530"
+                                },
+                                {
+                                    "dollar" : "64443"
+                                }
+                            ],
+                            "rowTotal" : 222731,
+                            "description" : "RLF - Project Implementation - Assist and develop community Landcare and production groups; Contributes to farming system tours and crop walks with farming groups",
+                            "shortLabel" : "Communities are involved in caring for their environment"
+                        },
+                        {
+                            "costs" : [
+                                {
+                                    "dollar" : "6667"
+                                },
+                                {
+                                    "dollar" : "16667"
+                                },
+                                {
+                                    "dollar" : "16667"
+                                },
+                                {
+                                    "dollar" : "16667"
+                                }
+                            ],
+                            "rowTotal" : 56668,
+                            "description" : "MERI & Admin - Monitoring activities, Admin Support, data compilation and distribution, field based assessments, interpreting effectiveness of the practices; evaluation of project participants at trial sites and workshops",
+                            "shortLabel" : "MERI & Admin"
+                        }
+                    ],
+                    "columnTotal" : [
+                        {
+                            "data" : 66667
+                        },
+                        {
+                            "data" : 166667
+                        },
+                        {
+                            "data" : 166667
+                        },
+                        {
+                            "data" : 166667
                         }
                     ]
-                }]}},
-    associatedProgram : "National Landcare Programme",
-    associatedSubProgram : "Regional Funding",
-    planStatus: "approved"
-});
+                }
+            }}});
 createProject({name:'project 6', projectId:"project_6", programId:'program_1',managementUnitId:"mu_1", grantId:"RLP-Test-Program-Project-1",
+    associatedProgram: "National Landcare Programme",
+    associatedSubProgram: "Regional Funding",
+    planStatus: "approved",
     outputTargets:[
         {"outputLabel":"Pest Management Details",
             "target":"600",
@@ -175,61 +319,127 @@ createProject({name:'project 6', projectId:"project_6", programId:'program_1',ma
             "scoreId":"score_4"
         }
     ],
-    custom:{"details":{"objectives" : {
-                "rows1" : [
+    custom:{"details":
+            {
+                "objectives":
                     {
-                        "assets" : [
-                            "Natural/Cultural assets managed",
-                            "Threatened Species",
-                            "Threatened Ecological Communities",
-                            "World Heritage area",
-                            "Community awareness/participation in NRM",
-                            "Remnant Vegetation"
-                        ],
-                        "description" : "By June 2018, engage 170 individuals (including Indigenous members) towards NRM awareness and skills relating to Ramsar and World Heritage areas, EPBC species and communities as measured by engagement evaluations (Strategic Objective 3)\n"
+                        "rows1": [
+                            {
+                                "assets": [
+                                    "Natural/Cultural assets managed",
+                                    "Threatened Species",
+                                    "Threatened Ecological Communities",
+                                    "World Heritage area",
+                                    "Community awareness/participation in NRM",
+                                    "Remnant Vegetation"
+                                ],
+                                "description": "By June 2018, engage 170 individuals (including Indigenous members) towards NRM awareness and skills relating to Ramsar and World Heritage areas, EPBC species and communities as measured by engagement evaluations (Strategic Objective 3)\n"
+                            },
+                            {
+                                "assets": [
+                                    "Natural/Cultural assets managed",
+                                    "Threatened Species",
+                                    "Threatened Ecological Communities",
+                                    "World Heritage area",
+                                    "Community awareness/participation in NRM",
+                                    "Remnant Vegetation"
+                                ],
+                                "description": "By 2018, implement actions towards 30 Ha of improved habitat in 1 inland Ramsar site and World Heritage areas, and implement recovery actions for 10 EPBC listed flora species or communities as measured by partner evaluations and Natural Values Atlas data entry. (Strategic objective 4)"
+                            }
+                        ]
                     },
-                    {
-                        "assets" : [
-                            "Natural/Cultural assets managed",
-                            "Threatened Species",
-                            "Threatened Ecological Communities",
-                            "World Heritage area",
-                            "Community awareness/participation in NRM",
-                            "Remnant Vegetation"
-                        ],
-                        "description" : "By 2018, implement actions towards 30 Ha of improved habitat in 1 inland Ramsar site and World Heritage areas, and implement recovery actions for 10 EPBC listed flora species or communities as measured by partner evaluations and Natural Values Atlas data entry. (Strategic objective 4)"
-                    }
-                ]}},
-        "budget" : {"headers" : [],
-            "columnTotal" : [],
-            "rows" : [
-                {
-                    "shortLabel" : "Farmers and fishers are increasing their long term returns through better management of the natural resource base",
-                    "description" : "Community grants",
-                    "rowTotal" : 212500,
-                    "costs" : [
+                "status": "active",
+                "budget": {
+                    "overallTotal" : 566668,
+                    "headers" : [
                         {
-                            "dollar" : "25000"
+                            "data" : "2014/2015"
                         },
                         {
-                            "dollar" : "62500"
+                            "data" : "2015/2016"
                         },
                         {
-                            "dollar" : "62500"
+                            "data" : "2016/2017"
                         },
                         {
-                            "dollar" : "62500"
+                            "data" : "2017/2018"
+                        }
+                    ],
+                    "rows" : [
+                        {
+                            "costs" : [
+                                {
+                                    "dollar" : "38626"
+                                },
+                                {
+                                    "dollar" : "79616"
+                                },
+                                {
+                                    "dollar" : "83470"
+                                },
+                                {
+                                    "dollar" : "85557"
+                                }
+                            ],
+                            "rowTotal" : 287269,
+                            "description" : "RLF - Project Implementation - facilitate and coordinate the sharing of skills between the Board and farming groups, schools, and community groups.  Provide feedback to the Australian Government on emerging issues",
+                            "shortLabel" : "Farmers and fishers are increasing their long term returns through better management of the natural resource base"
                         },
                         {
-                            "dollar" : "0"
+                            "costs" : [
+                                {
+                                    "dollar" : "21374"
+                                },
+                                {
+                                    "dollar" : "70384"
+                                },
+                                {
+                                    "dollar" : "66530"
+                                },
+                                {
+                                    "dollar" : "64443"
+                                }
+                            ],
+                            "rowTotal" : 222731,
+                            "description" : "RLF - Project Implementation - Assist and develop community Landcare and production groups; Contributes to farming system tours and crop walks with farming groups",
+                            "shortLabel" : "Communities are involved in caring for their environment"
+                        },
+                        {
+                            "costs" : [
+                                {
+                                    "dollar" : "6667"
+                                },
+                                {
+                                    "dollar" : "16667"
+                                },
+                                {
+                                    "dollar" : "16667"
+                                },
+                                {
+                                    "dollar" : "16667"
+                                }
+                            ],
+                            "rowTotal" : 56668,
+                            "description" : "MERI & Admin - Monitoring activities, Admin Support, data compilation and distribution, field based assessments, interpreting effectiveness of the practices; evaluation of project participants at trial sites and workshops",
+                            "shortLabel" : "MERI & Admin"
+                        }
+                    ],
+                    "columnTotal" : [
+                        {
+                            "data" : 66667
+                        },
+                        {
+                            "data" : 166667
+                        },
+                        {
+                            "data" : 166667
+                        },
+                        {
+                            "data" : 166667
                         }
                     ]
-                }]}},
-    associatedProgram : "National Landcare Programme",
-    associatedSubProgram : "Regional Funding",
-    planStatus: "approved"
-});
-
+                }
+            }}});
 
 
 createProgram({name:'National Landcare Programme', programId:'program_1' });
