@@ -36,6 +36,7 @@ class SearchSpec extends StubbedCasSpec {
         inputText = '"Project 5"' // searching a specific project
 
         then:
+        waitFor { search.displayed }
         searchProject() == null
 
         Thread.sleep(2000) // there are some animations that make this difficult to do waiting on conditions.
