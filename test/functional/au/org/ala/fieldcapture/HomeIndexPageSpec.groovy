@@ -1,5 +1,6 @@
 package au.org.ala.fieldcapture
 
+import pages.AdminClearCachePage
 import pages.AdminTools
 import pages.HomePage
 import pages.ProjectExplorer
@@ -17,6 +18,12 @@ class HomeIndexPageSpec extends StubbedCasSpec {
 
         setup:
         login([userId: '2', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ALA_ADMIN'], browser)
+
+        when: "clearing the homepage static cache"
+        to AdminClearCachePage
+
+        then:
+        clearHomePageStatisticsCache() == null
 
         when:
         to AdminTools
