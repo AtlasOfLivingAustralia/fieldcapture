@@ -19,14 +19,14 @@ class ProjectIndex extends ReloadablePage {
         meriPlanTab(required:false) {$('#details-tab')}
         activitiesTab {$('#plan-tab')}
         sitesTab {$('#site-tab')}
-        dashboardTab {$('#dashboard-tab')}
+        dashboardTab {$('#serviceDelivery-tab')}
         adminTab {$('#admin-tab')}
 
         projectName { $('h1') }
         overview { module OverviewTab }
         plansAndReports(wait:true) { module PlansAndReportsTab }
         sites { module SitesTab }
-        dashboard { module DashboardTab }
+        dashboard { $(".dashboard-section").moduleList ( DashboardTab) }
         admin { module ProjectAdminTab }
 
         iAmSure(wait: true) { $('.modal a', text:'OK') }
@@ -112,6 +112,13 @@ class SitesTab extends Module {
 }
 
 class DashboardTab extends Module {
+    static  content = {
+        serviceTitle{ $(".serviceTitle") }
+        serviceHelpText{ $(".helpText")  }
+        progresslabel{ $(".progress-label")}
+
+    }
+
 
 }
 
