@@ -28,7 +28,7 @@ class ProjectDashboardTabSpec extends StubbedCasSpec {
 
         then:
         waitFor{ dashboardTab.displayed }
-        waitFor{ dashboard.displayed }
+       // waitFor{ dashboard.displayed }
 
         and:
         dashboard[0].serviceTitle.text() == "Collecting, or synthesising baseline data"
