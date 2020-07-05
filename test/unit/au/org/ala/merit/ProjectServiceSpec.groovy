@@ -972,6 +972,13 @@ class ProjectServiceSpec extends Specification {
         service.getPrimaryOutcome(null) == null
     }
 
+    def "The service can return the secondary outcomes for a project"() {
+        expect:
+        service.getSecondaryOutcomes([custom:[details:[outcomes:[secondaryOutcomes:[[description:'Outcome 1'], [description:'Outcome 2']]]]]]) == ['Outcome 1', 'Outcome 2']
+        service.getSecondaryOutcomes([custom:[details:[:]]]) == []
+        service.getSecondaryOutcomes(null) == []
+    }
+
     private Map buildApprovalDocument(int i, String projectId) {
         Map approval = [
                 dateApproved:"2019-07-01T00:00:0${i}Z",
