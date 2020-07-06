@@ -30,7 +30,9 @@ class ProjectIndex extends ReloadablePage {
         admin { module ProjectAdminTab }
 
         iAmSure(wait: true) { $('.modal a', text:'OK') }
+        siteTableList { $("#sites-table tbody tr").moduleList(siteTable)}
 
+        addSites{ module AddSites }
         editDocumentForm {module AttachDocumentForm}
 
     }
@@ -109,6 +111,38 @@ class ActivityRow extends Module {
 
 class SitesTab extends Module {
 
+    static content  ={
+        firstSiteAdded{$('.addSite')}
+        addSite { $( '#addSite' )}
+        siteUpload{ $('#siteUpload')}
+        siteDownload{ $('#siteDownload')}
+        siteDeleted{ $('#siteDeleted')}
+    }
+}
+
+class siteTable extends Module{
+    static content = {
+        siteName{ $("#siteName")}
+        lastupdated{$("#lastupdated")}
+    }
+
+}
+class AddSites extends Module{
+
+    static content = {
+        name{$('#name')}
+        externalId{$("#externalId")}
+        type{$("#siteType")}
+        context{$("#siteContext")}
+        description{$("#description")}
+        notes{$("#notes")}
+        defineExtent{$("#extentSource")}
+        chooseLayer{$("#chooseLayer")}
+        chooseShape {$("#chooseShape")}
+        savechanges{$("#save")}
+        cancel{$("#cancel")}
+
+    }
 }
 
 class DashboardTab extends Module {
@@ -118,8 +152,6 @@ class DashboardTab extends Module {
         progresslabel{ $(".progress-label")}
 
     }
-
-
 }
 
 

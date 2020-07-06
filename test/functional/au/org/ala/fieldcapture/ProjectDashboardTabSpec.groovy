@@ -15,7 +15,7 @@ class ProjectDashboardTabSpec extends StubbedCasSpec {
     }
     def"I can view Project Dashboard tab as FC_ADMIN "(){
         setup: "log in as userId=1 who is a program admin for the program with programId=test_program"
-        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+        login([userId: '2', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ALA_ADMIN'], browser)
 
         when:
         to ProjectIndex, projectId
@@ -23,12 +23,13 @@ class ProjectDashboardTabSpec extends StubbedCasSpec {
         then:
         at ProjectIndex
 
-        when:
+        and:
+        waitFor {dashboardTab.displayed}
         dashboardTab.click()
 
         then:
         waitFor{ dashboardTab.displayed }
-       // waitFor{ dashboard.displayed }
+        waitFor{ dashboard.displayed }
 
         and:
         dashboard[0].serviceTitle.text() == "Collecting, or synthesising baseline data"

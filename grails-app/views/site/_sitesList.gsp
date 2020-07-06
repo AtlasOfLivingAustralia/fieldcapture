@@ -4,7 +4,7 @@
         <p>No ${wordForSite}s are currently associated with this project.</p>
         <g:if test="${editable}">
             <div class="btn-group btn-group-horizontal ">
-                <button data-bind="click: $root.addSite" type="button" class="btn">Add new ${wordForSite}</button>
+                <button data-bind="click: $root.addSite" type="button" class="btn addSite">Add new ${wordForSite}</button>
                 <button data-bind="click: $root.uploadSites" type="button" class="btn">Upload ${wordForSite}s from shapefile</button>
             </div>
         </g:if>
@@ -18,10 +18,10 @@
 
                 Actions:
                 <span class="btn-group">
-                    <a data-bind="click: $root.addSite" class="btn" title="Create a new site for your project"><i class="fa fa-plus"></i> New</a>
-                    <a data-bind="click: $root.uploadSites" type="button" class="btn" title="Create sites for your project by uploading a file"><i class="fa fa-upload"></i> Upload</a>
-                    <a data-bind="click: $root.downloadShapefile" type="button" class="btn" title="Download your project sites in shapefile format"><i class="fa fa-download"></i> Download</a>
-                    <button data-bind="click: $root.removeSelectedSites, enable:$root.selectedSiteIds().length > 0" type="button" class="btn" title="Delete selected sites"><i class="fa fa-trash"></i> Delete</button>
+                    <a data-bind="click: $root.addSite" id="addSite" class="btn" title="Create a new site for your project"><i class="fa fa-plus"></i> New</a>
+                    <a data-bind="click: $root.uploadSites" id="siteUpload" type="button" class="btn" title="Create sites for your project by uploading a file"><i class="fa fa-upload"></i> Upload</a>
+                    <a data-bind="click: $root.downloadShapefile" id="siteDownload" type="button" class="btn" title="Download your project sites in shapefile format"><i class="fa fa-download"></i> Download</a>
+                    <button data-bind="click: $root.removeSelectedSites, enable:$root.selectedSiteIds().length > 0"  id="siteDeleted" type="button" class="btn" title="Delete selected sites"><i class="fa fa-trash"></i> Delete</button>
                 </span>
 
             </div>
@@ -59,10 +59,10 @@
                     </td>
 
                     <td>
-                        <a data-bind="text:name, attr: {href:'${createLink(controller: "site", action: "index")}' + '/' + siteId}"></a>
+                        <a id="siteName" data-bind="text:name, attr: {href:'${createLink(controller: "site", action: "index")}' + '/' + siteId}"></a>
                     </td>
                     <td>
-                        <span data-bind="text:convertToSimpleDate(lastUpdated)"></span>
+                        <span id="lastUpdated" data-bind="text:convertToSimpleDate(lastUpdated)"></span>
                     </td>
                     <td>
                         <span data-bind="text:lastUpdated"></span>

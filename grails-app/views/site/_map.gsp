@@ -231,13 +231,13 @@
     <script type="text/html" id="pid">
     <div id="pidLocationDiv" class="drawLocationDiv row-fluid">
         <div class="span12">
-            <select data-bind="
+            <select id="chooseLayer" data-bind="
             options: layers(),
             optionsCaption:'Choose a layer...',
             optionsValue: 'id',
             optionsText:'name',
             value: chosenLayer"></select>
-            <select data-bind="options: layerObjects, disable: layerObjects().length == 0,
+            <select id="chooseShape" data-bind="options: layerObjects, disable: layerObjects().length == 0,
             optionsCaption:'Choose shape ...',
             optionsValue: 'pid',
             optionsText:'name', value: layerObject"></select>
