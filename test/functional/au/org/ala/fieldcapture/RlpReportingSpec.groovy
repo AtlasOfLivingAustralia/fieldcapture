@@ -56,7 +56,7 @@ class RlpReportingSpec extends StubbedCasSpec {
         and: "The new reports are displayed"
 
         waitFor {
-            projectReports.reports.size() == 12
+            projectReports.reports.size() == 14
             projectReports.reports[1].name != ""
         }
         projectReports.reports[0].name == "Year 2018/2019 - Quarter 1 Outputs Report"
