@@ -49,7 +49,6 @@
             <g:set var="active" value="${i==0?'active':''}"/>
             <div class="tab-pane ${active}" id="${program.programId}_projects" >
                 <g:if test="${programDetails.primaryOutcomes}">
-                    ${programDetails.primaryOutcomes}
                     <g:render template="outcomes" model="${[type:"primary", outcomes:programDetails.primaryOutcomes, title:"The Service Provider is addressing these primary outcomes"]}"/>
                     <hr/>
                 </g:if>
