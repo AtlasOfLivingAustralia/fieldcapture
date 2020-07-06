@@ -14,7 +14,7 @@ import spock.lang.Specification
 class GmsMapperSpec extends Specification {
 
     def gmsMapper = new GmsMapper()
-
+    AbnLookupService abnLookupService = Mock(AbnLookupService)
     def scores = [
             [scoreId:'1', label:'Area of revegetation works (Ha)', units:'Ha', externalId:'RVA', isOutputTarget:true],
             [scoreId:'2', label:'Number of plants planted', units:'', externalId:'RVN', isOutputTarget:true],
@@ -26,8 +26,7 @@ class GmsMapperSpec extends Specification {
     def setup() {
         activitiesModel = JSON.parse(new InputStreamReader(getClass().getResourceAsStream('/resources/activities-model.json')))
         Map programModel = [programs:[[name:'Green Army']]]
-        List organisations = [[name:'Test org 1', abn:'12345678901']]
-        AbnLookupService abnLookupService = Mock(AbnLookupService)
+        List organisations = [[ organisationId: "123", name:'Test org 1', abn:'12345678901']]
         gmsMapper = new GmsMapper(activitiesModel, programModel, organisations, abnLookupService,scores)
     }
 
@@ -272,4 +271,92 @@ class GmsMapperSpec extends Specification {
         !result.errors
     }
 
+    def "Organisation can be map using organisation name"(){
+        setup:
+        Map projectData = [APP_ID:'g1', ORG_TRADING_NAME:'Test org 1', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
+
+        when:
+        def result = gmsMapper.mapProject([projectData])
+
+        then:
+        result.errors[1].toString() != "No organisation exists with organisation name Test org 1"
+
+    }
+
+    def "An Error will raised organisation unable to map using organisation name"(){
+        setup:
+        Map projectData = [APP_ID:'g1', ORG_TRADING_NAME:'Test org 2', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
+
+        when:
+        def result = gmsMapper.mapProject([projectData])
+
+        then:
+        result.errors[1].toString() == "No organisation exists with organisation name Test org 2"
+    }
+
+
+    def "organisation to map using abn lookup"(){
+        setup:
+        Map projectData = [APP_ID:'g1', ABN: '12345678900', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
+        String abn = "12345678900"
+        Map abnValue = [abn:"12345678900", entityName:"Test org 1"]
+
+        when:
+        def result = gmsMapper.mapProject([projectData])
+
+        then:
+        1 * abnLookupService.lookupOrganisationNameByABN(abn) >> abnValue
+
+        and:
+        result.errors[1].toString() != "12345678900 is invalid. Please Enter the correct one"
+    }
+
+    def "An error is raise when abn number is not provided"(){
+        setup:
+        Map projectData = [APP_ID:'g1', ABN: '12345678900', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
+        String abn = "12345678900"
+        Map abnValue = null
+
+        when:
+        def result = gmsMapper.mapProject([projectData])
+
+        then:
+        1 * abnLookupService.lookupOrganisationNameByABN(abn) >> abnValue
+
+        and:
+        result.errors[1].toString() == "12345678900 is invalid. Please Enter the correct one"
+    }
+
+    def "An error is raise when abn number return the empty map"(){
+        setup:
+        Map projectData = [APP_ID:'g1', ABN: '12345678900', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
+        String abn = "12345678900"
+        Map abnValue = [abn: "", entityName: ""]
+
+        when:
+        def result = gmsMapper.mapProject([projectData])
+
+        then:
+        1 * abnLookupService.lookupOrganisationNameByABN(abn) >> abnValue
+
+        and:
+        result.errors[1].toString() == "12345678900 is invalid abn number. Please Enter the correct one"
+    }
+
+
+    def "Assign entity name to the organisation "(){
+        setup:
+        Map projectData = [APP_ID:'g1', ABN: '12345678900', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
+        String abn = "12345678900"
+        Map abnValue = [abn: "12345678900", entityName: "Org name"]
+
+        when:
+        def result = gmsMapper.mapProject([projectData])
+
+        then:
+        1 * abnLookupService.lookupOrganisationNameByABN(abn) >> abnValue
+
+        and:
+        result.errors[1].toString() != "12345678900 is invalid abn number. Please Enter the correct one"
+    }
 }

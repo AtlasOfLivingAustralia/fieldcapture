@@ -157,4 +157,14 @@ class ProgramServiceSpec extends Specification {
         service.isInProgramHierarchy(p1, p2.programId) == false
     }
 
+    def "The program service can return primary and secondary outcomes for a program"() {
+        setup:
+        List outcomes = [[outcome:"Outcome 1", shortDescription:"o1"], [outcome:"Outcome 2", shortDescription:"o2"], [outcome:"Outcome 3", shortDescription:"o3", type:"primary"],  [outcome:"Outcome 4", shortDescription:"o4", type:"secondary"]]
+        Map program = [outcomes:outcomes]
+
+        expect:
+        service.getPrimaryOutcomes(program) == [[outcome:"Outcome 1", shortDescription:"o1"], [outcome:"Outcome 2", shortDescription:"o2"], [outcome:"Outcome 3", shortDescription:"o3", type:"primary"]]
+        service.getSecondaryOutcomes(program) == [[outcome:"Outcome 1", shortDescription:"o1"], [outcome:"Outcome 2", shortDescription:"o2"], [outcome:"Outcome 4", shortDescription:"o4", type:"secondary"]]
+    }
+
 }

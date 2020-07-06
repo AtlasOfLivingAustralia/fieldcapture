@@ -10,6 +10,9 @@ import org.codehaus.groovy.util.ListHashMap
 class ProgramService {
 
     private static final String PROGRAM_DOCUMENT_FILTER = "className:au.org.ala.ecodata.Program"
+    public static final String OUTCOME_TYPE_PRIMARY_ONLY = 'primary'
+    public static final String OUTCOME_TYPE_SECONDARY_ONLY = 'secondary'
+
 
     GrailsApplication grailsApplication
     WebService webService
@@ -274,6 +277,13 @@ class ProgramService {
             parent = parent.parent
         }
         parent && parent.programId == programId
+    }
+
+    List<Map> getPrimaryOutcomes(Map program) {
+        program?.outcomes.findAll {it.type != OUTCOME_TYPE_SECONDARY_ONLY}
+    }
+    List<Map> getSecondaryOutcomes(Map program) {
+        program?.outcomes.findAll {it.type != OUTCOME_TYPE_PRIMARY_ONLY}
     }
 
     List<Map> listOfAllPrograms(){

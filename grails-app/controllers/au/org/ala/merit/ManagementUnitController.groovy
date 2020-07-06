@@ -95,8 +95,9 @@ class ManagementUnitController {
         projectsByCategory.each { String programId, List projectsInProgramGroup ->
             Map program = mu.programs.find{it.programId == programId}
 
-            List outcomes = findTargetedPrimaryOutcomes(program, projectsInProgramGroup)
-            displayedPrograms << [program:program, projects: projectsInProgramGroup, servicesWithScores:servicesWithScores[programId], primaryOutcomes:outcomes]
+            List primaryOutcomes = findTargetedPrimaryOutcomes(program, projectsInProgramGroup)
+            List secondaryOutcomes = findTargetedSecondaryOutcomes(program, projectsInProgramGroup)
+            displayedPrograms << [program:program, projects: projectsInProgramGroup, servicesWithScores:servicesWithScores[programId], primaryOutcomes:primaryOutcomes, secondaryOutcomes:secondaryOutcomes]
         }
 
         List reportOrder = mu.config?.managementUnitReports?.collect{[category:it.category, description:it.description]} ?: []
@@ -157,14 +158,31 @@ class ManagementUnitController {
      * @param projects all projects run under the program in the management unit
      */
     private List findTargetedPrimaryOutcomes(Map program, List projects) {
-        List outcomes = program.outcomes.findAll {it.type != 'secondary'}.collect{[outcome:it.outcome, shortDescription:it.shortDescription]}
+        List outcomes = programService.getPrimaryOutcomes(program).collect{[outcome:it.outcome, shortDescription:it.shortDescription]}
         for(Map project in projects){
-            String primaryOutcome = projectService.getPrimaryOutcome(project)
-            if (primaryOutcome){
-                Map oc =  outcomes.find {it.outcome == primaryOutcome}
+            String outcome = projectService.getPrimaryOutcome(project)
+            if (outcome){
+                Map oc =  outcomes.find {it.outcome == outcome}
                 if (oc) {
-                    oc['targeted'] = true // at least on project is targeting this outcome as the primary outcome.
+                    oc['targeted'] = true // at least one project is targeting this outcome as the primary outcome.
                 }
+            }
+        }
+        outcomes
+    }
+
+    /**
+     * Returns a list of program primary outcomes, with an extra entry (targeted) specifying whether any project
+     * has targeted that outcome as the primary outcome of the project.
+     * @param program the program.
+     * @param projects all projects run under the program in the management unit
+     */
+    private List findTargetedSecondaryOutcomes(Map program, List projects) {
+        List outcomes = programService.getSecondaryOutcomes(program).collect{[outcome:it.outcome, shortDescription:it.shortDescription]}
+        for(Map project in projects){
+            List projectOutcomes = projectService.getSecondaryOutcomes(project)
+            outcomes.findAll { it.outcome in projectOutcomes }.each {
+                it['targeted'] = true
             }
         }
         outcomes

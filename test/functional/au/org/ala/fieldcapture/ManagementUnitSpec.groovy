@@ -5,6 +5,11 @@ import pages.AdminReportsPage
 
 class ManagementUnitSpec extends StubbedCasSpec {
 
+    static final String NO_PERMISSIONS_USER = "10"
+    static final String EDITOR_USER = "4"
+    static final String ADMIN_USER = "1"
+    static final String GRANT_MANAGER_USER = "3"
+
     def setup() {
         useDataSet('dataset_mu')
     }
@@ -13,9 +18,51 @@ class ManagementUnitSpec extends StubbedCasSpec {
         logout(browser)
     }
 
-    def "As a user, I can view a management unit"() {
+    def "Only the about tab is visible to unauthenticated users"() {
+        when:
+        to ManagementUnitPage
+
+        then:
+        waitFor {at ManagementUnitPage}
+        overviewBtn.displayed
+        !reportsTab.displayed
+        !sitesTab.displayed
+        !adminTab.displayed
+    }
+
+
+    def "Only the about tab is visible to users with no permissions for the management unit"(
+            String userId, boolean aboutVisible, boolean reportsVisible, boolean sitesVisible, boolean adminVisible) {
+
         setup:
-        login([userId:'1', role:"ROLE_USER", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
+        String role = "ROLE_USER"
+        if (userId == GRANT_MANAGER_USER) {
+            role = "ROLE_FC_OFFICER"
+        }
+        login([userId:userId, role:role, email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
+
+        when:
+        to ManagementUnitPage
+
+        then:
+        waitFor {at ManagementUnitPage}
+        overviewBtn.displayed == aboutVisible
+        reportsTab.displayed == reportsVisible
+        sitesTab.displayed == sitesVisible
+        adminTab.displayed == adminVisible
+
+        where:
+        userId              | aboutVisible | reportsVisible | sitesVisible | adminVisible
+        NO_PERMISSIONS_USER | true | false | false | false
+        EDITOR_USER         | true | true | true | false
+        ADMIN_USER          | true | true | true | true
+        GRANT_MANAGER_USER  | true | true | true | true
+
+    }
+
+    def "The management unit about tab displays information about programs and projects with activity in the management unit"() {
+        setup:
+        login([userId:ADMIN_USER, role:"ROLE_USER", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
 
         when:
         to ManagementUnitPage
@@ -34,12 +81,14 @@ class ManagementUnitSpec extends StubbedCasSpec {
 
         then:
 
-        // grantIds() == ['RLP-Test-Program-Project-1'] will fail when using phantomjs
-        grantIds().size() ==1
+        grantIds() == ['RLP-Test-Program-Project-1']
         projectLinks().size()>=1
         gotoProgram().size() >= 1
 
-
+        primaryOutcomes() == ['o1', 'o2']
+        targetedPrimaryOutcomes()  == ['o1']
+        secondaryOutcomes() == ['o2', 'o3']
+        targetedSecondaryOutcomes() == ['o2', 'o3']
     }
 
 

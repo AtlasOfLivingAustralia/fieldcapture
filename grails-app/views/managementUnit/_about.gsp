@@ -49,21 +49,11 @@
             <g:set var="active" value="${i==0?'active':''}"/>
             <div class="tab-pane ${active}" id="${program.programId}_projects" >
                 <g:if test="${programDetails.primaryOutcomes}">
-                    <div class="well">
-                        <div class="well-title">The Service Provider is addressing these ${program.acronym ?: program.name} outcomes</div>
-                        <div class="row outcomes no-gutters">
-                            <g:each in="${programDetails.primaryOutcomes}" var="outcome" >
-                                <g:set var="outcomeClass" value="${outcome.targeted ? 'targeted' :''}"/>
-                                <div class="col-md">
-                                    <div class="outcome-wrapper h-100">
-                                        <div class="h-100 outcome ${outcomeClass}">
-                                            ${outcome.shortDescription}
-                                        </div>
-                                    </div>
-                                </div>
-                            </g:each>
-                        </div>
-                    </div>
+                    <g:render template="outcomes" model="${[type:"primary", outcomes:programDetails.primaryOutcomes, title:"The Service Provider is addressing these primary outcomes"]}"/>
+                    <hr/>
+                </g:if>
+                <g:if test="${programDetails.secondaryOutcomes}">
+                    <g:render template="outcomes" model="${[type:"secondary", outcomes:programDetails.secondaryOutcomes, title:"The Service Provider is addressing these secondary outcomes"]}"/>
                     <hr/>
                 </g:if>
 

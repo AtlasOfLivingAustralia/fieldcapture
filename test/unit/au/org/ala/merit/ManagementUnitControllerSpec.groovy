@@ -329,6 +329,7 @@ class ManagementUnitControllerSpec extends Specification {
     }
 
     def "The management unit controller supports the display of program outcomes that are targeted by projects in that management unit"() {
+        setup:
         String managementUnitId = 'mu1'
         userService.getUser() >> [userId:'u1']
         managementUnitService.get(managementUnitId) >> [managementUnitId:managementUnitId, name:"test"]
@@ -336,17 +337,22 @@ class ManagementUnitControllerSpec extends Specification {
         managementUnitService.getProjects(managementUnitId) >> [projects:[[projectId:'p1', programId:"program1"]]]
         managementUnitService.serviceScores(managementUnitId, _, _) >> [:]
         projectService.getPrimaryOutcome(_) >> "Outcome 1"
-        programService.get("program1") >> [[programId:'program1', outcomes:[[outcome:"Outcome 1", shortDescription:"o1"], [outcome:"Outcome 2", shortDescription:"o2"]]]]
+        projectService.getSecondaryOutcomes(_) >> ["Outcome 2", "Outcome 4"]
+        Map program = [programId:'program1']
+        programService.get(["program1"]) >> [program]
 
         when:
         Map model = controller.index(managementUnitId)
 
         then:
+        1 * programService.getPrimaryOutcomes(program) >> [[outcome:"Outcome 1", shortDescription:"o1"], [outcome:"Outcome 2", shortDescription:"o2"], [outcome:"Outcome 3", shortDescription:"o3", type:"primary"]]
+        1 * programService.getSecondaryOutcomes(program) >> [[outcome:"Outcome 1", shortDescription:"o1"], [outcome:"Outcome 2", shortDescription:"o2"], [outcome:"Outcome 4", shortDescription:"o4", type:"secondary"]]
         1 * userService.canEditManagementUnitBlog("u1", managementUnitId) >> true
         1 * userService.canUserEditManagementUnit("u1", managementUnitId) >> true
 
         model.content.about.displayedPrograms.size() == 1
-        model.content.about.displayedPrograms[0].primaryOutcomes == [[outcome:"Outcome 1", shortDescription:"o1", targeted:true], [outcome:"Outcome 2", shortDescription:"o2"]]
+        model.content.about.displayedPrograms[0].primaryOutcomes == [[outcome:"Outcome 1", shortDescription:"o1", targeted:true], [outcome:"Outcome 2", shortDescription:"o2"], [outcome:"Outcome 3", shortDescription:"o3"]]
+        model.content.about.displayedPrograms[0].secondaryOutcomes == [[outcome:"Outcome 1", shortDescription:"o1"], [outcome:"Outcome 2", shortDescription:"o2", targeted:true], [outcome:"Outcome 4", shortDescription:"o4", targeted:true]]
 
     }
 
