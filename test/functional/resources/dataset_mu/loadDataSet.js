@@ -14,12 +14,20 @@ var blog1 = {
     "stockIcon" : ""
 }
 
+var meriPlan = {
+  outcomes: {
+      primaryOutcome: { description: 'outcome 1'},
+      secondaryOutcomes: [ {description: 'outcome 2'}, {description: 'outcome 3'} ]
+  }
+};
 createProject({name:'project 1', projectId:"project_1", programId:'test_program',managementUnitId:"test_mu",siteId:'test_site_1', grantId:"RLP-Test-Program-Project-1",
-    blog:[blog1]})
+    blog:[blog1], custom:{details:meriPlan}});
 createProject({name:'project 2', projectId:"project_2", programId:'test_program',managementUnitId:"test_mu_2",siteId:'test_site_2', grantId:"RLP-Test-Program-Project-2"})
 createProject({name:'project in ACT', projectId:"project_3", programId:'test_program',managementUnitId:"test_mu_3",siteId:'test_site_3', grantId:"RLP-Test-Program-Project-3"})
 
+createProgram({name:'A test program', programId:'test_programId'})
 
+db.userPermission.insert({entityType:'au.org.ala.ecodata.Program', entityId:'test_programId', userId:'1', accessLevel:'admin'});
 
 
 createSite(site1)
@@ -37,9 +45,25 @@ var blog_program = {
     "stockIcon" : ""
 }
 
-createProgram({name:'New Test Program', parent:null ,programId:'new_test_Program'})
-createProgram({name:'New Second Test program', parent:null ,programId:'second_test_program'})
-createProgram({name:'Regional Land Partnerships', parent:null ,programId:'test_program', blog:[blog_program]})
+var outcomes = [
+    {
+        outcome:'outcome 1',
+        shortDescription: 'o1',
+        type:'primary'
+    },
+    {
+        outcome:'outcome 2',
+        shortDescription: 'o2'
+    },
+    {
+        outcome:'outcome 3',
+        shortDescription: 'o3',
+        type:'secondary'
+    }
+];
+createProgram({name:'New Test Program', parent:null, programId:'new_test_Program'})
+createProgram({name:'New Second Test program', parent:null, programId:'second_test_program'})
+createProgram({name:'Regional Land Partnerships', parent: null, programId:'test_program', blog:[blog_program], outcomes:outcomes})
 
 createOrganisation({
     name:'Test Organisation',
@@ -49,24 +73,9 @@ createOrganisation({
     acronym:'TSTORG'
 })
 
-var blog_mu = {
-    "content": "blog test",
-    "keepOnTop" : true,
-    "title" : "BlogTest",
-    "blogEntryId" : "0",
-    "managementUnitId" : "test_mu",
-    "date" : "2017-01-03T13:00:00Z",
-    "type" : "Management Unit Stories",
-    "stockIcon" : ""
-}
-
-
-createMu({name:'test mu', managementUnitId:"test_mu",managementUnitSiteId:'test_site_1', blog:[blog_mu]});
-createMu({name:'test mu 2', managementUnitId:"test_mu_2",managementUnitSiteId:'test_site_2'})
-createMu({name:'test mu in ACT', managementUnitId:"test_mu_3",managementUnitSiteId:'test_site_3'})
-
-// createProgram({programId:"test_program_2", name:"test program 2"})
-// createProject({projectId:"test_project_2", name:"test project 2", programId:'test_program_2', managementUnitId:"test_mu"})
+createMu({name:'test mu', managementUnitId:"test_mu",managementUnitSiteId:'test_site_1'});
+createMu({name:'test mu 2', managementUnitId:"test_mu_2",managementUnitSiteId:'test_site_2'});
+createMu({name:'test mu in ACT', managementUnitId:"test_mu_3",managementUnitSiteId:'test_site_3'});
 
 db.userPermission.insert({entityType:'au.org.ala.ecodata.Program', entityId:'test_program', userId:'1', accessLevel:'admin'});
 db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_1', userId:'1', accessLevel:'admin'});

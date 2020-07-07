@@ -1076,6 +1076,16 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             ko.applyBindings(self.meriPlan, announcementsSection);
         }
 
+        var risksChangesReport = document.getElementById(config.riskChangesReportElementId);
+        if (risksChangesReport) {
+            var reportOptions = {
+                riskChangesReportHtmlUrl: config.riskChangesReportHtmlUrl,
+                riskChangesReportPdfUrl: config.riskChangesReportPdfUrl
+            };
+            var risksReportViewModel = new RisksReportViewModel(project, reportOptions);
+            ko.applyBindings(risksReportViewModel, risksChangesReport);
+        }
+
     };
 
     self.initialiseMeriPlan = function() {
@@ -1419,5 +1429,54 @@ function ProjectService(project, options) {
     self.deleteDocument = function(documentId) {
         var url = config.documentDeleteUrl+'/'+documentId;
         return $.post(url);
+    };
+};
+
+/**
+ * This is the view model for the section of the risks & threats tab that can select dates and generate reports.
+ * @param project The project to generate risks reports for.
+ * @param options
+ * {
+ *       riskChangesReportHtmlUrl: <the url for generating an HTML report>
+ *       riskChangesReportPdfUrl: <the url for generating a PDF report>
+ * }
+ */
+var RisksReportViewModel = function(project, options) {
+    var self = this;
+
+
+    var projectEndDate = moment(project.plannedEndDate);
+    var projectStartDate = moment(project.plannedStartDate);
+
+    function truncateToProjectDates(date) {
+        if (date.isAfter(projectEndDate)) {
+            date = projectEndDate;
+        }
+        if (date.isBefore(projectStartDate)) {
+            date = projectStartDate;
+        }
+        return date;
+    }
+    var defaultToDate = truncateToProjectDates(moment());
+    var defaultFromDate = truncateToProjectDates(moment().subtract(3, 'months'));
+
+    self.fromDate = ko.observable().extend({simpleDate:false});
+    self.fromDate.date(defaultFromDate.toDate());
+    self.toDate = ko.observable().extend({simpleDate:false});
+    self.toDate.date(defaultToDate.toDate());
+    self.orientation = ko.observable('portrait');
+
+    function displayReport(url) {
+        var paramString= '?fromDate'+self.fromDate()+'&toDate='+self.toDate();
+        paramString+='&sections=Project+risks+changes';
+        paramString+='&orientation='+self.orientation();
+
+        window.open(url+paramString, 'risks-changes-report');
+    }
+    self.generateRisksReportHTML = function() {
+        displayReport(options.riskChangesReportHtmlUrl);
+    };
+    self.generateRisksReportPDF = function() {
+        displayReport(options.riskChangesReportPdfUrl);
     };
 };
