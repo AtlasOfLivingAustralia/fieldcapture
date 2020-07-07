@@ -283,6 +283,7 @@
 
             config.programObjectives = <fc:modelAsJavascript model="${config.program?.config?.objectives ?: []}"/>
             config.programActivities = <fc:modelAsJavascript model="${config.program?.config?.activities?.collect{it.name} ?: []}"/>
+            config.excludeFinancialYearData = ${config.program?.config?.excludeFinancialYearData ?: false};
 
             var viewModel = new ProjectPageViewModel(
                 project,

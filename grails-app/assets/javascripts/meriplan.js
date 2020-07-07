@@ -537,6 +537,7 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
     self.rationale = ko.observable(o.rationale);
     self.baseline = new GenericViewModel(o.baseline, ['baseline', 'method']);
     self.threats = new GenericViewModel(o.threats, ['threat', 'intervention']);
+    self.consultation = ko.observable(o.consultation);
 
     var row = [];
     o.events ? row = o.events : row.push(ko.mapping.toJS(new EventsRowViewModel()));

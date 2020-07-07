@@ -1213,7 +1213,8 @@ function ProjectService(project, options) {
         submitPlanUrl : fcConfig.submitPlanUrl,
         modifyPlanUrl : fcConfig.modifyPlanUrl,
         approvalPlanUrl : fcConfig.approvalPlanUrl,
-        rejectPlanUrl : fcConfig.rejectPlanUrl
+        rejectPlanUrl : fcConfig.rejectPlanUrl,
+        excludeFinancialYearData : false
     };
 
     var config = _.defaults(options, defaults);
@@ -1372,6 +1373,9 @@ function ProjectService(project, options) {
     };
 
     self.getBudgetHeaders = function() {
+        if (config.excludeFinancialYearData) {
+            return [""]; // Return a single period header for the project
+        }
         var headers = [];
         var startYr = moment(project.plannedStartDate).format('YYYY');
         var endYr = moment(project.plannedEndDate).format('YYYY');
