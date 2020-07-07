@@ -5,7 +5,7 @@
         <g:if test="${editable}">
             <div class="btn-group btn-group-horizontal ">
                 <button data-bind="click: $root.addSite" type="button" class="btn addSite">Add new ${wordForSite}</button>
-                <button data-bind="click: $root.uploadSites" type="button" class="btn">Upload ${wordForSite}s from shapefile</button>
+                <button data-bind="click: $root.uploadSites" type="button" class="btn uploadSite">Upload ${wordForSite}s from shapefile</button>
             </div>
         </g:if>
     </div>

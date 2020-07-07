@@ -30,7 +30,7 @@ class ProjectIndex extends ReloadablePage {
         admin { module ProjectAdminTab }
 
         iAmSure(wait: true) { $('.modal a', text:'OK') }
-        siteTableList { $("#sites-table tbody tr").moduleList(siteTable)}
+        siteLists {module sitesTable }
 
         addSites{ module AddSites }
         editDocumentForm {module AttachDocumentForm}
@@ -109,24 +109,37 @@ class ActivityRow extends Module {
 
 }
 
+class table extends Module{
+    static content={
+        siteName{ $("#siteName")}
+        lastupdated{$("#lastupdated")}
+    }
+}
+
 class SitesTab extends Module {
 
     static content  ={
-        firstSiteAdded{$('.addSite')}
+        firstSiteAdded{$('.addSite')} // this is for the sites page where there is not associate sites for that projects
+        newsiteupload{$(".uploadSite")}  // this is for the sites page where there is not associate sites for that projects
         addSite { $( '#addSite' )}
         siteUpload{ $('#siteUpload')}
         siteDownload{ $('#siteDownload')}
         siteDeleted{ $('#siteDeleted')}
+
+        siteName{ $("#siteName")}
+        lastupdated{$("#lastUpdated")}
     }
 }
 
-class siteTable extends Module{
+class sitesTable extends Module {
+
     static content = {
         siteName{ $("#siteName")}
         lastupdated{$("#lastupdated")}
     }
 
 }
+
 class AddSites extends Module{
 
     static content = {
@@ -139,9 +152,13 @@ class AddSites extends Module{
         defineExtent{$("#extentSource")}
         chooseLayer{$("#chooseLayer")}
         chooseShape {$("#chooseShape")}
-        savechanges{$("#save")}
+        saveButton{$("#save")}
         cancel{$("#cancel")}
 
+    }
+
+     def save() {
+        saveButton.click()
     }
 }
 
