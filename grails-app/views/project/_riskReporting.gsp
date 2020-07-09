@@ -2,7 +2,7 @@
 <div id="risk-changes-report">
     <h4>Changes to risks and threats</h4>
 
-    <p>Select the date range over which to view the changes to the project risks and threats then press "Generate Report (PDF)" button</p>
+    <p>Select the date range over which to view the changes to the project risks and threats then press the "Generate Report" button</p>
     <hr/>
 
     <form class="form-horizontal" id="risks-changes-report">
