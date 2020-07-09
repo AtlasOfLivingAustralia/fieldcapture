@@ -53,7 +53,6 @@ class ProjectDashboardTabSpec extends StubbedCasSpec {
         dashboard[0].serviceTitle.text() == "Collecting, or synthesising baseline data"
         dashboard[0].serviceHelpText.text() == "Number of baseline data sets collected and/or synthesised"
         dashboard[0].progresslabel.text() =="2/8"
-
         dashboard[1].serviceTitle.text() == "Communication materials"
         dashboard[1].serviceHelpText.text() == "Number of communication materials published"
         dashboard[1].progresslabel.text() =="2/8"
