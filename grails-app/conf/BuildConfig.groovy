@@ -113,6 +113,10 @@ grails.project.dependency.resolution = {
         test "org.seleniumhq.selenium:selenium-chrome-driver:2.53.1"
         test "com.codeborne:phantomjsdriver:1.3.0"
         test "net.sourceforge.nekohtml:nekohtml:1.9.22"
+
+        compile ('net.sourceforge.nekohtml:nekohtml:1.9.22'){
+            excludes "xercesImpl"
+        }
     }
 
     plugins {
@@ -134,7 +138,7 @@ grails.project.dependency.resolution = {
         //compile ":handlebars-asset-pipeline:2.13.1"
 
         runtime (":rest:0.8") {
-            excludes "httpclient", "httpcore"
+            excludes "httpclient", "httpcore","xercesImpl"
         }
         compile ":ala-auth:2.2.0"
         runtime ":csv:0.3.1"
