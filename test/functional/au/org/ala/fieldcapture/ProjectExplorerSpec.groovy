@@ -38,10 +38,12 @@ class ProjectExplorerSpec extends StubbedCasSpec {
         downloadsToggle.empty == true
 
         when: "collapse the map section"
-        waitFor {
-            map.displayed
+        if(map.displayed == true){
+            waitFor {
+                map.displayed
+            }
+            mapToggle.click()
         }
-        mapToggle.click()
 
         then:
         waitFor { map.displayed == false }

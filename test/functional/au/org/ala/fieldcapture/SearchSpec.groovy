@@ -36,17 +36,19 @@ class SearchSpec extends StubbedCasSpec {
         inputText = '"Project 5"' // searching a specific project
 
         then:
-        waitFor { search.displayed }
-        searchProject() == null
+//        waitFor { $(".search").displayed }
+        $("input.search.button").click()
 
         Thread.sleep(2000) // there are some animations that make this difficult to do waiting on conditions.
         downloadsToggle.empty == true
 
         when: "collapse the map section"
-        waitFor {
-            map.displayed
+        if(map.displayed == true){
+            waitFor {
+                map.displayed
+            }
+            mapToggle.click()
         }
-        mapToggle.click()
 
         then:
         waitFor { map.displayed == false }

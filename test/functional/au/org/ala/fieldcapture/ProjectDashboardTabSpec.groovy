@@ -1,5 +1,7 @@
 package au.org.ala.fieldcapture
 
+import pages.AdminTools
+import pages.ProjectExplorer
 import pages.ProjectIndex
 
 class ProjectDashboardTabSpec extends StubbedCasSpec {
@@ -18,6 +20,22 @@ class ProjectDashboardTabSpec extends StubbedCasSpec {
         login([userId: '2', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ALA_ADMIN'], browser)
 
         when:
+        to AdminTools
+
+        then:
+        at AdminTools
+     //   reindex()
+
+        when: "Reindex to ensure the project explorer will have predictable data"
+        reindex()
+        logout(browser)
+
+        boolean empty = true
+        while (empty) {
+            to ProjectExplorer
+            empty = emptyIndex()
+        }
+        login([userId: '2', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ALA_ADMIN'], browser)
         to ProjectIndex, projectId
 
         then:

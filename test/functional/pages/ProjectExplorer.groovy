@@ -27,18 +27,18 @@ class ProjectExplorer extends Page {
         facetAccordion(required: false) { $("#facetsContent .fa.fa-plus") }
 
         inputText{ $("#keywords")}
-        search { $("input.search")}
+//        search { $("input.search")}
     }
 
     /** When we reindex the index is destroyed and project explorer shows an error message about no data */
     boolean emptyIndex() {
         return mapToggle.empty
     }
-
-    void searchProject(){
-        waitFor {search.displayed}
-        search.click()
-    }
+//
+//    void searchProject(){
+//        waitFor {search.displayed}
+//        search.click()
+//    }
 
 }
 
