@@ -23,7 +23,8 @@ class HomeIndexPageSpec extends StubbedCasSpec {
         to AdminClearCachePage
 
         then:
-        clearHomePageStatisticsCache() == null
+        waitFor {$("#homePageStatistics").displayed}
+        $("#homePageStatistics").click()
 
         when:
         to AdminTools

@@ -16,11 +16,7 @@ class AdminClearCachePage extends Page {
         grailsTemplatesCache{ $("#grailsTemplatesCache")}
         homePageDocuments{ $("#homePageDocuments")}
         userProfileCache{ $("#userProfileCache")}
-        homePageStatistics{ $("#homePageStatistics")}
+        homePageStatistics{ $("form#homePageStatistics")}
 
-    }
-    void clearHomePageStatisticsCache(){
-        waitFor {homePageStatistics.displayed}
-        homePageStatistics.click()
     }
 }
