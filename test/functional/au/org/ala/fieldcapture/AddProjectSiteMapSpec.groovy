@@ -1,9 +1,8 @@
-///*
-//package au.org.ala.fieldcapture
-//
-//import pages.ProjectIndex
-//
-//class AddProjectSiteMapSpec extends StubbedCasSpec {
+package au.org.ala.fieldcapture
+
+import pages.ProjectIndex
+
+class AddProjectSiteMapSpec extends StubbedCasSpec {
 //    def projectId = 'project_10'
 //
 //    void setup() {
@@ -74,5 +73,5 @@
 ////        sites.lastupdated.text() =="07-07-2020"
 //    }
 //
-//}
-//*/
+}
+
