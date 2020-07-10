@@ -47,19 +47,19 @@ class ProjectDashboardTabSpec extends StubbedCasSpec {
 
         then:
         waitFor{ dashboardTab.displayed }
-        waitFor{ dashboard.displayed }
+        waitFor {dashboard.size() == 3}
+        def dashboardList = dashboard
 
         and:
-        dashboard[0].serviceTitle.text() == "Collecting, or synthesising baseline data"
-        dashboard[0].serviceHelpText.text() == "Number of baseline data sets collected and/or synthesised"
-        dashboard[0].progresslabel.text() =="2/8"
-        dashboard[1].serviceTitle.text() == "Communication materials"
-        dashboard[1].serviceHelpText.text() == "Number of communication materials published"
-        dashboard[1].progresslabel.text() =="2/8"
-
-        dashboard[2].serviceTitle.text() == "Weed distribution survey"
-        dashboard[2].serviceHelpText.text() == "Area (ha) surveyed for weeds"
-        dashboard[2].progresslabel.text() =="15/400"
+        dashboardList[0].serviceTitle.text() == "Collecting, or synthesising baseline data"
+        dashboardList[0].serviceHelpText.text() == "Number of baseline data sets collected and/or synthesised"
+        dashboardList[0].progresslabel.text() =="2/8"
+        dashboardList[1].serviceTitle.text() == "Communication materials"
+        dashboardList[1].serviceHelpText.text() == "Number of communication materials published"
+        dashboardList[1].progresslabel.text() =="2/8"
+        dashboardList[2].serviceTitle.text() == "Weed distribution survey"
+        dashboardList[2].serviceHelpText.text() == "Area (ha) surveyed for weeds"
+        dashboardList[2].progresslabel.text() =="15/400"
 
 
     }
