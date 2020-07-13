@@ -26,7 +26,7 @@ class ProjectIndex extends ReloadablePage {
         overview { module OverviewTab }
         plansAndReports(wait:true) { module PlansAndReportsTab }
         sites { module SitesTab }
-        dashboard { $(".dashboard-section").moduleList ( DashboardTab) }
+        dashboard { $("#services-dashboard .dashboard-section").moduleList ( DashboardTab) }
         admin { module ProjectAdminTab }
 
         iAmSure(wait: true) { $('.modal a', text:'OK') }
@@ -150,6 +150,8 @@ class AddSites extends Module{
         description{$("#description")}
         notes{$("#notes")}
         defineExtent{$("#extentSource")}
+        latitude {$("input",'data-bind':'value:geometry().decimalLatitude')}
+        longitude { $("input", 'data-bind':"value:geometry().decimalLongitude")}
         chooseLayer{$("#chooseLayer")}
         chooseShape {$("#chooseShape")}
         saveButton{$("#save")}

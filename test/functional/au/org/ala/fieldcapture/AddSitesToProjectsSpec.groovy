@@ -1,10 +1,10 @@
 package au.org.ala.fieldcapture
 
-import pages.CreateSitesForProjects
-import pages.ProjectIndex
 import pages.ProjectPage
+import pages.CreateSitesForProjects
 
-class AddProjectSiteMapSpec extends StubbedCasSpec {
+class AddSitesToProjectsSpec extends StubbedCasSpec {
+
     void setup() {
         useDataSet('data_static_score')
     }
@@ -30,21 +30,12 @@ class AddProjectSiteMapSpec extends StubbedCasSpec {
         site.name = "Test Map"
         site.description = "Test Map Description"
 
-        $("select", name:"extentSource").value("pid")
-        $("select", name:"chooseLayer").value("cl22")
+        $("select", name:"extentSource").value("point")
 
-        //site.defineExtent.value("cl22")
-        Thread.sleep(5000)
-        site.chooseShape.chooseShape.size() == 1
-        HashSet hashSet = site.chooseShape.chooseShape[0].collect {it.value()}
-        hashSet.size() == 12
-        Thread.sleep(5000)
-        $("select", name:"chooseShape").click()
-
-        $("option", value:"3742610").click()
-
+        site.latitude = "-35.85075512398081"
+        site.longitude = "146.30460166931152"
         site.save()
-        Thread.sleep(50000)
+        Thread.sleep(11000)
 
 
         then:
@@ -56,12 +47,9 @@ class AddProjectSiteMapSpec extends StubbedCasSpec {
 
         then:
         waitFor {siteTabContents.displayed}
-        Thread.sleep(20000)
-        waitFor{tableContents.displayed}
-        def tableContent = tableContents.collect{it.text()}
+        def tableContent = tableContents
         and:
-        tableContent[2] == "Test Map"
-
+        tableContent[2].siteName.text() == "Test Map"
+        mapMarker.size() == 1
     }
 }
-
