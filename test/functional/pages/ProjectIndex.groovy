@@ -3,6 +3,7 @@ package pages
 import geb.Module
 import geb.Page
 import pages.modules.ProjectAdminTab
+import pages.modules.ProjectDashboardSection
 import pages.modules.RisksAndThreats
 
 /**
@@ -26,7 +27,7 @@ class ProjectIndex extends ReloadablePage {
         overview { module OverviewTab }
         plansAndReports(wait:true) { module PlansAndReportsTab }
         sites { module SitesTab }
-        dashboard { $("#services-dashboard .dashboard-section").moduleList ( DashboardTab) }
+        dashboard { $("#services-dashboard div.dashboard-section").moduleList ( ProjectDashboardSection) }
         admin { module ProjectAdminTab }
 
         iAmSure(wait: true) { $('.modal a', text:'OK') }

@@ -18,7 +18,7 @@ class ProjectPage extends Page {
 
         siteTabContents{module SiteTabContent}
         tableContents { $("#sites-table tbody td").moduleList(SitesTableContents)}
-        mapMarker{ $("#map .leaflet-map-pane img.leaflet-marker-icon")}
+        mapMarker{ $('#map img[src*="marker-icon.png"]')}
 
         reporting{$("#reporting-tab")}
         adminTab{$("#admin-tab")}
