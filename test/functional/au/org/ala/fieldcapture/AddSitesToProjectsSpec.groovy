@@ -13,7 +13,7 @@ class AddSitesToProjectsSpec extends StubbedCasSpec {
         logout(browser)
     }
 
-    def"I can Add Sites in the projects as FC_ADMIN "() {
+    def"I can Add Sites point in the projects as FC_ADMIN "() {
         setup:
         login([userId: '2', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ALA_ADMIN'], browser)
 
@@ -35,7 +35,7 @@ class AddSitesToProjectsSpec extends StubbedCasSpec {
         site.latitude = "-35.85075512398081"
         site.longitude = "146.30460166931152"
         site.save()
-        Thread.sleep(11000)
+        Thread.sleep(50000)
 
 
         then:

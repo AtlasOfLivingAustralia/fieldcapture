@@ -1,7 +1,6 @@
 package au.org.ala.fieldcapture
 
 import pages.CreateSitesForProjects
-import pages.ProjectIndex
 import pages.ProjectPage
 
 class AddProjectSiteMapSpec extends StubbedCasSpec {
@@ -13,7 +12,7 @@ class AddProjectSiteMapSpec extends StubbedCasSpec {
         logout(browser)
     }
 
-    def"I can Add Sites in the projects as FC_ADMIN "() {
+    def"I can Add Sites as a known shape in the projects as FC_ADMIN "() {
         setup:
         login([userId: '2', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ALA_ADMIN'], browser)
 
