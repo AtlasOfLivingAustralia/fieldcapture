@@ -27,7 +27,10 @@ class ProjectExplorer extends Page {
         facetAccordion(required: false) { $("#facetsContent .fa.fa-plus") }
 
         inputText{ $("#keywords")}
-//        search { $("input.search")}
+
+        dashboardContent (required: false) {$("div#dashboard-content")}
+        dashboardContentList (required: false) {$(".dashboard-activities")}
+        reportView (required: false) {$("#reportView")}
     }
 
     /** When we reindex the index is destroyed and project explorer shows an error message about no data */
@@ -48,3 +51,11 @@ class ProjectsList extends Module {
         lastUpdated { $('.td2').text() }
     }
 }
+
+////class DashboardContent extends Module{
+////    static content = {
+////        heading{$("")}
+////
+////
+////    }
+//}
