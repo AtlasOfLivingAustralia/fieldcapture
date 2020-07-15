@@ -278,9 +278,9 @@
 
             config.autoSaveIntervalInSeconds = ${grailsApplication.config.fieldcapture.autoSaveIntervalInSeconds?:60};
             config.riskAndThreatTypes = ${config.riskAndThreatTypes ?: 'null'};
-            var programName = '${(config.program?.acronym?:project.associatedSubProgram) ?: project.associatedProgram}';
+            var programName = "${(config.program?.acronym?:project.associatedSubProgram) ?: project.associatedProgram}";
             config.programName = programName;
-            config.programObjectives = ${config.program?.config?.objectives ?: '[]'};
+            config.programObjectives = <fc:modelAsJavascript model="${config.program?.config?.objectives ?: []}"/>
             config.programActivities = <fc:modelAsJavascript model="${config.program?.config?.activities?.collect{it.name} ?: []}"/>
 
             var viewModel = new ProjectPageViewModel(
