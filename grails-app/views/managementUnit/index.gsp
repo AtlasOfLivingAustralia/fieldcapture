@@ -44,7 +44,7 @@
                 <g:link controller="home">Home</g:link>
             </li>
             <li class="breadcrumb-item">Management Units</li>
-            <li class="breadcrumb-item active">${managementUnit.name}</li>
+            <li class="breadcrumb-item active">${managementUnit.name.encodeAsHTML()}</li>
         </ol>
 
     </nav>

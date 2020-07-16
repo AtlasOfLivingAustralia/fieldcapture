@@ -44,7 +44,7 @@
                 <g:link controller="home">Home</g:link>
             </li>
             <li class="breadcrumb-item">Programs</li>
-            <li class="breadcrumb-item active">${program.name}</li>
+            <li class="breadcrumb-item active">${program.name.encodeAsHTML()}</li>
         </ol>
 
     </nav>
@@ -60,7 +60,7 @@
         </div>
 
         <div class="header-text">
-            <h2>${program.name}</h2>
+            <h2>${program.name.encodeAsHTML()}</h2>
             <g:if test="${program.associatedOrganisations}">
                 <g:each in="${program.associatedOrganisations}" var="org">
                     <div class="program-organisation">

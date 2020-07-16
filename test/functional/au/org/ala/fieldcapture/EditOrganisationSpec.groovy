@@ -34,7 +34,7 @@ class EditOrganisationSpec extends StubbedCasSpec {
         waitFor { details.name.displayed}
         details.name= "Test Organisation Test 2"
         details.description = "Test Organisation Description test"
-        details.save()
+        waitFor (10) {details.save()}
 
         then:
         waitFor { at Organisation}

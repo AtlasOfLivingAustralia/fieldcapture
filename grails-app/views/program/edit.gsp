@@ -29,7 +29,7 @@
             <li class="breadcrumb-item">
                 <g:link controller="home">Home</g:link>
             </li>
-            <li class="breadcrumb-item active"><g:link controller="program" action="index" id="${program.programId}">${program.name}</g:link> </li>
+            <li class="breadcrumb-item active"><g:link controller="program" action="index" id="${program.programId}">${program.name.encodeAsHTML()}</g:link> </li>
             <li class="breadcrumb-item active"><g:message code="program.breadcrumb.edit"/></li>
         </ol>
 

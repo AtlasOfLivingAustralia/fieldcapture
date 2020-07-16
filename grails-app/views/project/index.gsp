@@ -118,8 +118,8 @@
             </g:if>
             <g:if test="${config?.program?.name.equals('Regional Land Partnerships') || config?.program?.name.equals('Environmental Restoration Fund')}">
                 <li>
-                    ${config.program.name}
-%{--                <g:link controller="program" action="index" id="${config.program.programId}">${config.program.name}</g:link> --}%
+                    ${config.program.name.encodeAsJavaScript()}
+%{--                <g:link controller="program" action="index" id="${config.program.programId}">${config.program.name.encodeAsJavaScript()}</g:link> --}%
                     <span class="divider">/</span>
                 </li>
             </g:if>
@@ -278,8 +278,9 @@
 
             config.autoSaveIntervalInSeconds = ${grailsApplication.config.fieldcapture.autoSaveIntervalInSeconds?:60};
             config.riskAndThreatTypes = ${config.riskAndThreatTypes ?: 'null'};
-            var programName = "${(config.program?.acronym?:project.associatedSubProgram) ?: project.associatedProgram}";
-            config.programName = programName;
+            var programName = <fc:modelAsJavascript model="${(config.program?.acronym?:project.associatedSubProgram) ?: project.associatedProgram}"/>
+            config.programName = programName
+
             config.programObjectives = <fc:modelAsJavascript model="${config.program?.config?.objectives ?: []}"/>
             config.programActivities = <fc:modelAsJavascript model="${config.program?.config?.activities?.collect{it.name} ?: []}"/>
 

@@ -638,13 +638,18 @@ class FCTagLib {
 
     def modelAsJavascript = { attrs ->
         def model = attrs.model
-        if (!(model instanceof JSONObject) && !(model instanceof JSONArray) && !(model instanceof grails.converters.JSON)) {
-            model = model as JSON
+        if (model instanceof String){
+            out << "'${model.encodeAsHTML()}'"
+        }else{
+            if (!(model instanceof JSONObject) && !(model instanceof JSONArray) && !(model instanceof grails.converters.JSON)) {
+                model = model as JSON
+            }
 
+            def json = (model?:attrs.default != null? attrs.default:[:] as JSON)
+            def modelJson = json.toString()
+
+            out << "JSON.parse('${modelJson.encodeAsJavaScript()}')"
         }
-        def json = (model?:attrs.default != null? attrs.default:[:] as JSON)
-        def modelJson = json.toString()
-        out << "JSON.parse('${modelJson.encodeAsJavaScript()}')"
     }
 
     def renderProject = { attrs ->
@@ -981,8 +986,9 @@ class FCTagLib {
                 result.append(program.name)
             }
         }
+        def results = result.toString()
 
-        out << result.toString()
+        out << "${results.encodeAsHTML()}"
     }
 
     def displayDate = {}

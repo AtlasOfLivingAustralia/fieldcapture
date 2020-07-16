@@ -23,7 +23,7 @@
                     <div class="row-fluid">
                         <div class="span4 header-label">Management Unit</div>
                         <div class="span8"><g:link controller="managementUnit" action="index"
-                                                   id="${project.managementUnitId}">${project.managementUnitName}</g:link></div>
+                                                   id="${project.managementUnitId}">${project.managementUnitName.encodeAsHTML()}</g:link></div>
                     </div>
                     </g:if>
 
