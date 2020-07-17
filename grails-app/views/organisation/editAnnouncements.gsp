@@ -28,7 +28,7 @@
         </li>
     </ul>
     <div class="row-fluid">
-        <h2>Edit Announcements - ${organisation.name}</h2>
+        <h2>Edit Announcements - ${organisation.name.encodeAsHTML()}</h2>
     </div>
     <div class="well">
         <p>Instructions:</p>

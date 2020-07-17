@@ -60,7 +60,7 @@
         </div>
 
         <div class="header-text" id="managementUnitName">
-           <h2>${managementUnit.name}</h2>
+           <h2>${managementUnit.name.encodeAsHTML()}</h2>
         </div>
     </div>
 

@@ -3,7 +3,7 @@
     <g:if test="${displayedPrograms}">
        <g:each var="programDetails" status="i" in="${displayedPrograms}">
            <g:set var="program" value="${programDetails.program}"/>
-            <div class="well-title">Project reporting in program: ${program.name} %{--  <a href="${g.createLink(controller: 'program', action: 'index',id:program.programId)}">${program.name}</a> --}% </div>
+            <div class="well-title">Project reporting in program: ${program.name.encodeAsHTML()} %{--  <a href="${g.createLink(controller: 'program', action: 'index',id:program.programId)}">${program.name.encodeAsHTML()}</a> --}% </div>
             <table id="projectList-${i}" class="table table-striped table-bordered">
                 <thead class="thead-light">
                 <th class="projectId">Project ID</th>
