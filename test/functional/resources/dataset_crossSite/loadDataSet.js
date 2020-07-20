@@ -15,24 +15,14 @@ var blog1 = {
 }
 
 var meriPlan = {
-  outcomes: {
-      primaryOutcome: { description: 'outcome 1'},
-      secondaryOutcomes: [ {description: 'outcome 2'}, {description: 'outcome 3'} ]
-  }
+    outcomes: {
+        primaryOutcome: { description: 'outcome 1'},
+        secondaryOutcomes: [ {description: 'outcome 2'}, {description: 'outcome 3'} ]
+    }
 };
-createProject({name:'project 1', projectId:"project_1", programId:'test_program',managementUnitId:"test_mu",siteId:'test_site_1', grantId:"RLP-Test-Program-Project-1",
-    blog:[blog1], custom:{details:meriPlan}});
-createProject({name:'project 2', projectId:"project_2", programId:'test_program',managementUnitId:"test_mu_2",siteId:'test_site_2', grantId:"RLP-Test-Program-Project-2"})
-createProject({name:'project in ACT', projectId:"project_3", programId:'test_program',managementUnitId:"test_mu_3",siteId:'test_site_3', grantId:"RLP-Test-Program-Project-3"})
-
-createProgram({name:'A test program', programId:'test_programId'})
 
 db.userPermission.insert({entityType:'au.org.ala.ecodata.Program', entityId:'test_programId', userId:'1', accessLevel:'admin'});
 
-
-createSite(site1)
-createSite({name:"test site 2", siteId:'test_site_2', extent:{geometry:{state:'Victoria'}}})
-createSite({name:"ACT Acronyms", siteId:'test_site_3', extent:{geometry:{state:'ACT'}}})
 
 var blog_program = {
     "content": "blog test",
@@ -61,8 +51,7 @@ var outcomes = [
         type:'secondary'
     }
 ];
-createProgram({name:'New Test Program', parent:null, programId:'new_test_Program'})
-createProgram({name:'New Second Test program', parent:null, programId:'second_test_program'})
+
 createProgram({name:'Regional Land Partnerships', parent: null, programId:'test_program', blog:[blog_program], outcomes:outcomes})
 
 createOrganisation({
@@ -73,9 +62,7 @@ createOrganisation({
     acronym:'TSTORG'
 })
 
-createMu({name:'test mu', managementUnitId:"test_mu",managementUnitSiteId:'test_site_1'});
-createMu({name:'test mu 2', managementUnitId:"test_mu_2",managementUnitSiteId:'test_site_2'});
-createMu({name:'test mu in ACT', managementUnitId:"test_mu_3",managementUnitSiteId:'test_site_3'});
+
 
 db.userPermission.insert({entityType:'au.org.ala.ecodata.Program', entityId:'test_program', userId:'1', accessLevel:'admin'});
 db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_1', userId:'1', accessLevel:'admin'});
@@ -142,6 +129,7 @@ var site1 = {
 };
 
 
+createSite(site1)
 
 // script injection
 

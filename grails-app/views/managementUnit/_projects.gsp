@@ -18,7 +18,7 @@
                     <tr>
                         <td class="projectId"><a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}" >${project.externalId ?: project.grantId}</a></td>
                         <td class="workOrderId">${project.workOrderId}</td>
-                        <td class="name">${project.name}</td>
+                        <td class="name">${project.name.encodeAsHTML()}</td>
                         <td class="startDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedStartDate)}</td>
                         <td class="endDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedEndDate)}</td>
                         <td class="statusCol"><fc:status status="${project.status}"/></td>

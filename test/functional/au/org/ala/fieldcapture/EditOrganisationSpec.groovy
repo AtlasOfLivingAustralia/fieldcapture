@@ -61,7 +61,6 @@ class EditOrganisationSpec extends StubbedCasSpec {
         waitFor  {at EditOrganisation}
 
         when:
-
         details.abn = "11111111111"
         waitFor {details.prePopulateABN.displayed}
         details.prePopulateABN.click()

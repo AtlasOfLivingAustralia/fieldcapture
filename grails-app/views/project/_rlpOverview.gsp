@@ -11,18 +11,18 @@
 
 %{--                        This is temporarily not public until #1829 is released.--}%
                         <g:if test="${fc.userIsAlaAdmin()}">
-                            <div class="span8"><g:link controller="program" action="index"
+                            <div class="span8 programName"><g:link controller="program" action="index"
                                          id="${config.program.programId}"><fc:programFullName program="${config.program}"/></g:link></div>
                         </g:if>
                         <g:else>
-                            <div class="span8"><fc:programFullName program="${config.program}"/></div>
+                            <div class="span8 programName"><fc:programFullName program="${config.program}"/></div>
                         </g:else>
 
                     </div>
                     <g:if test="${project.managementUnitId}">
                     <div class="row-fluid">
                         <div class="span4 header-label">Management Unit</div>
-                        <div class="span8"><g:link controller="managementUnit" action="index"
+                        <div class="span8 managementUnitName"><g:link controller="managementUnit" action="index"
                                                    id="${project.managementUnitId}">${project.managementUnitName.encodeAsHTML()}</g:link></div>
                     </div>
                     </g:if>
