@@ -1184,6 +1184,7 @@ function BudgetTotalViewModel(rows, index) {
 function BudgetRowViewModel(o, period) {
     var self = this;
     if (!o) o = {};
+    if (!o.activities || !_.isArray(o.activities)) o.activities = [];
     self.shortLabel = ko.observable(o.shortLabel);
     self.description = ko.observable(o.description);
     self.activities = ko.observableArray(o.activities);
