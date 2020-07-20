@@ -1,11 +1,11 @@
 <!-- ko with:details.services -->
-<h4>Project services and minimum targets</h4>
+<h4>${title ?: "Project services and minimum targets"}</h4>
 
 <table class="table service-targets-view">
     <thead>
     <tr>
         <th class="index" rowspan="2"></th>
-        <th class="service" rowspan="2">Service</th>
+        <th class="service" rowspan="2">${serviceName ?: "Service"}</th>
         <th class="score" rowspan="2">Target measure</th>
         <th class="budget-cell" rowspan="2">Total to be delivered</th>
         <th data-bind="attr:{colspan:periods.length+1}">Minimum annual targets</th>
@@ -23,7 +23,7 @@
             <span data-bind="text:service() ? service().name : ''"></span>
         </td>
         <td class="score">
-            <span data-bind="text:score() ? score().label : ''"></span>
+            <span data-bind="text:score() ? score().label : ''  "></span>
         </td>
         <td class="budget-cell">
             <span data-bind="text: target"></span>

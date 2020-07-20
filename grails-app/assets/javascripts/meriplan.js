@@ -614,6 +614,23 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
 
     outputTargets = outputTargets || [];
 
+    /**
+     * This function is invoked when a selected service is changed or
+     * a service added or deleted.
+     * It keeps the list of selected service names up to date for use
+     * by the budget table.
+     */
+    function updateSelectedServices() {
+        var array =  _.map(self.services(), function(serviceTarget) {
+            var service = serviceTarget.service();
+            if (service) {
+                return service.name;
+            }
+        });
+        array = _.filter(array, function(val) { return val; });
+        array = _.unique(array);
+        self.selectedServices(array);
+    }
     var ServiceTarget = function (service, score) {
         var target = this;
 
@@ -713,6 +730,7 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
 
         target.serviceId.subscribe(function () {
             target.scoreId(null);
+            updateSelectedServices();
         });
 
         target.scoreId.subscribe(function () {
@@ -770,6 +788,10 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
     self.removeService = function (service) {
         self.services.remove(service);
     };
+
+
+    self.selectedServices = ko.observableArray();
+    self.services.subscribe(updateSelectedServices);
 
     /**
      * Once all of the scores for a service have been assigned targets, don't allow new rows to select that score.
@@ -1164,12 +1186,15 @@ function BudgetRowViewModel(o, period) {
     if (!o) o = {};
     self.shortLabel = ko.observable(o.shortLabel);
     self.description = ko.observable(o.description);
+    self.activities = ko.observableArray(o.activities);
 
     var arr = [];
-    for (i = 0; i < period.length; i++)
+    // Have at least one period to record, which will essentially be a project total.
+    var minPeriods = _.max([1, period.length]);
+    for (var i = 0; i < minPeriods; i++) {
         arr.push(ko.mapping.toJS(new FloatViewModel()));
+    }
 
-    //Incase if timeline is generated.
     if (o.costs && o.costs.length != arr.length) {
         o.costs = arr;
     }

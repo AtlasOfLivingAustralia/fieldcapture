@@ -1374,7 +1374,7 @@ function ProjectService(project, options) {
 
     self.getBudgetHeaders = function() {
         if (config.excludeFinancialYearData) {
-            return [""]; // Return a single period header for the project
+            return []; // Return a single period header for the project
         }
         var headers = [];
         var startYr = moment(project.plannedStartDate).format('YYYY');
