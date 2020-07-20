@@ -67,7 +67,7 @@ class BudgetRow extends Module {
         area { $('.budget-category select') }
         description { $('.budget-description textarea') }
         budgetAmounts { $('.budget-amount input') }
-        total { $('.budget-amount span') }
+        total { $('.budget-amount.budget-total span') }
         remove { $('i.icon-remove') }
     }
 }

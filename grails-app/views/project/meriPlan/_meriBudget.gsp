@@ -41,7 +41,7 @@
             </td>
             <!-- /ko -->
             <!-- ko if: details.budget.headers().length -->
-            <td class="budget-amount"><span data-bind="text: rowTotal.formattedCurrency, disable: $parent.isProjectDetailsLocked()"></span></td>
+            <td class="budget-amount budget-total"><span data-bind="text: rowTotal.formattedCurrency, disable: $parent.isProjectDetailsLocked()"></span></td>
             <!-- /ko -->
             <td class="remove">
                 <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()" ><i class="fa fa-remove" data-bind="click: $parent.removeBudget"></i></span>
