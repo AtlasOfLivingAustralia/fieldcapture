@@ -36,11 +36,11 @@ class ProjectExplorerMapTabSpec extends StubbedCasSpec {
         downloadsToggle.empty == true
 
         when: "open the map section"
-        if(map.displayed == false){
+        if(map.displayed == false) {
+            mapToggle.click()
             waitFor {
                 map.displayed
             }
-            mapToggle.click()
         }
 
         then:
