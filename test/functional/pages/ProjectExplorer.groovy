@@ -49,8 +49,10 @@ class ProjectsList extends Module {
     static content = {
         name { $('.projectTitleName').text() }
         lastUpdated { $('.td2').text() }
+        managementUnit { $(".managementUnitName").text()}
     }
 }
+
 
 ////class DashboardContent extends Module{
 ////    static content = {

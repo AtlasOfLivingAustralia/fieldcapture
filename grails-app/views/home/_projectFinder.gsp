@@ -840,8 +840,8 @@
             $tr.find('.homeLine a').attr("href", "${createLink(controller: 'project')}/" + id);
             $tr.find('a.zoom-in').data("id", id);
             $tr.find('a.zoom-out').data("id", id);
-            $tr.find('.orgLine').append(src.organisationName);
-            $tr.find('.descLine').append(src.description);
+            $tr.find('.orgLine').text(src.organisationName);
+            $tr.find('.descLine').text(src.description);
         <g:if test="${fc.userIsSiteAdmin()}">
             $tr.find('.downloadLine a').attr("href", "${createLink(controller: 'project',action: 'downloadProjectData')}" + "?id="+id+"&view=xlsx");
                     $tr.find('.downloadJSONLine a').attr("href", "${createLink(controller: 'project',action: 'downloadProjectData')}" + "?id="+id+"&view=json");

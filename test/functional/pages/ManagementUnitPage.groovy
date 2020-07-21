@@ -24,6 +24,9 @@ class ManagementUnitPage extends ReloadablePage {
         reportsTab(required: false) { $('#projects-tab') }
         reportsTabPane(required: false) { module ManagementUnitReports }
         sitesTab(required:false) { $('#sites-tab') }
+        headerTitle {$("#managementUnitName")}
+        visitUs {$("data-bind:'text-url'")}
+        description {$('.row .col-md-8 span[data-bind*="html:description"] p')}
     }
 
     List grantIds() {
@@ -58,6 +61,13 @@ class ManagementUnitPage extends ReloadablePage {
         adminTab.click()
         waitFor { adminTabPane.displayed }
         adminTabPane.attachDocument()
+    }
+
+    void editManagementUnit(){
+        adminTab.click()
+        waitFor{editManagementUnitButton.displayed}
+        editManagementUnitButton.click()
+
     }
 
 }

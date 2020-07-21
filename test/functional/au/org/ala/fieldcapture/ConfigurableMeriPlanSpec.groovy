@@ -123,6 +123,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         !meriPlan.projectImplementation.displayed
         !meriPlan.keq.displayed
         !meriPlan.budget.displayed
+        !meriPlan.consultation.displayed
         meriPlan.assets.displayed
         meriPlan.objectivesList.displayed
         meriPlan.shortTermOutcomes.displayed
@@ -219,7 +220,85 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlan2.projectPartnerships[0].orgType == 'Trust'
         meriPlan2.activities() == ["activity 1", 'Other activity']
 
+    }
 
+    def "The MERI Plan will display only sections specified in competitive grants config for competitive grants projects"() {
+        setup:
+        String projectId = 'grants1'
+        login([userId: '1', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'USER'], browser)
+
+        when:
+        to RlpProjectPage, projectId
+
+        then:
+        waitFor { at RlpProjectPage }
+
+        when:
+        def meriPlan = openMeriPlanEditTab()
+
+        then: "Only the sections of the MERI plan configured in the program will be displayed"
+        meriPlan != null
+        !meriPlan.primaryOutcome.displayed
+        !meriPlan.primaryPriority.displayed
+        !meriPlan.secondaryOutcomes.displayed
+        !meriPlan.mediumTermOutcomes.displayed
+        !meriPlan.projectName.displayed
+        !meriPlan.objectivesList.displayed
+        !meriPlan.projectBaseline.displayed
+        !meriPlan.reviewMethodology.displayed
+        !meriPlan.nationalAndRegionalPlans.displayed
+        !meriPlan.projectImplementation.displayed
+        !meriPlan.keq.displayed
+        !meriPlan.activities.displayed
+
+        meriPlan.assets.displayed
+        meriPlan.shortTermOutcomes.displayed
+        meriPlan.projectMethodology.displayed
+        meriPlan.projectDescription.displayed
+        meriPlan.monitoringIndicators.displayed
+        meriPlan.adaptiveManagement.displayed
+        meriPlan.projectPartnerships.displayed
+        meriPlan.consultation.displayed
+        meriPlan.budget.displayed
+        meriPlan.projectServices.displayed
+
+
+        when:
+        meriPlan.assets[0].description = "asset 1"
+        meriPlan.shortTermOutcomes[0].value("outcome 1")
+        meriPlan.projectDescription = 'Project description'
+        meriPlan.projectMethodology = 'Project Methodology'
+        meriPlan.monitoringIndicators[0].indicator.value("Indicator 1")
+        meriPlan.monitoringIndicators[0].approach.value('Approach 1')
+        meriPlan.adaptiveManagement = 'Adaptive management'
+        meriPlan.projectPartnerships[0].name = 'partner name'
+        meriPlan.projectPartnerships[0].partnership = 'partnership'
+        meriPlan.projectPartnerships[0].orgType = 'Trust'
+        meriPlan.consultation.value('Consultation')
+
+        meriPlan.save()
+
+        def previousLoad = getAtCheckTime()
+        to RlpProjectPage, projectId
+
+        then:
+        waitFor { getAtCheckTime() > previousLoad }
+
+        when:
+        meriPlan = openMeriPlanEditTab()
+
+        then:
+        meriPlan.assets[0].description == "asset 1"
+        meriPlan.shortTermOutcomes[0].value() == "outcome 1"
+        meriPlan.projectDescription == 'Project description'
+        meriPlan.projectMethodology == 'Project Methodology'
+        meriPlan.monitoringIndicators[0].indicator.value() == "Indicator 1"
+        meriPlan.monitoringIndicators[0].approach.value() == 'Approach 1'
+        meriPlan.adaptiveManagement == 'Adaptive management'
+        meriPlan.projectPartnerships[0].name == 'partner name'
+        meriPlan.projectPartnerships[0].partnership == 'partnership'
+        meriPlan.projectPartnerships[0].orgType == 'Trust'
+        meriPlan.consultation == 'Consultation'
 
     }
 }

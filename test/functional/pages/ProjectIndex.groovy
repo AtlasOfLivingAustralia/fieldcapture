@@ -63,7 +63,8 @@ class OverviewTab extends Module {
         newsAndEvents {$('')}
         stories {$('')}
         documents {$('')}
-
+        programName {$(".programName")}
+        managementUnit {$(".managementUnitName")}
     }
 }
 

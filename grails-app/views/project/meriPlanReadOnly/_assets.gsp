@@ -3,7 +3,7 @@
     <thead>
     <tr>
         <th class="index"></th>
-        <th class="asset">Species, ecological community or environmental asset(s) the project is targeting</th>
+            <th class="asset">${viewExplanation ?: "Species, ecological community or environmental asset(s) the project is targeting"}</th>
     </tr>
     </thead>
     <tbody data-bind="foreach:details.assets">

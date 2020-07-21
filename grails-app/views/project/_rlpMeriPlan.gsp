@@ -314,7 +314,7 @@
 
     <div class="row-fluid">
         <div class="span12">
-            <g:render template="/project/serviceTargets"/>
+            <g:render template="/project/meriPlan/serviceTargets"/>
         </div>
     </div>
 

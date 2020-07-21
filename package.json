@@ -20,7 +20,7 @@
     "karma-jquery": "^0.2.4",
     "karma-remote-reporter": "^0.2.0",
     "knockout": "^3.5.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.27"
   },

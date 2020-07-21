@@ -5,7 +5,7 @@
                 <g:link controller="home">Home</g:link> <span class="divider">/</span>
             </li>
             <li class="active"><g:link controller="organisation" action="list">Organisations</g:link> <span class="divider">/</span></li>
-            <li class="active">${organisation.name}</li>
+            <li class="active">${organisation.name?.encodeAsHTML()}</li>
         </ul>
     </div>
     <div class="row-fluid ">
@@ -16,7 +16,7 @@
             </span>
         </div>
         <div class="header-text">
-            <h2>${organisation.name}</h2>
+            <h2>${organisation.name?.encodeAsHTML()}</h2>
         </div>
     </div>
 </div>

@@ -197,7 +197,7 @@
         <fc:iconHelp title="Duration">The number of weeks the project will run for.</fc:iconHelp>
         </label>
         <div class="input-append">
-            <g:textField class="" name="duration" data-bind="value:transients.contractDuration" data-validation-engine="validate[custom[number]]"/>
+            <g:textField class="" name="contract-duration" data-bind="value:transients.contractDuration" data-validation-engine="validate[custom[number]]"/>
         </div>
 
     </div>

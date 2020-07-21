@@ -67,7 +67,7 @@ class BudgetRow extends Module {
         area { $('.budget-category select') }
         description { $('.budget-description textarea') }
         budgetAmounts { $('.budget-amount input') }
-        total { $('.budget-amount span') }
+        total { $('.budget-amount.budget-total span') }
         remove { $('i.icon-remove') }
     }
 }
@@ -118,10 +118,20 @@ class EditableMeriPlan extends Module {
         adaptiveManagement(required:false) { $('#adaptive-management textarea') }
         otherObjective(required:false) { $('#objectives-list input[type=text]') }
         otherActivity(required:false) { $('#activity-list input[type=text]') }
-
+        consultation(required:false) { $('.consultation textarea') }
         floatingSaveButton { $('#floating-save [data-bind*="saveProjectDetails"]') }
         saveButton { $('.form-actions [data-bind*="saveProjectDetails"]').first() }
         pdfButton { $('.btn[data-bind*="meriPlanPDF"').first() }
+
+    }
+
+    void addBudgetRow() {
+        int currentRows = budget.size()
+        $('button[click*=addBudget]').click()
+
+        waitFor {
+            budget.size() == currentRows + 1
+        }
     }
 
     void hideFloatingSave() {

@@ -1,7 +1,7 @@
 package au.org.ala.fieldcapture
 
+import pages.EditManagementUnitPage
 import pages.ManagementUnitPage
-import pages.AdminReportsPage
 
 class ManagementUnitSpec extends StubbedCasSpec {
 
@@ -91,6 +91,35 @@ class ManagementUnitSpec extends StubbedCasSpec {
         targetedSecondaryOutcomes() == ['o2', 'o3']
     }
 
+    def "Checking Security Vulnerability after injecting Script tag"(){
+        setup:
+        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+
+        when:
+        to ManagementUnitPage
+
+        and:
+        editManagementUnit()
+
+        then:
+        waitFor { at EditManagementUnitPage}
+
+        when:
+        details.name= "Testing <script>alert('Test')</script>"
+        details.description= "Testing"
+        details.save()
+
+        then:
+        at ManagementUnitPage
+
+        and:
+        overviewBtn.click()
+        overviewBtn.displayed
+        headerTitle.text() == "Testing <script>alert('Test')</script>"
+        description.text() == "Testing"
+
+
+    }
 
 
 /*    def "As an site admin, I can get report periods and request to generate reports"(){
