@@ -23,7 +23,5 @@ class OrganisationProjectSpec extends StubbedCasSpec {
 
         and:
         projectContent[1].text() == "Project Script Injection <script>alert('Test')</script>"
-
-
     }
 }
