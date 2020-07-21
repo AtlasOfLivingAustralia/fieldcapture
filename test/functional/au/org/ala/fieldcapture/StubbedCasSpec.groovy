@@ -63,8 +63,9 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
         $('.bootbox .btn-primary').each {
             if (it.displayed) {
                 it.click()
-                waitFor {
-                    !it && $('.modal-backdrop').size() == 0
+                waitFor 10, {
+                    println $('.modal-backdrop')
+                    $('.modal-backdrop').size() == 0
                 }
             }
         }
