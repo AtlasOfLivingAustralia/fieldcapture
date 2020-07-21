@@ -17,7 +17,7 @@
 
 <div data-bind="visible:description">
     <div class="span12 well">
-        <div class="well-title">About ${organisation.name.encodeAsHTML()}</div>
+        <div class="well-title">About ${organisation.name?.encodeAsHTML()}</div>
 
         <span id="orgDescription" data-bind="html:description.markdownToHtml()"></span>
 

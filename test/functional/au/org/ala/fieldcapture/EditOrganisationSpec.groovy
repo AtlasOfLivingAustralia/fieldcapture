@@ -5,6 +5,7 @@ import pages.EditOrganisation
 
 class EditOrganisationSpec extends StubbedCasSpec {
 
+    def orgId = "test_organisation"
     def setup(){
         useDataSet("dataset_mu")
     }
@@ -18,7 +19,7 @@ class EditOrganisationSpec extends StubbedCasSpec {
         login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
 
         when:
-        to Organisation
+        to Organisation, orgId
 
         and:
         edit()
@@ -52,7 +53,7 @@ class EditOrganisationSpec extends StubbedCasSpec {
         login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
 
         when:
-        to Organisation
+        to Organisation, orgId
 
         and:
         edit()

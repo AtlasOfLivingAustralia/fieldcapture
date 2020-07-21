@@ -3,7 +3,7 @@
     <g:if test="${displayedPrograms}">
        <g:each var="programDetails" status="i" in="${displayedPrograms}">
            <g:set var="program" value="${programDetails.program}"/>
-            <div class="well-title">Project reporting in program: ${program.name.encodeAsHTML()} %{--  <a href="${g.createLink(controller: 'program', action: 'index',id:program.programId)}">${program.name.encodeAsHTML()}</a> --}% </div>
+            <div class="well-title">Project reporting in program: ${program.name?.encodeAsHTML()} %{--  <a href="${g.createLink(controller: 'program', action: 'index',id:program.programId)}">${program.name?.encodeAsHTML()}</a> --}% </div>
             <table id="projectList-${i}" class="table table-striped table-bordered">
                 <thead class="thead-light">
                 <th class="projectId">Project ID</th>
@@ -18,7 +18,7 @@
                     <tr>
                         <td class="projectId"><a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}" >${project.externalId ?: project.grantId}</a></td>
                         <td class="workOrderId">${project.workOrderId}</td>
-                        <td class="name">${project.name.encodeAsHTML()}</td>
+                        <td class="name">${project.name?.encodeAsHTML()}</td>
                         <td class="startDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedStartDate)}</td>
                         <td class="endDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedEndDate)}</td>
                         <td class="statusCol"><fc:status status="${project.status}"/></td>

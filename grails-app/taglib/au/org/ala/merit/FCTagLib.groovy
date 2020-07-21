@@ -639,7 +639,7 @@ class FCTagLib {
     def modelAsJavascript = { attrs ->
         def model = attrs.model
         if (model instanceof String){
-            out << "'${model.encodeAsHTML()}'"
+            out << "'${model.encodeAsJavaScript()}'"
         }else{
             if (!(model instanceof JSONObject) && !(model instanceof JSONArray) && !(model instanceof grails.converters.JSON)) {
                 model = model as JSON

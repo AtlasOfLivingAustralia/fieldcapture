@@ -4,7 +4,7 @@ import geb.Page
 import pages.modules.OrganisationAdminTab
 
 class Organisation extends Page{
-    static url = 'organisation/index/test_organisation'
+    static url = 'organisation/index'
 
     static at = { waitFor {name.text() !=null}}
 
@@ -16,6 +16,8 @@ class Organisation extends Page{
         orgName { $('.header-text') }
         orgDescription { $('span#orgDescription') }
         orgAbn {$('span#orgAbn')}
+        projectTab {$("#projects-tab")}
+        projectContent {$("#projectList tbody tr td")}
     }
 
     void edit() {

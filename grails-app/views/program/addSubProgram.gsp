@@ -25,7 +25,7 @@
             <li class="breadcrumb-item">
                 <g:link controller="home">Home</g:link>
             </li>
-            <li class="breadcrumb-item active"><g:link controller="program" action="index" id="${program.parentProgramId}">${program.parentProgramName.encodeAsHTML()}</g:link> </li>
+            <li class="breadcrumb-item active"><g:link controller="program" action="index" id="${program.parentProgramId}">${program.parentProgramName?.encodeAsHTML()}</g:link> </li>
             <li class="breadcrumb-item active"><g:message code="program.breadcrumb.addSubProgram"/></li>
         </ol>
 

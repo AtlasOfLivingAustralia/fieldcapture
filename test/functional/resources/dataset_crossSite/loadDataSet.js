@@ -134,7 +134,7 @@ createSite(site1)
 // script injection
 
 createProject({name:"Project Script Injection <script>alert('Test')</script>",
-    projectId:"project_111",programId:'new_test_Program_1',managementUnitId:"test_mu_1",
+    projectId:"project_111",programId:'new_test_Program_1',managementUnitId:"test_mu_1", organisationId:"test_organisation_1",
     siteId:'test_site_1', grantId:"RLP-Test-Program-Project-1",
     blog:[blog1], custom:{details:meriPlan}});
 

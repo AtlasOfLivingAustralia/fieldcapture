@@ -113,13 +113,13 @@
             <g:if test="${project.managementUnitId}">
                 <li>
                 <g:link controller="managementUnit" action="index"
-                        id="${project.managementUnitId}">${project.managementUnitName.encodeAsHTML()}</g:link> <span class="divider">/</span>
+                        id="${project.managementUnitId}">${project.managementUnitName?.encodeAsHTML()}</g:link> <span class="divider">/</span>
                 </li>
             </g:if>
             <g:if test="${config?.program?.name.equals('Regional Land Partnerships') || config?.program?.name.equals('Environmental Restoration Fund')}">
                 <li>
-                    ${config.program.name.encodeAsHTML()}
-%{--                <g:link controller="program" action="index" id="${config.program.programId}">${config.program.name.encodeAsHTML()}</g:link> --}%
+                    ${config.program.name?.encodeAsHTML()}
+%{--                <g:link controller="program" action="index" id="${config.program.programId}">${config.program.name?.encodeAsHTML()}</g:link> --}%
                     <span class="divider">/</span>
                 </li>
             </g:if>
