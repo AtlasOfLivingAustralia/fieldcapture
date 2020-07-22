@@ -2,16 +2,13 @@ package au.org.ala.fieldcapture
 
 import pages.AdminTools
 import pages.ProjectExplorer
-import spock.lang.Stepwise
 
-@Stepwise
-class ProjectExplorerSpec extends StubbedCasSpec {
-
+class ProjectExplorerCrossSiteInjectionSpec  extends StubbedCasSpec{
     void setup() {
-        useDataSet('dataset2')
+        useDataSet('dataset_crossSite')
     }
 
-    void "The project explorer displays a list of projects"() {
+    void "Project Explorer Cross Site Injecting check "() {
 
         setup:
         login([userId: '2', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ALA_ADMIN'], browser)
@@ -38,45 +35,31 @@ class ProjectExplorerSpec extends StubbedCasSpec {
         downloadsToggle.empty == true
 
         when: "collapse the map section"
-        if (map.displayed == true){
-            waitFor {
-                map.displayed
-            }
-            mapToggle.click()
+
+        waitFor {
+            map.displayed
         }
+        mapToggle.click()
 
         then:
         waitFor { map.displayed == false }
 
         when: "expand the projects section"
-        def expectedProjects = new HashSet((1..9).collect{"Project $it"})
-        expectedProjects.add("Configurable MERI plan project")
+        def expectedProjects = new HashSet()
+        expectedProjects.add("Project Script Injection <script>alert('Test')</script>")
         projectsToggle.click()
-        waitFor { projectPagination.displayed }
 
         then:
         waitFor 20, {
 
             to ProjectExplorer
-            waitFor { projectPagination.displayed }
-
-            projects.size() == 10
-            facets.size() == 14
-            chooseMoreFacetTerms.size() == 0
         }
+        waitFor(10) {projects.displayed}
+        def projectList = projects
 
-        new HashSet(projects.collect{it.name}) == expectedProjects
-
-        when:
-        facetAccordion.eq(1).click()
-        waitFor {
-            facetTerms.eq(0).displayed
-        }
-
-        facetTerms.eq(0).click()
-
-        then:
-        waitFor {at ProjectExplorer}
-
+        and:
+        waitFor(20){projectList}
+        projectList.name[0] =="Project Script Injection <script>alert('Test')</script>"
+        projectList.managementUnit[0] == 'test mu <script>alert("MU")</script>'
     }
 }

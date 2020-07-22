@@ -224,6 +224,39 @@ describe("Loading the MERI plan is handled correctly", function () {
         expect(row.minimumTargetsValid()).toBeFalsy();
     });
 
+    it("should should track the names of selected services for use in the budget table", function() {
+        var project = {
+            plannedStartDate:'2018-07-01T00:00:00Z',
+            plannedEndDate:'2021-06-30T00:00:00Z'
+        };
+        var projectService = new ProjectService(project, {});
+        var options = {
+            useRlpTemplate:true,
+            healthCheckUrl:'testing',
+            services:[{id:1, name:"Service 1"}, {id:2, name:"Service 2"}]
+        };
+        var viewModel = new MERIPlan(project, projectService, options);
+
+        var serviceTarget = {
+            serviceId:1,
+            scoreId:1,
+            target:100,
+            periodTargets:[
+                {period:'2018/2019', target:1},
+                {period:'2019/2020', target:2},
+                {period:'2020/2021', target:3}
+            ]
+        };
+
+        expect(viewModel.meriPlan().services.selectedServices()).toEqual([]);
+
+        var row = viewModel.meriPlan().services.addServiceTarget(serviceTarget);
+        expect(viewModel.meriPlan().services.selectedServices()).toEqual(['Service 1']);
+
+        row.serviceId(2);
+        expect(viewModel.meriPlan().services.selectedServices()).toEqual(['Service 2']);
+    });
+
     it("should provide a simplified objectives model for selecting program objectives from a list", function() {
         var project = {
             plannedStartDate:'2018-07-01T00:00:00Z',

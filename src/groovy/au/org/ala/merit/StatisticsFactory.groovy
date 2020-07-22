@@ -18,8 +18,8 @@ class StatisticsFactory {
     private static final String STATISTICS_CACHE_REGION = 'homePageStatistics'
     private static final String DEFAULT_CONFIG = "/resources/statistics.json"
     private static final String STATISTICS_CONFIG_KEY = 'meritstatistics.config'
+    private static final String CONFIG_KEY = "config"
 
-    Map config
     @Autowired
     ReportService reportService
     @Autowired
@@ -31,14 +31,12 @@ class StatisticsFactory {
 
     public StatisticsFactory() {}
 
-    private void initialize() {
-        String result = settingService.get(STATISTICS_CONFIG_KEY)
-        if (result) {
-            config = JSON.parse(result)
-        }
+    private Map initialize() {
+        Map config = settingService.getJson(STATISTICS_CONFIG_KEY)
         if (!config) {
             config = readConfig()
         }
+        config
     }
 
     private Map readConfig() {
@@ -47,17 +45,22 @@ class StatisticsFactory {
     }
 
     public synchronized void clearConfig() {
-        config = null
         Cache cache = grailsCacheManager.getCache(STATISTICS_CACHE_REGION)
         cache.clear()
     }
 
+    private synchronized Map getConfig() {
+        Map config = grailsCacheManager.getCache(STATISTICS_CACHE_REGION).get(CONFIG_KEY)?.get()
+        if (!config) {
+            config = initialize()
+            grailsCacheManager.getCache(STATISTICS_CACHE_REGION).put(CONFIG_KEY, config)
+        }
+        config
+    }
+
     public synchronized List<Map> getStatisticsGroup(int groupNumber) {
 
-        if (config == null) {
-            initialize()
-        }
-
+        Map config = getConfig()
         List<Map> statistics = grailsCacheManager.getCache(STATISTICS_CACHE_REGION).get(groupNumber)?.get()
         if (!statistics) {
             log.info("Cache miss for homepage stats, key: ${groupNumber}")
@@ -82,9 +85,7 @@ class StatisticsFactory {
     }
 
     public synchronized int getGroupCount() {
-        if (config == null) {
-            initialize()
-        }
+        Map config = getConfig()
         return config.groups.size()
     }
 

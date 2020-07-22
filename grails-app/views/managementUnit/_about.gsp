@@ -36,7 +36,7 @@
             <g:set var="program" value="${programDetails.program}"/>
             <li class="nav-item">
                 <g:set var="active" value="${i==0?'active':''}"/>
-                <a class="nav-link ${active}"  data-toggle="tab" href="#${program.programId}_projects" role="tab">${program.name}</a>
+                <a class="nav-link ${active}"  data-toggle="tab" href="#${program.programId}_projects" role="tab">${program.name?.encodeAsHTML()}</a>
 
             </li>
         </g:each>
@@ -72,7 +72,7 @@
                         <g:each in="${programDetails.projects}" var="project">
                             <tr>
                                 <td class="grantId"><a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}" >${project.externalId ?: project.grantId}</a></td>
-                                <td class="projectName">${project.name}</td>
+                                <td class="projectName">${project.name?.encodeAsHTML()}</td>
                                 <td class="projectDescription">${project.description}</td>
                                 <g:if test="${project.custom?.details?.outcomes?.primaryOutcome}">
                                     <g:set var="primaryOutcome" value="${project.custom.details.outcomes.primaryOutcome}" />

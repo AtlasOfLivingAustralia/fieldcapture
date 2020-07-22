@@ -77,4 +77,37 @@ class EditProgramSpec extends StubbedCasSpec {
         and:
         "The program details have been updated"
     }
+
+    def "As a user with admin permissions, can edit program and insert script injection"() {
+        setup: "log in as userId=1 who is a program admin for the program with programId=test_programId"
+        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+
+        when:
+        to RLPEditPageWithNoParent
+
+        and:
+        edit()
+
+        then:
+        waitFor { at EditProgram }
+
+        when:
+        details.newParentProgramId.click()
+        details.newParentProgramId.find("span").find{it.text() == "No Parent"}.click()
+        details.name= "Testing <script>alert('Test')</script>"
+        details.description= "Testing"
+        details.url = "http://ala.org.au"
+        details.save()
+
+
+        then:
+        at RLPEditPageWithNoParent
+        overviewTab.click()
+        overviewTab.displayed
+        description.text() == "Testing"
+        visitUs.text() == "http://ala.org.au"
+
+        and:
+        "The program details have been updated"
+    }
 }

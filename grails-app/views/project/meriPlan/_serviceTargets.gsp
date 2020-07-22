@@ -1,15 +1,17 @@
 <!-- ko with:details.services -->
-<h4>Project services and minimum targets</h4>
+<h4>${title ?: "Project services and minimum targets"}</h4>
 
 <table class="table service-targets">
     <thead>
     <tr>
         <th class="index" rowspan="2"></th>
-        <th class="service required" rowspan="2">Service</th>
+        <th class="service required" rowspan="2">${serviceName ?: "Service"}</th>
         <th class="score required" rowspan="2">Target measure</th>
         <th class="budget-cell required" rowspan="2">Total to be delivered<fc:iconHelp html="true">The overall total of Project Services to be delivered during the project delivery period.
             <b>Note: this total is not necessarily the sum of the minimum annual targets set out for the service.</b></fc:iconHelp></th>
+        <!-- ko if: periods && periods.length -->
         <th data-bind="attr:{colspan:periods.length+1}">Minimum annual targets <fc:iconHelp>Specify the minimum total target for each Project Service to be delivered each financial year. Note: the sum of these targets will not necessarily equal the total services to be delivered.</fc:iconHelp></th>
+        <!-- /ko -->
     </tr>
     <tr>
 

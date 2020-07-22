@@ -146,7 +146,7 @@ class MeriPlanSpec extends StubbedCasSpec {
 
         when:
         okBootbox()
-        waitFor { $('.modal-backdrop').size() == 0}
+
         meriPlan = adminContent.meriPlan
 
         then: "the unsaved edits are present"

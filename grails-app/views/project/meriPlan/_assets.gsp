@@ -3,7 +3,8 @@
 <thead>
 <tr class="header">
     <th class="index"></th>
-    <th class="asset required">Please name the species, ecological community or environmental asset(s) the project is targeting</th>
+    <th class="asset required">${explanation ?: "Please name the species, ecological community or environmental asset(s) the project is targeting"}</th>
+
     <th class="remove"></th>
 </tr>
 </thead>

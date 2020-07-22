@@ -14,7 +14,7 @@
                 <tr>
                     <td class="projectLink"><a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}" >${project.externalId ?: project.grantId}</a></td>
                     <td class="workOrderId">${project.workOrderId}</td>
-                    <td class="name">${project.name}</td>
+                    <td class="name">${project.name?.encodeAsHTML()}</td>
                     <td class="startDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedStartDate)}</td>
                     <td class="endDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedEndDate)}</td>
                     <td class="statusCol"><fc:status status="${project.status}"/></td>
@@ -25,7 +25,7 @@
 </g:if>
 <g:else>
     <div class="row">
-        <span class="col-sm"><h4>${program.name} is not currently running any projects.</h4></span>
+        <span class="col-sm"><h4>${program.name?.encodeAsHTML()} is not currently running any projects.</h4></span>
     </div>
 </g:else>
 

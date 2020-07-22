@@ -28,7 +28,7 @@
                 <g:link controller="home">Home</g:link>
             </li>
             <li class="breadcrumb-item"> Management Unit </li>
-            <li class="breadcrumb-item active"><g:link controller="ManagementUnit" action="index" id="${mu.managementUnitId}">${mu.name}</g:link> </li>
+            <li class="breadcrumb-item active"><g:link controller="ManagementUnit" action="index" id="${mu.managementUnitId}">${mu.name?.encodeAsHTML()}</g:link> </li>
             <li class="breadcrumb-item active"><g:message code="managementUnit.breadcrumb.edit"/></li>
         </ol>
 

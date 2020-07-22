@@ -113,7 +113,7 @@ class SettingService {
         return res?.settingText?:""
     }
 
-    private def getJson(key) {
+    def getJson(key) {
         cacheService.get(key, {
             def settings = get(key)
             return settings ? JSON.parse(settings) : [:]
