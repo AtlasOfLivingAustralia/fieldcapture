@@ -467,8 +467,18 @@
 			$('.spinner').hide();
         	$('.tab-content').fadeIn();
 
-
+            $("#fundingSource").select2({ tags: true});
+            config.fundingSource = '${project.fundingSource}'
+            if($("#fundingSource").find("option[value='"+config.fundingSource +"']").length){
+                $("#fundingSource").val(config.fundingSource).trigger('change')
+            }else{
+            var newOption = new Option(config.fundingSource, config.fundingSource, true, true);
+            $("#fundingSource").append(newOption).trigger('change');
+            }
         });// end window.load
+
+
+
 
 
 </asset:script>
