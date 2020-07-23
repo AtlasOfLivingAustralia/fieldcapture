@@ -177,7 +177,7 @@ class ProjectService  {
      * @param initiatorRole the role of the user that initiated the email - this will determine whether grant managers
      * or admins will be sent/copied on the email.
      */
-    private void sendEmail(Closure<ProgramConfig> emailTemplate, Map project, String initiatorRole) {
+    void sendEmail(Closure<ProgramConfig> emailTemplate, Map project, String initiatorRole) {
 
         ProgramConfig config = projectConfigurationService.getProjectConfiguration(project)
         List roles = getMembersForProjectId(project.projectId)

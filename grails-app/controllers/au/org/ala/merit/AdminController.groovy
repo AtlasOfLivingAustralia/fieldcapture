@@ -648,6 +648,13 @@ class AdminController {
         score
     }
 
+    def testRisksQuery() {
+        // Find all projects modified since the last time this job was run. (maybe just one week ago by default?)
+        String date = "2020-07-07T19:41:35Z"
+        String query = "_query:(risks.dateUpdated:[${date} TO *])"
+        render searchService.allProjects([fq:query, include:['name', 'projectId', 'risks.dateUpdated'], max:100]) as JSON
+    }
+
     def generateServices() {
         InputStreamReader isr = new InputStreamReader(new FileInputStream("/Users/god08d/Documents/MERIT/services.csv"), 'UTF-8')
         CSVMapReader csvMapReader = new CSVMapReader(isr)
