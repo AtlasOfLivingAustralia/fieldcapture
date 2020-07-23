@@ -8,7 +8,9 @@
         <th class="service" rowspan="2">${serviceName ?: "Service"}</th>
         <th class="score" rowspan="2">Target measure</th>
         <th class="budget-cell" rowspan="2">Total to be delivered</th>
+        <!-- ko if: periods && periods.length -->
         <th data-bind="attr:{colspan:periods.length+1}">Minimum annual targets</th>
+        <!-- /ko  -->
     </tr>
     <tr>
         <!-- ko foreach: periods -->

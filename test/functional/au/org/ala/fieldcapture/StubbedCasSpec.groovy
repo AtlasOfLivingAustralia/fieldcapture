@@ -60,13 +60,24 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
 
     /** Presses the OK button on a displayed bootbox modal */
     def okBootbox() {
-        $('.bootbox .btn-primary').each {
-            if (it.displayed) {
-                it.click()
+        $('.bootbox .btn-primary').each { ok ->
+
+
+            waitFor 20, {
+                try {
+                    if (ok.displayed) {
+                        ok.click()
+                    }
+
+                }
+                catch (Exception e) {
+                    e.printStackTrace()
+                }
                 waitFor {
-                    !it && $('.modal-backdrop').size() == 0
+                    $('.modal-backdrop').size() == 0
                 }
             }
+
         }
     }
 
