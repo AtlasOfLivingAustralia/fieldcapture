@@ -40,12 +40,11 @@ class RisksService {
         settingService.setSettingText(SettingPageType.RISKS_LAST_CHECK_TIME, isoDate)
     }
 
-    /** We round the time off to 2am to avoid having to deal with how the processing time will affect checks */
     private DateTime approximatelyNow() {
-        DateUtils.now().withTime(2, 0, 0, 0).withZone(DateTimeZone.UTC)
+        DateUtils.now().withZone(DateTimeZone.UTC)
     }
 
-    @Scheduled(cron="0 2 0 * * *")
+    @Scheduled(cron="0 0 2 * * *")
     /**
      * Runs every day at 2am.
      * If it has been <config> days or more since the last time the system has checked projects for changes
@@ -54,8 +53,7 @@ class RisksService {
      * 2. For each project, send an email to all registered grant managers notifying them of the change.
      */
     void checkAndSendEmail() {
-        // We are deliberately ignoring the time here to prevent having to deal with small gaps created
-        // by processing.
+
         DateTime now = approximatelyNow()
         DateTime lastCheckTime = getLastCheckTime()
 
@@ -70,8 +68,10 @@ class RisksService {
     /** Returns true if we last checked <config> days ago or more */
     private boolean needsCheck(DateTime now, DateTime lastCheckTime) {
         int periodInDays = getScheduleCheckPeriod()
-        DateTime checkThreshold = now.minusDays(periodInDays)
-        lastCheckTime.isBefore(checkThreshold) || lastCheckTime.isEqual(checkThreshold)
+        // Round dates to the day to avoid issues with minor changes when the schedule runs.
+        DateTime checkThreshold = now.withTime(0, 0, 0, 0).minusDays(periodInDays)
+        DateTime lastCheckRounded  = lastCheckTime.withTime(0, 0, 0, 0)
+        lastCheckRounded.isBefore(checkThreshold) || lastCheckRounded.isEqual(checkThreshold)
     }
 
     /**

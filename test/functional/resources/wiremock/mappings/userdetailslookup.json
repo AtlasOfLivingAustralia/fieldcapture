@@ -8,6 +8,6 @@
     "headers": {
       "Content-Type": "application/json"
     },
-    "body": "{\"userName\":\"A User\", \"userId\":\"1\"}"
+    "body": "{\"userName\":\"auser@nowhere.com.au\", \"userId\":\"1\"}"
   }
 }
