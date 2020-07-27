@@ -1,7 +1,7 @@
 package au.org.ala.merit
 
-import grails.converters.JSON
 import grails.plugin.cache.GrailsCacheManager
+import groovy.json.JsonSlurper
 import org.apache.log4j.Logger
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,7 +17,6 @@ class StatisticsFactory {
 
     private static final String STATISTICS_CACHE_REGION = 'homePageStatistics'
     private static final String DEFAULT_CONFIG = "/resources/statistics.json"
-    private static final String STATISTICS_CONFIG_KEY = 'meritstatistics.config'
     private static final String CONFIG_KEY = "config"
 
     @Autowired
@@ -31,17 +30,16 @@ class StatisticsFactory {
 
     public StatisticsFactory() {}
 
-    private Map initialize() {
-        Map config = settingService.getJson(STATISTICS_CONFIG_KEY)
-        if (!config) {
-            config = readConfig()
+    private String initialize() {
+        String configString = settingService.getSettingText(SettingPageType.HOME_PAGE_STATISTICS)
+        if (!configString) {
+            configString = readConfig()
         }
-        config
+        configString
     }
 
-    private Map readConfig() {
-        def configAsString = getClass().getResource(DEFAULT_CONFIG).text
-        JSON.parse(configAsString)
+    private String readConfig() {
+        getClass().getResource(DEFAULT_CONFIG).text
     }
 
     public synchronized void clearConfig() {
@@ -50,12 +48,13 @@ class StatisticsFactory {
     }
 
     private synchronized Map getConfig() {
-        Map config = grailsCacheManager.getCache(STATISTICS_CACHE_REGION).get(CONFIG_KEY)?.get()
+        String config = grailsCacheManager.getCache(STATISTICS_CACHE_REGION).get(CONFIG_KEY)?.get()
         if (!config) {
             config = initialize()
             grailsCacheManager.getCache(STATISTICS_CACHE_REGION).put(CONFIG_KEY, config)
         }
-        config
+        JsonSlurper jsonSlurper = new JsonSlurper()
+        jsonSlurper.parseText(config)
     }
 
     public synchronized List<Map> getStatisticsGroup(int groupNumber) {
