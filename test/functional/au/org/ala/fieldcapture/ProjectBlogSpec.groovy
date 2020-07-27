@@ -69,6 +69,25 @@ class ProjectBlogSpec extends StubbedCasSpec {
         then:
         waitFor {blogModule.deleteBlogBtn.size() == 1 && editProjectBlogPane().isDisplayed()}
 
+        when:
+        overviewBtn().click()
+        waitFor {at ProjectBlogPage}
+        blogModule.newBlogBtn.click()
+        waitFor {at NewBlogEntryPage}
+        blogDetails.type = 'Project Stories'
+        blogDetails.title = 'Project story test'
+        blogDetails.description = 'Project story content'
+        toAttach = new File(getClass().getResource('/resources/testImage.png').toURI())
+        blogDetails.uploadingFile = toAttach.absolutePath
+        waitFor {blogDetails.privacy.displayed}
+        blogDetails.privacy = true
+        submit()
+
+        then:
+        waitFor {at ProjectBlogPage}
+        blogModule.blogs().size() == 2
+
+
     }
 
     def "As an admin, I can enter edit mode "(){
