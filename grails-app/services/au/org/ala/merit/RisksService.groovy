@@ -3,8 +3,6 @@ package au.org.ala.merit
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
-import org.springframework.scheduling.annotation.Scheduled
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
 
 /**
  * Manages the scheduling of a task to periodically check for changes to project risks and threats.
@@ -15,7 +13,6 @@ class RisksService {
     SearchService searchService
     SettingService settingService
     ProjectService projectService
-    ThreadPoolTaskScheduler threadPoolTaskScheduler
 
     private int getScheduleCheckPeriod() {
         grailsApplication.config.risks.scheduleCheckingPeriod
@@ -44,7 +41,6 @@ class RisksService {
         DateUtils.now().withZone(DateTimeZone.UTC)
     }
 
-    @Scheduled(cron="0 0 2 * * *")
     /**
      * Runs every day at 2am.
      * If it has been <config> days or more since the last time the system has checked projects for changes
@@ -53,11 +49,11 @@ class RisksService {
      * 2. For each project, send an email to all registered grant managers notifying them of the change.
      */
     void checkAndSendEmail() {
-
         DateTime now = approximatelyNow()
         DateTime lastCheckTime = getLastCheckTime()
 
         if (needsCheck(now,  lastCheckTime)) {
+            log.info("Checking for changes to risks and threats")
             List projects = findProjectsWithChangedRisksAndThreatsBetween(lastCheckTime, now)
             notifyGrantManagers(projects)
 
@@ -80,9 +76,12 @@ class RisksService {
      * @param projects the list of changed projects.
      */
     private void notifyGrantManagers(List projects) {
+        String systemEmail = grailsApplication.config.merit.support.email
+        log.info("Found ${projects.size()} projects with modified risks and threats")
         projects.each { Map project ->
             // Using the PROJECT_ADMIN_ROLE as the initiator has the effect of sending the email to grant managers.
-            projectService.sendEmail({EmailTemplate.RISKS_AND_THREATS_CHANGED_EMAIL}, project, RoleService.PROJECT_ADMIN_ROLE)
+            log.info("Sending risks and threats email for project: ${project.projectId}")
+            projectService.sendEmail({EmailTemplate.RISKS_AND_THREATS_CHANGED_EMAIL}, project, RoleService.PROJECT_ADMIN_ROLE, systemEmail)
         }
     }
 
@@ -100,6 +99,6 @@ class RisksService {
 
         List projects = results?.hits?.hits?.collect { it._source }
 
-        projects
+        projects ?: []
     }
 }

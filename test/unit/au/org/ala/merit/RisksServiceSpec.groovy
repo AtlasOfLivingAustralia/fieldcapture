@@ -28,9 +28,8 @@ class RisksServiceSpec extends Specification {
 
     void "The RisksService collaborates with other services to check for projects that have modified their risks and threats"(String lastCheckTime) {
         setup:
-        DateTime now = DateUtils.parse("2020-07-07T16:01:03Z")
-        DateTimeUtils.setCurrentMillisFixed(now.getMillis())
-        String expectedRoundedNow = "2020-07-07T16:00:00Z"
+        String now = "2020-07-07T16:01:03Z"
+        DateTimeUtils.setCurrentMillisFixed(DateUtils.parse(now).getMillis())
         String lastCheckDate = "2020-06-30T16:00:00Z"
         List projects = [[:], [:]]
         Map projectSearchResults = [hits:[hits:projects.collect{[_source:it]}]]
@@ -40,9 +39,9 @@ class RisksServiceSpec extends Specification {
 
         then:
         1 * settingService.getSettingText(SettingPageType.RISKS_LAST_CHECK_TIME) >> lastCheckDate
-        1 * searchService.allProjects([fq:"_query:(risks.dateUpdated:[${lastCheckDate} TO ${expectedRoundedNow}])"]) >> projectSearchResults
-        projects.size() * projectService.sendEmail(_, _, RoleService.PROJECT_ADMIN_ROLE)
-        1 * settingService.setSettingText(SettingPageType.RISKS_LAST_CHECK_TIME, expectedRoundedNow)
+        1 * searchService.allProjects([fq:"_query:(risks.dateUpdated:[${lastCheckDate} TO ${now}])"]) >> projectSearchResults
+        projects.size() * projectService.sendEmail(_, _, RoleService.PROJECT_ADMIN_ROLE, "MERIT@environment.gov.au")
+        1 * settingService.setSettingText(SettingPageType.RISKS_LAST_CHECK_TIME, now)
 
         where:
         lastCheckTime |  _
@@ -53,10 +52,10 @@ class RisksServiceSpec extends Specification {
 
     void "A missing lastCheckTime or a failure to contact ecodata will fall back on a time 7 days ago"() {
         setup:
-        DateTime now = DateUtils.parse("2020-07-07T16:01:03Z")
-        DateTimeUtils.setCurrentMillisFixed(now.getMillis())
-        String expectedRoundedNow = "2020-07-07T16:00:00Z"
-        String lastCheckDate = "2020-06-30T16:00:00Z"
+        String now = "2020-07-07T16:01:03Z"
+        DateTimeUtils.setCurrentMillisFixed(DateUtils.parse(now).getMillis())
+
+        String expectedLastCheckDate = "2020-06-30T16:01:03Z"
         List projects = [[:], [:]]
         Map projectSearchResults = [hits:[hits:projects.collect{[_source:it]}]]
 
@@ -65,15 +64,15 @@ class RisksServiceSpec extends Specification {
 
         then:
         1 * settingService.getSettingText(SettingPageType.RISKS_LAST_CHECK_TIME) >> ""
-        1 * searchService.allProjects([fq:"_query:(risks.dateUpdated:[${lastCheckDate} TO ${expectedRoundedNow}])"]) >> projectSearchResults
-        projects.size() * projectService.sendEmail(_, _, RoleService.PROJECT_ADMIN_ROLE)
-        1 * settingService.setSettingText(SettingPageType.RISKS_LAST_CHECK_TIME, expectedRoundedNow)
+        1 * searchService.allProjects([fq:"_query:(risks.dateUpdated:[${expectedLastCheckDate} TO ${now}])"]) >> projectSearchResults
+        projects.size() * projectService.sendEmail(_, _, RoleService.PROJECT_ADMIN_ROLE, "MERIT@environment.gov.au")
+        1 * settingService.setSettingText(SettingPageType.RISKS_LAST_CHECK_TIME, now)
     }
 
     void "Nothing will be done if less than the configured number of days has passed since we last checked and sent the emails"() {
         setup:
-        DateTime now = DateUtils.parse("2020-07-06T16:01:03Z")
-        DateTimeUtils.setCurrentMillisFixed(now.getMillis())
+        String now = "2020-07-06T16:01:03Z"
+        DateTimeUtils.setCurrentMillisFixed(DateUtils.parse(now).getMillis())
 
         when:
         service.checkAndSendEmail()

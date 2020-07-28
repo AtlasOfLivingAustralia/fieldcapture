@@ -107,7 +107,7 @@ if (!headerAndFooter.baseURL) {
 }
 // spatial services
 if(!spatial.baseUrl){
-    spatial.baseUrl = "https://spatial-beta.ala.org.au"
+    spatial.baseUrl = "https://nectar-spatial-test.ala.org.au"
 }
 if(!spatial.layersUrl){
     spatial.layersUrl = spatial.baseUrl + "/ws"

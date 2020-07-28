@@ -4,6 +4,13 @@ import grails.plugin.mail.MailService
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 
+/** Holder for evaluating the mailService closure so we can test the parameters are correct */
+class EmailParams {
+    Map params = [:]
+    def methodMissing(String name, def args) {
+        params[name] = args[0]
+    }
+}
 /**
  * Tests the EmailService class.
  */
@@ -37,37 +44,59 @@ class EmailServiceSpec extends Specification {
     def "project email addresses should be looked up then sorted by role"() {
 
         given:
-        def projectId = 'test123'
         userService.getUser() >> new UserDetails("MERIT USER", "merituser1@test.com", "1200")
-        projectService.getMembersForProjectId(_) >> [admin1, grantManager1, editor]
-
+        List usersAndRoles = [admin1, grantManager1, editor]
+        EmailTemplate emailTemplate = EmailTemplate.DEFAULT_PLAN_SUBMITTED_EMAIL_TEMPLATE
+        String body = "body"
+        body.metaClass.markdownToHtml = { "Body" }
+        EmailParams email
 
         when:
-        def result = service.getProjectEmailAddresses(projectId)
+        service.sendEmail(emailTemplate, [:], usersAndRoles, RoleService.PROJECT_ADMIN_ROLE)
 
         then:
-        result.userEmail == admin1.userName
-        result.grantManagerEmails == [grantManager1.userName]
-        result.adminEmails == []
+        1 * settingService.getSettingText(SettingPageType.PLAN_SUBMITTED_EMAIL_SUBJECT_LINE, [:]) >> "Subject"
+        1 * settingService.getSettingText(SettingPageType.PLAN_SUBMITTED_EMAIL, [:]) >> body
 
+        1 * mailService.sendMail(_) >> {args -> email = evaluateMailClosure(args); null}
+        email.params.to == ["merituser3@test.com"]
+        email.params.from == "merit@ala.org.au"
+        email.params.replyTo == "merituser1@test.com"
+        email.params.subject == "Subject"
+        email.params.html == "Body"
+    }
+
+
+    private EmailParams evaluateMailClosure(Closure mailConfig) {
+        EmailParams params = new EmailParams()
+        mailConfig.delegate = params
+        mailConfig()
+        params
     }
 
     def "if the project has no grant manager, a default should be used"() {
 
         given:
-        def projectId = 'test123'
+
         userService.getUser() >> new UserDetails("MERIT USER", "merituser1@test.com", "1200")
-        projectService.getMembersForProjectId(_) >> [admin1, admin2, editor]
-
-
+        List usersAndRoles = [admin1, admin2, editor]
+        EmailTemplate emailTemplate = EmailTemplate.DEFAULT_PLAN_APPROVED_EMAIL_TEMPLATE
+        String body = "body"
+        body.metaClass.markdownToHtml = { "Body" }
+        EmailParams email
 
         when:
-        def result = service.getProjectEmailAddresses(projectId)
+        service.sendEmail(emailTemplate, [:], usersAndRoles, RoleService.PROJECT_ADMIN_ROLE)
 
         then:
-        result.userEmail == admin1.userName
-        result.grantManagerEmails == [meritEmail]
-        result.adminEmails == [admin2.userName]
+        1 * settingService.getSettingText(SettingPageType.PLAN_APPROVED_EMAIL_SUBJECT_LINE, [:]) >> "Subject"
+        1 * settingService.getSettingText(SettingPageType.PLAN_APPROVED_EMAIL, [:]) >> body
+        1 * mailService.sendMail(_) >> {args -> email = evaluateMailClosure(args); null}
+        email.params.to == ["merit@test.com"]
+        email.params.from == "merit@ala.org.au"
+        email.params.replyTo == "merituser1@test.com"
+        email.params.subject == "Subject"
+        email.params.html == "Body"
 
     }
 

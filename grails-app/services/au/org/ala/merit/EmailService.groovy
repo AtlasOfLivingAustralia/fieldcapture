@@ -30,7 +30,7 @@ class EmailService {
                 if (!recipient) {
                     // The email won't be sent unless we have a to address - use the submitting user since
                     // the purpose of this is testing.
-                    recipient = [userService.getUser().userName]
+                    recipient = [getSenderEmail() ?: grailsApplication.config.merit.support.email]
                 }
                 ccList = ccList.findAll {it ==~ emailFilter}
 
@@ -52,59 +52,17 @@ class EmailService {
         }
     }
 
-    def sortEmailAddressesByRole(members) {
+    private String getSenderEmail() {
         def user = userService.getUser()
+        user?.userName
+    }
+
+    def sortEmailAddressesByRole(List members) {
+        String sender = getSenderEmail()
         def grantManagerEmails = members.findAll{it.role == RoleService.GRANT_MANAGER_ROLE}.collect{it.userName}
-        def adminEmails = members.findAll{it.role == RoleService.PROJECT_ADMIN_ROLE && it.userName != user.userName}.collect{it.userName}
+        def adminEmails = members.findAll{it.role == RoleService.PROJECT_ADMIN_ROLE && it.userName != sender}.collect{it.userName}
 
-        [userEmail:user.userName, grantManagerEmails:grantManagerEmails, adminEmails:adminEmails]
-    }
-
-    def sendReportSubmittedEmail(projectId, stageDetails) {
-
-        def emailAddresses = getProjectEmailAddresses(projectId)
-        def ccEmails = addDefaultsToCC([], emailAddresses)
-
-        createAndSend(
-                SettingPageType.REPORT_SUBMITTED_EMAIL_SUBJECT_LINE,
-                SettingPageType.REPORT_SUBMITTED_EMAIL,
-                stageDetails,
-                emailAddresses.grantManagerEmails,
-                emailAddresses.userEmail,
-                ccEmails
-        )
-    }
-
-
-    def sendReportApprovedEmail(projectId, stageDetails) {
-        def emailAddresses = getProjectEmailAddresses(projectId)
-        def ccEmails = addDefaultsToCC(emailAddresses.grantManagerEmails, emailAddresses)
-
-
-        createAndSend(
-                SettingPageType.REPORT_APPROVED_EMAIL_SUBJECT_LINE,
-                SettingPageType.REPORT_APPROVED_EMAIL,
-                stageDetails,
-                emailAddresses.adminEmails,
-                emailAddresses.userEmail,
-                ccEmails
-        )
-
-    }
-
-    def sendReportRejectedEmail(projectId, stageDetails) {
-
-        def emailAddresses = getProjectEmailAddresses(projectId)
-        def ccEmails = addDefaultsToCC(emailAddresses.grantManagerEmails, emailAddresses)
-
-        createAndSend(
-                SettingPageType.REPORT_REJECTED_EMAIL_SUBJECT_LINE,
-                SettingPageType.REPORT_REJECTED_EMAIL,
-                stageDetails,
-                emailAddresses.adminEmails,
-                emailAddresses.userEmail,
-                ccEmails
-        )
+        [grantManagerEmails:grantManagerEmails, adminEmails:adminEmails]
     }
 
     def sendOrganisationReportSubmittedEmail(organisationId, reportDetails) {
@@ -117,7 +75,7 @@ class EmailService {
                 SettingPageType.PERFORMANCE_REPORT_SUBMITTED_EMAIL,
                 reportDetails,
                 emailAddresses.grantManagerEmails,
-                emailAddresses.userEmail,
+                getSenderEmail(),
                 ccEmails
         )
     }
@@ -133,7 +91,7 @@ class EmailService {
                 SettingPageType.PERFORMANCE_REPORT_APPROVED_EMAIL,
                 reportDetails,
                 emailAddresses.adminEmails,
-                emailAddresses.userEmail,
+                getSenderEmail(),
                 ccEmails
         )
 
@@ -149,13 +107,13 @@ class EmailService {
                 SettingPageType.PERFORMANCE_REPORT_REJECTED_EMAIL,
                 reportDetails,
                 emailAddresses.adminEmails,
-                emailAddresses.userEmail,
+                getSenderEmail(),
                 ccEmails
         )
     }
 
 
-    void sendEmail(EmailTemplate emailTemplate, Map substitutionParams, List userEmailsAndRoles, String initiatingRole) {
+    void sendEmail(EmailTemplate emailTemplate, Map substitutionParams, List userEmailsAndRoles, String initiatingRole, String senderEmail = null) {
         def emailAddresses = sortEmailAddressesByRole(userEmailsAndRoles)
 
         if (!emailAddresses.grantManagerEmails) {
@@ -184,7 +142,7 @@ class EmailService {
                 emailTemplate.bodySettingPage,
                 substitutionParams,
                 recipientList,
-                emailAddresses.userEmail,
+                senderEmail ?: getSenderEmail(),
                 ccEmails
         )
     }
@@ -213,15 +171,6 @@ class EmailService {
         }
 
         return ccEmails
-    }
-
-    def getProjectEmailAddresses(projectId) {
-        def members = projectService.getMembersForProjectId(projectId)
-        def emailAddresses = sortEmailAddressesByRole(members)
-        if (!emailAddresses.grantManagerEmails) {
-            emailAddresses.grantManagerEmails = [grailsApplication.config.merit.support.email]
-        }
-        emailAddresses
     }
 
     def getOrganisationEmailAddresses(organisationId) {
