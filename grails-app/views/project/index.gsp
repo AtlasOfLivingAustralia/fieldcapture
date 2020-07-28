@@ -467,14 +467,19 @@
 			$('.spinner').hide();
         	$('.tab-content').fadeIn();
 
+
             $("#fundingSource").select2({ tags: true});
-            config.fundingSource = '${project.fundingSource}'
-            if($("#fundingSource").find("option[value='"+config.fundingSource +"']").length){
-                $("#fundingSource").val(config.fundingSource).trigger('change')
+            var fundingType = "${project.fundingSource}";
+            // Set the value, creating a new option if necessary
+            if($("#fundingSource").find("option[value='"+ fundingType +"']").length){
+                $("#fundingSource").val(fundingType).trigger('change')
             }else{
-            var newOption = new Option(config.fundingSource, config.fundingSource, true, true);
-            $("#fundingSource").append(newOption).trigger('change');
+                // Create a DOM Option and pre-select by default
+                var newOption = new Option(fundingType, fundingType, true, true);
+                // Append it to the select
+                $("#fundingSource").append(newOption).trigger('change');
             }
+
         });// end window.load
 
 
