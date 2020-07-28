@@ -467,8 +467,6 @@
 			$('.spinner').hide();
         	$('.tab-content').fadeIn();
 
-
-            $("#fundingSource").select2({ tags: true});
             var fundingType = "${project.fundingSource}";
             // Set the value, creating a new option if necessary
             if($("#fundingSource").find("option[value='"+ fundingType +"']").length){
