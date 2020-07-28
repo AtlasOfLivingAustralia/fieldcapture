@@ -23,13 +23,13 @@ class StatisticsFactorySpec extends Specification {
     def "The statistics config will be cleared when the cache is cleared"(){
 
         setup:
-        Map statsConfig = [groups:[["stat1"]], statistics:[stat1:[scoreLabel:"Test", type:"score", label:"Test"]]]
+        String statsConfig = """{"groups":[["stat1"]], "statistics":{"stat1":{"scoreLabel":"Test", "type":"score", "label":"Test"}}}"""
 
         when:
         List<Map> stats = factory.getStatisticsGroup(0)
 
         then:
-        1 * settingService.getJson(_) >> statsConfig
+        1 * settingService.getSettingText(SettingPageType.HOME_PAGE_STATISTICS) >> statsConfig
         1 * reportService.getNumericScore("Test", _) >> 3
         stats.size() == 1
         stats[0].label == "Test"
@@ -39,7 +39,7 @@ class StatisticsFactorySpec extends Specification {
         factory.getStatisticsGroup(0)
 
         then: "The cache will be used"
-        0 * settingService.getJson(_)
+        0 * settingService.getSettingText(_)
         0 * reportService._
 
         when: "We clear the cache and re-request the statistics"
@@ -47,7 +47,7 @@ class StatisticsFactorySpec extends Specification {
         factory.getStatisticsGroup(0)
 
         then: "Both the settings and the data will be refreshed"
-        1 * settingService.getJson(_) >> statsConfig
+        1 * settingService.getSettingText(SettingPageType.HOME_PAGE_STATISTICS) >> statsConfig
         1 * reportService.getNumericScore("Test", _) >> 3
 
     }

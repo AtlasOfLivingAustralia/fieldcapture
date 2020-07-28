@@ -227,7 +227,7 @@ class ProjectServiceSpec extends Specification {
         result.message == 'success'
         1 * webService.doPost({it.endsWith("project/"+projectId)}, [planStatus:ProjectService.PLAN_SUBMITTED]) >> [resp:[status:'ok']]
         1 * webService.getJson({it.endsWith("permissions/getMembersForProject/"+projectId)}) >> projectRoles
-        1 * emailService.sendEmail(EmailTemplate.DEFAULT_PLAN_SUBMITTED_EMAIL_TEMPLATE,_,projectRoles, RoleService.PROJECT_ADMIN_ROLE)
+        1 * emailService.sendEmail(EmailTemplate.DEFAULT_PLAN_SUBMITTED_EMAIL_TEMPLATE,_,projectRoles, RoleService.PROJECT_ADMIN_ROLE, null)
     }
 
     def "an email should be sent and an approval document created when a plan is approved"() {
@@ -252,7 +252,7 @@ class ProjectServiceSpec extends Specification {
         1 * webService.doPost({it.endsWith("project/"+projectId)}, [planStatus:ProjectService.PLAN_APPROVED]) >> [resp:[status:'ok']]
         1 * documentService.createTextDocument([projectId:projectId, type:'text', role:ProjectService.DOCUMENT_ROLE_APPROVAL, filename: expectedFilename, name:expectedName, readOnly:true, public:false, labels:['MERI']], {compareDocuments(it, expectedDocumentContent)})
         1 * webService.getJson({it.endsWith("permissions/getMembersForProject/"+projectId)}) >> projectRoles
-        1 * emailService.sendEmail(EmailTemplate.DEFAULT_PLAN_APPROVED_EMAIL_TEMPLATE,_,projectRoles, RoleService.GRANT_MANAGER_ROLE)
+        1 * emailService.sendEmail(EmailTemplate.DEFAULT_PLAN_APPROVED_EMAIL_TEMPLATE,_,projectRoles, RoleService.GRANT_MANAGER_ROLE, null)
         userService.getCurrentUserId() >> '1234'
     }
     private boolean compareDocuments(actual, expected) {
@@ -273,7 +273,7 @@ class ProjectServiceSpec extends Specification {
         result.message == 'success'
         1 * webService.doPost({it.endsWith("project/"+projectId)}, [planStatus:ProjectService.PLAN_NOT_APPROVED]) >> [resp:[status:'ok']]
         1 * webService.getJson({it.endsWith("permissions/getMembersForProject/"+projectId)}) >> projectRoles
-        1 * emailService.sendEmail(EmailTemplate.DEFAULT_PLAN_RETURNED_EMAIL_TEMPLATE,_,projectRoles, RoleService.GRANT_MANAGER_ROLE)
+        1 * emailService.sendEmail(EmailTemplate.DEFAULT_PLAN_RETURNED_EMAIL_TEMPLATE,_,projectRoles, RoleService.GRANT_MANAGER_ROLE,  null)
     }
 
     @Unroll
@@ -292,7 +292,7 @@ class ProjectServiceSpec extends Specification {
         ])
         webService.getJson(_) >> project
         Map results = [:]
-        1 * emailService.sendEmail(_,_,_,_) >> {actualTemplate, p , roles, actualRole -> results.actualEmailTemplate = actualTemplate; results.actualRole = actualRole}
+        1 * emailService.sendEmail(_,_,_,_,_) >> {actualTemplate, p , roles, actualRole, sender -> results.actualEmailTemplate = actualTemplate; results.actualRole = actualRole}
 
         when:
         action(service, projectId)

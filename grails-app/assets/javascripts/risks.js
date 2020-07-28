@@ -35,9 +35,12 @@ function Risks(risks, riskModel, disableFlag, key) {
 
 
     self.saveRisks = function(){
-        if (!$('#risk-validation').validationEngine('validate'))
-            return;
-        self.risks.saveWithErrorDetection(function() {location.reload();});
+        if ($('#risk-validation').validationEngine('validate')) {
+            self.risks.dateUpdated = new Date().toISOStringNoMillis();
+            self.risks.saveWithErrorDetection(function () {
+                window.location.reload();
+            });
+        }
     };
 
     self.loadRisks = function(risks) {
@@ -45,7 +48,6 @@ function Risks(risks, riskModel, disableFlag, key) {
     };
 
     self.loadRisks(risks);
-
 
 };
 
@@ -61,6 +63,7 @@ function RisksViewModel (risks, riskModel) {
         }
         self.overallRisk(orBlank(risks.overallRisk));
         self.status(orBlank(risks.status));
+        self.dateUpdated = risks.dateUpdated;
         if (risks.rows) {
             self.rows($.map(risks.rows, function (obj) {
                 return new RisksRowViewModel(obj, riskModel);

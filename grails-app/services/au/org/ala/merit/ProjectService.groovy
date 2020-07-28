@@ -176,13 +176,15 @@ class ProjectService  {
      * @param project the project the email is about.
      * @param initiatorRole the role of the user that initiated the email - this will determine whether grant managers
      * or admins will be sent/copied on the email.
+     * @param senderEmail the email to use for the from address.  Defaults to the current logged in user but
+     * is a parameter so a scheduled task can specify the merit support email address.
      */
-    private void sendEmail(Closure<ProgramConfig> emailTemplate, Map project, String initiatorRole) {
+    void sendEmail(Closure<ProgramConfig> emailTemplate, Map project, String initiatorRole, String senderEmail = null) {
 
         ProgramConfig config = projectConfigurationService.getProjectConfiguration(project)
         List roles = getMembersForProjectId(project.projectId)
         EmailTemplate template = emailTemplate(config)
-        emailService.sendEmail(template, [project:project], roles, initiatorRole)
+        emailService.sendEmail(template, [project:project], roles, initiatorRole, senderEmail)
     }
 
     /**

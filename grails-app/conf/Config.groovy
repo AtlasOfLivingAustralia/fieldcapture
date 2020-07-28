@@ -107,7 +107,7 @@ if (!headerAndFooter.baseURL) {
 }
 // spatial services
 if(!spatial.baseUrl){
-    spatial.baseUrl = "https://spatial-beta.ala.org.au"
+    spatial.baseUrl = "https://nectar-spatial-test.ala.org.au"
 }
 if(!spatial.layersUrl){
     spatial.layersUrl = spatial.baseUrl + "/ws"
@@ -225,6 +225,8 @@ abn.abnUrl= "https://abr.business.gov.au/json/AbnDetails.aspx?abn="
 
 esp.activities.admin = 'ESP Annual Report Submission'
 reports.filterableActivityTypes = ['RLP Output Report', 'Wildlife Recovery Progress Report - WRR']
+
+risks.scheduleCheckingPeriod = 7
 
 if (!grails.cache.ehcache) {
     grails {
@@ -362,6 +364,7 @@ environments {
             }
         }
         reports.filterableActivityTypes = ['RLP Output Report', 'Wildlife Recovery Progress Report - WRR', 'Progress Report']
+        grails.mail.port = com.icegreen.greenmail.util.ServerSetupTest.SMTP.port
     }
     production {
         grails.logging.jul.usebridge = false
