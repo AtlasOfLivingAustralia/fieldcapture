@@ -7,9 +7,11 @@ import com.icegreen.greenmail.util.ServerSetupTest
 import org.junit.Rule
 import pages.ProjectIndex
 import pages.RlpProjectPage
+import spock.lang.Stepwise
 
 import javax.mail.internet.MimeMessage
 
+@Stepwise
 class RisksSpec extends StubbedCasSpec {
 
     @Rule
