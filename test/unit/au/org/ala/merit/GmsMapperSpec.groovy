@@ -211,7 +211,7 @@ class GmsMapperSpec extends Specification {
 
     def "Management unit is not a compulsory field for a project load"() {
         when:
-        Map result = gmsMapper.mapProject([[APP_ID:'g1', PROGRAM_NM:"Green Army", ORG_TRADING_NAME:'Test org 1', ABN:'12345678901',  START_DT:'2019/07/01', FINISH_DT:'2020/07/01']])
+        Map result = gmsMapper.mapProject([[APP_ID:'g1', PROGRAM_NM:"Green Army", ORG_TRADING_NAME:'Test org 1', ABN:'12345678901', FUNDING_TYPE:"RLP", FUNDING:"1000", START_DT:'2019/07/01', FINISH_DT:'2020/07/01']])
 
         then:
         !result.errors
@@ -220,7 +220,7 @@ class GmsMapperSpec extends Specification {
     def "Programs can be mapped from the supplied name via the program map"() {
         setup:
         gmsMapper.programs = ["Program name 1":"p1id", "Program name 2":"p2id"]
-        Map projectData = [APP_ID:'g1', ORG_TRADING_NAME:'Test org 1', ABN:'12345678901', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
+        Map projectData = [APP_ID:'g1', ORG_TRADING_NAME:'Test org 1', ABN:'12345678901', FUNDING_TYPE:"RLP", FUNDING:"1000", START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
 
         when:
         Map result = gmsMapper.mapProject([ projectData + [PROGRAM_NM: 'Program name 2'] ])
@@ -232,7 +232,7 @@ class GmsMapperSpec extends Specification {
 
     def "Programs can be mapped from the programs model as a fallback if they aren't mapped in the program map"() {
         gmsMapper.programs = ["Program name 1":"p1id", "Program name 2":"p2id"]
-        Map projectData = [APP_ID:'g1', ORG_TRADING_NAME:'Test org 1', ABN: '12345678901', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
+        Map projectData = [APP_ID:'g1', ORG_TRADING_NAME:'Test org 1', ABN: '12345678901',FUNDING_TYPE:"RLP", FUNDING:"1000", START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
 
         when:
         Map result = gmsMapper.mapProject([ projectData + [PROGRAM_NM: 'Green Army'] ])
@@ -244,7 +244,7 @@ class GmsMapperSpec extends Specification {
 
     def "An error will be raised if the program is unable to be mapped or missing"() {
         gmsMapper.programs = ["Program name 1":"p1id", "Program name 2":"p2id"]
-        Map projectData = [APP_ID:'g1', ORG_TRADING_NAME:'Test org 1',ABN:  '12345678901', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
+        Map projectData = [APP_ID:'g1', ORG_TRADING_NAME:'Test org 1',ABN:  '12345678901', FUNDING_TYPE:"RLP", FUNDING:"1000", START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
 
         when:
         Map result = gmsMapper.mapProject([ projectData + [PROGRAM_NM: 'Missing program'] ])
@@ -261,7 +261,7 @@ class GmsMapperSpec extends Specification {
 
     def "Tags can be mapped by the GMS mapper"() {
         gmsMapper.programs = ["Program name 1":"p1id", "Program name 2":"p2id"]
-        Map projectData = [APP_ID:'g1',PROGRAM_NM:'Program name 1', ORG_TRADING_NAME:'Test org 1', ABN: '12345678901', START_DT:'2019/07/01', FINISH_DT:'2020/07/01', TAGS:"Fires, Flood, Test"]
+        Map projectData = [APP_ID:'g1',PROGRAM_NM:'Program name 1', ORG_TRADING_NAME:'Test org 1', ABN: '12345678901',FUNDING_TYPE:"RLP", FUNDING:"1000", START_DT:'2019/07/01', FINISH_DT:'2020/07/01', TAGS:"Fires, Flood, Test"]
 
         when:
         Map result = gmsMapper.mapProject([ projectData ])
@@ -273,7 +273,7 @@ class GmsMapperSpec extends Specification {
 
     def "Organisation can be map using organisation name"(){
         setup:
-        Map projectData = [APP_ID:'g1', ORG_TRADING_NAME:'Test org 1', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
+        Map projectData = [APP_ID:'g1', ORG_TRADING_NAME:'Test org 1', FUNDING_TYPE:"RLP", FUNDING:"1000",START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
 
         when:
         def result = gmsMapper.mapProject([projectData])
@@ -285,7 +285,7 @@ class GmsMapperSpec extends Specification {
 
     def "An Error will raised organisation unable to map using organisation name"(){
         setup:
-        Map projectData = [APP_ID:'g1', ORG_TRADING_NAME:'Test org 2', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
+        Map projectData = [APP_ID:'g1', ORG_TRADING_NAME:'Test org 2',FUNDING_TYPE:"RLP", FUNDING:"1000", START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
 
         when:
         def result = gmsMapper.mapProject([projectData])

@@ -1,11 +1,10 @@
 package au.org.ala.fieldcapture
 
-import geb.spock.GebReportingSpec
 import pages.ProjectIndex
 import spock.lang.Stepwise
 
 @Stepwise
-public class ProjectIndexSpec extends StubbedCasSpec {
+class ProjectIndexSpec extends StubbedCasSpec {
 
     def projectId = "project_1"
 
@@ -71,6 +70,31 @@ public class ProjectIndexSpec extends StubbedCasSpec {
         waitFor {admin.documents.documentSummaryList().size() == 1}
 
 
+    }
+
+    def "Adding Project Funding Type and Funding"(){
+        setup:
+        login([userId:'1', role:"ROLE_ADMIN", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
+        when:
+        to ProjectIndex, projectId
+
+        then:
+        waitFor {at ProjectIndex}
+        adminTab.click()
+        waitFor {admin.displayed}
+
+        when:
+        admin.projectSettingsTab.click()
+        waitFor{ admin.projectSettings.displayed}
+        admin.projectSettings.fundingType[0].click()
+        admin.projectSettings.funding = "1000"
+        admin.projectSettings.save.click()
+
+        then:
+
+        waitFor{ admin.projectSettings.displayed}
+        admin.projectSettings.fundingType.text() == "RLP"
+        admin.projectSettings.funding.value() == "1000"
     }
 }
 
