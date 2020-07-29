@@ -64,12 +64,11 @@
     <div class="control-group span4">
         <label class="control-label" for="fundingSource">Funding Type</label>
         <div class="controls">
-            <select  id="fundingSource" data-bind="select2: { value: fundingSource, placeholder: 'Select Funding Type', allowClear: true, tags: true }">
-            <option value=""></option>
-            <option id="rlp" value="RLP">RLP</option>
-            <option id="non-rlp" value="NON-RLP">NON-RLP</option>
+            <select id="fundingSource" data-bind="value:fundingSource" class="select">
+                <option value=""> Select Funding Type</option>
+                <option id="rlp" value="RLP">RLP</option>
+                <option id="non-rlp" value="NON-RLP">NON-RLP</option>
             </select>
-
         </div>
     </div>
 

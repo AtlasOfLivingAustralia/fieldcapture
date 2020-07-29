@@ -466,18 +466,6 @@
             //Page loading indicator.
 			$('.spinner').hide();
         	$('.tab-content').fadeIn();
-
-            var fundingType = "${project.fundingSource}";
-            // Set the value, creating a new option if necessary
-            if($("#fundingSource").find("option[value='"+ fundingType +"']").length){
-                $("#fundingSource").val(fundingType).trigger('change')
-            }else{
-                // Create a DOM Option and pre-select by default
-                var newOption = new Option(fundingType, fundingType, true, true);
-                // Append it to the select
-                $("#fundingSource").append(newOption).trigger('change');
-            }
-
         });// end window.load
 
 
