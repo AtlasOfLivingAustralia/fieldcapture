@@ -60,15 +60,15 @@ class ScheduledJobContext {
         }
 
         private Principal principal
-        public Principal getUserPrincipal() {
+        Principal getUserPrincipal() {
             return principal
         }
 
-        public HttpServletRequest getRequest() {
+        HttpServletRequest getRequest() {
             return request
         }
 
-        public void setUserAttributes(Map attributes) {
+        void setUserAttributes(Map attributes) {
             principal = new BackgroundThreadPrincipal(attributes)
             request =  new BackgroundThreadRequest(principal)
         }
