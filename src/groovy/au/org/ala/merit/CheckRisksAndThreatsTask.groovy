@@ -18,7 +18,7 @@ class CheckRisksAndThreatsTask {
     @Autowired
     SettingService settingService
 
-    @Scheduled(cron="* * 2 * * ?")
+    @Scheduled(cron="0 0 2 * * ?")
     void checkForRisksAndThreatsChanges() {
 
         withUser([name:"risksAndThreatsTask"]) {
