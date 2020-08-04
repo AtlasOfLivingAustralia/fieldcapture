@@ -51,6 +51,7 @@ class ProjectExplorerSpec extends StubbedCasSpec {
         when: "expand the projects section"
         def expectedProjects = new HashSet((1..9).collect{"Project $it"})
         expectedProjects.add("Configurable MERI plan project")
+        expectedProjects.add("Default outcome project")
         projectsToggle.click()
         waitFor { projectPagination.displayed }
 
@@ -60,8 +61,8 @@ class ProjectExplorerSpec extends StubbedCasSpec {
             to ProjectExplorer
             waitFor { projectPagination.displayed }
 
-            projects.size() == 10
-            facets.size() == 14
+            projects.size() == 11
+            facets.size() == 15
             chooseMoreFacetTerms.size() == 0
         }
 
