@@ -60,25 +60,43 @@
 
 </div>
 
+<div class="clearfix control-group">
+    <label class="control-label span3"><b>Project Funding:</b> </label>
+    <div class="span9" name="fundings">
+        <table class="table borderless">
+            <thead>
+                <td>Funding Type</td>
+                <td>Funding Source</td>
+                <td>Funding Amount</td>
+                <td>Action</td>
+            </thead>
+            <tbody>
+                <!-- ko foreach:fundings -->
+                    <tr>
+                        <td style="border: 0"><select name="fundingType" id="fundingType" data-bind="options:$root.fundingTypes, value: fundingType, optionsCaption: 'Select Funding Type'"></select></td>
+                        <td style="border: 0"><select name="fundingSource" id="fundingSource" data-bind="options:$root.fundingSources, value:fundingSource, optionsCaption: 'Select Funding Source'" class="select"></select></td>
+                        <td style="border: 0"><g:textField type="number" id="fundingSourceAmount" min="0" step="any" name="fundingSourceAmount" data-bind="value:fundingSourceAmount" data-validation-engine="validate[custom[number]]"/></td>
+                        <td style="border: 0"><button  id="removeFunding" class="btn btn-danger" data-bind="click:$root.removeFunding"> <i class="icon-minus"></i> Remove</button></td>
+                    </tr>
+                <!-- /ko -->
+                <tr>
+                    <td colspan="2" style="border: 0"></td>
+                    <td colspan="1" style="border: 0">
+                        <b>Total Amount: <span name="totalFundingAmount" data-bind="value: funding.formattedCurrency, text:funding.formattedCurrency"/></b>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="border: 0"></td>
+                    <td colspan="1" style="border: 0"> <button id="addFunding" class="btn btn-primary" data-bind="click:addFunding"> <i class="icon-plus"></i> Add Funding</button></td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+</div>
 <div class="row-fluid">
     <div class="control-group span4">
-        <label class="control-label" for="fundingSource">Funding Type</label>
-        <div class="controls">
-            <select id="fundingSource" data-bind="value:fundingSource" class="select">
-                <option value=""> Select Funding Type</option>
-                <option id="rlp" value="RLP">RLP</option>
-                <option id="non-rlp" value="NON-RLP">NON-RLP</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="control-group span4">
-        <label class="control-label" for="funding">Project funding</label>
-        <div class="controls">
-            <g:textField class="" name="funding" data-bind="value:funding" data-validation-engine="validate[custom[number]]"/>
-        </div>
-    </div>
-
     <div class="control-group span4">
         <label class="control-label" for="tags">Disaster relief categories</label>
         <div class="controls">
@@ -86,6 +104,7 @@
         </div>
     </div>
 
+</div>
 </div>
 
 <g:if test="${!hidePrograms}">
