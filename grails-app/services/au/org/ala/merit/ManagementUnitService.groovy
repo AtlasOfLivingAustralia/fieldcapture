@@ -5,6 +5,8 @@ import au.org.ala.merit.reports.ReportGenerationOptions
 import au.org.ala.merit.reports.ReportOwner
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.codehaus.groovy.grails.web.json.JSONArray
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 
 class ManagementUnitService {
 
@@ -324,8 +326,14 @@ class ManagementUnitService {
      */
     def generateReports(String startDate, String endDate, Map extras = null){
         // Convert to ISO 8601 date format
-        String isoStartDate = DateUtils.displayToIsoFormat(Date.parse("yyyy-MM-dd",startDate).format('dd-MM-yyyy'))
-        String isoEndDate = DateUtils.displayToIsoFormat(Date.parse("yyyy-MM-dd",endDate).format('dd-MM-yyyy'))
+        String format = 'yyyy-MM-dd'
+
+        // The end date is the last day of the period (e.g. 2020-06-30) but reports will end at midnight of the next day (e.g. 2020-07-01T00:00:00)
+        // so add a day or two to achieve this.
+        DateTime start = DateUtils.parseDisplayDate(startDate, format).plusDays(2)
+        DateTime end =  DateUtils.parseDisplayDate(endDate, format).plusDays(2)
+        String isoStartDate = DateUtils.format(start.withZone(DateTimeZone.UTC))
+        String isoEndDate = DateUtils.format(end.withZone(DateTimeZone.UTC))
 
         String url = "${grailsApplication.config.ecodata.baseUrl}" + "managementunit/generateReportsInPeriod?startDate=${isoStartDate}&endDate=${isoEndDate}"
 
