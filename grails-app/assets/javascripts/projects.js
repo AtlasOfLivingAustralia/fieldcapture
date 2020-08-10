@@ -73,7 +73,7 @@ function FundingViewModel(funding){
     var self = this;
     self.fundingSource = ko.observable(funding.fundingSource);
     self.fundingType = ko.observable(funding.fundingType);
-    self.fundingSourceAmount = ko.observable(funding.fundingSourceAmount).extend({currency:{currencySymbol:"AUD $ "}});
+    self.fundingSourceAmount = ko.observable(funding.fundingSourceAmount).extend({currency:{currencySymbol:"$"}});
 }
 
 function ProjectViewModel(project, isUserEditor, organisations) {
@@ -124,7 +124,7 @@ function ProjectViewModel(project, isUserEditor, organisations) {
     self.manager = ko.observable(project.manager);
     self.plannedStartDate = ko.observable(project.plannedStartDate).extend({simpleDate: false});
     self.plannedEndDate = ko.observable(project.plannedEndDate).extend({simpleDate: false});
-    self.fundingTypes = ["Public - commonwealth", "Public - state", "Public - local", "Public - in-kind", "Private - in-kind", "Private - industry", "Private - philanthropic", "Private - bequeath/other", "Private - NGO"];
+    self.fundingTypes = ["Public - commonwealth"];
     self.fundingSources=["RLP", "NON-RLP"]
 
     var fundings = $.map(project.fundings || [], function (funding) {
@@ -139,7 +139,7 @@ function ProjectViewModel(project, isUserEditor, organisations) {
             totals += parseInt(funding.fundingSourceAmount());
         })
         return totals
-    }).extend({currency:{currencySymbol: "AUD $ "}});
+    }).extend({currency:{currencySymbol: "$"}});
 
     self.removeFunding = function(){
         self.fundings.remove(this);

@@ -88,7 +88,6 @@ class ProjectIndexSpec extends StubbedCasSpec {
         waitFor{ admin.projectSettings.displayed}
         waitFor{admin.projectSettings.addFunding.displayed}
         admin.projectSettings.addFunding.click()
-        admin.projectSettings.fundingType[0].find("option").find {it.value() == "Public - commonwealth"}.click()
         admin.projectSettings.fundingSource[0].find("option").find {it.value() == "RLP"}.click()
         admin.projectSettings.fundingSourceAmount = "1000"
 

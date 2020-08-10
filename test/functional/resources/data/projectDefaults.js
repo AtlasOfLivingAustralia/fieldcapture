@@ -37,6 +37,20 @@ var projectDefaults = {
             "tags": [],
             "uNRegions": [],
             "workOrderId": "1234565",
+            "fundings":
+                [
+                    {
+                        "fundingType":'Public - commonwealth',
+                        "fundingSource":'RLP',
+                        "fundingSourceAmount": 50000
+                    },
+                    {
+                        "fundingType":'Public - commonwealth',
+                        "fundingSource":'NON-RLP',
+                        "fundingSourceAmount": 50000
+                    }
+                ]
+
         }
     }
 };

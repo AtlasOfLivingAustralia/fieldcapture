@@ -65,7 +65,6 @@
     <div class="span9" name="fundings">
         <table class="table borderless">
             <thead>
-                <td>Funding Type</td>
                 <td>Funding Source</td>
                 <td>Funding Amount</td>
                 <td>Action</td>
@@ -73,20 +72,20 @@
             <tbody>
                 <!-- ko foreach:fundings -->
                     <tr>
-                        <td style="border: 0"><select name="fundingType" id="fundingType" data-bind="options:$root.fundingTypes, value: fundingType, optionsCaption: 'Select Funding Type'"></select></td>
+                        <td style="border: 0; display: none"><select name="fundingType" id="fundingType" data-bind="options:$root.fundingTypes, value: fundingType" disabled="disabled"></select></td>
                         <td style="border: 0"><select name="fundingSource" id="fundingSource" data-bind="options:$root.fundingSources, value:fundingSource, optionsCaption: 'Select Funding Source'" class="select"></select></td>
                         <td style="border: 0"><g:textField type="number" id="fundingSourceAmount" min="0" step="any" name="fundingSourceAmount" data-bind="value:fundingSourceAmount" data-validation-engine="validate[custom[number]]"/></td>
                         <td style="border: 0"><button  id="removeFunding" class="btn btn-danger" data-bind="click:$root.removeFunding"> <i class="icon-minus"></i> Remove</button></td>
                     </tr>
                 <!-- /ko -->
                 <tr>
-                    <td colspan="2" style="border: 0"></td>
+                    <td colspan="1" style="border: 0"></td>
                     <td colspan="1" style="border: 0">
-                        <b>Total Amount: <span name="totalFundingAmount" data-bind="value: funding.formattedCurrency, text:funding.formattedCurrency"/></b>
+                        <b>Total Amount: <span id="totalFundingAmount" name="totalFundingAmount" data-bind="value: funding.formattedCurrency, text:funding.formattedCurrency"/></b>
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="3" style="border: 0"></td>
+                    <td colspan="2" style="border: 0"></td>
                     <td colspan="1" style="border: 0"> <button id="addFunding" class="btn btn-primary" data-bind="click:addFunding"> <i class="icon-plus"></i> Add Funding</button></td>
                 </tr>
 
