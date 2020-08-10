@@ -137,8 +137,11 @@ function ProjectViewModel(project, isUserEditor, organisations) {
         var totals = 0;
         ko.utils.arrayForEach(self.fundings(), function(funding){
             totals += parseInt(funding.fundingSourceAmount());
-        })
-        return totals
+        });
+        if (fundings.length === 0){
+            totals = parseInt(project.funding);
+        }
+        return totals;
     }).extend({currency:{currencySymbol: "$"}});
 
     self.removeFunding = function(){
