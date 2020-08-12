@@ -9,9 +9,7 @@ class AdminDocumentsTab extends Module {
         attachDocumentButton { $('#doAttach') }
         documentTypeFilter { $('[data-bind*=documentFilter]') }
         documents {
-            $('#adminDocumentList [data-bind*=documentEditTemplate]').collect {
-                module AdminDocumentSummary
-            }
+            $('#adminDocumentList [data-bind*=documentEditTemplate]').moduleList(AdminDocumentSummary)
         }
 
         attachDocumentDialog { module DocumentDialog }

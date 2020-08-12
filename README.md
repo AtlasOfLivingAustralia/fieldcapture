@@ -40,15 +40,38 @@ grails test-app
 
 * Javascript user tests are run using npm/karma.
 ```
+npm test
+```
+Or, to run the tests in a debugging environment using chrome:
+```
+npm run-script debug
+```
+Or, directly using karma:
+```
 node_modules/karma/bin/karma start karma.conf.js
 ```
+
 (if you installed karma globally you won't need the full path)
 
 
 ## Running
 MERIT depends on a running instance of [ecodata](https://github.com/AtlasOfLivingAustralia/ecodata) and CAS so ensure these dependencies are running and configured correctly in fieldcapture-config.properties.
 ```
-grails run-app -Dgrails.server.port=8087
+grails run-app -Dgrails.server.port.http=8087
 ```
+# MacOS Catalina
+if you getting this error in MacOS
+```
+unable to create directory data/fieldcature/ehcache
+``` 
+You can use the file /etc/synthetic.conf to map your old folder to a new virtual folder on the root directory. If the file doesn't exists, just create it with sudo :
+```
+sudo nano /etc/synthetic.conf
+Add this line in the synthetic.conf
+data    /User/directory/data/
+```
+You must have only one tab character only between data and /User/directory/data/
+
+
 Note the development configuration assumes MERIT is running on port 8087.  This is because is it usually paried with ecodata, which is running on port 8080.
 

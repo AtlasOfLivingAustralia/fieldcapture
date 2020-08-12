@@ -36,6 +36,7 @@ class AdminController {
     def documentService
     def organisationService
     def reportService
+    RisksService risksService
 
     def index() {}
 
@@ -343,63 +344,8 @@ class AdminController {
         [message: results?.message, compare: compare?.message, userDetails: userDetails.user]
     }
 
-    @PreAuthorise(accessLevel = 'alaAdmin', redirectController = "admin")
-    def migratePhotoPoints() {
-        if (params.outputId) {
-            def output = outputService.get(params.outputId)
-            adminService.migratePhotoPoints([output])
-        }
-        else {
-            adminService.migratePhotoPoints()
-        }
-        render text:'ok'
-    }
-
-
     def gmsProjectImport() {
         render(view:'import', model:[:])
-    }
-
-    /**
-     * Accepts a CSV file (as a multipart file upload) and validates and loads project, site & institution data from it.
-     * @return an error message if the CSV file is invalid, otherwise writes a CSV file describing any validation
-     * errors that were encountered.
-     */
-    def importProjectData() {
-
-        if (params.newFormat) {
-            gmsImport()
-            return
-        }
-        if (request instanceof MultipartHttpServletRequest) {
-            def file = request.getFile('projectData')
-
-            if (file) {
-
-                def results = importService.importProjectsByCsv(file.inputStream, params.importWithErrors)
-
-                if (results.error) {
-                    render contentType: 'text/json', status:400, text:"""{"error":"${results.error}"}"""
-                }
-                else {
-                    // Make sure the new projects are re-indexed.
-                    //adminService.reIndexAll()
-                }
-
-                // The validation results are current returned as a CSV file so that it can easily be sent back to
-                // be corrected at the source.  It's not great usability at the moment.
-                response.setContentType("text/csv")
-                PrintWriter pw = new PrintWriter(response.outputStream)
-                results.validationErrors.each {
-                    pw.println('"'+it.join('","')+'"')
-                }
-                pw.flush()
-                return null
-            }
-
-        }
-
-        render contentType: 'text/json', status:400, text:'{"error":"No file supplied"}'
     }
 
     def gmsImport() {
@@ -442,59 +388,6 @@ class AdminController {
 
     def importStatus() {
         render session.status as JSON
-    }
-
-    /**
-     * Accepts a CSV file (as a multipart file upload) and validates and bulk loads activity plan data for multiple projects.
-     * @return an error message if the CSV file is invalid, otherwise writes a CSV file describing any validation
-     * errors that were encountered.
-     */
-    def importPlanData() {
-        if (request instanceof MultipartHttpServletRequest) {
-            def file = request.getFile('planData')
-
-            if (file) {
-
-                def results = importService.importPlansByCsv(file.inputStream, params.overwriteActivities)
-
-                render results as JSON
-            }
-
-        }
-
-        render contentType: 'text/json', status:400, text:'{"error":"No file supplied"}'
-    }
-
-
-    def populateAggregrateProjectData() {
-        def result = [:]
-        if (request instanceof MultipartHttpServletRequest) {
-            def file = request.getFile('activityData')
-
-            if (file) {
-                result = importService.populateAggregrateProjectData(file.inputStream, params.preview)
-            }
-        }
-
-        def resultJSON = result as JSON
-        // Write to file as the request will likely time out for a large load
-        new File('/data/fieldcapture/biofundload.json').withWriter {it << resultJSON.toString(true)}
-
-        render resultJSON
-    }
-
-    def nlpMigrate() {
-
-        def results = []
-        if (request instanceof MultipartHttpServletRequest) {
-            def file = request.getFile('nlpData')
-            if (file) {
-                def preview = params.preview == 'on'
-                results = importService.doNlpMigration(file.inputStream, preview)
-            }
-
-        }
-        render results as JSON
     }
 
     def generateProjectReports() {
@@ -712,83 +605,6 @@ class AdminController {
         }
     }
 
-
-    def importOutcomes() {
-        if (request.respondsTo('getFile')) {
-            def f = request.getFile('pdf')
-
-            Workbook workbook = WorkbookFactory.create(f.inputStream)
-
-            Map sheetConfig = [
-                    "Ramsar Wetlands":[1, 1],
-                    "TE Communities":[1, 1],
-                    "World Heritage":[1, 1],
-                    "Soil Priorities":[2, 1],
-                    "TSS Species ":[1, 5]
-            ]
-            sheetConfig.each {k, v ->
-                Sheet sheet = workbook.getSheet(k)
-
-                printOutStuffAboutSheet(sheet, v[0], v[1])
-                println ""
-
-            }
-
-
-            Map result = [message:'ok']
-            flash.message = result.message
-            render view:'tools'
-
-
-        } else {
-            flash.message = 'No shapefile attached'
-            render view:'tools'
-        }
-    }
-
-    private void printOutStuffAboutSheet(Sheet sheet, int startRow, int startColForMu) {
-        Row header = sheet.getRow(startRow)
-        List mus = []
-        int col = 0
-        while (col < header.getLastCellNum()) {
-            if (col > 0) {
-                mus << header.getCell(col)
-            }
-            col++
-        }
-
-        List priorities = []
-        Map prioritiesByMu = [:].withDefault{[]}
-        int rowNum = startRow+1
-        Row row = sheet.getRow(rowNum)
-        String ramsar
-        while (row != null) {
-
-            col = 0
-            while (col < row.getLastCellNum()) {
-
-                String value = row.getCell(col)
-                if (col == 0) {
-                    ramsar = value
-                    priorities << ramsar
-                }
-                else if (col >= startColForMu) {
-                    String mu = mus[col-1]
-                    if (value && value.trim() != '-') {
-                        prioritiesByMu[mu] << ramsar
-                    }
-                }
-                col++
-            }
-            rowNum++
-            row = sheet.getRow(rowNum)
-        }
-
-        println priorities as JSON
-        println mus
-        println prioritiesByMu as JSON
-    }
-
     def buildScore(String output, String label, String method, String property, String filterProperty, String filterValue) {
         Map score = [
                 label:label.trim(),
@@ -837,61 +653,10 @@ class AdminController {
         score
     }
 
-    def generateServices() {
-        InputStreamReader isr = new InputStreamReader(new FileInputStream("/Users/god08d/Documents/MERIT/services.csv"), 'UTF-8')
-        CSVMapReader csvMapReader = new CSVMapReader(isr)
-
-        List<Map> services = csvMapReader.readAll()
-
-        List<Map> servicesjson = []
-
-        List<Map> scores = []
-
-        List<Map> outputs = []
-
-        services.eachWithIndex { Map service, int i ->
-            println service
-            def categories = service.Category.split(",").findAll()
-            servicesjson << [
-                    name:service.Name.trim(),
-                    output:service.Output.trim(),
-                    id:Integer.parseInt(service.ID.trim()),
-                    categories:categories.collect{it.trim()}]
-
-            ['Score 1', 'Score 2', 'Score 3', 'Score 4', 'Score 5', 'Score 6'].each{ score ->
-                if (service[score]) {
-                    scores << buildScore(service.Output, service[score], service[score+' Method'], service[score+' Attribute'], service[score+' Filter'], service[score+' Filter Value'])
-                }
-            }
-
-            File templateFolder = new File("/Users/god08d/projects/ecodata/models/"+service.Template.trim())
-
-            if (!templateFolder.exists()) {
-                templateFolder.mkdir()
-            }
-            outputs << [
-                    name:service.Output.trim(),
-                    template:service.Template.trim(),
-                    title:service.Name.trim()
-            ]
-        }
-
-        File servicesFile = new File("/Users/god08d/projects/fieldcapture/grails-app/conf/services.json")
-        servicesFile.withWriter "UTF-8", { out ->
-            out << (servicesjson as JSON).toString(true)
-        }
-
-        File scoresFile = new File("/Users/god08d/projects/ecodata/scripts/misc/rlpScores.js")
-        scoresFile.withWriter "UTF-8", { out ->
-            out << "scores = "+(scores as JSON).toString(true)
-        }
-
-        File outputFile = new File("/Users/god08d/projects/ecodata/scripts/misc/rlpOutputs.json")
-        outputFile.withWriter("UTF-8", { out ->
-            out << (outputs as JSON).toString(true)
-        })
-
+    /** Manual trigger for the scheduled job that polls for changes to risks and threats */
+    def checkForRisksAndThreatsChanges() {
+        risksService.checkAndSendEmail()
+        render 'ok'
     }
-
 
 }

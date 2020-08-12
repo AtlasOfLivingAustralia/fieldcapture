@@ -39,52 +39,83 @@ class ReportGenerator {
 
         DateTime endDate = reportOwner.periodEnd.withZone(DateTimeZone.default)
 
-        int sequenceNo = startingSequenceNo
-
-        List<Map> reports = []
-
-        if (reportConfig.multiple) {
-            Interval reportInterval = determineFirstReportInterval(reportConfig, reportOwner, latestApprovedReportPeriodEnd)
-
-            log.info "Regenerating reports starting at sequence: "+sequenceNo+" from: "+reportInterval.start+" ending at: "+reportInterval.end
-
-            while (reportInterval.start < endDate.minusDays(DATE_FUDGE_FACTOR)) {
-
-                reports << createReport(reportConfig, reportOwner, sequenceNo, reportInterval)
-                sequenceNo++
-                reportInterval = new Interval(reportInterval.end, reportInterval.end.plus(period))
-            }
+        List<Map> reports
+        if (reportConfig.multiple && !reportConfig.endDates) {
+            reports = generatePeriodicReports(reportConfig, reportOwner, latestApprovedReportPeriodEnd, startingSequenceNo, endDate, period)
+        }
+        else if (reportConfig.endDates) {
+            reports = generateNonPeriodicReportsByDate(latestApprovedReportPeriodEnd, reportOwner, reportConfig, endDate, startingSequenceNo)
         }
         else {
-
-            // Single reports are aligned with the owner dates.
-            DateTime start = reportOwner.periodStart.withZone(DateTimeZone.default)
-
-            DateTime end = endDate
-            if (reportConfig.getFirstReportingPeriodEnd()) {
-                end = reportConfig.getFirstReportingPeriodEnd()
-            }
-            else if (reportConfig.reportingPeriodInMonths) {
-                end = start.plus(period)
-            }
-            if (endDate < end) {
-                end = endDate
-            }
-            Interval reportInterval = new Interval(start, end)
-
-            // If the report minimumPeriodInMonths has been specified, only create the report if the owner duration
-            // is greater than the minimum period.
-            if (!reportConfig.minimumPeriodInMonths || reportInterval.toPeriod(PeriodType.months()).getMonths() >= reportConfig.minimumPeriodInMonths) {
-                log.info("Regenerating a single report from "+reportInterval.start+" to "+reportInterval.end)
-                reports << createReport(reportConfig, reportOwner, 1, reportInterval)
-            }
-            else{
-                log.info("Not regenerating report "+reportConfig.category+" because owner duration too short: "+reportInterval.toPeriod(PeriodType.months()).getMonths() +" < "+reportConfig.minimumPeriodInMonths)
-            }
-
+            reports = generateSingleReport(reportOwner, endDate, reportConfig, period)
         }
         alignEndDates(reports, reportOwner.periodEnd, reportConfig)
 
+        reports
+    }
+
+    private List<Map> generateSingleReport(ReportOwner reportOwner, DateTime endDate, ReportConfig reportConfig, Period period) {
+
+        List<Map> reports = []
+        // Single reports are aligned with the owner dates.
+        DateTime start = reportOwner.periodStart.withZone(DateTimeZone.default)
+
+        DateTime end = endDate
+        if (reportConfig.getFirstReportingPeriodEnd()) {
+            end = reportConfig.getFirstReportingPeriodEnd()
+        } else if (reportConfig.reportingPeriodInMonths) {
+            end = start.plus(period)
+        }
+        if (endDate < end) {
+            end = endDate
+        }
+        Interval reportInterval = new Interval(start, end)
+
+        // If the report minimumPeriodInMonths has been specified, only create the report if the owner duration
+        // is greater than the minimum period.
+        if (!reportConfig.minimumPeriodInMonths || reportInterval.toPeriod(PeriodType.months()).getMonths() >= reportConfig.minimumPeriodInMonths) {
+            log.info("Regenerating a single report from " + reportInterval.start + " to " + reportInterval.end)
+            reports << createReport(reportConfig, reportOwner, 1, reportInterval)
+        } else {
+            log.info("Not regenerating report " + reportConfig.category + " because owner duration too short: " + reportInterval.toPeriod(PeriodType.months()).getMonths() + " < " + reportConfig.minimumPeriodInMonths)
+        }
+        reports
+    }
+
+    private List<Map> generatePeriodicReports(ReportConfig reportConfig, ReportOwner reportOwner, DateTime latestApprovedReportPeriodEnd, int startingSequenceNo, DateTime endDate, Period period) {
+        int sequenceNo = startingSequenceNo
+        List<Map> reports = []
+        Interval reportInterval = determineFirstReportInterval(reportConfig, reportOwner, latestApprovedReportPeriodEnd)
+
+        log.info "Regenerating reports starting at sequence: " + sequenceNo + " from: " + reportInterval.start + " ending at: " + reportInterval.end
+
+        while (reportInterval.start < endDate.minusDays(DATE_FUDGE_FACTOR)) {
+
+            reports << createReport(reportConfig, reportOwner, sequenceNo, reportInterval)
+            sequenceNo++
+            reportInterval = new Interval(reportInterval.end, reportInterval.end.plus(period))
+        }
+        reports
+    }
+
+    private List<Map> generateNonPeriodicReportsByDate(DateTime latestApprovedReportPeriodEnd, ReportOwner reportOwner, ReportConfig reportConfig, DateTime endDate, int startingSequenceNo) {
+        int sequenceNo = startingSequenceNo
+        List<Map> reports = []
+        DateTime startConstraint = latestApprovedReportPeriodEnd && latestApprovedReportPeriodEnd > reportOwner.periodStart ? latestApprovedReportPeriodEnd : reportOwner.periodStart
+        startConstraint = startConstraint.withZone(DateTimeZone.default)
+
+        List<DateTime> reportEndDates = reportConfig.reportEndDates.collect { it.withZone(DateTimeZone.default) }
+        DateTime start = startConstraint
+        int index = 0
+        while (index < reportEndDates.size() && start.isBefore(endDate.minusDays(DATE_FUDGE_FACTOR))) {
+            if (reportEndDates[index].isAfter(startConstraint)) {
+                Interval reportInterval = new Interval(start, reportEndDates[index])
+                reports << createReport(reportConfig, reportOwner, sequenceNo, reportInterval)
+                sequenceNo++
+                start = reportInterval.end
+            }
+            index++
+        }
         reports
     }
 
@@ -101,7 +132,7 @@ class ReportGenerator {
 
             // Don't align the end date if there is only one report and it finishes before the owner end date.
             // This is to support single reports due on year 3 of the project (specifically the RLP Outcomes 1 Report)
-            if (reports.size() > 1 || reports[-1].toDate > finalToDate) {
+            if ((reports.size() > 1 && !reportConfig.endDates) || reports[-1].toDate > finalToDate) {
                 reports[-1].toDate = finalToDate
 
                 if (!reportConfig.canSubmitDuringReportingPeriod) {

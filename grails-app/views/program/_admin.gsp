@@ -8,6 +8,10 @@
         </g:if>
         <g:if test="${fc.userIsAlaOrFcAdmin()}">
             <a class="nav-link" data-toggle="pill" href="#config" role="tab">Configuration</a>
+            <a class="nav-link" data-toggle="pill" href="#outcomes" role="tab">Outcomes</a>
+            <a class="nav-link" data-toggle="pill" href="#priorities" role="tab">Priorities</a>
+            <a class="nav-link" data-toggle="pill" href="#themes" role="tab">Priority Areas / Themes</a>
+
         </g:if>
     </div>
 
@@ -17,11 +21,18 @@
 
             <div class="row">
                 <div class="col-sm-2">
-                    <a class="btn btn-info btn-small admin-action" href="${g.createLink(action: 'edit', id:program.programId)}"><i
+                    <a class="btn btn-info btn-small admin-action editBtnAction" href="${g.createLink(action: 'edit', id:program.programId)}"><i
                             class="fa fa-edit"></i> Edit</a>
                 </div>
 
                 <div class="col-sm-10">Edit the program details and content</div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-sm-2">
+                    <a class="btn btn-info btn-small admin-action addSubProgramButton" href="${g.createLink(action: 'addSubProgram',   id:  program.programId)}"><i
+                            class="fa fa-plus"></i> Add sub-program</a>
+                </div>
             </div>
 
         </div>
@@ -113,6 +124,30 @@
             <h4 style="display:inline-block">Program configuration</h4> <button class="btn btn-success float-right" data-bind="click:saveProgramConfiguration">Save Configuration</button>
 
             <textarea rows="80" style="width:100%" data-bind="value:config">
+
+            </textarea>
+        </div>
+
+        <div class="tab-pane" id="outcomes">
+            <h4 style="display:inline-block">Program outcomes</h4> <button class="btn btn-success float-right" data-bind="click:saveProgramOutcomes">Save Outcomes</button>
+
+            <textarea rows="80" style="width:100%" data-bind="value:outcomes">
+
+            </textarea>
+        </div>
+
+        <div class="tab-pane" id="priorities">
+            <h4 style="display:inline-block">Program priorities</h4> <button class="btn btn-success float-right" data-bind="click:saveProgramPriorities">Save Priorities</button>
+
+            <textarea rows="80" style="width:100%" data-bind="value:priorities">
+
+            </textarea>
+        </div>
+
+        <div class="tab-pane" id="themes">
+            <h4 style="display:inline-block">Program priority areas / themes</h4> <button class="btn btn-success float-right" data-bind="click:saveProgramThemes">Save Themes</button>
+
+            <textarea rows="80" style="width:100%" data-bind="value:themes">
 
             </textarea>
         </div>

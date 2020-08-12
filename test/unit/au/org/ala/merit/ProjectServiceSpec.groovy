@@ -227,7 +227,7 @@ class ProjectServiceSpec extends Specification {
         result.message == 'success'
         1 * webService.doPost({it.endsWith("project/"+projectId)}, [planStatus:ProjectService.PLAN_SUBMITTED]) >> [resp:[status:'ok']]
         1 * webService.getJson({it.endsWith("permissions/getMembersForProject/"+projectId)}) >> projectRoles
-        1 * emailService.sendEmail(EmailTemplate.DEFAULT_PLAN_SUBMITTED_EMAIL_TEMPLATE,_,projectRoles, RoleService.PROJECT_ADMIN_ROLE)
+        1 * emailService.sendEmail(EmailTemplate.DEFAULT_PLAN_SUBMITTED_EMAIL_TEMPLATE,_,projectRoles, RoleService.PROJECT_ADMIN_ROLE, null)
     }
 
     def "an email should be sent and an approval document created when a plan is approved"() {
@@ -252,7 +252,7 @@ class ProjectServiceSpec extends Specification {
         1 * webService.doPost({it.endsWith("project/"+projectId)}, [planStatus:ProjectService.PLAN_APPROVED]) >> [resp:[status:'ok']]
         1 * documentService.createTextDocument([projectId:projectId, type:'text', role:ProjectService.DOCUMENT_ROLE_APPROVAL, filename: expectedFilename, name:expectedName, readOnly:true, public:false, labels:['MERI']], {compareDocuments(it, expectedDocumentContent)})
         1 * webService.getJson({it.endsWith("permissions/getMembersForProject/"+projectId)}) >> projectRoles
-        1 * emailService.sendEmail(EmailTemplate.DEFAULT_PLAN_APPROVED_EMAIL_TEMPLATE,_,projectRoles, RoleService.GRANT_MANAGER_ROLE)
+        1 * emailService.sendEmail(EmailTemplate.DEFAULT_PLAN_APPROVED_EMAIL_TEMPLATE,_,projectRoles, RoleService.GRANT_MANAGER_ROLE, null)
         userService.getCurrentUserId() >> '1234'
     }
     private boolean compareDocuments(actual, expected) {
@@ -273,7 +273,7 @@ class ProjectServiceSpec extends Specification {
         result.message == 'success'
         1 * webService.doPost({it.endsWith("project/"+projectId)}, [planStatus:ProjectService.PLAN_NOT_APPROVED]) >> [resp:[status:'ok']]
         1 * webService.getJson({it.endsWith("permissions/getMembersForProject/"+projectId)}) >> projectRoles
-        1 * emailService.sendEmail(EmailTemplate.DEFAULT_PLAN_RETURNED_EMAIL_TEMPLATE,_,projectRoles, RoleService.GRANT_MANAGER_ROLE)
+        1 * emailService.sendEmail(EmailTemplate.DEFAULT_PLAN_RETURNED_EMAIL_TEMPLATE,_,projectRoles, RoleService.GRANT_MANAGER_ROLE,  null)
     }
 
     @Unroll
@@ -292,7 +292,7 @@ class ProjectServiceSpec extends Specification {
         ])
         webService.getJson(_) >> project
         Map results = [:]
-        1 * emailService.sendEmail(_,_,_,_) >> {actualTemplate, p , roles, actualRole -> results.actualEmailTemplate = actualTemplate; results.actualRole = actualRole}
+        1 * emailService.sendEmail(_,_,_,_,_) >> {actualTemplate, p , roles, actualRole, sender -> results.actualEmailTemplate = actualTemplate; results.actualRole = actualRole}
 
         when:
         action(service, projectId)
@@ -907,6 +907,76 @@ class ProjectServiceSpec extends Specification {
         null | _
         [hasViewAccess:false] | _
 
+    }
+
+    def "The project service can return a list of investment priorities from the MERI plan"() {
+        setup:
+        String projectId = 'p1'
+        List secondaryOutcomes = [ [ "assets" : [ "Investment priority 1" ], "description" : "Outcome 2" ] ]
+        Map primaryOutcome = [:]
+        Map project = [projectId:projectId, custom:[details:[outcomes:[secondaryOutcomes:secondaryOutcomes, primaryOutcome:primaryOutcome]]]]
+
+        when:
+        List priorities = service.listProjectInvestmentPriorities(projectId)
+
+        then:
+        1 * webService.getJson({it.contains("project/"+projectId)}) >> project
+
+        and:
+        priorities == ['Investment priority 1']
+
+        when:
+        project.custom.details.outcomes.primaryOutcome = [assets:['Investment Priority 2', 'Investment Priority 3'], description:"Outcome 1"]
+        priorities = service.listProjectInvestmentPriorities(projectId)
+
+        then:
+        then:
+        1 * webService.getJson({it.contains("project/"+projectId)}) >> project
+
+        and:
+        priorities == ['Investment Priority 2', 'Investment Priority 3', 'Investment priority 1']
+
+        when:
+        project.custom.details.outcomes = null
+        priorities = service.listProjectInvestmentPriorities(projectId)
+
+        then:
+        1 * webService.getJson({it.contains("project/"+projectId)}) >> project
+
+        and:
+        priorities == []
+    }
+
+    def "The service can return a list of activity types nominated by the project"() {
+        setup:
+        Map project = [custom:[details:[activities:[activities:['a1', 'a2']]]]]
+
+        when:
+        List activities = service.getProjectActivities(project)
+
+        then:
+        1 * projectConfigurationService.getProjectConfiguration(project) >> [activities:[[name:'a1', output:'o1'],[name:'a2', output:'o2']]]
+        activities == [[name:'a1', output:'o1'],[name:'a2', output:'o2']]
+
+        when:
+        activities = service.getProjectActivities([:])
+
+        then:
+        activities == []
+    }
+
+    def "The service can return the primary outcome for a project"() {
+        expect:
+        service.getPrimaryOutcome([custom:[details:[outcomes:[primaryOutcome:[description:'Outcome 1']]]]]) == 'Outcome 1'
+        service.getPrimaryOutcome([custom:[details:[:]]]) == null
+        service.getPrimaryOutcome(null) == null
+    }
+
+    def "The service can return the secondary outcomes for a project"() {
+        expect:
+        service.getSecondaryOutcomes([custom:[details:[outcomes:[secondaryOutcomes:[[description:'Outcome 1'], [description:'Outcome 2']]]]]]) == ['Outcome 1', 'Outcome 2']
+        service.getSecondaryOutcomes([custom:[details:[:]]]) == []
+        service.getSecondaryOutcomes(null) == []
     }
 
     private Map buildApprovalDocument(int i, String projectId) {

@@ -42,7 +42,7 @@
 
     <div class="row-fluid">
         <div class="span6 input-append">
-            <input id="searchText" data-bind="value:searchTerm, valueUpdate:'keyup'" class="span12" placeholder="Search organisations..." />
+            <input type="text" id="searchText" data-bind="value:searchTerm, valueUpdate:'keyup'" class="span12" placeholder="Search organisations..." />
             <span class="add-on"><i class="fa fa-search"></i> </span>
         </div>
     </div>

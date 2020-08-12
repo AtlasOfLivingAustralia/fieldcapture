@@ -4,6 +4,8 @@ load('../data/managementUnit.js');
 load('../data/siteDefaults.js');
 load('../data/activityForms/RLPOutputReport.js');
 load('../data/activityForms/CoreServicesReport.js');
+load('../data/activityForms/ProgressReport.js');
+
 
 function createProject(projectProperties) {
     // var project = Object.assign({}, projectDefaults);
@@ -22,6 +24,10 @@ function createProgram(programProperties) {
     var program = programDefaults.create()
     assign(programProperties,program)
     db.program.insert(program);
+}
+
+function createOrganisation(organisationProperties){
+    db.organisation.insert(organisationProperties)
 }
 
 function createMu(muProperties) {
@@ -46,6 +52,7 @@ function createSite(siteProperties) {
 function loadActivityForms() {
     db.activityForm.insert(rlpOutputReport);
     db.activityForm.insert(coreServicesReport);
+    db.activityForm.insert(progressReport);
 }
 
 
@@ -69,4 +76,8 @@ function assign(src, des){
         }
     }
 
+}
+
+function addSetting(key, value) {
+    db.setting.insert({key:key, value:value});
 }

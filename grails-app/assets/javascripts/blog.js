@@ -69,7 +69,7 @@ var EditableBlogEntryViewModel = function(blogEntry, options) {
     else if ( blogEntry.managementUnitId)
         storyType ="Management Unit Stories"
     else if (blogEntry.projectId)
-        storyType = 'Site Stories'
+        storyType = 'Project Stories'
 
 
     var defaults = {

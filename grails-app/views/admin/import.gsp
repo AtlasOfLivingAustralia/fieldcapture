@@ -7,7 +7,7 @@
     <script>
             var fcConfig = {
                 serverUrl: "${grailsApplication.config.grails.serverURL}",
-                importUrl: "${createLink(action: 'importProjectData')}",
+                importUrl: "${createLink(action: 'gmsImport')}",
                 projectUrl:"${createLink(controller:'project', action:'index')}",
                 importProgressUrl: "${createLink(action: 'importStatus')}"
             },

@@ -62,7 +62,7 @@
         rejectReportUrl: "${createLink(controller: 'project', action: 'ajaxRejectReport', id:project.projectId)}/",
         resetReportUrl: "${createLink(controller:'project', action:'resetReport', id:project.projectId)}",
         adjustReportUrl: "${createLink(controller:'project', action:'adjustReport', id:project.projectId)}",
-        reportOwner: {projectId:'${project.projectId}'},
+        reportOwner: {projectId:'${project.projectId}', endDate:'${project.plannedEndDate}'},
         reportCreateUrl: '${g.createLink( action:'createReport', id:project.projectId)}',
         viewReportUrl:'${createLink(action:"viewReport", id:project.projectId)}',
         editReportUrl:"${createLink(action:"editReport", id:project.projectId)}",
@@ -84,6 +84,8 @@
         leafletIconPath:"${assetPath(src:'leaflet-0.7.7/images')}",
         approvedMeriPlanHistoryUrl:"${createLink(action:"approvedMeriPlanHistory", id:project.projectId)}",
         viewHistoricalMeriPlanUrl:"${createLink(action:"viewMeriPlan", id:project.projectId)}",
+        riskChangesReportHtmlUrl:"${createLink(controller:'project', action:'projectReport', id:project.projectId)}",
+        riskChangesReportPdfUrl:"${createLink(controller:'project', action:'projectReportPDF', id:project.projectId)}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 
     },
@@ -111,13 +113,13 @@
             <g:if test="${project.managementUnitId}">
                 <li>
                 <g:link controller="managementUnit" action="index"
-                        id="${project.managementUnitId}">${project.managementUnitName}</g:link> <span class="divider">/</span>
+                        id="${project.managementUnitId}">${project.managementUnitName?.encodeAsHTML()}</g:link> <span class="divider">/</span>
                 </li>
             </g:if>
             <g:if test="${config?.program?.name.equals('Regional Land Partnerships') || config?.program?.name.equals('Environmental Restoration Fund')}">
                 <li>
-                    ${config.program.name}
-%{--                <g:link controller="program" action="index" id="${config.program.programId}">${config.program.name}</g:link> --}%
+                    ${config.program.name?.encodeAsHTML()}
+%{--                <g:link controller="program" action="index" id="${config.program.programId}">${config.program.name?.encodeAsHTML()}</g:link> --}%
                     <span class="divider">/</span>
                 </li>
             </g:if>
@@ -252,7 +254,10 @@
                 documentDeleteUrl: fcConfig.documentDeleteUrl,
                 meriStorageKey:PROJECT_DETAILS_KEY,
                 activityBasedReporting: ${Boolean.valueOf(projectContent.admin.config.activityBasedReporting)},
-                minimumProjectEndDate: ${projectContent.admin.minimumProjectEndDate?'"'+projectContent.admin.minimumProjectEndDate+'"':'null'}
+                minimumProjectEndDate: ${projectContent.admin.minimumProjectEndDate?'"'+projectContent.admin.minimumProjectEndDate+'"':'null'},
+                riskChangesReportElementId: 'risk-changes-report',
+                riskChangesReportHtmlUrl: fcConfig.riskChangesReportHtmlUrl,
+                riskChangesReportPdfUrl: fcConfig.riskChangesReportPdfUrl
             };
 
             var programs = <fc:modelAsJavascript model="${programs}"/>;
@@ -266,17 +271,19 @@
             config.showSiteType = ${Boolean.valueOf(projectContent.site.showSiteType)};
             config.services = services;
             config.useRlpTemplate = services.length > 0;
-            if (!config.useRlpTemplate) {
-               // The RLP template includes Risks in the MERI plan so having separate local storage causes
-               // Issues as it's not cleared on save.
-               config.risksStorageKey = PROJECT_RISKS_KEY;
-            }
+            config.useRlpRisksModel = config.useRlpTemplate;
+            config.risksStorageKey = PROJECT_RISKS_KEY;
+
             config.requireMeriApprovalReason = ${projectContent.admin.requireMeriPlanApprovalReason};
 
             config.autoSaveIntervalInSeconds = ${grailsApplication.config.fieldcapture.autoSaveIntervalInSeconds?:60};
             config.riskAndThreatTypes = ${config.riskAndThreatTypes ?: 'null'};
-            var programName = '${(config.program?.acronym?:project.associatedSubProgram) ?: project.associatedProgram}';
-            config.programName = programName;
+            var programName = <fc:modelAsJavascript model="${(config.program?.acronym?:project.associatedSubProgram) ?: project.associatedProgram}"/>
+            config.programName = programName
+
+            config.programObjectives = <fc:modelAsJavascript model="${config.program?.config?.objectives ?: []}"/>
+            config.programActivities = <fc:modelAsJavascript model="${config.program?.config?.activities?.collect{it.name} ?: []}"/>
+            config.excludeFinancialYearData = ${config.program?.config?.excludeFinancialYearData ?: false};
 
             var viewModel = new ProjectPageViewModel(
                 project,
@@ -290,25 +297,22 @@
             ko.applyBindings(viewModel);
             window.validateProjectEndDate = viewModel.validateProjectEndDate;
 
+            autoSaveModel(
+                viewModel.meriPlan.risks,
+                fcConfig.projectUpdateUrl,
+                {
+                    storageKey:PROJECT_RISKS_KEY,
+                    autoSaveIntervalInSeconds:${grailsApplication.config.fieldcapture.autoSaveIntervalInSeconds?:60},
+                    restoredDataWarningSelector:'#restoredRisksData',
+                    resultsMessageSelector:'#summary-result-placeholder',
+                    timeoutMessageSelector:'#timeoutMessage',
+                    errorMessage:"Failed to save risks details: ",
+                    successMessage: 'Successfully saved',
+                    defaultDirtyFlag:ko.dirtyFlag,
+                    healthCheckUrl:fcConfig.healthCheckUrl,
+                    preventNavigationIfDirty: true
+                });
 
-
-            if (config.risksStorageKey) {
-
-                autoSaveModel(
-                    viewModel.meriPlan.risks,
-                    fcConfig.projectUpdateUrl,
-                    {
-                        storageKey:PROJECT_RISKS_KEY,
-                        autoSaveIntervalInSeconds:${grailsApplication.config.fieldcapture.autoSaveIntervalInSeconds?:60},
-                        restoredDataWarningSelector:'#restoredRisksData',
-                        resultsMessageSelector:'#summary-result-placeholder',
-                        timeoutMessageSelector:'#timeoutMessage',
-                        errorMessage:"Failed to save risks details: ",
-                        successMessage: 'Successfully saved',
-                        defaultDirtyFlag:ko.dirtyFlag,
-                        healthCheckUrl:fcConfig.healthCheckUrl
-                    });
-            }
 
             function initialiseOverview() {
                 $( '#public-images-slider' ).mThumbnailScroller({});
@@ -414,7 +418,7 @@
                     bootbox.alert($('#risksUnsavedChanges').html());
                 }
                 else {
-                    risksVisible = (e.target.hash  == '#plan');
+                    risksVisible = (e.target.hash  == '#plan' || e.target.hash == '#risks');
                 }
             });
 
@@ -462,9 +466,10 @@
             //Page loading indicator.
 			$('.spinner').hide();
         	$('.tab-content').fadeIn();
-
-
         });// end window.load
+
+
+
 
 
 </asset:script>

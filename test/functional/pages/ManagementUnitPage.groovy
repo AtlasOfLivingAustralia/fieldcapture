@@ -16,9 +16,6 @@ class ManagementUnitPage extends ReloadablePage {
         grantIdsTable{$('td.grantId')}
         projectLinksTd{$('td.grantId a')}
         gotoProgramLinks{$('a.gotoProgram')}
-        blogTab{$('#blog-tab')}
-        blogContentDiv {$('div.muBlogContent')}
-        blogModule {module BlogPageModule}
         editManagementUnitBlogPane{$('div#editManagementUnitBlog')}
         adminTabPane(required: false) { module ManagementUnitAdminTab }
         editMUBlogTab{$('a#editManagementUnitBlog-tab')}
@@ -26,6 +23,10 @@ class ManagementUnitPage extends ReloadablePage {
         adminTab(required: false) { $('#admin-tab') }
         reportsTab(required: false) { $('#projects-tab') }
         reportsTabPane(required: false) { module ManagementUnitReports }
+        sitesTab(required:false) { $('#sites-tab') }
+        headerTitle {$("#managementUnitName")}
+        visitUs {$("data-bind:'text-url'")}
+        description {$('.row .col-md-8 span[data-bind*="html:description"] p')}
     }
 
     List grantIds() {
@@ -40,10 +41,33 @@ class ManagementUnitPage extends ReloadablePage {
         gotoProgramLinks.collect{it}
     }
 
+    List primaryOutcomes() {
+        $('div.outcomes.primary .outcome').collect{it.text().trim()}
+    }
+
+    List targetedPrimaryOutcomes() {
+        $('div.outcomes.primary .outcome.targeted').collect{it.text().trim()}
+    }
+
+    List secondaryOutcomes() {
+        $('div.outcomes.secondary .outcome').collect{it.text().trim()}
+    }
+
+    List targetedSecondaryOutcomes() {
+        $('div.outcomes.secondary .outcome.targeted').collect{it.text().trim()}
+    }
+
     void openDocumentDialog() {
         adminTab.click()
         waitFor { adminTabPane.displayed }
         adminTabPane.attachDocument()
+    }
+
+    void editManagementUnit(){
+        adminTab.click()
+        waitFor{editManagementUnitButton.displayed}
+        editManagementUnitButton.click()
+
     }
 
 }

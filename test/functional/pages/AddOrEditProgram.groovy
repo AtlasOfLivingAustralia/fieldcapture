@@ -5,6 +5,8 @@ import geb.Module
 class AddOrEditProgram extends Module {
 
     static content = {
+        parentProgram{ $('#parentProgramId') }
+        newParentProgramId { $('.select2-selection')}
         name { $('#name') }
         description { $('#description') }
         url { $('#url') }

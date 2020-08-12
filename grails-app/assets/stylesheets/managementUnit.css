@@ -82,9 +82,18 @@ form #start-date, form #end-date {
 
 }
 
-.outcome.targeted {
+.outcomes.secondary {
+    font-size: small;
+}
+
+.outcomes.primary .outcome.targeted {
     background: #D9EDF6;
 }
+
+.outcomes.secondary .outcome.targeted {
+    background: #D9EDF699;
+}
+
 
 #projectOverviewList th {
     white-space: normal;

@@ -5,10 +5,14 @@ import au.org.ala.merit.reports.ReportGenerationOptions
 import au.org.ala.merit.reports.ReportOwner;
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.codehaus.groovy.grails.web.json.JSONArray
+import org.codehaus.groovy.util.ListHashMap
 
 class ProgramService {
 
     private static final String PROGRAM_DOCUMENT_FILTER = "className:au.org.ala.ecodata.Program"
+    public static final String OUTCOME_TYPE_PRIMARY_ONLY = 'primary'
+    public static final String OUTCOME_TYPE_SECONDARY_ONLY = 'secondary'
+
 
     GrailsApplication grailsApplication
     WebService webService
@@ -257,6 +261,33 @@ class ProgramService {
                 userService.removeUserWithRole(project.projectId, userId, role)
             }
         }
+    }
+
+    /**
+     * Returns true if a Program is either equal to or a child of another program.
+     * @param program The Program to check.
+     * @param programId The Program to compare against.
+     */
+    boolean isInProgramHierarchy(Map program, String programId) {
+        if (program.programId == programId) {
+            return true
+        }
+        Map parent = program.parent
+        while (parent && parent.programId != programId) {
+            parent = parent.parent
+        }
+        parent && parent.programId == programId
+    }
+
+    List<Map> getPrimaryOutcomes(Map program) {
+        program?.outcomes.findAll {it.type != OUTCOME_TYPE_SECONDARY_ONLY}
+    }
+    List<Map> getSecondaryOutcomes(Map program) {
+        program?.outcomes.findAll {it.type != OUTCOME_TYPE_PRIMARY_ONLY}
+    }
+
+    List<Map> listOfAllPrograms(){
+        return webService.getJson("${grailsApplication.config.ecodata.baseUrl}program/listOfAllPrograms")
     }
 
 }

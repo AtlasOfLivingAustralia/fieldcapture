@@ -224,6 +224,305 @@ describe("Loading the MERI plan is handled correctly", function () {
         expect(row.minimumTargetsValid()).toBeFalsy();
     });
 
+    it("should should track the names of selected services for use in the budget table", function() {
+        var project = {
+            plannedStartDate:'2018-07-01T00:00:00Z',
+            plannedEndDate:'2021-06-30T00:00:00Z'
+        };
+        var projectService = new ProjectService(project, {});
+        var options = {
+            useRlpTemplate:true,
+            healthCheckUrl:'testing',
+            services:[{id:1, name:"Service 1"}, {id:2, name:"Service 2"}]
+        };
+        var viewModel = new MERIPlan(project, projectService, options);
 
-})
-;
+        var serviceTarget = {
+            serviceId:1,
+            scoreId:1,
+            target:100,
+            periodTargets:[
+                {period:'2018/2019', target:1},
+                {period:'2019/2020', target:2},
+                {period:'2020/2021', target:3}
+            ]
+        };
+
+        expect(viewModel.meriPlan().services.selectedServices()).toEqual([]);
+
+        var row = viewModel.meriPlan().services.addServiceTarget(serviceTarget);
+        expect(viewModel.meriPlan().services.selectedServices()).toEqual(['Service 1']);
+
+        row.serviceId(2);
+        expect(viewModel.meriPlan().services.selectedServices()).toEqual(['Service 2']);
+    });
+
+    it("should provide a simplified objectives model for selecting program objectives from a list", function() {
+        var project = {
+            plannedStartDate:'2018-07-01T00:00:00Z',
+            plannedEndDate:'2021-06-30T00:00:00Z'
+        };
+        var projectService = new ProjectService(project, {});
+
+        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing', programObjectives:['objective 1', 'objective 2']});
+
+        var objectivesModel = viewModel.meriPlan().objectives;
+
+        objectivesModel.simpleObjectives(["objective 1", "objective 2"]);
+        expect(objectivesModel.rows1().length).toBe(2);
+        expect(objectivesModel.rows1()[0].description()).toBe("objective 1");
+        expect(objectivesModel.rows1()[1].description()).toBe("objective 2");
+
+        expect(objectivesModel.simpleObjectives()).toEqual(["objective 1", "objective 2"]);
+
+
+        objectivesModel.simpleObjectives(["objective 2"]);
+        expect(objectivesModel.rows1().length).toBe(1);
+        expect(objectivesModel.rows1()[0].description()).toBe("objective 2");
+
+        objectivesModel.simpleObjectives([]);
+        expect(objectivesModel.rows1().length).toBe(0);
+
+        objectivesModel.simpleObjectives(["objective 1", "objective 2"]);
+        expect(objectivesModel.rows1().length).toBe(2);
+        expect(objectivesModel.rows1()[0].description()).toBe("objective 1");
+        expect(objectivesModel.rows1()[1].description()).toBe("objective 2");
+
+        // Empty values should be ignored
+        objectivesModel.simpleObjectives(["", null, "objective 1", "objective 2"]);
+        expect(objectivesModel.rows1().length).toBe(2);
+        expect(objectivesModel.rows1()[0].description()).toBe("objective 1");
+        expect(objectivesModel.rows1()[1].description()).toBe("objective 2");
+
+    });
+
+    it("should not serialize the simpleobjectives computed observable", function() {
+        var project = {
+            plannedStartDate:'2018-07-01T00:00:00Z',
+            plannedEndDate:'2021-06-30T00:00:00Z'
+        };
+        var projectService = new ProjectService(project, {});
+        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing', programObjectives:['objective 1', 'objective 2']});
+
+        var objectivesModel = viewModel.meriPlan().objectives;
+        objectivesModel.simpleObjectives(["objective 1", "objective 2"]);
+
+
+        var expectedResult = {
+            rows1:[{description:'objective 1', assets:[]}, {description:'objective 2', assets:[]}],
+            rows: [{}]
+        };
+        expect(JSON.parse(JSON.stringify(objectivesModel))).toEqual(expectedResult);
+
+        objectivesModel.simpleObjectives.otherChecked(true);
+        objectivesModel.simpleObjectives.otherValue("Other objective");
+
+        var expectedResultWithOther = {
+            rows1:[{description:'objective 1', assets:[]}, {description:'objective 2', assets:[]}, {description:'Other objective', assets:[]}],
+            rows: [{}]
+        };
+        expect(JSON.parse(JSON.stringify(objectivesModel))).toEqual(expectedResultWithOther);
+
+        objectivesModel.simpleObjectives.otherChecked(false);
+        expect(JSON.parse(JSON.stringify(objectivesModel))).toEqual(expectedResult);
+
+    });
+
+    it("should pre-populate the program and other objectives from saved data", function() {
+        var project = {
+            plannedStartDate:'2018-07-01T00:00:00Z',
+            plannedEndDate:'2021-06-30T00:00:00Z',
+            custom: {
+                details: {
+                    objectives: {
+                        rows1: [{
+                            description:'objective 1'
+                        },
+                        {
+                            description:'other objective'
+                        }]
+                    }
+                }
+            }
+        };
+        var projectService = new ProjectService(project, {});
+        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing', programObjectives:['objective 1', 'objective 2']});
+
+        var objectivesModel = viewModel.meriPlan().objectives;
+        expect(objectivesModel.simpleObjectives.otherChecked()).toBeTrue();
+        expect(objectivesModel.simpleObjectives.otherValue()).toEqual('other objective');
+        expect(objectivesModel.simpleObjectives()).toEqual(['objective 1']);
+
+        objectivesModel.simpleObjectives.otherChecked(false);
+        expect(objectivesModel.simpleObjectives.otherValue()).toBeUndefined();
+
+        var expectedResult = {
+            rows1:[{description:'objective 1', assets:[]}],
+            rows: [{}]
+        };
+        expect(JSON.parse(JSON.stringify(objectivesModel))).toEqual(expectedResult);
+    });
+
+    it("Should allow assets to be recorded", function() {
+        var project = {
+            plannedStartDate:'2018-07-01T00:00:00Z',
+            plannedEndDate:'2021-06-30T00:00:00Z',
+            custom: {
+                details: {
+                    assets:[{description:'asset 1'}]
+                }
+            }
+        };
+        var projectService = new ProjectService(project, {});
+        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'});
+        var meriPlan = viewModel.meriPlan();
+
+        expect(meriPlan.assets().length).toEqual(1);
+        expect(meriPlan.assets()[0].description()).toEqual('asset 1')
+
+        viewModel.addAsset();
+        expect(meriPlan.assets().length).toBe(2);
+
+        meriPlan.assets()[1].description('asset 2');
+
+        var serialized = JSON.parse(meriPlan.modelAsJSON());
+        expect(serialized.custom.details.assets).toEqual([{description:'asset 1'}, {description:'asset 2'}]);
+
+        viewModel.removeAsset(meriPlan.assets()[0]);
+        expect(meriPlan.assets().length).toBe(1);
+
+    });
+
+    it("The services should be serialized to an array of ids", function() {
+        var project = {
+            plannedStartDate:'2018-07-01T00:00:00Z',
+            plannedEndDate:'2021-06-30T00:00:00Z',
+            custom: {
+                details: {
+                }
+            }
+        };
+        var services = [
+            {id:1, name:"Service 1", scores:[{scoreId:1}]}, {id:2, name:"Service 2", scores:[{scoreId:2}]}
+        ];
+        var projectService = new ProjectService(project, {});
+        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'});
+        var serialized = JSON.parse(viewModel.meriPlan().modelAsJSON());
+
+        var savedMeriPlan = serialized.custom.details;
+        expect(savedMeriPlan.serviceIds).toEqual([]);
+
+        project.custom.details.serviceIds = [1,2];
+        project.outputTargets = [{scoreId:1}, {scoreId:2}];
+        viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing', services:services});
+        serialized = JSON.parse(viewModel.meriPlan().modelAsJSON());
+        savedMeriPlan = serialized.custom.details;
+        expect(savedMeriPlan.serviceIds).toEqual([1,2]);
+
+
+    });
+
+    it("should remove null outcomes when serialized", function() {
+        var project = {
+            plannedStartDate:'2018-07-01T00:00:00Z',
+            plannedEndDate:'2021-06-30T00:00:00Z',
+            custom: {
+                details: {
+                }
+            }
+        };
+
+        var projectService = new ProjectService(project, {});
+        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'});
+
+        expect(viewModel.meriPlan().outcomes.primaryOutcome.description()).toBeNull();
+
+        var serialized = JSON.parse(viewModel.meriPlan().modelAsJSON());
+
+        var savedMeriPlan = serialized.custom.details;
+        expect(savedMeriPlan.outcomes.primaryOutcome).toEqual({});
+
+    });
+
+    it("should be able to support activity selection, including 'Other'", function() {
+        var project = {
+            plannedStartDate:'2018-07-01T00:00:00Z',
+            plannedEndDate:'2021-06-30T00:00:00Z',
+            custom: {
+                details: {
+                    activities: {
+                        activities:['activity 1']
+                    }
+                }
+            }
+        };
+        var programActivities = ['activity 1', 'activity 2', 'activity 3'];
+        var projectService = new ProjectService(project, {});
+        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing', programActivities: programActivities});
+
+        expect(viewModel.meriPlan().activities.activities()).toEqual(['activity 1']);
+        viewModel.meriPlan().activities.activities(['activity 2']);
+        var serialized = JSON.parse(viewModel.meriPlan().modelAsJSON());
+        var savedMeriPlan = serialized.custom.details;
+        expect(savedMeriPlan.activities.activities).toEqual(['activity 2']);
+
+        viewModel.meriPlan().activities.activities.otherChecked(true);
+        viewModel.meriPlan().activities.activities.otherValue("Other");
+
+        serialized = JSON.parse(viewModel.meriPlan().modelAsJSON());
+        savedMeriPlan = serialized.custom.details;
+        expect(savedMeriPlan.activities.activities).toEqual(['activity 2', 'Other']);
+
+        viewModel.meriPlan().activities.activities.otherChecked(false);
+        expect(viewModel.meriPlan().activities.activities.otherValue()).toBeFalsy();
+
+        serialized = JSON.parse(viewModel.meriPlan().modelAsJSON());
+        savedMeriPlan = serialized.custom.details;
+        expect(savedMeriPlan.activities.activities).toEqual(['activity 2']);
+
+
+    });
+
+    it("should filter selectable outcomes from the program based on the type of the outcome (primary or secondary)", function() {
+
+        var options = {
+            outcomes: [
+                { outcome:"Outcome 1", "type": 'primary'},
+                { outcome:"Outcome 2", "type": 'primary'},
+                { outcome:"Outcome 3"},
+                { outcome:"Outcome 4", "type": 'secondary'},
+            ]
+        };
+
+        var viewModel = new OutcomesViewModel([], options);
+        expect(viewModel.selectablePrimaryOutcomes).toEqual(["Outcome 1", "Outcome 2", "Outcome 3"]);
+        expect(viewModel.selectableSecondaryOutcomes).toEqual(["Outcome 3", "Outcome 4"]);
+
+    });
+
+
+    it("should allow a outcome to be specified as default", function() {
+
+        var options = {
+            outcomes: [
+                { outcome:"Outcome 1", "type": 'primary'},
+                { outcome:"Outcome 2", "type": 'primary', default:true},
+                { outcome:"Outcome 3"},
+                { outcome:"Outcome 4", "type": 'secondary'},
+            ]
+        };
+
+        var viewModel = new OutcomesViewModel({}, options);
+        expect(viewModel.primaryOutcome.description()).toBe('Outcome 2');
+
+        var outcomeData = {
+            primaryOutcome: {
+                description: 'Outcome 3',
+                assets:[]
+            }
+        };
+        var viewModel = new OutcomesViewModel(outcomeData, options);
+        expect(viewModel.primaryOutcome.description()).toBe('Outcome 3');
+    });
+
+});

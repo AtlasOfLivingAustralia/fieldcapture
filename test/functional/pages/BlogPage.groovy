@@ -16,10 +16,15 @@ class BlogPageModule extends Module {
         editBlogBtn{$('a.editThisBlog')}
         deleteBlogBtn{$('a.delThisBlog')}
         editBlogPanelHeader{$('div#editProjectBlog h3',0)}
+        blogImages {$('img.blog-image')}
     }
 
     List blogs() {
         blogEntryTable.collect{it}
+    }
+
+    List images() {
+        blogImages.collect{it.attr('src')}
     }
 
     List blogTitles() {
@@ -55,7 +60,7 @@ class ProgramBlogPage extends Page {
         blogModule  { module BlogPageModule}
         adminTabPane {$('div#admin')}
         editProgramBlogTab{$('a#editProgramBlog-tab')}
-        editProgramButton(required:false) { $('#edit-program-details .admin-action')}
+        editProgramButton(required:false) { $('a.editBtnAction')}
     }
 
 //    def editProgramBlogTab() {
@@ -88,7 +93,8 @@ class NewBlogEntryPage extends Page {
 
 class BlogDetails extends Module {
     static content = {
-        //site { $('[data-bind~=value:siteId]') }
+        type { $('#type') }
+        date { $('#date') }
         title { $('input#title') }
         description { $('textarea#blog-content') }
         saveButton() {
@@ -100,6 +106,7 @@ class BlogDetails extends Module {
         docSelect {$('select[name=docCategory]')}
 
         uploadingFile {$('input#image[name=files]', 0)}
+        privacy(required:false) {$('input#declaration')  }
         saveBtn {$('button.btn[name=uploadingDocument]')}
     }
 }

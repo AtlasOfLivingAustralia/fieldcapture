@@ -16,7 +16,7 @@
     </div>
     <div class="control-group span6">
         <label class="control-label">Organisation name</label>
-        <input class="input-xlarge" readonly="readonly" data-bind="value:organisationName" id="organisationName"/>
+        <input type="text" class="input-xlarge" readonly="readonly" data-bind="value:organisationName" id="organisationName"/>
     </div>
 </div>
 <div class="row-fluid">
@@ -27,7 +27,7 @@
     </div>
     <div class="control-group span6">
         <label class="control-label">Service provider organisation name</label>
-        <input class="input-xlarge" readonly="readonly" data-bind="value:serviceProviderName" id="serviceProviderName"/>
+        <input type="text" class="input-xlarge" readonly="readonly" data-bind="value:serviceProviderName" id="serviceProviderName"/>
     </div>
 </div>
 <div class="row-fluid">
@@ -62,14 +62,18 @@
 
 <div class="row-fluid">
     <div class="control-group span4">
-        <label class="control-label" for="manager">Project manager</label>
+        <label class="control-label" for="fundingSource">Funding Type</label>
         <div class="controls">
-            <g:textField class="" name="manager" data-bind="value:manager"/>
+            <select id="fundingSource" data-bind="value:fundingSource" class="select">
+                <option value=""> Select Funding Type</option>
+                <option id="rlp" value="RLP">RLP</option>
+                <option id="non-rlp" value="NON-RLP">NON-RLP</option>
+            </select>
         </div>
     </div>
 
     <div class="control-group span4">
-        <label class="control-label" for="manager">Project funding</label>
+        <label class="control-label" for="funding">Project funding</label>
         <div class="controls">
             <g:textField class="" name="funding" data-bind="value:funding" data-validation-engine="validate[custom[number]]"/>
         </div>
@@ -197,7 +201,7 @@
         <fc:iconHelp title="Duration">The number of weeks the project will run for.</fc:iconHelp>
         </label>
         <div class="input-append">
-            <g:textField class="" name="duration" data-bind="value:transients.contractDuration" data-validation-engine="validate[custom[number]]"/>
+            <g:textField class="" name="contract-duration" data-bind="value:transients.contractDuration" data-validation-engine="validate[custom[number]]"/>
         </div>
 
     </div>
@@ -227,6 +231,6 @@
 </div>
 
 <div class="form-actions">
-    <button type="button" data-bind="disable:transients.disableSave, click: saveSettings" class="btn btn-primary">Save changes</button>
+    <button type="button" id="saveSettings" data-bind="disable:transients.disableSave, click: saveSettings" class="btn btn-primary">Save changes</button>
     <button type="button" id="cancel" class="btn">Cancel</button>
 </div>

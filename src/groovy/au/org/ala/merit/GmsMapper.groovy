@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat
  */
 class GmsMapper {
 
-    public static final List GMS_COLUMNS = ['PROGRAM_NM',	'ROUND_NM',	'APP_ID', 'EXTERNAL_ID', 'APP_NM', 'APP_DESC',	'START_DT',	'FINISH_DT', 'FUNDING',	'APPLICANT_NAME', 'ORG_TRADING_NAME', 'MANAGEMENT_UNIT', 'APPLICANT_EMAIL', 'AUTHORISEDP_CONTACT_TYPE', 'AUTHORISEDP_EMAIL', 'GRANT_MGR_EMAIL', 'GRANT_MGR_EMAIL_2','DATA_TYPE', 'ENV_DATA_TYPE',	'PGAT_PRIORITY', 'PGAT_GOAL_CATEGORY',	'PGAT_GOALS', 'PGAT_OTHER_DETAILS','PGAT_PRIMARY_ACTIVITY','PGAT_ACTIVITY_DELIVERABLE_GMS_CODE','PGAT_ACTIVITY_DELIVERABLE','PGAT_ACTIVITY_TYPE','PGAT_ACTIVITY_UNIT','PGAT_ACTIVITY_DESCRIPTION','PGAT_UOM', 'UNITS_COMPLETED', 'EDITOR_EMAIL', 'EDITOR_EMAIL_2', 'TAGS']
+    public static final List GMS_COLUMNS = ['PROGRAM_NM',	'ROUND_NM',	'APP_ID', 'EXTERNAL_ID', 'APP_NM', 'APP_DESC',	'START_DT',	'FINISH_DT', 'FUNDING_TYPE','FUNDING','APPLICANT_NAME', 'ORG_TRADING_NAME','ABN','MANAGEMENT_UNIT', 'APPLICANT_EMAIL', 'AUTHORISEDP_CONTACT_TYPE', 'AUTHORISEDP_EMAIL', 'GRANT_MGR_EMAIL', 'GRANT_MGR_EMAIL_2','DATA_TYPE', 'ENV_DATA_TYPE',	'PGAT_PRIORITY', 'PGAT_GOAL_CATEGORY',	'PGAT_GOALS', 'PGAT_OTHER_DETAILS','PGAT_PRIMARY_ACTIVITY','PGAT_ACTIVITY_DELIVERABLE_GMS_CODE','PGAT_ACTIVITY_DELIVERABLE','PGAT_ACTIVITY_TYPE','PGAT_ACTIVITY_UNIT','PGAT_ACTIVITY_DESCRIPTION','PGAT_UOM', 'UNITS_COMPLETED', 'EDITOR_EMAIL', 'EDITOR_EMAIL_2', 'TAGS']
 
     // These identify the data contained in the row.
     static final LOCATION_DATA_TYPE = 'Location Data'
@@ -44,6 +44,7 @@ class GmsMapper {
     private def programModel
 
     private def organisations
+    private AbnLookupService abnLookupService
 
     private List<Map> scores
 
@@ -61,11 +62,13 @@ class GmsMapper {
             ROUND_NM:[name:'associatedSubProgram', type:'string'],
             EXTERNAL_ID:[name:'externalId', type:'string'],
             ORG_TRADING_NAME:[name:'organisationName', type:'string'],
+            ABN:[name: 'abn', type: 'string'],
             START_DT:[name:'plannedStartDate', type:'date', mandatory:true],
             FINISH_DT:[name:'plannedEndDate', type:'date', mandatory:true],
             CONTRACT_START_DT:[name:'contractStartDate', type:'date'],
             CONTRACT_END_DT:[name:'contractEndDate', type:'date'],
             WORK_ORDER_ID:[name:'workOrderId', type:'string'],
+            FUNDING_TYPE:[name: 'fundingSource', type: 'string'],
             FUNDING:[name:'funding', type:'decimal'],
             AUTHORISEDP_EMAIL:[name:'adminEmail', type:'email'],
             GRANT_MGR_EMAIL:[name:'grantManagerEmail', type:'email'],
@@ -122,7 +125,7 @@ class GmsMapper {
         includeProgress = false
     }
 
-    public GmsMapper(activitiesModel, programModel, organisations, List<Map> scores, Map programs = [:], Map managementUnits = [:], includeProgress = false) {
+    public GmsMapper(activitiesModel, programModel, organisations, abnLookup, List<Map> scores, Map programs = [:], Map managementUnits = [:], includeProgress = false) {
         this.activitiesModel = activitiesModel
         this.programModel = programModel
         this.includeProgress = includeProgress
@@ -130,6 +133,7 @@ class GmsMapper {
         this.scores = scores
         this.programs = programs
         this.managementUnits = managementUnits
+        this.abnLookupService = abnLookup
     }
 
     def validateHeaders(projectRows) {
@@ -197,13 +201,41 @@ class GmsMapper {
             }
         }
 
-        def organisation = organisations.find{it.name == project.organisationName}
-        if (organisation) {
-            project.organisationId = organisation.organisationId
+        def organisation
+        Map abnLookup
+        if (project.organisationName || project.abn){
+             organisation = organisations.find{  it.abn == project.abn || it.name == project.organisationName}
+            if (organisation){
+                project.organisationId = organisation.organisationId
+            }else {
+                String abn = project.abn
+                if (!abn){
+                    if (!organisation && project.organisationName){
+                        errors << "No organisation exists with organisation name ${project.organisationName}"
+                    }
+                }else{
+                    abnLookup = abnLookupService.lookupOrganisationNameByABN(abn)
+                    if (abnLookup){
+                        organisation = organisations.find{it.name == abnLookup.entityName}
+                        if (organisation){
+                            project.organisationId = organisation.organisationId
+                        }else{
+                            if(abnLookup.entityName == ""){
+                                errors << "${project.abn} is invalid abn number. Please Enter the correct one"
+                            }else{
+                                project.organisationName = abnLookup.entityName
+                            }
+                        }
+                    }else{
+                        errors << "${project.abn} is invalid. Please Enter the correct one"
+                    }
+                }
+
+            }
+        }else{
+            errors << "No organisation exists with abn  ${project.abn} number and organisation name ${project.organisationName}"
         }
-        else {
-            errors << "No organisation exists with name ${project.organisationName}"
-        }
+
         if (project.serviceProviderName) {
             def serviceProviderOrganisation = organisations.find{it.name == project.serviceProviderName}
             if (serviceProviderOrganisation) {
@@ -227,7 +259,6 @@ class GmsMapper {
         [project:project, sites:sites, activities:activities, errors:errors]
 
     }
-
     private def mapSites(projectRows, project, errors) {
         // TODO more than one location row?
         def siteRows = projectRows.findAll{it[DATA_TYPE_COLUMN] == LOCATION_DATA_TYPE}

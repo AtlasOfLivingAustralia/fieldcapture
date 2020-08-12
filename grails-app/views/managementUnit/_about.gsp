@@ -30,14 +30,13 @@
 <div class="projects-wrapper d-none d-md-block">
     <hr/>
     <div class="well-title">Programs</div>
-    <g:set var="projects" value="${mu.projects}" />
-    <g:set var="programs" value="${mu.programs}" />
 
     <ul class="nav nav-tabs" id="programs-tab" >
-        <g:each in="${programs}" var="program" status="i">
+        <g:each in="${displayedPrograms}" var="programDetails" status="i">
+            <g:set var="program" value="${programDetails.program}"/>
             <li class="nav-item">
                 <g:set var="active" value="${i==0?'active':''}"/>
-                <a class="nav-link ${active}"  data-toggle="tab" href="#${program.programId}_projects" role="tab">${program.name}</a>
+                <a class="nav-link ${active}"  data-toggle="tab" href="#${program.programId}_projects" role="tab">${program.name?.encodeAsHTML()}</a>
 
             </li>
         </g:each>
@@ -45,25 +44,16 @@
     </ul>
 
     <div class="tab-content" id="programs-TabContent">
-        <g:each in="${programs}" var="program" status="i">
+        <g:each in="${displayedPrograms}" var="programDetails" status="i">
+            <g:set var="program" value="${programDetails.program}"/>
             <g:set var="active" value="${i==0?'active':''}"/>
             <div class="tab-pane ${active}" id="${program.programId}_projects" >
-                <g:if test="${program.outcomes}">
-                    <div class="well">
-                        <div class="well-title">The Service Provider is addressing these ${program.acronym ?: program.name} outcomes</div>
-                        <div class="row outcomes no-gutters">
-                            <g:each in="${program.outcomes}" var="outcome" >
-                                <g:set var="outcomeClass" value="${outcome.targeted ? 'targeted' :''}"/>
-                                <div class="col-md">
-                                    <div class="outcome-wrapper h-100">
-                                        <div class="h-100 outcome ${outcomeClass}">
-                                            ${outcome.shortDescription}
-                                        </div>
-                                    </div>
-                                </div>
-                            </g:each>
-                        </div>
-                    </div>
+                <g:if test="${programDetails.primaryOutcomes}">
+                    <g:render template="outcomes" model="${[type:"primary", outcomes:programDetails.primaryOutcomes, title:"The Service Provider is addressing these primary outcomes"]}"/>
+                    <hr/>
+                </g:if>
+                <g:if test="${programDetails.secondaryOutcomes}">
+                    <g:render template="outcomes" model="${[type:"secondary", outcomes:programDetails.secondaryOutcomes, title:"The Service Provider is addressing these secondary outcomes"]}"/>
                     <hr/>
                 </g:if>
 
@@ -79,10 +69,10 @@
                     <th class="endDate">End Date</th>
                     </thead>
                     <tbody>
-                        <g:findAll in="${projects}" expr="it.programId == program.programId" var="project">
+                        <g:each in="${programDetails.projects}" var="project">
                             <tr>
                                 <td class="grantId"><a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}" >${project.externalId ?: project.grantId}</a></td>
-                                <td class="projectName">${project.name}</td>
+                                <td class="projectName">${project.name?.encodeAsHTML()}</td>
                                 <td class="projectDescription">${project.description}</td>
                                 <g:if test="${project.custom?.details?.outcomes?.primaryOutcome}">
                                     <g:set var="primaryOutcome" value="${project.custom.details.outcomes.primaryOutcome}" />
@@ -101,15 +91,15 @@
                                 <td class="startDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedStartDate)}</td>
                                 <td class="endDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedEndDate)}</td>
                             </tr>
-                        </g:findAll>
+                        </g:each>
                     </tbody>
                 </table>
 
-                <g:if test="${servicesDashboard.visible && program.servicesWithScores}">
+                <g:if test="${servicesDashboard.visible && programDetails.servicesWithScores}">
                     <div>
                         <hr/>
                         <div class="well-title">Dashboard</div>
-                        <g:set var="services" value="${program.servicesWithScores}"/>
+                        <g:set var="services" value="${programDetails.servicesWithScores}"/>
 
                         <g:each in="${services}" var="service_detail" >
                             <div class="dashboard-section" style="padding:10px; margin-top:10px;">

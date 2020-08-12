@@ -863,3 +863,7 @@ a.icon-link {
 span.status {
 	text-transform: uppercase;
 }
+
+.table .table {
+	background-color: inherit;
+}

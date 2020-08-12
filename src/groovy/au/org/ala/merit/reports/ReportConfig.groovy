@@ -14,6 +14,9 @@ class ReportConfig {
     /** The date the first reporting period should end.  Used to align reports across programs */
     String firstReportingPeriodEnd = null
 
+    /** Allows reporting dates to be explicitly specified if they are not periodic */
+    List<String> endDates
+
     /** The period between the start and end date of generated reports */
     Integer reportingPeriodInMonths = 6
 
@@ -62,7 +65,20 @@ class ReportConfig {
 
 
     DateTime getFirstReportingPeriodEnd() {
-        firstReportingPeriodEnd ? DateUtils.parse(firstReportingPeriodEnd) : null
+        DateTime end = null
+        if (firstReportingPeriodEnd) {
+            end = DateUtils.parse(firstReportingPeriodEnd)
+        }
+        else if (endDates) {
+            end = DateUtils.parse(endDates[0])
+        }
+        end
+    }
+
+    List<DateTime> getReportEndDates() {
+        endDates.collect {
+            DateUtils.parse(it)
+        }
     }
 
     Period getReportingPeriod() {

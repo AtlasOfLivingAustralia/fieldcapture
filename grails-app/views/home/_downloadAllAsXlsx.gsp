@@ -1,6 +1,6 @@
-<a class="btn button btn-primary" id="downloadXlsxButton">Download as XLSX</a>
 
 <form id="downloadTabSelection" target="_blank" method="POST" action="${g.createLink(controller: 'search', action: 'downloadAllData')}">
+    <a class="btn button btn-primary" data-bind="click:downloadXlsx" id="downloadXlsxButton">Download as XLSX</a>
 
     <input type="hidden" name="view" value="xlsx">
     <g:each in="${params.getList("fq")}" var="selectedFacet">
@@ -63,20 +63,14 @@
 <asset:script>
 
 $(function() {
-   var disabled = false;
-   $('#downloadXlsxButton').click(function() {
-       if (!disabled) {
-           disabled = true;
 
-           $('#downloadXlsxButton').prop('disabled', true);
-           var url = "${g.createLink(controller: 'search', action: 'downloadAllData')}";
-           bootbox.alert("The download may take several minutes to complete.  Once it is complete, an email will be sent to your registed email address.");
-           $.post(url,  $('#downloadTabSelection').serializeArray()).done(function() {
-               disabled = false;
-               $('#downloadXlsxButton').prop('disabled', false);
-           });
-       }
-   });
-   ko.applyBindings({}, document.getElementById('downloadTabSelection'));
+   var options = {
+       downloadButtonSelector: '#downloadXlsxButton',
+       downloadTabsSelector: '#downloadTabSelection',
+       downloadXlsxUrl: "${g.createLink(controller: 'search', action: 'downloadAllData')}"
+   };
+
+
+   ko.applyBindings(new DownloadViewModel(options), document.getElementById('downloadTabSelection'));
 });
 </asset:script>

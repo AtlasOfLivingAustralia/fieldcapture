@@ -1,12 +1,14 @@
 package au.org.ala.fieldcapture
 
+import pages.EditManagementUnitPage
 import pages.ManagementUnitPage
-import pages.NewBlogEntryPage
-import pages.ProgramBlogPage
-import pages.ProgramPage
-import pages.AdminReportsPage
 
 class ManagementUnitSpec extends StubbedCasSpec {
+
+    static final String NO_PERMISSIONS_USER = "10"
+    static final String EDITOR_USER = "4"
+    static final String ADMIN_USER = "1"
+    static final String GRANT_MANAGER_USER = "3"
 
     def setup() {
         useDataSet('dataset_mu')
@@ -16,9 +18,51 @@ class ManagementUnitSpec extends StubbedCasSpec {
         logout(browser)
     }
 
-    def "As a user, I can view a management unit"() {
+    def "Only the about tab is visible to unauthenticated users"() {
+        when:
+        to ManagementUnitPage
+
+        then:
+        waitFor {at ManagementUnitPage}
+        overviewBtn.displayed
+        !reportsTab.displayed
+        !sitesTab.displayed
+        !adminTab.displayed
+    }
+
+
+    def "Only the about tab is visible to users with no permissions for the management unit"(
+            String userId, boolean aboutVisible, boolean reportsVisible, boolean sitesVisible, boolean adminVisible) {
+
         setup:
-        login([userId:'1', role:"ROLE_USER", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
+        String role = "ROLE_USER"
+        if (userId == GRANT_MANAGER_USER) {
+            role = "ROLE_FC_OFFICER"
+        }
+        login([userId:userId, role:role, email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
+
+        when:
+        to ManagementUnitPage
+
+        then:
+        waitFor {at ManagementUnitPage}
+        overviewBtn.displayed == aboutVisible
+        reportsTab.displayed == reportsVisible
+        sitesTab.displayed == sitesVisible
+        adminTab.displayed == adminVisible
+
+        where:
+        userId              | aboutVisible | reportsVisible | sitesVisible | adminVisible
+        NO_PERMISSIONS_USER | true | false | false | false
+        EDITOR_USER         | true | true | true | false
+        ADMIN_USER          | true | true | true | true
+        GRANT_MANAGER_USER  | true | true | true | true
+
+    }
+
+    def "The management unit about tab displays information about programs and projects with activity in the management unit"() {
+        setup:
+        login([userId:ADMIN_USER, role:"ROLE_USER", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
 
         when:
         to ManagementUnitPage
@@ -37,76 +81,48 @@ class ManagementUnitSpec extends StubbedCasSpec {
 
         then:
 
-        // grantIds() == ['RLP-Test-Program-Project-1'] will fail when using phantomjs
-        grantIds().size() ==1
+        grantIds() == ['RLP-Test-Program-Project-1']
         projectLinks().size()>=1
         gotoProgram().size() >= 1
 
+        primaryOutcomes() == ['o1', 'o2']
+        targetedPrimaryOutcomes()  == ['o1']
+        secondaryOutcomes() == ['o2', 'o3']
+        targetedSecondaryOutcomes() == ['o2', 'o3']
     }
 
-    def "As an admin, I can view/create/edit/delete a blog for program"(){
+    def "Checking Security Vulnerability after injecting Script tag"(){
         setup:
-        login([userId:'1', role:"ROLE_USER", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
+        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
 
         when:
         to ManagementUnitPage
 
+        and:
+        editManagementUnit()
+
         then:
-        waitFor {at ManagementUnitPage}
+        waitFor { at EditManagementUnitPage}
 
         when:
-        blogTab.click()
+        details.name= "Testing <script>alert('Test')</script>"
+        details.description= "Testing"
+        details.save()
 
         then:
-        waitFor {blogModule.displayed}
-        blogModule.blogs().size() ==1
-        blogModule.blogTitles() == ['BlogTest']
+        at ManagementUnitPage
 
-        when:
-        blogModule.newBlogBtn.click()
+        and:
+        overviewBtn.click()
+        overviewBtn.displayed
+        headerTitle.text() == "Testing <script>alert('Test')</script>"
+        description.text() == "Testing"
 
-        then:
-        waitFor {at NewBlogEntryPage}
 
-        when:
-        blogDetails.title = 'Testing blog of management unit'
-        blogDetails.description = 'Description of blog'
-        submit()
-
-        then:
-        waitFor {at ManagementUnitPage}
-        blogModule.blogs().size() ==2
-
-        ['BlogTest','Testing blog of management unit'].any{blogModule.blogTitles().contains(it)}
-
-        //Enter edit mode again
-        when:
-        blogModule.gotoBlogEditBtn.click()
-
-        then:
-        waitFor{editManagementUnitBlogPane().isDisplayed()}
-        blogModule.editBlogPanelTitle() == 'Edit Blog'
-        blogModule.deleteBlogBtn.size() == 2
-
-        when:
-        interact{
-            blogModule.deleteBlogBtn[1].click()
-        }
-        //bug in program admin page.
-        // When the page is reloaded the admin tab will be displayed but it will revert to the
-        // "Edit" section, we can use that to detect the page has reloaded
-        then:
-        waitFor(10d, {editManagementUnitButton.displayed})
-
-        when:
-        interact{
-            editMUBlogTab().click()
-        }
-        then:
-        blogModule.blogs().size() == 1
     }
 
-    def "As an site admin, I can get report periods and request to generate reports"(){
+
+/*    def "As an site admin, I can get report periods and request to generate reports"(){
         setup:
         login([userId:'1', role:"ROLE_ADMIN", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
 
@@ -133,6 +149,5 @@ class ManagementUnitSpec extends StubbedCasSpec {
 //        then:
 //        waitFor{muReportDownloadLink().isDisplayed()}
 
-    }
-
+    }*/
 }

@@ -25,7 +25,21 @@ var ReportViewModel = function(report, config) {
     self.toDate =  ko.observable(report.toDate).extend({simpleDate:false});
     self.submissionDate = ko.observable(report.submissionDate || report.toDate).extend({simpleDate:false});
     self.submissionDateLabel = convertToSimpleDate(moment(self.submissionDate()).subtract(1, 'hours').toDate(), false);
-    self.toDateLabel = convertToSimpleDate(moment(report.toDate).subtract(1, 'hours').toDate(), false);
+    self.toDateLabel = ko.computed(function() {
+        // If the report end date matches the project end date we want to use the project end date,
+        // as projects end at 00:00 of the specified day.  Otherwise, the reports end at 00:00 of the following
+        // day but we want to show the previous day on the label.
+        var label;
+        if (config.reportOwner && config.reportOwner.endDate) {
+            if (report.toDate == config.reportOwner.endDate) {
+                label = convertToSimpleDate(report.toDate);
+            }
+        }
+        if (!label) {
+            label = convertToSimpleDate(moment(report.toDate).subtract(1, 'hours').toDate(), false);
+        }
+        return label;
+    });
     self.dueDate = ko.observable(report.dueDate).extend({simpleDate:false});
     self.progress = ko.observable(report.progress || 'planned');
     self.editUrl = config.editReportUrl + '?&reportId='+report.reportId;
@@ -37,6 +51,8 @@ var ReportViewModel = function(report, config) {
         }
         return report.finishedCount / report.count * 100;
     }();
+
+
 
     self.reason = ko.observable();
     self.category = ko.observable();
@@ -251,7 +267,7 @@ var ReportsViewModel = function(reports, projects, availableReports, reportOwner
             if (!self.showAllReports() && report.fromDate > now) {
                 return;
             }
-            filteredReports.push(new ReportViewModel(report, config));
+            filteredReports.push(new ReportViewModel(report, _.extend({}, config, {reportOwner:reportOwner})));
         });
         filteredReports.sort(function(r1, r2) {
 
@@ -400,7 +416,7 @@ var ReportsViewModel = function(reports, projects, availableReports, reportOwner
 
 };
 
-var CategorisedReportsViewModel = function(allReports, order, projects, availableReports, reportOwner, config) {
+var CategorisedReportsViewModel = function(allReports, order, availableReports, reportOwner, config) {
 
     var self = this;
     var categorizedReports = _.groupBy(allReports, function(report) {
@@ -432,7 +448,7 @@ var CategorisedReportsViewModel = function(allReports, order, projects, availabl
             self.reportsByCategory.push({
                 title:category.category,
                 description:ko.observable(category.description).extend({markdown:true}),
-                model:new ReportsViewModel(reports, projects, availableReports, reportOwner, config)
+                model:new ReportsViewModel(reports, undefined, availableReports, reportOwner, config)
             });
         }
 

@@ -14,7 +14,7 @@ import spock.lang.Specification
 class GmsMapperSpec extends Specification {
 
     def gmsMapper = new GmsMapper()
-
+    AbnLookupService abnLookupService = Mock(AbnLookupService)
     def scores = [
             [scoreId:'1', label:'Area of revegetation works (Ha)', units:'Ha', externalId:'RVA', isOutputTarget:true],
             [scoreId:'2', label:'Number of plants planted', units:'', externalId:'RVN', isOutputTarget:true],
@@ -26,8 +26,8 @@ class GmsMapperSpec extends Specification {
     def setup() {
         activitiesModel = JSON.parse(new InputStreamReader(getClass().getResourceAsStream('/resources/activities-model.json')))
         Map programModel = [programs:[[name:'Green Army']]]
-        List organisations = [[name:'Test org 1']]
-        gmsMapper = new GmsMapper(activitiesModel, programModel, organisations, scores)
+        List organisations = [[ organisationId: "123", name:'Test org 1', abn:'12345678901']]
+        gmsMapper = new GmsMapper(activitiesModel, programModel, organisations, abnLookupService,scores)
     }
 
     /**
@@ -53,6 +53,7 @@ class GmsMapperSpec extends Specification {
         'Test Project Description' == project.description
         'Test Organisation 2' == project.organisationName
         'Green Army' == project.associatedProgram
+
         'Green Army Round 1' == project.associatedSubProgram
         expectedStartDate == project.plannedStartDate
         expectedEndDate == project.plannedEndDate
@@ -210,7 +211,7 @@ class GmsMapperSpec extends Specification {
 
     def "Management unit is not a compulsory field for a project load"() {
         when:
-        Map result = gmsMapper.mapProject([[APP_ID:'g1', PROGRAM_NM:"Green Army", ORG_TRADING_NAME:'Test org 1', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']])
+        Map result = gmsMapper.mapProject([[APP_ID:'g1', PROGRAM_NM:"Green Army", ORG_TRADING_NAME:'Test org 1', ABN:'12345678901', FUNDING_TYPE:"RLP", FUNDING:"1000", START_DT:'2019/07/01', FINISH_DT:'2020/07/01']])
 
         then:
         !result.errors
@@ -219,7 +220,7 @@ class GmsMapperSpec extends Specification {
     def "Programs can be mapped from the supplied name via the program map"() {
         setup:
         gmsMapper.programs = ["Program name 1":"p1id", "Program name 2":"p2id"]
-        Map projectData = [APP_ID:'g1', ORG_TRADING_NAME:'Test org 1', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
+        Map projectData = [APP_ID:'g1', ORG_TRADING_NAME:'Test org 1', ABN:'12345678901', FUNDING_TYPE:"RLP", FUNDING:"1000", START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
 
         when:
         Map result = gmsMapper.mapProject([ projectData + [PROGRAM_NM: 'Program name 2'] ])
@@ -231,7 +232,7 @@ class GmsMapperSpec extends Specification {
 
     def "Programs can be mapped from the programs model as a fallback if they aren't mapped in the program map"() {
         gmsMapper.programs = ["Program name 1":"p1id", "Program name 2":"p2id"]
-        Map projectData = [APP_ID:'g1', ORG_TRADING_NAME:'Test org 1', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
+        Map projectData = [APP_ID:'g1', ORG_TRADING_NAME:'Test org 1', ABN: '12345678901',FUNDING_TYPE:"RLP", FUNDING:"1000", START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
 
         when:
         Map result = gmsMapper.mapProject([ projectData + [PROGRAM_NM: 'Green Army'] ])
@@ -243,7 +244,7 @@ class GmsMapperSpec extends Specification {
 
     def "An error will be raised if the program is unable to be mapped or missing"() {
         gmsMapper.programs = ["Program name 1":"p1id", "Program name 2":"p2id"]
-        Map projectData = [APP_ID:'g1', ORG_TRADING_NAME:'Test org 1', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
+        Map projectData = [APP_ID:'g1', ORG_TRADING_NAME:'Test org 1',ABN:  '12345678901', FUNDING_TYPE:"RLP", FUNDING:"1000", START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
 
         when:
         Map result = gmsMapper.mapProject([ projectData + [PROGRAM_NM: 'Missing program'] ])
@@ -260,7 +261,7 @@ class GmsMapperSpec extends Specification {
 
     def "Tags can be mapped by the GMS mapper"() {
         gmsMapper.programs = ["Program name 1":"p1id", "Program name 2":"p2id"]
-        Map projectData = [APP_ID:'g1',PROGRAM_NM:'Program name 1', ORG_TRADING_NAME:'Test org 1', START_DT:'2019/07/01', FINISH_DT:'2020/07/01', TAGS:"Fires, Flood, Test"]
+        Map projectData = [APP_ID:'g1',PROGRAM_NM:'Program name 1', ORG_TRADING_NAME:'Test org 1', ABN: '12345678901',FUNDING_TYPE:"RLP", FUNDING:"1000", START_DT:'2019/07/01', FINISH_DT:'2020/07/01', TAGS:"Fires, Flood, Test"]
 
         when:
         Map result = gmsMapper.mapProject([ projectData ])
@@ -270,4 +271,92 @@ class GmsMapperSpec extends Specification {
         !result.errors
     }
 
+    def "Organisation can be map using organisation name"(){
+        setup:
+        Map projectData = [APP_ID:'g1', ORG_TRADING_NAME:'Test org 1', FUNDING_TYPE:"RLP", FUNDING:"1000",START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
+
+        when:
+        def result = gmsMapper.mapProject([projectData])
+
+        then:
+        result.errors[1].toString() != "No organisation exists with organisation name Test org 1"
+
+    }
+
+    def "An Error will raised organisation unable to map using organisation name"(){
+        setup:
+        Map projectData = [APP_ID:'g1', ORG_TRADING_NAME:'Test org 2',FUNDING_TYPE:"RLP", FUNDING:"1000", START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
+
+        when:
+        def result = gmsMapper.mapProject([projectData])
+
+        then:
+        result.errors[1].toString() == "No organisation exists with organisation name Test org 2"
+    }
+
+
+    def "organisation to map using abn lookup"(){
+        setup:
+        Map projectData = [APP_ID:'g1', ABN: '12345678900', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
+        String abn = "12345678900"
+        Map abnValue = [abn:"12345678900", entityName:"Test org 1"]
+
+        when:
+        def result = gmsMapper.mapProject([projectData])
+
+        then:
+        1 * abnLookupService.lookupOrganisationNameByABN(abn) >> abnValue
+
+        and:
+        result.errors[1].toString() != "12345678900 is invalid. Please Enter the correct one"
+    }
+
+    def "An error is raise when abn number is not provided"(){
+        setup:
+        Map projectData = [APP_ID:'g1', ABN: '12345678900', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
+        String abn = "12345678900"
+        Map abnValue = null
+
+        when:
+        def result = gmsMapper.mapProject([projectData])
+
+        then:
+        1 * abnLookupService.lookupOrganisationNameByABN(abn) >> abnValue
+
+        and:
+        result.errors[1].toString() == "12345678900 is invalid. Please Enter the correct one"
+    }
+
+    def "An error is raise when abn number return the empty map"(){
+        setup:
+        Map projectData = [APP_ID:'g1', ABN: '12345678900', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
+        String abn = "12345678900"
+        Map abnValue = [abn: "", entityName: ""]
+
+        when:
+        def result = gmsMapper.mapProject([projectData])
+
+        then:
+        1 * abnLookupService.lookupOrganisationNameByABN(abn) >> abnValue
+
+        and:
+        result.errors[1].toString() == "12345678900 is invalid abn number. Please Enter the correct one"
+    }
+
+
+    def "Assign entity name to the organisation "(){
+        setup:
+        Map projectData = [APP_ID:'g1', ABN: '12345678900', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
+        String abn = "12345678900"
+        Map abnValue = [abn: "12345678900", entityName: "Org name"]
+
+        when:
+        def result = gmsMapper.mapProject([projectData])
+
+        then:
+        1 * abnLookupService.lookupOrganisationNameByABN(abn) >> abnValue
+
+        and:
+        result.errors[1].toString() != "12345678900 is invalid abn number. Please Enter the correct one"
+    }
 }

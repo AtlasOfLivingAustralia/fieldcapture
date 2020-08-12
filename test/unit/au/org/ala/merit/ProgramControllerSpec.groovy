@@ -3,6 +3,7 @@ package au.org.ala.merit
 import au.org.ala.merit.command.SaveReportDataCommand
 import grails.test.mixin.TestFor
 import org.apache.http.HttpStatus
+import org.codehaus.groovy.util.ListHashMap
 import spock.lang.Specification
 
 @TestFor(ProgramController)
@@ -241,7 +242,44 @@ class ProgramControllerSpec extends Specification {
 
     }
 
+    def "Testing Add New Sub Program Passing programId"() {
+        setup:
+        setupProgramAdmin()
+        def id = "test_program"
+        Map program = createPrograms(id)
+        Map expected = [program: [parentProgramId:program.programId, parentProgramName:program.name]]
 
+        when:
+        Map actual = controller.addSubProgram(id)
+
+        then:
+        1 * programService.get(id) >> program
+
+        expect:
+        expected == actual
+    }
+
+    def "Testing Edit Program giving me list of program"(){
+        setup:
+        setupProgramAdmin()
+        def newProgram = "test_program"
+        Map program = createPrograms(newProgram)
+
+        List<Map> listOfProgram = [[id: 4, programId: 4, name:"Testing 4", description: "Description 4"]]
+        Map expected = [program:program, editProgramId:newProgram, allProgram:[[id: 4, programId: 4, name:"Testing 4", description: "Description 4"]],isNameEditable:false]
+
+        when:
+        Map actual = controller.edit(newProgram)
+
+        then:
+        1 * programService.get(newProgram) >> program
+        1 * programService.listOfAllPrograms() >> listOfProgram
+
+        and:
+        println(expected)
+        println(actual)
+        expected == actual
+    }
 
     private Map testProgram(String id, boolean includeReports) {
         Map program = [programId:id, name:'name', config:[:], inheritedConfig:[:]]
@@ -272,4 +310,7 @@ class ProgramControllerSpec extends Specification {
         userService.userIsAlaOrFcAdmin() >> false
     }
 
+    private static Map createPrograms(String id){
+        return [id:id, programId: id, name: "Testing Program Name", description: "Testing Program Description"]
+    }
 }

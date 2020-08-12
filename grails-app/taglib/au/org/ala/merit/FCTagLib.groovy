@@ -514,6 +514,13 @@ class FCTagLib {
         }
     }
 
+    /** evaluates to true if the logged in user has the ALA_ADMIN role.  used for conditional content on GSPs */
+    def userIsAlaAdmin = { attrs ->
+        if (userService.userIsAlaAdmin()) {
+            out << true
+        }
+    }
+
     def userHasReadOnlyAccess = {
         if (userService.userHasReadOnlyAccess()) {
             out << true
@@ -631,13 +638,18 @@ class FCTagLib {
 
     def modelAsJavascript = { attrs ->
         def model = attrs.model
-        if (!(model instanceof JSONObject) && !(model instanceof JSONArray) && !(model instanceof grails.converters.JSON)) {
-            model = model as JSON
+        if (model instanceof String){
+            out << "'${model.encodeAsJavaScript()}'"
+        }else{
+            if (!(model instanceof JSONObject) && !(model instanceof JSONArray) && !(model instanceof grails.converters.JSON)) {
+                model = model as JSON
+            }
 
+            def json = (model?:attrs.default != null? attrs.default:[:] as JSON)
+            def modelJson = json.toString()
+
+            out << "JSON.parse('${modelJson.encodeAsJavaScript()}')"
         }
-        def json = (model?:attrs.default != null? attrs.default:[:] as JSON)
-        def modelJson = json.toString()
-        out << "JSON.parse('${modelJson.encodeAsJavaScript()}')"
     }
 
     def renderProject = { attrs ->
@@ -946,6 +958,37 @@ class FCTagLib {
 
         out << status
 
+    }
+
+    def programFullName = { Map attrs ->
+        if (!attrs.program) {
+            throw new IllegalAccessException("No program attribute was supplied")
+        }
+        String separator = attrs.separator ?: '-'
+        Map program = attrs.program
+        Deque<Map> parents = new LinkedList<Map>()
+        while(program != null) {
+            parents.push(program)
+            program = program.parent
+        }
+
+        StringBuffer result = new StringBuffer()
+
+        while (parents.peekLast() != null) {
+            program = parents.pop()
+            if (result.length()) {
+                result.append(" ").append(separator).append(" ")
+            }
+            if (attrs.useAcronyms && !parents && program.acronym) {
+                result.append(program.acronym)
+            }
+            else {
+                result.append(program.name)
+            }
+        }
+        def results = result.toString()
+
+        out << "${results.encodeAsHTML()}"
     }
 
     def displayDate = {}

@@ -1,11 +1,10 @@
 package au.org.ala.fieldcapture
 
-import geb.spock.GebReportingSpec
 import pages.ProjectIndex
 import spock.lang.Stepwise
 
 @Stepwise
-public class ProjectIndexSpec extends StubbedCasSpec {
+class ProjectIndexSpec extends StubbedCasSpec {
 
     def projectId = "project_1"
 
@@ -31,45 +30,71 @@ public class ProjectIndexSpec extends StubbedCasSpec {
         adminTab.click()
 
         then:
-        waitFor {admin.editDocumentTab}
+        waitFor {admin.documentsTab}
 
         when:
-        admin.editDocumentTab.click()
+        admin.documentsTab.click()
 
         then:
-        admin.attached_documents.size() == 1
-        admin.attached_documents[0].text() == 'test 1'
+        admin.documents.documentSummaryList().size() == 1
+        admin.documents.documentSummaryList()[0].name == 'test 1'
 
         when:
-        admin.attachDocumentBtn.click()
+        admin.documents.attachDocumentButton.click()
+
 
         then:
-        waitFor {editDocumentForm}
-        editDocumentForm.reportOptions.size() == 2
-        //editDocumentForm.firstReportOption.text() == 'Core services report 1'
+        waitFor { admin.documents.attachDocumentDialog.title.displayed &&  admin.documents.attachDocumentDialog.report.displayed}
+        admin.documents.attachDocumentDialog.reportOptions.size() == 2
+
+        when:
+        File toAttach = new File(getClass().getResource('/resources/testImage.png').toURI())
+        admin.documents.attachDocumentDialog.report = 'report_1'
+        admin.documents.attachDocumentDialog.title = 'test 2'
+        admin.documents.attachDocumentDialog.file =(toAttach.absolutePath)
+        admin.documents.attachDocumentDialog.save()
+
+        then:
+        waitFor{hasBeenReloaded()}
+        at ProjectIndex // Do another at check or the next call to "hasBeenReloaded" will return regardless of whether the page has been reloaded again.
+
+        waitFor {admin.documents.documentSummaryList().size() == 2}
+        admin.documents.documentSummaryList().size() == 2
+        admin.documents.documentSummaryList()[1].name == 'test 2'
+
+        when:
+        admin.documents.documentSummaryList()[1].deleteButton.click()
+
+        then:
+        waitFor {hasBeenReloaded()}
+        waitFor {admin.documents.documentSummaryList().size() == 1}
 
 
-//        when:
-//        File outputFile = File.createTempFile('test', '.txt')
-//        String filename = outputFile.absolutePath
-//        editDocumentForm.reportSelect = 'report_1'
-//        editDocumentForm.documentNameInput = 'test 2'
-//        editDocumentForm.uploadingFile =(filename)
-//        editDocumentForm.saveBtn.click()
-//
-//        then:
-//        waitFor {admin.editDocumentTab}
-//        admin.attached_documents.size() == 2
-//        admin.attached_documents[1].text() == 'test 2'
-//        admin.deleteDocumentBtns.size() == 2
-//
-//        when:
-//        admin.deleteDocumentBtns[1].click()
-//
-//        then:
-//        waitFor {admin.editDocumentTab}
-//        admin.attached_documents.size() == 1
+    }
 
+    def "Adding Project Funding Type and Funding"(){
+        setup:
+        login([userId:'1', role:"ROLE_ADMIN", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
+        when:
+        to ProjectIndex, projectId
+
+        then:
+        waitFor {at ProjectIndex}
+        adminTab.click()
+        waitFor {admin.displayed}
+
+        when:
+        admin.projectSettingsTab.click()
+        waitFor{ admin.projectSettings.displayed}
+        admin.projectSettings.fundingType[0].click()
+        admin.projectSettings.funding = "1000"
+        admin.projectSettings.save.click()
+
+        then:
+
+        waitFor{ admin.projectSettings.displayed}
+        admin.projectSettings.fundingType.text() == "RLP"
+        admin.projectSettings.funding.value() == "1000"
     }
 }
 

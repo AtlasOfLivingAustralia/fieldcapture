@@ -1,7 +1,7 @@
 package au.org.ala.merit
 
-import grails.converters.JSON
 import grails.plugin.cache.GrailsCacheManager
+import groovy.json.JsonSlurper
 import org.apache.log4j.Logger
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,9 +17,8 @@ class StatisticsFactory {
 
     private static final String STATISTICS_CACHE_REGION = 'homePageStatistics'
     private static final String DEFAULT_CONFIG = "/resources/statistics.json"
-    private static final String STATISTICS_CONFIG_KEY = 'meritstatistics.config'
+    private static final String CONFIG_KEY = "config"
 
-    Map config
     @Autowired
     ReportService reportService
     @Autowired
@@ -31,33 +30,36 @@ class StatisticsFactory {
 
     public StatisticsFactory() {}
 
-    private void initialize() {
-        String result = settingService.get(STATISTICS_CONFIG_KEY)
-        if (result) {
-            config = JSON.parse(result)
+    private String initialize() {
+        String configString = settingService.getSettingText(SettingPageType.HOME_PAGE_STATISTICS)
+        if (!configString) {
+            configString = readConfig()
         }
-        if (!config) {
-            config = readConfig()
-        }
+        configString
     }
 
-    private Map readConfig() {
-        def configAsString = getClass().getResource(DEFAULT_CONFIG).text
-        JSON.parse(configAsString)
+    private String readConfig() {
+        getClass().getResource(DEFAULT_CONFIG).text
     }
 
     public synchronized void clearConfig() {
-        config = null
         Cache cache = grailsCacheManager.getCache(STATISTICS_CACHE_REGION)
         cache.clear()
     }
 
+    private synchronized Map getConfig() {
+        String config = grailsCacheManager.getCache(STATISTICS_CACHE_REGION).get(CONFIG_KEY)?.get()
+        if (!config) {
+            config = initialize()
+            grailsCacheManager.getCache(STATISTICS_CACHE_REGION).put(CONFIG_KEY, config)
+        }
+        JsonSlurper jsonSlurper = new JsonSlurper()
+        jsonSlurper.parseText(config)
+    }
+
     public synchronized List<Map> getStatisticsGroup(int groupNumber) {
 
-        if (config == null) {
-            initialize()
-        }
-
+        Map config = getConfig()
         List<Map> statistics = grailsCacheManager.getCache(STATISTICS_CACHE_REGION).get(groupNumber)?.get()
         if (!statistics) {
             log.info("Cache miss for homepage stats, key: ${groupNumber}")
@@ -82,9 +84,7 @@ class StatisticsFactory {
     }
 
     public synchronized int getGroupCount() {
-        if (config == null) {
-            initialize()
-        }
+        Map config = getConfig()
         return config.groups.size()
     }
 

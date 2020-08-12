@@ -2,6 +2,9 @@ describe("ManagmentUnitViewModel Spec", function () {
     beforeAll(function() {
         window.fcConfig = {
             imageLocation:'/'
+        };
+        if (!window.bootbox) {
+            window.bootbox = {alert:function(){}}
         }
         // These are defined in the ecodata-client-plugin which doesn't package javascript as a node module so
         // getting them for testing purposes is a bit messy, so they are just being stubbed.
@@ -26,6 +29,36 @@ describe("ManagmentUnitViewModel Spec", function () {
 
         expect(mu.name()).toEqual(muData.name);
         expect(mu.description()).toEqual(muData.description);
+    });
+
+    it("Management unit priorities can be saved", function() {
+        var options = {managementUnitSaveUrl:'/test/url', healthCheckUrl:'/test/health'};
+        var mu = { name: 'Test MU', managementUnitId:"m1" };
+        var model = new ManagementUnitPageViewModel(mu, options);
+
+        spyOn($, 'ajax').and.callFake(function () {
+            var d = $.Deferred();
+            // resolve using our mock data
+            d.resolve({success:true});
+            return d.promise();
+        });
+
+
+        spyOn(bootbox, 'alert');
+
+        var prioritiesFromJSONEditor = JSON.stringify([{category:'Test', priority: 'Test priority'}]);
+        model.priorities(prioritiesFromJSONEditor);
+        model.saveManagementUnitPriorities();
+        var expected = {
+            url: options.managementUnitSaveUrl,
+            type: 'POST',
+            data: '{"priorities":[{"category":"Test","priority":"Test priority"}]}',
+            dataType: 'json',
+            contentType: 'application/json'
+        };
+        expect($.ajax).toHaveBeenCalledWith(expected);
+        expect(bootbox.alert).toHaveBeenCalledWith("Management Unit priorities saved!");
+
     });
 
 });

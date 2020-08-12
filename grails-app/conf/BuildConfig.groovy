@@ -56,7 +56,7 @@ clover {
                 }
             }
         }
-        ant.'clover-check'(target: "26.9%", haltOnFailure: true) { }
+        ant.'clover-check'(target: "30.8%", haltOnFailure: true) { }
 
     }
 }
@@ -113,6 +113,11 @@ grails.project.dependency.resolution = {
         test "org.seleniumhq.selenium:selenium-chrome-driver:2.53.1"
         test "com.codeborne:phantomjsdriver:1.3.0"
         test "net.sourceforge.nekohtml:nekohtml:1.9.22"
+        test "com.icegreen:greenmail:1.5.14"
+
+        compile ('net.sourceforge.nekohtml:nekohtml:1.9.22'){
+            excludes "xercesImpl"
+        }
     }
 
     plugins {
@@ -134,7 +139,7 @@ grails.project.dependency.resolution = {
         //compile ":handlebars-asset-pipeline:2.13.1"
 
         runtime (":rest:0.8") {
-            excludes "httpclient", "httpcore"
+            excludes "httpclient", "httpcore","xercesImpl"
         }
         compile ":ala-auth:2.2.0"
         runtime ":csv:0.3.1"
@@ -154,7 +159,7 @@ grails.project.dependency.resolution = {
         test "org.grails.plugins:geb:1.0"
 
         if (Environment.current != Environment.DEVELOPMENT) {
-            compile (":ecodata-client-plugin:1.13-SNAPSHOT")
+            compile (":ecodata-client-plugin:1.14.1")
         }
 
     }

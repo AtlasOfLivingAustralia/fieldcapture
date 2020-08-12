@@ -17,7 +17,7 @@
 </g:if>
 <g:else>
     <div class="row-fluid">
-        <span class="span12"><h4>${organisation.name} is not currently involved in any projects.</h4></span>
+        <span class="span12"><h4>${organisation.name?.encodeAsHTML()} is not currently involved in any projects.</h4></span>
     </div>
 </g:else>
 
@@ -70,10 +70,14 @@ $(function() {
         }
         return '<span style="text-transform:uppercase;" class="'+badge+'">'+data+'</span>';
     };
+    var nameRender = function(data){
+       return data.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+    }
+
     var projectListHeader =  [
         {title:'Grant ID', width:'10%', render:projectUrlRenderer, data:'grantId'},
         <g:if test="${content.reporting?.visible}">{title:'Work Order', width:'10%', data:'workOrderId', defaultContent:''},</g:if>
-        {title:'Name', width:'25%', data:'name'},
+        {title:'Name', width:'25%', render: nameRender, data:'name'},
         <g:if test="${content.reporting?.visible}">{title:'Agreement Date', width:'10%', render:agreementDateRenderer, data:'serviceProviderAgreementDate'},</g:if>
         {title:'Contracted Start Date', width:'8%', render:dateRenderer, data:'startDate'},
         {title:'Contracted Project Length (weeks)', width:'4%', data:'duration', defaultContent:''},
