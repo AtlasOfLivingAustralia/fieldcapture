@@ -75,7 +75,7 @@
     <div class="control-group span4">
         <label class="control-label" for="funding">Project funding</label>
         <div class="controls">
-            <g:textField class="" name="funding" data-bind="value:funding" data-validation-engine="validate[custom[number]]"/>
+            <g:textField class="" id="funding" name="funding" data-bind="value:funding" data-validation-engine="validate[custom[number]]"/>
         </div>
     </div>
 
