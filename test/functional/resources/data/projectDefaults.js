@@ -36,7 +36,8 @@ var projectDefaults = {
             "status": "active",
             "tags": [],
             "uNRegions": [],
-            "workOrderId": "1234565",
+            "workOrderId": "1234565"
+
         }
     }
 };
