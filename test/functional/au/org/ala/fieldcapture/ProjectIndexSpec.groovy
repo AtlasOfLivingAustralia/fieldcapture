@@ -86,15 +86,18 @@ class ProjectIndexSpec extends StubbedCasSpec {
         when:
         admin.projectSettingsTab.click()
         waitFor{ admin.projectSettings.displayed}
-        admin.projectSettings.fundingType[0].click()
-        admin.projectSettings.funding = "1000"
+        waitFor{admin.projectSettings.addFunding.displayed}
+        admin.projectSettings.addFunding.click()
+        admin.projectSettings.fundings[0].fundingSource.find("option").find {it.value() == "RLP"}.click()
+        admin.projectSettings.fundings[0].fundingSourceAmount = 1000
+
         admin.projectSettings.save.click()
 
         then:
 
         waitFor{ admin.projectSettings.displayed}
-        admin.projectSettings.fundingType.text() == "RLP"
-        admin.projectSettings.funding.value() == "1000"
+        admin.projectSettings.fundings[0].fundingSource.value() == "RLP"
+        admin.projectSettings.fundings[0].fundingSourceAmount.value() == "1000"
     }
 }
 

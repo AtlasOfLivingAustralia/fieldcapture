@@ -69,6 +69,12 @@ function isValid(p, a) {
 	 return p;
 }
 
+function FundingViewModel(funding){
+    var self = this;
+    self.fundingSource = ko.observable(funding.fundingSource);
+    self.fundingType = ko.observable(funding.fundingType);
+    self.fundingSourceAmount = ko.observable(funding.fundingSourceAmount).extend({currency:{currencySymbol:"$"}});
+}
 
 function ProjectViewModel(project, isUserEditor, organisations) {
     var self = this;
@@ -118,8 +124,33 @@ function ProjectViewModel(project, isUserEditor, organisations) {
     self.manager = ko.observable(project.manager);
     self.plannedStartDate = ko.observable(project.plannedStartDate).extend({simpleDate: false});
     self.plannedEndDate = ko.observable(project.plannedEndDate).extend({simpleDate: false});
-    self.funding = ko.observable(project.funding).extend({currency:{}});
-    self.fundingSource = ko.observable(project.fundingSource);
+    self.fundingTypes = ["Public - commonwealth"];
+    self.fundingSources=["RLP", "NON-RLP"]
+
+    var fundings = $.map(project.fundings || [], function (funding) {
+
+        return new FundingViewModel(funding)});
+    self.fundings = ko.observableArray(fundings);
+    self.fundingData = ko.toJS(self.fundings());
+
+    self.funding = ko.computed(function () {
+        var totals = 0;
+        ko.utils.arrayForEach(self.fundings(), function(funding){
+            totals += parseInt(funding.fundingSourceAmount());
+        });
+        if (fundings.length === 0){
+            totals = parseInt(project.funding);
+        }
+        return totals;
+    }).extend({currency:{currencySymbol: "$"}});
+
+    self.removeFunding = function(){
+        self.fundings.remove(this);
+    }
+    self.addFunding = function(){
+        self.fundings.push(new FundingViewModel({fundingSource:"", fundingType:"", fundingSourceAmount:0}))
+    }
+
     self.regenerateProjectTimeline = ko.observable(false);
     self.projectDatesChanged = ko.computed(function() {
         return project.plannedStartDate != self.plannedStartDate() ||
@@ -883,7 +914,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             associatedProgram: self.associatedProgram(),
             associatedSubProgram: self.associatedSubProgram(),
             funding: new Number(self.funding()),
-            fundingSource:self.fundingSource(),
+            fundings: ko.toJS(self.fundings()),
             status: self.status(),
             tags: self.tags(),
             promoteOnHomepage: self.promoteOnHomepage(),
