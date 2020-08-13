@@ -93,7 +93,8 @@ class NewBlogEntryPage extends Page {
 
 class BlogDetails extends Module {
     static content = {
-        //site { $('[data-bind~=value:siteId]') }
+        type { $('#type') }
+        date { $('#date') }
         title { $('input#title') }
         description { $('textarea#blog-content') }
         saveButton() {

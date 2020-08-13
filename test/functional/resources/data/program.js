@@ -116,7 +116,7 @@ var programDefaults = {
           "name": "Test program",
           "outcomes": [
               {
-                  "outcome": "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions",
+                  "outcome": "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions",
                   "priorities": [
                       {
                           "category": "Ramsar"
@@ -126,7 +126,7 @@ var programDefaults = {
                   "shortDescription": "Ramsar Sites"
               },
               {
-                  "outcome": "By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved.",
+                  "outcome": "By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved.",
                   "priorities": [
                       {
                           "category": "Threatened Species"
@@ -136,7 +136,7 @@ var programDefaults = {
                   "shortDescription": "Threatened Species Strategy"
               },
               {
-                  "outcome": "By 2023, invasive species management has reduced threats to the natural heritage Outstanding Universal Value of World Heritage properties through the implementation of priority actions.",
+                  "outcome": "By 2023, invasive species management has reduced threats to the natural heritage Outstanding Universal Value of World Heritage properties through the implementation of priority actions.",
                   "priorities": [
                       {
                           "category": "World Heritage Sites"
@@ -146,7 +146,7 @@ var programDefaults = {
                   "shortDescription": "World Heritage Areas"
               },
               {
-                  "outcome": "By 2023, the implementation of priority actions is leading to an improvement in the condition of EPBC Act listed Threatened Ecological Communities.",
+                  "outcome": "By 2023, the implementation of priority actions is leading to an improvement in the condition of EPBC Act listed Threatened Ecological Communities.",
                   "priorities": [
                       {
                           "category": "Threatened Ecological Communities"

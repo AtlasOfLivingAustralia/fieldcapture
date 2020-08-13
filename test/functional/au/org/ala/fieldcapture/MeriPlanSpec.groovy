@@ -211,4 +211,45 @@ class MeriPlanSpec extends StubbedCasSpec {
         }
     }
 
+    def "A program can set a default primary outcome"()  {
+        setup:
+        String projectId = 'defaultOutcome'
+        login([userId: '1', email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'Admin'], browser)
+
+        when:
+        to RlpProjectPage, projectId
+
+        then:
+        waitFor { at RlpProjectPage }
+
+        when:
+        def meriPlan = openMeriPlanEditTab()
+
+        then: "The primary outcome will default to the program default"
+        waitFor {
+            meriPlan.primaryOutcome  == 'By 2023, invasive species management has reduced threats to the natural heritage Outstanding Universal Value of World Heritage properties through the implementation of priority actions.'
+        }
+
+        when:
+        meriPlan.primaryOutcome = "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
+        meriPlan.save()
+
+        def previousLoad = getAtCheckTime()
+        to RlpProjectPage, projectId
+
+        then:
+        waitFor { getAtCheckTime() > previousLoad }
+
+        when:
+        meriPlan = openMeriPlanEditTab()
+
+        then: "The saved value will not have been overwritten by the default"
+        waitFor {
+            meriPlan.primaryOutcome.value() == "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
+        }
+
+
+
+    }
+
 }

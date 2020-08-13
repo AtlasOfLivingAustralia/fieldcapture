@@ -187,3 +187,7 @@ function assign(src, des){
     }
 
 }
+
+function addSetting(key, value) {
+    db.setting.insert({key:key, value:value});
+}

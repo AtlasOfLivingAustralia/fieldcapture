@@ -500,5 +500,29 @@ describe("Loading the MERI plan is handled correctly", function () {
 
     });
 
-})
-;
+
+    it("should allow a outcome to be specified as default", function() {
+
+        var options = {
+            outcomes: [
+                { outcome:"Outcome 1", "type": 'primary'},
+                { outcome:"Outcome 2", "type": 'primary', default:true},
+                { outcome:"Outcome 3"},
+                { outcome:"Outcome 4", "type": 'secondary'},
+            ]
+        };
+
+        var viewModel = new OutcomesViewModel({}, options);
+        expect(viewModel.primaryOutcome.description()).toBe('Outcome 2');
+
+        var outcomeData = {
+            primaryOutcome: {
+                description: 'Outcome 3',
+                assets:[]
+            }
+        };
+        var viewModel = new OutcomesViewModel(outcomeData, options);
+        expect(viewModel.primaryOutcome.description()).toBe('Outcome 3');
+    });
+
+});

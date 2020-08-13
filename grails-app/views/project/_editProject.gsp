@@ -62,14 +62,18 @@
 
 <div class="row-fluid">
     <div class="control-group span4">
-        <label class="control-label" for="manager">Project manager</label>
+        <label class="control-label" for="fundingSource">Funding Type</label>
         <div class="controls">
-            <g:textField class="" name="manager" data-bind="value:manager"/>
+            <select id="fundingSource" data-bind="value:fundingSource" class="select">
+                <option value=""> Select Funding Type</option>
+                <option id="rlp" value="RLP">RLP</option>
+                <option id="non-rlp" value="NON-RLP">NON-RLP</option>
+            </select>
         </div>
     </div>
 
     <div class="control-group span4">
-        <label class="control-label" for="manager">Project funding</label>
+        <label class="control-label" for="funding">Project funding</label>
         <div class="controls">
             <g:textField class="" name="funding" data-bind="value:funding" data-validation-engine="validate[custom[number]]"/>
         </div>
@@ -227,6 +231,6 @@
 </div>
 
 <div class="form-actions">
-    <button type="button" data-bind="disable:transients.disableSave, click: saveSettings" class="btn btn-primary">Save changes</button>
+    <button type="button" id="saveSettings" data-bind="disable:transients.disableSave, click: saveSettings" class="btn btn-primary">Save changes</button>
     <button type="button" id="cancel" class="btn">Cancel</button>
 </div>
