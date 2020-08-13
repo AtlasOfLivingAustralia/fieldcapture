@@ -72,10 +72,10 @@
             <tbody>
                 <!-- ko foreach:fundings -->
                     <tr>
-                        <td style="border: 0; display: none"><select name="fundingType" id="fundingType" data-bind="options:$root.fundingTypes, value: fundingType" disabled="disabled"></select></td>
-                        <td style="border: 0"><select name="fundingSource" id="fundingSource" data-bind="options:$root.fundingSources, value:fundingSource, optionsCaption: 'Select Funding Source'" class="select"></select></td>
-                        <td style="border: 0"><g:textField type="number" id="fundingSourceAmount" min="0" step="any" name="fundingSourceAmount" data-bind="value:fundingSourceAmount" data-validation-engine="validate[custom[number]]"/></td>
-                        <td style="border: 0"><button  id="removeFunding" class="btn btn-danger" data-bind="click:$root.removeFunding"> <i class="icon-minus"></i> Remove</button></td>
+                        <td style="border: 0; display: none"><select name="fundingType" class="fundingType" data-bind="options:$root.fundingTypes, value: fundingType" disabled="disabled"></select></td>
+                        <td style="border: 0"><select name="fundingSource" class="fundingSource select" data-bind="options:$root.fundingSources, value:fundingSource, optionsCaption: 'Select Funding Source'"></select></td>
+                        <td style="border: 0"><g:textField type="number" class="fundingSourceAmount" min="0" step="any" name="fundingSourceAmount" data-bind="value:fundingSourceAmount" data-validation-engine="validate[custom[number]]"/></td>
+                        <td style="border: 0"><button  id="removeFunding" class="btn btn-danger removeFunding" data-bind="click:$root.removeFunding"> <i class="icon-minus"></i> Remove</button></td>
                     </tr>
                 <!-- /ko -->
                 <tr>

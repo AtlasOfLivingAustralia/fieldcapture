@@ -5,6 +5,7 @@ import geb.Module
 class AdminProjectSettingsTab extends Module {
     static content = {
         regenerateReportsButton {$('button[data-bind*=regenerateStageReports]')}
+        fundings {moduleList(Funding)}
         fundingType{$("#fundingType")}
         fundingSource{$("#fundingSource")}
         fundingSourceAmount{$("#fundingSourceAmount")}
@@ -18,5 +19,12 @@ class AdminProjectSettingsTab extends Module {
     }
     void AddFunding(){
         addFunding.click()
+    }
+
+}
+class Funding extends Module{
+    static content = {
+        fundingSource{$(".fundingSource")}
+        fundingSourceAmount{$(".fundingSourceAmount")}
     }
 }
