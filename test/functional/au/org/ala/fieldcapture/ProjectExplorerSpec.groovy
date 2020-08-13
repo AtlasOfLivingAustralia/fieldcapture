@@ -53,7 +53,7 @@ class ProjectExplorerSpec extends StubbedCasSpec {
         expectedProjects.add("Configurable MERI plan project")
         expectedProjects.add("Default outcome project")
         projectsToggle.click()
-        waitFor { projectPagination.displayed }
+        waitFor 10, { projectPagination.displayed }
 
         then:
         waitFor 20, {
