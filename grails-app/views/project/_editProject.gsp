@@ -59,51 +59,45 @@
     </div>
 
 </div>
-
+<label class="control-label"><b>Project Funding:</b> </label>
 <div class="clearfix control-group">
-    <label class="control-label span3"><b>Project Funding:</b> </label>
     <div class="span9" name="fundings">
         <table class="table borderless">
             <thead>
-                <td>Funding Source</td>
-                <td>Funding Amount</td>
-                <td>Action</td>
+            <td style="padding-left: 0">Funding Source</td>
+            <td style="padding-left: 0">Funding Amount</td>
+            <td style="padding-left: 0">Action</td>
             </thead>
             <tbody>
-                <!-- ko foreach:fundings -->
-                    <tr>
-                        <td style="border: 0; display: none"><select name="fundingType" class="fundingType" data-bind="options:$root.fundingTypes, value: fundingType" disabled="disabled"></select></td>
-                        <td style="border: 0"><select name="fundingSource" class="fundingSource select" data-bind="options:$root.fundingSources, value:fundingSource, optionsCaption: 'Select Funding Source'"></select></td>
-                        <td style="border: 0"><g:textField type="number" class="fundingSourceAmount" min="0" step="any" name="fundingSourceAmount" data-bind="value:fundingSourceAmount" data-validation-engine="validate[custom[number]]"/></td>
-                        <td style="border: 0"><button  id="removeFunding" class="btn btn-danger removeFunding" data-bind="click:$root.removeFunding"> <i class="icon-minus"></i> Remove</button></td>
-                    </tr>
-                <!-- /ko -->
-                <tr>
-                    <td colspan="1" style="border: 0"></td>
-                    <td colspan="1" style="border: 0">
-                        <b>Total Amount: <span id="totalFundingAmount" name="totalFundingAmount" data-bind="value: funding.formattedCurrency, text:funding.formattedCurrency"/></b>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2" style="border: 0"></td>
-                    <td colspan="1" style="border: 0"> <button id="addFunding" class="btn btn-primary" data-bind="click:addFunding"> <i class="icon-plus"></i> Add Funding</button></td>
-                </tr>
+            <!-- ko foreach:fundings -->
+            <tr>
+                <td style="border: 0; display: none; padding-left: 0" ><select name="fundingType" class="fundingType" data-bind="options:$root.fundingTypes, value: fundingType" disabled="disabled"></select></td>
+                <td style="border: 0; padding-left: 0"><select name="fundingSource" class="fundingSource select" data-bind="options:$root.fundingSources, value:fundingSource, optionsCaption: 'Select Funding Source'"></select></td>
+                <td style="border: 0; padding-left: 0"><g:textField type="number" class="fundingSourceAmount" min="0" step="any" name="fundingSourceAmount" data-bind="value:fundingSourceAmount" data-validation-engine="validate[custom[number]]"/></td>
+                <td style="border: 0; padding-left: 0"><button  id="removeFunding" class="btn btn-danger removeFunding" data-bind="click:$root.removeFunding"> <i class="icon-minus"></i> Remove</button></td>
+            </tr>
+            <!-- /ko -->
+            <tr>
+                <td colspan="1" style="border: 0; padding-left: 0"></td>
+                <td colspan="1" style="border: 0; padding-left: 0">
+                    <b>Total Amount: <span id="totalFundingAmount" name="totalFundingAmount" data-bind="value: funding.formattedCurrency, text:funding.formattedCurrency"/></b>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="border: 0"></td>
+                <td colspan="1" style="border: 0; padding-left: 0px"> <button id="addFunding" class="btn btn-primary" data-bind="click:addFunding"> <i class="icon-plus"></i> Add Funding</button></td>
+            </tr>
 
             </tbody>
         </table>
     </div>
-
-</div>
-<div class="row-fluid">
-    <div class="control-group span4">
-    <div class="control-group span4">
+    <div>
         <label class="control-label" for="tags">Disaster relief categories</label>
         <div class="controls">
             <select multiple="multiple" id="tags" data-bind="options:transients.defaultTags, multiSelect2:{value:tags, placeholder:''}" class="select input-xlarge"></select>
         </div>
     </div>
 
-</div>
 </div>
 
 <g:if test="${!hidePrograms}">
