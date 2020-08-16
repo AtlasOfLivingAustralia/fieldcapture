@@ -61,7 +61,7 @@
 </div>
 <label class="control-label"><b>Project Funding:</b> </label>
 <div class="clearfix control-group">
-    <div class="span9" name="fundings">
+    <div class="span12" name="fundings">
         <table class="table borderless">
             <thead>
             <td style="padding-left: 0">Funding Source</td>
@@ -93,14 +93,11 @@
     </div>
 </div>
 <div class="row-fluid">
-    <div class="control-group span4">
-        <div class="control-group span4">
-            <label class="control-label" for="tags">Disaster relief categories</label>
-            <div class="controls">
-                <select multiple="multiple" id="tags" data-bind="options:transients.defaultTags, multiSelect2:{value:tags, placeholder:''}" class="select input-xlarge"></select>
-            </div>
+    <div class="control-group span12">
+        <label class="control-label" for="tags">Disaster relief categories</label>
+        <div class="controls">
+            <select multiple="multiple" id="tags" data-bind="options:transients.defaultTags, multiSelect2:{value:tags, placeholder:''}" class="select input-xlarge"></select>
         </div>
-
     </div>
 </div>
 
