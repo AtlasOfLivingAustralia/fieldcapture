@@ -96,7 +96,9 @@ class ProjectIndexSpec extends StubbedCasSpec {
 
         then:
         waitFor {admin.projectSettings.fundings.displayed}
-        admin.projectSettings.fundings[0].fundingSource.value() == "RLP"
+        waitFor {
+            admin.projectSettings.fundings[0].fundingSource.value() == "RLP"
+        }
         admin.projectSettings.fundings[0].fundingSourceAmount.value() == "1000"
     }
 }
