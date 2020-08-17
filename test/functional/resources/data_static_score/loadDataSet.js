@@ -613,7 +613,7 @@ createOutput({activityId:"activity_12", outputId:"output_12", name: "RLP - Weed 
 });
 
 
-createProject({name:'General Projects', planStatus:"approved", projectId:"project_10", programId:'program_10',managementUnitId:"mu_10", grantId:"RLP-Test-Program-Project-1",
+createProject({name:'General Projects', projectId:"project_10", programId:'program_10',managementUnitId:"mu_10", grantId:"RLP-Test-Program-Project-1",
     "custom" : { "details" : { "serviceIds" : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35] } },
     outputTargets:[
         {"outputLabel":"Weed Treatment Details",
@@ -632,7 +632,7 @@ createProject({name:'General Projects', planStatus:"approved", projectId:"projec
                 },
                 {
                     "period" : "2019/2020",
-                    "target" : 0
+                    "target" : 10
                 },
                 {
                     "period" : "2020/2021",
@@ -659,26 +659,26 @@ createProject({name:'General Projects', planStatus:"approved", projectId:"projec
                     "target" : 0
                 }
             ],
-            "target" : "400"
+            "target" : 10
         },
         {
             "scoreId" : "score_43",
             "periodTargets" : [
                 {
                     "period" : "2017/2018",
-                    "target" : "02"
+                    "target" : 2
                 },
                 {
                     "period" : "2018/2019",
-                    "target" : "03"
+                    "target" : 3
                 },
                 {
                     "period" : "2019/2020",
-                    "target" : "02"
+                    "target" : 2
                 },
                 {
                     "period" : "2020/2021",
-                    "target" : "01"
+                    "target" : 1
                 },
                 {
                     "period" : "2021/2022",
@@ -689,7 +689,7 @@ createProject({name:'General Projects', planStatus:"approved", projectId:"projec
                     "target" : 0
                 }
             ],
-            "target" : "8"
+            "target" : 8
         },
         {
             "scoreId" : "score_42",
@@ -700,11 +700,11 @@ createProject({name:'General Projects', planStatus:"approved", projectId:"projec
                 },
                 {
                     "period" : "2018/2019",
-                    "target" : "0"
+                    "target" : 2
                 },
                 {
                     "period" : "2019/2020",
-                    "target" : "03"
+                    "target" : 6
                 },
                 {
                     "period" : "2020/2021",
@@ -719,7 +719,7 @@ createProject({name:'General Projects', planStatus:"approved", projectId:"projec
                     "target" : 0
                 }
             ],
-            "target" : "8"
+            "target" : 8
         }
     ]
 });
@@ -763,3 +763,5 @@ db.project.update({ projectId: "project_10"},{$set:{'custom.details.serviceIds':
                         NumberInt(34),
                         NumberInt(35)
                 ]}});
+
+createSite({projects:["project_10"]});
