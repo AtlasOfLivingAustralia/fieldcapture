@@ -2,6 +2,7 @@ print("This script is expected to be executed with a working directory containin
 print("Current working dir: "+pwd());
 load('../data_common/loadMeritHub.js');
 load('../data_common/insertData.js');
+load('../data/settingDefaults.js')
 
 createProject({name:'project 1', projectId:"project_1", programId:'program_1',managementUnitId:"mu_1", grantId:"RLP-Test-Program-Project-1",
     outputTargets:[
@@ -498,88 +499,6 @@ createPestOutDataDefaults({activityId:"activity_6", outputId:"output_6"});
 
 loadActivityForms();
 
-//inserting setting homepage static 6 box only
-
-var staticValue = "{\n" +
-    "  \"statistics\": {\n" +
-    "    \"ts1\": {\n" +
-    "      \"config\": \"5\",\n" +
-    "      \"title\": \"Threatened Species Strategy\",\n" +
-    "      \"label\": \"Protecting threatened species\",\n" +
-    "      \"units\": \"Projects\",\n" +
-    "      \"type\": \"projectCount\",\n" +
-    "      \"projectFilter\": [\n" +
-    "        \"meriPlanAssetFacet:Threatened Species\"\n" +
-    "      ]\n" +
-    "    },\n" +
-    "    \"nlp1\": {\n" +
-    "      \"config\": \"5\",\n" +
-    "      \"title\": \"National Landcare Programme\",\n" +
-    "      \"label\": \"Supporting sustainable agriculture\",\n" +
-    "      \"units\": \"Projects\",\n" +
-    "      \"type\": \"investmentProjectCount\",\n" +
-    "      \"projectFilter\": [\n" +
-    "        \"associatedProgramFacet:National Landcare Programme\"\n" +
-    "      ],\n" +
-    "      \"investmentTypeFilter\": \"Farmers and fishers are increasing their long term returns through better management of the natural resource base\"\n" +
-    "    },\n" +
-    "    \"nlp7\": {\n" +
-    "      \"config\": \"6\",\n" +
-    "      \"title\": \"National Landcare Programme\",\n" +
-    "      \"label\": \"That support World Heritage Areas\",\n" +
-    "      \"units\": \"Projects\",\n" +
-    "      \"type\": \"projectCount\",\n" +
-    "      \"projectFilter\": [\n" +
-    "        \"associatedProgramFacet:National Landcare Programme\",\n" +
-    "        \"meriPlanAssetFacet:World Heritage area\"\n" +
-    "      ]\n" +
-    "    },\n" +
-    "    \"nlp9\": {\n" +
-    "      \"config\": \"2\",\n" +
-    "      \"title\": \"National Landcare Programme\",\n" +
-    "      \"label\": \"Targeted for weed control\",\n" +
-    "      \"units\": \"Ha\",\n" +
-    "      \"type\": \"outputTarget\",\n" +
-    "      \"projectFilter\": [\n" +
-    "        \"associatedProgramFacet:National Landcare Programme\"\n" +
-    "      ],\n" +
-    "      \"scoreLabel\":\"Total new area treated for weeds (Ha)\"\n" +
-    "    },\n" +
-    "    \"nlp13\": {\n" +
-    "      \"config\": \"6\",\n" +
-    "      \"title\": \"National Landcare Programme\",\n" +
-    "      \"label\": \"Targeted for pest animal control\",\n" +
-    "      \"units\": \"Ha\",\n" +
-    "      \"type\": \"outputTarget\",\n" +
-    "      \"projectFilter\": [\n" +
-    "        \"associatedProgramFacet:National Landcare Programme\"\n" +
-    "      ],\n" +
-    "      \"scoreLabel\": \"Area covered (Ha) by pest treatment actions\"\n" +
-    "    },\n" +
-    "    \"all1\": {\n" +
-    "      \"config\": \"3\",\n" +
-    "      \"title\": \"All programmes\",\n" +
-    "      \"label\": \"Managed for invasive weeds\",\n" +
-    "      \"units\": \"Ha\",\n" +
-    "      \"type\": \"score\",\n" +
-    "      \"scoreLabel\": \"Total new area treated for weeds (Ha)\"\n" +
-    "    }\n" +
-    "  },\n" +
-    "  \"groups\": [\n" +
-    "    [\n" +
-    "      \"ts1\",\n" +
-    "      \"nlp1\",\n" +
-    "      \"nlp7\",\n" +
-    "      \"nlp9\",\n" +
-    "      \"nlp13\",\n" +
-    "      \"all1\"\n" +
-    "    ]\n" +
-    "  ]\n" +
-    "}"
-
-db.setting.insert({"key":"meritstatistics.config","value":staticValue, version: 3})
-
-
 createProjectNumberBaselineDataSets({"_id": 42, "scoreId":"score_42"});
 createProjectNumberOfCommunicationMaterialsPublished({"_id": 43, "scoreId":"score_43"});
 createProjectWeedAreaSurveyedHaDefault({"_id": 44, "scoreId":"score_44"});
@@ -723,7 +642,7 @@ createProject({name:'General Projects', projectId:"project_10", programId:'progr
         }
     ]
 });
-
+createSite({projects:["project_10"]});
 db.project.update({ projectId: "project_10"},{$set:{'custom.details.serviceIds':[
 
 
@@ -764,4 +683,6 @@ db.project.update({ projectId: "project_10"},{$set:{'custom.details.serviceIds':
                         NumberInt(35)
                 ]}});
 
-createSite({projects:["project_10"]});
+
+db.setting.insert({"key":"meritstatistics.config", "value": JSON.stringify(settingValue), "version":3});
+db.setting.update({key:"meritstatistics.config"},{$set:{version:NumberInt(3)}});

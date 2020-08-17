@@ -24,7 +24,7 @@ class ProjectDashboardTabSpec extends StubbedCasSpec {
 
         then:
         at AdminTools
-     //   reindex()
+
 
         when: "Reindex to ensure the project explorer will have predictable data"
         reindex()
