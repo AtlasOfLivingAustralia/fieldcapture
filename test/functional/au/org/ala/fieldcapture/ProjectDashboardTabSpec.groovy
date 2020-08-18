@@ -19,6 +19,15 @@ class ProjectDashboardTabSpec extends StubbedCasSpec {
         setup: "log in as userId=1 who is a program admin for the program with programId=test_program"
         login([userId: '2', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ALA_ADMIN'], browser)
 
+
+        when: "clearing the homepage static cache"
+        to AdminTools
+
+        then:
+        at AdminTools
+        waitFor {$("#btnClearMetadataCache").displayed}
+        $("#btnClearMetadataCache").click()
+
         when:
         to AdminTools
 
@@ -30,11 +39,6 @@ class ProjectDashboardTabSpec extends StubbedCasSpec {
         reindex()
         logout(browser)
 
-        boolean empty = true
-        while (empty) {
-            to ProjectExplorer
-            empty = emptyIndex()
-        }
         login([userId: '2', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ALA_ADMIN'], browser)
         to ProjectIndex, projectId
 

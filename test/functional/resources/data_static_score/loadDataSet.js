@@ -684,5 +684,7 @@ db.project.update({ projectId: "project_10"},{$set:{'custom.details.serviceIds':
                 ]}});
 
 
-db.setting.insert({"key":"meritstatistics.config", "value": JSON.stringify(settingValue), "version":3});
+db.setting.insert({"key":"meritstatistics.config", "value": JSON.stringify(homePageStatisticValues), "version":3});
+db.setting.insert({"key":"meritservices.config", "value":JSON.stringify(projectDashboardService) ,"version":0});
 db.setting.update({key:"meritstatistics.config"},{$set:{version:NumberInt(3)}});
+db.setting.update({key:"meritservices.config"},{$set:{version:NumberInt(0)}});

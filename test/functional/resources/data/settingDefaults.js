@@ -1,4 +1,4 @@
-var settingValue = {
+var homePageStatisticValues = {
     "statistics": {
         "ts1": {      "config": "5",      "title": "Threatened Species Strategy",      "label": "Protecting threatened species",      "units": "Projects",      "type": "projectCount",      "projectFilter": [        "meriPlanAssetFacet:Threatened Species"      ]    },
         "nlp1": {      "config": "5",      "title": "National Landcare Programme",      "label": "Supporting sustainable agriculture",      "units": "Projects",      "type": "investmentProjectCount",      "projectFilter": [        "associatedProgramFacet:National Landcare Programme"      ],      "investmentTypeFilter": "Farmers and fishers are increasing their long term returns through better management of the natural resource base"    },
@@ -7,5 +7,11 @@ var settingValue = {
         "nlp13": {      "config": "6",      "title": "National Landcare Programme",      "label": "Targeted for pest animal control",      "units": "Ha",      "type": "outputTarget",      "projectFilter": [        "associatedProgramFacet:National Landcare Programme"      ],      "scoreLabel": "Area covered (Ha) by pest treatment actions"    },
         "all1": {      "config": "3",      "title": "All programmes",      "label": "Managed for invasive weeds",      "units": "Ha",      "type": "score",      "scoreLabel": "Total new area treated for weeds (Ha)"    }},
     "groups": [ [      "ts1",      "nlp1",      "nlp7",      "nlp9",      "nlp13",      "all1"    ]  ]
-}
+};
+
+var projectDashboardService = [
+                                    {      "output": "RLP - Baseline data",      "name": "Collecting, or synthesising baseline data",      "id": 1,      "categories": ["Project initiation activities"]   },
+                                    {      "output": "RLP - Communication materials",      "name": "Communication materials",      "id": 2,      "categories": ["Complimentary"]   },
+                                    {      "output": "RLP - Weed distribution survey",      "name": "Weed distribution survey",      "id": 33,      "categories": ["Monitoring activities"]   }
+                                ]
 
