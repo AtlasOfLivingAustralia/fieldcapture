@@ -19,13 +19,6 @@ class HomeIndexPageSpec extends StubbedCasSpec {
         setup:
         login([userId: '2', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ALA_ADMIN'], browser)
 
-        when:
-        to AdminClearCachePage
-
-        then:
-        waitFor {$("#homePageStatistics").displayed}
-        $("#homePageStatistics").click()
-
         when: "clearing the homepage static cache"
         to AdminTools
 
@@ -33,6 +26,13 @@ class HomeIndexPageSpec extends StubbedCasSpec {
         at AdminTools
         waitFor {$("#btnClearMetadataCache").displayed}
        $("#btnClearMetadataCache").click()
+
+        when:
+        to AdminClearCachePage
+
+        then:
+        waitFor {$("#homePageStatistics").displayed}
+        $("#homePageStatistics").click()
 
         when:
         to AdminTools
