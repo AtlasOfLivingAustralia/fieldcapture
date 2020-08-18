@@ -138,6 +138,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
         when:
         meriPlan.assets[0].description = "asset 1"
+        waitFor 10,{meriPlan.objectivesList.displayed}
         meriPlan.checkObjective("objective 2")
         meriPlan.checkObjective("Other")
         waitFor 10, {!meriPlan.otherObjective.@readonly}
