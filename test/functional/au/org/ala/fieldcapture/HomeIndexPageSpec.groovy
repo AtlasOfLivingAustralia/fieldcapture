@@ -3,7 +3,6 @@ package au.org.ala.fieldcapture
 import pages.AdminClearCachePage
 import pages.AdminTools
 import pages.HomePage
-import pages.ProjectExplorer
 
 class HomeIndexPageSpec extends StubbedCasSpec {
 
@@ -28,7 +27,7 @@ class HomeIndexPageSpec extends StubbedCasSpec {
        $("#btnClearMetadataCache").click()
 
         when:
-        to AdminClearCachePage
+        waitFor 5,{to AdminClearCachePage}
 
         then:
         waitFor {$("#homePageStatistics").displayed}
@@ -38,7 +37,7 @@ class HomeIndexPageSpec extends StubbedCasSpec {
         to AdminTools
 
         then:
-        at AdminTools
+        waitFor 5,{at AdminTools}
 
         when: "Reindex to ensure the project explorer will have predictable data"
         reindex()
