@@ -45,7 +45,7 @@ class HomeIndexPageSpec extends StubbedCasSpec {
         logout(browser)
 
         then:
-       to HomePage
+       waitFor 20, {to HomePage}
 
         and:
         box1[0].statTitle.text() == "THREATENED SPECIES STRATEGY"

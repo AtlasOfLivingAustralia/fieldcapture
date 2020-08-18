@@ -51,7 +51,7 @@ class ProjectDashboardTabSpec extends StubbedCasSpec {
 
         then:
         waitFor{ dashboardTab.displayed }
-        waitFor {dashboard.size() == 3}
+        waitFor 20,{dashboard.size() == 3}
         def dashboardList = dashboard
 
         and:
