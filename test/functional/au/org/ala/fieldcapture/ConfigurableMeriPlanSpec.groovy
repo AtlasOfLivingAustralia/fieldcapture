@@ -140,7 +140,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlan.assets[0].description = "asset 1"
         meriPlan.checkObjective("objective 2")
         meriPlan.checkObjective("Other")
-        waitFor{!meriPlan.otherObjective.@readonly}
+        waitFor 10, {!meriPlan.otherObjective.@readonly}
         meriPlan.otherObjective = "Other objective"
         meriPlan.shortTermOutcomes[0].value("outcome 1")
         meriPlan.projectDescription = 'Project description'
@@ -155,7 +155,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
         meriPlan.checkActivity('activity 1')
         meriPlan.checkActivity('Other')
-        waitFor{!meriPlan.otherActivity.@readonly}
+        waitFor 10,{!meriPlan.otherActivity.@readonly}
         meriPlan.otherActivity = 'Other activity'
         meriPlan.save()
 
