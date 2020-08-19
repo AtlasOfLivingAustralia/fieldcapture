@@ -138,6 +138,9 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
         when:
         meriPlan.assets[0].description = "asset 1"
+        waitFor {
+            meriPlan.floatingSaveDisplayed()
+        }
         meriPlan.hideFloatingSave() // if we don't do that we can't click on the activity
         meriPlan.checkObjective("objective 2")
         meriPlan.checkObjective("Other")
@@ -266,6 +269,9 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
         when:
         meriPlan.assets[0].description = "asset 1"
+        waitFor {
+            meriPlan.floatingSaveDisplayed()
+        }
         meriPlan.hideFloatingSave() // if we don't do that we can't click on the activity
         meriPlan.shortTermOutcomes[0].value("outcome 1")
         meriPlan.projectDescription = 'Project description'
