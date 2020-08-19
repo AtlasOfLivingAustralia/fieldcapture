@@ -227,6 +227,6 @@
 </div>
 
 <div class="form-actions">
-    <button type="button" data-bind="disable:transients.disableSave, click: saveSettings" class="btn btn-primary">Save changes</button>
+    <button type="button" id="saveSettings" data-bind="disable:transients.disableSave, click: saveSettings" class="btn btn-primary">Save changes</button>
     <button type="button" id="cancel" class="btn">Cancel</button>
 </div>
