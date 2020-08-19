@@ -10,9 +10,16 @@ class AdminTools extends Page {
 
     static content = {
         reindexButton { $('#btnReindexAll') }
+        clearMetaDataCacheButton { $("#btnClearMetadataCache") }
+    }
+
+    void clearMetadata(){
+        waitFor {clearMetaDataCacheButton.displayed}
+        clearMetaDataCacheButton.click()
     }
 
     void reindex() {
         reindexButton().click()
     }
+
 }

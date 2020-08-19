@@ -51,6 +51,7 @@ environments {
         driver = {
             ChromeOptions o = new ChromeOptions()
             o.addArguments('headless')
+            o.addArguments("window-size=1920,1080")
             o.addArguments('--disable-dev-shm-usage')
             new ChromeDriver(o)
         }

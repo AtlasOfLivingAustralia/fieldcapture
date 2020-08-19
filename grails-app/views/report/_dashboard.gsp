@@ -6,7 +6,7 @@
     <g:each in="${categories}" var="category" status="i">
 
         <g:set var="categoryContent" value="category_${i}"/>
-        <div class="accordion-group">
+        <div class="accordion-group dashboard-activities">
             <div class="accordion-heading header">
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#reports" href="#${categoryContent}">
                     ${category} <g:if test="${!scores[category]}"><span class="pull-right" style="font-weight:normal">[no data available]</span></g:if>
