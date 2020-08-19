@@ -466,10 +466,9 @@
             //Page loading indicator.
 			$('.spinner').hide();
         	$('.tab-content').fadeIn();
+
+
         });// end window.load
-
-
-
 
 
 </asset:script>
