@@ -138,10 +138,13 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
         when:
         meriPlan.assets[0].description = "asset 1"
-        waitFor 10,{meriPlan.objectivesList.displayed}
+        waitFor {
+            meriPlan.floatingSaveDisplayed()
+        }
+        meriPlan.hideFloatingSave() // if we don't do that we can't click on the activity
         meriPlan.checkObjective("objective 2")
         meriPlan.checkObjective("Other")
-        waitFor 10, {!meriPlan.otherObjective.@readonly}
+        waitFor{!meriPlan.otherObjective.@readonly}
         meriPlan.otherObjective = "Other objective"
         meriPlan.shortTermOutcomes[0].value("outcome 1")
         meriPlan.projectDescription = 'Project description'
@@ -152,11 +155,11 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlan.projectPartnerships[0].name = 'partner name'
         meriPlan.projectPartnerships[0].partnership = 'partnership'
         meriPlan.projectPartnerships[0].orgType = 'Trust'
-        meriPlan.hideFloatingSave() // if we don't do that we can't click on the activity
+
 
         meriPlan.checkActivity('activity 1')
         meriPlan.checkActivity('Other')
-        waitFor 10,{!meriPlan.otherActivity.@readonly}
+        waitFor{!meriPlan.otherActivity.@readonly}
         meriPlan.otherActivity = 'Other activity'
         meriPlan.save()
 
@@ -266,6 +269,10 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
         when:
         meriPlan.assets[0].description = "asset 1"
+        waitFor {
+            meriPlan.floatingSaveDisplayed()
+        }
+        meriPlan.hideFloatingSave() // if we don't do that we can't click on the activity
         meriPlan.shortTermOutcomes[0].value("outcome 1")
         meriPlan.projectDescription = 'Project description'
         meriPlan.projectMethodology = 'Project Methodology'
