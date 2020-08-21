@@ -22,6 +22,8 @@ class OrganisationProjectSpec extends StubbedCasSpec {
         projectTab.click()
 
         and:
-        projectContent[1].text() == "Project Script Injection <script>alert('Test')</script>"
+        waitFor {
+            projectContent[1].text() == "Project Script Injection <script>alert('Test')</script>"
+        }
     }
 }

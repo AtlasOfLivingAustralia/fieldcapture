@@ -35,6 +35,7 @@ class AdminController {
     def outputService
     def documentService
     def organisationService
+    RisksService risksService
 
     def index() {}
 
@@ -648,61 +649,10 @@ class AdminController {
         score
     }
 
-    def generateServices() {
-        InputStreamReader isr = new InputStreamReader(new FileInputStream("/Users/god08d/Documents/MERIT/services.csv"), 'UTF-8')
-        CSVMapReader csvMapReader = new CSVMapReader(isr)
-
-        List<Map> services = csvMapReader.readAll()
-
-        List<Map> servicesjson = []
-
-        List<Map> scores = []
-
-        List<Map> outputs = []
-
-        services.eachWithIndex { Map service, int i ->
-            println service
-            def categories = service.Category.split(",").findAll()
-            servicesjson << [
-                    name:service.Name.trim(),
-                    output:service.Output.trim(),
-                    id:Integer.parseInt(service.ID.trim()),
-                    categories:categories.collect{it.trim()}]
-
-            ['Score 1', 'Score 2', 'Score 3', 'Score 4', 'Score 5', 'Score 6'].each{ score ->
-                if (service[score]) {
-                    scores << buildScore(service.Output, service[score], service[score+' Method'], service[score+' Attribute'], service[score+' Filter'], service[score+' Filter Value'])
-                }
-            }
-
-            File templateFolder = new File("/Users/god08d/projects/ecodata/models/"+service.Template.trim())
-
-            if (!templateFolder.exists()) {
-                templateFolder.mkdir()
-            }
-            outputs << [
-                    name:service.Output.trim(),
-                    template:service.Template.trim(),
-                    title:service.Name.trim()
-            ]
-        }
-
-        File servicesFile = new File("/Users/god08d/projects/fieldcapture/grails-app/conf/services.json")
-        servicesFile.withWriter "UTF-8", { out ->
-            out << (servicesjson as JSON).toString(true)
-        }
-
-        File scoresFile = new File("/Users/god08d/projects/ecodata/scripts/misc/rlpScores.js")
-        scoresFile.withWriter "UTF-8", { out ->
-            out << "scores = "+(scores as JSON).toString(true)
-        }
-
-        File outputFile = new File("/Users/god08d/projects/ecodata/scripts/misc/rlpOutputs.json")
-        outputFile.withWriter("UTF-8", { out ->
-            out << (outputs as JSON).toString(true)
-        })
-
+    /** Manual trigger for the scheduled job that polls for changes to risks and threats */
+    def checkForRisksAndThreatsChanges() {
+        risksService.checkAndSendEmail()
+        render 'ok'
     }
-
 
 }

@@ -161,6 +161,11 @@ createOrganisation({
 
 createMu({name:'test mu <script>alert("MU")</script>', managementUnitId:"test_mu_1",managementUnitSiteId:'test_site_1'});
 
+addSetting('meritfielddata.rlp.cs_report.submitted.emailSubject', 'Report submitted subject');
+addSetting('meritfielddata.rlp.cs_report.submitted.emailBody', 'Report submitted body');
+addSetting('meritfielddata.rlp.cs_report.submitted.emailSubject', 'Report approved subject');
+addSetting('meritfielddata.rlp.cs_report.submitted.emailBody', 'Report approved body');
+
 
 loadActivityForms();
 

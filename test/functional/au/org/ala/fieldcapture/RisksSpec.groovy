@@ -1,9 +1,22 @@
 package au.org.ala.fieldcapture
 
+import com.icegreen.greenmail.junit.GreenMailRule
+import com.icegreen.greenmail.util.GreenMailUtil
+import com.icegreen.greenmail.util.ServerSetup
+import com.icegreen.greenmail.util.ServerSetupTest
+import org.junit.Rule
 import pages.ProjectIndex
 import pages.RlpProjectPage
+import spock.lang.Stepwise
 
+import javax.mail.internet.MimeMessage
+
+@Stepwise
 class RisksSpec extends StubbedCasSpec {
+
+    @Rule
+    public final GreenMailRule greenMail = new GreenMailRule(ServerSetup.verbose(ServerSetupTest.SMTP))
+
     def setupSpec() {
         useDataSet('dataset3')
     }
@@ -100,6 +113,22 @@ class RisksSpec extends StubbedCasSpec {
         then:
         waitFor { hasBeenReloaded() }
         adminContent.risksAndThreats.overallRisk == 'Low'
+    }
+
+    def "Risks and threats changes can be emailed to grant managers"() {
+        setup:
+        login([userId: '1', role: "ROLE_FC_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+
+        when:
+        browser.go("admin/checkForRisksAndThreatsChanges")
+
+        then:
+        waitFor 20, {
+            MimeMessage[] messages = greenMail.getReceivedMessages()
+            messages?.length == 2
+            messages[0].getSubject() == "Risks and threats changed subject"
+            GreenMailUtil.getBody(messages[0]) == "<p>Risks and threats changed body</p>"
+        }
     }
 
 }

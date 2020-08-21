@@ -10,7 +10,10 @@ import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.phantomjs.PhantomJSDriver
 
-
+if (!System.getProperty("webdriver.chrome.driver")) {
+    System.setProperty("webdriver.chrome.driver", "node_modules/chromedriver/bin/chromedriver")
+}
+driver = { new ChromeDriver() }
 baseUrl = 'http://devt.ala.org.au:8087/fieldcapture/'
 environments {
 
@@ -20,9 +23,7 @@ environments {
 
     // run as grails -Dgeb.env=chrome test-app
     chrome {
-        if (!System.getProperty("webdriver.chrome.driver")) {
-            System.setProperty("webdriver.chrome.driver", "node_modules/chromedriver/bin/chromedriver")
-        }
+
         driver = { new ChromeDriver() }
     }
 
@@ -51,6 +52,7 @@ environments {
         driver = {
             ChromeOptions o = new ChromeOptions()
             o.addArguments('headless')
+            o.addArguments("window-size=1920,1080")
             o.addArguments('--disable-dev-shm-usage')
             new ChromeDriver(o)
         }

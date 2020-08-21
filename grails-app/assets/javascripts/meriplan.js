@@ -1000,17 +1000,36 @@ function OutcomesViewModel(outcomes, config) {
      *
      * @param outcomes the list of available outcomes to be filtered.  Outcomes are defined by a program.
      * @param type the type to filter.  Outcomes matching the supplied type will be returned
-     * @returns {Array} an array of strings (outcome descriptions) filtered from the supplied list.
      */
     function filterByType(outcomes, type) {
-        return _.map(_.filter(outcomes, function (outcome) {
+        return _.filter(outcomes, function (outcome) {
             return !outcome.type || outcome.type == type;
-        }), function (outcome) {
+        })
+    }
+
+    /** Selects outcomes of the supplied type and returns an array of strings to use for user selection */
+    function selectableOutcomes(outcomes, type) {
+        var selected = filterByType(outcomes, type);
+        return _.map(selected, function (outcome) {
             return outcome.outcome;
         });
     }
-    self.selectablePrimaryOutcomes = filterByType(config.outcomes, 'primary');
-    self.selectableSecondaryOutcomes = filterByType(config.outcomes, 'secondary');
+
+    var PRIMARY_OUTCOMES = 'primary';
+    var SECONDARY_OUTCOMES = 'secondary';
+    self.selectablePrimaryOutcomes = selectableOutcomes(config.outcomes, PRIMARY_OUTCOMES);
+    self.selectableSecondaryOutcomes = selectableOutcomes(config.outcomes, SECONDARY_OUTCOMES);
+
+    // If the program has specified a default primary outcome, and the project has not yet selected an outcome,
+    // set the default.
+    if (!outcomes.primaryOutcome.description) {
+        var defaultOutcome = _.find(filterByType(config.outcomes, PRIMARY_OUTCOMES), function (outcome) {
+            return outcome.default == true;
+        });
+        if (defaultOutcome) {
+            outcomes.primaryOutcome.description = defaultOutcome.outcome;
+        }
+    }
 
     self.outcomePriorities = function (outcomeText) {
 

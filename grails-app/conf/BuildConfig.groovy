@@ -56,7 +56,7 @@ clover {
                 }
             }
         }
-        ant.'clover-check'(target: "30.2%", haltOnFailure: true) { }
+        ant.'clover-check'(target: "30.8%", haltOnFailure: true) { }
 
     }
 }
@@ -113,6 +113,7 @@ grails.project.dependency.resolution = {
         test "org.seleniumhq.selenium:selenium-chrome-driver:2.53.1"
         test "com.codeborne:phantomjsdriver:1.3.0"
         test "net.sourceforge.nekohtml:nekohtml:1.9.22"
+        test "com.icegreen:greenmail:1.5.14"
 
         compile ('net.sourceforge.nekohtml:nekohtml:1.9.22'){
             excludes "xercesImpl"

@@ -6,7 +6,7 @@
     <g:each in="${servicesDashboard.services}" var="service" status="i">
 
         <div class="dashboard-section" style="padding:10px; margin-top:10px;">
-            <h3>${service.name}</h3>
+            <h3 class="serviceTitle">${service.name}</h3>
             <g:each in="${service.scores}" var="score">
                 <fc:renderScore score="${score}"></fc:renderScore>
             </g:each>

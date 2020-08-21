@@ -3,6 +3,7 @@ package pages
 import geb.Module
 import geb.Page
 import pages.modules.ProjectAdminTab
+import pages.modules.ProjectDashboardSection
 import pages.modules.RisksAndThreats
 
 /**
@@ -19,18 +20,20 @@ class ProjectIndex extends ReloadablePage {
         meriPlanTab(required:false) {$('#details-tab')}
         activitiesTab {$('#plan-tab')}
         sitesTab {$('#site-tab')}
-        dashboardTab {$('#dashboard-tab')}
+        dashboardTab {$('#serviceDelivery-tab')}
         adminTab {$('#admin-tab')}
 
         projectName { $('h1') }
         overview { module OverviewTab }
         plansAndReports(wait:true) { module PlansAndReportsTab }
         sites { module SitesTab }
-        dashboard { module DashboardTab }
+        dashboard { $("#services-dashboard div.dashboard-section").moduleList ( ProjectDashboardSection) }
         admin { module ProjectAdminTab }
 
         iAmSure(wait: true) { $('.modal a', text:'OK') }
+        siteLists {module sitesTable }
 
+        addSites{ module AddSites }
         editDocumentForm {module AttachDocumentForm}
 
     }
@@ -108,12 +111,68 @@ class ActivityRow extends Module {
 
 }
 
+class table extends Module{
+    static content={
+        siteName{ $("#siteName")}
+        lastupdated{$("#lastupdated")}
+    }
+}
+
 class SitesTab extends Module {
+
+    static content  ={
+        firstSiteAdded{$('.addSite')} // this is for the sites page where there is not associate sites for that projects
+        newsiteupload{$(".uploadSite")}  // this is for the sites page where there is not associate sites for that projects
+        addSite { $( '#addSite' )}
+        siteUpload{ $('#siteUpload')}
+        siteDownload{ $('#siteDownload')}
+        siteDeleted{ $('#siteDeleted')}
+
+        siteName{ $("#siteName")}
+        lastupdated{$("#lastUpdated")}
+    }
+}
+
+class sitesTable extends Module {
+
+    static content = {
+        siteName{ $("#siteName")}
+        lastupdated{$("#lastupdated")}
+    }
 
 }
 
-class DashboardTab extends Module {
+class AddSites extends Module{
 
+    static content = {
+        name{$('#name')}
+        externalId{$("#externalId")}
+        type{$("#siteType")}
+        context{$("#siteContext")}
+        description{$("#description")}
+        notes{$("#notes")}
+        defineExtent{$("#extentSource")}
+        latitude {$("input",'data-bind':'value:geometry().decimalLatitude')}
+        longitude { $("input", 'data-bind':"value:geometry().decimalLongitude")}
+        chooseLayer{$("#chooseLayer")}
+        chooseShape {$("#chooseShape")}
+        saveButton{$("#save")}
+        cancel{$("#cancel")}
+
+    }
+
+     def save() {
+        saveButton.click()
+    }
+}
+
+class DashboardTab extends Module {
+    static  content = {
+        serviceTitle{ $(".serviceTitle") }
+        serviceHelpText{ $(".helpText")  }
+        progresslabel{ $(".progress-label")}
+
+    }
 }
 
 

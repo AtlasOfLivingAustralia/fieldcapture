@@ -295,6 +295,7 @@ config.meriPlanContents = [
 ];
 
 createProgram({programId: "grants", name: "Competitive Grants", description: "", config: config});
+
 createProject({projectId: "grants1", name: "Excluded content project", programId: "grants"});
 db.userPermission.insert({
     entityType: 'au.org.ala.ecodata.Project',
@@ -302,3 +303,9 @@ db.userPermission.insert({
     userId: '1',
     accessLevel: 'admin'
 });
+
+
+
+addSetting('meritfielddata.risks.lastCheckTime', '2020-07-01T00:00:00Z');
+addSetting('meritfielddata.risk_changes.emailSubject', 'Risks and threats changed subject');
+addSetting('meritfielddata.risk_changes.emailBody', 'Risks and threats changed body');

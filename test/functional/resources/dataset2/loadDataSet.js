@@ -84,6 +84,20 @@ db.userPermission.insert({
     accessLevel: 'admin'
 });
 
+var programWithDefaultOutcome = programDefaults.create();
+programWithDefaultOutcome.outcomes[2].default = true;
+programWithDefaultOutcome.programId  = 'default_outcome';
+programWithDefaultOutcome.name =  "Default outcome";
+
+db.program.insert(programWithDefaultOutcome);
+
+createProject({projectId: "defaultOutcome", name: "Default outcome project", programId: "default_outcome"});
+db.userPermission.insert({
+    entityType: 'au.org.ala.ecodata.Project',
+    entityId: "defaultOutcome",
+    userId: '1',
+    accessLevel: 'admin'
+});
 
 
 

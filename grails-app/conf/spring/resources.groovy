@@ -1,5 +1,7 @@
+
 import au.org.ala.merit.hub.HubAwareLinkGenerator
 import au.org.ala.merit.StatisticsFactory
+import au.org.ala.merit.CheckRisksAndThreatsTask
 
 // Place your Spring DSL code here
 beans = {
@@ -11,5 +13,5 @@ beans = {
 
     statisticsFactory(StatisticsFactory)
 
-
+    checkForRisksAndThreatsTask(CheckRisksAndThreatsTask)
 }
