@@ -147,6 +147,12 @@
             var reportSite =  ${reportSite?.encodeAsJSON() ?: '{}' };
             var formFeatures = new ecodata.forms.FeatureCollection(reportSite ? reportSite.features : []);
             fcConfig.featureCollection = formFeatures;
+            var mapOptions = {};
+            if (fcConfig.useGoogleBaseMap) {
+                mapOptions.baseLayersName = 'Google'; // Default is Open Street Maps
+            }
+            // Initialise our map so we can supply options (otherwise it's initialised  with  defaults)
+            ecodata.forms.maps.featureMap(mapOptions);
         }
 
         $('.imageList a[target="_photo"]').attr('rel', 'gallery').fancybox({type:'image', autoSize:true, nextEffect:'fade', preload:0, 'prevEffect':'fade'});
