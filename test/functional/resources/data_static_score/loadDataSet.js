@@ -688,3 +688,10 @@ db.setting.insert({"key":"meritstatistics.config", "value": JSON.stringify(homeP
 db.setting.insert({"key":"meritservices.config", "value":JSON.stringify(projectDashboardService) ,"version":0});
 db.setting.update({key:"meritstatistics.config"},{$set:{version:NumberInt(3)}});
 db.setting.update({key:"meritservices.config"},{$set:{version:NumberInt(0)}});
+
+db.document.insert({externalUrl:'https://ala.org.au/1', name:'Link 1', role:'helpResource', documentId:'1'});
+db.document.insert({externalUrl:'https://ala.org.au/2', name:'Link 2', role:'helpResource', documentId:'2'});
+db.document.insert({externalUrl:'https://ala.org.au/3', name:'Link 3', role:'helpResource', documentId:'3'});
+db.document.insert({externalUrl:'https://ala.org.au/4', name:'Link 4', role:'helpResource', documentId:'4'});
+db.document.insert({externalUrl:'https://ala.org.au/5', name:'Link 5', role:'helpResource', documentId:'5'});
+db.document.insert({externalUrl:'https://ala.org.au/6', name:'Link 6', role:'helpResource', documentId:'6'});
