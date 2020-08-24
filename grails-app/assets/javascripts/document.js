@@ -506,7 +506,7 @@ function iconnameFromFilename(filename) {
     }
 }
 
-var HelpLinksViewModel = function(helpLinks, validationElementSelector) {
+var HelpLinksViewModel = function(helpLinks, options) {
     var HELP_LINK_ROLE = 'helpResource';
     var self = this;
 
@@ -529,10 +529,16 @@ var HelpLinksViewModel = function(helpLinks, validationElementSelector) {
         return JSON.stringify(documents);
     }
     self.save = function() {
-        if ($(validationElementSelector).validationEngine('validate')) {
-            self.saveWithErrorDetection(function() {$.unblockUI()});
+        if ($(options.validationElementSelector).validationEngine('validate')) {
+            self.saveWithErrorDetection(function() {
+                self.clearHelpLinkCache();
+                $.unblockUI();
+            });
         }
     };
+    self.clearHelpLinkCache = function() {
+        $.post(options.clearCacheUrl, {cache:'homePageDocuments'});
+    }
     self.cancel = function() {
         window.location.reload();
     }
@@ -548,8 +554,8 @@ var HelpLinksViewModel = function(helpLinks, validationElementSelector) {
         var rightSort = right.labels[0];
         return leftSort == rightSort ? 0 : (leftSort < rightSort ? -1 : 1)
     });
-    $(validationElementSelector).validationEngine();
-    autoSaveModel(self, fcConfig.documentBulkUpdateUrl, {blockUIOnSave:true});
+    $(options.validationElementSelector).validationEngine();
+    autoSaveModel(self, options.documentBulkUpdateUrl, {blockUIOnSave:true, healthCheckUrl:options.healthCheckUrl});
 };
 
 function initialiseDocumentTable(containerSelector) {

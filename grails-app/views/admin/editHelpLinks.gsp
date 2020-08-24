@@ -8,6 +8,7 @@
         fcConfig = {
            documentBulkUpdateUrl: "${g.createLink(controller:"document", action:"bulkUpdate")}",
            documentDeleteUrl: "${g.createLink(controller:"document", action:"deleteDocument")}",
+           clearCacheUrl: "${g.createLink(controller:'admin', action:"clearCache")}",
            imageLocation:"${assetPath(src:'/')}"
         }
     </script>
@@ -44,7 +45,13 @@
 <script>
     $(function() {
         var links = <fc:modelAsJavascript model="${helpLinks}" default="[]"/>;
-        var helpViewModel = new HelpLinksViewModel(links, '#help-resources');
+        var options = {
+            clearCacheUrl: fcConfig.clearCacheUrl,
+            documentBulkUpdateUrl: fcConfig.documentBulkUpdateUrl,
+            validationElementSelector: '#help-resources',
+            healthCheckUrl: fcConfig.healthCheckUrl
+        };
+        var helpViewModel = new HelpLinksViewModel(links, options);
 
         ko.applyBindings(helpViewModel);
     });
