@@ -1,5 +1,6 @@
 package pages
 
+import geb.Module
 import geb.Page
 import pages.modules.box1
 import pages.modules.box2
@@ -7,6 +8,13 @@ import pages.modules.box3
 import pages.modules.box4
 import pages.modules.box5
 import pages.modules.box6
+
+class HelpLink extends Module {
+    static content = {
+        title { $('.help-link .help-link-title').text() }
+        url { $('.help-link a').attr('href') }
+    }
+}
 
 class HomePage extends Page {
 
@@ -21,5 +29,8 @@ class HomePage extends Page {
         box4{ $(".box4").moduleList(box4)}
         box5{ $(".box5").moduleList(box5)}
         box6{ $(".box6").moduleList(box6)}
+
+        helpLinks { $('#help-links .help-link').moduleList(HelpLink) }
+
     }
 }
