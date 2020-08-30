@@ -111,10 +111,16 @@ class ProjectConfigurationService {
         ]
         // The original MERIT project template required content be included (excluded by default) but we've
         // moved to an included by default model.
-        programConfig.excludes = [ProgramConfig.ProjectContent.MERI_PLAN, ProgramConfig.ProjectContent.RISKS_AND_THREATS]
-        if (config.optionalProjectContent) {
-            programConfig.excludes = programConfig.excludes.findAll{!it in config.optionalProjectContent}
+        programConfig.excludes = [ProgramConfig.ProjectContent.MERI_PLAN.toString(), ProgramConfig.ProjectContent.RISKS_AND_THREATS.toString()]
+        Map mapping = [
+                'MERI Plan':  ProgramConfig.ProjectContent.MERI_PLAN.toString(),
+                'Risks and Threats': ProgramConfig.ProjectContent.RISKS_AND_THREATS.toString()
+        ]
+
+        config.optionalProjectContent?.each { String content ->
+            programConfig.excludes.remove(mapping[content])
         }
+
         programConfig.activities = config.activities
         programConfig
     }

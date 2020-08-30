@@ -178,13 +178,17 @@ class ProjectService  {
      * or admins will be sent/copied on the email.
      * @param senderEmail the email to use for the from address.  Defaults to the current logged in user but
      * is a parameter so a scheduled task can specify the merit support email address.
+     * @param model  The model containing substitution parameters to be used by the email template
      */
-    void sendEmail(Closure<ProgramConfig> emailTemplate, Map project, String initiatorRole, String senderEmail = null) {
+    void sendEmail(Closure<ProgramConfig> emailTemplate, Map project, String initiatorRole, String senderEmail = null, Map model = null) {
 
         ProgramConfig config = projectConfigurationService.getProjectConfiguration(project)
         List roles = getMembersForProjectId(project.projectId)
         EmailTemplate template = emailTemplate(config)
-        emailService.sendEmail(template, [project:project], roles, initiatorRole, senderEmail)
+        if (!model) {
+            model = [project:project]
+        }
+        emailService.sendEmail(template, model, roles, initiatorRole, senderEmail)
     }
 
     /**

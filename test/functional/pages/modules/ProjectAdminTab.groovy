@@ -1,7 +1,8 @@
 package pages.modules
 
 import geb.Module
-
+import pages.modules.AdminDocumentsTab
+import pages.modules.AdminProjectSettingsTab
 
 class ProjectAdminTab extends Module {
     static content = {

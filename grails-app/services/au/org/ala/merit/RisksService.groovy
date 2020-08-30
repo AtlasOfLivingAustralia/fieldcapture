@@ -14,6 +14,8 @@ class RisksService {
     SettingService settingService
     ProjectService projectService
 
+    private static final String RISKS_REPORT_PATH = "/project/projectReport/"
+
     private int getScheduleCheckPeriod() {
         grailsApplication.config.risks.scheduleCheckingPeriod
     }
@@ -55,7 +57,7 @@ class RisksService {
         if (needsCheck(now,  lastCheckTime)) {
             log.info("Checking for changes to risks and threats")
             List projects = findProjectsWithChangedRisksAndThreatsBetween(lastCheckTime, now)
-            notifyGrantManagers(projects)
+            notifyGrantManagers(projects, lastCheckTime, now)
 
             updateLastCheckTime(now)
         }
@@ -75,14 +77,22 @@ class RisksService {
      * them of a change to the risks and threats.
      * @param projects the list of changed projects.
      */
-    private void notifyGrantManagers(List projects) {
+    private void notifyGrantManagers(List projects, DateTime fromDate, DateTime toDate) {
         String systemEmail = grailsApplication.config.merit.support.email
         log.info("Found ${projects.size()} projects with modified risks and threats")
         projects.each { Map project ->
             // Using the PROJECT_ADMIN_ROLE as the initiator has the effect of sending the email to grant managers.
             log.info("Sending risks and threats email for project: ${project.projectId}")
-            projectService.sendEmail({EmailTemplate.RISKS_AND_THREATS_CHANGED_EMAIL}, project, RoleService.PROJECT_ADMIN_ROLE, systemEmail)
+            Map model = [project:project, reportUrl:buildReportUrl(project.projectId, fromDate, toDate)]
+            projectService.sendEmail({EmailTemplate.RISKS_AND_THREATS_CHANGED_EMAIL}, project, RoleService.PROJECT_ADMIN_ROLE, systemEmail, model)
         }
+    }
+
+    private String buildReportUrl(String projectId, DateTime fromDate, DateTime toDate) {
+        grailsApplication.config.grails.serverURL+RISKS_REPORT_PATH+projectId +
+                "?fromDate="+DateUtils.format(fromDate)+
+                "&toDate="+DateUtils.format(toDate)+
+                "&sections=Project+risks+changes&orientation=portrait"
     }
 
     /**

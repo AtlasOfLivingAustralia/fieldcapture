@@ -257,6 +257,7 @@ class AdminController {
     /**
      * Re-index all docs with ElasticSearch
      */
+    @PreAuthorise(accessLevel = 'alaAdmin', redirectController = "admin")
     def reIndexAll() {
         render adminService.reIndexAll()
     }
@@ -576,10 +577,12 @@ class AdminController {
         [reports:[[name: 'performanceAssessmentComparison', label: 'Performance Assessment Comparison']], reef2050Reports:reefReports, reportsPeriodsOfManagementUnit:reportsPeriodsOfManagementUnit]
     }
 
+    @PreAuthorise(accessLevel = 'siteAdmin', redirectController = "admin")
     def cacheManagement() {
         [cacheRegions:grailsCacheManager.getCacheNames()]
     }
 
+    @PreAuthorise(accessLevel = 'siteAdmin', redirectController = "admin")
     def clearCache() {
         if (params.cache) {
             grailsCacheManager.getCache(params.cache).clear()

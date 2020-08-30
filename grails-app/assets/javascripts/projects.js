@@ -119,7 +119,6 @@ function ProjectViewModel(project, isUserEditor, organisations) {
     self.plannedStartDate = ko.observable(project.plannedStartDate).extend({simpleDate: false});
     self.plannedEndDate = ko.observable(project.plannedEndDate).extend({simpleDate: false});
     self.funding = ko.observable(project.funding).extend({currency:{}});
-    self.fundingSource = ko.observable(project.fundingSource);
     self.regenerateProjectTimeline = ko.observable(false);
     self.projectDatesChanged = ko.computed(function() {
         return project.plannedStartDate != self.plannedStartDate() ||
@@ -883,7 +882,6 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             associatedProgram: self.associatedProgram(),
             associatedSubProgram: self.associatedSubProgram(),
             funding: new Number(self.funding()),
-            fundingSource:self.fundingSource(),
             status: self.status(),
             tags: self.tags(),
             promoteOnHomepage: self.promoteOnHomepage(),
@@ -1473,7 +1471,7 @@ var RisksReportViewModel = function(project, options) {
     self.orientation = ko.observable('portrait');
 
     function displayReport(url) {
-        var paramString= '?fromDate'+self.fromDate()+'&toDate='+self.toDate();
+        var paramString= '?fromDate='+self.fromDate()+'&toDate='+self.toDate();
         paramString+='&sections=Project+risks+changes';
         paramString+='&orientation='+self.orientation();
 

@@ -138,6 +138,10 @@ class EditableMeriPlan extends Module {
         js.exec("\$('#floating-save').css('display', 'none');")
     }
 
+    boolean floatingSaveDisplayed() {
+        $("#floating-save").size() > 0 && $("#floating-save").displayed
+    }
+
     void save() {
         saveButton.click()
         // There is a chance of a race condition here if the save

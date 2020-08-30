@@ -25,12 +25,23 @@ class ProjectExplorer extends Page {
         chooseMoreFacetTerms(required: false) { $('#facetsContent .moreFacets') }
         facetTerms(required: false) { $("#facetsContent .facetValues a") }
         facetAccordion(required: false) { $("#facetsContent .fa.fa-plus") }
+
+        inputText{ $("#keywords")}
+
+        dashboardContent (required: false) {$("div#dashboard-content")}
+        dashboardContentList (required: false) {$(".dashboard-activities")}
+        reportView (required: false) {$("#reportView")}
     }
 
     /** When we reindex the index is destroyed and project explorer shows an error message about no data */
     boolean emptyIndex() {
         return mapToggle.empty
     }
+//
+//    void searchProject(){
+//        waitFor {search.displayed}
+//        search.click()
+//    }
 
 }
 
@@ -41,3 +52,12 @@ class ProjectsList extends Module {
         managementUnit { $(".managementUnitName").text()}
     }
 }
+
+
+////class DashboardContent extends Module{
+////    static content = {
+////        heading{$("")}
+////
+////
+////    }
+//}

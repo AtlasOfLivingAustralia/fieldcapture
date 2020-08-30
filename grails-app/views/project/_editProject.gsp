@@ -62,18 +62,14 @@
 
 <div class="row-fluid">
     <div class="control-group span4">
-        <label class="control-label" for="fundingSource">Funding Type</label>
+        <label class="control-label" for="manager">Project manager</label>
         <div class="controls">
-            <select id="fundingSource" data-bind="value:fundingSource" class="select">
-                <option value=""> Select Funding Type</option>
-                <option id="rlp" value="RLP">RLP</option>
-                <option id="non-rlp" value="NON-RLP">NON-RLP</option>
-            </select>
+            <g:textField class="" name="manager" data-bind="value:manager"/>
         </div>
     </div>
 
     <div class="control-group span4">
-        <label class="control-label" for="funding">Project funding</label>
+        <label class="control-label" for="manager">Project funding</label>
         <div class="controls">
             <g:textField class="" id="funding" name="funding" data-bind="value:funding" data-validation-engine="validate[custom[number]]"/>
         </div>

@@ -55,8 +55,15 @@ class EditOrganisationSpec extends StubbedCasSpec {
         when:
         to Organisation, orgId
 
+        then:
+        waitFor 10, { at Organisation }
+
         and:
-        edit()
+        waitFor {adminTab.displayed}
+        adminTab.click()
+        waitFor 10, { adminTabContent.displayed }
+        waitFor 10, { adminTabContent.editButton.displayed }
+        waitFor { adminTabContent.editButton.click() }
 
         then:
         waitFor  {at EditOrganisation}

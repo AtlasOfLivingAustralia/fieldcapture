@@ -5,6 +5,9 @@ load('../data/siteDefaults.js');
 load('../data/activityForms/RLPOutputReport.js');
 load('../data/activityForms/CoreServicesReport.js');
 load('../data/activityForms/ProgressReport.js');
+load('../data/scoreDefaults.js');
+load('../data/activityDefaults.js');
+load('../data/outputDefaults.js');
 
 
 function createProject(projectProperties) {
@@ -39,6 +42,113 @@ function createMu(muProperties) {
     db.managementUnit.insert(mu);
 }
 
+function createScoreWeedHaDefaults(weedsProperties) {
+    var weedHa = scoreWeedHaDefaults.create();
+    assign(weedsProperties, weedHa);
+    db.score.insert(weedHa);
+
+}
+
+function createActivities(activities){
+    var activity = activityDefaults.create();
+    assign(activities, activity);
+    db.activity.insert(activity);
+}
+
+function createOutput(outputs) {
+    var out = outputDefaults.create();
+    assign(outputs, out);
+    db.output.insert(out);
+}
+
+function createPestOutDataDefaults(pestData){
+    var pestOutput =pestOutDataDefaults.create();
+    assign(pestData, pestOutput);
+    db.output.insert(pestOutput);
+}
+function createScoreInvasiveSpecies(invasiveSpecies){
+    var species = scoreInvasiveSpeciesDefaults.create();
+    assign(invasiveSpecies, species);
+    db.score.insert(species);
+}
+
+function createProjectNumberBaselineDataSets(data){
+    var scoreDefault = projectNumberBaselineDataSets.create();
+    assign(data, scoreDefault)
+    db.score.insert(scoreDefault);
+
+}
+function createProjectNumberOfCommunicationMaterialsPublished(data){
+    var scoreDefault = projectNumberOfCommunicationMaterialsPublished.create();
+    assign(data, scoreDefault)
+    db.score.insert(scoreDefault);
+
+}
+function createProjectWeedAreaSurveyedHaDefault(data){
+    var scoreDefault = projectWeedAreaSurveyedHaDefault.create();
+    assign(data, scoreDefault)
+    db.score.insert(scoreDefault);
+}
+function createProjectWeedNumberOfSurveysConductedDefault(data){
+    var scoreDefault = projectWeedNumberOfSurveysConductedDefault.create();
+    assign(data, scoreDefault)
+    db.score.insert(scoreDefault);
+}
+function createProjectPestAreaFollowup(data){
+    var scoreDefault = projectPestAreaFollowup.create();
+    assign(data, scoreDefault)
+    db.score.insert(scoreDefault);
+}
+function createProjectPestAreaInitial(data){
+    var scoreDefault = projectPestAreaInitial.create();
+    assign(data, scoreDefault)
+    db.score.insert(scoreDefault);
+}
+function createProjectAccessHasBeenControlled(data){
+    var scoreDefault = projectAccessHasBeenControlled.create();
+    assign(data, scoreDefault)
+    db.score.insert(scoreDefault);
+}
+function createProjectRLPLengthInstalled(data){
+    var scoreDefault = projectRLPLengthInstalled.create();
+    assign(data, scoreDefault)
+    db.score.insert(scoreDefault);
+}
+function createProjectCommunityAdviceInteractions(data){
+    var scoreDefault = projectCommunityAdviceInteractions.create();
+    assign(data, scoreDefault)
+    db.score.insert(scoreDefault);
+}
+function createProjectCommunitySeminars(data){
+    var scoreDefault = projectCommunitySeminars.create();
+    assign(data, scoreDefault)
+    db.score.insert(scoreDefault);
+}
+function createProjectCommunityWorkshopEvent(data){
+    var scoreDefault = projectCommunityWorkshopEvent.create();
+    assign(data, scoreDefault)
+    db.score.insert(scoreDefault);
+}
+function createProjectCommunityFiledDays(data){
+    var scoreDefault = projectCommunityFiledDays.create();
+    assign(data, scoreDefault)
+    db.score.insert(scoreDefault);
+}
+function createProjectRLPNumberOfStructuresInstalled(data){
+    var scoreDefault = projectRLPNumberOfStructuresInstalled.create();
+    assign(data, scoreDefault)
+    db.score.insert(scoreDefault);
+}
+function createProjectCommunityOnGroundWorks(data){
+    var scoreDefault = projectCommunityOnGroundWorks.create();
+    assign(data, scoreDefault)
+    db.score.insert(scoreDefault);
+}
+function createProjectCommunityDemostrations(data){
+    var scoreDefault = projectCommunityDemostrations.create();
+    assign(data, scoreDefault)
+    db.score.insert(scoreDefault);
+}
 
 function createSite(siteProperties) {
     // var mu = Object.assign({}, muDefaults);
