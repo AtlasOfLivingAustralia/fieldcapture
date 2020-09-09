@@ -1,6 +1,6 @@
 <div class="meri-plan" data-bind="let:{details:meriPlan()}">
    <g:render template="/project/meriPlanReadOnly/programOutcome"/>
-   <g:render template="/project/meriPlanReadOnlys/additionalOutcomes"/>
+   <g:render template="/project/meriPlanReadOnly/additionalOutcomes"/>
 
     <h4>Project outcomes</h4>
     <table class="table">
