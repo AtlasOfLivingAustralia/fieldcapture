@@ -1,4 +1,4 @@
-<h4>${title ?: "Project rationale"}<fc:iconHelp>Provide a rationale of why the targeted investment priorities are being addressed and explain (using evidence) how the methodology will address them.</fc:iconHelp></h4>
+<h4 class="header-with-help">${title ?: "Project rationale"}</h4><fc:iconHelp>Provide a rationale of why the targeted investment priorities are being addressed and explain (using evidence) how the methodology will address them.</fc:iconHelp>
 <g:if test="${explanation}">
     ${explanation}
 </g:if>

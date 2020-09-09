@@ -1,4 +1,4 @@
-<h4>Project name <fc:iconHelp>The project name will be visible on project overview page in MERIT</fc:iconHelp></h4>
+<h4 class="header-with-help">Project name</h4><fc:iconHelp>The project name will be visible on project overview page in MERIT</fc:iconHelp>
 <g:if test="${explanation}">
     ${explanation}
 </g:if>
