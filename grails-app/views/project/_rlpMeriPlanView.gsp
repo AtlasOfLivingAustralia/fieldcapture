@@ -1,6 +1,6 @@
 <div class="meri-plan" data-bind="let:{details:meriPlan()}">
-   <g:render template="/project/meriPlan/programOutcome"/>
-   <g:render template="/project/meriPlan/additionalOutcomes"/>
+   <g:render template="/project/meriPlanReadOnly/programOutcome"/>
+   <g:render template="/project/meriPlanReadOnlys/additionalOutcomes"/>
 
     <h4>Project outcomes</h4>
     <table class="table">
@@ -20,9 +20,9 @@
         </tbody>
     </table>
 
-    <g:render template="/project/meriPlan/mediumTermOutcomes"/>
+    <g:render template="/project/meriPlanReadOnly/mediumTermOutcomes"/>
 
-    <g:render template="/project/meriPlan/nameAndDescription"/>
+    <g:render template="/project/meriPlanReadOnly/nameAndDescription"/>
 
     <!-- ko if:isAgricultureProject -->
     <table class="table">
@@ -41,7 +41,7 @@
     <!-- /ko -->
 
     <!-- ko if:!isAgricultureProject() -->
-    <g:render template="/project/meriPlan/keyThreats"/>
+    <g:render template="/project/meriPlanReadOnly/keyThreats"/>
     <!-- /ko -->
 
     <g:render template="/project/meriPlanReadOnly/projectMethodology"/>
