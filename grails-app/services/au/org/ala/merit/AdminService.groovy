@@ -34,4 +34,8 @@ class AdminService {
                 api_key: grailsApplication.config.api_key
         ])
     }
+
+    def deleteUserPermission(String userId){
+       return webService.getJson("${grailsApplication.config.ecodata.baseUrl}permissions/deleteUserPermission/$userId")
+    }
 }

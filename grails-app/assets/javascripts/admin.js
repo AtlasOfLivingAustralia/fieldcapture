@@ -76,3 +76,52 @@ var ImageGallery = function() {
     });
 
 };
+
+var RemoveUserPermissionViewModel = function (props, options){
+    var defaults = {
+        validationContainerSelector: '.validationEngineContainer'
+    };
+    var config = $.extend({}, defaults, options);
+    var self =$.extend(this, new Documents(options));
+    self.userId = ko.observable();
+    self.emailAddress = ko.observable()
+    self.firstName = ko.observable();
+    self.lastName = ko.observable();
+    self.users = ko.observableArray();
+
+
+
+    self.searchUser = function (){
+        var emailAddress = self.emailAddress()
+        if (emailAddress){
+            $.get(config.searchUser, {emailAddress: emailAddress, contentType: "application/json"}).done(function (data){
+                if (data.error === "error"){
+                    bootbox.alert('<span class="label label-important">This Email Address is invalid: </span><p>' + emailAddress + '</p>');
+                }else{
+                    self.users(data)
+                }
+            });
+        }else{
+            bootbox.alert('<span class="label label-important">Please Enter the Email Address</span>');
+        }
+
+    };
+
+    self.removeUser = function (data){
+        var userId = data.userId
+
+        $.get(config.removeUser, {userId: userId, contentType: "application/json"}).done(function (data){
+           if (data.error){
+                   bootbox.alert('<span class="label label-important">Failed to remove users from MERIT </span>'+'<p> Reason: '+data.error+'</p>');
+           }else{
+               blockUIWithMessage("Successfully Remove User Permission...")
+               blockUIWithMessage("Refreshing page...");
+               window.location.reload();
+           }
+        }).fail(function(data) {
+            $.unblockUI();
+            alert('An unhandled error occurred: ' + data.status + " Please refresh the page and try again");
+        });
+    };
+
+};
