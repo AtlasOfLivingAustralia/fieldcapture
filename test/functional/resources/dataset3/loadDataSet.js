@@ -309,3 +309,88 @@ db.userPermission.insert({
 addSetting('meritfielddata.risks.lastCheckTime', '2020-07-01T00:00:00Z');
 addSetting('meritfielddata.risk_changes.emailSubject', 'Risks and threats changed subject');
 addSetting('meritfielddata.risk_changes.emailBody', 'Risks and threats changed body');
+
+config.meriPlanContents =  [
+    {
+        "template": "programOutcome"
+    },
+    {
+        "template": "additionalOutcomes"
+    },
+    {
+        "template": "outcomeStatements",
+        "model": {
+            "subtitle": "Short-term outcome statement/s",
+            "title": "Project outcomes"
+        }
+    },
+    {
+        "template": "mediumTermOutcomes"
+    },
+    {
+        "template": "name",
+        "model": {
+            "placeHolder": "[150 characters]"
+        }
+    },
+    {
+        "template": "description"
+    },
+    {
+        "template": "keyThreats"
+    },
+    {
+        "template": "rationale"
+    },
+    {
+        "template": "projectMethodology",
+        "model": {
+            "maxSize": "4000",
+            "title": "Project methodology",
+            "tableHeading": "Please describe the methodology that will be used to achieve the project's short term outcome statements. To help demonstrate best practice delivery approaches and cost effectiveness of methodologies used, include details of the specific delivery mechanisms to leverage change (e.g. delivery method, approach and justification)",
+            "placeHolder": "[Free text; limit response to 4000 characters (approx. 650 words)]"
+        }
+    },
+    {
+        "template": "communityEngagement",
+        "model": {
+            "maxSize": "4000",
+            "title": "Community engagement",
+            "placeHolder": "[Free text; limit response to 4000 characters (approx. 650 words)]"
+        }
+    },
+    {
+        "template": "monitoringBaseline"
+    },
+    {
+        "template": "monitoringIndicators",
+        "model": {
+            "approachHeading": "Describe the project monitoring indicator(s) approach",
+            "indicatorHeading": "Identify the project monitoring indicator(s)",
+            "indicatorHelpText": "List the measurable indicators of project success that will be monitored. Indicators should link back to the outcome statements and have units of measure. Indicators should measure both project outputs (e.g. area (ha) of rabbit control, length (km) of predator proof fencing) and change the project is aiming to achieve (e.g. Change in abundance of X threatened species at Y location, Change in vegetation cover (%), etc).",
+            "approachHelpText": "How will the indicator be monitored? Briefly describe the method to be used to monitor the indicator (including timing of monitoring, who will collect/collate / analyse data, etc)",
+            "indicatorPlaceHolder": "[Free text]",
+            "approachPlaceHolder": "[Free text]",
+            "title": "Project Monitoring Indicators"
+        }
+    },
+    {
+        "template": "projectReview"
+    },
+    {
+        "template": "nationalAndRegionalPlans"
+    },
+    {
+        "template": "serviceTargets"
+    }
+];
+
+createProgram({programId: "fhr", name: "FHR", description: "", config: config});
+
+createProject({projectId: "fhr1", name: "FHR project", programId: "fhr"});
+db.userPermission.insert({
+    entityType: 'au.org.ala.ecodata.Project',
+    entityId: "fhr1",
+    userId: '1',
+    accessLevel: 'admin'
+});
