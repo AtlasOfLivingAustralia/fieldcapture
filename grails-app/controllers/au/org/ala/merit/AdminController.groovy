@@ -105,10 +105,10 @@ class AdminController {
     @PreAuthorise(accessLevel = 'alaAdmin', redirectController = "admin")
     def searchUser(){
         String emailAddress = params.emailAddress
-        def user = authService.getUserForEmailAddress(emailAddress)
+        def result = authService.getUserForEmailAddress(emailAddress)
         Map userDetails
-        if (user != null && user.userName == emailAddress){
-            userDetails = [userId: user.userId, emailAddress: user.userName, firstName: user.firstName, lastName: user.lastName]
+        if (result != null && result.userName == emailAddress){
+            userDetails = [userId: result.userId, emailAddress: result.userName, firstName: result.firstName, lastName: result.lastName]
         }else{
             userDetails = [error: "error"]
         }
@@ -117,18 +117,18 @@ class AdminController {
     @PreAuthorise(accessLevel = 'alaAdmin', redirectController = "admin")
     def removeUser(){
         String userId = params.userId
-        def user = adminService.deleteUserPermission(userId)
+        def result = adminService.deleteUserPermission(userId)
 
-        if (user.status == 200){
-            user = [status: 200, success: "Success"]
+        if (result.status == 200){
+            result = [status: 200, success: "Success"]
         }
-        if (user.status == 500){
-            user = [status: 500, error: user.resp.error]
+        if (result.status == 500){
+            result = [status: 500, error: user.error]
         }
-        if (user.status == 400){
-            user = [status: 400, error: "No UserPermissions found"]
+        if (result.status == 400){
+            result = [status: 400, error: "No UserPermissions found"]
         }
-        render user as JSON
+        render result as JSON
 
     }
     @PreAuthorise(accessLevel = 'siteAdmin', redirectController = "admin")
