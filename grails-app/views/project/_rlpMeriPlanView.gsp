@@ -1,55 +1,6 @@
 <div class="meri-plan" data-bind="let:{details:meriPlan()}">
-    <h4><span data-bind="text:details.programName"></span>  Outcome</h4>
-    <table class="table primary-outcome">
-        <thead>
-        <tr>
-            <th class="outcome-priority">Primary outcome</th>
-            <th class="primary-outcome priority">Primary Investment Priority</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td class="outcome-priority"><span
-                    data-bind="text:details.outcomes.primaryOutcome.description"></span>
-            </td>
-            <td class="priority">
-                <!-- ko if:!isAgricultureProject() -->
-                <span data-bind="text:details.outcomes.primaryOutcome.asset"></span>
-                <!-- /ko -->
-                <!-- ko if:isAgricultureProject() -->
-                <ul data-bind="foreach:details.outcomes.primaryOutcome.assets">
-                    <li data-bind="text:$data"></li>
-                </ul>
-                <!-- /ko -->
-
-            </td>
-        </tr>
-
-        </tbody>
-    </table>
-    <h4>Additional benefits</h4>
-    <table class="table secondary-outcome">
-
-        <thead>
-
-        <tr>
-            <th class="outcome-priority">Secondary outcome(s)</th>
-            <th class="priority">Secondary Investment Priorities</th>
-        </tr>
-        </thead>
-        <tbody data-bind="foreach:details.outcomes.secondaryOutcomes">
-        <tr>
-            <td class="outcome-priority"><span
-                    data-bind="text:description"></span>
-            </td>
-            <td class="priority">
-                <span data-bind="text:asset">
-                </span>
-            </td>
-        </tr>
-
-        </tbody>
-    </table>
+   <g:render template="/project/meriPlanReadOnly/programOutcome"/>
+   <g:render template="/project/meriPlanReadOnly/additionalOutcomes"/>
 
     <h4>Project outcomes</h4>
     <table class="table">
@@ -69,48 +20,10 @@
         </tbody>
     </table>
 
-    <table class="table">
-        <thead>
-        <tr>
-            <th class="index"></th>
-            <th class="outcome">Medium-term outcome statement/s</th>
-        </tr>
-        </thead>
-        <tbody data-bind="foreach:details.outcomes.midTermOutcomes">
-        <tr>
-            <td class="index" data-bind="text:$index()+1"></td>
-            <td class="outcome"><span data-bind="text:description"></span></td>
-        </tr>
-        </tbody>
-    </table>
+    <g:render template="/project/meriPlanReadOnly/mediumTermOutcomes"/>
 
+    <g:render template="/project/meriPlanReadOnly/nameAndDescription"/>
 
-    <h4>Project details</h4>
-
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Project name</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td><span data-bind="text:details.name"></span></td>
-        </tr>
-        </tbody>
-    </table>
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Project description</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td><span data-bind="text:details.description"></span></td>
-        </tr>
-        </tbody>
-    </table>
     <!-- ko if:isAgricultureProject -->
     <table class="table">
        <thead>
@@ -128,55 +41,12 @@
     <!-- /ko -->
 
     <!-- ko if:!isAgricultureProject() -->
-    <!-- ko with:details.threats -->
-    <table class="table threats-view">
-        <thead>
-        <th class="index"></th>
-        <th class="threat required">Key threat(s) and/or key threatening processes</th>
-        <th class="intervention required">Interventions to address threats</th>
-        </thead>
-        <tbody data-bind="foreach: rows">
-        <tr>
-            <td class="index"><span data-bind="text:$index()+1"></span></td>
-            <td class="threat">
-                <span data-bind="text: threat">
-                </span>
-            </td>
-            <td class="intervention">
-                <span data-bind="text: intervention"></span>
-            </td>
-        </tr>
-        </tbody>
-
-    </table>
-    <!-- /ko -->
+    <g:render template="/project/meriPlanReadOnly/keyThreats"/>
     <!-- /ko -->
 
     <g:render template="/project/meriPlanReadOnly/projectMethodology"/>
 
-    <h4>Monitoring methodology</h4>
-    <!-- ko with:details.baseline -->
-    <table class="table baseline-view">
-        <thead>
-        <th class="index"></th>
-        <th class="baseline required">Project baseline</th>
-        <th class="baseline-method required">The method used to obtain the baseline, or how the baseline will be established</th>
-        </thead>
-        <tbody data-bind="foreach: rows">
-        <tr>
-            <td class="index"><span data-bind="text:$index()+1"></span></td>
-            <td class="baseline">
-                <span data-bind="text: baseline"></span>
-            </td>
-            <td class="baseline-method">
-                <span data-bind="text: method"></span>
-            </td>
-
-        </tr>
-        </tbody>
-
-    </table>
-    <!-- /ko -->
+    <g:render template="/project/meriPlanReadOnly/monitoringBaseline"/>
 
     <table class="table monitoring-indicators-view">
         <thead>
@@ -200,43 +70,9 @@
         </tbody>
     </table>
 
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Project Review, Evaluation and Improvement Methodology and Approach</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td><span data-bind="text:details.projectEvaluationApproach"></span></td>
-        </tr>
-        </tbody>
-    </table>
+    <g:render template="/project/meriPlanReadOnly/projectReview"/>
 
-    <h4>Relevant national and regional plans</h4>
-
-    <table class="table plans-view">
-        <thead>
-        <tr>
-            <th class="index"></th>
-            <th class="document-name">Document name <fc:iconHelp
-                    title="Document name">List the name of the National or Regional plan the project is addressing.</fc:iconHelp></th>
-            <th class="section">Relevant section <fc:iconHelp
-                    title="Relevant section">What section (target/outcomes/objective etc) of the plan is being addressed?</fc:iconHelp></th>
-            <th class="alignment">Explanation of strategic alignment <fc:iconHelp
-                    title="Explanation of strategic alignment">In what way will the project deliver against this section? Keep the response brief, 1 to 2 sentences should be adequate.</fc:iconHelp></th>
-        </tr>
-        </thead>
-        <tbody data-bind="foreach : details.priorities.rows">
-        <tr>
-            <td class="index"><span data-bind="text:$index()+1"></span></td>
-            <td class="document-name"><span data-bind="text: data1"></span></td>
-            <td class="section"><span data-bind="text: data2"></span></td>
-            <td class="alignment"><span data-bind="text: data3"></span></td>
-        </tr>
-        </tbody>
-
-    </table>
+    <g:render template="/project/meriPlanReadOnly/nationalAndRegionalPlans"/>
 
     <g:render template="/project/meriPlanReadOnly/serviceTargets"/>
 
