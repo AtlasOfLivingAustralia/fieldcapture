@@ -110,7 +110,7 @@ class AdminController {
         if (result != null && result.userName == emailAddress){
             userDetails = [userId: result.userId, emailAddress: result.userName, firstName: result.firstName, lastName: result.lastName]
         }else{
-            userDetails = [error: "error"]
+            userDetails = [error: "error", emailAddress: emailAddress]
         }
         render userDetails as JSON
     }

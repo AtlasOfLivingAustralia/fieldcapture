@@ -96,7 +96,7 @@ var RemoveUserPermissionViewModel = function (props, options){
         if (emailAddress){
             $.get(config.searchUser, {emailAddress: emailAddress, contentType: "application/json"}).done(function (data){
                 if (data.error === "error"){
-                    bootbox.alert('<span class="label label-important">This Email Address is invalid: </span><p>' + emailAddress + '</p>');
+                    bootbox.alert('<span class="label label-important">This Email Address is invalid: </span><p>' + data.emailAddress + '</p>');
                 }else{
                     self.users(data)
                 }
