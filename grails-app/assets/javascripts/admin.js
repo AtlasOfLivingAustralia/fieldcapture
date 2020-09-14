@@ -91,8 +91,8 @@ var RemoveUserPermissionViewModel = function (props, options){
 
 
 
-    self.searchUser = function (){
-        var emailAddress = self.emailAddress()
+    self.searchUserDetails = function (){
+        var emailAddress = self.emailAddress
         if (emailAddress){
             $.get(config.searchUser, {emailAddress: emailAddress, contentType: "application/json"}).done(function (data){
                 if (data.error === "error"){
@@ -107,8 +107,8 @@ var RemoveUserPermissionViewModel = function (props, options){
 
     };
 
-    self.removeUser = function (data){
-        var userId = data.userId
+    self.removeUserDetails = function (){
+        var userId = self.userId
 
         $.get(config.removeUser, {userId: userId, contentType: "application/json"}).done(function (data){
            if (data.error){
