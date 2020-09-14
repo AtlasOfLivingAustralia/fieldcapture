@@ -123,7 +123,7 @@ class AdminController {
             result = [status: 200, success: "Success"]
         }
         if (result.status == 500){
-            result = [status: 500, error: user.error]
+            result = [status: 500, error: result.error]
         }
         if (result.status == 400){
             result = [status: 400, error: "No UserPermissions found"]
