@@ -25,7 +25,7 @@
         <label for="email" class="control-label span2">Enter User's Email Address</label>
         <input id="email" name="email" type="text" class="form-control" value="" data-bind="value:emailAddress"
                data-validation-engine="validate[required, custom[email]]" data-errormessage-value-missing="Email is required!">
-        <button class="btn btn-primary" data-bind="click:searchUserDetails">Search</button>
+        <button class="btn btn-primary searchUserDetails" data-bind="click:searchUserDetails">Search</button>
     </div>
 
 </form>
@@ -46,11 +46,11 @@
 
     <tbody>
         <tr>
-            <td data-bind="text:userId"></td>
-            <td data-bind="text:emailAddress"></td>
-            <td data-bind="text:firstName"></td>
-            <td data-bind="text:lastName"></td>
-            <td><button class="btn btn-danger" data-bind="click:$root.removeUserDetails">Remove</button></td>
+            <td class="userId" data-bind="text:userId"></td>
+            <td class="emailAddress" data-bind="text:emailAddress"></td>
+            <td class="firstName" data-bind="text:firstName"></td>
+            <td class="lastName" data-bind="text:lastName"></td>
+            <td><button class="btn btn-danger removeUserDetails" data-bind="click:$root.removeUserDetails">Remove</button></td>
         </tr>
     </tbody>
 
