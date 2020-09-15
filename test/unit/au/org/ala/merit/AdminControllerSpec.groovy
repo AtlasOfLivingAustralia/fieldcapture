@@ -23,14 +23,17 @@ class AdminControllerSpec extends Specification {
 
         when:
         controller.searchUser()
-        def results = response
+        def results = response.getJson()
 
 
         then:
         1 * authService.getUserForEmailAddress(email) >> userDetails
 
         and:
-        results.getText() == '{"userId":"12345","emailAddress":"test@test.com","firstName":"Test","lastName":"Testing"}'
+        results.userId == "12345"
+        results.emailAddress == "test@test.com"
+        results.firstName == "Test"
+        results.lastName == "Testing"
 
     }
 
@@ -42,14 +45,15 @@ class AdminControllerSpec extends Specification {
 
         when:
         controller.searchUser()
-        def results = response
+        def results = response.getJson()
 
 
         then:
         1 * authService.getUserForEmailAddress(email) >> userDetails
 
         and:
-        results.getText() == '{"error":"error"}'
+        results.error == "error"
+        results.emailAddress == "test@test.com"
     }
 
     void "Remove user Details from merit with successfully"(){
@@ -60,13 +64,14 @@ class AdminControllerSpec extends Specification {
 
         when:
         controller.removeUser()
-        def result = response
+        def results = response.getJson()
 
         then:
         1 * adminService.deleteUserPermission(userId) >> success
 
         and:
-        result.getText() == '{"status":200,"success":"Success"}'
+        results.status == 200
+        results.success == "Success"
     }
 
     void "Unable to remove user when no user found in the database"(){
@@ -77,13 +82,14 @@ class AdminControllerSpec extends Specification {
 
         when:
         controller.removeUser()
-        def result = response
+        def results = response.getJson()
 
         then:
         1 * adminService.deleteUserPermission(userId) >> success
 
         and:
-        result.getText() == '{"status":400,"error":"No UserPermissions found"}'
+        results.status == 400
+        results.error == "No UserPermissions found"
     }
 
     void "500 error when there is an issue downloading with db"(){
@@ -94,13 +100,13 @@ class AdminControllerSpec extends Specification {
 
         when:
         controller.removeUser()
-        def result = response
+        def results = response.getJson()
 
         then:
         1 * adminService.deleteUserPermission(userId) >> success
 
         and:
-        result.getText() == '{"status":500,"error":"Downloading issue"}'
+        results.status == 500
+        results.error == "Downloading issue"
     }
-
 }
