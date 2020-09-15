@@ -28,10 +28,10 @@ class AdminUserPermissionSpec extends StubbedCasSpec {
         adminContent.searchButton.click()
 
         then:
-        waitFor {at AdminPage}
+        waitFor 20, {at AdminPage}
 
         and:
-        adminContent.userId.text() == "100"
+        waitFor { adminContent.userId.text() == "100" }
         adminContent.emailAddress.text() == "auser@nowhere.com.au"
         adminContent.firstName.text() == "Test"
         adminContent.lastName.text() == "Test"
