@@ -107,8 +107,13 @@ var RemoveUserPermissionViewModel = function (props, options){
 
     };
 
-    self.removeUserDetails = function (){
-        var userId = self.userId
+    self.removeUserDetails = function (userDetails){
+        var userId
+        if (userDetails === undefined){
+            userId = self.userId
+        }else{
+            userId = userDetails.userId
+        }
 
         $.get(config.removeUser, {userId: userId, contentType: "application/json"}).done(function (data){
            if (data.error){

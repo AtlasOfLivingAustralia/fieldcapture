@@ -56,7 +56,7 @@ describe("RemoveUserPermissionViewModel Spec", function (){
         let options = {searchUser: "test/url"}
         let props = {}
         var email = "test@testing.com"
-        var userDetails = {error: "error"}
+        var userDetails = {error: "error", emailAddress: email}
 
         spyOn($, "get").and.returnValue(
             ajax_response(userDetails)
@@ -68,7 +68,7 @@ describe("RemoveUserPermissionViewModel Spec", function (){
         model.emailAddress = email
         model.searchUserDetails()
 
-        expect(bootbox.alert).toHaveBeenCalledWith('<span class="label label-important">This Email Address is invalid: </span><p>' + email + '</p>');
+        expect(bootbox.alert).toHaveBeenCalledWith('<span class="label label-important">This Email Address is invalid: </span><p>' + userDetails.emailAddress + '</p>');
     });
 
 
@@ -77,7 +77,7 @@ describe("RemoveUserPermissionViewModel Spec", function (){
         let options = {removeUser: "test/url"}
         let props = {}
         var userId = "12345"
-        var userDetails = {error: "error"}
+        var userDetails = {error: "error", userId: userId}
 
         spyOn($, "get").and.returnValue(
             ajax_response(userDetails)
@@ -85,27 +85,11 @@ describe("RemoveUserPermissionViewModel Spec", function (){
 
         spyOn(bootbox, 'alert');
 
-        var model = new RemoveUserPermissionViewModel(props, options)
+        var model = new RemoveUserPermissionViewModel(props, options);
         model.userId = userId
         model.removeUserDetails()
 
         expect(bootbox.alert).toHaveBeenCalledWith('<span class="label label-important">Failed to remove users from MERIT </span>'+'<p> Reason: '+ userDetails.error+'</p>');
     });
-
-    // it('should remove the userDetails', function() {
-    //     let options = {removeUser: "test/url"}
-    //     let props = {userId: "12345", firstName: "Testing", lastName: "Testing", emailAddress: "test@testing.com"}
-    //     var userId = "12345"
-    //     var success = {success: "Success", status: 200}
-    //
-    //     spyOn($, "get").and.returnValue(
-    //         ajax_response(success)
-    //     );
-    //
-    //     var model = new RemoveUserPermissionViewModel(props, options)
-    //     model.userId = userId
-    //     model.removeUserDetails()
-    //
-    // });
 
 });

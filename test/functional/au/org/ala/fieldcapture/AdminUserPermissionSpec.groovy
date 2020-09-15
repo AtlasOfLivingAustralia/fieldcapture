@@ -31,10 +31,33 @@ class AdminUserPermissionSpec extends StubbedCasSpec {
         waitFor {at AdminPage}
 
         and:
-        adminContent.userId.text() == "1"
+        adminContent.userId.text() == "100"
         adminContent.emailAddress.text() == "auser@nowhere.com.au"
         adminContent.firstName.text() == "Test"
         adminContent.lastName.text() == "Test"
 
     }
+
+    def "I can search user details using email Address and remove user as an FC_ADMIN"() {
+
+        setup:
+        login([userId:'1', role:"ROLE_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+
+        when:
+        to AdminPage
+
+        then:
+        waitFor {at AdminPage}
+
+        when:
+        adminContent.email = "auser@nowhere.com.au"
+        adminContent.searchButton.click()
+
+        then:
+        waitFor {at AdminPage}
+
+        and:
+        adminContent.removeButton.click()
+    }
+
 }

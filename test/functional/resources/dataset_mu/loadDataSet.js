@@ -79,6 +79,7 @@ createMu({name:'test mu in ACT', managementUnitId:"test_mu_3",managementUnitSite
 
 db.userPermission.insert({entityType:'au.org.ala.ecodata.Program', entityId:'test_program', userId:'1', accessLevel:'admin'});
 db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_1', userId:'1', accessLevel:'admin'});
+db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_1', userId:'100', accessLevel:'admin'});
 db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entityId:'test_mu_2', userId:'1', accessLevel:'admin'});
 db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entityId:'test_mu', userId:'1', accessLevel:'admin'});
 db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entityId:'test_mu', userId:'3', accessLevel:'caseManager'});
