@@ -111,6 +111,7 @@ function ProjectViewModel(project, isUserEditor, organisations) {
     self.transients.defaultTags = ["Fires", "Flood", "Cyclone", "Drought", "Storm", "Wind"];
 
     self.name = ko.observable(project.name);
+    self.programId = ko.observable(project.programId);
     self.aim = ko.observable(project.aim);
     self.description = ko.observable(project.description).extend({markdown:true});
     self.externalId = ko.observable(project.externalId);
@@ -881,6 +882,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             serviceProviderName: self.serviceProviderName(),
             associatedProgram: self.associatedProgram(),
             associatedSubProgram: self.associatedSubProgram(),
+            programId: self.programId(),
             funding: new Number(self.funding()),
             status: self.status(),
             tags: self.tags(),

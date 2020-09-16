@@ -30,6 +30,17 @@
         <input type="text" class="input-xlarge" readonly="readonly" data-bind="value:serviceProviderName" id="serviceProviderName"/>
     </div>
 </div>
+<g:if test="${hidePrograms}">
+    <div class="row-fluid">
+        <div class="control-group span4">
+            <label for="programId" class="control-label">Program </label>
+            <div class="controls">
+                <g:select class="programId select" style="width: 280px" from="${programList}" data-bind="value:programId" optionKey="programId" name="name" id="programId" optionValue="name"/>
+
+            </div>
+        </div>
+    </div>
+</g:if>
 <div class="row-fluid">
     <div class="control-group">
         <label for="description" class="control-label">Project description</label>

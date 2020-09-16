@@ -27,6 +27,7 @@ class ProjectController {
 
     def projectService, metadataService, organisationService, commonService, activityService, userService, webService, roleService, grailsApplication
     def siteService, documentService, reportService, blogService, pdfGenerationService
+    def programService
 
     private def espOverview(Map project, Map user) {
 
@@ -85,7 +86,7 @@ class ProjectController {
                 def members = projectService.getMembersForProjectId(id)
                 def admins = members.findAll { it.role == "admin" }.collect { it.userName }.join(",")
                 // comma separated list of user email addresses
-
+                List<Map> programList = programService.listOfAllPrograms()
                 def programs = projectService.programsModel()
                 def content = projectContent(project, user, template, config)
 
@@ -100,6 +101,7 @@ class ProjectController {
                              outputTargetMetadata  : metadataService.getOutputTargetsByOutputByActivity(),
                              organisations         : organisationList(project),
                              programs              : programs,
+                             programList            : programList,
                              today                 : DateUtils.format(new DateTime()),
                              themes                : config.themes,
                              config                : config,
