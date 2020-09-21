@@ -24,7 +24,6 @@ class ProjectControllerSpec extends Specification {
     def reportService = Mock(ReportService)
     def activityService = Mock(ActivityService)
     def siteService = Mock(SiteService)
-    def programService = Mock(ProgramService)
 
     ProjectService realProjectService
 
@@ -46,7 +45,6 @@ class ProjectControllerSpec extends Specification {
         controller.siteService = siteService
         controller.activityService = activityService
         controller.grailsApplication = grailsApplication
-        controller.programService = programService
 
         projectService.getMembersForProjectId(_) >> []
         projectService.getProgramConfiguration(_) >> new ProgramConfig([requiresActivityLocking: true])

@@ -35,6 +35,7 @@ class ProjectService  {
 
     def webService, grailsApplication, siteService, activityService, emailService, documentService, userService, metadataService, settingService, reportService, auditService, speciesService, commonService
     ProjectConfigurationService projectConfigurationService
+    def programService
 
     def get(id, levelOfDetail = "", includeDeleted = false) {
 
@@ -1704,5 +1705,26 @@ class ProjectService  {
      */
     List<String> getSecondaryOutcomes(Map project) {
         project?.custom?.details?.outcomes?.secondaryOutcomes?.collect{it.description} ?: []
+    }
+
+    List<Map> getProgramList(){
+        List<Map> listOfProgram = programService.listOfAllPrograms()
+        List<Map> programList = []
+        List newProgramList = []
+        listOfProgram.each {program ->
+            Map programDetails = programService.get(program?.programId)
+            Map updatedProgramList = [:]
+            if (programDetails?.parent != null){
+                updatedProgramList["name"] = programDetails.parent?.name + " - " + programDetails.name
+                updatedProgramList["programId"] = programDetails.programId
+            }
+            if (programDetails?.parent == null){
+                updatedProgramList["name"] =  programDetails.name
+                updatedProgramList["programId"] = programDetails.programId
+            }
+            newProgramList.add(updatedProgramList)
+        }
+        programList.addAll(newProgramList)
+        return programList
     }
 }

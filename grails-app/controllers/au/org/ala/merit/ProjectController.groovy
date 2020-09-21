@@ -86,7 +86,10 @@ class ProjectController {
                 def members = projectService.getMembersForProjectId(id)
                 def admins = members.findAll { it.role == "admin" }.collect { it.userName }.join(",")
                 // comma separated list of user email addresses
-                List<Map> programList = programService.listOfAllPrograms()
+                boolean meriPlanStatus = projectService.isMeriPlanSubmittedOrApproved(project)
+                List<Map> programList = projectService.getProgramList()
+
+
                 def programs = projectService.programsModel()
                 def content = projectContent(project, user, template, config)
 
@@ -101,7 +104,8 @@ class ProjectController {
                              outputTargetMetadata  : metadataService.getOutputTargetsByOutputByActivity(),
                              organisations         : organisationList(project),
                              programs              : programs,
-                             programList            : programList,
+                             programList           : programList,
+                             meriPlanStatus        : meriPlanStatus,
                              today                 : DateUtils.format(new DateTime()),
                              themes                : config.themes,
                              config                : config,

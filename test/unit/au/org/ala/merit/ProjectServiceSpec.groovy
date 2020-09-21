@@ -27,6 +27,7 @@ class ProjectServiceSpec extends Specification {
     AuditService auditService = Mock(AuditService)
     ProjectConfigurationService projectConfigurationService = Mock(ProjectConfigurationService)
     ProgramConfig projectConfig = new ProgramConfig([activityBasedReporting: true, reportingPeriod:6, reportingPeriodAlignedToCalendar: true, weekDaysToCompleteReport:43])
+    ProgramService programService = Mock(ProgramService)
 
     Map reportConfig = [
             weekDaysToCompleteReport:projectConfig.weekDaysToCompleteReport,
@@ -53,6 +54,7 @@ class ProjectServiceSpec extends Specification {
         service.emailService = emailService
         service.projectConfigurationService = projectConfigurationService
         service.auditService = auditService
+        service.programService = programService
         userService.userIsAlaOrFcAdmin() >> false
         metadataService.getProgramConfiguration(_,_) >> [reportingPeriod:6, reportingPeriodAlignedToCalendar: true, weekDaysToCompleteReport:43]
         projectConfigurationService.getProjectConfiguration(_) >> projectConfig
@@ -977,6 +979,42 @@ class ProjectServiceSpec extends Specification {
         service.getSecondaryOutcomes([custom:[details:[outcomes:[secondaryOutcomes:[[description:'Outcome 1'], [description:'Outcome 2']]]]]]) == ['Outcome 1', 'Outcome 2']
         service.getSecondaryOutcomes([custom:[details:[:]]]) == []
         service.getSecondaryOutcomes(null) == []
+    }
+
+    def "The Program will join the two program name when the parent is not null"(){
+        setup:
+        String programId = "12345"
+        Map programDetails = [programId: programId, name: "Test Sub Program", parent: [name: "Test Program", programId: "programId"]]
+        List<Map> list = [[name: "Test Sub Program", programId: programId]]
+
+        when:
+        List<Map> programList = service.getProgramList()
+
+        then:
+        1 * programService.listOfAllPrograms() >> list
+        1 * programService.get(programId) >> programDetails
+
+        and:
+        programList[0].name == "Test Program - Test Sub Program"
+        programList[0].programId == "12345"
+    }
+
+    def "The program will return program name when parent is null"(){
+        setup:
+        String programId = "12345"
+        Map programDetails = [programId: programId, name: "Test Program", parent: null]
+        List<Map> list = [[name: "Test Program", programId: programId]]
+
+        when:
+        List<Map> programList = service.getProgramList()
+
+        then:
+        1 * programService.listOfAllPrograms() >> list
+        1 * programService.get(programId) >> programDetails
+
+        and:
+        programList[0].name == "Test Program"
+        programList[0].programId == "12345"
     }
 
     private Map buildApprovalDocument(int i, String projectId) {
