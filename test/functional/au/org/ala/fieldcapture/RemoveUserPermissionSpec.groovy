@@ -1,8 +1,9 @@
 package au.org.ala.fieldcapture
 
+import pages.ProjectIndex
 import pages.RemoveUserPermissionPage
 
-class AdminUserPermissionSpec extends StubbedCasSpec {
+class RemoveUserPermissionSpec extends StubbedCasSpec {
 
     def setup (){
         useDataSet('dataset_mu')
@@ -15,7 +16,7 @@ class AdminUserPermissionSpec extends StubbedCasSpec {
     def "I can search user details using email Address as an ROLE_ADMIN"() {
 
         setup:
-        login([userId:'1', role:"ROLE_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+        login([userId:'1', role:"ROLE_ADMIN", email:'role-admin@nowhere.com', firstName: "ROLE", lastName:'Admin'], browser)
 
         when:
         to RemoveUserPermissionPage
@@ -41,7 +42,7 @@ class AdminUserPermissionSpec extends StubbedCasSpec {
     def "I can search user details using email Address and remove user as an ROLE_ADMIN"() {
 
         setup:
-        login([userId:'1', role:"ROLE_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+        login([userId:'1', role:"ROLE_ADMIN", email:'role-admin@nowhere.com', firstName: "ROLE", lastName:'Admin'], browser)
 
         when:
         to RemoveUserPermissionPage
@@ -56,8 +57,30 @@ class AdminUserPermissionSpec extends StubbedCasSpec {
         then:
         waitFor {at RemoveUserPermissionPage}
 
-        and:
+        when:
         adminContent.removeButton.click()
+
+        then:
+        waitFor {at RemoveUserPermissionPage }
+
+        when:
+        to ProjectIndex, "project_1"
+
+        then:
+        waitFor {at ProjectIndex}
+        when:
+        adminTab.click()
+        then:
+        waitFor {admin.projectAccessTab.displayed}
+
+        when:
+        admin.projectAccessTab.click()
+
+        then:
+        waitFor {admin.projectAccess.displayed}
+
+        and:
+        admin.projectAccess.size() == 1
     }
 
 }
