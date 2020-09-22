@@ -81,6 +81,7 @@ class RemoveUserPermissionSpec extends StubbedCasSpec {
 
         and:
         admin.projectAccess.size() == 1
+        admin.projectAccess[0].messageRow.text() ==  "No project members set"
     }
 
 }

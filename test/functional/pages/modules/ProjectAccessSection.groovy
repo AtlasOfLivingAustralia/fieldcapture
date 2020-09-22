@@ -7,5 +7,6 @@ class ProjectAccessSection extends Module{
         userId {$(".memUserId")}
         userName{ $(".memUserName")}
         role { $ (".memUserRole")}
+        messageRow { $("#messageRow")}
     }
 }
