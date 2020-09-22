@@ -7,9 +7,9 @@
     <script disposition="head">
         var fcConfig = {
             serverUrl: "${grailsApplication.config.grails.serverURL}",
-            returnToUrl: "${params.returnTo ?: createLink(controller: 'admin',action:'index')}",
-            searchUser: "${createLink(controller: "admin", action: "searchUser")}",
-            removeUser:"${createLink(controller: "admin", action: "removeUser")}"
+            returnToUrl: "${params.returnTo ?: createLink(controller: 'admin',action:'removeUserPermission')}",
+            searchUserDetailsUrl: "${createLink(controller: "admin", action: "searchUserDetails")}",
+            removeUserDetailsUrl:"${createLink(controller: "admin", action: "removeUserDetails")}"
         };
     </script>
 
@@ -18,7 +18,7 @@
 
 </head>
 <body>
-<h2>Remove User Permission From Project</h2>
+<h2>Remove User From MERIT</h2>
 
 <form id="removeUser" class=" validationEngineContainer">
     <div class="control-group required">
@@ -32,7 +32,6 @@
 
 
 
-<!-- ko foreach:users -->
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
@@ -50,17 +49,16 @@
             <td class="emailAddress" data-bind="text:emailAddress"></td>
             <td class="firstName" data-bind="text:firstName"></td>
             <td class="lastName" data-bind="text:lastName"></td>
-            <td><button class="btn btn-danger removeUserDetails" data-bind="click:$root.removeUserDetails">Remove</button></td>
+            <td><button class="btn btn-danger removeUserDetails" data-bind="click:$root.removeUserDetails, disable: !(userId())">Remove</button></td>
         </tr>
     </tbody>
 
 </table>
-<!-- /ko -->
 
 <asset:script>
     $(function () {
 
-       var userDetails = <fc:modelAsJavascript model="${userDetails}"/>;
+       var userDetails
         var removeUserPermission = new RemoveUserPermissionViewModel(userDetails, fcConfig);
 
         ko.applyBindings(removeUserPermission);
@@ -71,7 +69,6 @@
 <asset:javascript src="base.js"/>
 <asset:javascript src="common.js"/>
 <asset:javascript src="admin.js"/>
-<asset:javascript src="forms-knockout-bindings.js"/>
 <asset:deferredScripts/>
 
 </body>

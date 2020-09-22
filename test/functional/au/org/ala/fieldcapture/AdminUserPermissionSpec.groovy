@@ -1,6 +1,6 @@
 package au.org.ala.fieldcapture
 
-import pages.AdminPage
+import pages.RemoveUserPermissionPage
 
 class AdminUserPermissionSpec extends StubbedCasSpec {
 
@@ -12,23 +12,23 @@ class AdminUserPermissionSpec extends StubbedCasSpec {
         logout(browser)
     }
 
-    def "I can search user details using email Address as an FC_ADMIN"() {
+    def "I can search user details using email Address as an ROLE_ADMIN"() {
 
         setup:
         login([userId:'1', role:"ROLE_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
 
         when:
-        to AdminPage
+        to RemoveUserPermissionPage
 
         then:
-        waitFor {at AdminPage}
+        waitFor {at RemoveUserPermissionPage}
 
         when:
         adminContent.email = "auser@nowhere.com.au"
         adminContent.searchButton.click()
 
         then:
-        waitFor 20, {at AdminPage}
+        waitFor 20, {at RemoveUserPermissionPage}
 
         and:
         waitFor { adminContent.userId.text() == "100" }
@@ -38,23 +38,23 @@ class AdminUserPermissionSpec extends StubbedCasSpec {
 
     }
 
-    def "I can search user details using email Address and remove user as an FC_ADMIN"() {
+    def "I can search user details using email Address and remove user as an ROLE_ADMIN"() {
 
         setup:
         login([userId:'1', role:"ROLE_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
 
         when:
-        to AdminPage
+        to RemoveUserPermissionPage
 
         then:
-        waitFor {at AdminPage}
+        waitFor {at RemoveUserPermissionPage}
 
         when:
         adminContent.email = "auser@nowhere.com.au"
         adminContent.searchButton.click()
 
         then:
-        waitFor {at AdminPage}
+        waitFor {at RemoveUserPermissionPage}
 
         and:
         adminContent.removeButton.click()

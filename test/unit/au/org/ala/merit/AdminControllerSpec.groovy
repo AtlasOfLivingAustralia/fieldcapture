@@ -22,7 +22,7 @@ class AdminControllerSpec extends Specification {
         Map userDetails = [userId: "12345", userName: email, firstName: "Test", lastName: "Testing"]
 
         when:
-        controller.searchUser()
+        controller.searchUserDetails()
         def results = response.getJson()
 
 
@@ -44,7 +44,7 @@ class AdminControllerSpec extends Specification {
         Map userDetails = [userId: null, userName: null, firstName: null, lastName: null]
 
         when:
-        controller.searchUser()
+        controller.searchUserDetails()
         def results = response.getJson()
 
 
@@ -60,11 +60,12 @@ class AdminControllerSpec extends Specification {
         setup:
         String userId = "12345"
         params.userId = userId
-        Map success = [status:200, error: false]
+        Map success = [resp: [status:200, error: false]]
 
         when:
-        controller.removeUser()
-        def results = response.getJson()
+        request.method = "POST"
+        controller.removeUserDetails()
+        Map results = response.getJson()
 
         then:
         1 * adminService.deleteUserPermission(userId) >> success
@@ -78,11 +79,12 @@ class AdminControllerSpec extends Specification {
         setup:
         String userId = "12345"
         params.userId = userId
-        Map success = [status:400, error: "No UserPermissions found"]
+        Map success = [resp: [ status:400, error: "No UserPermissions found"]]
 
         when:
-        controller.removeUser()
-        def results = response.getJson()
+        request.method = "POST"
+        controller.removeUserDetails()
+        Map results = response.getJson()
 
         then:
         1 * adminService.deleteUserPermission(userId) >> success
@@ -96,11 +98,12 @@ class AdminControllerSpec extends Specification {
         setup:
         String userId = "12345"
         params.userId = userId
-        Map success = [status:500, error: "Downloading issue"]
+        Map success = [resp: [ status:500, error: "Downloading issue"]]
 
         when:
-        controller.removeUser()
-        def results = response.getJson()
+        request.method = "POST"
+        controller.removeUserDetails()
+        Map results = response.getJson()
 
         then:
         1 * adminService.deleteUserPermission(userId) >> success

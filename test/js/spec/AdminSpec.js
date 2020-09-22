@@ -30,7 +30,7 @@ describe("RemoveUserPermissionViewModel Spec", function (){
     }
 
     it('should search the userDetails when email address provided', function () {
-        let options = {searchUser: "test/url"}
+        let options = {searchUserDetailsUrl: "test/url"}
         let props = {}
         var email = "test@testing.com"
         var userDetails = {userId: "12345", emailAddress: email, firstName: "Test", lastName: "Testing"}
@@ -40,20 +40,19 @@ describe("RemoveUserPermissionViewModel Spec", function (){
         );
 
         var model = new RemoveUserPermissionViewModel(props, options)
-        model.emailAddress = email
-        model.searchUserDetails()
+        model.searchUserDetails({emailAddress:email})
 
 
-        expect(model.users().emailAddress).toEqual(userDetails.emailAddress);
-        expect(model.users().userId).toEqual(userDetails.userId);
-        expect(model.users().firstName).toEqual(userDetails.firstName);
-        expect(model.users().lastName).toEqual(userDetails.lastName);
+        expect(model.emailAddress()).toEqual(userDetails.emailAddress);
+        expect(model.userId()).toEqual(userDetails.userId);
+        expect(model.firstName()).toEqual(userDetails.firstName);
+        expect(model.lastName()).toEqual(userDetails.lastName);
 
     });
 
     it('should throw an error message when user search with invalid email', function () {
 
-        let options = {searchUser: "test/url"}
+        let options = {searchUserDetailsUrl: "test/url"}
         let props = {}
         var email = "test@testing.com"
         var userDetails = {error: "error", emailAddress: email}
@@ -65,29 +64,27 @@ describe("RemoveUserPermissionViewModel Spec", function (){
         spyOn(bootbox, 'alert');
 
         var model = new RemoveUserPermissionViewModel(props, options)
-        model.emailAddress = email
-        model.searchUserDetails()
+        model.searchUserDetails({emailAddress:email})
 
-        expect(bootbox.alert).toHaveBeenCalledWith('<span class="label label-important">This Email Address is invalid: </span><p>' + userDetails.emailAddress + '</p>');
+        expect(bootbox.alert).toHaveBeenCalledWith('<span class="label label-important">This Email Address is invalid: </span><p>' + email + '</p>');
     });
 
 
     it('should throw an error message when user not able to remove user id', function () {
 
-        let options = {removeUser: "test/url"}
+        let options = {removeUserDetailsUrl: "test/url"}
         let props = {}
         var userId = "12345"
         var userDetails = {error: "error", userId: userId}
 
-        spyOn($, "get").and.returnValue(
+        spyOn($, "post").and.returnValue(
             ajax_response(userDetails)
         );
 
         spyOn(bootbox, 'alert');
 
         var model = new RemoveUserPermissionViewModel(props, options);
-        model.userId = userId
-        model.removeUserDetails()
+        model.removeUserDetails(userDetails)
 
         expect(bootbox.alert).toHaveBeenCalledWith('<span class="label label-important">Failed to remove users from MERIT </span>'+'<p> Reason: '+ userDetails.error+'</p>');
     });
