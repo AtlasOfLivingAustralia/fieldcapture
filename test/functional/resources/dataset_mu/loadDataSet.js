@@ -22,7 +22,9 @@ var meriPlan = {
 };
 createProject({name:'project 1', projectId:"project_1", programId:'test_program',managementUnitId:"test_mu",siteId:'test_site_1', grantId:"RLP-Test-Program-Project-1",
     blog:[blog1], custom:{details:meriPlan}});
-createProject({name:'project 2', projectId:"project_2", programId:'test_program',managementUnitId:"test_mu_2",siteId:'test_site_2', grantId:"RLP-Test-Program-Project-2"})
+createProject({name:'project 5', projectId:"project_5", programId:'test_program',managementUnitId:"test_mu",siteId:'test_site_5', grantId:"RLP-Test-Program-Project-5",
+    blog:[blog1], custom:{details:meriPlan}});
+createProject({name:'project 2', projectId:"project_2", programId:'test_program',managementUnitId:"test_mu_2",siteId:'test_site_2', grantId:"RLP-Test-Program-Project-2"});
 createProject({name:'project in ACT', projectId:"project_3", programId:'test_program',managementUnitId:"test_mu_3",siteId:'test_site_3', grantId:"RLP-Test-Program-Project-3"})
 
 createProgram({name:'A test program', programId:'test_programId'})
@@ -78,8 +80,8 @@ createMu({name:'test mu 2', managementUnitId:"test_mu_2",managementUnitSiteId:'t
 createMu({name:'test mu in ACT', managementUnitId:"test_mu_3",managementUnitSiteId:'test_site_3'});
 
 db.userPermission.insert({entityType:'au.org.ala.ecodata.Program', entityId:'test_program', userId:'1', accessLevel:'admin'});
-db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_2', userId:'1', accessLevel:'admin'});
-db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_1', userId:'100', accessLevel:'admin'});
+db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_1', userId:'1', accessLevel:'admin'});
+db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_5', userId:'100', accessLevel:'admin'});
 db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entityId:'test_mu_2', userId:'1', accessLevel:'admin'});
 db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entityId:'test_mu', userId:'1', accessLevel:'admin'});
 db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entityId:'test_mu', userId:'3', accessLevel:'caseManager'});

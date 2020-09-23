@@ -64,7 +64,7 @@ class RemoveUserPermissionSpec extends StubbedCasSpec {
         waitFor {at RemoveUserPermissionPage }
 
         when:
-        to ProjectIndex, "project_1"
+        to ProjectIndex, "project_5"
 
         then:
         waitFor {at ProjectIndex}
