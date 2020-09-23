@@ -32,7 +32,7 @@ class RemoveUserPermissionSpec extends StubbedCasSpec {
         waitFor 20, {at RemoveUserPermissionPage}
 
         and:
-        waitFor { adminContent.userId.text() == "100" }
+        waitFor { adminContent.userId.text() == "1" }
         adminContent.emailAddress.text() == "auser@nowhere.com.au"
         adminContent.firstName.text() == "Test"
         adminContent.lastName.text() == "Test"
