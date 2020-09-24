@@ -84,31 +84,32 @@ var ImageGallery = function() {
  * validationContainerSelector, searchUserDetailsUrl, removeUserDetailsUrl
  * @constructor
  */
-var RemoveUserPermissionViewModel = function (props, options){
+var RemoveUserPermissionViewModel = function (options){
     var defaults = {
         validationContainerSelector: '.validationEngineContainer'
     };
     var self =this
-    var config = $.extend(self, defaults, options);
+    var config = $.extend({}, defaults, options);
 
     self.userId = ko.observable();
     self.emailAddress = ko.observable()
     self.firstName = ko.observable();
     self.lastName = ko.observable();
+    self.email = ko.observable();
 
 
 
     self.searchUserDetails = function (details){
         var emailAddress = details.emailAddress
         if (emailAddress){
-            $.get(config.searchUserDetailsUrl, {emailAddress: emailAddress, contentType: "application/json"}).done(function (data){
+            $.get(config.searchUserDetailsUrl, {emailAddress: emailAddress}, undefined, "json").done(function (data){
                 if (data.error === "error"){
                     bootbox.alert('<span class="label label-important">This Email Address is invalid: </span><p>' + data.emailAddress + '</p>');
                 }else{
                     self.userId(data.userId);
                     self.firstName(data.firstName);
                     self.lastName(data.lastName);
-                    self.emailAddress(data.emailAddress);
+                    self.email(data.emailAddress);
 
                 }
             }).fail( function (){
@@ -122,15 +123,19 @@ var RemoveUserPermissionViewModel = function (props, options){
 
     self.removeUserDetails = function (userDetails){
         var userId = userDetails.userId
-        $.post(config.removeUserDetailsUrl, {userId: userId, contentType: "application/json" }).done(function (data){
+
+        blockUIWithMessage("Removing User Permission...")
+        $.post(config.removeUserDetailsUrl,{userId: userId},undefined, "json" ).done(function (data){
            if (data.error){
-                   bootbox.alert('<span class="label label-important">Failed to remove users from MERIT </span>'+'<p> Reason: '+data.error+'</p>');
+               $.unblockUI();
+               bootbox.alert('<span class="label label-important">Failed to remove users from MERIT </span>'+'<p> Reason: '+data.error+'</p>');
            }else{
                blockUIWithMessage("Successfully Remove User Permission...")
                blockUIWithMessage("Refreshing page...");
                window.location.reload();
            }
         }).fail(function(data) {
+            $.unblockUI();
             alert('An unhandled error occurred: ' + data.status + " Please refresh the page and try again");
         });
     };

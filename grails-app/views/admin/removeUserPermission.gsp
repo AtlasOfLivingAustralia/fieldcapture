@@ -46,7 +46,7 @@
     <tbody>
         <tr>
             <td class="userId" data-bind="text:userId"></td>
-            <td class="emailAddress" data-bind="text:emailAddress"></td>
+            <td class="emailAddress" data-bind="text:email"></td>
             <td class="firstName" data-bind="text:firstName"></td>
             <td class="lastName" data-bind="text:lastName"></td>
             <td><button class="btn btn-danger removeUserDetails" data-bind="click:$root.removeUserDetails, disable: !(userId())">Remove</button></td>
@@ -58,8 +58,7 @@
 <asset:script>
     $(function () {
 
-       var userDetails
-        var removeUserPermission = new RemoveUserPermissionViewModel(userDetails, fcConfig);
+        var removeUserPermission = new RemoveUserPermissionViewModel(fcConfig);
 
         ko.applyBindings(removeUserPermission);
         $('.validationEngineContainer').validationEngine();

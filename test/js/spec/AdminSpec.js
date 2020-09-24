@@ -43,7 +43,7 @@ describe("RemoveUserPermissionViewModel Spec", function (){
         model.searchUserDetails({emailAddress:email})
 
 
-        expect(model.emailAddress()).toEqual(userDetails.emailAddress);
+        expect(model.email()).toEqual(userDetails.emailAddress);
         expect(model.userId()).toEqual(userDetails.userId);
         expect(model.firstName()).toEqual(userDetails.firstName);
         expect(model.lastName()).toEqual(userDetails.lastName);
