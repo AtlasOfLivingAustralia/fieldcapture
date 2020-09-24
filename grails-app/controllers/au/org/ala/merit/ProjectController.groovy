@@ -768,6 +768,17 @@ class ProjectController {
     }
 
     @PreAuthorise(accessLevel = 'editor')
+    def printableReport(String id, String reportId) {
+        if (!id || !reportId) {
+            error('An invalid report was selected for printing', id)
+            return
+        }
+        Map model = activityReportModel(id, reportId, ReportMode.PRINT)
+
+        render view:'/activity/activityReportView', model:model
+    }
+
+    @PreAuthorise(accessLevel = 'editor')
     def saveReport(SaveReportDataCommand saveReportDataCommand) {
 
         Map result
