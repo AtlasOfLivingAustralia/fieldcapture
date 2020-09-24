@@ -39,10 +39,10 @@ class RemoveUserPermissionSpec extends StubbedCasSpec {
 
     }
 
-    def "I can search user details using email Address and remove user as an ROLE_ADMIN"() {
+    def "I can search user details using email Address and remove user as an FC_ADMIN"() {
 
         setup:
-        login([userId:'1', role:"ROLE_ADMIN", email:'role-admin@nowhere.com', firstName: "ROLE", lastName:'Admin'], browser)
+        login([userId:'1', role:"ROLE_FC_ADMIN", email:'role-admin@nowhere.com', firstName: "ROLE", lastName:'Admin'], browser)
 
         when:
         to RemoveUserPermissionPage
@@ -83,5 +83,4 @@ class RemoveUserPermissionSpec extends StubbedCasSpec {
         admin.projectAccess.size() == 1
         admin.projectAccess[0].messageRow.text() ==  "No project members set"
     }
-
 }

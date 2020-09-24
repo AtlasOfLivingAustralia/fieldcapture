@@ -79,7 +79,6 @@ var ImageGallery = function() {
 
 /**
  * Knockout view model for Remove USer Permission pages.
- * @param props JSON/javascript representation of the user permission.
  * @param options an object specifying the following options:
  * validationContainerSelector, searchUserDetailsUrl, removeUserDetailsUrl
  * @constructor
@@ -127,16 +126,16 @@ var RemoveUserPermissionViewModel = function (options){
         blockUIWithMessage("Removing User Permission...")
         $.post(config.removeUserDetailsUrl,{userId: userId},undefined, "json" ).done(function (data){
            if (data.error){
-               $.unblockUI();
                bootbox.alert('<span class="label label-important">Failed to remove users from MERIT </span>'+'<p> Reason: '+data.error+'</p>');
+               $.unblockUI();
            }else{
                blockUIWithMessage("Successfully Remove User Permission...")
                blockUIWithMessage("Refreshing page...");
                window.location.reload();
            }
         }).fail(function(data) {
-            $.unblockUI();
             alert('An unhandled error occurred: ' + data.status + " Please refresh the page and try again");
+            $.unblockUI();
         });
     };
 

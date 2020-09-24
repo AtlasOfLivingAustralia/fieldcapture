@@ -31,7 +31,6 @@ describe("RemoveUserPermissionViewModel Spec", function (){
 
     it('should search the userDetails when email address provided', function () {
         let options = {searchUserDetailsUrl: "test/url"}
-        let props = {}
         var email = "test@testing.com"
         var userDetails = {userId: "12345", emailAddress: email, firstName: "Test", lastName: "Testing"}
 
@@ -39,7 +38,7 @@ describe("RemoveUserPermissionViewModel Spec", function (){
             ajax_response(userDetails)
         );
 
-        var model = new RemoveUserPermissionViewModel(props, options)
+        var model = new RemoveUserPermissionViewModel(options)
         model.searchUserDetails({emailAddress:email})
 
 
@@ -53,7 +52,6 @@ describe("RemoveUserPermissionViewModel Spec", function (){
     it('should throw an error message when user search with invalid email', function () {
 
         let options = {searchUserDetailsUrl: "test/url"}
-        let props = {}
         var email = "test@testing.com"
         var userDetails = {error: "error", emailAddress: email}
 
@@ -63,7 +61,7 @@ describe("RemoveUserPermissionViewModel Spec", function (){
 
         spyOn(bootbox, 'alert');
 
-        var model = new RemoveUserPermissionViewModel(props, options)
+        var model = new RemoveUserPermissionViewModel(options)
         model.searchUserDetails({emailAddress:email})
 
         expect(bootbox.alert).toHaveBeenCalledWith('<span class="label label-important">This Email Address is invalid: </span><p>' + email + '</p>');
@@ -73,7 +71,6 @@ describe("RemoveUserPermissionViewModel Spec", function (){
     it('should throw an error message when user not able to remove user id', function () {
 
         let options = {removeUserDetailsUrl: "test/url"}
-        let props = {}
         var userId = "12345"
         var userDetails = {error: "error", userId: userId}
 
@@ -83,7 +80,7 @@ describe("RemoveUserPermissionViewModel Spec", function (){
 
         spyOn(bootbox, 'alert');
 
-        var model = new RemoveUserPermissionViewModel(props, options);
+        var model = new RemoveUserPermissionViewModel(options);
         model.removeUserDetails(userDetails)
 
         expect(bootbox.alert).toHaveBeenCalledWith('<span class="label label-important">Failed to remove users from MERIT </span>'+'<p> Reason: '+ userDetails.error+'</p>');
