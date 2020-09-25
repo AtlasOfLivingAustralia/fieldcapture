@@ -38,8 +38,9 @@ describe("RemoveUserPermissionViewModel Spec", function (){
             ajax_response(userDetails)
         );
 
-        var model = new RemoveUserPermissionViewModel(options)
-        model.searchUserDetails({emailAddress:email})
+        var model = new RemoveUserPermissionViewModel(options);
+        model.emailAddress(email);
+        model.searchUserDetails();
 
 
         expect(model.email()).toEqual(userDetails.emailAddress);
@@ -51,9 +52,9 @@ describe("RemoveUserPermissionViewModel Spec", function (){
 
     it('should throw an error message when user search with invalid email', function () {
 
-        let options = {searchUserDetailsUrl: "test/url"}
-        var email = "test@testing.com"
-        var userDetails = {error: "error", emailAddress: email}
+        let options = {searchUserDetailsUrl: "test/url"};
+        var email = "test@testing.com";
+        var userDetails = {error: "error", emailAddress: email};
 
         spyOn($, "get").and.returnValue(
             ajax_response(userDetails)
@@ -61,8 +62,9 @@ describe("RemoveUserPermissionViewModel Spec", function (){
 
         spyOn(bootbox, 'alert');
 
-        var model = new RemoveUserPermissionViewModel(options)
-        model.searchUserDetails({emailAddress:email})
+        var model = new RemoveUserPermissionViewModel(options);
+        model.emailAddress(email);
+        model.searchUserDetails();
 
         expect(bootbox.alert).toHaveBeenCalledWith('<span class="label label-important">This Email Address is invalid: </span><p>' + email + '</p>');
     });
@@ -70,9 +72,9 @@ describe("RemoveUserPermissionViewModel Spec", function (){
 
     it('should throw an error message when user not able to remove user id', function () {
 
-        let options = {removeUserDetailsUrl: "test/url"}
-        var userId = "12345"
-        var userDetails = {error: "error", userId: userId}
+        let options = {removeUserDetailsUrl: "test/url"};
+        var userId = "12345";
+        var userDetails = {error: "error", userId: userId};
 
         spyOn($, "post").and.returnValue(
             ajax_response(userDetails)
@@ -81,7 +83,8 @@ describe("RemoveUserPermissionViewModel Spec", function (){
         spyOn(bootbox, 'alert');
 
         var model = new RemoveUserPermissionViewModel(options);
-        model.removeUserDetails(userDetails)
+        model.userId(userId);
+        model.removeUserDetails();
 
         expect(bootbox.alert).toHaveBeenCalledWith('<span class="label label-important">Failed to remove users from MERIT </span>'+'<p> Reason: '+ userDetails.error+'</p>');
     });

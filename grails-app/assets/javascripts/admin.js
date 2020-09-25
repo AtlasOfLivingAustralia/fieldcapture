@@ -87,7 +87,7 @@ var RemoveUserPermissionViewModel = function (options){
     var defaults = {
         validationContainerSelector: '.validationEngineContainer'
     };
-    var self =this
+    var self =this;
     var config = $.extend({}, defaults, options);
 
     self.userId = ko.observable();
@@ -98,8 +98,8 @@ var RemoveUserPermissionViewModel = function (options){
 
 
 
-    self.searchUserDetails = function (details){
-        var emailAddress = details.emailAddress
+    self.searchUserDetails = function (){
+        var emailAddress = self.emailAddress();
         if (emailAddress){
             $.get(config.searchUserDetailsUrl, {emailAddress: emailAddress}, undefined, "json").done(function (data){
                 if (data.error === "error"){
@@ -120,10 +120,10 @@ var RemoveUserPermissionViewModel = function (options){
 
     };
 
-    self.removeUserDetails = function (userDetails){
-        var userId = userDetails.userId
+    self.removeUserDetails = function (){
+        var userId = self.userId();
 
-        blockUIWithMessage("Removing User Permission...")
+        blockUIWithMessage("Removing User Permission...");
         $.post(config.removeUserDetailsUrl,{userId: userId},undefined, "json" ).done(function (data){
            if (data.error){
                bootbox.alert('<span class="label label-important">Failed to remove users from MERIT </span>'+'<p> Reason: '+data.error+'</p>');
