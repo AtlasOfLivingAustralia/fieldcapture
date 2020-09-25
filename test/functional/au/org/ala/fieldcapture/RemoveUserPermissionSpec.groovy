@@ -1,5 +1,6 @@
 package au.org.ala.fieldcapture
 
+import pages.HomePage
 import pages.ProjectIndex
 import pages.RemoveUserPermissionPage
 
@@ -61,7 +62,7 @@ class RemoveUserPermissionSpec extends StubbedCasSpec {
         adminContent.removeButton.click()
 
         then:
-        waitFor {at RemoveUserPermissionPage }
+        waitFor 20, {at RemoveUserPermissionPage }
 
         when:
         to ProjectIndex, "project_1"
@@ -82,5 +83,21 @@ class RemoveUserPermissionSpec extends StubbedCasSpec {
         and:
         admin.projectAccess.size() == 1
         admin.projectAccess[0].messageRow.text() ==  "No project members set"
+    }
+
+    def "Check ROLE_USER can access the page or not"() {
+        setup:
+        login([userId:'1', role:"ROLE_USER", email:'role-user@nowhere.com', firstName: "ROLE", lastName:'User'], browser)
+
+        when:
+        via RemoveUserPermissionPage
+        to HomePage
+
+        then:"the user did not have permission to view the page"
+        waitFor {at HomePage}
+
+        and:
+        title =="Home | MERIT"
+
     }
 }
