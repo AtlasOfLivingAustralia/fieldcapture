@@ -40,7 +40,5 @@
 
     </asset:script>
 </g:if>
-
-<r:layoutResources/>
 </body>
 </html>
