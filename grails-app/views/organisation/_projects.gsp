@@ -87,7 +87,7 @@ $(function() {
 
         {title:'Status', width:'4%', render:statusRenderer, data:'status'},
         {title:'Funding', width:'8%', data:'funding', defaultContent:''},
-        {title:'Programme', width:'13%', data:'associatedProgram', defaultContent:''}];
+        {title:'Programme', width:'13%', render: nameRender, data:'associatedProgram', defaultContent:''}];
 
     /** changes the cell contents to display a date picker and autosaves the agreement date once the date changes */
     var editAgreementDate = function(e) {

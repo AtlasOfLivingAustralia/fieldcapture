@@ -22,7 +22,7 @@ class ProjectCrossSiteInjectionSpec extends StubbedCasSpec {
         waitFor {overview.displayed}
 
         and:
-        overview.programName.text() =='null - New Test Program <script>alert("Program")</script>'
+        overview.programName.text() =='New Test Program <script>alert("Program")</script>'
         overview.managementUnit.text() == 'test mu <script>alert("MU")</script>'
 
     }
