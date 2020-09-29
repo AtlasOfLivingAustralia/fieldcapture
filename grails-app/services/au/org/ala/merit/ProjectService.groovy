@@ -15,6 +15,7 @@ import org.joda.time.Interval
 import org.joda.time.Period
 import org.springframework.cache.annotation.Cacheable
 
+import java.math.RoundingMode
 import java.text.SimpleDateFormat
 
 class ProjectService  {
@@ -1417,8 +1418,20 @@ class ProjectService  {
      */
     List<Map> getProjectServicesWithTargets(String projectId) {
         Map project = get(projectId, 'flat')
+
+        List listOfServiceIds = project.custom?.details?.serviceIds
+        def serviceIds = []
+        def serViceId = []
+        listOfServiceIds.forEach({items ->
+            List ids = []
+            BigDecimal id = new BigDecimal(items).setScale(BigDecimal.ROUND_UP, RoundingMode.HALF_DOWN)
+            ids.add(id.intValue())
+            serViceId.addAll(ids)
+        })
+        serviceIds.addAll(serViceId)
+
         List<Map> allServices = metadataService.getProjectServices()
-        List projectServices = allServices?.findAll {it.id in project.custom?.details?.serviceIds }
+        List projectServices = allServices?.findAll {it.id in serviceIds }
         List targets = project.outputTargets
 
         // Make a copy of the services as we are going to augment them with target information.

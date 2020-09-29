@@ -28,6 +28,7 @@ class ProjectServiceSpec extends Specification {
     ProjectConfigurationService projectConfigurationService = Mock(ProjectConfigurationService)
     ProgramConfig projectConfig = new ProgramConfig([activityBasedReporting: true, reportingPeriod:6, reportingPeriodAlignedToCalendar: true, weekDaysToCompleteReport:43])
     ProgramService programService = Mock(ProgramService)
+    CacheService cacheService = Mock(CacheService)
 
     Map reportConfig = [
             weekDaysToCompleteReport:projectConfig.weekDaysToCompleteReport,
@@ -1015,6 +1016,39 @@ class ProjectServiceSpec extends Specification {
         and:
         programList[0].name == "Test Program"
         programList[0].programId == "12345"
+    }
+
+
+    private Map setupMockServices() {
+
+         List<Map> services =[[output: "Output Test 1",name: "Output Test 1", scores: [[scoreId:"1", label: "Test label 1", isOutputTarget:true]], id: 1, category: null]]
+
+        metadataService.getProjectServices() >> services
+    }
+    def "Convert double value to int for Services"(){
+        setup:
+        setupMockServices()
+        String projectId = "project_10"
+        Map project = [projectId: projectId,
+                       outputTargets:[
+                               [scoreId: "1", target: "10", scoreLabel: "Test Score Label 1", unit: "Ha", scoreName: "areaTreatedHa", outputLabel: "Test Output Label 1"]],
+                       custom: [details: [serviceIds:[1.0, 2.0,3.0,4.0]]]]
+
+
+        when:
+        def results = service.getProjectServicesWithTargets(project.projectId)
+
+        then:
+        1 * webService.getJson({it.contains("project/"+projectId)}) >> project
+
+        and:
+        results.size() == 1
+        results[0].name == "Output Test 1"
+        results[0].scores[0].label == "Test label 1"
+        results[0].scores[0].isOutputTarget == true
+        results[0].scores[0].target == "10"
+        results[0].scores[0].preiodTargets == null
+
     }
 
     private Map buildApprovalDocument(int i, String projectId) {
