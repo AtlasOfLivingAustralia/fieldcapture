@@ -1422,7 +1422,7 @@ class ProjectService  {
         List listOfServiceIds = project.custom?.details?.serviceIds
         def serviceIds = []
         def serViceId = []
-        listOfServiceIds.forEach({items ->
+        listOfServiceIds?.forEach({items ->
             List ids = []
             BigDecimal id = new BigDecimal(items).setScale(BigDecimal.ROUND_UP, RoundingMode.HALF_DOWN)
             ids.add(id.intValue())

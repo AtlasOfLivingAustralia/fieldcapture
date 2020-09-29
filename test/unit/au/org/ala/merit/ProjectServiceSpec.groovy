@@ -1051,6 +1051,25 @@ class ProjectServiceSpec extends Specification {
 
     }
 
+    def "Check if the servicesIds is null"(){
+        setup:
+        setupMockServices()
+        String projectId = "project_10"
+        Map project = [projectId: projectId,
+                       outputTargets:[
+                               [scoreId: "1", target: "10", scoreLabel: "Test Score Label 1", unit: "Ha", scoreName: "areaTreatedHa", outputLabel: "Test Output Label 1"]]]
+
+
+        when:
+        def results = service.getProjectServicesWithTargets(project.projectId)
+
+        then:
+        1 * webService.getJson({it.contains("project/"+projectId)}) >> project
+
+        and:
+        results.size() == 0
+    }
+
     private Map buildApprovalDocument(int i, String projectId) {
         Map approval = [
                 dateApproved:"2019-07-01T00:00:0${i}Z",
