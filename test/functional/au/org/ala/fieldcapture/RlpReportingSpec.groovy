@@ -64,7 +64,7 @@ class RlpReportingSpec extends StubbedCasSpec {
         projectReports.reports[0].toDate == "30-09-2018"
 
         and: "The end date of the report finishing on the same day of the project is not the day before like other reports"
-        projectReports.reports[13].name == "Outcomes Report 2 for Project 1"
+        projectReports.reports[13].name == "Outcomes Report 1 for Project 1"
         projectReports.reports[13].fromDate == "01-07-2018"
         projectReports.reports[13].toDate == "01-07-2023"
 
