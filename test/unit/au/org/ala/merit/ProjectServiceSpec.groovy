@@ -1051,6 +1051,32 @@ class ProjectServiceSpec extends Specification {
 
     }
 
+    def "able to collect int for Services"(){
+        setup:
+        setupMockServices()
+        String projectId = "project_10"
+        Map project = [projectId: projectId,
+                       outputTargets:[
+                               [scoreId: "1", target: "10", scoreLabel: "Test Score Label 1", unit: "Ha", scoreName: "areaTreatedHa", outputLabel: "Test Output Label 1"]],
+                       custom: [details: [serviceIds:[1, 2,3,4]]]]
+
+
+        when:
+        def results = service.getProjectServicesWithTargets(project.projectId)
+
+        then:
+        1 * webService.getJson({it.contains("project/"+projectId)}) >> project
+
+        and:
+        results.size() == 1
+        results[0].name == "Output Test 1"
+        results[0].scores[0].label == "Test label 1"
+        results[0].scores[0].isOutputTarget == true
+        results[0].scores[0].target == "10"
+        results[0].scores[0].preiodTargets == null
+
+    }
+
     def "Check if the servicesIds is null"(){
         setup:
         setupMockServices()

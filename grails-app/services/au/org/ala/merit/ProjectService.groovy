@@ -1419,16 +1419,7 @@ class ProjectService  {
     List<Map> getProjectServicesWithTargets(String projectId) {
         Map project = get(projectId, 'flat')
 
-        List listOfServiceIds = project.custom?.details?.serviceIds
-        def serviceIds = []
-        def serViceId = []
-        listOfServiceIds?.forEach({items ->
-            List ids = []
-            BigDecimal id = new BigDecimal(items).setScale(BigDecimal.ROUND_UP, RoundingMode.HALF_DOWN)
-            ids.add(id.intValue())
-            serViceId.addAll(ids)
-        })
-        serviceIds.addAll(serViceId)
+        List serviceIds = project.custom?.details?.serviceIds?.collect{it as Integer}
 
         List<Map> allServices = metadataService.getProjectServices()
         List projectServices = allServices?.findAll {it.id in serviceIds }
