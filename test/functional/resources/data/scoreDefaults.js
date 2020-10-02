@@ -2,8 +2,6 @@
 var scoreWeedHaDefaults = {
     create: function(){
         return {
-            "_id":10,
-
             "category":"Invasive Species Management - Weeds",
             "configuration":
                 {"childAggregations": [
@@ -119,7 +117,6 @@ var scoreWeedHaDefaults = {
 var scoreInvasiveSpeciesDefaults = {
     create: function(){
         return {
-            "_id" : 40,
             "category" : "Invasive Species Management - Pests & Diseases",
             "configuration" : {
                 "childAggregations" : [

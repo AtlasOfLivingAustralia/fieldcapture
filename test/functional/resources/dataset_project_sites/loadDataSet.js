@@ -462,7 +462,7 @@ db.userPermission.insert({entityType:'au.org.ala.ecodata.Program', entityId:'pro
 db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_3', userId:'1', accessLevel:'admin'});
 db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entityId:'mu_3', userId:'1', accessLevel:'admin'});
 
-createScoreWeedHaDefaults({_id:35, scoreId: "score_1"});
+createScoreWeedHaDefaults({scoreId: "score_1"});
 // createScoreWeedHaDefaults({_id:36, scoreId: "score_2"});
 // createScoreWeedHaDefaults({_id:37, scoreId: "score_3"});
 
@@ -485,7 +485,7 @@ createOutput({activityId:"activity_3", outputId:"output_3", data:{"linearAreaTre
 
 //  // for Invasive Species Management - Pests & Diseases
 
-createScoreInvasiveSpecies({_id: 39, scoreId:"score_4"});
+createScoreInvasiveSpecies({scoreId:"score_4"});
 
 
 createActivities({activityId:"activity_4", progress:"finished",projectId: "project_4", type:"Pest Management"});
@@ -580,21 +580,9 @@ var staticValue = "{\n" +
 db.setting.insert({"key":"meritstatistics.config","value":staticValue, version: 3})
 
 
-createProjectNumberBaselineDataSets({"_id": 42, "scoreId":"score_42"});
-createProjectNumberOfCommunicationMaterialsPublished({"_id": 43, "scoreId":"score_43"});
-createProjectWeedAreaSurveyedHaDefault({"_id": 44, "scoreId":"score_44"});
-// createProjectWeedNumberOfSurveysConductedDefault({"_id": 45, "scoreId":"score_45"});
-// createProjectPestAreaFollowup({"_id": 46, "scoreId":"score_46"});
-// createProjectPestAreaInitial({"_id": 47, "scoreId":"score_47"});
-// createProjectAccessHasBeenControlled({"_id": 48, "scoreId":"score_48"});
-// createProjectRLPLengthInstalled({"_id": 49, "scoreId":"score_49"});
-// createProjectCommunityAdviceInteractions({"_id": 50, "scoreId":"score_50"});
-// createProjectCommunitySeminars({"_id": 51, "scoreId":"score_52"});
-// createProjectCommunityWorkshopEvent({"_id": 52, "scoreId":"score_52"});
-// createProjectCommunityFiledDays({"_id": 53, "scoreId":"score_53"});
-// createProjectRLPNumberOfStructuresInstalled({"_id": 54, "scoreId":"score_54"});
-// createProjectCommunityOnGroundWorks({"_id": 55, "scoreId":"score_55"});
-// createProjectCommunityDemostrations({"_id": 56, "scoreId":"score_56"});
+createProjectNumberBaselineDataSets({scoreId:"score_42"});
+createProjectNumberOfCommunicationMaterialsPublished({scoreId:"score_43"});
+createProjectWeedAreaSurveyedHaDefault({scoreId:"score_44"});
 
 createActivities({activityId: "activity_10", projectId: "project_10", type:"RLP Output Report", progress:"finished"});
 createActivities({activityId: "activity_11", projectId: "project_10", type:"RLP Output Report", progress:"finished"});
