@@ -13,7 +13,6 @@ db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'pro
 db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entityId:'mu_1', userId:'1', accessLevel:'admin'});
 
 
-loadActivityForms();
 var report1 = {
         "managementUnitId" : "mu_1",
         "activityType" : "RLP Core Services report",
@@ -81,3 +80,5 @@ var document1 = {
 };
 
 db.document.insert(document1);
+
+loadActivityForms();

@@ -496,7 +496,6 @@ createPestOutDataDefaults({activityId:"activity_4", outputId:"output_4"});
 createPestOutDataDefaults({activityId:"activity_5", outputId:"output_5"});
 createPestOutDataDefaults({activityId:"activity_6", outputId:"output_6"});
 
-loadActivityForms();
 
 //inserting setting homepage static 6 box only
 
@@ -906,3 +905,4 @@ var projectSites = {
     "type" : "compound"
 };
 db.site.insert(projectSites);
+loadActivityForms();

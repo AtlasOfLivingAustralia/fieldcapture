@@ -206,7 +206,7 @@ db.userPermission.insert({
     accessLevel: 'admin'
 });
 
-loadActivityForms();
+
 
 config.excludeFinancialYearData = true;
 config.excludes = [];
@@ -394,3 +394,5 @@ db.userPermission.insert({
     userId: '1',
     accessLevel: 'admin'
 });
+
+loadActivityForms();
