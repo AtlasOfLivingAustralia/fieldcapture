@@ -1696,6 +1696,35 @@ class ProjectService  {
     }
 
     /**
+     * Returns a map with key=<project priority>, value=<Ag or Env>
+     * The map is used to determine whether the priority is associated with
+     * an Environment of Agriculture outcome, which in turn allows
+     * customisation of  the  questions asked in the outcomes report.
+     *
+     */
+    Map projectPrioritiesByOutcomeType(String projectId) {
+        Map project = get(projectId,'flat')
+
+        Map prioritiesByOutcomeType = [:]
+        List outcomes = []
+        Map primaryOutcome =  project?.custom?.details?.outcomes?.primaryOutcome
+        if (primaryOutcome) {
+            outcomes << primaryOutcome
+        }
+        outcomes += project?.custom?.details?.outcomes?.secondaryOutcomes ?: []
+        (outcomes).each { Map outcome ->
+            outcome?.assets.each {String asset  ->
+                String type = (outcome.description?.startsWith('5') || outcome?.description?.startsWith('6')) ? 'Ag' : "Env"
+                prioritiesByOutcomeType[asset] = type
+            }
+        }
+
+        prioritiesByOutcomeType
+
+
+    }
+
+    /**
      * Returns the primary outcome specified in the project MERI plan, null if none is specified.
      * @param project the project of interest
      */

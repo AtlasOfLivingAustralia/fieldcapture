@@ -1051,6 +1051,11 @@ class ProjectController {
         render projectService.listProjectInvestmentPriorities(id) as JSON
     }
 
+    @PreAuthorise(accessLevel = 'editor')
+    def projectPrioritiesByOutcomeType(String id) {
+        render projectService.projectPrioritiesByOutcomeType(id) as JSON
+    }
+
     private def error(String message, String projectId) {
         flash.message = message
         if (projectId) {
