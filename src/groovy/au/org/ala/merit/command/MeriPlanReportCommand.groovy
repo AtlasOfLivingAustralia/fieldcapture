@@ -51,6 +51,7 @@ class MeriPlanReportCommand {
         }
         else {
             project = projectService.get(id, 'all')
+            project.remove("sites")
         }
 
         Map model
