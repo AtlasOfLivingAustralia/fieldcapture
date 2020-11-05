@@ -76,7 +76,13 @@
     <div class="control-group span4">
         <label class="control-label" for="workOrderId">Work order id / Internal order number</label>
         <div class="controls">
-            <g:textField class="" name="workOrderId" data-bind="value:workOrderId"/>
+            <!-- Once the MERI plan is approved, the internal order number becomes a mandatory field. -->
+            <g:if test="${ProjectService.APPLICATION_STATUS != project.status}">
+                <g:textField class="" name="workOrderId" data-bind="value:workOrderId" data-validation-engine="validate[required]"/>
+            </g:if>
+            <g:else>
+                <g:textField class="" name="workOrderId" data-bind="value:workOrderId"/>
+            </g:else>
         </div>
     </div>
 
@@ -233,8 +239,13 @@
         <g:if test="${ProjectService.PLAN_UNLOCKED == project.planStatus}">
             <select class="input-xlarge" id="projectState" data-bind="options:projectStatus, optionsText: 'name', optionsValue: 'id', value:status" disabled="disabled"></select>
         </g:if>
+        <!-- Application status cannot be changed until the MERI plan is approved. -->
+        <g:elseif test="${ProjectService.APPLICATION_STATUS == project.status}">
+            <select class="input-xlarge" id="projectState" data-bind="options:projectStatus, optionsText: 'name', optionsValue: 'id', value:status" disabled="disabled"></select>
+        </g:elseif>
+        <!-- Application status is set only when creating the project -->
         <g:else>
-            <select class="input-xlarge" id="projectState" data-bind="options:projectStatus, optionsText: 'name', optionsValue: 'id', value:status"></select>
+            <select class="input-xlarge" id="projectState" data-bind="options:projectStatus.filter(x => x.name != '${ProjectService.APPLICATION_STATUS}'), optionsText: 'name', optionsValue: 'id', value:status"></select>
         </g:else>
     </div>
     <div class="span4">

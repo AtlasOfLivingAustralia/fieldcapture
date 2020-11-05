@@ -130,7 +130,7 @@ function ProjectViewModel(project, isUserEditor, organisations) {
         projectDefault = project.status;
     }
     self.status = ko.observable(projectDefault.toLowerCase());
-    self.projectStatus = [{id: 'active', name:'Active'},{id:'completed',name:'Completed'},{id:'deleted', name:'Deleted'}];
+    self.projectStatus = [{id: 'application', name:'Application'}, {id: 'active', name:'Active'},{id:'completed',name:'Completed'},{id:'deleted', name:'Deleted'}];
 
     self.organisationId = ko.observable(project.organisationId);
     self.transients.organisation = ko.observable(organisationsMap[self.organisationId()]);

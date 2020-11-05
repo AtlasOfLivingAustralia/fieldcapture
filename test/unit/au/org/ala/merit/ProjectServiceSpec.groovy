@@ -203,6 +203,19 @@ class ProjectServiceSpec extends Specification {
         result.error == "Invalid plan status"
     }
 
+    def "plan should not be approved if work order number is not supplied"(){
+        given:
+        def projectId = 'project1'
+        def planStatus = ProjectService.PLAN_SUBMITTED
+        webService.getJson(_) >> [projectId:projectId, planStatus:planStatus, wrokOrderId:""]
+
+        when:
+        def result = service.approvePlan(projectId, [:])
+
+        then:
+        result.error == "An internal order number must be supplied before the MERI Plan can be approved"
+    }
+
     def "plan should not be rejected if it's not been approved."(){
         given:
         def projectId = 'project1'

@@ -23,6 +23,8 @@ class ProjectService  {
     static final String OUTCOMES_OUTPUT_TYPE = 'Outcomes'
     static final String STAGE_OUTCOMES_OUTPUT_TYPE = ''
     static final String COMPLETE = 'completed'
+    static final String APPLICATION_STATUS = 'Application'
+    static final String ACTIVE = 'active'
 
     static dateWithTime = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss")
     static dateWithTimeFormat2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
@@ -397,7 +399,15 @@ class ProjectService  {
     def approvePlan(String projectId, Map approvalDetails) {
         def project = get(projectId)
         if (project.planStatus == PLAN_SUBMITTED) {
-            def resp = update(projectId, [planStatus:PLAN_APPROVED])
+
+            //The MERI plan cannot be approved until an internal order number has been supplied for the project.
+            if(project.workOrderId == null || project.workOrderId == "") {
+                return [error: 'An internal order number must be supplied before the MERI Plan can be approved']
+            }
+
+            //When the MERI plan is first approved, the status is changed to "active"
+            def resp = project.status == APPLICATION_STATUS ? update(projectId, [planStatus:PLAN_APPROVED, status:ACTIVE])
+                    : update(projectId, [planStatus:PLAN_APPROVED])
             if (resp.resp && !resp.resp.error) {
                 createMeriPlanApprovalDocument(project, approvalDetails)
                 sendEmail({ProgramConfig programConfig -> programConfig.getPlanApprovedTemplate()}, project, RoleService.GRANT_MANAGER_ROLE)

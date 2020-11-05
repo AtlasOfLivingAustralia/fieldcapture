@@ -286,6 +286,10 @@ a.meri-history-toggle {
     color: white;
 }
 
+#disabledApproveMeriPlanBtn {
+    border-bottom-left-radius: 4px;
+    border-top-left-radius: 4px;
+}
 
 .announcements-table td.index {
     background-color: #f5f5f5;

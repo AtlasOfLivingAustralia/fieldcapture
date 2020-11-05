@@ -6,7 +6,13 @@
 	<div class="form-actions" >
 		<b>Grant manager actions:</b>
 		<span class="btn-group">
-			<button type="button" data-bind="click:approvePlan" class="btn btn-success"><i class="fa fa-check icon-white"></i> Approve</button>
+			<!-- The MERI plan cannot be approved until an internal order number has been supplied for the project. -->
+			<g:if test="${"" == project.workOrderId || !project.workOrderId}">
+				<button type="button" class="btn btn-success" id="disabledApproveMeriPlanBtn" disabled="disabled"><i class="fa fa-check icon-white"></i> Approve</button>
+			</g:if>
+			<g:else>
+				<button type="button" data-bind="click:approvePlan" class="btn btn-success"><i class="fa fa-check icon-white"></i> Approve</button>
+			</g:else>
 			<button type="button" data-bind="click:rejectPlan" class="btn btn-danger"><i class="fa fa-remove icon-white"></i> Reject</button>
 		</span>
 	</div>
