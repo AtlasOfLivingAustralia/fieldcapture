@@ -1,6 +1,7 @@
 package au.org.ala.fieldcapture
 
 import pages.MeriPlanPDFPage
+import pages.ProjectIndex
 import pages.RlpProjectPage
 
 class MeriPlanSpec extends StubbedCasSpec {
@@ -252,4 +253,238 @@ class MeriPlanSpec extends StubbedCasSpec {
 
     }
 
+    def "Try to approve MERI plan of a project with the application status and no work order Id"() {
+
+        setup:
+        logout(browser)
+        String projectId = 'project_application'
+        login([userId: '2', role: "ROLE_FC_OFFICER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+
+        when:
+        to ProjectIndex, projectId
+
+        then:
+        waitFor { at ProjectIndex }
+
+        when:
+        adminTab.click()
+
+        then:
+        def meriplan = waitFor { admin.openMeriPlan() }
+        waitFor {
+            !meriplan.approveButton.displayed
+            meriplan.disabledApproveButton.displayed
+            meriplan.approvePlanErrorDisplayed()
+        }
+    }
+
+    def "Try to approve MERI plan of a project with the application status and work order Id"() {
+
+        setup:
+        logout(browser)
+        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+
+        when:
+        to ProjectIndex, 'project_application'
+
+        then:
+        at ProjectIndex
+
+        when:
+        adminTab.click()
+
+        then:
+        waitFor { admin.projectSettingsTab.click() }
+
+        when:
+        admin.projectSettings.workOrderId = '12345'
+        admin.projectSettings.saveChangesButton.click()
+
+        then:
+        waitFor{hasBeenReloaded()}
+        at ProjectIndex
+
+        !admin.projectSettings.workOrderErrorDisplayed()
+        admin.projectSettings.workOrderId == '12345'
+
+        when:
+        logout(browser)
+        login([userId: '2', role: "ROLE_FC_OFFICER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+
+        to ProjectIndex, 'project_application'
+
+        then:
+        waitFor { at ProjectIndex }
+
+        when:
+        adminTab.click()
+
+        then:
+        def meriplan = waitFor { admin.openMeriPlan() }
+        waitFor {
+            meriplan.approveButton.displayed
+            !meriplan.disabledApproveButton.displayed
+            !meriplan.approvePlanErrorDisplayed()
+        }
+    }
+
+    def "Try to approve MERI plan of a project with the active status"() {
+
+        setup:
+        logout(browser)
+        login([userId: '2', role: "ROLE_FC_OFFICER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+
+        when:
+        to ProjectIndex, 'project_active'
+
+        then:
+        waitFor { at ProjectIndex }
+
+        when:
+        adminTab.click()
+
+        then:
+        def meriplan = waitFor { admin.openMeriPlan() }
+        waitFor {
+            meriplan.approveButton.displayed
+            !meriplan.disabledApproveButton.displayed
+            !meriplan.approvePlanErrorDisplayed()
+        }
+    }
+
+    def "Approve MERI plan of a project with the application status and work order Id"() {
+
+        setup:
+        logout(browser)
+        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+
+        when:
+        to ProjectIndex, 'project_application'
+
+        then:
+        at ProjectIndex
+
+        when:
+        adminTab.click()
+
+        then:
+        waitFor { admin.projectSettingsTab.click() }
+
+        when:
+        admin.projectSettings.workOrderId = '12345'
+        admin.projectSettings.saveChangesButton.click()
+
+        then:
+        waitFor{hasBeenReloaded()}
+        at ProjectIndex
+
+        !admin.projectSettings.workOrderErrorDisplayed()
+        admin.projectSettings.workOrderId == '12345'
+
+        when:
+        logout(browser)
+        login([userId: '2', role: "ROLE_FC_OFFICER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+
+        to ProjectIndex, 'project_application'
+
+        then:
+        waitFor { at ProjectIndex }
+
+        when:
+        adminTab.click()
+
+        then:
+        def meriplan = waitFor { admin.openMeriPlan() }
+        waitFor {
+            meriplan.approveButton.displayed
+            !meriplan.disabledApproveButton.displayed
+            !meriplan.approvePlanErrorDisplayed()
+        }
+
+        when:
+        waitFor { meriplan.approveButton.click() }
+
+        then:
+        waitFor {
+            meriplan.approvePlanDialog.changeOrderNumbers.displayed
+        }
+
+        when:
+        meriplan.approvePlanDialog.changeOrderNumbers = 'test'
+        meriplan.approvePlanDialog.comment = 'test'
+
+        meriplan.approvePlanDialog.approvePlanButton.click()
+
+        then:
+        waitFor{hasBeenReloaded()}
+        at ProjectIndex
+
+        when:
+        adminTab.click()
+
+        then:
+        def updatedMeriPlan = waitFor { admin.openMeriPlan() }
+        updatedMeriPlan.modifyApprovedPlanButton.displayed
+
+        when:
+        overviewTab.click()
+
+        then:
+        overview.projectStatus.text() == 'ACTIVE'
+    }
+
+    def "Approve MERI plan of a project with the active status and work order Id"() {
+
+        setup:
+        logout(browser)
+        login([userId: '2', role: "ROLE_FC_OFFICER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+
+        when:
+        to ProjectIndex, 'project_active'
+
+        then:
+        waitFor { at ProjectIndex }
+
+        when:
+        adminTab.click()
+
+        then:
+        def meriplan = waitFor { admin.openMeriPlan() }
+        waitFor {
+            meriplan.approveButton.displayed
+            !meriplan.disabledApproveButton.displayed
+            !meriplan.approvePlanErrorDisplayed()
+        }
+
+        when:
+        waitFor { meriplan.approveButton.click() }
+
+        then:
+        waitFor {
+            meriplan.approvePlanDialog.changeOrderNumbers.displayed
+        }
+
+        when:
+        meriplan.approvePlanDialog.changeOrderNumbers = 'test'
+        meriplan.approvePlanDialog.comment = 'test'
+
+        meriplan.approvePlanDialog.approvePlanButton.click()
+
+        then:
+        waitFor{hasBeenReloaded()}
+        at ProjectIndex
+
+        when:
+        adminTab.click()
+
+        then:
+        def updatedMeriPlan = waitFor { admin.openMeriPlan() }
+        updatedMeriPlan.modifyApprovedPlanButton.displayed
+
+        when:
+        overviewTab.click()
+
+        then:
+        overview.projectStatus.text() == 'ACTIVE'
+    }
 }
