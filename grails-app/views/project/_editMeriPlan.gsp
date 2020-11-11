@@ -7,7 +7,7 @@
 		<b>Grant manager actions:</b>
 		<span class="btn-group">
 			<!-- The MERI plan cannot be approved until an internal order number has been supplied for the project. -->
-			<g:if test="${"" == project.workOrderId || !project.workOrderId}">
+			<g:if test="${"" == project.internalOrderId || !project.internalOrderId}">
 				<button type="button" class="btn btn-success" id="disabledApproveMeriPlanBtn" disabled="disabled"><i class="fa fa-check icon-white"></i> Approve</button>
 			</g:if>
 			<g:else>

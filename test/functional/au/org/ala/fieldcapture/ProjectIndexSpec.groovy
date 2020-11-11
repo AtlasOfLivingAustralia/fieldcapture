@@ -102,7 +102,7 @@ class ProjectIndexSpec extends StubbedCasSpec {
 //        admin.projectSettings.fundingSourceAmount.value() == "1000"
 //    }
 
-    def "Projects with application status can be saved without a work order id"() {
+    def "Projects with application status can be saved without a internal order id"() {
         setup:
         login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
 
@@ -119,18 +119,18 @@ class ProjectIndexSpec extends StubbedCasSpec {
         waitFor { admin.projectSettingsTab.click() }
 
         when:
-        admin.projectSettings.workOrderId = ''
+        admin.projectSettings.internalOrderId = ''
         admin.projectSettings.saveChangesButton.click()
 
         then:
         waitFor{hasBeenReloaded()}
         at ProjectIndex
 
-        !admin.projectSettings.workOrderErrorDisplayed()
-        admin.projectSettings.workOrderId == ''
+        !admin.projectSettings.internalOrderIdErrorDisplayed()
+        admin.projectSettings.internalOrderId == ''
     }
 
-    def "Projects with application status can be saved with a work order id"() {
+    def "Projects with application status can be saved with a internal order id"() {
         setup:
         login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
 
@@ -147,18 +147,18 @@ class ProjectIndexSpec extends StubbedCasSpec {
         waitFor { admin.projectSettingsTab.click() }
 
         when:
-        admin.projectSettings.workOrderId = '12345'
+        admin.projectSettings.internalOrderId = '12345'
         admin.projectSettings.saveChangesButton.click()
 
         then:
         waitFor{hasBeenReloaded()}
         at ProjectIndex
 
-        !admin.projectSettings.workOrderErrorDisplayed()
-        admin.projectSettings.workOrderId == '12345'
+        !admin.projectSettings.internalOrderIdErrorDisplayed()
+        admin.projectSettings.internalOrderId == '12345'
     }
 
-    def "Projects with active status can be saved without a work order id"() {
+    def "Projects with active status can be saved without a internal order id"() {
         setup:
         login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
 
@@ -175,14 +175,14 @@ class ProjectIndexSpec extends StubbedCasSpec {
         waitFor { admin.projectSettingsTab.click() }
 
         when:
-        admin.projectSettings.workOrderId = ''
+        admin.projectSettings.internalOrderId = ''
         admin.projectSettings.saveChangesButton.click()
 
         then:
-        admin.projectSettings.workOrderErrorDisplayed()
+        admin.projectSettings.internalOrderIdErrorDisplayed()
     }
 
-    def "Projects with active status can be saved with a work order id"() {
+    def "Projects with active status can be saved with a internal order id"() {
         setup:
         login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
 
@@ -199,18 +199,18 @@ class ProjectIndexSpec extends StubbedCasSpec {
         waitFor { admin.projectSettingsTab.click() }
 
         when:
-        admin.projectSettings.workOrderId = '12345'
+        admin.projectSettings.internalOrderId = '12345'
         admin.projectSettings.saveChangesButton.click()
 
         then:
         waitFor{hasBeenReloaded()}
         at ProjectIndex
 
-        !admin.projectSettings.workOrderErrorDisplayed()
-        admin.projectSettings.workOrderId == '12345'
+        !admin.projectSettings.internalOrderIdErrorDisplayed()
+        admin.projectSettings.internalOrderId == '12345'
     }
 
-    def "Projects with completed status can be saved without a work order id"() {
+    def "Projects with completed status can be saved without a internal order id"() {
         setup:
         login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
 
@@ -227,14 +227,14 @@ class ProjectIndexSpec extends StubbedCasSpec {
         waitFor { admin.projectSettingsTab.click() }
 
         when:
-        admin.projectSettings.workOrderId = ''
+        admin.projectSettings.internalOrderId = ''
         admin.projectSettings.saveChangesButton.click()
 
         then:
-        admin.projectSettings.workOrderErrorDisplayed()
+        admin.projectSettings.internalOrderIdErrorDisplayed()
     }
 
-    def "Projects with completed status can be saved with a work order id"() {
+    def "Projects with completed status can be saved with a internal order id"() {
         setup:
         login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
 
@@ -251,15 +251,15 @@ class ProjectIndexSpec extends StubbedCasSpec {
         waitFor { admin.projectSettingsTab.click() }
 
         when:
-        admin.projectSettings.workOrderId = '12345'
+        admin.projectSettings.internalOrderId = '12345'
         admin.projectSettings.saveChangesButton.click()
 
         then:
         waitFor{hasBeenReloaded()}
         at ProjectIndex
 
-        !admin.projectSettings.workOrderErrorDisplayed()
-        admin.projectSettings.workOrderId == '12345'
+        !admin.projectSettings.internalOrderIdErrorDisplayed()
+        admin.projectSettings.internalOrderId == '12345'
     }
 
     def "Status of the projects with application status cannot be changed"() {

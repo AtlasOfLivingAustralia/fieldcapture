@@ -799,7 +799,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
     });
     self.meriPlan = new MERIPlan(project, projectService, meriPlanConfig);
 
-    self.workOrderId = ko.observable(project.workOrderId);
+    self.internalOrderId = ko.observable(project.internalOrderId);
     self.userIsCaseManager = ko.observable(userRoles.grantManager);
     self.userIsAdmin = ko.observable(userRoles.admin);
     self.promote = [{id: 'yes', name:'Yes'},{id:'no',name:'No'}];
@@ -870,7 +870,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             description: self.description(),
             externalId: self.externalId(),
             grantId: self.grantId(),
-            workOrderId: self.workOrderId(),
+            internalOrderId: self.internalOrderId(),
             manager: self.manager(),
             plannedStartDate: self.plannedStartDate(),
             plannedEndDate: self.plannedEndDate(),

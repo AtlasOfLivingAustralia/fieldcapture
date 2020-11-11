@@ -401,7 +401,7 @@ class ProjectService  {
         if (project.planStatus == PLAN_SUBMITTED) {
 
             //The MERI plan cannot be approved until an internal order number has been supplied for the project.
-            if(project.workOrderId == null || project.workOrderId == "") {
+            if(project.internalOrderId == null || project.internalOrderId == "") {
                 return [error: 'An internal order number must be supplied before the MERI Plan can be approved']
             }
 

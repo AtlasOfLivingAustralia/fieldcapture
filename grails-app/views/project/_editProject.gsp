@@ -74,14 +74,14 @@
         </div>
     </div>
     <div class="control-group span4">
-        <label class="control-label" for="workOrderId">Work order id / Internal order number</label>
+        <label class="control-label" for="internalOrderId">Internal order number</label>
         <div class="controls">
             <!-- Once the MERI plan is approved, the internal order number becomes a mandatory field. -->
             <g:if test="${ProjectService.APPLICATION_STATUS != project.status}">
-                <g:textField class="" name="workOrderId" data-bind="value:workOrderId" data-validation-engine="validate[required]"/>
+                <g:textField class="" name="internalOrderId" data-bind="value:internalOrderId" data-validation-engine="validate[required]"/>
             </g:if>
             <g:else>
-                <g:textField class="" name="workOrderId" data-bind="value:workOrderId"/>
+                <g:textField class="" name="internalOrderId" data-bind="value:internalOrderId"/>
             </g:else>
         </div>
     </div>

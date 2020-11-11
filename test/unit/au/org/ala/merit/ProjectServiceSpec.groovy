@@ -251,7 +251,7 @@ class ProjectServiceSpec extends Specification {
         def projectId = 'project1'
         def planStatus = ProjectService.PLAN_SUBMITTED
         List projectRoles = []
-        Map project = [projectId:projectId, planStatus:planStatus, grantId:'g1', reports:null, workOrderId: "12345"]
+        Map project = [projectId:projectId, planStatus:planStatus, grantId:'g1', reports:null, internalOrderId: "12345"]
         webService.getJson(_) >> project
         String expectedName = 'g1 MERI plan approved 2019-07-01T00:00:00Z'
         String expectedFilename = 'meri-approval-project1-1561939200000.txt'

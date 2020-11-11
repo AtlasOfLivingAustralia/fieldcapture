@@ -4,7 +4,7 @@ import geb.Module
 
 class AdminProjectSettingsTab extends Module {
     static content = {
-        workOrderId {$('#workOrderId')}
+        internalOrderId {$('#internalOrderId')}
         projectState {$('#projectState')}
         regenerateReportsButton {$('button[data-bind*=regenerateStageReports]')}
         saveChangesButton {$('button[data-bind*=saveSettings]')}
@@ -18,7 +18,7 @@ class AdminProjectSettingsTab extends Module {
         saveChangesButton.click()
     }
 
-    def workOrderErrorDisplayed() {
-        $('.workOrderIdformError.parentFormsettings-validation.formError').displayed
+    def internalOrderIdErrorDisplayed() {
+        $('.internalOrderIdformError.parentFormsettings-validation.formError').displayed
     }
 }

@@ -253,7 +253,7 @@ class MeriPlanSpec extends StubbedCasSpec {
 
     }
 
-    def "Try to approve MERI plan of a project with the application status and no work order Id"() {
+    def "Try to approve MERI plan of a project with the application status and no internal order Id"() {
 
         setup:
         logout(browser)
@@ -278,7 +278,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         }
     }
 
-    def "Try to approve MERI plan of a project with the application status and work order Id"() {
+    def "Try to approve MERI plan of a project with the application status and internal order Id"() {
 
         setup:
         logout(browser)
@@ -297,15 +297,15 @@ class MeriPlanSpec extends StubbedCasSpec {
         waitFor { admin.projectSettingsTab.click() }
 
         when:
-        admin.projectSettings.workOrderId = '12345'
+        admin.projectSettings.internalOrderId = '12345'
         admin.projectSettings.saveChangesButton.click()
 
         then:
         waitFor{hasBeenReloaded()}
         at ProjectIndex
 
-        !admin.projectSettings.workOrderErrorDisplayed()
-        admin.projectSettings.workOrderId == '12345'
+        !admin.projectSettings.internalOrderIdErrorDisplayed()
+        admin.projectSettings.internalOrderId == '12345'
 
         when:
         logout(browser)
@@ -352,7 +352,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         }
     }
 
-    def "Approve MERI plan of a project with the application status and work order Id"() {
+    def "Approve MERI plan of a project with the application status and internal order Id"() {
 
         setup:
         logout(browser)
@@ -371,15 +371,15 @@ class MeriPlanSpec extends StubbedCasSpec {
         waitFor { admin.projectSettingsTab.click() }
 
         when:
-        admin.projectSettings.workOrderId = '12345'
+        admin.projectSettings.internalOrderId = '12345'
         admin.projectSettings.saveChangesButton.click()
 
         then:
         waitFor{hasBeenReloaded()}
         at ProjectIndex
 
-        !admin.projectSettings.workOrderErrorDisplayed()
-        admin.projectSettings.workOrderId == '12345'
+        !admin.projectSettings.internalOrderIdErrorDisplayed()
+        admin.projectSettings.internalOrderId == '12345'
 
         when:
         logout(browser)
@@ -433,7 +433,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         overview.projectStatus.text() == 'ACTIVE'
     }
 
-    def "Approve MERI plan of a project with the active status and work order Id"() {
+    def "Approve MERI plan of a project with the active status and internal order Id"() {
 
         setup:
         logout(browser)
