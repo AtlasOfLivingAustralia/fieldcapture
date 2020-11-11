@@ -298,7 +298,7 @@ class ProjectServiceSpec extends Specification {
         def projectId = 'project1'
         def planStatus = initialState
         List projectRoles = []
-        Map project =  [projectId:projectId, planStatus:planStatus, workOrderId: "12345"]
+        Map project =  [projectId:projectId, planStatus:planStatus, internalOrderId: "12345"]
         ProgramConfig programConfig = new ProgramConfig([
                 emailTemplates:[
                         (ProgramConfig.PLAN_SUBMITTED_EMAIL_TEMPLATE_CONFIG_ITEM): EmailTemplate.RLP_PLAN_SUBMITTED_EMAIL_TEMPLATE.name(),
