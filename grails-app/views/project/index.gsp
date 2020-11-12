@@ -394,6 +394,11 @@
                         viewModel.initialiseReports();
                     }
                 },
+                'datasets': {
+                    initialiser: function() {
+                        viewModel.initialiseDataSets();
+                    }
+                },
                 'admin': {
                     initialiser: function () {
                         viewModel.initialiseAdminTab();

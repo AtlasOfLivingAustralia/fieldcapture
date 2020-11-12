@@ -1760,4 +1760,32 @@ class ProjectService  {
         programList.addAll(newProgramList)
         return programList
     }
+
+    Map saveDataSet(String projectId, Map dataSet) {
+        Map project = get(projectId)
+        if (!project) {
+            throw new  IllegalArgumentException("Project "+projectId+" does not exist")
+        }
+        if (!project.custom) {
+            project.custom = [:]
+        }
+        if (!project.custom.dataSets) {
+            project.custom.dataSets = []
+        }
+
+        if (!dataSet.dataSetId) {
+            dataSet.dataSetId = UUID.randomUUID()
+            project.custom.dataSets << dataSet
+        }
+        else {
+            int i = project.custom.dataSets.findIndexOf({it.dataSetId == dataSet.dataSetId})
+            project.custom.dataSets[i] = dataSet
+        }
+
+        update(projectId, [custom: project.custom])
+    }
+
+    Map deleteDataSet(String projectId, String dataSetId) {
+
+    }
 }
