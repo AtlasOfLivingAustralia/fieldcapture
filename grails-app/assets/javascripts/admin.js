@@ -76,3 +76,67 @@ var ImageGallery = function() {
     });
 
 };
+
+/**
+ * Knockout view model for Remove USer Permission pages.
+ * @param options an object specifying the following options:
+ * validationContainerSelector, searchUserDetailsUrl, removeUserDetailsUrl
+ * @constructor
+ */
+var RemoveUserPermissionViewModel = function (options){
+    var defaults = {
+        validationContainerSelector: '.validationEngineContainer'
+    };
+    var self =this;
+    var config = $.extend({}, defaults, options);
+
+    self.userId = ko.observable();
+    self.emailAddress = ko.observable()
+    self.firstName = ko.observable();
+    self.lastName = ko.observable();
+    self.email = ko.observable();
+
+
+
+    self.searchUserDetails = function (){
+        var emailAddress = self.emailAddress();
+        if (emailAddress){
+            $.get(config.searchUserDetailsUrl, {emailAddress: emailAddress}, undefined, "json").done(function (data){
+                if (data.error === "error"){
+                    bootbox.alert('<span class="label label-important">This Email Address is invalid: </span><p>' + data.emailAddress + '</p>');
+                }else{
+                    self.userId(data.userId);
+                    self.firstName(data.firstName);
+                    self.lastName(data.lastName);
+                    self.email(data.emailAddress);
+
+                }
+            }).fail( function (){
+                bootbox.alert('<span class="label label-important">This Email Address is invalid: </span><p>' + data.emailAddress + '</p>')
+        });
+        }else{
+            bootbox.alert('<span class="label label-important">Please Enter the Email Address</span>');
+        }
+
+    };
+
+    self.removeUserDetails = function (){
+        var userId = self.userId();
+
+        blockUIWithMessage("Removing User Permission...");
+        $.post(config.removeUserDetailsUrl,{userId: userId},undefined, "json" ).done(function (data){
+           if (data.error){
+               bootbox.alert('<span class="label label-important">Failed to remove users from MERIT </span>'+'<p> Reason: '+data.error+'</p>');
+               $.unblockUI();
+           }else{
+               blockUIWithMessage("Successfully Remove User Permission...")
+               blockUIWithMessage("Refreshing page...");
+               window.location.reload();
+           }
+        }).fail(function(data) {
+            alert('An unhandled error occurred: ' + data.status + " Please refresh the page and try again");
+            $.unblockUI();
+        });
+    };
+
+};

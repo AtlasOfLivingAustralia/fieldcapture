@@ -1,0 +1,14 @@
+{
+  "request": {
+    "urlPath": "/userdetails/userDetails/userDetails/getUserDetails",
+    "method": "ANY"
+  },
+  "response": {
+    "transformers": ["response-template"],
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{\"userId\":\"1\",\"userName\":\"auser@nowhere.com.au\",\"firstName\":\"Test\",\"lastName\":\"Test\"}"
+  }
+}
