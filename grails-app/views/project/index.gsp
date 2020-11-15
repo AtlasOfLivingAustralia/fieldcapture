@@ -86,6 +86,8 @@
         viewHistoricalMeriPlanUrl:"${createLink(action:"viewMeriPlan", id:project.projectId)}",
         riskChangesReportHtmlUrl:"${createLink(controller:'project', action:'projectReport', id:project.projectId)}",
         riskChangesReportPdfUrl:"${createLink(controller:'project', action:'projectReportPDF', id:project.projectId)}",
+        newDataSetUrl:"${createLink(controller:'dataSet', action:'create', id:project.projectId)}",
+        editDataSetUrl:"${createLink(controller:'dataSet', action:'edit', id:project.projectId)}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 
     },
@@ -258,7 +260,9 @@
                 minimumProjectEndDate: ${projectContent.admin.minimumProjectEndDate?'"'+projectContent.admin.minimumProjectEndDate+'"':'null'},
                 riskChangesReportElementId: 'risk-changes-report',
                 riskChangesReportHtmlUrl: fcConfig.riskChangesReportHtmlUrl,
-                riskChangesReportPdfUrl: fcConfig.riskChangesReportPdfUrl
+                riskChangesReportPdfUrl: fcConfig.riskChangesReportPdfUrl,
+                newDataSetUrl: fcConfig.newDataSetUrl,
+                editDataSetUrl: fcConfig.editDataSetUrl
             };
 
             var programs = <fc:modelAsJavascript model="${programs}"/>;

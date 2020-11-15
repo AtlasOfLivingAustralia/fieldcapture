@@ -1069,8 +1069,9 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
 
     self.initialiseDataSets = function() {
         var dataSetsConfig = {
-            dataSetsSelector: config.dataSetsSelector || '#data-sets-list',
-            newDataSetUrl:  config.newDataSetUrl
+            dataSetsSelector: config.dataSetsSelector || '#project-data-sets',
+            newDataSetUrl:  config.newDataSetUrl,
+            editDataSetUrl: config.editDataSetUrl
         };
         var projectService = new ProjectService({}, config);
         var viewModel = new DataSetsViewModel(project.custom && project.custom.dataSets, projectService, dataSetsConfig);

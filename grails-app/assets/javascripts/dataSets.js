@@ -3,12 +3,11 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
 
     self.dataSets = _.map(dataSets || [], function(dataSet) {
         return new DataSetSummary(dataSet);
-    })
+    });
 
     self.newDataSet = function() {
-        window.location.url = config.newDataSetUrl;
+        window.location.href = config.newDataSetUrl;
     };
-
 
     function DataSetSummary(dataSet) {
 

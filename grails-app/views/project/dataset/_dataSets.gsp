@@ -1,9 +1,11 @@
+<!-- ko stopBinding: true -->
 <div id="project-data-sets">
     <h3>Project data sets</h3>
 
-    <!-- ko stopBinding: true -->
-
-    <table class="table table-striped" id="data-sets-list">
+    <div class="form-actions">
+        <button class="btn btn-primary float-right" data-bind="click:newDataSet">New data set</button>
+    </div>
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th class="actions">Actions</th>
@@ -27,6 +29,6 @@
         </tbody>
 
     </table>
-    <!-- /ko -->
 
 </div>
+<!-- /ko -->
