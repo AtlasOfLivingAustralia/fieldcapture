@@ -1,4 +1,5 @@
 //Default for Total new area treated for weeds (Ha) for Weed Treatment Details - All Programme
+// Removing score _id coz now it will auto generated in database
 var scoreWeedHaDefaults = {
     create: function(){
         return {
