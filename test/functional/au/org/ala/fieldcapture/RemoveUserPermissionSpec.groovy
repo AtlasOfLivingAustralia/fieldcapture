@@ -56,7 +56,7 @@ class RemoveUserPermissionSpec extends StubbedCasSpec {
         adminContent.searchButton.click()
 
         then:
-        waitFor {at RemoveUserPermissionPage}
+        waitFor 10, {at RemoveUserPermissionPage}
 
         when:
         adminContent.removeButton.click()
