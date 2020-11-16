@@ -68,7 +68,7 @@ class RemoveUserPermissionSpec extends StubbedCasSpec {
         to ProjectIndex, "project_1"
 
         then:
-        waitFor {at ProjectIndex}
+        waitFor 10, {at ProjectIndex}
         when:
         adminTab.click()
         then:
@@ -94,7 +94,7 @@ class RemoveUserPermissionSpec extends StubbedCasSpec {
         to HomePage
 
         then:"the user did not have permission to view the page"
-        waitFor {at HomePage}
+        waitFor 10, {at HomePage}
 
         and:
         title =="Home | MERIT"
