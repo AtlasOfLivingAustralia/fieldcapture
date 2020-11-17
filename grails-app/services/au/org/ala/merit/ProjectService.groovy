@@ -1774,7 +1774,7 @@ class ProjectService  {
         }
 
         if (!dataSet.dataSetId) {
-            dataSet.dataSetId = UUID.randomUUID()
+            dataSet.dataSetId = UUID.randomUUID().toString()
             project.custom.dataSets << dataSet
         }
         else {
@@ -1786,6 +1786,14 @@ class ProjectService  {
     }
 
     Map deleteDataSet(String projectId, String dataSetId) {
-
+        Map project = get(projectId)
+        if (!project) {
+            throw new IllegalArgumentException("Project "+projectId+" does not exist")
+        }
+        boolean found  = project.custom?.dataSets?.removeAll{ it.dataSetId == dataSetId}
+        if (!found)  {
+            throw new IllegalArgumentException("Data set "+dataSetId+" does not exist")
+        }
+        update(projectId, [custom: project.custom])
     }
 }
