@@ -238,12 +238,9 @@
         </label>
         <!-- Application status cannot be changed until the MERI plan is approved. -->
         <!-- Application status is set only when creating the project -->
-        <g:if test="${ProjectService.PLAN_UNLOCKED == project.planStatus}">
+        <g:if test="${ProjectService.PLAN_UNLOCKED == project.planStatus || ProjectService.APPLICATION_STATUS == project.status}">
             <select class="input-xlarge" id="projectState" data-bind="options:projectStatus, optionsText: 'name', optionsValue: 'id', value:status" disabled="disabled"></select>
         </g:if>
-        <g:elseif test="${ProjectService.APPLICATION_STATUS == project.status}">
-            <select class="input-xlarge" id="projectState" data-bind="options:projectStatus, optionsText: 'name', optionsValue: 'id', value:status" disabled="disabled"></select>
-        </g:elseif>
         <g:else>
             <select class="input-xlarge" id="projectState" data-bind="options:projectStatus.filter(x => x.name != '${ProjectService.APPLICATION_STATUS}'), optionsText: 'name', optionsValue: 'id', value:status"></select>
         </g:else>

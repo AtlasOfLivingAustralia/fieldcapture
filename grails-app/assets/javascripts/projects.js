@@ -1374,6 +1374,10 @@ function ProjectService(project, options) {
         return project.status && project.status.toLowerCase() == 'completed';
     };
 
+    self.canApproveMeriPlan = function() {
+        return project.internalOrderId ? true: false
+    };
+
     self.getBudgetHeaders = function() {
         if (config.excludeFinancialYearData) {
             return []; // Return a single period header for the project

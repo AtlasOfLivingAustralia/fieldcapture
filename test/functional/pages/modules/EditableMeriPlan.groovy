@@ -125,7 +125,6 @@ class EditableMeriPlan extends Module {
         pdfButton { $('.btn[data-bind*="meriPlanPDF"').first() }
 
         approveButton(required:false){ $('[data-bind*="approvePlan"]') }
-        disabledApproveButton(required:false){ $('#disabledApproveMeriPlanBtn') }
         rejectButton(required:false) { $('[data-bind*="rejectPlan"') }
         modifyApprovedPlanButton(required:false){ $('[data-bind*="modifyPlan"') }
 
@@ -218,10 +217,6 @@ class EditableMeriPlan extends Module {
         waitFor{ mediumTermOutcomes.size() > midTermOutcomeCount }
 
         mediumTermOutcomes[midTermOutcomeCount].value(outcome)
-    }
-
-    def approvePlanErrorDisplayed() {
-        $('.disabledApproveMeriPlanBtnformError').displayed
     }
 
 }

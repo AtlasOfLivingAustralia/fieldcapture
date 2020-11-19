@@ -272,9 +272,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         then:
         def meriplan = waitFor { admin.openMeriPlan() }
         waitFor {
-            !meriplan.approveButton.displayed
-            meriplan.disabledApproveButton.displayed
-            meriplan.approvePlanErrorDisplayed()
+            meriplan.approveButton.@disabled
         }
     }
 
@@ -322,9 +320,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         then:
         def meriplan = waitFor { admin.openMeriPlan() }
         waitFor {
-            meriplan.approveButton.displayed
-            !meriplan.disabledApproveButton.displayed
-            !meriplan.approvePlanErrorDisplayed()
+            !meriplan.approveButton.@disabled
         }
     }
 
@@ -346,9 +342,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         then:
         def meriplan = waitFor { admin.openMeriPlan() }
         waitFor {
-            meriplan.approveButton.displayed
-            !meriplan.disabledApproveButton.displayed
-            !meriplan.approvePlanErrorDisplayed()
+            !meriplan.approveButton.@disabled
         }
     }
 
@@ -397,8 +391,6 @@ class MeriPlanSpec extends StubbedCasSpec {
         def meriplan = waitFor { admin.openMeriPlan() }
         waitFor {
             meriplan.approveButton.displayed
-            !meriplan.disabledApproveButton.displayed
-            !meriplan.approvePlanErrorDisplayed()
         }
 
         when:
@@ -451,9 +443,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         then:
         def meriplan = waitFor { admin.openMeriPlan() }
         waitFor {
-            meriplan.approveButton.displayed
-            !meriplan.disabledApproveButton.displayed
-            !meriplan.approvePlanErrorDisplayed()
+            !meriplan.approveButton.@disabled
         }
 
         when:

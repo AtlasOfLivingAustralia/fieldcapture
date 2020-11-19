@@ -438,18 +438,14 @@ function MERIPlan(project, projectService, config) {
 
         });
     }
-    displayDisabledApproveMeriPlanError.apply()
 
-};
-
-function displayDisabledApproveMeriPlanError(){
-
-    var disabledApproveMeriPlanBtn = "#disabledApproveMeriPlanBtn";
-    if(disabledApproveMeriPlanBtn) {
-        setInterval(function () {
-            $(disabledApproveMeriPlanBtn).validationEngine("showPrompt", "*An internal order number must be supplied before the MERI Plan can be approved", "topRight", false);
-        }, 2000);
-    }
+    self.canApprove = function() {
+        var canApprove = projectService.canApproveMeriPlan()
+        if(!canApprove) {
+            $('.grantManagerActionSpan').popover({content:'*An internal order number must be supplied before the MERI Plan can be approved', placement:'top', trigger:'hover'})
+        }
+        return canApprove
+    };
 };
 
 function ReadOnlyMeriPlan(project, projectService, config) {
