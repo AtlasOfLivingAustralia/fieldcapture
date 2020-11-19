@@ -9,13 +9,17 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
         window.location.href = config.newDataSetUrl;
     };
 
+
     function DataSetSummary(dataSet) {
 
-        this.editUrl = config.editDataSetUrl + dataSet.dataSetId;
+        this.editUrl = config.editDataSetUrl + '?dataSetId='+dataSet.dataSetId;
         this.name = dataSet.name;
         this.deleteDataSet = function() {
             bootbox.confirm("Are you sure?", function() {
-                projectService.deleteDataSet(dataSet.dataSetId);
+                projectService.deleteDataSet(dataSet.dataSetId).done(function() {
+                    blockUIWithMessage("Refreshing page...");
+                    window.location.href = config.returnToUrl;
+                });
             });
         };
     }
@@ -58,12 +62,14 @@ var DataSetViewModel = function(dataSet, projectService, options) {
         var dataSet = ko.mapping.toJS(self);
         projectService.saveDataSet(dataSet).done(function() {
             // return to project
+            window.location.href = options.returnToUrl;
         }).fail(function() {
-            // show error
+            bootbox.alert("There was an error saving the data set");
         });
     }
 
     self.cancel = function() {
         // return to project
+        window.location.href = options.returnToUrl;
     }
 };

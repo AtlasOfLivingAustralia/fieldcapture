@@ -89,29 +89,55 @@ function ProjectService(project, options) {
         }
     };
 
-    self.saveDataSet = function(dataSet) {
-
-        var json = JSON.stringify(dataSet);
-        blockUIWithMessage("Saving data set....");
+    self.save = function(url, payload, message) {{
+        blockUIWithMessage(message);
         return $.ajax({
-            url: options.dataSetUpdateUrl,
+            url: url,
             type: 'POST',
-            data: json,
-            contentType: 'application/json'
-        }).done(function(data) {
-            if (data.error) {
-                $.unblockUI();
-                showAlert("Failed to save data set: " + data.detail + ' \n' + data.error,
-                    "alert-error","save-result-placeholder");
-            } else {
-                blockUIWithMessage("Refreshing page...");
-                showAlert("Data set saved","alert-success","save-result-placeholder");
-
-            }
-        }).fail(function(data) {
+            data: payload,
+            contentType: 'application/json',
+            dataType:'json'
+        }).always(function() {
             $.unblockUI();
-            alert('An unhandled error occurred: ' + data.status + " Please refresh the page and try again");
         });
+    }}
+
+    self.saveDataSet = function(dataSet) {
+        var json = JSON.stringify(dataSet);
+        return self.save(options.dataSetUpdateUrl, json, "Saving data set....")
+            .done(function(data) {
+                if (data.error) {
+                    $.unblockUI();
+                    showAlert("Failed to save data set: " + data.detail + ' \n' + data.error,
+                        "alert-error","save-result-placeholder");
+                } else {
+                    blockUIWithMessage("Refreshing page...");
+                    showAlert("Data set saved","alert-success","save-result-placeholder");
+    
+                }
+            }).fail(function(data) {
+                $.unblockUI();
+                alert('An unhandled error occurred: ' + data.status + " Please refresh the page and try again");
+            });
+    };
+
+    self.deleteDataSet = function(dataSetId) {
+
+        var json = JSON.stringify({dataSetId:dataSetId});
+        return self.save(options.deleteDataSetUrl, json, "Deleting data set....")
+            .done(function(data) {
+                if (data.error) {
+                    $.unblockUI();
+                    showAlert("An error occurred while deleting the data set: " + data.detail + ' \n' + data.error,
+                        "alert-error","save-result-placeholder");
+                } else {
+                    blockUIWithMessage("Refreshing page...");
+
+                }
+            }).fail(function(data) {
+                $.unblockUI();
+                alert('An unhandled error occurred: ' + data.status + " Please refresh the page and try again");
+            });
 
     };
 

@@ -1,7 +1,8 @@
-package au.org.ala
+package au.org.ala.merit
 
 import au.org.ala.merit.PreAuthorise
 import au.org.ala.merit.ProjectService
+import grails.converters.JSON
 import org.springframework.http.HttpStatus
 
 class DataSetController {
@@ -22,11 +23,12 @@ class DataSetController {
     def edit(String id, String dataSetId) {
 
         Map project = projectService.get(id)
-        if (!project) {
+        Map dataSet = project?.custom?.dataSets?.find{it.dataSetId = dataSetId}
+        if (!dataSet) {
             respond status: HttpStatus.NOT_FOUND
         }
         else {
-            [projectId:id, dataSet:project.custom?.dataSets?.find{it.dataSetId == dataSetId}]
+            [projectId:id, dataSet:dataSet]
         }
 
     }
@@ -36,8 +38,8 @@ class DataSetController {
 
         Map dataSet = request.JSON
 
-        projectService.saveDataSet(id, dataSet)
-
+        Map response = projectService.saveDataSet(id, dataSet)
+        render response as JSON
     }
 
     @PreAuthorise(accessLevel = 'editor')
@@ -49,7 +51,8 @@ class DataSetController {
             respond status:400, text:"A dataSetId must be supplied"
         }
 
-        projectService.deleteDataSet(id, dataSetId)
+        Map response = projectService.deleteDataSet(id, dataSetId)
+        render response as JSON
 
     }
 }
