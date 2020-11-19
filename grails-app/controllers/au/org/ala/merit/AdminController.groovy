@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest
 
 @PreAuthorise(accessLevel = 'officer', redirectController = "home")
 class AdminController {
+    static allowedMethods = [ searchUserDetails: "GET", removeUserDetails:"POST"]
 
     BlogService blogService
     GrailsCacheManager grailsCacheManager
@@ -36,6 +37,7 @@ class AdminController {
     def documentService
     def organisationService
     RisksService risksService
+    UserService userService
 
     def index() {}
 
@@ -96,6 +98,36 @@ class AdminController {
         render(view:'bulkLoadUserPermissions', model:[user: user, results: results])
     }
 
+    @PreAuthorise(accessLevel = 'siteAdmin', redirectController = "admin")
+    def removeUserPermission(){
+    }
+
+    @PreAuthorise(accessLevel = 'siteAdmin', redirectController = "admin")
+    def searchUserDetails(){
+        String emailAddress = params.emailAddress
+        def result = authService.getUserForEmailAddress(emailAddress)
+        Map userDetails
+        if (result != null && result.userName == emailAddress){
+            userDetails = [userId: result.userId, emailAddress: result.userName, firstName: result.firstName, lastName: result.lastName]
+        }else{
+            userDetails = [error: "error", emailAddress: emailAddress]
+        }
+        render userDetails as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'siteAdmin', redirectController = "admin")
+    def removeUserDetails(){
+        String userId = params.userId
+        def result = adminService.deleteUserPermission(userId)
+
+        if (result?.resp?.status == 200){
+            result = [status: 200, success: "Success"]
+        }else{
+            result = [status: result?.resp?.status, error: result?.resp?.error]
+        }
+        render result as JSON
+
+    }
     @PreAuthorise(accessLevel = 'siteAdmin', redirectController = "admin")
     def staticPages() {
         def settings = []
