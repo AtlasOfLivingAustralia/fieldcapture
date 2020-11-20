@@ -60,6 +60,7 @@
                         <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'selectHomePageImages')}" title="Home Page Images"/>
                         <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'adminReports')}" title="Administrator Reports"/>
                         <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'gmsProjectImport')}" title="Load new projects into MERIT"/>
+                        <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'removeUserPermission')}" title="Remove User from MERIT"/>
                     </g:if>
                     <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.alaAdminRole)}">
                         <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'tools')}" title="Tools" />

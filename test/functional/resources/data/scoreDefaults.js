@@ -1,9 +1,8 @@
 //Default for Total new area treated for weeds (Ha) for Weed Treatment Details - All Programme
+// Removing score _id coz now it will auto generated in database
 var scoreWeedHaDefaults = {
     create: function(){
         return {
-            "_id":10,
-
             "category":"Invasive Species Management - Weeds",
             "configuration":
                 {"childAggregations": [
@@ -119,7 +118,6 @@ var scoreWeedHaDefaults = {
 var scoreInvasiveSpeciesDefaults = {
     create: function(){
         return {
-            "_id" : 40,
             "category" : "Invasive Species Management - Pests & Diseases",
             "configuration" : {
                 "childAggregations" : [

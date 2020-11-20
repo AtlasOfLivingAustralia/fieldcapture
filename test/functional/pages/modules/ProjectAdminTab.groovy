@@ -20,6 +20,7 @@ class ProjectAdminTab extends Module {
         projectSettings { module AdminProjectSettingsTab }
         meriPlan { $('#edit-meri-plan').module EditableMeriPlan }
         risksAndThreats(required:false) { $('#risks').module RisksAndThreats }
+        projectAccess {moduleList(ProjectAccessSection)}
 
     }
 
