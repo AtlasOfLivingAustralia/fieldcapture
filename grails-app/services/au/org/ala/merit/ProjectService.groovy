@@ -1700,9 +1700,20 @@ class ProjectService  {
      */
     List listProjectInvestmentPriorities(String projectId) {
         Map project = get(projectId,'flat')
-        List primaryOutcomes = project?.custom?.details?.outcomes?.primaryOutcome?.assets ?: []
-        List secondaryOutcomes = project?.custom?.details?.outcomes?.secondaryOutcomes?.collect{it.assets}?.flatten() ?: []
-        primaryOutcomes + secondaryOutcomes
+        listProjectInvestmentPriorities(project)
+    }
+
+    /**
+     * This method combines investment priorities listed in the primary and secondary outcome sections of the
+     * RLP MERI plan into a single list for the purposes of pre-popluating one of the RLP outcomes reporting forms.
+     * @param projectId the project of interest
+     * @return a List of outcomes selected in the project MERI plan
+     */
+    List listProjectInvestmentPriorities(Map project) {
+        List primaryPriorities = project?.custom?.details?.outcomes?.primaryOutcome?.assets ?: []
+        List secondaryPriorities = project?.custom?.details?.outcomes?.secondaryOutcomes?.collect{it.assets}?.flatten() ?: []
+        List allPriorities = primaryPriorities + secondaryPriorities
+        allPriorities.findAll{it}
     }
 
     /**
@@ -1748,6 +1759,15 @@ class ProjectService  {
      */
     List<String> getSecondaryOutcomes(Map project) {
         project?.custom?.details?.outcomes?.secondaryOutcomes?.collect{it.description} ?: []
+    }
+
+    List<String> getAllProjectOutcomes(Map project) {
+        List outcomes = []
+        outcomes << getPrimaryOutcome(project)
+        outcomes.addAll(getSecondaryOutcomes(project))
+
+        // Don't return null or empty values
+        outcomes.findAll{it}
     }
 
     List<Map> getProgramList(){

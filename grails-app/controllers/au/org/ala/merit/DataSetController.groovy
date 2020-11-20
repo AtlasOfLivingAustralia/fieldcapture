@@ -10,25 +10,36 @@ class DataSetController {
     static allowedMethods = [create:'GET', edit:'GET', save:'POST', delete:'POST']
 
     ProjectService projectService
+    ProgramService programService
 
     // Note that authorization is done against a project, so the project id must be supplied to the method.
     @PreAuthorise(accessLevel = 'editor')
     def create(String id) {
+        projectData(id)
+    }
 
-        [projectId:id]
+    Map projectData(String projectId) {
+        Map project = projectService.get(projectId)
+        Map config = projectService.getProgramConfiguration(project)
+        String programName = config.program?.name ?: project.associatedSubProgram
+        List outcomes = projectService.getAllProjectOutcomes(project)
+        List priorities = projectService.listProjectInvestmentPriorities(project)
+
+        [projectId:projectId, programName:programName, priorities:priorities, outcomes: outcomes, project:project]
     }
 
     // Note that authorization is done against a project, so the project id must be supplied to the method.
     @PreAuthorise(accessLevel = 'editor')
     def edit(String id, String dataSetId) {
 
-        Map project = projectService.get(id)
-        Map dataSet = project?.custom?.dataSets?.find{it.dataSetId = dataSetId}
+        Map projectData = projectData(id)
+        Map dataSet = projectData.project?.custom?.dataSets?.find{it.dataSetId = dataSetId}
         if (!dataSet) {
             respond status: HttpStatus.NOT_FOUND
         }
         else {
-            [projectId:id, dataSet:dataSet]
+            projectData.dataSet = dataSet
+            projectData
         }
 
     }
