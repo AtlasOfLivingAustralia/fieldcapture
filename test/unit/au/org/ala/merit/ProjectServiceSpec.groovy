@@ -203,6 +203,19 @@ class ProjectServiceSpec extends Specification {
         result.error == "Invalid plan status"
     }
 
+    def "plan should not be approved if work order number is not supplied"(){
+        given:
+        def projectId = 'project1'
+        def planStatus = ProjectService.PLAN_SUBMITTED
+        webService.getJson(_) >> [projectId:projectId, planStatus:planStatus, wrokOrderId:""]
+
+        when:
+        def result = service.approvePlan(projectId, [:])
+
+        then:
+        result.error == "An internal order number must be supplied before the MERI Plan can be approved"
+    }
+
     def "plan should not be rejected if it's not been approved."(){
         given:
         def projectId = 'project1'
@@ -238,7 +251,7 @@ class ProjectServiceSpec extends Specification {
         def projectId = 'project1'
         def planStatus = ProjectService.PLAN_SUBMITTED
         List projectRoles = []
-        Map project = [projectId:projectId, planStatus:planStatus, grantId:'g1', reports:null]
+        Map project = [projectId:projectId, planStatus:planStatus, grantId:'g1', reports:null, internalOrderId: "12345"]
         webService.getJson(_) >> project
         String expectedName = 'g1 MERI plan approved 2019-07-01T00:00:00Z'
         String expectedFilename = 'meri-approval-project1-1561939200000.txt'
@@ -285,7 +298,7 @@ class ProjectServiceSpec extends Specification {
         def projectId = 'project1'
         def planStatus = initialState
         List projectRoles = []
-        Map project =  [projectId:projectId, planStatus:planStatus]
+        Map project =  [projectId:projectId, planStatus:planStatus, internalOrderId: "12345"]
         ProgramConfig programConfig = new ProgramConfig([
                 emailTemplates:[
                         (ProgramConfig.PLAN_SUBMITTED_EMAIL_TEMPLATE_CONFIG_ITEM): EmailTemplate.RLP_PLAN_SUBMITTED_EMAIL_TEMPLATE.name(),

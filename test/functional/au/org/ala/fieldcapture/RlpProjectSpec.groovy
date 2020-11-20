@@ -57,7 +57,7 @@ class RlpProjectSpec extends StubbedCasSpec {
         overview.projectStart.text() == '01-07-2018'
         overview.projectEnd.text() == '01-07-2023'
         overview.funding.text() == '$100,000.00'
-        overview.orderNumber.text() == '1234565'
+        overview.internalOrderNumber.text() == '1234565'
 
     }
 

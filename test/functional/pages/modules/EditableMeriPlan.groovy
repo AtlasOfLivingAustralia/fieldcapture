@@ -124,6 +124,12 @@ class EditableMeriPlan extends Module {
         saveButton { $('.form-actions [data-bind*="saveProjectDetails"]').first() }
         pdfButton { $('.btn[data-bind*="meriPlanPDF"').first() }
 
+        approveButton(required:false){ $('[data-bind*="approvePlan"]') }
+        rejectButton(required:false) { $('[data-bind*="rejectPlan"') }
+        modifyApprovedPlanButton(required:false){ $('[data-bind*="modifyPlan"') }
+
+        approvePlanDialog(required:false) { $('#meri-plan-approval-modal').module(MeriPlanApproveDialog) }
+
     }
 
     void addBudgetRow() {
@@ -212,6 +218,5 @@ class EditableMeriPlan extends Module {
 
         mediumTermOutcomes[midTermOutcomeCount].value(outcome)
     }
-
 
 }

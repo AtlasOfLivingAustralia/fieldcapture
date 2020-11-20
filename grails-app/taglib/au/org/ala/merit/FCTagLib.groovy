@@ -918,6 +918,9 @@ class FCTagLib {
             case 'completed':
                 statusClass = 'badge-info'
                 break
+            case 'application':
+                statusClass = 'badge-info'
+                break
         }
 
         MarkupBuilder mb = new MarkupBuilder(out)

@@ -10,7 +10,7 @@ table#projectList th {
 table#projectList .projectId {
     width: 10%;
 }
-table#projectList .workOrderId {
+table#projectList .internalOrderId {
     width: 10%;
 }
 table#projectList .name {

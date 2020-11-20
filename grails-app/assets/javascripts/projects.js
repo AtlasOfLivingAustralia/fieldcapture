@@ -130,7 +130,7 @@ function ProjectViewModel(project, isUserEditor, organisations) {
         projectDefault = project.status;
     }
     self.status = ko.observable(projectDefault.toLowerCase());
-    self.projectStatus = [{id: 'active', name:'Active'},{id:'completed',name:'Completed'},{id:'deleted', name:'Deleted'}];
+    self.projectStatus = [{id: 'application', name:'Application'}, {id: 'active', name:'Active'},{id:'completed',name:'Completed'},{id:'deleted', name:'Deleted'}];
 
     self.organisationId = ko.observable(project.organisationId);
     self.transients.organisation = ko.observable(organisationsMap[self.organisationId()]);
@@ -799,7 +799,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
     });
     self.meriPlan = new MERIPlan(project, projectService, meriPlanConfig);
 
-    self.workOrderId = ko.observable(project.workOrderId);
+    self.internalOrderId = ko.observable(project.internalOrderId);
     self.userIsCaseManager = ko.observable(userRoles.grantManager);
     self.userIsAdmin = ko.observable(userRoles.admin);
     self.promote = [{id: 'yes', name:'Yes'},{id:'no',name:'No'}];
@@ -870,7 +870,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             description: self.description(),
             externalId: self.externalId(),
             grantId: self.grantId(),
-            workOrderId: self.workOrderId(),
+            internalOrderId: self.internalOrderId(),
             manager: self.manager(),
             plannedStartDate: self.plannedStartDate(),
             plannedEndDate: self.plannedEndDate(),
@@ -1372,6 +1372,10 @@ function ProjectService(project, options) {
 
     self.isCompleted = function() {
         return project.status && project.status.toLowerCase() == 'completed';
+    };
+
+    self.canApproveMeriPlan = function() {
+        return project.internalOrderId ? true: false
     };
 
     self.getBudgetHeaders = function() {
