@@ -1,8 +1,8 @@
 package au.org.ala.fieldcapture
 
 import pages.HomePage
-import pages.ProjectIndex
 import pages.RemoveUserPermissionPage
+import pages.RlpProjectPage
 
 class RemoveUserPermissionSpec extends StubbedCasSpec {
 
@@ -58,31 +58,29 @@ class RemoveUserPermissionSpec extends StubbedCasSpec {
         then:
         waitFor 10, {at RemoveUserPermissionPage}
 
-        when:
+        and:
         adminContent.removeButton.click()
 
-        then:
-        waitFor 20, {at RemoveUserPermissionPage }
-
         when:
-        to ProjectIndex, "project_1"
+         to RlpProjectPage, "project_1"
 
         then:
-        waitFor 10, {at ProjectIndex}
+        waitFor 10, {at RlpProjectPage}
+
         when:
         adminTab.click()
         then:
-        waitFor {admin.projectAccessTab.displayed}
+        waitFor {adminContent.projectAccessTab.displayed}
 
         when:
-        admin.projectAccessTab.click()
+        adminContent.projectAccessTab.click()
 
         then:
-        waitFor {admin.projectAccess.displayed}
+        waitFor {adminContent.projectAccess.displayed}
 
         and:
-        admin.projectAccess.size() == 1
-        admin.projectAccess[0].messageRow.text() ==  "No project members set"
+        adminContent.projectAccess.size() == 1
+        adminContent.projectAccess[0].messageRow.text() ==  "No project members set"
     }
 
     def "Check ROLE_USER can access the page or not"() {
