@@ -1267,7 +1267,41 @@ function ActivitiesViewModel(activities, programActivities) {
             self.activities.otherValue(undefined);
         }
     });
+    var otherLabel = 'Other';
+    self.activities.selectableActivities = function() {
+        var activities = programActivities.slice();
+        activities.push(otherLabel);
+        return activities;
+    }();
 
+    // This variable can be bound to a single select and will use
+    // the activities array as storage.  This is used when the
+    // singleSelection attribute is set in the template.
+    self.activities.singleSelection = ko.computed({
+        read: function() {
+            var value = matchingActivities.length > 0 ? matchingActivities[0] : undefined;
+            if (!value && self.activities.otherValue()) {
+                value = otherLabel;
+            }
+            return value;
+        },
+        write: function(value) {
+            if (value != otherLabel) {
+                if (self.activities().length == 0) {
+                    self.activities().push(value);
+                }
+                else {
+                    self.activities()[0] = value;
+                }
+                self.activities.otherChecked(false);
+            }
+            else {
+                self.activities([]);
+                self.activities.otherChecked(true);
+            }
+
+        }
+    });
     self.toJSON = function () {
         var js = ko.mapping.toJS(self);
         if (self.activities.otherChecked() && self.activities.otherValue()) {
