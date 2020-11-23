@@ -483,6 +483,44 @@ describe("Loading the MERI plan is handled correctly", function () {
 
     });
 
+    it("should be able to support single activity selection, including 'Other'", function() {
+        var project = {
+            plannedStartDate:'2018-07-01T00:00:00Z',
+            plannedEndDate:'2021-06-30T00:00:00Z',
+            custom: {
+                details: {
+                    activities: {
+                        activities:['activity 1']
+                    }
+                }
+            }
+        };
+        var programActivities = ['activity 1', 'activity 2', 'activity 3'];
+        var projectService = new ProjectService(project, {});
+        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing', programActivities: programActivities});
+
+        expect(viewModel.meriPlan().activities.activities()).toEqual(['activity 1']);
+        viewModel.meriPlan().activities.activities.singleSelection('activity 2');
+        var serialized = JSON.parse(viewModel.meriPlan().modelAsJSON());
+        var savedMeriPlan = serialized.custom.details;
+        expect(savedMeriPlan.activities.activities).toEqual(['activity 2']);
+
+        viewModel.meriPlan().activities.activities.singleSelection('Other');
+        viewModel.meriPlan().activities.activities.otherValue("Other activity");
+
+        serialized = JSON.parse(viewModel.meriPlan().modelAsJSON());
+        savedMeriPlan = serialized.custom.details;
+        expect(savedMeriPlan.activities.activities).toEqual(['Other activity']);
+
+        project.custom.details.activities.activities = ['Another activity'];
+        viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing', programActivities: programActivities});
+        serialized = JSON.parse(viewModel.meriPlan().modelAsJSON());
+        savedMeriPlan = serialized.custom.details;
+        expect(savedMeriPlan.activities.activities).toEqual(['Another activity']);
+        expect(viewModel.meriPlan().activities.activities.otherValue()).toEqual('Another activity');
+        expect(viewModel.meriPlan().activities.activities.otherChecked()).toBeTruthy();
+    });
+
     it("should filter selectable outcomes from the program based on the type of the outcome (primary or secondary)", function() {
 
         var options = {
