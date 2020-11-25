@@ -61,8 +61,9 @@ class RemoveUserPermissionSpec extends StubbedCasSpec {
         and:
         adminContent.removeButton.click()
 
-        when:
-         to RlpProjectPage, "project_1"
+        when: "Check user if exist in project admin access tab after removing from admin section"
+
+         waitFor 20, { to RlpProjectPage, "project_1"}
 
         then:
         waitFor 10, {at RlpProjectPage}
