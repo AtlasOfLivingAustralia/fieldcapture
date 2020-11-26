@@ -34,16 +34,17 @@
             Dataset description
         </div>
     </div>
+
     <div class="form-group row">
         <label for="programOutcome" class="col-sm-5 col-form-label">5. What program outcome does this dataset relate to?</label>
         <div class="col-sm-7">
-            <g:select from="${outcomes}" class="form-control" id="programOutcome" name="programOutcome" data-validation-engine="validate[required]" data-bind="value:programOutcome"/>
+            <g:select from="${outcomes}" noSelection="['':'Please select...']" class="form-control" id="programOutcome" name="programOutcome" data-validation-engine="validate[required]" data-bind="value:programOutcome"/>
         </div>
     </div>
     <div class="form-group row">
-        <label for="investmentPriority" class="col-sm-5 col-form-label">6. What primary or secondary investment priority does this dataset relate to?</label>
+        <label for="investmentPriority" class="col-sm-5 col-form-label">6. What primary or secondary investment priority or asset does this dataset relate to?</label>
         <div class="col-sm-7">
-            <g:select from="${priorities}" name="investmentPriority" class="form-control" id="investmentPriority" data-validation-engine="validate[required]" data-bind="value:investmentPriority"/>
+            <g:select from="${priorities}" noSelection="['':'Please select...']" name="investmentPriority" class="form-control" id="investmentPriority" data-validation-engine="validate[required]" data-bind="value:investmentPriority"/>
         </div>
     </div>
     <div class="form-group row">

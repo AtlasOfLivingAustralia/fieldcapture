@@ -1716,6 +1716,11 @@ class ProjectService  {
         allPriorities.findAll{it}
     }
 
+    /** Returns all assets identified in the project MERI plan */
+    List listProjectAssets(Map project) {
+        project?.custom?.details?.assets?.collect{it.description}?.findAll{it}
+    }
+
     /**
      * Returns a map with key=<project priority>, value=<Ag or Env>
      * The map is used to determine whether the priority is associated with

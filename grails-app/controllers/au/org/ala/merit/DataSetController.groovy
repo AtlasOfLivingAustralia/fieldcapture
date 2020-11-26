@@ -23,7 +23,22 @@ class DataSetController {
         Map config = projectService.getProgramConfiguration(project)
         String programName = config.program?.name ?: project.associatedSubProgram
         List outcomes = projectService.getAllProjectOutcomes(project)
+        if (!outcomes) {
+            outcomes = config.outcomes?.collect{it.outcome}
+        }
+        if (!outcomes) {
+           outcomes = ['n/a']
+        }
         List priorities = projectService.listProjectInvestmentPriorities(project)
+        if (!priorities) {
+            priorities = projectService.listProjectAssets(project)
+        }
+        if (!priorities) {
+            priorities = config.priorities?.collect{it.priority}
+        }
+        if (!priorities) {
+            priorities = ['n/a']
+        }
 
         [projectId:projectId, programName:programName, priorities:priorities, outcomes: outcomes, project:project]
     }
