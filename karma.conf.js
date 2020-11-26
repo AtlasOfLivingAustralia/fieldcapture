@@ -74,7 +74,7 @@ module.exports = function (config) {
             'type':"text",
             check: {
                 global: {
-                    lines: 29.2
+                    lines: 29.3
                 }
             }
         },

@@ -234,6 +234,10 @@ function MERIPlan(project, projectService, config) {
     self.projectThemes.push("MERI & Admin");
     self.projectThemes.push("Others");
 
+    self.priorityAssets = _.map(project.priorities || [], function (priority) {
+        return priority.priority;
+    });
+
     self.programObjectives = config.programObjectives || [];
 
     self.obligationOptions = ['Yes', 'No'];
