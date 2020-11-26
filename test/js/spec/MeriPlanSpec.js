@@ -563,4 +563,21 @@ describe("Loading the MERI plan is handled correctly", function () {
         expect(viewModel.primaryOutcome.description()).toBe('Outcome 3');
     });
 
+    it("provides a flat list of project assets for use as a select list by the assets section", function() {
+        var project = {
+            plannedStartDate:'2018-07-01T00:00:00Z',
+            plannedEndDate:'2021-06-30T00:00:00Z',
+            priorities:[
+                {"category":"Cat 1", "priority":"Priority 1"},
+                {"category":"Cat 1", "priority":"Priority 2"},
+                {"category":"Cat 2", "priority":"Priority 3"}
+            ]
+        };
+        var projectService = new ProjectService(project, {});
+
+        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'});
+
+        expect(viewModel.priorityAssets).toEqual(["Priority 1", "Priority 2", "Priority 3"]);
+    });
+
 });
