@@ -31,7 +31,7 @@ class ProjectSiteSpec extends StubbedCasSpec {
         mapMarker.size() == 1
     }
 
-    def "Rename sites name and save successfully" (){
+    def "Update site name and save successfully without any failure" (){
 
         setup:
         login([userId: '2', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ALA_ADMIN'], browser)
