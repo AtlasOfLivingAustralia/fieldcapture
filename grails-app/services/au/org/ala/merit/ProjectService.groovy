@@ -1713,7 +1713,7 @@ class ProjectService  {
         List primaryPriorities = project?.custom?.details?.outcomes?.primaryOutcome?.assets ?: []
         List secondaryPriorities = project?.custom?.details?.outcomes?.secondaryOutcomes?.collect{it.assets}?.flatten() ?: []
         List allPriorities = primaryPriorities + secondaryPriorities
-        allPriorities.findAll{it}
+        allPriorities.findAll{it}.unique()
     }
 
     /** Returns all assets identified in the project MERI plan */
@@ -1772,7 +1772,7 @@ class ProjectService  {
         outcomes.addAll(getSecondaryOutcomes(project))
 
         // Don't return null or empty values
-        outcomes.findAll{it}
+        outcomes.findAll{it}.unique()
     }
 
     List<Map> getProgramList(){
