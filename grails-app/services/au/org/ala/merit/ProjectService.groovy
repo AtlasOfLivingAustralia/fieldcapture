@@ -1740,8 +1740,8 @@ class ProjectService  {
         outcomes += project?.custom?.details?.outcomes?.secondaryOutcomes ?: []
         (outcomes).each { Map outcome ->
             outcome?.assets.each {String asset  ->
-                String type = (outcome.description?.startsWith('5') || outcome?.description?.startsWith('6')) ? 'Ag' : "Env"
-                prioritiesByOutcomeType[asset] = type
+                //String type = (outcome.description?.startsWith('5') || outcome?.description?.startsWith('6')) ? 'Ag' : "Env"
+                prioritiesByOutcomeType[asset] = (outcome.shortDescription ?: outcome.description)
             }
         }
 

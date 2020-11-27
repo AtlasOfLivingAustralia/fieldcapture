@@ -23,8 +23,8 @@
             <li class="breadcrumb-item">
                 <g:link controller="home">Home</g:link>
             </li>
-            <li class="breadcrumb-item">Project</li>
-            <li class="breadcrumb-item active">New Data Set</li>
+            <li class="breadcrumb-item"><g:link controller="project" id="${project.projectId}">Project </g:link></li>
+            <li class="breadcrumb-item active">New data set summary</li>
         </ol>
 
     </nav>

@@ -64,7 +64,9 @@
         <div class="col-sm-7">
             <select multiple="multiple" type="text" class="form-control" id="" data-validation-engine="validate[required]" data-bind="selectedOptions:measurementTypes">
                 <option>Abundance</option>
-                <option>Adoption, awareness</option>
+                <option>Adoption - climate and market demands</option>
+                <option>Adoption - land resource management practices</option>
+                <option>Awareness, knowledge, skills, confidence</option>
                 <option>Basal area</option>
                 <option>Coarse woody debris</option>
                 <option>Condition</option>
@@ -72,21 +74,22 @@
                 <option>Fauna - vertebrate</option>
                 <option>Fire</option>
                 <option>Flora</option>
+                <option>Genetic diversity</option>
+                <option>Groundcover</option>
+                <option>Habitat condition</option>
                 <option>Interventions</option>
-                <option>Knowledge, skills, confidence</option>
                 <option>Opportune records</option>
                 <option>Other</option>
                 <option>Participation</option>
-                <option>Practices, strategies, motivations</option>
                 <option>Publication of materials</option>
                 <option>Recruitment - Fauna, flora</option>
                 <option>Site description</option>
                 <option>Soil composition</option>
-                <option>Targeted - fauna and flora</option>
+                <option>Soil erosion</option>
                 <option>Targeted - feral animals</option>
                 <option>Targeted - threatened species</option>
-                <option> Targeted - weeds</option>
-                <option>Water quality</option>
+                <option>Targeted - weeds</option>
+                <option>Water quality
             </select>
         </div>
     </div>
@@ -100,16 +103,18 @@
         <label for="methods" class="col-sm-5 col-form-label">9. Identify the method(s) used to collect the data.</label>
         <div class="col-sm-7">
             <select class="form-control" multiple="multiple" id="methods" data-validation-engine="validate[required]" data-bind="value:methods">
+                <option>Genetic sampling</option>
+                <option>Hair, track, dung sampling</option>
+                <option>Area sampling</option>
+                <option>Water quality sampling</option>
                 <option>Active searching</option>
                 <option>Aerial photography</option>
-                <option>Area sampling</option>
                 <option>Call playback</option>
                 <option>Camera trapping</option>
                 <option>Data extraction</option>
                 <option>Distance sampling</option>
                 <option>Grab sampling</option>
                 <option>Habitat condition assessment</option>
-                <option>Hair, track, dung sampling</option>
                 <option>Mark-recapture</option>
                 <option>Meta-analysis</option>
                 <option>Other</option>
@@ -117,13 +122,13 @@
                 <option>Plotless sampling</option>
                 <option>Quadrat sampling</option>
                 <option>Participant surveys</option>
-                <option>Soil analysis</option>
-                <option>Soil sampling</option>
+                <option>Soil sampling and analysis</option>
                 <option>Surber sampling</option>
                 <option>Surveying - Fauna, Flora</option>
                 <option>Transect sampling</option>
                 <option>Trapping</option>
                 <option>Vegetation mapping</option>
+                <option>Ground cover monitoring
             </select>
         </div>
     </div>
@@ -273,14 +278,15 @@
     </div>
 
     <div class="form-group row">
-        <label for="owner" class="col-sm-5 col-form-label">23. Primary source of data (organisation or individual that owns or maintains the dataset)</label>
+        <label for="owner" class="col-sm-5 col-form-label">23. Primary source of data (organisation or individual that owns or maintains the dataset)<p>Please include the contact name, physical address, email address and phone number where possible</p></label>
+
         <div class="col-sm-7">
             <input type="text"  class="form-control" id="owner" placeholder="" data-validation-engine="validate[required,maxSize[200]]" data-bind="value:owner">
         </div>
     </div>
 
     <div class="form-group row">
-        <label for="custodian" class="col-sm-5 col-form-label">24. Dataset custodian (name of contact to obtain access to dataset)</label>
+        <label for="custodian" class="col-sm-5 col-form-label">24. Dataset custodian (name of contact to obtain access to dataset)<p>Please include the contact name, physical address, email address and phone number where possible</p></label>
         <div class="col-sm-7">
             <input type="text" class="form-control" id="custodian" placeholder="" data-validation-engine="validate[required,maxSize[300]]" data-bind="value:custodian">
         </div>
