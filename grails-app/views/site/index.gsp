@@ -78,7 +78,7 @@
 
             <div>
                 <div class="clearfix">
-                    <h3>Site: ${site?.name?.encodeAsHTML()}</h3>
+                    <h3 class="siteName">Site: ${site?.name?.encodeAsHTML()}</h3>
 
                 </div>
                 <g:if test="${site.description?.encodeAsHTML()}">

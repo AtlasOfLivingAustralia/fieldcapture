@@ -8,6 +8,6 @@ class SiteIndexPage  extends Page{
     static at = { title.endsWith('Field Capture')}
 
     static content = {
-        name {$("h3")[0]}
+        name {$(".siteName")}
     }
 }
