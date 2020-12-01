@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta name="layout" content="nrm_bs4"/>
-    <title>Create | Data Set | MERIT</title>
+    <title>Create | Data Set Summary | MERIT</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
     <script disposition="head">
         var fcConfig = {
@@ -28,7 +28,7 @@
         </ol>
 
     </nav>
-    <h2>New data set</h2>
+    <h2>New data set summary</h2>
     <g:render template="editDataSet" />
 
     <div class="form-actions">
