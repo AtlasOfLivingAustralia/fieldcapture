@@ -1730,6 +1730,7 @@ class ProjectService  {
      */
     Map projectPrioritiesByOutcomeType(String projectId) {
         Map project = get(projectId,'flat')
+        Map config = getProgramConfiguration(project)
 
         Map prioritiesByOutcomeType = [:]
         List outcomes = []
@@ -1739,9 +1740,10 @@ class ProjectService  {
         }
         outcomes += project?.custom?.details?.outcomes?.secondaryOutcomes ?: []
         (outcomes).each { Map outcome ->
+            Map programOutcome = config.outcomes?.find{it.outcome == outcome?.description}
+            String outcomeDescription = programOutcome ? (programOutcome.shortDescription ?: programOutcome.outcome) : outcome?.description
             outcome?.assets.each {String asset  ->
-                //String type = (outcome.description?.startsWith('5') || outcome?.description?.startsWith('6')) ? 'Ag' : "Env"
-                prioritiesByOutcomeType[asset] = (outcome.shortDescription ?: outcome.description)
+                prioritiesByOutcomeType[asset] = outcomeDescription
             }
         }
 
