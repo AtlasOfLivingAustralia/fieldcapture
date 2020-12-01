@@ -147,7 +147,8 @@ grails.project.dependency.resolution = {
         compile ':cache:1.1.8'
         compile ":cache-ehcache:1.0.5"
 
-        compile ":google-visualization:1.0.1"
+        compile ":google-visualization:1.0.2"
+        compile "org.grails.plugins:d3:3.4.8.0"
         compile ":mail:1.0.6"
         compile ":excel-export:0.2.0"
         compile ":excel-import:1.0.1"
