@@ -1049,7 +1049,9 @@ class ProjectController {
      */
     @PreAuthorise(accessLevel = 'editor')
     def listProjectInvestmentPriorities(String id) {
-        render projectService.listProjectInvestmentPriorities(id) as JSON
+        List investmentPriorities = projectService.listProjectInvestmentPriorities(id)
+        investmentPriorities <<  "Other"
+        render investmentPriorities as JSON
     }
 
     @PreAuthorise(accessLevel = 'editor')
