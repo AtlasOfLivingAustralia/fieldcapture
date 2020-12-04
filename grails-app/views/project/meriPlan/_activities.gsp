@@ -9,7 +9,7 @@
     </g:if>
 
     <g:if test="${singleSelection}">
-        <select data-bind="optionsCaption:'Please select... ', value:details.activities.activities.singleSelection, options:details.activities.activities.selectableActivities">
+        <select data-bind="optionsCaption:'Please select... ', value:details.activities.activities.singleSelection, options:details.activities.activities.selectableActivities" class="input-xxlarge">
         </select>
 
         <input type="text" data-bind="enable:details.activities.activities.otherChecked() && !isProjectDetailsLocked(), value:details.activities.activities.otherValue">
