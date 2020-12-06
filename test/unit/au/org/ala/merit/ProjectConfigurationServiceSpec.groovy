@@ -58,7 +58,7 @@ class ProjectConfigurationServiceSpec extends Specification {
         config.projectReports[0].reportType == programConfig.reportType
         config.projectReports[0].reportingPeriodInMonths == programConfig.reportingPeriodInMonths
         config.projectReports[0].reportsAlignedToCalendar == programConfig.reportingPeriodAlignedToCalendar
-        config.excludes == [ProgramConfig.ProjectContent.MERI_PLAN.toString(), ProgramConfig.ProjectContent.RISKS_AND_THREATS.toString()]
+        config.excludes == [ProgramConfig.ProjectContent.DATA_SETS.toString(), ProgramConfig.ProjectContent.MERI_PLAN.toString(), ProgramConfig.ProjectContent.RISKS_AND_THREATS.toString()]
 
         !config.includesContent(ProgramConfig.ProjectContent.MERI_PLAN)
         !config.includesContent(ProgramConfig.ProjectContent.RISKS_AND_THREATS)
