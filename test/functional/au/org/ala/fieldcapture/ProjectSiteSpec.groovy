@@ -55,7 +55,7 @@ class ProjectSiteSpec extends StubbedCasSpec {
         edit.saveBtn.click()
 
         then:
-        Thread.sleep(15000)
+        Thread.sleep(18000)
         waitFor 30,{at SiteIndexPage}
 
         and:
