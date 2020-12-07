@@ -1063,6 +1063,14 @@ function OutcomesViewModel(outcomes, config) {
         return priorities;
     };
 
+    self.primaryOutcomeSupportsMultiplePriorities = ko.pureComputed(function() {
+        var outcomeText = self.primaryOutcome.description();
+        var outcome = _.find(config.outcomes, function (outcome) {
+            return outcome.outcome == outcomeText;
+        });
+        return outcome && outcome.supportsMultiplePriorities;
+    });
+
     self.primaryOutcome = new SingleAssetOutcomeViewModel(outcomes.primaryOutcome);
     self.secondaryOutcomes = ko.observableArray(_.map(outcomes.secondaryOutcomes || [], function (outcome) {
         return new SingleAssetOutcomeViewModel(outcome)
@@ -1071,6 +1079,12 @@ function OutcomesViewModel(outcomes, config) {
         return new SingleAssetOutcomeViewModel(outcome)
     }));
     self.midTermOutcomes = ko.observableArray(_.map(outcomes.midTermOutcomes || [], outcomeToViewModel));
+
+    self.toJSON = function () {
+        // Exclude the computed used by the view model
+        var excludes = ['primaryOutcomeSupportsMultiplePriorities', 'selectablePrimaryOutcomes', 'selectableSecondaryOutcomes'];
+        return ko.mapping.toJS(self, {ignore:excludes});
+    }
 }
 
 

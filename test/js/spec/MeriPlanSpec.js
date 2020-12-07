@@ -563,6 +563,44 @@ describe("Loading the MERI plan is handled correctly", function () {
         expect(viewModel.primaryOutcome.description()).toBe('Outcome 3');
     });
 
+    it("should allow multiple priorities to be selected for an outcome if configured to do so", function() {
+
+        var options = {
+            outcomes: [
+                { outcome:"Outcome 1", "type": 'primary', supportsMultiplePriorities:true},
+                { outcome:"Outcome 2", "type": 'primary', default:true},
+                { outcome:"Outcome 3"},
+                { outcome:"Outcome 4", "type": 'secondary'},
+            ]
+        };
+
+        var viewModel = new OutcomesViewModel({}, options);
+        expect(viewModel.primaryOutcome.description()).toBe('Outcome 2');
+        expect(viewModel.primaryOutcomeSupportsMultiplePriorities()).toBeFalsy();
+
+        viewModel.primaryOutcome.description(options.outcomes[0].outcome);
+        expect(viewModel.primaryOutcomeSupportsMultiplePriorities()).toBeTruthy();
+
+    });
+
+    it("should not serialize the attributes used only for display configuration", function() {
+
+        var options = {
+            outcomes: [
+                { outcome:"Outcome 1", "type": 'primary', supportsMultiplePriorities:true},
+                { outcome:"Outcome 2", "type": 'primary', default:true},
+                { outcome:"Outcome 3"},
+                { outcome:"Outcome 4", "type": 'secondary'},
+            ]
+        };
+
+        var viewModel = new OutcomesViewModel({}, options);
+
+        var serialized = JSON.parse(JSON.stringify(viewModel));
+        expect(serialized).toEqual({"primaryOutcome":{"description":"Outcome 2","assets":[]},"secondaryOutcomes":[{}],"shortTermOutcomes":[{}],"midTermOutcomes":[]});
+
+    });
+
     it("provides a flat list of project assets for use as a select list by the assets section", function() {
         var project = {
             plannedStartDate:'2018-07-01T00:00:00Z',
