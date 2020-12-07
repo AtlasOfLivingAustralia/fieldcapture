@@ -1,4 +1,4 @@
-<h4><span data-bind="text:details.programName"></span>  Outcome</h4>
+<h4>Program Outcome</h4>
 <table class="table primary-outcome">
     <thead>
     <tr>

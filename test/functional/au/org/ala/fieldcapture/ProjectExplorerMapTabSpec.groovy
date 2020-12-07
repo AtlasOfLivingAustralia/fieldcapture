@@ -47,8 +47,8 @@ class ProjectExplorerMapTabSpec extends StubbedCasSpec {
         waitFor { map.displayed == true }
 
         and:
-        waitFor {
-            $('#mapView img[src*="measle"]').size() ==  2
+        waitFor 10, {
+            $('#mapView img[src*="measle"]').size() ==  1
         }
 
 

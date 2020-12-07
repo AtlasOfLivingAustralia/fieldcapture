@@ -68,7 +68,7 @@
             <g:set var="funding" value="${(project.custom?.details?.budget?.overallTotal?:project.funding)}"/>
             <div class="span9">
                 <g:if test="${funding}">
-                    <g:formatNumber type="currency" number="${funding}"/>
+                    <g:formatNumber type="currency" number="${funding}" locale="en_AU"/>
                 </g:if>
             </div>
         </div>
