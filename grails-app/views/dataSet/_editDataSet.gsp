@@ -102,7 +102,7 @@
     <div class="form-group row">
         <label for="methods" class="col-sm-5 col-form-label required">9. Identify the method(s) used to collect the data. <br/>To select more than one answer, hold down the ‘CTRL’ button whilst selecting an option from the drop-down list</label>
         <div class="col-sm-7">
-            <select class="form-control" multiple="multiple" id="methods" data-validation-engine="validate[required]" data-bind="value:methods">
+            <select class="form-control" multiple="multiple" id="methods" data-validation-engine="validate[required]" data-bind="selectedOptions:methods">
                 <option>Genetic sampling</option>
                 <option>Hair, track, dung sampling</option>
                 <option>Area sampling</option>
@@ -135,7 +135,7 @@
     <div class="form-group row">
         <label for="methodDescription" class="col-sm-5 col-form-label required">10. Describe the method used to collect the data in detail.</label>
         <div class="col-sm-7">
-            <input type="text"  class="form-control" id="methodDescription" placeholder="" data-validation-engine="validate[required,maxSize[2000]]" data-bind="value:methodDescription">
+            <textarea rows="4"  class="form-control" id="methodDescription" placeholder="" data-validation-engine="validate[required,maxSize[2000]]" data-bind="value:methodDescription"></textarea>
         </div>
     </div>
     <div class="form-group row">

@@ -41,8 +41,8 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     self.projectName = dataSet.projectName;
     self.programName = dataSet.programName;
     self.description = ko.observable(dataSet.description);
-    self.programOutcome = ko.observable(dataSet.outcome);
-    self.investmentPriority = ko.observable(dataSet.startDate ? dataSet.startDate :  startDate).extend({simpleDate:false});
+    self.programOutcome = ko.observable(dataSet.programOutcome);
+    self.investmentPriority = ko.observable(dataSet.investmentPriority);
     self.type = ko.observable(dataSet.type);
 
     if (dataSet.measurementTypes && !_.isArray(dataSet.measurementTypes)) {
