@@ -121,7 +121,7 @@
         <g:if test="${user?.isAdmin}">
             <div class="row-fluid space-after">
                 <div class="required">
-                    <g:render template="/project/meriPlanReadOnly/meriBudget"/>
+                    <g:render template="/project/meriPlanReadOnly/meriBudget" model="${[showThemeColumn:true]}"/>
                 </div>
             </div>
         </g:if>

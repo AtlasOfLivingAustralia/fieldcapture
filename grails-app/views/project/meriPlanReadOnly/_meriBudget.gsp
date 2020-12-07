@@ -4,7 +4,7 @@
         <thead>
         <tr>
             <th class="index"></th>
-            <g:if test="${!showActivityColumn}">
+            <g:if test="${showThemeColumn}">
             <th class="budget-category">Investment/Priority Area</th>
             </g:if>
             <th class="budget-description">Description</th>
