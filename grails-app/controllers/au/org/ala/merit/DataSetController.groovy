@@ -10,16 +10,24 @@ class DataSetController {
     static allowedMethods = [create:'GET', edit:'GET', save:'POST', delete:'POST']
 
     ProjectService projectService
-    ProgramService programService
 
     // Note that authorization is done against a project, so the project id must be supplied to the method.
     @PreAuthorise(accessLevel = 'editor')
     def create(String id) {
-        projectData(id)
+        Map model = projectData(id)
+        if (!model.project) {
+            render status:404
+        }
+        else {
+            model
+        }
     }
 
     Map projectData(String projectId) {
         Map project = projectService.get(projectId)
+        if (!project) {
+            return [projectId:projectId, project: null]
+        }
         Map config = projectService.getProgramConfiguration(project)
         String programName = config.program?.name ?: project.associatedSubProgram
         List outcomes = projectService.getAllProjectOutcomes(project)
@@ -50,7 +58,7 @@ class DataSetController {
         Map projectData = projectData(id)
         Map dataSet = projectData.project?.custom?.dataSets?.find{it.dataSetId = dataSetId}
         if (!dataSet) {
-            respond status: HttpStatus.NOT_FOUND
+            render status: HttpStatus.NOT_FOUND
         }
         else {
             projectData.dataSet = dataSet
@@ -74,7 +82,7 @@ class DataSetController {
         Map dataSet = request.JSON
         String dataSetId = dataSet.dataSetId
         if (!dataSetId) {
-            respond status:400, text:"A dataSetId must be supplied"
+            render status:HttpStatus.NOT_FOUND, text:"A dataSetId must be supplied"
         }
 
         Map response = projectService.deleteDataSet(id, dataSetId)
