@@ -16,7 +16,7 @@
             <tr>
                 <td><textarea rows="5"  data-validation-engine="validate[required,maxSize[1500]]" data-bind="value:details.description, disable: isProjectDetailsLocked()"></textarea></td>
             </tr>
-            <g:if test="${!showRationaleTable}">
+
                 <!-- ko if:isAgricultureProject() -->
                 <tr class="header">
                     <th class="required">Project rationale (3000 character limit [approx 500 words]) <fc:iconHelp>Provide a rationale of why the targeted investment priorities are being addressed and explain (using evidence) how the methodology will address them.</fc:iconHelp></th>
@@ -25,15 +25,6 @@
                     <td><textarea rows="5" data-validation-engine="validate[required,maxSize[4000]]" data-bind="value:details.rationale, disable: isProjectDetailsLocked()"></textarea></td>
                 </tr>
                 <!-- /ko -->
-            </g:if>
-            <g:if test="${showRationaleTable}">
-                <tr class="header">
-                    <th class="required">Project rationale (3000 character limit [approx 500 words]) <fc:iconHelp>Provide a rationale of why the targeted investment priorities are being addressed and explain (using evidence) how the methodology will address them.</fc:iconHelp></th>
-                </tr>
-                <tr>
-                    <td><textarea rows="5" data-validation-engine="validate[required,maxSize[4000]]" data-bind="value:details.rationale, disable: isProjectDetailsLocked()"></textarea></td>
-                </tr>
-            </g:if>
 
             </tbody>
         </table>
