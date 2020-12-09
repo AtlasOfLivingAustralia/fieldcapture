@@ -4,6 +4,7 @@ import au.org.ala.merit.reports.ReportGenerationOptions
 import grails.converters.JSON
 import grails.test.mixin.TestFor
 import groovy.json.JsonSlurper
+import org.apache.http.HttpStatus
 import org.codehaus.groovy.grails.web.converters.marshaller.json.CollectionMarshaller
 import org.codehaus.groovy.grails.web.converters.marshaller.json.MapMarshaller
 import org.codehaus.groovy.grails.web.json.parser.JSONParser
@@ -1107,6 +1108,107 @@ class ProjectServiceSpec extends Specification {
 
         and:
         results.size() == 0
+    }
+
+    def "A new dataset can be added"()  {
+        setup:
+        String projectId = 'p1'
+        Map dataset = [name:'data set 1']
+        Map project = [projectId:projectId, reports:[[reportId:'r1']]]
+        Map postData
+
+        when:
+        Map result = service.saveDataSet(projectId, dataset)
+
+        then:
+        2 * webService.getJson({it.contains("project/"+projectId)}) >> project
+        1 * webService.doPost({it.endsWith('project/'+projectId)}, _) >> { id, data ->
+            postData = data
+            [status: HttpStatus.SC_OK]
+        }
+
+        postData.size() == 1
+        postData.custom.size() == 1
+        postData.custom.dataSets.size() == 1
+        postData.custom.dataSets[0].name =='data set 1'
+        postData.custom.dataSets[0].dataSetId != null
+        result == [status: HttpStatus.SC_OK]
+    }
+
+    def "A dataset can be edited"()  {
+        setup:
+        String projectId = 'p1'
+        Map dataset = [name:'data set 1', dataSetId:'d1']
+        Map project = [projectId:projectId, custom:[dataSets:[[dataSetId:'d1', name:"old name"]]]]
+        Map postData
+
+        when:
+        Map result = service.saveDataSet(projectId, dataset)
+
+        then:
+        2 * webService.getJson({it.contains("project/"+projectId)}) >> project
+        1 * webService.doPost({it.endsWith('project/'+projectId)}, _) >> { id, data ->
+            postData = data
+            [status: HttpStatus.SC_OK]
+        }
+
+        postData.size() == 1
+        postData.custom.size() == 1
+        postData.custom.dataSets.size() == 1
+        postData.custom.dataSets[0].name =='data set 1'
+        postData.custom.dataSets[0].dataSetId == 'd1'
+        result == [status: HttpStatus.SC_OK]
+    }
+
+    def "If the data set does not exist when saving an exception will be thrown"()  {
+        setup:
+        String projectId = 'p1'
+        Map dataset = [name:'data set 1', dataSetId:'d2']
+        Map project = [projectId:projectId, custom:[dataSets:[[dataSetId:'d1', name:"old name"]]]]
+
+        when:
+        service.saveDataSet(projectId, dataset)
+
+        then:
+        1 * webService.getJson({it.contains("project/"+projectId)}) >> project
+        thrown IllegalArgumentException
+    }
+
+    def "A dataset can be deleted"()  {
+        setup:
+        String projectId = 'p1'
+        String datasetId = 'd1'
+        Map project = [projectId:projectId, custom:[dataSets:[[dataSetId:'d1', name:"name"]]]]
+        Map postData
+
+        when:
+        Map result = service.deleteDataSet(projectId, datasetId)
+
+        then:
+        2 * webService.getJson({it.contains("project/"+projectId)}) >> project
+        1 * webService.doPost({it.endsWith('project/'+projectId)}, _) >> { id, data ->
+            postData = data
+            [status: HttpStatus.SC_OK]
+        }
+
+        postData.size() == 1
+        postData.custom.size() == 1
+        postData.custom.dataSets.size() == 0
+        result == [status: HttpStatus.SC_OK]
+    }
+
+    def "If the data set does not exist when deleting an exception will be thrown"()  {
+        setup:
+        String projectId = 'p1'
+        String datasetId = 'd2'
+        Map project = [projectId:projectId, custom:[dataSets:[[dataSetId:'d1', name:"old name"]]]]
+
+        when:
+        service.deleteDataSet(projectId, datasetId)
+
+        then:
+        1 * webService.getJson({it.contains("project/"+projectId)}) >> project
+        thrown IllegalArgumentException
     }
 
     private Map buildApprovalDocument(int i, String projectId) {

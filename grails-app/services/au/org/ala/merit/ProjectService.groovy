@@ -1816,6 +1816,9 @@ class ProjectService  {
         }
         else {
             int i = project.custom.dataSets.findIndexOf({it.dataSetId == dataSet.dataSetId})
+            if (i < 0)  {
+                throw new  IllegalArgumentException("Data set "+dataSet.dataSetId+" does not exist")
+            }
             project.custom.dataSets[i] = dataSet
         }
 
