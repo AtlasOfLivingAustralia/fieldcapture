@@ -14,8 +14,16 @@
                 data-bind="text:description"></span>
         </td>
         <td class="priority">
-            <span data-bind="text:asset">
-            </span>
+            <!-- ko if:!details.outcomes.secondaryOutcomeSupportsMultiplePriorities($data.description()) -->
+            <span data-bind="text:asset"></span>
+            <!-- /ko -->
+
+            <!-- ko if:details.outcomes.secondaryOutcomeSupportsMultiplePriorities($data.description()) -->
+            <ul data-bind="foreach:assets">
+                <li data-bind="text:$data"></li>
+            </ul>
+            <!-- /ko -->
+        </span>
         </td>
     </tr>
 
