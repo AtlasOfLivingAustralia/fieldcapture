@@ -1,4 +1,8 @@
 <h4>Project assets</h4>
+<g:if test="${explanation}">
+    ${explanation}
+</g:if>
+
 <table class="table assets">
 <thead>
 <tr class="header">

@@ -1063,13 +1063,19 @@ function OutcomesViewModel(outcomes, config) {
         return priorities;
     };
 
-    self.primaryOutcomeSupportsMultiplePriorities = ko.pureComputed(function() {
-        var outcomeText = self.primaryOutcome.description();
+    var supportsMultiplePriorities = function(outcomeText, configItemName) {
         var outcome = _.find(config.outcomes, function (outcome) {
             return outcome.outcome == outcomeText;
         });
-        return outcome && outcome.supportsMultiplePriorities;
+        return outcome && outcome[configItemName];
+    }
+    self.primaryOutcomeSupportsMultiplePriorities = ko.pureComputed(function() {
+        var outcomeText = self.primaryOutcome.description();
+        return supportsMultiplePriorities(outcomeText, 'supportsMultiplePrioritiesAsPrimary')
     });
+    self.secondaryOutcomeSupportsMultiplePriorities = function(outcomeText) {
+        return supportsMultiplePriorities(outcomeText, 'supportsMultiplePrioritiesAsSecondary')
+    };
 
     self.primaryOutcome = new SingleAssetOutcomeViewModel(outcomes.primaryOutcome);
     self.secondaryOutcomes = ko.observableArray(_.map(outcomes.secondaryOutcomes || [], function (outcome) {
