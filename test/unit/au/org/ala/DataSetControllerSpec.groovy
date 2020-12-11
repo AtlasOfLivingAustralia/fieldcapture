@@ -17,32 +17,7 @@ class DataSetControllerSpec extends Specification {
     def cleanup() {
     }
 
-    void "create and edit are only accessible using GET, update and delete via POST"(String action, String method, boolean methodNotAllowed) {
 
-        setup:
-        projectService.get(_) >> [projectId:'p1']
-        projectService.getProgramConfiguration(_) >> [:]
-
-        when:
-        params.id = 'p1'
-        params.dataSetId = 'd1' // Ignored for all but edit but sufficient for this test
-        request.method = method
-        controller."${action}"()
-
-        then:
-        (response.status == HttpStatus.SC_METHOD_NOT_ALLOWED) == methodNotAllowed
-
-        where:
-        action   | method | methodNotAllowed
-        "create" | "GET"  | false
-        "create" | "POST" | true
-        "edit"   | "GET"  | false
-        "edit"   | "POST" | true
-        "save"   | "GET"  | true
-        "save"   | "POST" | false
-        "delete" | "GET"  | true
-        "delete" | "POST" | false
-    }
 
     void "If the project cannot be found, a 404 is returned"() {
 
