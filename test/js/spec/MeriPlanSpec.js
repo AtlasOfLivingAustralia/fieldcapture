@@ -569,7 +569,7 @@ describe("Loading the MERI plan is handled correctly", function () {
             outcomes: [
                 { outcome:"Outcome 1", "type": 'primary', supportsMultiplePrioritiesAsPrimary:true},
                 { outcome:"Outcome 2", "type": 'primary', default:true},
-                { outcome:"Outcome 3"},
+                { outcome:"Outcome 3", supportsMultiplePrioritiesAsSecondary:true},
                 { outcome:"Outcome 4", "type": 'secondary'},
             ]
         };
@@ -580,6 +580,11 @@ describe("Loading the MERI plan is handled correctly", function () {
 
         viewModel.primaryOutcome.description(options.outcomes[0].outcome);
         expect(viewModel.primaryOutcomeSupportsMultiplePriorities()).toBeTruthy();
+
+        expect(viewModel.secondaryOutcomeSupportsMultiplePriorities("Outcome 1")).toBeFalsy();
+        expect(viewModel.secondaryOutcomeSupportsMultiplePriorities("Outcome 2")).toBeFalsy();
+        expect(viewModel.secondaryOutcomeSupportsMultiplePriorities("Outcome 3")).toBeTruthy();
+        expect(viewModel.secondaryOutcomeSupportsMultiplePriorities("Outcome 4")).toBeFalsy();
 
     });
 
