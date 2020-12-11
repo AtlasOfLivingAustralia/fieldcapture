@@ -567,7 +567,7 @@ describe("Loading the MERI plan is handled correctly", function () {
 
         var options = {
             outcomes: [
-                { outcome:"Outcome 1", "type": 'primary', supportsMultiplePriorities:true},
+                { outcome:"Outcome 1", "type": 'primary', supportsMultiplePrioritiesAsPrimary:true},
                 { outcome:"Outcome 2", "type": 'primary', default:true},
                 { outcome:"Outcome 3"},
                 { outcome:"Outcome 4", "type": 'secondary'},
@@ -587,7 +587,7 @@ describe("Loading the MERI plan is handled correctly", function () {
 
         var options = {
             outcomes: [
-                { outcome:"Outcome 1", "type": 'primary', supportsMultiplePriorities:true},
+                { outcome:"Outcome 1", "type": 'primary', supportsMultiplePrioritiesAsPrimary:true},
                 { outcome:"Outcome 2", "type": 'primary', default:true},
                 { outcome:"Outcome 3"},
                 { outcome:"Outcome 4", "type": 'secondary'},
