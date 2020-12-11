@@ -3,9 +3,6 @@
         <thead>
         <tr class="header required">
             <th class="required">${title ?: "Project rationale"}<fc:iconHelp>Provide a rationale of why the targeted investment priorities are being addressed and explain (using evidence) how the methodology will address them.</fc:iconHelp></th>
-        <g:if test="${explanation}">
-            ${explanation}
-        </g:if>
         </tr>
         </thead>
         <tbody>
