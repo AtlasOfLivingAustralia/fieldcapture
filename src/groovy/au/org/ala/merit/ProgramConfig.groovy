@@ -20,7 +20,7 @@ class ProgramConfig implements Map {
     private Logger log = Logger.getLogger(ProgramConfig.class)
 
     /** Items that can be omitted or included in the default project view */
-    enum ProjectContent { MERI_PLAN, RISKS_AND_THREATS, SITES, DASHBOARD, DOCUMENTS }
+    enum ProjectContent { MERI_PLAN, RISKS_AND_THREATS, SITES, DASHBOARD, DOCUMENTS, DATA_SETS }
 
     /** Different project views */
     enum ProjectTemplate {

@@ -97,8 +97,9 @@ class ProjectControllerSpec extends Specification {
         model.projectContent.site.disabled == true
         model.projectContent.dashboard.disabled == true
 
-        and: "the admin tab is not visible"
+        and: "the data set summary and admin tabs are not visible"
         model.projectContent.admin.visible == false
+        model.projectContent.datasets.visible == false
     }
 
     def "the admin content should be enabled for project admins"() {
@@ -397,6 +398,7 @@ class ProjectControllerSpec extends Specification {
         model.projectContent.details.visible == false
         model.projectContent.admin.visible == false
         model.projectContent.reporting.visible == false
+        model.projectContent.datasets.visible == false
         model.projectContent.overview.template == 'rlpOverview'
         model.projectContent.overview.visible == true
         model.projectContent.documents.visible == true
@@ -529,7 +531,8 @@ class ProjectControllerSpec extends Specification {
                         ProgramConfig.ProjectContent.DOCUMENTS.toString(),
                         ProgramConfig.ProjectContent.RISKS_AND_THREATS.toString(),
                         ProgramConfig.ProjectContent.MERI_PLAN.toString(),
-                        ProgramConfig.ProjectContent.DASHBOARD.toString()]])
+                        ProgramConfig.ProjectContent.DASHBOARD.toString(),
+                        ProgramConfig.ProjectContent.DATA_SETS.toString()]])
 
         view == '/project/index'
         !model.projectContent.overview.disabled
@@ -538,6 +541,7 @@ class ProjectControllerSpec extends Specification {
         model.projectContent.details.visible == false
         model.projectContent.site.visible == false
         model.projectContent.dashboard.visible == false
+        model.projectContent.datasets.visible == false
     }
 
     def "The controller delegates to the projectService to list project priorities and returns a JSON encoded response"() {

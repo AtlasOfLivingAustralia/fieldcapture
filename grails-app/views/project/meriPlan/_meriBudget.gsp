@@ -28,7 +28,7 @@
         <tbody data-bind="foreach : details.budget.rows">
         <tr>
             <td class="index"><span data-bind="text:$index()+1"></span></td>
-            <g:if test="${!showActivityColumn}">
+            <g:if test="${showThemeColumn}">
             <td class="budget-category"><select data-bind="options: $parent.projectThemes, optionsCaption: 'Please select', value:shortLabel, disable: $parent.isProjectDetailsLocked()"> </select></td>
             </g:if>
             <td class="budget-description"><textarea data-bind="value: description, disable: $parent.isProjectDetailsLocked()" rows="3"></textarea></td>
