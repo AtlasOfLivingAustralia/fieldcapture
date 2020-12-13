@@ -132,13 +132,7 @@ var site1 = {
 createSite(site1)
 
 // script injection
-
-createProject({name:"Project Script Injection <script>alert('Test')</script>",
-    projectId:"project_111",programId:'new_test_Program_1',managementUnitId:"test_mu_1", organisationId:"test_organisation_1",
-    siteId:'test_site_1', grantId:"RLP-Test-Program-Project-1",
-    blog:[blog1], custom:{details:meriPlan}});
-
-createProgram({name:'New Test Program <script>alert("Program")</script>', parent:null, programId:'new_test_Program_1'});
+createProgram({name:'New Test Program <script>alert("Program Test Program")</script>', parent:null, programId:'new_test_Program_1'});
 createOrganisation({
     name:'Test Organisation <script>alert("Org")</script>',
     organisationId:'test_organisation_1',
@@ -148,6 +142,11 @@ createOrganisation({
 })
 
 createMu({name:'test mu <script>alert("MU")</script>', managementUnitId:"test_mu_1",managementUnitSiteId:'test_site_1'});
+
+createProject({name:"Project Script Injection <script>alert('Test')</script>",
+    projectId:"project_111",programId:'new_test_Program_1',managementUnitId:"test_mu_1", organisationId:"test_organisation_1",
+    siteId:'test_site_1', grantId:"RLP-Test-Program-Project-1",
+    blog:[blog1], custom:{details:meriPlan}});
 
 
 loadActivityForms();

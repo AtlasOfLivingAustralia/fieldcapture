@@ -234,6 +234,10 @@ function MERIPlan(project, projectService, config) {
     self.projectThemes.push("MERI & Admin");
     self.projectThemes.push("Others");
 
+    self.priorityAssets = _.map(project.priorities || [], function (priority) {
+        return priority.priority;
+    });
+
     self.programObjectives = config.programObjectives || [];
 
     self.obligationOptions = ['Yes', 'No'];
@@ -439,6 +443,13 @@ function MERIPlan(project, projectService, config) {
         });
     }
 
+    self.canApprove = function() {
+        var canApprove = projectService.canApproveMeriPlan()
+        if(!canApprove) {
+            $('.grantManagerActionSpan').popover({content:'*An internal order number must be supplied before the MERI Plan can be approved', placement:'top', trigger:'hover'})
+        }
+        return canApprove
+    };
 };
 
 function ReadOnlyMeriPlan(project, projectService, config) {
@@ -1052,6 +1063,20 @@ function OutcomesViewModel(outcomes, config) {
         return priorities;
     };
 
+    var supportsMultiplePriorities = function(outcomeText, configItemName) {
+        var outcome = _.find(config.outcomes, function (outcome) {
+            return outcome.outcome == outcomeText;
+        });
+        return outcome && outcome[configItemName];
+    }
+    self.primaryOutcomeSupportsMultiplePriorities = ko.pureComputed(function() {
+        var outcomeText = self.primaryOutcome.description();
+        return supportsMultiplePriorities(outcomeText, 'supportsMultiplePrioritiesAsPrimary')
+    });
+    self.secondaryOutcomeSupportsMultiplePriorities = function(outcomeText) {
+        return supportsMultiplePriorities(outcomeText, 'supportsMultiplePrioritiesAsSecondary')
+    };
+
     self.primaryOutcome = new SingleAssetOutcomeViewModel(outcomes.primaryOutcome);
     self.secondaryOutcomes = ko.observableArray(_.map(outcomes.secondaryOutcomes || [], function (outcome) {
         return new SingleAssetOutcomeViewModel(outcome)
@@ -1060,6 +1085,12 @@ function OutcomesViewModel(outcomes, config) {
         return new SingleAssetOutcomeViewModel(outcome)
     }));
     self.midTermOutcomes = ko.observableArray(_.map(outcomes.midTermOutcomes || [], outcomeToViewModel));
+
+    self.toJSON = function () {
+        // Exclude the computed used by the view model
+        var excludes = ['primaryOutcomeSupportsMultiplePriorities', 'selectablePrimaryOutcomes', 'selectableSecondaryOutcomes'];
+        return ko.mapping.toJS(self, {ignore:excludes});
+    }
 }
 
 
@@ -1260,7 +1291,41 @@ function ActivitiesViewModel(activities, programActivities) {
             self.activities.otherValue(undefined);
         }
     });
+    var otherLabel = 'Other';
+    self.activities.selectableActivities = function() {
+        var activities = programActivities.slice();
+        activities.push(otherLabel);
+        return activities;
+    }();
 
+    // This variable can be bound to a single select and will use
+    // the activities array as storage.  This is used when the
+    // singleSelection attribute is set in the template.
+    self.activities.singleSelection = ko.computed({
+        read: function() {
+            var value = matchingActivities.length > 0 ? matchingActivities[0] : undefined;
+            if (!value && self.activities.otherValue()) {
+                value = otherLabel;
+            }
+            return value;
+        },
+        write: function(value) {
+            if (value != otherLabel) {
+                if (self.activities().length == 0) {
+                    self.activities().push(value);
+                }
+                else {
+                    self.activities()[0] = value;
+                }
+                self.activities.otherChecked(false);
+            }
+            else {
+                self.activities([]);
+                self.activities.otherChecked(true);
+            }
+
+        }
+    });
     self.toJSON = function () {
         var js = ko.mapping.toJS(self);
         if (self.activities.otherChecked() && self.activities.otherValue()) {

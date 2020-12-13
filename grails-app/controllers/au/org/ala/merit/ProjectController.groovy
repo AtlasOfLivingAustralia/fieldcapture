@@ -27,6 +27,7 @@ class ProjectController {
 
     def projectService, metadataService, organisationService, commonService, activityService, userService, webService, roleService, grailsApplication
     def siteService, documentService, reportService, blogService, pdfGenerationService
+    def programService
 
     private def espOverview(Map project, Map user) {
 
@@ -85,6 +86,9 @@ class ProjectController {
                 def members = projectService.getMembersForProjectId(id)
                 def admins = members.findAll { it.role == "admin" }.collect { it.userName }.join(",")
                 // comma separated list of user email addresses
+                boolean meriPlanStatus = projectService.isMeriPlanSubmittedOrApproved(project)
+                List<Map> programList = projectService.getProgramList()
+
 
                 def programs = projectService.programsModel()
                 def content = projectContent(project, user, template, config)
@@ -100,6 +104,8 @@ class ProjectController {
                              outputTargetMetadata  : metadataService.getOutputTargetsByOutputByActivity(),
                              organisations         : organisationList(project),
                              programs              : programs,
+                             programList           : programList,
+                             meriPlanStatus        : meriPlanStatus,
                              today                 : DateUtils.format(new DateTime()),
                              themes                : config.themes,
                              config                : config,
@@ -762,6 +768,17 @@ class ProjectController {
     }
 
     @PreAuthorise(accessLevel = 'editor')
+    def printableReport(String id, String reportId) {
+        if (!id || !reportId) {
+            error('An invalid report was selected for printing', id)
+            return
+        }
+        Map model = activityReportModel(id, reportId, ReportMode.PRINT)
+
+        render view:'/activity/activityReportView', model:model
+    }
+
+    @PreAuthorise(accessLevel = 'editor')
     def saveReport(SaveReportDataCommand saveReportDataCommand) {
 
         Map result
@@ -1032,6 +1049,11 @@ class ProjectController {
     @PreAuthorise(accessLevel = 'editor')
     def listProjectInvestmentPriorities(String id) {
         render projectService.listProjectInvestmentPriorities(id) as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'editor')
+    def projectPrioritiesByOutcomeType(String id) {
+        render projectService.projectPrioritiesByOutcomeType(id) as JSON
     }
 
     private def error(String message, String projectId) {

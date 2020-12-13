@@ -2,6 +2,7 @@ package pages
 
 import geb.Module
 import geb.Page
+import pages.modules.EditSiteContent
 import pages.modules.SiteTabContent
 import pages.modules.SitesTableContents
 
@@ -15,8 +16,9 @@ class ProjectPage extends Page {
         documentTab { $("#documents-tab")}
         meriPlanTab{ $("#details-tab")}
         siteTab {$("#site-tab")}
-
+        editMap {$('button[data-bind*="editSite"]')}
         siteTabContents{module SiteTabContent}
+        editSite {module EditSiteContent}
         tableContents { $("#sites-table tbody td").moduleList(SitesTableContents)}
         mapMarker{ $('#map img[src*="marker-icon.png"]')}
 

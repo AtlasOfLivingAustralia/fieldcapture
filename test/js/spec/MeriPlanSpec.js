@@ -483,6 +483,44 @@ describe("Loading the MERI plan is handled correctly", function () {
 
     });
 
+    it("should be able to support single activity selection, including 'Other'", function() {
+        var project = {
+            plannedStartDate:'2018-07-01T00:00:00Z',
+            plannedEndDate:'2021-06-30T00:00:00Z',
+            custom: {
+                details: {
+                    activities: {
+                        activities:['activity 1']
+                    }
+                }
+            }
+        };
+        var programActivities = ['activity 1', 'activity 2', 'activity 3'];
+        var projectService = new ProjectService(project, {});
+        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing', programActivities: programActivities});
+
+        expect(viewModel.meriPlan().activities.activities()).toEqual(['activity 1']);
+        viewModel.meriPlan().activities.activities.singleSelection('activity 2');
+        var serialized = JSON.parse(viewModel.meriPlan().modelAsJSON());
+        var savedMeriPlan = serialized.custom.details;
+        expect(savedMeriPlan.activities.activities).toEqual(['activity 2']);
+
+        viewModel.meriPlan().activities.activities.singleSelection('Other');
+        viewModel.meriPlan().activities.activities.otherValue("Other activity");
+
+        serialized = JSON.parse(viewModel.meriPlan().modelAsJSON());
+        savedMeriPlan = serialized.custom.details;
+        expect(savedMeriPlan.activities.activities).toEqual(['Other activity']);
+
+        project.custom.details.activities.activities = ['Another activity'];
+        viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing', programActivities: programActivities});
+        serialized = JSON.parse(viewModel.meriPlan().modelAsJSON());
+        savedMeriPlan = serialized.custom.details;
+        expect(savedMeriPlan.activities.activities).toEqual(['Another activity']);
+        expect(viewModel.meriPlan().activities.activities.otherValue()).toEqual('Another activity');
+        expect(viewModel.meriPlan().activities.activities.otherChecked()).toBeTruthy();
+    });
+
     it("should filter selectable outcomes from the program based on the type of the outcome (primary or secondary)", function() {
 
         var options = {
@@ -523,6 +561,66 @@ describe("Loading the MERI plan is handled correctly", function () {
         };
         var viewModel = new OutcomesViewModel(outcomeData, options);
         expect(viewModel.primaryOutcome.description()).toBe('Outcome 3');
+    });
+
+    it("should allow multiple priorities to be selected for an outcome if configured to do so", function() {
+
+        var options = {
+            outcomes: [
+                { outcome:"Outcome 1", "type": 'primary', supportsMultiplePrioritiesAsPrimary:true},
+                { outcome:"Outcome 2", "type": 'primary', default:true},
+                { outcome:"Outcome 3", supportsMultiplePrioritiesAsSecondary:true},
+                { outcome:"Outcome 4", "type": 'secondary'},
+            ]
+        };
+
+        var viewModel = new OutcomesViewModel({}, options);
+        expect(viewModel.primaryOutcome.description()).toBe('Outcome 2');
+        expect(viewModel.primaryOutcomeSupportsMultiplePriorities()).toBeFalsy();
+
+        viewModel.primaryOutcome.description(options.outcomes[0].outcome);
+        expect(viewModel.primaryOutcomeSupportsMultiplePriorities()).toBeTruthy();
+
+        expect(viewModel.secondaryOutcomeSupportsMultiplePriorities("Outcome 1")).toBeFalsy();
+        expect(viewModel.secondaryOutcomeSupportsMultiplePriorities("Outcome 2")).toBeFalsy();
+        expect(viewModel.secondaryOutcomeSupportsMultiplePriorities("Outcome 3")).toBeTruthy();
+        expect(viewModel.secondaryOutcomeSupportsMultiplePriorities("Outcome 4")).toBeFalsy();
+
+    });
+
+    it("should not serialize the attributes used only for display configuration", function() {
+
+        var options = {
+            outcomes: [
+                { outcome:"Outcome 1", "type": 'primary', supportsMultiplePrioritiesAsPrimary:true},
+                { outcome:"Outcome 2", "type": 'primary', default:true},
+                { outcome:"Outcome 3"},
+                { outcome:"Outcome 4", "type": 'secondary'},
+            ]
+        };
+
+        var viewModel = new OutcomesViewModel({}, options);
+
+        var serialized = JSON.parse(JSON.stringify(viewModel));
+        expect(serialized).toEqual({"primaryOutcome":{"description":"Outcome 2","assets":[]},"secondaryOutcomes":[{}],"shortTermOutcomes":[{}],"midTermOutcomes":[]});
+
+    });
+
+    it("provides a flat list of project assets for use as a select list by the assets section", function() {
+        var project = {
+            plannedStartDate:'2018-07-01T00:00:00Z',
+            plannedEndDate:'2021-06-30T00:00:00Z',
+            priorities:[
+                {"category":"Cat 1", "priority":"Priority 1"},
+                {"category":"Cat 1", "priority":"Priority 2"},
+                {"category":"Cat 2", "priority":"Priority 3"}
+            ]
+        };
+        var projectService = new ProjectService(project, {});
+
+        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'});
+
+        expect(viewModel.priorityAssets).toEqual(["Priority 1", "Priority 2", "Priority 3"]);
     });
 
 });

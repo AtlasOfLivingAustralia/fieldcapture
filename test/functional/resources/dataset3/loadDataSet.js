@@ -33,7 +33,10 @@ var config = {
             "template": "keq"
         },
         {
-            "template": "meriBudget"
+            "template": "meriBudget",
+            "model": {
+                "showThemeColumn":true
+            }
         }
     ],
     objectives: [

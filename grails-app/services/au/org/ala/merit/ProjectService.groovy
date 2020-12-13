@@ -15,6 +15,7 @@ import org.joda.time.Interval
 import org.joda.time.Period
 import org.springframework.cache.annotation.Cacheable
 
+import java.math.RoundingMode
 import java.text.SimpleDateFormat
 
 class ProjectService  {
@@ -22,6 +23,8 @@ class ProjectService  {
     static final String OUTCOMES_OUTPUT_TYPE = 'Outcomes'
     static final String STAGE_OUTCOMES_OUTPUT_TYPE = ''
     static final String COMPLETE = 'completed'
+    static final String APPLICATION_STATUS = 'Application'
+    static final String ACTIVE = 'active'
 
     static dateWithTime = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss")
     static dateWithTimeFormat2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
@@ -35,6 +38,7 @@ class ProjectService  {
 
     def webService, grailsApplication, siteService, activityService, emailService, documentService, userService, metadataService, settingService, reportService, auditService, speciesService, commonService
     ProjectConfigurationService projectConfigurationService
+    def programService
 
     def get(id, levelOfDetail = "", includeDeleted = false) {
 
@@ -395,7 +399,15 @@ class ProjectService  {
     def approvePlan(String projectId, Map approvalDetails) {
         def project = get(projectId)
         if (project.planStatus == PLAN_SUBMITTED) {
-            def resp = update(projectId, [planStatus:PLAN_APPROVED])
+
+            //The MERI plan cannot be approved until an internal order number has been supplied for the project.
+            if(!project.internalOrderId) {
+                return [error: 'An internal order number must be supplied before the MERI Plan can be approved']
+            }
+
+            //When the MERI plan is first approved, the status is changed to "active"
+            def resp = project.status == APPLICATION_STATUS ? update(projectId, [planStatus:PLAN_APPROVED, status:ACTIVE])
+                    : update(projectId, [planStatus:PLAN_APPROVED])
             if (resp.resp && !resp.resp.error) {
                 createMeriPlanApprovalDocument(project, approvalDetails)
                 sendEmail({ProgramConfig programConfig -> programConfig.getPlanApprovedTemplate()}, project, RoleService.GRANT_MANAGER_ROLE)
@@ -1416,8 +1428,11 @@ class ProjectService  {
      */
     List<Map> getProjectServicesWithTargets(String projectId) {
         Map project = get(projectId, 'flat')
+
+        List serviceIds = project.custom?.details?.serviceIds?.collect{it as Integer}
+
         List<Map> allServices = metadataService.getProjectServices()
-        List projectServices = allServices?.findAll {it.id in project.custom?.details?.serviceIds }
+        List projectServices = allServices?.findAll {it.id in serviceIds }
         List targets = project.outputTargets
 
         // Make a copy of the services as we are going to augment them with target information.
@@ -1691,6 +1706,35 @@ class ProjectService  {
     }
 
     /**
+     * Returns a map with key=<project priority>, value=<Ag or Env>
+     * The map is used to determine whether the priority is associated with
+     * an Environment of Agriculture outcome, which in turn allows
+     * customisation of  the  questions asked in the outcomes report.
+     *
+     */
+    Map projectPrioritiesByOutcomeType(String projectId) {
+        Map project = get(projectId,'flat')
+
+        Map prioritiesByOutcomeType = [:]
+        List outcomes = []
+        Map primaryOutcome =  project?.custom?.details?.outcomes?.primaryOutcome
+        if (primaryOutcome) {
+            outcomes << primaryOutcome
+        }
+        outcomes += project?.custom?.details?.outcomes?.secondaryOutcomes ?: []
+        (outcomes).each { Map outcome ->
+            outcome?.assets.each {String asset  ->
+                String type = (outcome.description?.startsWith('5') || outcome?.description?.startsWith('6')) ? 'Ag' : "Env"
+                prioritiesByOutcomeType[asset] = type
+            }
+        }
+
+        prioritiesByOutcomeType
+
+
+    }
+
+    /**
      * Returns the primary outcome specified in the project MERI plan, null if none is specified.
      * @param project the project of interest
      */
@@ -1704,5 +1748,26 @@ class ProjectService  {
      */
     List<String> getSecondaryOutcomes(Map project) {
         project?.custom?.details?.outcomes?.secondaryOutcomes?.collect{it.description} ?: []
+    }
+
+    List<Map> getProgramList(){
+        List<Map> listOfProgram = programService.listOfAllPrograms()
+        List<Map> programList = []
+        List newProgramList = []
+        listOfProgram.each {program ->
+            Map programDetails = programService.get(program?.programId)
+            Map updatedProgramList = [:]
+            if (programDetails?.parent != null){
+                updatedProgramList["name"] = programDetails.parent?.name + " - " + programDetails.name
+                updatedProgramList["programId"] = programDetails.programId
+            }
+            if (programDetails?.parent == null){
+                updatedProgramList["name"] =  programDetails.name
+                updatedProgramList["programId"] = programDetails.programId
+            }
+            newProgramList.add(updatedProgramList)
+        }
+        programList.addAll(newProgramList)
+        return programList
     }
 }

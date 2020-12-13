@@ -34,4 +34,13 @@ class AdminService {
                 api_key: grailsApplication.config.api_key
         ])
     }
+
+    /**
+     *
+     * @param userId
+     * @return in Map
+     */
+    def deleteUserPermission(String userId){
+       return webService.doPost("${grailsApplication.config.ecodata.baseUrl}permissions/deleteUserPermission/$userId", null)
+    }
 }

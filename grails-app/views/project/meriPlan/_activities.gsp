@@ -8,11 +8,20 @@
         </g:if>
     </g:if>
 
-    <g:each var="activity" in="${config.program?.config?.activities?.collect{it.name} ?: []}">
-        <label class="checkbox"><input type="checkbox" data-bind="checked:details.activities.activities, disable: isProjectDetailsLocked()" value="${activity}">${activity}</label>
-    </g:each>
-    <g:if test="${includeOther}">
-        <label class="checkbox"><input type="checkbox" data-bind="checked:details.activities.activities.otherChecked" value="Other">Other</label>
+    <g:if test="${singleSelection}">
+        <select data-bind="optionsCaption:'Please select... ', value:details.activities.activities.singleSelection, options:details.activities.activities.selectableActivities">
+        </select>
+
         <input type="text" data-bind="enable:details.activities.activities.otherChecked() && !isProjectDetailsLocked(), value:details.activities.activities.otherValue">
     </g:if>
+    <g:else>
+        <g:each var="activity" in="${config.program?.config?.activities?.collect{it.name} ?: []}">
+            <label class="checkbox"><input type="checkbox" data-bind="checked:details.activities.activities, disable: isProjectDetailsLocked()" value="${activity}">${activity}</label>
+        </g:each>
+        <g:if test="${includeOther}">
+            <label class="checkbox"><input type="checkbox" data-bind="checked:details.activities.activities.otherChecked" value="Other">Other</label>
+            <input type="text" data-bind="enable:details.activities.activities.otherChecked() && !isProjectDetailsLocked(), value:details.activities.activities.otherValue">
+        </g:if>
+    </g:else>
+
 </div>
