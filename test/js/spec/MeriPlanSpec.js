@@ -620,7 +620,11 @@ describe("Loading the MERI plan is handled correctly", function () {
 
         var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'});
 
-        expect(viewModel.priorityAssets).toEqual(["Priority 1", "Priority 2", "Priority 3"]);
+        expect(viewModel.priorityAssets()).toEqual(["Priority 1", "Priority 2", "Priority 3"]);
+        expect(viewModel.priorityAssets("Cat 1")).toEqual(["Priority 1", "Priority 2"]);
+        expect(viewModel.priorityAssets("Cat 2")).toEqual(["Priority 3"]);
+        expect(viewModel.priorityAssets(["Cat 1", "Cat 2"])).toEqual(["Priority 1", "Priority 2", "Priority 3"]);
+
     });
 
 });

@@ -234,9 +234,23 @@ function MERIPlan(project, projectService, config) {
     self.projectThemes.push("MERI & Admin");
     self.projectThemes.push("Others");
 
-    self.priorityAssets = _.map(project.priorities || [], function (priority) {
-        return priority.priority;
-    });
+    /**
+     * Returns a list of program priorities/assets that match the supplied category or categories.
+     * @param category a string or array of strings of categories to match.  If not supplied all priorities will be returned.
+     * @returns {Array}
+     */
+    self.priorityAssets = function(category) {
+        var matchingPriorities = _.filter(project.priorities || [], function (priority) {
+            if (_.isArray(category)) {
+                return _.find(category, function(cat) { return priority.category == cat; });
+            } else {
+                return (!category || category == priority.category);
+            }
+        });
+        return _.map(matchingPriorities, function(priority) {
+            return priority.priority;
+        });
+    };
 
     self.programObjectives = config.programObjectives || [];
 
