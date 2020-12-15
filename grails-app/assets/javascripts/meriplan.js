@@ -143,14 +143,14 @@ function MERIPlan(project, projectService, config) {
                         referenceDocument:viewModel.referenceDocument(),
                         reason: viewModel.reason(),
                         dateApproved: viewModel.dateApproved()
-                    });
+                    }, self.internalOrderId);
                 }
             };
             ko.applyBindings(planApprovalViewModel, $planApprovalModal[0]);
             $planApprovalModal.modal({backdrop: 'static', keyboard:true, show:true}).on('hidden', function() {ko.cleanNode($planApprovalModal[0])});
         }
         else {
-            projectService.approvePlan({dateApproved:convertToIsoDate(new Date())});
+            projectService.approvePlan({dateApproved:convertToIsoDate(new Date())}, self.internalOrderId());
         }
 
 
@@ -456,9 +456,15 @@ function MERIPlan(project, projectService, config) {
 
         });
     }
+    /**
+     * Workaround to allow grant managers to supply the order number as
+     * they don't have access to the project settings section.
+     * @type {Observable<string>}
+     */
+    self.internalOrderId = ko.observable(project.internalOrderId);
 
     self.canApprove = function() {
-        var canApprove = projectService.canApproveMeriPlan()
+        var canApprove = projectService.canApproveMeriPlan();
         if(!canApprove) {
             $('.grantManagerActionSpan').popover({content:'*An internal order number must be supplied before the MERI Plan can be approved', placement:'top', trigger:'hover'})
         }

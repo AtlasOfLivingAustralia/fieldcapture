@@ -161,8 +161,19 @@ function ProjectService(project, options) {
         self.saveStatus(config.modifyPlanUrl);
     };
     // approve plan and handle errors
-    self.approvePlan = function (approvalDetails) {
-        self.saveStatus(config.approvalPlanUrl, approvalDetails);
+    self.approvePlan = function (approvalDetails, internalOrderId) {
+        if (!self.canApproveMeriPlan() && internalOrderId) {
+            var payload = JSON.stringify({internalOrderId: internalOrderId});
+            var message = "Saving internal order number";
+            self.save(config.projectUpdateUrl, payload, message).done(function() {
+                self.saveStatus(config.approvalPlanUrl, approvalDetails);
+            }).fail(function() {
+                bootbox.alert("There was an error saving the internal order number.  Please contact support");
+            });
+        }
+        else {
+            self.saveStatus(config.approvalPlanUrl, approvalDetails);
+        }
     };
     // reject plan and handle errors
     self.rejectPlan = function () {
