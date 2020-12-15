@@ -1,3 +1,14 @@
+/**
+ * This view model backs the "Data set summary" tab that is optionally displayed on project
+ * pages that support it.
+ * @param dataSets array containing any data set summaries already associated with the project.
+ * @param projectService instance of the project service - used to communicate with MERIT when
+ * deleting data sets.
+ * @param config configuration for the view model.  Must contain two entries:
+ * 1) editDataSetUrl : URL for the data set summary edit page
+ * 2) newDataSetUrl : URL used to delete a data set.
+ * @constructor
+ */
 var DataSetsViewModel =function(dataSets, projectService, config) {
     var self = this;
 
@@ -9,7 +20,7 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
         window.location.href = config.newDataSetUrl;
     };
 
-
+    /** View model backing for a single row in the data set summary table */
     function DataSetSummary(dataSet) {
 
         this.editUrl = config.editDataSetUrl + '?dataSetId='+dataSet.dataSetId;
@@ -27,7 +38,17 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
 };
 
 
-
+/**
+ * This view model backs the "Create / Edit data set summary" pages.
+ * @param dataSet Existing details of the data set summary if one is being edited.
+ * @param projectService instance of the project service - used to communicate with MERIT when
+ * saving data sets.
+ * @param options configuration for the view model.  Must contain two entries:
+ * 1) returnToURL : URL to navigate to after saving or cancelling an edit.
+ * 2) validationContainerSelector (optional, default '.validationEngineContainer') :
+ *   CSS selector for the form element which has the jQueryValidationEngine attached.
+ * @constructor
+ */
 var DataSetViewModel = function(dataSet, projectService, options) {
     var self = this;
 
@@ -40,7 +61,6 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     self.grantId = dataSet.grantId;
     self.projectName = dataSet.projectName;
     self.programName = dataSet.programName;
-    self.description = ko.observable(dataSet.description);
     self.programOutcome = ko.observable(dataSet.programOutcome);
     self.investmentPriority = ko.observable(dataSet.investmentPriority);
     self.type = ko.observable(dataSet.type);
@@ -76,7 +96,8 @@ var DataSetViewModel = function(dataSet, projectService, options) {
         var valid = self.validate();
 
         if (valid) {
-            var dataSet = ko.mapping.toJS(self);
+            var dataSet = ko.mapping.toJS(self,
+                {ignore: ['grantId', 'projectName', 'programName', 'validate', 'save', 'cancel']});
             projectService.saveDataSet(dataSet).done(function() {
                 // return to project
                 window.location.href = config.returnToUrl;
