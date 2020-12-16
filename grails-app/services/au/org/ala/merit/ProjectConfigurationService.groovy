@@ -111,7 +111,7 @@ class ProjectConfigurationService {
         ]
         // The original MERIT project template required content be included (excluded by default) but we've
         // moved to an included by default model.
-        programConfig.excludes = [ProgramConfig.ProjectContent.MERI_PLAN.toString(), ProgramConfig.ProjectContent.RISKS_AND_THREATS.toString()]
+        programConfig.excludes = [ProgramConfig.ProjectContent.DATA_SETS.toString(), ProgramConfig.ProjectContent.MERI_PLAN.toString(), ProgramConfig.ProjectContent.RISKS_AND_THREATS.toString()]
         Map mapping = [
                 'MERI Plan':  ProgramConfig.ProjectContent.MERI_PLAN.toString(),
                 'Risks and Threats': ProgramConfig.ProjectContent.RISKS_AND_THREATS.toString()

@@ -105,3 +105,6 @@ table td.report-status, table th.report-status {
 #editor-button-bar .wmd-button-row {
     box-sizing: initial;
 }
+.fa.input-group-text {
+    display: inherit;
+}

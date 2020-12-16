@@ -5,8 +5,17 @@
 <div class="span6 required">
 	<div class="form-actions" >
 		<b>Grant manager actions:</b>
+		<div data-bind="if:!canApprove()">
+		<div class="alert alert-info">
+			Insert the allocated Internal Order number for this project. If the Internal Order number is not available, insert ‘TBA’ as a placeholder to allow you to complete the MERI plan. The Internal Order number must be inserted as soon as it becomes available
+		</div>
+		<div>
+			<label for="internalOrderId">Internal order number:</label>
+			<input id="internalOrderId" type="text" placeholder="If unavailable, use 'TBA'" data-bind="value:internalOrderId, valueUpdate:'keyup'">
+		</div>
+		</div>
 		<span class="btn-group grantManagerActionSpan">
-			<button type="button" data-bind="enable:canApprove(), click:approvePlan" class="btn btn-success"><i class="fa fa-check icon-white"></i> Approve</button>
+			<button type="button" data-bind="enable:canApprove() || internalOrderId(), click:approvePlan" class="btn btn-success"><i class="fa fa-check icon-white"></i> Approve</button>
 			<button type="button" data-bind="click:rejectPlan" class="btn btn-danger"><i class="fa fa-remove icon-white"></i> Reject</button>
 		</span>
 	</div>

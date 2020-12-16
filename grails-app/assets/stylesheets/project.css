@@ -10,6 +10,7 @@
 *= require sites.css
 *= require select2/4.0.3/css/select2
 *= require blog
+*= require dataSets
 *= require_self
 */
 
@@ -198,4 +199,13 @@
 .popover.warning.top .arrow:after {
 	border-top-color: yellow;
 	border-right-color: transparent;
+}
+
+.form-subheading div {
+	background-color:lightgrey;
+	padding: 10px;
+	margin-bottom: 10px;
+	margin-left:10px;
+	margin-right:10px;
+
 }

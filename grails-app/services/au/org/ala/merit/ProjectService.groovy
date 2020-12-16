@@ -1700,9 +1700,25 @@ class ProjectService  {
      */
     List listProjectInvestmentPriorities(String projectId) {
         Map project = get(projectId,'flat')
-        List primaryOutcomes = project?.custom?.details?.outcomes?.primaryOutcome?.assets ?: []
-        List secondaryOutcomes = project?.custom?.details?.outcomes?.secondaryOutcomes?.collect{it.assets}?.flatten() ?: []
-        primaryOutcomes + secondaryOutcomes
+        listProjectInvestmentPriorities(project)
+    }
+
+    /**
+     * This method combines investment priorities listed in the primary and secondary outcome sections of the
+     * RLP MERI plan into a single list for the purposes of pre-popluating one of the RLP outcomes reporting forms.
+     * @param projectId the project of interest
+     * @return a List of outcomes selected in the project MERI plan
+     */
+    List listProjectInvestmentPriorities(Map project) {
+        List primaryPriorities = project?.custom?.details?.outcomes?.primaryOutcome?.assets ?: []
+        List secondaryPriorities = project?.custom?.details?.outcomes?.secondaryOutcomes?.collect{it.assets}?.flatten() ?: []
+        List allPriorities = primaryPriorities + secondaryPriorities
+        allPriorities.findAll{it}.unique()
+    }
+
+    /** Returns all assets identified in the project MERI plan */
+    List listProjectAssets(Map project) {
+        project?.custom?.details?.assets?.collect{it.description}?.findAll{it}
     }
 
     /**
@@ -1714,6 +1730,7 @@ class ProjectService  {
      */
     Map projectPrioritiesByOutcomeType(String projectId) {
         Map project = get(projectId,'flat')
+        Map config = getProgramConfiguration(project)
 
         Map prioritiesByOutcomeType = [:]
         List outcomes = []
@@ -1723,9 +1740,10 @@ class ProjectService  {
         }
         outcomes += project?.custom?.details?.outcomes?.secondaryOutcomes ?: []
         (outcomes).each { Map outcome ->
+            Map programOutcome = config.outcomes?.find{it.outcome == outcome?.description}
+            String outcomeDescription = programOutcome ? (programOutcome.shortDescription ?: programOutcome.outcome) : outcome?.description
             outcome?.assets.each {String asset  ->
-                String type = (outcome.description?.startsWith('5') || outcome?.description?.startsWith('6')) ? 'Ag' : "Env"
-                prioritiesByOutcomeType[asset] = type
+                prioritiesByOutcomeType[asset] = outcomeDescription
             }
         }
 
@@ -1750,6 +1768,15 @@ class ProjectService  {
         project?.custom?.details?.outcomes?.secondaryOutcomes?.collect{it.description} ?: []
     }
 
+    List<String> getAllProjectOutcomes(Map project) {
+        List outcomes = []
+        outcomes << getPrimaryOutcome(project)
+        outcomes.addAll(getSecondaryOutcomes(project))
+
+        // Don't return null or empty values
+        outcomes.findAll{it}.unique()
+    }
+
     List<Map> getProgramList(){
         List<Map> listOfProgram = programService.listOfAllPrograms()
         List<Map> programList = []
@@ -1769,5 +1796,44 @@ class ProjectService  {
         }
         programList.addAll(newProgramList)
         return programList
+    }
+
+    Map saveDataSet(String projectId, Map dataSet) {
+        Map project = get(projectId)
+        if (!project) {
+            throw new  IllegalArgumentException("Project "+projectId+" does not exist")
+        }
+        if (!project.custom) {
+            project.custom = [:]
+        }
+        if (!project.custom.dataSets) {
+            project.custom.dataSets = []
+        }
+
+        if (!dataSet.dataSetId) {
+            dataSet.dataSetId = UUID.randomUUID().toString()
+            project.custom.dataSets << dataSet
+        }
+        else {
+            int i = project.custom.dataSets.findIndexOf({it.dataSetId == dataSet.dataSetId})
+            if (i < 0)  {
+                throw new  IllegalArgumentException("Data set "+dataSet.dataSetId+" does not exist")
+            }
+            project.custom.dataSets[i] = dataSet
+        }
+
+        update(projectId, [custom: project.custom])
+    }
+
+    Map deleteDataSet(String projectId, String dataSetId) {
+        Map project = get(projectId)
+        if (!project) {
+            throw new IllegalArgumentException("Project "+projectId+" does not exist")
+        }
+        boolean found  = project.custom?.dataSets?.removeAll{ it.dataSetId == dataSetId}
+        if (!found)  {
+            throw new IllegalArgumentException("Data set "+dataSetId+" does not exist")
+        }
+        update(projectId, [custom: project.custom])
     }
 }

@@ -76,7 +76,7 @@
 
 <!-- Budget table -->
 <div class="row-fluid space-after">
-   <g:render template="/project/meriPlan/meriBudget"/>
+   <g:render template="/project/meriPlan/meriBudget" model="${[showThemeColumn:true]}"/>
 </div>
 
 <div class="row-fluid space-after">

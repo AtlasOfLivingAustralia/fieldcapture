@@ -78,10 +78,10 @@
         <div class="controls">
             <!-- Once the MERI plan is approved, the internal order number becomes a mandatory field. -->
             <g:if test="${ProjectService.APPLICATION_STATUS != project.status}">
-                <g:textField class="" name="internalOrderId" data-bind="value:internalOrderId" data-validation-engine="validate[required]"/>
+                <g:textField class="" placeholder="If unavailable, use 'TBA'" name="internalOrderId" data-bind="value:internalOrderId" data-validation-engine="validate[required]"/>
             </g:if>
             <g:else>
-                <g:textField class="" name="internalOrderId" data-bind="value:internalOrderId"/>
+                <g:textField class="" placeholder="If not available, use TBA" name="internalOrderId" data-bind="value:internalOrderId"/>
             </g:else>
         </div>
     </div>

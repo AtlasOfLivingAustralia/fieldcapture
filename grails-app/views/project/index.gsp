@@ -86,6 +86,10 @@
         viewHistoricalMeriPlanUrl:"${createLink(action:"viewMeriPlan", id:project.projectId)}",
         riskChangesReportHtmlUrl:"${createLink(controller:'project', action:'projectReport', id:project.projectId)}",
         riskChangesReportPdfUrl:"${createLink(controller:'project', action:'projectReportPDF', id:project.projectId)}",
+        newDataSetUrl:"${createLink(controller:'dataSet', action:'create', id:project.projectId)}",
+        editDataSetUrl:"${createLink(controller:'dataSet', action:'edit', id:project.projectId)}.json",
+        deleteDataSetUrl:"${createLink(controller:'dataSet', action:'delete', id:project.projectId)}.json",
+
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 
     },
@@ -258,7 +262,11 @@
                 minimumProjectEndDate: ${projectContent.admin.minimumProjectEndDate?'"'+projectContent.admin.minimumProjectEndDate+'"':'null'},
                 riskChangesReportElementId: 'risk-changes-report',
                 riskChangesReportHtmlUrl: fcConfig.riskChangesReportHtmlUrl,
-                riskChangesReportPdfUrl: fcConfig.riskChangesReportPdfUrl
+                riskChangesReportPdfUrl: fcConfig.riskChangesReportPdfUrl,
+                newDataSetUrl: fcConfig.newDataSetUrl,
+                editDataSetUrl: fcConfig.editDataSetUrl,
+                deleteDataSetUrl: fcConfig.deleteDataSetUrl,
+                returnToUrl: fcConfig.returnTo
             };
 
             var programs = <fc:modelAsJavascript model="${programs}"/>;
@@ -392,6 +400,11 @@
                 'reporting': {
                     initialiser: function () {
                         viewModel.initialiseReports();
+                    }
+                },
+                'datasets': {
+                    initialiser: function() {
+                        viewModel.initialiseDataSets();
                     }
                 },
                 'admin': {
