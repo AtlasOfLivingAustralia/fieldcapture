@@ -67,6 +67,7 @@ class GmsMapper {
             FINISH_DT:[name:'plannedEndDate', type:'date', mandatory:true],
             CONTRACT_START_DT:[name:'contractStartDate', type:'date'],
             CONTRACT_END_DT:[name:'contractEndDate', type:'date'],
+            ORDER_NO: [name: 'internalOrderId', type:'string'],
             WORK_ORDER_ID:[name:'workOrderId', type:'string'],
             FUNDING:[name:'funding', type:'decimal'],
             AUTHORISEDP_EMAIL:[name:'adminEmail', type:'email'],

@@ -53,6 +53,7 @@ class GmsMapperSpec extends Specification {
         'Test Project Description' == project.description
         'Test Organisation 2' == project.organisationName
         'Green Army' == project.associatedProgram
+        '111111' == project.internalOrderId
 
         'Green Army Round 1' == project.associatedSubProgram
         expectedStartDate == project.plannedStartDate
