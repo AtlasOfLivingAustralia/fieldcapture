@@ -1145,6 +1145,7 @@ function AssetViewModel(asset) {
     if (!asset) {
         asset = {};
     }
+    self.category = ko.observable(asset.category);
     self.description = ko.observable(asset.description);
 }
 

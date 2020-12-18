@@ -2,12 +2,15 @@
 <g:if test="${explanation}">
     ${explanation}
 </g:if>
-
+<g:set var="assetClass" value="${useCategorySelection ? 'asset-detail': 'asset'} "/>
 <table class="table assets">
 <thead>
 <tr class="header">
     <th class="index"></th>
-    <th class="asset required">${explanation ?: "Please name the species, ecological community or environmental asset(s) the project is targeting"}</th>
+<g:if test="${fromPriorities && useCategorySelection}">
+    <th class="asset-category required">Asset Type</th>
+</g:if>
+    <th class="${assetClass} required">${assetHeading ?: "Please name the species, ecological community or environmental asset(s) the project is targeting"}</th>
 
     <th class="remove"></th>
 </tr>
@@ -15,11 +18,26 @@
 <tbody data-bind="foreach:details.assets">
 <tr>
     <td class="index" data-bind="text:$index()+1"></td>
-    <td class="asset">
-        <g:if test="${fromPriorities}">
+    <g:if test="${fromPriorities && useCategorySelection}">
+        <td class="asset-category required">
             <select data-validation-engine="validate[required]"
-                data-bind="select2:{}, value:description, optionsCaption:'${placeHolder  ?: "Please select..."}', options: $root.priorityAssets(<fc:modelAsJavascript model="${priorityCategories}" default=""/>), disable: $parent.isProjectDetailsLocked()">
+                    data-bind="select2:{}, value:category, optionsCaption:'${placeHolder  ?: "Please select..."}', options: <fc:modelAsJavascript model="${priorityCategories}"/>, disable: $parent.isProjectDetailsLocked()">
             </select>
+        </td>
+    </g:if>
+    <td class="${assetClass}">
+        <g:if test="${fromPriorities}">
+            <g:if test="${useCategorySelection}">
+                <select data-validation-engine="validate[required]"
+                        data-bind="select2:{}, value:description, optionsCaption:'${placeHolder  ?: "Please select..."}', options: $root.priorityAssets(category()), disable: !category() || $parent.isProjectDetailsLocked()">
+                </select>
+            </g:if>
+            <g:else>
+                <select data-validation-engine="validate[required]"
+                        data-bind="select2:{}, value:description, optionsCaption:'${placeHolder  ?: "Please select..."}', options: $root.priorityAssets(<fc:modelAsJavascript model="${priorityCategories}" default=""/>), disable: $parent.isProjectDetailsLocked()">
+                </select>
+            </g:else>
+
         </g:if>
         <g:else>
             <textarea placeholder="${placeHolder}" data-validation-engine="validate[required]" data-bind="value:description, disable: $parent.isProjectDetailsLocked()"></textarea>
