@@ -386,7 +386,7 @@ describe("Loading the MERI plan is handled correctly", function () {
         meriPlan.assets()[1].description('asset 2');
 
         var serialized = JSON.parse(meriPlan.modelAsJSON());
-        expect(serialized.custom.details.assets).toEqual([{description:'asset 1'}, {description:'asset 2'}]);
+        expect(serialized.custom.details.assets).toEqual([{category: '', description:'asset 1'}, {category: '',description:'asset 2'}]);
 
         viewModel.removeAsset(meriPlan.assets()[0]);
         expect(meriPlan.assets().length).toBe(1);
@@ -624,6 +624,29 @@ describe("Loading the MERI plan is handled correctly", function () {
         expect(viewModel.priorityAssets("Cat 1")).toEqual(["Priority 1", "Priority 2"]);
         expect(viewModel.priorityAssets("Cat 2")).toEqual(["Priority 3"]);
         expect(viewModel.priorityAssets(["Cat 1", "Cat 2"])).toEqual(["Priority 1", "Priority 2", "Priority 3"]);
+
+    });
+
+    it("provides a list of asset categories for use as a select list by the assets section", function() {
+        var project = {
+            plannedStartDate:'2018-07-01T00:00:00Z',
+            plannedEndDate:'2021-06-30T00:00:00Z',
+            priorities:[
+                {"category":"Cat 1", "priority":"Priority 1"},
+                {"category":"Cat 1", "priority":"Priority 2"},
+                {"category":"Cat 2", "priority":"Priority 3"},
+                {"category":"Cat 3", "priority":"Priority 4"}
+            ]
+        };
+        var projectService = new ProjectService(project, {});
+
+        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'});
+
+        expect(viewModel.assetCategories()).toEqual(["Cat 1", "Cat 2", "Cat 3"]);
+        expect(viewModel.assetCategories(["Cat 1"])).toEqual(["Cat 1"]);
+        // Note filter order is preserved.
+        expect(viewModel.assetCategories(["Cat 2", "Cat 1"])).toEqual(["Cat 2", "Cat 1"]);
+        expect(viewModel.assetCategories(["Cat 3", "Cat 4", "Cat 2"])).toEqual(["Cat 3", "Cat 2"]);
 
     });
 

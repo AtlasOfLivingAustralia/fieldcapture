@@ -21,7 +21,7 @@
     <g:if test="${fromPriorities && useCategorySelection}">
         <td class="asset-category required">
             <select data-validation-engine="validate[required]"
-                    data-bind="select2:{}, value:category, optionsCaption:'${placeHolder  ?: "Please select..."}', options: <fc:modelAsJavascript model="${priorityCategories}"/>, disable: $parent.isProjectDetailsLocked()">
+                    data-bind="select2:{}, value:category, optionsCaption:'${placeHolder  ?: "Please select..."}', options: $root.assetCategories(<fc:modelAsJavascript model="${priorityCategories}"/>), disable: $parent.isProjectDetailsLocked()">
             </select>
         </td>
     </g:if>
