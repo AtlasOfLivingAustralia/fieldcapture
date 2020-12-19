@@ -1139,7 +1139,8 @@ class ProjectServiceSpec extends Specification {
         setup:
         String projectId = 'p1'
         Map dataset = [name:'data set 1', dataSetId:'d1']
-        Map project = [projectId:projectId, custom:[dataSets:[[dataSetId:'d1', name:"old name"]]]]
+        List existingDataSets = [[name:'data set 1 - old name', dataSetId:'d1'], [name:'data set 2', dataSetId:'d2'], [name:'data set 3', dataSetId:'d3']]
+        Map project = [projectId:projectId, custom:[dataSets:existingDataSets]]
         Map postData
 
         when:
@@ -1154,9 +1155,12 @@ class ProjectServiceSpec extends Specification {
 
         postData.size() == 1
         postData.custom.size() == 1
-        postData.custom.dataSets.size() == 1
+        postData.custom.dataSets.size() == 3
         postData.custom.dataSets[0].name =='data set 1'
         postData.custom.dataSets[0].dataSetId == 'd1'
+        postData.custom.dataSets[1] == existingDataSets[1]
+        postData.custom.dataSets[2] == existingDataSets[2]
+
         result == [status: HttpStatus.SC_OK]
     }
 
