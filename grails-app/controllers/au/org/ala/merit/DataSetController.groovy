@@ -56,7 +56,7 @@ class DataSetController {
     def edit(String id, String dataSetId) {
 
         Map projectData = projectData(id)
-        Map dataSet = projectData.project?.custom?.dataSets?.find{it.dataSetId = dataSetId}
+        Map dataSet = projectData.project?.custom?.dataSets?.find{it.dataSetId == dataSetId}
         if (!dataSet) {
             render status: HttpStatus.NOT_FOUND
         }

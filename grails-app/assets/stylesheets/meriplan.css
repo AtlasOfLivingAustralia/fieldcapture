@@ -241,6 +241,10 @@ table tr.header th {
     height: 30px;
 }
 
+.meri-plan .asset-category, .merplan .asset-category {
+    width: 50%;
+}
+
 #project-risks-threats table {
     width:100%;
 }
@@ -326,3 +330,4 @@ a.meri-history-toggle {
 .announcements-table .information {
     width:28%;
 }
+

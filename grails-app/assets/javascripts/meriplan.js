@@ -252,6 +252,23 @@ function MERIPlan(project, projectService, config) {
         });
     };
 
+    /**
+     * Returns a list of distinct asset categories available for this project.
+     * @param filter (optional) if supplied, only categories in this array will be returned.
+     */
+    self.assetCategories = function(filter) {
+        var categories = _.map(project.priorities || [], function(priority) {
+            return priority.category;
+        });
+        categories = _.uniq(categories);
+        if (filter) {
+            categories = _.filter(filter, function(category) {
+                return categories.indexOf(category) >= 0;
+            });
+        }
+        return categories;
+    }
+
     self.programObjectives = config.programObjectives || [];
 
     self.obligationOptions = ['Yes', 'No'];
@@ -1145,6 +1162,7 @@ function AssetViewModel(asset) {
     if (!asset) {
         asset = {};
     }
+    self.category = ko.observable(asset.category);
     self.description = ko.observable(asset.description);
 }
 
