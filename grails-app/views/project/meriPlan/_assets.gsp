@@ -1,4 +1,4 @@
-<h4>Project assets</h4>
+<h4>Project assets<g:if test="${helpTextHeading}"> <fc:iconHelp html="true" container="body">${helpTextHeading}</fc:iconHelp></g:if></h4>
 <g:if test="${explanation}">
     ${explanation}
 </g:if>
@@ -8,9 +8,9 @@
 <tr class="header">
     <th class="index"></th>
 <g:if test="${fromPriorities && useCategorySelection}">
-    <th class="asset-category required">Asset Type</th>
+    <th class="asset-category required">Asset Type <g:if test="${helpText}"> <fc:iconHelp html="true" container="body">${helpText}</fc:iconHelp></g:if></th>
 </g:if>
-    <th class="${assetClass} required">${assetHeading ?: "Please name the species, ecological community or environmental asset(s) the project is targeting"}</th>
+    <th class="${assetClass} required">${assetHeading ?: "Please name the species, ecological community or environmental asset(s) the project is targeting"}<g:if test="${helpText}"> <fc:iconHelp html="true" container="body">${helpText}</fc:iconHelp></g:if></th>
 
     <th class="remove"></th>
 </tr>
