@@ -687,6 +687,7 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
         target.scoreId = ko.observable(score ? score.scoreId : null);
 
         target.target = ko.observable();
+        target.targetDate = ko.observable().extend({simpleDate:false});
 
         target.periodTargets = _.map(periods, function (period) {
             return {period: period, target: ko.observable(0)}
@@ -722,11 +723,13 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
                 target.periodTargets[i].target(periodTarget || 0);
             });
             target.target(currentTarget ? currentTarget.target || 0 : 0);
+            target.targetDate(currentTarget ? currentTarget.targetDate : null);
         };
 
         target.toJSON = function () {
             return {
                 target: target.target(),
+                targetDate: target.targetDate(),
                 scoreId: target.scoreId(),
                 periodTargets: ko.toJS(target.periodTargets)
             };

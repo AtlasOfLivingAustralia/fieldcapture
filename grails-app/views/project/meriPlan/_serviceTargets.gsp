@@ -9,6 +9,11 @@
         <th class="score required" rowspan="2">Target measure</th>
         <th class="budget-cell required" rowspan="2">Total to be delivered<fc:iconHelp html="true">The overall total of Project Services to be delivered during the project delivery period.
             <b>Note: this total is not necessarily the sum of the minimum annual targets set out for the service.</b></fc:iconHelp></th>
+        <g:if test="${showTargetDate}">
+            <th class="target-date required" rowspan="2">
+                Delivery date
+            </th>
+        </g:if>
         <!-- ko if: periods && periods.length -->
         <th data-bind="attr:{colspan:periods.length+1}">Minimum annual targets <fc:iconHelp>Specify the minimum total target for each Project Service to be delivered each financial year. Note: the sum of these targets will not necessarily equal the total services to be delivered.</fc:iconHelp></th>
         <!-- /ko -->
@@ -37,6 +42,17 @@
                    data-validation-engine="validate[min[0.01]]"  data-warningmessage="The sum of the minimum targets must be less than or equal to the overall target">
         </td>
 
+        <g:if test="${showTargetDate}">
+            <td class="target-date">
+                <div class="input-append">
+                <input class="input-small" data-bind="datepicker:targetDate.date, disable: $root.isProjectDetailsLocked()" type="text" size="16" data-validation-engine="validate[required]">
+                <span class="add-on open-datepicker">
+                    <i class="fa fa-th ">&nbsp;</i>
+                </span>
+                </div>
+            </td>
+        </g:if>
+
         <!-- ko foreach: periodTargets -->
         <td class="budget-cell">
             <input type="number"
@@ -56,7 +72,7 @@
     <tfoot>
 
     <tr>
-        <td data-bind="attr:{colspan:periods.length+5}">
+        <td data-bind="attr:{colspan:periods.length+${showTargetDate ? 6 : 5}}">
             <button type="button" class="btn btn-small"
                     data-bind="disable: $parent.isProjectDetailsLocked(), click: addService">
                 <i class="icon-plus"></i> Add a row</button>
