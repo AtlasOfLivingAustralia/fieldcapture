@@ -397,3 +397,165 @@ db.userPermission.insert({
     userId: '1',
     accessLevel: 'admin'
 });
+
+config.meriPlanContents =  [
+    {
+        "template": "assets",
+        "model": {
+            "priorityCategories": [
+                "Priority Vertebrate Animals",
+                "Additional Priority Species",
+                "Priority Invertebrate Species",
+                "Priority Natural Asset",
+                "Priority Plants",
+                "Additional Priority Plants",
+                "Threatened Ecological Community",
+                "Additional Priority Natural Asset",
+                "Additional Threatened Ecological Community"
+            ],
+            "assetHeading": "Asset",
+            "viewExplanation": "Species, ecological community or environmental asset(s) the project is targeting",
+            "useCategorySelection": true,
+            "explanation": "List the natural assets within the bushfire region that will benefit from this project",
+            "fromPriorities": true,
+            "placeHolder": "Please select"
+        }
+    },
+    {
+        "template": "activities",
+        "model": {
+            "noneSelectedMessage": "No priority actions have been nominated for this project",
+            "singleSelection": true,
+            "title": "Priority actions",
+            "explanation": "Please select from the drop-down options which of the following regional investment strategy objectives are applicable to this project"
+        }
+    },
+    {
+        "template": "outcomeStatements",
+        "model": {
+            "subtitle": "Please provide outcome statements. Outcomes statements should: <br/>- Contribute to the regional investment strategy;<br/>- Outline the degree of impact having undertaken the actions within the project timeframe;<br/>- Be expressed as a SMART statement (Specific, Measurable, Attainable, Realistic and Time-bound); and<br/>- Ensure the outcomes are measurable with consideration to the monitoring methodology provided below.",
+            "placeholder": "By 30 June 2021, [Free text]",
+            "title": "Outcome statements"
+        }
+    },
+    {
+        "template": "sectionHeading",
+        "model": {
+            "heading": "Project Details"
+        }
+    },
+    {
+        "template": "description",
+        "model": {
+            "maxSize": "1000",
+            "placeholder": "[Free text; limit response to 1000 characters (approx. 150 words)]",
+            "explanation": " Please provide a short description of this project. The project description should be succinct and state what will be done and why it will be done. This project description will be visible on the project overview page in MERIT"
+        }
+    },
+    {
+        "template": "projectPartnerships",
+        "model": {
+            "namePlaceHolder": "[Free text]",
+            "partnershipPlaceHolder": "[Free text]"
+        }
+    },
+    {
+        "template": "consultation",
+        "model": {
+            "title": "Consultation",
+            "explanation": "Please provide details of consultation with relevant state / territory agencies and NRM organisations to identify any duplication between activities proposed in the Activity and any other government-funded actions already underway in the project location. Where duplication has been identified, please describe how this has been resolved. If a modification to the Activity is required, you must submit a written request for a variation to the Department.",
+            "placeHolder": "[Free text]"
+        }
+    },
+    {
+        "template": "keyThreats"
+    },
+    {
+        "template": "projectMethodology",
+        "model": {
+            "maxSize": "4000",
+            "title": "Project methodology",
+            "tableHeading": "Please describe the methodology that will be used to achieve the project’s outcome statements.",
+            "placeHolder": "[Free text; limit response to 4000 characters (approx. 650 words)]"
+        }
+    },
+    {
+        "template": "monitoringIndicators",
+        "model": {
+            "approachHeading": "Describe the project monitoring indicator(s) approach",
+            "indicatorHeading": "Identify the project monitoring indicator(s)",
+            "indicatorHelpText": "List the measurable indicators of project success that will be monitored. Indicators should link back to the outcome statements and have units of measure. Indicators should measure both project outputs (e.g. area (ha) of rabbit control, length (km) of predator proof fencing) and change the project is aiming to achieve (e.g. Change in abundance of X threatened species at Y location, Change in vegetation cover (%), etc).",
+            "approachHelpText": "How will the indicator be monitored? Briefly describe the method to be used to monitor the indicator (including timing of monitoring, who will collect/collate / analyse data, etc)",
+            "indicatorPlaceHolder": "[Free text]",
+            "approachPlaceHolder": "[Free text]",
+            "title": "Project Monitoring Indicators"
+        }
+    },
+    {
+        "template": "adaptiveManagement",
+        "model": {
+            "title": "Project Review, Evaluation and Improvement Methodology and Approach",
+            "explanation": "Outline the methods and processes that will enable adaptive management during the lifetime of this project"
+        }
+    },
+    {
+        "template": "nationalAndRegionalPlans"
+    },
+    {
+        "template": "serviceTargets",
+        "model": {
+            "title": "Services and Targets Table",
+            "serviceName": "Service"
+        }
+    },
+    {
+        "template": "meriBudget",
+        "model": {
+            "itemName": "Budget item",
+            "showActivityColumn": false
+        }
+    }
+];
+var priorities = [
+    {
+        "category": "Priority Natural Asset",
+        "priority": "Gondwana Rainforests of Australia World Heritage Area"
+    },
+    {
+        "category": "Additional Priority Natural Asset",
+        "priority": "Great Sandy National Park"
+    },
+    {
+        "category": "Threatened Ecological Community",
+        "priority": "Lowland Rainforest of Subtropical Australia"
+    },
+    {
+        "category": "Priority Vertebrate Animals",
+        "priority": "Pseudomugil mellis (Honey Blue-eye)"
+    },
+    {
+        "category": "Additional Priority Species",
+        "priority": "Pezoporus wallicus (ground parrot)"
+    },
+    {
+        "category": "Priority Invertebrate Species",
+        "priority": "Euastacus jagara (Freshwater crayfish)"
+    },
+    {
+        "category": "Priority Plants",
+        "priority": "Bertya ernestiana (Mt Barney bertya-shrub)"
+    },
+    {
+        "category": "Additional Priority Plants",
+        "priority": "Pseudanthus pauciflorus subsp. pauciflorus"
+    }
+];
+createProgram({programId: "bushfireProgram", name: "New Bushfire Program", description: "", config: config});
+db.managementUnit.insert({managementUnitId: "bushfireManagement", name: "New Bushfire Management", config:{}, priorities: priorities, status: "active"});
+createProject({projectId: "bushfireProject", name: "New Bushfire Project", description: "", programId: "bushfireProgram", managementUnitId: "bushfireManagement"})
+db.userPermission.insert({
+    entityType: 'au.org.ala.ecodata.Project',
+    entityId: "bushfireProject",
+    userId: '1',
+    accessLevel: 'admin'
+});

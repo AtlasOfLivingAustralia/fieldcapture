@@ -386,4 +386,72 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
     }
 
+    //  Regional Fund for Wildlife and Habitat Bushfire Recovery (the Regional Fund) - States
+    def "The MERI Plan will only display only specific section for the Bushfire Recovery (the Regional Fund) - States"(){
+
+        setup:
+        String projectId = 'bushfireProject'
+        login([userId: '1', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'USER'], browser)
+
+        when:
+        to RlpProjectPage, projectId
+
+        then:
+        waitFor { at RlpProjectPage }
+
+        when:
+        def meriPlan = openMeriPlanEditTab()
+
+        meriPlan.assetType = "Priority Invertebrate Species"
+        waitFor {
+            meriPlan.asset.find('[value="Euastacus jagara (Freshwater crayfish)"')
+        }
+        meriPlan.asset = "Euastacus jagara (Freshwater crayfish)"
+        meriPlan.shortTermOutcomes[0].value( "Short term outcome 1")
+        meriPlan.projectDescription = "MERI plan edited description"
+        meriPlan.projectPartnerships[0].name = 'partner name'
+        meriPlan.projectPartnerships[0].partnership = 'partnership'
+        meriPlan.projectPartnerships[0].orgType = 'Trust'
+        meriPlan.consultation = 'Consultation'
+        meriPlan.keyThreats[0].threat= "Threat 1"
+        meriPlan.keyThreats[0].intervention = "Intervention 1"
+        meriPlan.projectMethodology = "Project methodology"
+        meriPlan.adaptiveManagement = 'Adaptive management'
+        meriPlan.nationalAndRegionalPlans[0].name= "Plan 1"
+        meriPlan.nationalAndRegionalPlans[0].section= "Section 1"
+        meriPlan.nationalAndRegionalPlans[0].alignment= "Alignment 1"
+        meriPlan.budget[0].description = 'budget description'
+        meriPlan.budget[0].budgetAmounts[0].value('100')
+
+        meriPlan.save()
+
+        def previousLoad = getAtCheckTime()
+        to RlpProjectPage, projectId
+
+        then:
+        waitFor { getAtCheckTime() > previousLoad }
+
+        when:
+        meriPlan = openMeriPlanEditTab()
+
+        then:
+        meriPlan.assetType.value() == "Priority Invertebrate Species" // Direct comparison fails due to &nbsp in the HTML due to the length of the options
+        meriPlan.asset == "Euastacus jagara (Freshwater crayfish)"
+        meriPlan.shortTermOutcomes[0].value() == "Short term outcome 1"
+        meriPlan.projectDescription == "MERI plan edited description"
+        meriPlan.projectPartnerships[0].name == 'partner name'
+        meriPlan.projectPartnerships[0].partnership == 'partnership'
+        meriPlan.projectPartnerships[0].orgType == 'Trust'
+        meriPlan.consultation == 'Consultation'
+        meriPlan.keyThreats[0].threat.value() == "Threat 1"
+        meriPlan.keyThreats[0].intervention.value() == "Intervention 1"
+        meriPlan.projectMethodology == "Project methodology"
+        meriPlan.adaptiveManagement == 'Adaptive management'
+        meriPlan.nationalAndRegionalPlans[0].name.value() == "Plan 1"
+        meriPlan.nationalAndRegionalPlans[0].section.value() == "Section 1"
+        meriPlan.nationalAndRegionalPlans[0].alignment.value() == "Alignment 1"
+
+        meriPlan.budget[0].description == 'budget description'
+        meriPlan.budget[0].budgetAmounts[0].value() == '100'
+    }
 }
