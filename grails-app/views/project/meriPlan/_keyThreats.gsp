@@ -1,8 +1,8 @@
 <g:if test="${title}">
-    <p>${title}</p>
+    <h4>${title}</h4>
 </g:if>
 <g:if test="${explanation}">
-    <p>${${explanation}}</p>
+    <p>${explanation}</p>
 </g:if>
 <!-- ko with:details.threats -->
 <table class="table threats">
