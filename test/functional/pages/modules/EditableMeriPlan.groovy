@@ -8,6 +8,7 @@ class OutcomeRow extends Module {
         outcome { $('.outcome-priority select') }
         priority { $('.priority select') }
         remove { $('i.icon-remove') }
+        priorityUnstyle{$('.unstyled')}
     }
 }
 
@@ -92,8 +93,11 @@ class EditableMeriPlan extends Module {
     static content = {
         primaryOutcome(required: false) { $('.outcome-priority select[data-bind*="primaryOutcome.description"]') }
         primaryPriority(required: false) { $('select[data-bind*="primaryOutcome.asset"]') }
+        primaryPriorityUnstyled(required: false) {$('.priority .unstyled')}
+
         assetType(required: false) {$('.asset-category select[data-bind*="category"]')}
         asset(required: false) {$('.asset-detail select[data-bind*="description"]')}
+
         secondaryOutcomes(required: false) { $('table.secondary-outcome tbody tr').moduleList(OutcomeRow) }
         shortTermOutcomes(required: false) { $('tbody[data-bind*="shortTermOutcomes"] textarea') }
         mediumTermOutcomes(required: false) {  $('tbody[data-bind*="midTermOutcomes"] textarea') }
