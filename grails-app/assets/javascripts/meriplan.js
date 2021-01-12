@@ -1125,6 +1125,9 @@ function OutcomesViewModel(outcomes, config) {
         return new SingleAssetOutcomeViewModel(outcome)
     }));
     self.midTermOutcomes = ko.observableArray(_.map(outcomes.midTermOutcomes || [], outcomeToViewModel));
+    self.fdf = ko.observableArray(outcomes.fdf);
+    self.nrm = ko.observableArray(outcomes.nrm);
+
 
     self.toJSON = function () {
         // Exclude the computed used by the view model
