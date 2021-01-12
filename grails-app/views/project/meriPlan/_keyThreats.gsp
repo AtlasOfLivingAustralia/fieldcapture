@@ -1,3 +1,9 @@
+<g:if test="${title}">
+    <p>${title}</p>
+</g:if>
+<g:if test="${explanation}">
+    <p>${${explanation}}</p>
+</g:if>
 <!-- ko with:details.threats -->
 <table class="table threats">
     <thead>

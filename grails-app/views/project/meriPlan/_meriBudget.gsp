@@ -1,6 +1,9 @@
 <div class="meri-budget">
 
     <label><b>Project Budget</b><fc:iconHelp title="Project Budget">Include the planned budget expenditure against each programme objective. This information will be used to report on the use of public money.</fc:iconHelp></label>
+    <g:if test="${explanation}">
+        <p>${explanation}</p>
+    </g:if>
     <table class="table">
         <thead>
         <tr>
