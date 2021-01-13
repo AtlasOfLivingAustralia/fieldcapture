@@ -8,9 +8,7 @@
     <tbody>
     <tr>
         <td><g:each var="fdf" in="${config.program?.config?.fdf?.collect { it.name } ?: []}">
-            <label class="checkbox"><input type="checkbox"
-                                           data-bind="checked:details.outcomes.fdf, disable: isProjectDetailsLocked()"
-                                           value="${fdf}">${fdf}</label>
+            <label class="checkbox"><input type="checkbox" data-bind="checked:details.outcomes.fdf, disable: isProjectDetailsLocked()" value="${fdf}">${fdf}</label>
         </g:each>
         </td>
 
@@ -28,9 +26,7 @@
     <tr>
     <td>
         <g:each var="nrm" in="${config.program?.config?.nrm?.collect { it.name } ?: []}">
-            <label class="checkbox"><input type="checkbox"
-                                               data-bind="checked:details.outcomes.nrm, disable: isProjectDetailsLocked()"
-                                               value="${nrm}">${nrm}</label>
+            <label class="checkbox"><input type="checkbox" data-bind="checked:details.outcomes.nrm, disable: isProjectDetailsLocked()" value="${nrm}">${nrm}</label>
         </g:each>
     </td>
     </tr>
