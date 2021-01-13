@@ -1,5 +1,4 @@
 <h4>${headingTitle ?: "Additional Benefit"}</h4>
-
 <table class="table" style="display: ${hideFDF}">
     <thead>
     <tr class="header required">
