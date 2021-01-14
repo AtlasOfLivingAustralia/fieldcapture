@@ -2,8 +2,8 @@
 <table class="table">
     <thead>
     <tr class="header">
-        <th class="required">${titleFDF ?: "FDF Outcome(s)"}<th>
-        <th class="required">${titleNRM ?: "NRM L Outcomes (Select at least 2)"}</th>
+        <th class="required">${titleFDF ?: "FDF Outcome(s)"}</th> <g:if test="${helpTextFDF}"> <fc:iconHelp>${helpTextFDF}</fc:iconHelp> </g:if>
+        <th class="required">${titleNRM ?: "NRM L Outcomes (Select at least 2)"}</th><g:if test="${helpTextNRM}"> <fc:iconHelp>${helpTextNRM}</fc:iconHelp> </g:if>
         <th class="remove"></th>
     </tr>
     </thead>
