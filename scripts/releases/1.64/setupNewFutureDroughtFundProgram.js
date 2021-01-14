@@ -130,10 +130,6 @@ let config = {
         }
     ],
     "excludes": [],
-    "visibility": "public",
-    "organisationRelationship": "Service Provider",
-    "excludeFinancialYearData": true,
-    "requiresActivityLocking": true,
     "nrm": [
         {
             "name": "More primary producers adopt whole-of-system approaches to NRM to improve the natural resource base, for long-term productivity and landscape health (also and FDF Outcome)"
@@ -148,6 +144,7 @@ let config = {
             "name": "Improved NRM in agricultural landscapes for increased capacity to prepare and respond to drought"
         }
     ],
+    "navigationMode": "returnToProject",
     "fdf": [
         {
             "name": "More primary producers preserve natural capital while also improving productivity and profitability"
@@ -169,8 +166,7 @@ let config = {
         "Financial",
         "External stakeholders",
         "Natural Environment"
-    ],
-    "navigationMode": "returnToProject"
+    ]
 };
 
 let name = "Future Drought Fund";
