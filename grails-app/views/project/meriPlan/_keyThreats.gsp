@@ -8,8 +8,8 @@
 <table class="table threats">
     <thead>
     <th class="index"></th>
-    <th class="threat required">Key threat(s) and/or key threatening processes <fc:iconHelp>Describe the key threats (or key threatening processes) to the primary investment priority</fc:iconHelp></th>
-    <th class="intervention required">Interventions to address threats <fc:iconHelp>Describe the proposed interventions to address the threat and how this will deliver on the 5 year outcome.</fc:iconHelp></th>
+    <th class="threat required">Key threat(s) and/or key threatening processes <fc:iconHelp>${threatHelpText ?: "Describe the key threats (or key threatening processes) to the primary investment priority"}</fc:iconHelp></th>
+    <th class="intervention required">Interventions to address threats <fc:iconHelp>${interventionHelpText ?: "Describe the proposed interventions to address the threat and how this will deliver on the 5 year outcome."}</fc:iconHelp></th>
     <th class="remove"></th>
     </thead>
     <tbody data-bind="foreach: rows">
