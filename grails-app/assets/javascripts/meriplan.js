@@ -723,7 +723,7 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
                 target.periodTargets[i].target(periodTarget || 0);
             });
             target.target(currentTarget ? currentTarget.target || 0 : 0);
-            target.targetDate(currentTarget ? currentTarget.targetDate : null);
+            target.targetDate(currentTarget ? currentTarget.targetDate : '');
         };
 
         target.toJSON = function () {

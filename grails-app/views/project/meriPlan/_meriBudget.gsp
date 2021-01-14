@@ -8,7 +8,7 @@
         <thead>
         <tr>
             <th class="index"></th>
-            <g:if test="${!showActivityColumn}">
+            <g:if test="${showThemeColumn}">
             <th class="budget-category">Investment/Priority Area <fc:iconHelp title="Investment/Priority Area">Select the appropriate investment area and indicate the funding distribution across the project to this. Add rows as required for different investment priority areas.</fc:iconHelp></th>
             </g:if>
             <th class="budget-description">${itemName ?: "Description"} <fc:iconHelp title="${itemName ?: "Description"}">${itemHelp ?:"Describe how funding distribution will address this investment priority"}</fc:iconHelp></th>
@@ -54,7 +54,9 @@
         <tfoot>
         <tr>
             <td class="footer-index"></td>
+            <g:if test="${showActivityColumn || showThemeColumn}">
             <td class="budget-footer"></td>
+            </g:if>
 
             <td style="text-align: right;"  class="budget-footer"><b>Total </b></td>
             <!-- ko foreach: details.budget.columnTotal -->
@@ -63,8 +65,9 @@
             <td style="text-align: center;" class="budget-amount"><b><span data-bind="text:details.budget.overallTotal.formattedCurrency"></span></b></td>
             <td class="remove"></td>
         </tr>
+        <g:set var="colspan" value="${(showActivityColumn || showThemeColumn) ? 8 : 7 }"/>
         <tr>
-            <td data-bind="attr:{colspan:details.budget.columnTotal.length+8}">
+            <td data-bind="attr:{colspan:details.budget.columnTotal.length+${colspan}}">
                 <button type="button" class="btn btn-small" data-bind="disable: isProjectDetailsLocked(), click: addBudget">
                     <i class="fa fa-plus"></i> Add a row</button>
             </td>

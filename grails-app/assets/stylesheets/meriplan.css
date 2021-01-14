@@ -154,6 +154,9 @@ table tr.header th {
 .meri-plan .service-targets td.target-date {
     width:7em;
 }
+.meri-plan .service-targets-view .target-date {
+    min-width:6em;
+}
 .meri-plan .service-targets td.target-date input {
     width:7em;
 }
