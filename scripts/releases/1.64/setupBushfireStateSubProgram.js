@@ -167,6 +167,7 @@ program.config.meriPlanContents = [
         "model": {
             "itemName": "Budget item",
             "showActivityColumn": false,
+            "showThemeColumn": false,
             "explanation": "The budget <u>must</u> clearly specify how the funds will be spent for each service the proponent will undertake in accordance with the approved project proposal. Expenditure items must align with the approved project proposal (including the amount identified for project reporting and administration). Each service or spending category should be set out as a different line item"
         }
     }
