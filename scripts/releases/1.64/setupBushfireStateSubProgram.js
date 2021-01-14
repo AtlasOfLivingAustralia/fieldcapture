@@ -119,7 +119,8 @@ program.config.meriPlanContents = [
         "template": "keyThreats",
         "model": {
             "title": "Key Threats",
-            "explanation": "Describe the key threat(s) and/or key threatening process to the priority action for this project. A key threat may comprise, for example: bridal veil <i>(asparagus declinatus)</i> invasion (a weed of national significance). The intervention to address the threat may comprise, for example: control and remove bridal veil at project site"
+            "explanation": "Describe the key threat(s) and/or key threatening process to the priority action for this project. A key threat may comprise, for example: bridal veil <i>(asparagus declinatus)</i> invasion (a weed of national significance). The intervention to address the threat may comprise, for example: control and remove bridal veil at project site",
+            "interventionHelpText": "Describe the proposed interventions to address the threat and how this will deliver on the project outcome"
         }
     },
     {
@@ -197,7 +198,7 @@ program.config.projectReports = [
     },
     {
         "reportType": "Single",
-        "firstReportingPeriodEnd": "2021-06-30T14:00:00Z",
+        "firstReportingPeriodEnd": "2022-06-30T14:00:00Z",
         "reportDescriptionFormat": "Outcomes Report 1 for %4$s",
         "reportNameFormat": "Outcomes Report 1",
         "reportingPeriodInMonths": 36,
