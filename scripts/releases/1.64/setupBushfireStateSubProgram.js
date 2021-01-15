@@ -65,7 +65,9 @@ program.config.meriPlanContents = [
             "useCategorySelection": true,
             "explanation": "List the natural assets within the bushfire region that will benefit from this project",
             "fromPriorities": true,
-            "placeHolder": "Please select"
+            "placeHolder": "Please select",
+            "assetCategoryHelpText": "as identified within the regional workshop reports.  Types with no assets are not selectable",
+            "assetHelpText": "scientific and/or common name"
         }
     },
     {
@@ -82,7 +84,8 @@ program.config.meriPlanContents = [
         "model": {
             "subtitle": "Please provide outcome statements. Outcomes statements should: <br/>- Contribute to the regional investment strategy;<br/>- Outline the degree of impact having undertaken the actions within the project timeframe;<br/>- Be expressed as a SMART statement (Specific, Measurable, Attainable, Realistic and Time-bound); and<br/>- Ensure the outcomes are measurable with consideration to the monitoring methodology provided below.",
             "placeholder": "By 30 June 2021, [Free text]",
-            "title": "Outcome statements"
+            "title": "Outcome statements",
+            "helpText":" outcome/s the project is expected to achieve by June 2022"
         }
     },
     {
@@ -94,6 +97,7 @@ program.config.meriPlanContents = [
     {
         "template": "description",
         "model": {
+            "helpTextHeading":"a succinct overview of the project: (i) what will be done and (ii) why it will be done",
             "maxSize": "1000",
             "placeholder": "[Free text; limit response to 1000 characters (approx. 150 words)]",
             "explanation": " Please provide a short description of this project. The project description should be succinct and state what will be done and why it will be done. This project description will be visible on the project overview page in MERIT"
@@ -102,6 +106,7 @@ program.config.meriPlanContents = [
     {
         "template": "projectPartnerships",
         "model": {
+            "helpTextPartnerNature":"if partnership with an organisation: provide the name of the organisation and the role they will play/how you will support them. If partnering with community groups or members of the public: indicate each group or individual you will engage with",
             "namePlaceHolder": "[Free text]",
             "partnershipPlaceHolder": "[Free text]",
             "explanation": "Please provide details on all project partners, including partner name, type of organisation and the nature of their participation in the project. For example, a partner could be a research institute that contributes frog research expertise to the project proponent in the deliver of a threatened frog species habitat augmentation and breeding project"
@@ -112,7 +117,8 @@ program.config.meriPlanContents = [
         "model": {
             "title": "Consultation",
             "explanation": "Please provide details of consultation with relevant state / territory agencies and NRM organisations to identify any duplication between activities proposed in the Activity and any other government-funded actions already underway in the project location. Where duplication has been identified, please describe how this has been resolved. If a modification to the Activity is required, you must submit a written request for a variation to the Department.",
-            "placeHolder": "[Free text]"
+            "placeHolder": "[Free text] Indicate the groups or individuals you will consult with",
+            "helpTextHeading": "Indicate the groups or individuals you will consult with"
         }
     },
     {

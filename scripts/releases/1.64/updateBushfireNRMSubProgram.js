@@ -8,7 +8,8 @@ program.config.meriPlanContents =  [
     {
         "template": "programOutcome",
         "model": {
-            "maximumPriorities": "1000"
+            "maximumPriorities": "1000",
+            "helpTextHeading": "Bushfire program outcomes are listed in the secondary outcomes"
         }
     },
     {
@@ -37,7 +38,9 @@ program.config.meriPlanContents =  [
             "useCategorySelection": true,
             "explanation": "List the natural assets within the bushfire region that will benefit from this project",
             "fromPriorities": true,
-            "placeHolder": "Please select"
+            "placeHolder": "Please select",
+            "assetCategoryHelpText": "as identified within the regional workshop reports.  Types with no assets are not selectable",
+            "assetHelpText": "scientific and/or common name"
         }
     },
     {
@@ -64,6 +67,7 @@ program.config.meriPlanContents =  [
     {
         "template": "description",
         "model": {
+            "helpTextHeading":"a succinct overview of the project: (i) what will be done and (ii) why it will be done",
             "tableFormatting": true,
             "maxSize": "1000",
             "placeholder": "Please provide a short description of this project. This project description will be visible on the project overview page in MERIT [Free text; limit response to 1000 characters (approx. 150 words)]"
