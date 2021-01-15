@@ -42,7 +42,7 @@ class DataSetControllerSpec extends Specification {
         1 * projectService.getAllProjectOutcomes(project) >> ["1", "2"]
         1 * projectService.listProjectInvestmentPriorities(project) >> ["p1"]
 
-        model == [project:project, projectId:'p1', programName:"program 1", priorities:["p1", "Other"], outcomes:["1", "2"]]
+        model == [project:project, projectId:'p1', programName:"program 1", priorities:["p1"], outcomes:["1", "2"]]
     }
 
     void "If the project or data set cannot be found when editing a dataset, a 404 is returned"() {
@@ -77,7 +77,7 @@ class DataSetControllerSpec extends Specification {
         1 * projectService.getAllProjectOutcomes(project) >> ["1", "2"]
         1 * projectService.listProjectInvestmentPriorities(project) >> ["p1"]
 
-        model == [project:project, projectId:'p1', programName:"program 1", priorities:["p1", "Other"], outcomes:["1", "2"], dataSet:existingDataSets[1]]
+        model == [project:project, projectId:'p1', programName:"program 1", priorities:["p1"], outcomes:["1", "2"], dataSet:existingDataSets[1]]
     }
 
     void "The save method delegates to the projectService"() {
