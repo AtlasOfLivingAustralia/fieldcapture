@@ -453,6 +453,15 @@ config.meriPlanContents =  [
         }
     },
     {
+        "template": "relatedProjects",
+        "model": {
+            "helpTextHeading":"A succinct overview of the project: (i) what will be done and (ii) why it will be done",
+            "maxSize": "1000",
+            "placeholder": "[Free text; limit response to 1000 characters (approx. 150 words)]",
+            "explanation": " Please provide a short description of this project. The project description should be succinct and state what will be done and why it will be done. This project description will be visible on the project overview page in MERIT"
+        }
+    },
+    {
         "template": "projectPartnerships",
         "model": {
             "namePlaceHolder": "[Free text]",

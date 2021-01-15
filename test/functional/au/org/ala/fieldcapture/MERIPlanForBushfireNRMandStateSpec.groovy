@@ -35,6 +35,7 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
         meriPlan.asset = "Euastacus jagara (Freshwater crayfish)"
         meriPlan.shortTermOutcomes[0].value( "Short term outcome 1")
         meriPlan.projectDescription = "MERI plan edited description"
+        meriPlan.relatedProjects = "Related projects"
         meriPlan.projectPartnerships[0].name = 'partner name'
         meriPlan.projectPartnerships[0].partnership = 'partnership'
         meriPlan.projectPartnerships[0].orgType = 'Trust'
@@ -65,6 +66,7 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
         meriPlan.asset == "Euastacus jagara (Freshwater crayfish)"
         meriPlan.shortTermOutcomes[0].value() == "Short term outcome 1"
         meriPlan.projectDescription == "MERI plan edited description"
+        meriPlan.relatedProjects == "Related projects"
         meriPlan.projectPartnerships[0].name == 'partner name'
         meriPlan.projectPartnerships[0].partnership == 'partnership'
         meriPlan.projectPartnerships[0].orgType == 'Trust'
