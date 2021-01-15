@@ -561,6 +561,7 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
         self.name = ko.observable(project.name);
         self.programName = config.programName;
         self.projectEvaluationApproach = ko.observable(o.projectEvaluationApproach);
+        self.relatedProjects = ko.observable(o.relatedProjects);
         // Initialise with 2 KEQ rows
         if (!o.keq) {
             o.keq = {
