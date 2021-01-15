@@ -39,7 +39,7 @@ program.config.meriPlanContents =  [
             "explanation": "List the natural assets within the bushfire region that will benefit from this project",
             "fromPriorities": true,
             "placeHolder": "Please select",
-            "assetCategoryHelpText": "as identified within the regional workshop reports.  Types with no assets are not selectable",
+            "assetCategoryHelpText": "As identified within the regional workshop reports.  Types with no assets are not selectable",
             "assetHelpText": "scientific and/or common name"
         }
     },
@@ -67,7 +67,7 @@ program.config.meriPlanContents =  [
     {
         "template": "description",
         "model": {
-            "helpTextHeading":"a succinct overview of the project: (i) what will be done and (ii) why it will be done",
+            "helpTextHeading":"A succinct overview of the project: (i) what will be done and (ii) why it will be done",
             "tableFormatting": true,
             "maxSize": "1000",
             "placeholder": "Please provide a short description of this project. This project description will be visible on the project overview page in MERIT [Free text; limit response to 1000 characters (approx. 150 words)]"
@@ -76,6 +76,7 @@ program.config.meriPlanContents =  [
     {
         "template": "projectPartnerships",
         "model": {
+            "helpTextPartnerNature":"If partnership with an organisation: provide the name of the organisation and the role they will play/how you will support them. If partnering with community groups or members of the public: indicate each group or individual you will engage with",
             "namePlaceHolder": "[Free text]",
             "partnershipPlaceHolder": "[Free text]"
         }
