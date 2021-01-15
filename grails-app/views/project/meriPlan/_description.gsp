@@ -4,7 +4,7 @@
             <table class="table">
                 <tbody>
                 <tr class="header required">
-                    <th class="required">Project description (${maxSize ?: 1500} character limit) <fc:iconHelp>"${helpTextHeading ?:'Project description will be visible on project overview page in MERIT.'}"</fc:iconHelp></th>
+                    <th class="required">Project description (${maxSize ?: 1500} character limit) <fc:iconHelp>${helpTextHeading ?:'Project description will be visible on project overview page in MERIT.'}</fc:iconHelp></th>
                 </tr>
                 <tr>
                     <td><textarea rows="5" data-validation-engine="validate[required,maxSize[${maxSize ?: 1500}]]"
