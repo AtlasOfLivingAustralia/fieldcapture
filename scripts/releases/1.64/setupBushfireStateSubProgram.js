@@ -104,6 +104,15 @@ program.config.meriPlanContents = [
         }
     },
     {
+        "template": "relatedProjects",
+        "model": {
+            "helpTextHeading":"A succinct overview of the project: (i) what will be done and (ii) why it will be done",
+            "maxSize": "1000",
+            "placeholder": "[Free text; limit response to 1000 characters (approx. 150 words)]",
+            "explanation": " Please provide a short description of this project. The project description should be succinct and state what will be done and why it will be done. This project description will be visible on the project overview page in MERIT"
+        }
+    },
+    {
         "template": "projectPartnerships",
         "model": {
             "helpTextPartnerNature":"If partnership with an organisation: provide the name of the organisation and the role they will play/how you will support them. If partnering with community groups or members of the public: indicate each group or individual you will engage with",

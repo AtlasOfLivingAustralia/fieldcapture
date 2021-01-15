@@ -40,7 +40,7 @@ program.config.meriPlanContents =  [
             "fromPriorities": true,
             "placeHolder": "Please select",
             "assetCategoryHelpText": "As identified within the regional workshop reports.  Types with no assets are not selectable",
-            "assetHelpText": "scientific and/or common name"
+            "assetHelpText": "Scientific and/or common name"
         }
     },
     {
