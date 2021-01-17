@@ -47,7 +47,7 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
         meriPlan.nationalAndRegionalPlans[0].name= "Plan 1"
         meriPlan.nationalAndRegionalPlans[0].section= "Section 1"
         meriPlan.nationalAndRegionalPlans[0].alignment= "Alignment 1"
-        meriPlan.projectServices[0].service = "Communication materials"
+        meriPlan.projectServices[0].selectService("Communication materials")
         meriPlan.projectServices[0].selectScore("Number of communication materials published")
         meriPlan.projectServices[0].targets = "5"
         meriPlan.projectServices[0].date = "01-07-2021"

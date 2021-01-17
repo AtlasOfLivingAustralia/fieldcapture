@@ -87,12 +87,20 @@ class ServiceTargetRow extends Module {
         targets { $('.budget-cell input') }
     }
 
+    void selectService(String value) {
+        waitFor {
+            def options = $('.service option').collect{it.text() }
+            options.contains(value)
+        }
+        service = value
+    }
+
     void selectScore(String value) {
         waitFor {
             def options = $('.score option').collect{it.text() }
             options.contains(value)
         }
-        score = value;
+        score = value
     }
 }
 
