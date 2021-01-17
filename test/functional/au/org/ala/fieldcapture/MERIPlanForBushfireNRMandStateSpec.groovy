@@ -1,7 +1,11 @@
 package au.org.ala.fieldcapture
 
+import pages.AdminClearCachePage
+import pages.AdminTools
 import pages.RlpProjectPage
+import spock.lang.Stepwise
 
+@Stepwise
 class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
 
     def setupSpec() {
@@ -10,6 +14,25 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
 
     def cleanup() {
         logout(browser)
+    }
+
+    // Clear the metadata cache to ensure the services and scores are loaded correctly.
+    def clearCache() {
+        setup:
+        login([userId: '2', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ALA_ADMIN'], browser)
+
+        when:
+        to AdminTools
+
+        then:
+        at AdminTools
+
+        when:
+        waitFor {$("#btnClearMetadataCache").displayed}
+        $("#btnClearMetadataCache").click()
+
+        then:
+        waitFor 5,{to AdminClearCachePage}
     }
 
     //  Regional Fund for Wildlife and Habitat Bushfire Recovery (the Regional Fund) - States

@@ -2,6 +2,7 @@ print("This script is expected to be executed with a working directory containin
 print("Current working dir: " + pwd());
 load('../data_common/loadMeritHub.js');
 load('../data_common/insertData.js');
+load('../data/settingDefaults.js');
 
 var config = {
     optionalProjectContent: ["Risks and Threats", "MERI Plan"]
@@ -774,6 +775,7 @@ db.userPermission.insert({
     accessLevel: 'admin'
 });
 
+db.setting.insert({"key":"meritservices.config", "value":JSON.stringify(projectDashboardService) ,"version":0});
 // Load scores used by RLP services to enable their selection in the MERI plan.
 createProjectNumberBaselineDataSets({ "scoreId":"score_42"});
 createProjectNumberOfCommunicationMaterialsPublished({ "scoreId":"score_43"});
