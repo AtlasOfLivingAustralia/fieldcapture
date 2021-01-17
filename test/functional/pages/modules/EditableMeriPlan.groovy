@@ -83,7 +83,16 @@ class ServiceTargetRow extends Module {
     static content = {
         service { $('.service select') }
         score { $('.score select') }
+        date(required:false) { $('.target-date input') }
         targets { $('.budget-cell input') }
+    }
+
+    void selectScore(String value) {
+        waitFor {
+            def options = $('.score option').collect{it.text() }
+            options.contains(value)
+        }
+        score = value;
     }
 }
 

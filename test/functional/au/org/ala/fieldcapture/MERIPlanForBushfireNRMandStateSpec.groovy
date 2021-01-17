@@ -47,6 +47,10 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
         meriPlan.nationalAndRegionalPlans[0].name= "Plan 1"
         meriPlan.nationalAndRegionalPlans[0].section= "Section 1"
         meriPlan.nationalAndRegionalPlans[0].alignment= "Alignment 1"
+        meriPlan.projectServices[0].service = "Communication materials"
+        meriPlan.projectServices[0].selectScore("Number of communication materials published")
+        meriPlan.projectServices[0].targets = "5"
+        meriPlan.projectServices[0].date = "01-07-2021"
         meriPlan.budget[0].description = 'budget description'
         meriPlan.budget[0].budgetAmounts[0].value('100')
 
@@ -78,7 +82,11 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
         meriPlan.nationalAndRegionalPlans[0].name.value() == "Plan 1"
         meriPlan.nationalAndRegionalPlans[0].section.value() == "Section 1"
         meriPlan.nationalAndRegionalPlans[0].alignment.value() == "Alignment 1"
-
+        meriPlan.projectServices[0].targets.size() == 1
+        meriPlan.projectServices[0].service.value() == "2"
+        meriPlan.projectServices[0].score.value() == "score_43"
+        meriPlan.projectServices[0].targets.value() == "5"
+        meriPlan.projectServices[0].date.value() == "01-07-2021"
         meriPlan.budget[0].description == 'budget description'
         meriPlan.budget[0].budgetAmounts[0].value() == '100'
     }

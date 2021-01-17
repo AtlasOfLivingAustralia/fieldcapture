@@ -514,7 +514,8 @@ config.meriPlanContents =  [
         "template": "serviceTargets",
         "model": {
             "title": "Services and Targets Table",
-            "serviceName": "Service"
+            "serviceName": "Service",
+            "showTargetDate": true
         }
     },
     {
@@ -774,3 +775,8 @@ db.userPermission.insert({
     userId: '1',
     accessLevel: 'admin'
 });
+
+// Load scores used by RLP services to enable their selection in the MERI plan.
+createProjectNumberBaselineDataSets({ "scoreId":"score_42"});
+createProjectNumberOfCommunicationMaterialsPublished({ "scoreId":"score_43"});
+createProjectWeedAreaSurveyedHaDefault({ "scoreId":"score_44"});
