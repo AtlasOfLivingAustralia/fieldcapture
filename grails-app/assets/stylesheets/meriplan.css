@@ -140,15 +140,25 @@ table tr.header th {
     word-break: break-word;
 }
 
-.meri-plan #serviceTargetsContainer td.service {
-    width: 20%;
+.meri-plan .service-targets td.service {
+    width: 30%;
 }
-.meri-plan #serviceTargetsContainer td.score {
-    width: 60%;
+.meri-plan .service-targets td.score {
+    width: 50%;
 }
 
-.meri-plan #serviceTargetsContainer td.target {
-    width: 20%;
+.meri-plan .service-targets td.target {
+    width: 10%;
+}
+
+.meri-plan .service-targets td.target-date {
+    width:7em;
+}
+.meri-plan .service-targets-view .target-date {
+    min-width:6em;
+}
+.meri-plan .service-targets td.target-date input {
+    width:7em;
 }
 
 .meri-plan td .select2.select2-container {
@@ -241,7 +251,7 @@ table tr.header th {
     height: 30px;
 }
 
-.meri-plan .asset-category, .merplan .asset-category {
+.meri-plan .asset-category, .meri-plan .asset-category {
     width: 50%;
 }
 

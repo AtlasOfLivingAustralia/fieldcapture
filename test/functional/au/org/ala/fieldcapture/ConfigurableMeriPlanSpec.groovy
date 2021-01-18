@@ -385,5 +385,4 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
 
     }
-
 }

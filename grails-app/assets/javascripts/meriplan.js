@@ -561,6 +561,7 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
         self.name = ko.observable(project.name);
         self.programName = config.programName;
         self.projectEvaluationApproach = ko.observable(o.projectEvaluationApproach);
+        self.relatedProjects = ko.observable(o.relatedProjects);
         // Initialise with 2 KEQ rows
         if (!o.keq) {
             o.keq = {
@@ -687,6 +688,7 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
         target.scoreId = ko.observable(score ? score.scoreId : null);
 
         target.target = ko.observable();
+        target.targetDate = ko.observable().extend({simpleDate:false});
 
         target.periodTargets = _.map(periods, function (period) {
             return {period: period, target: ko.observable(0)}
@@ -722,11 +724,13 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
                 target.periodTargets[i].target(periodTarget || 0);
             });
             target.target(currentTarget ? currentTarget.target || 0 : 0);
+            target.targetDate(currentTarget ? currentTarget.targetDate : '');
         };
 
         target.toJSON = function () {
             return {
                 target: target.target(),
+                targetDate: target.targetDate(),
                 scoreId: target.scoreId(),
                 periodTargets: ko.toJS(target.periodTargets)
             };
@@ -1122,6 +1126,9 @@ function OutcomesViewModel(outcomes, config) {
         return new SingleAssetOutcomeViewModel(outcome)
     }));
     self.midTermOutcomes = ko.observableArray(_.map(outcomes.midTermOutcomes || [], outcomeToViewModel));
+    self.fdf = ko.observableArray(outcomes.fdf);
+    self.nrm = ko.observableArray(outcomes.nrm);
+
 
     self.toJSON = function () {
         // Exclude the computed used by the view model

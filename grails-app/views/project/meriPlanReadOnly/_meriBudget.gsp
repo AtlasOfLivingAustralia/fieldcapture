@@ -26,7 +26,7 @@
         <tbody data-bind="foreach : details.budget.rows">
         <tr>
             <td class="index"><span data-bind="text:$index()+1"></span></td>
-            <g:if test="${!showActivityColumn}">
+            <g:if test="${showThemeColumn}">
             <td class="budget-category"><span data-bind="text:shortLabel"></span></td>
             </g:if>
             <td class="budget-description"><div style="text-align: left;"><span data-bind="text: description"></span></div>
@@ -49,7 +49,9 @@
         <tfoot>
         <tr>
             <td class="footer-index"></td>
+            <g:if test="${showActivityColumn || showThemeColumn}">
             <td class="budget-footer"></td>
+            </g:if>
             <td style="text-align: right;" class="budget-footer"><b>Total</b></td>
             <!-- ko foreach: details.budget.columnTotal -->
             <td style="text-align: center;" class="budget-amount">

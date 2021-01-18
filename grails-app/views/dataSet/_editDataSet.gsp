@@ -46,6 +46,7 @@
         <div class="col-sm-7">
             <g:select from="${priorities}" noSelection="['':'Please select...']" name="investmentPriority" class="form-control" id="investmentPriority" data-validation-engine="validate[required]" data-bind="value:investmentPriority"/>
         </div>
+
     </div>
     <div class="form-group row">
         <label for="type" class="col-sm-5 col-form-label required">7. Is this (a) a baseline dataset associated with a project outcome i.e. against which, change will be measured, (b) a project progress dataset that is tracking change against an established project baseline dataset or (c) a standalone, foundational dataset to inform future management interventions?</label>
