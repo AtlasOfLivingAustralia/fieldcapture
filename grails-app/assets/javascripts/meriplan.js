@@ -1083,7 +1083,7 @@ function OutcomesViewModel(outcomes, config) {
             outcomes.primaryOutcome.description = defaultOutcome.outcome;
         }
     }
-    self.fdFundOutcomeByCategory = function (category) {
+    self.listOfOtherOutcomeCategory = function (category) {
         var outcomes = [];
         config.outcomes.forEach(function (outcome) {
             if (outcome.category === category) {
@@ -1092,6 +1092,19 @@ function OutcomesViewModel(outcomes, config) {
         });
         return outcomes;
     };
+
+    self.selectedOtherOutcomesByCategory = function(category){
+        var selectedOutcome = [];
+        outcomes.otherOutcomes.forEach(function (otherOutcomes) {
+            var listOfOutcomes = self.listOfOtherOutcomeCategory(category);
+           listOfOutcomes.forEach(function (outcomes){
+               if (otherOutcomes === outcomes){
+                   selectedOutcome.push(outcomes)
+               }
+           })
+        })
+        return selectedOutcome;
+    }
 
     self.outcomePriorities = function (outcomeText) {
 

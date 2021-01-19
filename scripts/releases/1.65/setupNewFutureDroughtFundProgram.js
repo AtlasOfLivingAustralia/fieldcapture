@@ -72,7 +72,11 @@ let config = {
             }
         },
         {
-            "template": "fdFund"
+            "template": "otherOutcomes",
+            "model": {
+                "otherOutcomeCategoryTableTwo": "nrm",
+                "otherOutcomeCategoryTableOne": "fdf"
+            }
         },
         {
             "template": "outcomeStatements",
@@ -109,7 +113,7 @@ let config = {
             "template": "rationale",
             "model": {
                 "tableFormatting": true,
-                "rationaleHelpText": "Provide a rationale of why the targeted investment priorities are being addressed and explain (using evidence) how the methodology will address them. This includes why the area / stakeholders are being targeted and how the project activities chosen will contribute to achieving the 5 year outcomes. ",
+                "rationaleHelpText": "Provide a rationale of why the targeted investment priorities are being addressed and explain (using evidence) how the methodology will address them. This includes why the area / stakeholders are being targeted and how the project activities chosen will contribute to achieving the 5 year outcomes. Future Drought Fund and NRM Landscapes Program outcomes ",
                 "maxSize": "3000",
                 "title": "Project Rationale  (3000 character limit [approximately 500 words])"
             }
@@ -123,7 +127,10 @@ let config = {
             }
         },
         {
-            "template": "monitoringBaseline"
+            "template": "monitoringBaseline",
+            "model": {
+                "titleHelpText": "Describe the project baseline(s) units of measure or data which will be used to report progress towards this project's outcomes (short-term, medium-term, NRM Landscapes, FDF and 5 year program outcome), and the monitoring design. Refer to the Regional Land Partnerships Evaluation Plan, which provides guidance on  baselines and the monitoring indicators for each RLP outcome. Note, other monitoring indicators can also be used. Refer to the Future Drought Fund Monitoring, Evaluation and Learning Framework for guidance"
+            }
         },
         {
             "template": "monitoringIndicators",
@@ -199,4 +206,4 @@ while(program.hasNext()){
     p.config = config;
     p.outcomes = outcomes;
     db.program.save(p);
-}
+};
