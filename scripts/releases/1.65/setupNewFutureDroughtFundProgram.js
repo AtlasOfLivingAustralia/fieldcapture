@@ -68,7 +68,8 @@ let config = {
         {
             "template": "programOutcome",
             "model": {
-                "maximumPriorities": "1000"
+                "maximumPriorities": "1000",
+                "priorityHelpText": "Enter the primary investment priority/ies for the primary outcome. <br/>For outcomes 1-4, only one primary investment priority can be selected.<br/>For outcomes 5-6, select one or a maximum of two primary investment priorities"
             }
         },
         {

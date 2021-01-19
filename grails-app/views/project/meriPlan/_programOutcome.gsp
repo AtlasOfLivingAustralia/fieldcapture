@@ -3,7 +3,9 @@
     <thead>
     <tr class="header">
         <th class="outcome-priority required">Primary outcome<g:if test="${helpTextPrimaryOutcome}"> <fc:iconHelp html="true" container="body">${helpTextPrimaryOutcome}</fc:iconHelp></g:if></th>
-        <th class="primary-outcome priority required">Primary Investment <span data-bind="if:!isAgricultureProject() && !details.outcomes.primaryOutcomeSupportsMultiplePriorities()">Priority</span><span data-bind="if:isAgricultureProject() || details.outcomes.primaryOutcomeSupportsMultiplePriorities()">Priorities</span> <fc:iconHelp html="true" container="body">Enter the primary investment priority/ies for the primary outcome. (drop down list in MERIT) <br/>For outcomes 1-4, only one primary investment priority can be selected.<br/>For outcomes 5-6, select one or a maximum of two primary investment priorities</fc:iconHelp></th>
+        <th class="primary-outcome priority required">Primary Investment <span data-bind="if:!isAgricultureProject() && !details.outcomes.primaryOutcomeSupportsMultiplePriorities()">Priority</span><span data-bind="if:isAgricultureProject() || details.outcomes.primaryOutcomeSupportsMultiplePriorities()">Priorities</span>
+                <fc:iconHelp html="true" container="body">${priorityHelpText?: 'Enter the primary investment priority/ies for the primary outcome. (drop down list in MERIT) <br/>For outcomes 1-4, only one primary investment priority can be selected.<br/>For outcomes 5-6, select one or a maximum of two primary investment priorities'}</fc:iconHelp>
+        </th>
         <th class="remove"></th>
     </tr>
     </thead>
