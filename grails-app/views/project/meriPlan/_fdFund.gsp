@@ -9,16 +9,19 @@
     </thead>
     <tbody>
     <tr>
-        <td class="outcome-priority">
-            <g:each var="fdf" in="${config.program?.config?.fdf?.collect { it.name } ?: []}">
-                <label class="checkbox"><input type="checkbox" name="fdf" data-validation-engine="validate[minCheckbox[2],maxCheckbox[${maximumFDF?:'4'}]" data-bind="checked:details.outcomes.fdf, disable: isProjectDetailsLocked()" value="${fdf}">${fdf}</label>
-            </g:each>
-
+        <td class="outcome-priority fdf">
+            <ul class="unstyled" data-bind="foreach:details.outcomes.fdFundOutcomeByCategory('fdf')">
+                <li>
+                    <label class="checkbox"><input type="checkbox" name="fdf" data-validation-engine="validate[minCheckbox[2],maxCheckbox[${maximumFDF?:'4'}]" data-bind="value:$data, checked:details.outcomes.otherOutcomes, disable: $parent.isProjectDetailsLocked()"> <!--ko text: $data--><!--/ko--></label>
+                </li>
+            </ul>
         </td>
-        <td colspan="2" class="priority">
-            <g:each var="nrm" in="${config.program?.config?.nrm?.collect { it.name } ?: []}">
-                <label class="checkbox"><input type="checkbox" name="nrm" data-validation-engine="validate[minCheckbox[2],maxCheckbox[${maximumNRM?:'4'}]" data-bind="checked:details.outcomes.nrm, disable: isProjectDetailsLocked()" value="${nrm}">${nrm}</label>
-            </g:each>
+        <td class="outcome-priority nrm">
+            <ul class="unstyled" data-bind="foreach:details.outcomes.fdFundOutcomeByCategory('nrm')">
+                <li>
+                    <label class="checkbox"><input type="checkbox" name="nrm" data-validation-engine="validate[minCheckbox[2],maxCheckbox[${maximumNRM?:'4'}]" data-bind="value:$data, checked:details.outcomes.otherOutcomes, disable: $parent.isProjectDetailsLocked()"> <!--ko text: $data--><!--/ko--></label>
+                </li>
+            </ul>
         </td>
     </tr>
     </tbody>

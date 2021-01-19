@@ -1083,6 +1083,15 @@ function OutcomesViewModel(outcomes, config) {
             outcomes.primaryOutcome.description = defaultOutcome.outcome;
         }
     }
+    self.fdFundOutcomeByCategory = function (category) {
+        var outcomes = [];
+        config.outcomes.forEach(function (outcome) {
+            if (outcome.category === category) {
+                outcomes.push(outcome.outcome)
+            }
+        });
+        return outcomes;
+    };
 
     self.outcomePriorities = function (outcomeText) {
 
@@ -1126,9 +1135,7 @@ function OutcomesViewModel(outcomes, config) {
         return new SingleAssetOutcomeViewModel(outcome)
     }));
     self.midTermOutcomes = ko.observableArray(_.map(outcomes.midTermOutcomes || [], outcomeToViewModel));
-    self.fdf = ko.observableArray(outcomes.fdf);
-    self.nrm = ko.observableArray(outcomes.nrm);
-
+    self.otherOutcomes = ko.observableArray(outcomes.otherOutcomes);
 
     self.toJSON = function () {
         // Exclude the computed used by the view model
