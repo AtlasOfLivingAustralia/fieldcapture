@@ -1,7 +1,7 @@
 <!-- ko stopBinding: true -->
 <div id="project-data-sets">
     <h3>Project data set summaries</h3>
-    <p>For each project, Service Providers should be collecting data that enables them to evaluate and report on the success of their projects. Service Providers will need to provide a summary of each dataset by answering the following questions.</p>
+    ${projectContent.datasets.description}
     <div class="form-actions">
         <button class="btn btn-primary float-right" data-bind="click:newDataSet">New data set summary</button>
     </div>
