@@ -1,7 +1,7 @@
 <!-- ko stopBinding: true -->
 <div id="project-data-sets">
     <h3>Project data set summaries</h3>
-    ${projectContent.datasets.description}
+    <fc:getSettingContent settingType="${au.org.ala.merit.SettingPageType.DATA_SET_DESCRIPTION}"/>
     <div class="form-actions">
         <button class="btn btn-primary float-right" data-bind="click:newDataSet">New data set summary</button>
     </div>
