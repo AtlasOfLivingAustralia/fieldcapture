@@ -19,7 +19,7 @@ fi
 
 BRANCH=$3
 if [ -z $BRANCH]; then
-    BRANCH=feature/download_mu_report
+    BRANCH=dev
 fi
 
 ECODATA_LOCAL_DIR=$2
