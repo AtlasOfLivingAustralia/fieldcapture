@@ -114,7 +114,8 @@ class EditableMeriPlan extends Module {
 
         assetType(required: false) {$('.asset-category select[data-bind*="category"]')}
         asset(required: false) {$('.asset-detail select[data-bind*="description"]')}
-
+        otherOutcomeColumn1(required: false) {$('.column-1 ul.unstyled li')}
+        otherOutcomeColumn2(required: false) {$('.column-2 ul.unstyled li')}
         secondaryOutcomes(required: false) { $('table.secondary-outcome tbody tr').moduleList(OutcomeRow) }
         shortTermOutcomes(required: false) { $('tbody[data-bind*="shortTermOutcomes"] textarea') }
         mediumTermOutcomes(required: false) {  $('tbody[data-bind*="midTermOutcomes"] textarea') }
