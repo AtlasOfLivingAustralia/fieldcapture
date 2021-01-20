@@ -75,6 +75,8 @@ let config = {
         {
             "template": "otherOutcomes",
             "model": {
+                "titleTableHeadingOne": "FDF Outcomes (Select at least 1)",
+                "minimumCheckTableOne": "1",
                 "otherOutcomeCategoryTableTwo": "nrm",
                 "otherOutcomeCategoryTableOne": "fdf"
             }
@@ -107,14 +109,14 @@ let config = {
         {
             "template": "sectionHeading",
             "model": {
-                "heading": "Agriculture projects only (Primary outcomes 5 or 6)"
+                "heading": "Agriculture projects only"
             }
         },
         {
             "template": "rationale",
             "model": {
                 "tableFormatting": true,
-                "rationaleHelpText": "Provide a rationale of why the targeted investment priorities are being addressed and explain (using evidence) how the methodology will address them. This includes why the area / stakeholders are being targeted and how the project activities chosen will contribute to achieving the 5 year outcomes. Future Drought Fund and NRM Landscapes Program outcomes ",
+                "rationaleHelpText": "Provide a rationale of why the targeted investment priorities are being addressed and explain (using evidence) how the methodology will address them. This includes why the area / stakeholders are being targeted and how the project activities chosen will contribute to achieving the 5 year Future Drought Fund and NRM Landscapes Program outcomes.",
                 "maxSize": "3000",
                 "title": "Project Rationale  (3000 character limit [approximately 500 words])"
             }
