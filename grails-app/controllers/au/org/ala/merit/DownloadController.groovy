@@ -4,7 +4,7 @@ import org.codehaus.groovy.grails.commons.GrailsApplication
 
 import javax.servlet.http.HttpServletResponse
 
-//@PreAuthorise(accessLevel = 'siteReadOnly', redirectController = "home")
+@PreAuthorise(accessLevel = 'siteReadOnly', redirectController = "home")
 class DownloadController {
     GrailsApplication grailsApplication
     WebService webService
@@ -18,7 +18,7 @@ class DownloadController {
         if (!id) {
             response.setStatus(400)
             render "A download ID is required"
-        }else {
+        } else {
             String url = "${grailsApplication.config.ecodata.baseUrl}" +'download/'+id
 
             def resp = webService.proxyGetRequest(response, url, true, true, 120000)
