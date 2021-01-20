@@ -1,6 +1,9 @@
 <g:if test="${title}">
     <h4>${title}</h4>
 </g:if>
+<g:if test="${explanation}">
+    <p>${explanation}</p>
+</g:if>
 <table class="table methodology">
     <thead>
     <tr class="header required">

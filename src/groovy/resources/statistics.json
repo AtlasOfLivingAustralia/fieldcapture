@@ -153,10 +153,21 @@
     "nlp12": {
       "config": "3",
       "title": "20 Million Trees",
-      "label": "planned for planting",
+      "label": "surviving with mature height > 2 metres",
       "units": "Trees",
-      "type": "outputTarget",
-      "searchTerm":"associatedProgramFacet:\"20 Million Trees Service Providers\" OR (associatedProgramFacet:\"National Landcare Programme\" AND associatedSubProgramFacet:\"20 Million Trees Grants\")",
+      "type": "score",
+      "projectFilter": [
+        "associatedSubProgramFacet:20 Million Trees Cumberland Conservation Corridor Grants",
+        "associatedSubProgramFacet:20 Million Trees Cumberland Conservation Corridor Land Management",
+        "associatedSubProgramFacet:20 Million Trees Discretionary Grants",
+        "associatedSubProgramFacet:20 Million Trees Grants Round 1",
+        "associatedSubProgramFacet:20 Million Trees Grants Round 2",
+        "associatedSubProgramFacet:20 Million Trees Grants Round 3",
+        "associatedSubProgramFacet:20 Million Trees Service Providers",
+        "associatedSubProgramFacet:20 Million Trees Service Providers Tranche 2",
+        "associatedSubProgramFacet:20 Million Trees Service Providers Tranche 3",
+        "associatedSubProgramFacet:20 Million Trees West Melbourne"
+      ],
       "scoreLabel": "Total No. of plants surviving with mature height > 2 metres"
     },
     "nlp13": {
@@ -219,6 +230,66 @@
       "projectFilter": [
         "associatedProgramFacet:Green Army"
       ]
+    },
+    "nlp15": {
+      "config": "1",
+      "title": "20 Million Trees",
+      "label": "Total seeds sown for species expected to grow above 2m",
+      "units": "Kg",
+      "type": "score",
+      "projectFilter": [
+        "associatedSubProgramFacet:20 Million Trees Cumberland Conservation Corridor Grants",
+        "associatedSubProgramFacet:20 Million Trees Cumberland Conservation Corridor Land Management",
+        "associatedSubProgramFacet:20 Million Trees Discretionary Grants",
+        "associatedSubProgramFacet:20 Million Trees Grants Round 1",
+        "associatedSubProgramFacet:20 Million Trees Grants Round 2",
+        "associatedSubProgramFacet:20 Million Trees Grants Round 3",
+        "associatedSubProgramFacet:20 Million Trees Service Providers",
+        "associatedSubProgramFacet:20 Million Trees Service Providers Tranche 2",
+        "associatedSubProgramFacet:20 Million Trees Service Providers Tranche 3",
+        "associatedSubProgramFacet:20 Million Trees West Melbourne"
+      ],
+      "scoreLabel": "Kilograms of seed sown of species expected to grow > 2 metres in height"
+    },
+    "nlp16": {
+      "config": "5",
+      "title": "20 Million Trees",
+      "label": "Total area revegetated",
+      "units": "Ha",
+      "type": "score",
+      "projectFilter": [
+        "associatedSubProgramFacet:20 Million Trees Cumberland Conservation Corridor Grants",
+        "associatedSubProgramFacet:20 Million Trees Cumberland Conservation Corridor Land Management",
+        "associatedSubProgramFacet:20 Million Trees Discretionary Grants",
+        "associatedSubProgramFacet:20 Million Trees Grants Round 1",
+        "associatedSubProgramFacet:20 Million Trees Grants Round 2",
+        "associatedSubProgramFacet:20 Million Trees Grants Round 3",
+        "associatedSubProgramFacet:20 Million Trees Service Providers",
+        "associatedSubProgramFacet:20 Million Trees Service Providers Tranche 2",
+        "associatedSubProgramFacet:20 Million Trees Service Providers Tranche 3",
+        "associatedSubProgramFacet:20 Million Trees West Melbourne"
+      ],
+      "scoreLabel": "Area of revegetation works (Ha)"
+    },
+    "nlp17": {
+      "config": "6",
+      "title": "20 Million Trees",
+      "label": "Total number of native species with understorey",
+      "units": "Trees",
+      "type": "score",
+      "projectFilter": [
+        "associatedSubProgramFacet:20 Million Trees Cumberland Conservation Corridor Grants",
+        "associatedSubProgramFacet:20 Million Trees Cumberland Conservation Corridor Land Management",
+        "associatedSubProgramFacet:20 Million Trees Discretionary Grants",
+        "associatedSubProgramFacet:20 Million Trees Grants Round 1",
+        "associatedSubProgramFacet:20 Million Trees Grants Round 2",
+        "associatedSubProgramFacet:20 Million Trees Grants Round 3",
+        "associatedSubProgramFacet:20 Million Trees Service Providers",
+        "associatedSubProgramFacet:20 Million Trees Service Providers Tranche 2",
+        "associatedSubProgramFacet:20 Million Trees Service Providers Tranche 3",
+        "associatedSubProgramFacet:20 Million Trees West Melbourne"
+      ],
+      "scoreLabel": "Total No. of plants surviving"
     }
   },
   "groups": [
@@ -226,7 +297,7 @@
       "ts1",
       "all1",
       "r2",
-      "ga1",
+      "nlp12",
       "all2",
       "r1"
     ],
@@ -235,24 +306,32 @@
       "nlp7",
       "nlp1",
       "nlp4",
-      "ga3",
+      "nlp9",
       "all2"
     ],
     [
       "nlp5",
-      "nlp7",
-      "nlp9",
-      "ga3",
       "r4",
+      "nlp9",
+      "r2",
+      "all2",
       "nlp12"
     ],
     [
-      "ga2",
+      "nlp12",
       "r3",
       "all2",
       "nlp13",
       "nlp4",
       "r4"
+    ],
+    [
+      "nlp12",
+      "r4",
+      "ga1",
+      "nlp15",
+      "nlp16",
+      "nlp17"
     ]
   ]
 }

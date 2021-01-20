@@ -99,6 +99,18 @@ db.userPermission.insert({
     accessLevel: 'admin'
 });
 
+createOrganisation({
+    name:'THE TRUSTEE FOR PSS FUND Test',
+    organisationId:'test_organisation',
+    status:'active', abn:'',
+    url:'http://www.ala.org.au',
+    acronym:'TSTORG', description:'THE TRUSTEE FOR PSS FUND Test'
+})
 
+createProject({name:'project active', projectId:"project_active", status:"active", planStatus:'submitted', internalOrderId:'12345' })
+createProject({name:'project application', projectId:"project_application", status:"application", planStatus:'submitted', internalOrderId:''})
+createProject({name:'project completed', projectId:"project_completed", status:"completed", planStatus:'submitted', internalOrderId:'12345'})
 
-
+db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_active', userId:'2', accessLevel:'caseManager'});
+db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_application', userId:'2', accessLevel:'caseManager'});
+db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_completed', userId:'2', accessLevel:'caseManager'});

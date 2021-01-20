@@ -80,10 +80,10 @@
                     </div>
 
                     <g:if test="${showOrderNumber}">
-                    <div class="row-fluid" data-bind="visible:workOrderId">
+                    <div class="row-fluid" data-bind="visible:internalOrderId">
                         <div class="span4 header-label">Internal order number</div>
 
-                        <div class="span8">${project.workOrderId}</div>
+                        <div class="span8">${project.internalOrderId}</div>
                     </div>
                     </g:if>
                 </div>

@@ -414,6 +414,9 @@ class ImportService {
             def editorEmail = projectDetails.project.remove('editorEmail')
             def editorEmail2 = projectDetails.project.remove('editorEmail2')
 
+            //When projects are loaded into MERIT via CSV upload, they are given a status of "Application".
+            projectDetails.project.status = 'application'
+
             def result = importProject(projectDetails.project, false) // Do not overwrite existing projects because of the impacts to sites / activities etc.
 
             if (result.project == 'existing') {

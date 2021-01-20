@@ -174,7 +174,7 @@ function loadActivityForms() {
 function assign(src, des){
     for(var prop in src){
         if(src.hasOwnProperty(prop)){
-            if(isObject(src[prop])) {
+            if(src[prop] && isObject(src[prop])) {
                 if ( Array.isArray(src[prop]))
                     des[prop] = []
                 else

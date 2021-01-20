@@ -4,6 +4,7 @@ import au.org.ala.merit.reports.ReportGenerationOptions
 import grails.converters.JSON
 import grails.test.mixin.TestFor
 import groovy.json.JsonSlurper
+import org.apache.http.HttpStatus
 import org.codehaus.groovy.grails.web.converters.marshaller.json.CollectionMarshaller
 import org.codehaus.groovy.grails.web.converters.marshaller.json.MapMarshaller
 import org.codehaus.groovy.grails.web.json.parser.JSONParser
@@ -27,6 +28,8 @@ class ProjectServiceSpec extends Specification {
     AuditService auditService = Mock(AuditService)
     ProjectConfigurationService projectConfigurationService = Mock(ProjectConfigurationService)
     ProgramConfig projectConfig = new ProgramConfig([activityBasedReporting: true, reportingPeriod:6, reportingPeriodAlignedToCalendar: true, weekDaysToCompleteReport:43])
+    ProgramService programService = Mock(ProgramService)
+    CacheService cacheService = Mock(CacheService)
 
     Map reportConfig = [
             weekDaysToCompleteReport:projectConfig.weekDaysToCompleteReport,
@@ -53,6 +56,7 @@ class ProjectServiceSpec extends Specification {
         service.emailService = emailService
         service.projectConfigurationService = projectConfigurationService
         service.auditService = auditService
+        service.programService = programService
         userService.userIsAlaOrFcAdmin() >> false
         metadataService.getProgramConfiguration(_,_) >> [reportingPeriod:6, reportingPeriodAlignedToCalendar: true, weekDaysToCompleteReport:43]
         projectConfigurationService.getProjectConfiguration(_) >> projectConfig
@@ -200,6 +204,19 @@ class ProjectServiceSpec extends Specification {
         result.error == "Invalid plan status"
     }
 
+    def "plan should not be approved if work order number is not supplied"(){
+        given:
+        def projectId = 'project1'
+        def planStatus = ProjectService.PLAN_SUBMITTED
+        webService.getJson(_) >> [projectId:projectId, planStatus:planStatus, wrokOrderId:""]
+
+        when:
+        def result = service.approvePlan(projectId, [:])
+
+        then:
+        result.error == "An internal order number must be supplied before the MERI Plan can be approved"
+    }
+
     def "plan should not be rejected if it's not been approved."(){
         given:
         def projectId = 'project1'
@@ -235,7 +252,7 @@ class ProjectServiceSpec extends Specification {
         def projectId = 'project1'
         def planStatus = ProjectService.PLAN_SUBMITTED
         List projectRoles = []
-        Map project = [projectId:projectId, planStatus:planStatus, grantId:'g1', reports:null]
+        Map project = [projectId:projectId, planStatus:planStatus, grantId:'g1', reports:null, internalOrderId: "12345"]
         webService.getJson(_) >> project
         String expectedName = 'g1 MERI plan approved 2019-07-01T00:00:00Z'
         String expectedFilename = 'meri-approval-project1-1561939200000.txt'
@@ -282,7 +299,7 @@ class ProjectServiceSpec extends Specification {
         def projectId = 'project1'
         def planStatus = initialState
         List projectRoles = []
-        Map project =  [projectId:projectId, planStatus:planStatus]
+        Map project =  [projectId:projectId, planStatus:planStatus, internalOrderId: "12345"]
         ProgramConfig programConfig = new ProgramConfig([
                 emailTemplates:[
                         (ProgramConfig.PLAN_SUBMITTED_EMAIL_TEMPLATE_CONFIG_ITEM): EmailTemplate.RLP_PLAN_SUBMITTED_EMAIL_TEMPLATE.name(),
@@ -977,6 +994,225 @@ class ProjectServiceSpec extends Specification {
         service.getSecondaryOutcomes([custom:[details:[outcomes:[secondaryOutcomes:[[description:'Outcome 1'], [description:'Outcome 2']]]]]]) == ['Outcome 1', 'Outcome 2']
         service.getSecondaryOutcomes([custom:[details:[:]]]) == []
         service.getSecondaryOutcomes(null) == []
+    }
+
+    def "The Program will join the two program name when the parent is not null"(){
+        setup:
+        String programId = "12345"
+        Map programDetails = [programId: programId, name: "Test Sub Program", parent: [name: "Test Program", programId: "programId"]]
+        List<Map> list = [[name: "Test Sub Program", programId: programId]]
+
+        when:
+        List<Map> programList = service.getProgramList()
+
+        then:
+        1 * programService.listOfAllPrograms() >> list
+        1 * programService.get(programId) >> programDetails
+
+        and:
+        programList[0].name == "Test Program - Test Sub Program"
+        programList[0].programId == "12345"
+    }
+
+    def "The program will return program name when parent is null"(){
+        setup:
+        String programId = "12345"
+        Map programDetails = [programId: programId, name: "Test Program", parent: null]
+        List<Map> list = [[name: "Test Program", programId: programId]]
+
+        when:
+        List<Map> programList = service.getProgramList()
+
+        then:
+        1 * programService.listOfAllPrograms() >> list
+        1 * programService.get(programId) >> programDetails
+
+        and:
+        programList[0].name == "Test Program"
+        programList[0].programId == "12345"
+    }
+
+
+    private Map setupMockServices() {
+
+         List<Map> services =[[output: "Output Test 1",name: "Output Test 1", scores: [[scoreId:"1", label: "Test label 1", isOutputTarget:true]], id: 1, category: null]]
+
+        metadataService.getProjectServices() >> services
+    }
+    def "Convert double value to int for Services"(){
+        setup:
+        setupMockServices()
+        String projectId = "project_10"
+        Map project = [projectId: projectId,
+                       outputTargets:[
+                               [scoreId: "1", target: "10", scoreLabel: "Test Score Label 1", unit: "Ha", scoreName: "areaTreatedHa", outputLabel: "Test Output Label 1"]],
+                       custom: [details: [serviceIds:[1.0, 2.0,3.0,4.0]]]]
+
+
+        when:
+        def results = service.getProjectServicesWithTargets(project.projectId)
+
+        then:
+        1 * webService.getJson({it.contains("project/"+projectId)}) >> project
+
+        and:
+        results.size() == 1
+        results[0].name == "Output Test 1"
+        results[0].scores[0].label == "Test label 1"
+        results[0].scores[0].isOutputTarget == true
+        results[0].scores[0].target == "10"
+        results[0].scores[0].preiodTargets == null
+
+    }
+
+    def "able to collect int for Services"(){
+        setup:
+        setupMockServices()
+        String projectId = "project_10"
+        Map project = [projectId: projectId,
+                       outputTargets:[
+                               [scoreId: "1", target: "10", scoreLabel: "Test Score Label 1", unit: "Ha", scoreName: "areaTreatedHa", outputLabel: "Test Output Label 1"]],
+                       custom: [details: [serviceIds:[1, 2,3,4]]]]
+
+
+        when:
+        def results = service.getProjectServicesWithTargets(project.projectId)
+
+        then:
+        1 * webService.getJson({it.contains("project/"+projectId)}) >> project
+
+        and:
+        results.size() == 1
+        results[0].name == "Output Test 1"
+        results[0].scores[0].label == "Test label 1"
+        results[0].scores[0].isOutputTarget == true
+        results[0].scores[0].target == "10"
+        results[0].scores[0].preiodTargets == null
+
+    }
+
+    def "Check if the servicesIds is null"(){
+        setup:
+        setupMockServices()
+        String projectId = "project_10"
+        Map project = [projectId: projectId,
+                       outputTargets:[
+                               [scoreId: "1", target: "10", scoreLabel: "Test Score Label 1", unit: "Ha", scoreName: "areaTreatedHa", outputLabel: "Test Output Label 1"]]]
+
+
+        when:
+        def results = service.getProjectServicesWithTargets(project.projectId)
+
+        then:
+        1 * webService.getJson({it.contains("project/"+projectId)}) >> project
+
+        and:
+        results.size() == 0
+    }
+
+    def "A new dataset can be added"()  {
+        setup:
+        String projectId = 'p1'
+        Map dataset = [name:'data set 1']
+        Map project = [projectId:projectId, reports:[[reportId:'r1']]]
+        Map postData
+
+        when:
+        Map result = service.saveDataSet(projectId, dataset)
+
+        then:
+        2 * webService.getJson({it.contains("project/"+projectId)}) >> project
+        1 * webService.doPost({it.endsWith('project/'+projectId)}, _) >> { id, data ->
+            postData = data
+            [status: HttpStatus.SC_OK]
+        }
+
+        postData.size() == 1
+        postData.custom.size() == 1
+        postData.custom.dataSets.size() == 1
+        postData.custom.dataSets[0].name =='data set 1'
+        postData.custom.dataSets[0].dataSetId != null
+        result == [status: HttpStatus.SC_OK]
+    }
+
+    def "A dataset can be edited"()  {
+        setup:
+        String projectId = 'p1'
+        Map dataset = [name:'data set 1', dataSetId:'d1']
+        List existingDataSets = [[name:'data set 1 - old name', dataSetId:'d1'], [name:'data set 2', dataSetId:'d2'], [name:'data set 3', dataSetId:'d3']]
+        Map project = [projectId:projectId, custom:[dataSets:existingDataSets]]
+        Map postData
+
+        when:
+        Map result = service.saveDataSet(projectId, dataset)
+
+        then:
+        2 * webService.getJson({it.contains("project/"+projectId)}) >> project
+        1 * webService.doPost({it.endsWith('project/'+projectId)}, _) >> { id, data ->
+            postData = data
+            [status: HttpStatus.SC_OK]
+        }
+
+        postData.size() == 1
+        postData.custom.size() == 1
+        postData.custom.dataSets.size() == 3
+        postData.custom.dataSets[0].name =='data set 1'
+        postData.custom.dataSets[0].dataSetId == 'd1'
+        postData.custom.dataSets[1] == existingDataSets[1]
+        postData.custom.dataSets[2] == existingDataSets[2]
+
+        result == [status: HttpStatus.SC_OK]
+    }
+
+    def "If the data set does not exist when saving an exception will be thrown"()  {
+        setup:
+        String projectId = 'p1'
+        Map dataset = [name:'data set 1', dataSetId:'d2']
+        Map project = [projectId:projectId, custom:[dataSets:[[dataSetId:'d1', name:"old name"]]]]
+
+        when:
+        service.saveDataSet(projectId, dataset)
+
+        then:
+        1 * webService.getJson({it.contains("project/"+projectId)}) >> project
+        thrown IllegalArgumentException
+    }
+
+    def "A dataset can be deleted"()  {
+        setup:
+        String projectId = 'p1'
+        String datasetId = 'd1'
+        Map project = [projectId:projectId, custom:[dataSets:[[dataSetId:'d1', name:"name"]]]]
+        Map postData
+
+        when:
+        Map result = service.deleteDataSet(projectId, datasetId)
+
+        then:
+        2 * webService.getJson({it.contains("project/"+projectId)}) >> project
+        1 * webService.doPost({it.endsWith('project/'+projectId)}, _) >> { id, data ->
+            postData = data
+            [status: HttpStatus.SC_OK]
+        }
+
+        postData.size() == 1
+        postData.custom.size() == 1
+        postData.custom.dataSets.size() == 0
+        result == [status: HttpStatus.SC_OK]
+    }
+
+    def "If the data set does not exist when deleting an exception will be thrown"()  {
+        setup:
+        String projectId = 'p1'
+        String datasetId = 'd2'
+        Map project = [projectId:projectId, custom:[dataSets:[[dataSetId:'d1', name:"old name"]]]]
+
+        when:
+        service.deleteDataSet(projectId, datasetId)
+
+        then:
+        1 * webService.getJson({it.contains("project/"+projectId)}) >> project
+        thrown IllegalArgumentException
     }
 
     private Map buildApprovalDocument(int i, String projectId) {

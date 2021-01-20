@@ -86,6 +86,10 @@
         viewHistoricalMeriPlanUrl:"${createLink(action:"viewMeriPlan", id:project.projectId)}",
         riskChangesReportHtmlUrl:"${createLink(controller:'project', action:'projectReport', id:project.projectId)}",
         riskChangesReportPdfUrl:"${createLink(controller:'project', action:'projectReportPDF', id:project.projectId)}",
+        newDataSetUrl:"${createLink(controller:'dataSet', action:'create', id:project.projectId)}",
+        editDataSetUrl:"${createLink(controller:'dataSet', action:'edit', id:project.projectId)}.json",
+        deleteDataSetUrl:"${createLink(controller:'dataSet', action:'delete', id:project.projectId)}.json",
+
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 
     },
@@ -98,6 +102,7 @@
     <asset:stylesheet src="project.css"/>
     <asset:stylesheet src="leaflet-manifest.css"/>
     <asset:stylesheet src="feature.css"/>
+    <asset:stylesheet src="select2-bootstrap4/select2-bootstrap4.css"/>
 </head>
 <body>
 <div id="spinner" class="spinner" style="position: fixed;top: 50%;left: 50%;margin-left: -50px;margin-top: -50px;text-align:center;z-index:1234;overflow: auto;width: 100px;height: 102px;">
@@ -257,7 +262,11 @@
                 minimumProjectEndDate: ${projectContent.admin.minimumProjectEndDate?'"'+projectContent.admin.minimumProjectEndDate+'"':'null'},
                 riskChangesReportElementId: 'risk-changes-report',
                 riskChangesReportHtmlUrl: fcConfig.riskChangesReportHtmlUrl,
-                riskChangesReportPdfUrl: fcConfig.riskChangesReportPdfUrl
+                riskChangesReportPdfUrl: fcConfig.riskChangesReportPdfUrl,
+                newDataSetUrl: fcConfig.newDataSetUrl,
+                editDataSetUrl: fcConfig.editDataSetUrl,
+                deleteDataSetUrl: fcConfig.deleteDataSetUrl,
+                returnToUrl: fcConfig.returnTo
             };
 
             var programs = <fc:modelAsJavascript model="${programs}"/>;
@@ -393,6 +402,11 @@
                         viewModel.initialiseReports();
                     }
                 },
+                'datasets': {
+                    initialiser: function() {
+                        viewModel.initialiseDataSets();
+                    }
+                },
                 'admin': {
                     initialiser: function () {
                         viewModel.initialiseAdminTab();
@@ -466,8 +480,7 @@
             //Page loading indicator.
 			$('.spinner').hide();
         	$('.tab-content').fadeIn();
-
-
+        	$('.programId').select2({theme: "bootstrap4"});
         });// end window.load
 
 

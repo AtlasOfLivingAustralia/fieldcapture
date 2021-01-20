@@ -30,6 +30,28 @@
         <input type="text" class="input-xlarge" readonly="readonly" data-bind="value:serviceProviderName" id="serviceProviderName"/>
     </div>
 </div>
+<g:if test="${meriPlanStatus == true && hidePrograms}">
+    <div class="row-fluid">
+        <div class="control-group span4">
+            <label for="programId" class="control-label">Program </label>
+            <div class="controls">
+                <g:select class="programId select" style="width: 280px" from="${programList}" data-bind="value:programId" optionKey="programId" name="name" id="programId" optionValue="name" disabled="disabled"/>
+
+            </div>
+        </div>
+    </div>
+</g:if>
+<g:elseif test="${meriPlanStatus == false  && hidePrograms}">
+    <div class="row-fluid">
+        <div class="control-group span4">
+            <label for="programId" class="control-label">Program </label>
+            <div class="controls">
+                <g:select class="programId select" style="width: 280px" from="${programList}" data-bind="value:programId" optionKey="programId" name="name" id="programId" optionValue="name"/>
+
+            </div>
+        </div>
+    </div>
+</g:elseif>
 <div class="row-fluid">
     <div class="control-group">
         <label for="description" class="control-label">Project description</label>
@@ -52,9 +74,15 @@
         </div>
     </div>
     <div class="control-group span4">
-        <label class="control-label" for="workOrderId">Work order id / Internal order number</label>
+        <label class="control-label" for="internalOrderId">Internal order number</label>
         <div class="controls">
-            <g:textField class="" name="workOrderId" data-bind="value:workOrderId"/>
+            <!-- Once the MERI plan is approved, the internal order number becomes a mandatory field. -->
+            <g:if test="${ProjectService.APPLICATION_STATUS != project.status}">
+                <g:textField class="" placeholder="If unavailable, use 'TBA'" name="internalOrderId" data-bind="value:internalOrderId" data-validation-engine="validate[required]"/>
+            </g:if>
+            <g:else>
+                <g:textField class="" placeholder="If not available, use TBA" name="internalOrderId" data-bind="value:internalOrderId"/>
+            </g:else>
         </div>
     </div>
 
@@ -208,11 +236,13 @@
         <label>Project status
         	<fc:iconHelp title="Project status">Project status.</fc:iconHelp>
         </label>
-        <g:if test="${ProjectService.PLAN_UNLOCKED == project.planStatus}">
+        <!-- Application status cannot be changed until the MERI plan is approved. -->
+        <!-- Application status is set only when creating the project -->
+        <g:if test="${ProjectService.PLAN_UNLOCKED == project.planStatus || ProjectService.APPLICATION_STATUS == project.status}">
             <select class="input-xlarge" id="projectState" data-bind="options:projectStatus, optionsText: 'name', optionsValue: 'id', value:status" disabled="disabled"></select>
         </g:if>
         <g:else>
-            <select class="input-xlarge" id="projectState" data-bind="options:projectStatus, optionsText: 'name', optionsValue: 'id', value:status"></select>
+            <select class="input-xlarge" id="projectState" data-bind="options:projectStatus.filter(x => x.name != '${ProjectService.APPLICATION_STATUS}'), optionsText: 'name', optionsValue: 'id', value:status"></select>
         </g:else>
     </div>
     <div class="span4">

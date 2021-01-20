@@ -309,4 +309,80 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlan.consultation == 'Consultation'
 
     }
+
+    def "The MERI Plan will display only sections specified in FHR config for FHR projects"() {
+        setup:
+        String projectId = 'fhr1'
+        login([userId: '1', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'USER'], browser)
+
+        when:
+        to RlpProjectPage, projectId
+
+        then:
+        waitFor { at RlpProjectPage }
+
+        when:
+        def meriPlan = openMeriPlanEditTab()
+
+        meriPlan.primaryOutcome = "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
+        waitFor {
+            meriPlan.primaryPriority.find('[value="Ginini Flats Wetland Complex"')
+        }
+        meriPlan.primaryPriority = "Ginini Flats Wetland Complex"
+        meriPlan.secondaryOutcomes[0].outcome = "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
+        meriPlan.secondaryOutcomes[0].priority = "Ginini Flats Wetland Complex"
+        meriPlan.shortTermOutcomes[0].value("Short term outcome 1")
+        meriPlan.addMediumTermOutcome("Medium term outcome 1")
+        meriPlan.projectName = "MERI plan edited name"
+        meriPlan.projectDescription = "MERI plan edited description"
+        meriPlan.keyThreats[0].threat = "Threat 1"
+        meriPlan.keyThreats[0].intervention = "Intervention 1"
+        meriPlan.projectMethodology = "Project methodology"
+        meriPlan.projectBaseline[0].baseline = "Baseline 1"
+        meriPlan.projectBaseline[0].method = "Method 1"
+        meriPlan.monitoringIndicators[0].indicator = "Indicator 1"
+        meriPlan.monitoringIndicators[0].approach = 'Approach 1'
+        meriPlan.reviewMethodology = "Review methodology"
+        meriPlan.nationalAndRegionalPlans[0].name = "Plan 1"
+        meriPlan.nationalAndRegionalPlans[0].section = "Section 1"
+        meriPlan.nationalAndRegionalPlans[0].alignment = "Alignment 1"
+        meriPlan.rationale = "rationale"
+        meriPlan.communityEngagement = "community engagement"
+
+        meriPlan.save()
+
+        def previousLoad = getAtCheckTime()
+        to RlpProjectPage, projectId
+
+        then:
+        waitFor { getAtCheckTime() > previousLoad }
+
+        when:
+        meriPlan = openMeriPlanEditTab()
+
+        then:
+        meriPlan.primaryOutcome.value().contains("Ramsar") // Direct comparison fails due to &nbsp in the HTML due to the length of the options
+        meriPlan.primaryPriority == "Ginini Flats Wetland Complex"
+        meriPlan.secondaryOutcomes[0].outcome.value().contains("Ramsar")
+        meriPlan.secondaryOutcomes[0].priority.value() == "Ginini Flats Wetland Complex"
+        meriPlan.shortTermOutcomes[0].value() == "Short term outcome 1"
+        meriPlan.mediumTermOutcomes[0].value() == "Medium term outcome 1"
+        meriPlan.projectName == "MERI plan edited name"
+        meriPlan.projectDescription == "MERI plan edited description"
+        meriPlan.keyThreats[0].threat.value() == "Threat 1"
+        meriPlan.keyThreats[0].intervention.value() == "Intervention 1"
+        meriPlan.projectMethodology == "Project methodology"
+        meriPlan.projectBaseline[0].baseline.value() == "Baseline 1"
+        meriPlan.projectBaseline[0].method.value() == "Method 1"
+        meriPlan.monitoringIndicators[0].indicator.value() == "Indicator 1"
+        meriPlan.monitoringIndicators[0].approach.value() == 'Approach 1'
+        meriPlan.reviewMethodology == "Review methodology"
+        meriPlan.nationalAndRegionalPlans[0].name.value() == "Plan 1"
+        meriPlan.nationalAndRegionalPlans[0].section.value() == "Section 1"
+        meriPlan.nationalAndRegionalPlans[0].alignment.value() == "Alignment 1"
+        meriPlan.rationale.value() == "rationale"
+        meriPlan.communityEngagement.value() == "community engagement"
+
+
+    }
 }

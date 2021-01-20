@@ -6,14 +6,17 @@ class SiteTabContent extends Module {
     static content = {
         addSites{$(".addSite")}
         uploadSites{$(".uploadSite")}
+
     }
 }
-//class tableContent extends Module {
-//    static content = {
-//        siteName { $("#siteName") }
-//    }
-//}class tableContent extends Module {
-//    static content = {
-//        siteName { $("#siteName") }
-//    }
-//}
+
+class EditSiteContent extends  Module{
+    static content = {
+        name{$('input[data-bind*="name"]')}
+        saveBtn {$("#save")}
+    }
+
+    void save(){
+        saveBtn.click()
+    }
+}

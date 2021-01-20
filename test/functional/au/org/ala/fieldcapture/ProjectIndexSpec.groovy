@@ -101,5 +101,219 @@ class ProjectIndexSpec extends StubbedCasSpec {
 //        admin.projectSettings.fundingSource[0].value() == "RLP"
 //        admin.projectSettings.fundingSourceAmount.value() == "1000"
 //    }
+
+    def "Projects with application status can be saved without a internal order id"() {
+        setup:
+        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+
+        when:
+        to ProjectIndex, 'project_application'
+
+        then:
+        at ProjectIndex
+
+        when:
+        adminTab.click()
+
+        then:
+        waitFor { admin.projectSettingsTab.click() }
+
+        when:
+        admin.projectSettings.internalOrderId = ''
+        admin.projectSettings.saveChangesButton.click()
+
+        then:
+        waitFor{hasBeenReloaded()}
+        at ProjectIndex
+
+        !admin.projectSettings.internalOrderIdErrorDisplayed()
+        admin.projectSettings.internalOrderId == ''
+    }
+
+    def "Projects with application status can be saved with a internal order id"() {
+        setup:
+        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+
+        when:
+        to ProjectIndex, 'project_application'
+
+        then:
+        at ProjectIndex
+
+        when:
+        adminTab.click()
+
+        then:
+        waitFor { admin.projectSettingsTab.click() }
+
+        when:
+        admin.projectSettings.internalOrderId = '12345'
+        admin.projectSettings.saveChangesButton.click()
+
+        then:
+        waitFor{hasBeenReloaded()}
+        at ProjectIndex
+
+        !admin.projectSettings.internalOrderIdErrorDisplayed()
+        admin.projectSettings.internalOrderId == '12345'
+    }
+
+    def "Projects with active status can be saved without a internal order id"() {
+        setup:
+        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+
+        when:
+        to ProjectIndex, 'project_active'
+
+        then:
+        at ProjectIndex
+
+        when:
+        adminTab.click()
+
+        then:
+        waitFor { admin.projectSettingsTab.click() }
+
+        when:
+        admin.projectSettings.internalOrderId = ''
+        admin.projectSettings.saveChangesButton.click()
+
+        then:
+        admin.projectSettings.internalOrderIdErrorDisplayed()
+    }
+
+    def "Projects with active status can be saved with a internal order id"() {
+        setup:
+        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+
+        when:
+        to ProjectIndex, 'project_active'
+
+        then:
+        at ProjectIndex
+
+        when:
+        adminTab.click()
+
+        then:
+        waitFor { admin.projectSettingsTab.click() }
+
+        when:
+        admin.projectSettings.internalOrderId = '12345'
+        admin.projectSettings.saveChangesButton.click()
+
+        then:
+        waitFor{hasBeenReloaded()}
+        at ProjectIndex
+
+        !admin.projectSettings.internalOrderIdErrorDisplayed()
+        admin.projectSettings.internalOrderId == '12345'
+    }
+
+    def "Projects with completed status can be saved without a internal order id"() {
+        setup:
+        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+
+        when:
+        to ProjectIndex, 'project_completed'
+
+        then:
+        at ProjectIndex
+
+        when:
+        adminTab.click()
+
+        then:
+        waitFor { admin.projectSettingsTab.click() }
+
+        when:
+        admin.projectSettings.internalOrderId = ''
+        admin.projectSettings.saveChangesButton.click()
+
+        then:
+        admin.projectSettings.internalOrderIdErrorDisplayed()
+    }
+
+    def "Projects with completed status can be saved with a internal order id"() {
+        setup:
+        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+
+        when:
+        to ProjectIndex, 'project_completed'
+
+        then:
+        at ProjectIndex
+
+        when:
+        adminTab.click()
+
+        then:
+        waitFor { admin.projectSettingsTab.click() }
+
+        when:
+        admin.projectSettings.internalOrderId = '12345'
+        admin.projectSettings.saveChangesButton.click()
+
+        then:
+        waitFor{hasBeenReloaded()}
+        at ProjectIndex
+
+        !admin.projectSettings.internalOrderIdErrorDisplayed()
+        admin.projectSettings.internalOrderId == '12345'
+    }
+
+    def "Status of the projects with application status cannot be changed"() {
+        setup:
+        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+
+        when:
+        to ProjectIndex, 'project_application'
+
+        then:
+        at ProjectIndex
+
+        when:
+        adminTab.click()
+
+        then:
+        waitFor { admin.projectSettingsTab.click() }
+        admin.projectSettings.projectState.@disabled
+    }
+
+    def "Status of the projects with active status should be able to be changed"() {
+        setup:
+        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+
+        when:
+        to ProjectIndex, 'project_active'
+
+        then:
+        at ProjectIndex
+
+        when:
+        adminTab.click()
+
+        then:
+        waitFor { admin.projectSettingsTab.click() }
+        !admin.projectSettings.projectState.@disabled
+    }
+
+    def "Status of the projects with completed status should be able to be changed"() {
+        setup:
+        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+
+        when:
+        to ProjectIndex, 'project_completed'
+
+        then:
+        at ProjectIndex
+
+        when:
+        adminTab.click()
+
+        then:
+        waitFor { admin.projectSettingsTab.click() }
+        !admin.projectSettings.projectState.@disabled
+    }
 }
 

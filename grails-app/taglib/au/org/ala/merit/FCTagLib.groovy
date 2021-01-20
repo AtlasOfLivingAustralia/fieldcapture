@@ -140,14 +140,27 @@ class FCTagLib {
                 inputAttrs["data-validation-engine"] = "validate[required]"
             }
 
-            mb.input(inputAttrs) {
-            }
-
-            mb.span(class:'add-on open-datepicker') {
-                mb.i(class:'fa fa-th') {
-                    mkp.yieldUnescaped("&nbsp;")
+            def content = {
+                mb.input(inputAttrs) {
+                }
+                String addOnClass = attrs.bs4 ? "input-group-append" : "add-on"
+                String buttonClass = attrs.bs4 ? "fa fa-th input-group-text" : "fa fa-th "
+                mb.span(class: "${addOnClass} open-datepicker") {
+                    mb.i(class: buttonClass) {
+                        mkp.yieldUnescaped("&nbsp;")
+                    }
                 }
             }
+            //  Bootstrap 4 needs the control to be wrapped in an input-group class
+            if (attrs.bs4) {
+                mb.div(class:"input-group") {
+                    content()
+                }
+            }
+            else {
+                content()
+            }
+
         } else {
             def inputAttrs = [
                 name:"${attrs.name}",
@@ -916,6 +929,9 @@ class FCTagLib {
                 statusClass = 'badge-success'
                 break
             case 'completed':
+                statusClass = 'badge-info'
+                break
+            case 'application':
                 statusClass = 'badge-info'
                 break
         }
