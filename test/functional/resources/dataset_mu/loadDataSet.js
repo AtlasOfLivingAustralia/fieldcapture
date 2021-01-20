@@ -203,7 +203,7 @@ var activity1 = {
     "startDate" : ISODate("2018-06-30T14:00:00.000Z"),
     "status" : "active",
     "type" : "RLP Core Services report",
-    "formVersion" : 1,
+    "formVersion" : NumberInt(1),
     "projectStage" : "",
     "siteId" : "",
     "mainTheme" : ""
