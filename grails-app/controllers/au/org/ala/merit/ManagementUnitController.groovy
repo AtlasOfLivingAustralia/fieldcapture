@@ -514,6 +514,7 @@ class ManagementUnitController {
         render featureCollection as JSON
     }
 
+    @PreAuthorise(accessLevel='siteReadOnly')
     def generateReportsInPeriod(){
         String startDate = params.startDate
         String endDate = params.endDate
@@ -524,12 +525,11 @@ class ManagementUnitController {
 
             def user = userService.getUser()
             def extras =[:]
-            if(user){
-                String email = user.userName
-                extras.put("systemEmail", grailsApplication.config.fieldcapture.system.email.address)
-                extras.put("senderEmail", grailsApplication.config.fieldcapture.system.email.address)
-                extras.put("email", email)
-            }
+
+            String email = user.userName
+            extras.put("systemEmail", grailsApplication.config.fieldcapture.system.email.address)
+            extras.put("senderEmail", grailsApplication.config.fieldcapture.system.email.address)
+            extras.put("email", email)
 
             String reportDownloadBaseUrl= grailsLinkGenerator.link(controller:'download',action:'get', absolute: true)
             extras.put("reportDownloadBaseUrl", reportDownloadBaseUrl)
