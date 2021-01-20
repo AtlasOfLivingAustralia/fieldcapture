@@ -47,6 +47,9 @@ class DataSetController {
         if (!priorities) {
             priorities = ['n/a']
         }
+        if (priorities){
+            priorities << 'Other'
+        }
 
         [projectId:projectId, programName:programName, priorities:priorities, outcomes: outcomes, project:project]
     }
