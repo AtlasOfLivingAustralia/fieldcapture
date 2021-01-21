@@ -1,0 +1,37 @@
+can you please copy the static page text from test and loaded into the production:
+
+1. https://fieldcapture-test.ala.org.au/admin/staticPages
+2. edit dataset.details
+3. copy the value from text box
+
+then
+load that into production
+After deploying the 1.65 go to
+1. https://fieldcapture.ala.org.au/admin/staticPages
+2. edit dataset.details
+3. cop the text from test environment
+4. paste in text box and save it.
+
+
+
+alternatively here is text that goes in the text box
+
+
+<strong>Overview</strong>
+<p>Service Providers collect data for each project to evaluate and report on the delivery of their projects. Service Providers need to provide a summary statement of each raw data set by answering the questions in the data set summary form.</p>
+<strong>What is a ‘data set summary’?</strong>
+<p>This is a set of basic information about raw data collections for a project or project service. </p>
+<ul> <li >Data set. Collection of data relating to a particular subject (e.g. field surveys).</li>
+<li>Raw data. Data that has not been processed since collection (e.g. species abundance data, camera trap data, weed assessments, participant surveys). </li>
+<li>Data summary. Key information on the data (e.g. metadata type information like measurements, method used, accessibility) to allow the Department to effectively organize, find and understand the data collected.  </li>
+</ul>
+<p>You do not need to complete a form for derived data sets (e.g. collated, joined, converted data) or for planning documents. </p>
+<strong>Who will need to complete a data set summary form?</strong>
+<p>Service Providers collecting raw data to support delivery of their project</p>
+<strong>Why should I complete this form?</strong>
+<p>To contribute to the long-term monitoring of RLP and future natural resource management programs. Data set summaries collect metadata information to allow the Department as ‘data stewards’ to manage all of the data collected by RLP projects. These summaries will provide the evidence base for reporting on project and program performance, as well as allow analysis and evaluation of benefits of the investment. </p>
+<strong>When do I need to do this by?</strong>
+<p>At any point in the lead up to and when completing Outcomes Report 1. </p>
+
+<strong>How?</strong>
+<p>Hit the <strong>New data set summary</strong> button below.</p>
