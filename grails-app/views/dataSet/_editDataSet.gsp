@@ -66,7 +66,7 @@
     <div class="form-group row">
         <label for="" class="col-sm-5 col-form-label required">8. What types of measurements or observations does the dataset include? <br/>To select more than one answer, hold down the ‘CTRL’ button whilst selecting an option from the drop-down list</label>
         <div class="col-sm-7">
-            <select multiple="multiple" type="text" class="form-control" id="" data-validation-engine="validate[required]" data-bind="selectedOptions:measurementTypes">
+            <select multiple="multiple" type="text" class="form-control" id="measurementTypes" data-validation-engine="validate[required]" data-bind="selectedOptions:measurementTypes">
                 <option>Abundance</option>
                 <option>Adoption - climate and market demands</option>
                 <option>Adoption - land resource management practices</option>
