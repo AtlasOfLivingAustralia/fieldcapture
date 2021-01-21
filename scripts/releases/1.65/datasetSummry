@@ -9,7 +9,7 @@ load that into production
 After deploying the 1.65 go to
 1. https://fieldcapture.ala.org.au/admin/staticPages
 2. edit dataset.details
-3. cop the text from test environment
+3. copy the text from test environment
 4. paste in text box and save it.
 
 
