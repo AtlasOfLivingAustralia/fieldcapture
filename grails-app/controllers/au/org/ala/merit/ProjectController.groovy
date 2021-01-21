@@ -28,6 +28,7 @@ class ProjectController {
     def projectService, metadataService, organisationService, commonService, activityService, userService, webService, roleService, grailsApplication
     def siteService, documentService, reportService, blogService, pdfGenerationService
     def programService
+    SettingService settingService
 
     private def espOverview(Map project, Map user) {
 

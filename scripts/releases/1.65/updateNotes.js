@@ -1,0 +1,1 @@
+db.site.update({notes:null}, {$set:{notes:null}}, {multi:true});

@@ -150,5 +150,4 @@ class ManagementUnitSpec extends StubbedCasSpec {
 //        waitFor{muReportDownloadLink().isDisplayed()}
 
     }*/
-
 }

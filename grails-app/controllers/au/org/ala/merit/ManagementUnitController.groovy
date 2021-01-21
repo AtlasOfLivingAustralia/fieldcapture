@@ -4,7 +4,7 @@ import au.org.ala.merit.command.SaveReportDataCommand
 import grails.converters.JSON
 import org.apache.http.HttpStatus
 import org.springframework.cache.annotation.Cacheable
-
+import java.text.ParseException
 import static ReportService.ReportMode
 
 /**
@@ -21,6 +21,9 @@ class ManagementUnitController {
     PdfGenerationService pdfGenerationService
     BlogService blogService
     ProjectService projectService
+
+    def grailsApplication
+    def grailsLinkGenerator
 
     def index(String id) {
         def mu = managementUnitService.get(id)
@@ -511,6 +514,36 @@ class ManagementUnitController {
         render featureCollection as JSON
     }
 
+    @PreAuthorise(accessLevel='siteReadOnly')
+    def generateReportsInPeriod(){
+        String startDate = params.startDate
+        String endDate = params.endDate
+        String dateFormat = "yyyy-MM-dd"
+        try{
+            Date.parse(dateFormat,startDate)
+            Date.parse(dateFormat,endDate)
 
+            def user = userService.getUser()
+            def extras =[:]
 
+            String email = user.userName
+            extras.put("systemEmail", grailsApplication.config.fieldcapture.system.email.address)
+            extras.put("senderEmail", grailsApplication.config.fieldcapture.system.email.address)
+            extras.put("email", email)
+
+            String reportDownloadBaseUrl= grailsLinkGenerator.link(controller:'download',action:'get', absolute: true)
+            extras.put("reportDownloadBaseUrl", reportDownloadBaseUrl)
+
+            def resp = managementUnitService.generateReports(startDate, endDate,extras)
+            render resp as JSON
+
+        }catch (ParseException e){
+            def message = [message: 'Error: You need to provide startDate and endDate in the format of yyyy-MM-dd ']
+            response.setContentType("application/json")
+            render message as JSON
+        }catch(Exception e){
+            def message = [message: 'Fatal: '+ e.message]
+            render message as JSON
+        }
+    }
 }

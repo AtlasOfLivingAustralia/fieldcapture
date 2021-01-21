@@ -458,6 +458,14 @@ class ReportService {
         return []
     }
 
+    def findReportPeriodsOfManagmentUnit(){
+        int[] reportPeriods = webService.getJson(grailsApplication.config.ecodata.baseUrl+"managementunit/getReportPeriods")
+
+        return reportPeriods
+
+    }
+
+
 
 
     /**

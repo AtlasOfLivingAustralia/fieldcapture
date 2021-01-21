@@ -86,6 +86,7 @@ db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entity
 
 
 
+
 var site1 = {
     "dateCreated" : ISODate("2013-12-16T00:48:29.045Z"),
     "extent" : {
@@ -170,8 +171,45 @@ addSetting('meritfielddata.rlp.cs_report.submitted.emailBody', 'Report approved 
 loadActivityForms();
 
 
+var report1 = {
+        "managementUnitId" : "test_mu",
+        "activityType" : "RLP Core Services report",
+        "category" : "Core Services Reporting",
+        "dateCreated" : ISODate("2019-08-27T01:13:26.944Z"),
+        "description" : "Core services report 1 for Test MU",
+        "fromDate" : ISODate("2018-06-30T14:00:00.000Z"),
+        "lastUpdated" : ISODate("2019-09-04T05:38:41.463Z"),
+        "name" : "Core services report 1",
+        "publicationStatus" : "unpublished",
+        "reportId" : "a02a527a-4377-40f0-86de-77ceabe6d72f",
+        "status" : "active",
+        "submissionDate" : ISODate("2018-07-31T14:00:00.000Z"),
+        "toDate" : ISODate("2018-07-31T14:00:00.000Z"),
+        "type" : "Administrative",
+        "activityId" : "d17254bf-b4fe-481c-9324-6d65d9c7c0d8",
+        "progress" : "started"
+}
 
+var activity1 = {
+    "activityId" : "d17254bf-b4fe-481c-9324-6d65d9c7c0d8",
+    "assessment" : false,
+    "dateCreated" : ISODate("2019-08-27T01:13:26.961Z"),
+    "description" : "Core services report 1",
+    "endDate" : ISODate("2018-07-31T14:00:00.000Z"),
+    "lastUpdated" : ISODate("2019-09-04T05:38:41.470Z"),
+    "plannedEndDate" : ISODate("2018-07-31T14:00:00.000Z"),
+    "plannedStartDate" : ISODate("2018-06-30T14:00:00.000Z"),
+    "progress" : "started",
+    "startDate" : ISODate("2018-06-30T14:00:00.000Z"),
+    "status" : "active",
+    "type" : "RLP Core Services report",
+    "formVersion" : NumberInt(1),
+    "projectStage" : "",
+    "siteId" : "",
+    "mainTheme" : ""
+}
 
-
+db.report.insert(report1);
+db.activity.insert(activity1);
 
 

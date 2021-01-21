@@ -86,7 +86,8 @@ enum SettingPageType {
     REPORT_ADJUSTMENT_INSTRUCTIONS('reportAdjustmentInstructions', 'Instructions for pre-configuring the adjustment report', 'fielddata.report.adjustment.instructions'),
     RISKS_AND_THREATS_EMAIL_SUBJECT('risksAndThreatsSubject', 'Subject line of the email notifying changes to risks and threats', 'fielddata.risk_changes.emailSubject'),
     RISKS_AND_THREATS_EMAIL_BODY('risksAndThreatsBody', 'Body text of the email notifying changes to risks and threats', 'fielddata.risk_changes.emailBody'),
-    RISKS_LAST_CHECK_TIME('risksLastCheckTime', 'The last time the project risks and threats were checked for changes', 'fielddata.risks.lastCheckTime')
+    RISKS_LAST_CHECK_TIME('risksLastCheckTime', 'The last time the project risks and threats were checked for changes', 'fielddata.risks.lastCheckTime'),
+    DATA_SET_DESCRIPTION("dataSetDescriptionDetails","Data Set","dataset.details")
     String name
     String title
     String key

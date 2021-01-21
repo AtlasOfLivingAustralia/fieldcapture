@@ -27,16 +27,39 @@ let outcomes = [
         "outcome": "6. By 2023, there is an increase in the capacity of agriculture systems to adapt to significant changes in climate and market demands for information on provenance and sustainable production."
     },
     {
-        "priorities": [
-            {
-                "category": "Bushfires"
-            }
-        ],
-        "shortDescription": "Bushfire Recovery",
-        "type": "secondary",
-        "category": "bushfires",
-        "outcome": "Enhance the recovery and maximise the resilience of fire affected priority species, ecological communities and other natural assets within the seven regions impacted by the 2019-20 bushfires",
-        "supportsMultiplePrioritiesAsSecondary": true
+        "type": "other",
+        "category": "fdf",
+        "outcome": "More primary producers preserve natural capital while also improving productivity and profitability"
+    },
+    {
+        "type": "other",
+        "category": "fdf",
+        "outcome": "More primary producers adopt risk management practices to improve their sustainability and resilience"
+    },
+    {
+        "type": "other",
+        "category": "fdf",
+        "outcome": "More primary producers adopt whole-of-system approaches to NRM to improve the natural resource base, for long-term productivity and landscape health"
+    },
+    {
+        "type": "other",
+        "category": "nrm",
+        "outcome": "More primary producers and agricultural communities are experimenting with adaptive or transformative NRM practices, systems and approaches that link and contribute to building drought resilience"
+    },
+    {
+        "type": "other",
+        "category": "nrm",
+        "outcome": "Partnerships and engagement is built between stakeholders responsible for managing natural resources"
+    },
+    {
+        "type": "other",
+        "category": "nrm",
+        "outcome": "More primary producers adopt whole-of-system approaches to NRM to improve the natural resource base, for long-term productivity and landscape health (also and FDF Outcome)"
+    },
+    {
+        "type": "other",
+        "category": "nrm",
+        "outcome": "Improved NRM in agricultural landscapes for increased capacity to prepare and respond to drought"
     }
 ];
 
@@ -45,11 +68,18 @@ let config = {
         {
             "template": "programOutcome",
             "model": {
-                "maximumPriorities": "1000"
+                "maximumPriorities": "1000",
+                "priorityHelpText": "Enter the primary investment priority/ies for the primary outcome. <br/>For outcomes 1-4, only one primary investment priority can be selected.<br/>For outcomes 5-6, select one or a maximum of two primary investment priorities"
             }
         },
         {
-            "template": "fdFund"
+            "template": "otherOutcomes",
+            "model": {
+                "titleTableHeadingOne": "FDF Outcomes (Select at least 1)",
+                "minimumCheckTableOne": "1",
+                "otherOutcomeCategoryTableTwo": "nrm",
+                "otherOutcomeCategoryTableOne": "fdf"
+            }
         },
         {
             "template": "outcomeStatements",
@@ -79,14 +109,14 @@ let config = {
         {
             "template": "sectionHeading",
             "model": {
-                "heading": "Agriculture projects only (Primary outcomes 5 or 6)"
+                "heading": "Agriculture projects only"
             }
         },
         {
             "template": "rationale",
             "model": {
                 "tableFormatting": true,
-                "rationaleHelpText": "Provide a rationale of why the targeted investment priorities are being addressed and explain (using evidence) how the methodology will address them. This includes why the area / stakeholders are being targeted and how the project activities chosen will contribute to achieving the 5 year outcomes. ",
+                "rationaleHelpText": "Provide a rationale of why the targeted investment priorities are being addressed and explain (using evidence) how the methodology will address them. This includes why the area / stakeholders are being targeted and how the project activities chosen will contribute to achieving the Future Drought Fund and NRM Landscapes and 5 year Program outcomes.",
                 "maxSize": "3000",
                 "title": "Project Rationale  (3000 character limit [approximately 500 words])"
             }
@@ -100,7 +130,11 @@ let config = {
             }
         },
         {
-            "template": "monitoringBaseline"
+            "template": "monitoringBaseline",
+            "model": {
+                "baselineMethodHelpText": "Describe the project baseline(s) units of measure or data which will be used to report progress towards this project's outcomes (short-term, medium-term, Future Drought Fund, NRM Landscapes and 5 year program outcome), and the monitoring design. ",
+                "titleHelpText": "Describe the project baseline(s) units of measure or data which will be used to report progress towards this project's outcomes (short-term, medium-term, Future Drought Fund, NRM Landscapes and 5 year program outcome), and the monitoring design."
+            }
         },
         {
             "template": "monitoringIndicators",
@@ -130,32 +164,7 @@ let config = {
         }
     ],
     "excludes": [],
-    "nrm": [
-        {
-            "name": "More primary producers adopt whole-of-system approaches to NRM to improve the natural resource base, for long-term productivity and landscape health (also and FDF Outcome)"
-        },
-        {
-            "name": "Partnerships and engagement is built between stakeholders responsible for managing natural resources"
-        },
-        {
-            "name": "More primary producers and agricultural communities are experimenting with adaptive or transformative NRM practices, systems and approaches that link and contribute to building drought resilience"
-        },
-        {
-            "name": "Improved NRM in agricultural landscapes for increased capacity to prepare and respond to drought"
-        }
-    ],
     "navigationMode": "returnToProject",
-    "fdf": [
-        {
-            "name": "More primary producers preserve natural capital while also improving productivity and profitability"
-        },
-        {
-            "name": "More primary producers adopt risk management practices to improve their sustainability and resilience"
-        },
-        {
-            "name": "More primary producers adopt whole-of-system approaches to NRM to improve the natural resource base, for long-term productivity and landscape health"
-        }
-    ],
     "projectTemplate": "rlp",
     "activityPeriodDescriptor": "Outputs report #",
     "meriPlanTemplate": "configurableMeriPlan",
@@ -173,7 +182,7 @@ let name = "Future Drought Fund";
 var program = db.program.find({name: name});
 var now = ISODate();
 var p = {
-    name: name, programId: UUID.generate(), dateCreated: now, lastUpdate: now
+    name: name, programId: UUID.generate(), dateCreated: now, lastUpdate: now, status: "active"
 }
 if (!program.hasNext()) {
     db.program.insert(p);
@@ -187,7 +196,7 @@ var program = db.program.find({name: name});
 var parent = db.program.find({name: "Future Drought Fund"}).next();
 var now = ISODate();
 var p = {
-    name: name, programId: UUID.generate(), dateCreated: now, lastUpdate: now, parent: parent._id
+    name: name, programId: UUID.generate(), dateCreated: now, lastUpdate: now, parent: parent._id, status: "active"
 }
 if (!program.hasNext()) {
     db.program.insert(p);
@@ -201,4 +210,4 @@ while(program.hasNext()){
     p.config = config;
     p.outcomes = outcomes;
     db.program.save(p);
-}
+};
