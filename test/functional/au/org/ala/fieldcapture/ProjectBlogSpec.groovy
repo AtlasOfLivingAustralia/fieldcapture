@@ -122,7 +122,10 @@ class ProjectBlogSpec extends StubbedCasSpec {
         //Do not need to test 'save', rely on test case of 'create blog'
 
         when:
-        cancelBtn.click()
+        File outputFile = File.createTempFile('test', '.png')
+        String filename = outputFile.absolutePath
+        blogDetails.uploadingFile =(filename)
+        saveBtn.click()
 
         then:
         waitFor {at ProjectBlogPage}

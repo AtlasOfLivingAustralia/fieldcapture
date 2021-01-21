@@ -22,6 +22,7 @@ class DateUtils {
     private static DateTimeFormatter LOCAL_DATE_ISO_FORMAT = ISODateTimeFormat.date().withZone(DateTimeZone.default)
 
 
+
     /**
      * Aligns the supplied DateTime to the start date of the period it falls into.
      * The period is defined relative to the Calendar year.
@@ -86,6 +87,10 @@ class DateUtils {
 
     static DateTime parseDisplayDate(String displayDateString) {
         return DISPLAY_DATE_FORMATTER.parseDateTime(displayDateString)
+    }
+
+    static DateTime parseDisplayDate(String dateString, String format) {
+        DateTimeFormat.forPattern(format).withZone(DateTimeZone.default).parseDateTime(dateString)
     }
 
     static DateTime now() {
