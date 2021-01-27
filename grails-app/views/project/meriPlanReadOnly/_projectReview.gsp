@@ -6,7 +6,7 @@
     </thead>
     <tbody>
     <tr>
-        <td><span data-bind="text:details.projectEvaluationApproach"></span></td>
+        <td><span class="projectReview" data-bind="text:details.projectEvaluationApproach"></span></td>
     </tr>
     </tbody>
 </table>

@@ -7,13 +7,13 @@
         </thead>
         <tbody>
         <tr>
-            <td><span data-bind="text:details.description"></span></td>
+            <td><span class="description" data-bind="text:details.description"></span></td>
         </tr>
         </tbody>
     </table>
 </g:if>
 <g:else>
     <h4>Project description</h4>
-    <span data-bind="text:details.description"></span>
+    <span class="description" data-bind="text:details.description"></span>
 </g:else>
 
