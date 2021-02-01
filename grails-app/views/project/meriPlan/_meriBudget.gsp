@@ -1,6 +1,6 @@
 <div class="meri-budget">
 
-    <label><b>Project Budget</b><fc:iconHelp title="Project Budget">Include the planned budget expenditure against each programme objective. This information will be used to report on the use of public money.</fc:iconHelp></label>
+    <label><b>Project Budget</b><fc:iconHelp title="Project Budget">${projectHeadingHelpText?:"Include the planned budget expenditure against each programme objective. This information will be used to report on the use of public money."}</fc:iconHelp></label>
     <g:if test="${explanation}">
         <p>${explanation}</p>
     </g:if>
@@ -9,9 +9,9 @@
         <tr>
             <th class="index"></th>
             <g:if test="${showThemeColumn}">
-            <th class="budget-category">Investment/Priority Area <fc:iconHelp title="Investment/Priority Area">Select the appropriate investment area and indicate the funding distribution across the project to this. Add rows as required for different investment priority areas.</fc:iconHelp></th>
+            <th class="budget-category">Investment/Priority Area <fc:iconHelp title="Investment/Priority Area">${investmentHelpText ?:"Select the appropriate investment area and indicate the funding distribution across the project to this. Add rows as required for different investment priority areas."}</fc:iconHelp></th>
             </g:if>
-            <th class="budget-description">${itemName ?: "Description"} <fc:iconHelp title="${itemName ?: "Description"}">${itemHelp ?:"Describe how funding distribution will address this investment priority"}</fc:iconHelp></th>
+            <th class="budget-description">${itemName ?: "Description"} <g:if test="${hideHelpText == null}"><fc:iconHelp title="${itemName ?: "Description"}">${itemHelp ?:"Describe how funding distribution will address this investment priority"}</fc:iconHelp></g:if></th>
             <g:if test="${showActivityColumn}">
             <th class="budget-activities">Project activities relevant to budget item</th>
             </g:if>
