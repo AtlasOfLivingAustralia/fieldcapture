@@ -19,30 +19,30 @@ program.config.meriPlanContents =  [
             ],
             "assetHeading": "Asset",
             "viewExplanation": "Species, ecological community or environmental asset(s) the project is targeting",
-            "autoSelectCategory": true,
+            "useCategorySelection": true,
             "explanation": "List the natural assets within the bushfire region that will benefit from this project",
             "fromPriorities": true,
-            "placeHolder": "Please select",
+            "assetHelpText": "Scientific and/or common name",
             "assetCategoryHelpText": "as identified within the regional workshop reports.  Types with no assets are not selectable",
-            "assetHelpText": "Scientific and/or common name"
+            "placeHolder": "Please select"
         }
     },
     {
         "template": "activities",
         "model": {
+            "includeOther": true,
             "noneSelectedMessage": "No priority actions have been nominated for this project",
-            "singleSelection": true,
+            "singleSelection": false,
             "title": "Priority Action",
-            "explanation": "Please select from the drop-down list the priority action applicable to this project. The priority action <strong><u>must</u></strong> align with the approved project proposal. If the priority action is not listed and ‘other’ is selected, please provide details of the ‘other’ priority within the space provided"
+            "explanation": "Please select from the drop-down list the priority action applicable to this project. If the priority action is not listed and ‘other’ is selected, please provide details of the ‘other’ priority within the space provided"
         }
     },
     {
         "template": "outcomeStatements",
         "model": {
-            "subtitle": "Please provide outcome statements. Outcomes statements should: <br/>- Contribute to the regional investment strategy;<br/>- Outline the degree of impact having undertaken the actions within the project timeframe;<br/>- Be expressed as a SMART statement (Specific, Measurable, Attainable, Realistic and Time-bound); and<br/>- Ensure the outcomes are measurable with consideration to the monitoring methodology provided below.",
+            "subtitle": "Please provide outcome statements. Outcomes statements should: <br/>- Clearly describe the intent of the project, specifically the benefit or change that the project is expected to deliver by June 2022;<br/>- Be expressed as a SMART statement (Specific, Measurable, Attainable, Realistic and Time-bound); and<br/>- Ensure that the outcomes are measurable with consideration to the monitoring methodology provided below",
             "placeholder": "By 30 June 2021, [Free text]",
-            "title": "Outcome statements",
-            "helpText":"Outcome/s the project is expected to achieve by June 2022"
+            "title": "Outcome statements"
         }
     },
     {
@@ -54,43 +54,47 @@ program.config.meriPlanContents =  [
     {
         "template": "description",
         "model": {
-            "helpTextHeading":"A succinct overview of the project: (i) what will be done and (ii) why it will be done",
+            "helpTextHeading": "A succinct overview of the project: (i) what will be done and (ii) why it will be done",
+            "maxSize": "1000",
+            "placeholder": "[Free text; limit response to 1000 characters (approx. 150 words)]",
+            "explanation": " Please provide a short succinct description of this project. The description should state what will be done and why it will be done. This project description will be publicly visible on the project overview page in MERIT"
+        }
+    },
+    {
+        "template": "relatedProjects",
+        "model": {
+            "helpTextHeading": "A succinct overview of the project: (i) what will be done and (ii) why it will be done",
             "maxSize": "1000",
             "placeholder": "[Free text; limit response to 1000 characters (approx. 150 words)]",
             "explanation": " Please provide a short description of this project. The project description should be succinct and state what will be done and why it will be done. This project description will be visible on the project overview page in MERIT"
         }
     },
     {
-        "template": "relatedProjects",
-        "model": {
-            "maxSize": "1000",
-            "placeholder": "[Free text; limit response to 1000 characters (approx. 150 words)]"
-        }
-    },
-    {
         "template": "projectPartnerships",
         "model": {
-            "helpTextPartnerNature":"If partnership with an organisation: provide the name of the organisation and the role they will play/how you will support them. If partnering with community groups or members of the public: indicate each group or individual you will engage with",
             "namePlaceHolder": "[Free text]",
+            "helpTextPartnerNature": "A brief description of the role the partner will have in the delivery of the project and the contribution they will make",
             "partnershipPlaceHolder": "[Free text]",
-            "explanation": "Please provide details on all project partners, including partner name, type of organisation and the nature of their participation in the project. For example, a partner could be a research institute that contributes frog research expertise to the project proponent in the deliver of a threatened frog species habitat augmentation and breeding project"
+            "explanation": "Please provide details on all project partners, including partner name, type of organisation and the nature of their participation in the project.",
+            "helpTextPartnerName": "Name of project partner: an individual or organisation actively involved in the planning or delivery of the project"
         }
     },
     {
         "template": "consultation",
         "model": {
+            "helpTextHeading": "Indicate the groups or individuals you will consult with",
             "title": "Consultation",
-            "explanation": "Please provide details of consultation with relevant state / territory agencies and NRM organisations to identify any duplication between activities proposed in the Activity and any other government-funded actions already underway in the project location. Where duplication has been identified, please describe how this has been resolved. If a modification to the Activity is required, you must submit a written request for a variation to the Department.",
-            "placeHolder": "[Free text] Indicate the groups or individuals you will consult with",
-            "helpTextHeading": "Indicate the groups or individuals you will consult with"
+            "explanation": "Please provide details on all groups or individuals that you will consult with as part of undertaking the project",
+            "placeHolder": "[Free text] Indicate the groups or individuals you will consult with"
         }
     },
     {
         "template": "keyThreats",
         "model": {
+            "threatHelpText": "The key threats (or key threatening processes) that your project will be addressing",
+            "interventionHelpText": "Describe the proposed interventions to address the threat and how this will deliver on the project outcome",
             "title": "Key Threats",
-            "explanation": "Describe the key threat(s) and/or key threatening process to the priority action for this project. A key threat may comprise, for example: bridal veil <i>(asparagus declinatus)</i> invasion (a weed of national significance). The intervention to address the threat may comprise, for example: control and remove bridal veil at project site",
-            "interventionHelpText": "Describe the proposed interventions to address the threat and how this will deliver on the project outcome"
+            "explanation": "Describe the key threat(s) and/or key threatening processes impacting project assets that the project will be addressing."
         }
     },
     {
@@ -98,7 +102,7 @@ program.config.meriPlanContents =  [
         "model": {
             "maxSize": "4000",
             "title": "Project Methodology",
-            "explanation": "The methodology should detail how each project service will be completed. The methodology should reflect the services (i.e. actions) outlined in the approved proposal and describe how each service will be implemented to achieve outcomes. This <u>must</u> include an explanation for the choice of a specific methodology to undertake the service. The methodology should also describe how the project service will be undertaken, the location (where applicable), partner/s involvement (where applicable) and outputs. The methodology should clearly link to the approved project proposal outcome statement. There should be at least one method described that is linked to achieving each project outcome",
+            "explanation": "The methodology should describe how each project service (i.e., action) will be implemented to achieve outcomes and why that specific approach or technique was chosen. The methodology could include the location, partner/s involvement and outputs. The methodology should clearly link to the outcome statement. At least one method for each project outcome should be identified.",
             "tableHeading": "Please describe the methodology that will be used to achieve the project’s outcome statements.",
             "placeHolder": "[Free text; limit response to 4000 characters (approx. 650 words)]"
         }
@@ -108,8 +112,8 @@ program.config.meriPlanContents =  [
         "model": {
             "approachHeading": "Describe the project monitoring indicator(s) approach",
             "indicatorHeading": "Identify the project monitoring indicator(s)",
-            "indicatorHelpText": "List the measurable indicators of project success that will be monitored. Indicators should link back to the outcome statements and have units of measure. Indicators should measure both project outputs (e.g. area (ha) of rabbit control, length (km) of predator proof fencing) and change the project is aiming to achieve (e.g. Change in abundance of X threatened species at Y location, Change in vegetation cover (%), etc).",
-            "approachHelpText": "How will the indicator be monitored? Briefly describe the method to be used to monitor the indicator (including timing of monitoring, who will collect/collate / analyse data, etc)",
+            "indicatorHelpText": "List the indicators of project success that will be monitored. Indicators should link back to the outcome statements and, in most cases, will be quantitative and expressed as a numerical measurable. Where relevant, qualitative indicators can be used. Indicators should measure both project outputs (e.g., area (ha) of rabbit control, length (km) of predator proof fencing) and change the project is aiming to achieve (e.g., change in abundance of X threatened species at Y location, change in vegetation cover (%) etc.)",
+            "approachHelpText": "Briefly describe the method that will be used to monitor the indicator (including timing of monitoring, who will collect/collate/analyse, data, etc)",
             "indicatorPlaceHolder": "[Free text]",
             "approachPlaceHolder": "[Free text]",
             "title": "Project Monitoring Indicators"
@@ -129,7 +133,7 @@ program.config.meriPlanContents =  [
         "template": "serviceTargets",
         "model": {
             "showTargetDate": true,
-            "title": "Services and Targets Table",
+            "title": "Actions and Targets Table",
             "serviceName": "Service"
         }
     },
@@ -137,9 +141,11 @@ program.config.meriPlanContents =  [
         "template": "meriBudget",
         "model": {
             "itemName": "Budget item",
-            "showActivityColumn": false,
             "showThemeColumn": false,
-            "explanation": "The budget <u>must</u> clearly specify how the funds will be spent for each service the proponent will undertake in accordance with the approved project proposal. Expenditure items must align with the approved project proposal (including the amount identified for project reporting and administration). Each service or spending category should be set out as a different line item"
+            "showActivityColumn": false,
+            "explanation": "Please detail how project funding will be allocated to project services (action). Expenditure should align with the approved project proposal (including the amount identified for project reporting and administration). Each action should be identified as a different line item",
+            "projectHeadingHelpText": "Planned budget expenditure for each service (action)",
+            "hideHelpText": true
         }
     }
 ];
