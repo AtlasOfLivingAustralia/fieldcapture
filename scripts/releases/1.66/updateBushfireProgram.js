@@ -160,14 +160,13 @@ for (var i=0; i<assets.length; i+=2) {
 
 // Update each state bushfire management unit.
 var stateManagementUnitNames = [
-   "New South Wales Bushfires",
-    "South Australia Bushfires",
-    "Tasmania Bushfires",
-    "Queensland Bushfires",
-    "Western Australia Bushfires",
-    "Victoria Bushfires",
-    "ACT Bushfires"//,
-    //"Northern Territory Bushfires"
+    "Alpine Bushfires",
+    "Greater Blue Mountains Bushfires",
+    "East Gippsland Bushfires",
+    "Kangaroo Island Bushfires",
+    "NSW North Coast And Tablelands Bushfires",
+    "NSW South Coast Bushfires",
+    "South-East Queensland Bushfires"
 ];
 for (var i=0; i<stateManagementUnitNames.length; i++) {
     print("Updating "+ stateManagementUnitNames[i]);
