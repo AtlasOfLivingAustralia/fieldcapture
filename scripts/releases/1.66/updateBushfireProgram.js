@@ -15,9 +15,9 @@ program.config.meriPlanContents =  [
                 "Vertebrate species"
             ],
             "assetHeading": "Asset",
-            "assetClass":"asset-with-category",
-            "viewExplanation": "Species, ecological community or environmental asset(s) the project is targeting",
             "autoSelectCategory": true,
+            "assetClass": "asset-with-category",
+            "viewExplanation": "Species, ecological community or environmental asset(s) the project is targeting",
             "explanation": "List the natural assets within the bushfire region that will benefit from this project",
             "fromPriorities": true,
             "assetHelpText": "Scientific and/or common name",
@@ -32,7 +32,7 @@ program.config.meriPlanContents =  [
             "noneSelectedMessage": "No priority actions have been nominated for this project",
             "singleSelection": false,
             "title": "Project Actions",
-            "explanation": "Please select from the lists of priority action applicable to this project. If the priority action is not listed and ‘other’ is selected, please provide details of the ‘other’ priority within the space provided"
+            "explanation": "Please select from the list of priority actions applicable to this project. If the priority action is not listed and ‘other’ is selected, please provide details of the ‘other’ priority within the space provided"
         }
     },
     {
@@ -131,8 +131,9 @@ program.config.meriPlanContents =  [
         "template": "serviceTargets",
         "model": {
             "showTargetDate": true,
+            "totalHelpText": "The overall total of Project Activities to be delivered during the project delivery period.",
             "title": "Actions and Targets Table",
-            "serviceName": "Service"
+            "serviceName": "Activities"
         }
     },
     {
@@ -141,8 +142,8 @@ program.config.meriPlanContents =  [
             "itemName": "Budget item",
             "showThemeColumn": false,
             "showActivityColumn": false,
-            "explanation": "Please detail how project funding will be allocated to project services (action). Expenditure should align with the approved project proposal (including the amount identified for project reporting and administration). Each action should be identified as a different line item",
-            "projectHeadingHelpText": "Planned budget expenditure for each service (action)",
+            "explanation": "Please detail how project funding will be allocated to project activities. Expenditure should align with the approved project proposal (including the amount identified for project reporting and administration). Each action should be identified as a different line item",
+            "projectHeadingHelpText": "Planned budget expenditure for each activity",
             "hideHelpText": true
         }
     }
