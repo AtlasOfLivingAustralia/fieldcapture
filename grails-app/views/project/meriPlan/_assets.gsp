@@ -2,7 +2,7 @@
 <g:if test="${explanation}">
     ${explanation}
 </g:if>
-<g:set var="assetClass" value="${useCategorySelection ? 'asset-detail': 'asset'} "/>
+<g:set var="assetClass" value="${useCategorySelection || autoSelectCategory ? 'asset-detail': 'asset'} "/>
 <table class="table assets">
 <thead>
 <tr class="header">
@@ -11,7 +11,9 @@
     <th class="asset-category required">Asset Type <g:if test="${assetCategoryHelpText}"> <fc:iconHelp html="true" container="body">${assetCategoryHelpText}</fc:iconHelp></g:if></th>
 </g:if>
     <th class="${assetClass} required">${assetHeading ?: "Please name the species, ecological community or environmental asset(s) the project is targeting"}<g:if test="${assetHelpText}"> <fc:iconHelp html="true" container="body">${assetHelpText}</fc:iconHelp></g:if></th>
-
+    <g:if test="${fromPriorities && autoSelectCategory}">
+        <th class="asset-category required">Asset Type <g:if test="${assetCategoryHelpText}"> <fc:iconHelp html="true" container="body">${assetCategoryHelpText}</fc:iconHelp></g:if></th>
+    </g:if>
     <th class="remove"></th>
 </tr>
 </thead>
@@ -44,6 +46,12 @@
         </g:else>
 
     </td>
+    <g:if test="${fromPriorities && autoSelectCategory}">
+        <td class="asset-category required">
+            <input type="text" readonly="readonly" placeholder="${categoryPlaceholder ?:"Select an asset..."}"
+                   data-bind="value:$root.assetCategory(description()), disable: $parent.isProjectDetailsLocked()">
+        </td>
+    </g:if>
     <td class="remove">
         <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()"><i class="fa fa-remove"
                                                                                data-bind="click: $parent.removeAsset"></i>
@@ -53,7 +61,7 @@
 </tbody>
 <tfoot>
 <tr>
-    <td colspan="3">
+    <td colspan="${useCategorySelection || autoSelectCategory ? 4: 3}">
         <button type="button" class="btn btn-small"
                 data-bind="disable: isProjectDetailsLocked(), click: addAsset">
             <i class="fa fa-plus"></i> Add a row</button></td>

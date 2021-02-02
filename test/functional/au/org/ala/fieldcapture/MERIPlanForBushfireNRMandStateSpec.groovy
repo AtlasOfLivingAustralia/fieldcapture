@@ -51,7 +51,6 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
         when:
         def meriPlan = openMeriPlanEditTab()
 
-        meriPlan.assetType = "Priority Invertebrate Species"
         waitFor {
             meriPlan.asset.find('[value="Euastacus jagara (Freshwater crayfish)"')
         }
@@ -84,6 +83,34 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
 
         then:
         waitFor { getAtCheckTime() > previousLoad }
+
+        when:
+        meriPlan = openMeriPlanEditTab()
+
+        then:
+        meriPlan.asset == "Euastacus jagara (Freshwater crayfish)"
+        meriPlan.assetType == "Priority Invertebrate Species"
+        meriPlan.shortTermOutcomes[0].value() == "Short term outcome 1"
+        meriPlan.projectDescription == "MERI plan edited description"
+        meriPlan.relatedProjects == "Related projects"
+        meriPlan.projectPartnerships[0].name == 'partner name'
+        meriPlan.projectPartnerships[0].partnership == 'partnership'
+        meriPlan.projectPartnerships[0].orgType == 'Trust'
+        meriPlan.consultation == 'Consultation'
+        meriPlan.keyThreats[0].threat.value() == "Threat 1"
+        meriPlan.keyThreats[0].intervention.value() == "Intervention 1"
+        meriPlan.projectMethodology == "Project methodology"
+        meriPlan.adaptiveManagement == 'Adaptive management'
+        meriPlan.nationalAndRegionalPlans[0].name.value() == "Plan 1"
+        meriPlan.nationalAndRegionalPlans[0].section.value() == "Section 1"
+        meriPlan.nationalAndRegionalPlans[0].alignment.value() == "Alignment 1"
+        meriPlan.projectServices[0].targets.size() == 1
+        meriPlan.projectServices[0].service.value() == "2"
+        meriPlan.projectServices[0].score.value() == "score_43"
+        meriPlan.projectServices[0].targets.value() == "5"
+        meriPlan.projectServices[0].date.value() == "01-07-2021"
+        meriPlan.budget[0].description == 'budget description'
+        meriPlan.budget[0].budgetAmounts[0].value() == '100'
 
         when:
         meriPlan = openReadOnlyMeriPlan()

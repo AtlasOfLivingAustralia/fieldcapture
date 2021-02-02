@@ -7,19 +7,17 @@ program.config.meriPlanContents =  [
         "template": "assets",
         "model": {
             "priorityCategories": [
-                "Priority Vertebrate Animals",
-                "Additional Priority Species",
-                "Priority Invertebrate Species",
-                "Priority Natural Asset",
+                "Ecological Communities",
+                "Invertebrate species",
+                "Other natural asset",
+                "Plant species",
                 "Priority Plants",
-                "Additional Priority Plants",
-                "Threatened Ecological Community",
-                "Additional Priority Natural Asset",
-                "Additional Threatened Ecological Community"
+                "Vertebrate species"
             ],
             "assetHeading": "Asset",
+            "assetClass":"asset-with-category",
             "viewExplanation": "Species, ecological community or environmental asset(s) the project is targeting",
-            "useCategorySelection": true,
+            "autoSelectCategory": true,
             "explanation": "List the natural assets within the bushfire region that will benefit from this project",
             "fromPriorities": true,
             "assetHelpText": "Scientific and/or common name",
@@ -149,5 +147,16 @@ program.config.meriPlanContents =  [
         }
     }
 ];
+
+load("stateBushfireAssets.js");
+program.priorities = [];
+
+for (var i=0; i<assets.length; i+=2) {
+    program.priorities.push({
+        category:assets[i],
+        priority:assets[i+1]
+    });
+}
+
 
 db.program.save(program);

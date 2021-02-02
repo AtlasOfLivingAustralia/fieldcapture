@@ -416,7 +416,7 @@ config.meriPlanContents =  [
             ],
             "assetHeading": "Asset",
             "viewExplanation": "Species, ecological community or environmental asset(s) the project is targeting",
-            "useCategorySelection": true,
+            "autoSelectCategory": true,
             "explanation": "List the natural assets within the bushfire region that will benefit from this project",
             "fromPriorities": true,
             "placeHolder": "Please select"

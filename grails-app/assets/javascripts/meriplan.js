@@ -269,6 +269,18 @@ function MERIPlan(project, projectService, config) {
         return categories;
     }
 
+    /**
+     * Returns the asset category assoociated with the supplied asset.
+     * @param asset the asset to check.
+     * @returns {*}
+     */
+    self.assetCategory = function(asset) {
+        var result = _.find(project.priorities || [], function(priority) {
+            return priority.priority == asset;
+        });
+        return result && result.category;
+    };
+
     self.programObjectives = config.programObjectives || [];
 
     self.obligationOptions = ['Yes', 'No'];
