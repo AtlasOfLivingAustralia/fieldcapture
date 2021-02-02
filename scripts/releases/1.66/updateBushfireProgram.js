@@ -31,8 +31,8 @@ program.config.meriPlanContents =  [
             "includeOther": true,
             "noneSelectedMessage": "No priority actions have been nominated for this project",
             "singleSelection": false,
-            "title": "Project Action",
-            "explanation": "Please select from the drop-down list the priority action applicable to this project. If the priority action is not listed and ‘other’ is selected, please provide details of the ‘other’ priority within the space provided"
+            "title": "Project Actions",
+            "explanation": "Please select from the lists of priority action applicable to this project. If the priority action is not listed and ‘other’ is selected, please provide details of the ‘other’ priority within the space provided"
         }
     },
     {
