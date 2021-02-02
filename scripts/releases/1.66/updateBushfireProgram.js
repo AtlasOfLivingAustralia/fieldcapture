@@ -158,5 +158,22 @@ for (var i=0; i<assets.length; i+=2) {
     });
 }
 
+// Update each state bushfire management unit.
+var stateManagementUnitNames = [
+   "New South Wales Bushfires",
+    "South Australia Bushfires",
+    "Tasmania Bushfires",
+    "Queensland Bushfires",
+    "Western Australia Bushfires",
+    "Victoria Bushfires",
+    "ACT Bushfires"//,
+    //"Northern Territory Bushfires"
+];
+for (var i=0; i<stateManagementUnitNames.length; i++) {
+    print("Updating "+ stateManagementUnitNames[i]);
+    var mu = db.managementUnit.find({name:stateManagementUnitNames[i]}).next();
+    mu.priorities = program.priorities;
+    db.managementUnit.save(mu);
+}
 
 db.program.save(program);
