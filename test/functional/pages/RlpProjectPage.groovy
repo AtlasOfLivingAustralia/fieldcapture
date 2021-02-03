@@ -1,5 +1,6 @@
 package pages
 
+import pages.modules.DatasetPageModule
 import pages.modules.DocumentsTab
 import pages.modules.EditableMeriPlan
 import pages.modules.MeriPlanTabContent
@@ -34,6 +35,10 @@ class RlpProjectPage extends ReloadablePage {
 
         timeoutModal(required: false) { $('div.bootbox.modal').module TimeoutModal }
         unsavedEdits(required: false) { $('.unsaved-changes') }
+
+        datasetTab(required: false) {$('#datasets-tab')}
+        datasetDetails(required: false) {module DatasetPage}
+        addNewDataset(required: false) {$('.btn-primary')}
 
         meriPlanTabContent {module MeriPlanTabContent }
     }

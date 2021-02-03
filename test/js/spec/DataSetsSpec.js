@@ -67,7 +67,8 @@ describe("The data set summaries view models behave correctly", function () {
             "owner" : "Test",
             "methodDescription" : "Test method",
             "custodian" : "Test",
-            "investmentPriority" : "Botaurus poiciloptilus (Australasian Bittern)",
+            "investmentPriority" : ["Botaurus poiciloptilus (Australasian Bittern)"],
+            "investmentPriorityOtherValue": undefined,
             "endDate" : "2020-12-02T13:00:00Z",
             "methods" : [
                 "Surveying - Fauna, Flora"
