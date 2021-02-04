@@ -46,7 +46,7 @@
         <div class="col-sm-7">
             <g:select multiple="multiple" from="${priorities}" name="investmentPriority" class="form-control" id="investmentPriority" data-validation-engine="validate[required]" data-bind="selectedOptions:investmentPriority"/>
             <div style="margin-top: 10px">
-            <textarea type="text" class="form-control" placeholder="Note: This Other Priorities box only enable if other is selected" data-bind="enable: investmentOtherSelected() == 'Other', value: otherInvestmentPriorities"></textarea>
+            <textarea type="text" class="form-control" placeholder="Note: This Other Priorities box only enable if other is selected" data-bind="enable: investmentOtherSelected(), value: otherInvestmentPriorities"></textarea>
             </div>
         </div>
 
