@@ -62,19 +62,18 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     self.projectName = dataSet.projectName;
     self.programName = dataSet.programName;
     self.programOutcome = ko.observable(dataSet.programOutcome);
-    self.investmentPriority = ko.observableArray(dataSet.investmentPriority);
-    self.otherInvestmentPriorities = ko.observable(dataSet.otherInvestmentPriorities);
+    self.investmentPriorities = ko.observableArray(dataSet.investmentPriorities);
+    self.otherInvestmentPriority = ko.observable(dataSet.otherInvestmentPriority);
 
     self.investmentOtherSelected = ko.pureComputed(function() {
-        return _.contains(self.investmentPriority(), "Other");
+        return _.contains(self.investmentPriorities(), "Other");
     });
 
     self.investmentOtherSelected.subscribe(function(otherSelected) {
         if (!otherSelected) {
-            self.otherInvestmentPriorities(undefined);
+            self.otherInvestmentPriority(undefined);
         }
     });
-
 
     self.type = ko.observable(dataSet.type);
 

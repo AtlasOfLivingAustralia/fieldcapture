@@ -7,7 +7,8 @@ class DatasetPageModule extends Module{
     static content = {
         title(required: false) {$('#title')}
         programOutcome(required: false) {$('#programOutcome')}
-        investmentPriority(required: false) {$('#investmentPriority')}
+        investmentPriorities(required: false) {$('#investmentPriority')}
+        otherInvestmentPriority(required: false) {$(".otherPriorityTextArea")}
         type(required: false){$("#type")}
         measurementTypes(required: false) {$("#measurementTypes")}
         methods (required: false){$("#methods")}

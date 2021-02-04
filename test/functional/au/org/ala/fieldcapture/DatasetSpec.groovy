@@ -24,8 +24,6 @@ class DatasetSpec extends StubbedCasSpec{
         waitFor { at RlpProjectPage }
 
         when:
-       // def dataSet = openAndEditDataSet()
-9
         datasetTab.click()
         waitFor {datasetDetails.displayed}
         datasetDetails.addNewDataset.click()
@@ -33,7 +31,8 @@ class DatasetSpec extends StubbedCasSpec{
         def dataSet = datasetDetails.datasetContent
         dataSet.title = "Title"
         dataSet.programOutcome = "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
-        dataSet.investmentPriority = ["Soil acidification"]
+        dataSet.investmentPriorities = ["Soil acidification", "Other"]
+        dataSet.otherInvestmentPriority = "Other Priority"
         dataSet.type = "Baseline dataset associated with a project outcome"
         dataSet.measurementTypes = ["Soil erosion"]
         dataSet.methods = ["Genetic sampling", "Area sampling"]
@@ -64,7 +63,8 @@ class DatasetSpec extends StubbedCasSpec{
         def set = datasetDetails.datasetContent
         set.title == "Title"
         set.programOutcome == "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
-        set.investmentPriority == ["Soil acidification"]
+        set.investmentPriorities == ["Soil acidification", "Other"]
+        set.otherInvestmentPriority == "Other Priority"
         set.type == "Baseline dataset associated with a project outcome"
         set.measurementTypes == ["Soil erosion"]
         set.methods == ["Genetic sampling", "Area sampling"]

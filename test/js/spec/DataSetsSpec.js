@@ -67,8 +67,8 @@ describe("The data set summaries view models behave correctly", function () {
             "owner" : "Test",
             "methodDescription" : "Test method",
             "custodian" : "Test",
-            "investmentPriority" : ["Botaurus poiciloptilus (Australasian Bittern)", "Other"],
-            "otherInvestmentPriorities": "Test",
+            "investmentPriorities" : ["Botaurus poiciloptilus (Australasian Bittern)", "Other"],
+            "otherInvestmentPriority": "Test",
             "endDate" : "2020-12-02T13:00:00Z",
             "methods" : [
                 "Surveying - Fauna, Flora"
@@ -118,4 +118,15 @@ describe("The data set summaries view models behave correctly", function () {
 
     });
 
+    it("should able to compute the the value of investment Properties", function(){
+        let config = {
+            returnToUrl: '/project/1',
+            validationContainerSelector: '.validationEngineContainer'
+        };
+        let dataSet = {"investmentPriorities" : ["Botaurus poiciloptilus (Australasian Bittern)", "Other"]}
+
+        let dataSetsVM = new DataSetViewModel(dataSet, projectService, config);
+        dataSetsVM.investmentPriorities(dataSet.investmentPriorities);
+        expect(dataSetsVM.investmentOtherSelected()).toEqual(true)
+    });
 });
