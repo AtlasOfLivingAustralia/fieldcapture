@@ -22,9 +22,9 @@
         </g:each>
     </ul>
 
-    <strong>DataSet Data</strong><br/>
+    <strong>Data set summary</strong><br/>
     <ul class="unstyled">
-        <li><label class="checkbox"><input type="checkbox" name="tabs" value="Dataset" data-validation-engine="validate[minCheckbox[1]]">Dataset</label></li>
+        <li><label class="checkbox"><input type="checkbox" name="tabs" value="Dataset" data-validation-engine="validate[minCheckbox[1]]">Data set summary</label></li>
     </ul>
 
     <strong>MERI Plan</strong>
