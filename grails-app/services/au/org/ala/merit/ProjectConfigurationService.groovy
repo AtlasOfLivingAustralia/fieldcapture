@@ -59,8 +59,7 @@ class ProjectConfigurationService {
                 programConfig.outcomes = managementUnit.outcomes
             }
 
-            // Allow management units to override project reporting frequency or include additional reports
-            // to those defined by the program configuration.
+            // Allow management units to override project reporting frequency
             List extraReports = []
             if (!programConfig.projectReports) {
                 programConfig.projectReports = []
@@ -70,10 +69,10 @@ class ProjectConfigurationService {
                     return it.category == configuration.category && it.activityType == configuration.activityType
                 }
                 if (programReport) {
+                    // Both the frequency and start date are required so the report dates
+                    // align correctly.
                     programReport.reportingPeriodInMonths = configuration.reportingPeriodInMonths
-                }
-                else {
-                    extraReports << configuration
+                    programReport.firstReportingPeriodEnd = configuration.firstReportingPeriodEnd
                 }
             }
             programConfig.projectReports?.addAll(extraReports)
