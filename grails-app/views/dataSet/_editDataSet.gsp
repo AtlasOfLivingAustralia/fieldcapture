@@ -42,11 +42,11 @@
         </div>
     </div>
     <div class="form-group row">
-        <label for="investmentPriority" class="col-sm-5 col-form-label required">6. What primary or secondary investment priority or asset does this dataset relate to?</label>
+        <label for="investmentPriority" class="col-sm-5 col-form-label required">6. What primary or secondary investment priorities or assets does this dataset relate to?</label>
         <div class="col-sm-7">
             <g:select multiple="multiple" from="${priorities}" name="investmentPriority" class="form-control" id="investmentPriority" data-validation-engine="validate[required]" data-bind="selectedOptions:investmentPriority"/>
-            <div>
-                <input type="text" class="form-control" placeholder="Enter Other value if Other is selected" data-bind="value: investmentPriorityOtherValue">
+            <div style="margin-top: 10px">
+            <textarea type="text" class="form-control" placeholder="Note: This Other Priorities box only enable if other is selected" data-bind="enable: investmentOtherSelected() == 'Other', value: investmentPriorityOtherValue"></textarea>
             </div>
         </div>
 
