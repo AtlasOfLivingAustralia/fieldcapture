@@ -63,10 +63,10 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     self.programName = dataSet.programName;
     self.programOutcome = ko.observable(dataSet.programOutcome);
     self.investmentPriority = ko.observableArray(dataSet.investmentPriority);
-    self.investmentPriorityOtherValue = ko.observable(dataSet.investmentPriorityOtherValue);
+    self.otherInvestmentPriorities = ko.observable(dataSet.otherInvestmentPriorities);
     self.investmentOtherSelected = ko.observable();
 
-    if (self.investmentPriorityOtherValue() === undefined){
+    if (self.otherInvestmentPriorities() === undefined){
         self.investmentOtherSelected(undefined);
     }else{
         self.investmentOtherSelected("Other");
@@ -78,11 +78,11 @@ var DataSetViewModel = function(dataSet, projectService, options) {
         value.forEach(function (other){
             if (other === "Other") {
                 otherSelected = true
-                self.investmentPriorityOtherValue(self.investmentPriorityOtherValue());
+                self.otherInvestmentPriorities(self.otherInvestmentPriorities());
                 self.investmentOtherSelected(other);
             }
             if (otherSelected === false){
-                self.investmentPriorityOtherValue(undefined);
+                self.otherInvestmentPriorities(undefined);
                 self.investmentOtherSelected(undefined);
             }
         });
@@ -122,7 +122,7 @@ var DataSetViewModel = function(dataSet, projectService, options) {
 
         if (valid) {
             var dataSet = ko.mapping.toJS(self,
-                {ignore: ['grantId', 'projectName', 'programName', 'validate', 'save', 'cancel']});
+                {ignore: ['grantId', 'projectName', 'programName', 'validate', 'save', 'cancel', 'investmentOtherSelected']});
             projectService.saveDataSet(dataSet).done(function() {
                 // return to project
                 window.location.href = config.returnToUrl;
