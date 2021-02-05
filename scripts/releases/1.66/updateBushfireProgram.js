@@ -100,7 +100,7 @@ program.config.meriPlanContents =  [
         "model": {
             "maxSize": "4000",
             "title": "Project Methodology",
-            "explanation": "The methodology should describe <u>how</u> each project activities will be implemented to achieve outcomes and <u>why</u> that specific approach or technique was chosen. The methodology could include the location, partner/s involvement and outputs. The methodology should clearly link to the outcome statement. At least one method for each project outcome should be identified.",
+            "explanation": "The methodology should describe <u>how</u> each project activity will be implemented to achieve outcomes and <u>why</u> that specific approach or technique was chosen. The methodology could include the location, partner/s involvement and outputs. The methodology should clearly link to the outcome statement. At least one method for each project outcome should be identified.",
             "tableHeading": "Please describe the methodology that will be used to achieve the project’s outcome statements.",
             "placeHolder": "[Free text; limit response to 4000 characters (approx. 650 words)]"
         }
@@ -132,7 +132,7 @@ program.config.meriPlanContents =  [
         "model": {
             "showTargetDate": true,
             "totalHelpText": "The overall total of Project Activities to be delivered during the project delivery period.",
-            "title": "Actions and Targets Table",
+            "title": "Activities and Targets Table",
             "serviceName": "Activities"
         }
     },
