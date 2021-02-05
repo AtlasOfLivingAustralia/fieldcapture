@@ -64,3 +64,34 @@ for (var i=0; i<programsToUpdate.length; i++) {
     program.config.projectReports = projectReports;
     db.program.save(program);
 }
+
+// Now remove some of the configuration from the management units so it doesn't override
+// the dates for the reports that aren't configurable via MU.
+
+var mus = db.managementUnit.find({status:{$ne:'deleted'}});
+while (mus.hasNext()) {
+    var mu = mus.next();
+
+    if (mu.config && mu.config.projectReports) {
+        var rlpOutputReport;
+        for (var i=0; i<mu.config.projectReports.length; i++) {
+            if (mu.config.projectReports[i].activityType == "RLP Output Report") {
+                rlpOutputReport = mu.config.projectReports[i];
+            }
+        }
+        if (rlpOutputReport) {
+            mu.config.projectReports = [rlpOutputReport];
+            print("Updating reports for "+mu.name);
+            db.managementUnit.save(mu);
+        }
+
+    }
+
+}
+
+var bushfireNrm = db.program.findOne({name : 'Regional Fund for Wildlife and Habitat Bushfire Recovery (the Regional Fund) - NRM'});
+bushfireNrm.config.projectReports[2].firstReportingPeriodEnd = '2022-06-30T14:00:00Z';
+db.program.save(bushfireNrm);
+print("##############################################################################################################################");
+print("# After running this script, go to https://fieldcapture.ala.org.au/program/index/"+bushfireNrm.programId+" and regenerate the outcomes reports");
+print("##############################################################################################################################");
