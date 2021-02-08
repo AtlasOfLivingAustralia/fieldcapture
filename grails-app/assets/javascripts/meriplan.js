@@ -591,7 +591,7 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
     self.outcomes = new OutcomesViewModel(o.outcomes, {outcomes:project.outcomes, priorities:project.priorities}); // Use in new MERI plan template
     self.priorities = new GenericViewModel(o.priorities);
     self.implementation = new ImplementationViewModel(o.implementation);
-    self.partnership = new GenericViewModel(o.partnership);
+    self.partnership = new PartnershipViewModel(o.partnership)
     self.lastUpdated = o.lastUpdated ? o.lastUpdated : moment().format();
     self.budget = new BudgetViewModel(o.budget, period);
     self.adaptiveManagement = ko.observable(o.adaptiveManagement);
@@ -919,7 +919,14 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
     };
 };
 
+/**
+ *
+ * @param partnership
+ * @constructor
+ */
+function PartnershipViewModel(partnership){
 
+}
 
 
 function GenericViewModel(o, propertyNames) {
