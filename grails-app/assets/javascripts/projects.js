@@ -139,6 +139,8 @@ function ProjectViewModel(project, isUserEditor, organisations) {
     self.status.subscribe(function (terminated) {
         if (terminated === "terminated"){
             editWithMarkdown("Explain", self.explanation)
+        }else{
+            self.explanation(undefined)
         }
     });
 

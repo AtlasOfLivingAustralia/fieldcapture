@@ -524,7 +524,11 @@ function ReadOnlyMeriPlan(project, projectService, config) {
             if (projectService.isUnlockedForDataCorrection()) {
                 result = {text: 'The plan has been unlocked for data correction', badgeClass: 'badge-warning'};
             } else {
-                result = {text: 'This project is complete', badgeClass: 'badge-info'};
+                if (project.status.toLowerCase() === "terminated"){
+                    result = {text: 'This project is ' + project.status.toLowerCase(), badgeClass: 'badge-danger'};
+                }else{
+                    result = {text: 'This project is ' + project.status.toLowerCase(), badgeClass: 'badge-info'};
+                }
             }
         } else {
             if (projectService.isApproved()) {

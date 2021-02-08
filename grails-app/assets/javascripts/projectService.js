@@ -238,7 +238,7 @@ function ProjectService(project, options) {
     };
 
     self.isCompleted = function() {
-        return project.status && project.status.toLowerCase() == 'completed';
+        return project.status && (project.status.toLowerCase() === 'completed' || project.status.toLowerCase() === 'terminated');
     };
 
     self.canApproveMeriPlan = function() {

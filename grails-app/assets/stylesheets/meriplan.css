@@ -340,4 +340,7 @@ a.meri-history-toggle {
 .announcements-table .information {
     width:28%;
 }
+.control-group .badge-danger {
+    background-color: #FF0000;
+}
 

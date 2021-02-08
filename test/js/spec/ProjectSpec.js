@@ -20,7 +20,7 @@ describe("ProjectViewModel Spec", function () {
 
         expect(project.name()).toEqual(projectData.name);
         expect(project.description()).toEqual(projectData.description);
-        expect(project.projectStatus).toEqual([{id: 'application', name:'Application'}, {id: 'active', name:'Active'},{id:'completed',name:'Completed'},{id:'deleted', name:'Deleted'}])
+        expect(project.projectStatus).toEqual([{id: 'application', name:'Application'}, {id: 'active', name:'Active'},{id:'completed',name:'Completed'},{id:'deleted', name:'Deleted'}, {id:'terminated', name: 'Terminated'}])
     });
 
 
