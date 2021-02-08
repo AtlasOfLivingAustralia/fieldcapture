@@ -339,10 +339,10 @@ function MERIPlan(project, projectService, config) {
     };
 
     self.addPartnership = function () {
-        self.meriPlan().partnership.rows.push(new GenericRowViewModel());
+        self.meriPlan().partnership.addRow();
     };
     self.removePartnership = function (partnership) {
-        self.meriPlan().partnership.rows.remove(partnership);
+        self.meriPlan().partnership.removeRow(partnership);
     };
 
     self.addSecondaryOutcome = function () {
@@ -591,7 +591,7 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
     self.outcomes = new OutcomesViewModel(o.outcomes, {outcomes:project.outcomes, priorities:project.priorities}); // Use in new MERI plan template
     self.priorities = new GenericViewModel(o.priorities);
     self.implementation = new ImplementationViewModel(o.implementation);
-    self.partnership = new GenericViewModel(o.partnership);
+    self.partnership = new GenericViewModel(o.partnership, ['data1', 'data2', 'data3', 'otherOrganisationType']);
     self.lastUpdated = o.lastUpdated ? o.lastUpdated : moment().format();
     self.budget = new BudgetViewModel(o.budget, period);
     self.adaptiveManagement = ko.observable(o.adaptiveManagement);

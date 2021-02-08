@@ -675,4 +675,36 @@ describe("Loading the MERI plan is handled correctly", function () {
 
     });
 
+    it("", function() {
+        var project = {
+            plannedStartDate: '2018-07-01T00:00:00Z',
+            plannedEndDate: '2021-06-30T00:00:00Z',
+            custom: {
+                details: {
+                    partnership: {
+                        rows: [
+                            {data1:'Partner 1', data2:'Advice', data3:'Research', otherOrganisationType:null},
+                            {data1:'Partner 2', data2:'Partner', data3:'Other', otherOrganisationType:"Test"},
+                        ]
+                    }
+                }
+            }
+        }
+        var projectService = new ProjectService(project, {});
+
+        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'});
+
+        expect(viewModel.meriPlan().partnership.rows().length).toEqual(2);
+        var serialized = JSON.stringify(ko.mapping.toJS(viewModel.meriPlan().partnership));
+        expect(JSON.parse(serialized)).toEqual(project.custom.details.partnership);
+
+        viewModel.addPartnership();
+        expect(viewModel.meriPlan().partnership.rows().length).toEqual(3);
+
+        viewModel.removePartnership(viewModel.meriPlan().partnership.rows()[2]);
+        var serialized = JSON.stringify(ko.mapping.toJS(viewModel.meriPlan().partnership));
+        expect(JSON.parse(serialized)).toEqual(project.custom.details.partnership);
+
+    });
+
 });
