@@ -290,7 +290,7 @@ function MERIPlan(project, projectService, config) {
         'Workplace health & safety (eg. Project staff and / or delivery partner injury or death)', 'Land use Conflict'];
     self.threatOptions = config.riskAndThreatTypes || defaultRiskAndThreats;
     self.organisations = ['Academic/research institution', 'Australian Government Department', 'Commercial entity', 'Community group',
-        'Farm/Fishing Business', 'If other, enter type', 'Indigenous Organisation', 'Individual', 'Local Government', 'Other', 'Primary Industry group',
+        'Farm/Fishing Business', 'Indigenous Organisation', 'Individual', 'Local Government', 'Other', 'Primary Industry group',
         'School', 'State Government Organisation', 'Trust'];
     self.protectedNaturalAssests = ['Natural/Cultural assets managed', 'Threatened Species', 'Threatened Ecological Communities',
         'Migratory Species', 'Ramsar Wetland', 'World Heritage area', 'Community awareness/participation in NRM', 'Indigenous Cultural Values',
