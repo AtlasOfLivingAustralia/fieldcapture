@@ -132,7 +132,15 @@ function ProjectViewModel(project, isUserEditor, organisations) {
         projectDefault = project.status;
     }
     self.status = ko.observable(projectDefault.toLowerCase());
-    self.projectStatus = [{id: 'application', name:'Application'}, {id: 'active', name:'Active'},{id:'completed',name:'Completed'},{id:'deleted', name:'Deleted'}];
+    self.projectStatus = [{id: 'application', name:'Application'}, {id: 'active', name:'Active'},{id:'completed',name:'Completed'},{id:'deleted', name:'Deleted'}, {id:"terminated", name: "Terminated"}];
+
+    self.explanation = ko.observable(project.explanation).extend({markdown: true});
+
+    self.status.subscribe(function (terminated) {
+        if (terminated === "terminated"){
+            editWithMarkdown("Explain", self.explanation)
+        }
+    });
 
     self.organisationId = ko.observable(project.organisationId);
     self.transients.organisation = ko.observable(organisationsMap[self.organisationId()]);
@@ -887,6 +895,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             programId: self.programId(),
             funding: new Number(self.funding()),
             status: self.status(),
+            explanation: self.explanation(),
             tags: self.tags(),
             promoteOnHomepage: self.promoteOnHomepage(),
             options: {
