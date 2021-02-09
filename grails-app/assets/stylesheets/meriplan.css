@@ -340,4 +340,7 @@ a.meri-history-toggle {
 .announcements-table .information {
     width:28%;
 }
-
+.fa-question-circle{
+    font-size: 14px;
+    content: "\f059";
+}
