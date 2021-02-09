@@ -1,6 +1,7 @@
 package pages.modules
 
 import geb.Module
+import geb.module.FormElement
 import org.openqa.selenium.StaleElementReferenceException
 
 class OutcomeRow extends Module {
@@ -51,6 +52,7 @@ class PartnershipRow extends Module {
         name { $('.partner-name textarea') }
         partnership { $('.partnership-nature textarea') }
         orgType { $('.partner-organisation-type select') }
+        otherOrgType { $('.partner-organisation-type input').module(FormElement) }
         remove { $('i.icon-remove') }
     }
 }
@@ -134,7 +136,7 @@ class EditableMeriPlan extends Module {
         nationalAndRegionalPlans(required: false) { $('table.plans tbody tr').moduleList(PlanRow) }
         projectServices(required: false) { $('table.service-targets tbody tr').moduleList(ServiceTargetRow) }
         objectivesList(required: false) { $('#objectives-list') }
-        projectPartnerships(required: false) { $('#project-partnership').moduleList(PartnershipRow) }
+        projectPartnerships(required: false) { $('#project-partnership tbody tr').moduleList(PartnershipRow) }
         keq(required:false) { $('#keq tbody tr').moduleList(KeqRow) }
         budget(required:false) { $('.meri-budget').moduleList(BudgetRow) }
         activities(required:false) { $('#activity-list') }
@@ -164,6 +166,14 @@ class EditableMeriPlan extends Module {
 
         waitFor {
             budget.size() == currentRows + 1
+        }
+    }
+
+    void addPartnershipRow() {
+        int currentRows = projectPartnerships.size();
+        $('button[data-bind*=addPartnership]').click();
+        waitFor {
+            projectPartnerships.size() == currentRows + 1
         }
     }
 
