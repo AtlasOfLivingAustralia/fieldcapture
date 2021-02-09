@@ -348,3 +348,25 @@ ko.bindingHandlers.warningPopup = {
     }
   }
 };
+
+/**
+ * Interacts with the "options" and "value" bindings for a select element.
+ * Upon initialisation, if the current value of the select field does not exist in the options list, this
+ * binding will add it.  This is to support backwards-compatible removal of options from select lists without
+ * invalidating saved data that selected the removed value.
+ * Note - if the value for the "options" binding is not an observable, this binding must be applied before the
+ * options binding.
+ * @type {{init: ko.bindingHandlers.addValueToOptionsIfMissing.init}}
+ */
+ko.bindingHandlers['addValueToOptionsIfMissing'] = {
+  init: function(element, valueAccessor, allBindings) {
+    var options = ko.utils.unwrapObservable(allBindings.get('options'));
+    var value = ko.utils.unwrapObservable(allBindings.get('value'));
+
+    // If the initial value is not in the options list, add it.
+    if (value && options && _.isArray(options) && !_.contains(options, value)) {
+      options.push(value);
+    }
+  }
+
+}
