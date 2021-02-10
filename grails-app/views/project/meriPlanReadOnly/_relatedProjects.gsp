@@ -6,7 +6,7 @@
     </thead>
     <tbody>
     <tr>
-        <td><span data-bind="text:details.relatedProjects"></span></td>
+        <td><span class="relatedProjects" data-bind="text:details.relatedProjects"></span></td>
     </tr>
     </tbody>
 </table>

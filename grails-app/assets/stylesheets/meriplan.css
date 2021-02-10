@@ -251,7 +251,7 @@ table tr.header th {
     height: 30px;
 }
 
-.meri-plan .asset-category, .meri-plan .asset-category {
+.meri-plan .asset-category, .meri-plan .asset-detail {
     width: 50%;
 }
 
@@ -340,4 +340,7 @@ a.meri-history-toggle {
 .announcements-table .information {
     width:28%;
 }
-
+.fa-question-circle{
+    font-size: 14px;
+    content: "\f059";
+}

@@ -7,3 +7,6 @@ table td.dataset-name, table th.dataset-name {
 table td.report-start, table th.report-start {
     width:15%;
 }
+div.otherPriority {
+    margin-top: 10px;
+}

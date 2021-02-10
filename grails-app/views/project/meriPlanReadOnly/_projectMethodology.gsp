@@ -9,7 +9,7 @@
     </thead>
     <tbody>
     <tr>
-        <td><span data-bind="text:details.implementation.description"></span></td>
+        <td><span class="projectMethodology" data-bind="text:details.implementation.description"></span></td>
     </tr>
     </tbody>
 </table>

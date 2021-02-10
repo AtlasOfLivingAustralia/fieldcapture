@@ -42,9 +42,11 @@
         </div>
     </div>
     <div class="form-group row">
-        <label for="investmentPriority" class="col-sm-5 col-form-label required">6. What primary or secondary investment priority or asset does this dataset relate to?</label>
+        <label for="investmentPriority" class="col-sm-5 col-form-label required">6. What primary or secondary investment priorities or assets does this dataset relate to?</label>
         <div class="col-sm-7">
-            <g:select from="${priorities}" noSelection="['':'Please select...']" name="investmentPriority" class="form-control" id="investmentPriority" data-validation-engine="validate[required]" data-bind="value:investmentPriority"/>
+            <g:select multiple="multiple" from="${priorities}" name="investmentPriority" class="form-control" id="investmentPriority" data-validation-engine="validate[required]" data-bind="selectedOptions:investmentPriorities"/>
+            <div class="otherPriority">
+                <textarea type="text" class="form-control otherPriorityTextArea" placeholder="Note: This Other Priorities box only enable if other is selected" data-bind="enable: investmentOtherSelected(), value: otherInvestmentPriority"></textarea>            </div>
         </div>
 
     </div>
@@ -61,9 +63,9 @@
         </div>
     </div>
     <div class="form-group row">
-        <label for="" class="col-sm-5 col-form-label required">8. What types of measurements or observations does the dataset include? <br/>To select more than one answer, hold down the ‘CTRL’ button whilst selecting an option from the drop-down list</label>
+        <label for="measurementTypes" class="col-sm-5 col-form-label required">8. What types of measurements or observations does the dataset include? <br/>To select more than one answer, hold down the ‘CTRL’ button whilst selecting an option from the drop-down list</label>
         <div class="col-sm-7">
-            <select multiple="multiple" type="text" class="form-control" id="" data-validation-engine="validate[required]" data-bind="selectedOptions:measurementTypes">
+            <select multiple="multiple" type="text" class="form-control" id="measurementTypes" data-validation-engine="validate[required]" data-bind="selectedOptions:measurementTypes">
                 <option>Abundance</option>
                 <option>Adoption - climate and market demands</option>
                 <option>Adoption - land resource management practices</option>

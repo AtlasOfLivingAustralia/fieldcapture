@@ -28,15 +28,15 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
         at AdminTools
 
         when:
-        waitFor {$("#btnClearMetadataCache").displayed}
+        waitFor { $("#btnClearMetadataCache").displayed }
         $("#btnClearMetadataCache").click()
 
         then:
-        waitFor 5,{to AdminClearCachePage}
+        waitFor 5, { to AdminClearCachePage }
     }
 
     //  Regional Fund for Wildlife and Habitat Bushfire Recovery (the Regional Fund) - States
-    def "The MERI Plan will only display only specific section for the Bushfire Recovery (the Regional Fund) - States"(){
+    def "The MERI Plan will only display only specific section for the Bushfire Recovery (the Regional Fund) - States"() {
 
         setup:
         String projectId = 'bushfireProject'
@@ -51,25 +51,33 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
         when:
         def meriPlan = openMeriPlanEditTab()
 
-        meriPlan.assetType = "Priority Invertebrate Species"
         waitFor {
             meriPlan.asset.find('[value="Euastacus jagara (Freshwater crayfish)"')
         }
         meriPlan.asset = "Euastacus jagara (Freshwater crayfish)"
-        meriPlan.shortTermOutcomes[0].value( "Short term outcome 1")
+        meriPlan.shortTermOutcomes[0].value("Short term outcome 1")
         meriPlan.projectDescription = "MERI plan edited description"
         meriPlan.relatedProjects = "Related projects"
         meriPlan.projectPartnerships[0].name = 'partner name'
         meriPlan.projectPartnerships[0].partnership = 'partnership'
         meriPlan.projectPartnerships[0].orgType = 'Trust'
+        meriPlan.hideFloatingSave()
+        meriPlan.addPartnershipRow()
+        meriPlan.projectPartnerships[1].name = 'partner name 2'
+        meriPlan.projectPartnerships[1].partnership = 'partnership 2'
+        meriPlan.projectPartnerships[1].orgType = 'Other'
+        waitFor {
+            !meriPlan.projectPartnerships[1].otherOrgType.disabled
+        }
+        meriPlan.projectPartnerships[1].otherOrgType = "Other type"
         meriPlan.consultation = 'Consultation'
-        meriPlan.keyThreats[0].threat= "Threat 1"
+        meriPlan.keyThreats[0].threat = "Threat 1"
         meriPlan.keyThreats[0].intervention = "Intervention 1"
         meriPlan.projectMethodology = "Project methodology"
         meriPlan.adaptiveManagement = 'Adaptive management'
-        meriPlan.nationalAndRegionalPlans[0].name= "Plan 1"
-        meriPlan.nationalAndRegionalPlans[0].section= "Section 1"
-        meriPlan.nationalAndRegionalPlans[0].alignment= "Alignment 1"
+        meriPlan.nationalAndRegionalPlans[0].name = "Plan 1"
+        meriPlan.nationalAndRegionalPlans[0].section = "Section 1"
+        meriPlan.nationalAndRegionalPlans[0].alignment = "Alignment 1"
         meriPlan.projectServices[0].selectService("Communication materials")
         meriPlan.projectServices[0].selectScore("Number of communication materials published")
         meriPlan.projectServices[0].targets = "5"
@@ -89,14 +97,19 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
         meriPlan = openMeriPlanEditTab()
 
         then:
-        meriPlan.assetType.value() == "Priority Invertebrate Species"
         meriPlan.asset == "Euastacus jagara (Freshwater crayfish)"
+        meriPlan.assetType == "Priority Invertebrate Species"
         meriPlan.shortTermOutcomes[0].value() == "Short term outcome 1"
         meriPlan.projectDescription == "MERI plan edited description"
         meriPlan.relatedProjects == "Related projects"
         meriPlan.projectPartnerships[0].name == 'partner name'
         meriPlan.projectPartnerships[0].partnership == 'partnership'
         meriPlan.projectPartnerships[0].orgType == 'Trust'
+        meriPlan.projectPartnerships[1].name == 'partner name 2'
+        meriPlan.projectPartnerships[1].partnership == 'partnership 2'
+        meriPlan.projectPartnerships[1].orgType == 'Other'
+        meriPlan.projectPartnerships[1].otherOrgType == 'Other type'
+
         meriPlan.consultation == 'Consultation'
         meriPlan.keyThreats[0].threat.value() == "Threat 1"
         meriPlan.keyThreats[0].intervention.value() == "Intervention 1"
@@ -112,8 +125,36 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
         meriPlan.projectServices[0].date.value() == "01-07-2021"
         meriPlan.budget[0].description == 'budget description'
         meriPlan.budget[0].budgetAmounts[0].value() == '100'
-    }
 
+        when:
+        meriPlan = openReadOnlyMeriPlan()
+
+        then:
+
+        meriPlan.assetType[0].text() == "Priority Invertebrate Species"
+        meriPlan.asset[0].text() == "Euastacus jagara (Freshwater crayfish)"
+        meriPlan.priorityAction[1].text() == "No priority actions have been nominated for this project"
+        meriPlan.outcomeStatements[0].text() == "Short term outcome 1"
+        meriPlan.description[0].text() == "MERI plan edited description"
+        meriPlan.relatedProjects[0].text() == "Related projects"
+        meriPlan.consultation[0].text() == "Consultation"
+        meriPlan.projectMethodology[0].text() == "Project methodology"
+        meriPlan.nationalAndRegionalPlansName[1].text() == "Plan 1"
+        meriPlan.nationalAndRegionalPlansSection[1].text() == "Section 1"
+        meriPlan.nationalAndRegionalPlansAlignment[1].text() == "Alignment 1"
+        meriPlan.keyThreatsThreats[0].text() == "Threat 1"
+        meriPlan.keyThreatsIntervention[0].text() == "Intervention 1"
+        meriPlan.ppPartnerName[1].text() == "partner name"
+        meriPlan.ppNature[1].text() == "partnership"
+        meriPlan.ppOrganisationType[1].text() == "Trust"
+        meriPlan.projectService[1].text() == "Communication materials"
+        meriPlan.projectTargetMeasure[1].text() == "Number of communication materials published"
+        meriPlan.projectTotalDelivered[1].text() == "5"
+        meriPlan.projectDeliveryDate[1].text() == "01-07-2021"
+        meriPlan.budgetDescription[1].text() == "budget description"
+        meriPlan.budgetAmount[1].text() == "\$100.00"
+
+    }
 
 
     //  Regional Fund for Wildlife and Habitat Bushfire Recovery (the Regional Fund) - NRM
@@ -132,9 +173,6 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
         def meriPlan = openMeriPlanEditTab()
 
         meriPlan.primaryOutcome = "2. By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved."
-//        waitFor {
-//            meriPlan.primaryPriority.find('[value="Numenius madagascariensis (Eastern Curlew, Far Eastern Curlew)"')
-//        }
         meriPlan.primaryPriorityUnstyled[0].click()
         meriPlan.secondaryOutcomes[0].outcome = "2. By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved."
         meriPlan.secondaryOutcomes[0].click()

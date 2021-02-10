@@ -651,4 +651,60 @@ describe("Loading the MERI plan is handled correctly", function () {
 
     });
 
+    it("can return the category an asset falls into", function() {
+        var project = {
+            plannedStartDate:'2018-07-01T00:00:00Z',
+            plannedEndDate:'2021-06-30T00:00:00Z',
+            priorities:[
+                {"category":"Cat 1", "priority":"Priority 1"},
+                {"category":"Cat 1", "priority":"Priority 2"},
+                {"category":"Cat 2", "priority":"Priority 3"},
+                {"category":"Cat 3", "priority":"Priority 4"}
+            ]
+        };
+        var projectService = new ProjectService(project, {});
+
+        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'});
+
+        expect(viewModel.assetCategory()).toBeUndefined();
+        expect(viewModel.assetCategory("Not in list")).toBeUndefined();
+        expect(viewModel.assetCategory("Priority 1")).toEqual("Cat 1");
+        expect(viewModel.assetCategory("Priority 2")).toEqual("Cat 1");
+        expect(viewModel.assetCategory("Priority 3")).toEqual("Cat 2");
+        expect(viewModel.assetCategory("Priority 4")).toEqual("Cat 3");
+
+    });
+
+    it("", function() {
+        var project = {
+            plannedStartDate: '2018-07-01T00:00:00Z',
+            plannedEndDate: '2021-06-30T00:00:00Z',
+            custom: {
+                details: {
+                    partnership: {
+                        rows: [
+                            {data1:'Partner 1', data2:'Advice', data3:'Research', otherOrganisationType:null},
+                            {data1:'Partner 2', data2:'Partner', data3:'Other', otherOrganisationType:"Test"},
+                        ]
+                    }
+                }
+            }
+        }
+        var projectService = new ProjectService(project, {});
+
+        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'});
+
+        expect(viewModel.meriPlan().partnership.rows().length).toEqual(2);
+        var serialized = JSON.stringify(ko.mapping.toJS(viewModel.meriPlan().partnership));
+        expect(JSON.parse(serialized)).toEqual(project.custom.details.partnership);
+
+        viewModel.addPartnership();
+        expect(viewModel.meriPlan().partnership.rows().length).toEqual(3);
+
+        viewModel.removePartnership(viewModel.meriPlan().partnership.rows()[2]);
+        var serialized = JSON.stringify(ko.mapping.toJS(viewModel.meriPlan().partnership));
+        expect(JSON.parse(serialized)).toEqual(project.custom.details.partnership);
+
+    });
+
 });

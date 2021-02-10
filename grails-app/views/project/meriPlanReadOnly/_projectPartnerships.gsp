@@ -14,7 +14,14 @@
             <td class="index"><span data-bind="text: $index()+1"></span></td>
             <td class="partner-name"><span data-bind="text:data1"></span></td>
             <td class="partnership-nature"><label data-bind="text:data2"></label></td>
-            <td class="partner-organisation-type"><label data-bind="text:data3"></label></td>
+            <td class="partner-organisation-type">
+                <div data-bind="if:data3() != 'Other'">
+                    <label data-bind="text:data3"></label>
+                </div>
+                <div data-bind="if:data3() == 'Other'">
+                    <label data-bind="text:otherOrganisationType"></label>
+                </div>
+            </td>
         </tr>
         </tbody>
     </table>

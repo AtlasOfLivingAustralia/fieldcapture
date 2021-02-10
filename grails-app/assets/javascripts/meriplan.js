@@ -269,6 +269,18 @@ function MERIPlan(project, projectService, config) {
         return categories;
     }
 
+    /**
+     * Returns the asset category assoociated with the supplied asset.
+     * @param asset the asset to check.
+     * @returns {*}
+     */
+    self.assetCategory = function(asset) {
+        var result = _.find(project.priorities || [], function(priority) {
+            return priority.priority == asset;
+        });
+        return result && result.category;
+    };
+
     self.programObjectives = config.programObjectives || [];
 
     self.obligationOptions = ['Yes', 'No'];
@@ -278,7 +290,7 @@ function MERIPlan(project, projectService, config) {
         'Workplace health & safety (eg. Project staff and / or delivery partner injury or death)', 'Land use Conflict'];
     self.threatOptions = config.riskAndThreatTypes || defaultRiskAndThreats;
     self.organisations = ['Academic/research institution', 'Australian Government Department', 'Commercial entity', 'Community group',
-        'Farm/Fishing Business', 'If other, enter type', 'Indigenous Organisation', 'Individual', 'Local Government', 'Other', 'Primary Industry group',
+        'Farm/Fishing Business', 'Indigenous Organisation', 'Individual', 'Local Government', 'Other', 'Primary Industry group',
         'School', 'State Government Organisation', 'Trust'];
     self.protectedNaturalAssests = ['Natural/Cultural assets managed', 'Threatened Species', 'Threatened Ecological Communities',
         'Migratory Species', 'Ramsar Wetland', 'World Heritage area', 'Community awareness/participation in NRM', 'Indigenous Cultural Values',
@@ -327,10 +339,10 @@ function MERIPlan(project, projectService, config) {
     };
 
     self.addPartnership = function () {
-        self.meriPlan().partnership.rows.push(new GenericRowViewModel());
+        self.meriPlan().partnership.addRow();
     };
     self.removePartnership = function (partnership) {
-        self.meriPlan().partnership.rows.remove(partnership);
+        self.meriPlan().partnership.removeRow(partnership);
     };
 
     self.addSecondaryOutcome = function () {
@@ -579,7 +591,7 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
     self.outcomes = new OutcomesViewModel(o.outcomes, {outcomes:project.outcomes, priorities:project.priorities}); // Use in new MERI plan template
     self.priorities = new GenericViewModel(o.priorities);
     self.implementation = new ImplementationViewModel(o.implementation);
-    self.partnership = new GenericViewModel(o.partnership);
+    self.partnership = new GenericViewModel(o.partnership, ['data1', 'data2', 'data3', 'otherOrganisationType']);
     self.lastUpdated = o.lastUpdated ? o.lastUpdated : moment().format();
     self.budget = new BudgetViewModel(o.budget, period);
     self.adaptiveManagement = ko.observable(o.adaptiveManagement);

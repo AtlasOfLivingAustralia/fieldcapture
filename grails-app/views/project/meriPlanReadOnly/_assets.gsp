@@ -2,7 +2,7 @@
 <g:if test="${viewExplanation}">
     ${viewExplanation ?: "Species, ecological community or environmental asset(s) the project is targeting"}
 </g:if>
-<g:set var="assetClass" value="${useCategorySelection ? 'asset-detail': 'asset'} "/>
+<g:set var="assetClass" value="${useCategorySelection || autoSelectCategory ? 'asset-detail': 'asset'} "/>
 <table class="table assets-view">
     <thead>
     <tr>
@@ -11,6 +11,9 @@
             <th class="asset-category">Asset Type</th>
         </g:if>
             <th class="${assetClass}">${assetHeading ?: "Species, ecological community or environmental asset(s) the project is targeting"}</th>
+        <g:if test="${fromPriorities && autoSelectCategory}">
+            <th class="asset-category">Asset Type</th>
+        </g:if>
     </tr>
     </thead>
     <tbody data-bind="foreach:details.assets">
@@ -24,6 +27,11 @@
         <td class="${assetClass}">
             <span data-bind="text:description"></span>
         </td>
+        <g:if test="${fromPriorities && autoSelectCategory}">
+            <td class="asset-category">
+                <span data-bind="text:$root.assetCategory(description())"></span>
+            </td>
+        </g:if>
     </tr>
     </tbody>
 </table>

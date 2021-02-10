@@ -22,6 +22,11 @@
         </g:each>
     </ul>
 
+    <strong>Data set summary</strong><br/>
+    <ul class="unstyled">
+        <li><label class="checkbox"><input type="checkbox" name="tabs" value="Dataset" data-validation-engine="validate[minCheckbox[1]]">Data set summary</label></li>
+    </ul>
+
     <strong>MERI Plan</strong>
     <ul class="unstyled">
         <g:each in="${['Outcomes', 'Monitoring', 'Project Partnerships', 'Project Implementation', 'Key Evaluation Question', 'Priorities', 'Budget', 'Risks and Threats', 'WHS and Case Study', 'Attachments', 'Baseline', 'Event', "Approvals"]}" var="name">
