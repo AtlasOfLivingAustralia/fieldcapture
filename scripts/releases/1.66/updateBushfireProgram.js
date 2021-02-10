@@ -149,6 +149,37 @@ program.config.meriPlanContents =  [
     }
 ];
 
+program.config.projectReports = [
+    {
+        "reportType": "Activity",
+        "endDates": [
+            "2021-03-31T13:00:00Z",
+            "2021-09-30T14:00:00Z",
+            "2022-03-31T13:00:00Z"
+        ],
+        "reportDescriptionFormat": "Progress Report %1d",
+        "reportNameFormat": "Progress Report %1d",
+        "reportingPeriodInMonths": 6,
+        "description": "",
+        "category": "Progress Reports",
+        "activityType": "State Intervention Progress Report",
+        "reportsAlignedToCalendar": true,
+        "canSubmitDuringReportingPeriod": true
+    },
+    {
+        "reportType": "Single",
+        "firstReportingPeriodEnd": "2022-06-30T14:00:00Z",
+        "reportDescriptionFormat": "Final Report",
+        "reportNameFormat": "Final Report",
+        "reportingPeriodInMonths": 0,
+        "multiple": false,
+        "description": "",
+        "category": "Final Report",
+        "reportsAlignedToCalendar": false,
+        "activityType": "Final Report"
+    }
+];
+
 load("stateBushfireAssets.js");
 program.priorities = [];
 
