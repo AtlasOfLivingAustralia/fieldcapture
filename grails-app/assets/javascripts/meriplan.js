@@ -1003,7 +1003,7 @@ function ObjectiveViewModel(o, programObjectives) {
         }
     });
 
-    if (programObjectives) {
+    if (programObjectives && programObjectives.length > 0) {
 
         var otherObjectives = _.filter(_.map(self.rows1(), function (row) {
             return row.description();
