@@ -114,3 +114,13 @@ createProject({name:'project completed', projectId:"project_completed", status:"
 db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_active', userId:'2', accessLevel:'caseManager'});
 db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_application', userId:'2', accessLevel:'caseManager'});
 db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_completed', userId:'2', accessLevel:'caseManager'});
+
+
+createProgram({programId:"grants", name:"Grant Program"});
+var grantProgram = db.program.findOne({programId:"grants"});
+grantProgram.config.projectTemplate=null;
+grantProgram.config.meriPlanTemplate=null;
+db.program.save(grantProgram);
+createProject({name:'Grants project', projectId:"grants_project", programId:"grants", status:"active", planStatus:''});
+db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'grants_project', userId:'2', accessLevel:'admin'});
+

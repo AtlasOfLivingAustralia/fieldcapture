@@ -106,6 +106,17 @@ class ServiceTargetRow extends Module {
     }
 }
 
+class ObjectivesAndAssets extends Module {
+    static content = {
+        outcome { $('.original-outcomes textarea') }
+        assets { $('.original-assets select') }
+        removeButton(required:false) { $('.remove i') }
+    }
+    void remove() {
+        removeButton.click()
+    }
+}
+
 class EditableMeriPlan extends Module {
 
 
@@ -147,6 +158,7 @@ class EditableMeriPlan extends Module {
         consultation(required:false) { $('.consultation textarea') }
         communityEngagement(required:false) { $('.community-engagement textarea') }
         relatedProjects(required:false) { $('.related-projects textarea') }
+        objectivesAndAssets(required:false) { $('table tbody[data-bind*="objectives.rows1"] tr').moduleList(ObjectivesAndAssets) }
 
         floatingSaveButton { $('#floating-save [data-bind*="saveProjectDetails"]') }
         saveButton { $('.form-actions [data-bind*="saveProjectDetails"]').first() }
@@ -174,6 +186,14 @@ class EditableMeriPlan extends Module {
         $('button[data-bind*=addPartnership]').click();
         waitFor {
             projectPartnerships.size() == currentRows + 1
+        }
+    }
+
+    void addObjectiveAndAssetRow() {
+        int currentRows = objectivesAndAssets.size();
+        $('button[data-bind*=addOutcome]').click();
+        waitFor {
+            objectivesAndAssets.size() == currentRows + 1
         }
     }
 
