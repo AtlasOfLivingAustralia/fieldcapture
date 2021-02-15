@@ -141,7 +141,7 @@ grails.project.dependency.resolution = {
         runtime (":rest:0.8") {
             excludes "httpclient", "httpcore","xercesImpl"
         }
-        compile ":ala-auth:2.2.0"
+        compile ":ala-auth:2.2.1"
         runtime ":csv:0.3.1"
         compile ":markdown:1.1.1"
         compile ':cache:1.1.8'
