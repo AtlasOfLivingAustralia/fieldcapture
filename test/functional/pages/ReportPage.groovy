@@ -2,6 +2,7 @@ package pages
 
 import geb.Page
 import geb.navigator.Navigator
+import pages.modules.ReportContentModule
 
 class ReportPage extends Page {
 
@@ -10,6 +11,7 @@ class ReportPage extends Page {
     }
 
     static content = {
+        reportContent {module ReportContentModule }
         saveButton { $('#nav-buttons button[data-bind$=save') }
         exitButton { $('#nav-buttons button[data-bind*=exitReport') }
     }
@@ -41,5 +43,9 @@ class ReportPage extends Page {
 
     def exitReport() {
         exitButton.click()
+    }
+
+    def getReport() {
+        return reportContent
     }
 }
