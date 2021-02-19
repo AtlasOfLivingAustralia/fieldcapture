@@ -29,8 +29,7 @@ class ReportServiceFilteringSpec extends StubbedCasSpec {
         at AdminTools
 
         when:
-        waitFor { $("#btnClearMetadataCache").displayed }
-        $("#btnClearMetadataCache").click()
+        clearCache()
 
         then:
         waitFor 5, { to AdminClearCachePage }

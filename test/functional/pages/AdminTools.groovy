@@ -22,4 +22,9 @@ class AdminTools extends Page {
         reindexButton().click()
     }
 
+    void clearCache() {
+        waitFor { $("#btnClearMetadataCache").displayed }
+        $("#btnClearMetadataCache").click()
+    }
+
 }
