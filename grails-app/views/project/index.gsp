@@ -87,8 +87,8 @@
         riskChangesReportHtmlUrl:"${createLink(controller:'project', action:'projectReport', id:project.projectId)}",
         riskChangesReportPdfUrl:"${createLink(controller:'project', action:'projectReportPDF', id:project.projectId)}",
         newDataSetUrl:"${createLink(controller:'dataSet', action:'create', id:project.projectId)}",
-        editDataSetUrl:"${createLink(controller:'dataSet', action:'edit', id:project.projectId)}.json",
-        deleteDataSetUrl:"${createLink(controller:'dataSet', action:'delete', id:project.projectId)}.json",
+        editDataSetUrl:"${createLink(controller:'dataSet', action:'edit', id:project.projectId)}",
+        deleteDataSetUrl:"${createLink(controller:'dataSet', action:'delete', id:project.projectId)}",
 
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 

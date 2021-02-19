@@ -15,7 +15,7 @@ class DatasetSpec extends StubbedCasSpec{
     def "Add new data set in to project"() {
         setup:
         String projectId = 'fdFundProject'
-        login([userId: '1', role: "ROLE_FC_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'USER'], browser)
+        login([userId: '1', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'USER'], browser)
 
         when:
         to RlpProjectPage, projectId
@@ -54,8 +54,6 @@ class DatasetSpec extends StubbedCasSpec{
 
         dataSet.createButton.click()
 
-      //  to RlpProjectPage, projectId
-
         then:
         waitFor {$("#project-data-sets .fa-edit").displayed}
         $("#project-data-sets .fa-edit").click()
@@ -84,7 +82,20 @@ class DatasetSpec extends StubbedCasSpec{
         set.dataOwner == "data owner"
         set.custodian == "custodian"
 
+        when:
+        datasetDetails.cancel()
 
+        then: "The data set summary is displayed"
+        waitFor {$("#project-data-sets .fa-remove").displayed}
+
+        when: "Delete the data set"
+        $("#project-data-sets .fa-remove").click()
+        waitFor{ $('.bootbox a.btn-primary').displayed }
+        $('.bootbox a.btn-primary').click()
+
+        then: "The data set is removed"
+        waitFor { hasBeenReloaded() }
+        $('#project-data-sets tbody[data-bind*=dataSets] tr').size() == 0
 
     }
 }
