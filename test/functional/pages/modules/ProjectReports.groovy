@@ -1,6 +1,7 @@
 package pages.modules
 
 import geb.Module
+import geb.module.FormElement
 import org.openqa.selenium.StaleElementReferenceException
 
 class ProjectReports extends Module {
@@ -21,6 +22,10 @@ class ProjectReports extends Module {
         $('#declaration [name="acceptTerms"]').value(true)
     }
     def submitDeclaration() {
+        waitFor { canSubmitDeclaration() }
         $('#declaration [data-bind*="submitReport"]').click()
+    }
+    def canSubmitDeclaration() {
+        $('#declaration [data-bind*="submitReport"]').module(FormElement).enabled
     }
 }
