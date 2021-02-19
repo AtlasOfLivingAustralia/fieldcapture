@@ -73,6 +73,12 @@ for (var i = 1; i < 10; i++) {
             userId: '10',
             accessLevel: 'editor'
         });
+        db.userPermission.insert({
+            entityType: 'au.org.ala.ecodata.Project',
+            entityId: id,
+            userId: '30',
+            accessLevel: 'caseManager'
+        });
     }
 }
 
@@ -124,3 +130,13 @@ db.program.save(grantProgram);
 createProject({name:'Grants project', projectId:"grants_project", programId:"grants", status:"active", planStatus:''});
 db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'grants_project', userId:'2', accessLevel:'admin'});
 
+addSetting('meritfielddata.rlp.report.declaration', 'Report declaration text');
+addSetting('meritfielddata.rlp.report.submitted.emailSubject', 'Report submitted subject');
+addSetting('meritfielddata.rlp.report.submitted.emailBody', 'Report submitted body');
+addSetting('meritfielddata.rlp.report.submitted.emailSubject', 'Report approved subject');
+addSetting('meritfielddata.rlp.report.submitted.emailBody', 'Report approved body');
+
+// Load scores used by RLP services to enable their selection in the MERI plan.
+createProjectNumberBaselineDataSets({ "scoreId":"score_42"});
+createProjectNumberOfCommunicationMaterialsPublished({ "scoreId":"score_43"});
+createProjectWeedAreaSurveyedHaDefault({ "scoreId":"score_44"});

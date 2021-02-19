@@ -9,15 +9,9 @@ class ReportSummaryLine extends Module {
         fromDate { $('.report-start').text() }
         toDate { $('.report-end').text() }
         editLink { $('td.report-actions [data-bind*=editUrl]')}
-        submitButton { $('button[data-bind*="submitReport"]') }
-        approveButton { $('button[data-bind*=approveReport]') }
-        returnButton { $('button[data-bind*=rejectReport]') }
-    }
-
-    def printname() {
-        println $('.report-name span')
-
-        return true
+        submitButton(required:false) { $('button[data-bind*="submitReport"]') }
+        approveButton(required:false) { $('button[data-bind*=approveReport]') }
+        returnButton(required:false) { $('button[data-bind*=rejectReport]') }
     }
 
     def edit() {

@@ -14,6 +14,13 @@ class ProjectReports extends Module {
                 return []
             }
         }
+        reportDeclaration { $('#declaration') }
     }
 
+    def acceptTerms() {
+        $('#declaration [name="acceptTerms"]').value(true)
+    }
+    def submitDeclaration() {
+        $('#declaration [data-bind*="submitReport"]').click()
+    }
 }
