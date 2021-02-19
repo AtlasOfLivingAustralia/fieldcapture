@@ -55,6 +55,7 @@ class DatasetSpec extends StubbedCasSpec{
         dataSet.createButton.click()
 
         then:
+        waitFor { at RlpProjectPage }
         waitFor {$("#project-data-sets .fa-edit").displayed}
         $("#project-data-sets .fa-edit").click()
 
@@ -86,6 +87,7 @@ class DatasetSpec extends StubbedCasSpec{
         datasetDetails.cancel()
 
         then: "The data set summary is displayed"
+        waitFor { at RlpProjectPage }
         waitFor {$("#project-data-sets .fa-remove").displayed}
 
         when: "Delete the data set"
