@@ -2,7 +2,7 @@ package pages
 
 import geb.Page
 
-class AdminTools extends Page {
+class AdminTools extends ReloadablePage {
 
     static url = "admin/tools"
 
