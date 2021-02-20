@@ -16,10 +16,12 @@ class ProjectReports extends Module {
             }
         }
         reportDeclaration { $('#declaration') }
+        acceptTermsCheckBox { $('#declaration [name="acceptTerms"]') }
     }
 
     def acceptTerms() {
-        $('#declaration [name="acceptTerms"]').value(true)
+        waitFor { acceptTermsCheckBox.displayed }
+        acceptTermsCheckBox.value(true)
     }
     def submitDeclaration() {
         waitFor { canSubmitDeclaration() }
