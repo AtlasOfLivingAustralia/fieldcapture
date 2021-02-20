@@ -26,6 +26,8 @@ class ProjectExplorerDashboardSectionSpec extends StubbedCasSpec {
 
         when: "Clear the cache to make the data reflect the dataset, then reindex"
         clearCache()
+        waitFor { hasBeenReloaded() }
+
         reindex()
         logout(browser)
 
