@@ -10,6 +10,7 @@
             <tr>
                 <th class="actions">Actions</th>
                 <th class="dataset-name">Title</th>
+                <th class="dataset-progress">Status</th>
                 <th></th>
             </tr>
         </thead>
@@ -24,6 +25,10 @@
                     </a>
                 </td>
                 <td class="dataset-name" data-bind="text:name"></td>
+                <td><button type="button" class="btn btn-small"   data-bind="activityProgress:progress">
+                    <span data-bind="text: progress"></span>
+                </button>
+                </td>
                 <td></td>
             </tr>
         </tbody>

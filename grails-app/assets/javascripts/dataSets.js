@@ -25,6 +25,7 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
 
         this.editUrl = config.editDataSetUrl + '?dataSetId='+dataSet.dataSetId;
         this.name = dataSet.name;
+        this.progress = dataSet.progress;
         this.deleteDataSet = function() {
             bootbox.confirm("Are you sure?", function() {
                 projectService.deleteDataSet(dataSet.dataSetId).done(function() {
@@ -100,12 +101,18 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     self.sensitivities = ko.observableArray(dataSet.sensitivities);
     self.owner = ko.observable(dataSet.owner);
     self.custodian = ko.observable(dataSet.custodian);
+    self.progress = ko.observable(dataSet.progress);
+    self.markedAsFinished = ko.observable(dataSet.progress === 'finished');
+    self.markedAsFinished.subscribe(function (finished) {
+        self.progress(finished ? 'finished' : 'started');
+    });
 
     self.validate = function() {
         return $(config.validationContainerSelector).validationEngine('validate');
     }
     self.save =  function() {
-        var valid = self.validate();
+        var markAsFinished = self.markedAsFinished();
+        var valid = markAsFinished ? self.validate() : true;
 
         if (valid) {
             var dataSet = ko.mapping.toJS(self,
