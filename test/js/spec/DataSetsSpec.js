@@ -92,7 +92,9 @@ describe("The data set summaries view models behave correctly", function () {
             "programOutcome" : "2. By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved.",
             "publicationUrl" : "https://test.com.au",
             "startDate" : "2020-11-30T13:00:00Z",
-            "addition" : "Yes"
+            "addition" : "Yes",
+            "progress" : "started",
+            "markedAsFinished": false
         };
     }
 
