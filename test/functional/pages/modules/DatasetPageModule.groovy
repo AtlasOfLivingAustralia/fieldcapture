@@ -28,6 +28,8 @@ class DatasetPageModule extends Module{
         dataOwner(required: false) {$("#owner")}
         custodian(required: false) {$("#custodian")}
 
+        markCompleted(required: false) {$('[data-bind*="checked:markedAsFinished"]')}
+
         createButton{$("#save")}
 
     }
