@@ -1,6 +1,7 @@
 package pages
 
 import geb.Page
+import geb.module.Checkbox
 import geb.navigator.Navigator
 import pages.modules.ReportContentModule
 
@@ -27,8 +28,32 @@ class ReportPage extends Page {
         fields
     }
 
+    /** Required or it stops webdriver from clicking checkboxes */
+    void hideFloatingToolbar() {
+        js.exec("\$('#floating-save').css('display', 'none');")
+    }
+
+    /** Required or it stops webdriver from clicking checkboxes */
+    void restoreFloatingToolbar() {
+        js.exec("\$('#floating-save').css('display', 'block');")
+    }
+
     def markAsComplete() {
         $("[data-bind*=\"markedAsFinished\"]").value(true)
+    }
+
+    boolean isOptional(String sectionId) {
+        String sectionSelector = '#'+sectionId + " input[data-bind*=outputNotComplete]"
+        $(sectionSelector).displayed
+    }
+
+    def markAsNotApplicable(String sectionId) {
+        String sectionSelector = '#'+sectionId + " input[data-bind*=outputNotComplete]"
+        $(sectionSelector).value(true)
+    }
+
+    List getFormSections() {
+        $('.output-block')*.@id
     }
 
     def save() {

@@ -9,4 +9,8 @@ class DatasetPage extends Module{
         datasetContent(required: false) {module DatasetPageModule}
     }
 
+    void cancel() {
+        $('#cancel').click()
+    }
+
 }

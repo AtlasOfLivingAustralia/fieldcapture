@@ -2,7 +2,7 @@ package pages
 
 import geb.Page
 
-class AdminTools extends Page {
+class AdminTools extends ReloadablePage {
 
     static url = "admin/tools"
 
@@ -20,6 +20,11 @@ class AdminTools extends Page {
 
     void reindex() {
         reindexButton().click()
+    }
+
+    void clearCache() {
+        waitFor { $("#btnClearMetadataCache").displayed }
+        $("#btnClearMetadataCache").click()
     }
 
 }
