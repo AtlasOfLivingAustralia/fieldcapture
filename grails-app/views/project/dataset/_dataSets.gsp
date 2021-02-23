@@ -11,7 +11,6 @@
                 <th class="actions">Actions</th>
                 <th class="dataset-name">Title</th>
                 <th class="dataset-progress">Status</th>
-                <th></th>
             </tr>
         </thead>
         <tbody data-bind="foreach:dataSets">
@@ -29,7 +28,6 @@
                     <span data-bind="text: progress"></span>
                 </button>
                 </td>
-                <td></td>
             </tr>
         </tbody>
 

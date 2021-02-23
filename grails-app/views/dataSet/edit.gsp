@@ -35,7 +35,7 @@
         <button type="button" id="save" data-bind="click:save" class="btn btn-primary">Save</button>
         <button type="button" id="cancel" class="btn" data-bind="click:cancel">Cancel</button>
         <label class="checkbox inline mark-complete">
-            <input data-bind="checked:markedAsFinished" type="checkbox"> Mark this report as complete.
+            <input data-bind="checked:markedAsFinished" type="checkbox"> This form is complete
         </label>
     </div>
 </div>
