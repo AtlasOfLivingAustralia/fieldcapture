@@ -4,6 +4,7 @@ import geb.Browser
 import geb.spock.GebReportingSpec
 import org.apache.log4j.Logger
 import pages.EntryPage
+import pages.HomePage
 import spock.lang.Shared
 
 /**
@@ -100,9 +101,16 @@ class FieldcaptureFunctionalTest extends GebReportingSpec {
     }
 
     def logout(Browser browser) {
-        String serverUrl = (testConfig.baseUrl instanceof String) ? testConfig.baseUrl : testConfig.grails.serverURL
-        String logoutUrl = "${serverUrl}/logout/logout?casUrl=${testConfig.security.cas.casServerUrlPrefix}/logout&appUrl=${serverUrl}"
-        browser.go logoutUrl
+        if ($('#logout-btn').displayed) {
+            $('#logout-btn').click()
+            waitFor { at HomePage }
+        }
+        else {
+            String serverUrl = (testConfig.baseUrl instanceof String) ? testConfig.baseUrl : testConfig.grails.serverURL
+            String logoutUrl = "${serverUrl}/logout/logout?appUrl=${serverUrl}"
+            browser.go logoutUrl
+        }
+
     }
 
 }
