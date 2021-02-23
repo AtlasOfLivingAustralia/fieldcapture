@@ -51,7 +51,7 @@
 
     </div>
     <div class="form-group row">
-        <label for="investmentPriority" class="col-sm-5 col-form-label">7. Is this data being collected for reporting against short or medium term outcome statements?</label>
+        <label for="term" class="col-sm-5 col-form-label">7. Is this data being collected for reporting against short or medium term outcome statements?</label>
         <div class="col-sm-7">
             <select class="form-control" id="term" data-bind="value:term">
                 <option></option>
