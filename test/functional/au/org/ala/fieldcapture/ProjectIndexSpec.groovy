@@ -13,7 +13,7 @@ class ProjectIndexSpec extends StubbedCasSpec {
     }
 
     def cleanup() {
-        logout(browser)
+        logoutViaUrl(browser)
     }
 
     def "document should be displayed / uploaded correctly"() {
