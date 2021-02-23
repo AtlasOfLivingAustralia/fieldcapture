@@ -36,6 +36,7 @@ class DatasetSpec extends StubbedCasSpec{
         dataSet.programOutcome = "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
         dataSet.investmentPriorities = ["Soil acidification", "Other"]
         dataSet.otherInvestmentPriority = "Other Priority"
+        dataSet.term = "Short-term outcome statement"
         dataSet.type = "Baseline dataset associated with a project outcome"
         dataSet.measurementTypes = ["Soil erosion"]
         dataSet.methods = ["Genetic sampling", "Area sampling"]
@@ -69,6 +70,7 @@ class DatasetSpec extends StubbedCasSpec{
         set.programOutcome == "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
         set.investmentPriorities == ["Soil acidification", "Other"]
         set.otherInvestmentPriority == "Other Priority"
+        set.term == "Short-term outcome statement"
         set.type == "Baseline dataset associated with a project outcome"
         set.measurementTypes == ["Soil erosion"]
         set.methods == ["Genetic sampling", "Area sampling"]

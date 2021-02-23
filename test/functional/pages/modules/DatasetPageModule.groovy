@@ -9,6 +9,7 @@ class DatasetPageModule extends Module{
         programOutcome(required: false) {$('#programOutcome')}
         investmentPriorities(required: false) {$('#investmentPriority')}
         otherInvestmentPriority(required: false) {$(".otherPriorityTextArea")}
+        term(required: false){$("#term")}
         type(required: false){$("#type")}
         measurementTypes(required: false) {$("#measurementTypes")}
         methods (required: false){$("#methods")}

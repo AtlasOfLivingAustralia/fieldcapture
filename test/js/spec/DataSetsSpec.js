@@ -94,7 +94,8 @@ describe("The data set summaries view models behave correctly", function () {
             "startDate" : "2020-11-30T13:00:00Z",
             "addition" : "Yes",
             "progress" : "started",
-            "markedAsFinished": false
+            "markedAsFinished": false,
+            "term": "Short-term outcome statement"
         };
     }
 

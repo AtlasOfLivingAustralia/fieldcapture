@@ -77,6 +77,7 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     });
 
     self.type = ko.observable(dataSet.type);
+    self.term = ko.observable(dataSet.term);
 
     if (dataSet.measurementTypes && !_.isArray(dataSet.measurementTypes)) {
         dataSet.measurementTypes = [dataSet.measurementTypes];
