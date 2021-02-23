@@ -455,40 +455,6 @@ class FCTagLib {
         }
     }
 
-    /**
-     * FC version of loginlogout taglib from ala-web-theme. Adds icon and button to link
-     *
-     * @attr logoutUrl
-     * @attr loginReturnToUrl
-     * @attr logoutReturnToUrl
-     * @attr casLoginUrl
-     * @attr casLogoutUrl
-     * @attr cssClass
-     */
-    def loginLogoutButton = { attrs, body ->
-        def serverUrl = grailsApplication.config.grails.serverURL
-        def requestUri = removeContext(serverUrl) + request.forwardURI
-        def logoutUrl = attrs.logoutUrl ?: serverUrl + "/session/logout"
-        def loginReturnToUrl = attrs.loginReturnToUrl ?: requestUri
-        def logoutReturnToUrl = attrs.logoutReturnToUrl ?: params.returnTo ?: requestUri
-        def casLoginUrl = attrs.casLoginUrl ?: grailsApplication.config.security.cas.loginUrl ?: "https://auth.ala.org.au/cas/login"
-        def casLogoutUrl = attrs.casLogoutUrl ?: grailsApplication.config.security.cas.logoutUrl ?: "https://auth.ala.org.au/cas/logout"
-        def cssClass = attrs.cssClass?:"btn btn-small btn-inverse btn-login"
-        def output
-
-        def username = userService.currentUserDisplayName
-        if (username) {
-            output = "<a id='logout-btn' href='${logoutUrl}" +
-                    "?casUrl=${casLogoutUrl}" +
-                    "&appUrl=${logoutReturnToUrl}' " +
-                    "class='${cssClass}'><i class=\"fa fa-sign-in\"></i> Logout</a>"
-        } else {
-            // currently logged out
-            output =  "<a href='${casLoginUrl}?service=${loginReturnToUrl}' class='${cssClass}'><span><i class=\"fa fa-sign-in\"></i> Log in</span></a>"
-        }
-        out << output
-    }
-
     def loginInNewWindow = { attr, body ->
         def casLoginUrl = grailsApplication.config.security.cas.loginUrl ?: "https://auth.ala.org.au/cas/login"
         out << "<a href=\"${casLoginUrl}?service=${createLink(absolute: true, controller: 'home', action:'close')}\" target=\"fieldcapture-login\">${body}</a>"
