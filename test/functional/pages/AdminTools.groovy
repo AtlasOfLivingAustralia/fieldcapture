@@ -16,15 +16,18 @@ class AdminTools extends ReloadablePage {
     void clearMetadata(){
         waitFor {clearMetaDataCacheButton.displayed}
         clearMetaDataCacheButton.click()
+        waitFor { hasBeenReloaded() }
     }
 
     void reindex() {
         reindexButton().click()
+        waitFor { hasBeenReloaded() }
     }
 
     void clearCache() {
         waitFor { $("#btnClearMetadataCache").displayed }
         $("#btnClearMetadataCache").click()
+        waitFor { hasBeenReloaded() }
     }
 
 }
