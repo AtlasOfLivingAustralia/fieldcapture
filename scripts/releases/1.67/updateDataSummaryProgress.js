@@ -1,5 +1,6 @@
 
 // This change is done under https://github.com/AtlasOfLivingAustralia/fieldcapture/issues/2170
+// Update the dataset summary progress to finished for the existing summaries
 
 print("Start to update dataset summary progress");
 
