@@ -1529,7 +1529,13 @@ class ProjectService  {
                 selectedForProject = getProjectActivities(project)
             }
             else {
-                serviceList = projectConfigurationService.getProjectConfiguration(project).services
+                // We are deliberately filtering the project services against the
+                // full service list instead of the services supported by the program.  This is
+                // so that we can share a report containing the full service list across programs
+                // and have the services filtered out.  If we just used the project/program
+                // service list here, any services not on the program list would be treated
+                // as non-service form sections (like WHS) and always display in the report.
+                serviceList = metadataService.getProjectServices()
             }
 
             if (selectedForProject) {
