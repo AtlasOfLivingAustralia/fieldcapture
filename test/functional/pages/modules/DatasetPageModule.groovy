@@ -28,6 +28,8 @@ class DatasetPageModule extends Module{
         sensitivities(required: false) {$("#sensitivities")}
         dataOwner(required: false) {$("#owner")}
         custodian(required: false) {$("#custodian")}
+        ongoingProject(required: false) {$("#ongoingProject")}
+        ongoingProjectChecked(required: false) {$("#ongoingProject:checked")}
 
         markCompleted(required: false) {$('[data-bind*="checked:markedAsFinished"]')}
 

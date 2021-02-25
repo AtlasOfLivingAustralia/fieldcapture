@@ -177,6 +177,12 @@
         <div class="col-sm-3">
             <fc:datePicker type="text"  bs4="true" class="form-control" id="endDate" placeholder="" data-validation-engine="validate[future[startDate]" targetField="endDate.date"/>
         </div>
+        <div class="col-sm-3" id="ongoingProjectDiv">
+            <label class="checkbox">
+                <input type="checkbox" id="ongoingProject" data-bind="checked:ongoingProject">
+                Data collection is ongoing
+            </label>
+        </div>
     </div>
     <div class="form-group row">
         <label for="addition" class="col-sm-5 col-form-label required">16. Is this data an addition to existing time-series data collected as part of a previous project, or is being collected as part of a broader/national dataset?</label>

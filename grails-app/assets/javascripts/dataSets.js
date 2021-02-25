@@ -89,6 +89,12 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     self.location = ko.observable(dataSet.location);
     self.startDate = ko.observable(dataSet.startDate).extend({simpleDate:false});
     self.endDate = ko.observable(dataSet.endDate).extend({simpleDate:false});
+    self.endDate.subscribe(function (endDate) {
+        self.endDate(endDate);
+        if(endDate) {
+            self.ongoingProject(null);
+        }
+    });
     self.addition = ko.observable(dataSet.addition);
     self.collectorType = ko.observable(dataSet.collectorType);
     self.qa = ko.observable(dataSet.qa);
@@ -106,6 +112,13 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     self.markedAsFinished = ko.observable(dataSet.progress === 'finished');
     self.markedAsFinished.subscribe(function (finished) {
         self.progress(finished ? 'finished' : 'started');
+    });
+    self.ongoingProject = ko.observable(dataSet.ongoingProject);
+    self.ongoingProject.subscribe(function (ongoingProject) {
+        self.ongoingProject(ongoingProject);
+        if(ongoingProject) {
+            $('#endDate').val(null).trigger('change');
+        }
     });
 
     self.validate = function() {

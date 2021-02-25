@@ -89,6 +89,8 @@ class DatasetSpec extends StubbedCasSpec{
         set.sensitivities ==["Commercially sensitive", "Ecologically sensitive"]
         set.dataOwner == "data owner"
         set.custodian == "custodian"
+        set.ongoingProject.size() == 1
+        set.ongoingProjectChecked.size() == 0
 
         when:
         datasetDetails.cancel()
@@ -141,6 +143,8 @@ class DatasetSpec extends StubbedCasSpec{
 
         def set = datasetDetails.datasetContent
         set.title == "Title"
+        set.ongoingProject.size() == 1
+        set.ongoingProjectChecked.size() == 0
 
         set.markCompleted.click()
         set.createButton.click()

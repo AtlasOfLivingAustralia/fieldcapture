@@ -13,3 +13,6 @@ div.otherPriority {
 table td.dataset-progress, table th.dataset-progress {
     width:10em;
 }
+#ongoingProjectDiv {
+    margin-top: 10px;
+}

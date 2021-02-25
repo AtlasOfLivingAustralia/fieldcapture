@@ -1868,6 +1868,10 @@ class ProjectService  {
             dataSet.progress = ActivityService.PROGRESS_STARTED
         }
 
+        if(!dataSet.ongoingProject) {
+            dataSet.ongoingProject = false
+        }
+
         if (!dataSet.dataSetId) {
             dataSet.dataSetId = UUID.randomUUID().toString()
             project.custom.dataSets << dataSet
