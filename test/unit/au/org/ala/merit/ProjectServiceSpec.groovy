@@ -1232,7 +1232,8 @@ class ProjectServiceSpec extends Specification {
         Map filteredModel = service.filterOutputModel(activityModel, project, activityData)
 
         then:
-        2 * projectConfigurationService.getProjectConfiguration(project) >> setupMockServiceProgramConfig(services)
+        metadataService.getProjectServices() >> services
+        1 * projectConfigurationService.getProjectConfiguration(project) >> setupMockServiceProgramConfig(services)
         filteredModel.outputs == ['o1', 'o2', 'o4']
     }
 
@@ -1253,7 +1254,8 @@ class ProjectServiceSpec extends Specification {
         Map filteredModel = service.filterOutputModel(activityModel, project, activityData)
 
         then:
-        2 * projectConfigurationService.getProjectConfiguration(project) >> setupMockServiceProgramConfig(services)
+        metadataService.getProjectServices() >> services
+        1 * projectConfigurationService.getProjectConfiguration(project) >> setupMockServiceProgramConfig(services)
         filteredModel.outputs == ['o1', 'o2', 'o4', 'non service']
     }
 
