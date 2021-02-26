@@ -50,7 +50,7 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
  *   CSS selector for the form element which has the jQueryValidationEngine attached.
  * @constructor
  */
-var DataSetViewModel = function(dataSet, projectService, options, endDateEle) {
+var DataSetViewModel = function(dataSet, projectService, options) {
     var self = this;
 
     var config = _.defaults({validationContainerSelector:'.validationEngineContainer'}, options);
@@ -117,7 +117,7 @@ var DataSetViewModel = function(dataSet, projectService, options, endDateEle) {
     self.dataCollectionOngoing.subscribe(function (dataCollectionOngoing) {
         self.dataCollectionOngoing(dataCollectionOngoing);
         if(dataCollectionOngoing) {
-            endDateEle.val(null).trigger('change');
+            $(options.endDateSelector).val(null).trigger('change');
         }
     });
 

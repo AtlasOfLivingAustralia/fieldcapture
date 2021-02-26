@@ -47,7 +47,8 @@
     var project = {};
     var dataSet = <fc:modelAsJavascript model="${dataSet}"/>;
     var projectService = new ProjectService(project, fcConfig);
-    var viewModel = new DataSetViewModel(dataSet, projectService, fcConfig, $('#endDate'));
+    var config = _.extend(fcConfig, {endDateSelector:"#endDate"});
+    var viewModel = new DataSetViewModel(dataSet, projectService, fcConfig);
     ko.applyBindings(viewModel);
 </script>
 <asset:deferredScripts/>
