@@ -38,7 +38,7 @@ var scores = [{
                     "type": "filter"
                 },
                 "childAggregations": [{
-                    "property": "data.culturalSite.numberOfSitesWhereWorkHasOccurred",
+                    "property": "data.culturalSites.numberOfSitesWhereWorkHasOccurred",
                     "type": "SUM"
                 }]
             }]
@@ -64,7 +64,7 @@ var scores = [{
                     "type": "filter"
                 },
                 "childAggregations": [{
-                    "property": "data.culturalSite.calculatedAreaHa",
+                    "property": "data.culturalSites.calculatedAreaHa",
                     "type": "SUM"
                 }]
             }]
@@ -160,7 +160,7 @@ var scores = [{
     {
         "category": "Indigenous Consultations and Participation",
         "configuration": {
-            "label": "Area (ha) covered by Cultural practices",
+            "label": "Area (ha) covered by cultural practices",
             "childAggregations": [{
                 "filter": {
                     "filterValue": "Cultural Practices",
@@ -169,16 +169,16 @@ var scores = [{
                 },
                 "childAggregations": [{
                     "property": "data.culturalPractices.calculatedAreaHa",
-                    "type": "COUNT"
+                    "type": "SUM"
                 }]
             }]
         },
-        "description": "Area (ha) covered by Cultural practices",
+        "description": "Area (ha) covered by cultural practices",
         "displayType": "",
         "entity": "Activity",
         "entityTypes": [],
         "isOutputTarget": true,
-        "label": "Area (ha) covered by Cultural practices",
+        "label": "Area (ha) covered by cultural practices",
         "outputType": "Cultural Practices",
         "scoreId": UUID.generate(),
         "status": "active"
@@ -189,7 +189,7 @@ var scores = [{
             "label": "Number of guidelines/protocols/plans for delivery of the project services and monitoring",
             "childAggregations": [{
                 "filter": {
-                    "filterValue": "eveloping/updating Guidelines/Protocols/Plans",
+                    "filterValue": "Developing/updating Guidelines/Protocols/Plans",
                     "property": "name",
                     "type": "filter"
                 },
@@ -204,7 +204,7 @@ var scores = [{
         "entity": "Activity",
         "entityTypes": [],
         "isOutputTarget": true,
-        "label": "Area (ha) covered by Cultural practices",
+        "label": "Number of guidelines/protocols/plans for delivery of the project services and monitoring",
         "outputType": "Developing/updating Guidelines/Protocols/Plans",
         "scoreId": UUID.generate(),
         "status": "active"
