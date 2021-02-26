@@ -1378,8 +1378,9 @@ class ProjectService  {
     List<Map> getProjectServices(Map project) {
         ProgramConfig config = projectConfigurationService.getProjectConfiguration(project)
         List<Map> supportedServices = config.services
+        List serviceIds = project.custom?.details?.serviceIds?.collect{it as Integer}
 
-        List projectServices = supportedServices?.findAll {it.id in project.custom?.details?.serviceIds }
+        List projectServices = supportedServices?.findAll {it.id in serviceIds }
 
         projectServices
     }
