@@ -50,7 +50,7 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
  *   CSS selector for the form element which has the jQueryValidationEngine attached.
  * @constructor
  */
-var DataSetViewModel = function(dataSet, projectService, options) {
+var DataSetViewModel = function(dataSet, projectService, options, endDateEle) {
     var self = this;
 
     var config = _.defaults({validationContainerSelector:'.validationEngineContainer'}, options);
@@ -92,7 +92,7 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     self.endDate.subscribe(function (endDate) {
         self.endDate(endDate);
         if(endDate) {
-            self.ongoingProject(null);
+            self.dataCollectionOngoing(null);
         }
     });
     self.addition = ko.observable(dataSet.addition);
@@ -113,11 +113,11 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     self.markedAsFinished.subscribe(function (finished) {
         self.progress(finished ? 'finished' : 'started');
     });
-    self.ongoingProject = ko.observable(dataSet.ongoingProject);
-    self.ongoingProject.subscribe(function (ongoingProject) {
-        self.ongoingProject(ongoingProject);
-        if(ongoingProject) {
-            $('#endDate').val(null).trigger('change');
+    self.dataCollectionOngoing = ko.observable(dataSet.dataCollectionOngoing);
+    self.dataCollectionOngoing.subscribe(function (dataCollectionOngoing) {
+        self.dataCollectionOngoing(dataCollectionOngoing);
+        if(dataCollectionOngoing) {
+            endDateEle.val(null).trigger('change');
         }
     });
 

@@ -4,11 +4,11 @@
 
 print("Start to update dataset summary ongoing project status");
 
-db.project.find({isMERIT:true, "custom.dataSets" : {$ne:null}, "custom.dataSets.ongoingProject":null})
+db.project.find({isMERIT:true, "custom.dataSets" : {$ne:null}, "custom.dataSets.dataCollectionOngoing":null})
     .forEach(function (project) {
         project.custom.dataSets.forEach(function (dataset) {
-            if (dataset.ongoingProject == null) {
-                dataset.ongoingProject = false;
+            if (dataset.dataCollectionOngoing == null) {
+                dataset.dataCollectionOngoing = false;
             }
         });
         db.project.save(project);

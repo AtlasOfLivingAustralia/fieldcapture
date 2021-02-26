@@ -177,9 +177,9 @@
         <div class="col-sm-3">
             <fc:datePicker type="text"  bs4="true" class="form-control" id="endDate" placeholder="" data-validation-engine="validate[future[startDate]" targetField="endDate.date"/>
         </div>
-        <div class="col-sm-3" id="ongoingProjectDiv">
+        <div class="col-sm-3" id="dataCollectionOngoingDiv">
             <label class="checkbox">
-                <input type="checkbox" id="ongoingProject" data-bind="checked:ongoingProject">
+                <input type="checkbox" id="dataCollectionOngoing" data-bind="checked:dataCollectionOngoing">
                 Data collection is ongoing
             </label>
         </div>

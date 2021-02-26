@@ -96,7 +96,7 @@ describe("The data set summaries view models behave correctly", function () {
             "progress" : "started",
             "markedAsFinished": false,
             "term": "Short-term outcome statement",
-            "ongoingProject": false
+            "dataCollectionOngoing": false
         };
     }
 
