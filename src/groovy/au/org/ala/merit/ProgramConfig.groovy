@@ -31,6 +31,9 @@ class ProgramConfig implements Map {
 
     @Delegate Map config
 
+    /** List of service ids that are supported by this program */
+    List<Integer> supportedServiceIds
+
     ProgramConfig(Map config) {
         this.config = new HashMap(config)
     }

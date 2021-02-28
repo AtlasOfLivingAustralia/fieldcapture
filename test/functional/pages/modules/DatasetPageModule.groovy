@@ -9,6 +9,7 @@ class DatasetPageModule extends Module{
         programOutcome(required: false) {$('#programOutcome')}
         investmentPriorities(required: false) {$('#investmentPriority')}
         otherInvestmentPriority(required: false) {$(".otherPriorityTextArea")}
+        term(required: false){$("#term")}
         type(required: false){$("#type")}
         measurementTypes(required: false) {$("#measurementTypes")}
         methods (required: false){$("#methods")}
@@ -27,6 +28,10 @@ class DatasetPageModule extends Module{
         sensitivities(required: false) {$("#sensitivities")}
         dataOwner(required: false) {$("#owner")}
         custodian(required: false) {$("#custodian")}
+        dataCollectionOngoing(required: false) {$("#dataCollectionOngoing")}
+        dataCollectionOngoingChecked(required: false) {$("#dataCollectionOngoing:checked")}
+
+        markCompleted(required: false) {$('[data-bind*="checked:markedAsFinished"]')}
 
         createButton{$("#save")}
 

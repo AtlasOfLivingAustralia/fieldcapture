@@ -25,9 +25,8 @@ class ProjectController {
     static String RLP_MERI_PLAN_TEMPLATE = "rlpMeriPlan"
     static String MERI_PLAN_TEMPLATE = "meriPlan"
 
-    def projectService, metadataService, organisationService, commonService, activityService, userService, webService, roleService, grailsApplication
+    def projectService, metadataService, commonService, activityService, userService, webService, roleService, grailsApplication
     def siteService, documentService, reportService, blogService, pdfGenerationService
-    def programService
 
     private def espOverview(Map project, Map user) {
 
@@ -858,7 +857,7 @@ class ProjectController {
         List sites = project.remove('sites')
         Map config = projectService.getProgramConfiguration(project)
         Map model = reportService.activityReportModel(reportId, mode, formVersion)
-        model.metaModel = filterOutputModel(model.metaModel, project, model.activity)
+        model.metaModel = projectService.filterOutputModel(model.metaModel, project, model.activity)
 
         model.context = new HashMap(project)
         model.returnTo = g.createLink(action:'index', id:projectId)
@@ -929,60 +928,6 @@ class ProjectController {
     private boolean hasFinancialYearTarget(Map targetRow) {
         def financialYearTarget = targetRow.financialYearTarget
         financialYearTarget != 0 && financialYearTarget != "0"
-    }
-
-    /**
-     * If the activity type to be displayed is the RLP Outputs report, only show the outputs that align with
-     * services to be delivered by the model.  This method has a side effect of modifying the
-     * @param model the model containing the activity metaModel and output templates.
-     * @param project the project associated with the report.
-     */
-    private Map filterOutputModel(Map activityModel, Map project, Map existingActivityData) {
-
-        Map filteredModel = activityModel
-        if (isFilterable(activityModel)) {
-
-            List allServices
-            List selectedForProject
-
-            // The values to be filtered can come from either project services or activities in the MERI plan.
-            selectedForProject = projectService.getProjectServices(project)
-
-            if (!selectedForProject) {
-
-                allServices = projectService.getProgramConfiguration(project).activities
-                selectedForProject = projectService.getProjectActivities(project)
-            }
-            else {
-                allServices = metadataService.getProjectServices()
-            }
-
-            if (selectedForProject) {
-                List serviceOutputs = allServices.collect{it.output}
-                List projectOutputs = selectedForProject.collect{it.output}
-                filteredModel = filterActivityModel(activityModel, existingActivityData, serviceOutputs, projectOutputs)
-            }
-        }
-        filteredModel
-    }
-
-    private boolean isFilterable(Map activityModel) {
-        List filterableActivityTypes = grailsApplication.config.reports.filterableActivityTypes
-        return activityModel?.name in filterableActivityTypes
-    }
-
-    private Map filterActivityModel(Map activityModel, Map existingActivityData, List filterableSections, List sectionsToInclude) {
-        Map filteredModel = new JSONObject(activityModel)
-        List existingOutputs = existingActivityData?.outputs?.collect{it.name}
-        filteredModel.outputs = activityModel.outputs.findAll({ String output ->
-            boolean isFilterable = filterableSections.find{it == output}
-
-            // Include this output if it's not associated with a service,
-            // Or if it's associated by a service delivered by this project
-            // Or it has previously had data recorded against it (this can happen if the services change after the report has been completed)
-            !isFilterable || output in sectionsToInclude || output in existingOutputs
-        })
-        filteredModel
     }
 
     @PreAuthorise(accessLevel ='siteAdmin')

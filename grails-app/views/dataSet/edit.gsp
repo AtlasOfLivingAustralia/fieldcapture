@@ -34,6 +34,9 @@
     <div class="form-actions">
         <button type="button" id="save" data-bind="click:save" class="btn btn-primary">Save</button>
         <button type="button" id="cancel" class="btn" data-bind="click:cancel">Cancel</button>
+        <label class="checkbox inline mark-complete">
+            <input data-bind="checked:markedAsFinished" type="checkbox"> This form is complete
+        </label>
     </div>
 </div>
 
@@ -44,6 +47,7 @@
     var project = {};
     var dataSet = <fc:modelAsJavascript model="${dataSet}"/>;
     var projectService = new ProjectService(project, fcConfig);
+    var config = _.extend(fcConfig, {endDateSelector:"#endDate"});
     var viewModel = new DataSetViewModel(dataSet, projectService, fcConfig);
     ko.applyBindings(viewModel);
 </script>

@@ -1,6 +1,7 @@
 package pages.modules
 
 import geb.Module
+import geb.module.FormElement
 import org.openqa.selenium.StaleElementReferenceException
 
 class ProjectReports extends Module {
@@ -14,6 +15,19 @@ class ProjectReports extends Module {
                 return []
             }
         }
+        reportDeclaration { $('#declaration') }
+        acceptTermsCheckBox { $('#declaration [name="acceptTerms"]') }
     }
 
+    def acceptTerms() {
+        waitFor { acceptTermsCheckBox.displayed }
+        acceptTermsCheckBox.value(true)
+    }
+    def submitDeclaration() {
+        waitFor { canSubmitDeclaration() }
+        $('#declaration [data-bind*="submitReport"]').click()
+    }
+    def canSubmitDeclaration() {
+        $('#declaration [data-bind*="submitReport"]').module(FormElement).enabled
+    }
 }

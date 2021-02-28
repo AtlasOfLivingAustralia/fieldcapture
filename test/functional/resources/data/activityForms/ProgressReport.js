@@ -66,6 +66,11 @@ var progressReport = {
                         "dataType": "number",
                         "name": "example",
                         "units": "mm"
+                    },
+                    {
+                        "dataType": "text",
+                        "name": "example2",
+                        "validate": "required,maxSize[5]"
                     }
                 ],
                 "viewModel": [
@@ -82,6 +87,11 @@ var progressReport = {
                                         "displayOptions": {
                                             "displayUnits": true
                                         }
+                                    },
+                                    {
+                                        "type": "text",
+                                        "source": "example2",
+                                        "preLabel": "example2"
                                     }
                                 ]
                             }

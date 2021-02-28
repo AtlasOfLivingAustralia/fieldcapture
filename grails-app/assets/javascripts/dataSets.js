@@ -25,6 +25,7 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
 
         this.editUrl = config.editDataSetUrl + '?dataSetId='+dataSet.dataSetId;
         this.name = dataSet.name;
+        this.progress = dataSet.progress;
         this.deleteDataSet = function() {
             bootbox.confirm("Are you sure?", function() {
                 projectService.deleteDataSet(dataSet.dataSetId).done(function() {
@@ -76,6 +77,7 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     });
 
     self.type = ko.observable(dataSet.type);
+    self.term = ko.observable(dataSet.term);
 
     if (dataSet.measurementTypes && !_.isArray(dataSet.measurementTypes)) {
         dataSet.measurementTypes = [dataSet.measurementTypes];
@@ -87,6 +89,12 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     self.location = ko.observable(dataSet.location);
     self.startDate = ko.observable(dataSet.startDate).extend({simpleDate:false});
     self.endDate = ko.observable(dataSet.endDate).extend({simpleDate:false});
+    self.endDate.subscribe(function (endDate) {
+        self.endDate(endDate);
+        if(endDate) {
+            self.dataCollectionOngoing(null);
+        }
+    });
     self.addition = ko.observable(dataSet.addition);
     self.collectorType = ko.observable(dataSet.collectorType);
     self.qa = ko.observable(dataSet.qa);
@@ -100,12 +108,25 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     self.sensitivities = ko.observableArray(dataSet.sensitivities);
     self.owner = ko.observable(dataSet.owner);
     self.custodian = ko.observable(dataSet.custodian);
+    self.progress = ko.observable(dataSet.progress);
+    self.markedAsFinished = ko.observable(dataSet.progress === 'finished');
+    self.markedAsFinished.subscribe(function (finished) {
+        self.progress(finished ? 'finished' : 'started');
+    });
+    self.dataCollectionOngoing = ko.observable(dataSet.dataCollectionOngoing);
+    self.dataCollectionOngoing.subscribe(function (dataCollectionOngoing) {
+        self.dataCollectionOngoing(dataCollectionOngoing);
+        if(dataCollectionOngoing) {
+            $(options.endDateSelector).val(null).trigger('change');
+        }
+    });
 
     self.validate = function() {
         return $(config.validationContainerSelector).validationEngine('validate');
     }
     self.save =  function() {
-        var valid = self.validate();
+        var markAsFinished = self.markedAsFinished();
+        var valid = markAsFinished ? self.validate() : true;
 
         if (valid) {
             var dataSet = ko.mapping.toJS(self,

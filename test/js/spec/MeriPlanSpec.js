@@ -363,6 +363,46 @@ describe("Loading the MERI plan is handled correctly", function () {
         expect(JSON.parse(JSON.stringify(objectivesModel))).toEqual(expectedResult);
     });
 
+    it("Should not use the simplified objectives if the program doesn't require selection from a list", function() {
+        var project = {
+            plannedStartDate:'2018-07-01T00:00:00Z',
+            plannedEndDate:'2021-06-30T00:00:00Z',
+            custom: {
+                details: {
+                    objectives: {
+                        rows1: [{
+                            description:'objective 1',
+                            assets:['asset 1']
+                        },
+                        {
+                            description:'other objective',
+                            assets:[]
+                        }]
+                    }
+                }
+            }
+        };
+        var projectService = new ProjectService(project, {});
+        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'});
+
+        var objectivesModel = viewModel.meriPlan().objectives;
+        expect(objectivesModel.simpleObjectives.otherChecked).toBeUndefined();
+        expect(objectivesModel.simpleObjectives.otherValue).toBeUndefined();
+
+        var expectedResult = {
+            rows1:[{description:'objective 1', assets:['asset 1']}, {description:'other objective', assets:[]}],
+            rows: [{}]
+        };
+        expect(JSON.parse(JSON.stringify(objectivesModel))).toEqual(expectedResult);
+
+        viewModel.removeObjectivesOutcome(objectivesModel.rows1()[1]);
+        expectedResult = {
+            rows1: [{description: 'objective 1', assets: ['asset 1']}],
+            rows: [{}]
+        };
+        expect(JSON.parse(JSON.stringify(objectivesModel))).toEqual(expectedResult);
+    });
+
     it("Should allow assets to be recorded", function() {
         var project = {
             plannedStartDate:'2018-07-01T00:00:00Z',

@@ -10,7 +10,7 @@
             <tr>
                 <th class="actions">Actions</th>
                 <th class="dataset-name">Title</th>
-                <th></th>
+                <th class="dataset-progress">Status</th>
             </tr>
         </thead>
         <tbody data-bind="foreach:dataSets">
@@ -24,7 +24,10 @@
                     </a>
                 </td>
                 <td class="dataset-name" data-bind="text:name"></td>
-                <td></td>
+                <td><button type="button" class="btn btn-small"   data-bind="activityProgress:progress">
+                    <span data-bind="text: progress"></span>
+                </button>
+                </td>
             </tr>
         </tbody>
 

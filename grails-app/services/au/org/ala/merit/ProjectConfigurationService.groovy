@@ -33,6 +33,10 @@ class ProjectConfigurationService {
         ProgramConfig programConfig = new ProgramConfig(program.inheritedConfig ?: [:])
         if (!programConfig.activityBasedReporting) {
             programConfig.services = metadataService.getProjectServices()
+            if (programConfig.supportedServiceIds) {
+                List supportedServiceIds = programConfig.supportedServiceIds?.collect{it as Integer}
+                programConfig.services = programConfig.services.findAll{it.id in supportedServiceIds}
+            }
         }
         // Outcomes are defined by the program
         programConfig.outcomes = program.outcomes ?: []

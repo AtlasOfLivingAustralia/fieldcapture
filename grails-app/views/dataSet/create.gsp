@@ -34,6 +34,9 @@
     <div class="form-actions">
         <button type="button" id="save" data-bind="click:save" class="btn btn-primary">Create</button>
         <button type="button" id="cancel" class="btn" data-bind="click:cancel">Cancel</button>
+        <label class="checkbox inline mark-complete">
+            <input data-bind="checked:markedAsFinished" type="checkbox"> This form is complete
+        </label>
     </div>
 </div>
 
@@ -43,7 +46,8 @@
 <script>
     var project = {};
     var projectService = new ProjectService(project, fcConfig);
-    var viewModel = new DataSetViewModel({}, projectService, fcConfig);
+    var config = _.extend(fcConfig, {endDateSelector:"#endDate"});
+    var viewModel = new DataSetViewModel({}, projectService, config);
     ko.applyBindings(viewModel);
 </script>
 <asset:deferredScripts/>

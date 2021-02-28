@@ -54,6 +54,7 @@ class ProjectExplorerSpec extends StubbedCasSpec {
         expectedProjects.add("Default outcome project")
         expectedProjects.add("project completed")
         expectedProjects.add("project active")
+        expectedProjects.add("Grants project")
         if (!projectPagination.displayed) {
             projectsToggle.click()
             waitFor 10,{ projectPagination.displayed }
@@ -65,8 +66,8 @@ class ProjectExplorerSpec extends StubbedCasSpec {
             to ProjectExplorer
             waitFor { projectPagination.displayed }
 
-            projects.size() == 13
-            facets.size() == 16
+            projects.size() == 14
+            facets.size() == 17
                 chooseMoreFacetTerms.size() == 0
         }
 
