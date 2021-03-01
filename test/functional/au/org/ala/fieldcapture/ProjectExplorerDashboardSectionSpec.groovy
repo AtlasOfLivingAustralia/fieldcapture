@@ -24,8 +24,13 @@ class ProjectExplorerDashboardSectionSpec extends StubbedCasSpec {
         then:
         at AdminTools
 
-        when: "Reindex to ensure the project explorer will have predictable data"
+        when: "Clear the cache to make the data reflect the dataset, then reindex"
+        clearCache()
+        waitFor { hasBeenReloaded() }
+        at AdminTools // Reset the at check for the next reload with the reindex call.
+
         reindex()
+
         logout(browser)
 
         boolean empty = true

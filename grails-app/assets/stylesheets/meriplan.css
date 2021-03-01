@@ -37,8 +37,7 @@ table tr.header th {
 .meri-plan .index {
     min-width: 1em;
     max-width: 1em;
-    width: 0.1%;
-
+    width: 1em;
 }
 
 .meri-plan .footer-index {
@@ -255,6 +254,10 @@ table tr.header th {
     width: 50%;
 }
 
+.meri-plan table.assets {
+    table-layout:fixed;
+}
+
 #project-risks-threats table {
     width:100%;
 }
@@ -339,6 +342,10 @@ a.meri-history-toggle {
 
 .announcements-table .information {
     width:28%;
+}
+.fa-question-circle{
+    font-size: 14px;
+    content: "\f059";
 }
 .control-group .badge-danger {
     background-color: #FF0000;

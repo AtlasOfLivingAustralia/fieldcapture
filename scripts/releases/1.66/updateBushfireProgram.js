@@ -149,6 +149,49 @@ program.config.meriPlanContents =  [
     }
 ];
 
+program.config.projectReports = [
+    {
+        "reportType": "Activity",
+        "endDates": [
+            "2021-03-31T13:00:00Z",
+            "2021-09-30T14:00:00Z",
+            "2022-03-31T13:00:00Z"
+        ],
+        "reportDescriptionFormat": "Progress Report %1d",
+        "reportNameFormat": "Progress Report %1d",
+        "reportingPeriodInMonths": 6,
+        "description": "",
+        "category": "Progress Reports",
+        "activityType": "State Intervention Progress Report",
+        "reportsAlignedToCalendar": true,
+        "canSubmitDuringReportingPeriod": true
+    },
+    {
+        "reportType": "Single",
+        "firstReportingPeriodEnd": "2022-06-30T14:00:00Z",
+        "reportDescriptionFormat": "Final Report",
+        "reportNameFormat": "Final Report",
+        "reportingPeriodInMonths": 0,
+        "multiple": false,
+        "description": "",
+        "category": "Final Report",
+        "reportsAlignedToCalendar": false,
+        "activityType": "Final Report"
+    },
+    {
+        "reportType": "Single",
+        "firstReportingPeriodEnd": "2022-06-30T14:00:00Z",
+        "reportDescriptionFormat": "Outcomes Report for %4$s",
+        "reportNameFormat": "Outcomes Report",
+        "reportingPeriodInMonths": 0,
+        "multiple": false,
+        "description": "Before beginning Outcomes Report 1, please go to the Data set summary tab and complete a form for each data set collected for this project. Help with completing this form can be found in Section 10 of the [RLP MERIT User Guide](http://www.nrm.gov.au/my-project/monitoring-and-reporting-plan/merit)",
+        "category": "Outcomes Report 1",
+        "reportsAlignedToCalendar": false,
+        "activityType": "RLP Short term project outcomes"
+    }
+];
+
 load("stateBushfireAssets.js");
 program.priorities = [];
 

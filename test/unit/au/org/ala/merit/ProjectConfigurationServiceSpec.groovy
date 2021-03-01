@@ -164,4 +164,37 @@ class ProjectConfigurationServiceSpec extends Specification {
 
     }
 
+    void "Program configuration can filter the service list"() {
+        setup:
+        String programId = 'programId'
+        Map project = [projectId:'project1', programId:programId]
+        Map programConfig = [inheritedConfig:[projectReports:[[activityType:'1', reportType:ReportService.REPORT_TYPE_STAGE_REPORT]], test:'test', activityBasedReporting:false]]
+
+        when:
+        Map config = service.getProjectConfiguration(project)
+
+        then:
+        1 * programService.get(programId) >> programConfig
+        1 * metadataService.getProjectServices() >> buildServiceList()
+        config.services == buildServiceList()
+
+        when:
+        programConfig.inheritedConfig.supportedServiceIds = [2, 3, 4, 11, 15, 18]
+        config = service.getProjectConfiguration(project)
+
+        then:
+        1 * programService.get(programId) >> programConfig
+        1 * metadataService.getProjectServices() >> buildServiceList()
+        config.services == programConfig.inheritedConfig.supportedServiceIds.collect{[id: it, name: "service ${it}", output: "output ${it}"]}
+    }
+
+
+    private List buildServiceList() {
+        List services = []
+        for (int i=0; i<20; i++) {
+            services << [id: i, name: "service ${i}", output: "output ${i}"]
+        }
+        services
+    }
+
 }

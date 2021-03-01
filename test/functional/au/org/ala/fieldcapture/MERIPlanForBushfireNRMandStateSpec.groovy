@@ -61,6 +61,15 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
         meriPlan.projectPartnerships[0].name = 'partner name'
         meriPlan.projectPartnerships[0].partnership = 'partnership'
         meriPlan.projectPartnerships[0].orgType = 'Trust'
+        meriPlan.hideFloatingSave()
+        meriPlan.addPartnershipRow()
+        meriPlan.projectPartnerships[1].name = 'partner name 2'
+        meriPlan.projectPartnerships[1].partnership = 'partnership 2'
+        meriPlan.projectPartnerships[1].orgType = 'Other'
+        waitFor {
+            !meriPlan.projectPartnerships[1].otherOrgType.disabled
+        }
+        meriPlan.projectPartnerships[1].otherOrgType = "Other type"
         meriPlan.consultation = 'Consultation'
         meriPlan.keyThreats[0].threat = "Threat 1"
         meriPlan.keyThreats[0].intervention = "Intervention 1"
@@ -96,6 +105,11 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
         meriPlan.projectPartnerships[0].name == 'partner name'
         meriPlan.projectPartnerships[0].partnership == 'partnership'
         meriPlan.projectPartnerships[0].orgType == 'Trust'
+        meriPlan.projectPartnerships[1].name == 'partner name 2'
+        meriPlan.projectPartnerships[1].partnership == 'partnership 2'
+        meriPlan.projectPartnerships[1].orgType == 'Other'
+        meriPlan.projectPartnerships[1].otherOrgType == 'Other type'
+
         meriPlan.consultation == 'Consultation'
         meriPlan.keyThreats[0].threat.value() == "Threat 1"
         meriPlan.keyThreats[0].intervention.value() == "Intervention 1"

@@ -47,7 +47,7 @@ class ProjectServiceSpec extends Specification {
         // Delegate activity description to the implementation in the ActivityService while retaining the ability to mock other methods.
         au.org.ala.merit.ActivityService realService = new au.org.ala.merit.ActivityService()
         activityService.defaultDescription(_ as Map) >> {Map activity -> realService.defaultDescription(activity) }
-        service.grailsApplication = [config:[ecodata:[baseUrl:'']]]
+        service.grailsApplication = [config:[ecodata:[baseUrl:''], reports:[filterableActivityTypes:['output']]]]
         service.reportService = reportService
         service.userService = userService
         service.metadataService = metadataService
@@ -1033,15 +1033,18 @@ class ProjectServiceSpec extends Specification {
     }
 
 
-    private Map setupMockServices() {
-
-         List<Map> services =[[output: "Output Test 1",name: "Output Test 1", scores: [[scoreId:"1", label: "Test label 1", isOutputTarget:true]], id: 1, category: null]]
-
-        metadataService.getProjectServices() >> services
+    private ProgramConfig setupMockServiceProgramConfig(List services) {
+        if (!services) {
+            services =[[output: "Output Test 1",name: "Output Test 1", scores: [[scoreId:"1", label: "Test label 1", isOutputTarget:true]], id: 1, category: null]]
+        }
+        ProgramConfig config = new ProgramConfig([:])
+        config.services = services
+        config
     }
+
     def "Convert double value to int for Services"(){
         setup:
-        setupMockServices()
+
         String projectId = "project_10"
         Map project = [projectId: projectId,
                        outputTargets:[
@@ -1054,6 +1057,7 @@ class ProjectServiceSpec extends Specification {
 
         then:
         1 * webService.getJson({it.contains("project/"+projectId)}) >> project
+        1 * projectConfigurationService.getProjectConfiguration(project) >> setupMockServiceProgramConfig()
 
         and:
         results.size() == 1
@@ -1067,7 +1071,6 @@ class ProjectServiceSpec extends Specification {
 
     def "able to collect int for Services"(){
         setup:
-        setupMockServices()
         String projectId = "project_10"
         Map project = [projectId: projectId,
                        outputTargets:[
@@ -1080,6 +1083,7 @@ class ProjectServiceSpec extends Specification {
 
         then:
         1 * webService.getJson({it.contains("project/"+projectId)}) >> project
+        1 * projectConfigurationService.getProjectConfiguration(project) >> setupMockServiceProgramConfig()
 
         and:
         results.size() == 1
@@ -1093,7 +1097,6 @@ class ProjectServiceSpec extends Specification {
 
     def "Check if the servicesIds is null"(){
         setup:
-        setupMockServices()
         String projectId = "project_10"
         Map project = [projectId: projectId,
                        outputTargets:[
@@ -1105,6 +1108,7 @@ class ProjectServiceSpec extends Specification {
 
         then:
         1 * webService.getJson({it.contains("project/"+projectId)}) >> project
+        1 * projectConfigurationService.getProjectConfiguration(project) >> setupMockServiceProgramConfig()
 
         and:
         results.size() == 0
@@ -1213,6 +1217,63 @@ class ProjectServiceSpec extends Specification {
         then:
         1 * webService.getJson({it.contains("project/"+projectId)}) >> project
         thrown IllegalArgumentException
+    }
+
+    def "for the output report, only outputs matching the project services will be displayed"() {
+
+        setup:
+        List services = setupMockServicesForFilteredOutputModel()
+        Map activityModel = setupActivityModelForFiltering(services)
+        Map project = [custom:[details:[serviceIds:[1,2,4]]]]
+
+        Map activityData = [:]
+
+        when:
+        Map filteredModel = service.filterOutputModel(activityModel, project, activityData)
+
+        then:
+        metadataService.getProjectServices() >> services
+        1 * projectConfigurationService.getProjectConfiguration(project) >> setupMockServiceProgramConfig(services)
+        filteredModel.outputs == ['o1', 'o2', 'o4']
+    }
+
+
+    def "for the output report, outputs that are not service outputs will always be displayed"() {
+
+        setup:
+
+        List services = setupMockServicesForFilteredOutputModel()
+        Map activityModel = setupActivityModelForFiltering(services)
+        activityModel.outputs << 'non service'
+
+        Map project = [custom:[details:[serviceIds:[1,2,4]]]]
+
+        Map activityData = [:]
+
+        when:
+        Map filteredModel = service.filterOutputModel(activityModel, project, activityData)
+
+        then:
+        metadataService.getProjectServices() >> services
+        1 * projectConfigurationService.getProjectConfiguration(project) >> setupMockServiceProgramConfig(services)
+        filteredModel.outputs == ['o1', 'o2', 'o4', 'non service']
+    }
+
+    private Map setupActivityModelForFiltering(List services) {
+        Map activityModel = [name:'output', outputs:[]]
+        services.each {
+            activityModel.outputs << it.output
+        }
+        activityModel
+    }
+
+    private List setupMockServicesForFilteredOutputModel() {
+
+        List services = [1,2,3,4,5,6,7,8,9,10].collect{
+            String output = 'o'+it
+            [id:it, output:output]
+        }
+        services
     }
 
     private Map buildApprovalDocument(int i, String projectId) {

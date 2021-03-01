@@ -8,6 +8,7 @@ import grails.converters.JSON
 import org.apache.commons.lang.CharUtils
 import org.apache.http.HttpStatus
 import org.codehaus.groovy.grails.web.json.JSONArray
+import org.codehaus.groovy.grails.web.json.JSONObject
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.Days
@@ -78,16 +79,6 @@ class ProjectService  {
 
     def getRich(id) {
         get(id, 'rich')
-    }
-
-    def getActivities(project) {
-        def list = []
-        project.sites.each { site ->
-            siteService.get(site.siteId)?.activities?.each { act ->
-                list << activityService.constructName(act)
-            }
-        }
-        list
     }
 
     /**
@@ -1385,9 +1376,11 @@ class ProjectService  {
     }
 
     List<Map> getProjectServices(Map project) {
-        List<Map> allServices = metadataService.getProjectServices()
+        ProgramConfig config = projectConfigurationService.getProjectConfiguration(project)
+        List<Map> supportedServices = config.services
+        List serviceIds = project.custom?.details?.serviceIds?.collect{it as Integer}
 
-        List projectServices = allServices?.findAll {it.id in project.custom?.details?.serviceIds }
+        List projectServices = supportedServices?.findAll {it.id in serviceIds }
 
         projectServices
     }
@@ -1431,8 +1424,9 @@ class ProjectService  {
 
         List serviceIds = project.custom?.details?.serviceIds?.collect{it as Integer}
 
-        List<Map> allServices = metadataService.getProjectServices()
-        List projectServices = allServices?.findAll {it.id in serviceIds }
+        ProgramConfig config = projectConfigurationService.getProjectConfiguration(project)
+        List<Map> supportedServices = config.services
+        List projectServices = supportedServices?.findAll {it.id in serviceIds }
         List targets = project.outputTargets
 
         // Make a copy of the services as we are going to augment them with target information.
@@ -1511,6 +1505,66 @@ class ProjectService  {
         BigDecimal target = new BigDecimal(targetData.target ?: 0)
         BigDecimal result = new BigDecimal(targetData.result ?: 0)
         return target > result
+    }
+
+    /**
+     * If the activity type to be displayed is the RLP Outputs report, only show the outputs that align with
+     * services to be delivered by the model.  This method has a side effect of modifying the
+     * @param model the model containing the activity metaModel and output templates.
+     * @param project the project associated with the report.
+     */
+    Map filterOutputModel(Map activityModel, Map project, Map existingActivityData) {
+
+        Map filteredModel = activityModel
+        if (isFilterable(activityModel)) {
+
+            List serviceList
+            List selectedForProject
+
+            // The values to be filtered can come from either project services or activities in the MERI plan.
+            selectedForProject = getProjectServices(project)
+
+            if (!selectedForProject) {
+
+                serviceList = getProgramConfiguration(project).activities
+                selectedForProject = getProjectActivities(project)
+            }
+            else {
+                // We are deliberately filtering the project services against the
+                // full service list instead of the services supported by the program.  This is
+                // so that we can share a report containing the full service list across programs
+                // and have the services filtered out.  If we just used the project/program
+                // service list here, any services not on the program list would be treated
+                // as non-service form sections (like WHS) and always display in the report.
+                serviceList = metadataService.getProjectServices()
+            }
+
+            if (selectedForProject) {
+                List serviceOutputs = serviceList.collect{it.output}
+                List projectOutputs = selectedForProject.collect{it.output}
+                filteredModel = filterActivityModel(activityModel, existingActivityData, serviceOutputs, projectOutputs)
+            }
+        }
+        filteredModel
+    }
+
+    private boolean isFilterable(Map activityModel) {
+        List filterableActivityTypes = grailsApplication.config.reports.filterableActivityTypes
+        return activityModel?.name in filterableActivityTypes
+    }
+
+    private Map filterActivityModel(Map activityModel, Map existingActivityData, List filterableSections, List sectionsToInclude) {
+        Map filteredModel = new JSONObject(activityModel)
+        List existingOutputs = existingActivityData?.outputs?.collect{it.name}
+        filteredModel.outputs = activityModel.outputs.findAll({ String output ->
+            boolean isFilterable = filterableSections.find{it == output}
+
+            // Include this output if it's not associated with a service,
+            // Or if it's associated by a service delivered by this project
+            // Or it has previously had data recorded against it (this can happen if the services change after the report has been completed)
+            !isFilterable || output in sectionsToInclude || output in existingOutputs
+        })
+        filteredModel
     }
 
 
@@ -1815,6 +1869,14 @@ class ProjectService  {
         }
         if (!project.custom.dataSets) {
             project.custom.dataSets = []
+        }
+
+        if(!dataSet.progress) {
+            dataSet.progress = ActivityService.PROGRESS_STARTED
+        }
+
+        if(!dataSet.dataCollectionOngoing) {
+            dataSet.dataCollectionOngoing = false
         }
 
         if (!dataSet.dataSetId) {

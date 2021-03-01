@@ -2,11 +2,17 @@ table td.actions, table th.actions {
     width:10%;
 }
 table td.dataset-name, table th.dataset-name {
-    width:45%;
+    width:65%;
 }
 table td.report-start, table th.report-start {
     width:15%;
 }
 div.otherPriority {
+    margin-top: 10px;
+}
+table td.dataset-progress, table th.dataset-progress {
+    width:10em;
+}
+#dataCollectionOngoingDiv {
     margin-top: 10px;
 }
