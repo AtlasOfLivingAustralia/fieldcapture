@@ -209,3 +209,11 @@
 	margin-right:10px;
 
 }
+.row-fluid .span8 .badge-danger {
+	background-color: #dc3545;
+	color: #fff;
+}
+.clearfix .span3 .badge-danger {
+	background-color: #dc3545;
+	color: #fff;
+}

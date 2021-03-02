@@ -221,8 +221,16 @@ function ProjectService(project, options) {
         return (project.planStatus == PlanStatus.APPROVED || project.planStatus == PlanStatus.SUBMITTED);
     };
 
+    self.isCompletedOrTerminated = function() {
+        return project.status && (project.status.toLowerCase() === 'completed' || project.status.toLowerCase() === 'terminated');
+    };
+
     self.isProjectDetailsLocked = ko.computed(function () {
-        return self.isSubmittedOrApproved();
+        if (self.isCompletedOrTerminated() === true){
+            return self.isCompletedOrTerminated();
+        }else{
+            return self.isSubmittedOrApproved();
+        }
     });
 
     self.isApproved = function() {
@@ -233,12 +241,12 @@ function ProjectService(project, options) {
         return project.planStatus == PlanStatus.SUBMITTED;
     };
 
-    self.isUnlockedForDataCorrection = function() {
-        return project.planStatus == PlanStatus.UNLOCKED;
+    self.isTerminated = function(){
+        return project.status.toLowerCase() === 'terminated';
     };
 
-    self.isCompleted = function() {
-        return project.status && (project.status.toLowerCase() === 'completed' || project.status.toLowerCase() === 'terminated');
+    self.isUnlockedForDataCorrection = function() {
+        return project.planStatus == PlanStatus.UNLOCKED;
     };
 
     self.canApproveMeriPlan = function() {

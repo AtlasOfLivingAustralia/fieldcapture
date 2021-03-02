@@ -48,11 +48,22 @@
                         <div class="span4 header-label">Project status</div>
 
                         <div class="span8 value">
-                            <span style="text-transform:uppercase;" data-bind="text:status" class="badge badge-info"
-                                  style="font-size: 13px;"></span>
+                            <span data-bind="if: status().toLowerCase() == 'terminated'">
+                                <span style="text-transform:uppercase;" data-bind="text:status" class="badge badge-danger" style="font-size: 13px;"></span>
+                            </span>
+                            <span data-bind="if: status().toLowerCase() != 'terminated'">
+                                <span style="text-transform:uppercase;" data-bind="text:status" class="badge badge-info" style="font-size: 13px;"></span>
+                            </span>
                         </div>
                     </div>
-
+                    <span data-bind="if: status().toLowerCase() == 'terminated'">
+                            <div class="row-fluid">
+                                <div class="span4 header-label">Termination Reason</div>
+                                <div class="span8 value">
+                                    <span data-bind="text: terminationReason"></span>
+                                </div>
+                            </div>
+                    </span>
                 </div>
             </div></div>
 

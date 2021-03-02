@@ -53,6 +53,10 @@
                 Project Status:
                 <span style="text-transform:uppercase;" data-bind="text:status" class="badge badge-info" style="font-size: 13px;"></span>
             </span>
+            <span data-bind="if: status().toLowerCase() == 'terminated'">
+                Project Status:
+                <span style="text-transform:uppercase;" data-bind="text:status" class="badge badge-danger" style="font-size: 13px;"></span>
+            </span>
 
         </div>
         <div class="span3" data-bind="visible:grantId" style="margin-bottom: 0">

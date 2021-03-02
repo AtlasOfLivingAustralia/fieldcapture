@@ -134,13 +134,13 @@ function ProjectViewModel(project, isUserEditor, organisations) {
     self.status = ko.observable(projectDefault.toLowerCase());
     self.projectStatus = [{id: 'application', name:'Application'}, {id: 'active', name:'Active'},{id:'completed',name:'Completed'},{id:'deleted', name:'Deleted'}, {id:"terminated", name: "Terminated"}];
 
-    self.explanation = ko.observable(project.explanation).extend({markdown: true});
+    self.terminationReason = ko.observable(project.terminationReason);
 
     self.status.subscribe(function (terminated) {
         if (terminated === "terminated"){
-            editWithMarkdown("Explain", self.explanation)
+            bootbox.prompt("Reason For Termination", self.terminationReason)
         }else{
-            self.explanation(undefined)
+            self.terminationReason(undefined)
         }
     });
 
@@ -897,7 +897,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             programId: self.programId(),
             funding: new Number(self.funding()),
             status: self.status(),
-            explanation: self.explanation(),
+            terminationReason: self.terminationReason(),
             tags: self.tags(),
             promoteOnHomepage: self.promoteOnHomepage(),
             options: {
