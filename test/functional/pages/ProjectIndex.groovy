@@ -67,6 +67,7 @@ class OverviewTab extends Module {
         programName {$(".programName")}
         managementUnit {$(".managementUnitName")}
         projectStatus {$('span[data-bind*=status]')}
+        terminationReason {$('.terminationReason')}
     }
 }
 

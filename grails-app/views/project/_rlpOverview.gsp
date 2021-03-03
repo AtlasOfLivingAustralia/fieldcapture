@@ -60,7 +60,7 @@
                             <div class="row-fluid">
                                 <div class="span4 header-label">Termination Reason</div>
                                 <div class="span8 value">
-                                    <span data-bind="text: terminationReason"></span>
+                                    <span class="terminationReason" data-bind="text: terminationReason"></span>
                                 </div>
                             </div>
                     </span>
