@@ -1,18 +1,102 @@
 package au.org.ala.fieldcapture
 
-import pages.AddActivityPage
 import pages.EditActivityPage
 import pages.ProjectIndex
 import spock.lang.Stepwise
 
 @Stepwise
-public class AddActivitySpec extends FieldcaptureFunctionalTest {
+class AddActivitySpec extends StubbedCasSpec {
 
     def setupSpec() {
         useDataSet('dataset1')
     }
 
-    def projectId = "cb5497a9-0f36-4fef-9f6a-9ea832c5b68c"
+    def cleanup() {
+        logout(browser)
+    }
+
+    def projectId = "activityProject"
+
+    def "Generate a Activities"(){
+
+        setup: "log in as userId=1 who is a program admin for the program with programId=test_program"
+        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+
+        when:
+        to ProjectIndex, projectId
+
+        then:
+        waitFor{at ProjectIndex}
+        adminTab.click()
+        waitFor {admin.displayed}
+
+
+        when:
+        admin.projectSettingsTab.click()
+        waitFor {
+            admin.projectSettings.displayed
+        }
+        waitFor 30, {admin.projectSettings.regenerateReports()}
+
+        waitFor 10, {admin.projectSettings.displayed}
+
+        then:
+        activitiesTab.click()
+        waitFor 10,{plansAndReports.displayed}
+
+        and:
+        plansAndReports.size() == 1
+    }
+
+    def "Edit Activity Forms and timing out issue"() {
+        setup: "log in as userId=1 who is a program admin for the program with programId=test_program"
+        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+
+        when:
+        to ProjectIndex, projectId
+
+        then:
+        waitFor {at ProjectIndex}
+        activitiesTab.click()
+        waitFor 10,{plansAndReports.displayed}
+
+        $(".icon-link")[0].click()
+
+        when: "Make an edit after the session times out and attempt to save"
+        waitFor { at EditActivityPage }
+        activityDetails.description = "Checking the local storage"
+
+        simulateTimeout(browser)
+
+        submit()
+
+        then: "The save will fail an a dialog is displayed to explain the situation"
+        waitFor 20, {timeoutModal.displayed}
+
+        when: "Click the re-login link and log back in"
+        waitFor {timeoutModal.loginLink.click() }
+        // Our stubs are automatically logging us in here.
+
+        then:
+        waitFor 20, {at EditActivityPage}
+
+        and: "A dialog is displayed to say there are unsaved edits"
+        waitFor {unsavedEdits.displayed}
+
+        when:
+        okBootbox()
+
+        then: "the unsaved edits are present"
+        activityDetails.description == "Checking the local storage"
+        activityDetails.submit.click()
+
+        and:
+        waitFor 10, {
+            activityDetails.description == "Checking the local storage"
+        }
+
+    }
+
 /*
     def "No permission to add an activity"() {
 

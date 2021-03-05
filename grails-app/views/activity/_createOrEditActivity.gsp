@@ -123,7 +123,6 @@
 
 </div>
 
-
 <g:if test="${!printView}">
     <div class="form-actions">
         <button type="button" id="save" class="btn btn-primary" data-bind="click:save">Save changes</button>
@@ -134,6 +133,7 @@
 </div>
 
 <!-- templates -->
+<g:render template="/shared/timeoutMessage" model="${[url:grailsApplication.config.security.cas.loginUrl+'?service='+createLink(action:'edit', id:activity.activityId, absolute: true)]}"/>
 
 <asset:script>
 
@@ -145,6 +145,7 @@
 
         $('.helphover').popover({animation: true, trigger:'hover'});
 
+        let ACTIVITY_STORAGE_KEY = 'activity-${activity.activityId}';
 
         function ViewModel (act, site, project, activityTypes, themes, targetMetadata) {
             var self = this;
@@ -171,7 +172,7 @@
             self.transients.project = project;
             self.transients.themes = $.map(themes, function (obj, i) { return obj.name });
             self.transients.targetsWarning = ko.computed(function() {
-                if (self.type() == act.type || !act.type) {
+                if (self.type() === act.type || !act.type) {
                     return false;
                 }
                 var outputTargets = new OutputTargets(project.activities || [], project.outputTargets, false, targetMetadata, {saveOutputTargetsUrl:fcConfig.saveOuputTargetsUrl});
@@ -179,13 +180,13 @@
                 return !outputTargets.safeToRemove(act.type);
             });
             self.transients.typeWarning = ko.computed(function() {
-                if (act.outputs === undefined || act.outputs.length == 0) {
+                if (act.outputs === undefined || act.outputs.length === 0) {
                     return false;
                 }
                 if (!self.type()) {
                     return false;
                 }
-                return (self.type() != act.type);
+                return (self.type() !== act.type);
             });
 
             self.transients.activityDescription = ko.computed(function() {
@@ -207,7 +208,7 @@
             });
             self.transients.stages = [''];
             $.each(project.reports, function(i, report) {
-                if (!report.publicationStatus || report.publicationStatus == 'unpublished') {
+                if (!report.publicationStatus || report.publicationStatus === 'unpublished') {
                     self.transients.stages.push(report.name);
                 }
             });
@@ -261,8 +262,6 @@
                 if (self.transients.typeWarning()) {
                     jsData.progress = 'planned';
                 }
-
-
                 return jsData;
             };
             self.modelAsJSON = function () {
@@ -271,8 +270,12 @@
 
             self.save = function (callback, key) {
             };
-            self.dirtyFlag = ko.dirtyFlag(self, false);
 
+            if(amplify.store(ACTIVITY_STORAGE_KEY)) {
+                self.dirtyFlag = ko.dirtyFlag(self, true);
+           } else {
+                self.dirtyFlag = ko.dirtyFlag(self, false);
+            }
 
             var ignoreStageChanges = false;
             self.projectStage.subscribe(function(newStage) {
@@ -361,6 +364,7 @@
                     }
 
                     var activityData = self.modelAsJSON();
+                    blockUIWithMessage("Saving activity data...");
                     $.ajax({
                         url: "${createLink(action: 'ajaxUpdate', id: activity.activityId)}",
                         type: 'POST',
@@ -372,8 +376,8 @@
                                 errorText = "<span class='label label-important'>Important</span><h4>There was an error while trying to save your changes.</h4>";
                                 $.each(data.errors, function (i, error) {
                                     errorText += "<p>Saving <b>" +
-    (error.name === 'activity' ? 'the activity context' : error.name) +
-    "</b> threw the following error:<br><blockquote>" + error.error + "</blockquote></p>";
+                                    (error.name === 'activity' ? 'the activity context' : error.name) +
+                                    "</b> threw the following error:<br><blockquote>" + error.error + "</blockquote></p>";
                                 });
                                 errorText += "<p>Any other changes should have been saved.</p>";
                                 bootbox.alert(errorText);
@@ -388,34 +392,50 @@
                                     else {
                                         self.saved();
                                     }
-
                                 }
                                 else {
                                     self.saved();
                                 }
-
                             }
                         },
                         error: function (data) {
                             var status = data.status;
-                            alert('An unhandled error occurred: ' + data.status);
+                            let toSave = JSON.stringify(activityData)
+                            amplify.store(ACTIVITY_STORAGE_KEY, toSave);
+                            $('#logout-warning').show();
+                            var unloadHandler = window.onbeforeunload;
+                            window.onbeforeunload = null;
+                            bootbox.alert($("#timeoutMessage").html(),
+                                function() {
+                                    window.onbeforeunload = unloadHandler;
+                            });
                         }
                     });
                 }
 
             };
             self.saved = function () {
+                amplify.store(ACTIVITY_STORAGE_KEY, null)
                 document.location.href = returnTo;
             };
 
             self.cancel = function() {
+                amplify.store(ACTIVITY_STORAGE_KEY, null)
                 document.location.href = returnTo;
             };
-
-
         };
 
-        var activity = ${fc.modelAsJavascript([model:activity?:[:]])};
+        var activity;
+        if(amplify.store(ACTIVITY_STORAGE_KEY)) {
+            console.log("Amplify value: " + amplify.store(ACTIVITY_STORAGE_KEY))
+            let localSavedActivity = amplify.store(ACTIVITY_STORAGE_KEY)
+            let restored =  JSON.parse(localSavedActivity)
+            activity = JSON.parse(restored); // this parse will converted into JSON object
+            bootbox.alert("Unsaved data has been found for this form.  Please press 'Save' to keep this data or 'Cancel' to discard it");
+        }else {
+            activity = ${fc.modelAsJavascript([model:activity?:[:]])};
+            console.log("Old Activity: "+ activity)
+        };
 
         var viewModel = new ViewModel(
     activity,
@@ -424,7 +444,6 @@
     ${(activityTypes as JSON).toString()},
     ${themes},
      ${fc.modelAsJavascript(model:outputTargetMetadata ?: [:])});
-
 
         var mapFeatures = $.parseJSON('${mapFeatures?mapFeatures.encodeAsJavaScript():"{}"}');
 
@@ -449,6 +468,5 @@
         if (activity.siteId) {
             viewModel.siteId(activity.siteId);
         }
-
     });
 </asset:script>
