@@ -427,14 +427,12 @@
 
         var activity;
         if(amplify.store(ACTIVITY_STORAGE_KEY)) {
-            console.log("Amplify value: " + amplify.store(ACTIVITY_STORAGE_KEY))
             let localSavedActivity = amplify.store(ACTIVITY_STORAGE_KEY)
             let restored =  JSON.parse(localSavedActivity)
             activity = JSON.parse(restored); // this parse will converted into JSON object
             bootbox.alert("Unsaved data has been found for this form.  Please press 'Save' to keep this data or 'Cancel' to discard it");
         }else {
-            activity = ${fc.modelAsJavascript([model:activity?:[:]])};
-            console.log("Old Activity: "+ activity)
+            activity = ${fc.modelAsJavascript([model:activity?:[:]])};)
         };
 
         var viewModel = new ViewModel(
