@@ -49,21 +49,24 @@
 
                         <div class="span8 value">
                             <span data-bind="if: status().toLowerCase() == 'terminated'">
-                                <span style="text-transform:uppercase;" data-bind="text:status" class="badge badge-danger" style="font-size: 13px;"></span>
+                                <span style="text-transform:uppercase;" data-bind="text:status" class="badge badge-danger projectStatus"></span>
                             </span>
                             <span data-bind="if: status().toLowerCase() != 'terminated'">
-                                <span style="text-transform:uppercase;" data-bind="text:status" class="badge badge-info" style="font-size: 13px;"></span>
+                                <span  data-bind="text:status" class="badge badge-info projectStatus"></span>
                             </span>
                         </div>
                     </div>
-                    <span data-bind="if: status().toLowerCase() == 'terminated'">
+                    <g:if test="${fc.userIsAlaOrFcAdmin()}">
+                        <span data-bind="if: status().toLowerCase() == 'terminated'">
                             <div class="row-fluid">
                                 <div class="span4 header-label">Termination Reason</div>
                                 <div class="span8 value">
                                     <span class="terminationReason" data-bind="text: terminationReason"></span>
                                 </div>
                             </div>
-                    </span>
+                        </span>
+                    </g:if>
+
                 </div>
             </div></div>
 

@@ -220,17 +220,16 @@ function ProjectService(project, options) {
     self.isSubmittedOrApproved = function() {
         return (project.planStatus == PlanStatus.APPROVED || project.planStatus == PlanStatus.SUBMITTED);
     };
+    self.isTerminated = function(){
+        return project.status.toLowerCase() === 'terminated';
+    };
 
     self.isCompletedOrTerminated = function() {
-        return project.status && (project.status.toLowerCase() === 'completed' || project.status.toLowerCase() === 'terminated');
+        return project.status && (project.status.toLowerCase() === 'completed' || self.isTerminated());
     };
 
     self.isProjectDetailsLocked = ko.computed(function () {
-        if (self.isCompletedOrTerminated() === true){
-            return self.isCompletedOrTerminated();
-        }else{
-            return self.isSubmittedOrApproved();
-        }
+            return self.isCompletedOrTerminated() || self.isSubmittedOrApproved();
     });
 
     self.isApproved = function() {
@@ -241,9 +240,6 @@ function ProjectService(project, options) {
         return project.planStatus == PlanStatus.SUBMITTED;
     };
 
-    self.isTerminated = function(){
-        return project.status.toLowerCase() === 'terminated';
-    };
 
     self.isUnlockedForDataCorrection = function() {
         return project.planStatus == PlanStatus.UNLOCKED;
