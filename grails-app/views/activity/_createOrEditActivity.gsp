@@ -432,7 +432,7 @@
             activity = JSON.parse(restored); // this parse will converted into JSON object
             bootbox.alert("Unsaved data has been found for this form.  Please press 'Save' to keep this data or 'Cancel' to discard it");
         }else {
-            activity = ${fc.modelAsJavascript([model:activity?:[:]])};)
+            activity = ${fc.modelAsJavascript([model:activity?:[:]])};
         };
 
         var viewModel = new ViewModel(

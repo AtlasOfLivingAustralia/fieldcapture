@@ -347,3 +347,7 @@ a.meri-history-toggle {
     font-size: 14px;
     content: "\f059";
 }
+.control-group .badge-danger {
+    background-color: #dc3545;
+}
+

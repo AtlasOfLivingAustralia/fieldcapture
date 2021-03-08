@@ -71,7 +71,7 @@ class AddActivitySpec extends StubbedCasSpec {
         submit()
 
         then: "The save will fail an a dialog is displayed to explain the situation"
-        waitFor 20, {timeoutModal.displayed}
+        waitFor 20, { timeoutModal.displayed }
 
         when: "Click the re-login link and log back in"
         waitFor {timeoutModal.loginLink.click() }

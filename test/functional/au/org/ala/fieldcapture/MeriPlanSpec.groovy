@@ -422,7 +422,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         overviewTab.click()
 
         then:
-        overview.projectStatus.text() == 'ACTIVE'
+        overview.projectStatus[1].text() == 'ACTIVE'
     }
 
     def "Approve MERI plan of a project with the active status and internal order Id"() {
@@ -475,6 +475,6 @@ class MeriPlanSpec extends StubbedCasSpec {
         overviewTab.click()
 
         then:
-        overview.projectStatus.text() == 'ACTIVE'
+        overview.projectStatus[1].text() == 'ACTIVE'
     }
 }

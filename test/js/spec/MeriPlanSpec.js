@@ -747,4 +747,22 @@ describe("Loading the MERI plan is handled correctly", function () {
 
     });
 
+    it('should check if the project is terminated', function () {
+        let project = {
+            status: "terminated"
+        }
+        let projectService = new ProjectService(project, {})
+        let readOnlyMeriPlan = new ReadOnlyMeriPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'} )
+        expect(readOnlyMeriPlan.meriPlanStatus().text).toEqual("This project is terminated")
+    });
+
+    it('should check if the project is completed', function () {
+        let project = {
+            status: "completed"
+        }
+        let projectService = new ProjectService(project, {})
+        let readOnlyMeriPlan = new ReadOnlyMeriPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'} )
+        expect(readOnlyMeriPlan.meriPlanStatus().text).toEqual("This project is completed")
+    });
+
 });
