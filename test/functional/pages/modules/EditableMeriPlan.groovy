@@ -170,6 +170,7 @@ class EditableMeriPlan extends Module {
 
         approvePlanDialog(required:false) { $('#meri-plan-approval-modal').module(MeriPlanApproveDialog) }
 
+        internalOrderNumber(required:false) { $('#internalOrderId') }
     }
 
     void addBudgetRow() {

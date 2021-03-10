@@ -143,7 +143,7 @@ function MERIPlan(project, projectService, config) {
                         referenceDocument:viewModel.referenceDocument(),
                         reason: viewModel.reason(),
                         dateApproved: viewModel.dateApproved()
-                    }, self.internalOrderId);
+                    }, self.internalOrderId());
                 }
             };
             ko.applyBindings(planApprovalViewModel, $planApprovalModal[0]);
