@@ -245,7 +245,9 @@
             <select class="input-xlarge" id="projectState" data-bind="options:projectStatus.filter(x => x.name != '${ProjectService.APPLICATION_STATUS}'), optionsText: 'name', optionsValue: 'id', value:status"></select>
         </g:else>
     </div>
-    <div class="span4">
+    <div class="span4" data-bind="visible:status() ==='terminated'">
+        <label class="required" for="terminationReason">Termination Reason </label>
+            <textarea class="span12" id="terminationReason" rows="3" data-bind=" value:terminationReason" data-validation-engine="validate[required]"></textarea>
 
     </div>
 </div>

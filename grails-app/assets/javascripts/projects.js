@@ -137,9 +137,7 @@ function ProjectViewModel(project, isUserEditor, organisations) {
     self.terminationReason = ko.observable(project.terminationReason);
 
     self.status.subscribe(function (terminated) {
-        if (terminated === "terminated"){
-            bootbox.prompt("Reason For Termination", self.terminationReason)
-        }else{
+        if (terminated !== "terminated"){
             self.terminationReason(undefined)
         }
     });
