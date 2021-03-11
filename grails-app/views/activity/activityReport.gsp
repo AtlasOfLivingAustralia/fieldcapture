@@ -86,7 +86,7 @@
 </div>
 
 <g:render template="/shared/timeoutMessage"
-          model="${[url: createLink(action: 'enterData', id: activity.activityId, params: [returnTo: returnTo])]}"/>
+          model="${[url:grailsApplication.config.security.cas.loginUrl+'?service='+ createLink(controller: 'project', action: 'index', absolute: true, id: activity.projectId)]}"/>
 
 <g:render template="/shared/documentTemplate"></g:render>
 
@@ -101,7 +101,17 @@
     $(function () {
         var returnTo = "${returnTo}";
         var activity = JSON.parse('${(activity as JSON).toString().encodeAsJavaScript()}');
-        var reportSite = ${reportSite?.encodeAsJSON() ?: '{}' };
+        var reportSite;
+        if(amplify.store("activity-${activity.activityId}")){
+            let localStorage = amplify.store("activity-${activity.activityId}");
+            let restoredSite = $.parseJSON(localStorage);
+            reportSite = restoredSite.site
+        }else{
+            reportSite = ${reportSite?.encodeAsJSON() ?: '{}' };
+        }
+
+
+        console.log(reportSite.features);
         var projectArea = ${projectArea?.encodeAsJSON() ?: '{}'};
 
         var reportId = '${report.reportId}';
@@ -235,11 +245,25 @@
 
         var blockId = "${blockId}";
         var output = <fc:modelAsJavascript model="${output}"/>;
+
         var config = ${fc.modelAsJavascript(model:metaModel.outputConfig?.find{it.outputName == outputName}, default:'{}')};
+
+        if(amplify.store(outputModelConfig.recoveryDataStorageKey)){
+            let localSavedActivity = amplify.store(outputModelConfig.recoveryDataStorageKey);
+            let restored = $.parseJSON(localSavedActivity);
+            restored.activity.outputs.forEach(function (storedOutput) {
+                    if(storedOutput.name === output.name){
+                        viewModel.dirtyFlag.isDirty = ko.observable(true);
+                        output = storedOutput;
+                    }
+                })
+            }
+
+
+
 
         config.model = ${fc.modelAsJavascript(model:model)};
         config.featureCollection = context.featureCollection;
-
         config = _.extend({}, outputModelConfig, config);
 
         var outputViewModel = ecodata.forms.initialiseOutputViewModel(blockId, config.model.dataModel, output, config, context);
