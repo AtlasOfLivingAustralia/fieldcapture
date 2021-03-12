@@ -202,7 +202,7 @@
         </div>
     </div>
     <div class="form-group row">
-        <label for="collectorType" class="col-sm-5 col-form-label required">17. Who developed/collated the dataset?</label>
+        <label for="collectorType" class="col-sm-5 col-form-label required">17. Who developed the dataset?</label>
         <div class="col-sm-7">
             <select type="text"  class="form-control" id="collectorType"  data-validation-engine="validate[required]" data-bind="value:collectorType">
                 <option></option>
