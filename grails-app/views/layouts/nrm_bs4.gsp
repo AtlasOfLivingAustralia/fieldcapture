@@ -63,38 +63,39 @@
     </g:if>
 
     <div class="navbar navbar-static-top navbar-expand-md navbar-light" id="header">
+        <div class="${containerType}">
+            <g:if test="${hubConfig.logoUrl}">
+                <div class="navbar-nav logo">
 
-        <g:if test="${hubConfig.logoUrl}">
-            <div class="navbar-nav logo">
+                    <a href="${createLink(controller: "home")}">
+                        <asset:image src="ag-Inline_W.png" alt="${hubConfig.title}"/>
+                    </a>
 
-                <a href="${createLink(controller: "home")}">
-                    <asset:image src="ag-Inline_W.png" alt="${hubConfig.title}"/>
-                </a>
-
-                <g:if test="${hubConfig.title}"><div class="d-flex align-items-center"><span
-                        class="merit">${hubConfig.title}</span></div></g:if>
-            </div>
-        </g:if>
-        <div class="ml-md-auto text-right">
-            <g:if test="${fc.currentUserDisplayName()}">
-                <div class="greeting text-right">G'day <fc:currentUserDisplayName/></div>
+                    <g:if test="${hubConfig.title}"><div class="d-flex align-items-center"><span
+                            class="merit">${hubConfig.title}</span></div></g:if>
+                </div>
             </g:if>
+            <div class="ml-md-auto text-right">
+                <g:if test="${fc.currentUserDisplayName()}">
+                    <div class="greeting text-right">G'day <fc:currentUserDisplayName/></div>
+                </g:if>
 
-            <div class="btn-group login-logout">
-                <auth:loginLogout
-                        loginReturnToUrl="${createLink(controller:'home', action:'login', absolute:true)}"
-                        logoutReturnToUrl="${grailsApplication.config.grails.serverURL}"
-                        logoutUrl="${createLink(controller: 'logout', action: 'logout')}"
-                                      cssClass="btn btn-small btn-inverse btn-login"/>
+                <div class="btn-group login-logout">
+                    <auth:loginLogout
+                            loginReturnToUrl="${createLink(controller:'home', action:'login', absolute:true)}"
+                            logoutReturnToUrl="${grailsApplication.config.grails.serverURL}"
+                            logoutUrl="${createLink(controller: 'logout', action: 'logout')}"
+                            cssClass="btn btn-small btn-inverse btn-login"/>
+                </div>
+
             </div>
-
         </div>
+
 
     </div><!--/.navbar -->
 
     <div class="page-header-menu">
-
-
+    <div class="${containerType}">
         <div id="dcNav" class="clearfix ">
 
             <div class="navbar navbar-expand-md navbar-light">
@@ -118,21 +119,24 @@
 
                     </ul>
                     <form class="form-inline ml-auto">
-%{--                        <span id="buttonBar">--}%
-                            <g:render template="/layouts/nrmUserButtons"/>
-                            <g:pageProperty name="page.buttonBar"/>
-%{--                        </span>--}%
+                        %{--                        <span id="buttonBar">--}%
+                        <g:render template="/layouts/nrmUserButtons"/>
+                        <g:pageProperty name="page.buttonBar"/>
+                        %{--                        </span>--}%
                     </form>
                     <g:form controller="search" method="GET" class="search merit">
 
-                            <input aria-label="Search MERIT" type="text" name="query" id="keywords" placeholder="Search MERIT"
-                                   value="${params.query ? params.query.encodeAsHTML() : ''}">
-                            <input type="submit" value="search" class="search button">
+                        <input aria-label="Search MERIT" type="text" name="query" id="keywords" placeholder="Search MERIT"
+                               value="${params.query ? params.query.encodeAsHTML() : ''}">
+                        <input type="submit" value="search" class="search button">
 
                     </g:form>
                 </div>
             </div><!-- /.navbar-inner -->
         </div>
+    </div>
+
+
     </div>
 
 </div>

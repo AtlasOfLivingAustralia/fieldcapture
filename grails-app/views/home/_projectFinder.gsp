@@ -3,7 +3,7 @@
 <div id="projectExplorer">
 <g:if test="${flash.error || results.error}">
     <g:set var="error" value="${flash.error?:results.error}"/>
-    <div class="row-fluid">
+    <div class="row">
         <div class="alert alert-error large-space-before">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             <span>Error: ${error}</span>
@@ -12,18 +12,18 @@
 </g:if>
 <g:elseif test="${results?.hits?.total?:0 > 0}">
 
-    <div class="row-fluid ">
-        <div id="facetsCol" class="well well-small" style="display:none;">
+    <div class="row">
+        <div id="facetsCol" class="card card-body bg-light" style="display:none;">
             <g:set var="reqParams" value="query,sort,order,max,fq,fromDate,toDate"/>
             <div class="visible-phone pull-right" style="margin-top: 5px;">
-                <a href="#" id="toggleFacetDisplay" rel="facetsContent" role="button" class="btn btn-small btn-inverse" style="color:white;">
+                <a href="#" id="toggleFacetDisplay" rel="facetsContent" role="button" class="btn btn-sm btn-inverse" style="color:white;">
                     <span>show</span> options&nbsp;
                     <b class="caret"></b>
                 </a>
             </div>
             <h3 style="margin-bottom:0;">Filter results</h3>
-            <button class="btn btn-small facetSearch"><i class="icon-filter"></i>Refine</button>
-            <button class="btn btn-small clearFacet"><i class="icon-remove-sign"></i>Clear all</button>
+            <button class="btn btn-sm facetSearch"><i class="icon-filter"></i>Refine</button>
+            <button class="btn btn-sm clearFacet"><i class="icon-remove-sign"></i>Clear all</button>
             <g:if test="${params.fq}">
                 <div class="currentFilters">
                     <h4>Current filters</h4>
@@ -58,7 +58,7 @@
                 </div>
             </div>
         </div>
-        <div class="span12">
+        <div class="col-sm-11">
 
             <div class="accordian" id="project-display-options">
                 <div class="accordion-group">
@@ -69,7 +69,7 @@
                         <span class="span4 facet-holder"></span>
 
                         <span class="span8">
-                            <div class="row-fluid">
+                            <div class="row">
                                 <g:render template="searchResultsSummary"/>
                             </div>
                             <g:render template="/shared/sites" model="${[projectCount:results?.hits?.total?:0]}"/>
@@ -84,7 +84,7 @@
                         <span class="span4 facet-holder"></span>
 
                         <span class="span8">
-                            <div class="row-fluid">
+                            <div class="row">
                                 <g:render template="searchResultsSummary"/>
                             </div>
 
@@ -102,8 +102,8 @@
                                 <div id="paginateTable" class="hide" style="text-align:center;">
                                     <span id="paginationInfo" style="display:inline-block;float:left;margin-top:4px;"></span>
                                     <div class="btn-group">
-                                        <button class="btn btn-small prev"><i class="icon-chevron-left"></i>&nbsp;previous</button>
-                                        <button class="btn btn-small next">next&nbsp;<i class="icon-chevron-right"></i></button>
+                                        <button class="btn btn-sm prev"><i class="icon-chevron-left"></i>&nbsp;previous</button>
+                                        <button class="btn btn-sm next">next&nbsp;<i class="icon-chevron-right"></i></button>
                                     </div>
                                 </div>
                             </div>
@@ -161,11 +161,11 @@
                         <div class="span4 facet-holder" style="display:none;" data-hidden="true"></div>
 
                         <div style="overflow-x:scroll">
-                            <div class="row-fluid" style="margin-top:5px;">
+                            <div class="row" style="margin-top:5px;">
                                 <button class="btn facets-toggle"><i class="fa fa-bars"></i></button> <span>
                                 <g:render template="searchResultsSummary"/>
                             </div>
-                            <div class="row-fluid" >
+                            <div class="row" >
                                 <g:if test="${fc.userIsAlaOrFcAdmin()}">
                                     <span class="span12">
                                         <h4>Report: </h4>
@@ -203,7 +203,7 @@
 
                             <span class="span8">
 
-                                <div class="row-fluid">
+                                <div class="row">
                                     <g:render template="searchResultsSummary"/>
                                 </div>
 
@@ -255,7 +255,7 @@
     </div>
 </g:elseif>
 <g:else>
-    <div class="row-fluid ">
+    <div class="row ">
         <div class="span12">
             <div class="alert alert-error large-space-before">
                 Error: search index returned 0 results
