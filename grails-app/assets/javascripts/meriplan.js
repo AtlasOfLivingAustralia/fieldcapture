@@ -619,14 +619,14 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
      * @returns
      */
     function assetLookup(asset) {
-        let result = _.find(project.priorities || [], function(priority) {
+        var result = _.find(project.priorities || [], function(priority) {
             return priority.priority === asset;
         });
         return result && result.category;
     }
 
     self.assets = ko.observableArray(_.map(o.assets || [{}], function(asset) {
-         if (asset.category === ""){
+         if (!asset.category){
              asset.category = assetLookup(asset.description); // assigning related assets type to assets. so it store the asset type as category in the database
          }
         return new AssetViewModel(asset);

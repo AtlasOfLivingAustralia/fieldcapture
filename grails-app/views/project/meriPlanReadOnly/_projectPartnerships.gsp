@@ -18,7 +18,7 @@
                 <div data-bind="if:data3() != 'Other'">
                     <label data-bind="text:data3"></label>
                 </div>
-                <div data-bind="if:data3() == 'Other' && otherOrganisationType() == ''">
+                <div data-bind="if:data3() == 'Other' && !otherOrganisationType()">
                     <label data-bind="text:data3"></label>
                 </div>
 
