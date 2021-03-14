@@ -29,7 +29,7 @@
         </td>
         <g:if test="${fromPriorities && autoSelectCategory}">
             <td class="asset-category">
-                <span class="Test" data-bind="text:category"></span>
+                <span data-bind="text:category"></span>
             </td>
         </g:if>
     </tr>
