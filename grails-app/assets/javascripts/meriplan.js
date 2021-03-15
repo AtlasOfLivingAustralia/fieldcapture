@@ -611,24 +611,7 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
         return new EventsRowViewModel(obj);
     }));
 
-    /**
-     * Assets category stored empty in db for category type assets. looking up the priority/ category using assets
-     * Category was missing in database
-     * wasn't showing the assets Type in PDF
-     * @param asset
-     * @returns
-     */
-    function assetLookup(asset) {
-        var result = _.find(project.priorities || [], function(priority) {
-            return priority.priority === asset;
-        });
-        return result && result.category;
-    }
-
     self.assets = ko.observableArray(_.map(o.assets || [{}], function(asset) {
-         if (!asset.category){
-             asset.category = assetLookup(asset.description); // assigning related assets type to assets. so it store the asset type as category in the database
-         }
         return new AssetViewModel(asset);
     }));
 
