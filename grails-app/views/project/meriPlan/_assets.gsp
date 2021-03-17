@@ -3,7 +3,7 @@
     ${explanation}
 </g:if>
 <g:set var="assetClass" value="${useCategorySelection || autoSelectCategory ? 'asset-detail': 'asset'} "/>
-<table class="table assets-table">
+<table class="table assets">
 <thead>
     <th class="index"></th>
 <g:if test="${fromPriorities && useCategorySelection}">

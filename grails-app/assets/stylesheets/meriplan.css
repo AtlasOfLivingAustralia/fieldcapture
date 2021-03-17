@@ -258,6 +258,12 @@ table tr.header th {
     table-layout:fixed;
 }
 
+.meri-plan .assets .remove {
+    min-width: 1em;
+    max-width: 1em;
+    width: 1em;
+}
+
 #project-risks-threats table {
     width:100%;
 }
