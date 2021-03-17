@@ -5,18 +5,19 @@
 <g:set var="assetClass" value="${useCategorySelection || autoSelectCategory ? 'asset-detail': 'asset'} "/>
 <table class="table assets">
 <thead>
-    <th class="index"></th>
-<g:if test="${fromPriorities && useCategorySelection}">
-    <th class="asset-category required">Asset Type <g:if test="${assetCategoryHelpText}"> <fc:iconHelp html="true" container="body">${assetCategoryHelpText}</fc:iconHelp></g:if></th>
-</g:if>
-    <th class="${assetClass} required">${assetHeading ?:
-            "Please name the species, ecological community or environmental asset(s) the project is targeting"}
-        <g:if test="${assetHelpText}"> <fc:iconHelp html="true" container="body">${assetHelpText}</fc:iconHelp></g:if></th>
-    <g:if test="${fromPriorities && autoSelectCategory}">
+    <tr>
+        <th class="index"></th>
+    <g:if test="${fromPriorities && useCategorySelection}">
         <th class="asset-category required">Asset Type <g:if test="${assetCategoryHelpText}"> <fc:iconHelp html="true" container="body">${assetCategoryHelpText}</fc:iconHelp></g:if></th>
     </g:if>
-    <th class="remove"></th>
-
+        <th class="${assetClass} required">${assetHeading ?:
+                "Please name the species, ecological community or environmental asset(s) the project is targeting"}
+            <g:if test="${assetHelpText}"> <fc:iconHelp html="true" container="body">${assetHelpText}</fc:iconHelp></g:if></th>
+        <g:if test="${fromPriorities && autoSelectCategory}">
+            <th class="asset-category required">Asset Type <g:if test="${assetCategoryHelpText}"> <fc:iconHelp html="true" container="body">${assetCategoryHelpText}</fc:iconHelp></g:if></th>
+        </g:if>
+        <th class="remove"></th>
+    </tr>
 </thead>
 <tbody data-bind="foreach:details.assets">
 <tr>
