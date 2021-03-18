@@ -68,7 +68,9 @@ class AddActivitySpec extends StubbedCasSpec {
 
         simulateTimeout(browser)
 
-        submit()
+        waitFor 20, {
+            submit()
+        }
 
         then: "The save will fail an a dialog is displayed to explain the situation"
         waitFor 20, { timeoutModal.displayed }
@@ -88,8 +90,9 @@ class AddActivitySpec extends StubbedCasSpec {
 
         then: "the unsaved edits are present"
         activityDetails.description == "Checking the local storage"
-        activityDetails.submit.click()
-
+       waitFor 10, {
+           activityDetails.submit.click()
+       }
         and:
         waitFor 10, {
             activityDetails.description == "Checking the local storage"
