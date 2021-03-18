@@ -137,19 +137,19 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
 </cas:serviceResponse>
         """
 
-//        stubFor(get(urlPathEqualTo("/cas/login?service=")).atPriority(2)
-//                .willReturn(aResponse()
-//                        .withStatus(302)
-//                        .withHeader("Location", "{{request.requestLine.query.service}}&ticket=test")
-//                        .withHeader("Set-Cookie", "ALA-Auth=\"${email}\"; Domain=ala.org.au; Path=/; HttpOnly")
-//                        .withTransformers("response-template")))
-
         stubFor(get(urlPathEqualTo("/cas/login"))
                 .willReturn(aResponse()
                 .withStatus(302)
                 .withHeader("Location", "{{request.requestLine.query.service}}?ticket=aticket")
                 .withHeader("Set-Cookie", "ALA-Auth=\"${email}\"; Domain=ala.org.au; Path=/; HttpOnly")
                 .withTransformers("response-template")))
+
+        stubFor(get(urlMatching("\\/cas\\/login\\?service\\=http:\\/\\/[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,4}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)"))
+                .willReturn(aResponse()
+                        .withStatus(302)
+                        .withHeader("location", "{{request.requestLine.query.service}}&ticket=aticket?")
+                        .withHeader("Set-Cookie", "ALA-Auth=\"${email}\"; Domain=ala.org.au; Path=/; HttpOnly")
+                        .withTransformers("response-template")))
 
         
         stubFor(get(urlPathEqualTo("/cas/p3/serviceValidate"))
