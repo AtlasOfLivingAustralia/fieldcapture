@@ -86,7 +86,7 @@
 </div>
 
 <g:render template="/shared/timeoutMessage"
-          model="${[url:grailsApplication.config.security.cas.loginUrl+'?service='+ createLink(controller: 'project', action: 'editReport', absolute: true, id: activity.projectId, params: [reportId: report.reportId])+'?reportId='+report.reportId]}"/>
+          model="${[url:grailsApplication.config.security.cas.loginUrl+'?service='+ createLink(controller: 'project', action: 'editReport', absolute: true, id: activity.projectId, params: [reportId: report.reportId])]}"/>
 
 <g:render template="/shared/documentTemplate"></g:render>
 
