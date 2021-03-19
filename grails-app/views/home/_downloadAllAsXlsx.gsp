@@ -15,7 +15,7 @@
     <g:if test="${params.query}">
         <input type="hidden" name="query" value="${params.query.encodeAsHTML()}">
     </g:if>
-    <strong>Project Information</strong>
+    <br/></p><strong>Project Information</strong>
     <ul class="unstyled">
         <g:each in="${['Projects', 'Output Targets', 'Sites', 'Reports', 'Report Summary', 'Documents', 'Blog']}" var="name">
             <li><label class="checkbox"><input type="checkbox" name="tabs" value="${name}" data-validation-engine="validate[minCheckbox[1]]">${name}</label></li>

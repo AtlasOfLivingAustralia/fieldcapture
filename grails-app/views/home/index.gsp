@@ -22,7 +22,7 @@
     </script>
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
 %{--    <asset:stylesheet src="common.css"/>--}%
-%{--    <asset:stylesheet src="homepage.css"/>--}%
+    <asset:stylesheet src="homepage.css"/>
     <asset:stylesheet src="common-bs4.css"/>
 
 </head>
@@ -57,7 +57,8 @@
     <g:render template="projectFinder"/>
 </div>
 
-<asset:javascript src="common.js"/>
+%{--<asset:javascript src="common.js"/>--}%
+<asset:javascript src="common-bs4.js"/>
 <asset:javascript src="projectExplorer.js"/>
 
 <asset:deferredScripts/>

@@ -74,3 +74,78 @@
 .facet-collapse.in.height {
     height: auto;
 }
+.accordion .card {
+    border-color: #ddd;
+    padding: 10px 15px;
+    margin-bottom: 5px;
+}
+.accordion .card .card-header {
+    margin-bottom: 0;
+    background-color: rgba(0,0,0,0);
+    padding: 0;
+    border-bottom: 0 solid rgba(0,0,0,0);
+}
+
+
+
+#projectExplorer .accordion .card .card-header a {
+
+    display: inline-block;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: 0 solid white;
+    padding: 0;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    color: #000000;
+
+}
+#projectExplorer .accordion .card .card-header button.btn:hover {
+    background-color: #FFFFFF;
+}
+#projectExplorer .accordion .card .card-header button:active {
+    background-color: #fff;
+    border: 0 solid #fff;
+}
+#projectExplorer .accordion .card .card-header button:hover {
+    background-color: #ffffff;
+}
+
+ul.unstyled,
+ol.unstyled {
+    margin-left: 0;
+    list-style: none;
+}
+
+#downloadView .checkbox input {
+    margin-right: 13px;
+}
+#downloadView .checkbox {
+    margin:4px 0px 0px -40px;
+}
+
+@media (min-width: 576px) {
+#projectExplorer .row .col-sm-11 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+    }
+}
+
+.accordion .card-header:after {
+    font-family: 'FontAwesome';
+    content: "\f068";
+    float: right;
+}
+.accordion .card-header.collapsed:after {
+    /* symbol for "collapsed" panels */
+    content: "\f067";
+}

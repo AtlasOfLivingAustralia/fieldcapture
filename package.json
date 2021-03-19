@@ -6,7 +6,8 @@
   "directories": {},
   "private": true,
   "dependencies": {
-    "bootstrap": "4.6"
+    "bootstrap": "4.6",
+    "bootstrap-icons": "^1.4.0"
   },
   "devDependencies": {
     "@metahub/karma-jasmine-jquery": "^2.0.1",
