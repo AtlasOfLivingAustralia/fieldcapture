@@ -144,7 +144,7 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
                 .withHeader("Set-Cookie", "ALA-Auth=\"${email}\"; Domain=ala.org.au; Path=/; HttpOnly")
                 .withTransformers("response-template")))
 
-        stubFor(get(urlMatching("\\/cas\\/login\\?service\\=http?:\\/\\/[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\/fieldcapture\\/project\\/editReport\\/1\\?reportId\\=report_1"))
+        stubFor(get(urlMatching("\\/cas\\/login\\?service\\=https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\/fieldcapture\\/project\\/editReport\\/1\\?reportId\\=[-a-zA-Z0-9@:%._\\+~#=]*"))
                 .willReturn(aResponse()
                         .withStatus(302)
                         .withHeader("location", "{{request.requestLine.query.service}}&ticket=aticket")

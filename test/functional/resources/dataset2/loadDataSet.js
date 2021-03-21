@@ -140,39 +140,3 @@ addSetting('meritfielddata.rlp.report.submitted.emailBody', 'Report approved bod
 createProjectNumberBaselineDataSets({ "scoreId":"score_42"});
 createProjectNumberOfCommunicationMaterialsPublished({ "scoreId":"score_43"});
 createProjectWeedAreaSurveyedHaDefault({ "scoreId":"score_44"});
-var report = {
-    "dateCreated":ISODate("2021-03-18T02:11:45.992Z"),
-    "lastUpdated":ISODate("2021-03-18T02:11:45.996Z"),
-    "submissionDate":ISODate("2018-09-30T14:00:00.000Z"),
-    "statusChangeHistory":[],
-    "toDate":ISODate("2018-12-31T13:00:00.000Z"),
-    "fromDate":ISODate("2018-09-30T14:00:00.000Z"),
-    "activityType":"RLP Output Report",
-    "publicationStatus":"unpublished",
-    "name":"Year 2018/2019 - Quarter 2 Outputs Report",
-    "type":"Activity",
-    "category":"Outputs Reporting",
-    "status":"active",
-    "projectId":"1",
-    "description":"Year 2018/2019 - Quarter 2 Outputs Report",
-    "reportId":"report_1",
-    "activityId":"activity_1"
-}
-
-var activity = {
-    "dateCreated":ISODate("2021-03-18T02:11:45.994Z"),
-    "lastUpdated":ISODate("2021-03-18T02:11:45.994Z"),
-    "activityId":"activity_1",
-    "endDate":ISODate("2018-12-31T13:00:00.000Z"),
-    "startDate":ISODate("2018-09-30T14:00:00.000Z"),
-    "assessment":false,
-    "plannedStartDate":ISODate("2018-09-30T14:00:00.000Z"),
-    "progress":"planned",
-    "type":"RLP Output Report",
-    "plannedEndDate":ISODate("2018-12-31T13:00:00.000Z"),
-    "status":"active",
-    "projectId":"1",
-    "description":"Year 2018/2019 - Quarter 2 Outputs Report"
-}
-db.report.insert(report)
-db.activity.insert(activity);
