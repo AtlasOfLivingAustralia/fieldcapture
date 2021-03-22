@@ -122,32 +122,43 @@ class ManagementUnitSpec extends StubbedCasSpec {
     }
 
 
-/*    def "As an site admin, I can get report periods and request to generate reports"(){
+    def "As an fc admin, I can update the reporting period for reports relating to this Management Unit"(){
         setup:
-        login([userId:'1', role:"ROLE_ADMIN", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
+        login([userId:'1', role:"ROLE_FC_ADMIN", email:'user@nowhere.com', firstName: "MERIT", lastName:'FC_ADMIN'], browser)
 
         when:
-        to AdminReportsPage
+        to ManagementUnitPage
+        at ManagementUnitPage
+        displayReportsTab()
 
         then:
-        waitFor {at AdminReportsPage}
-        selectedPeriod() =="startDate=2018-07-01&endDate=2019-06-30"
+        reportsTabPane.reports.size() == 1
 
         when:
-        interact {
-            downloadReportBtn().click()
+        displayAdminReportConfig()
+
+        then:
+        adminTabPane.reportingSection.coreServicesGroup.value() == "Quarterly - Group B (First period ends 31 August 2018)"
+        adminTabPane.reportingSection.projectOutputReportingGroup.value()  == "Quarterly (First period ends 30 September 2018)"
+
+        when:
+        adminTabPane.reportingSection.coreServicesGroup = "Monthly (First period ends 31 July 2018)"
+        adminTabPane.reportingSection.projectOutputReportingGroup == "Half-yearly (First period ends 31 December 2018)"
+        adminTabPane.reportingSection.saveReportingGroups()
+
+        then:
+        waitFor 60, { hasBeenReloaded() }
+        at ManagementUnitPage
+
+        when:
+        displayReportsTab()
+        reportsTabPane.showAllReports()
+
+        then:
+        waitFor {
+            reportsTabPane.reports.size() == 60
         }
+    }
 
-        then:
-        waitFor{showDownloadDetailsIcon().isDisplayed()}
 
-//        when:
-//        interact {
-//            showDownloadDetailsIcon().click()
-//        }
-//
-//        then:
-//        waitFor{muReportDownloadLink().isDisplayed()}
-
-    }*/
 }

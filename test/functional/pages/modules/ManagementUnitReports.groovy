@@ -1,6 +1,7 @@
 package pages.modules
 
 import geb.Module
+import geb.module.Checkbox
 import org.openqa.selenium.StaleElementReferenceException
 
 class ManagementUnitReports extends Module {
@@ -25,6 +26,10 @@ class ManagementUnitReports extends Module {
     }
     def submitDeclaration() {
         $('#declaration [data-bind*="submitReport"]').click()
+    }
+
+    def showAllReports() {
+        $('.hide-future-reports').module(Checkbox).check()
     }
 
 
