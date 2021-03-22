@@ -90,8 +90,9 @@ class AddActivitySpec extends StubbedCasSpec {
 
         then: "the unsaved edits are present"
         activityDetails.description == "Checking the local storage"
-       waitFor 10, {
-           activityDetails.submit.click()
+
+       waitFor 20, {
+           submit()
        }
         and:
         waitFor 10, {
