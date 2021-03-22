@@ -53,7 +53,10 @@
                 Project Status:
                 <span style="text-transform:uppercase;" data-bind="text:status" class="badge badge-info" style="font-size: 13px;"></span>
             </span>
-
+            <span data-bind="if: status().toLowerCase() == 'terminated'">
+                Project Status:
+                <span style="text-transform:uppercase;" data-bind="text:status" class="badge badge-danger" style="font-size: 13px;"></span>
+            </span>
         </div>
         <div class="span3" data-bind="visible:grantId" style="margin-bottom: 0">
             Grant Id:
@@ -69,6 +72,14 @@
         </div>
 
     </div>
+    <g:if test="${fc.userIsAlaOrFcAdmin()}">
+        <span data-bind="if: status().toLowerCase() == 'terminated'">
+            <div class="row-fluid">
+                <div class="terminationReasonSection"><strong>Termination Reason: </strong><span class="terminationReason" data-bind="text: terminationReason"></span></div>
+            </div>
+        </span>
+    </g:if>
+    <strong>Project Description</strong>
     <div data-bind="visible:description()">
         <p class="well well-small more" data-bind="text:description"></p>
     </div>

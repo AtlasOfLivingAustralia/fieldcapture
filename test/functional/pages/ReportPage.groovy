@@ -4,6 +4,7 @@ import geb.Page
 import geb.module.Checkbox
 import geb.navigator.Navigator
 import pages.modules.ReportContentModule
+import pages.modules.TimeoutModal
 
 class ReportPage extends Page {
 
@@ -15,6 +16,9 @@ class ReportPage extends Page {
         reportContent {module ReportContentModule }
         saveButton { $('#nav-buttons button[data-bind$=save') }
         exitButton { $('#nav-buttons button[data-bind*=exitReport') }
+        timeoutModal(required: false) { $('div.bootbox.modal').module TimeoutModal }
+        unsavedEdits(required: false) { $('div.bootbox') }
+        editAnyway (required: false) { $(".alert .btn")}
     }
 
     def field(String name) {

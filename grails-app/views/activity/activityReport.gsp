@@ -86,7 +86,7 @@
 </div>
 
 <g:render template="/shared/timeoutMessage"
-          model="${[url: createLink(action: 'enterData', id: activity.activityId, params: [returnTo: returnTo])]}"/>
+          model="${[url:grailsApplication.config.security.cas.loginUrl+'?service='+ createLink(controller: 'project', action: 'editReport', absolute: true, id: activity.projectId, params: [reportId: report.reportId])]}"/>
 
 <g:render template="/shared/documentTemplate"></g:render>
 
@@ -101,7 +101,19 @@
     $(function () {
         var returnTo = "${returnTo}";
         var activity = JSON.parse('${(activity as JSON).toString().encodeAsJavaScript()}');
-        var reportSite = ${reportSite?.encodeAsJSON() ?: '{}' };
+        var reportSite;
+        var recoveryDataStorageKey = "activity-${activity.activityId}";
+
+        if(amplify.store(recoveryDataStorageKey)){
+            let localStorage = amplify.store(recoveryDataStorageKey);
+            let restoredSite = $.parseJSON(localStorage);
+            reportSite = restoredSite.site
+        }else{
+            reportSite = ${reportSite?.encodeAsJSON() ?: '{}' };
+        }
+
+
+        console.log(reportSite.features);
         var projectArea = ${projectArea?.encodeAsJSON() ?: '{}'};
 
         var reportId = '${report.reportId}';
@@ -223,7 +235,7 @@
             projectId: projectId,
             disablePrepop: ${activity.progress == au.org.ala.merit.ActivityService.PROGRESS_FINISHED},
             speciesConfig:<fc:modelAsJavascript model="${speciesConfig}"/>,
-            recoveryDataStorageKey: 'activity-' + activityId
+            recoveryDataStorageKey: recoveryDataStorageKey
         };
         outputModelConfig = _.extend(fcConfig, outputModelConfig);
 
@@ -235,11 +247,21 @@
 
         var blockId = "${blockId}";
         var output = <fc:modelAsJavascript model="${output}"/>;
+
         var config = ${fc.modelAsJavascript(model:metaModel.outputConfig?.find{it.outputName == outputName}, default:'{}')};
+
+        if(amplify.store(recoveryDataStorageKey)){
+            let localSavedActivity = amplify.store(recoveryDataStorageKey);
+            let restored = $.parseJSON(localSavedActivity);
+            restored.activity.outputs.forEach(function (storedOutput) {
+                    if(storedOutput.name === output.name){
+                        output = storedOutput;
+                    }
+                })
+            }
 
         config.model = ${fc.modelAsJavascript(model:model)};
         config.featureCollection = context.featureCollection;
-
         config = _.extend({}, outputModelConfig, config);
 
         var outputViewModel = ecodata.forms.initialiseOutputViewModel(blockId, config.model.dataModel, output, config, context);

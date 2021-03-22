@@ -48,6 +48,7 @@ class EditActivityPage extends ActivityPage {
 
     // Pressing submit actually does an ajax call then changes the page using JavaScript.
     def submit() {
+        waitFor { activityDetails.submitButton.displayed}
         activityDetails.submitButton.click()
     }
 

@@ -143,7 +143,7 @@ function MERIPlan(project, projectService, config) {
                         referenceDocument:viewModel.referenceDocument(),
                         reason: viewModel.reason(),
                         dateApproved: viewModel.dateApproved()
-                    }, self.internalOrderId);
+                    }, self.internalOrderId());
                 }
             };
             ko.applyBindings(planApprovalViewModel, $planApprovalModal[0]);
@@ -201,7 +201,7 @@ function MERIPlan(project, projectService, config) {
 
     self.meriGrantManagerActionsTemplate = ko.pureComputed(function () {
         var template = 'editablePlanTmpl';
-        if (projectService.isCompleted()) {
+        if (projectService.isCompletedOrTerminated()) {
             template = projectService.isUnlockedForDataCorrection() ? 'unlockedProjectTmpl' : 'completedProjectTmpl';
         } else {
             if (projectService.isApproved()) {
@@ -520,11 +520,15 @@ function ReadOnlyMeriPlan(project, projectService, config) {
             text: 'This plan is not yet approved',
             badgeClass: 'badge-warning'
         };
-        if (projectService.isCompleted()) {
+        if (projectService.isCompletedOrTerminated()) {
             if (projectService.isUnlockedForDataCorrection()) {
                 result = {text: 'The plan has been unlocked for data correction', badgeClass: 'badge-warning'};
             } else {
-                result = {text: 'This project is complete', badgeClass: 'badge-info'};
+                if (projectService.isTerminated()){
+                    result = {text: 'This project is ' + project.status.toLowerCase(), badgeClass: 'badge-danger'};
+                }else{
+                    result = {text: 'This project is ' + project.status.toLowerCase(), badgeClass: 'badge-info'};
+                }
             }
         } else {
             if (projectService.isApproved()) {
@@ -606,6 +610,7 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
     self.events = ko.observableArray(_.map(row, function (obj, i) {
         return new EventsRowViewModel(obj);
     }));
+
     self.assets = ko.observableArray(_.map(o.assets || [{}], function(asset) {
         return new AssetViewModel(asset);
     }));

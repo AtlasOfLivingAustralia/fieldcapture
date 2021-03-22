@@ -315,5 +315,61 @@ class ProjectIndexSpec extends StubbedCasSpec {
         waitFor { admin.projectSettingsTab.click() }
         !admin.projectSettings.projectState.@disabled
     }
+
+    def "Project Status is Terminated"() {
+        setup:
+        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+
+        when:
+        to ProjectIndex, 'project_terminated'
+
+        then:
+        at ProjectIndex
+
+        when:
+        overviewTab.click()
+
+        then:
+        overview.projectStatus[1].text() == 'TERMINATED'
+        overview.terminationReason.text() == "Termination Reason"
+
+    }
+    def "Project Termination"(){
+        setup:
+        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+
+        when:
+        to ProjectIndex, "project_active"
+
+        then:
+        waitFor { at ProjectIndex }
+
+        then:
+        at ProjectIndex
+
+        when:
+        adminTab.click()
+
+        then:
+        waitFor { admin.projectSettingsTab.click() }
+
+        when:
+        admin.projectSettings.projectState.value("Terminated")
+        admin.projectSettings.terminationReason = "Termination Reason Test"
+
+        then:
+        admin.projectSettings.saveChanges()
+
+        and:
+        waitFor 30,{
+            admin.projectSettings.projectState.value() == "terminated"
+            admin.projectSettings.terminationReason == "Termination Reason Test"
+        }
+
+
+
+
+    }
+
 }
 

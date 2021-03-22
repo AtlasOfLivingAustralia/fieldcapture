@@ -3,7 +3,9 @@ package au.org.ala.fieldcapture
 import pages.MeriPlanPDFPage
 import pages.ProjectIndex
 import pages.RlpProjectPage
+import spock.lang.Stepwise
 
+@Stepwise
 class MeriPlanSpec extends StubbedCasSpec {
 
     def setupSpec() {
@@ -258,7 +260,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         setup:
         logout(browser)
         String projectId = 'project_application'
-        login([userId: '2', role: "ROLE_FC_OFFICER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+        login([userId: '2', role: "ROLE_FC_OFFICER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_OFFICER'], browser)
 
         when:
         to ProjectIndex, projectId
@@ -280,7 +282,7 @@ class MeriPlanSpec extends StubbedCasSpec {
 
         setup:
         logout(browser)
-        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'FC_ADMIN'], browser)
 
         when:
         to ProjectIndex, 'project_application'
@@ -377,7 +379,7 @@ class MeriPlanSpec extends StubbedCasSpec {
 
         when:
         logout(browser)
-        login([userId: '2', role: "ROLE_FC_OFFICER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+        login([userId: '2', role: "ROLE_FC_OFFICER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_OFFICER'], browser)
 
         to ProjectIndex, 'project_application'
 
@@ -422,7 +424,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         overviewTab.click()
 
         then:
-        overview.projectStatus.text() == 'ACTIVE'
+        overview.projectStatus[1].text() == 'ACTIVE'
     }
 
     def "Approve MERI plan of a project with the active status and internal order Id"() {
@@ -475,6 +477,64 @@ class MeriPlanSpec extends StubbedCasSpec {
         overviewTab.click()
 
         then:
-        overview.projectStatus.text() == 'ACTIVE'
+        overview.projectStatus[1].text() == 'ACTIVE'
+    }
+
+    def "A grant manager must supply the internal order number to be able to approve the MERI plan of a project with the application status"() {
+
+        setup:
+        // Refresh the data set, the rest of the spec relies on progressively modifying the data so the dataset is only loaded once
+        useDataSet('dataset2')
+        login([userId: '2', role: "ROLE_FC_OFFICER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_OFFICER'], browser)
+
+        when:
+        to ProjectIndex, 'project_application'
+        waitFor { at ProjectIndex }
+        adminTab.click()
+        def meriplan = waitFor { admin.openMeriPlan() }
+        waitFor {
+            meriplan.approveButton.displayed
+        }
+
+        then:
+        meriplan.approveButton.@disabled
+        meriplan.internalOrderNumber.displayed
+
+        when:
+        meriplan.internalOrderNumber = "TBA"
+
+        then:
+        waitFor { !meriplan.approveButton.@disabled }
+
+        when:
+        waitFor { meriplan.approveButton.click() }
+
+        then:
+        waitFor {
+            meriplan.approvePlanDialog.changeOrderNumbers.displayed
+        }
+
+        when:
+        meriplan.approvePlanDialog.changeOrderNumbers = 'test'
+        meriplan.approvePlanDialog.comment = 'test'
+
+        meriplan.approvePlanDialog.approvePlanButton.click()
+
+        then:
+        waitFor{hasBeenReloaded()}
+        at ProjectIndex
+
+        when:
+        adminTab.click()
+
+        then:
+        def updatedMeriPlan = waitFor { admin.openMeriPlan() }
+        updatedMeriPlan.modifyApprovedPlanButton.displayed
+
+        when:
+        overviewTab.click()
+
+        then:
+        overview.projectStatus[1].text() == 'ACTIVE'
     }
 }
