@@ -143,11 +143,13 @@ class FCTagLib {
             def content = {
                 mb.input(inputAttrs) {
                 }
-                String addOnClass = attrs.bs4 ? "input-group-append" : "add-on"
+                String addOnClass = attrs.bs4 ? "input-group-append" : "input-group-text add-on"
                 String buttonClass = attrs.bs4 ? "fa fa-th input-group-text" : "fa fa-th "
-                mb.span(class: "${addOnClass} open-datepicker") {
-                    mb.i(class: buttonClass) {
-                        mkp.yieldUnescaped("&nbsp;")
+                mb.div(class: "input-group-append") {
+                    mb.span(class: "${addOnClass} open-datepicker", id: "basic-addon2") {
+                        mb.i(class: buttonClass) {
+                            mkp.yieldUnescaped("&nbsp;")
+                        }
                     }
                 }
             }

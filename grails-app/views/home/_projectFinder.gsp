@@ -13,7 +13,7 @@
 <g:elseif test="${results?.hits?.total?:0 > 0}">
 
     <div class="row">
-        <div id="facetsCol" class="card card-body bg-light" style="display:none;">
+        <div id="facetsCol" class="bg-white" style="display:none;">
             <g:set var="reqParams" value="query,sort,order,max,fq,fromDate,toDate"/>
             <div class="visible-phone pull-right" style="margin-top: 5px;">
                 <a href="#" id="toggleFacetDisplay" rel="facetsContent" role="button" class="btn btn-sm btn-inverse" style="color:white;">
@@ -22,8 +22,21 @@
                 </a>
             </div>
             <h3 style="margin-bottom:0;">Filter results</h3>
-            <button class="btn btn-sm facetSearch"><i class="icon-filter"></i>Refine</button>
-            <button class="btn btn-sm clearFacet"><i class="icon-remove-sign"></i>Clear all</button>
+            <div class="row">
+                <div id="facetFilter">
+                    <div class="col-sm-4" >
+                        <button class="btn btn-sm facetSearch"><i class="fa fa-filter"></i> Refine</button>
+                    </div>
+                </div>
+                <div id="facetClear">
+                    <div class="col-sm-4">
+                        <button class="btn btn-sm clearFacet"><i class="fa fa-remove"></i> Clear all</button>
+
+                    </div>
+                </div>
+
+            </div>
+
             <g:if test="${params.fq}">
                 <div class="currentFilters">
                     <h4>Current filters</h4>
@@ -35,7 +48,7 @@
                             <g:set var="newUrl"><fc:formatParams params="${params}" requiredParams="${reqParams}" excludeParam="${f}"/></g:set>
                             <li><g:message code="label.${fqBits[0]}" default="${fqBits[0]}"/>: <g:message code="label.${fqBits[1]}" default="${fqBits[1]?.capitalize()}"/>
                                 <a href="${newUrl?:"?"}" class="btn btn-inverse btn-mini tooltips" title="remove filter" aria-label="remove filter">
-                                    <i class="icon-white icon-remove"></i></a>
+                                    <i class="fa fa-remove"></i></a>
                             </li>
                         </g:each>
                     </ul>
@@ -45,14 +58,23 @@
                 <g:set var="baseUrl"><fc:formatParams params="${params}" requiredParams="${reqParams}"/></g:set>
                 <g:set var="fqLink" value="${g.createLink(controller: 'home', action: 'projectExplorer') + (baseUrl?:"?")}"/>
             <!-- fqLink = ${fqLink} -->
-                <div><h4 id="facet-dates-header" style="display:inline-block">Project Dates <fc:iconHelp helpTextCode="project.dates.help"/> </h4><a class="accordian-toggle pointer" data-toggle="collapse" data-target="#facet-dates"><i style="float:right; margin-top:10px;" class="fa fa-plus"></i></a></div>
-                <div id="facet-dates" data-name="projectDates" class="collapse validationEngineContainer">
-                    <div><select style="width:100%;" data-bind="options:ranges, optionsText:'display', value:selectedRange"></select></div>
-                    <div><div style="width:4em; display:inline-block;">From:</div> <div class="input-append"><fc:datePicker targetField="fromDate.date" class="input-small" name="fromDate" data-validation-engine="validate[date]"/></div></div>
-                    <div><div style="width:4em; display:inline-block;">To:</div> <div class="input-append"><fc:datePicker targetField="toDate.date" class="input-append input-small" name="toDate" data-validation-engine="validate[date,future[fromDate]]"/></div></div>
-                    <div><button data-bind="click:clearDates, enable:fromDate() || toDate()" class="btn" style="margin-left:4em;"><i class="fa fa-remove"></i> Clear dates</button></div>
+            <div class="accordion">
+                <div class="card" style="border: 0px solid white; padding-left: 0px; padding-bottom: 0px; margin-bottom: 0px">
+                    <div class="card-header collapsed" data-toggle="collapse" href="#facet-dates" id="projectDates">
+                        <a><h4>Project Dates <fc:iconHelp helpTextCode="project.dates.help" container="body"/></h4></a>
+                    </div>
 
+                        <div id="facet-dates" data-name="projectDates" class="collapse validationEngineContainer">
+                            <div class="card-body" style="padding: 4px 0px 6px;">
+                                <select style="margin-bottom: 10px" data-bind="options:ranges, optionsText:'display', value:selectedRange"></select>
+                                <div class="input-group" style="margin-bottom: 10px"><label for="fromDate" style="width:7em;">From:</label><fc:datePicker targetField="fromDate.date" class="input-small" name="fromDate" data-validation-engine="validate[date]"/></div>
+                                <div class="input-group" style="margin-bottom: 10px"><label for="fromDate" style="width:7em;">To:</label><fc:datePicker targetField="toDate.date" class="input-append input-small" name="toDate" data-validation-engine="validate[date,future[fromDate]]"/></div>
+                                <div style="margin-left: 33px;"><button data-bind="click:clearDates, enable:fromDate() || toDate()" class="btn" style="margin-left:4em;"><i class="fa fa-remove"></i> Clear dates</button></div>
+
+            </div>
+                        </div>
                 </div>
+            </div>
                 <div id="facet-list">
                     <facet-filter params="'facetsList' : facetsList, results:  results, fqLink: fqLink, baseUrl: baseUrl, projectExplorerUrl: projectExplorerUrl"></facet-filter>
                 </div>
@@ -65,10 +87,10 @@
                         <a class="text-left text-uppercase">Map</a>
                     </div>
 
-                    <div id="accordionMapView" class="collapse show" aria-labelledby="mapHeading" data-parent="#project-display-options">
+                    <div id="accordionMapView" class="collapseItems show" aria-labelledby="mapHeading" data-parent="#project-display-options">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-sm-4">
+                                <div class="col-sm-4" style="padding-left: 0px; margin-left: -10px;">
                                     <span class="facet-holder"></span>
                                 </div>
 
@@ -84,10 +106,10 @@
                         <div class="card-header collapsed" id="projectHeading" href="#projectsView" data-toggle="collapse">
                             <a class="text-left text-uppercase">Projects</a>
                         </div>
-                    <div id="projectsView" class="collapse" aria-labelledby="projectHeading" data-parent="#project-display-options">
+                    <div id="projectsView" class="collapse collapseItems" aria-labelledby="projectHeading" data-parent="#project-display-options">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-sm-4">
+                                <div class="col-sm-4" style="padding-left: 0px; margin-left: -10px;">
                                     <span class="facet-holder"></span>
                                 </div>
                                 <div class="col-sm-8">
@@ -163,10 +185,10 @@
                 <div class="card-header collapsed" id="dashboardHeading" href="#reportView" data-toggle="collapse">
                     <a class="text-left text-uppercase">Dashboard</a>
                 </div>
-                    <div id="reportView" class="collapse" aria-labelledby="dashboardHeading" data-parent="#project-display-options">
+                    <div id="reportView" class="collapse collapseItems" aria-labelledby="dashboardHeading" data-parent="#project-display-options">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-sm-4">
+                                <div class="col-sm-4" style="padding-left: 0px; margin-left: -10px;">
                                     <span class="facet-holder" style="display:none;" data-hidden="true"></span>
                                     <div style="overflow-x:scroll">
                                         <div class="row" style="margin-top:5px;">
@@ -207,10 +229,10 @@
                         <div class="card-header collapsed" id="downloadHeading" href="#downloadView" data-toggle="collapse">
                             <a class="text-left text-uppercase">Download</a>
                         </div>
-                        <div id="downloadView" class="collapse" aria-labelledby="downloadHeading" data-parent="#project-display-options">
+                        <div id="downloadView" class="collapse collapseItems" aria-labelledby="downloadHeading" data-parent="#project-display-options">
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-4" style="padding-left: 0px; margin-left: -10px;">
                                         <span class="facet-holder"></span>
                                     </div>
                                     <div class="col-sm-8">
@@ -268,34 +290,185 @@
 </g:else>
 </div>
 
-%{--<asset:script>--}%
+<asset:script>
 
-%{--    var sectionMapping = {--}%
-%{--        projects:'#projectsView',--}%
-%{--        map:'#accordionMapView',--}%
-%{--        dashboard:'#reportView',--}%
-%{--        download:'#downloadView'--}%
-%{--    };--}%
+    var sectionMapping = {
+        projects:'#projectsView',
+        map:'#accordionMapView',
+        dashboard:'#reportView',
+        download:'#downloadView'
+    };
 
-%{--    var reportMapping = {--}%
-%{--        activities:'dashboard',--}%
-%{--        reef2050:'reef2050PlanActionSelection'--}%
-%{--    };--}%
-%{--    <g:if test="${fc.userIsAlaOrFcAdmin()}">--}%
-%{--        reportMapping['announcements']='announcements';--}%
-%{--        reportMapping['targets']='outputTargets';--}%
-%{--    </g:if>--}%
-%{--    var selectedSection = sectionMapping['${params.section?:''}'];--}%
-%{--    var selectedReport = reportMapping['${params.subsection?:''}'];--}%
+    var reportMapping = {
+        activities:'dashboard',
+        reef2050:'reef2050PlanActionSelection'
+    };
+    <g:if test="${fc.userIsAlaOrFcAdmin()}">
+        reportMapping['announcements']='announcements';
+        reportMapping['targets']='outputTargets';
+    </g:if>
+    var selectedSection = sectionMapping['${params.section?:''}'];
+    var selectedReport = reportMapping['${params.subsection?:''}'];
 
-%{--    var projectListIds = [], facetList = [], mapDataHasChanged = false, mapBounds, projectSites; // globals--}%
-%{--    var facetModelViewArgs = {--}%
-%{--        facetsList : ${(facetsList as grails.converters.JSON).toString()},--}%
-%{--        results: ${(results as grails.converters.JSON).toString()},--}%
-%{--        fqLink: "${fqLink}",--}%
-%{--        baseUrl: "${baseUrl}",--}%
-%{--        projectExplorerUrl: "${g.createLink(controller:'home', action:'projectExplorer')}"--}%
-%{--    };--}%
+    var projectListIds = [], facetList = [], mapDataHasChanged = false, mapBounds, projectSites; // globals
+    var facetModelViewArgs = {
+        facetsList : ${(facetsList as grails.converters.JSON).toString()},
+        results: ${(results as grails.converters.JSON).toString()},
+        fqLink: "${fqLink}",
+        baseUrl: "${baseUrl}",
+        projectExplorerUrl: "${g.createLink(controller:'home', action:'projectExplorer')}"
+    };
+
+    $(function(){
+        var VIEW_STATE_KEY = 'homepage-tab-state';
+        if(amplify.store(VIEW_STATE_KEY)){
+        var storedTab = amplify.store(VIEW_STATE_KEY)
+        }
+        var initialisedReport = false, initialisedMap = false, initialisedProjects = false;
+        var initialiseContentSection = function(section){
+            if (section === '#accordionMapView' && !initialisedMap) {
+%{--              //  generateMap(facetList);--}%
+%{--                initialisedMap = true;--}%
+
+
+
+console.log("It initialisation Map")
+   }
+   else if (section === '#projectsView' && !initialisedProjects) {
+%{--               // updateProjectTable();--}%
+%{--                initialisedProjects = true;--}%
+    console.log("It initialisation Project")
+        }
+        else if (section === '#reportView' && !initialisedReport) {
+%{--                initialisedReport = true;--}%
+%{--                var reportType = selectedReport || amplify.store('report-type-state');--}%
+%{--                var $reportSelector = $('#dashboardType');--}%
+%{--                if (reportType) {--}%
+%{--                    $reportSelector.val(reportType);--}%
+%{--                }--}%
+%{--                $reportSelector.change(function() {--}%
+%{--                    var reportType = $reportSelector.val();--}%
+%{--                    amplify.store('report-type-state', reportType);--}%
+%{--                 //   loadReport(reportType);--}%
+%{--                }).trigger('change');--}%
+    console.log("It initialisation Report")
+        }
+
+    };
+
+var urlWithoutDates = '<fc:formatParams params="${params}" requiredParams="sort,order,max,fq"/>';
+        var fromDate = '${params.fromDate?:''}';
+        var toDate = '${params.toDate?:''}';
+        var DatePickerModel = function() {
+            var formatString = 'YYYY-MM-DD';
+            var self = this;
+            var date = moment('2011-07-01T00:00:00+10:00');
+            var end = moment('2021-01-01T00:00:00+11:00');
+
+            self.ranges = [{display:'select date range', from:undefined, to:undefined}];
+            while (date.isBefore(end)) {
+                var rangeEnd = moment(date).add(6, 'months');
+                self.ranges.push({from:date.format(formatString), to:rangeEnd.format(formatString), display:date.format("MMM YYYY")+' - '+rangeEnd.format("MMM YYYY")});
+
+                date = rangeEnd;
+            }
+            self.selectedRange = ko.observable();
+            self.fromDate = ko.observable().extend({simpleDate:false});
+            if (fromDate) {
+                self.fromDate(moment(fromDate).format());
+            }
+            self.toDate = ko.observable().extend({simpleDate:false});
+            if (toDate) {
+                self.toDate(moment(toDate).format());
+            }
+
+            self.clearDates = function() {
+                if (!urlWithoutDates) {
+                    urlWithoutDates = '?';
+                }
+                document.location.href = urlWithoutDates;
+            };
+
+            var validateAndReload = function(newFromDate, newToDate) {
+
+                var parsedNewFromDate = moment(newFromDate);
+                var parsedNewToDate = moment(newToDate);
+                var parsedFromDate = moment(fromDate);
+                var parsedToDate = moment(toDate);
+
+                if (parsedFromDate.isSame(parsedNewFromDate) && parsedToDate.isSame(parsedNewToDate)) {
+                   return;
+                }
+
+                if ($('#facet-dates').validationEngine('validate')) {
+                    reloadWithDates(newFromDate, newToDate);
+                }
+            }
+
+            var reloadWithDates = function(newFromDate, newToDate) {
+                var parsedNewFromDate = moment(newFromDate);
+                var parsedNewToDate = moment(newToDate);
+                if (newFromDate && parsedNewFromDate.isValid()) {
+                    urlWithoutDates += urlWithoutDates?'&':'?';
+                    urlWithoutDates += 'fromDate='+moment(newFromDate).format(formatString);
+                }
+                if (newToDate && parsedNewToDate.isValid()) {
+                    urlWithoutDates += urlWithoutDates?'&':'?';
+                    urlWithoutDates += 'toDate='+moment(newToDate).format(formatString);
+                }
+                document.location.href = urlWithoutDates;
+            }
+
+            self.fromDate.subscribe(function(a, b) {
+                validateAndReload(self.fromDate(), self.toDate());
+            });
+            self.toDate.subscribe(function(toDate) {
+                validateAndReload(self.fromDate(), self.toDate());
+            });
+
+            self.selectedRange.subscribe(function(value) {
+
+                if (value.from) {
+                    reloadWithDates(value.from, value.to);
+                }
+
+            });
+        };
+        ko.applyBindings(new DatePickerModel(), document.getElementById('facet-dates'));
+        function FacetFilterViewModel (params) {
+            this.facetsList = params.facetsList;
+            this.results = params.results;
+            this.fqLink = params.fqLink;
+            this.baseUrl = params.baseUrl;
+            this.projectExplorerUrl = params.projectExplorerUrl;
+        }
+        ko.applyBindings(new FacetFilterViewModel(facetModelViewArgs), document.getElementById('facet-list'));
+        $('#facet-dates').validationEngine('attach', {scroll:false});
+
+        $('.helphover').popover({animation: true, trigger:'hover', container:'body'});
+
+    // retain accordion state for future re-visits
+
+    $('#project-display-options').on("show.bs.collapse", function(e){
+        var $target = $(e.target)
+        if($target.hasClass('collapseItems')){
+            var targetId = e.target.id
+            var section = '#'+targetId
+            amplify.store(VIEW_STATE_KEY, section);
+            initialiseContentSection(section);
+                // Because the facets use accordion and are inside the main accordion view we need to filter them out.
+            $('#facetsCol').appendTo($(section).find('.facet-holder'));
+            $('#facetsCol').show();
+        }
+    });
+});
+
+
+
+
+
+
+
 %{--    $(function () {--}%
 %{--        var delay = (function(){--}%
 %{--            var timer = 0;--}%
@@ -854,4 +1027,4 @@
 %{--            $('#projectTable tbody').append($tr);--}%
 %{--        });--}%
 %{--    }--}%
-%{--</asset:script>--}%
+</asset:script>
