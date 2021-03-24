@@ -1,6 +1,6 @@
 <table class="table">
     <thead>
-        <tr class="header required">
+        <tr>
             <th class="required">${title ?: "Related Projects"}</th>
         </tr>
     </thead>

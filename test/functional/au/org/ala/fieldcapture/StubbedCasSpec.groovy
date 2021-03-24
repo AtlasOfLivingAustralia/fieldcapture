@@ -2,6 +2,7 @@ package au.org.ala.fieldcapture
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer
+import com.github.tomakehurst.wiremock.http.HttpHeaders
 import com.icegreen.greenmail.junit.GreenMailRule
 import com.icegreen.greenmail.util.ServerSetup
 import com.icegreen.greenmail.util.ServerSetupTest
@@ -135,12 +136,21 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
     </cas:authenticationSuccess>
 </cas:serviceResponse>
         """
+
         stubFor(get(urlPathEqualTo("/cas/login"))
                 .willReturn(aResponse()
                 .withStatus(302)
                 .withHeader("Location", "{{request.requestLine.query.service}}?ticket=aticket")
                 .withHeader("Set-Cookie", "ALA-Auth=\"${email}\"; Domain=ala.org.au; Path=/; HttpOnly")
                 .withTransformers("response-template")))
+
+        stubFor(get(urlMatching("\\/cas\\/login\\?service\\=https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\/fieldcapture\\/project\\/editReport\\/1\\?reportId\\=[-a-zA-Z0-9@:%._\\+~#=]*"))
+                .willReturn(aResponse()
+                        .withStatus(302)
+                        .withHeader("location", "{{request.requestLine.query.service}}&ticket=aticket")
+                        .withHeader("Set-Cookie", "ALA-Auth=\"${email}\"; Domain=ala.org.au; Path=/; HttpOnly")
+                        .withTransformers("response-template")))
+
         
         stubFor(get(urlPathEqualTo("/cas/p3/serviceValidate"))
             .willReturn(aResponse()

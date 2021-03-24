@@ -115,7 +115,7 @@ var Master = function (activityId, config) {
     self.modelAsJS = function(valid) {
         var activityData, outputs = [];
         $.each(self.subscribers, function(i, obj) {
-            if (obj.isDirty()) {
+            if (obj.isDirty() || self.dirtyFlag.isDirty()) {
                 if (obj.model === 'activityModel') {
                     activityData = obj.get();
                 }
@@ -239,6 +239,7 @@ var Master = function (activityId, config) {
                     self.dirtyFlag.reset();
                     blockUIWithMessage("Activity data saved.");
                     amplify.store(activityStorageKey, null);
+                    self.dirtyFlag.isDirty(false);
 
                     if (validate && !valid) {
                         $.unblockUI();
@@ -290,6 +291,7 @@ var Master = function (activityId, config) {
 
     if (amplify.store(activityStorageKey)) {
         bootbox.alert("Unsaved data has been found for this form.  Please press 'Save' to keep this data or 'Cancel' to discard it");
+        self.dirtyFlag.isDirty(true);
     }
 };
 

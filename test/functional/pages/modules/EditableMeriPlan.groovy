@@ -125,7 +125,7 @@ class EditableMeriPlan extends Module {
         primaryPriority(required: false) { $('select[data-bind*="primaryOutcome.asset"]') }
         primaryPriorityUnstyled(required: false) {$('.priority .unstyled')}
 
-        assetType(required: false) {$('.asset-category input')}
+        assetType(required: false) {$('.asset-category select')}
         asset(required: false) {$('.asset-detail select[data-bind*="description"]')}
         otherOutcomeColumn1(required: false) {$('.column-1 ul.unstyled li')}
         otherOutcomeColumn2(required: false) {$('.column-2 ul.unstyled li')}

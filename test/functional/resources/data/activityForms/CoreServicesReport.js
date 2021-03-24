@@ -5,11 +5,11 @@ var coreServicesReport = {
     "category": "RLP Reports",
     "createdUserId": "<anon>",
     "dateCreated": ISODate("2019-06-25T06:36:14Z"),
-    "formVersion": 1,
+    "formVersion": NumberInt(1),
     "gmsId": null,
     "lastUpdated": ISODate("2019-06-25T06:36:14Z"),
     "lastUpdatedUserId": "<anon>",
-    "minOptionalSectionsCompleted": 1,
+    "minOptionalSectionsCompleted": NumberInt(1),
     "name": "RLP Core Services report",
     "publicationStatus": "published",
     "sections": [

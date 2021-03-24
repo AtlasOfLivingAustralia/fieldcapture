@@ -424,7 +424,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         overviewTab.click()
 
         then:
-        overview.projectStatus.text() == 'ACTIVE'
+        overview.projectStatus[1].text() == 'ACTIVE'
     }
 
     def "Approve MERI plan of a project with the active status and internal order Id"() {
@@ -477,7 +477,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         overviewTab.click()
 
         then:
-        overview.projectStatus.text() == 'ACTIVE'
+        overview.projectStatus[1].text() == 'ACTIVE'
     }
 
     def "A grant manager must supply the internal order number to be able to approve the MERI plan of a project with the application status"() {
@@ -535,6 +535,6 @@ class MeriPlanSpec extends StubbedCasSpec {
         overviewTab.click()
 
         then:
-        overview.projectStatus.text() == 'ACTIVE'
+        overview.projectStatus[1].text() == 'ACTIVE'
     }
 }

@@ -70,4 +70,16 @@ class ManagementUnitPage extends ReloadablePage {
 
     }
 
+    void displayAdminReportConfig() {
+        adminTab.click()
+        waitFor { adminTabPane.displayed }
+        adminTabPane.viewReportingSection()
+    }
+
+    void displayReportsTab() {
+        reportsTab.click()
+        waitFor { reportsTabPane.displayed }
+        reportsTabPane
+    }
+
 }

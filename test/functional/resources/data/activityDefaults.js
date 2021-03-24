@@ -14,7 +14,7 @@ var activityDefaults =   {
             "status" : "active",
             "publicationStatus":"published",
             "type" : "Managed for invasive weeds",
-            "formVersion" : 1,
+            "formVersion" : NumberInt(1),
             "projectStage" : "",
             "siteId" : "",
             "mainTheme" : "",

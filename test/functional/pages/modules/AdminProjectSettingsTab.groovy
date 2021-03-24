@@ -8,6 +8,8 @@ class AdminProjectSettingsTab extends Module {
         projectState {$('#projectState')}
         regenerateReportsButton {$('button[data-bind*=regenerateStageReports]')}
         saveChangesButton {$('button[data-bind*=saveSettings]')}
+        terminationReason (required: false) { $("#terminationReason") }
+
     }
 
     def regenerateReports() {
