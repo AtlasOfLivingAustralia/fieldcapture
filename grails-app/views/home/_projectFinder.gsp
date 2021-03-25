@@ -324,15 +324,15 @@
         var initialisedReport = false, initialisedMap = false, initialisedProjects = false;
         var initialiseContentSection = function(section){
             if (section === '#accordionMapView' && !initialisedMap) {
-%{--              //  generateMap(facetList);--}%
-%{--                initialisedMap = true;--}%
-    }
-   else if (section === '#projectsView' && !initialisedProjects) {
+                generateMap(facetList);
+                initialisedMap = true;
+            }
+            else if (section === '#projectsView' && !initialisedProjects) {
 %{--               // updateProjectTable();--}%
 %{--                initialisedProjects = true;--}%
-    console.log("It initialisation Project")
-        }
-        else if (section === '#reportView' && !initialisedReport) {
+                console.log("It initialisation Project")
+            }
+            else if (section === '#reportView' && !initialisedReport) {
 %{--                initialisedReport = true;--}%
 %{--                var reportType = selectedReport || amplify.store('report-type-state');--}%
 %{--                var $reportSelector = $('#dashboardType');--}%
@@ -344,10 +344,9 @@
 %{--                    amplify.store('report-type-state', reportType);--}%
 %{--                 //   loadReport(reportType);--}%
 %{--                }).trigger('change');--}%
-    console.log("It initialisation Report")
-        }
-
-    };
+                console.log("It initialisation Report")
+            }
+        };
 
 var urlWithoutDates = '<fc:formatParams params="${params}" requiredParams="sort,order,max,fq"/>';
         var fromDate = '${params.fromDate?:''}';
