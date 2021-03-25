@@ -48,7 +48,7 @@
                             <g:set var="newUrl"><fc:formatParams params="${params}" requiredParams="${reqParams}" excludeParam="${f}"/></g:set>
                             <li><g:message code="label.${fqBits[0]}" default="${fqBits[0]}"/>: <g:message code="label.${fqBits[1]}" default="${fqBits[1]?.capitalize()}"/>
                                 <a href="${newUrl?:"?"}" class="btn btn-inverse btn-mini tooltips" title="remove filter" aria-label="remove filter">
-                                    <i class="fa fa-remove"></i></a>
+                                    <i class="text-white fa fa-remove"></i></a>
                             </li>
                         </g:each>
                     </ul>
@@ -64,7 +64,7 @@
                         <a><h4>Project Dates <fc:iconHelp helpTextCode="project.dates.help" container="body"/></h4></a>
                     </div>
 
-                        <div id="facet-dates" data-name="projectDates" class="collapse validationEngineContainer">
+                        <div id="facet-dates" data-name="projectDates" class="collapse facetItems validationEngineContainer">
                             <div class="card-body" style="padding: 4px 0px 6px;">
                                 <select style="margin-bottom: 10px" data-bind="options:ranges, optionsText:'display', value:selectedRange"></select>
                                 <div class="input-group" style="margin-bottom: 10px"><label for="fromDate" style="width:7em;">From:</label><fc:datePicker targetField="fromDate.date" class="input-small" name="fromDate" data-validation-engine="validate[date]"/></div>
@@ -83,11 +83,11 @@
         <div class="col-sm-11">
             <div class="accordion" id="project-display-options">
                 <div class="card">
-                    <div class="card-header" id="mapHeading" href="#accordionMapView" data-toggle="collapse">
+                    <div class="card-header collapsed" id="mapHeading" href="#accordionMapView" data-toggle="collapse">
                         <a class="text-left text-uppercase">Map</a>
                     </div>
 
-                    <div id="accordionMapView" class="collapseItems show" aria-labelledby="mapHeading" data-parent="#project-display-options">
+                    <div id="accordionMapView" class="collapseItems collapse" aria-labelledby="mapHeading" data-parent="#project-display-options">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-sm-4" style="padding-left: 0px; margin-left: -10px;">
@@ -321,19 +321,12 @@
 
     $(function(){
         var VIEW_STATE_KEY = 'homepage-tab-state';
-        if(amplify.store(VIEW_STATE_KEY)){
-        var storedTab = amplify.store(VIEW_STATE_KEY)
-        }
         var initialisedReport = false, initialisedMap = false, initialisedProjects = false;
         var initialiseContentSection = function(section){
             if (section === '#accordionMapView' && !initialisedMap) {
 %{--              //  generateMap(facetList);--}%
 %{--                initialisedMap = true;--}%
-
-
-
-console.log("It initialisation Map")
-   }
+    }
    else if (section === '#projectsView' && !initialisedProjects) {
 %{--               // updateProjectTable();--}%
 %{--                initialisedProjects = true;--}%
@@ -448,19 +441,47 @@ var urlWithoutDates = '<fc:formatParams params="${params}" requiredParams="sort,
         $('.helphover').popover({animation: true, trigger:'hover', container:'body'});
 
     // retain accordion state for future re-visits
+    var expandedToggles = amplify.store('facetToggleState') || [];
+        function restoreFacetSelections() {
 
-    $('#project-display-options').on("show.bs.collapse", function(e){
-        var $target = $(e.target)
-        if($target.hasClass('collapseItems')){
-            var targetId = e.target.id
-            var section = '#'+targetId
-            amplify.store(VIEW_STATE_KEY, section);
-            initialiseContentSection(section);
-                // Because the facets use accordion and are inside the main accordion view we need to filter them out.
+            if ($('#facetsContent').is(':visible')) {
+                if (expandedToggles) {
+                expandedToggles.forEach(function(section){
+                    $(section).collapse('show');
+                });
+                }
+            }
+
+        }
+// re-establish the previous view state
+        var storedTab = selectedSection || amplify.store(VIEW_STATE_KEY) || '#accordionMapView';
+        if (!$('#project-display-options '+storedTab)[0]) {
+            storedTab = '#accordionMapView';
+        }
+        $('#project-display-options '+storedTab).collapse({parent:'#project-display-options'});
+        var $tabStore = amplify.store('facetToggleState');
+        $('#project-display-options').on("shown.bs.collapse", function(e){
+            var $target = $(e.target)
+            var targetId;
+            if($target.hasClass('collapseItems')){
+                targetId = e.target.id
+               var  section = '#'+targetId
+                amplify.store(VIEW_STATE_KEY, section);
+                initialiseContentSection(section);
+            }
+            if($target.hasClass('facetItems')){
+                targetId = e.target.id;
+                var sectionId = '#'+targetId;
+                $tabStore.push(sectionId);
+                var section = $tabStore;
+                amplify.store('facetToggleState', section);
+            }
+            // Because the facets use accordion and are inside the main accordion view we need to filter them out.
             $('#facetsCol').appendTo($(section).find('.facet-holder'));
             $('#facetsCol').show();
-        }
-    });
+            restoreFacetSelections();
+        });
+
 });
 
 
