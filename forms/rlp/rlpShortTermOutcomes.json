@@ -66,8 +66,8 @@
                 "name": "investmentPriorities",
                 "columns": [
                   {
-                    "name": "investmentPriority",
-                    "dataType": "text",
+                    "name": "investmentPriorities",
+                    "dataType": "stringList",
                     "validate": "required",
                     "constraints": {
                       "type": "pre-populated",
@@ -91,76 +91,21 @@
                     "behaviour": [
                       {
                         "type": "enable",
-                        "condition": "investmentPriority == \"Other\""
+                        "condition": "\"Other\" in investmentPriorities"
                       }
                     ]
                   },
                   {
+                    "name": "agOrEnv",
                     "dataType": "text",
-                    "name": "otherAgOrEnv",
-                    "behaviour": [
-                      {
-                        "type": "enable",
-                        "condition": "investmentPriority == \"Other\""
-                      }
-                    ],
                     "constraints": [
                       "Environment",
                       "Agriculture"
                     ]
                   },
                   {
-                    "dataType": "lookupTable",
-                    "name": "agOrEnvByOutcome",
-                    "config": {
-                      "source": {
-                        "type": "literal",
-                        "literal": [
-                          {
-                            "input": "Ramsar Sites",
-                            "output": "Env"
-                          },
-                          {
-                            "input": "Threatened Species Strategy",
-                            "output": "Env"
-                          },
-                          {
-                            "input": "World Heritage Areas",
-                            "output": "Env"
-                          },
-                          {
-                            "input": "Threatened Ecological Communities",
-                            "output": "Env"
-                          },
-                          {
-                            "input": "Climate / Weather Adaption",
-                            "output": "Ag"
-                          },
-                          {
-                            "input": "Soil Condition",
-                            "output": "Ag"
-                          }
-                        ]
-                      }
-                    }
-                  },
-                  {
-                    "name": "outcome",
-                    "dataType": "text",
-                    "computed": {
-                      "expression": "priorityByOutcomeType.lookupValue(investmentPriority)"
-                    }
-                  },
-                  {
-                    "name": "agOrEnv",
-                    "dataType": "text",
-                    "computed": {
-                      "expression": "agOrEnvByOutcome.lookupValue(outcome)"
-                    }
-                  },
-                  {
-                    "name": "outcomeIndicator",
-                    "dataType": "text",
+                    "name": "outcomeIndicators",
+                    "dataType": "stringList",
                     "validate": "required",
                     "constraints": {
                       "type": "computed",
@@ -207,7 +152,7 @@
                       ],
                       "options": [
                         {
-                          "condition": "otherAgOrEnv == \"Environment\"",
+                          "condition": "agOrEnv == \"Environment\"",
                           "value": [
                             "Ramsar - Control of pest, predator and competitor species",
                             "Ramsar - Decrease in inappropriate land management practices within the catchment area",
@@ -241,56 +186,7 @@
                           ]
                         },
                         {
-                          "condition": "outcome == \"Ramsar Sites\"",
-                          "value": [
-                            "Ramsar - Control of pest, predator and competitor species",
-                            "Ramsar - Decrease in inappropriate land management practices within the catchment area",
-                            "Ramsar - Creation or enhancement of ecological niches",
-                            "Ramsar - Increase in recruitment/survival of plants/food sources",
-                            "Ramsar - Improved habitat connectivity",
-                            "Ramsar - Stabilised or improved water quality",
-                            "Ramsar - Restoration of hydrology to more natural regimes",
-                            "Ramsar - Other (please specify)"
-                          ]
-                        },
-                        {
-                          "condition": "outcome == \"Threatened Species Strategy\"",
-                          "value": [
-                            "Threatened species - Control of pest, predator and competitor species",
-                            "Threatened species - Disease threats contained, reduced or excluded",
-                            "Threatened species - Increased area of suitable habitat",
-                            "Threatened species - Improved quality of habitat",
-                            "Threatened species - Protection of existing populations",
-                            "Threatened species - Enhancement of wild populations with re-introductions",
-                            "Threatened species - Other (please specify)"
-                          ]
-                        },
-                        {
-                          "condition": "outcome == \"World Heritage Areas\"",
-                          "value": [
-                            "World heritage - Control of pest, predator and competitor species",
-                            "World heritage - Disease threats contained, reduced or excluded",
-                            "World heritage - Reduction or halting of inappropriate fire regimes",
-                            "World heritage - Reduction of the unsustainable use of land within or surrounding the property",
-                            "World heritage - Stabilisation or improvement of nutrient levels",
-                            "World heritage - Other (please specify)"
-                          ]
-                        },
-                        {
-                          "condition": "outcome == \"Threatened Ecological Communities\"",
-                          "value": [
-                            "Threatened Ecological Community - Control of pest, predator and competitor species",
-                            "Threatened Ecological Community - Disease threats contained, reduced or excluded",
-                            "Threatened Ecological Community - Improved/increased faunal habitat values or related floral features",
-                            "Threatened Ecological Community - Increased area of relevant vegetation types",
-                            "Threatened Ecological Community - Improved connectivity between patches",
-                            "Threatened Ecological Community - Improved projected foliage cover of over-storey",
-                            "Threatened Ecological Community - Improved composition and cover of understorey",
-                            "Threatened Ecological Community - Other (please specify)"
-                          ]
-                        },
-                        {
-                          "condition": "outcome == \"Climate / Weather Adaption\" or outcome == \"Soil Condition\" or otherAgOrEnv == \"Agriculture\"",
+                          "condition": "agOrEnv == \"Agriculture\"",
                           "value": [
                             "Sustainable agriculture - Increase in knowledge and awareness among landholders of sustainable agricultural practices.",
                             "Sustainable agriculture - Increase in knowledge and awareness among landholders of the tools, technologies and practices which improve climate resilience.",
@@ -314,7 +210,7 @@
                     "behaviour": [
                       {
                         "type": "enable",
-                        "condition": "outcomeIndicator == \"Other (please specify)\" or outcomeIndicator == \"Threatened Ecological Community - Other (please specify)\" or outcomeIndicator == \"World heritage - Other (please specify)\" or outcomeIndicator == \"Threatened species - Other (please specify)\" or outcomeIndicator == \"\" or outcomeIndicator == \"Ramsar - Other (please specify)\""
+                        "condition": "\"Other (please specify)\" in outcomeIndicators or \"Threatened Ecological Community - Other (please specify)\" in outcomeIndicators or \"World heritage - Other (please specify)\" in outcomeIndicators or \"Threatened species - Other (please specify)\" or \"Ramsar - Other (please specify)\" in outcomeIndicators"
                       }
                     ]
                   },
@@ -359,7 +255,7 @@
                           ],
                           "options": [
                             {
-                              "condition": "otherAgOrEnv == \"Environment\" or agOrEnv == \"Env\"",
+                              "condition": "agOrEnv == \"Environment\"",
                               "value": [
                                 "Native fauna (disturbance)",
                                 "Habitat loss",
@@ -377,7 +273,7 @@
                               ]
                             },
                             {
-                              "condition": "otherAgOrEnv == \"Agriculture\" or agOrEnv == \"Ag\"",
+                              "condition": "agOrEnv == \"Agriculture\"",
                               "value": [
                                 "Livestock",
                                 "Weeding",
@@ -405,7 +301,7 @@
                         "behaviour": [
                           {
                             "type": "visible",
-                            "condition": "otherAgOrEnv == \"Environment\" or agOrEnv == \"Env\""
+                            "condition": "oagOrEnv == \"Environment\""
                           }
                         ],
                         "constraints": {
@@ -1178,24 +1074,34 @@
                 "removeRowText": "Remove investment priority",
                 "items": [
                   {
-                    "type": "row",
-                    "items": [
-                      {
-                        "preLabel": "Select an investment priority",
-                        "type": "select2",
-                        "source": "investmentPriority"
-                      }
-                    ]
+                  "type": "row",
+                  "items": [
+                    {
+                      "preLabel": "Is this an Environment or Agriculture outcome",
+                      "type": "selectOne",
+                      "source": "agOrEnv"
+                    }]
                   },
+
                   {
                     "type": "row",
-                    "behaviour": [
-                      {
-                        "type": "if_expression",
-                        "condition": "investmentPriority == \"Other\""
-                      }
-                    ],
                     "items": [
+                      {
+                        "type": "col",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Select the investment priority/s that relate to this outcome",
+                                "type": "select2Many",
+                                "source": "investmentPriorities"
+                              }
+                            ]
+                          }
+
+                        ]
+                      },
                       {
                         "type": "col",
                         "items": [
@@ -1210,13 +1116,10 @@
                               }
                             ]
                           }
+
                         ]
-                      },
-                      {
-                        "preLabel": "Does this investment priority relate to an Environment or Agriculture outcome",
-                        "type": "selectOne",
-                        "source": "otherAgOrEnv"
                       }
+
                     ]
                   },
                   {
@@ -1233,8 +1136,8 @@
                     "items": [
                       {
                         "preLabel": "",
-                        "type": "select2",
-                        "source": "outcomeIndicator",
+                        "type": "select2Many",
+                        "source": "outcomeIndicators",
                         "displayOptions": {
                           "tags": false
                         }
@@ -1288,7 +1191,7 @@
                     "behaviour": [
                       {
                         "type": "if_expression",
-                        "condition": "otherAgOrEnv == \"Environment\" or agOrEnv == \"Env\""
+                        "condition": "agOrEnv == \"Environment\""
                       }
                     ],
                     "items": [
@@ -1319,7 +1222,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "Select project services, activities, or interventions<br/><div style=\"font-weight:normal;\">Select a maximum of 3</div>",
+                        "preLabel": "Select project services, activities, or interventions<br/><div style=\"font-weight:normal;\">Select a maximum of 3<br/>The drop down list does not directly reflect RLP project services. It does not include monitoring, as this is not regarded as an activity or intervention that will lead to an outcome.</div>",
                         "type": "select2Many",
                         "source": "keyInterventions"
                       },
