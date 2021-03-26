@@ -215,3 +215,15 @@ select {
         padding: 10px;
     }
 }
+
+table tbody .td1 .accordion .card-header:after {
+    font-family: 'FontAwesome';
+    content: "\f068";
+    float: right;
+    display: none;
+}
+table tbody .td1 .accordion .card-header.collapsed:after {
+    /* symbol for "collapsed" panels */
+    content: "\f067";
+    display: none;
+}

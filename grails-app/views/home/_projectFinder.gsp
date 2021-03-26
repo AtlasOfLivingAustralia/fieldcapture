@@ -115,17 +115,17 @@
                                 <div class="col-sm-8">
                                     <p><g:render template="searchResultsSummary"/></p>
                                     <div class="scroll-list clearfix" id="projectList">
-                                        <table class="table">
+                                        <table class="table" id="projectTable" data-offset="0" data-max="25" style="table-layout: fixed">
                                             <thead>
                                                 <tr>
                                                     <th width="85%" data-sort="nameSort" scope="col" data-order="ASC" class="header"> Project name</th>
-                                                    <th width="15%" data-sort="nameSort" scope="col" data-order="DESC" class="header"> Last updated</th>
+                                                    <th width="15%" data-sort="lastUpdated" scope="col" data-order="DESC" class="header"> Last updated</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                             </tbody>
                                         </table>
-                                        <div id="paginateTable" class="hide" style="text-align: center">
+                                        <div id="paginateTable" class="d-none" style="text-align: center">
                                             <span id="paginationInfo" style="display:inline-block;float:left;margin-top:4px;"></span>
                                             <div class="btn-group">
                                                 <button class="btn btn-sm prev"><i class="fa fa-chevron-left" style="margin-top: 2px"></i>&nbsp;previous</button>
@@ -135,42 +135,49 @@
                                         </div>
                                     </div> <!-- table -->
 %{--                             template for jQuery DOM injection --}%
-                                    <table id="projectRowTempl" class="hide">
+                                    <table id="projectRowTempl" class="d-none">
                                         <tr>
                                             <td class="td1">
-                                                <a href="#" class="projectTitle" id="a_" data-id="" title="click to show/hide details">
-                                                    <span class="showHideCaret">&#9658;</span> <span class="projectTitleName">$name</span></a>
-                                                <a href="#" class="managementUnitLine">
-                                                    <small><i class="managementUnitName pull-right"></i></small>
-                                                </a>
-                                                <div class="hide projectInfo" id="proj_$id">
-                                                    <div class="homeLine">
-                                                        <i class="fa fa-home"></i>
-                                                        <a href="">View project page</a>
-                                                    </div>
-                                                    <div class="orgLine">
-                                                        <i class="fa fa-user" data-toggle="tooltip"  title="Organisation"></i>
-                                                    </div>
-                                                    <div class="associatedProgramLine">
-                                                        <i class="fa fa-bookmark" data-toggle="tooltip"  title="Associated program / sub program"></i>
-                                                        <span></span>
-                                                        <i class="associatedSubProgram"></i>
-                                                    </div>
-
-                                                    <div class="descLine">
-                                                        <i class="fa fa-info"></i>
-                                                    </div>
-                                                    <g:if test="${fc.userIsSiteAdmin()}">
-                                                        <div class="downloadLine">
-                                                            <i class="fa fa-download"></i>
-                                                            <a href="" target="_blank">Download (.xlsx)</a>
+                                                <div class="accordion" style="margin-bottom: 0px">
+                                                    <div class="card" style="margin-bottom: 0px;border: 0px; padding: 0px 0px 0px 0px;">
+                                                        <div>
+                                                                <a class="projectTitle collapsed" id="proj_" href="#a_" data-toggle="collapse" data-id="" title="click to show/hide details">
+                                                                    <span class="showHideCaret">&#9658; </span><span class="projectTitleName">$name</span>
+                                                                </a>
+                                                            <a href="#" class="managementUnitLine pull-right">
+                                                                <small><i class="managementUnitName"></i></small>
+                                                            </a>
                                                         </div>
-                                                        <div class="downloadJSONLine">
-                                                            <i class="fa fa-download"></i>
-                                                            <a href="" target="_blank">Download (.json)</a>
+                                                        <div class="projectInfo collapse" id="a_" aria-labelledby="proj_">
+                                                            <div class="card-body" style="padding: 3px 0px 0px;">
+                                                                <div class="homeLine">
+                                                                    <i class="fa fa-home"></i>
+                                                                    <a href="">View project page</a>
+                                                                </div>
+                                                                <div class="orgLine">
+                                                                    <i class="fa fa-user" data-toggle="tooltip" title="Organisation"></i>
+                                                                </div>
+                                                                <div class="associatedProgramLine">
+                                                                    <i class="fa fa-bookmark" data-toggle="tooltip" title="Associated program / sub program"></i>
+                                                                    <span></span>
+                                                                    <i class="associatedSubProgram"></i>
+                                                                </div>
+                                                                <div class="descLine">
+                                                                    <i class="fa fa-info"></i>
+                                                                </div>
+                                                                <g:if test="${fc.userIsSiteAdmin()}">
+                                                                    <div class="downloadLine">
+                                                                        <i class="fa fa-download"></i>
+                                                                        <a href="" target="_blank">Download (.xlsx)</a>
+                                                                    </div>
+                                                                    <div class="downloadJSONLine">
+                                                                        <i class="fa fa-download"></i>
+                                                                        <a href="" target="_blank">Download (.json)</a>
+                                                                    </div>
+                                                                </g:if>
+                                                            </div>
                                                         </div>
-                                                    </g:if>
-
+                                                    </div> <!-- end of card -->
                                                 </div>
                                             </td>
                                             <td class="td2">$date</td>
@@ -320,6 +327,149 @@
     };
 
     $(function(){
+
+
+    /**
+    * Update the project table DOM using a plain HTML template (cloned)
+    *
+    * @param data
+    */
+    function populateTable(data) {
+        //console.log("populateTable", data);
+        $.each(data.hits.hits, function(i, el) {
+            //console.log(i, "el", el);
+            var id = el._id;
+            var src = el._source
+            var $tr = $('#projectRowTempl tr').clone(); // template
+            $tr.find(".projectTitle").attr("href", "#a_"+id)
+            $tr.find(".projectTitle").attr("id", "proj_"+id)
+            $tr.find(".projectInfo").attr("aria-labelledby", "proj_"+id)
+            $tr.find('.projectInfo').attr("id", "a_" + id)
+            $tr.find('.td1 .projectTitleName').text(src.name); // projectTitleName
+            if(src.managementUnitName){
+                $tr.find('.td1 .managementUnitName').text(src.managementUnitName);
+                $tr.find('.td1 a.managementUnitLine').attr("href", "${createLink(controller: 'managementUnit')}/" + src.managementUnitId);
+            }
+            if(src.associatedProgram){
+                if (src.programId){
+                    $tr.find('.td1 .associatedProgramLine span').text(src.associatedProgram);
+                    //$tr.find('.td1 .associatedProgramLine a').attr("href", "${createLink(controller: 'program')}/" + src.programId);
+                    }
+                else{
+                    //$tr.find('.td1 .associatedProgramLine a').attr("href", "#");
+                    $tr.find('.td1 .associatedProgramLine a').replaceWith('<span>'+ src.associatedProgram +'</span>')
+                }
+
+                if (src.associatedSubProgram)
+                    $tr.find('.td1 .associatedProgramLine i.associatedSubProgram').text( " - "+src.associatedSubProgram )
+            }
+
+          //  $tr.find('.projectInfo').attr("id", "proj_" + id);
+            $tr.find('.homeLine a').attr("href", "${createLink(controller: 'project')}/" + id);
+            $tr.find('a.zoom-in').data("id", id);
+            $tr.find('a.zoom-out').data("id", id);
+            $tr.find('.orgLine').text(src.organisationName);
+            $tr.find('.descLine').text(src.description);
+        <g:if test="${fc.userIsSiteAdmin()}">
+            $tr.find('.downloadLine a').attr("href", "${createLink(controller: 'project',action: 'downloadProjectData')}" + "?id="+id+"&view=xlsx");
+                    $tr.find('.downloadJSONLine a').attr("href", "${createLink(controller: 'project',action: 'downloadProjectData')}" + "?id="+id+"&view=json");
+        </g:if>
+            $tr.find('.td2').text(formatDate(Date.parse(src.lastUpdated))); // relies on the js_iso8601 resource
+            //console.log("appending row", $tr);
+            $('#projectTable tbody').append($tr);
+        });
+    }
+
+    /**
+    * Dynamically update the project list table via AJAX
+    *
+    * @param facetFilters (an array)
+    */
+    function updateProjectTable(facetFilters) {
+        var url = "${createLink(controller:'nocas', action:'geoService')}";
+        var sort = $('#projectTable').data("sort");
+        var order = $('#projectTable').data("order");
+        var offset = $('#projectTable').data("offset");
+        var max = $('#projectTable').data("max");
+        var params = "max="+max+"&offset="+offset;
+
+        var query = '${params.query ? params.query.replace("'", "\\'") : ""}';
+        if (sort) {
+            params += "&sort="+sort+"&order="+order;
+        }
+        else if (!query) {
+            // Sort by date if no query term has been entered.
+            var defaultSort = "&sort=lastUpdated&order=DESC";
+            params += defaultSort;
+        }
+
+        if (projectListIds.length > 0) {
+            params += "&ids=" + projectListIds.join(",");
+        } else {
+            params += "&query="+encodeURIComponent(query || '*:*');
+        }
+        if (facetFilters) {
+            params += "&fq=" + facetFilters.join("&fq=");
+        }
+
+        <g:if test="${params.fq}">
+            <g:set var="fqList" value="${[params.fq].flatten()}"/>
+            params += "&fq=${fqList.collect{it.encodeAsURL()}.join('&fq=')}";
+        </g:if>
+        <g:if test="${params.fromDate}">
+            params += '&fromDate='+'${params.fromDate}';
+        </g:if>
+        <g:if test="${params.toDate}">
+            params += '&toDate='+'${params.toDate}';
+        </g:if>
+
+        $.post(url, params).done(function(data1) {
+            //console.log("getJSON data", data);
+            var data
+            if (data1.resp) {
+                data = data1.resp;
+            } else if (data1.hits) {
+                data = data1;
+            }
+            if (data.error) {
+                console.error("Error: " + data.error);
+            } else {
+                var total = data.hits.total;
+                $("numberOfProjects").html(total);
+                $('#projectTable').data("total", total);
+                $('#paginateTable').show();
+                if (total == 0) {
+                    $('#paginationInfo').html("Nothing found");
+
+                } else {
+                    var max = data.hits.hits.length
+                    $('#paginationInfo').html((offset+1)+" to "+(offset+max) + " of "+total);
+                    $("#paginateTable").removeClass("d-none");
+                    if (offset == 0) {
+                        $('#paginateTable .prev').addClass("disabled");
+                    } else {
+                        $('#paginateTable .prev').removeClass("disabled");
+                    }
+                    if (offset >= (total - max) ) {
+                        $('#paginateTable .next').addClass("disabled");
+                    } else {
+                        $('#paginateTable .next').removeClass("disabled");
+                    }
+                }
+
+                $('#projectTable tbody').empty();
+                populateTable(data);
+            }
+        }).fail(function (request, status, error) {
+            //console.error("AJAX error", status, error);
+            $('#paginationInfo').html("AJAX error:" + status + " - " + error);
+        });
+    }
+
+
+
+
+
         var VIEW_STATE_KEY = 'homepage-tab-state';
         var initialisedReport = false, initialisedMap = false, initialisedProjects = false;
         var initialiseContentSection = function(section){
@@ -328,8 +478,8 @@
                 initialisedMap = true;
             }
             else if (section === '#projectsView' && !initialisedProjects) {
-%{--               // updateProjectTable();--}%
-%{--                initialisedProjects = true;--}%
+                updateProjectTable();
+                initialisedProjects = true;
                 console.log("It initialisation Project")
             }
             else if (section === '#reportView' && !initialisedReport) {
