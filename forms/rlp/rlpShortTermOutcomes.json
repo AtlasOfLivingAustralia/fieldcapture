@@ -210,7 +210,7 @@
                     "behaviour": [
                       {
                         "type": "enable",
-                        "condition": "\"Other (please specify)\" in outcomeIndicators or \"Threatened Ecological Community - Other (please specify)\" in outcomeIndicators or \"World heritage - Other (please specify)\" in outcomeIndicators or \"Threatened species - Other (please specify)\" or \"Ramsar - Other (please specify)\" in outcomeIndicators"
+                        "condition": "\"Other (please specify)\" in outcomeIndicators or \"Threatened Ecological Community - Other (please specify)\" in outcomeIndicators or \"World heritage - Other (please specify)\" in outcomeIndicators or \"Threatened species - Other (please specify)\" in outcomeIndicators or \"Ramsar - Other (please specify)\" in outcomeIndicators"
                       }
                     ]
                   },
