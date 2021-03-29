@@ -140,14 +140,27 @@ class FCTagLib {
                 inputAttrs["data-validation-engine"] = "validate[required]"
             }
 
-            mb.input(inputAttrs) {
-            }
-
-            mb.span(class:'add-on open-datepicker') {
-                mb.i(class:'fa fa-th') {
-                    mkp.yieldUnescaped("&nbsp;")
+            def content = {
+                mb.input(inputAttrs) {
+                }
+                String addOnClass = attrs.bs4 ? "input-group-append" : "add-on"
+                String buttonClass = attrs.bs4 ? "fa fa-th input-group-text" : "fa fa-th "
+                mb.span(class: "${addOnClass} open-datepicker") {
+                    mb.i(class: buttonClass) {
+                        mkp.yieldUnescaped("&nbsp;")
+                    }
                 }
             }
+            //  Bootstrap 4 needs the control to be wrapped in an input-group class
+            if (attrs.bs4) {
+                mb.div(class:"input-group") {
+                    content()
+                }
+            }
+            else {
+                content()
+            }
+
         } else {
             def inputAttrs = [
                 name:"${attrs.name}",
@@ -440,40 +453,6 @@ class FCTagLib {
         else {
             out << attrs.defaultValue ?: ''
         }
-    }
-
-    /**
-     * FC version of loginlogout taglib from ala-web-theme. Adds icon and button to link
-     *
-     * @attr logoutUrl
-     * @attr loginReturnToUrl
-     * @attr logoutReturnToUrl
-     * @attr casLoginUrl
-     * @attr casLogoutUrl
-     * @attr cssClass
-     */
-    def loginLogoutButton = { attrs, body ->
-        def serverUrl = grailsApplication.config.grails.serverURL
-        def requestUri = removeContext(serverUrl) + request.forwardURI
-        def logoutUrl = attrs.logoutUrl ?: serverUrl + "/session/logout"
-        def loginReturnToUrl = attrs.loginReturnToUrl ?: requestUri
-        def logoutReturnToUrl = attrs.logoutReturnToUrl ?: params.returnTo ?: requestUri
-        def casLoginUrl = attrs.casLoginUrl ?: grailsApplication.config.security.cas.loginUrl ?: "https://auth.ala.org.au/cas/login"
-        def casLogoutUrl = attrs.casLogoutUrl ?: grailsApplication.config.security.cas.logoutUrl ?: "https://auth.ala.org.au/cas/logout"
-        def cssClass = attrs.cssClass?:"btn btn-small btn-inverse btn-login"
-        def output
-
-        def username = userService.currentUserDisplayName
-        if (username) {
-            output = "<a id='logout-btn' href='${logoutUrl}" +
-                    "?casUrl=${casLogoutUrl}" +
-                    "&appUrl=${logoutReturnToUrl}' " +
-                    "class='${cssClass}'><i class=\"fa fa-sign-in\"></i> Logout</a>"
-        } else {
-            // currently logged out
-            output =  "<a href='${casLoginUrl}?service=${loginReturnToUrl}' class='${cssClass}'><span><i class=\"fa fa-sign-in\"></i> Log in</span></a>"
-        }
-        out << output
     }
 
     def loginInNewWindow = { attr, body ->
@@ -916,6 +895,9 @@ class FCTagLib {
                 statusClass = 'badge-success'
                 break
             case 'completed':
+                statusClass = 'badge-info'
+                break
+            case 'application':
                 statusClass = 'badge-info'
                 break
         }

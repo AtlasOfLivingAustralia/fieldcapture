@@ -1,7 +1,10 @@
 package pages
 
 import geb.Page
+import geb.module.Checkbox
 import geb.navigator.Navigator
+import pages.modules.ReportContentModule
+import pages.modules.TimeoutModal
 
 class ReportPage extends Page {
 
@@ -10,8 +13,12 @@ class ReportPage extends Page {
     }
 
     static content = {
+        reportContent {module ReportContentModule }
         saveButton { $('#nav-buttons button[data-bind$=save') }
         exitButton { $('#nav-buttons button[data-bind*=exitReport') }
+        timeoutModal(required: false) { $('div.bootbox.modal').module TimeoutModal }
+        unsavedEdits(required: false) { $('div.bootbox') }
+        editAnyway (required: false) { $(".alert .btn")}
     }
 
     def field(String name) {
@@ -25,8 +32,32 @@ class ReportPage extends Page {
         fields
     }
 
+    /** Required or it stops webdriver from clicking checkboxes */
+    void hideFloatingToolbar() {
+        js.exec("\$('#floating-save').css('display', 'none');")
+    }
+
+    /** Required or it stops webdriver from clicking checkboxes */
+    void restoreFloatingToolbar() {
+        js.exec("\$('#floating-save').css('display', 'block');")
+    }
+
     def markAsComplete() {
         $("[data-bind*=\"markedAsFinished\"]").value(true)
+    }
+
+    boolean isOptional(String sectionId) {
+        String sectionSelector = '#'+sectionId + " input[data-bind*=outputNotComplete]"
+        $(sectionSelector).displayed
+    }
+
+    def markAsNotApplicable(String sectionId) {
+        String sectionSelector = '#'+sectionId + " input[data-bind*=outputNotComplete]"
+        $(sectionSelector).value(true)
+    }
+
+    List getFormSections() {
+        $('.output-block')*.@id
     }
 
     def save() {
@@ -41,5 +72,9 @@ class ReportPage extends Page {
 
     def exitReport() {
         exitButton.click()
+    }
+
+    def getReport() {
+        return reportContent
     }
 }

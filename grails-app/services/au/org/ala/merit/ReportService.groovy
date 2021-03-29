@@ -132,7 +132,8 @@ class ReportService {
                report1.type != report2.type ||
                report1.activityType != report2.activityType ||
                report1.category != report2.category ||
-               report1.submissionDate != report2.submissionDate
+               report1.submissionDate != report2.submissionDate ||
+               report1.generatedBy != report2.generatedBy
     }
 
     /**
@@ -457,6 +458,14 @@ class ReportService {
         }
         return []
     }
+
+    def findReportPeriodsOfManagmentUnit(){
+        int[] reportPeriods = webService.getJson(grailsApplication.config.ecodata.baseUrl+"managementunit/getReportPeriods")
+
+        return reportPeriods
+
+    }
+
 
 
 

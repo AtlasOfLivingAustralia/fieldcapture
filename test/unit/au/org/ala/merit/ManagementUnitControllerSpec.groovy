@@ -369,6 +369,22 @@ class ManagementUnitControllerSpec extends Specification {
         return program
     }
 
+    def "The controller delegates to the managementUnitService to produce reports"() {
+        setup:
+        String startDate = '2020-07-01'
+        String endDate = '2020-12-31'
+
+        when:
+        params.startDate = startDate
+        params.endDate = endDate
+        controller.generateReportsInPeriod()
+
+        then:
+        1 * userService.getUser() >> [userName:'test@test.com']
+        1 * managementUnitService.generateReports(startDate, endDate, _) >> [status:HttpStatus.SC_OK]
+        response.json == [status:HttpStatus.SC_OK]
+    }
+
     private void setupAnonymousUser() {
         userService.getUser() >> null
         userService.userHasReadOnlyAccess() >> false

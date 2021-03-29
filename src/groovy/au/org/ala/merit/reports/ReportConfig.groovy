@@ -57,6 +57,9 @@ class ReportConfig {
 
     boolean canSubmitDuringReportingPeriod = false
 
+    /** Identifier attached to generated reports to identify this configuration */
+    String label = null
+
     /**
      * For reports with multiple=false and no reportingPeriodInMonths supplied, this property acts to suppress
      * the creation of reports for owners with durations less than this value.
@@ -83,6 +86,10 @@ class ReportConfig {
 
     Period getReportingPeriod() {
         Period.months(reportingPeriodInMonths)
+    }
+
+    String getLabel() {
+        label ?: category
     }
 
     /** Specifies the type of activity to be used if an adjustment to this report is required */

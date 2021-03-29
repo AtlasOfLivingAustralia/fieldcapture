@@ -8,6 +8,11 @@
         <th class="service" rowspan="2">${serviceName ?: "Service"}</th>
         <th class="score" rowspan="2">Target measure</th>
         <th class="budget-cell" rowspan="2">Total to be delivered</th>
+        <g:if test="${showTargetDate}">
+            <th class="target-date" rowspan="2">
+                Delivery date
+            </th>
+        </g:if>
         <!-- ko if: periods && periods.length -->
         <th data-bind="attr:{colspan:periods.length+1}">Minimum annual targets</th>
         <!-- /ko  -->
@@ -30,6 +35,11 @@
         <td class="budget-cell">
             <span data-bind="text: target"></span>
         </td>
+        <g:if test="${showTargetDate}">
+            <td class="target-date">
+                <span data-bind="text: targetDate.formattedDate()"></span>
+            </td>
+        </g:if>
 
         <!-- ko foreach: periodTargets -->
         <td class="budget-cell">

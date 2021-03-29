@@ -3,11 +3,11 @@ var rlpOutputReport = {
   "category": "RLP Reports",
   "createdUserId": "1493",
   "dateCreated": ISODate("2019-08-22T03:34:29Z"),
-  "formVersion": 1,
+  "formVersion": NumberInt(1),
   "gmsId": null,
   "lastUpdated": ISODate("2019-08-27T22:32:11Z"),
   "lastUpdatedUserId": "1493",
-  "minOptionalSectionsCompleted": 0,
+  "minOptionalSectionsCompleted": NumberInt(0),
   "name": "RLP Output Report",
   "publicationStatus": "published",
   "sections": [

@@ -2,6 +2,7 @@ package au.org.ala.merit
 
 import au.org.ala.merit.reports.ReportGenerationOptions
 import grails.test.mixin.TestFor
+import org.apache.http.HttpStatus
 import spock.lang.Specification
 
 @TestFor(ManagementUnitService)
@@ -169,6 +170,20 @@ class ManagementUnitServiceSpec extends Specification {
         1 * webService.getJson({it.endsWith("/managementUnit/${muId}")}) >> [managementUnitId: muId]
         1 * documentService.search([managementUnitId: muId, public: true]) >> [documents:[], count:0]
         0 * reportService.findReportsForManagementUnit(muId)
+    }
+
+    def "The server delegates to the ecodata to produce reports"() {
+        setup:
+        String startDate = '2020-07-01'
+        String endDate = '2020-12-31'
+        Map extras = [test:'test']
+
+        when:
+        service.generateReports(startDate, endDate, extras)
+
+        then:
+        1 * webService.getJson(
+                {it.endsWith('managementunit/generateReportsInPeriod?startDate=2020-07-02T14:00:00Z&endDate=2021-01-01T13:00:00Z&test=test')})
     }
 
 }

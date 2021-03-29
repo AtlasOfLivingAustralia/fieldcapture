@@ -5,3 +5,6 @@
 *= require capture.css
 *= require global-styles.css
 */
+.validationEngineContainer .required label:after, .validationEngineContainer th.required:after, .validationEngineContainer label.required:after {
+    font-size: inherit;
+}

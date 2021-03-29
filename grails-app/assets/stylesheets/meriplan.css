@@ -37,8 +37,7 @@ table tr.header th {
 .meri-plan .index {
     min-width: 1em;
     max-width: 1em;
-    width: 0.1%;
-
+    width: 1em;
 }
 
 .meri-plan .footer-index {
@@ -140,15 +139,25 @@ table tr.header th {
     word-break: break-word;
 }
 
-.meri-plan #serviceTargetsContainer td.service {
-    width: 20%;
+.meri-plan .service-targets td.service {
+    width: 30%;
 }
-.meri-plan #serviceTargetsContainer td.score {
-    width: 60%;
+.meri-plan .service-targets td.score {
+    width: 50%;
 }
 
-.meri-plan #serviceTargetsContainer td.target {
-    width: 20%;
+.meri-plan .service-targets td.target {
+    width: 10%;
+}
+
+.meri-plan .service-targets td.target-date {
+    width:7em;
+}
+.meri-plan .service-targets-view .target-date {
+    min-width:6em;
+}
+.meri-plan .service-targets td.target-date input {
+    width:7em;
 }
 
 .meri-plan td .select2.select2-container {
@@ -241,6 +250,20 @@ table tr.header th {
     height: 30px;
 }
 
+.meri-plan .asset-category, .meri-plan .asset-detail {
+    width: 50%;
+}
+
+.meri-plan table.assets {
+    table-layout:fixed;
+}
+
+.meri-plan .assets .remove {
+    min-width: 1em;
+    max-width: 1em;
+    width: 1em;
+}
+
 #project-risks-threats table {
     width:100%;
 }
@@ -286,6 +309,10 @@ a.meri-history-toggle {
     color: white;
 }
 
+#disabledApproveMeriPlanBtn {
+    border-bottom-left-radius: 4px;
+    border-top-left-radius: 4px;
+}
 
 .announcements-table td.index {
     background-color: #f5f5f5;
@@ -322,3 +349,11 @@ a.meri-history-toggle {
 .announcements-table .information {
     width:28%;
 }
+.fa-question-circle{
+    font-size: 14px;
+    content: "\f059";
+}
+.control-group .badge-danger {
+    background-color: #dc3545;
+}
+

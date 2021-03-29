@@ -104,6 +104,8 @@ class WebService {
             headers.each { header ->
                 response.setHeader(header, conn.getHeaderField(header))
             }
+            response.status = conn.responseCode
+
             response.outputStream << conn.inputStream
         }
         else {

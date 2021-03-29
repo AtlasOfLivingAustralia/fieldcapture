@@ -134,6 +134,9 @@ ManagementUnitViewModel = function (props, options) {
 
 var ManagementUnitPageViewModel = function(props, options) {
     var self = this;
+    if (!options.$window) {
+        options.$window = window;
+    }
     _.extend(self, new ManagementUnitViewModel(props, options));
 
     var config = props.config || {};
@@ -175,10 +178,10 @@ var ManagementUnitPageViewModel = function(props, options) {
     var managementUnitReportConfig = getManagementUnitReportConfig();
 
     self.coreServicesOptions = [
-        {label:'Monthly (First period ends 31 July 2018)', firstReportingPeriodEnd:'2018-07-31T14:00:00Z', reportingPeriodInMonths:1},
-        {label:'Bi-monthly (First period ends 31 August 2018)', firstReportingPeriodEnd:'2018-08-31T14:00:00Z', reportingPeriodInMonths:2},
-        {label:"Quarterly - Group A (First period ends 30 September 2018)", firstReportingPeriodEnd:'2018-09-30T14:00:00Z', reportingPeriodInMonths:3},
-        {label:"Quarterly - Group B (First period ends 31 August 2018)", firstReportingPeriodEnd:'2018-08-31T14:00:00Z', reportingPeriodInMonths:3}];
+        {label:'Monthly (First period ends 31 July 2018)', firstReportingPeriodEnd:'2018-07-31T14:00:00Z', reportingPeriodInMonths:1, reportConfigLabel:'Monthly'},
+        {label:'Bi-monthly (First period ends 31 August 2018)', firstReportingPeriodEnd:'2018-08-31T14:00:00Z', reportingPeriodInMonths:2, reportConfigLabel:'Bi-monthly'},
+        {label:"Quarterly - Group A (First period ends 30 September 2018)", firstReportingPeriodEnd:'2018-09-30T14:00:00Z', reportingPeriodInMonths:3, reportConfigLabel:'Quarterly - Group A'},
+        {label:"Quarterly - Group B (First period ends 31 August 2018)", firstReportingPeriodEnd:'2018-08-31T14:00:00Z', reportingPeriodInMonths:3, reportConfigLabel:'Quarterly - Group B'}];
 
     var currentOption = _.find(self.coreServicesOptions, function(option) {
         return option.firstReportingPeriodEnd == managementUnitReportConfig.firstReportingPeriodEnd && option.reportingPeriodInMonths == managementUnitReportConfig.reportingPeriodInMonths;
@@ -187,8 +190,8 @@ var ManagementUnitPageViewModel = function(props, options) {
 
 
     self.activityReportingOptions = [
-        {label:"Quarterly (First period ends 30 September 2018)", firstReportingPeriodEnd:'2018-09-30T14:00:00Z', reportingPeriodInMonths:3},
-        {label:"Half-yearly (First period ends 31 December 2018)", firstReportingPeriodEnd:'2018-12-31T13:00:00Z', reportingPeriodInMonths:6}];
+        {label:"Quarterly (First period ends 30 September 2018)", firstReportingPeriodEnd:'2018-09-30T14:00:00Z', reportingPeriodInMonths:3, reportConfigLabel:'Quarter'},
+        {label:"Half-yearly (First period ends 31 December 2018)", firstReportingPeriodEnd:'2018-12-31T13:00:00Z', reportingPeriodInMonths:6, reportConfigLabel:'Semester'}];
 
     currentOption = _.find(self.activityReportingOptions, function(option) {
         return option.firstReportingPeriodEnd == activityReportConfig.firstReportingPeriodEnd && option.reportingPeriodInMonths == activityReportConfig.reportingPeriodInMonths;
@@ -219,18 +222,20 @@ var ManagementUnitPageViewModel = function(props, options) {
             });
             managementUnitReportConfig.firstReportingPeriodEnd = selectedCoreServicesPeriod.firstReportingPeriodEnd;
             managementUnitReportConfig.reportingPeriodInMonths = selectedCoreServicesPeriod.reportingPeriodInMonths;
+            managementUnitReportConfig.label = selectedCoreServicesPeriod.reportConfigLabel;
 
             var selectedActivityReportingPeriod = _.find(self.activityReportingOptions, function(option) {
                 return option.label == self.activityReportingPeriod();
             });
             activityReportConfig.firstReportingPeriodEnd = selectedActivityReportingPeriod.firstReportingPeriodEnd;
             activityReportConfig.reportingPeriodInMonths = selectedActivityReportingPeriod.reportingPeriodInMonths;
+            activityReportConfig.label = selectedActivityReportingPeriod.reportConfigLabel;
 
             blockUIWithMessage("Saving configuration...");
             self.saveConfig(config).done(function() {
                 blockUIWithMessage("Regenerating reports...");
                 self.regenerateReports([coreServicesReportCategory], [projectOutputReportCategory]).done(function() {
-                    window.location.reload();
+                    options.$window.location.reload();
                 }).fail(function() {
                     $.unblockUI();
                 });

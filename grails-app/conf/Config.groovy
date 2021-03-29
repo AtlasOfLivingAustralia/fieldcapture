@@ -107,7 +107,7 @@ if (!headerAndFooter.baseURL) {
 }
 // spatial services
 if(!spatial.baseUrl){
-    spatial.baseUrl = "https://nectar-spatial-test.ala.org.au"
+    spatial.baseUrl = "https://spatial-test.ala.org.au"
 }
 if(!spatial.layersUrl){
     spatial.layersUrl = spatial.baseUrl + "/ws"
@@ -345,7 +345,7 @@ environments {
         security.cas.loginUrl="${security.cas.casServerUrlPrefix}/login"
         security.cas.casLoginUrl="${security.cas.casServerUrlPrefix}/login"
         userDetails.url = "${casBaseUrl}/userdetails/userDetails/"
-        userDetailsSingleUrl = "${userDetailsUrl}getUserDetails"
+        userDetailsSingleUrl = "${userDetails.Url}getUserDetails"
         userDetailsUrl = "${userDetatails.url}getUserListFull"
         logging.dir = '.'
         upload.images.path = '/tmp'

@@ -4,6 +4,7 @@ import geb.Module
 import geb.Page
 import geb.navigator.Navigator
 import org.openqa.selenium.Keys
+import pages.modules.TimeoutModal
 
 
 class ActivityPage extends Page {
@@ -40,10 +41,14 @@ class EditActivityPage extends ActivityPage {
 
     static content = {
         activityDetails { module ActivityDetails }
+        timeoutModal(required: false) { $('div.bootbox.modal').module TimeoutModal }
+        unsavedEdits(required: false) { $('div.bootbox') }
+
     }
 
     // Pressing submit actually does an ajax call then changes the page using JavaScript.
     def submit() {
+        waitFor { activityDetails.submitButton.displayed}
         activityDetails.submitButton.click()
     }
 
@@ -57,7 +62,7 @@ class ActivityDetails extends Module {
         description { $('#description') }
         plannedStartDate { $('#plannedStartDate') }
         plannedEndDate { $('#plannedEndDate') }
-
+        submit {$(".form-actions .btn-primary")}
         submitButton() {
             $("button", class:"btn-primary")
         }

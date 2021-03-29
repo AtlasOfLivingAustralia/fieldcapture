@@ -1,6 +1,7 @@
 
 <form id="downloadTabSelection" target="_blank" method="POST" action="${g.createLink(controller: 'search', action: 'downloadAllData')}">
-    <a class="btn button btn-primary" data-bind="click:downloadXlsx" id="downloadXlsxButton">Download as XLSX</a>
+    <a class="btn button btn-primary" data-bind="click:downloadXlsx" id="downloadXlsxButton">Download as XLSX</a><br/>
+    <label><input type="checkbox" name="formSectionPerTab" value="true" checked="checked"> When downloading reports or activities, export each form section to a separate tab</label>
 
     <input type="hidden" name="view" value="xlsx">
     <g:each in="${params.getList("fq")}" var="selectedFacet">
@@ -20,6 +21,11 @@
         <g:each in="${['Projects', 'Output Targets', 'Sites', 'Reports', 'Report Summary', 'Documents', 'Blog']}" var="name">
             <li><label class="checkbox"><input type="checkbox" name="tabs" value="${name}" data-validation-engine="validate[minCheckbox[1]]">${name}</label></li>
         </g:each>
+    </ul>
+
+    <strong>Data set summary</strong><br/>
+    <ul class="unstyled">
+        <li><label class="checkbox"><input type="checkbox" name="tabs" value="Dataset" data-validation-engine="validate[minCheckbox[1]]">Data set summary</label></li>
     </ul>
 
     <strong>MERI Plan</strong>

@@ -4,7 +4,6 @@ load('../data_common/loadMeritHub.js');
 load('../data_common/insertData.js');
 
 createProject({name:'project 1', projectId:"project_1", programId:'program_1',managementUnitId:"mu_1", grantId:"RLP-Test-Program-Project-1" })
-
 createProgram({name:'Regional Land Partnerships', programId:'program_1' })
 createMu({name:'test mu', managementUnitId:"mu_1"});
 
@@ -13,6 +12,7 @@ db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'pro
 db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entityId:'mu_1', userId:'1', accessLevel:'admin'});
 
 
+loadActivityForms();
 var report1 = {
         "managementUnitId" : "mu_1",
         "activityType" : "RLP Core Services report",
@@ -46,7 +46,7 @@ var activity1 = {
     "startDate" : ISODate("2018-06-30T14:00:00.000Z"),
     "status" : "active",
     "type" : "RLP Core Services report",
-    "formVersion" : 1,
+    "formVersion" : NumberInt(1),
     "projectStage" : "",
     "siteId" : "",
     "mainTheme" : "",
@@ -81,4 +81,13 @@ var document1 = {
 
 db.document.insert(document1);
 
-loadActivityForms();
+createProject({name:'project active', projectId:"project_active", managementUnitId:"mu_1", grantId:"RLP-Test-Program-Project-1", status:"active", programId:'program_1' })
+createProject({name:'project application', projectId:"project_application", managementUnitId:"mu_1", grantId:"RLP-Test-Program-Project-1", status:"application", programId:'program_1' })
+createProject({name:'project completed', projectId:"project_completed", managementUnitId:"mu_1", grantId:"RLP-Test-Program-Project-1", status:"completed", programId:'program_1' })
+createProject({name:'project Terminated', projectId:"project_terminated", programId:'program_1',managementUnitId:"mu_1", grantId:"RLP-Test-Program-Project-1", status: 'terminated', terminationReason: "Termination Reason" })
+
+db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_active', userId:'1', accessLevel:'admin'});
+db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_application', userId:'1', accessLevel:'admin'});
+db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_completed', userId:'1', accessLevel:'admin'});
+db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_terminated', userId:'1', accessLevel:'admin'});
+

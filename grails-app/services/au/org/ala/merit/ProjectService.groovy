@@ -8,6 +8,7 @@ import grails.converters.JSON
 import org.apache.commons.lang.CharUtils
 import org.apache.http.HttpStatus
 import org.codehaus.groovy.grails.web.json.JSONArray
+import org.codehaus.groovy.grails.web.json.JSONObject
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.Days
@@ -23,6 +24,8 @@ class ProjectService  {
     static final String OUTCOMES_OUTPUT_TYPE = 'Outcomes'
     static final String STAGE_OUTCOMES_OUTPUT_TYPE = ''
     static final String COMPLETE = 'completed'
+    static final String APPLICATION_STATUS = 'Application'
+    static final String ACTIVE = 'active'
 
     static dateWithTime = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss")
     static dateWithTimeFormat2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
@@ -76,16 +79,6 @@ class ProjectService  {
 
     def getRich(id) {
         get(id, 'rich')
-    }
-
-    def getActivities(project) {
-        def list = []
-        project.sites.each { site ->
-            siteService.get(site.siteId)?.activities?.each { act ->
-                list << activityService.constructName(act)
-            }
-        }
-        list
     }
 
     /**
@@ -397,7 +390,15 @@ class ProjectService  {
     def approvePlan(String projectId, Map approvalDetails) {
         def project = get(projectId)
         if (project.planStatus == PLAN_SUBMITTED) {
-            def resp = update(projectId, [planStatus:PLAN_APPROVED])
+
+            //The MERI plan cannot be approved until an internal order number has been supplied for the project.
+            if(!project.internalOrderId) {
+                return [error: 'An internal order number must be supplied before the MERI Plan can be approved']
+            }
+
+            //When the MERI plan is first approved, the status is changed to "active"
+            def resp = project.status == APPLICATION_STATUS ? update(projectId, [planStatus:PLAN_APPROVED, status:ACTIVE])
+                    : update(projectId, [planStatus:PLAN_APPROVED])
             if (resp.resp && !resp.resp.error) {
                 createMeriPlanApprovalDocument(project, approvalDetails)
                 sendEmail({ProgramConfig programConfig -> programConfig.getPlanApprovedTemplate()}, project, RoleService.GRANT_MANAGER_ROLE)
@@ -1375,9 +1376,11 @@ class ProjectService  {
     }
 
     List<Map> getProjectServices(Map project) {
-        List<Map> allServices = metadataService.getProjectServices()
+        ProgramConfig config = projectConfigurationService.getProjectConfiguration(project)
+        List<Map> supportedServices = config.services
+        List serviceIds = project.custom?.details?.serviceIds?.collect{it as Integer}
 
-        List projectServices = allServices?.findAll {it.id in project.custom?.details?.serviceIds }
+        List projectServices = supportedServices?.findAll {it.id in serviceIds }
 
         projectServices
     }
@@ -1421,8 +1424,9 @@ class ProjectService  {
 
         List serviceIds = project.custom?.details?.serviceIds?.collect{it as Integer}
 
-        List<Map> allServices = metadataService.getProjectServices()
-        List projectServices = allServices?.findAll {it.id in serviceIds }
+        ProgramConfig config = projectConfigurationService.getProjectConfiguration(project)
+        List<Map> supportedServices = config.services
+        List projectServices = supportedServices?.findAll {it.id in serviceIds }
         List targets = project.outputTargets
 
         // Make a copy of the services as we are going to augment them with target information.
@@ -1501,6 +1505,66 @@ class ProjectService  {
         BigDecimal target = new BigDecimal(targetData.target ?: 0)
         BigDecimal result = new BigDecimal(targetData.result ?: 0)
         return target > result
+    }
+
+    /**
+     * If the activity type to be displayed is the RLP Outputs report, only show the outputs that align with
+     * services to be delivered by the model.  This method has a side effect of modifying the
+     * @param model the model containing the activity metaModel and output templates.
+     * @param project the project associated with the report.
+     */
+    Map filterOutputModel(Map activityModel, Map project, Map existingActivityData) {
+
+        Map filteredModel = activityModel
+        if (isFilterable(activityModel)) {
+
+            List serviceList
+            List selectedForProject
+
+            // The values to be filtered can come from either project services or activities in the MERI plan.
+            selectedForProject = getProjectServices(project)
+
+            if (!selectedForProject) {
+
+                serviceList = getProgramConfiguration(project).activities
+                selectedForProject = getProjectActivities(project)
+            }
+            else {
+                // We are deliberately filtering the project services against the
+                // full service list instead of the services supported by the program.  This is
+                // so that we can share a report containing the full service list across programs
+                // and have the services filtered out.  If we just used the project/program
+                // service list here, any services not on the program list would be treated
+                // as non-service form sections (like WHS) and always display in the report.
+                serviceList = metadataService.getProjectServices()
+            }
+
+            if (selectedForProject) {
+                List serviceOutputs = serviceList.collect{it.output}
+                List projectOutputs = selectedForProject.collect{it.output}
+                filteredModel = filterActivityModel(activityModel, existingActivityData, serviceOutputs, projectOutputs)
+            }
+        }
+        filteredModel
+    }
+
+    private boolean isFilterable(Map activityModel) {
+        List filterableActivityTypes = grailsApplication.config.reports.filterableActivityTypes
+        return activityModel?.name in filterableActivityTypes
+    }
+
+    private Map filterActivityModel(Map activityModel, Map existingActivityData, List filterableSections, List sectionsToInclude) {
+        Map filteredModel = new JSONObject(activityModel)
+        List existingOutputs = existingActivityData?.outputs?.collect{it.name}
+        filteredModel.outputs = activityModel.outputs.findAll({ String output ->
+            boolean isFilterable = filterableSections.find{it == output}
+
+            // Include this output if it's not associated with a service,
+            // Or if it's associated by a service delivered by this project
+            // Or it has previously had data recorded against it (this can happen if the services change after the report has been completed)
+            !isFilterable || output in sectionsToInclude || output in existingOutputs
+        })
+        filteredModel
     }
 
 
@@ -1652,6 +1716,13 @@ class ProjectService  {
                             referenceDocument:content.referenceDocument,
                             reason:content.reason
                     ]
+                }else{
+                   doc = [
+                       documentId:it.documentId,
+                       date: it.lastUpdated,
+                       referenceDocument: it.filename,
+                       reason: "Error: "+it.name +" document is missing or damaged!"
+                   ]
                 }
                 doc
             }
@@ -1690,9 +1761,56 @@ class ProjectService  {
      */
     List listProjectInvestmentPriorities(String projectId) {
         Map project = get(projectId,'flat')
-        List primaryOutcomes = project?.custom?.details?.outcomes?.primaryOutcome?.assets ?: []
-        List secondaryOutcomes = project?.custom?.details?.outcomes?.secondaryOutcomes?.collect{it.assets}?.flatten() ?: []
-        primaryOutcomes + secondaryOutcomes
+        listProjectInvestmentPriorities(project)
+    }
+
+    /**
+     * This method combines investment priorities listed in the primary and secondary outcome sections of the
+     * RLP MERI plan into a single list for the purposes of pre-popluating one of the RLP outcomes reporting forms.
+     * @param projectId the project of interest
+     * @return a List of outcomes selected in the project MERI plan
+     */
+    List listProjectInvestmentPriorities(Map project) {
+        List primaryPriorities = project?.custom?.details?.outcomes?.primaryOutcome?.assets ?: []
+        List secondaryPriorities = project?.custom?.details?.outcomes?.secondaryOutcomes?.collect{it.assets}?.flatten() ?: []
+        List allPriorities = primaryPriorities + secondaryPriorities
+        allPriorities.findAll{it}.unique()
+    }
+
+    /** Returns all assets identified in the project MERI plan */
+    List listProjectAssets(Map project) {
+        project?.custom?.details?.assets?.collect{it.description}?.findAll{it}
+    }
+
+    /**
+     * Returns a map with key=<project priority>, value=<Ag or Env>
+     * The map is used to determine whether the priority is associated with
+     * an Environment of Agriculture outcome, which in turn allows
+     * customisation of  the  questions asked in the outcomes report.
+     *
+     */
+    Map projectPrioritiesByOutcomeType(String projectId) {
+        Map project = get(projectId,'flat')
+        Map config = getProgramConfiguration(project)
+
+        Map prioritiesByOutcomeType = [:]
+        List outcomes = []
+        Map primaryOutcome =  project?.custom?.details?.outcomes?.primaryOutcome
+        if (primaryOutcome) {
+            outcomes << primaryOutcome
+        }
+        outcomes += project?.custom?.details?.outcomes?.secondaryOutcomes ?: []
+        (outcomes).each { Map outcome ->
+            Map programOutcome = config.outcomes?.find{it.outcome == outcome?.description}
+            String outcomeDescription = programOutcome ? (programOutcome.shortDescription ?: programOutcome.outcome) : outcome?.description
+            outcome?.assets.each {String asset  ->
+                prioritiesByOutcomeType[asset] = outcomeDescription
+            }
+        }
+
+        prioritiesByOutcomeType
+
+
     }
 
     /**
@@ -1709,6 +1827,15 @@ class ProjectService  {
      */
     List<String> getSecondaryOutcomes(Map project) {
         project?.custom?.details?.outcomes?.secondaryOutcomes?.collect{it.description} ?: []
+    }
+
+    List<String> getAllProjectOutcomes(Map project) {
+        List outcomes = []
+        outcomes << getPrimaryOutcome(project)
+        outcomes.addAll(getSecondaryOutcomes(project))
+
+        // Don't return null or empty values
+        outcomes.findAll{it}.unique()
     }
 
     List<Map> getProgramList(){
@@ -1730,5 +1857,52 @@ class ProjectService  {
         }
         programList.addAll(newProgramList)
         return programList
+    }
+
+    Map saveDataSet(String projectId, Map dataSet) {
+        Map project = get(projectId)
+        if (!project) {
+            throw new  IllegalArgumentException("Project "+projectId+" does not exist")
+        }
+        if (!project.custom) {
+            project.custom = [:]
+        }
+        if (!project.custom.dataSets) {
+            project.custom.dataSets = []
+        }
+
+        if(!dataSet.progress) {
+            dataSet.progress = ActivityService.PROGRESS_STARTED
+        }
+
+        if(!dataSet.dataCollectionOngoing) {
+            dataSet.dataCollectionOngoing = false
+        }
+
+        if (!dataSet.dataSetId) {
+            dataSet.dataSetId = UUID.randomUUID().toString()
+            project.custom.dataSets << dataSet
+        }
+        else {
+            int i = project.custom.dataSets.findIndexOf({it.dataSetId == dataSet.dataSetId})
+            if (i < 0)  {
+                throw new  IllegalArgumentException("Data set "+dataSet.dataSetId+" does not exist")
+            }
+            project.custom.dataSets[i] = dataSet
+        }
+
+        update(projectId, [custom: project.custom])
+    }
+
+    Map deleteDataSet(String projectId, String dataSetId) {
+        Map project = get(projectId)
+        if (!project) {
+            throw new IllegalArgumentException("Project "+projectId+" does not exist")
+        }
+        boolean found  = project.custom?.dataSets?.removeAll{ it.dataSetId == dataSetId}
+        if (!found)  {
+            throw new IllegalArgumentException("Data set "+dataSetId+" does not exist")
+        }
+        update(projectId, [custom: project.custom])
     }
 }

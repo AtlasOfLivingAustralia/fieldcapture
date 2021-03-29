@@ -5,6 +5,8 @@ import au.org.ala.merit.reports.ReportGenerationOptions
 import au.org.ala.merit.reports.ReportOwner
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.codehaus.groovy.grails.web.json.JSONArray
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 
 class ManagementUnitService {
 
@@ -307,5 +309,38 @@ class ManagementUnitService {
         // build a collection ready for mapping.  Hence the 30 second timeout.  Caching has been applied to
         // the controller.
         webService.getJson2(url, 30000)
+    }
+    /**
+     * Download reports of a management unit
+     * @param id
+     * @return
+     */
+    def downloadReports(String id){
+        String url = "${grailsApplication.config.ecodata.baseUrl}" + "managementunit/"+id+"/report"
+        webService.getJson(url)
+    }
+    /**
+     * Download [all] management unit reports in a given period
+     * @param startDate
+     * @param endDate
+     * @param emails for sending email to user
+     * @return
+     */
+    def generateReports(String startDate, String endDate, Map extras = null){
+        // Convert to ISO 8601 date format
+        String format = 'yyyy-MM-dd'
+
+        // The end date is the last day of the period (e.g. 2020-06-30) but reports will end at midnight of the next day (e.g. 2020-07-01T00:00:00)
+        // so add a day or two to achieve this.
+        DateTime start = DateUtils.parseDisplayDate(startDate, format).plusDays(2)
+        DateTime end =  DateUtils.parseDisplayDate(endDate, format).plusDays(2)
+        String isoStartDate = DateUtils.format(start.withZone(DateTimeZone.UTC))
+        String isoEndDate = DateUtils.format(end.withZone(DateTimeZone.UTC))
+
+        String url = "${grailsApplication.config.ecodata.baseUrl}" + "managementunit/generateReportsInPeriod?startDate=${isoStartDate}&endDate=${isoEndDate}"
+
+        url += '&' + extras.collect { k,v -> "$k=$v" }.join('&')
+        def resp = webService.getJson(url)
+        return resp
     }
 }

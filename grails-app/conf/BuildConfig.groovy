@@ -56,7 +56,7 @@ clover {
                 }
             }
         }
-        ant.'clover-check'(target: "30.8%", haltOnFailure: true) { }
+        ant.'clover-check'(target: "32%", haltOnFailure: true) { }
 
     }
 }
@@ -141,7 +141,7 @@ grails.project.dependency.resolution = {
         runtime (":rest:0.8") {
             excludes "httpclient", "httpcore","xercesImpl"
         }
-        compile ":ala-auth:2.2.0"
+        compile ":ala-auth:2.2.1"
         runtime ":csv:0.3.1"
         compile ":markdown:1.1.1"
         compile ':cache:1.1.8'
@@ -159,7 +159,7 @@ grails.project.dependency.resolution = {
         test "org.grails.plugins:geb:1.0"
 
         if (Environment.current != Environment.DEVELOPMENT) {
-            compile (":ecodata-client-plugin:1.15-SNAPSHOT")
+            compile (":ecodata-client-plugin:1.15")
         }
 
     }

@@ -1,6 +1,7 @@
 package pages.modules
 
 import geb.Module
+import geb.module.FormElement
 import org.openqa.selenium.StaleElementReferenceException
 
 class OutcomeRow extends Module {
@@ -8,6 +9,7 @@ class OutcomeRow extends Module {
         outcome { $('.outcome-priority select') }
         priority { $('.priority select') }
         remove { $('i.icon-remove') }
+        priorityUnstyle{$('.unstyled')}
     }
 }
 
@@ -50,6 +52,7 @@ class PartnershipRow extends Module {
         name { $('.partner-name textarea') }
         partnership { $('.partnership-nature textarea') }
         orgType { $('.partner-organisation-type select') }
+        otherOrgType { $('.partner-organisation-type input').module(FormElement) }
         remove { $('i.icon-remove') }
     }
 }
@@ -82,7 +85,35 @@ class ServiceTargetRow extends Module {
     static content = {
         service { $('.service select') }
         score { $('.score select') }
+        date(required:false) { $('.target-date input') }
         targets { $('.budget-cell input') }
+    }
+
+    void selectService(String value) {
+        waitFor {
+            def options = $('.service option').collect{it.text() }
+            options.contains(value)
+        }
+        service = value
+    }
+
+    void selectScore(String value) {
+        waitFor {
+            def options = $('.score option').collect{it.text() }
+            options.contains(value)
+        }
+        score = value
+    }
+}
+
+class ObjectivesAndAssets extends Module {
+    static content = {
+        outcome { $('.original-outcomes textarea') }
+        assets { $('.original-assets select') }
+        removeButton(required:false) { $('.remove i') }
+    }
+    void remove() {
+        removeButton.click()
     }
 }
 
@@ -92,6 +123,12 @@ class EditableMeriPlan extends Module {
     static content = {
         primaryOutcome(required: false) { $('.outcome-priority select[data-bind*="primaryOutcome.description"]') }
         primaryPriority(required: false) { $('select[data-bind*="primaryOutcome.asset"]') }
+        primaryPriorityUnstyled(required: false) {$('.priority .unstyled')}
+
+        assetType(required: false) {$('.asset-category select')}
+        asset(required: false) {$('.asset-detail select[data-bind*="description"]')}
+        otherOutcomeColumn1(required: false) {$('.column-1 ul.unstyled li')}
+        otherOutcomeColumn2(required: false) {$('.column-2 ul.unstyled li')}
         secondaryOutcomes(required: false) { $('table.secondary-outcome tbody tr').moduleList(OutcomeRow) }
         shortTermOutcomes(required: false) { $('tbody[data-bind*="shortTermOutcomes"] textarea') }
         mediumTermOutcomes(required: false) {  $('tbody[data-bind*="midTermOutcomes"] textarea') }
@@ -110,7 +147,7 @@ class EditableMeriPlan extends Module {
         nationalAndRegionalPlans(required: false) { $('table.plans tbody tr').moduleList(PlanRow) }
         projectServices(required: false) { $('table.service-targets tbody tr').moduleList(ServiceTargetRow) }
         objectivesList(required: false) { $('#objectives-list') }
-        projectPartnerships(required: false) { $('#project-partnership').moduleList(PartnershipRow) }
+        projectPartnerships(required: false) { $('#project-partnership tbody tr').moduleList(PartnershipRow) }
         keq(required:false) { $('#keq tbody tr').moduleList(KeqRow) }
         budget(required:false) { $('.meri-budget').moduleList(BudgetRow) }
         activities(required:false) { $('#activity-list') }
@@ -120,10 +157,20 @@ class EditableMeriPlan extends Module {
         otherActivity(required:false) { $('#activity-list input[type=text]') }
         consultation(required:false) { $('.consultation textarea') }
         communityEngagement(required:false) { $('.community-engagement textarea') }
+        relatedProjects(required:false) { $('.related-projects textarea') }
+        objectivesAndAssets(required:false) { $('table tbody[data-bind*="objectives.rows1"] tr').moduleList(ObjectivesAndAssets) }
+
         floatingSaveButton { $('#floating-save [data-bind*="saveProjectDetails"]') }
         saveButton { $('.form-actions [data-bind*="saveProjectDetails"]').first() }
         pdfButton { $('.btn[data-bind*="meriPlanPDF"').first() }
 
+        approveButton(required:false){ $('[data-bind*="approvePlan"]') }
+        rejectButton(required:false) { $('[data-bind*="rejectPlan"') }
+        modifyApprovedPlanButton(required:false){ $('[data-bind*="modifyPlan"') }
+
+        approvePlanDialog(required:false) { $('#meri-plan-approval-modal').module(MeriPlanApproveDialog) }
+
+        internalOrderNumber(required:false) { $('#internalOrderId') }
     }
 
     void addBudgetRow() {
@@ -132,6 +179,22 @@ class EditableMeriPlan extends Module {
 
         waitFor {
             budget.size() == currentRows + 1
+        }
+    }
+
+    void addPartnershipRow() {
+        int currentRows = projectPartnerships.size();
+        $('button[data-bind*=addPartnership]').click();
+        waitFor {
+            projectPartnerships.size() == currentRows + 1
+        }
+    }
+
+    void addObjectiveAndAssetRow() {
+        int currentRows = objectivesAndAssets.size();
+        $('button[data-bind*=addOutcome]').click();
+        waitFor {
+            objectivesAndAssets.size() == currentRows + 1
         }
     }
 
@@ -212,6 +275,5 @@ class EditableMeriPlan extends Module {
 
         mediumTermOutcomes[midTermOutcomeCount].value(outcome)
     }
-
 
 }

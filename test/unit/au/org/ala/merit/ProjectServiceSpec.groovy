@@ -4,6 +4,7 @@ import au.org.ala.merit.reports.ReportGenerationOptions
 import grails.converters.JSON
 import grails.test.mixin.TestFor
 import groovy.json.JsonSlurper
+import org.apache.http.HttpStatus
 import org.codehaus.groovy.grails.web.converters.marshaller.json.CollectionMarshaller
 import org.codehaus.groovy.grails.web.converters.marshaller.json.MapMarshaller
 import org.codehaus.groovy.grails.web.json.parser.JSONParser
@@ -46,7 +47,7 @@ class ProjectServiceSpec extends Specification {
         // Delegate activity description to the implementation in the ActivityService while retaining the ability to mock other methods.
         au.org.ala.merit.ActivityService realService = new au.org.ala.merit.ActivityService()
         activityService.defaultDescription(_ as Map) >> {Map activity -> realService.defaultDescription(activity) }
-        service.grailsApplication = [config:[ecodata:[baseUrl:'']]]
+        service.grailsApplication = [config:[ecodata:[baseUrl:''], reports:[filterableActivityTypes:['output']]]]
         service.reportService = reportService
         service.userService = userService
         service.metadataService = metadataService
@@ -203,6 +204,19 @@ class ProjectServiceSpec extends Specification {
         result.error == "Invalid plan status"
     }
 
+    def "plan should not be approved if work order number is not supplied"(){
+        given:
+        def projectId = 'project1'
+        def planStatus = ProjectService.PLAN_SUBMITTED
+        webService.getJson(_) >> [projectId:projectId, planStatus:planStatus, wrokOrderId:""]
+
+        when:
+        def result = service.approvePlan(projectId, [:])
+
+        then:
+        result.error == "An internal order number must be supplied before the MERI Plan can be approved"
+    }
+
     def "plan should not be rejected if it's not been approved."(){
         given:
         def projectId = 'project1'
@@ -238,7 +252,7 @@ class ProjectServiceSpec extends Specification {
         def projectId = 'project1'
         def planStatus = ProjectService.PLAN_SUBMITTED
         List projectRoles = []
-        Map project = [projectId:projectId, planStatus:planStatus, grantId:'g1', reports:null]
+        Map project = [projectId:projectId, planStatus:planStatus, grantId:'g1', reports:null, internalOrderId: "12345"]
         webService.getJson(_) >> project
         String expectedName = 'g1 MERI plan approved 2019-07-01T00:00:00Z'
         String expectedFilename = 'meri-approval-project1-1561939200000.txt'
@@ -285,7 +299,7 @@ class ProjectServiceSpec extends Specification {
         def projectId = 'project1'
         def planStatus = initialState
         List projectRoles = []
-        Map project =  [projectId:projectId, planStatus:planStatus]
+        Map project =  [projectId:projectId, planStatus:planStatus, internalOrderId: "12345"]
         ProgramConfig programConfig = new ProgramConfig([
                 emailTemplates:[
                         (ProgramConfig.PLAN_SUBMITTED_EMAIL_TEMPLATE_CONFIG_ITEM): EmailTemplate.RLP_PLAN_SUBMITTED_EMAIL_TEMPLATE.name(),
@@ -1019,15 +1033,18 @@ class ProjectServiceSpec extends Specification {
     }
 
 
-    private Map setupMockServices() {
-
-         List<Map> services =[[output: "Output Test 1",name: "Output Test 1", scores: [[scoreId:"1", label: "Test label 1", isOutputTarget:true]], id: 1, category: null]]
-
-        metadataService.getProjectServices() >> services
+    private ProgramConfig setupMockServiceProgramConfig(List services) {
+        if (!services) {
+            services =[[output: "Output Test 1",name: "Output Test 1", scores: [[scoreId:"1", label: "Test label 1", isOutputTarget:true]], id: 1, category: null]]
+        }
+        ProgramConfig config = new ProgramConfig([:])
+        config.services = services
+        config
     }
+
     def "Convert double value to int for Services"(){
         setup:
-        setupMockServices()
+
         String projectId = "project_10"
         Map project = [projectId: projectId,
                        outputTargets:[
@@ -1040,6 +1057,7 @@ class ProjectServiceSpec extends Specification {
 
         then:
         1 * webService.getJson({it.contains("project/"+projectId)}) >> project
+        1 * projectConfigurationService.getProjectConfiguration(project) >> setupMockServiceProgramConfig()
 
         and:
         results.size() == 1
@@ -1053,7 +1071,6 @@ class ProjectServiceSpec extends Specification {
 
     def "able to collect int for Services"(){
         setup:
-        setupMockServices()
         String projectId = "project_10"
         Map project = [projectId: projectId,
                        outputTargets:[
@@ -1066,6 +1083,7 @@ class ProjectServiceSpec extends Specification {
 
         then:
         1 * webService.getJson({it.contains("project/"+projectId)}) >> project
+        1 * projectConfigurationService.getProjectConfiguration(project) >> setupMockServiceProgramConfig()
 
         and:
         results.size() == 1
@@ -1079,7 +1097,6 @@ class ProjectServiceSpec extends Specification {
 
     def "Check if the servicesIds is null"(){
         setup:
-        setupMockServices()
         String projectId = "project_10"
         Map project = [projectId: projectId,
                        outputTargets:[
@@ -1091,9 +1108,172 @@ class ProjectServiceSpec extends Specification {
 
         then:
         1 * webService.getJson({it.contains("project/"+projectId)}) >> project
+        1 * projectConfigurationService.getProjectConfiguration(project) >> setupMockServiceProgramConfig()
 
         and:
         results.size() == 0
+    }
+
+    def "A new dataset can be added"()  {
+        setup:
+        String projectId = 'p1'
+        Map dataset = [name:'data set 1']
+        Map project = [projectId:projectId, reports:[[reportId:'r1']]]
+        Map postData
+
+        when:
+        Map result = service.saveDataSet(projectId, dataset)
+
+        then:
+        2 * webService.getJson({it.contains("project/"+projectId)}) >> project
+        1 * webService.doPost({it.endsWith('project/'+projectId)}, _) >> { id, data ->
+            postData = data
+            [status: HttpStatus.SC_OK]
+        }
+
+        postData.size() == 1
+        postData.custom.size() == 1
+        postData.custom.dataSets.size() == 1
+        postData.custom.dataSets[0].name =='data set 1'
+        postData.custom.dataSets[0].dataSetId != null
+        result == [status: HttpStatus.SC_OK]
+    }
+
+    def "A dataset can be edited"()  {
+        setup:
+        String projectId = 'p1'
+        Map dataset = [name:'data set 1', dataSetId:'d1']
+        List existingDataSets = [[name:'data set 1 - old name', dataSetId:'d1'], [name:'data set 2', dataSetId:'d2'], [name:'data set 3', dataSetId:'d3']]
+        Map project = [projectId:projectId, custom:[dataSets:existingDataSets]]
+        Map postData
+
+        when:
+        Map result = service.saveDataSet(projectId, dataset)
+
+        then:
+        2 * webService.getJson({it.contains("project/"+projectId)}) >> project
+        1 * webService.doPost({it.endsWith('project/'+projectId)}, _) >> { id, data ->
+            postData = data
+            [status: HttpStatus.SC_OK]
+        }
+
+        postData.size() == 1
+        postData.custom.size() == 1
+        postData.custom.dataSets.size() == 3
+        postData.custom.dataSets[0].name =='data set 1'
+        postData.custom.dataSets[0].dataSetId == 'd1'
+        postData.custom.dataSets[1] == existingDataSets[1]
+        postData.custom.dataSets[2] == existingDataSets[2]
+
+        result == [status: HttpStatus.SC_OK]
+    }
+
+    def "If the data set does not exist when saving an exception will be thrown"()  {
+        setup:
+        String projectId = 'p1'
+        Map dataset = [name:'data set 1', dataSetId:'d2']
+        Map project = [projectId:projectId, custom:[dataSets:[[dataSetId:'d1', name:"old name"]]]]
+
+        when:
+        service.saveDataSet(projectId, dataset)
+
+        then:
+        1 * webService.getJson({it.contains("project/"+projectId)}) >> project
+        thrown IllegalArgumentException
+    }
+
+    def "A dataset can be deleted"()  {
+        setup:
+        String projectId = 'p1'
+        String datasetId = 'd1'
+        Map project = [projectId:projectId, custom:[dataSets:[[dataSetId:'d1', name:"name"]]]]
+        Map postData
+
+        when:
+        Map result = service.deleteDataSet(projectId, datasetId)
+
+        then:
+        2 * webService.getJson({it.contains("project/"+projectId)}) >> project
+        1 * webService.doPost({it.endsWith('project/'+projectId)}, _) >> { id, data ->
+            postData = data
+            [status: HttpStatus.SC_OK]
+        }
+
+        postData.size() == 1
+        postData.custom.size() == 1
+        postData.custom.dataSets.size() == 0
+        result == [status: HttpStatus.SC_OK]
+    }
+
+    def "If the data set does not exist when deleting an exception will be thrown"()  {
+        setup:
+        String projectId = 'p1'
+        String datasetId = 'd2'
+        Map project = [projectId:projectId, custom:[dataSets:[[dataSetId:'d1', name:"old name"]]]]
+
+        when:
+        service.deleteDataSet(projectId, datasetId)
+
+        then:
+        1 * webService.getJson({it.contains("project/"+projectId)}) >> project
+        thrown IllegalArgumentException
+    }
+
+    def "for the output report, only outputs matching the project services will be displayed"() {
+
+        setup:
+        List services = setupMockServicesForFilteredOutputModel()
+        Map activityModel = setupActivityModelForFiltering(services)
+        Map project = [custom:[details:[serviceIds:[1,2,4]]]]
+
+        Map activityData = [:]
+
+        when:
+        Map filteredModel = service.filterOutputModel(activityModel, project, activityData)
+
+        then:
+        metadataService.getProjectServices() >> services
+        1 * projectConfigurationService.getProjectConfiguration(project) >> setupMockServiceProgramConfig(services)
+        filteredModel.outputs == ['o1', 'o2', 'o4']
+    }
+
+
+    def "for the output report, outputs that are not service outputs will always be displayed"() {
+
+        setup:
+
+        List services = setupMockServicesForFilteredOutputModel()
+        Map activityModel = setupActivityModelForFiltering(services)
+        activityModel.outputs << 'non service'
+
+        Map project = [custom:[details:[serviceIds:[1,2,4]]]]
+
+        Map activityData = [:]
+
+        when:
+        Map filteredModel = service.filterOutputModel(activityModel, project, activityData)
+
+        then:
+        metadataService.getProjectServices() >> services
+        1 * projectConfigurationService.getProjectConfiguration(project) >> setupMockServiceProgramConfig(services)
+        filteredModel.outputs == ['o1', 'o2', 'o4', 'non service']
+    }
+
+    private Map setupActivityModelForFiltering(List services) {
+        Map activityModel = [name:'output', outputs:[]]
+        services.each {
+            activityModel.outputs << it.output
+        }
+        activityModel
+    }
+
+    private List setupMockServicesForFilteredOutputModel() {
+
+        List services = [1,2,3,4,5,6,7,8,9,10].collect{
+            String output = 'o'+it
+            [id:it, output:output]
+        }
+        services
     }
 
     private Map buildApprovalDocument(int i, String projectId) {

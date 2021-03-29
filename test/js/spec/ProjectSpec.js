@@ -2,6 +2,11 @@ describe("ProjectViewModel Spec", function () {
     beforeAll(function() {
         window.fcConfig = {
             imageLocation:'/'
+        };
+        if (!window.bootbox) {
+            window.bootbox = {alert:function(term){
+                    console.log("Test: " + term);
+                }}
         }
     });
     afterAll(function() {
@@ -20,6 +25,7 @@ describe("ProjectViewModel Spec", function () {
 
         expect(project.name()).toEqual(projectData.name);
         expect(project.description()).toEqual(projectData.description);
+        expect(project.projectStatus).toEqual([{id: 'application', name:'Application'}, {id: 'active', name:'Active'},{id:'completed',name:'Completed'},{id:'deleted', name:'Deleted'}, {id:'terminated', name: 'Terminated'}])
     });
 
 
@@ -60,4 +66,15 @@ describe("ProjectViewModel Spec", function () {
 
     });
 
+    it("should project should display project status and termination reason", function (){
+        let projectData = {
+            status: 'terminated',
+            terminationReason: "Termination Reason"
+        }
+        var org = [];
+        var isEditor = true
+        let project = new ProjectViewModel(projectData, isEditor, org)
+        expect(project.status()).toEqual(projectData.status)
+        expect(project.terminationReason()).toEqual(projectData.terminationReason)
+    });
 });

@@ -4,11 +4,11 @@ var progressReport = {
     "category": "Progress Reports",
     "createdUserId": "<anon>",
     "dateCreated": ISODate("2019-06-25T06:36:14Z"),
-    "formVersion": 1,
+    "formVersion": NumberInt(1),
     "gmsId": null,
     "lastUpdated": ISODate("2019-06-25T06:36:14Z"),
     "lastUpdatedUserId": "<anon>",
-    "minOptionalSectionsCompleted": 1,
+    "minOptionalSectionsCompleted": NumberInt(1),
     "name": "Progress Report",
     "publicationStatus": "published",
     "sections": [{
@@ -66,6 +66,11 @@ var progressReport = {
                         "dataType": "number",
                         "name": "example",
                         "units": "mm"
+                    },
+                    {
+                        "dataType": "text",
+                        "name": "example2",
+                        "validate": "required,maxSize[5]"
                     }
                 ],
                 "viewModel": [
@@ -82,6 +87,11 @@ var progressReport = {
                                         "displayOptions": {
                                             "displayUnits": true
                                         }
+                                    },
+                                    {
+                                        "type": "text",
+                                        "source": "example2",
+                                        "preLabel": "example2"
                                     }
                                 ]
                             }

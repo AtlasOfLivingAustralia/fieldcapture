@@ -48,10 +48,24 @@
                         <div class="span4 header-label">Project status</div>
 
                         <div class="span8 value">
-                            <span style="text-transform:uppercase;" data-bind="text:status" class="badge badge-info"
-                                  style="font-size: 13px;"></span>
+                            <span data-bind="if: status().toLowerCase() == 'terminated'">
+                                <span style="text-transform:uppercase;" data-bind="text:status" class="badge badge-danger projectStatus"></span>
+                            </span>
+                            <span data-bind="if: status().toLowerCase() != 'terminated'">
+                                <span  data-bind="text:status" class="badge badge-info projectStatus"></span>
+                            </span>
                         </div>
                     </div>
+                    <g:if test="${fc.userIsAlaOrFcAdmin()}">
+                        <span data-bind="if: status().toLowerCase() == 'terminated'">
+                            <div class="row-fluid">
+                                <div class="span4 header-label">Termination Reason</div>
+                                <div class="span8 value">
+                                    <span class="terminationReason" data-bind="text: terminationReason"></span>
+                                </div>
+                            </div>
+                        </span>
+                    </g:if>
 
                 </div>
             </div></div>
@@ -80,10 +94,10 @@
                     </div>
 
                     <g:if test="${showOrderNumber}">
-                    <div class="row-fluid" data-bind="visible:workOrderId">
+                    <div class="row-fluid" data-bind="visible:internalOrderId">
                         <div class="span4 header-label">Internal order number</div>
 
-                        <div class="span8">${project.workOrderId}</div>
+                        <div class="span8">${project.internalOrderId}</div>
                     </div>
                     </g:if>
                 </div>

@@ -74,9 +74,15 @@
         </div>
     </div>
     <div class="control-group span4">
-        <label class="control-label" for="workOrderId">Work order id / Internal order number</label>
+        <label class="control-label" for="internalOrderId">Internal order number</label>
         <div class="controls">
-            <g:textField class="" name="workOrderId" data-bind="value:workOrderId"/>
+            <!-- Once the MERI plan is approved, the internal order number becomes a mandatory field. -->
+            <g:if test="${ProjectService.APPLICATION_STATUS != project.status}">
+                <g:textField class="" placeholder="If unavailable, use 'TBA'" name="internalOrderId" data-bind="value:internalOrderId" data-validation-engine="validate[required]"/>
+            </g:if>
+            <g:else>
+                <g:textField class="" placeholder="If not available, use TBA" name="internalOrderId" data-bind="value:internalOrderId"/>
+            </g:else>
         </div>
     </div>
 
@@ -93,7 +99,7 @@
     <div class="control-group span4">
         <label class="control-label" for="manager">Project funding</label>
         <div class="controls">
-            <g:textField class="" name="funding" data-bind="value:funding" data-validation-engine="validate[custom[number]]"/>
+            <g:textField class="" id="funding" name="funding" data-bind="value:funding" data-validation-engine="validate[custom[number]]"/>
         </div>
     </div>
 
@@ -230,14 +236,18 @@
         <label>Project status
         	<fc:iconHelp title="Project status">Project status.</fc:iconHelp>
         </label>
-        <g:if test="${ProjectService.PLAN_UNLOCKED == project.planStatus}">
+        <!-- Application status cannot be changed until the MERI plan is approved. -->
+        <!-- Application status is set only when creating the project -->
+        <g:if test="${ProjectService.PLAN_UNLOCKED == project.planStatus || ProjectService.APPLICATION_STATUS == project.status}">
             <select class="input-xlarge" id="projectState" data-bind="options:projectStatus, optionsText: 'name', optionsValue: 'id', value:status" disabled="disabled"></select>
         </g:if>
         <g:else>
-            <select class="input-xlarge" id="projectState" data-bind="options:projectStatus, optionsText: 'name', optionsValue: 'id', value:status"></select>
+            <select class="input-xlarge" id="projectState" data-bind="options:projectStatus.filter(x => x.name != '${ProjectService.APPLICATION_STATUS}'), optionsText: 'name', optionsValue: 'id', value:status"></select>
         </g:else>
     </div>
-    <div class="span4">
+    <div class="span4" data-bind="visible:status() ==='terminated'">
+        <label class="required" for="terminationReason">Termination Reason </label>
+            <textarea class="span12" id="terminationReason" rows="3" data-bind=" value:terminationReason" data-validation-engine="validate[required]"></textarea>
 
     </div>
 </div>

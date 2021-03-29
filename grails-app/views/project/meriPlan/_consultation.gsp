@@ -1,4 +1,4 @@
-<h4>${title}</h4>
+<h4>${title}<g:if test="${helpTextHeading}"> <fc:iconHelp html="true" container="body">${helpTextHeading}</fc:iconHelp></g:if></h4>
 <g:if test="${explanation}">
     ${explanation}
 </g:if>

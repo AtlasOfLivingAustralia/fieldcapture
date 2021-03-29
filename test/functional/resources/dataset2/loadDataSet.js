@@ -3,7 +3,7 @@ print("Current working dir: " + pwd());
 load('../data_common/loadMeritHub.js');
 load('../data_common/insertData.js');
 
-
+loadActivityForms();
 
 createProgram({});
 var config = {
@@ -73,6 +73,12 @@ for (var i = 1; i < 10; i++) {
             userId: '10',
             accessLevel: 'editor'
         });
+        db.userPermission.insert({
+            entityType: 'au.org.ala.ecodata.Project',
+            entityId: id,
+            userId: '30',
+            accessLevel: 'caseManager'
+        });
     }
 }
 
@@ -99,6 +105,38 @@ db.userPermission.insert({
     accessLevel: 'admin'
 });
 
+createOrganisation({
+    name:'THE TRUSTEE FOR PSS FUND Test',
+    organisationId:'test_organisation',
+    status:'active', abn:'',
+    url:'http://www.ala.org.au',
+    acronym:'TSTORG', description:'THE TRUSTEE FOR PSS FUND Test'
+})
+
+createProject({name:'project active', projectId:"project_active", status:"active", planStatus:'submitted', internalOrderId:'12345' })
+createProject({name:'project application', projectId:"project_application", status:"application", planStatus:'submitted', internalOrderId:''})
+createProject({name:'project completed', projectId:"project_completed", status:"completed", planStatus:'submitted', internalOrderId:'12345'})
+
+db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_active', userId:'2', accessLevel:'caseManager'});
+db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_application', userId:'2', accessLevel:'caseManager'});
+db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_completed', userId:'2', accessLevel:'caseManager'});
 
 
-loadActivityForms();
+createProgram({programId:"grants", name:"Grant Program"});
+var grantProgram = db.program.findOne({programId:"grants"});
+grantProgram.config.projectTemplate=null;
+grantProgram.config.meriPlanTemplate=null;
+db.program.save(grantProgram);
+createProject({name:'Grants project', projectId:"grants_project", programId:"grants", status:"active", planStatus:''});
+db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'grants_project', userId:'2', accessLevel:'admin'});
+
+addSetting('meritfielddata.rlp.report.declaration', 'Report declaration text');
+addSetting('meritfielddata.rlp.report.submitted.emailSubject', 'Report submitted subject');
+addSetting('meritfielddata.rlp.report.submitted.emailBody', 'Report submitted body');
+addSetting('meritfielddata.rlp.report.submitted.emailSubject', 'Report approved subject');
+addSetting('meritfielddata.rlp.report.submitted.emailBody', 'Report approved body');
+
+// Load scores used by RLP services to enable their selection in the MERI plan.
+createProjectNumberBaselineDataSets({ "scoreId":"score_42"});
+createProjectNumberOfCommunicationMaterialsPublished({ "scoreId":"score_43"});
+createProjectWeedAreaSurveyedHaDefault({ "scoreId":"score_44"});

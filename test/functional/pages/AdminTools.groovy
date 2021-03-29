@@ -2,7 +2,7 @@ package pages
 
 import geb.Page
 
-class AdminTools extends Page {
+class AdminTools extends ReloadablePage {
 
     static url = "admin/tools"
 
@@ -16,10 +16,18 @@ class AdminTools extends Page {
     void clearMetadata(){
         waitFor {clearMetaDataCacheButton.displayed}
         clearMetaDataCacheButton.click()
+        waitFor { hasBeenReloaded() }
     }
 
     void reindex() {
         reindexButton().click()
+        waitFor { hasBeenReloaded() }
+    }
+
+    void clearCache() {
+        waitFor { $("#btnClearMetadataCache").displayed }
+        $("#btnClearMetadataCache").click()
+        waitFor { hasBeenReloaded() }
     }
 
 }

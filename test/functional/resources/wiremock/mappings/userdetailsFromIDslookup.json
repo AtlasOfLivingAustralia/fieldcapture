@@ -9,6 +9,6 @@
     "headers": {
       "Content-Type": "application/json"
     },
-    "body": "{\"success\":true, \"users\":{}}}"
+    "body": "{\"success\":true, \"users\":{ \"1\":{ \"userName\":\"user1@user.com\"}, \"30\":{ \"userName\":\"user30@user.com\"} }}"
   }
 }

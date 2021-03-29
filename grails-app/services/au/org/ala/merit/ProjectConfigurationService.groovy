@@ -33,6 +33,10 @@ class ProjectConfigurationService {
         ProgramConfig programConfig = new ProgramConfig(program.inheritedConfig ?: [:])
         if (!programConfig.activityBasedReporting) {
             programConfig.services = metadataService.getProjectServices()
+            if (programConfig.supportedServiceIds) {
+                List supportedServiceIds = programConfig.supportedServiceIds?.collect{it as Integer}
+                programConfig.services = programConfig.services.findAll{it.id in supportedServiceIds}
+            }
         }
         // Outcomes are defined by the program
         programConfig.outcomes = program.outcomes ?: []
@@ -59,8 +63,7 @@ class ProjectConfigurationService {
                 programConfig.outcomes = managementUnit.outcomes
             }
 
-            // Allow management units to override project reporting frequency or include additional reports
-            // to those defined by the program configuration.
+            // Allow management units to override project reporting frequency
             List extraReports = []
             if (!programConfig.projectReports) {
                 programConfig.projectReports = []
@@ -70,10 +73,10 @@ class ProjectConfigurationService {
                     return it.category == configuration.category && it.activityType == configuration.activityType
                 }
                 if (programReport) {
+                    // Both the frequency and start date are required so the report dates
+                    // align correctly.
                     programReport.reportingPeriodInMonths = configuration.reportingPeriodInMonths
-                }
-                else {
-                    extraReports << configuration
+                    programReport.firstReportingPeriodEnd = configuration.firstReportingPeriodEnd
                 }
             }
             programConfig.projectReports?.addAll(extraReports)
@@ -111,7 +114,7 @@ class ProjectConfigurationService {
         ]
         // The original MERIT project template required content be included (excluded by default) but we've
         // moved to an included by default model.
-        programConfig.excludes = [ProgramConfig.ProjectContent.MERI_PLAN.toString(), ProgramConfig.ProjectContent.RISKS_AND_THREATS.toString()]
+        programConfig.excludes = [ProgramConfig.ProjectContent.DATA_SETS.toString(), ProgramConfig.ProjectContent.MERI_PLAN.toString(), ProgramConfig.ProjectContent.RISKS_AND_THREATS.toString()]
         Map mapping = [
                 'MERI Plan':  ProgramConfig.ProjectContent.MERI_PLAN.toString(),
                 'Risks and Threats': ProgramConfig.ProjectContent.RISKS_AND_THREATS.toString()

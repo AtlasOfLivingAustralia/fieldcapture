@@ -12,7 +12,7 @@ class RlpOverviewTab extends Module {
         projectStart { $('.overview .row-fluid .span6 div', text:'Project start').siblings()[0] }
         projectEnd { $('.overview .row-fluid .span6 div', text:'Project end').siblings()[0] }
         funding { $('.overview .row-fluid .span6 div', text:'Project Funding').siblings()[0] }
-        orderNumber { $('.overview .row-fluid .span6 div', text:'Internal order number').siblings()[0]}
+        internalOrderNumber { $('.overview .row-fluid .span6 div', text:'Internal order number').siblings()[0]}
 
         description { $('p[data-bind*=description]') }
         newsAndEvents { $('div', text:'').siblings()[0] }

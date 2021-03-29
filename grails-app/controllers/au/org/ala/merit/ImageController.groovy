@@ -97,7 +97,12 @@ class ImageController {
      * The content type of the file is derived purely from the file extension.
      */
     def get() {
-        File f = new File(imageService.fullPath(params.id))
+        String filename = FilenameUtils.getName(params.id)
+        if (filename != params.id) {
+            response.status = 404
+            return
+        }
+        File f = new File(imageService.fullPath(filename))
         if (!f.exists()) {
             response.status = 404
             return

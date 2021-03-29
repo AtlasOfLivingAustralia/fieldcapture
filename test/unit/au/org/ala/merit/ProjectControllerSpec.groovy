@@ -97,8 +97,9 @@ class ProjectControllerSpec extends Specification {
         model.projectContent.site.disabled == true
         model.projectContent.dashboard.disabled == true
 
-        and: "the admin tab is not visible"
+        and: "the data set summary and admin tabs are not visible"
         model.projectContent.admin.visible == false
+        model.projectContent.datasets.visible == false
     }
 
     def "the admin content should be enabled for project admins"() {
@@ -244,8 +245,10 @@ class ProjectControllerSpec extends Specification {
         controller.viewReport(projectId, reportId)
 
         then:
-        1 * projectService.getProgramConfiguration(project) >> new ProgramConfig([requiresActivityLocking: true])
         1 * reportService.activityReportModel(reportId, ReportService.ReportMode.VIEW, null) >> activityReportModel
+        1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity) >> activityReportModel.metaModel
+        1 * projectService.getProgramConfiguration(project) >> new ProgramConfig([requiresActivityLocking: true])
+
         view == '/activity/activityReportView'
         model.context == project
         model.contextViewUrl == '/project/index/'+projectId
@@ -266,6 +269,7 @@ class ProjectControllerSpec extends Specification {
         controller.editReport(projectId, reportId)
         then:
         1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> activityReportModel
+        1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity) >> activityReportModel.metaModel
         1 * projectService.getProgramConfiguration(project) >> new ProgramConfig([requiresActivityLocking: true])
         view == '/activity/activityReport'
         model.context == project
@@ -292,6 +296,7 @@ class ProjectControllerSpec extends Specification {
         // Override the default behaviour from setup
         1 * projectService.getProgramConfiguration(project) >> new ProgramConfig([requiresActivityLocking: true])
         0 * reportService.lockForEditing(_)
+        1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity) >> activityReportModel.metaModel
 
         and: "the user should be redirected to the report view"
         response.redirectUrl == '/project/viewReport/'+projectId+"?reportId="+reportId+"&attemptedEdit=true"
@@ -314,6 +319,8 @@ class ProjectControllerSpec extends Specification {
 
         then:
         1 * reportService.lockForEditing(project.reports[0])
+        1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity) >> activityReportModel.metaModel
+
         view == '/activity/activityReport'
     }
 
@@ -397,57 +404,10 @@ class ProjectControllerSpec extends Specification {
         model.projectContent.details.visible == false
         model.projectContent.admin.visible == false
         model.projectContent.reporting.visible == false
+        model.projectContent.datasets.visible == false
         model.projectContent.overview.template == 'rlpOverview'
         model.projectContent.overview.visible == true
         model.projectContent.documents.visible == true
-    }
-
-
-    private Map setupMockServices() {
-        Map activityModel = [name:'output', outputs:[]]
-        List services = [1,2,3,4,5,6,7,8,9,10].collect{
-            String output = 'o'+it
-            activityModel.outputs << output
-            [id:it, output:output]
-        }
-        metadataServiceStub.getProjectServices() >> services
-        activityModel
-    }
-
-    def "for the output report, only outputs matching the project services will be displayed"() {
-
-        setup:
-        Map activityModel = setupMockServices()
-
-        grailsApplication.config = [reports:[filterableActivityTypes:['output']]]
-        Map project = [custom:[details:[serviceIds:[1,2,4]]]]
-
-        Map activityData = [:]
-
-        when:
-        Map filteredModel = controller.filterOutputModel(activityModel, project, activityData)
-
-        then:
-        filteredModel.outputs == ['o1', 'o2', 'o4']
-    }
-
-
-    def "for the output report, outputs that are not service outputs will always be displayed"() {
-
-        setup:
-        Map activityModel = setupMockServices()
-        activityModel.outputs << 'non service'
-
-        grailsApplication.config = [reports:[filterableActivityTypes:['output']]]
-        Map project = [custom:[details:[serviceIds:[1,2,4]]]]
-
-        Map activityData = [:]
-
-        when:
-        Map filteredModel = controller.filterOutputModel(activityModel, project, activityData)
-
-        then:
-        filteredModel.outputs == ['o1', 'o2', 'o4', 'non service']
     }
 
     def "the financial year target exclusion works with numeric and string values"() {
@@ -529,7 +489,8 @@ class ProjectControllerSpec extends Specification {
                         ProgramConfig.ProjectContent.DOCUMENTS.toString(),
                         ProgramConfig.ProjectContent.RISKS_AND_THREATS.toString(),
                         ProgramConfig.ProjectContent.MERI_PLAN.toString(),
-                        ProgramConfig.ProjectContent.DASHBOARD.toString()]])
+                        ProgramConfig.ProjectContent.DASHBOARD.toString(),
+                        ProgramConfig.ProjectContent.DATA_SETS.toString()]])
 
         view == '/project/index'
         !model.projectContent.overview.disabled
@@ -538,6 +499,7 @@ class ProjectControllerSpec extends Specification {
         model.projectContent.details.visible == false
         model.projectContent.site.visible == false
         model.projectContent.dashboard.visible == false
+        model.projectContent.datasets.visible == false
     }
 
     def "The controller delegates to the projectService to list project priorities and returns a JSON encoded response"() {

@@ -463,9 +463,8 @@ db.userPermission.insert({entityType:'au.org.ala.ecodata.Program', entityId:'pro
 db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_3', userId:'1', accessLevel:'admin'});
 db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entityId:'mu_3', userId:'1', accessLevel:'admin'});
 
-createScoreWeedHaDefaults({scoreId: "score_1"});
-// createScoreWeedHaDefaults({_id:36, scoreId: "score_2"});
-// createScoreWeedHaDefaults({_id:37, scoreId: "score_3"});
+createScoreWeedHaDefaults({ scoreId: "score_1"});
+
 
 createActivities({activityId:"activity_1", projectId:"project_1", type : "Managed for invasive weeds"});
 createActivities({activityId:"activity_2", projectId:"project_2", type : "Managed for invasive weeds"});
@@ -497,9 +496,11 @@ createPestOutDataDefaults({activityId:"activity_4", outputId:"output_4"});
 createPestOutDataDefaults({activityId:"activity_5", outputId:"output_5"});
 createPestOutDataDefaults({activityId:"activity_6", outputId:"output_6"});
 
-createProjectNumberBaselineDataSets({"scoreId":"score_42"});
-createProjectNumberOfCommunicationMaterialsPublished({"scoreId":"score_43"});
-createProjectWeedAreaSurveyedHaDefault({"scoreId":"score_44"});
+loadActivityForms();
+
+createProjectNumberBaselineDataSets({ "scoreId":"score_42"});
+createProjectNumberOfCommunicationMaterialsPublished({ "scoreId":"score_43"});
+createProjectWeedAreaSurveyedHaDefault({ "scoreId":"score_44"});
 
 
 createActivities({activityId: "activity_10", projectId: "project_10", type:"RLP Output Report", progress:"finished"});
@@ -693,7 +694,3 @@ db.document.insert({externalUrl:'https://ala.org.au/3', name:'Link 3', role:'hel
 db.document.insert({externalUrl:'https://ala.org.au/4', name:'Link 4', role:'helpResource', documentId:'4'});
 db.document.insert({externalUrl:'https://ala.org.au/5', name:'Link 5', role:'helpResource', documentId:'5'});
 db.document.insert({externalUrl:'https://ala.org.au/6', name:'Link 6', role:'helpResource', documentId:'6'});
-
-
-// leave this at the end of the file
-loadActivityForms();

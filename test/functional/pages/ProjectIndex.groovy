@@ -6,6 +6,7 @@ import pages.modules.ProjectAdminTab
 import pages.modules.ProjectDashboardSection
 import pages.modules.RisksAndThreats
 
+
 /**
  * Represents a project index page.
  */
@@ -65,6 +66,8 @@ class OverviewTab extends Module {
         documents {$('')}
         programName {$(".programName")}
         managementUnit {$(".managementUnitName")}
+        projectStatus {$('span[data-bind*=status]')}
+        terminationReason {$('.terminationReason')}
     }
 }
 

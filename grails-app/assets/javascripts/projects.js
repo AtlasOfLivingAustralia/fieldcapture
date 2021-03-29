@@ -20,6 +20,8 @@
 //= require projectActivityPlan.js
 //= require projectActivity.js
 //= require blog
+//= require dataSets
+//= require projectService
 //= require_self
 
 /*
@@ -130,7 +132,15 @@ function ProjectViewModel(project, isUserEditor, organisations) {
         projectDefault = project.status;
     }
     self.status = ko.observable(projectDefault.toLowerCase());
-    self.projectStatus = [{id: 'active', name:'Active'},{id:'completed',name:'Completed'},{id:'deleted', name:'Deleted'}];
+    self.projectStatus = [{id: 'application', name:'Application'}, {id: 'active', name:'Active'},{id:'completed',name:'Completed'},{id:'deleted', name:'Deleted'}, {id:"terminated", name: "Terminated"}];
+
+    self.terminationReason = ko.observable(project.terminationReason);
+
+    self.status.subscribe(function (terminated) {
+        if (terminated !== "terminated"){
+            self.terminationReason(undefined)
+        }
+    });
 
     self.organisationId = ko.observable(project.organisationId);
     self.transients.organisation = ko.observable(organisationsMap[self.organisationId()]);
@@ -799,7 +809,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
     });
     self.meriPlan = new MERIPlan(project, projectService, meriPlanConfig);
 
-    self.workOrderId = ko.observable(project.workOrderId);
+    self.internalOrderId = ko.observable(project.internalOrderId);
     self.userIsCaseManager = ko.observable(userRoles.grantManager);
     self.userIsAdmin = ko.observable(userRoles.admin);
     self.promote = [{id: 'yes', name:'Yes'},{id:'no',name:'No'}];
@@ -870,7 +880,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             description: self.description(),
             externalId: self.externalId(),
             grantId: self.grantId(),
-            workOrderId: self.workOrderId(),
+            internalOrderId: self.internalOrderId(),
             manager: self.manager(),
             plannedStartDate: self.plannedStartDate(),
             plannedEndDate: self.plannedEndDate(),
@@ -885,6 +895,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             programId: self.programId(),
             funding: new Number(self.funding()),
             status: self.status(),
+            terminationReason: self.terminationReason(),
             tags: self.tags(),
             promoteOnHomepage: self.promoteOnHomepage(),
             options: {
@@ -1065,6 +1076,19 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
         return sitesViewModel;
     };
 
+    self.initialiseDataSets = function() {
+        var dataSetsConfig = {
+            dataSetsSelector: config.dataSetsSelector || '#project-data-sets',
+            newDataSetUrl:  config.newDataSetUrl,
+            editDataSetUrl: config.editDataSetUrl,
+            deleteDataSetUrl: config.deleteDataSetUrl,
+            returnToUrl: config.returnToUrl
+        };
+        var projectService = new ProjectService({}, config);
+        var viewModel = new DataSetsViewModel(project.custom && project.custom.dataSets, projectService, dataSetsConfig);
+        ko.applyBindings(viewModel, $(dataSetsConfig.dataSetsSelector)[0]);
+    };
+
     self.initialiseAdminTab = function() {
         $("#settings-validation").validationEngine();
         ko.applyBindings(self.meriPlan, document.getElementById("edit-meri-plan"));
@@ -1193,250 +1217,6 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
 
 } // end of view model
 
-
-/** Constants representing the status of a project MERI plan */
-PlanStatus = {
-    SUBMITTED: 'submitted',
-    APPROVED: 'approved',
-    NOT_APPROVED: 'not approved',
-    UNLOCKED: 'unlocked for correction'
-};
-
-/**
- * Handles common project and meri plan status functions as well as communication with the server for
- * saving / submitting / approvals etc.
- * @param project the project this service is working with.
- * @param options mostly URLs to access server functions.
- */
-function ProjectService(project, options) {
-
-    var self = this;
-    var defaults = {
-        submitPlanUrl : fcConfig.submitPlanUrl,
-        modifyPlanUrl : fcConfig.modifyPlanUrl,
-        approvalPlanUrl : fcConfig.approvalPlanUrl,
-        rejectPlanUrl : fcConfig.rejectPlanUrl,
-        excludeFinancialYearData : false
-    };
-
-    var config = _.defaults(options, defaults);
-
-    self.saveGrantManagerSettings = function () {
-
-        if ($('#grantmanager-validation').validationEngine('validate')) {
-            var doc = {oldDate:project.plannedEndDate, newDate:self.plannedEndDate(),reason:self.transients.variation(),role:"variation",projectId:project.projectId};
-            var jsData = {
-                plannedEndDate: self.plannedEndDate()
-            };
-            var json = JSON.stringify(jsData, function (key, value) {
-                return value === undefined ? "" : value;
-            });
-
-            $.ajax({
-                url: config.projectUpdateUrl,
-                type: 'POST',
-                data: json,
-                contentType: 'application/json',
-                success: function (data) {
-                    if (data.error) {
-                        showAlert("Failed to save settings: " + data.detail + ' \n' + data.error,
-                            "alert-error","save-settings-result-placeholder");
-                    } else {
-                        self.uploadVariationDoc(doc);
-                    }
-                },
-                error: function (data) {
-                    var status = data.status;
-                    alert('An unhandled error occurred: ' + data.status);
-                }
-            });
-        }
-    };
-
-    self.saveProjectData = function (jsData) {
-        if ($('#settings-validation').validationEngine('validate')) {
-
-            // this call to stringify will make sure that undefined values are propagated to
-            // the update call - otherwise it is impossible to erase fields
-            var json = JSON.stringify(jsData, function (key, value) {
-                return value === undefined ? "" : value;
-            });
-
-            blockUIWithMessage("Saving....");
-            $.ajax({
-                url: config.projectUpdateUrl,
-                type: 'POST',
-                data: json,
-                contentType: 'application/json'
-            }).done(function(data) {
-                if (data.error) {
-                    $.unblockUI();
-                    showAlert("Failed to save settings: " + data.detail + ' \n' + data.error,
-                        "alert-error","save-result-placeholder");
-                } else {
-                    blockUIWithMessage("Refreshing page...");
-                    showAlert("Project settings saved","alert-success","save-result-placeholder");
-                    window.location.reload();
-                }
-            }).fail(function(data) {
-                $.unblockUI();
-                alert('An unhandled error occurred: ' + data.status + " Please refresh the page and try again");
-            });
-        }
-    };
-
-    self.uploadVariationDoc = function(doc){
-        var json = JSON.stringify(doc, function (key, value) {
-            return value === undefined ? "" : value;
-        });
-        $.post(
-            config.documentUpdateUrl,
-            {document:json},
-            function(result) {
-                showAlert("Project end date saved","alert-success","save-settings-result-placeholder");
-                location.reload();
-            })
-            .fail(function() {
-                alert('Error saving document record');
-            });
-    };
-
-    self.modifyPlan = function () {
-        self.saveStatus(config.modifyPlanUrl);
-    };
-    // approve plan and handle errors
-    self.approvePlan = function (approvalDetails) {
-        self.saveStatus(config.approvalPlanUrl, approvalDetails);
-    };
-    // reject plan and handle errors
-    self.rejectPlan = function () {
-        self.saveStatus(config.rejectPlanUrl);
-    };
-
-    self.finishCorrections = function () {
-        self.saveStatus(config.finishedCorrectingPlanUrl);
-    };
-
-    self.submitPlan = function(declarationText) {
-        self.saveStatus(config.submitPlanUrl, {declaration:declarationText});
-    };
-
-    self.unlockPlan = function(declarationText) {
-        self.saveStatus(unlockPlanForCorrectionUrl, {declaration:declarationText});
-    };
-
-    self.saveStatus = function (url, payloadData) {
-        var payload = {projectId: project.projectId};
-        if (payloadData) {
-            _.extend(payload, payloadData);
-        }
-        return $.ajax({
-            url: url,
-            type: 'POST',
-            data: JSON.stringify(payload),
-            contentType: 'application/json'
-        }).done(function (data) {
-            if (data.error) {
-                bootbox.alert("Unable to modify plan.\n" + data.error);
-            } else {
-                location.reload();
-            }
-        }).fail(function (data) {
-            if (data.status === 401) {
-                bootbox.alert("Unable to modify plan. You may not have the correct permissions.");
-            } else {
-                bootbox.alert("Unable to modify plan. An unhandled error occurred: " + data.status);
-            }
-        });
-    };
-
-    self.isSubmittedOrApproved = function() {
-        return (project.planStatus == PlanStatus.APPROVED || project.planStatus == PlanStatus.SUBMITTED);
-    };
-
-    self.isProjectDetailsLocked = ko.computed(function () {
-        return self.isSubmittedOrApproved();
-    });
-
-    self.isApproved = function() {
-        return project.planStatus == PlanStatus.APPROVED;
-    };
-
-    self.isSubmitted = function() {
-        return project.planStatus == PlanStatus.SUBMITTED;
-    };
-
-    self.isUnlockedForDataCorrection = function() {
-        return project.planStatus == PlanStatus.UNLOCKED;
-    };
-
-    self.isCompleted = function() {
-        return project.status && project.status.toLowerCase() == 'completed';
-    };
-
-    self.getBudgetHeaders = function() {
-        if (config.excludeFinancialYearData) {
-            return []; // Return a single period header for the project
-        }
-        var headers = [];
-        var startYr = moment(project.plannedStartDate).format('YYYY');
-        var endYr = moment(project.plannedEndDate).format('YYYY');
-        var startMonth = moment(project.plannedStartDate).format('M');
-        var endMonth = moment(project.plannedEndDate).format('M');
-
-        //Is startYr is between jan to june?
-        if(startMonth >= 1 &&  startMonth <= 6 ){
-            startYr--;
-        }
-
-        //Is the end year is between july to dec?
-        if(endMonth >= 7 &&  endMonth <= 12 ){
-            endYr++;
-        }
-
-        var count = endYr - startYr;
-        for (i = 0; i < count; i++){
-            headers.push(startYr + '/' + ++startYr);
-        }
-        return headers;
-
-    };
-
-    /**
-     * Queries the server to retrieve an array of objects representing each time the MERI plan was approved.
-     */
-    self.getApprovedMeriPlanHistory = function() {
-        var approvedPlans = [];
-        var deferred = $.Deferred();
-        if (config.approvedMeriPlanHistoryUrl) {
-            $.getJSON(config.approvedMeriPlanHistoryUrl).done(function(data) {
-                if (data && data.approvedMeriPlanHistory) {
-                    _.each(data.approvedMeriPlanHistory, function(meriPlan) {
-                        approvedPlans.push(
-                            {
-                                openMeriPlanUrl: config.viewHistoricalMeriPlanUrl+"?documentId="+meriPlan.documentId,
-                                userDisplayName:meriPlan.userDisplayName,
-                                dateApproved:convertToSimpleDate(meriPlan.date, true),
-                                reason:meriPlan.reason,
-                                referenceDocument:meriPlan.referenceDocument,
-                                documentId:meriPlan.documentId
-                            }
-                        )
-                    });
-                }
-                deferred.resolve(approvedPlans);
-            }).fail(function() {
-                deferred.reject(approvedPlans);
-            });
-        }
-        return deferred;
-    };
-
-    self.deleteDocument = function(documentId) {
-        var url = config.documentDeleteUrl+'/'+documentId;
-        return $.post(url);
-    };
-};
 
 /**
  * This is the view model for the section of the risks & threats tab that can select dates and generate reports.

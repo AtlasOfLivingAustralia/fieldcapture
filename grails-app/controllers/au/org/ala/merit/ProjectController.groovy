@@ -25,9 +25,8 @@ class ProjectController {
     static String RLP_MERI_PLAN_TEMPLATE = "rlpMeriPlan"
     static String MERI_PLAN_TEMPLATE = "meriPlan"
 
-    def projectService, metadataService, organisationService, commonService, activityService, userService, webService, roleService, grailsApplication
+    def projectService, metadataService, commonService, activityService, userService, webService, roleService, grailsApplication
     def siteService, documentService, reportService, blogService, pdfGenerationService
-    def programService
 
     private def espOverview(Map project, Map user) {
 
@@ -164,13 +163,14 @@ class ProjectController {
 
         boolean adminTabVisible = user?.isEditor || user?.isAdmin || user?.isCaseManager
         boolean showMeriPlanHistory = config.supportsMeriPlanHistory && userService.userIsSiteAdmin()
-
+        boolean datasetsVisible = config.includesContent(ProgramConfig.ProjectContent.DATA_SETS) && userHasViewAccess
         def model = [overview       : [label: 'Overview', visible: true, default: true, type: 'tab', publicImages: imagesModel, displayOutcomes: false, blog: blog, hasNewsAndEvents: hasNewsAndEvents, hasProjectStories: hasProjectStories, canChangeProjectDates: canChangeProjectDates, outcomes:project.outcomes, objectives:config.program?.config?.objectives],
                      documents      : [label: 'Documents', visible: config.includesContent(ProgramConfig.ProjectContent.DOCUMENTS), type: 'tab', user:user, template:'docs', activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage'],
                      details        : [label: 'MERI Plan', default: false, disabled: !meriPlanEnabled, visible: meriPlanVisible, meriPlanVisibleToUser: meriPlanVisibleToUser, risksAndThreatsVisible: canViewRisks, announcementsVisible: true, project:project, type: 'tab', template:'viewMeriPlan', meriPlanTemplate:MERI_PLAN_TEMPLATE+'View', config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage'],
                      plan           : [label: 'Activities', visible: true, disabled: !user?.hasViewAccess, type: 'tab', template:'projectActivities', grantManagerSettingsVisible:user?.isCaseManager, project:project, reports: project.reports, scores: scores, risksAndThreatsVisible: risksAndThreatsVisible],
                      site           : [label: 'Sites', visible: config.includesContent(ProgramConfig.ProjectContent.SITES), disabled: !user?.hasViewAccess, editable:user?.isEditor, type: 'tab', template:'projectSites'],
                      dashboard      : [label: 'Dashboard', visible: config.includesContent(ProgramConfig.ProjectContent.DASHBOARD), disabled: !user?.hasViewAccess, type: 'tab'],
+                     datasets       : [label: 'Data set summary', visible: datasetsVisible, template: '/project/dataset/dataSets', type:'tab'],
                      admin          : [label: 'Admin', visible: adminTabVisible, user:user, type: 'tab', template:'projectAdmin', project:project, canChangeProjectDates: canChangeProjectDates, minimumProjectEndDate:minimumProjectEndDate, showMERIActivityWarning:true, showAnnouncementsTab: showAnnouncementsTab, showSpecies:true, meriPlanTemplate:MERI_PLAN_TEMPLATE, showMeriPlanHistory:showMeriPlanHistory, requireMeriPlanApprovalReason:Boolean.valueOf(config.supportsMeriPlanHistory),  config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage']]
 
         if (template == MERI_ONLY_TEMPLATE) {
@@ -209,7 +209,7 @@ class ProjectController {
                 }
             }
 
-            Map rlpModel = [overview:model.overview, serviceDelivery: model.serviceDelivery, documents:model.documents, details:model.details, site:model.site, reporting:reportingTab]
+            Map rlpModel = [overview:model.overview, serviceDelivery: model.serviceDelivery, documents:model.documents, details:model.details, site:model.site, reporting:reportingTab, datasets: model.datasets]
             rlpModel.admin = model.admin
             rlpModel.admin.meriPlanTemplate =  config.meriPlanTemplate ?: RLP_MERI_PLAN_TEMPLATE
             rlpModel.admin.projectServices = config.services
@@ -857,7 +857,7 @@ class ProjectController {
         List sites = project.remove('sites')
         Map config = projectService.getProgramConfiguration(project)
         Map model = reportService.activityReportModel(reportId, mode, formVersion)
-        model.metaModel = filterOutputModel(model.metaModel, project, model.activity)
+        model.metaModel = projectService.filterOutputModel(model.metaModel, project, model.activity)
 
         model.context = new HashMap(project)
         model.returnTo = g.createLink(action:'index', id:projectId)
@@ -930,60 +930,6 @@ class ProjectController {
         financialYearTarget != 0 && financialYearTarget != "0"
     }
 
-    /**
-     * If the activity type to be displayed is the RLP Outputs report, only show the outputs that align with
-     * services to be delivered by the model.  This method has a side effect of modifying the
-     * @param model the model containing the activity metaModel and output templates.
-     * @param project the project associated with the report.
-     */
-    private Map filterOutputModel(Map activityModel, Map project, Map existingActivityData) {
-
-        Map filteredModel = activityModel
-        if (isFilterable(activityModel)) {
-
-            List allServices
-            List selectedForProject
-
-            // The values to be filtered can come from either project services or activities in the MERI plan.
-            selectedForProject = projectService.getProjectServices(project)
-
-            if (!selectedForProject) {
-
-                allServices = projectService.getProgramConfiguration(project).activities
-                selectedForProject = projectService.getProjectActivities(project)
-            }
-            else {
-                allServices = metadataService.getProjectServices()
-            }
-
-            if (selectedForProject) {
-                List serviceOutputs = allServices.collect{it.output}
-                List projectOutputs = selectedForProject.collect{it.output}
-                filteredModel = filterActivityModel(activityModel, existingActivityData, serviceOutputs, projectOutputs)
-            }
-        }
-        filteredModel
-    }
-
-    private boolean isFilterable(Map activityModel) {
-        List filterableActivityTypes = grailsApplication.config.reports.filterableActivityTypes
-        return activityModel?.name in filterableActivityTypes
-    }
-
-    private Map filterActivityModel(Map activityModel, Map existingActivityData, List filterableSections, List sectionsToInclude) {
-        Map filteredModel = new JSONObject(activityModel)
-        List existingOutputs = existingActivityData?.outputs?.collect{it.name}
-        filteredModel.outputs = activityModel.outputs.findAll({ String output ->
-            boolean isFilterable = filterableSections.find{it == output}
-
-            // Include this output if it's not associated with a service,
-            // Or if it's associated by a service delivered by this project
-            // Or it has previously had data recorded against it (this can happen if the services change after the report has been completed)
-            !isFilterable || output in sectionsToInclude || output in existingOutputs
-        })
-        filteredModel
-    }
-
     @PreAuthorise(accessLevel ='siteAdmin')
     def adjustReport(String id) {
 
@@ -1048,7 +994,14 @@ class ProjectController {
      */
     @PreAuthorise(accessLevel = 'editor')
     def listProjectInvestmentPriorities(String id) {
-        render projectService.listProjectInvestmentPriorities(id) as JSON
+        List investmentPriorities = projectService.listProjectInvestmentPriorities(id)
+        investmentPriorities <<  "Other"
+        render investmentPriorities as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'editor')
+    def projectPrioritiesByOutcomeType(String id) {
+        render projectService.projectPrioritiesByOutcomeType(id) as JSON
     }
 
     private def error(String message, String projectId) {

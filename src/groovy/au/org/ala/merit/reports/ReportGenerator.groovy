@@ -157,7 +157,8 @@ class ReportGenerator {
                 description:format(reportConfig.reportDescriptionFormat, reportConfig, reportOwner, sequenceNo, startDate, endDate),
                 category:reportConfig.category,
                 type:reportConfig.reportType,
-                submissionDate:reportConfig.canSubmitDuringReportingPeriod ? fromDate : toDate
+                submissionDate:reportConfig.canSubmitDuringReportingPeriod ? fromDate : toDate,
+                generatedBy:reportConfig.label
         ]
         if (reportConfig.activityType) {
             report.activityType = reportConfig.activityType

@@ -86,6 +86,10 @@
         viewHistoricalMeriPlanUrl:"${createLink(action:"viewMeriPlan", id:project.projectId)}",
         riskChangesReportHtmlUrl:"${createLink(controller:'project', action:'projectReport', id:project.projectId)}",
         riskChangesReportPdfUrl:"${createLink(controller:'project', action:'projectReportPDF', id:project.projectId)}",
+        newDataSetUrl:"${createLink(controller:'dataSet', action:'create', id:project.projectId)}",
+        editDataSetUrl:"${createLink(controller:'dataSet', action:'edit', id:project.projectId)}",
+        deleteDataSetUrl:"${createLink(controller:'dataSet', action:'delete', id:project.projectId)}",
+
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 
     },
@@ -171,7 +175,6 @@
     <div class="tab-content" style="overflow:visible;display:none">
         <fc:tabContent tabs="${projectContent}"/>
     </div>
-
     <g:render template="/shared/timeoutMessage" model="${[url:grailsApplication.config.security.cas.loginUrl+'?service='+createLink(action:'index', id:project.projectId, absolute: true)]}"/>
     <g:render template="/shared/unsavedChanges" model="${[id:'meriPlanUnsavedChanges', unsavedData:'MERI Plan']}"/>
     <g:render template="/shared/unsavedChanges" model="${[id:'risksUnsavedChanges', unsavedData:'Risks & Threats']}"/>
@@ -258,7 +261,11 @@
                 minimumProjectEndDate: ${projectContent.admin.minimumProjectEndDate?'"'+projectContent.admin.minimumProjectEndDate+'"':'null'},
                 riskChangesReportElementId: 'risk-changes-report',
                 riskChangesReportHtmlUrl: fcConfig.riskChangesReportHtmlUrl,
-                riskChangesReportPdfUrl: fcConfig.riskChangesReportPdfUrl
+                riskChangesReportPdfUrl: fcConfig.riskChangesReportPdfUrl,
+                newDataSetUrl: fcConfig.newDataSetUrl,
+                editDataSetUrl: fcConfig.editDataSetUrl,
+                deleteDataSetUrl: fcConfig.deleteDataSetUrl,
+                returnToUrl: fcConfig.returnTo
             };
 
             var programs = <fc:modelAsJavascript model="${programs}"/>;
@@ -392,6 +399,11 @@
                 'reporting': {
                     initialiser: function () {
                         viewModel.initialiseReports();
+                    }
+                },
+                'datasets': {
+                    initialiser: function() {
+                        viewModel.initialiseDataSets();
                     }
                 },
                 'admin': {

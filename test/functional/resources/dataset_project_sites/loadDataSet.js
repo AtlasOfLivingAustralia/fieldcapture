@@ -462,9 +462,7 @@ db.userPermission.insert({entityType:'au.org.ala.ecodata.Program', entityId:'pro
 db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_3', userId:'1', accessLevel:'admin'});
 db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entityId:'mu_3', userId:'1', accessLevel:'admin'});
 
-createScoreWeedHaDefaults({scoreId: "score_1"});
-// createScoreWeedHaDefaults({_id:36, scoreId: "score_2"});
-// createScoreWeedHaDefaults({_id:37, scoreId: "score_3"});
+createScoreWeedHaDefaults({ scoreId: "score_1"});
 
 createActivities({activityId:"activity_1", projectId:"project_1", type : "Managed for invasive weeds"});
 createActivities({activityId:"activity_2", projectId:"project_2", type : "Managed for invasive weeds"});
@@ -485,7 +483,7 @@ createOutput({activityId:"activity_3", outputId:"output_3", data:{"linearAreaTre
 
 //  // for Invasive Species Management - Pests & Diseases
 
-createScoreInvasiveSpecies({scoreId:"score_4"});
+createScoreInvasiveSpecies({ scoreId:"score_4"});
 
 
 createActivities({activityId:"activity_4", progress:"finished",projectId: "project_4", type:"Pest Management"});
@@ -496,6 +494,7 @@ createPestOutDataDefaults({activityId:"activity_4", outputId:"output_4"});
 createPestOutDataDefaults({activityId:"activity_5", outputId:"output_5"});
 createPestOutDataDefaults({activityId:"activity_6", outputId:"output_6"});
 
+loadActivityForms();
 
 //inserting setting homepage static 6 box only
 
@@ -579,9 +578,10 @@ var staticValue = "{\n" +
 db.setting.insert({"key":"meritstatistics.config","value":staticValue, version: 3})
 
 
-createProjectNumberBaselineDataSets({scoreId:"score_42"});
-createProjectNumberOfCommunicationMaterialsPublished({scoreId:"score_43"});
-createProjectWeedAreaSurveyedHaDefault({scoreId:"score_44"});
+createProjectNumberBaselineDataSets({ "scoreId":"score_42"});
+createProjectNumberOfCommunicationMaterialsPublished({ "scoreId":"score_43"});
+createProjectWeedAreaSurveyedHaDefault({ "scoreId":"score_44"});
+
 
 createActivities({activityId: "activity_10", projectId: "project_10", type:"RLP Output Report", progress:"finished"});
 createActivities({activityId: "activity_11", projectId: "project_10", type:"RLP Output Report", progress:"finished"});
@@ -905,4 +905,3 @@ var projectSites = {
     "type" : "compound"
 };
 db.site.insert(projectSites);
-loadActivityForms();
