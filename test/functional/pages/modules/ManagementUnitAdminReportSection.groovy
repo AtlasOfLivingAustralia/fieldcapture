@@ -6,6 +6,7 @@ class ManagementUnitAdminReportSection extends Module {
 
     static content = {
         coreServicesGroup { $('#core-services-group')}
+        projectOutputReportingGroup { $('#progress-reporting-group') }
         saveButton {$('[data-bind*="saveReportingConfiguration"]')}
     }
 

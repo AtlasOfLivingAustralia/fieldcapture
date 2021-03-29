@@ -29,6 +29,7 @@
         imageLeafletViewer: '${createLink(controller: 'resource', action: 'imageviewer', absolute: true)}',
         readonly:true,
         useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.PRODUCTION},
+        prepopUrlPrefix:"${grailsApplication.config.grails.serverURL}",
         returnTo: "${returnTo}"
         },
         here = document.location.href;
@@ -38,7 +39,7 @@
 </head>
 <body>
 <div class="${containerType} validationEngineContainer" id="validation-container">
-    <g:if test="${activity.lock}">
+    <g:if test="${activity.lock && params.attemptedEdit}">
         <div class="alert alert-error">
             This form has been locked for editing by <fc:userDisplayName userId="${activity.lock.userId}" defaultValue="an unknown user"/> since ${au.org.ala.merit.DateUtils.displayFormatWithTime(activity.lock.dateCreated)}
             <p>
@@ -72,7 +73,7 @@
                       model="${[viewModelInstance:activity.activityId+fc.toSingleWord([name: outputName])+'ViewModel',
                                 edit:false, model:outputModels[outputName],
                                 outputName:outputName]}"></g:render>
-            <g:render template="/output/readOnlyOutput"
+            <g:render template="/activity/reportOutputReadOnly"
                       model="${[activity:activity,
                                 outputModel:outputModels[outputName],
                                 outputName:outputName,
