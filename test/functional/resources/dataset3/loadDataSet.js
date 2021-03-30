@@ -952,7 +952,7 @@ db.userPermission.insert({
 
 
 
-db.setting.insert({"key":"meritservices.config", "value":JSON.stringify(projectDashboardService) ,"version":0});
+db.setting.insert({"key":"meritservices.config", "value":JSON.stringify(projectDashboardService) ,"version":NumberInt(0)});
 // Load scores used by RLP services to enable their selection in the MERI plan.
 createProjectNumberBaselineDataSets({ "scoreId":"score_42"});
 createProjectNumberOfCommunicationMaterialsPublished({ "scoreId":"score_43"});
