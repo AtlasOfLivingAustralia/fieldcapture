@@ -44,8 +44,6 @@ mongo ecodata-functional-test --eval 'db.dropDatabase();'
 mongo ecodata-functional-test --eval 'db.project.count();'
 
 echo "Starting ecodata from $ECODATA_LOCAL_DIR"
-#grails -Dgrails.env=meritfunctionaltest run-app &
-sdk install grails 3.0.6
 ./gradlew bootRun -Dgrails.env=meritfunctionaltest &
 
 cd $MERIT_DIR/..

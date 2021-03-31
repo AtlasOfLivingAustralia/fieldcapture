@@ -42,7 +42,7 @@ class ManagementUnitDocumentsSpec extends StubbedCasSpec {
         }
 
         dialog.save()
-        waitFor 20, {
+        waitFor 30, {
             hasBeenReloaded()
         }
 
