@@ -227,3 +227,33 @@ table tbody .td1 .accordion .card-header.collapsed:after {
     content: "\f067";
     display: none;
 }
+
+#project-display-options .card:not(:last-of-type) {
+    border-bottom: 1px;
+    border-bottom-right-radius: 0.25px;
+    border-bottom-left-radius: 0.25px;
+}
+
+.reportDropdown {
+    margin-left: -15px;
+}
+
+#reports > .card:not(:last-of-type) {
+    border-bottom: 1px solid #dddddd;
+    border-bottom-left-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+}
+#reports .card .card-header:after {
+    font-family: 'FontAwesome';
+    content: "\f068";
+    float: right;
+    display: none;
+}
+#reports .card .card-header.collapse:after {
+    /* symbol for "collapsed" panels */
+    content: "\f067";
+    display: none;
+}
+/*.hideFacets {*/
+/*    display: none;*/
+/*}*/

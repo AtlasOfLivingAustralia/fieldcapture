@@ -6,14 +6,14 @@
     <g:each in="${categories}" var="category" status="i">
 
         <g:set var="categoryContent" value="category_${i}"/>
-        <div class="accordion-group dashboard-activities">
-            <div class="accordion-heading header">
+        <div class="accordion-group card dashboard-activities">
+            <div class="accordion-heading card-header header">
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#reports" href="#${categoryContent}">
                     ${category} <g:if test="${!scores[category]}"><span class="pull-right" style="font-weight:normal">[no data available]</span></g:if>
 
                 </a>
             </div>
-            <div id="${categoryContent}" class="outputData accordian-body collapse" data-category="${category}">
+            <div id="${categoryContent}" class="outputData accordian-body card-body collapse" data-category="${category}">
                 <div class="accordian-inner row-fluid">
                     <asset:image width="50" height="50" src="loading.gif" alt="saving icon"/> Loading...
                 </div>
@@ -43,7 +43,7 @@
         var loadingTemplate = '<div class="accordian-inner row-fluid">'+
             '<asset:image width="50" height="50" src="loading.gif" alt="saving icon"/> Loading...'+
             '</div>';
-        $('#reports .collapse').on('show', function() {
+        $("#reports .collapse").on('shown.bs.collapse', function() {
             var $div = $(this);
 
             var category = $div.data('category');

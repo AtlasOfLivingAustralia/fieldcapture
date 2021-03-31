@@ -82,7 +82,7 @@
         </div>
         <div class="col-sm-11">
             <div class="accordion" id="project-display-options">
-                <div class="card">
+                <div class="card" style="border-bottom: 1px solid #dddddd; border-bottom-left-radius: 0.25rem; border-bottom-right-radius: 0.25rem">
                     <div class="card-header collapsed" id="mapHeading" href="#accordionMapView" data-toggle="collapse">
                         <a class="text-left text-uppercase">Map</a>
                     </div>
@@ -102,7 +102,7 @@
                         </div>
                     </div>
                 </div> <!-- Map Section -->
-                <div class="card">
+                <div class="card" style="border-bottom: 1px solid #dddddd; border-bottom-left-radius: 0.25rem; border-bottom-right-radius: 0.25rem">
                         <div class="card-header collapsed" id="projectHeading" href="#projectsView" data-toggle="collapse">
                             <a class="text-left text-uppercase">Projects</a>
                         </div>
@@ -188,51 +188,53 @@
                         </div>
                     </div>
                 </div> <!-- Project View -->
-                <div class="card">
+                <div class="card" style="border-bottom: 1px solid #dddddd; border-bottom-left-radius: 0.25rem; border-bottom-right-radius: 0.25rem">
                 <div class="card-header collapsed" id="dashboardHeading" href="#reportView" data-toggle="collapse">
                     <a class="text-left text-uppercase">Dashboard</a>
                 </div>
                     <div id="reportView" class="collapse collapseItems" aria-labelledby="dashboardHeading" data-parent="#project-display-options">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-sm-4" style="padding-left: 0px; margin-left: -10px;">
-                                    <span class="facet-holder" style="display:none;" data-hidden="true"></span>
-                                    <div style="overflow-x:scroll">
+                                <div class="col-sm-4 d-none" style="padding-left: 0px; margin-left: -10px;" data-hidden="true">
+                                    <span class="facet-holder" data-hidden="true"></span>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div>
                                         <div class="row" style="margin-top:5px;">
-                                            <button class="btn facets-toggle" type="button"><i class="fa fa-bars"></i></button> <span>
+                                            <button class="btn facets-toggle" type="button" style="margin-right: 0.7rem;"><i class="fa fa-bars"></i></button>
+                                            <span style="margin-top: 0.6em;">
                                             <g:render template="searchResultsSummary"/>
+                                        </span>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-sm-8">
-                                    <g:if test="${fc.userIsAlaOrFcAdmin()}">
-                                        <span class="col-sm-12">
-                                            <h4>Report: </h4>
+                                    <div class="reportDropdown">
+                                        <g:if test="${fc.userIsAlaOrFcAdmin()}">
+                                                <h4>Report: </h4>
+                                                <select id="dashboardType" name="dashboardType" style="min-width: 220px; max-width: 220px">
+                                                    <option value="dashboard">Activity Outputs</option>
+                                                    <option value="announcements">Announcements</option>
+                                                    <option value="outputTargets">Output Targets By Programme</option>
+                                                    <option value="reef2050PlanActionSelection">Reef 2050 Plan Dashboard</option>
+                                                </select>
+                                        </g:if>
+                                        <g:else>
                                             <select id="dashboardType" name="dashboardType">
                                                 <option value="dashboard">Activity Outputs</option>
-                                                <option value="announcements">Announcements</option>
-                                                <option value="outputTargets">Output Targets By Programme</option>
                                                 <option value="reef2050PlanActionSelection">Reef 2050 Plan Dashboard</option>
                                             </select>
-                                        </span>
-                                    </g:if>
-                                    <g:else>
-                                        <select id="dashboardType" name="dashboardType">
-                                            <option value="dashboard">Activity Outputs</option>
-                                            <option value="reef2050PlanActionSelection">Reef 2050 Plan Dashboard</option>
-                                        </select>
-                                    </g:else>
-                                </div>
-                                <div class="loading-message">
-                                    <asset:image dir="images" src="loading.gif" alt="saving icon"/> Loading...
-                                </div>
-                                <div id="dashboard-content"></div>
+                                        </g:else>
+                                    </div>
+                                    <div class="loading-message">
+                                        <asset:image dir="images" src="loading.gif" alt="saving icon"/> Loading...
+                                    </div>
+                                    <div id="dashboard-content"></div>
+                                </div> <!-- col-sm-8 -->
                             </div>
                             </div>
                         </div>
                     </div> <!-- Dashboard -->
                 <g:if test="${includeDownloads}">
-                    <div class="card">
+                    <div class="card" style="border-bottom: 1px solid #dddddd; border-bottom-left-radius: 0.25rem; border-bottom-right-radius: 0.25rem">
                         <div class="card-header collapsed" id="downloadHeading" href="#downloadView" data-toggle="collapse">
                             <a class="text-left text-uppercase">Download</a>
                         </div>
@@ -328,7 +330,56 @@
 
     $(function(){
 
+    var delay = (function(){
+            var timer = 0;
+            return function(callback, ms){
+                clearTimeout (timer);
+                timer = setTimeout(callback, ms);
+            };
+        })();
 
+        var loadReportRequest = null;
+        var loadReport = function(reportType) {
+            var $content = $('#dashboard-content');
+            var $loading = $('.loading-message');
+            $content.hide();
+            $loading.show();
+            if (loadReportRequest) {
+                loadReportRequest.abort();
+            }
+
+            loadReportRequest = $.get(fcConfig.dashboardUrl,{report:reportType}, function(data) {
+                loadReportRequest = null;
+                $content.show();
+                $loading.hide();
+                $content.html(data);
+                $('#reportView .helphover').popover({animation: true, trigger:'hover', container:'body'});
+            });
+        };
+
+
+        function toggleFacets() {
+            var $holder = $('#facetsCol').parent().parent();
+            var hidden = $holder.data('hidden');
+            $holder.data('hidden', !hidden);
+            var $content = $holder.next();
+            if (!hidden) {
+                $holder.animate({width:"toggle" }, function() {
+                    $holder.addClass('d-none');
+                    $content.removeClass('col-sm-8').addClass('col-sm-12')
+                });
+            }
+            else {
+                $holder.animate({width:"toggle" }, function() {
+                    $holder.removeClass('d-none');
+                   $content.removeClass('col-sm-12').addClass('col-sm-8');
+                });
+            }
+        }
+
+        $(".facets-toggle").on('click', function(){
+            toggleFacets();
+        });
     /**
     * Update the project table DOM using a plain HTML template (cloned)
     *
@@ -466,10 +517,6 @@
         });
     }
 
-
-
-
-
         var VIEW_STATE_KEY = 'homepage-tab-state';
         var initialisedReport = false, initialisedMap = false, initialisedProjects = false;
         var initialiseContentSection = function(section){
@@ -483,17 +530,17 @@
                 console.log("It initialisation Project")
             }
             else if (section === '#reportView' && !initialisedReport) {
-%{--                initialisedReport = true;--}%
-%{--                var reportType = selectedReport || amplify.store('report-type-state');--}%
-%{--                var $reportSelector = $('#dashboardType');--}%
-%{--                if (reportType) {--}%
-%{--                    $reportSelector.val(reportType);--}%
-%{--                }--}%
-%{--                $reportSelector.change(function() {--}%
-%{--                    var reportType = $reportSelector.val();--}%
-%{--                    amplify.store('report-type-state', reportType);--}%
-%{--                 //   loadReport(reportType);--}%
-%{--                }).trigger('change');--}%
+                initialisedReport = true;
+                var reportType = selectedReport || amplify.store('report-type-state');
+                var $reportSelector = $('#dashboardType');
+                if (reportType) {
+                    $reportSelector.val(reportType);
+                }
+                $reportSelector.change(function() {
+                    var reportType = $reportSelector.val();
+                    amplify.store('report-type-state', reportType);
+                    loadReport(reportType);
+                }).trigger('change');
                 console.log("It initialisation Report")
             }
         };
@@ -608,7 +655,7 @@ var urlWithoutDates = '<fc:formatParams params="${params}" requiredParams="sort,
             storedTab = '#accordionMapView';
         }
         $('#project-display-options '+storedTab).collapse({parent:'#project-display-options'});
-        var $tabStore = amplify.store('facetToggleState');
+        var $tabStore = amplify.store('facetToggleState') || [];
         $('#project-display-options').on("shown.bs.collapse", function(e){
             var $target = $(e.target)
             var targetId;
@@ -631,570 +678,208 @@ var urlWithoutDates = '<fc:formatParams params="${params}" requiredParams="sort,
             restoreFacetSelections();
         });
 
+        $(".clearFacet").click(function(e){
+            amplify.store('facetToggleState', null);
+       	    window.location.href = facetModelViewArgs.projectExplorerUrl;
+        });
+
+        $('#shapefile-download').click(function(e) {
+            e.preventDefault();
+            var url = $('#shapefile-download').attr('href');
+            $.get(url).done(function() {
+                bootbox.alert("The download may take several minutes to complete.  Once it is complete, an email will be sent to your registed email address.")
+            }).fail(function() {
+                bootbox.alert("There was an error requesting the download");
+            });
+
+        });
+
+        // project list filter
+        $('.filterinput').keyup(function() {
+            //console.log("filter keyup");
+            var a = $(this).val(),
+                target = $(this).attr('data-target');
+
+            var qList;
+
+            if (a.length > 1) {
+                $('#' + target + '-filter-warning').show();
+                var qList = [ "_all:" +  a.toLowerCase() ]
+            } else {
+                $('#' + target + '-filter-warning').hide();
+                qList = null;
+            }
+
+            delay(function(){
+                //console.log('Time elapsed!');
+                $("#projectTable").data("offset", 0);
+                updateProjectTable( qList );
+            }, 1000 );
+
+            return false;
+        });
+
+
+        $('.clearFilterBtn').click(function () {
+            var $filterInput = $(this).prev(),
+                target = $filterInput.attr('data-target');
+            //console.log("clear button");
+            $('#' + target + '-filter-warning').hide();
+            $filterInput.val('');
+            $("#projectTable").data("offset", 0);
+            updateProjectTable();
+        });
+
+        // highlight icon on map when project name is clicked
+        var prevFeatureId;
+        $('#projectTable').on("click", ".projectTitle", function(el) {
+            //console.log("projectHighlight", $(this).data("id"), alaMap.featureIndex);
+            el.preventDefault();
+            var thisEl = this;
+            var fId = $(this).data("id");
+
+            //if (prevFeatureId) alaMap.unAnimateFeatureById(prevFeatureId);
+            projectSites = alaMap.animateFeatureById(fId);
+            $(thisEl).tooltip('hide');
+            //console.log("toggle", prevFeatureId, fId);
+            if (!prevFeatureId) {
+                $("#proj_" + fId).slideToggle();
+                $(thisEl).find(".showHideCaret").html("&#9660;");
+            } else if (prevFeatureId != fId) {
+                if ($("#proj_" + prevFeatureId).is(":visible")) {
+                    // hide prev selected, show this
+                    $("#proj_" + prevFeatureId).slideUp();
+                    $("#a_" + prevFeatureId).find(".showHideCaret").html("&#9658;");
+                    $("#proj_" + fId).slideDown();
+                    $("#a_" + fId).find(".showHideCaret").html("&#9660;");
+                } else {
+                    //show this, hide others
+                    $("#proj_" + fId).slideToggle();
+                    $(thisEl).find(".showHideCaret").html("&#9660;");
+                    $("#proj_" + prevFeatureId).slideUp();
+                    $("#a_" + prevFeatureId).find(".showHideCaret").html("&#9658;");
+                }
+                alaMap.unAnimateFeatureById(prevFeatureId);
+            } else {
+                $("#proj_" + fId).slideToggle();
+                if ($("#proj_" + fId).is(':visible')) {
+                    $(thisEl).find(".showHideCaret").html("&#9658;");
+                } else {
+                    $(thisEl).find(".showHideCaret").html("&#9660;");
+                }
+                alaMap.unAnimateFeatureById(fId);
+            }
+            prevFeatureId = fId;
+        });
+
+        // zoom in/out to project points via +/- buttons
+        var initCentre, initZoom;
+        $('#projectTable').on("click", "a.zoom-in",function(el) {
+            el.preventDefault();
+
+            if (!projectSites) {
+                alert("No sites found for project");
+                return false;
+            }
+
+            if (!initCentre && !initZoom) {
+                initCentre = alaMap.map.getCenter();
+                initZoom = alaMap.map.getZoom();
+            }
+
+            var projectId = $(this).data("id");
+            var delay = 0;
+            if (!alaMap.map || alaMap.map.zoom == 0) {
+                // maps not loaded yet (lazy loading and maps tab not yet clicked) - add delay
+                // so that map data can be loaded #HACK
+                delay = 2000;
+            }
+            //$('#accordionMapView').tab('show');
+            setTimeout(
+                function() {
+                    //var fId = $(this).data("id");
+                    alaMap.animateFeatureById(projectId);
+                    var bounds = alaMap.getExtentByFeatureId(projectId);
+                    alaMap.map.fitBounds(bounds);
+                }, delay
+            );
+
+        });
+
+
+        // Tooltips
+        $('.projectTitle').tooltip({
+            placement: "right",
+            container: "#projectTable",
+            delay: 400
+        });
+        $('.tooltips').tooltip({placement: "right"});
+
+
+        // sorting project table
+        $("#projectTable .header").click(function(el) {
+            var sort = $(this).data("sort");
+            var order = $(this).data("order");
+            var prevSort =  $("#projectTable").data("sort");
+            var newOrder = (prevSort != sort) ? order : ((order == "ASC") ? "DESC" :"ASC");
+            // update new data attrs in table
+            $("#projectTable").data("sort", sort);
+            $("#projectTable").data("order", newOrder); // toggle
+            $("#projectTable").data("offset", 0); // always start at page 1
+            $(this).data("order", newOrder);
+            // update CSS classes
+            $("#projectTable .header").removeClass("headerSortDown").removeClass("headerSortUp"); // remove all sort classes first
+            $(this).addClass((newOrder == "ASC") ? "headerSortDown" : "headerSortUp");
+            // $(this).removeClass((newOrder == "ASC") ? "headerSortUp" : "headerSortDown");
+            updateProjectTable();
+        });
+
+        // next/prev buttons in project list table
+        $("#paginateTable .btn").not(".clearFilterBtn").click(function(el) {
+            // Don't trigger if button is disabled
+            if (!$(this).hasClass("disabled")) {
+                 //var prevOrNext = (this).hasClass("next") ? "next" : "prev";
+                var offset = $("#projectTable").data("offset");
+                var max = $("#projectTable").data("max");
+                var newOffset = $(this).hasClass("next") ? (offset + max) : (offset - max);
+                $("#projectTable").data("offset", newOffset);
+                //console.log("offset", offset, newOffset, $("#projectTable").data("offset"));
+                updateProjectTable();
+            }
+        });
+
+        // in mobile view toggle display of facets
+        $("#toggleFacetDisplay").click(function(e) {
+            e.preventDefault();
+            $(this).find("i").toggleClass("icon-chevron-down icon-chevron-right");
+            if ($("#" + $(this).attr('rel')).is(":visible")) {
+                $("#" + $(this).attr('rel')).addClass("hidden-phone");
+                $(this).find("span").text("show");
+            } else {
+                $("#" + $(this).attr('rel')).removeClass("hidden-phone");
+                $(this).find("span").text("hide");
+            }
+        });
+
+    /**
+    * Sort a list by its li elements using the data-foo (dataEl) attribute of the li element
+    *
+    * @param $list
+    * @param dataEl
+    * @param op
+    */
+    function sortList($list, dataEl, op) {
+        //console.log("args",$list, dataEl, op);
+        $list.find("li").sort(function(a, b) {
+            var comp;
+            if (op == ">") {
+                comp =  ($(a).data(dataEl)) > ($(b).data(dataEl)) ? 1 : -1;
+            } else {
+                comp =  ($(a).data(dataEl)) < ($(b).data(dataEl)) ? 1 : -1;
+            }
+            return comp;
+        }).appendTo($list);
+    }
+
 });
-
-
-
-
-
-
-
-%{--    $(function () {--}%
-%{--        var delay = (function(){--}%
-%{--            var timer = 0;--}%
-%{--            return function(callback, ms){--}%
-%{--                clearTimeout (timer);--}%
-%{--                timer = setTimeout(callback, ms);--}%
-%{--            };--}%
-%{--        })();--}%
-
-%{--        var loadReportRequest = null;--}%
-%{--        var loadReport = function(reportType) {--}%
-%{--            var $content = $('#dashboard-content');--}%
-%{--            var $loading = $('.loading-message');--}%
-%{--            $content.hide();--}%
-%{--            $loading.show();--}%
-%{--            if (loadReportRequest) {--}%
-%{--                loadReportRequest.abort();--}%
-%{--            }--}%
-
-%{--            loadReportRequest = $.get(fcConfig.dashboardUrl,{report:reportType}, function(data) {--}%
-%{--                loadReportRequest = null;--}%
-%{--                $content.show();--}%
-%{--                $loading.hide();--}%
-%{--                $content.html(data);--}%
-%{--                $('#reportView .helphover').popover({animation: true, trigger:'hover', container:'body'});--}%
-%{--            });--}%
-%{--        };--}%
-
-%{--        var VIEW_STATE_KEY = 'homepage-tab-state';--}%
-%{--        var initialisedReport = false, initialisedMap = false, initialisedProjects = false;--}%
-%{--        var initialiseContentSection = function(section) {--}%
-
-%{--            if (section === '#accordionMapView' && !initialisedMap) {--}%
-%{--                generateMap(facetList);--}%
-%{--                initialisedMap = true;--}%
-%{--            }--}%
-%{--            else if (section === '#projectsView' && !initialisedProjects) {--}%
-%{--                updateProjectTable();--}%
-%{--                initialisedProjects = true;--}%
-%{--            }--}%
-%{--            else if (section === '#reportView' && !initialisedReport) {--}%
-%{--                initialisedReport = true;--}%
-%{--                var reportType = selectedReport || amplify.store('report-type-state');--}%
-%{--                var $reportSelector = $('#dashboardType');--}%
-%{--                if (reportType) {--}%
-%{--                    $reportSelector.val(reportType);--}%
-%{--                }--}%
-%{--                $reportSelector.change(function() {--}%
-%{--                    var reportType = $reportSelector.val();--}%
-%{--                    amplify.store('report-type-state', reportType);--}%
-%{--                    loadReport(reportType);--}%
-%{--                }).trigger('change');--}%
-%{--            }--}%
-%{--        };--}%
-
-%{--        var expandedToggles = amplify.store('facetToggleState') || [];--}%
-%{--        function restoreFacetSelections() {--}%
-
-%{--            if ($('#facetsContent').is(':visible')) {--}%
-%{--                if (expandedToggles) {--}%
-%{--                    for (var i=0; i<expandedToggles.length; i++) {--}%
-%{--                        $('[data-name="'+expandedToggles[i]+'"]').collapse('show');--}%
-%{--                    }--}%
-%{--                }--}%
-%{--            }--}%
-
-%{--        }--}%
-
-%{--        // retain accordian state for future re-visits--}%
-%{--        $('#project-display-options').on('shown', function (e) {--}%
-%{--            // Because the facets use accordion and are inside the main accordion view we need to filter them out.--}%
-%{--            var $target = $(e.target);--}%
-%{--            if ($target.hasClass('card-body')) {--}%
-%{--                var targetId = e.target.id;--}%
-%{--                var section = '#'+targetId;--}%
-%{--                amplify.store(VIEW_STATE_KEY, section);--}%
-%{--                initialiseContentSection(section);--}%
-%{--                $('#'+targetId+'-heading').find('i').removeClass('fa-plus').addClass('fa-minus');--}%
-%{--            }--}%
-%{--        });--}%
-%{--        $('#project-display-options').on('show', function (e) {--}%
-
-%{--            // Because the facets use accordion and are inside the main accordion view we need to filter them out.--}%
-%{--            var $target = $(e.target);--}%
-%{--            if ($target.hasClass('card-body')) {--}%
-
-%{--                var section = '#'+e.target.id;--}%
-%{--                $('#facetsCol').appendTo($(section).find('.facet-holder'));--}%
-%{--                $('#facetsCol').show();--}%
-%{--                restoreFacetSelections();--}%
-%{--            }--}%
-
-%{--        });--}%
-%{--        $('#project-display-options').on('hidden', function (e) {--}%
-%{--            var targetId = e.target.id;--}%
-%{--            $('#'+targetId+'-heading').find('i').removeClass('fa-minus').addClass('fa-plus');--}%
-%{--        });--}%
-
-%{--        // re-establish the previous view state--}%
-%{--        var storedTab = selectedSection || amplify.store(VIEW_STATE_KEY) || '#accordionMapView';--}%
-%{--        if (!$('#project-display-options '+storedTab)[0]) {--}%
-%{--            storedTab = '#accordionMapView';--}%
-%{--        }--}%
-%{--        $('#project-display-options '+storedTab).collapse({parent:'#project-display-options'});--}%
-%{--        $('#project-display-options '+storedTab).collapse('show');--}%
-
-%{--        // project list filter--}%
-%{--        $('.filterinput').keyup(function() {--}%
-%{--            //console.log("filter keyup");--}%
-%{--            var a = $(this).val(),--}%
-%{--                target = $(this).attr('data-target');--}%
-
-%{--            var qList;--}%
-
-%{--            if (a.length > 1) {--}%
-%{--                $('#' + target + '-filter-warning').show();--}%
-%{--                var qList = [ "_all:" +  a.toLowerCase() ]--}%
-%{--            } else {--}%
-%{--                $('#' + target + '-filter-warning').hide();--}%
-%{--                qList = null;--}%
-%{--            }--}%
-
-%{--            delay(function(){--}%
-%{--                //console.log('Time elapsed!');--}%
-%{--                $("#projectTable").data("offset", 0);--}%
-%{--                updateProjectTable( qList );--}%
-%{--            }, 1000 );--}%
-
-%{--            return false;--}%
-%{--        });--}%
-
-%{--        $('.clearFilterBtn').click(function () {--}%
-%{--            var $filterInput = $(this).prev(),--}%
-%{--                target = $filterInput.attr('data-target');--}%
-%{--            //console.log("clear button");--}%
-%{--            $('#' + target + '-filter-warning').hide();--}%
-%{--            $filterInput.val('');--}%
-%{--            $("#projectTable").data("offset", 0);--}%
-%{--            updateProjectTable();--}%
-%{--        });--}%
-
-%{--        // highlight icon on map when project name is clicked--}%
-%{--        var prevFeatureId;--}%
-%{--        $('#projectTable').on("click", ".projectTitle", function(el) {--}%
-%{--            //console.log("projectHighlight", $(this).data("id"), alaMap.featureIndex);--}%
-%{--            el.preventDefault();--}%
-%{--            var thisEl = this;--}%
-%{--            var fId = $(this).data("id");--}%
-
-%{--            //if (prevFeatureId) alaMap.unAnimateFeatureById(prevFeatureId);--}%
-%{--            projectSites = alaMap.animateFeatureById(fId);--}%
-%{--            $(thisEl).tooltip('hide');--}%
-%{--            //console.log("toggle", prevFeatureId, fId);--}%
-%{--            if (!prevFeatureId) {--}%
-%{--                $("#proj_" + fId).slideToggle();--}%
-%{--                $(thisEl).find(".showHideCaret").html("&#9660;");--}%
-%{--            } else if (prevFeatureId != fId) {--}%
-%{--                if ($("#proj_" + prevFeatureId).is(":visible")) {--}%
-%{--                    // hide prev selected, show this--}%
-%{--                    $("#proj_" + prevFeatureId).slideUp();--}%
-%{--                    $("#a_" + prevFeatureId).find(".showHideCaret").html("&#9658;");--}%
-%{--                    $("#proj_" + fId).slideDown();--}%
-%{--                    $("#a_" + fId).find(".showHideCaret").html("&#9660;");--}%
-%{--                } else {--}%
-%{--                    //show this, hide others--}%
-%{--                    $("#proj_" + fId).slideToggle();--}%
-%{--                    $(thisEl).find(".showHideCaret").html("&#9660;");--}%
-%{--                    $("#proj_" + prevFeatureId).slideUp();--}%
-%{--                    $("#a_" + prevFeatureId).find(".showHideCaret").html("&#9658;");--}%
-%{--                }--}%
-%{--                alaMap.unAnimateFeatureById(prevFeatureId);--}%
-%{--            } else {--}%
-%{--                $("#proj_" + fId).slideToggle();--}%
-%{--                if ($("#proj_" + fId).is(':visible')) {--}%
-%{--                    $(thisEl).find(".showHideCaret").html("&#9658;");--}%
-%{--                } else {--}%
-%{--                    $(thisEl).find(".showHideCaret").html("&#9660;");--}%
-%{--                }--}%
-%{--                alaMap.unAnimateFeatureById(fId);--}%
-%{--            }--}%
-%{--            prevFeatureId = fId;--}%
-%{--        });--}%
-
-%{--        // zoom in/out to project points via +/- buttons--}%
-%{--        var initCentre, initZoom;--}%
-%{--        $('#projectTable').on("click", "a.zoom-in",function(el) {--}%
-%{--            el.preventDefault();--}%
-
-%{--            if (!projectSites) {--}%
-%{--                alert("No sites found for project");--}%
-%{--                return false;--}%
-%{--            }--}%
-
-%{--            if (!initCentre && !initZoom) {--}%
-%{--                initCentre = alaMap.map.getCenter();--}%
-%{--                initZoom = alaMap.map.getZoom();--}%
-%{--            }--}%
-
-%{--            var projectId = $(this).data("id");--}%
-%{--            var delay = 0;--}%
-%{--            if (!alaMap.map || alaMap.map.zoom == 0) {--}%
-%{--                // maps not loaded yet (lazy loading and maps tab not yet clicked) - add delay--}%
-%{--                // so that map data can be loaded #HACK--}%
-%{--                delay = 2000;--}%
-%{--            }--}%
-%{--            //$('#accordionMapView').tab('show');--}%
-%{--            setTimeout(--}%
-%{--                function() {--}%
-%{--                    //var fId = $(this).data("id");--}%
-%{--                    alaMap.animateFeatureById(projectId);--}%
-%{--                    var bounds = alaMap.getExtentByFeatureId(projectId);--}%
-%{--                    alaMap.map.fitBounds(bounds);--}%
-%{--                }, delay--}%
-%{--            );--}%
-
-%{--        });--}%
-
-
-%{--        // Tooltips--}%
-%{--        $('.projectTitle').tooltip({--}%
-%{--            placement: "right",--}%
-%{--            container: "#projectTable",--}%
-%{--            delay: 400--}%
-%{--        });--}%
-%{--        $('.tooltips').tooltip({placement: "right"});--}%
-
-
-%{--        // sorting project table--}%
-%{--        $("#projectTable .header").click(function(el) {--}%
-%{--            var sort = $(this).data("sort");--}%
-%{--            var order = $(this).data("order");--}%
-%{--            var prevSort =  $("#projectTable").data("sort");--}%
-%{--            var newOrder = (prevSort != sort) ? order : ((order == "ASC") ? "DESC" :"ASC");--}%
-%{--            // update new data attrs in table--}%
-%{--            $("#projectTable").data("sort", sort);--}%
-%{--            $("#projectTable").data("order", newOrder); // toggle--}%
-%{--            $("#projectTable").data("offset", 0); // always start at page 1--}%
-%{--            $(this).data("order", newOrder);--}%
-%{--            // update CSS classes--}%
-%{--            $("#projectTable .header").removeClass("headerSortDown").removeClass("headerSortUp"); // remove all sort classes first--}%
-%{--            $(this).addClass((newOrder == "ASC") ? "headerSortDown" : "headerSortUp");--}%
-%{--            // $(this).removeClass((newOrder == "ASC") ? "headerSortUp" : "headerSortDown");--}%
-%{--            updateProjectTable();--}%
-%{--        });--}%
-
-%{--        // next/prev buttons in project list table--}%
-%{--        $("#paginateTable .btn").not(".clearFilterBtn").click(function(el) {--}%
-%{--            // Don't trigger if button is disabled--}%
-%{--            if (!$(this).hasClass("disabled")) {--}%
-%{--                 //var prevOrNext = (this).hasClass("next") ? "next" : "prev";--}%
-%{--                var offset = $("#projectTable").data("offset");--}%
-%{--                var max = $("#projectTable").data("max");--}%
-%{--                var newOffset = $(this).hasClass("next") ? (offset + max) : (offset - max);--}%
-%{--                $("#projectTable").data("offset", newOffset);--}%
-%{--                //console.log("offset", offset, newOffset, $("#projectTable").data("offset"));--}%
-%{--                updateProjectTable();--}%
-%{--            }--}%
-%{--        });--}%
-
-%{--        // in mobile view toggle display of facets--}%
-%{--        $("#toggleFacetDisplay").click(function(e) {--}%
-%{--            e.preventDefault();--}%
-%{--            $(this).find("i").toggleClass("icon-chevron-down icon-chevron-right");--}%
-%{--            if ($("#" + $(this).attr('rel')).is(":visible")) {--}%
-%{--                $("#" + $(this).attr('rel')).addClass("hidden-phone");--}%
-%{--                $(this).find("span").text("show");--}%
-%{--            } else {--}%
-%{--                $("#" + $(this).attr('rel')).removeClass("hidden-phone");--}%
-%{--                $(this).find("span").text("hide");--}%
-%{--            }--}%
-%{--        });--}%
-
-%{--        var projectExplorerUrl = '${g.createLink(controller:'home', action:'projectExplorer')}';--}%
-%{--        $(".clearFacet").click(function(e){--}%
-%{--       	 window.location.href = projectExplorerUrl;--}%
-%{--        });--}%
-
-%{--        $('#shapefile-download').click(function(e) {--}%
-%{--            e.preventDefault();--}%
-%{--            var url = $('#shapefile-download').attr('href');--}%
-%{--            $.get(url).done(function() {--}%
-%{--                bootbox.alert("The download may take several minutes to complete.  Once it is complete, an email will be sent to your registed email address.")--}%
-%{--            }).fail(function() {--}%
-%{--                bootbox.alert("There was an error requesting the download");--}%
-%{--            });--}%
-
-%{--        });--}%
-
-
-%{--        function toggleFacets() {--}%
-
-%{--            var $holder = $('#facetsCol').parent();--}%
-%{--            var hidden = $holder.data('hidden');--}%
-%{--            $holder.data('hidden', !hidden);--}%
-%{--            var $content = $holder.next();--}%
-%{--            if (!hidden) {--}%
-%{--                $holder.animate({width:'toggle'}, 200, 'swing', function() {--}%
-%{--                    $content.removeClass('span8');--}%
-%{--                });--}%
-%{--            }--}%
-%{--            else {--}%
-%{--                $holder.animate({width:'toggle'}, 200, 'swing', function() {--}%
-%{--                   $content.addClass('span8');--}%
-%{--                   restoreFacetSelections();--}%
-
-%{--                });--}%
-%{--            }--}%
-%{--        }--}%
-%{--        $('.facets-toggle').click(function(e) {--}%
-%{--           toggleFacets();--}%
-%{--        });--}%
-
-%{--        var urlWithoutDates = '<fc:formatParams params="${params}" requiredParams="sort,order,max,fq"/>';--}%
-%{--        var fromDate = '${params.fromDate?:''}';--}%
-%{--        var toDate = '${params.toDate?:''}';--}%
-%{--        var DatePickerModel = function() {--}%
-%{--            var formatString = 'YYYY-MM-DD';--}%
-%{--            var self = this;--}%
-%{--            var date = moment('2011-07-01T00:00:00+10:00');--}%
-%{--            var end = moment('2021-01-01T00:00:00+11:00');--}%
-
-%{--            self.ranges = [{display:'select date range', from:undefined, to:undefined}];--}%
-%{--            while (date.isBefore(end)) {--}%
-%{--                var rangeEnd = moment(date).add(6, 'months');--}%
-%{--                self.ranges.push({from:date.format(formatString), to:rangeEnd.format(formatString), display:date.format("MMM YYYY")+' - '+rangeEnd.format("MMM YYYY")});--}%
-
-%{--                date = rangeEnd;--}%
-%{--            }--}%
-%{--            self.selectedRange = ko.observable();--}%
-%{--            self.fromDate = ko.observable().extend({simpleDate:false});--}%
-%{--            if (fromDate) {--}%
-%{--                self.fromDate(moment(fromDate).format());--}%
-%{--            }--}%
-%{--            self.toDate = ko.observable().extend({simpleDate:false});--}%
-%{--            if (toDate) {--}%
-%{--                self.toDate(moment(toDate).format());--}%
-%{--            }--}%
-
-%{--            self.clearDates = function() {--}%
-%{--                if (!urlWithoutDates) {--}%
-%{--                    urlWithoutDates = '?';--}%
-%{--                }--}%
-%{--                document.location.href = urlWithoutDates;--}%
-%{--            };--}%
-
-%{--            var validateAndReload = function(newFromDate, newToDate) {--}%
-
-%{--                var parsedNewFromDate = moment(newFromDate);--}%
-%{--                var parsedNewToDate = moment(newToDate);--}%
-%{--                var parsedFromDate = moment(fromDate);--}%
-%{--                var parsedToDate = moment(toDate);--}%
-
-%{--                if (parsedFromDate.isSame(parsedNewFromDate) && parsedToDate.isSame(parsedNewToDate)) {--}%
-%{--                   return;--}%
-%{--                }--}%
-
-%{--                if ($('#facet-dates').validationEngine('validate')) {--}%
-%{--                    reloadWithDates(newFromDate, newToDate);--}%
-%{--                }--}%
-%{--            }--}%
-
-%{--            var reloadWithDates = function(newFromDate, newToDate) {--}%
-%{--                var parsedNewFromDate = moment(newFromDate);--}%
-%{--                var parsedNewToDate = moment(newToDate);--}%
-%{--                if (newFromDate && parsedNewFromDate.isValid()) {--}%
-%{--                    urlWithoutDates += urlWithoutDates?'&':'?';--}%
-%{--                    urlWithoutDates += 'fromDate='+moment(newFromDate).format(formatString);--}%
-%{--                }--}%
-%{--                if (newToDate && parsedNewToDate.isValid()) {--}%
-%{--                    urlWithoutDates += urlWithoutDates?'&':'?';--}%
-%{--                    urlWithoutDates += 'toDate='+moment(newToDate).format(formatString);--}%
-%{--                }--}%
-%{--                document.location.href = urlWithoutDates;--}%
-%{--            }--}%
-
-%{--            self.fromDate.subscribe(function(a, b) {--}%
-%{--                validateAndReload(self.fromDate(), self.toDate());--}%
-%{--            });--}%
-%{--            self.toDate.subscribe(function(toDate) {--}%
-%{--                validateAndReload(self.fromDate(), self.toDate());--}%
-%{--            });--}%
-
-%{--            self.selectedRange.subscribe(function(value) {--}%
-
-%{--                if (value.from) {--}%
-%{--                    reloadWithDates(value.from, value.to);--}%
-%{--                }--}%
-
-%{--            });--}%
-%{--        };--}%
-%{--        ko.applyBindings(new DatePickerModel(), document.getElementById('facet-dates'));--}%
-
-%{--        function FacetFilterViewModel (params) {--}%
-%{--            this.facetsList = params.facetsList;--}%
-%{--            this.results = params.results;--}%
-%{--            this.fqLink = params.fqLink;--}%
-%{--            this.baseUrl = params.baseUrl;--}%
-%{--            this.projectExplorerUrl = params.projectExplorerUrl;--}%
-%{--        }--}%
-%{--        ko.applyBindings(new FacetFilterViewModel(facetModelViewArgs), document.getElementById('facet-list'));--}%
-%{--        $('#facet-dates').validationEngine('attach', {scroll:false});--}%
-
-%{--        $('.helphover').popover({animation: true, trigger:'hover', container:'body'});--}%
-%{--    });--}%
-
-%{--    /**--}%
-%{--    * Sort a list by its li elements using the data-foo (dataEl) attribute of the li element--}%
-%{--    *--}%
-%{--    * @param $list--}%
-%{--    * @param dataEl--}%
-%{--    * @param op--}%
-%{--    */--}%
-%{--    function sortList($list, dataEl, op) {--}%
-%{--        //console.log("args",$list, dataEl, op);--}%
-%{--        $list.find("li").sort(function(a, b) {--}%
-%{--            var comp;--}%
-%{--            if (op == ">") {--}%
-%{--                comp =  ($(a).data(dataEl)) > ($(b).data(dataEl)) ? 1 : -1;--}%
-%{--            } else {--}%
-%{--                comp =  ($(a).data(dataEl)) < ($(b).data(dataEl)) ? 1 : -1;--}%
-%{--            }--}%
-%{--            return comp;--}%
-%{--        }).appendTo($list);--}%
-%{--    }--}%
-
-
-%{--    /**--}%
-%{--    * Dynamically update the project list table via AJAX--}%
-%{--    *--}%
-%{--    * @param facetFilters (an array)--}%
-%{--    */--}%
-%{--    function updateProjectTable(facetFilters) {--}%
-%{--        var url = "${createLink(controller:'nocas', action:'geoService')}";--}%
-%{--        var sort = $('#projectTable').data("sort");--}%
-%{--        var order = $('#projectTable').data("order");--}%
-%{--        var offset = $('#projectTable').data("offset");--}%
-%{--        var max = $('#projectTable').data("max");--}%
-%{--        var params = "max="+max+"&offset="+offset;--}%
-
-%{--        var query = '${params.query ? params.query.replace("'", "\\'") : ""}';--}%
-%{--        if (sort) {--}%
-%{--            params += "&sort="+sort+"&order="+order;--}%
-%{--        }--}%
-%{--        else if (!query) {--}%
-%{--            // Sort by date if no query term has been entered.--}%
-%{--            var defaultSort = "&sort=lastUpdated&order=DESC";--}%
-%{--            params += defaultSort;--}%
-%{--        }--}%
-
-%{--        if (projectListIds.length > 0) {--}%
-%{--            params += "&ids=" + projectListIds.join(",");--}%
-%{--        } else {--}%
-%{--            params += "&query="+encodeURIComponent(query || '*:*');--}%
-%{--        }--}%
-%{--        if (facetFilters) {--}%
-%{--            params += "&fq=" + facetFilters.join("&fq=");--}%
-%{--        }--}%
-
-%{--        <g:if test="${params.fq}">--}%
-%{--            <g:set var="fqList" value="${[params.fq].flatten()}"/>--}%
-%{--            params += "&fq=${fqList.collect{it.encodeAsURL()}.join('&fq=')}";--}%
-%{--        </g:if>--}%
-%{--        <g:if test="${params.fromDate}">--}%
-%{--            params += '&fromDate='+'${params.fromDate}';--}%
-%{--        </g:if>--}%
-%{--        <g:if test="${params.toDate}">--}%
-%{--            params += '&toDate='+'${params.toDate}';--}%
-%{--        </g:if>--}%
-
-%{--        $.post(url, params).done(function(data1) {--}%
-%{--            //console.log("getJSON data", data);--}%
-%{--            var data--}%
-%{--            if (data1.resp) {--}%
-%{--                data = data1.resp;--}%
-%{--            } else if (data1.hits) {--}%
-%{--                data = data1;--}%
-%{--            }--}%
-%{--            if (data.error) {--}%
-%{--                console.error("Error: " + data.error);--}%
-%{--            } else {--}%
-%{--                var total = data.hits.total;--}%
-%{--                $("numberOfProjects").html(total);--}%
-%{--                $('#projectTable').data("total", total);--}%
-%{--                $('#paginateTable').show();--}%
-%{--                if (total == 0) {--}%
-%{--                    $('#paginationInfo').html("Nothing found");--}%
-
-%{--                } else {--}%
-%{--                    var max = data.hits.hits.length--}%
-%{--                    $('#paginationInfo').html((offset+1)+" to "+(offset+max) + " of "+total);--}%
-%{--                    if (offset == 0) {--}%
-%{--                        $('#paginateTable .prev').addClass("disabled");--}%
-%{--                    } else {--}%
-%{--                        $('#paginateTable .prev').removeClass("disabled");--}%
-%{--                    }--}%
-%{--                    if (offset >= (total - max) ) {--}%
-%{--                        $('#paginateTable .next').addClass("disabled");--}%
-%{--                    } else {--}%
-%{--                        $('#paginateTable .next').removeClass("disabled");--}%
-%{--                    }--}%
-%{--                }--}%
-
-%{--                $('#projectTable tbody').empty();--}%
-%{--                populateTable(data);--}%
-%{--            }--}%
-%{--        }).fail(function (request, status, error) {--}%
-%{--            //console.error("AJAX error", status, error);--}%
-%{--            $('#paginationInfo').html("AJAX error:" + status + " - " + error);--}%
-%{--        });--}%
-%{--    }--}%
-
-%{--    /**--}%
-%{--    * Update the project table DOM using a plain HTML template (cloned)--}%
-%{--    *--}%
-%{--    * @param data--}%
-%{--    */--}%
-%{--    function populateTable(data) {--}%
-%{--        //console.log("populateTable", data);--}%
-%{--        $.each(data.hits.hits, function(i, el) {--}%
-%{--            //console.log(i, "el", el);--}%
-%{--            var id = el._id;--}%
-%{--            var src = el._source--}%
-%{--            var $tr = $('#projectRowTempl tr').clone(); // template--}%
-%{--            $tr.find('.td1 > a').attr("id", "a_" + id).data("id", id);--}%
-%{--            $tr.find('.td1 .projectTitleName').text(src.name); // projectTitleName--}%
-%{--            if(src.managementUnitName){--}%
-%{--                $tr.find('.td1 .managementUnitName').text(src.managementUnitName);--}%
-%{--                $tr.find('.td1 a.managementUnitLine').attr("href", "${createLink(controller: 'managementUnit')}/" + src.managementUnitId);--}%
-%{--            }--}%
-%{--            if(src.associatedProgram){--}%
-%{--                if (src.programId){--}%
-%{--                    $tr.find('.td1 .associatedProgramLine span').text(src.associatedProgram);--}%
-%{--                    //$tr.find('.td1 .associatedProgramLine a').attr("href", "${createLink(controller: 'program')}/" + src.programId);--}%
-%{--                    }--}%
-%{--                else{--}%
-%{--                    //$tr.find('.td1 .associatedProgramLine a').attr("href", "#");--}%
-%{--                    $tr.find('.td1 .associatedProgramLine a').replaceWith('<span>'+ src.associatedProgram +'</span>')--}%
-%{--                }--}%
-
-%{--                if (src.associatedSubProgram)--}%
-%{--                    $tr.find('.td1 .associatedProgramLine i.associatedSubProgram').text( " - "+src.associatedSubProgram )--}%
-%{--            }--}%
-
-%{--            $tr.find('.projectInfo').attr("id", "proj_" + id);--}%
-%{--            $tr.find('.homeLine a').attr("href", "${createLink(controller: 'project')}/" + id);--}%
-%{--            $tr.find('a.zoom-in').data("id", id);--}%
-%{--            $tr.find('a.zoom-out').data("id", id);--}%
-%{--            $tr.find('.orgLine').text(src.organisationName);--}%
-%{--            $tr.find('.descLine').text(src.description);--}%
-%{--        <g:if test="${fc.userIsSiteAdmin()}">--}%
-%{--            $tr.find('.downloadLine a').attr("href", "${createLink(controller: 'project',action: 'downloadProjectData')}" + "?id="+id+"&view=xlsx");--}%
-%{--                    $tr.find('.downloadJSONLine a').attr("href", "${createLink(controller: 'project',action: 'downloadProjectData')}" + "?id="+id+"&view=json");--}%
-%{--        </g:if>--}%
-%{--            $tr.find('.td2').text(formatDate(Date.parse(src.lastUpdated))); // relies on the js_iso8601 resource--}%
-%{--            //console.log("appending row", $tr);--}%
-%{--            $('#projectTable tbody').append($tr);--}%
-%{--        });--}%
-%{--    }--}%
 </asset:script>

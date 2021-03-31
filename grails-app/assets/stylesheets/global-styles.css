@@ -867,3 +867,7 @@ span.status {
 .table .table {
 	background-color: inherit;
 }
+
+.hidden-desktop {
+	display: none !important;
+}
