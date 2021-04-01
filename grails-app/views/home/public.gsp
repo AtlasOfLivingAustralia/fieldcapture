@@ -3,7 +3,7 @@
 <head>
     <g:set var="containerType" scope="request" value="container"/>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}&libraries=visualization"></script>
-    <meta name="layout" content="${hubConfig.skin}"/>
+    <meta name="layout" content="nrm_bs4"/>
     <title>Home | MERIT</title>
     <script>
         var fcConfig = {
@@ -20,8 +20,8 @@
         };
     </script>
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
-    <asset:stylesheet src="common.css"/>
     <asset:stylesheet src="homepage.css"/>
+    <asset:stylesheet src="common-bs4.css"/>
 </head>
 
 <body>
@@ -30,12 +30,12 @@
     <div id="stats-holder">
         <g:render template="/report/statistics"/>
     </div>
-    <div class="row-fluid">
-        <div id="latest-news" class="span6">
+    <div class="row-fluid row">
+        <div id="latest-news" class="span6 col-sm-6">
             <h4>Latest news</h4>
             <g:render template="/shared/blog" />
         </div>
-        <div id="poi" class="span6">
+        <div id="poi" class="span6 col-sm-6">
             <g:render template="/shared/poi"/>
         </div>
     </div>
@@ -71,15 +71,6 @@
                 if ($('#latest-news').height() > 400) {
                     $('#latest-news').height(400).css('overflow-y', 'scroll');
                 }
-                //var $news = $('#latest-news');
-                //var approxExtras = $news.find('h4').height() + ($news.outerHeight()-$news.height())/2;
-                //$($news).on('scroll', function(e) {
-                //    var scrollPos = $news.scrollTop();
-                //    var blogHeight = $('#blog-').height();
-                //    if (scrollPos+400 >= blogHeight+approxExtras-10) {
-                //        // we would load more blog entries at this point.
-                //    }
-                //});
             });
 
 </script>
