@@ -49,7 +49,7 @@ describe("Facet filter component unit tests", function () {
     });
 
     it("should render component template correctly", function () {
-        expect($(mockElement).find('.fa.fa-plus').length).toEqual(2);
+        expect($(mockElement).find('.fa.fa-plus').length).toEqual(0);
         expect($(mockElement).find('.moreFacets').length).toEqual(1);
         expect($(mockElement).find('input').length).toEqual(4);
     })
