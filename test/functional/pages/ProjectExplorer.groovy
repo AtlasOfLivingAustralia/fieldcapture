@@ -12,10 +12,10 @@ class ProjectExplorer extends Page {
     }
 
     static content = {
-        mapToggle(required:false) { $('a#accordionMapView-heading')}
-        projectsToggle(required:false) { $('a#projectsView-heading')}
-        dashboardToggle(required:false) { $('a#reportView-heading') }
-        downloadsToggle(required:false) { $('a#downloadView-heading') }
+        mapToggle(required:false) { $('#mapHeading')}
+        projectsToggle(required:false) { $('#projectHeading')}
+        dashboardToggle(required:false) { $('#dashboardHeading') }
+        downloadsToggle(required:false) { $('#downloadHeading') }
 
         projectTable{ $('#projectTable')}
         projectPagination(required:false) { $('#paginationInfo')}
@@ -23,8 +23,8 @@ class ProjectExplorer extends Page {
         map(required:false) { $('#map') }
         facets(required: false) { $('#facetsContent input') }
         chooseMoreFacetTerms(required: false) { $('#facetsContent .moreFacets') }
-        facetTerms(required: false) { $("#facetsContent .facetValues a") }
-        facetAccordion(required: false) { $("#facetsContent .fa.fa-plus") }
+        facetTerms(required: false) { $("#facetsContent .accordion .card-header a") }
+        facetAccordion(required: false) { $("#facetsContent .accordion") }
 
         inputText{ $("#keywords")}
 
