@@ -47,7 +47,7 @@
     <a id="project-explorer-holder" href="${g.createLink(controller: 'home', action:'projectExplorer')}">
         <button>
             <div id="project-explorer-icon"><i class="text-center fa fa-search"></i></div>
-            <h2 class="span12 text-center project-explorer-text">PROJECT EXPLORER</h2>
+            <h2 class="span12 col-sm-12 text-center project-explorer-text">PROJECT EXPLORER</h2>
         </button>
     </a>
 </div>
