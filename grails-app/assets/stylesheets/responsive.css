@@ -60,30 +60,6 @@
 
 }
 
-@media only screen and (min-width: 576px) {
-
-    #stats-holder .statistics .row .col-sm-4 {
-        width: 31.623931623931625%;
-        *width: 31.570740134569924%;
-
-    }
-
-}
-
-@media only screen and (min-width: 1200px) {
-    .statistics .row .col-sm-4 {
-        width: 31.623931623931625%;
-        *width: 31.570740134569924%;
-    }
-
-    .statistics .row [class*="col-sm-4"] {
-        display: block;
-        width: 100%;
-        min-height: 30px;
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-        float: left;
-    }
-
+.statHeight {
+    height: 195px;
 }

@@ -23,6 +23,6 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-12 span12 align-content-center text-center"><a href="#" class="show-more-stats">Show more stats <i class="fa fa-refresh"></i></a></div>
+        <div class="col-sm-12 span12 align-content-center text-center"><a href="#" class="show-more-stats text-dark">Show more stats <i class="fa fa-refresh"></i></a></div>
     </div>
 </div>
