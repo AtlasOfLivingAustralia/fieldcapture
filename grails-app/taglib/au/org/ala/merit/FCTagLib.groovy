@@ -145,23 +145,23 @@ class FCTagLib {
                 }
                 String addOnClass = attrs.bs4 ? "input-group-append" : "input-group-text add-on"
                 String buttonClass = attrs.bs4 ? "fa fa-th input-group-text" : "fa fa-th "
-                mb.div(class: "input-group-append") {
+                def spanDateWrapper = {
                     mb.span(class: "${addOnClass} open-datepicker", id: "basic-addon2") {
                         mb.i(class: buttonClass) {
                             mkp.yieldUnescaped("&nbsp;")
                         }
                     }
                 }
-            }
-            //  Bootstrap 4 needs the control to be wrapped in an input-group class
-            if (attrs.bs4) {
-                mb.div(class:"input-group") {
-                    content()
+                //  Bootstrap 4 needs the control to be wrapped in an input-group class
+                if (attrs.bs4){
+                    mb.div(class: "input-group-append") {
+                        spanDateWrapper()
+                    }
+                }else{
+                   spanDateWrapper()
                 }
             }
-            else {
-                content()
-            }
+            content()
 
         } else {
             def inputAttrs = [

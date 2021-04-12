@@ -22,6 +22,13 @@
         *width: 31.570740134569924%;
     }
 
+    #facetsContent .input-group .dataClass {
+        width: 3em;
+    }
+
+    #facetsContent .clearDates {
+        margin-left: 2.5em;
+    }
 }
 
 @media only screen  and (max-width: 768px){
@@ -51,6 +58,13 @@
         padding-left: 5px;
         margin: 0 0 0 5px;
         border-left: 1px solid #93a4aa;
+    }
+
+    .clearDates {
+        margin-left: -33px;
+    }
+    #facetsContent .input-group .dataClass {
+        width: 3em;
     }
 }
 @media only screen and (max-width: 425px) {

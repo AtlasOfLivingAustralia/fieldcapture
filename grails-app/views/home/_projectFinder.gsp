@@ -67,9 +67,9 @@
                         <div id="facet-dates" data-name="projectDates" class="collapse facetItems validationEngineContainer">
                             <div class="card-body" style="padding: 4px 0px 6px;">
                                 <select style="margin-bottom: 10px" data-bind="options:ranges, optionsText:'display', value:selectedRange"></select>
-                                <div class="input-group" style="margin-bottom: 10px"><label for="fromDate" style="width:7em;">From:</label><fc:datePicker targetField="fromDate.date" class="input-small" name="fromDate" data-validation-engine="validate[date]"/></div>
-                                <div class="input-group" style="margin-bottom: 10px"><label for="fromDate" style="width:7em;">To:</label><fc:datePicker targetField="toDate.date" class="input-append input-small" name="toDate" data-validation-engine="validate[date,future[fromDate]]"/></div>
-                                <div style="margin-left: 33px;"><button data-bind="click:clearDates, enable:fromDate() || toDate()" class="btn" style="margin-left:4em;"><i class="fa fa-remove"></i> Clear dates</button></div>
+                                <div class="input-group" style="margin-bottom: 10px"><label for="fromDate" class="dataClass">From:</label><fc:datePicker targetField="fromDate.date" bs4="bs4" class="input-small" name="fromDate" data-validation-engine="validate[date]"/></div>
+                                <div class="input-group" style="margin-bottom: 10px"><label for="fromDate" class="dataClass">To:</label><fc:datePicker targetField="toDate.date" bs4="bs4" class="input-append input-small" name="toDate" data-validation-engine="validate[date,future[fromDate]]"/></div>
+                                <div><button data-bind="click:clearDates, enable:fromDate() || toDate()" class="btn clearDates"><i class="fa fa-remove"></i> Clear dates</button></div>
 
             </div>
                         </div>
@@ -218,7 +218,7 @@
                                                 </select>
                                         </g:if>
                                         <g:else>
-                                            <select id="dashboardType" name="dashboardType">
+                                            <select id="dashboardType" name="dashboardType" style="min-width: 220px; max-width: 220px">
                                                 <option value="dashboard">Activity Outputs</option>
                                                 <option value="reef2050PlanActionSelection">Reef 2050 Plan Dashboard</option>
                                             </select>

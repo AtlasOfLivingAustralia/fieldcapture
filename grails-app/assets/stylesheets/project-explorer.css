@@ -189,18 +189,18 @@ select {
     margin-bottom: 10px;
 }
 .form-group .inputDates span.open-datepicker {
-    display: inline-block;
-    width: auto;
-    height: 20px;
-    min-width: 16px;
-    padding: 4px 5px;
-    font-size: 14px;
-    font-weight: normal;
-    line-height: 20px;
-    text-align: center;
-    text-shadow: 0 1px 0 #fff;
-    background-color: #eee;
-    border: 1px solid #ccc;
+    /*display: inline-block;*/
+    /*width: auto;*/
+    /*height: 20px;*/
+    /*min-width: 16px;*/
+    /*padding: 4px 5px;*/
+    /*font-size: 14px;*/
+    /*font-weight: normal;*/
+    /*line-height: 20px;*/
+    /*text-align: center;*/
+    /*text-shadow: 0 1px 0 #fff;*/
+    /*background-color: #eee;*/
+    /*border: 1px solid #ccc;*/
 }
 
 .inputDates {
@@ -254,6 +254,15 @@ table tbody .td1 .accordion .card-header.collapsed:after {
     content: "\f067";
     display: none;
 }
-/*.hideFacets {*/
-/*    display: none;*/
-/*}*/
+
+#facetsContent .clearDates {
+    margin-left: 6em;
+}
+#facetsContent .input-group .dataClass {
+    width: 7em;
+}
+
+#facetsContent .input-group-text {
+    padding: 4px 5px;
+    border-radius: 0 4px 4px 0;
+}
