@@ -1,8 +1,9 @@
 <div class="control-group form-group row">
-    <label class="control-label span3 col-form-label col-sm-3"><g:message code="g.socialMedia"/>:<fc:iconHelp><g:message
+    <div class="col-sm-2"></div>
+    <label class="control-label span3 col-form-label col-sm-1"><g:message code="g.socialMedia"/>:<fc:iconHelp><g:message
             code="g.socialMedia.help" args="[entity]"/></fc:iconHelp></label>
 
-    <div class="span9 col-sm-9">
+    <div class="span9 col-sm-3">
         <table class="table links-table controls">
             <tbody data-bind="foreach:transients.socialMedia">
             <tr>
@@ -14,8 +15,8 @@
             </tr>
             </tbody>
             <tfoot data-bind="visible:transients.socialMediaUnspecified().length > 0">
-            <tr><td colspan="3">
-                <select id="addSocialMedia" class="form-control"
+            <tr><td>
+                <select id="addSocialMedia" class="form-control form-control-sm"
                         data-bind="options:transients.socialMediaUnspecified,optionsText:'name',optionsValue:'role',value:transients.socialMediaToAdd,optionsCaption:'Add social media link...'"></select>
             </td></tr>
             </tfoot>

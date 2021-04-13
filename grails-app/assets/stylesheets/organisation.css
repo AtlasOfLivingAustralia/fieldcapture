@@ -12,3 +12,24 @@
 .smallFont {
     margin: 5px 0;
 }
+
+.w-53 {
+    width: 53% !important;
+}
+
+/*.form-control-sm {*/
+/*    height: calc(1.5em + 0.5rem + 2px);*/
+/*    padding: 0.25rem 0.5rem;*/
+/*    font-size: 0.875rem;*/
+/*    line-height: 1.5;*/
+/*    border-radius: unset;*/
+/*}*/
+.col-sm-3 {
+    -ms-flex: 0 0 31.7%;
+    flex: 0 0 31.7%;
+    max-width: 100%;
+}
+
+.prePopBtn {
+    padding: 0px;
+}
