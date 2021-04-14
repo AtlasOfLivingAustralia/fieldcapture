@@ -370,7 +370,7 @@ var ValidationSupport = function() {
 
 function helpHover(helpText) {
     return '<a href="#" class="helphover" data-original-title="" data-placement="top" data-container="body" data-content="'+helpText+'">'+
-        '<i class="icon-question-sign">&nbsp;</i>'+
+        '<i class="icon-question-sign fa fa-question-circle">&nbsp;</i>'+
         '</a>';
 };
 

@@ -1,8 +1,17 @@
 (function ($) {
-  function SlickGridPager(dataView, grid, $container) {
+  function SlickGridPager(dataView, grid, $container, options) {
     var $status;
-
+    var _options;
+    var _defaults = {
+      showAllText: "Showing all {rowCount} rows",
+      showPageText: "Showing page {pageNum} of {pageCount}",
+      showCountText: "From {countBegin} to {countEnd} of {rowCount} rows",
+      showCount: false
+    };
+    
     function init() {
+      _options = $.extend(true, {}, _defaults, options);
+      
       dataView.onPagingInfoChanged.subscribe(function (e, pagingInfo) {
         updatePager(pagingInfo);
       });
@@ -17,12 +26,12 @@
       var lastPage = pagingInfo.totalPages - 1;
 
       return {
-        canGotoFirst: !cannotLeaveEditMode && pagingInfo.pageSize != 0 && pagingInfo.pageNum > 0,
-        canGotoLast: !cannotLeaveEditMode && pagingInfo.pageSize != 0 && pagingInfo.pageNum != lastPage,
-        canGotoPrev: !cannotLeaveEditMode && pagingInfo.pageSize != 0 && pagingInfo.pageNum > 0,
-        canGotoNext: !cannotLeaveEditMode && pagingInfo.pageSize != 0 && pagingInfo.pageNum < lastPage,
+        canGotoFirst: !cannotLeaveEditMode && pagingInfo.pageSize !== 0 && pagingInfo.pageNum > 0,
+        canGotoLast: !cannotLeaveEditMode && pagingInfo.pageSize !== 0 && pagingInfo.pageNum !== lastPage,
+        canGotoPrev: !cannotLeaveEditMode && pagingInfo.pageSize !== 0 && pagingInfo.pageNum > 0,
+        canGotoNext: !cannotLeaveEditMode && pagingInfo.pageSize !== 0 && pagingInfo.pageNum < lastPage,
         pagingInfo: pagingInfo
-      }
+      };
     }
 
     function setPageSize(n) {
@@ -71,7 +80,7 @@
 
       $settings.find("a[data]").click(function (e) {
         var pagesize = $(e.target).attr("data");
-        if (pagesize != undefined) {
+        if (pagesize !== undefined) {
           if (pagesize == -1) {
             var vp = grid.getViewport();
             setPageSize(vp.bottom - vp.top);
@@ -86,7 +95,7 @@
 
       $(icon_prefix + "ui-icon-lightbulb" + icon_suffix)
           .click(function () {
-            $(".slick-pager-settings-expanded").toggle()
+            $(".slick-pager-settings-expanded").toggle();
           })
           .appendTo($settings);
 
@@ -132,17 +141,29 @@
         $container.find(".ui-icon-seek-prev").addClass("ui-state-disabled");
       }
 
-      if (pagingInfo.pageSize == 0) {
-        var totalRowsCount = dataView.getItems().length;
-        var visibleRowsCount = pagingInfo.totalRows;
-        if (visibleRowsCount < totalRowsCount) {
-          $status.text("Showing " + visibleRowsCount + " of " + totalRowsCount + " rows");
-        } else {
-          $status.text("Showing all " + totalRowsCount + " rows");
-        }
-        $status.text("Showing all " + pagingInfo.totalRows + " rows");
+      if (pagingInfo.pageSize === 0) {
+        $status.text(_options.showAllText.replace('{rowCount}', pagingInfo.totalRows + "").replace('{pageCount}', pagingInfo.totalPages + ""));
       } else {
-        $status.text("Showing page " + (pagingInfo.pageNum + 1) + " of " + pagingInfo.totalPages);
+        $status.text(_options.showPageText.replace('{pageNum}', pagingInfo.pageNum + 1 + "").replace('{pageCount}', pagingInfo.totalPages + ""));
+      }
+
+      if (_options.showCount && pagingInfo.pageSize!==0)
+      {
+        var pageBegin = pagingInfo.pageNum * pagingInfo.pageSize;
+        var currentText = $status.text();
+
+        if (currentText)
+        {
+          currentText += " - ";
+        }
+
+        $status.text(
+            currentText +
+            _options.showCountText
+                .replace('{rowCount}', pagingInfo.totalRows + "")
+                .replace("{countBegin}", pageBegin + 1)
+                .replace("{countEnd}", Math.min(pageBegin + pagingInfo.pageSize, pagingInfo.totalRows))
+        );
       }
     }
 

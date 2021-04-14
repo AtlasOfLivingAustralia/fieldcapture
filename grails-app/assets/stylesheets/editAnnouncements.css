@@ -44,3 +44,14 @@ input.editor-text {box-sizing:border-box; width: 100%;}
     right:5px;
 
 }
+
+.slick-column-name a.helphover{
+    color: #000;
+}
+.hide {
+    display: none;
+}
+
+#announcementsTable .slick-row {
+    height: 25px;
+}
