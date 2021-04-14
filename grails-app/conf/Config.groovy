@@ -349,8 +349,8 @@ environments {
         userDetailsUrl = "${userDetatails.url}getUserListFull"
         logging.dir = '.'
         upload.images.path = '/tmp'
-        ecodata.baseUrl = 'http://devt.ala.org.au:8080/ecodata/ws/'
-        ecodata.service.url = 'http://devt.ala.org.au:8080/ecodata/ws'
+        ecodata.baseUrl = 'http://devt.ala.org.au:8080/ws/'
+        ecodata.service.url = 'http://devt.ala.org.au:8080/ws'
         pdfgen.baseURL = "http://devt.ala.org.au:${wiremock.port}/"
         abn.abnUrl= "http://localhost:${wiremock.port}/json/AbnDetails.aspx?abn="
         abn.abnLookupToken = "123456"
