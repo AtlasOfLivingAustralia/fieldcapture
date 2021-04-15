@@ -21,14 +21,11 @@
         };
     </script>
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
-%{--    <asset:stylesheet src="common.css"/>--}%
     <asset:stylesheet src="homepage.css"/>
     <asset:stylesheet src="common-bs4.css"/>
-
 </head>
 <body>
 <div id="wrapper" class="${containerType}">
-
     <div class="row">
         <g:if test="${flash.errorMessage}">
             <div class="${containerType}">

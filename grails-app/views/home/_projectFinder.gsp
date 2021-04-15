@@ -11,7 +11,6 @@
     </div>
 </g:if>
 <g:elseif test="${results?.hits?.total?:0 > 0}">
-
     <div class="row">
         <div id="facetsCol" class="bg-white" style="display:none;">
             <g:set var="reqParams" value="query,sort,order,max,fq,fromDate,toDate"/>
@@ -59,13 +58,13 @@
                 <g:set var="fqLink" value="${g.createLink(controller: 'home', action: 'projectExplorer') + (baseUrl?:"?")}"/>
             <!-- fqLink = ${fqLink} -->
             <div class="accordion">
-                <div class="card" style="border: 0px solid white; padding-left: 0px; padding-bottom: 0px; margin-bottom: 0px">
+                <div class="card customCard">
                     <div class="card-header collapsed" data-toggle="collapse" href="#facet-dates" id="projectDates">
                         <a><h4>Project Dates <fc:iconHelp helpTextCode="project.dates.help" container="body"/></h4></a>
                     </div>
 
                         <div id="facet-dates" data-name="projectDates" class="collapse facetItems validationEngineContainer">
-                            <div class="card-body" style="padding: 4px 0px 6px;">
+                            <div class="card-body cardBody">
                                 <select style="margin-bottom: 10px" data-bind="options:ranges, optionsText:'display', value:selectedRange"></select>
                                 <div class="input-group" style="margin-bottom: 10px"><label for="fromDate" class="dataClass">From:</label><fc:datePicker targetField="fromDate.date" bs4="bs4" class="input-small" name="fromDate" data-validation-engine="validate[date]"/></div>
                                 <div class="input-group" style="margin-bottom: 10px"><label for="fromDate" class="dataClass">To:</label><fc:datePicker targetField="toDate.date" bs4="bs4" class="input-append input-small" name="toDate" data-validation-engine="validate[date,future[fromDate]]"/></div>
@@ -82,7 +81,7 @@
         </div>
         <div class="col-sm-11">
             <div class="accordion" id="project-display-options">
-                <div class="card" style="border-bottom: 1px solid #dddddd; border-bottom-left-radius: 0.25rem; border-bottom-right-radius: 0.25rem">
+                <div class="card cardSection">
                     <div class="card-header collapsed" id="mapHeading" href="#accordionMapView" data-toggle="collapse">
                         <a class="text-left text-uppercase">Map</a>
                     </div>
@@ -90,7 +89,7 @@
                     <div id="accordionMapView" class="collapseItems collapse" aria-labelledby="mapHeading" data-parent="#project-display-options">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-sm-4" style="padding-left: 0px; margin-left: -10px;">
+                                <div class="col-sm-4">
                                     <span class="facet-holder"></span>
                                 </div>
 
@@ -102,14 +101,14 @@
                         </div>
                     </div>
                 </div> <!-- Map Section -->
-                <div class="card" style="border-bottom: 1px solid #dddddd; border-bottom-left-radius: 0.25rem; border-bottom-right-radius: 0.25rem">
+                <div class="card cardSection">
                         <div class="card-header collapsed" id="projectHeading" href="#projectsView" data-toggle="collapse">
                             <a class="text-left text-uppercase">Projects</a>
                         </div>
                     <div id="projectsView" class="collapse collapseItems" aria-labelledby="projectHeading" data-parent="#project-display-options">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-sm-4" style="padding-left: 0px; margin-left: -10px;">
+                                <div class="col-sm-4">
                                     <span class="facet-holder"></span>
                                 </div>
                                 <div class="col-sm-8">
@@ -126,7 +125,7 @@
                                             </tbody>
                                         </table>
                                         <div id="paginateTable" class="d-none" style="text-align: center">
-                                            <span id="paginationInfo" style="display:inline-block;float:left;margin-top:4px;"></span>
+                                            <span id="paginationInfo"></span>
                                             <div class="btn-group">
                                                 <button class="btn btn-sm prev"><i class="fa fa-chevron-left" style="margin-top: 2px"></i>&nbsp;previous</button>
                                                 <button class="btn btn-sm next">next&nbsp;<i class="fa fa-chevron-right"></i></button>
@@ -138,8 +137,8 @@
                                     <table id="projectRowTempl" class="d-none">
                                         <tr>
                                             <td class="td1">
-                                                <div class="accordion" style="margin-bottom: 0px">
-                                                    <div class="card" style="margin-bottom: 0px;border: 0px; padding: 0px 0px 0px 0px;">
+                                                <div class="accordion mb-0">
+                                                    <div class="card mb-0 border-0 p-0">
                                                         <div>
                                                                 <a class="projectTitle collapsed" id="proj_" href="#a_" data-toggle="collapse" data-id="" title="click to show/hide details">
                                                                     <span class="showHideCaret">&#9658; </span><span class="projectTitleName">$name</span>
@@ -149,7 +148,7 @@
                                                             </a>
                                                         </div>
                                                         <div class="projectInfo collapse" id="a_" aria-labelledby="proj_">
-                                                            <div class="card-body" style="padding: 3px 0px 0px;">
+                                                            <div class="card-body pt-3">
                                                                 <div class="homeLine">
                                                                     <i class="fa fa-home"></i>
                                                                     <a href="">View project page</a>
@@ -188,14 +187,14 @@
                         </div>
                     </div>
                 </div> <!-- Project View -->
-                <div class="card" style="border-bottom: 1px solid #dddddd; border-bottom-left-radius: 0.25rem; border-bottom-right-radius: 0.25rem">
+                <div class="card cardSection">
                 <div class="card-header collapsed" id="dashboardHeading" href="#reportView" data-toggle="collapse">
                     <a class="text-left text-uppercase">Dashboard</a>
                 </div>
                     <div id="reportView" class="collapse collapseItems" aria-labelledby="dashboardHeading" data-parent="#project-display-options">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-sm-4 d-none" style="padding-left: 0px; margin-left: -10px;" data-hidden="true">
+                                <div class="col-sm-4 d-none" data-hidden="true">
                                     <span class="facet-holder" data-hidden="true"></span>
                                 </div>
                                 <div class="col-sm-12">
@@ -210,7 +209,7 @@
                                     <div class="reportDropdown">
                                         <g:if test="${fc.userIsAlaOrFcAdmin()}">
                                                 <h4>Report: </h4>
-                                                <select id="dashboardType" name="dashboardType" style="min-width: 220px; max-width: 220px">
+                                                <select id="dashboardType"  class="dashboardSelect" name="dashboardType">
                                                     <option value="dashboard">Activity Outputs</option>
                                                     <option value="announcements">Announcements</option>
                                                     <option value="outputTargets">Output Targets By Programme</option>
@@ -218,7 +217,7 @@
                                                 </select>
                                         </g:if>
                                         <g:else>
-                                            <select id="dashboardType" name="dashboardType" style="min-width: 220px; max-width: 220px">
+                                            <select id="dashboardType" class="dashboardSelect" name="dashboardType">
                                                 <option value="dashboard">Activity Outputs</option>
                                                 <option value="reef2050PlanActionSelection">Reef 2050 Plan Dashboard</option>
                                             </select>
@@ -234,14 +233,14 @@
                         </div>
                     </div> <!-- Dashboard -->
                 <g:if test="${includeDownloads}">
-                    <div class="card" style="border-bottom: 1px solid #dddddd; border-bottom-left-radius: 0.25rem; border-bottom-right-radius: 0.25rem">
+                    <div class="card cardSection">
                         <div class="card-header collapsed" id="downloadHeading" href="#downloadView" data-toggle="collapse">
                             <a class="text-left text-uppercase">Download</a>
                         </div>
                         <div id="downloadView" class="collapse collapseItems" aria-labelledby="downloadHeading" data-parent="#project-display-options">
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-sm-4" style="padding-left: 0px; margin-left: -10px;">
+                                    <div class="col-sm-4">
                                         <span class="facet-holder"></span>
                                     </div>
                                     <div class="col-sm-8">
@@ -289,8 +288,8 @@
     </div> <!-- End of Row -->
 </g:elseif>
 <g:else>
-    <div class="row ">
-        <div class="span12">
+    <div class="row">
+        <div class="col-sm-12">
             <div class="alert alert-error large-space-before">
                 Error: search index returned 0 results
             </div>
@@ -880,6 +879,5 @@ var urlWithoutDates = '<fc:formatParams params="${params}" requiredParams="sort,
             return comp;
         }).appendTo($list);
     }
-
 });
 </asset:script>

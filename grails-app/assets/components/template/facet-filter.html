@@ -3,14 +3,14 @@
     <!-- ko with: $parent.results.facets[fn.facet], as: 'f', noChildContext: true -->
         <!-- ko if: fn.facet != 'class' && $component.getFacetTermsLength(fn.facet) > 0 -->
             <div class="accordion">
-                <div class="card" style="border: 0px solid white; padding-left: 0px; padding-bottom: 0px; margin-bottom: 0px">
+                <div class="card customCard">
                     <div class="card-header collapsed" data-toggle="collapse" data-bind="attr: {id:fn.facet, href:'#facet-'+fn.facet}">
                         <a> <h4 data-bind="attr: {id: 'facet-list-' + fnIndex() + '-header'}, html: fn.displayname" style="display:inline-block;"></h4></a>
                     </div>
                 </div>
                 <div data-bind="attr: {id: 'facet-'+fn.facet, 'data-name':fn.facet }" class="collapse facetItems">
-                    <div class="card-body" style="padding: 4px 0px 6px;">
-                        <ul role="group" data-bind="attr: {'aria-labelledby': 'facet-list-' + fnIndex() + '-header'}" style="list-style-type: none; margin-left: 25px; padding-left: 0px" class="facetValues">
+                    <div class="card-body cardBody">
+                        <ul role="group" data-bind="attr: {'aria-labelledby': 'facet-list-' + fnIndex() + '-header'}" class="facetValues facetGroupValues">
                             <!-- ko foreach: {data: f.terms, as: 't', noChildContext: true} -->
                             <!-- ko if: tIndex() < max && t.term -->
                             <li>

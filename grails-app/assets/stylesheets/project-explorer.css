@@ -154,13 +154,13 @@ ol.unstyled {
 .card-body .row #facetFilter .col-sm-4 {
     flex: 0 0 33.333333%;
     max-width: 100%;
-    padding-right: 7px;
+    margin-left: 1rem !important;
 
 }
 .card-body .row #facetClear .col-sm-4 {
     flex: 0 0 33.333333%;
     max-width: 100%;
-    padding-left:0px;
+    margin-left: 0rem !important;
 }
 
 div#facetsCol {
@@ -188,20 +188,6 @@ select {
     vertical-align: middle;
     margin-bottom: 10px;
 }
-.form-group .inputDates span.open-datepicker {
-    /*display: inline-block;*/
-    /*width: auto;*/
-    /*height: 20px;*/
-    /*min-width: 16px;*/
-    /*padding: 4px 5px;*/
-    /*font-size: 14px;*/
-    /*font-weight: normal;*/
-    /*line-height: 20px;*/
-    /*text-align: center;*/
-    /*text-shadow: 0 1px 0 #fff;*/
-    /*background-color: #eee;*/
-    /*border: 1px solid #ccc;*/
-}
 
 .inputDates {
     display: inline-block;
@@ -223,7 +209,6 @@ table tbody .td1 .accordion .card-header:after {
     display: none;
 }
 table tbody .td1 .accordion .card-header.collapsed:after {
-    /* symbol for "collapsed" panels */
     content: "\f067";
     display: none;
 }
@@ -265,4 +250,45 @@ table tbody .td1 .accordion .card-header.collapsed:after {
 #facetsContent .input-group-text {
     padding: 4px 5px;
     border-radius: 0 4px 4px 0;
+}
+
+#facet-list .customCard, #facetsContent .customCard  {
+    border: 0px solid white;
+    padding-left: 0px;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+}
+
+#facet-list .facetGroupValues {
+    list-style-type: none;
+    margin-left: 25px;
+    padding-left: 0px;
+}
+
+#facet-list .cardBody {
+    padding: 4px 0px 6px;
+}
+
+#project-display-options > .cardSection {
+    border-bottom: 1px solid #dddddd !important;
+    border-bottom-left-radius: 0.25rem !important;
+    border-bottom-right-radius: 0.25rem !important;
+}
+
+#accordionMapView .col-sm-4, #projectsView .col-sm-4, #reportView .col-sm-4, #downloadView .col-sm-4 {
+    padding-left: 0px;
+    margin-left: -10px;
+}
+.pt-3 {
+    padding-top: 3px !important;
+}
+#paginateTable > #paginationInfo {
+    display:inline-block;
+    float:left;
+    margin-top:4px;
+}
+
+.dashboardSelect {
+    min-width: 220px;
+    max-width: 220px;
 }
