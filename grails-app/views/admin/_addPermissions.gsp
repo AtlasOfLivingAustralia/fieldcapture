@@ -23,8 +23,8 @@
         </div>
     </g:elseif>
     <g:else><div class="alert alert-error">Missing model - either <code>projectId</code> or <code>projects</code> must be provided</div></g:else>
-    <div class="control-group">
-        <div class="controls">
+    <div class="form-group">
+        <div class="group">
             <button id="addUserRoleBtn" class="btn btn-primary">Submit</button>
             <asset:image src="spinner.gif" id="spinner1" class="hide d-none spinner" alt="spinner icon"/>
         </div>

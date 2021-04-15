@@ -84,3 +84,9 @@ div.dataTables_wrapper div.dataTables_filter input {
     border-radius: 0.2rem;
     width: 220px;
 }
+
+.table th, .table td {
+    padding: 0.50rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+}

@@ -13,10 +13,9 @@
                 <p class="ml-3"><button class="admin-action btn btn-small btn-danger" style="width:200px;" data-bind="click:deleteOrganisation"><i class="fa fa-remove"></i> Delete</button> Delete this organisation from the system. <strong>This cannot be undone</strong></p></g:if>
 
         </div>
-</div>
     <h4>Add Permissions</h4>
     <div class="row">
-        <div class="col-sm-6 alert alert-primary">
+        <div class="ml-3 col-sm-6 alert alert-primary">
             Any user access assigned to this organisation will automatically be applied to all projects managed by this organisation.
         </div>
     </div>
