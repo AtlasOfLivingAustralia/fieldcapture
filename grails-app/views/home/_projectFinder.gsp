@@ -66,8 +66,8 @@
                         <div id="facet-dates" data-name="projectDates" class="collapse facetItems validationEngineContainer">
                             <div class="card-body cardBody">
                                 <select style="margin-bottom: 10px" data-bind="options:ranges, optionsText:'display', value:selectedRange"></select>
-                                <div class="input-group" style="margin-bottom: 10px"><label for="fromDate" class="dataClass">From:</label><fc:datePicker targetField="fromDate.date" bs4="bs4" class="input-small" name="fromDate" data-validation-engine="validate[date]"/></div>
-                                <div class="input-group" style="margin-bottom: 10px"><label for="fromDate" class="dataClass">To:</label><fc:datePicker targetField="toDate.date" bs4="bs4" class="input-append input-small" name="toDate" data-validation-engine="validate[date,future[fromDate]]"/></div>
+                                <div class="input-group" style="margin-bottom: 10px"><label for="fromDate" class="dataClass">From:</label><fc:datePicker targetField="fromDate.date" bs4="bs4" class="dateControl" name="fromDate" data-validation-engine="validate[date]"/></div>
+                                <div class="input-group" style="margin-bottom: 10px"><label for="fromDate" class="dataClass">To:</label><fc:datePicker targetField="toDate.date" bs4="bs4" class="dateControl" name="toDate" data-validation-engine="validate[date,future[fromDate]]"/></div>
                                 <div><button data-bind="click:clearDates, enable:fromDate() || toDate()" class="btn clearDates"><i class="fa fa-remove"></i> Clear dates</button></div>
 
             </div>

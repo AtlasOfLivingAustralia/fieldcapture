@@ -292,3 +292,8 @@ table tbody .td1 .accordion .card-header.collapsed:after {
     min-width: 220px;
     max-width: 220px;
 }
+
+input.dateControl {
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: .25rem;
+}
