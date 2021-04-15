@@ -90,3 +90,10 @@ div.dataTables_wrapper div.dataTables_filter input {
     vertical-align: top;
     border-top: 1px solid #dee2e6;
 }
+
+.tab-content #sites {
+    margin-bottom: 77px;
+}
+#map-info{
+    margin-top: 58px;
+}

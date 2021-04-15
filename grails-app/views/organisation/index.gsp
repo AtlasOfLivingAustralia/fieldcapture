@@ -122,7 +122,7 @@
 
         var organisationTabStorageKey = 'organisation-page-tab';
         var initialisedSites = false;
-        $('a[data-toggle="tab"]').on('shown', function (e) {
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
             var tab = e.currentTarget.hash;
             amplify.store(organisationTabStorageKey, tab);
             if (!initialisedSites && tab == '#sites') { // Google maps doesn't initialise well unless it is visible.

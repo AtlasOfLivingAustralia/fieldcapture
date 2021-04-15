@@ -285,15 +285,15 @@
         var html = "<div class='projectInfoWindow'>";
 
         if (projectId && projectName) {
-            html += "<div><i class='icon-home'></i> <a href='" +
+            html += "<div><i class='fa fa-home'></i> <a href='" +
                     projectLinkPrefix + projectId + "'>" +projectName + "</a></div>";
         }
 
         if(orgName !== undefined && orgName != ''){
-            html += "<div><i class='icon-user'></i> Org name: " +orgName + "</div>";
+            html += "<div><i class='fa fa-user'></i> Org name: " +orgName + "</div>";
         }
 
-        html+= "<div><i class='icon-map-marker'></i> Site: <a href='" +siteLinkPrefix + siteId + "'>" + siteName + "</a></div>";
+        html+= "<div><i class='fa fa-map-marker'></i> Site: <a href='" +siteLinkPrefix + siteId + "'>" + siteName + "</a></div>";
         return html;
     }
 
