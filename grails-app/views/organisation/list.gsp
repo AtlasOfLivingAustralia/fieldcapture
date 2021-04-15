@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="${hubConfig.skin}"/>
+    <meta name="layout" content="nrm_bs4"/>
     <title>Organisations | Field Capture</title>
     <script>
         var fcConfig = {
@@ -13,7 +13,7 @@
             noLogoImageUrl: "${assetPath(src:'no-image-2.png')}"
             };
     </script>
-    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="common-bs4.css"/>
 </head>
 
 <body>
@@ -39,20 +39,23 @@
     <g:if test="${fc.userIsAlaOrFcAdmin()}">
         <a href="${g.createLink(action:'create')}"><button class="btn btn-info pull-right">Create Organisation</button></a>
     </g:if>
-
-    <div class="row-fluid">
-        <div class="span6 input-append">
-            <input type="text" id="searchText" data-bind="value:searchTerm, valueUpdate:'keyup'" class="span12" placeholder="Search organisations..." />
-            <span class="add-on"><i class="fa fa-search"></i> </span>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="input-group">
+                <input type="text" id="searchText" data-bind="value:searchTerm, valueUpdate:'keyup'" class="form-control "   aria-labelledby="Search Organisation" aria-describedby="basic-addon2" placeholder="Search organisations..." >
+                <div class="input-group-append">
+                    <span type="button" class="btn btn-secondary disabled" ><i class="fa fa-search" style="color: #000000"></i></span>
+                </div>
+            </div>
         </div>
     </div>
 
-    <h4>Found <span data-bind="text:pagination.totalResults"></span> organisations</h4>
+    <h4 class="ml-3">Found <span data-bind="text:pagination.totalResults"></span> organisations</h4>
 
     <hr/>
 
     <!-- ko foreach : organisations -->
-        <div class="row-fluid organisation">
+        <div class="row organisation">
             <div class="organisation-logo"><img class="logo" data-bind="attr:{'src':logoUrl()?logoUrl():fcConfig.noLogoImageUrl}"></div>
             <div class="organisation-text">
                 <h4>
@@ -67,7 +70,7 @@
 
     <!-- /ko -->
 
-    <div class="row-fluid">
+    <div class="row">
         <g:render template="/shared/pagination"/>
     </div>
 
@@ -86,7 +89,7 @@
 });
 
 </asset:script>
-<asset:javascript src="common.js"/>
+<asset:javascript src="common-bs4.js"/>
 <asset:javascript src="organisation.js"/>
 <asset:deferredScripts/>
 

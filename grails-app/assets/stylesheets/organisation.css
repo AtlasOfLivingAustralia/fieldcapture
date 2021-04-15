@@ -97,3 +97,8 @@ div.dataTables_wrapper div.dataTables_filter input {
 #map-info{
     margin-top: 58px;
 }
+
+.organisation-text {
+    margin-left: 40px;
+    margin-top: 5px;
+}
