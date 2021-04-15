@@ -28,7 +28,7 @@ class ProjectSiteSpec extends StubbedCasSpec {
         def tableContent = tableContents
         and:
         tableContent[2].siteName.text() == "Site area for project"
-        mapMarker.size() == 1
+        siteTabContents.markers.size() == 1
     }
 
     def "Edit and Update site name and save successfully" (){
