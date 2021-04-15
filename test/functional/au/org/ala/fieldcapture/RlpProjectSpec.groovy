@@ -11,9 +11,7 @@ class RlpProjectSpec extends StubbedCasSpec {
     }
 
     def cleanup() {
-        println "Logout"
         logout(browser)
-        println "Logged out"
     }
 
 

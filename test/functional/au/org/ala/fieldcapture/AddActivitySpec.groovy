@@ -31,7 +31,7 @@ class AddActivitySpec extends StubbedCasSpec {
         $("#btnClearMetadataCache").click()
 
         then:
-        waitFor 5,{to AdminClearCachePage}
+        waitFor {hasBeenReloaded()}
     }
 
     def "Generate a Activities"(){

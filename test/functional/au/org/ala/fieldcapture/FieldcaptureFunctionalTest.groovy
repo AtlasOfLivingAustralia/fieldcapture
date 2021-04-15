@@ -104,7 +104,7 @@ class FieldcaptureFunctionalTest extends GebReportingSpec {
 
     def logout(Browser browser) {
         def logoutButton = browser.page.$('.login-logout a.btn-login')
-        if (logoutButton.displayed && logoutButton) {
+        if (logoutButton.displayed && logoutButton.text() == "Logout") {
             try {
                 logoutButton.click();
                 waitFor 25, { at HomePage }
