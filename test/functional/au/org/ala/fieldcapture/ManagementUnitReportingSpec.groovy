@@ -59,7 +59,7 @@ class ManagementUnitReportingSpec extends StubbedCasSpec {
         reportingSection.saveReportingGroups()
 
         then:
-        waitFor {
+        waitFor 20,{
             hasBeenReloaded()
         }
 
