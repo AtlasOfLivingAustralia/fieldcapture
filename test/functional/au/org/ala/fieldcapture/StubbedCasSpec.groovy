@@ -59,8 +59,7 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
      */
     def simulateTimeout(Browser browser) {
         withNewWindow({
-            js.exec("window.open('.');")},
-                {logout(browser); return true})
+            js.exec("window.open('${getConfig().baseUrl}');")}, {logout(browser); return true})
     }
 
     /** Presses the OK button on a displayed bootbox modal */
