@@ -76,15 +76,7 @@ class PlansAndReportsTab extends Module {
     static base = { $('#plan') }
     static content = {
         activities {
-
-            def tableRows = $('#tablePlan tbody tr')
-            def activities = []
-            if (tableRows.size() > 0) {
-                activities = tableRows.collect {
-                    module ActivityRow, it
-                }
-            }
-            activities
+            $('#tablePlan tbody tr:not([data-bind])').moduleList(ActivityRow)
         }
         risksAndThreats(required:false) { $('#risk-validation').module(RisksAndThreats)}
     }

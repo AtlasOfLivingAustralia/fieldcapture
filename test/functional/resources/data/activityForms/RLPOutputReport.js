@@ -1,7 +1,7 @@
 var rlpOutputReport = {
   "activationDate": null,
   "category": "RLP Reports",
-  "createdUserId": "1493",
+  "createdUserId": "<anon>",
   "dateCreated": ISODate("2019-08-22T03:34:29Z"),
   "formVersion": NumberInt(1),
   "gmsId": null,

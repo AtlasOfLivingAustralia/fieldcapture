@@ -1,8 +1,10 @@
 package au.org.ala.fieldcapture
 
 import geb.Browser
+import geb.Page
 import geb.spock.GebReportingSpec
 import org.apache.log4j.Logger
+import org.openqa.selenium.StaleElementReferenceException
 import pages.EntryPage
 import pages.HomePage
 import spock.lang.Shared
@@ -101,9 +103,16 @@ class FieldcaptureFunctionalTest extends GebReportingSpec {
     }
 
     def logout(Browser browser) {
-        if ($('#logout-btn').displayed) {
-            $('#logout-btn').click()
-            waitFor { at HomePage }
+        def logoutButton = browser.page.$('.login-logout a.btn-login')
+        if (logoutButton.displayed && logoutButton) {
+            try {
+                logoutButton.click();
+                waitFor 25, { at HomePage }
+            }
+            catch (Exception e) {
+                log.warn("Test ended during page reload or with a modal backdrop resulting in failure to click logout button - directly navigating browser")
+                logoutViaUrl(browser)
+            }
         }
         else {
             logoutViaUrl(browser)

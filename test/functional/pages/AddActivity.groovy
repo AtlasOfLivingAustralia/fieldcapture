@@ -7,7 +7,7 @@ import org.openqa.selenium.Keys
 import pages.modules.TimeoutModal
 
 
-class ActivityPage extends Page {
+class ActivityPage extends ReloadablePage {
 
 
     def setDate(Navigator dateField, String date) {
