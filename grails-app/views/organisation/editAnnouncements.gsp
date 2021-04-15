@@ -46,17 +46,17 @@
 
     </div>
 
-    <div class="row-fluid row bg-light">
-            <span class="span3 col-sm-3 mt-4 mb-4">
+    <div class="row bg-light">
+            <span class="col-sm-3 mt-4 mb-4">
                 <button type="button" id ="bulkUploadTrigger" data-bind="click:toggleBulkUploadOptions" class="btn btn-small"><i class="fa fa-upload icon-upload"></i> Upload data for this table</button>
             </span>
-            <span class="span9 col-sm-9 mt-4 mb-4" style="text-align:right">
+            <span class="col-sm-9 mt-4 mb-4" style="text-align:right">
                 <button type="button" id="save" data-bind="click:save" class="btn btn-primary" title="Save edits and return to the previous page">Save</button>
                 <button type="button" id="cancel" data-bind="click:cancel" class="btn btn" title="Cancel edits and return to previous page">Cancel</button>
             </span>
 
     </div>
-    <div id="bulkUpload" class="row-fluid row" data-bind="visible:showBulkUploadOptions" style="display:none;">
+    <div id="bulkUpload" class="row" data-bind="visible:showBulkUploadOptions" style="display:none;">
         When adding new rows to the Excel template, please be sure that the Grant ID and Project Name columns exactly match an existing project.
 
         <div class="text-left" style="margin:5px">

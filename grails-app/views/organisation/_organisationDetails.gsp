@@ -52,7 +52,7 @@
             </div>
             <div data-bind="visible:logoUrl()"><g:message code="organisation.logo.visible"/></div>
         </div>
-        <span class="span3 col-sm-3">
+        <span class="col-sm-3">
             <span class="btn fileinput-button pull-right"
                   data-url="${createLink(controller: 'image', action: 'upload')}"
                   data-role="logo"
@@ -75,7 +75,7 @@
                 <img style="max-width:100%;max-height:100%" alt="No image provided" data-bind="attr:{src:mainImageUrl}">
             </div>
         </div>
-        <span class="span3 col-sm-3">
+        <span class="col-sm-3">
             <span class="btn fileinput-button pull-right"
                   data-url="${createLink(controller: 'image', action: 'upload')}"
                   data-role="mainImage"

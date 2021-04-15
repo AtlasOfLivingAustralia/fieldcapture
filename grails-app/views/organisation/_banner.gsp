@@ -1,5 +1,5 @@
 <div class="organisation-header banner" data-bind="style:{'backgroundImage':asBackgroundImage(bannerUrl())}">
-    <div class="row-fluid row">
+    <div class="row">
         <ul class="breadcrumb">
             <li>
                 <g:link controller="home">Home</g:link> <span class="divider">/</span>
@@ -8,7 +8,7 @@
             <li class="active">${organisation.name?.encodeAsHTML()}</li>
         </ul>
     </div>
-    <div class="row-fluid row">
+    <div class="row">
         <span data-bind="visible:logoUrl"><img class="logo" data-bind="attr:{'src':logoUrl}"></span>
         <div class="pull-right" style="vertical-align: middle;">
             <span data-bind="foreach:transients.socialMedia">

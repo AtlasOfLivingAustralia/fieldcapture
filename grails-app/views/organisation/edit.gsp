@@ -30,7 +30,7 @@
 
 <div class="${containerType} organisation-header organisation-banner image-box" data-bind="style:{'backgroundImage':asBackgroundImage(bannerUrl())}">
 
-    <div class="row-fluid">
+    <div class="row">
         <ul class="breadcrumb demphasise">
             <li>
                 <g:link controller="home">Home</g:link> <span class="divider">/</span>
