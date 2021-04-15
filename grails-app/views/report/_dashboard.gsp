@@ -14,7 +14,7 @@
                 </a>
             </div>
             <div id="${categoryContent}" class="outputData accordian-body card-body collapse" data-category="${category}">
-                <div class="accordian-inner row-fluid">
+                <div class="accordian-inner row-fluid row">
                     <asset:image width="50" height="50" src="loading.gif" alt="saving icon"/> Loading...
                 </div>
             </div>
@@ -31,7 +31,7 @@
 
 </g:if>
 <g:else>
-    <div class="alert alert-error">
+    <div class="alert alert-error alert-danger">
         Not enough data was returned to display summary data for your facet selection.
     </div>
 </g:else>
@@ -40,7 +40,7 @@
 
 
     $(function() {
-        var loadingTemplate = '<div class="accordian-inner row-fluid">'+
+        var loadingTemplate = '<div class="accordian-inner row-fluid row">'+
             '<asset:image width="50" height="50" src="loading.gif" alt="saving icon"/> Loading...'+
             '</div>';
         $("#reports .collapse").on('shown.bs.collapse', function() {

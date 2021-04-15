@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="${hubConfig.skin}"/>
+    <meta name="layout" content="nrm_bs4"/>
     <title>${organisation.name.encodeAsHTML()} | Field Capture</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}&libraries=visualization"></script>
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
@@ -39,9 +39,9 @@
             dashboardCategoryUrl: "${g.createLink(controller: 'report', action: 'activityOutputs', params: [fq:'organisationFacet:'+organisation.name])}",
             reportOwner: {organisationId:'${organisation.organisationId}'},
             projects : <fc:modelAsJavascript model="${organisation.projects}"/>
-            };
+        };
     </script>
-    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="common-bs4.css"/>
     <asset:stylesheet src="organisation.css" />
 </head>
 <body>
@@ -52,15 +52,11 @@
     <div id="organisationDetails" style="display:none;">
 
         <g:render template="/shared/flashScopeMessage"/>
-
-        <div class="row-fluid">
-            <ul class="nav nav-tabs" data-tabs="tabs">
-                <fc:tabList tabs="${content}"/>
-            </ul>
-
-            <div class="tab-content">
-                <fc:tabContent tabs="${content}"/>
-            </div>
+        <ul class="nav nav-tabs" id="orgTabs" role="tabList">
+            <fc:tabList tabs="${content}"/>
+        </ul>
+        <div class="tab-content" id="tabContent">
+            <fc:tabContent tabs="${content}"/>
         </div>
         <div id="loading" class="text-center">
             <asset:image width="50px" src="loading.gif" alt="loading icon"/>
@@ -147,14 +143,14 @@
             }
         }
 
-        <g:if test="${content.admin.visible}">
+    <g:if test="${content.admin.visible}">
         populatePermissionsTable(fcConfig.organisationMembersUrl);
-        </g:if>
+    </g:if>
     });
 
 </asset:script>
 
-<asset:javascript src="common.js"/>
+<asset:javascript src="common-bs4.js"/>
 <asset:javascript src="organisation-manifest.js"/>
 <asset:deferredScripts/>
 

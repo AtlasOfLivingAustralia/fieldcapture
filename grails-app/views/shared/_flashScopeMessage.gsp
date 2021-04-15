@@ -1,4 +1,4 @@
-<div class="row-fluid">
+<div class="row-fluid row">
     <g:if test="${flash.errorMessage}">
         <div class="${containerType}">
             <div class="alert alert-error">
@@ -8,8 +8,8 @@
     </g:if>
 
     <g:if test="${flash.message}">
-        <div class="row-fluid">
-            <div class="span6 alert alert-info" style="margin-bottom:0;">
+        <div class="row-fluid row">
+            <div class="span6 col-sm-6 alert alert-info" style="margin-bottom:0;">
                 <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
                 ${flash.message}
             </div>

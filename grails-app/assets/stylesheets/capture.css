@@ -1052,3 +1052,12 @@ input[type="checkbox"] { -webkit-appearance: checkbox; !important }
 .label-with-help {
     display: inline-block;
 }
+
+.card-title {
+    border-bottom: 1px solid lightgrey;
+    font-weight: bold;
+    padding-bottom:5px;
+    margin-bottom:10px;
+    margin-top: 5px;
+    font-size:larger;
+}

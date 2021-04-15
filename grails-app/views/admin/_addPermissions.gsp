@@ -1,13 +1,13 @@
 <form class="form-horizontal" id="userAccessForm">
     <div class="control-group form-group row">
-        <label class="control-label col-form-label col-sm-3" for="emailAddress">User's email address</label>
-        <div class="controls col-sm-9">
-            <input class="input-xlarge form-control validate[required,custom[email]]" id="emailAddress" placeholder="enter a user's email address" type="text"/>
+        <label class="control-label col-form-label col-sm-2" for="emailAddress">User's email address</label>
+        <div class="controls col-sm-2">
+            <input class="input-xlarge form-control form-control-sm validate[required,custom[email]]" id="emailAddress" placeholder="enter a user's email address" type="text"/>
         </div>
     </div>
     <div class="control-group form-group row">
-        <label class="control-label col-form-label col-sm-3" for="addUserRole">Permission level</label>
-        <div class="controls col-sm-9" id="rolesSelect">
+        <label class="control-label col-form-label col-sm-2" for="addUserRole">Permission level</label>
+        <div class="controls col-sm-2" id="rolesSelect">
             <g:render id="addUserRole" template="/admin/userRolesSelect" model="[roles:roles, includeEmptyOption: true, selectClass:'form-control']"/>
         </div>
     </div>
@@ -30,7 +30,7 @@
         </div>
     </div>
 </form>
-<div id="status" class="offset2 span7 hide d-none alert alert-success">
+<div id="status" class="offset2 col-sm-7 hide d-none alert alert-success">
     <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
     <span></span>
 </div>
