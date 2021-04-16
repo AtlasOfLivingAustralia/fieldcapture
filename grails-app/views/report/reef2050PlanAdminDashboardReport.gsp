@@ -18,7 +18,7 @@
         };
     </script>
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
-    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="common-bs4.css"/>
     <asset:stylesheet src="homepage.css"/>
 
     <title>Reef 2050 Plan Action Reporting</title>
@@ -28,7 +28,7 @@
 <body>
 <div class="container-fluid">
 
-    <asset:javascript src="common.js"/>
+    <asset:javascript src="common-bs4.js"/>
     <asset:javascript src="projectExplorer.js"/>
     <asset:javascript src="reef2050Report.js"/>
 

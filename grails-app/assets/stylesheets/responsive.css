@@ -77,3 +77,11 @@
 .statHeight {
     height: 195px;
 }
+
+@media (min-width: 576px) {
+    #reportContents .report-section .col-sm-2 {
+        -ms-flex: 0 0 13.666667%;
+        flex: 0 0 13.666667%;
+        max-width: 13.666667%;
+    }
+}

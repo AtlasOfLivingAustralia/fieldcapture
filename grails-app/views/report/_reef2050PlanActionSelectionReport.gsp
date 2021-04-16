@@ -1,9 +1,7 @@
-
-
 <div id="reef-2050-reports">
 <g:if test="${flash.error || error}">
     <g:set var="error" value="${flash.error ?: error}"/>
-    <div class="row-fluid">
+    <div class="row">
         <div class="alert alert-error large-space-before">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             <span>Error: ${error}</span>

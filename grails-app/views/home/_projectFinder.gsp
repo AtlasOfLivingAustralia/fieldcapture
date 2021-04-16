@@ -859,8 +859,8 @@ var urlWithoutDates = '<fc:formatParams params="${params}" requiredParams="sort,
                 $(this).find("span").text("hide");
             }
         });
-
-    /**
+});
+        /**
     * Sort a list by its li elements using the data-foo (dataEl) attribute of the li element
     *
     * @param $list
@@ -879,5 +879,4 @@ var urlWithoutDates = '<fc:formatParams params="${params}" requiredParams="sort,
             return comp;
         }).appendTo($list);
     }
-});
 </asset:script>
