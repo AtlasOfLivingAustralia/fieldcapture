@@ -223,7 +223,9 @@ class AddActivitySpec extends StubbedCasSpec {
         waitFor 5, {iAmSure.click()} // this is animated so takes time to be clickable.
 
         then: "the activity is no longer available on the page"
-        waitFor 10, {at ProjectIndex}
+        waitFor 20, {
+            hasBeenReloaded()
+        }
 
         plansAndReports.activities.size() == 1 && plansAndReports.activities.find { it.description == 'Test activity [edited]' } == null
     }
