@@ -13,8 +13,8 @@
 <h3>Reef 2050 Plan Action Reporting</h3>
 
     <form class="report-selector form-inline">
-        <div class="control-group">
-            <label class="control-label">Selected period:   </label>  <select data-bind="options:reportPeriods, optionsText:'label', value:selectedPeriod" class="input-xlarge"></select></label>
+        <div class="input-group">
+            <label class="control-label" for="selectPeriod">Selected period:   </label>  <select id="selectPeriod" data-bind="options:reportPeriods, optionsText:'label', value:selectedPeriod" class="form-control form-control-sm ml-1 br-2"></select>
         </div>
 
     </form>

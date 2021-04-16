@@ -3,7 +3,7 @@
 
 <g:if test="${flash.error || error}">
     <g:set var="error" value="${flash.error ?: error}"/>
-    <div class="row-fluid">
+    <div class="row">
         <div class="alert alert-error large-space-before">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             <span>Error: ${error}</span>
@@ -22,7 +22,7 @@
     </g:if>
     <g:else>
 
-        <div class="well">
+        <div class="card customCard">
             <strong>Progress on Reef 2050 Plan for the period <g:formatDate date="${startDate}"
                                                                             format="MMMM"/> to <g:formatDate
                     date="${endDate}" format="dd MMMM yyyy"/></strong>

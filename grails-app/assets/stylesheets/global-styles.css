@@ -871,3 +871,7 @@ span.status {
 .hidden-desktop {
 	display: none !important;
 }
+
+.br-2 {
+	border-radius: 0.25rem !important;
+}

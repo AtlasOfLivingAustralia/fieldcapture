@@ -66,9 +66,9 @@
                         <div id="facet-dates" data-name="projectDates" class="collapse facetItems validationEngineContainer">
                             <div class="card-body cardBody">
                                 <select style="margin-bottom: 10px" data-bind="options:ranges, optionsText:'display', value:selectedRange"></select>
-                                <div class="input-group" style="margin-bottom: 10px"><label for="fromDate" class="dataClass">From:</label><fc:datePicker targetField="fromDate.date" bs4="bs4" class="dateControl" name="fromDate" data-validation-engine="validate[date]"/></div>
-                                <div class="input-group" style="margin-bottom: 10px"><label for="fromDate" class="dataClass">To:</label><fc:datePicker targetField="toDate.date" bs4="bs4" class="dateControl" name="toDate" data-validation-engine="validate[date,future[fromDate]]"/></div>
-                                <div><button data-bind="click:clearDates, enable:fromDate() || toDate()" class="btn clearDates"><i class="fa fa-remove"></i> Clear dates</button></div>
+                                <div class="input-group" style="margin-bottom: 10px"><label for="fromDate" class="dataClass">From:</label><fc:datePicker targetField="fromDate.date" bs4="bs4" class="dateControl form-control form-control-sm" name="fromDate" data-validation-engine="validate[date]"/></div>
+                                <div class="input-group" style="margin-bottom: 10px"><label for="fromDate" class="dataClass">To:</label><fc:datePicker targetField="toDate.date" bs4="bs4" class="dateControl form-control form-control-sm" name="toDate" data-validation-engine="validate[date,future[fromDate]]"/></div>
+                                <div><button data-bind="click:clearDates, enable:fromDate() || toDate()" class="btn btn-sm clearDates"><i class="fa fa-remove"></i> Clear dates</button></div>
 
             </div>
                         </div>
@@ -87,7 +87,7 @@
                     </div>
 
                     <div id="accordionMapView" class="collapseItems collapse" aria-labelledby="mapHeading" data-parent="#project-display-options">
-                        <div class="card-body">
+                        <div class="card-body pt-0">
                             <div class="row">
                                 <div class="col-sm-4">
                                     <span class="facet-holder"></span>
@@ -106,7 +106,7 @@
                             <a class="text-left text-uppercase">Projects</a>
                         </div>
                     <div id="projectsView" class="collapse collapseItems" aria-labelledby="projectHeading" data-parent="#project-display-options">
-                        <div class="card-body">
+                        <div class="card-body pt-0">
                             <div class="row">
                                 <div class="col-sm-4">
                                     <span class="facet-holder"></span>
@@ -192,7 +192,7 @@
                     <a class="text-left text-uppercase">Dashboard</a>
                 </div>
                     <div id="reportView" class="collapse collapseItems" aria-labelledby="dashboardHeading" data-parent="#project-display-options">
-                        <div class="card-body">
+                        <div class="card-body pt-0">
                             <div class="row">
                                 <div class="col-sm-4 d-none" data-hidden="true">
                                     <span class="facet-holder" data-hidden="true"></span>
@@ -238,7 +238,7 @@
                             <a class="text-left text-uppercase">Download</a>
                         </div>
                         <div id="downloadView" class="collapse collapseItems" aria-labelledby="downloadHeading" data-parent="#project-display-options">
-                            <div class="card-body">
+                            <div class="card-body pt-0">
                                 <div class="row">
                                     <div class="col-sm-4">
                                         <span class="facet-holder"></span>
@@ -526,7 +526,6 @@
             else if (section === '#projectsView' && !initialisedProjects) {
                 updateProjectTable();
                 initialisedProjects = true;
-                console.log("It initialisation Project")
             }
             else if (section === '#reportView' && !initialisedReport) {
                 initialisedReport = true;
@@ -540,7 +539,6 @@
                     amplify.store('report-type-state', reportType);
                     loadReport(reportType);
                 }).trigger('change');
-                console.log("It initialisation Report")
             }
         };
 
@@ -635,11 +633,40 @@ var urlWithoutDates = '<fc:formatParams params="${params}" requiredParams="sort,
 
         $('.helphover').popover({animation: true, trigger:'hover', container:'body'});
 
-    // retain accordion state for future re-visits
-    var expandedToggles = amplify.store('facetToggleState') || [];
-        function restoreFacetSelections() {
 
+        $("#facetsContent").on("shown.bs.collapse", function(e){
+            var $target = $(e.target);
+            var targetId = "#"+e.target.id;
+            var facetValue = amplify.store('facetToggleState') || [];
+            if(!facetValue.includes(targetId)){
+                facetValue.push(targetId)
+            }
+            var section = facetValue;
+            amplify.store('facetToggleState', section);
+
+        });
+        $("#facetsContent").on("hidden.bs.collapse", function(e){
+            var targetId = "#"+e.target.id;
+            var facetStoredTab = amplify.store('facetToggleState') || [];
+            var updatedFacetList = [];
+            facetStoredTab.forEach(function(tab){
+                if(tab !== targetId){
+                    updatedFacetList.push(tab)
+                }
+            })
+            if(updatedFacetList.length > 1){
+                amplify.store('facetToggleState', updatedFacetList)
+            }else{
+                amplify.store('facetToggleState', null);
+            }
+
+
+        });
+
+    // retain accordion state for future re-visits
+        function restoreFacetSelections() {
             if ($('#facetsContent').is(':visible')) {
+            var expandedToggles = amplify.store('facetToggleState') || [];
                 if (expandedToggles) {
                 expandedToggles.forEach(function(section){
                     $(section).collapse('show');
@@ -654,7 +681,6 @@ var urlWithoutDates = '<fc:formatParams params="${params}" requiredParams="sort,
             storedTab = '#accordionMapView';
         }
         $('#project-display-options '+storedTab).collapse({parent:'#project-display-options'});
-        var $tabStore = amplify.store('facetToggleState') || [];
         $('#project-display-options').on("shown.bs.collapse", function(e){
             var $target = $(e.target)
             var targetId;
@@ -663,13 +689,6 @@ var urlWithoutDates = '<fc:formatParams params="${params}" requiredParams="sort,
                var  section = '#'+targetId
                 amplify.store(VIEW_STATE_KEY, section);
                 initialiseContentSection(section);
-            }
-            if($target.hasClass('facetItems')){
-                targetId = e.target.id;
-                var sectionId = '#'+targetId;
-                $tabStore.push(sectionId);
-                var section = $tabStore;
-                amplify.store('facetToggleState', section);
             }
             // Because the facets use accordion and are inside the main accordion view we need to filter them out.
             $('#facetsCol').appendTo($(section).find('.facet-holder'));

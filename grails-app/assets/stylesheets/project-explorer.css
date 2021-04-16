@@ -241,7 +241,7 @@ table tbody .td1 .accordion .card-header.collapsed:after {
 }
 
 #facetsContent .clearDates {
-    margin-left: 6em;
+    margin-left: 7em;
 }
 #facetsContent .input-group .dataClass {
     width: 7em;
@@ -252,11 +252,15 @@ table tbody .td1 .accordion .card-header.collapsed:after {
     border-radius: 0 4px 4px 0;
 }
 
-#facet-list .customCard, #facetsContent .customCard  {
+#facet-list .customCard, #facetsContent .customCard, #reportContents .customCard {
     border: 0px solid white;
     padding-left: 0px;
     padding-bottom: 0px;
     margin-bottom: 0px;
+
+}
+#facet-list .customCard {
+    padding-top: 0px !important;
 }
 
 #facet-list .facetGroupValues {
@@ -269,6 +273,9 @@ table tbody .td1 .accordion .card-header.collapsed:after {
     padding: 4px 0px 6px;
 }
 
+#facet-dates .cardBody {
+    padding: 4px 0px 6px;
+}
 #project-display-options > .cardSection {
     border-bottom: 1px solid #dddddd !important;
     border-bottom-left-radius: 0.25rem !important;
@@ -296,6 +303,7 @@ table tbody .td1 .accordion .card-header.collapsed:after {
 
 input.dateControl {
     border: 1px solid rgb(204, 204, 204);
-    border-radius: .25rem;
+    border-radius: .25rem !important;
+    max-width: 10rem !important;
 }
 
