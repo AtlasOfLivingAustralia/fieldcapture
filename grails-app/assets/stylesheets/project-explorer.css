@@ -294,6 +294,10 @@ table tbody .td1 .accordion .card-header.collapsed:after {
     margin-bottom: .25rem;
 }
 
+input.dateControl {
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: .25rem;
+}
 .input-group-text {
     display: -ms-flexbox;
     display: flex;
