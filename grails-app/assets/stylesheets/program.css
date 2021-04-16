@@ -123,3 +123,34 @@ form #start-date, form #end-date {
     width: 100%;
     font-size:1rem;
 }
+
+input.dateControl {
+    max-width: 300px !important;
+}
+
+.tab-content #sites {
+    margin-bottom: 50px;
+}
+#map-info{
+    margin-top: 25px !important;
+}
+
+div.dataTables_wrapper div.dataTables_length label {
+    font-weight: normal;
+    white-space: nowrap;
+    text-align: left;
+    margin-left: 13px;
+}
+
+div.dataTables_wrapper div.dataTables_filter input {
+    display: inline-block;
+    width: 190px;
+}
+
+div.dataTables_wrapper div.dataTables_filter label {
+    padding-right: 10px !important;
+}
+#projectList_wrapper .row .col-sm-12, #projectOverviewList_wrapper .row .col-sm-12 {
+    padding-right: 4px !important;
+    padding-left: 4px !important;
+}
