@@ -34,13 +34,15 @@ class HomeIndexPageSpec extends StubbedCasSpec {
         at AdminTools
         waitFor {$("#btnClearMetadataCache").displayed}
         $("#btnClearMetadataCache").click()
+        waitFor{hasBeenReloaded()}
 
         when:
-        waitFor 5,{to AdminClearCachePage}
+        to AdminClearCachePage
 
         then:
         waitFor {$("#homePageStatistics").displayed}
         $("#homePageStatistics").click()
+        waitFor{hasBeenReloaded()}
 
         when:
         to HomePage

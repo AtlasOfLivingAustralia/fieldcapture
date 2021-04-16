@@ -44,7 +44,9 @@ class SiteBlogSpec extends StubbedCasSpec {
         delBtn()[0].click()
 
         then:
-        waitFor {at EditSiteBlogPage}
+        waitFor {
+            hasBeenReloaded()
+        }
         blogs().size() == --blogSize
     }
 

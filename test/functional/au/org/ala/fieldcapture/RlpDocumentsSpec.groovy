@@ -32,7 +32,7 @@ class RlpDocumentsSpec extends StubbedCasSpec {
         waitFor { adminContent.documents.attachDocumentDialog.title.displayed }
 
         then: "Ensure the output reports are available for selection"
-        dialog.availableStages().size() == 28 // 20 reports and a "please select" option
+        waitFor {dialog.availableStages().size() == 28} // 5 annual, 20 output, 2 outcomes and a "please select" option
 
         when: "We enter data for the document"
         dialog.title = "Test doc"

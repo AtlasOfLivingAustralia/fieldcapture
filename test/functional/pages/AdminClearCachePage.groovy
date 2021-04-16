@@ -1,8 +1,6 @@
 package pages
 
-import geb.Page
-
-class AdminClearCachePage extends Page {
+class AdminClearCachePage extends ReloadablePage {
     static url = "admin/cacheManagement"
 
     static at = { waitFor { title.startsWith("Cache Management | Admin | MERIT")}}
