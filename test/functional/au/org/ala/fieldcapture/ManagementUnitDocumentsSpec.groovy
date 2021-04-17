@@ -24,6 +24,7 @@ class ManagementUnitDocumentsSpec extends StubbedCasSpec {
         to ManagementUnitPage
         openDocumentDialog()
 
+        Thread.sleep(1500) // Wait for the animation to finish
         waitFor { adminTabPane.documents.attachDocumentDialog.title.displayed }
 
         def dialog = adminTabPane.documents.attachDocumentDialog
