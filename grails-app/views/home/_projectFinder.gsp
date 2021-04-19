@@ -290,7 +290,7 @@
 <g:else>
     <div class="row">
         <div class="col-sm-12">
-            <div class="alert alert-error large-space-before">
+            <div class="alert alert-danger large-space-before">
                 Error: search index returned 0 results
             </div>
         </div>
@@ -659,8 +659,6 @@ var urlWithoutDates = '<fc:formatParams params="${params}" requiredParams="sort,
             }else{
                 amplify.store('facetToggleState', null);
             }
-
-
         });
 
     // retain accordion state for future re-visits

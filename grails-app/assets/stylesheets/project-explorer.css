@@ -306,4 +306,6 @@ input.dateControl {
     border-radius: .25rem !important;
     max-width: 10rem !important;
 }
-
+#dashboardType {
+    width: 206px;
+}

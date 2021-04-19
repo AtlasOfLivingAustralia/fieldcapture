@@ -13,7 +13,7 @@
     <g:if test="${other}">
 
         <h3>Progress of Outputs without targets</h3>
-        <div class="row-fluid row outputs-without-targets">
+        <div class="row-fluid outputs-without-targets">
         <g:each in="${other?.entrySet()}" var="metric" status="i">
 
             <div class="well well-small">
