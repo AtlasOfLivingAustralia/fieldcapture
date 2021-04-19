@@ -147,8 +147,8 @@
                                                                 <small><i class="managementUnitName"></i></small>
                                                             </a>
                                                         </div>
-                                                        <div class="projectInfo collapse" id="a_" aria-labelledby="proj_">
-                                                            <div class="card-body pt-3">
+                                                        <div class="projectInfo collapse pl-2 pt-1" id="a_" aria-labelledby="proj_">
+                                                            <div class="card-body pt-0 pl-0 pb-0">
                                                                 <div class="homeLine">
                                                                     <i class="fa fa-home"></i>
                                                                     <a href="">View project page</a>
