@@ -64,6 +64,7 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
 
     /** Presses the OK button on a displayed bootbox modal */
     def okBootbox() {
+        Thread.sleep(1000) // wait for the animation to finish
         $('.bootbox .btn-primary').each { ok ->
 
 
