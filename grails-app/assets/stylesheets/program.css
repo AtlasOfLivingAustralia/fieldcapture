@@ -171,3 +171,6 @@ div.dataTables_wrapper div.dataTables_filter label {
     border: 1px solid #ced4da;
     border-radius: 0 0.25rem 0.25rem 0 !important;
 }
+.report-header .header-label {
+    font-weight: bold;
+}
