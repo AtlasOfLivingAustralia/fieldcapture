@@ -17,7 +17,7 @@
 </g:if>
 <g:else>
     <div class="row">
-        <span class="col-sm-12"><h4>${organisation.name?.encodeAsHTML()} is not currently involved in any projects.</h4></span>
+        <span class="col-sm-12 ml-3"><h4>${organisation.name?.encodeAsHTML()} is not currently involved in any projects.</h4></span>
     </div>
 </g:else>
 

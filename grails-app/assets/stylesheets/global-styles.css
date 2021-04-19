@@ -871,3 +871,11 @@ span.status {
 .hidden-desktop {
 	display: none !important;
 }
+
+.br-2 {
+	border-radius: 0.25rem !important;
+}
+.breadcrumb > li > .divider {
+	color: #393124;
+	padding: 0 5px;
+}

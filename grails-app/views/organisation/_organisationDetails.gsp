@@ -14,7 +14,7 @@
             <input type="text" id="abnSelector" class="w-100 form-control form-control-sm" data-bind="value:abn, valueUpdate: 'input'" data-validation-engine="validate[custom[number],minSize[11],maxSize[11]" data-validation-error-message="Please enter an 11 digit ABN"  maxlength="11" placeholder="Enter ABN Number"/>
         </div>
         <div class="col-sm-2 prePopBtn">
-            <button type="button" id="prepopulateFromABN" data-bind="click:prepopulateFromABN, disable: !(abn())" class="btn btn-primary" disabled="disabled">Pre Populate From ABN</button>
+            <button type="button" id="prepopulateFromABN" data-bind="click:prepopulateFromABN, disable: !(abn())" class="btn btn-sm btn-primary" disabled="disabled">Pre Populate From ABN</button>
         </div>
     </section>
     <section class="form-group row">
@@ -26,15 +26,15 @@
     </section>
     <section class="form-group row required">
         <div class="col-sm-2"></div>
-        <label for="description" class="col-sm-1 form-check-label">Description: <fc:iconHelp><g:message code="organisation.description.help"/></fc:iconHelp></label>
+        <label for="description" class="col-sm-1 form-check-label labelModification">Description: <fc:iconHelp><g:message code="organisation.description.help"/></fc:iconHelp></label>
         <div class="col-sm-3">
             <textarea type="text" id="description" placeholder="A description of the organisation" class="form-control form-control-sm w-100" data-validation-engine="validate[required]" data-bind="value:description"></textarea>
-            <button class="btn popup-edit" data-bind="click:editDescription"><i class="fa fa-edit"></i> Edit with Markdown Editor</button>
+            <button class="btn btn-sm popup-edit" data-bind="click:editDescription"><i class="fa fa-edit"></i> Edit with Markdown Editor</button>
         </div>
     </section>
     <section class="form-group row">
         <div class="col-sm-2"></div>
-        <label for="url" class="col-sm-1 form-check-label">Web Site URL: <fc:iconHelp><g:message code="organisation.webUrl.help"/></fc:iconHelp></label>
+        <label for="url" class="col-sm-1 form-check-label labelModification">Web Site URL: <fc:iconHelp><g:message code="organisation.webUrl.help"/></fc:iconHelp></label>
         <div class="col-sm-3">
             <input type="text" class="form-control form-control-sm w-100" id="url" data-bind="value:url" data-validation-engine="validate[custom[url]]" placeholder="link to your organisations website">
         </div>

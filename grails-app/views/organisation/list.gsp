@@ -14,6 +14,7 @@
             };
     </script>
     <asset:stylesheet src="common-bs4.css"/>
+    <asset:stylesheet src="organisation.css"/>
 </head>
 
 <body>
@@ -37,20 +38,20 @@
 </g:if>
     <fc:getSettingContent settingType="${au.org.ala.merit.SettingPageType.ORGANISATION_LIST_PAGE_HEADER}"/>
     <g:if test="${fc.userIsAlaOrFcAdmin()}">
-        <a href="${g.createLink(action:'create')}"><button class="btn btn-info pull-right">Create Organisation</button></a>
+        <a href="${g.createLink(action:'create')}"><button class="btn btn-info btn-sm pull-right">Create Organisation</button></a>
     </g:if>
     <div class="row">
         <div class="col-sm-6">
             <div class="input-group">
-                <input type="text" id="searchText" data-bind="value:searchTerm, valueUpdate:'keyup'" class="form-control "   aria-labelledby="Search Organisation" aria-describedby="basic-addon2" placeholder="Search organisations..." >
+                <input type="text" id="searchText" data-bind="value:searchTerm, valueUpdate:'keyup'" class="form-control form-control-sm"   aria-labelledby="Search Organisation" aria-describedby="basic-addon2" placeholder="Search organisations..." >
                 <div class="input-group-append">
-                    <span type="button" class="btn btn-secondary disabled" ><i class="fa fa-search" style="color: #000000"></i></span>
+                    <span type="button" class="btn btn-sm btn-secondary disabled orgSearch"><i class="fa fa-search" style="color: #000000"></i></span>
                 </div>
             </div>
         </div>
     </div>
 
-    <h4 class="ml-3">Found <span data-bind="text:pagination.totalResults"></span> organisations</h4>
+    <h4>Found <span data-bind="text:pagination.totalResults"></span> organisations</h4>
 
     <hr/>
 

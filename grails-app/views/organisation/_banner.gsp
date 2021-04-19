@@ -1,6 +1,6 @@
 <div class="organisation-header banner" data-bind="style:{'backgroundImage':asBackgroundImage(bannerUrl())}">
     <div class="row">
-        <ul class="breadcrumb">
+        <ul class="breadcrumb ml-3">
             <li>
                 <g:link controller="home">Home</g:link> <span class="divider">/</span>
             </li>
@@ -15,7 +15,7 @@
                 <a data-bind="attr:{href:link.url}"><img data-bind="attr:{src:logo('${imageUrl}')}"/></a>
             </span>
         </div>
-        <div class="header-text">
+        <div class="header-text ml-3">
             <h2>${organisation.name?.encodeAsHTML()}</h2>
         </div>
     </div>

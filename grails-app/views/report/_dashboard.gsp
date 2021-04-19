@@ -14,7 +14,7 @@
                 </a>
             </div>
             <div id="${categoryContent}" class="outputData accordian-body card-body collapse" data-category="${category}">
-                <div class="accordian-inner row-fluid row">
+                <div class="accordian-inner row">
                     <asset:image width="50" height="50" src="loading.gif" alt="saving icon"/> Loading...
                 </div>
             </div>
@@ -43,20 +43,30 @@
         var loadingTemplate = '<div class="accordian-inner row-fluid row">'+
             '<asset:image width="50" height="50" src="loading.gif" alt="saving icon"/> Loading...'+
             '</div>';
-        $("#reports .collapse").on('shown.bs.collapse', function() {
-            var $div = $(this);
 
-            var category = $div.data('category');
-            var url = fcConfig.dashboardCategoryUrl;
-            $.ajax({url:url, data:{report:'dashboard', category:category}}).done(function(data) {
+            $("#reports .collapse").on('shown.bs.collapse', function() {
+                var $div = $(this);
+                var category = $div.data('category');
+                var url = fcConfig.dashboardCategoryUrl;
+                $.ajax({url:url, data:{report:'dashboard', category:category}}).done(function(data) {
 
-                $div.html(data);
+                    $div.html(data);
+                });
+            }).on('hidden.bs.collapse', function() {
+                var $div = $(this);
+                $div.empty().append(loadingTemplate);
+            }).on("show", function (){
+                var $div = $(this);
+                var category = $div.data('category');
+                var url = fcConfig.dashboardCategoryUrl;
+                $.ajax({url:url, data:{report:'dashboard', category:category}}).done(function(data) {
+
+                    $div.html(data);
+                });
+            }).on("hidden", function (){
+                var $div = $(this);
+                $div.empty().append(loadingTemplate);
             });
-        }).on('hidden', function() {
-            var $div = $(this);
-            $div.empty().append(loadingTemplate);
-        });
     });
 
 </script>
-

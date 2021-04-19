@@ -1,4 +1,4 @@
-<div id="carousel" class="slider-pro row-fluid" data-bind="visible:mainImageUrl()" style="margin-bottom:20px;">
+<div id="carousel" class="slider-pro row" data-bind="visible:mainImageUrl()" style="margin-bottom:20px;">
     <div class="sp-slides">
         <div class="sp-slide">
             <img class="sp-image" data-bind="attr:{'data-src':mainImageUrl}"/>
