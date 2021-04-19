@@ -106,3 +106,22 @@ form #start-date, form #end-date {
     border-right: none;
     border-bottom: none;
 }
+.dashboard-section .progress span {
+    margin-top: 0.6rem;
+}
+
+div.dataTables_wrapper .row .col-sm-12 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.tab-content #sites {
+    margin-bottom: 50px;
+}
+#map-info{
+    margin-top: 25px !important;
+}
+
+input.dateControl {
+    max-width: 300px !important;
+}

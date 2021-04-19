@@ -21,7 +21,7 @@
 
             <div class="row">
                 <div class="col-sm-2">
-                    <a class="btn btn-info btn-small admin-action editBtnAction" href="${g.createLink(action: 'edit', id:program.programId)}"><i
+                    <a class="btn btn-info btn-sm admin-action editBtnAction" href="${g.createLink(action: 'edit', id:program.programId)}"><i
                             class="fa fa-edit"></i> Edit</a>
                 </div>
 
@@ -29,8 +29,8 @@
             </div>
             <br/>
             <div class="row">
-                <div class="col-sm-2">
-                    <a class="btn btn-info btn-small admin-action addSubProgramButton" href="${g.createLink(action: 'addSubProgram',   id:  program.programId)}"><i
+                <div class="col-sm-3">
+                    <a class="btn btn-info btn-sm admin-action addSubProgramButton" href="${g.createLink(action: 'addSubProgram',   id:  program.programId)}"><i
                             class="fa fa-plus"></i> Add sub-program</a>
                 </div>
             </div>
@@ -72,14 +72,14 @@
                 <h3>Core services and output reporting frequency</h3>
                 <div class="form-group">
                     <label for="start-date">Start date</label>
-                    <div>
-                    <fc:datePicker class="form-control" id="start-date" name="start-date" targetField="startDate.date" data-validation-engine="validate[required,future[30-06-2018]]"/>
+                    <div class="input-group">
+                    <fc:datePicker class="form-control dateControl" id="start-date" name="start-date" bs4="bs4" targetField="startDate.date" data-validation-engine="validate[required,future[30-06-2018]]"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="end-date">End date</label>
-                    <div>
-                    <fc:datePicker class="form-control" id="end-date" name="end-date" targetField="endDate.date" data-validation-engine="validate[required,future[start-date]]"/>
+                    <div class="input-group">
+                    <fc:datePicker class="form-control dateControl" id="end-date" name="end-date" bs4="bs4" targetField="endDate.date" data-validation-engine="validate[required,future[start-date]]"/>
                     </div>
                 </div>
 
