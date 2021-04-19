@@ -20,17 +20,21 @@
 
 <body>
 <div class="${containerType}">
-    <ul class="breadcrumb">
-        <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
-        <li><a href="${createLink(controller:'organisation', action:'index', id:organisation.organisationId)}" class="clickable">Organisation</a> <span class="divider">/</span></li>
-        <li class="active">
-             Edit Announcements
-        </li>
-    </ul>
-    <div class="row-fluid">
-        <h2>Edit Announcements - ${organisation.name?.encodeAsHTML()}</h2>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <g:link controller="home">Home</g:link>
+            </li>
+            <li class="breadcrumb-item">
+                <g:link controller="organisation" action="list">Organisations</g:link>
+            </li>
+            <li class="breadcrumb-item active"> Edit Announcements</li>
+        </ol>
+    </nav>
+    <div class="row">
+        <h2 class="ml-3">Edit Announcements - ${organisation.name?.encodeAsHTML()}</h2>
     </div>
-    <div class="well">
+    <div class="card customCard">
         <p>Instructions:</p>
 
         <ul>

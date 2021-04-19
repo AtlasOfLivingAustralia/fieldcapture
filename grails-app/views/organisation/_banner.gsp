@@ -1,12 +1,18 @@
 <div class="organisation-header banner" data-bind="style:{'backgroundImage':asBackgroundImage(bannerUrl())}">
     <div class="row">
-        <ul class="breadcrumb ml-3">
-            <li>
-                <g:link controller="home">Home</g:link> <span class="divider">/</span>
-            </li>
-            <li class="active"><g:link controller="organisation" action="list">Organisations</g:link> <span class="divider">/</span></li>
-            <li class="active">${organisation.name?.encodeAsHTML()}</li>
-        </ul>
+        <nav aria-label="breadcrumb" class="ml-3">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <g:link controller="home">Home</g:link>
+                </li>
+                <li class="breadcrumb-item">
+                    <g:link controller="organisation" action="list">Organisations</g:link>
+                </li>
+                <li class="breadcrumb-item">
+                    ${organisation.name?.encodeAsHTML()}
+                </li>
+            </ol>
+        </nav>
     </div>
     <div class="row">
         <span data-bind="visible:logoUrl"><img class="logo" data-bind="attr:{'src':logoUrl}"></span>

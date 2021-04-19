@@ -19,12 +19,14 @@
 
 <body>
 <div class="${containerType}">
-    <ul class="breadcrumb">
-        <li>
-            <g:link controller="home">Home</g:link><span class="divider">/</span>
-        </li>
-        <li class="active">Organisations<span class="divider"></span></li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <g:link controller="home">Home</g:link>
+            </li>
+            <li class="breadcrumb-item active">Organisations</li>
+        </ol>
+    </nav>
 <g:if test="${allowOrganisationRegistration}">
     <div>
         <h2 style="display:inline">Registered

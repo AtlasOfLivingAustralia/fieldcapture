@@ -55,3 +55,6 @@ input.editor-text {box-sizing:border-box; width: 100%;}
 #announcementsTable .slick-row {
     height: 25px;
 }
+.customCard {
+    border:unset;
+}

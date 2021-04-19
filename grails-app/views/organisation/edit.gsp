@@ -31,13 +31,19 @@
 <div class="${containerType} organisation-header organisation-banner image-box" data-bind="style:{'backgroundImage':asBackgroundImage(bannerUrl())}">
 
     <div class="row">
-        <ul class="breadcrumb demphasise">
-            <li>
-                <g:link controller="home">Home</g:link> <span class="divider">/</span>
-            </li>
-            <li class="active">Organisations <span class="divider">/</span></li>
-            <li class="active" data-bind="text:name"/>
-        </ul>
+        <nav aria-label="breadcrumb" class="ml-3">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <g:link controller="home">Home</g:link>
+                </li>
+                <li class="breadcrumb-item">
+                    <g:link controller="organisation" action="list">Organisations</g:link>
+                </li>
+                <li class="breadcrumb-item active">
+                    ${organisation.name?.encodeAsHTML()}
+                </li>
+            </ol>
+        </nav>
     </div>
     <g:render template="organisationDetails"/>
 

@@ -36,6 +36,25 @@
     #facetsContent .clearDates {
         margin-left: 2.5em;
     }
+    .organisation-banner .col-sm-1 {
+        -ms-flex: 0 0 20.333333%;
+        flex: 0 0 20.333333%;
+        max-width: 20.333333%;
+    }
+    .organisation-banner label {
+        text-align: right;
+    }
+}
+
+@media only screen and (max-width: 1440px) {
+    .organisation-banner .col-sm-1 {
+        -ms-flex: 0 0 20.333333%;
+        flex: 0 0 20.333333%;
+        max-width: 20.333333%;
+    }
+    .organisation-banner label {
+        text-align: right;
+    }
 }
 
 @media only screen  and (max-width: 768px){

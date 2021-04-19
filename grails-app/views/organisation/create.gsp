@@ -21,14 +21,17 @@
 </head>
 <body>
 <div class="${containerType}">
-    <ul class="breadcrumb">
-        <li>
-            <g:link controller="home">Home</g:link> <span class="divider">/</span>
-        </li>
-        <li class="active"><g:link controller="organisation" action="list">Organisations</g:link> <span class="divider">/</span></li>
-        <li class="active" data-bind="text:breadcrumbName"></li>
-    </ul>
-
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <g:link controller="home">Home</g:link>
+            </li>
+            <li class="breadcrumb-item">
+                <g:link controller="organisation" action="list">Organisations</g:link>
+            </li>
+            <li class="breadcrumb-item" data-bind="text:breadcrumbName"></li>
+        </ol>
+    </nav>
     <g:render template="organisationDetails"/>
 
     <div class="form-actions">
