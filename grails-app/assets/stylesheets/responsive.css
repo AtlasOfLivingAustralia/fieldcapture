@@ -6,16 +6,23 @@
         padding-left: 5px;
         padding-right: 5px;
     }
-    .page-header .navbar .container {
-        max-width: 1024px;
+    .page-header .navbar .container, .page-header > .navbar > .container-fluid {
+        max-width: 1024px !important;
+    }
+    .page-header > .navbar > .container-fluid {
+        padding: 0px !important;
     }
 
-    .page-header-menu .container {
+    .page-header-menu .container, .page-header-menu .container-fluid {
         max-width: 1024px;
     }
-    .page-header-menu .container #dcNav .navbar {
+    .page-header-menu .container #dcNav .navbar, .page-header-menu .container-fluid #dcNav .navbar {
         padding-left: 5px;
         padding-right: 5px;
+    }
+    .page-header-menu .container-fluid {
+        padding-left: 0px;
+        padding-right: 0px;
     }
     #stats-holder .statistics .row .col-sm-4 {
         width: 31.623931623931625%;
@@ -66,6 +73,23 @@
     #facetsContent .input-group .dataClass {
         width: 3em;
     }
+    .page-header > .navbar {
+        padding-right: 5px !important;
+        padding-left: 5px !important;
+    }
+
+    .page-header-menu .container-fluid {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+    .organisation-banner .col-sm-1 {
+        -ms-flex: 0 0 20.333333%;
+        flex: 0 0 20.333333%;
+        max-width: 20.333333%;
+    }
+    .organisation-banner label {
+        text-align: right;
+    }
 }
 @media only screen and (max-width: 425px) {
     .greeting {
@@ -83,5 +107,8 @@
         -ms-flex: 0 0 13.666667%;
         flex: 0 0 13.666667%;
         max-width: 13.666667%;
+    }
+    .organisation-banner #prepopulateFromABN {
+        width: 10.75rem;
     }
 }

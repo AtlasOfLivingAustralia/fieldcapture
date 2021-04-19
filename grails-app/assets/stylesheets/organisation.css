@@ -17,13 +17,6 @@
     width: 53% !important;
 }
 
-/*.form-control-sm {*/
-/*    height: calc(1.5em + 0.5rem + 2px);*/
-/*    padding: 0.25rem 0.5rem;*/
-/*    font-size: 0.875rem;*/
-/*    line-height: 1.5;*/
-/*    border-radius: unset;*/
-/*}*/
 .col-sm-3 {
     -ms-flex: 0 0 31.7%;
     flex: 0 0 31.7%;
@@ -68,14 +61,6 @@ div.dataTables_wrapper div.dataTables_filter input {
     width: 190px;
 }
 
-@media (min-width: 576px){
-    .col-sm-2 {
-        -ms-flex: 0 0 12.666667%;
-         flex: 0 0 12.666667%;
-        max-width: 12.666667%;
-    }
-}
-
 #userAccessForm .form-control-sm {
     height: calc(1.5em + 0.5rem + 2px);
     padding: 0.25rem 0.5rem;
@@ -101,4 +86,27 @@ div.dataTables_wrapper div.dataTables_filter input {
 .organisation-text {
     margin-left: 40px;
     margin-top: 5px;
+}
+
+.orgSearch {
+    height: 1.98rem;
+}
+
+.input-group input {
+    margin-left: -0.98rem;
+}
+#dashboardType {
+    width: 206px;
+}
+.customCard {
+    border:unset;
+}
+.no-border {
+    border-top: unset !important;
+    padding: 0px !important;
+    vertical-align: unset;
+}
+
+.popup-edit {
+    padding: 7px;
 }

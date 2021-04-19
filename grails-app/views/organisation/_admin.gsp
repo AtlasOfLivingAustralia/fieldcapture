@@ -1,16 +1,16 @@
 
         <h4>Administrator actions</h4>
     <div class="row">
-        <p class="ml-3"><button class="btn btn-info btn-small admin-action" style="width:200px;" data-bind="click:editOrganisation"><i class="fa fa-edit"></i> Edit</button> Edit the organisation details and content</p>
+        <p class="ml-3"><button class="btn btn-info btn-sm admin-action" style="width:200px;" data-bind="click:editOrganisation"><i class="fa fa-edit"></i> Edit</button> Edit the organisation details and content</p>
     </div>
         <g:if test="${showEditAnnoucements}">
             <div class="row">
-                <p class="ml-3"><a href="${g.createLink(action:'editAnnouncements',id:organisation.organisationId)}"><button class="btn btn-small btn-info admin-action" style="width:200px;"><i class="fa fa-edit"></i> Edit Announcements</button></a> Bulk edit the announcements for all projects managed by this organisation</p>
+                <p class="ml-3"><a href="${g.createLink(action:'editAnnouncements',id:organisation.organisationId)}"><button class="btn btn-sm btn-info admin-action" style="width:200px;"><i class="fa fa-edit"></i> Edit Announcements</button></a> Bulk edit the announcements for all projects managed by this organisation</p>
             </div>
         </g:if>
         <g:if test="${fc.userIsAlaOrFcAdmin()}">
             <div class="row">
-                <p class="ml-3"><button class="admin-action btn btn-small btn-danger" style="width:200px;" data-bind="click:deleteOrganisation"><i class="fa fa-remove"></i> Delete</button> Delete this organisation from the system. <strong>This cannot be undone</strong></p></g:if>
+                <p class="ml-3"><button class="admin-action btn btn-sm btn-danger" style="width:200px;" data-bind="click:deleteOrganisation"><i class="fa fa-remove"></i> Delete</button> Delete this organisation from the system. <strong>This cannot be undone</strong></p></g:if>
 
         </div>
     <h4>Add Permissions</h4>
