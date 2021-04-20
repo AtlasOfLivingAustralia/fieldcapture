@@ -12371,6 +12371,14 @@
                         }
                       },
                       {
+                        "readonly": "readonly",
+                        "source": "calculatedLengthKm",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      },
+                      {
                         "type": "row",
                         "items": [
                           {
