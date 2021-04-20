@@ -9217,7 +9217,8 @@
               },
               {
                 "dataType": "number",
-                "name": "amountSeedCollected"
+                "name": "amountSeedCollected",
+                "decimalPlaces": 5
               },
               {
                 "dataType": "number",
@@ -11287,16 +11288,6 @@
             "columns": [
               {
                 "dataType": "text",
-                "description": "",
-                "name": "baselineOrIndicatorSurvey",
-                "constraints": [
-                  "Baseline",
-                  "Indicator"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "text",
                 "name": "typeOfActivity",
                 "validate": "required",
                 "constraints": [
@@ -11310,10 +11301,12 @@
                 "dataType": "text",
                 "name": "otherActivityType",
                 "validate": "required,max[300]",
-                "behaviour": [ {
-                  "condition":"typeOfActivity == \"Other\"",
-                  "type":"enable_and_clear"
-                }]
+                "behaviour": [
+                  {
+                    "condition": "typeOfActivity == \"Other\"",
+                    "type": "enable_and_clear"
+                  }
+                ]
               },
               {
                 "dataType": "number",
@@ -11346,9 +11339,85 @@
                 "decimalPlaces": 3
               },
               {
+                "computed": {
+                  "expression": "$geom.lengthKm(surveyArea)"
+                },
+                "dataType": "number",
+                "name": "calculatedLengthKm",
+                "units": "km",
+                "decimalPlaces": 3
+              },
+              {
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "calculatedAreaHa"
+                },
+                "dataType": "number",
+                "name": "actualAreaHa",
+                "validate": "min[0]",
+                "decimalPlaces": 3,
+                "units": "ha"
+              },
+              {
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "calculatedLengthKm"
+                },
+                "dataType": "number",
+                "name": "actualLengthKm",
+                "validate": "min[0]",
+                "decimalPlaces": 3,
+                "units": "km"
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedReason",
+                "behaviour": [
+                  {
+                    "condition": "not (within(actualAreaHa, calculatedAreaHa, 0.1) and within(actualLengthKm, calculatedLengthKm, 0.1))",
+                    "type": "visible"
+                  }
+                ],
+                "constraints": [
+                  "The site is culturally sensitive",
+                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedComments",
+                "behaviour": [
+                  {
+                    "condition": "\"Other\" == mappingNotAlignedReason",
+                    "type": "visible"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "document",
+                "name": "extraMappingDetails",
+                "description": "Please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                "behaviour": [
+                  {
+                    "condition": "not (within(actualAreaHa, calculatedAreaHa, 0.1) and within(actualLengthKm, calculatedLengthKm, 0.1))",
+                    "type": "if"
+                  }
+                ],
+                "validate": "required"
+              },
+              {
                 "dataType": "number",
                 "name": "numberOfDaysAdministeringSurveys",
                 "validate": "required,min[0]",
+                "description": ""
+              },
+              {
+                "dataType": "text",
+                "name": "dateRange",
+                "validate": "maxSize[100]",
                 "description": ""
               }
             ]
@@ -11381,27 +11450,19 @@
                 "source": "culturalValueSurveysAndAssessments",
                 "columns": [
                   {
-                    "title": "Baseline survey or indicator (follow-up) survey?",
-                    "source": "baselineOrIndicatorSurvey",
-                    "type": "selectOne",
-                    "width": "15%"
-                  },
-                  {
                     "type": "col",
-                    "width": "20%",
-                    "title": "Type of cultural activity",
+                    "width": "15%",
+                    "title": "Type of activity",
                     "css": "required",
                     "items": [
                       {
                         "source": "typeOfActivity",
-                        "type":"selectOne"
-
+                        "type": "selectOne"
                       },
                       {
                         "placeholder": "Type of activity (if Other)",
                         "source": "otherActivityType",
-                        "type":"text"
-
+                        "type": "text"
                       }
                     ]
                   },
@@ -11409,28 +11470,28 @@
                     "title": "Number of activities conducted",
                     "source": "numberOfActivitiesConducted",
                     "type": "number",
-                    "width": "10%"
+                    "width": "5%"
                   },
                   {
-                    "title": "Survey objective",
+                    "title": "Survey/ assessment objective",
                     "source": "surveyObjective",
                     "type": "textarea",
-                    "width": "20%",
-                    "helpText": "Survey objective should outline aim of the survey and how the data will be used",
+                    "width": "18%",
+                    "helpText": "Survey/ Assessment Objective should outline the aim of the survey/assessment",
                     "rows": 3
                   },
                   {
-                    "title": "Survey technique",
+                    "title": "Survey/ assessment technique",
                     "source": "surveyTechnique",
                     "type": "textarea",
-                    "width": "20%",
-                    "helpText": "Survey technique refers to the survey design, data you will capture and how it will be used",
+                    "width": "18%",
+                    "helpText": "Survey/Assessment technique refers to the survey design and what information is recorded and how it will be used",
                     "rows": 3
                   },
                   {
-                    "width": "5%",
+                    "width": "10%",
                     "type": "col",
-                    "title": "Area which has been surveyed",
+                    "title": "Area which has been surveyed/ assessed, where reporting is area based",
                     "items": [
                       {
                         "source": "surveyArea",
@@ -11443,14 +11504,82 @@
                         "displayOptions": {
                           "displayUnits": true
                         }
+                      },
+                      {
+                        "readonly": "readonly",
+                        "source": "calculatedLengthKm",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Please attach mapping details",
+                            "source": "extraMappingDetails",
+                            "type": "document"
+                          }
+                        ]
                       }
                     ]
                   },
                   {
-                    "title": "Number of days spent on administering survey/s",
+                    "helpText": "May be changed manually if different to the calculated areas",
+                    "width": "10%",
+                    "type": "col",
+                    "title": "Actual length (km) / area (ha) where survey/ assessment has been undertaken",
+                    "items": [
+                      {
+                        "source": "actualAreaHa",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      },
+                      {
+                        "source": "actualLengthKm",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Reason for actual being different to mapped amount",
+                            "source": "mappingNotAlignedReason",
+                            "type": "selectOne"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "placeholder": "Please enter the reason/s the mapping didn't align with the actual amount",
+                            "source": "mappingNotAlignedComments",
+                            "type": "textarea",
+                            "rows": 5
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "title": "Number of days spent on undertaking survey/s or assessment/s",
                     "source": "numberOfDaysAdministeringSurveys",
                     "type": "number",
-                    "width": "10%"
+                    "width": "5%"
+                  },
+                  {
+                    "title": "Date range",
+                    "source": "dateRange",
+                    "type": "text",
+                    "width": "14%",
+                    "helpText": "Refers to when the visit/s occurred. They can be specific dates, dates ranging from/to, months or seasons"
                   }
                 ],
                 "userAddedRows": true,
@@ -11491,6 +11620,15 @@
             "name": "culturalSites",
             "columns": [
               {
+                "dataType": "text",
+                "name": "initialOrFollowup",
+                "validate": "required",
+                "constraints": [
+                  "Initial",
+                  "Follow-up"
+                ]
+              },
+              {
                 "dataType": "number",
                 "name": "numberOfSitesWhereWorkHasOccurred",
                 "validate": "required,maxSize[300]",
@@ -11508,6 +11646,76 @@
                 "name": "calculatedAreaHa",
                 "units": "ha",
                 "decimalPlaces": 3
+              },
+              {
+                "computed": {
+                  "expression": "$geom.lengthKm(planOrWorkArea)"
+                },
+                "dataType": "number",
+                "name": "calculatedLengthKm",
+                "units": "km",
+                "decimalPlaces": 3
+              },
+              {
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "calculatedAreaHa"
+                },
+                "dataType": "number",
+                "name": "actualAreaHa",
+                "validate": "min[0]",
+                "decimalPlaces": 3,
+                "units": "ha"
+              },
+              {
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "calculatedLengthKm"
+                },
+                "dataType": "number",
+                "name": "actualLengthKm",
+                "validate": "min[0]",
+                "decimalPlaces": 3,
+                "units": "km"
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedReason",
+                "behaviour": [
+                  {
+                    "condition": "not (within(actualAreaHa, calculatedAreaHa, 0.1) and within(actualLengthKm, calculatedLengthKm, 0.1))",
+                    "type": "visible"
+                  }
+                ],
+                "constraints": [
+                  "The site is culturally sensitive",
+                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedComments",
+                "behaviour": [
+                  {
+                    "condition": "\"Other\" == mappingNotAlignedReason",
+                    "type": "visible"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "document",
+                "name": "extraMappingDetails",
+                "description": "Please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                "behaviour": [
+                  {
+                    "condition": "not (within(actualAreaHa, calculatedAreaHa, 0.1) and within(actualLengthKm, calculatedLengthKm, 0.1))",
+                    "type": "if"
+                  }
+                ],
+                "validate": "required"
               },
               {
                 "dataType": "text",
@@ -11557,6 +11765,12 @@
                 "source": "culturalSites",
                 "columns": [
                   {
+                    "title": "Initial or follow-up",
+                    "source": "initialOrFollowup",
+                    "type": "selectOne",
+                    "width": "15%"
+                  },
+                  {
                     "title": "Number of sites where work has occurred",
                     "source": "numberOfSitesWhereWorkHasOccurred",
                     "type": "number",
@@ -11578,6 +11792,67 @@
                         "displayOptions": {
                           "displayUnits": true
                         }
+                      },
+                      {
+                        "readonly": "readonly",
+                        "source": "calculatedLengthKm",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Please attach mapping details",
+                            "source": "extraMappingDetails",
+                            "type": "document"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "helpText": "May be changed manually if different to the calculated areas",
+                    "width": "10%",
+                    "type": "col",
+                    "title": "Actual length (km) / area (ha) where cultural site management work or planning has occurred",
+                    "items": [
+                      {
+                        "source": "actualAreaHa",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      },
+                      {
+                        "source": "actualLengthKm",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Reason for actual being different to mapped amount",
+                            "source": "mappingNotAlignedReason",
+                            "type": "selectOne"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                            "source": "mappingNotAlignedComments",
+                            "type": "textarea",
+                            "rows": 5
+                          }
+                        ]
                       }
                     ]
                   },
@@ -11585,20 +11860,22 @@
                     "title": "Type of site",
                     "source": "typeOfSite",
                     "type": "text",
-                    "width": "25%"
+                    "width": "15%",
+                    "helpText": "Describe the type of cultural site, e.g. midden, rock art site, registered Aboriginal Place"
                   },
                   {
                     "title": "Type of activity",
                     "source": "typeOfActivity",
                     "type": "text",
-                    "width": "25%"
+                    "width": "20%",
+                    "helpText": "Describe the management actions undertaken"
                   },
-
                   {
                     "title": "Purpose of activity",
                     "source": "purposeOfActivity",
                     "type": "textarea",
-                    "width": "30%"
+                    "width": "20%",
+                    "helpText": "Describe why the management work is being undertaken and how it supports the values of the site or place"
                   }
                 ],
                 "userAddedRows": true,
@@ -11652,6 +11929,76 @@
                 "decimalPlaces": 3
               },
               {
+                "computed": {
+                  "expression": "$geom.lengthKm(areaOfVisit)"
+                },
+                "dataType": "number",
+                "name": "calculatedVisitedLengthKm",
+                "units": "km",
+                "decimalPlaces": 3
+              },
+              {
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "calculatedVisitedAreaHa"
+                },
+                "dataType": "number",
+                "name": "actualAreaHa",
+                "validate": "min[0]",
+                "decimalPlaces": 3,
+                "units": "ha"
+              },
+              {
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "calculatedVisitedLengthKm"
+                },
+                "dataType": "number",
+                "name": "actualLengthKm",
+                "validate": "min[0]",
+                "decimalPlaces": 3,
+                "units": "km"
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedReason",
+                "behaviour": [
+                  {
+                    "condition": "not (within(actualAreaHa, calculatedVisitedAreaHa, 0.1) and within(actualLengthKm, calculatedVisitedLengthKm, 0.1))",
+                    "type": "visible"
+                  }
+                ],
+                "constraints": [
+                  "The site is culturally sensitive",
+                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedComments",
+                "behaviour": [
+                  {
+                    "condition": "\"Other\" == mappingNotAlignedReason",
+                    "type": "visible"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "document",
+                "name": "extraMappingDetails",
+                "description": "Please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                "behaviour": [
+                  {
+                    "condition": "not (within(actualAreaHa, calculatedVisitedAreaHa, 0.1) and within(actualLengthKm, calculatedVisitedLengthKm, 0.1))",
+                    "type": "if"
+                  }
+                ],
+                "validate": "required"
+              },
+              {
                 "dataType": "number",
                 "name": "numberOfVisits",
                 "validate": "required,min[0]"
@@ -11661,18 +12008,22 @@
                 "name": "numberIndigenousCommunityInvolved",
                 "validate": "required,min[0]"
               },
-
               {
                 "dataType": "text",
                 "name": "purposeOfVisits",
                 "validate": "required,maxSize[300]",
                 "description": ""
               },
-
               {
                 "dataType": "text",
                 "name": "activitiesUndertaken",
                 "validate": "required,maxSize[300]",
+                "description": ""
+              },
+              {
+                "dataType": "text",
+                "name": "dateRange",
+                "validate": "maxSize[100]",
                 "description": ""
               }
             ]
@@ -11705,7 +12056,7 @@
                 "source": "onCountryVisits",
                 "columns": [
                   {
-                    "width": "15%",
+                    "width": "12%",
                     "type": "col",
                     "title": "Area where the visit has occurred",
                     "items": [
@@ -11720,6 +12071,67 @@
                         "displayOptions": {
                           "displayUnits": true
                         }
+                      },
+                      {
+                        "readonly": "readonly",
+                        "source": "calculatedVisitedLengthKm",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Please attach mapping details",
+                            "source": "extraMappingDetails",
+                            "type": "document"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "helpText": "May be changed manually if different to the calculated areas",
+                    "width": "13%",
+                    "type": "col",
+                    "title": "Actual length (km) / area (ha) where the visit occurred",
+                    "items": [
+                      {
+                        "source": "actualAreaHa",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      },
+                      {
+                        "source": "actualLengthKm",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Reason for actual being different to mapped amount",
+                            "source": "mappingNotAlignedReason",
+                            "type": "selectOne"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "placeholder": "Please enter the reason/s the mapping didn't align with the calculated amount",
+                            "source": "mappingNotAlignedComments",
+                            "type": "textarea",
+                            "rows": 5
+                          }
+                        ]
                       }
                     ]
                   },
@@ -11727,27 +12139,36 @@
                     "title": "Number of visits",
                     "source": "numberOfVisits",
                     "type": "number",
-                    "width": "15%"
+                    "width": "10%"
                   },
                   {
                     "title": "Number of Indigenous community members involved",
                     "source": "numberIndigenousCommunityInvolved",
                     "type": "number",
-                    "width": "15%"
+                    "width": "10%"
                   },
                   {
                     "title": "Purpose of visits",
                     "source": "purposeOfVisits",
                     "type": "textarea",
-                    "width": "32%",
-                    "rows": 3
+                    "width": "20%",
+                    "rows": 3,
+                    "helpText": "Describe how these visits contribute to the project activities and area"
                   },
                   {
                     "title": "Activities undertaken",
                     "source": "activitiesUndertaken",
                     "type": "textarea",
-                    "width": "32%",
-                    "rows": 3
+                    "width": "20",
+                    "rows": 3,
+                    "helpText": "Describe the activities undertaken and how they contribute to the area"
+                  },
+                  {
+                    "title": "Date range",
+                    "source": "dateRange",
+                    "type": "text",
+                    "width": "15%",
+                    "helpText": "Refers to when the visit/s occurred. They can be specific dates, dates ranging from/to, months or seasons"
                   }
                 ],
                 "userAddedRows": true,
@@ -11788,6 +12209,10 @@
             "name": "culturalPractices",
             "columns": [
               {
+                "dataType": "number",
+                "name": "numberOfSitesCoveredByCulturalPractice"
+              },
+              {
                 "dataType": "feature",
                 "name": "sitesCoveredByCulturalPractice"
               },
@@ -11801,17 +12226,90 @@
                 "decimalPlaces": 3
               },
               {
+                "computed": {
+                  "expression": "$geom.lengthKm(sitesCoveredByCulturalPractice)"
+                },
+                "dataType": "number",
+                "name": "calculatedLengthKm",
+                "units": "km",
+                "decimalPlaces": 3
+              },
+              {
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "calculatedAreaHa"
+                },
+                "dataType": "number",
+                "name": "actualAreaHa",
+                "validate": "min[0]",
+                "decimalPlaces": 3,
+                "units": "ha"
+              },
+              {
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "calculatedLengthKm"
+                },
+                "dataType": "number",
+                "name": "actualLengthKm",
+                "validate": "min[0]",
+                "decimalPlaces": 3,
+                "units": "km"
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedReason",
+                "behaviour": [
+                  {
+                    "condition": "not (within(actualAreaHa, calculatedAreaHa, 0.1) and within(actualLengthKm, calculatedLengthKm, 0.1))",
+                    "type": "visible"
+                  }
+                ],
+                "constraints": [
+                  "The site is culturally sensitive",
+                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedComments",
+                "behaviour": [
+                  {
+                    "condition": "\"Other\" == mappingNotAlignedReason",
+                    "type": "visible"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "document",
+                "name": "extraMappingDetails",
+                "description": "Please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                "behaviour": [
+                  {
+                    "condition": "not (within(actualAreaHa, calculatedAreaHa, 0.1) and within(actualLengthKm, calculatedLengthKm, 0.1))",
+                    "type": "if"
+                  }
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "number",
+                "name": "numberOfCulturalPractices",
+                "validate": "min[0]"
+              },
+              {
                 "dataType": "text",
                 "name": "typeOfCulturalPractice",
                 "validate": "required,maxSize[300]",
                 "description": ""
               },
               {
-
                 "dataType": "number",
                 "name": "numberOfIndigenousCommunityMembers",
                 "validate": "required,min[0]"
-
               },
               {
                 "dataType": "text",
@@ -11849,9 +12347,16 @@
                 "source": "culturalPractices",
                 "columns": [
                   {
-                    "width": "15%",
+                    "type": "number",
+                    "source": "numberOfSitesCoveredByCulturalPractice",
+                    "width": "10%",
+                    "title": "Number of sites where cultural practices are conducted"
+                  },
+                  {
+                    "width": "10%",
                     "type": "col",
                     "title": "Site/s covered by cultural practice",
+                    "helpText": "Optional for Site Mapping. For sensitive sites, add hectares manually when required and put Site mapping into a document and attach to the field that appears in this column.",
                     "items": [
                       {
                         "source": "sitesCoveredByCulturalPractice",
@@ -11864,27 +12369,88 @@
                         "displayOptions": {
                           "displayUnits": true
                         }
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Please attach mapping details",
+                            "source": "extraMappingDetails",
+                            "type": "document"
+                          }
+                        ]
                       }
                     ]
+                  },
+                  {
+                    "helpText": "May be changed manually if different to the calculated areas",
+                    "width": "10%",
+                    "type": "col",
+                    "title": "Actual area (ha) / length (km) where cultural practices conducted",
+                    "items": [
+                      {
+                        "source": "actualAreaHa",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      },
+                      {
+                        "source": "actualLengthKm",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Reason for actual being different to mapped amount",
+                            "source": "mappingNotAlignedReason",
+                            "type": "selectOne"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                            "source": "mappingNotAlignedComments",
+                            "type": "textarea",
+                            "rows": 5
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "number",
+                    "source": "numberOfCulturalPractices",
+                    "width": "10%",
+                    "title": "Number of cultural practices"
                   },
                   {
                     "title": "Type of cultural practice",
                     "source": "typeOfCulturalPractice",
                     "type": "textarea",
-                    "width": "35%",
-                    "rows": 3
+                    "width": "20%",
+                    "rows": 3,
+                    "helpText": "Describe the type of action undertaken"
                   },
                   {
                     "title": "Number of Indigenous community members involved",
                     "source": "numberOfIndigenousCommunityMembers",
                     "type": "number",
-                    "width": "15%"
+                    "width": "10%"
                   },
                   {
                     "title": "Purpose of cultural practice",
                     "source": "purposeOfCulturalPractice",
                     "type": "textarea",
-                    "width": "35%",
+                    "width": "20",
+                    "helpText": "Describe how the cultural practice/s contribute to the area",
                     "rows": 3
                   }
                 ],
@@ -11938,11 +12504,22 @@
                 "dataType": "text",
                 "name": "typeOfDocument",
                 "validate": "required,maxSize[300]",
-                "description": ""
+                "description": "",
+                "constraints": [
+                  "Guidelines",
+                  "Protocols",
+                  "Plans"
+                ]
               },
               {
                 "dataType": "number",
                 "name": "numberOfDocuments",
+                "validate": "required,min[0]",
+                "description": ""
+              },
+              {
+                "dataType": "text",
+                "name": "purposeOfDocument",
                 "validate": "required,min[0]",
                 "description": ""
               }
@@ -11979,19 +12556,27 @@
                     "title": "Developing or updating?",
                     "source": "developingOrUpdating",
                     "type": "selectOne",
-                    "width": "30%"
+                    "width": "20%"
                   },
                   {
                     "title": "Type of document",
                     "source": "typeOfDocument",
-                    "type": "text",
-                    "width": "50%"
+                    "type": "selectOne",
+                    "width": "20%"
                   },
                   {
                     "title": "No. of document/guidelines/protocols/plans",
                     "source": "numberOfDocuments",
                     "type": "number",
                     "width": "20%"
+                  },
+                  {
+                    "title": "Purpose of document",
+                    "source": "purposeOfDocument",
+                    "type": "textarea",
+                    "width": "40%",
+                    "rows": 3,
+                    "helpText": "Please identify what this/these document is and why it/they are needed"
                   }
                 ],
                 "userAddedRows": true,
