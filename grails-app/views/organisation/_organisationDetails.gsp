@@ -4,18 +4,33 @@
         <div class="col-sm-2"></div>
         <label for="name" class="col-sm-1 form-check-label">Name: <fc:iconHelp><g:message code="organisation.name.help"/></fc:iconHelp></label>
         <div class="col-sm-3">
-            <input type="text" id="name" class="form-control form-control-sm w-100" data-bind="value:name, disable: !(name())" data-validation-engine="validate[required]" placeholder="Organisation name" ${!isNameEditable?'readonly="readonly"':''}>
+            <g:if test="${organisation.organisationId}">
+                    <input type="text" id="name" class="form-control form-control-sm w-100" data-bind="value:name" data-validation-engine="validate[required]" placeholder="Organisation name" ${!isNameEditable?'readonly="readonly"':''}>
+            </g:if>
+            <g:else>
+                <input type="text" id="name" class="form-control form-control-sm w-100" data-bind="value:name, disable: !(name())" data-validation-engine="validate[required]" placeholder="Organisation name" ${!isNameEditable?'readonly="readonly"':''}>
+            </g:else>
         </div>
     </section>
     <section class="form-group row">
         <div class="col-sm-2"></div>
         <label for="abnSelector" class="col-sm-1 form-check-label">ABN: <fc:iconHelp><g:message code="organisation.abn.help"/></fc:iconHelp></label>
-        <div class="col-sm-3">
-            <input type="text" id="abnSelector" class="w-100 form-control form-control-sm" data-bind="value:abn, valueUpdate: 'input'" data-validation-engine="validate[custom[number],minSize[11],maxSize[11]" data-validation-error-message="Please enter an 11 digit ABN"  maxlength="11" placeholder="Enter ABN Number"/>
-        </div>
-        <div class="col-sm-2 prePopBtn">
-            <button type="button" id="prepopulateFromABN" data-bind="click:prepopulateFromABN, disable: !(abn())" class="btn btn-sm btn-primary" disabled="disabled">Pre Populate From ABN</button>
-        </div>
+        <g:if test="${organisation.organisationId}">
+            <div class="col-sm-3">
+                <input type="text" id="abnSelector" class="w-100 form-control form-control-sm" data-bind="value:abn" data-validation-engine="validate[custom[number],minSize[11],maxSize[11]" data-validation-error-message="Please enter an 11 digit ABN"  maxlength="11" placeholder="Enter ABN Number"/>
+            </div>
+            <div class="col-sm-2 prePopBtn">
+                <button type="button" id="prepopulateFromABN" data-bind="click:prepopulateFromABN" class="btn btn-sm btn-primary" disabled="disabled">Pre Populate From ABN</button>
+            </div>
+        </g:if>
+        <g:else>
+            <div class="col-sm-3">
+                <input type="text" id="abnSelector" class="w-100 form-control form-control-sm" data-bind="value:abn, valueUpdate: 'input'" data-validation-engine="validate[custom[number],minSize[11],maxSize[11]" data-validation-error-message="Please enter an 11 digit ABN"  maxlength="11" placeholder="Enter ABN Number"/>
+            </div>
+            <div class="col-sm-2 prePopBtn">
+                <button type="button" id="prepopulateFromABN" data-bind="click:prepopulateFromABN, disable: !(abn())" class="btn btn-sm btn-primary" disabled="disabled">Pre Populate From ABN</button>
+            </div>
+        </g:else>
     </section>
     <section class="form-group row">
         <div class="col-sm-2"></div>
@@ -40,7 +55,6 @@
         </div>
     </section>
     <g:render template="/shared/editSocialMediaLinks" model="${[entity: 'organisation', imageUrl: assetPath(src: 'filetypes')]}"></g:render>
-
     <h4 class="block-header"><g:message code="organisation.images.header"/></h4>
     <section class="form-group row">
         <div class="col-sm-2"></div>
@@ -61,12 +75,9 @@
                   data-bind="stagedImageUpload:documents, visible:!logoUrl()"><i class="fa fa-plus"></i>
                 <input id="logo" type="file" name="files"><span>Attach</span>
             </span>
-
-
             <button class="btn main-image-button" data-bind="click:removeLogoImage, visible:logoUrl()"><i class="fa fa-minus"></i> Remove</button>
         </span>
     </section>
-
     <section class="form-group row">
         <div class="col-sm-2"></div>
         <label for="logo" class="col-sm-2 form-check-label">Feature Graphic: <fc:iconHelp><g:message code="organisation.mainImage.help"/></fc:iconHelp></label>
@@ -84,12 +95,9 @@
                   data-bind="stagedImageUpload:documents, visible:!mainImageUrl()"><i class="fa fa-plus"></i>
                 <input id="mainImage" type="file" name="files"><span>Attach</span>
             </span>
-
-
             <button class="btn main-image-button" data-bind="click:removeMainImage, visible:mainImageUrl()"><i class="fa fa-minus"></i> Remove</button>
         </span>
     </section>
-
 </form>
 <g:render template="/shared/attachDocument"/>
 <g:render template="/shared/markdownEditorModal"/>

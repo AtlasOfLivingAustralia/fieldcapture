@@ -19,5 +19,7 @@ class OrganisationList extends Page {
         searchByName { $('#searchCaseSensitive') }
 
         organisationLinks { $('#organisations a[data-bind*="visible:organisationId"]') }
+        createOrganisation { $(".createOrganisation")}
+        registerNewOrganisation { $(".registerNewOrganisation")}
     }
 }
