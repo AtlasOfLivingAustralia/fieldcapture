@@ -4,14 +4,17 @@
 <p>Please enter the details of risks and threats to the project and the mitigation strategies being used to address them. These should be updated at each reporting period:</p>
 
 <div id="project-risks-threats" class="well well-small">
-
-    <div align="right">Overall project risk profile : <span style="color: red;">*</span>
-        <span class="ratingStyling">
-            <select data-validation-engine="validate[required]"
-                    data-bind="options: ratingOptions, value:risks.overallRisk, optionsCaption: 'Please select', css: overAllRiskHighlight, disable:risksDisabled"
-                    id="overall-risk"></select>
-        </span>
-    </div>
+    <form>
+        <div class="row">
+            <div class="col-sm-8 mr-6"></div>
+                <label for="overall-risk" class="col-sm-2 overall-risk-label col-form-label pr-0">Overall project risk profile :</label>
+                <div class="col-sm-2 float-right pull-right">
+                    <select data-validation-engine="validate[required]"
+                            data-bind="options: ratingOptions, value:risks.overallRisk, optionsCaption: 'Please select', css: overAllRiskHighlight, disable:risksDisabled"
+                            id="overall-risk" class="form-control form-control-sm input-small pl-0 float-right"></select>
+                </div>
+            </div>
+    </form>
     <table class="table">
         <thead>
         <tr>
@@ -28,31 +31,31 @@
         <tbody data-bind="foreach : risks.rows">
         <tr>
             <td class="risk-type">
-                <select data-validation-engine="validate[required]"
+                <select  class="form-control form-control-sm" data-validation-engine="validate[required]"
                         data-bind="options: $parent.threatOptions, value: threat, optionsCaption: 'Please select', disable:$parent.risksDisabled"></select>
             </td>
             <td class="risk-description">
-                <textarea data-validation-engine="validate[required]" class="input-xlarge"
+                <textarea data-validation-engine="validate[required]" class="form-control form-control-sm"
                           data-bind="value: description, disable:$parent.risksDisabled" rows="5"></textarea>
             </td>
             <td class="risk-likelihood">
-                <select data-validation-engine="validate[required]"
+                <select data-validation-engine="validate[required]" class="form-control form-control-sm"
                         data-bind="options: $parent.likelihoodOptions, value: likelihood, optionsCaption: 'Please select', disable:$parent.risksDisabled"></select>
             </td>
             <td class="risk-consequence">
-                <select data-validation-engine="validate[required]"
+                <select data-validation-engine="validate[required]" class="form-control form-control-sm"
                         data-bind="options: $parent.consequenceOptions, value: consequence,  optionsCaption: 'Please select', disable:$parent.risksDisabled"></select>
             </td>
             <td class="risk-rating">
                 <b><span data-bind="text:riskRating"></span></b>
             </td>
             <td class="risk-control">
-                <textarea data-validation-engine="validate[required]"
+                <textarea data-validation-engine="validate[required]" class="form-control form-control-sm"
                           data-bind="value : currentControl, disable:$parent.risksDisabled" rows="5"></textarea>
             </td>
             <td class="residual-risk">
                 <!-- Residual risk -->
-                <select data-validation-engine="validate[required]"
+                <select data-validation-engine="validate[required]" class="form-control form-control-sm"
                         data-bind="options: $parent.ratingOptions, value: residualRisk, optionsCaption: 'Please select', disable:$parent.risksDisabled"></select>
             </td>
             <td class="risk-actions remove">
@@ -64,7 +67,7 @@
         <tfoot>
         <tr>
             <td colspan="8" style="text-align:right;">
-                <button type="button" class="btn btn-small" data-bind="click: addRisks, disable:risksDisabled">
+                <button type="button" class="btn btn-sm" data-bind="click: addRisks, disable:risksDisabled">
                     <i class="fa fa-plus"></i> Add a row</button></td>
         </tr>
         </tfoot>

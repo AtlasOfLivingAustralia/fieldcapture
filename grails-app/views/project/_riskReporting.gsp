@@ -6,22 +6,16 @@
     <hr/>
 
     <form class="form-horizontal" id="risks-changes-report">
-        <div class="control-group">
+        <div class="form-group">
             <label class="control-label" for="risks-changes-from-date">From date (baseline for comparison):</label>
-
-            <div class="controls">
-                <div class="input-append">
-                <fc:datePicker class="input-small" id="risks-changes-from-date" targetField="fromDate.date"></fc:datePicker>
-                </div>
+            <div class="input-group input-append">
+                <fc:datePicker class="form-control form-control-sm dateControl" bs4="bs4" id="risks-changes-from-date" targetField="fromDate.date"/>
             </div>
         </div>
-        <div class="control-group">
+        <div class="form-group">
             <label class="control-label" for="risks-changes-to-date">To date:</label>
-
-            <div class="controls">
-                <div class="input-append">
-                <fc:datePicker id="risks-changes-to-date" class="input-small" targetField="toDate.date"></fc:datePicker>
-                </div>
+            <div class="input-group input-append">
+                <fc:datePicker id="risks-changes-to-date" bs4="bs4" class="form-control form-control-sm dateControl" targetField="toDate.date"/>
             </div>
         </div>
 %{--        Commenting this out as the PDF report needs work--}%
@@ -37,13 +31,13 @@
 %{--        </div>--}%
     </form>
 
-    <div class="control-group">
-        <button type="button" class="btn btn-success"
+    <form class="form-group">
+        <button type="button" class="btn btn-sm btn-success" id="generateRisksReportHTML"
                 data-bind="click:generateRisksReportHTML">Generate Report</button>
         %{--        Commenting this out as the PDF report needs work--}%
-%{--        <button type="button" class="btn btn-success"--}%
+%{--        <button type="button" class="btn btn-sm btn-success"--}%
 %{--                data-bind="click:generateRisksReportPDF">Generate Report (PDF)</button>--}%
-    </div>
+    </form>
 
 </div>
 <!-- /ko -->

@@ -6,9 +6,11 @@
                 <img data-bind="visible:imageUrl(), attr:{src:imageThumbnailUrl}" class="pull-left" width="50" height="50">
                 <i class="blog-icon floatleft fa fa-3x" data-bind="visible:stockIcon(), css:stockIcon"></i>
                 <div>
-                    <div class="row-fluid">
-                        <strong data-bind="text:title"></strong>
-                        <div class="pull-right">
+                    <div class="row">
+                        <div class="col-sm-11">
+                            <strong data-bind="text:title"></strong>
+                        </div>
+                        <div class="col-sm-1">
                             <a class="editThisBlog" href data-bind="click:$parent.editBlogEntry">Edit</a> |
                             <a class="delThisBlog" href data-bind="click:$parent.deleteBlogEntry">Delete</a>
                         </div>
@@ -25,7 +27,7 @@
     </g:else>
 
     <div class="form-actions">
-        <button data-bind="click:newBlogEntry" type="button" id="new" class="btn btn-primary">New Entry</button>
+        <button data-bind="click:newBlogEntry" type="button" id="new" class="btn btn-sm btn-primary">New Entry</button>
     </div>
 </div>
 <!-- /ko -->
