@@ -1094,7 +1094,7 @@
                             "items": [
                               {
                                 "preLabel": "Select the investment priority/s that relate to this outcome",
-                                "type": "selectMany",
+                                "type": "select2Many",
                                 "source": "investmentPriorities"
                               }
                             ]
