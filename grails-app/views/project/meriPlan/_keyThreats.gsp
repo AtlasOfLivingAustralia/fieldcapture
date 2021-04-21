@@ -16,11 +16,11 @@
     <tr>
         <td class="index"><span data-bind="text:$index()+1"></span></td>
         <td class="threat">
-            <textarea rows="4" data-validation-engine="validate[required]"
+            <textarea class="form-control" rows="4" data-validation-engine="validate[required]"
                       data-bind="value: threat, disable: $root.isProjectDetailsLocked()">
             </textarea>
         </td>
-        <td class="intervention"><textarea data-validation-engine="validate[required]"
+        <td class="intervention"><textarea class="form-control" data-validation-engine="validate[required]"
                                            data-bind="value: intervention, disable: $root.isProjectDetailsLocked()"
                                            rows="4"></textarea></td>
         <td class="remove">
@@ -33,7 +33,7 @@
     <tfoot>
     <tr>
         <td colspan="4">
-            <button type="button" class="btn btn-small"
+            <button type="button" class="btn btn-sm"
                     data-bind="disable: $root.isProjectDetailsLocked(), click: addRow">
                 <i class="fa fa-plus"></i> Add a row</button></td>
     </tr>

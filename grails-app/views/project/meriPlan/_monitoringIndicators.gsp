@@ -22,12 +22,12 @@
             <tr>
                 <td class="index"> <span data-bind="text:$index()+1"></span></td>
                 <g:if test="${monitoringValidation == true}">
-                    <td class="baseline"> <textarea data-validation-engine="validate[required]" data-bind="value: data1, disable: $parent.isProjectDetailsLocked()" rows="3" placeholder="${indicatorPlaceHolder}"> </textarea></td>
-                    <td class="baseline-method"> <textarea data-validation-engine="validate[required]" data-bind="value: data2, disable: $parent.isProjectDetailsLocked()" rows="5" placeholder="${approachPlaceHolder}"></textarea> </td>
+                    <td class="baseline"> <textarea class="form-control" data-validation-engine="validate[required]" data-bind="value: data1, disable: $parent.isProjectDetailsLocked()" rows="3" placeholder="${indicatorPlaceHolder}"> </textarea></td>
+                    <td class="baseline-method"> <textarea class="form-control" data-validation-engine="validate[required]" data-bind="value: data2, disable: $parent.isProjectDetailsLocked()" rows="5" placeholder="${approachPlaceHolder}"></textarea> </td>
                 </g:if>
                 <g:else>
-                    <td class="baseline"> <textarea data-bind="value: data1, disable: $parent.isProjectDetailsLocked()" rows="3" placeholder="${indicatorPlaceHolder}"> </textarea></td>
-                    <td class="baseline-method"> <textarea data-bind="value: data2, disable: $parent.isProjectDetailsLocked()" rows="5" placeholder="${approachPlaceHolder}"></textarea> </td>
+                    <td class="baseline"> <textarea class="form-control" data-bind="value: data1, disable: $parent.isProjectDetailsLocked()" rows="3" placeholder="${indicatorPlaceHolder}"> </textarea></td>
+                    <td class="baseline-method"> <textarea class="form-control" data-bind="value: data2, disable: $parent.isProjectDetailsLocked()" rows="5" placeholder="${approachPlaceHolder}"></textarea> </td>
                 </g:else>
                 <td class="remove">
                     <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()"><i class="icon-remove" data-bind="click: $parent.removeObjectives"></i></span>
@@ -37,8 +37,8 @@
             <tfoot>
             <tr>
                 <td colspan="5">
-                    <button type="button" class="btn btn-small" data-bind="disable:isProjectDetailsLocked(), click: addObjectives">
-                        <i class="icon-plus"></i> Add a row</button>
+                    <button type="button" class="btn btn-sm" data-bind="disable:isProjectDetailsLocked(), click: addObjectives">
+                        <i class="fa fa-plus"></i> Add a row</button>
                 </td>
             </tr>
             </tfoot>

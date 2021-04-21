@@ -9,11 +9,11 @@
         <form class="validationEngineContainer">
             <div class="row">
                 <div class="col-sm-4">Date / time approved</div>
-                <div class="col-sm-8"><input type="text" readonly="readonly" data-bind="value:dateApproved.formattedDate"></div>
+                <div class="col-sm-8"><input class="form-control" type="text" readonly="readonly" data-bind="value:dateApproved.formattedDate"></div>
             </div>
             <div class="row">
                 <div class="col-sm-4"><label class="required" for="meri-plan-approval-document-reference">Change order numbers </label></div>
-                <div class="col-sm-8"><input id="meri-plan-approval-document-reference" type="text" class="required" data-bind="value:referenceDocument"></div>
+                <div class="col-sm-8"><input id="meri-plan-approval-document-reference" type="text" class="required form-control" data-bind="value:referenceDocument"></div>
             </div>
             <div class="row">
                 <div class="col-sm-4"><label class="required" for="meri-plan-approval-reason">Comments </label></div>

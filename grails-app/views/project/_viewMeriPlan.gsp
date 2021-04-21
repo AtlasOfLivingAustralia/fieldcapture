@@ -10,8 +10,8 @@
     </div>
     <!-- /ko -->
 
-    <div class="row-fluid space-after">
-        <div class="span12">
+    <div class="row space-after">
+        <div class="col-sm-12">
             <div class="well well-small">
                 <label><b>MERI attachments:</b></label>
                 <g:render template="/shared/listDocuments"
