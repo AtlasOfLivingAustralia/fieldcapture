@@ -1,5 +1,8 @@
 package au.org.ala.fieldcapture
 
+import pages.AddActivityPage
+import pages.AdminClearCachePage
+import pages.AdminTools
 import pages.EditActivityPage
 import pages.ProjectIndex
 import spock.lang.Stepwise
@@ -11,11 +14,25 @@ class AddActivitySpec extends StubbedCasSpec {
         useDataSet('dataset1')
     }
 
-    def cleanup() {
+    def cleanupSpec() {
         logout(browser)
     }
 
     def projectId = "activityProject"
+
+    def "Clear the cache to ensure activity forms are loaded"() {
+        setup:
+        login([userId:'1', role:"ROLE_ADMIN", email:'fc-admin@nowhere.com', firstName: "ALA", lastName:'Admin'], browser)
+
+        when:
+        to AdminTools
+
+        waitFor {$("#btnClearMetadataCache").displayed}
+        $("#btnClearMetadataCache").click()
+
+        then:
+        waitFor {hasBeenReloaded()}
+    }
 
     def "Generate a Activities"(){
 
@@ -36,8 +53,10 @@ class AddActivitySpec extends StubbedCasSpec {
         waitFor {
             admin.projectSettings.displayed
         }
-        waitFor 30, {admin.projectSettings.regenerateReports()}
-
+        admin.projectSettings.regenerateReports()
+        waitFor {
+            hasBeenReloaded()
+        }
         waitFor 10, {admin.projectSettings.displayed}
 
         then:
@@ -75,12 +94,17 @@ class AddActivitySpec extends StubbedCasSpec {
         then: "The save will fail an a dialog is displayed to explain the situation"
         waitFor 20, { timeoutModal.displayed }
 
+        Thread.sleep(1500) // Wait  for the  modal animation to finish.
+
         when: "Click the re-login link and log back in"
-        waitFor {timeoutModal.loginLink.click() }
+        timeoutModal.loginLink.click()
         // Our stubs are automatically logging us in here.
 
         then:
-        waitFor 20, {at EditActivityPage}
+        waitFor 20, {
+            hasBeenReloaded()
+        }
+        at EditActivityPage
 
         and: "A dialog is displayed to say there are unsaved edits"
         waitFor {unsavedEdits.displayed}
@@ -90,22 +114,21 @@ class AddActivitySpec extends StubbedCasSpec {
 
         then: "the unsaved edits are present"
         activityDetails.description == "Checking the local storage"
+        submit()
 
-       waitFor 20, {
-           submit()
-       }
         and:
-        waitFor 10, {
-            activityDetails.description == "Checking the local storage"
+        waitFor {
+            hasBeenReloaded()
         }
-
+        activityDetails.description == "Checking the local storage"
     }
 
-/*
+
     def "No permission to add an activity"() {
 
+        // This user has no permissions on the project
         logout(browser)
-        loginAsProjectEditor(browser)
+        login([userId:'3', role:"ROLE_USER", email:'editor@nowhere.com', firstName: "project", lastName:'editor'], browser)
         when: "go to new activity page"
         via AddActivityPage, projectId:projectId
 
@@ -116,7 +139,7 @@ class AddActivitySpec extends StubbedCasSpec {
     def "Add an activity"() {
 
         logout(browser)
-        loginAsProjectAdmin(browser)
+        login([userId:'2', role:"ROLE_USER", email:'admin@nowhere.com', firstName: "project", lastName:'admin'], browser)
 
         def returnToUrl = getConfig().baseUrl+ProjectIndex.url+'/'+projectId
 
@@ -178,7 +201,7 @@ class AddActivitySpec extends StubbedCasSpec {
         submit()
 
         then:
-        waitFor 10, {at ProjectIndex}
+        waitFor 100, {at ProjectIndex}
 
         def activities = plansAndReports.activities
         def activity = activities.find {
@@ -202,11 +225,13 @@ class AddActivitySpec extends StubbedCasSpec {
         waitFor 5, {iAmSure.click()} // this is animated so takes time to be clickable.
 
         then: "the activity is no longer available on the page"
-        waitFor 10, {at ProjectIndex}
+        waitFor 20, {
+            hasBeenReloaded()
+        }
 
-        plansAndReports.activities.size() == 0 || plansAndReports.activities.find { it.description == 'Test activity [edited]' } == null
+        plansAndReports.activities.size() == 1 && plansAndReports.activities.find { it.description == 'Test activity [edited]' } == null
     }
 
- */
+
 }
 

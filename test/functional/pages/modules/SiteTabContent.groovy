@@ -6,6 +6,7 @@ class SiteTabContent extends Module {
     static content = {
         addSites{$(".addSite")}
         uploadSites{$(".uploadSite")}
+        markers{$('.leaflet-marker-pane img')}
 
     }
 }

@@ -49,7 +49,10 @@ class ImportProjectsSpec extends StubbedCasSpec {
         projectTab.click()
 
         and:
-        $("#projectList tbody tr td .badge.badge-info").text() == 'APPLICATION'
+        waitFor {
+            $("#projectList tbody tr td .badge.badge-info").text() == 'APPLICATION'
+        }
+
     }
 
     def "New projects can be imported into MERßIT"() {

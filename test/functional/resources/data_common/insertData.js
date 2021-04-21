@@ -5,6 +5,8 @@ load('../data/siteDefaults.js');
 load('../data/activityForms/RLPOutputReport.js');
 load('../data/activityForms/CoreServicesReport.js');
 load('../data/activityForms/ProgressReport.js');
+load('../data/activityForms/Revegetation.js');
+load('../data/activityForms/PlantPropogation.js')
 load('../data/scoreDefaults.js');
 load('../data/activityDefaults.js');
 load('../data/outputDefaults.js');
@@ -163,6 +165,25 @@ function loadActivityForms() {
     db.activityForm.insert(rlpOutputReport);
     db.activityForm.insert(coreServicesReport);
     db.activityForm.insert(progressReport);
+    db.activityForm.insert(revegetation);
+    db.activityForm.insert(plantPropogation);
+    var forms = db.activityForm.find({});
+    print("Total Forms in DB: " + forms.count());
+    forms.forEach( function (form){
+        if (form){
+            print("Updating Form Version From Double to Int: " + form.name)
+            db.activityForm.update({_id: form._id},{$set: {formVersion:NumberInt(form.formVersion), minOptionalSectionsCompleted: NumberInt(form.minOptionalSectionsCompleted)}})
+        }
+    });
+
+    var forms2 = db.activity.find({});
+    print("Total Forms in DB: " + forms2.count());
+    forms2.forEach( function (form){
+        if (form){
+            print("Updating Form Version From Double to Int: " + form.type)
+            db.activity.update({activityId: form.activityId},{$set: {formVersion:NumberInt(form.formVersion)}})
+        }
+    });
 }
 
 

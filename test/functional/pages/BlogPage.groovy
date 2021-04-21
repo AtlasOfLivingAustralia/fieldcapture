@@ -120,7 +120,7 @@ class NewProgramBlogPage extends Page{
     }
 }
 
-class EditSiteBlogPage extends Page {
+class EditSiteBlogPage extends ReloadablePage {
     static url = 'admin/editSiteBlog'
 
     static at = {waitFor {title() != null } }

@@ -320,11 +320,11 @@ environments {
         layout.skin = "nrm"
         security.cas.appServerName = serverName
         security.cas.contextPath = "/" + appName
-        ecodata.baseUrl = 'http://devt.ala.org.au:8080/ecodata/ws/'
+        ecodata.baseUrl = 'http://devt.ala.org.au:8080/ws/'
         upload.images.url = grails.serverURL+'/image/'
         emailFilter = /[A-Z0-9._%-]+@csiro\.au|chris\.godwin\.ala@gmail.com/
         logging.dir = '.'
-        ecodata.service.url = 'http://devt.ala.org.au:8080/ecodata/ws'
+        ecodata.service.url = 'http://devt.ala.org.au:8080/ws'
         espSupportEmail='ESPmonitoring@environment.gov.au'
     }
     test {
@@ -349,8 +349,8 @@ environments {
         userDetailsUrl = "${userDetatails.url}getUserListFull"
         logging.dir = '.'
         upload.images.path = '/tmp'
-        ecodata.baseUrl = 'http://devt.ala.org.au:8080/ecodata/ws/'
-        ecodata.service.url = 'http://devt.ala.org.au:8080/ecodata/ws'
+        ecodata.baseUrl = 'http://devt.ala.org.au:8080/ws/'
+        ecodata.service.url = 'http://devt.ala.org.au:8080/ws'
         pdfgen.baseURL = "http://devt.ala.org.au:${wiremock.port}/"
         abn.abnUrl= "http://localhost:${wiremock.port}/json/AbnDetails.aspx?abn="
         abn.abnLookupToken = "123456"

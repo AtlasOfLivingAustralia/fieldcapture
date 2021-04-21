@@ -387,7 +387,15 @@
                                     var outputTargets = new OutputTargets(project.activities || [], project.outputTargets, false, targetMetadata, {saveTargetsUrl:fcConfig.saveOuputTargetsUrl});
                                     if (outputTargets.onlyActivityOfType(act.type)) {
                                         outputTargets.removeTargetsAssociatedWithActivityType(act.type);
-                                        outputTargets.saveOutputTargets().always(self.saved);
+                                        var result = outputTargets.saveOutputTargets();
+                                        if (result) {
+                                            result.always(function() {
+                                                self.saved();
+                                            });
+                                        }
+                                        else {
+                                            self.saved();
+                                        }
                                     }
                                     else {
                                         self.saved();

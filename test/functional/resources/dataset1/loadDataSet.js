@@ -2,6 +2,7 @@ print("This script is expected to be executed with a working directory containin
 print("Current working dir: "+pwd());
 load('../data_common/loadMeritHub.js');
 load("../data_common/insertData.js");
+loadActivityForms();
 
 var  activityProject = {
     "alaHarvest":false,
@@ -117,6 +118,18 @@ var  activityProject = {
     ,"workOrderId":""
 };
 db.project.insert(activityProject)
+db.userPermission.insert({
+    entityType: 'au.org.ala.ecodata.Project',
+    entityId: activityProject.projectId,
+    userId: '1',
+    accessLevel: 'editor'
+});
+db.userPermission.insert({
+    entityType: 'au.org.ala.ecodata.Project',
+    entityId: activityProject.projectId,
+    userId: '2',
+    accessLevel: 'admin'
+});
 
 var activity = {
     "activityId":"6034ca77-464e-4546-9de1-b88006d3ebfb",

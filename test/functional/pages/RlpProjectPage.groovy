@@ -55,6 +55,7 @@ class RlpProjectPage extends ReloadablePage {
         adminContent.projectSettingsTab.click()
         waitFor { adminContent.projectSettings.displayed }
         adminContent.projectSettings.regenerateReports()
+        waitFor { hasBeenReloaded() }
     }
 
     def openAdminTab() {

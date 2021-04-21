@@ -34,14 +34,3 @@ class ProjectPage extends Page {
         siteTabContents.addSites.click()
     }
 }
-//
-//class siteTabContent extends Module{
-//    static content = {
-//        addSites{$(".addSite")}
-//        uploadSites{$(".uploadSite")}
-//        tableContents { $("#sites-table").moduleList(tableContent)}
-//
-//    }
-//}
-
-//}

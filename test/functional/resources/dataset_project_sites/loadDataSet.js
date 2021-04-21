@@ -575,7 +575,7 @@ var staticValue = "{\n" +
     "  ]\n" +
     "}"
 
-db.setting.insert({"key":"meritstatistics.config","value":staticValue, version: 3})
+db.setting.insert({"key":"meritstatistics.config","value":staticValue, version: NumberInt(3)})
 
 
 createProjectNumberBaselineDataSets({ "scoreId":"score_42"});
