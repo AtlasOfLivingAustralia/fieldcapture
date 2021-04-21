@@ -9217,7 +9217,8 @@
               },
               {
                 "dataType": "number",
-                "name": "amountSeedCollected"
+                "name": "amountSeedCollected",
+                "decimalPlaces": 5
               },
               {
                 "dataType": "number",
