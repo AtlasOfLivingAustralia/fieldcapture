@@ -34,13 +34,13 @@
         Organisations</h2>
 
         <g:if test="${user}">
-            <button class="btn btn-success pull-right" data-bind="click:addOrganisation">Register new organisation</button>
+            <button class="btn btn-success pull-right registerNewOrganisation" data-bind="click:addOrganisation">Register new organisation</button>
         </g:if>
     </div>
 </g:if>
     <fc:getSettingContent settingType="${au.org.ala.merit.SettingPageType.ORGANISATION_LIST_PAGE_HEADER}"/>
     <g:if test="${fc.userIsAlaOrFcAdmin()}">
-        <a href="${g.createLink(action:'create')}"><button class="btn btn-info btn-sm pull-right">Create Organisation</button></a>
+        <a href="${g.createLink(action:'create')}"><button class="btn btn-info btn-sm pull-right createOrganisation">Create Organisation</button></a>
     </g:if>
     <div class="row">
         <div class="col-sm-6">
