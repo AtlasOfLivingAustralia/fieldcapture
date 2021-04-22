@@ -49,8 +49,8 @@
         <tfoot>
         <tr>
             <td colspan="8">
-                <button type="button" class="btn btn-sm" data-bind="click: addEvents, disable:${disableConditionPrefix}isProjectDetailsLocked()">
-                    <i class="fa fa-plus"></i> Add a row</button></td>
+                <button type="button" class="btn btn-small" data-bind="click: addEvents, disable:${disableConditionPrefix}isProjectDetailsLocked()">
+                    <i class="icon-plus"></i> Add a row</button></td>
         </tr>
         </tfoot>
     </table>

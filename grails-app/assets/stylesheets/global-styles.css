@@ -875,13 +875,7 @@ span.status {
 .br-2 {
 	border-radius: 0.25rem !important;
 }
-
-.badge {
-	padding-left: 9px;
-	padding-right: 9px;
-	border-radius: 9px;
-}
-
-.customCard {
-	border:unset;
+.breadcrumb > li > .divider {
+	color: #393124;
+	padding: 0 5px;
 }

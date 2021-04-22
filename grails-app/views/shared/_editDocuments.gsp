@@ -1,5 +1,5 @@
-<div class="row" id="${containerId}">
-    <div data-bind="col-sm-12">
+<div class="row-fluid" id="${containerId}">
+    <div data-bind="span12">
         <div class="well">
 
             <div data-bind="foreach: { data: filteredDocuments }">
