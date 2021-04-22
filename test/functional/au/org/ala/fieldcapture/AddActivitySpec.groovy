@@ -94,8 +94,10 @@ class AddActivitySpec extends StubbedCasSpec {
         then: "The save will fail an a dialog is displayed to explain the situation"
         waitFor 20, { timeoutModal.displayed }
 
+        Thread.sleep(1500) // Wait  for the  modal animation to finish.
+
         when: "Click the re-login link and log back in"
-        waitFor {timeoutModal.loginLink.click() }
+        timeoutModal.loginLink.click()
         // Our stubs are automatically logging us in here.
 
         then:

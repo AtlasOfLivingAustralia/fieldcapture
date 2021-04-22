@@ -110,3 +110,6 @@ div.dataTables_wrapper div.dataTables_filter input {
 .popup-edit {
     padding: 7px;
 }
+.ml-6 {
+    margin-left: 5.66rem !important;
+}
