@@ -1,5 +1,5 @@
-<div id="adaptive-management" class="row">
-    <div class="col-sm-12">
+<div id="adaptive-management" class="row-fluid">
+    <div class="span12">
         <g:if test="${title}">
             <h4>${title}</h4>
             <g:if test="${explanation}">
@@ -12,6 +12,6 @@
               maxlength="3000"
               data-validation-engine="validate[required,maxSize[3000]"
               data-bind="value:details.adaptiveManagement, disable: isProjectDetailsLocked()"
-              class="form-control" rows="5" ></textarea>
+              class="input-xlarge" rows="5" ></textarea>
     </div>
 </div>

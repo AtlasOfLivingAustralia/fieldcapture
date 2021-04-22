@@ -3,7 +3,7 @@
     <g:if test="${site.poi}">
         <h3>Site: ${site.name}</h3>
         <g:each in="${site.poi}" var="poi">
-            <div class="row">
+            <div class="row-fluid">
                 <h4>Photopoint: ${poi.name?.encodeAsHTML()}</h4>
             <g:if test="${poi.description}">${poi.description}</g:if>
             <g:if test="${poi.photos}">

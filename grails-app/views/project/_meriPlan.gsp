@@ -18,8 +18,8 @@
                 <tbody data-bind="foreach : details.objectives.rows1">
                 <tr>
                     <td class="index"> <span data-bind="text:$index()+1"></span></td>
-                    <td class="original-outcomes"><textarea class="form-control" data-bind="value: description, disable: $parent.isProjectDetailsLocked()" rows="5" ></textarea></td>
-                    <td class="original-assets"><select class="form-control form-control-sm"
+                    <td class="original-outcomes"><textarea data-bind="value: description, disable: $parent.isProjectDetailsLocked()" rows="5" ></textarea></td>
+                    <td class="original-assets"><select class="input-xlarge"
                                             data-bind="options: $parent.protectedNaturalAssests, selectedOptions: assets, disable: $parent.isProjectDetailsLocked()" size="5" multiple="true"></select></td>
                     <td class="remove">
                         <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()"><i class="fa fa-remove" data-bind="click: $parent.removeObjectivesOutcome"></i></span>
@@ -29,7 +29,7 @@
                 <tfoot>
                 <tr>
                     <td colspan="4">
-                        <button type="button" class="btn btn-sm" data-bind="disable:isProjectDetailsLocked(), click: addOutcome">
+                        <button type="button" class="btn btn-small" data-bind="disable:isProjectDetailsLocked(), click: addOutcome">
                             <i class="fa fa-plus"></i> Add a row</button>
                     </td>
 

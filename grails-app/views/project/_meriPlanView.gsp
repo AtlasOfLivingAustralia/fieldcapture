@@ -15,8 +15,8 @@
 
         <h3>MERI Plan Information</h3>
 
-        <div class="row space-after">
-            <div class="col-sm-6">
+        <div class="row-fluid space-after">
+            <div class="span6">
                 <div id="project-objectives" class="well well-small">
                     <label><b>Project Outcomes:</b></label>
                     <table style="width: 100%;">
@@ -40,24 +40,24 @@
                 </div>
             </div>
 
-            <div class="col-sm-6">
+            <div class="span6">
                 <g:render template="/project/meriPlanReadOnly/projectPartnerships"/>
             </div>
         </div>
 
-        <div class="row space-after">
-            <div class="col-sm-6">
+        <div class="row-fluid space-after">
+            <div class="span6">
                 <g:render template="/project/meriPlanReadOnly/projectImplementation"/>
             </div>
 
-            <div class="col-sm-6">
+            <div class="span6">
 
             </div>
         </div>
 
 
         <g:if test="${announcementsVisible && user?.isAdmin}">
-            <div class="row space-after">
+            <div class="row-fluid space-after">
                 <div class="well well-small">
                     <div id="project-keq" class="announcements well well-small">
                         <label><b>Projects Announcements</b></label>
@@ -90,11 +90,11 @@
             </div>
         </g:if>
 
-        <div class="row space-after">
+        <div class="row-fluid space-after">
             <g:render template="/project/meriPlanReadOnly/keq"/>
         </div>
 
-        <div class="row space-after">
+        <div class="row-fluid space-after">
             <div id="national-priorities" class="well well-small">
                 <label><b>National and regional priorities:</b></label>
                 <table style="width: 100%;">
@@ -119,7 +119,7 @@
         </div>
 
         <g:if test="${user?.isAdmin}">
-            <div class="row space-after">
+            <div class="row-fluid space-after">
                 <div class="required">
                     <g:render template="/project/meriPlanReadOnly/meriBudget" model="${[showThemeColumn:true]}"/>
                 </div>
@@ -131,8 +131,8 @@
         </g:if>
 
 
-        <div class="row space-after">
-            <div class="col-sm-6">
+        <div class="row-fluid space-after">
+            <div class="span6">
                 <div class="well well-small">
                     <label><b>Workplace Health and Safety</b></label>
 
@@ -144,7 +144,7 @@
                 </div>
             </div>
 
-            <div class="col-sm-6">
+            <div class="span6">
                 <div class="well well-small">
                     <span><b>&nbsp;Are you willing for your project to be used as a case study by the Department?</b>
                     </span>

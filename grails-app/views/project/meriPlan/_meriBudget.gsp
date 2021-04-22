@@ -32,15 +32,15 @@
         <tr>
             <td class="index"><span data-bind="text:$index()+1"></span></td>
             <g:if test="${showThemeColumn}">
-            <td class="budget-category"><select class="form-control form-control-sm" data-bind="options: $parent.projectThemes, optionsCaption: 'Please select', value:shortLabel, disable: $parent.isProjectDetailsLocked()"> </select></td>
+            <td class="budget-category"><select data-bind="options: $parent.projectThemes, optionsCaption: 'Please select', value:shortLabel, disable: $parent.isProjectDetailsLocked()"> </select></td>
             </g:if>
-            <td class="budget-description"><textarea class="form-control" data-bind="value: description, disable: $parent.isProjectDetailsLocked()" rows="3"></textarea></td>
+            <td class="budget-description"><textarea data-bind="value: description, disable: $parent.isProjectDetailsLocked()" rows="3"></textarea></td>
             <g:if test="${showActivityColumn}">
-                <td class="budget-activities"><select class="form-control form-control-sm" multiple="multiple" data-bind="options:details.services.selectedServices, multiSelect2:{value:activities}, disable: $parent.isProjectDetailsLocked()"></select></td>
+                <td class="budget-activities"><select multiple="multiple" data-bind="options:details.services.selectedServices, multiSelect2:{value:activities}, disable: $parent.isProjectDetailsLocked()"></select></td>
             </g:if>
             <!-- ko foreach: costs -->
             <td class="budget-amount">
-                <input type="number" class="form-control form-control-sm input-small" data-bind="value: dollar, numeric: $root.number, disable: $root.isProjectDetailsLocked()" data-validation-engine="validate[custom[number]]"/>
+                <input type="number" class="input-small" data-bind="value: dollar, numeric: $root.number, disable: $root.isProjectDetailsLocked()" data-validation-engine="validate[custom[number]]"/>
             </td>
             <!-- /ko -->
             <!-- ko if: details.budget.headers().length -->
@@ -68,7 +68,7 @@
         <g:set var="colspan" value="${(showActivityColumn || showThemeColumn) ? 8 : 7 }"/>
         <tr>
             <td data-bind="attr:{colspan:details.budget.columnTotal.length+${colspan}}">
-                <button type="button" class="btn btn-sm" data-bind="disable: isProjectDetailsLocked(), click: addBudget">
+                <button type="button" class="btn btn-small" data-bind="disable: isProjectDetailsLocked(), click: addBudget">
                     <i class="fa fa-plus"></i> Add a row</button>
             </td>
         </tr>

@@ -215,9 +215,9 @@
 					</ul>
 					</g:if>
 					<g:if test="${allowMeriPlanUpload}">
-						<div class="btn fileinput-button btn-sm"
-							 data-bind="fileUploadNoImage:meriPlanUploadConfig"><i class="fa fa-plus"></i>
-							<input class="form-control" type="file" name="meriPlan"><span>Upload MERI Plan</span>
+						<div class="btn fileinput-button"
+							 data-bind="fileUploadNoImage:meriPlanUploadConfig"><i class="icon-plus"></i>
+							<input type="file" name="meriPlan"><span>Upload MERI Plan</span>
 						</div>
 					</g:if>
 					<button type="button" data-bind="click: saveAndSubmitChanges" class="btn btn-sm btn-info">Submit for approval</button>

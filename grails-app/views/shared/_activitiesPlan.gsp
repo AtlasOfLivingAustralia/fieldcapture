@@ -12,7 +12,7 @@
          to the main viewModel. -->
 <span class="badge" style="font-size: 13px;" data-bind="text:meriPlan.meriPlanStatus().text, css:meriPlan.meriPlanStatus().badgeClass"></span>
 <!-- ko stopBinding: true -->
-<div class="row" id="planContainer">
+<div class="row-fluid" id="planContainer">
 
     <div id="status-update-error-placeholder"></div>
     <div id="activityContainer" class="space-before">
@@ -42,9 +42,9 @@
                     </div>
                     <div class="modal-footer control-group">
                         <div class="controls">
-                            <button type="button" class="btn btn-sm btn-success"
+                            <button type="button" class="btn btn-success"
                                     data-bind="click:saveProjectDates">Save</button>
-                            <button class="btn btn-sm" data-bind="click:cancelChangeProjectDates">Cancel</button>
+                            <button class="btn" data-bind="click:cancelChangeProjectDates">Cancel</button>
                         </div>
                     </div>
                 </div>
@@ -83,7 +83,7 @@
                                             <label class="checkbox"><input type="checkbox" data-bind="checkedValue: $data.value, checked: $parent.reportIncludedSections, disable:$parent.disabledSection($data)">
                                                 <span data-bind="text:$data.text"></span>
                                                 <!-- ko if:$data.help -->
-                                                    <i class="fa fa-question-circle" data-bind="popover:{content:$data.help, placement:'top'}"></i>
+                                                    <i class="icon-question-sign" data-bind="popover:{content:$data.help, placement:'top'}"></i>
                                                 <!-- /ko -->
                                             </label>
                                         <!-- /ko -->
@@ -108,11 +108,11 @@
 
                         <div class="controls">
 
-                            <button type="button" class="btn btn-sm btn-success"
+                            <button type="button" class="btn btn-success"
                                     data-bind="click:generateProjectReportHTML">Generate Report (HTML)</button>
-                            <button type="button" class="btn btn-sm btn-success"
+                            <button type="button" class="btn btn-success"
                                     data-bind="click:generateProjectReportPDF">Generate Report (PDF)</button>
-                            <button class="btn btn-sm" data-bind="click:cancelGenerateReport">Cancel</button>
+                            <button class="btn" data-bind="click:cancelGenerateReport">Cancel</button>
                         </div>
                     </div>
                 </div>
@@ -161,19 +161,19 @@
 </div>
 
 <script id="planningTmpl" type="text/html">
-<span class="col-sm-3">
+<span class="span3">
     <span class="badge badge-warning" style="font-size:13px;">This plan is not yet approved</span>
 </span>
 <g:if test="${user?.isAdmin}">
-    <span class="col-sm-9">
+    <span class="span9">
         Build your plan by adding activities and entering project targets. Submit your plan when it is built.
-        <button type="button" data-bind="click:submitPlan" class="btn btn-sm btn-success"><i class="icon-thumbs-up icon-white"></i> Submit plan</button>
+        <button type="button" data-bind="click:submitPlan" class="btn btn-success"><i class="icon-thumbs-up icon-white"></i> Submit plan</button>
     </span>
 </g:if>
 </script>
 
 <script id="submittedTmpl" type="text/html">
-<span class="col-sm-4">
+<span class="span4">
     <span class="badge badge-info" style="font-size:13px;">This plan has been submitted for approval</span>
 </span>
 <span data-bind="visible:!userIsCaseManager()" class="span8">
@@ -183,25 +183,25 @@
 <span data-bind="visible:userIsCaseManager" class="span8">
     <span>Grant manager actions: </span>
     <span class="btn-group">
-        <button type="button" data-bind="click:approvePlan" class="btn btn-sm btn-success"><i class="icon-ok icon-white"></i> Approve plan</button>
-        <button type="button" data-bind="click:rejectPlan" class="btn btn-sm btn-danger"><i class="icon-remove icon-white"></i> Reject plan</button>
+        <button type="button" data-bind="click:approvePlan" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve plan</button>
+        <button type="button" data-bind="click:rejectPlan" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject plan</button>
     </span>
 </span>
 </script>
 
 <script id="approvedTmpl" type="text/html">
-<span class="col-sm-3">
+<span class="span3">
     <span class="badge badge-success" style="font-size:13px;">This plan has been approved</span>
 </span>
-<span data-bind="visible:!userIsCaseManager()" class="col-sm-9">
+<span data-bind="visible:!userIsCaseManager()" class="span9">
     <span>Enter information into each activity. When all activities in a stage are finished (or
     cancelled or deferred) you can submit the stage for validation by clicking the 'report' button.</span>
 </span>
-<span data-bind="visible:userIsCaseManager" class="col-sm-8">
+<span data-bind="visible:userIsCaseManager" class="span8">
     <span>Grant manager actions: </span>
     <span class="btn-group">
-        <button type="button" data-bind="click:modifyPlan" class="btn btn-sm btn-info" title="Allow the user to vary and re-submit the plan">
-            <i class="fa fa-repeat"></i> Modify plan
+        <button type="button" data-bind="click:modifyPlan" class="btn btn-info" title="Allow the user to vary and re-submit the plan">
+            <i class="icon-repeat icon-white"></i> Modify plan
         </button>
     </span>
 </span>
@@ -209,7 +209,7 @@
 
 <script id="stageNotReportableTmpl" type="text/html">
     <g:if test="${fc.userIsAlaOrFcAdmin()}">
-        <button type="button" class="btn delete-stage btn-sm" title="Delete all activities in this stage" data-bind="visible:activities.length > 0, click:deleteStage">Delete stage</button>
+        <button type="button" class="btn delete-stage btn-small" title="Delete all activities in this stage" data-bind="visible:activities.length > 0, click:deleteStage">Delete stage</button>
     </g:if>
 </script>
 
@@ -218,7 +218,7 @@
 <!-- Disable button for editor with help text -->
 <g:if test="${user?.isAdmin}">
 
-    <button type="button" class="btn btn-success btn-sm"
+    <button type="button" class="btn btn-success btn-small"
             data-bind="
             enable:canSubmitReport,
             click:submitReport,
@@ -228,11 +228,11 @@
 <g:else>
     <g:if test="${user?.isEditor}">
         <br/>
-        <button type="button" class="btn btn-success btn-sm" style="margin-top:4px;" disabled="disabled" title="Your Editor access level does not allow submitting of a report, this is an administrator user role. Contact your Administrator or Grant Manager if access upgrade is required">Submit report</button>
+        <button type="button" class="btn btn-success btn-small" style="margin-top:4px;" disabled="disabled" title="Your Editor access level does not allow submitting of a report, this is an administrator user role. Contact your Administrator or Grant Manager if access upgrade is required">Submit report</button>
     </g:if>
 </g:else>
 <g:if test="${fc.userIsAlaOrFcAdmin()}">
-    <button type="button" class="btn delete-stage btn-sm" title="Delete all activities in this stage" data-bind="visible:activities.length > 0, click:deleteStage">Delete stage</button>
+    <button type="button" class="btn delete-stage btn-small" title="Delete all activities in this stage" data-bind="visible:activities.length > 0, click:deleteStage">Delete stage</button>
 </g:if>
 <br/>
 </script>
@@ -253,8 +253,8 @@
 
     <span>Grant manager actions: </span>
     <span class="btn-group">
-        <button type="button" data-bind="enable:canApproveStage, click:approveStage" class="btn btn-sm btn-success"><i class="icon-ok icon-white"></i> Approve</button>
-        <button type="button" data-bind="enable:canRejectStage, click:rejectStage" class="btn btn-sm btn-danger"><i class="icon-remove icon-white"></i> Reject</button>
+        <button type="button" data-bind="enable:canApproveStage, click:approveStage" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve</button>
+        <button type="button" data-bind="enable:canRejectStage, click:rejectStage" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject</button>
     </span>
 </g:if>
 
@@ -268,9 +268,9 @@
     <span>Grant manager actions: </span>
 
     <span class="btn-group">
-        <button type="button" data-bind="enable:canApproveStage, click:approveStage" class="btn btn-sm btn-success"><i class="icon-ok icon-white"></i> Approve</button>
-        <button type="button" data-bind="enable:canRejectStage, click:rejectStage" class="btn btn-sm btn-danger"><i class="icon-remove icon-white"></i> Reject</button>
-        <button type="button" data-bind="enable:canApproveStage, click:variationModal" class="btn btn-sm btn-warning"><i class="icon-remove icon-white"></i> Variation</button>
+        <button type="button" data-bind="enable:canApproveStage, click:approveStage" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve</button>
+        <button type="button" data-bind="enable:canRejectStage, click:rejectStage" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject</button>
+        <button type="button" data-bind="enable:canApproveStage, click:variationModal" class="btn btn-warning"><i class="icon-remove icon-white"></i> Variation</button>
     </span>
 </g:if>
 
@@ -295,8 +295,8 @@
         <textarea rows="5" style="width:97%" data-bind="textInput:reason"></textarea>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-sm btn-success" data-bind="click:submit, text:buttonText, enable:reason" data-dismiss="modal" aria-hidden="true"></button>
-        <button class="btn btn-sm btn-danger" data-dismiss="modal" aria-hidden="true">Cancel</button>
+        <button class="btn btn-success" data-bind="click:submit, text:buttonText, enable:reason" data-dismiss="modal" aria-hidden="true"></button>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
     </div>
 </div>
 <!-- /ko -->

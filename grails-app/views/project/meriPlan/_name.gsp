@@ -1,6 +1,6 @@
 <g:if test="${tableFormatting}">
-    <div class="row">
-        <div class="col-sm-12">
+    <div class="row-fluid">
+        <div class="span12">
             <table class="table">
                 <tbody>
 
@@ -9,7 +9,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <input type="text" class="form-control form-control-sm" data-validation-engine="validate[required,maxSize[${maxSize ?: 150}]]]"
+                        <input type="text" data-validation-engine="validate[required,maxSize[${maxSize ?: 150}]]]"
                                data-bind="value:details.name, disable: isProjectDetailsLocked()" placeholder="${placeholder ?: ""}">
                     </td>
                 </tr>
@@ -23,8 +23,8 @@
     <g:if test="${explanation}">
         ${explanation}
     </g:if>
-    <div class="project-name row">
-        <input class="col-sm-12" type="text" data-validation-engine="validate[required,maxSize[${maxSize ?: 150}]]"
+    <div class="project-name row-fluid">
+        <input class="span12" type="text" data-validation-engine="validate[required,maxSize[${maxSize ?: 150}]]"
                data-bind="value:details.name, disable: isProjectDetailsLocked()"
                placeholder="${placeholder ?: ""}"></input>
     </div>

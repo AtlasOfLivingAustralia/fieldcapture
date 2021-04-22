@@ -7,7 +7,7 @@
         </thead>
         <tbody>
         <tr>
-            <td><textarea class="form-control col-sm-12" rows="5" data-validation-engine="validate[required,maxSize[${maxSize?:1500}]]" data-bind="value:details.rationale, disable: isProjectDetailsLocked()" placeholder="${placeholder?:""}"></textarea></td>
+            <td><textarea class="form-control span12" rows="5" data-validation-engine="validate[required,maxSize[${maxSize?:1500}]]" data-bind="value:details.rationale, disable: isProjectDetailsLocked()" placeholder="${placeholder?:""}"></textarea></td>
         </tr>
         </tbody>
     </table>
@@ -17,7 +17,7 @@
     <g:if test="${explanation}">
         ${explanation}
     </g:if>
-    <div class="rationale row">
-        <textarea class="form-control col-sm-12" rows="5" data-validation-engine="validate[required,maxSize[${maxSize?:1500}]]" data-bind="value:details.rationale, disable: isProjectDetailsLocked()" placeholder="${placeholder?:""}"></textarea>
+    <div class="rationale row-fluid">
+        <textarea class="form-control span12" rows="5" data-validation-engine="validate[required,maxSize[${maxSize?:1500}]]" data-bind="value:details.rationale, disable: isProjectDetailsLocked()" placeholder="${placeholder?:""}"></textarea>
     </div>
 </g:else>
