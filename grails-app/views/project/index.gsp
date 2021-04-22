@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="${hubConfig.skin}"/>
+    <meta name="layout" content="nrm_bs4"/>
     <title>${project?.name.encodeAsHTML()} | Project | Field Capture</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
     <script>
@@ -98,7 +98,7 @@
         fcConfig.project = <fc:renderProject project="${project}"/>;
     </script>
 
-    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="common-bs4.css"/>
     <asset:stylesheet src="project.css"/>
     <asset:stylesheet src="leaflet-manifest.css"/>
     <asset:stylesheet src="feature.css"/>
@@ -109,69 +109,59 @@
     <asset:image id="img-spinner" width="50" height="50" src="loading.gif" alt="Loading"/>
 </div>
 <div class="${containerType}">
-
-    <ul class="breadcrumb">
-        <li>
-            <g:link controller="home">Home</g:link> <span class="divider">/</span>
-        </li>
-        <g:if test="${config?.program || project.managementUnitId}">
-            <g:if test="${project.managementUnitId}">
-                <li>
-                <g:link controller="managementUnit" action="index"
-                        id="${project.managementUnitId}">${project.managementUnitName?.encodeAsHTML()}</g:link> <span class="divider">/</span>
-                </li>
-            </g:if>
-            <g:if test="${config?.program?.name.equals('Regional Land Partnerships') || config?.program?.name.equals('Environmental Restoration Fund')}">
-                <li>
-                    ${config.program.name?.encodeAsHTML()}
-%{--                <g:link controller="program" action="index" id="${config.program.programId}">${config.program.name?.encodeAsHTML()}</g:link> --}%
-                    <span class="divider">/</span>
-                </li>
-            </g:if>
-        </g:if>
-        <g:else>
-            Projects
-        </g:else>
-
-        <li class="active" data-bind="text:name"></li>
-    </ul>
-
-    <div class="row-fluid">
-        <div class="row-fluid">
-            <div class="clearfix">
-                <h1 class="pull-left" data-bind="text:name"></h1>
-                <g:if test="${flash.errorMessage || flash.message}">
-                    <div class="span5">
-                        <div class="alert alert-error">
-                            <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
-                            ${flash.errorMessage?:flash.message}
-                        </div>
-                    </div>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <g:link controller="home">Home</g:link>
+            </li>
+            <g:if test="${config?.program || project.managementUnitId}">
+                <g:if test="${project.managementUnitId}">
+                    <li class="breadcrumb-item">
+                        <g:link controller="managementUnit" action="index"
+                                id="${project.managementUnitId}">${project.managementUnitName?.encodeAsHTML()}</g:link>
+                    </li>
                 </g:if>
-                <div class="pull-right">
-                    <g:if test="${showAlternateTemplate}">
-                        <a class="btn"  href="${createLink(action:'index', id:project.projectId)}">User View</a>
-                    </g:if>
-                    <g:set var="disabled">${(!user) ? "disabled='disabled' title='login required'" : ''}</g:set>
-                    <g:if test="${isProjectStarredByUser}">
-                        <button class="btn" id="starBtn"><i class="icon-star"></i> <span>Remove from favourites</span></button>
-                    </g:if>
-                    <g:else>
-                        <button class="btn" id="starBtn" ${disabled}><i class="icon-star-empty"></i> <span>Add to favourites</span></button>
-                    </g:else>
+                <g:if test="${config?.program?.name.equals('Regional Land Partnerships') || config?.program?.name.equals('Environmental Restoration Fund')}">
+                    <li class="breadcrumb-item">${config.program.name?.encodeAsHTML()}</li>
+                </g:if>
+            </g:if>
+            <g:else>
+                Projects
+            </g:else>
+            <li class="breadcrumb-item active" data-bind="text:name"></li>
+        </ol>
+    </nav>
+    <div class="row projectHeader">
+        <div class="col-sm-9">
+            <h1 class="pull-left float-left" data-bind="text:name"></h1>
+            <g:if test="${flash.errorMessage || flash.message}">
+                <div class="col-sm-5">
+                    <div class="alert alert-danger">
+                        <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
+                        ${flash.errorMessage?:flash.message}
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
+            </g:if>
+        </div> <!-- End of col-sm-5 -->
+        <div class="col-sm-3 float-right">
+                <g:if test="${showAlternateTemplate}">
+                    <a class="btn btn-sm"  href="${createLink(action:'index', id:project.projectId)}">User View</a>
+                </g:if>
+                <g:set var="disabled">${(!user) ? "disabled='disabled' title='login required'" : ''}</g:set>
+                <g:if test="${isProjectStarredByUser}">
+                    <button class="btn btn-sm pull-right" id="starBtn"><i class="fa fa-star"></i> <span>Remove from favourites</span></button>
+                </g:if>
+                <g:else>
+                    <button class="btn btn-sm pull-right" id="starBtn" ${disabled}><i class="fa fa-star-o"></i> <span>Add to favourites</span></button>
+                </g:else>
+        </div> <!-- End of float-right-->
+
+    </div> <!--End of row -->
 
     <!-- content tabs -->
-    <ul id="projectTabs" class="nav nav-tabs big-tabs">
+    <ul id="projectTabs" class="nav nav-tabs" data-tab="tabs" role="tablist">
         <fc:tabList tabs="${projectContent}"/>
     </ul>
-
-
-
-
     <div class="tab-content" style="overflow:visible;display:none">
         <fc:tabContent tabs="${projectContent}"/>
     </div>
@@ -469,7 +459,7 @@
 
             // Star button click event
             $("#starBtn").click(function(e) {
-                var isStarred = ($("#starBtn i").attr("class") == "icon-star");
+                var isStarred = $("#starBtn i").hasClass("fa-star");
                 toggleStarred(isStarred, '${user?.userId?:''}', '${project.projectId}');
             });
 
@@ -484,7 +474,7 @@
 
 
 </asset:script>
-<asset:javascript src="common.js"/>
+<asset:javascript src="common-bs4.js"/>
 <asset:javascript src="tab-init.js"/>
 <asset:javascript src="projects.js"/>
 <asset:javascript src="reporting.js"/>

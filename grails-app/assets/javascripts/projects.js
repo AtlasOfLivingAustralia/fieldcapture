@@ -1,6 +1,7 @@
-//= require jquery.dataTables/jquery.dataTables.js
-//= require jquery.dataTables/jquery.dataTables.bootstrap.js
-//= require jquery.dataTables/dataTables.tableTools.js
+//= require datatables/1.10.16/js/jquery.dataTables
+//= require datatables/1.10.16/js/dataTables.bootstrap4
+//= require datatables/1.10.16/js/dataTables.moment
+//= require datatables/buttons/1.5.1/dataTables.buttons
 //= require wms
 //= require mapWithFeatures.js
 //= require fancybox/jquery.fancybox
@@ -764,7 +765,7 @@ function toggleStarred(isProjectStarredByUser, userId, projectId) {
             if (data.error) {
                 alert(data.error);
             } else {
-                $("#starBtn i").removeClass("icon-star").addClass("icon-star-empty");
+                $("#starBtn i").removeClass("fa-star").addClass("fa-star-o");
                 $("#starBtn span").text("Add to favourites");
             }
         }).fail(function(j,t,e){ alert(t + ":" + e);}).done();
@@ -774,7 +775,7 @@ function toggleStarred(isProjectStarredByUser, userId, projectId) {
             if (data.error) {
                 alert(data.error);
             } else {
-                $("#starBtn i").removeClass("icon-star-empty").addClass("icon-star");
+                $("#starBtn i").removeClass("fa-star-o").addClass("fa-star");
                 $("#starBtn span").text("Remove from favourites");
             }
         }).fail(function(j,t,e){ alert(t + ":" + e);}).done();

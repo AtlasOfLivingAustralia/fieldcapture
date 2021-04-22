@@ -2,13 +2,13 @@
     <div class="control-group form-group row">
         <label class="control-label col-form-label col-sm-2" for="emailAddress">User's email address</label>
         <div class="controls col-sm-2">
-            <input class="input-xlarge form-control form-control-sm validate[required,custom[email]]" id="emailAddress" placeholder="enter a user's email address" type="text"/>
+            <input class="input-xlarge form-control form-control-sm input-medium validate[required,custom[email]]" id="emailAddress" placeholder="enter a user's email address" type="text"/>
         </div>
     </div>
     <div class="control-group form-group row">
         <label class="control-label col-form-label col-sm-2" for="addUserRole">Permission level</label>
         <div class="controls col-sm-2" id="rolesSelect">
-            <g:render id="addUserRole" template="/admin/userRolesSelect" model="[roles:roles, includeEmptyOption: true, selectClass:'form-control']"/>
+            <g:render id="addUserRole" template="/admin/userRolesSelect" model="[roles:roles, includeEmptyOption: true, selectClass:'form-control form-control-sm input-medium']"/>
         </div>
     </div>
     <g:if test="${entityId}">
@@ -18,11 +18,11 @@
         <div class="control-group">
             <label class="control-label" for="projectId">Project</label>
             <div class="controls">
-                <g:select name="project" id="projectId" class="input-xlarge combobox validate[required]" from="${projects}" optionValue="name" optionKey="projectId" noSelection="['':'start typing a project name']" />
+                <g:select name="project" id="projectId" class="form-control form-control-sm input-medium combobox validate[required]" from="${projects}" optionValue="name" optionKey="projectId" noSelection="['':'start typing a project name']" />
             </div>
         </div>
     </g:elseif>
-    <g:else><div class="alert alert-error">Missing model - either <code>projectId</code> or <code>projects</code> must be provided</div></g:else>
+    <g:else><div class="alert alert-danger">Missing model - either <code>projectId</code> or <code>projects</code> must be provided</div></g:else>
     <div class="form-group">
         <div class="group">
             <button id="addUserRoleBtn" class="btn btn-primary">Submit</button>

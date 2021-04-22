@@ -16,13 +16,13 @@
     <tbody data-bind="foreach : details.priorities.rows">
     <tr>
         <td class="index"><span data-bind="text:$index()+1"></span></td>
-        <td class="document-name"><textarea class="input-xlarge" data-validation-engine="validate[required]"
+        <td class="document-name"><textarea class="form-control" data-validation-engine="validate[required]"
                                             data-bind="value: data1, disable: $parent.isProjectDetailsLocked()"
                                             rows="3"></textarea></td>
-        <td class="section"><textarea class="input-xlarge" data-validation-engine="validate[required]"
+        <td class="section"><textarea class="form-control" data-validation-engine="validate[required]"
                                       data-bind="value: data2, disable: $parent.isProjectDetailsLocked()"
                                       rows="5"></textarea></td>
-        <td class="alignment"><textarea class="input-xlarge" data-validation-engine="validate[required]"
+        <td class="alignment"><textarea class="form-control" data-validation-engine="validate[required]"
                                         data-bind="value: data3, disable: $parent.isProjectDetailsLocked()"
                                         rows="5"></textarea></td>
         <td class="remove">
@@ -36,7 +36,7 @@
     <tr>
 
         <td colspan="5">
-            <button type="button" class="btn btn-small"
+            <button type="button" class="btn btn-sm"
                     data-bind="disable: isProjectDetailsLocked(), click: addNationalAndRegionalPriorities">
                 <i class="fa fa-plus"></i> Add a row</button></td>
     </tr>

@@ -3,7 +3,7 @@
     <div class="form-group row">
         <label for="title" class="col-sm-5 col-form-label required">1. Dataset title</label>
         <div class="col-sm-7">
-            <input type="text" class="form-control" id="title" placeholder="" data-validation-engine="validate[required,maxSize[150]]" data-bind="value:name">
+            <input type="text" class="form-control form-control-sm" id="title" placeholder="" data-validation-engine="validate[required,maxSize[150]]" data-bind="value:name">
         </div>
     </div>
     <div class="row form-subheading">
@@ -14,19 +14,19 @@
     <div class="form-group row">
         <label for="projectId" class="col-sm-5 col-form-label">2. Project ID</label>
         <div class="col-sm-7">
-            <input type="text" readonly="readonly" class="form-control" id="projectId" placeholder="" value="${project.grantId}">
+            <input type="text" readonly="readonly" class="form-control form-control-sm" id="projectId" placeholder="" value="${project.grantId}">
         </div>
     </div>
     <div class="form-group row">
         <label for="projectName" class="col-sm-5 col-form-label">3. Project name</label>
         <div class="col-sm-7">
-            <input type="text" readonly="readonly" class="form-control" id="projectName" placeholder="" value="${project.name}">
+            <input type="text" readonly="readonly" class="form-control form-control-sm" id="projectName" placeholder="" value="${project.name}">
         </div>
     </div>
     <div class="form-group row">
         <label for="programName" class="col-sm-5 col-form-label">4. What program does this dataset relate to?</label>
         <div class="col-sm-7">
-            <input type="text" readonly="readonly" class="form-control" id="programName" placeholder="" value="${programName}">
+            <input type="text" readonly="readonly" class="form-control form-control-sm" id="programName" placeholder="" value="${programName}">
         </div>
     </div>
     <div class="row form-subheading">
@@ -38,22 +38,22 @@
     <div class="form-group row">
         <label for="programOutcome" class="col-sm-5 col-form-label required">5. What program outcome does this dataset relate to?</label>
         <div class="col-sm-7">
-            <g:select from="${outcomes}" noSelection="['':'Please select...']" class="form-control" id="programOutcome" name="programOutcome" data-validation-engine="validate[required]" data-bind="value:programOutcome"/>
+            <g:select from="${outcomes}" noSelection="['':'Please select...']" class="form-control form-control-sm" id="programOutcome" name="programOutcome" data-validation-engine="validate[required]" data-bind="value:programOutcome"/>
         </div>
     </div>
     <div class="form-group row">
         <label for="investmentPriority" class="col-sm-5 col-form-label required">6. What primary or secondary investment priorities or assets does this dataset relate to?</label>
         <div class="col-sm-7">
-            <g:select multiple="multiple" from="${priorities}" name="investmentPriority" class="form-control" id="investmentPriority" data-validation-engine="validate[required]" data-bind="selectedOptions:investmentPriorities"/>
+            <g:select multiple="multiple" from="${priorities}" name="investmentPriority" class="form-control form-control-sm" id="investmentPriority" data-validation-engine="validate[required]" data-bind="selectedOptions:investmentPriorities"/>
             <div class="otherPriority">
-                <textarea type="text" class="form-control otherPriorityTextArea" placeholder="Note: This Other Priorities box only enable if other is selected" data-bind="enable: investmentOtherSelected(), value: otherInvestmentPriority"></textarea>            </div>
+                <textarea type="text" class="form-control form-control-sm otherPriorityTextArea" placeholder="Note: This Other Priorities box only enable if other is selected" data-bind="enable: investmentOtherSelected(), value: otherInvestmentPriority"></textarea>            </div>
         </div>
 
     </div>
     <div class="form-group row">
         <label for="term" class="col-sm-5 col-form-label">7. Is this data being collected for reporting against short or medium term outcome statements?</label>
         <div class="col-sm-7">
-            <select class="form-control" id="term" data-bind="value:term">
+            <select class="form-control form-control-sm" id="term" data-bind="value:term">
                 <option></option>
                 <option>Short-term outcome statement</option>
                 <option>Medium-term outcome statement</option>
@@ -64,7 +64,7 @@
     <div class="form-group row">
         <label for="type" class="col-sm-5 col-form-label required">8. Is this (a) a baseline dataset associated with a project outcome i.e. against which, change will be measured, (b) a project progress dataset that is tracking change against an established project baseline dataset or (c) a standalone, foundational dataset to inform future management interventions?</label>
         <div class="col-sm-7">
-            <select class="form-control" id="type" data-validation-engine="validate[required]" data-bind="value:type">
+            <select class="form-control form-control-sm" id="type" data-validation-engine="validate[required]" data-bind="value:type">
                 <option></option>
                 <option>Baseline dataset associated with a project outcome</option>
                 <option>Project progress dataset that is tracking change against an established project baseline dataset</option>
@@ -76,7 +76,7 @@
     <div class="form-group row">
         <label for="measurementTypes" class="col-sm-5 col-form-label required">9. What types of measurements or observations does the dataset include? <br/>To select more than one answer, hold down the ‘CTRL’ button whilst selecting an option from the drop-down list</label>
         <div class="col-sm-7">
-            <select multiple="multiple" type="text" class="form-control" id="measurementTypes" data-validation-engine="validate[required]" data-bind="selectedOptions:measurementTypes">
+            <select multiple="multiple" type="text" class="form-control form-control-sm" id="measurementTypes" data-validation-engine="validate[required]" data-bind="selectedOptions:measurementTypes">
                 <option>Abundance</option>
                 <option>Adoption - climate and market demands</option>
                 <option>Adoption - land resource management practices</option>
@@ -116,7 +116,7 @@
     <div class="form-group row">
         <label for="methods" class="col-sm-5 col-form-label required">10. Identify the method(s) used to collect the data. <br/>To select more than one answer, hold down the ‘CTRL’ button whilst selecting an option from the drop-down list</label>
         <div class="col-sm-7">
-            <select class="form-control" multiple="multiple" id="methods" data-validation-engine="validate[required]" data-bind="selectedOptions:methods">
+            <select class="form-control form-control-sm" multiple="multiple" id="methods" data-validation-engine="validate[required]" data-bind="selectedOptions:methods">
                 <option>Genetic sampling</option>
                 <option>Hair, track, dung sampling</option>
                 <option>Area sampling</option>
@@ -149,13 +149,13 @@
     <div class="form-group row">
         <label for="methodDescription" class="col-sm-5 col-form-label required">11. Describe the method used to collect the data in detail.</label>
         <div class="col-sm-7">
-            <textarea rows="4"  class="form-control" id="methodDescription" placeholder="" data-validation-engine="validate[required,maxSize[2000]]" data-bind="value:methodDescription"></textarea>
+            <textarea rows="4"  class="form-control form-control-sm" id="methodDescription" placeholder="" data-validation-engine="validate[required,maxSize[2000]]" data-bind="value:methodDescription"></textarea>
         </div>
     </div>
     <div class="form-group row">
         <label for="collectionApp" class="col-sm-5 col-form-label">12. Identify any apps used during data collection.</label>
         <div class="col-sm-7">
-            <input type="text"  class="form-control" id="collectionApp" placeholder="" data-bind="value:collectionApp">
+            <input type="text"  class="form-control form-control-sm" id="collectionApp" placeholder="" data-bind="value:collectionApp">
         </div>
     </div>
     <div class="form-group row">
@@ -163,21 +163,21 @@
         (For biophysical/ecological surveys where an app was not used, and where there are no sensitivities in providing a location).
         </label>
         <div class="col-sm-7">
-            <input type="text" class="form-control" id="location" placeholder="" data-bind="value:location">
+            <input type="text" class="form-control form-control-sm" id="location" placeholder="" data-bind="value:location">
         </div>
     </div>
     <div class="form-group row">
         <label for="startDate" class="col-sm-5 col-form-label">14. First collection date.</label>
-        <div class="col-sm-3">
-            <fc:datePicker type="text"   bs4="true" class="form-control" id="startDate" name="startDate" placeholder="" targetField="startDate.date"/>
+        <div class="col-sm-3 input-group input-append">
+            <fc:datePicker type="text"   bs4="bs4" class="form-control form-control-sm dateControl" id="startDate" name="startDate" placeholder="" targetField="startDate.date"/>
         </div>
     </div>
     <div class="form-group row">
         <label for="endDate" class="col-sm-5 col-form-label">15. Last collection date.</label>
-        <div class="col-sm-3">
-            <fc:datePicker type="text"  bs4="true" class="form-control" id="endDate" placeholder="" data-validation-engine="validate[future[startDate]" targetField="endDate.date"/>
+        <div class="col-sm-2 input-group input-append">
+            <fc:datePicker type="text"  bs4="bs4" class="form-control form-control-sm dateControl" id="endDate" placeholder="" data-validation-engine="validate[future[startDate]" targetField="endDate.date"/>
         </div>
-        <div class="col-sm-3" id="dataCollectionOngoingDiv">
+        <div class="col-sm-2" id="dataCollectionOngoingDiv">
             <label class="checkbox">
                 <input type="checkbox" id="dataCollectionOngoing" data-bind="checked:dataCollectionOngoing">
                 Data collection is ongoing
@@ -187,7 +187,7 @@
     <div class="form-group row">
         <label for="addition" class="col-sm-5 col-form-label required">16. Is this data an addition to existing time-series data collected as part of a previous project, or is being collected as part of a broader/national dataset?</label>
         <div class="col-sm-7">
-            <select class="form-control" id="addition" data-validation-engine="validate[required]" data-bind="value:addition">
+            <select class="form-control form-control-sm" id="addition" data-validation-engine="validate[required]" data-bind="value:addition">
                 <option></option>
                 <option>Yes</option>
                 <option>No</option>
@@ -204,7 +204,7 @@
     <div class="form-group row">
         <label for="collectorType" class="col-sm-5 col-form-label required">17. Who developed the dataset?</label>
         <div class="col-sm-7">
-            <select type="text"  class="form-control" id="collectorType"  data-validation-engine="validate[required]" data-bind="value:collectorType">
+            <select type="text"  class="form-control form-control-sm" id="collectorType"  data-validation-engine="validate[required]" data-bind="value:collectorType">
                 <option></option>
                 <option>University researcher</option>
                 <option>Specialist consultant</option>
@@ -218,7 +218,7 @@
     <div class="form-group row">
         <label for="qa" class="col-sm-5 col-form-label required">18. Has a quality assurance check been undertaken on the data?</label>
         <div class="col-sm-7">
-            <select class="form-control" id="qa" data-validation-engine="validate[required]" data-bind="value:qa">
+            <select class="form-control form-control-sm" id="qa" data-validation-engine="validate[required]" data-bind="value:qa">
                 <option></option>
                 <option>Yes</option>
                 <option>No</option>
@@ -229,7 +229,7 @@
     <div class="form-group row">
         <label for="published" class="col-sm-5 col-form-label required">19. Has the data contributed to a publication?</label>
         <div class="col-sm-7">
-            <select class="form-control" id="published" data-validation-engine="validate[required]" data-bind="value:published">
+            <select class="form-control form-control-sm" id="published" data-validation-engine="validate[required]" data-bind="value:published">
                 <option></option>
                 <option>Yes</option>
                 <option>No</option>
@@ -240,7 +240,7 @@
     <div class="form-group row">
         <label for="storageType" class="col-sm-5 col-form-label required">20. Where is the data held?</label>
         <div class="col-sm-7">
-            <select class="form-control" id="storageType" data-validation-engine="validate[required]" data-bind="value:storageType">
+            <select class="form-control form-control-sm" id="storageType" data-validation-engine="validate[required]" data-bind="value:storageType">
                 <option></option>
                 <option>Aurion</option>
                 <option>Cloud</option>
@@ -260,13 +260,13 @@
     <div class="form-group row">
         <label for="publicationUrl" class="col-sm-5 col-form-label">21. For all public datasets, please provide the published location. If stored internally by your organisation, write ‘stored internally’.</label>
         <div class="col-sm-7">
-            <input type="text"  class="form-control" id="publicationUrl" placeholder="" data-bind="value:publicationUrl">
+            <input type="text"  class="form-control form-control-sm" id="publicationUrl" placeholder="" data-bind="value:publicationUrl">
         </div>
     </div>
     <div class="form-group row">
         <label for="format" class="col-sm-5 col-form-label required">22. What format is the dataset?</label>
         <div class="col-sm-7">
-            <select class="form-control" id="format" data-validation-engine="validate[required]" data-bind="value:format">
+            <select class="form-control form-control-sm" id="format" data-validation-engine="validate[required]" data-bind="value:format">
                 <option></option>
                 <option>CSV</option>
                 <option>XML</option>
@@ -285,7 +285,7 @@
     <div class="form-group row">
         <label for="sensitivities" class="col-sm-5 col-form-label required">23. Are there any sensitivities in the dataset?</label>
         <div class="col-sm-7">
-            <select class="form-control" multiple="multiple" id="sensitivities" data-validation-engine="validate[required]" data-bind="selectedOptions:sensitivities">
+            <select class="form-control form-control-sm" multiple="multiple" id="sensitivities" data-validation-engine="validate[required]" data-bind="selectedOptions:sensitivities">
                 <option>No</option>
                 <option>Indigenous/cultural</option>
                 <option>Commercially sensitive</option>
@@ -305,7 +305,7 @@
 
 
         <div class="col-sm-7">
-            <textarea rows="2" class="form-control" id="owner" placeholder="" data-validation-engine="validate[required,maxSize[200]]" data-bind="value:owner"></textarea>
+            <textarea rows="2" class="form-control form-control-sm" id="owner" placeholder="" data-validation-engine="validate[required,maxSize[200]]" data-bind="value:owner"></textarea>
         </div>
     </div>
 
@@ -315,7 +315,7 @@
             <p>Please include the contact name, physical address, email address and phone number where possible</p>
         </div>
         <div class="col-sm-7">
-            <textarea rows="2" class="form-control" id="custodian" placeholder="" data-validation-engine="validate[required,maxSize[300]]" data-bind="value:custodian"></textarea>
+            <textarea rows="2" class="form-control form-control-sm" id="custodian" placeholder="" data-validation-engine="validate[required,maxSize[300]]" data-bind="value:custodian"></textarea>
         </div>
     </div>
 </form>

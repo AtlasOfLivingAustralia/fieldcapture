@@ -23,8 +23,8 @@
             <fc:iconHelp dynamic-help="currentPeriodHelpText"></fc:iconHelp> </span>
     </div>
 
-<span class="badge badge-info" data-bind="if:progress() == 'started'">Reporting form incomplete</span>
-<span class="badge badge-success" data-bind="if:progress() == 'finished'">Reporting form complete</span>
+<span class="badge btn-sm badge-info" data-bind="if:progress() == 'started'">Reporting form incomplete</span>
+<span class="badge btn-sm badge-success" data-bind="if:progress() == 'finished'">Reporting form complete</span>
 
 </script>
 
@@ -35,7 +35,7 @@
 
 <g:if test="${isAdmin || fc.userIsAlaOrFcAdmin()}">
     <p>
-        <button class="btn btn-success btn-small" data-bind="enable:complete,click:submitReport"
+        <button class="btn btn-success btn-sm" data-bind="enable:complete,click:submitReport"
                 title="The reporting form must be marked as complete before this report can be submitted.">Submit report</button>
     </p>
     <span class="badge badge-info" data-bind="if:progress() == 'started'">Reporting form incomplete</span>
@@ -51,12 +51,12 @@
     <p data-bind="visible:report.dateAdjusted"><span class="badge badge-important">Report adjusted</span></p>
     <g:if test="${fc.userIsAlaOrFcAdmin()}">
         <p>
-        <button type="button" data-bind="click:rejectReport" class="btn btn-danger"><i class="fa fa-remove icon-white"></i> Withdraw approval</button>
+        <button type="button" data-bind="click:rejectReport" class="btn btn-sm btn-danger"><i class="fa fa-remove icon-white"></i> Withdraw approval</button>
         </p>
     </g:if>
     <g:if test="${fc.userIsSiteAdmin()}">
         <p data-bind="visible:report.isAdjustable && !report.dateAdjusted">
-            <button type="button" data-bind="click:adjustReport" class="btn btn-danger"><i class="fa fa-edit"></i> Adjustment required</button>
+            <button type="button" data-bind="click:adjustReport" class="btn btn-sm btn-danger"><i class="fa fa-edit"></i> Adjustment required</button>
         </p>
     </g:if>
 
@@ -69,9 +69,9 @@
 <g:if test="${isGrantManager || fc.userIsAlaOrFcAdmin()}">
 
     <span class="btn-group">
-        <button type="button" data-bind="click:approveReport" class="btn btn-success"><i
+        <button type="button" data-bind="click:approveReport" class="btn btn-sm btn-success"><i
                 class="fa fa-check icon-white"></i> Confirm</button>
-        <button type="button" data-bind="click:rejectReport" class="btn btn-danger"><i
+        <button type="button" data-bind="click:rejectReport" class="btn btn-sm btn-danger"><i
                 class="fa fa-remove icon-white"></i> More Information Required</button>
     </span>
     </p>
@@ -106,24 +106,24 @@
 
     <tr>
         <td class="report-actions">
-            <a class="btn btn-container" data-bind="attr:{href:editUrl}, visible:editable"><i
+            <a class="btn btn-sm btn-container" data-bind="attr:{href:editUrl}, visible:editable"><i
                     class="fa fa-edit" title="Complete this report"></i></a>
 
-            <a class="btn btn-container disabled-icon" data-bind="visible:!editable">
+            <a class="btn btn-sm btn-container disabled-icon" data-bind="visible:!editable">
             <i class="fa fa-edit" title="Submitted or approved reports cannot be edited"></i>
             </a>
 
-            <a class="btn btn-container" data-bind="attr:{href:viewUrl}, visible:viewable"><i
+            <a class="btn btn-sm btn-container" data-bind="attr:{href:viewUrl}, visible:viewable"><i
                     class="fa fa-eye" title="View this report"></i></a>
 
-            <a class="btn btn-container disabled-icon" data-bind="visible:!viewable">
+            <a class="btn btn-sm btn-container disabled-icon" data-bind="visible:!viewable">
                 <i class="fa fa-eye" title="Please mark the report as complete before viewing it"></i>
             </a>
 
             <a target="print-report" class="btn btn-container"
                     data-bind="attr:{href:downloadUrl}, visible:viewable"><i
                     class="fa fa-download" title="Download a PDF of this report"></i></a>
-            <a class="btn btn-container disabled-icon" data-bind="visible:!viewable">
+            <a class="btn btn-sm btn-container disabled-icon" data-bind="visible:!viewable">
                 <i class="fa fa-download" title="Please mark the report as complete before generating a PDF"></i>
             </a>
 

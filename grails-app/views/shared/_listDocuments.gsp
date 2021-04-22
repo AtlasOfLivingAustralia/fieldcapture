@@ -1,7 +1,6 @@
 
-<div class="row-fluid row-eq-height" id="${containerId}">
-    <div class="span5">
-        <div class="row-fluid">
+<div class="row row-eq-height" id="${containerId}">
+    <div class="col-sm-5" style="padding-left: 30px">
             <div id="filter-by-stage" class="document-filter-group btn-group pull-right">
                 <a class="btn dropdown-toggle" href="#">
                     <i class="fa fa-filter"></i> Filter by report
@@ -13,8 +12,6 @@
 
             </div>
 
-        </div>
-        <div></div>
         %{-- The use of the width attribute (as opposed to a css style) is to allow for correct resizing behaviour of the DataTable --}%
         <table class="docs-table table" width="100%" style="table-layout:fixed">
             <thead>
@@ -76,34 +73,34 @@
             </tbody>
         </table>
 
+    </div> <!-- span5 -->
+    <div class="fc-resource-preview-container col-sm-7" data-bind="{ template: { name: previewTemplate } }"></div>
+</div>
+<div class="row">
+    <script id="iframeViewer" type="text/html">
+    <div class="well fc-resource-preview-well">
+        <iframe class="fc-resource-preview" data-bind="attr: {src: selectedDocumentFrameUrl}">
+            <p>Your browser does not support iframes <i class="fa fa-frown-o"></i>.</p>
+        </iframe>
     </div>
-    <div class="fc-resource-preview-container span7" data-bind="{ template: { name: previewTemplate } }"></div>
+    </script>
+
+    <script id="xssViewer" type="text/html">
+    <div class="well fc-resource-preview-well" data-bind="html: selectedDocument().embeddedVideo"></div>
+    </script>
+
+    <script id="noPreviewViewer" type="text/html">
+    <div class="well fc-resource-preview-well">
+        <p>There is no preview available for this file.</p>
+    </div>
+    </script>
+
+    <script id="noViewer" type="text/html">
+    <div class="well fc-resource-preview-well">
+        <p>Select a document to preview it here.</p>
+    </div>
+    </script>
 </div>
-
-<script id="iframeViewer" type="text/html">
-<div class="well fc-resource-preview-well">
-    <iframe class="fc-resource-preview" data-bind="attr: {src: selectedDocumentFrameUrl}">
-        <p>Your browser does not support iframes <i class="fa fa-frown-o"></i>.</p>
-    </iframe>
-</div>
-</script>
-
-<script id="xssViewer" type="text/html">
-<div class="well fc-resource-preview-well" data-bind="html: selectedDocument().embeddedVideo"></div>
-</script>
-
-<script id="noPreviewViewer" type="text/html">
-<div class="well fc-resource-preview-well">
-    <p>There is no preview available for this file.</p>
-</div>
-</script>
-
-<script id="noViewer" type="text/html">
-<div class="well fc-resource-preview-well">
-    <p>Select a document to preview it here.</p>
-</div>
-</script>
-
 <g:render template="/shared/documentTemplate"></g:render>
 <asset:script>
     var imageLocation = "${imageUrl}",

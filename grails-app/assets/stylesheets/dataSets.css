@@ -16,3 +16,14 @@ table td.dataset-progress, table th.dataset-progress {
 #dataCollectionOngoingDiv {
     margin-top: 10px;
 }
+input.dateControl {
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: .25rem !important;
+    max-width: 10rem !important;
+}
+
+.input-group-text {
+    padding: 4px 5px;
+    border-radius: 0 4px 4px 0;
+    height: 31px;
+}

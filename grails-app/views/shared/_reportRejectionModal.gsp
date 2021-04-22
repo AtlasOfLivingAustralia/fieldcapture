@@ -15,8 +15,8 @@
         <textarea rows="5" style="width:97%" data-bind="textInput:reason"></textarea>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-success" data-bind="click:submit, text:buttonText, enable:reason" data-dismiss="modal" aria-hidden="true"></button>
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+        <button class="btn btn-sm btn-success" data-bind="click:submit, text:buttonText, enable:reason" data-dismiss="modal" aria-hidden="true"></button>
+        <button class="btn btn-sm btn-danger" data-dismiss="modal" aria-hidden="true">Cancel</button>
     </div>
 </div>
 <!-- /ko -->

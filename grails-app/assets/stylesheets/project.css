@@ -1,6 +1,6 @@
 /*
-*= require jquery.dataTables/dataTables.bootstrap.css
-*= require jquery.dataTables/dataTables.tableTools.css
+*= require datatables/1.10.16/css/dataTables.bootstrap4
+*= require datatables/buttons/1.5.1/css/buttons.bootstrap4
 *= require thumbnail.scroller/2.0.3/jquery.mThumbnailScroller.css
 *= require blueimp/fileupload-9.28.0/jquery.fileupload
 *= require fancybox/jquery.fancybox
@@ -224,4 +224,86 @@
 }
 .terminationReasonSection {
 	padding-bottom: 20px;
+}
+
+#projectTabs li>a {
+	border: solid 1px #dddddd;
+}
+#projectTabs li>a.active {
+	border-bottom-color: transparent;
+}
+input.dateControl {
+	max-width: 150px !important;
+}
+
+span.progress-label {
+	padding-top: 7px !important;
+}
+
+#adminNav .nav-link:after {
+	font-family: 'FontAwesome';
+	content: "\f054";
+	float: right;
+}
+#adminNav .nav-link.active{
+	color:#000;
+	background-color: #eee;
+	border-radius: unset;
+}
+#adminNav .nav-link{
+ border: 1px solid #eee;
+	border-radius: unset;
+}
+#admin .tab-content {
+	border-left: unset !important;
+	border-right: unset !important;
+	border-bottom: unset !important;
+	padding-top: unset !important;
+
+}
+#adminNav .nav-link:first-child {
+	border-top-left-radius: 0.25rem;
+	border-top-right-radius: 0.25rem;
+}
+#adminNav .nav-link:last-child {
+	border-bottom-left-radius: 0.25rem;
+	border-bottom-right-radius: 0.25rem;
+}
+form input.input-large, form textarea.input-large {
+	width: 520px;
+}
+form input.input-medium, form select.input-medium, select.input-medium {
+	width: 300px;
+}
+form .form-group label {
+	margin-bottom: 5px;
+}
+
+#admin form .form-group .input-group-text {
+	padding: 4px 5px;
+	border-radius: 0 4px 4px 0;
+}
+#admin .col-sm-12 {
+	padding-right: 15px;
+	padding-left: 15px;
+}
+.attachDocumentModal {
+	border-bottom: 1px solid #EEEEEE;
+	padding-bottom: 1rem;
+}
+#addUserRoleBtn {
+	margin-left: 19rem;
+}
+
+.overall-risk-label {
+	-ms-flex: 0 0 13.666667% !important;
+	flex: 0 0 13.666667% !important;
+	max-width: 13.666667% !important;
+}
+.input-small {
+	width: 150px !important;
+}
+
+.mr-6 {
+	margin-right: 2.5rem !important;
 }
