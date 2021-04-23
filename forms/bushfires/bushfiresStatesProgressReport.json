@@ -11492,6 +11492,7 @@
                     "width": "10%",
                     "type": "col",
                     "title": "Area which has been surveyed/ assessed, where reporting is area based",
+                    "helpText": "Optional for Site Mapping. For sensitive sites, add hectares manually when required and put Site mapping into a document and attach to the field that appears in this column.",
                     "items": [
                       {
                         "source": "surveyArea",
@@ -11579,7 +11580,7 @@
                     "source": "dateRange",
                     "type": "text",
                     "width": "14%",
-                    "helpText": "Refers to when the visit/s occurred. They can be specific dates, dates ranging from/to, months or seasons"
+                    "helpText": "Refers to when the activity occurred. They can be specific dates, dates ranging from/to, months or seasons"
                   }
                 ],
                 "userAddedRows": true,
@@ -11780,6 +11781,7 @@
                     "width": "10%",
                     "type": "col",
                     "title": "Area where cultural site management work or planning has occurred",
+                    "helpText": "Optional for Site Mapping. For sensitive sites, add hectares manually when required and put Site mapping into a document and attach to the field that appears in this column.",
                     "items": [
                       {
                         "source": "planOrWorkArea",
@@ -12059,6 +12061,7 @@
                     "width": "12%",
                     "type": "col",
                     "title": "Area where the visit has occurred",
+                    "helpText": "Optional for Site Mapping. For sensitive sites, add hectares manually when required and put Site mapping into a document and attach to the field that appears in this column.",
                     "items": [
                       {
                         "source": "areaOfVisit",
