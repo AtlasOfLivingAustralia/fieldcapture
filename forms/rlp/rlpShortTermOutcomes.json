@@ -1382,7 +1382,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "KEQ1 - To what extent are you progressing towards the medium-term outcomes of the program?",
+                "preLabel": "KEQ1 - To what extent are you progressing towards the medium-term project outcome?",
                 "type": "selectOne",
                 "rows": 5,
                 "source": "keq1"
