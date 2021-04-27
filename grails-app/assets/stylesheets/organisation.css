@@ -17,12 +17,6 @@
     width: 53% !important;
 }
 
-.col-sm-3 {
-    -ms-flex: 0 0 31.7%;
-    flex: 0 0 31.7%;
-    max-width: 100%;
-}
-
 .prePopBtn {
     padding: 0px;
 }
@@ -112,4 +106,12 @@ div.dataTables_wrapper div.dataTables_filter input {
 }
 .ml-6 {
     margin-left: 5.66rem !important;
+}
+
+.banner .logo {
+    height: 110px;
+    margin-bottom: 10px;
+    float: left;
+    padding-left: 0px !important;
+    margin-right: 10px;
 }

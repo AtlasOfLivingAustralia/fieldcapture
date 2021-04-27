@@ -49,7 +49,7 @@
 <div class="${containerType}">
     <g:render template="banner" model="${[imageUrl:assetPath(src:'filetypes')]}"/>
 
-    <div id="organisationDetails" style="display:none;">
+    <div id="organisationDetails"  class="clearfix" style="display:none;">
 
         <g:render template="/shared/flashScopeMessage"/>
         <ul class="nav nav-tabs" id="orgTabs" role="tabList">
