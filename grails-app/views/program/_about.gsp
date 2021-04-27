@@ -1,4 +1,4 @@
-<div id="carousel" class="slider-pro row-fluid" data-bind="visible:mainImageUrl()" style="margin-bottom:20px;">
+<div id="carousel" class="slider-pro row" data-bind="visible:mainImageUrl()" style="margin-bottom:20px;">
     <div class="sp-slides">
         <div class="sp-slide">
             <img class="sp-image" data-bind="attr:{'data-src':mainImageUrl}"/>
@@ -151,44 +151,41 @@
 </g:else>
 
 </div>
+<hr/>
 <g:if test="${blog.editable || blog.hasNewsAndEvents || blog.hasProgramStories || blog.hasPhotos}">
-<div class="row-fluid">
-    <hr/>
-    <div class="well-title">Program blog</div>
+<div class="row">
+    <div class="well-title ml-2 col-sm-11">Program blog</div>
     <g:if test="${blog.editable}">
-        <p>
-            <a class="newBlog" href="${g.createLink(controller: 'blog', action: 'create', params:[programId: program.programId, returnTo:g.createLink(controller: 'program', action:'index', id:program.programId)])}"><button class="btn"><i class="fa fa-newspaper-o"></i> New Entry</button></a>
-            <button id="gotoEditBlog" class="btn"><i class="fa fa-edit"></i> Edit</button>
-            </a>
-        </p>
+        <div class="col-sm-11 ml-2">
+            <p>
+                <a class="newBlog" href="${g.createLink(controller: 'blog', action: 'create', params:[programId: program.programId, returnTo:g.createLink(controller: 'program', action:'index', id:program.programId)])}">
+                <button class="btn"><i class="fa fa-newspaper-o"></i> New Entry</button></a>
+                <button id="gotoEditBlog" class="btn"><i class="fa fa-edit"></i> Edit</button>
+                </a>
+            </p>
+        </div>
     </g:if>
 
 
     <g:if test="${blog.hasNewsAndEvents}">
-        <div class="row-fluid">
-            <div class="well-title">News and Events</div>
-            <div class="blog-section">
-                <g:render template="/shared/blog" model="${[blog:blog.blogs, type:'News and Events']}"/>
-            </div>
+        <div class="well-title ml-2 col-sm-11">News and Events</div>
+        <div class="blog-section  ml-2 col-sm-11">
+            <g:render template="/shared/blog" model="${[blog:blog.blogs, type:'News and Events']}"/>
         </div>
     </g:if>
 
     <g:if test="${blog.hasProgramStories}">
-        <div class="row-fluid">
-            <div class="well-title">Program stories</div>
-            <div class="blog-section">
+            <div class="well-title ml-2 col-sm-11">Program stories</div>
+            <div class="blog-section ml-2 col-sm-11">
                 <g:render template="/shared/blog" model="${[blog:blog.blogs, type:'Program Stories']}"/>
             </div>
-        </div>
     </g:if>
 
     <g:if test="${blog.hasPhotos}">
-        <div class="row-fluid">
-            <div class="well-title">Photos</div>
-            <div class="blog-section">
+            <div class="well-title ml-2 col-sm-11">Photos</div>
+            <div class="blog-section ml-2 col-sm-11">
                 <g:render template="/shared/blog" model="${[blog:blog.blogs, type:'Photo']}"/>
             </div>
-        </div>
     </g:if>
 
  </div>

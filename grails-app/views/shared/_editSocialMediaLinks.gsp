@@ -1,9 +1,8 @@
 <div class="control-group form-group row">
-    <div class="col-sm-2"></div>
-    <label class="control-label span3 col-form-label col-sm-1 labelModification"><g:message code="g.socialMedia"/>:<fc:iconHelp><g:message
+    <label class="control-label col-form-label col-sm-3 labelModification"><g:message code="g.socialMedia"/>:<fc:iconHelp><g:message
             code="g.socialMedia.help" args="[entity]"/></fc:iconHelp></label>
 
-    <div class="span9 col-sm-3">
+    <div class="col-sm-6">
         <table class="table links-table controls">
             <tbody data-bind="foreach:transients.socialMedia">
             <tr>

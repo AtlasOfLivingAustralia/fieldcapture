@@ -125,3 +125,9 @@ div.dataTables_wrapper .row .col-sm-12 {
 input.dateControl {
     max-width: 300px !important;
 }
+select#addUserRole {
+    width: 250px;
+}
+input#emailAddress {
+    width: 250px;
+}

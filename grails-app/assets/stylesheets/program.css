@@ -174,3 +174,9 @@ div.dataTables_wrapper div.dataTables_filter label {
 .report-header .header-label {
     font-weight: bold;
 }
+select#addUserRole {
+    width: 250px;
+}
+input#emailAddress {
+    width: 250px;
+}

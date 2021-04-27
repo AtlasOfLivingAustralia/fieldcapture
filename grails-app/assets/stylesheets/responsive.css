@@ -36,14 +36,16 @@
     #facetsContent .clearDates {
         margin-left: 2.5em;
     }
-    .organisation-banner .col-sm-1 {
-        -ms-flex: 0 0 20.333333%;
-        flex: 0 0 20.333333%;
-        max-width: 20.333333%;
-    }
+
     .organisation-banner label {
         text-align: right;
     }
+
+    .prePopBtn {
+        padding: 0px !important;
+        margin-left: -11px !important;
+    }
+
 }
 
 @media only screen and (max-width: 1440px) {
@@ -130,4 +132,11 @@
     .organisation-banner #prepopulateFromABN {
         width: 10.75rem;
     }
+
+    #programDetails #about .row .col-sm-11 {
+        -ms-flex: 0 0 98.666667% !important;
+        flex: 0 0 98.666667% !important;
+        max-width: 98.666667% !important;
+    }
+
 }
