@@ -1,8 +1,6 @@
 package au.org.ala.fieldcapture
 
-import pages.AdminTools
 import pages.Organisation
-import pages.ProjectExplorer
 import pages.ProjectImport
 
 class ImportProjectsSpec extends StubbedCasSpec {
