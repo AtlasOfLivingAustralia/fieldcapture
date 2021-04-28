@@ -3,8 +3,8 @@
 <html>
     <head>
         <meta name="layout" content="adminLayout"/>
-        <title>Settings | Admin | Data capture | Atlas of Living Australia</title>
-        <asset:stylesheet src="base.css"/>
+        <title>Settings | Admin | MERIT</title>
+        <asset:stylesheet src="base-bs4.css"/>
     </head>
 
     <body>
@@ -67,6 +67,6 @@
             </tbody>
         </table>
 
-    <asset:javascript src="base.js"/>
+    <asset:javascript src="base-bs4.js"/>
     </body>
 </html>

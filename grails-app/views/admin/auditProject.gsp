@@ -3,22 +3,28 @@
 <html>
 	<head>
 		<meta name="layout" content="adminLayout"/>
-		<title>Admin - Audit Project | Data capture | Atlas of Living Australia</title>
+		<title>${project?.name} | Audit Project | Admin | MERIT</title>
 		<asset:stylesheet src="audit.css"/>
 	</head>
 	<body>
+    <content tag="pageTitle">Audit</content>
 
         <g:set var="searchTerm" value="${params.searchTerm}"/>
 
         <div class="row">
-             <h3>Project Audit - ${project.name}</h3>
-             <h4>Grant Id : ${project.grantId}</h4>
-             <h4>External Id : ${project.externalId}</h4>
+        <div class="col-sm-12"><h3>Project Audit - ${project.name}</h3></div>
+
+        <div class="col-sm-12"><h4>Grant Id : ${project.grantId}</h4></div>
+
+        <div class="col-sm-12"><h4>External Id : ${project.externalId}</h4></div>
+
+
+
         </div>
 
         <div class="row">
-            <div class="span12 text-right">
-                <a href="${createLink(action:'auditProjectSearch',params:[searchTerm: searchTerm])}" class="btn btn-default btn-small"><i class="icon-backward"></i> Back</a>
+            <div class="col-sm-12 text-right">
+                <a href="${createLink(action:'auditProjectSearch',params:[searchTerm: searchTerm])}" class="btn btn-default btn-sm float-right"><i class="fa fa-backward"></i> Back</a>
             </div>
         </div>
 

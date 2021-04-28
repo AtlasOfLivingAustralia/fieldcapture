@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="layout" content="adminLayout"/>
-    <title>Edit | Site Blog| Admin | Data capture | Atlas of Living Australia</title>
+    <title>Site Blog | Admin | MERIT</title>
 
     <script>
         fcConfig = {
@@ -14,16 +14,17 @@
             imageLocation:"${assetPath(src:'/')}"
         }
     </script>
-    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="common-bs4.css"/>
     <g:set var="here" value="${g.createLink(action:'editSiteBlog')}"/>
 </head>
 
 <body>
 <h3 class="editSiteBlog">Edit Site Blog</h3>
+<content tag="pageTitle">Site Blog</content>
 
 <g:render template="/blog/blogSummary"/>
 
-<asset:javascript src="common.js"/>
+<asset:javascript src="common-bs4.js"/>
 <asset:javascript src="blog.js"/>
 <asset:deferredScripts/>
 </body>

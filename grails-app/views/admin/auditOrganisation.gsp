@@ -3,10 +3,11 @@
 <html>
 	<head>
 		<meta name="layout" content="adminLayout"/>
-		<title>Admin - Audit Organisation | MERIT | Atlas of Living Australia</title>
+		<title>${organisation?.name} | Admin | MERIT</title>
         <asset:stylesheet src="audit.css"/>
 	</head>
 	<body>
+    <content tag="pageTitle">Audit</content>
         <g:set var="searchTerm" value="${params.searchTerm}"/>
 
 
@@ -14,8 +15,8 @@
 
 
         <div class="row">
-            <div class="span12 text-right">
-                <a href="${createLink(action:'auditOrganisationSearch',params:[searchTerm: searchTerm])}" class="btn btn-default btn-small"><i class="icon-backward"></i> Back</a>
+            <div class="col-sm-12 text-right">
+                <a href="${createLink(action:'auditOrganisationSearch',params:[searchTerm: searchTerm])}" class="btn btn-default btn-sm"><i class="fa fa-backward"></i> Back</a>
             </div>
         </div>
 

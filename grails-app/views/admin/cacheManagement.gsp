@@ -2,21 +2,22 @@
 <html>
 <head>
     <meta name="layout" content="adminLayout"/>
-    <title>Cache Management |  Admin | MERIT</title>
-    <asset:stylesheet src="base.css"/>
+    <title>Cache Management | Admin | MERIT</title>
+    <asset:stylesheet src="base-bs4.css"/>
 </head>
 
 <body>
-<div class="row-fluid">
-    <h3>Caches</h3>
-    <ul class="unstyled">
+<content tag="pageTitle">Caches</content>
+<h3>Caches Management</h3>
+<div class="row">
+    <ul>
         <g:each in="${cacheRegions}" var="cache">
-            <li><form action="clearCache"><button type="submit" class="btn" id="${cache}">Clear</button> ${cache} <input type="hidden" name="cache" value="${cache}"></form></li>
+            <li class="nav mb-2"><form action="clearCache"><button type="submit" class="btn btn-sm btn-danger" id="${cache}"><i class="fa fa-times"></i> Clear</button> ${cache} <input type="hidden" name="cache" value="${cache}"></form></li>
         </g:each>
 
     </ul>
 
 </div>
-<asset:javascript src="base.js"/>
+<asset:javascript src="base-bs4.js"/>
 </body>
 </html>

@@ -3,17 +3,17 @@
 <form id="performance-report-form" class="form-actions">
 
     <strong>Compare performance:</strong>
-    <div class="row-fluid">
-        <span class="span3">
-            <label for="year">Year: </label><g:select name="year" from="${years}" value="${year}"></g:select>
+    <div class="row-fluid row mb-2">
+        <span class="span3 col-sm-3 pl-0">
+            <label for="year">Year: </label><g:select name="year" from="${years}" value="${year}" class="form-control form-control-sm"></g:select>
         </span>
-        <span class="span3">
-            <label for="state">State: (leave blank for Australia) </label><g:select name="state" from="${states}" value="${state}"></g:select>
+        <span class="span3 col-sm-3 pl-0">
+            <label for="state">State: (leave blank for Australia) </label><g:select name="state" from="${states}" value="${state}" class="form-control form-control-sm"></g:select>
         </span>
 
     </div>
-    <div class="row-fluid">
-        <button class="btn btn-success bottom">Update</button>
+    <div class="row-fluid row">
+        <button class="btn btn-sm btn-success bottom">Update</button>
     </div>
     <script>
         $('#performance-report-form button').click(function(e) {
@@ -32,7 +32,7 @@
 </form>
 
 <g:if test="${results || report}">
-<table class="row-fluid performance-report">
+<table class="row-fluid row performance-report">
     <thead>
     <tr>
         <th colspan="4">Result of self assessment</th>
