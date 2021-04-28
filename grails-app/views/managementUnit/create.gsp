@@ -26,7 +26,7 @@
                 <g:link controller="home">Home</g:link>
             </li>
             <li class="breadcrumb-item"><g:link controller="program" action="list">Programmes</g:link></li>
-            <li class="breadcrumb-item active"> ${program.name}</li>
+            <li class="breadcrumb-item active"> ${program?.name}</li>
             <li class="breadcrumb-item active"><g:message code="managementUnit.breadcrumb.create"/></li>
         </ol>
 

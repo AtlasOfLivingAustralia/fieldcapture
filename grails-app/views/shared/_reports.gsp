@@ -72,7 +72,7 @@
             <td data-bind="text:meriPlanStatus()"></td>
             <td data-bind="click:toggleHistory">
                 <div class="layout-container">
-                    <em data-bind="visible:!historyVisible()">Show history </em><i class="see-more icon-plus pointer"></i><em data-bind="visible:historyVisible()">Hide history </em><i class="icon-minus see-more pointer"></i>
+                    <em data-bind="visible:!historyVisible()">Show history </em><i class="see-more fa fa-plus icon-plus pointer"></i><em data-bind="visible:historyVisible()">Hide history </em><i class="icon-minus see-more pointer"></i>
                 </div>
             </td>
             <g:if test="${allowProjectRecommendation}">
