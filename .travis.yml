@@ -8,6 +8,7 @@ branches:
   only:
   - master
   - dev
+  - /^feature\/.*$/
   - /^hotfix\/.*$/
 node_js:
   - 12
