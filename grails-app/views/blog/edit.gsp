@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta name="layout" content="nrm_bs4"/>
-    <title>Edit | Blog Entry | Field Capture</title>
+    <title>Edit | Blog Entry | MERIT</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
     <script>
         var fcConfig = {
