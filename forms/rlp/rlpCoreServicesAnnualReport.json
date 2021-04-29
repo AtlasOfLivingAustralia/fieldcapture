@@ -657,12 +657,14 @@
                   {
                     "title": "2021/22 ($)",
                     "source": "investment2021_22",
-                    "type": "number"
+                    "type": "number",
+                    "readonly": true
                   },
                   {
                     "title": "2022/23 ($)",
                     "source": "investment2022_23",
-                    "type": "number"
+                    "type": "number",
+                    "readonly": true
                   },
                   {
                     "title": "Total ($)",
@@ -746,13 +748,15 @@
                     "title": "2021/22",
                     "source": "contractWorkforce2021_22",
                     "type": "number",
-                    "width": "10%"
+                    "width": "10%",
+                    "readonly": true
                   },
                   {
                     "title": "2022/23",
                     "source": "contractWorkforce2022_23",
                     "type": "number",
-                    "width": "10%"
+                    "width": "10%",
+                    "readonly": true
                   },
                   {
                     "title": "Total",
@@ -827,13 +831,15 @@
                     "title": "2021/22",
                     "source": "organisationWorkforce2021_22",
                     "type": "number",
-                    "width": "10%"
+                    "width": "10%",
+                    "readonly": true
                   },
                   {
                     "title": "2022/23",
                     "source": "organisationWorkforce2022_23",
                     "type": "number",
-                    "width": "10%"
+                    "width": "10%",
+                    "readonly": true
                   },
                   {
                     "title": "Total",
@@ -908,12 +914,14 @@
                   {
                     "title": "2021/22 ($)",
                     "source": "serviceSubcontracted2021_22",
-                    "type": "number"
+                    "type": "number",
+                    "readonly": true
                   },
                   {
                     "title": "2022/23 ($)",
                     "source": "serviceSubcontracted2022_23",
-                    "type": "number"
+                    "type": "number",
+                    "readonly": true
                   },
                   {
                     "title": "Total ($)",
