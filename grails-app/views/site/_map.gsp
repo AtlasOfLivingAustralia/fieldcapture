@@ -1,59 +1,66 @@
 <!-- ko stopBinding: true -->
 <div id="sitemap">
             <script type="text/javascript" src="${grailsApplication.config.google.drawmaps.url}"></script>
-            <div class="row-fluid">
+            <div class="row">
                 <g:hiddenField name="id" value="${site?.siteId}"/>
-                <div>
+                <div class="col-sm-8">
                     <label for="name">Site name</label>
                     <h1>
                         <input data-bind="value: name" data-validation-engine="validate[required]"
-                               class="span8" id="name" type="text" value="${site?.name?.encodeAsHTML()}"
+                               class="form-control form-control-sm" id="name" type="text" value="${site?.name?.encodeAsHTML()}"
                                placeholder="Enter a name for the new site"/>
                     </h1>
                 </div>
             </div>
             <g:if test="${project && controllerName.equals('site')}">
-            <div class="row-fluid" style="padding-bottom:15px;">
-                <span>Project name:</span>
-                <g:link controller="project" action="index" id="${project?.projectId}">${project?.name?.encodeAsHTML()}</g:link>
-            </div>
+                <div class="row" style="padding-bottom:15px;">
+                    <div class="col-sm-8">
+                        <span>Project name: <g:link controller="project" action="index" id="${project?.projectId}">${project?.name?.encodeAsHTML()}</g:link></span>
+                    </div>
+                </div>
             </g:if>
-            <div class="row-fluid">
-                <div class="span3">
+            <div class="row">
+                <div class="col-sm-4">
                     <label for="externalId">External Id
                         <fc:iconHelp title="External id">Identifier code for the site - used in external documents.</fc:iconHelp>
                     </label>
-                    <input data-bind="value:externalId" id="externalId" type="text" class="span12"/>
+                    <div>
+                        <input data-bind="value:externalId" id="externalId" class="form-control form-control-sm input-medium" type="text"/>
+                    </div>
                 </div>
-                <div class="span3">
+                <div class="col-sm-4">
                     <label for="siteType">Type</label>
                     %{--<input data-bind="value: type" id="siteType" type="text" class="span12"/>--}%
-                    <g:select id="siteType"
+                    <div>
+                        <g:select id="siteType"
                               data-bind="value: type"
-                              class="span12"
+                              class="form-control form-control-sm input-medium"
                               name='type'
                               from="['Works Area','Project Extent']"
                               keys="['worksArea','projectArea']"/>
+                    </div>
                 </div>
-                <div class="span3">
+                <div class="col-sm-4">
                     <label for="siteContext">Context</label>
                     %{--<input data-bind="value: context" id="siteContext" type="text" class="span12"/>--}%
-                    <g:select id="siteContext"
+                    <div>
+                        <g:select id="siteContext"
                               data-bind="value: context"
-                              class="span12"
+                              class="form-control form-control-sm input-medium"
                               name='context'
                               from="['choose site context','Pastoral','Industrial','Urban','Coastal', 'Reserve', 'Private land']"
                               keys="['none','Pastoral','Industrial','Urban','Coastal','Reserve', 'Private land']"/>
+                    </div>
                 </div>
 
             </div>
 
-            <div class="row-fluid">
-                <div class="span6">
-                    <fc:textArea data-bind="value: description" id="description" label="Description" class="span12" rows="3" cols="50"/>
+            <div class="row mt-3">
+                <div class="col-sm-6">
+                    <fc:textArea data-bind="value: description" id="description" label="Description" class="form-control form-control-sm" rows="3" cols="50"/>
                 </div>
-                <div class="span6">
-                    <fc:textArea data-bind="value: notes" id="notes" label="Notes" class="span12" rows="3" cols="50"/>
+                <div class="col-sm-6">
+                    <fc:textArea data-bind="value: notes" id="notes" label="Notes" class="form-control form-control-sm" rows="3" cols="50"/>
                 </div>
             </div>
 
@@ -62,19 +69,16 @@
                 a polygon, radius or point. KML, WKT and shape files are supported for uploading polygons.
                 As are PID's of existing features in the Atlas Spatial Portal.</fc:iconHelp>
 
-            <div class="row-fluid">
-
-                <div class="span6">
-                    <div id="mapForExtent" class="smallMap span6" style="width:100%;height:600px;"></div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div id="mapForExtent" class="smallMap w-100" style="height:600px;"></div>
                 </div>
 
-                <div class="span6">
-
+                <div class="col-sm-6">
                     <div class="well well-small">
-
                         <div>
                             <h4>Define extent using:
-                            <g:select class="input-medium" data-bind="value: extentSource" data-validation-engine="validate[funcCall[validateSiteExtent]]"
+                            <g:select class="input-medium form-control form-control-sm" data-bind="value: extentSource" data-validation-engine="validate[funcCall[validateSiteExtent]]"
                                       name='extentSource'
                                       from="['choose type','point','known shape','draw a shape']"
                                       keys="['none','point','pid','drawn']"/>
@@ -137,18 +141,18 @@
                             of interest with a site. Points of interest may include photo points
                             or the locations of previous survey work.</fc:iconHelp>
                         </h4>
-                        <div class="row-fluid" id="pointsOfInterest" >
-                            <div class="span12" data-bind="foreach: poi">
+                        <div class="mt-2 row" id="pointsOfInterest" >
+                            <div class="col-sm-11" data-bind="foreach: poi">
                                 <div>
                                     <div data-bind="template: { name: 'poi'}" ></div>
-                                    <button type="button" class="btn btn-danger" style="margin-bottom:20px;" data-bind="click: $parent.removePOI, visible:!hasPhotoPointDocuments">Remove</button>
+                                    <button type="button" class="mt-2 btn btn-sm btn-danger" style="margin-bottom:20px;" data-bind="click: $parent.removePOI, visible:!hasPhotoPointDocuments">Remove</button>
                                 </div>
                                 <hr/>
                             </div>
                         </div>
-                        <div class="row-fluid">
-                            <button type="button" data-bind="click: newPOI, visible: poi.length == 0" class="btn">Add a POI</button>
-                            <button type="button" data-bind="click: newPOI, visible: poi.length > 0" class="btn">Add another POI</button>
+                        <div class="row">
+                            <button type="button" data-bind="click: newPOI, visible: poi.length == 0" class="btn btn-sm">Add a POI</button>
+                            <button type="button" data-bind="click: newPOI, visible: poi.length > 0" class="btn btn-sm">Add another POI</button>
                         </div>
                     </div>
                 </div>
@@ -160,101 +164,134 @@
 </script>
 
 <script type="text/html" id="point">
-<div class="drawLocationDiv row-fluid">
-    <div class="span12">
-        <div class="row-fluid controls-row">
-            <fc:textField data-bind="value:geometry().decimalLatitude" data-validation-engine="validate[required,custom[number],min[-90],max[0]]" outerClass="span6" label="Latitude"/>
-            <fc:textField data-bind="value:geometry().decimalLongitude" data-validation-engine="validate[required,custom[number],min[-180],max[180]]" data-prompt-position="topRight:-150" outerClass="span6" label="Longitude"/>
+    <div class="drawLocationDiv row">
+        <div class="col-sm-10">
+            <div class="row controls-row mb-2">
+                <fc:textField data-bind="value:geometry().decimalLatitude" data-validation-engine="validate[required,custom[number],min[-90],max[0]]" outerClass="col-sm-6" class="form-control form-control-sm" label="Latitude"/>
+                <fc:textField data-bind="value:geometry().decimalLongitude" data-validation-engine="validate[required,custom[number],min[-180],max[180]]" data-prompt-position="topRight:-150" outerClass="col-sm-6" class="form-control form-control-sm" label="Longitude"/>
+            </div>
+            <div class="row controls-row">
+                <fc:textField data-bind="value:geometry().uncertainty, enable: hasCoordinate()" outerClass="col-sm-4" class="form-control form-control-sm" label="Uncertainty (metres)" data-validation-engine="validate[min[0],custom[integer]]"/>
+                <fc:textField data-bind="value:geometry().precision, enable: hasCoordinate()" outerClass="col-sm-4" class="form-control form-control-sm" label="Precision" data-validation-engine="validate[min[0],custom[number]]"/>
+                %{-- CG - only supporting WGS84 at the moment --}%
+                <fc:textField data-bind="value:geometry().datum, enable: hasCoordinate()" outerClass="col-sm-4" class="form-control form-control-sm" label="Datum" placeholder="WGS84" readonly="readonly"/>
+            </div>
         </div>
-        <div class="row-fluid controls-row">
-            <fc:textField data-bind="value:geometry().uncertainty, enable: hasCoordinate()" outerClass="span4" label="Uncertainty (metres)" data-validation-engine="validate[min[0],custom[integer]]"/>
-            <fc:textField data-bind="value:geometry().precision, enable: hasCoordinate()" outerClass="span4" label="Precision" data-validation-engine="validate[min[0],custom[number]]"/>
-            %{-- CG - only supporting WGS84 at the moment --}%
-            <fc:textField data-bind="value:geometry().datum, enable: hasCoordinate()" outerClass="span4" label="Datum" placeholder="WGS84" readonly="readonly"/>
+        <div class="mt-3 col-sm-10">
+            <div class=" row controls-row gazProperties">
+                <div class="col-sm-8 mb-2">
+                    <span class="label label-success">State/territory</span> <span data-bind="expandable:geometry().state"></span>
+                </div>
+                <div class="col-sm-8 mb-2">
+                    <span class="label label-success">Local Gov. Area</span> <span data-bind="expandable:geometry().lga"></span>
+                </div>
+                <div class="col-sm-8 mb-2">
+                    <span class="label label-success">NRM</span> <span data-bind="expandable:geometry().nrm"></span>
+                </div>
+                <div class="col-sm-8 mb-2">
+                    <span class="label label-success">Locality</span> <span data-bind="text:geometry().locality"></span>
+                </div>
+                <div class="col-sm-8 mb-2">
+                    <span class="label label-success">NVIS major vegetation group:</span> <span data-bind="text:geometry().mvg"></span>
+                </div>
+                <div class="col-sm-8 mb-2">
+                    <span class="label label-success">NVIS major vegetation subgroup:</span> <span data-bind="text:geometry().mvs"></span>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="row-fluid controls-row gazProperties">
-        <span class="label label-success">State/territory</span> <span data-bind="expandable:geometry().state"></span>
-    </div>
-    <div class="row-fluid controls-row gazProperties">
-        <span class="label label-success">Local Gov. Area</span> <span data-bind="expandable:geometry().lga"></span>
-    </div>
-    <div class="row-fluid controls-row gazProperties">
-        <span class="label label-success">NRM</span> <span data-bind="expandable:geometry().nrm"></span>
-    </div>
-    <div class="row-fluid controls-row gazProperties">
-        <span class="label label-success">Locality</span> <span data-bind="text:geometry().locality"></span>
-    </div>
-    <div class="row-fluid controls-row gazProperties">
-        <span class="label label-success">NVIS major vegetation group:</span> <span data-bind="text:geometry().mvg"></span>
-    </div>
 
-    <div class="row-fluid controls-row gazProperties">
-        <span class="label label-success">NVIS major vegetation subgroup:</span> <span data-bind="text:geometry().mvs"></span>
     </div>
-</div>
 </script>
 
     <script type="text/html" id="poi">
-    <div class="drawLocationDiv row-fluid">
-        <div class="span12">
-            <div class="row-fluid alert" style="box-sizing:border-box;" data-bind="visible:hasPhotoPointDocuments">
+    <div class="drawLocationDiv row">
+        <div class="col-sm-10">
+            <div class="row alert" style="box-sizing:border-box;" data-bind="visible:hasPhotoPointDocuments">
                 This point of interest has documents attached and cannot be removed.
             </div>
-            <div class="row-fluid controls-row">
-                <fc:textField data-bind="value:name" outerClass="span6" label="Name" data-validation-engine="validate[required]"/>
+            <div class="row controls-row">
+                <fc:textField data-bind="value:name" outerClass="col-sm-4" class="form-control form-control-sm " label="Name" data-validation-engine="validate[required]"/>
             </div>
-            <div class="row-fluid controls-row">
-                <fc:textArea rows="2" data-bind="value:description" outerClass="span12" class="span12" label="Description"/>
+            <div class="mt-2 row controls-row">
+                <fc:textArea rows="2" data-bind="value:description" outerClass="col-sm-10" class="form-control form-control-sm" label="Description"/>
             </div>
-            <div class="row-fluid controls-row">
-                <label for="type">Point type</label>
-                <g:select data-bind="value: type"
-                          name='type'
-                          from="['choose type','photopoint', 'location of previous surveys', 'other']"
-                          keys="['none','photopoint', 'survey', 'other']"/>
+            <div class=" mt-2 row controls-row">
+                <div class="col-sm-10">
+                    <label for="type">Point type</label>
+                    <div>
+                        <g:select class="from-control form-control-sm custom-input" data-bind="value: type"
+                                  name='type'
+                                  from="['choose type','photopoint', 'location of previous surveys', 'other']"
+                                  keys="['none','photopoint', 'survey', 'other']"/>
+                    </div>
+                </div>
+
             </div>
-            <div class="row-fluid controls-row">
-                <fc:textField data-bind="value:geometry().decimalLatitude" outerClass="span4" label="Latitude" data-validation-engine="validate[required,custom[number],min[-90],max[0]]" data-prompt-position="topRight:-150"/>
-                <fc:textField data-bind="value:geometry().decimalLongitude" outerClass="span4" label="Longitude" data-validation-engine="validate[required,custom[number],min[-180],max[180]]"/>
-                <fc:textField data-bind="value:geometry().bearing" outerClass="span4" label="Bearing (degrees)" data-validation-engine="validate[custom[number],min[0],max[360]]" data-prompt-position="topRight:-150"/>
+            <div class="mt-2 row controls-row">
+
+                    <fc:textField data-bind="value:geometry().decimalLatitude" outerClass="col-sm-4"  class="form-control form-control-sm" label="Latitude" data-validation-engine="validate[required,custom[number],min[-90],max[0]]" data-prompt-position="topRight:-150"/>
+                    <fc:textField data-bind="value:geometry().decimalLongitude" outerClass="col-sm-4" class="form-control form-control-sm" label="Longitude" data-validation-engine="validate[required,custom[number],min[-180],max[180]]"/>
+                    <fc:textField data-bind="value:geometry().bearing" outerClass="col-sm-3" class="form-control form-control-sm" label="Bearing (degrees)" data-validation-engine="validate[custom[number],min[0],max[360]]" data-prompt-position="topRight:-150"/>
             </div>
-            <div class="row-fluid controls-row" style="display:none;">
-                <fc:textField data-bind="value:geometry().uncertainty, enable: hasCoordinate()" outerClass="span4" label="Uncertainty"/>
-                <fc:textField data-bind="value:geometry().precision, enable: hasCoordinate()" outerClass="span4" label="Precision"/>
-                <fc:textField data-bind="value:geometry().datum, enable: hasCoordinate()" outerClass="span4" label="Datum" placeholder="e.g. WGS84"/>
+            <div class="row controls-row" style="display:none;">
+                <div class="col-sm-10">
+                    <fc:textField data-bind="value:geometry().uncertainty, enable: hasCoordinate()" outerClass="col-sm-4" class="form-control form-control-sm" label="Uncertainty"/>
+                    <fc:textField data-bind="value:geometry().precision, enable: hasCoordinate()" outerClass="col-sm-4" class="form-control form-control-sm" label="Precision"/>
+                    <fc:textField data-bind="value:geometry().datum, enable: hasCoordinate()" outerClass="col-sm-3" class="form-control form-control-sm" label="Datum" placeholder="e.g. WGS84"/>
+                </div>
+
             </div>
         </div>
     </div>
     </script>
 
     <script type="text/html" id="pid">
-    <div id="pidLocationDiv" class="drawLocationDiv row-fluid">
-        <div class="span12">
-            <select id="chooseLayer" name="chooseLayer" data-bind="
-            options: layers(),
-            optionsCaption:'Choose a layer...',
-            optionsValue: 'id',
-            optionsText:'name',
-            value: chosenLayer"></select>
-            <select id="chooseShape" name="chooseShape" data-bind="options: layerObjects, disable: layerObjects().length == 0,
-            optionsCaption:'Choose shape ...',
-            optionsValue: 'pid',
-            optionsText:'name', value: layerObject"></select>
-            <div class="row-fluid controls-row" style="display:none;">
-                <span class="label label-success">PID</span> <span data-bind="text:geometry().pid"></span>
+    <div id="pidLocationDiv" class="drawLocationDiv">
+        <div class="row">
+            <div class="col-sm-4">
+                <select id="chooseLayer" name="chooseLayer" data-bind="
+                options: layers(),
+                optionsCaption:'Choose a layer...',
+                optionsValue: 'id',
+                optionsText:'name',
+                value: chosenLayer" class="form-control form-control-sm"></select>
             </div>
-            <div class="row-fluid controls-row">
-                <span class="label label-success">Name</span> <span data-bind="text:geometry().name"></span>
+            <div class="col-sm-4">
+                <select id="chooseShape"   name="chooseShape" data-bind="options: layerObjects, disable: layerObjects().length == 0,
+                optionsCaption:'Choose shape ...',
+                optionsValue: 'pid',
+                optionsText:'name', value: layerObject" class="form-control form-control-sm"></select>
             </div>
-            <div class="row-fluid controls-row" style="display:none;">
-                <span class="label label-success">LayerID</span> <span data-bind="text:geometry().fid"></span>
+        </div>
+
+            <div class="mt-3 row controls-row" style="display:none;">
+                <div class="col-sm-10">
+                    <span class="label label-success">PID</span> <span data-bind="text:geometry().pid"></span>
+                </div>
+
             </div>
-            <div class="row-fluid controls-row">
-                <span class="label label-success">Layer</span> <span data-bind="text:geometry().layerName"></span>
+            <div class="mt-3 row controls-row">
+                <div class="col-sm-10">
+                    <span class="label label-success">Name</span> <span data-bind="text:geometry().name"></span>
+                </div>
             </div>
-            <div class="row-fluid controls-row">
-                <span class="label label-success">Area (Ha)</span> <span data-bind="text:geometry().area() ? geometry().area() * 100 : ''"></span>
+            <div class="mt-3 row controls-row" style="display:none;">
+                <div class="col-sm-10">
+                    <span class="label label-success">LayerID</span> <span data-bind="text:geometry().fid"></span>
+                </div>
+
+            </div>
+            <div class="mt-3 row controls-row">
+                <div class="col-sm-10">
+                    <span class="label label-success">Layer</span> <span data-bind="text:geometry().layerName"></span>
+                </div>
+
+            </div>
+            <div class="mt-3 row controls-row">
+                <div class="col-sm-10">
+                    <span class="label label-success">Area (Ha)</span> <span data-bind="text:geometry().area() ? geometry().area() * 100 : ''"></span>
+
+                </div>
             </div>
         </div>
     </div>
@@ -265,56 +302,56 @@
     </script>
 
     <script type="text/html" id="drawn">
-    <div id="drawnLocationDiv" class="drawLocationDiv row-fluid">
-        <div class="span12">
+    <div id="drawnLocationDiv" class="drawLocationDiv row">
+        <div class="col-sm-10">
 
-            <div class="row-fluid controls-row" style="display:none;">
+            <div class="mt-2 row controls-row" style="display:none;">
                 <span class="label label-success">Type</span> <span data-bind="text:geometry().type"></span>
             </div>
-            <div class="row-fluid controls-row" data-bind="visible: geometry!=null && geometry().areaKmSq!=null && geometry().areaKmSq != '' ">
+            <div class="mt-2 row controls-row" data-bind="visible: geometry!=null && geometry().areaKmSq!=null && geometry().areaKmSq != '' ">
                 <span class="label label-success">Area (Ha)</span> <span data-bind="text:geometry().areaKmSq() ? geometry().areaKmSq()*100: '' "></span>
             </div>
 
-            <div class="row-fluid controls-row gazProperties" data-bind="visible: geometry!=null && geometry().state!=null && geometry().state!=''">
+            <div class="mt-2 row controls-row gazProperties" data-bind="visible: geometry!=null && geometry().state!=null && geometry().state!=''">
                 <span class="label label-success">State/territory</span> <span data-bind="expandable:geometry().state"></span>
             </div>
 
-            <div class="row-fluid controls-row gazProperties" data-bind="visible: geometry!=null && geometry().lga!=null && geometry().lga!=''">
+            <div class="mt-2 row controls-row gazProperties" data-bind="visible: geometry!=null && geometry().lga!=null && geometry().lga!=''">
                 <span class="label label-success">Local Gov. Area</span> <span data-bind="expandable:geometry().lga"></span>
             </div>
 
-            <div class="row-fluid controls-row gazProperties">
+            <div class="mt-2 row controls-row gazProperties">
                 <span class="label label-success">NRM</span> <span data-bind="expandable:geometry().nrm"></span>
             </div>
 
-            <div class="row-fluid controls-row gazProperties">
+            <div class="mt-2 row controls-row gazProperties">
                 <span class="label label-success">Locality</span> <span data-bind="text:geometry().locality"></span>
             </div>
 
-            <div class="row-fluid controls-row gazProperties">
+            <div class="mt-2 row controls-row gazProperties">
                 <span class="label label-success">NVIS major vegetation group:</span> <span data-bind="text:geometry().mvg"></span>
             </div>
 
-            <div class="row-fluid controls-row gazProperties">
+            <div class="mt-2 row controls-row gazProperties">
                 <span class="label label-success">NVIS major vegetation subgroup:</span> <span data-bind="text:geometry().mvs"></span>
             </div>
 
-            <div style="display:none;" class="row-fluid controls-row">
+            <div style="display:none;" class="mt-2 row controls-row">
                 <span class="label label-success">Center</span> <span data-bind="text:geometry().centre"></span>
             </div>
-            <div class="row-fluid controls-row circleProperties propertyGroup">
+            <div class="mt-2 row controls-row circleProperties propertyGroup">
                 <span class="label label-success">Radius (m)</span> <span data-bind="text:geometry().radius"></span>
             </div>
 
-            <div style="display:none;" class="row-fluid controls-row  propertyGroup">
+            <div style="display:none;" class="mt-2 row controls-row  propertyGroup">
                 <span class="label">GeoJSON</span> <span data-bind="text:ko.toJSON(geometry())"></span>
             </div>
 
-            <div class="row-fluid controls-row rectangleProperties propertyGroup">
+            <div class="mt-2 row controls-row rectangleProperties propertyGroup">
                 <span class="label label-success">Latitude (SW)</span> <span data-bind="text:geometry().minLat"></span>
                 <span class="label label-success">Longitude (SW)</span> <span data-bind="text:geometry().minLon"></span>
             </div>
-            <div class="row-fluid controls-row rectangleProperties propertyGroup">
+            <div class="mt-2 row controls-row rectangleProperties propertyGroup">
                 <span class="label label-success">Latitude (NE)</span> <span data-bind="text:geometry().maxLat"></span>
                 <span class="label label-success">Longitude (NE)</span> <span data-bind="text:geometry().maxLon"></span>
             </div>

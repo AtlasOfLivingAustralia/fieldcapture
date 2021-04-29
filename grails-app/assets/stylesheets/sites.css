@@ -38,3 +38,17 @@
  #sitesActivityTab li>a.active {
     border-bottom-color: transparent;
 }
+ .overflow-x-scroll {
+     overflow-x: scroll;
+ }
+
+ .input-medium {
+     width: 60%;
+ }
+
+ .custom-input {
+     padding: 5px;
+     border-radius: 0.25rem;
+     border: 1px solid #ced4da;
+     width: 207px;
+ }
