@@ -1,0 +1,20 @@
+//= require common-bs4
+//= require wms
+//= require mapWithFeatures.js
+//= require fancybox/jquery.fancybox
+//= require bootstrap-combobox/bootstrap-combobox.js
+//= require jquery.shorten/jquery.shorten.js
+//= require jquery.appear/jquery.appear.js
+//= require thumbnail.scroller/2.0.3/jquery.mThumbnailScroller.js
+//= require jquery.columnizer/jquery.columnizer.js
+//= require jquery-gantt/js/jquery.fn.gantt.js
+//= require knockout-repeat/2.1/knockout-repeat.js
+//= require attach-document-no-ui.js
+//= require jquery.fileDownload/jQuery.fileDownload
+//= require sites.js
+//= require activity.js
+//= require projectActivityPlan.js
+//= require projectActivity.js
+//= require projectService
+//= require_self
+

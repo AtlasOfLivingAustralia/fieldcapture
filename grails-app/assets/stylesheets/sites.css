@@ -13,3 +13,28 @@
 #sitesList #map {
     width: 100%;
 }
+.label-info {
+    background-color: #25aed6;
+    border: 1px solid #25aed6;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    color: #FFFFFF;
+}
+
+.label-success {
+    background-color: #006400;
+    border: 1px solid #006400;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    color: #FFFFFF;
+}
+.customCard {
+    border:unset;
+}
+
+ #sitesActivityTab li>a {
+    border: solid 1px #dddddd;
+}
+ #sitesActivityTab li>a.active {
+    border-bottom-color: transparent;
+}
