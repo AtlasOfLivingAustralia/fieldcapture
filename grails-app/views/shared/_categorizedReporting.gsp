@@ -35,7 +35,7 @@
 
 <g:if test="${isAdmin || fc.userIsAlaOrFcAdmin()}">
     <p>
-        <button class="btn btn-success btn-small" data-bind="enable:complete,click:submitReport"
+        <button class="btn btn-success btn-sm" data-bind="enable:complete,click:submitReport"
                 title="The reporting form must be marked as complete before this report can be submitted.">Submit report</button>
     </p>
     <span class="badge badge-info" data-bind="if:progress() == 'started'">Reporting form incomplete</span>
@@ -69,9 +69,9 @@
 <g:if test="${isGrantManager || fc.userIsAlaOrFcAdmin()}">
 
     <span class="btn-group">
-        <button type="button" data-bind="click:approveReport" class="btn btn-success"><i
+        <button type="button" data-bind="click:approveReport" class="btn btn-sm mr-1 btn-success"><i
                 class="fa fa-check icon-white"></i> Confirm</button>
-        <button type="button" data-bind="click:rejectReport" class="btn btn-danger"><i
+        <button type="button" data-bind="click:rejectReport" class="btn btn-sm btn-danger"><i
                 class="fa fa-remove icon-white"></i> More Information Required</button>
     </span>
     </p>
