@@ -19,9 +19,10 @@
     var _defaults = {
       enableForCells: true,
       enableForHeaderCells: false,
-      maxToolTipLength: null
+      maxToolTipLength: null,
+      replaceExisting: true
     };
-    
+
     /**
      * Initialize plugin.
      */
@@ -31,7 +32,7 @@
       if (options.enableForCells) _grid.onMouseEnter.subscribe(handleMouseEnter);
       if (options.enableForHeaderCells) _grid.onHeaderMouseEnter.subscribe(handleHeaderMouseEnter);
     }
-    
+
     /**
      * Destroy plugin.
      */
@@ -39,7 +40,7 @@
       if (options.enableForCells) _grid.onMouseEnter.unsubscribe(handleMouseEnter);
       if (options.enableForHeaderCells) _grid.onHeaderMouseEnter.unsubscribe(handleHeaderMouseEnter);
     }
-    
+
     /**
      * Handle mouse entering grid cell to add/remove tooltip.
      * @param {jQuery.Event} e - The event
@@ -49,18 +50,21 @@
       if (cell) {
         var $node = $(_grid.getCellNode(cell.row, cell.cell));
         var text;
-        if ($node.innerWidth() < $node[0].scrollWidth) {
-          text = $.trim($node.text());
-          if (options.maxToolTipLength && text.length > options.maxToolTipLength) {
-            text = text.substr(0, options.maxToolTipLength - 3) + "...";
+        if (!$node.attr("title") || options.replaceExisting) {
+          if ($node.innerWidth() < $node[0].scrollWidth) {
+            text = $.trim($node.text());
+            if (options.maxToolTipLength && text.length > options.maxToolTipLength) {
+              text = text.substr(0, options.maxToolTipLength - 3) + "...";
+            }
+          } else {
+            text = "";
           }
-        } else {
-          text = "";
+          $node.attr("title", text);
         }
-        $node.attr("title", text);
+		    $node = null;
       }
     }
-    
+
     /**
      * Handle mouse entering header cell to add/remove tooltip.
      * @param {jQuery.Event} e     - The event
@@ -69,15 +73,17 @@
     function handleHeaderMouseEnter(e, args) {
       var column = args.column,
           $node = $(e.target).closest(".slick-header-column");
-      if (!column.toolTip) {
+      if (column && !column.toolTip) {
         $node.attr("title", ($node.innerWidth() < $node[0].scrollWidth) ? column.name : "");
       }
+	    $node = null;
     }
-    
+
     // Public API
     $.extend(this, {
       "init": init,
-      "destroy": destroy
+      "destroy": destroy,
+      "pluginName": "AutoTooltips"
     });
   }
 })(jQuery);

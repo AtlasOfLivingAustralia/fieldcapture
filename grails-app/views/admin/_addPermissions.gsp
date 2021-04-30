@@ -1,13 +1,13 @@
 <form class="form-horizontal" id="userAccessForm">
-    <div class="control-group form-group row">
-        <label class="control-label col-form-label col-sm-3" for="emailAddress">User's email address</label>
-        <div class="controls col-sm-9">
-            <input class="input-xlarge form-control validate[required,custom[email]]" id="emailAddress" placeholder="enter a user's email address" type="text"/>
+    <div class="control-group form-group row row-fluid">
+        <label class="control-label col-form-label span2 col-sm-2" for="emailAddress">User's email address</label>
+        <div class="controls span2 col-sm-2">
+            <input class="input-xlarge form-control form-control-sm validate[required,custom[email]]" id="emailAddress" placeholder="enter a user's email address" type="text"/>
         </div>
     </div>
     <div class="control-group form-group row">
-        <label class="control-label col-form-label col-sm-3" for="addUserRole">Permission level</label>
-        <div class="controls col-sm-9" id="rolesSelect">
+        <label class="control-label col-form-label span2 col-sm-2" for="addUserRole">Permission level</label>
+        <div class="controls span2 col-sm-2" id="rolesSelect">
             <g:render id="addUserRole" template="/admin/userRolesSelect" model="[roles:roles, includeEmptyOption: true, selectClass:'form-control']"/>
         </div>
     </div>
@@ -22,15 +22,21 @@
             </div>
         </div>
     </g:elseif>
-    <g:else><div class="alert alert-error">Missing model - either <code>projectId</code> or <code>projects</code> must be provided</div></g:else>
-    <div class="control-group">
-        <div class="controls">
-            <button id="addUserRoleBtn" class="btn btn-primary">Submit</button>
-            <asset:image src="spinner.gif" id="spinner1" class="hide d-none spinner" alt="spinner icon"/>
+    <g:else><div class="alert alert-danger">Missing model - either <code>projectId</code> or <code>projects</code> must be provided</div></g:else>
+    <div class="row row-fluid">
+        <div class="span5 col-sm-5">
+            <div class="form-group text-center" >
+                <div class="group">
+                    <button id="addUserRoleBtn" class="btn btn-sm btn-primary text-center">Submit</button>
+                    <asset:image src="spinner.gif" id="spinner1" class="hide d-none spinner" alt="spinner icon"/>
+                </div>
+            </div>
         </div>
+
     </div>
+
 </form>
-<div id="status" class="offset2 span7 hide d-none alert alert-success">
+<div id="status" class="offset2 col-sm-7 hide d-none alert alert-success">
     <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
     <span></span>
 </div>

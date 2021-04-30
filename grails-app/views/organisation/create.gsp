@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="${hubConfig.skin}"/>
+    <meta name="layout" content="nrm_bs4"/>
     <title>Create | Organisation | Field Capture</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
     <script disposition="head">
@@ -15,19 +15,23 @@
             returnTo: "${params.returnTo}"
             };
     </script>
-    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="common-bs4.css"/>
+    <asset:stylesheet src="organisation.css"/>
 
 </head>
 <body>
 <div class="${containerType}">
-    <ul class="breadcrumb">
-        <li>
-            <g:link controller="home">Home</g:link> <span class="divider">/</span>
-        </li>
-        <li class="active"><g:link controller="organisation" action="list">Organisations</g:link> <span class="divider">/</span></li>
-        <li class="active" data-bind="text:breadcrumbName"></li>
-    </ul>
-
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <g:link controller="home">Home</g:link>
+            </li>
+            <li class="breadcrumb-item">
+                <g:link controller="organisation" action="list">Organisations</g:link>
+            </li>
+            <li class="breadcrumb-item" data-bind="text:breadcrumbName"></li>
+        </ol>
+    </nav>
     <g:render template="organisationDetails"/>
 
     <div class="form-actions">
@@ -87,7 +91,7 @@
     });
 
 </asset:script>
-<asset:javascript src="common.js"/>
+<asset:javascript src="common-bs4.js"/>
 <asset:javascript src="attach-document-no-ui.js"/>
 <asset:javascript src="organisation.js"/>
 <asset:deferredScripts/>

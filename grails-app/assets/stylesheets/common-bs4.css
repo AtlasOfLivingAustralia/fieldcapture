@@ -1,6 +1,6 @@
 /*
 *= require base-bs4
-*= require bootstrap-datepicker/css/datepicker
+*= require bootstrap-datepicker/css/datepicker.css
 *= require jquery.validationEngine/3.1.0/validationEngine.jquery
 *= require datatables/1.10.16/css/dataTables.bootstrap4
 *= require datatables/buttons/1.5.1/css/buttons.bootstrap4
@@ -93,13 +93,13 @@ table td.report-name, table th.report-name {
     width:45%;
 }
 table td.report-start, table th.report-start {
-    width:15%;
+    width:13%;
 }
 table td.report-end, table th.report-end {
-    width:15%;
+    width:12%;
 }
 table td.report-status, table th.report-status {
-    width:15%;
+    width:20%;
 }
 
 #editor-button-bar .wmd-button-row {

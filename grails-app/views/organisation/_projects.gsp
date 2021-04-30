@@ -1,8 +1,8 @@
 <g:if test="${!disableProjectCreation}">
-    <div class="row-fluid">
+    <div class="row ">
         <a href="${createLink(controller: 'project', action: 'create', params: [organisationId: organisation.organisationId])}"
            class="btn btn-small pull-right">
-            <i class="icon-file"></i>&nbsp;<g:message code="project.create.crumb"/></a>
+            <i class="fa fa-file"></i>&nbsp;<g:message code="project.create.crumb"/></a>
     </div>
 </g:if>
 <g:if test="${organisation.projects}">
@@ -16,8 +16,8 @@
     </table>
 </g:if>
 <g:else>
-    <div class="row-fluid">
-        <span class="span12"><h4>${organisation.name?.encodeAsHTML()} is not currently involved in any projects.</h4></span>
+    <div class="row">
+        <span class="col-sm-12 ml-3"><h4>${organisation.name?.encodeAsHTML()} is not currently involved in any projects.</h4></span>
     </div>
 </g:else>
 

@@ -229,7 +229,10 @@ class AddActivitySpec extends StubbedCasSpec {
             hasBeenReloaded()
         }
 
-        plansAndReports.activities.size() == 1 && plansAndReports.activities.find { it.description == 'Test activity [edited]' } == null
+        waitFor {
+
+            plansAndReports.activities.size() == 1 && plansAndReports.activities.find { it.description == 'Test activity [edited]' } == null
+        }
     }
 
 

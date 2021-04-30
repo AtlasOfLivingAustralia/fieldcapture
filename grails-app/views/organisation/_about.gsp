@@ -1,4 +1,4 @@
-<div id="carousel" class="slider-pro row-fluid" data-bind="visible:mainImageUrl()" style="margin-bottom:20px;">
+<div id="carousel" class="slider-pro row" data-bind="visible:mainImageUrl()" style="margin-bottom:20px;">
     <div class="sp-slides">
         <div class="sp-slide">
             <img class="sp-image" data-bind="attr:{'data-src':mainImageUrl}"/>
@@ -16,8 +16,8 @@
 </div>
 
 <div data-bind="visible:description">
-    <div class="span12 well">
-        <div class="well-title">About ${organisation.name?.encodeAsHTML()}</div>
+    <div class="col-sm-12 card customCard">
+        <div class="card-title">About ${organisation.name?.encodeAsHTML()}</div>
 
         <span id="orgDescription" data-bind="html:description.markdownToHtml()"></span>
 

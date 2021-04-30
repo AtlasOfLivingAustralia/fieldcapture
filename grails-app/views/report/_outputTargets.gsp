@@ -13,6 +13,23 @@
     #outputTargets table {
         width:100%;
     }
+    #outputTargets_wrapper{
+        overflow-x: auto;
+    }
+    div.dataTables_wrapper div.dataTables_filter label {
+        font-weight: normal !important;
+        white-space: nowrap !important;
+        text-align: left !important;
+        margin-left: -0.9rem !important;
+    }
+    div.dt-buttons {
+        position: relative;
+        float: left;
+        margin-left: -14px;
+    }
+    table#outputTargets {
+        margin-left: -0.9rem;
+    }
     </style>
 </head>
 <table id="outputTargets" class="table table-striped">

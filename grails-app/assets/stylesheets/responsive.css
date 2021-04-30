@@ -1,0 +1,142 @@
+@media only screen and (max-width: 1024px) {
+    .nav.navbar-nav li {
+        margin-right:-10px
+    }
+    .page-header .navbar {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    .page-header .navbar .container, .page-header > .navbar > .container-fluid {
+        max-width: 1024px !important;
+    }
+    .page-header > .navbar > .container-fluid {
+        padding: 0px !important;
+    }
+
+    .page-header-menu .container, .page-header-menu .container-fluid {
+        max-width: 1024px;
+    }
+    .page-header-menu .container #dcNav .navbar, .page-header-menu .container-fluid #dcNav .navbar {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    .page-header-menu .container-fluid {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+    #stats-holder .statistics .row .col-sm-4 {
+        width: 31.623931623931625%;
+        *width: 31.570740134569924%;
+    }
+
+    #facetsContent .input-group .dataClass {
+        width: 3em;
+    }
+
+    #facetsContent .clearDates {
+        margin-left: 2.5em;
+    }
+
+    .organisation-banner label {
+        text-align: right;
+    }
+
+    .prePopBtn {
+        padding: 0px !important;
+        margin-left: -11px !important;
+    }
+
+}
+
+@media only screen and (max-width: 1440px) {
+    .organisation-banner .col-sm-1 {
+        -ms-flex: 0 0 20.333333%;
+        flex: 0 0 20.333333%;
+        max-width: 20.333333%;
+    }
+    .organisation-banner label {
+        text-align: right;
+    }
+}
+
+@media only screen  and (max-width: 768px){
+
+    .page-header-menu .container #dcNav .navbar {
+        padding-left: 20px;
+        padding-right: 20px;
+        display: -ms-flexbox !important;
+        display: flex !important;
+        -ms-flex-preferred-size: auto;
+        flex-basis: auto;
+    }
+
+    .page-header-menu #dcNav .navbar .hidden-desktop {
+        display: block !important;
+    }
+
+    .page-header-menu .container #dcNav .navbar #nav-items {
+        max-height: 100%;
+    }
+    .page-header-bs4 .page-header-menu {
+        height: auto;
+    }
+    span.merit {
+        font-family: 'Oswald', sans-serif;
+        font-size: 18px;
+        padding-left: 5px;
+        margin: 0 0 0 5px;
+        border-left: 1px solid #93a4aa;
+    }
+
+    .clearDates {
+        margin-left: -33px;
+    }
+    #facetsContent .input-group .dataClass {
+        width: 3em;
+    }
+    .page-header > .navbar {
+        padding-right: 5px !important;
+        padding-left: 5px !important;
+    }
+
+    .page-header-menu .container-fluid {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+    .organisation-banner .col-sm-1 {
+        -ms-flex: 0 0 20.333333%;
+        flex: 0 0 20.333333%;
+        max-width: 20.333333%;
+    }
+    .organisation-banner label {
+        text-align: right;
+    }
+}
+@media only screen and (max-width: 425px) {
+    .greeting {
+        padding-left: 300px;
+    }
+
+}
+
+.statHeight {
+    height: 195px;
+}
+
+@media (min-width: 576px) {
+    #reportContents .report-section .col-sm-2 {
+        -ms-flex: 0 0 13.666667%;
+        flex: 0 0 13.666667%;
+        max-width: 13.666667%;
+    }
+    .organisation-banner #prepopulateFromABN {
+        width: 10.75rem;
+    }
+
+    #programDetails #about .row .col-sm-11 {
+        -ms-flex: 0 0 98.666667% !important;
+        flex: 0 0 98.666667% !important;
+        max-width: 98.666667% !important;
+    }
+
+}

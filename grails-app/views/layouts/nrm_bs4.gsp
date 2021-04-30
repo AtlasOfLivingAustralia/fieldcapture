@@ -63,53 +63,45 @@
     </g:if>
 
     <div class="navbar navbar-static-top navbar-expand-md navbar-light" id="header">
+        <div class="${containerType}">
+            <g:if test="${hubConfig.logoUrl}">
+                <div class="navbar-nav logo">
 
-        <g:if test="${hubConfig.logoUrl}">
-            <div class="navbar-nav logo">
-
-                <a href="${createLink(controller: "home")}">
-                    <asset:image src="ag-Inline_W.png" alt="${hubConfig.title}"/>
-                </a>
-
-                <g:if test="${hubConfig.title}"><div class="d-flex align-items-center"><span
-                        class="merit">${hubConfig.title}</span></div></g:if>
-            </div>
-        </g:if>
-        <div class="ml-md-auto text-right">
-            <g:if test="${fc.currentUserDisplayName()}">
-                <div class="greeting text-right">G'day <fc:currentUserDisplayName/></div>
+                    <a href="${createLink(controller: "home")}">
+                        <asset:image src="ag-Inline_W.png" alt="${hubConfig.title}"/>
+                        <g:if test="${hubConfig.title}"><span
+                                class="merit">${hubConfig.title}</span></g:if>
+                    </a>
+                </div>
             </g:if>
+            <div class="ml-md-auto text-right">
+                <g:if test="${fc.currentUserDisplayName()}">
+                    <div class="greeting text-right">G'day <fc:currentUserDisplayName/></div>
+                </g:if>
 
-            <div class="btn-group login-logout">
-                <auth:loginLogout
-                        loginReturnToUrl="${createLink(controller:'home', action:'login', absolute:true)}"
-                        logoutReturnToUrl="${grailsApplication.config.grails.serverURL}"
-                        logoutUrl="${createLink(controller: 'logout', action: 'logout')}"
-                                      cssClass="btn btn-small btn-inverse btn-login"/>
+                <div class="btn-group login-logout">
+                    <auth:loginLogout
+                            loginReturnToUrl="${createLink(controller:'home', action:'login', absolute:true)}"
+                            logoutReturnToUrl="${grailsApplication.config.grails.serverURL}"
+                            logoutUrl="${createLink(controller: 'logout', action: 'logout')}"
+                            cssClass="btn btn-small btn-inverse btn-login"/>
+                </div>
+
             </div>
-
         </div>
+
 
     </div><!--/.navbar -->
 
     <div class="page-header-menu">
-
-
+    <div class="${containerType}">
         <div id="dcNav" class="clearfix ">
 
-            <div class="navbar navbar-expand-md navbar-light">
+            <nav class="navbar navbar-expand-lg text-light">
+                <a href="#" class="navbar-brand hidden-desktop text-light">Home</a>
 
-                %{--<ul class="navbar-nav">--}%
-                %{--<li><a href="${g.createLink(controller: 'home')}" class="active hidden-lg"><i class="icon-home">&nbsp;</i>&nbsp;Home</a></li>--}%
-                %{--</ul>--}%
-                %{--<a class="btn navbar-btn" data-toggle="collapse" data-target=".navbar-collapse">--}%
-                %{--<span class="icon-bar"></span>--}%
-                %{--<span class="icon-bar"></span>--}%
-                %{--<span class="icon-bar"></span>--}%
-                %{--</a>--}%
-
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav-items" aria-controls="nav-items" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+                <button class="navbar-toggler btn btn-navbar btn-inverse" type="button" data-toggle="collapse" data-target="#nav-items" aria-controls="nav-items" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="text-light fa fa-navicon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="nav-items">
                     <ul class="nav navbar-nav mr-auto">
@@ -117,22 +109,25 @@
                                    items="${['home', 'projectExplorer', 'about', 'help', 'contacts']}"/>
 
                     </ul>
-                    <form class="form-inline ml-auto">
-%{--                        <span id="buttonBar">--}%
-                            <g:render template="/layouts/nrmUserButtons"/>
-                            <g:pageProperty name="page.buttonBar"/>
-%{--                        </span>--}%
+                    <form class="form-inline">
+                        %{--                        <span id="buttonBar">--}%
+                        <g:render template="/layouts/nrmUserButtons"/>
+                        <g:pageProperty name="page.buttonBar"/>
+                        %{--                        </span>--}%
                     </form>
                     <g:form controller="search" method="GET" class="search merit">
 
-                            <input aria-label="Search MERIT" type="text" name="query" id="keywords" placeholder="Search MERIT"
-                                   value="${params.query ? params.query.encodeAsHTML() : ''}">
-                            <input type="submit" value="search" class="search button">
+                        <input aria-label="Search MERIT" type="text" name="query" id="keywords" placeholder="Search MERIT"
+                               value="${params.query ? params.query.encodeAsHTML() : ''}">
+                        <input type="submit" value="search" class="search button">
 
                     </g:form>
                 </div>
-            </div><!-- /.navbar-inner -->
+            </nav><!-- /.navbar-inner -->
         </div>
+    </div>
+
+
     </div>
 
 </div>
