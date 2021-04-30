@@ -51,12 +51,12 @@
     <p data-bind="visible:report.dateAdjusted"><span class="badge badge-important">Report adjusted</span></p>
     <g:if test="${fc.userIsAlaOrFcAdmin()}">
         <p>
-        <button type="button" data-bind="click:rejectReport" class="btn btn-danger"><i class="fa fa-remove icon-white"></i> Withdraw approval</button>
+            <button type="button" data-bind="click:rejectReport" class="btn btn-sm btn-danger"><i class="fa fa-remove icon-white"></i> Withdraw approval</button>
         </p>
     </g:if>
     <g:if test="${fc.userIsSiteAdmin()}">
         <p data-bind="visible:report.isAdjustable && !report.dateAdjusted">
-            <button type="button" data-bind="click:adjustReport" class="btn btn-danger"><i class="fa fa-edit"></i> Adjustment required</button>
+            <button type="button" data-bind="click:adjustReport" class="btn btn-sm btn-danger"><i class="fa fa-edit"></i> Adjustment required</button>
         </p>
     </g:if>
 
