@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
-    <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
+    <meta name="layout" content="nrm_bs4"/>
     <title>Performance Report | MERIT</title>
     <script type="text/javascript">
         fcConfig = {
@@ -10,35 +10,39 @@
             returnToUrl:'${params.returnTo ?: g.createLink(controller:'organisation', action:'index', id:report.organisationId)}'
         };
     </script>
-    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="common-bs4.css"/>
 </head>
 
 <body>
 <div class="${containerType} validationEngineContainer performance-report">
-    <ul class="breadcrumb">
-        <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
-        <li><a class="clickable" href="${g.createLink(controller:'organisation', action:'index', id:report.organisationId)}">Organisation</a> <span class="divider">/</span></li>
-        <li class="active">
-            ${report.name}
-        </li>
-    </ul>
+    <div aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+            <g:link controller="home">Home</g:link>
+            </li>
+            <li class="breadcrumb-item"><a class="clickable" href="${g.createLink(controller:'organisation', action:'index', id:report.organisationId)}">Organisation</a></li>
+            <li class="breadcrumb-item active">
+                ${report.name}
+            </li>
+        </ol>
+    </div>
     <g:render template="/shared/flashScopeMessage"/>
 
     <h3>${report.name}</h3>
     <h4>${organisation.name}</h4>
 
     <br/>
-    <div class="row-fluid">
-        <div class="form-inline span12">
+    <div class="row">
+        <div class="form-inline col-sm-12">
             <label for="whoCompletedForm" class="control-label">Who is the authorised person completing this self assessment?</label>
             &nbsp;
-            <input id="whoCompletedForm" type="text" class="input-xlarge" data-bind="textInput:data.whoCompletedForm" data-validation-engine="validate[required]">
+            <input id="whoCompletedForm" type="text" class="form-control form-control-sm" data-bind="textInput:data.whoCompletedForm" data-validation-engine="validate[required]">
 
         </div>
     </div>
     <br/>
 
-    <table class="row-fluid header" data-bind="with:data">
+    <table class="header" data-bind="with:data">
         <thead>
             <tr>
                 <th rowspan="2" colspan="2">Performance expectation framework</th>
@@ -67,28 +71,28 @@
 
     <br/>
 
-    <div class="row-fluid">
-        <div class="span7">
+    <div class="row mb-2">
+        <div class="col-sm-7">
             <label for="peerAssistanceRequired">Are there any areas of the performance expectations your region would like peer assistance in meeting?</label>
         </div>
-        <div class="span5">
-            <textarea id="peerAssistanceRequired" type="text" data-bind="textInput:data.peerAssistanceRequired"></textarea>
+        <div class="col-sm-5">
+            <textarea id="peerAssistanceRequired" class="form-control form-control-sm" type="text" data-bind="textInput:data.peerAssistanceRequired"></textarea>
         </div>
     </div>
 
-    <div class="row-fluid">
-        <div class="span7">
+    <div class="row">
+        <div class="col-sm-7">
             <label for="peerAssistanceOffered">Are there any areas of the performance expectations your region would be able to provide peer assistance on?</label>
         </div>
-        <div class="span5">
-            <textarea id="peerAssistanceOffered" type="text" data-bind="textInput:data.peerAssistanceOffered"></textarea>
+        <div class="col-sm-5">
+            <textarea id="peerAssistanceOffered" class="form-control form-control-sm" type="text" data-bind="textInput:data.peerAssistanceOffered"></textarea>
         </div>
     </div>
 
     <div class="form-actions">
 
-        <button type="button" id="save" data-bind="click:save" class="btn btn-primary" title="Save edits and return to the previous page">Save</button>
-        <buttom type="button" id="cancel" data-bind="click:cancel" class="btn btn" title="Cancel edits and return to previous page">Cancel</buttom>
+        <button type="button" id="save" data-bind="click:save" class="btn btn-sm btn-primary" title="Save edits and return to the previous page">Save</button>
+        <buttom type="button" id="cancel" data-bind="click:cancel" class="btn btn-sm btn-danger" title="Cancel edits and return to previous page">Cancel</buttom>
 
     </div>
 
@@ -211,7 +215,7 @@
     });
 
 </asset:script>
-<asset:javascript src="common.js"/>
+<asset:javascript src="common-bs4.js"/>
 <asset:javascript src="jquery.appear/jquery.appear.js"/>
 <asset:deferredScripts/>
 
