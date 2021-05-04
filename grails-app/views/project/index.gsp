@@ -98,7 +98,11 @@
         fcConfig.project = <fc:renderProject project="${project}"/>;
     </script>
 
-    <asset:stylesheet src="project-bs4.css"/>
+    <asset:stylesheet src="common-bs4.css"/>
+    <asset:stylesheet src="project.css"/>
+    <asset:stylesheet src="leaflet-manifest.css"/>
+    <asset:stylesheet src="feature.css"/>
+    <asset:stylesheet src="select2-bootstrap4/select2-bootstrap4.css"/>
 
 </head>
 
@@ -481,7 +485,14 @@
         });// end window.load
 
 </asset:script>
-<asset:javascript src="project-bs4.js"/>
+<asset:javascript src="common-bs4.js"/>
+<asset:javascript src="tab-init.js"/>
+<asset:javascript src="projects.js"/>
+<asset:javascript src="reporting.js"/>
+<asset:javascript src="select2/4.0.3/js/select2.full"/>
+<asset:javascript src="forms-knockout-bindings.js"/>
+<asset:javascript src="leaflet-manifest.js"/>
+<asset:javascript src="feature.js"/>
 <asset:deferredScripts/>
 </body>
 </html>
