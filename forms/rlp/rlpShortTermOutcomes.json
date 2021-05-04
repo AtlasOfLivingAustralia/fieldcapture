@@ -66,7 +66,7 @@
                 "name": "investmentPriorities",
                 "columns": [
                   {
-                    "name": "investmentPriorities",
+                    "name": "investmentPriorities2",
                     "dataType": "stringList",
                     "validate": "required",
                     "constraints": {
@@ -91,7 +91,7 @@
                     "behaviour": [
                       {
                         "type": "enable",
-                        "condition": "\"Other\" in investmentPriorities"
+                        "condition": "\"Other\" in investmentPriorities2"
                       }
                     ]
                   },
@@ -1095,7 +1095,7 @@
                               {
                                 "preLabel": "Select the investment priority/s that relate to this outcome",
                                 "type": "select2Many",
-                                "source": "investmentPriorities"
+                                "source": "investmentPriorities2"
                               }
                             ]
                           }
