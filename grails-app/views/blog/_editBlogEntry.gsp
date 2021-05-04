@@ -51,7 +51,7 @@
 
         <div class="col-sm-3" style="text-align:center;background:white" data-bind="visible:!stockIcon()">
             <div style="margin:0;padding:0;width:200px;height:150px;line-height:146px;text-align:left;">
-                <img alt="No image provided" data-bind="attr:{src:imageUrl}">
+                <img alt="No image provided" style="width: 200px" data-bind="attr:{src:imageUrl}"/>
             </div>
         </div>
         <div class="col-sm-3" data-bind="visible:stockIcon()">
@@ -81,7 +81,7 @@
 
             <button class="btn main-image-button" data-bind="click:removeBlogImage, visible:image()"><i
                     class="fa fa-minus"></i> Remove</button>
-
+        </div>
 
         </div>
     </div>
@@ -96,7 +96,7 @@
     <div class="form-group row" data-bind="with:image">
         <label class="control-label required col-sm-3"
                for="declaration">Privacy declaration: <fc:iconHelp>You must accept the declaration before the image can be saved.</fc:iconHelp></label>
-        <div class="col-sm-9">
+        <div class="col-sm-6">
             <label id="thirdPartyDeclarationText" class="checkbox" for="declaration">
                 <input id="declaration" type="checkbox" name="thirdPartyConsentDeclarationMade" data-validation-engine="validate[required]" data-bind="checked:thirdPartyConsentDeclarationMade">
                 <fc:getSettingContent settingType="${au.org.ala.merit.SettingPageType.THIRD_PARTY_PHOTO_CONSENT_DECLARATION}"/>
