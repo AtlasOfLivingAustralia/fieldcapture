@@ -1,109 +1,120 @@
 <%@ page import="au.org.ala.merit.ProjectService" %>
-<div class="row-fluid">
-    <div class="control-group">
+<div class="row mb-2">
+    <div class="col-sm-12">
         <label for="name" class="control-label">Project name</label>
         <div class="controls">
-            <input type="text" class="input-xxlarge" id="name" data-bind="value: name"
+            <input type="text" class="input-large" id="name" data-bind="value: name"
                    data-validation-engine="validate[required]"/>
         </div>
     </div>
 </div>
-<div class="row-fluid">
-    <div class="control-group span5">
-        <label class="control-label">Search for an organisation</label>
-        <input type="text" class="input-xlarge" id="organisation" placeholder="Search organisations..."
+<div class="row mb-2">
+    <div class="control-group col-sm-6">
+        <label class="control-label" for="organisation">Search for an organisation</label>
+        <input type="text" class="input-medium" id="organisation" placeholder="Search organisations..."
                 data-bind="elasticSearchAutocomplete:{url:fcConfig.organisationSearchUrl, value:'name', label:'name', result:transients.selectOrganisation}"/>
     </div>
-    <div class="control-group span6">
-        <label class="control-label">Organisation name</label>
-        <input type="text" class="input-xlarge" readonly="readonly" data-bind="value:organisationName" id="organisationName"/>
+    <div class="control-group col-sm-6">
+        <label class="control-label" for="organisationName">Organisation name</label>
+        <div class="control-label">
+            <input type="text"  disabled="disabled" class=" input-medium disabled" aria-readonly="true" readonly="readonly" data-bind="value:organisationName" id="organisationName"/>
+        </div>
+
     </div>
 </div>
-<div class="row-fluid">
-    <div class="control-group span5">
-        <label class="control-label">Search for a service provider organisation</label>
-        <input type="text" class="input-xlarge" id="serviceProviderOrganisation" placeholder="Search organisations..."
-                data-bind="elasticSearchAutocomplete:{url:fcConfig.organisationSearchUrl, value:'name', label:'name', result:transients.selectServiceProviderOrganisation}"></input>
+<div class="row mb-2">
+    <div class="control-group col-sm-6">
+        <label class="control-label" for="serviceProviderOrganisation">Search for a service provider organisation</label>
+        <div class="control">
+            <input type="text" class="input-medium" id="serviceProviderOrganisation" placeholder="Search organisations..."
+                   data-bind="elasticSearchAutocomplete:{url:fcConfig.organisationSearchUrl, value:'name', label:'name', result:transients.selectServiceProviderOrganisation}"/>
+        </div>
+
     </div>
-    <div class="control-group span6">
+    <div class="control-group col-sm-6">
         <label class="control-label">Service provider organisation name</label>
-        <input type="text" class="input-xlarge" readonly="readonly" data-bind="value:serviceProviderName" id="serviceProviderName"/>
+        <div class="control">
+            <input type="text" class="input-medium disabled" disabled="disabled" readonly="readonly" data-bind="value:serviceProviderName" id="serviceProviderName"/>
+        </div>
+
     </div>
 </div>
 <g:if test="${meriPlanStatus == true && hidePrograms}">
-    <div class="row-fluid">
-        <div class="control-group span4">
+    <div class="row mb-2">
+        <div class="control-group col-sm-6">
             <label for="programId" class="control-label">Program </label>
             <div class="controls">
-                <g:select class="programId select" style="width: 280px" from="${programList}" data-bind="value:programId" optionKey="programId" name="name" id="programId" optionValue="name" disabled="disabled"/>
+                <g:select class="programId select input-medium" from="${programList}" data-bind="value:programId" optionKey="programId" name="name" id="programId" optionValue="name" disabled="disabled"/>
 
             </div>
         </div>
     </div>
 </g:if>
 <g:elseif test="${meriPlanStatus == false  && hidePrograms}">
-    <div class="row-fluid">
-        <div class="control-group span4">
+    <div class="row mb-2">
+        <div class="control-group col-sm-6">
             <label for="programId" class="control-label">Program </label>
             <div class="controls">
-                <g:select class="programId select" style="width: 280px" from="${programList}" data-bind="value:programId" optionKey="programId" name="name" id="programId" optionValue="name"/>
+                <g:select class="programId select input-medium" from="${programList}" data-bind="value:programId" optionKey="programId" name="name" id="programId" optionValue="name"/>
 
             </div>
         </div>
     </div>
 </g:elseif>
-<div class="row-fluid">
-    <div class="control-group">
-        <label for="description" class="control-label">Project description</label>
-        <div class="controls">
-            <textarea data-bind="value:description" class="input-xxlarge" id="description" rows="3" cols="50"></textarea>
+<div class="row mb-2">
+    <div class="col-sm-12">
+        <div class="control-group">
+            <label for="description" class="control-label">Project description</label>
+            <div class="controls">
+                <textarea data-bind="value:description" class="input-large" id="description" rows="3" cols="50"></textarea>
+            </div>
         </div>
     </div>
 </div>
-<div class="row-fluid">
-    <div class="control-group span4">
+<div class="row mb-2">
+    <div class="control-group col-sm-4">
         <label class="control-label" for="externalId">External id</label>
         <div class="controls">
-            <g:textField class="" name="externalId" data-bind="value:externalId"/>
+            <g:textField class="input-small" name="externalId" data-bind="value:externalId"/>
         </div>
     </div>
-    <div class="control-group span4">
+    <div class="control-group col-sm-4">
         <label class="control-label" for="grantId">Grant id</label>
         <div class="controls">
-            <g:textField class="" name="grantId" data-bind="value:grantId"/>
+            <g:textField class="input-small" name="grantId" data-bind="value:grantId"/>
         </div>
     </div>
-    <div class="control-group span4">
+    <div class="control-group col-sm-4">
         <label class="control-label" for="internalOrderId">Internal order number</label>
         <div class="controls">
             <!-- Once the MERI plan is approved, the internal order number becomes a mandatory field. -->
             <g:if test="${ProjectService.APPLICATION_STATUS != project.status}">
-                <g:textField class="" placeholder="If unavailable, use 'TBA'" name="internalOrderId" data-bind="value:internalOrderId" data-validation-engine="validate[required]"/>
+                <input class="input-small" placeholder="If unavailable, use 'TBA'" name="internalOrderId" id="internalOrderId" data-bind="value:internalOrderId" data-validation-engine="validate[required]"/>
             </g:if>
             <g:else>
-                <g:textField class="" placeholder="If not available, use TBA" name="internalOrderId" data-bind="value:internalOrderId"/>
+                <input class="input-small" placeholder="If not available, use TBA" name="internalOrderId" data-bind="value:internalOrderId"/>
             </g:else>
         </div>
     </div>
 
 </div>
 
-<div class="row-fluid">
-    <div class="control-group span4">
+<div class="row mb-2">
+    <div class="control-group col-sm-4">
         <label class="control-label" for="manager">Project manager</label>
         <div class="controls">
             <g:textField class="" name="manager" data-bind="value:manager"/>
         </div>
     </div>
 
-    <div class="control-group span4">
+    <div class="control-group col-sm-4">
         <label class="control-label" for="manager">Project funding</label>
         <div class="controls">
             <g:textField class="" id="funding" name="funding" data-bind="value:funding" data-validation-engine="validate[custom[number]]"/>
         </div>
     </div>
 
-    <div class="control-group span4">
+    <div class="control-group col-sm-4">
         <label class="control-label" for="tags">Disaster relief categories</label>
         <div class="controls">
             <select multiple="multiple" id="tags" data-bind="options:transients.defaultTags, multiSelect2:{value:tags, placeholder:''}" class="select input-xlarge"></select>
@@ -117,13 +128,13 @@
 <div class="alert alert-block">You cannot change the start date or programme for a project with submitted or approved reports or MERI plan.</div>
 </g:if>
 
-<div class="row-fluid">
-    <div class="span4">
+<div class="row mb-2">
+    <div class="col-sm-4">
         <label class="control-label">Programme name</label>
         <select data-bind="value:associatedProgram,options:transients.programs,optionsCaption: 'Choose...',enable:${canChangeProjectDates?:'false'}"
                 data-validation-engine="validate[required]"></select>
     </div>
-    <div class="span4">
+    <div class="col-sm-4">
         <label class="control-label">Sub-programme name</label>
         <select data-bind="value:associatedSubProgram,options:transients.subprogramsToDisplay,optionsCaption: 'Choose...',,enable:${canChangeProjectDates?:'false'}"></select>
     </div>
@@ -135,8 +146,8 @@
     </g:if>
 </g:else>
 
-<div class="row-fluid">
-    <div class="span4">
+<div class="row mb-2">
+    <div class="col-sm-4">
         <label for="startDate">Planned start date
         <fc:iconHelp title="Start date">Date the project is intended to commence.</fc:iconHelp>
         </label>
@@ -149,7 +160,7 @@
             </g:else>
         </div>
     </div>
-    <div class="span4">
+    <div class="col-sm-4">
         <label for="endDate">Planned end date
         <fc:iconHelp title="End date">Date the project is intended to finish.</fc:iconHelp>
         </label>
@@ -158,10 +169,10 @@
         </div>
 
     </div>
-    <div class="span1">
+    <div class="col-sm-1">
         OR
     </div>
-    <div class="span3">
+    <div class="col-sm-3">
         <label for="duration">Duration (weeks)
         <fc:iconHelp title="Duration">The number of weeks the project will run for.</fc:iconHelp>
         </label>
@@ -171,7 +182,7 @@
 
     </div>
 </div>
-<div class="row-fluid">
+<div class="row mb-2">
     <p>These options control how project date changes will affect reports containing data and / or activities: </p>
     <g:if test="${config?.activityBasedReporting}">
         <p>
@@ -193,14 +204,14 @@
     <p><input type="checkbox" data-bind="checked:includeSubmittedReports"> Allow date changes to submitted or approved reports <fc:iconHelp>This project has submitted and/or approved reports.  Changing the project start date may result in a change to these reporting dates, depending on the reporting configuration and the new start date.</fc:iconHelp></p>
     <p>
         <label>Reason for changing the project start date:<fc:iconHelp>This reason is required when changing approved or submitted reports and will be recorded against the report status changes</fc:iconHelp>
-        <textarea class="span12" rows="3" data-bind="enable:includeSubmittedReports, value:dateChangeReason" data-validation-engine="validate[required]"></textarea>
+        <textarea class="col-sm-12" row mb-2s="3" data-bind="enable:includeSubmittedReports, value:dateChangeReason" data-validation-engine="validate[required]"></textarea>
         </label>
     </p>
 
 </div>
 
-<div class="row-fluid">
-    <div class="span4">
+<div class="row mb-2">
+    <div class="col-sm-4">
         <label for="contractStartDate">Contract start date
         <fc:iconHelp title="Contract Start date">Contracted start date.</fc:iconHelp>
         </label>
@@ -208,7 +219,7 @@
             <fc:datePicker targetField="contractStartDate.date" name="contractStartDate" printable="${printView}" size="input-large"/>
         </div>
     </div>
-    <div class="span4">
+    <div class="col-sm-4">
         <label for="endDate">Contract end date
         <fc:iconHelp title="Contract End date">Date the project is contracted to finish.</fc:iconHelp>
         </label>
@@ -217,10 +228,10 @@
         </div>
 
     </div>
-    <div class="span1">
+    <div class="col-sm-1">
         OR
     </div>
-    <div class="span3">
+    <div class="col-sm-3">
         <label for="duration">Duration (weeks)
         <fc:iconHelp title="Duration">The number of weeks the project will run for.</fc:iconHelp>
         </label>
@@ -231,8 +242,8 @@
     </div>
 </div>
 
-<div class="row-fluid">
-    <div class="span4">
+<div class="row mb-2">
+    <div class="col-sm-4">
         <label>Project status
         	<fc:iconHelp title="Project status">Project status.</fc:iconHelp>
         </label>
@@ -245,15 +256,15 @@
             <select class="input-xlarge" id="projectState" data-bind="options:projectStatus.filter(x => x.name != '${ProjectService.APPLICATION_STATUS}'), optionsText: 'name', optionsValue: 'id', value:status"></select>
         </g:else>
     </div>
-    <div class="span4" data-bind="visible:status() ==='terminated'">
+    <div class="col-sm-4" data-bind="visible:status() ==='terminated'">
         <label class="required" for="terminationReason">Termination Reason </label>
-            <textarea class="span12" id="terminationReason" rows="3" data-bind=" value:terminationReason" data-validation-engine="validate[required]"></textarea>
+            <textarea class="col-sm-12" id="terminationReason" row mb-2s="3" data-bind=" value:terminationReason" data-validation-engine="validate[required]"></textarea>
 
     </div>
 </div>
 
-<div class="row-fluid">
-    <div class="span12">
+<div class="row mb-2">
+    <div class="col-sm-12">
         <button data-bind="click:regenerateStageReports" class="btn btn-warning">Re-create project stage reports</button>
     </div>
 </div>

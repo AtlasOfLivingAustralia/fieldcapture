@@ -27,3 +27,10 @@
 //= require datatables/1.10.16/js/dataTables.moment
 //= require datatables/buttons/1.5.1/dataTables.buttons
 
+ActivityProgress = {
+    planned: 'planned',
+    started: 'started',
+    finished: 'finished',
+    deferred: 'deferred',
+    cancelled:'cancelled',
+};
