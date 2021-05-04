@@ -207,17 +207,12 @@
           },
           {
             "dataType": "text",
-            "name": "investmentByFinancialYearDetails",
-            "validate": "maxSize[1250]"
-          },
-          {
-            "dataType": "text",
             "name": "indigenousParticipationTarget",
             "validate": "required",
             "constraints": [
-              "N/A - Exempt (Allows input but no cells are mandatory)",
-              "General - At least 4% (Renders all answers applicable to be mandatory)",
-              "Remote - Goal of 20% (Renders all answers applicable to be mandatory)"
+              "N/A - Exempt",
+              "General - At least 4%",
+              "Remote - Goal of 20%"
             ]
           },
           {
@@ -228,7 +223,7 @@
             "behaviour": [
               {
                 "type": "conditional_validation",
-                "condition": "indigenousParticipationTarget == \"General - At least 4% (Renders all answers applicable to be mandatory)\" or indigenousParticipationTarget == \"Remote - Goal of 20% (Renders all answers applicable to be mandatory)\"",
+                "condition": "indigenousParticipationTarget == \"General - At least 4%\" or indigenousParticipationTarget == \"Remote - Goal of 20%\"",
                 "value": {
                   "validate": "required,maxSize[1250]"
                 }
@@ -283,7 +278,7 @@
             "name": "percentageOfIndigenousSubcontractors",
             "dataType": "number",
             "computed": {
-              "expression": "subcontractedWorkForceByFinancialYear[0].workforceTotal()/subcontractedWorkForceByFinancialYear[1].contractWorkforceTotal()*100"
+              "expression": "subcontractedWorkForceByFinancialYear[0].contractWorkforceTotal()/subcontractedWorkForceByFinancialYear[1].contractWorkforceTotal()*100"
             }
           },
           {
@@ -338,7 +333,7 @@
             "name": "percentageOfIndigenousEmployees",
             "dataType": "number",
             "computed": {
-              "expression": "organisationWorkForceByFinancialYear[0].workforceTotal()/organisationWorkForceByFinancialYear[1].organisationWorkforceTotal()*100"
+              "expression": "organisationWorkForceByFinancialYear[0].organisationWorkforceTotal()/organisationWorkForceByFinancialYear[1].organisationWorkforceTotal()*100"
             }
           },
           {
@@ -398,7 +393,7 @@
             "behaviour": [
               {
                 "type": "conditional_validation",
-                "condition": "indigenousParticipationTarget == \"General - At least 4% (Renders all answers applicable to be mandatory)\" or indigenousParticipationTarget == \"Remote - Goal of 20% (Renders all answers applicable to be mandatory)\"",
+                "condition": "indigenousParticipationTarget == \"General - At least 4%\" or indigenousParticipationTarget == \"Remote - Goal of 20%\"",
                 "value": {
                   "validate": "required,maxSize[1250]"
                 }
@@ -595,7 +590,7 @@
             "type": "row",
             "items": [
               {
-                "source": "<b>8. In the past 12 months, what has been the level of community participation and investment in projects delivered under the Services Agreement?</b>",
+                "source": "<b>8. Community participation and investment in projects delivered under the Services Agreement</b>",
                 "type": "literal"
               }
             ]
@@ -604,7 +599,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "8. a) Please describe how the community has participated in the delivery of any of the Core Services and projects over the past 12 months, including quantitative figures. (1250 character [approx. 250 word] limit).",
+                "preLabel": "8. a) Please describe how the community has participated in the delivery of any of the Core Services and projects over the past 12 months. (1250 character [approx. 250 word] limit).",
                 "source": "communityParticipation",
                 "type": "textarea"
               }
@@ -614,7 +609,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "8. b) Please provide the level of community investment that has occurred over the past 12 months that contributes to the requirement that at least 20% of the combined value of RLP Projects delivered by a Service Provider must directly support the delivery of small on-ground projects and related activities that are delivered by, or directly engage with, the local landcare community (the Requirement). Also include whether you are on track to meet the Requirement over the life of the agreed Services Agreement. (1250 character [approx. 250 word] limit).",
+                "preLabel": "8. b) Please provide the level of community investment that has occurred over the past 12 months that contributes to the requirement that at least 20% of the combined value of RLP Projects delivered by a Service Provider must directly support the delivery of small on-ground projects and related activities that are delivered by, or directly engage with, the local landcare community (the Requirement). Also include whether you are on track to meet the Requirement over the life of the agreed Services Agreement. Note that quantitative figures will be collected in Question 8c), and the investment percentage will be calculated. (1250 character [approx. 250 word] limit).",
                 "source": "communityParticipationFor20PercentRequirement",
                 "type": "textarea"
               }
@@ -684,10 +679,19 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "Would you like to provide more details?",
-                "source": "investmentByFinancialYearDetails",
+                "source": "<b>9. Indigenous employment and procurement investment</b>",
+                "type": "literal"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "9. a) Please describe how Indigenous people have participated in the delivery of any of the Core Services and projects over the past 12 months. (1250 character [approx. 250 word] limit)",
+                "source": "indigenousParticipation",
                 "type": "textarea",
-                "rows": 4
+                "helpText": "Quantitative figures can include number of participants, timeframes, dollar value etc"
               }
             ]
           },
@@ -695,17 +699,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "9. Please identify level of Indigenous employment and procurement investment you have agreed to provide in your services agreement",
-                "source": "indigenousParticipationTarget",
-                "type": "selectOne"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "preLabel": "9. a) Please describe the level of Indigenous employment and procurement investment that has occurred over the past 12 months that contributes to the requirement of clause 40.2 of the agreed Services Agreement. Also include whether you are on track to meet the requirement of clause 40.2 of the agreed Services Agreement over the life of the agreed Services Agreement. (1250 character [approx. 250 word] limit).",
+                "preLabel": "9. b) Please describe the level of Indigenous employment and procurement investment that has occurred over the past 12 months that contributes to the requirement of clause 40.2 of the agreed Services Agreement. Also include whether you are on track to meet the requirement of clause 40.2 of the agreed Services Agreement over the life of the agreed Services Agreement. Note that quantitative figures will be collected in question 9d), and the investment percentage will be calculated. (1250 character [approx. 250 word] limit).",
                 "source": "indigenousParticipationForClause40Point2",
                 "type": "textarea"
               }
@@ -715,7 +709,77 @@
             "type": "row",
             "items": [
               {
-                "title": "<b>9. b) i) What has been the level of full-time equivalent (FTE) Australian-based workforce deployed on subcontracts to deliver services where clause 40.2(a)(1)(A) of the agreed Services Agreement applies, in the past 12 month?</b>",
+                "preLabel": "9. c) Please identify level of Indigenous employment and procurement investment you have agreed to provide in your services agreement",
+                "source": "indigenousParticipationTarget",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "9. d) i) Enter the total value of investments in your Management Unit where clause 40.2 of the agreed Services Agreement applies.",
+                "source": "indigenousInvestmentAmount",
+                "type": "currency",
+                "helpText": "The total value of services minus projects with an exemption from clause 40.2(a)(ii)"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "title": "<b>9. d) ii) What has been the value of services subcontracted to Indigenous Enterprises where clause 40.2(a)(ii) of the agreed Services Agreement applies in the last 12 months?</b>",
+                "type": "table",
+                "disableTableUpload": true,
+                "columns": [
+                  {
+                    "title": "2018/19 ($)",
+                    "source": "serviceSubcontracted2018_19",
+                    "type": "number"
+                  },
+                  {
+                    "title": "2019/20 ($)",
+                    "source": "serviceSubcontracted2019_20",
+                    "type": "number"
+                  },
+                  {
+                    "title": "2020/21 ($)",
+                    "source": "serviceSubcontracted2020_21",
+                    "type": "number"
+                  },
+                  {
+                    "title": "2021/22 ($)",
+                    "source": "serviceSubcontracted2021_22",
+                    "type": "number",
+                    "readonly": true
+                  },
+                  {
+                    "title": "2022/23 ($)",
+                    "source": "serviceSubcontracted2022_23",
+                    "type": "number",
+                    "readonly": true
+                  },
+                  {
+                    "title": "Total ($)",
+                    "source": "serviceSubcontractedTotal",
+                    "type": "number"
+                  },
+                  {
+                    "title": "% of total",
+                    "source": "percentageSubcontractedOfTotal",
+                    "type": "number"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "title": "<b>9. d) iii) What has been the level of full-time equivalent (FTE) Australian-based workforce deployed on subcontracts to deliver services where clause 40.2(a)(1)(A) of the agreed Services Agreement applies, in the past 12 month?</b>",
                 "source": "subcontractedWorkForceByFinancialYear",
                 "type": "table",
                 "disableTableUpload": true,
@@ -773,7 +837,7 @@
             "behaviour": [
               {
                 "type": "if_expression",
-                "condition": "indigenousParticipationTarget == \"General - At least 4% (Renders all answers applicable to be mandatory)\" or indigenousParticipationTarget == \"Remote - Goal of 20% (Renders all answers applicable to be mandatory)\""
+                "condition": "indigenousParticipationTarget == \"General - At least 4%\" or indigenousParticipationTarget == \"Remote - Goal of 20%\""
               }
             ],
             "items": [
@@ -798,7 +862,7 @@
             "type": "row",
             "items": [
               {
-                "title": "<b>9. b) ii) What has been the level of full-time equivalent (FTE) Australian-based workforce within the Service Provider's Organisation engaged to deliver the services where clause 40.2(a)(1)(B) of the agreed Services Agreement applies, in the past 12 months?</b>",
+                "title": "<b>9. d) iv) What has been the level of full-time equivalent (FTE) Australian-based workforce within the Service Provider's Organisation engaged to deliver the services where clause 40.2(a)(1)(B) of the agreed Services Agreement applies, in the past 12 months?</b>",
                 "source": "organisationWorkForceByFinancialYear",
                 "type": "table",
                 "disableTableUpload": true,
@@ -856,7 +920,7 @@
             "behaviour": [
               {
                 "type": "if_expression",
-                "condition": "indigenousParticipationTarget == \"General - At least 4% (Renders all answers applicable to be mandatory)\" or indigenousParticipationTarget == \"Remote - Goal of 20% (Renders all answers applicable to be mandatory)\""
+                "condition": "indigenousParticipationTarget == \"General - At least 4%\" or indigenousParticipationTarget == \"Remote - Goal of 20%\""
               }
             ],
             "items": [
@@ -874,77 +938,6 @@
                 "preLabel": "Would you like to provide more details?",
                 "source": "organisationWorkforceByFinancialYearDetails",
                 "type": "textarea"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "preLabel": "9. b) iii) Enter the total value of investments in your Management Unit where clause 40.2 of the agreed Services Agreement applies.",
-                "source": "indigenousInvestmentAmount",
-                "type": "currency",
-                "helpText": "The total value of services minus projects with an exemption from clause 40.2(a)(ii)"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "title": "<b>9. b) iv) What has been the value of services subcontracted to Indigenous Enterprises where clause 40.2(a)(ii) of the agreed Services Agreement applies in the last 12 months?</b>",
-                "type": "table",
-                "disableTableUpload": true,
-                "columns": [
-                  {
-                    "title": "2018/19 ($)",
-                    "source": "serviceSubcontracted2018_19",
-                    "type": "number"
-                  },
-                  {
-                    "title": "2019/20 ($)",
-                    "source": "serviceSubcontracted2019_20",
-                    "type": "number"
-                  },
-                  {
-                    "title": "2020/21 ($)",
-                    "source": "serviceSubcontracted2020_21",
-                    "type": "number"
-                  },
-                  {
-                    "title": "2021/22 ($)",
-                    "source": "serviceSubcontracted2021_22",
-                    "type": "number",
-                    "readonly": true
-                  },
-                  {
-                    "title": "2022/23 ($)",
-                    "source": "serviceSubcontracted2022_23",
-                    "type": "number",
-                    "readonly": true
-                  },
-                  {
-                    "title": "Total ($)",
-                    "source": "serviceSubcontractedTotal",
-                    "type": "number"
-                  },
-                  {
-                    "title": "% of total",
-                    "source": "percentageSubcontractedOfTotal",
-                    "type": "number"
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "preLabel": "9. c) Please describe how Indigenous people have participated in the delivery of any of the Core Services and projects over the past 12 months, including quantitative figures. (1250 character [approx. 250 word] limit)",
-                "source": "indigenousParticipation",
-                "type": "textarea",
-                "helpText": "Quantitative figures can include number of participants, timeframes, dollar value etc"
               }
             ]
           },
