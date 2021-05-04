@@ -25,7 +25,7 @@
     </g:else>
 
     <div class="form-actions">
-        <button data-bind="click:newBlogEntry" type="button" id="new" class="btn btn-primary">New Entry</button>
+        <button data-bind="click:newBlogEntry" type="button" id="new" class="btn btn-sm btn-primary">New Entry</button>
     </div>
 </div>
 <!-- /ko -->
