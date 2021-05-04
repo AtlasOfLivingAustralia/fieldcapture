@@ -1,6 +1,6 @@
 <h4>Project details</h4>
-<div class="row-fluid">
-    <div class="span12">
+<div class="row">
+    <div class="col-sm-12">
         <table class="table">
             <tbody>
 

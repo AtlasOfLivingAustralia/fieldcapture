@@ -37,8 +37,8 @@
             <tfoot>
             <tr>
                 <td colspan="5">
-                    <button type="button" class="btn btn-small" data-bind="disable:isProjectDetailsLocked(), click: addObjectives">
-                        <i class="icon-plus"></i> Add a row</button>
+                    <button type="button" class="btn btn-sm" data-bind="disable:isProjectDetailsLocked(), click: addObjectives">
+                        <i class="fa fa-plus"></i> Add a row</button>
                 </td>
             </tr>
             </tfoot>

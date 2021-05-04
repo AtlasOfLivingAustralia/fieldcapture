@@ -174,7 +174,7 @@
                     <!-- ko foreach:siteReports() -->
                         <tr>
                             <td><a data-bind="attr:{href:editActivityUrl()}"><span data-bind="text:description"></span></a></td>
-                            <td><button type="button" class="btn btn-small"   data-bind="activityProgress:progress">
+                            <td><button type="button" class="btn btn-sm"   data-bind="activityProgress:progress">
                                 <span data-bind="text: progress"></span>
                             </button>
                             </td>

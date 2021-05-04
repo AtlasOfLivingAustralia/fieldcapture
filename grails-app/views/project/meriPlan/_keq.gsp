@@ -28,7 +28,7 @@
         <tr>
 
             <td colspan="5">
-                <button type="button" class="btn btn-small" data-bind="disable: isProjectDetailsLocked(), click: addKEQ">
+                <button type="button" class="btn btn-sm" data-bind="disable: isProjectDetailsLocked(), click: addKEQ">
                     <i class="fa fa-plus"></i> Add a row</button></td>
         </tr>
         </tfoot>

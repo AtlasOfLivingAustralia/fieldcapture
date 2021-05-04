@@ -73,9 +73,9 @@
 
     <tr>
         <td data-bind="attr:{colspan:periods.length+${showTargetDate ? 6 : 5}}">
-            <button type="button" class="btn btn-small"
+            <button type="button" class="btn btn-sm"
                     data-bind="disable: $parent.isProjectDetailsLocked(), click: addService">
-                <i class="icon-plus"></i> Add a row</button>
+                <i class="fa fa-plus"></i> Add a row</button>
         </td>
     </tr>
     </tfoot>

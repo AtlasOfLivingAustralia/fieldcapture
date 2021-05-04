@@ -29,7 +29,7 @@
                 <tfoot>
                 <tr>
                     <td colspan="4">
-                        <button type="button" class="btn btn-small" data-bind="disable:isProjectDetailsLocked(), click: addOutcome">
+                        <button type="button" class="btn btn-sm" data-bind="disable:isProjectDetailsLocked(), click: addOutcome">
                             <i class="fa fa-plus"></i> Add a row</button>
                     </td>
 

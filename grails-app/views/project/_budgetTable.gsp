@@ -52,7 +52,7 @@
     <tr>
         <td></td>
         <td colspan="0" style="text-align:left;">
-            <button type="button" class="btn btn-small"
+            <button type="button" class="btn btn-sm"
                     data-bind="disable: isProjectDetailsLocked(), click: addBudget">
                 <i class="icon-plus"></i> Add a row</button></td>
         <td style="text-align: right;"><b>Total</b></td>
