@@ -1,7 +1,6 @@
 <span data-bind="if: pagination.info()">
     <span data-bind="if: pagination.totalResults() >= pagination.rppOptions[0]-1">
         <div class="row">
-            <div class="col-sm-12"``>
                 <div class="col-sm-4 text-left">
                     <p class="hidden-xs pull-left nomargin padding20">
                         <span data-bind="text: pagination.info()"></span>
@@ -9,7 +8,7 @@
                 </div>
                 <div class="col-sm-4 text-center">
                     <p class="hidden-xs pull-center nomargin padding20">
-                        <select style="width:20%;" data-bind="options: pagination.rppOptions, value: pagination.resultsPerPage" ></select>
+                        <select style="width:20%;" class="form-control form-control-sm" data-bind="options: pagination.rppOptions, value: pagination.resultsPerPage" ></select>
                     </p>
                 </div>
                 <div class="col-sm-4 text-right">
@@ -23,8 +22,6 @@
                         <span data-bind="if: pagination.currentPage() < pagination.lastPage()"><a href="#" class="btn btn-small" data-bind="click:pagination.last"><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i></a></span>
                     </span>
                 </div>
-            </div>
         </div>
     </span>
 </span>
-</br>

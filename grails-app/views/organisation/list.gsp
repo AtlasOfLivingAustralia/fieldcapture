@@ -72,11 +72,7 @@
     <hr/>
 
     <!-- /ko -->
-
-    <div class="row">
-        <g:render template="/shared/pagination"/>
-    </div>
-
+    <g:render template="/shared/pagination"/>
 </div>
 
 

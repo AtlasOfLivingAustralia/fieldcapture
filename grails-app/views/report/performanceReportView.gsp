@@ -2,7 +2,7 @@
 <%@ page import="au.org.ala.merit.DateUtils" contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
-    <meta name="layout" content="${(grailsApplication.config.layout.skin?:'main')+'Print'}"/>
+    <meta name="layout" content="nrmPrint"/>
     <title>${report.name}</title>
     <%-- Override the bootstrap print style that sets background: transparent !important  --%>
     <style type="text/css">
@@ -13,6 +13,7 @@
             background-color: #d9edf7 !important;
         }
     </style>
+    <asset:stylesheet src="common-bs4.css"/>
 </head>
 
 <body>
@@ -28,14 +29,14 @@
     </g:if>
 
     <br/>
-    <div class="row-fluid">
-        <div class="form-inline span12">
+    <div class="row">
+        <div class="form-inline col-sm-10">
             <label>Who is the authorised person completing this self assessment?</label> &nbsp;${report.data.whoCompletedForm}
         </div>
     </div>
     <br/>
 
-    <table class="row-fluid header" data-bind="with:data">
+    <table class="header" data-bind="with:data">
         <thead>
             <tr>
                 <th rowspan="2" colspan="2">Performance expectation framework</th>
@@ -62,20 +63,20 @@
 
     <br/>
 
-    <div class="row-fluid">
-        <div class="span7">
+    <div class="row">
+        <div class="col-sm-7">
             <label>Are there any areas of the performance expectations your region would like peer assistance in meeting?</label>
         </div>
-        <div class="span5">
+        <div class="col-sm-5">
             <span class="model-text-value">${report.data.peerAssistanceRequired}</span>
         </div>
     </div>
 
-    <div class="row-fluid">
-        <div class="span7">
+    <div class="row">
+        <div class="col-sm-7">
             <label>Are there any areas of the performance expectations your region would be able to provide peer assistance on?</label>
         </div>
-        <div class="span5">
+        <div class="col-sm-5">
             <span class="model-text-value">${report.data.peerAssistanceOffered}</span>
         </div>
     </div>

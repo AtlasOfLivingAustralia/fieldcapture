@@ -23,7 +23,8 @@ div.report-section {
 
 .action-table {
     table-layout:fixed;
-    width: 100%;
+    width: 97%;
+    margin-left: 16px;
 }
 .action-table th {
     white-space: normal;
