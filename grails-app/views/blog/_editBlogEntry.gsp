@@ -32,7 +32,7 @@
         <label class="control-label col-sm-3"
                for="title">Title: <fc:iconHelp>The title of this blog entry</fc:iconHelp></label>
         <div class="col-sm-9">
-            <input type="text" id="title" class="form-control form-control-sm input-small" data-bind="value:title" data-validation-engine="validate[required]">
+            <input type="text" id="title" class="form-control form-control-sm input-medium" data-bind="value:title" data-validation-engine="validate[required]">
         </div>
     </div>
 
