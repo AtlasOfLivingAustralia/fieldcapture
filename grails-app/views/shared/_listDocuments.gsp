@@ -1,6 +1,6 @@
 
-<div class="row-fluid row-eq-height" id="${containerId}">
-    <div class="span5">
+<div class="row row-eq-height" id="${containerId}">
+    <div class="col-sm-5">
         <div class="row-fluid">
             <div id="filter-by-stage" class="document-filter-group btn-group pull-right">
                 <a class="btn dropdown-toggle" href="#">
@@ -16,7 +16,7 @@
         </div>
         <div></div>
         %{-- The use of the width attribute (as opposed to a css style) is to allow for correct resizing behaviour of the DataTable --}%
-        <table class="docs-table table" width="100%" style="table-layout:fixed">
+        <table class="docs-table table w-100"  style="table-layout:fixed">
             <thead>
             <tr>
                 <th style="width:35px"></th>
@@ -66,7 +66,7 @@
                         <!-- /ko -->
                         <!-- ko if:embeddedVideo() -->
 
-                        <i class="icon-question-sign" data-bind="popover:{content:'Embedded videos are not downloadable.'}"></i>
+                        <i class="fa fa-question-circle" data-bind="popover:{content:'Embedded videos are not downloadable.'}"></i>
 
                         <!-- /ko -->
 
@@ -77,7 +77,7 @@
         </table>
 
     </div>
-    <div class="fc-resource-preview-container span7" data-bind="{ template: { name: previewTemplate } }"></div>
+    <div class="fc-resource-preview-container col-sm-7" data-bind="{ template: { name: previewTemplate } }"></div>
 </div>
 
 <script id="iframeViewer" type="text/html">
