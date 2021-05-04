@@ -232,7 +232,7 @@
 	border-bottom-color: transparent;
 }
 input.dateControl {
-	max-width: 150px !important;
+	max-width: 9.5rem !important;
 }
 
 span.progress-label {
@@ -308,4 +308,8 @@ form .form-group label {
 
 .input-large {
 	width: 49rem !important;
+}
+li.select2-search input {
+	border-radius: unset;
+	border: unset;
 }

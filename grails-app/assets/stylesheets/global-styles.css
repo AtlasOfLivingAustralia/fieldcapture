@@ -879,10 +879,3 @@ span.status {
 	color: #393124;
 	padding: 0 5px;
 }
-input, textarea, select {
-	padding: 0.25rem 0.5rem !important;
-	color: #495057 !important;
-	border: 1px solid #ced4da !important;
-	border-radius: 0.25rem !important;
-	transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
-}
