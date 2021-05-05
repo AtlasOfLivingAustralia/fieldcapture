@@ -756,11 +756,6 @@ class ProjectController {
         }
     }
 
-    def exitReport(String id, String reportId) {
-        reportService.unlock(reportId)
-        redirect action: 'index', id:id
-    }
-
     @PreAuthorise(accessLevel = 'editor')
     def viewReport(String id, String reportId) {
         if (!id || !reportId) {
@@ -865,7 +860,7 @@ class ProjectController {
         model.metaModel = projectService.filterOutputModel(model.metaModel, project, model.activity)
 
         model.context = new HashMap(project)
-        model.returnTo = g.createLink(action:'exitReport', id:projectId, params:[reportId:reportId])
+        model.returnTo = g.createLink(action:'index', id:projectId)
         model.contextViewUrl = model.returnTo
         model.reportHeaderTemplate = '/project/rlpProjectReportHeader'
         model.config = config
