@@ -490,6 +490,7 @@
 <asset:javascript src="projects.js"/>
 <asset:javascript src="reporting.js"/>
 <asset:javascript src="select2/4.0.3/js/select2.full"/>
+<asset:javascript src="knockout-custom-bindings.js"/>
 <asset:javascript src="forms-knockout-bindings.js"/>
 <asset:javascript src="leaflet-manifest.js"/>
 <asset:javascript src="feature.js"/>

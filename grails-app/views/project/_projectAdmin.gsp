@@ -116,7 +116,7 @@
                     <div class="clearfix"></div>
                     <hr/>
                     <div class="row">
-                        <div class="col-sm-10">
+                        <div class="col-sm-12 ml-3 ">
                             <g:render template="/shared/editDocuments"
                                       model="[useExistingModel: true,editable:true, filterBy: 'all', ignore: '', imageUrl:assetPath(src:'filetypes'),containerId:'adminDocumentList']"/>
                         </div>

@@ -313,3 +313,15 @@ li.select2-search input {
 	border-radius: unset;
 	border: unset;
 }
+.modal-body {
+	max-height: calc(100vh - 143px);
+	overflow-y: auto;
+}
+#adminDocumentList .col-sm-12 {
+	padding: 0px !important;
+}
+
+.media-body-template .customMargin {
+	margin-top: -13px;
+	margin-right: -20px;
+}

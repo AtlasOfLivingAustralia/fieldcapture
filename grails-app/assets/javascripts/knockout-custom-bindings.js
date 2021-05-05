@@ -14,7 +14,7 @@ ko.bindingHandlers.popover = {
   update: function(element, valueAccessor) {
 
     var $element = $(element);
-    $element.popover('destroy');
+    $element.popover('hide');
     var options = ko.bindingHandlers.popover.initPopover(element, valueAccessor);
     if (options.autoShow) {
       if ($element.data('firstPopover') === false) {

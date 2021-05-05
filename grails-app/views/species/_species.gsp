@@ -1,8 +1,8 @@
 <!-- This section is bound to a secondary KO viewModel. The following line prevents binding
          to the main viewModel. -->
 <!-- ko stopBinding: true -->
-<div class="row-fluid" id="species-container">
-    <div class="row-fluid">
+<div class="row" id="species-container">
+    <div class="row">
         <div class="clearfix">
             <h3 class="pull-left">Species of Interest</h3>
             %{--<g:link style="margin-bottom:10px;" action="species" id="${project.projectId}" class="btn pull-right title-edit">Edit Species Lists</a></g:link>--}%
@@ -16,7 +16,7 @@
             </g:if>
         </p>
     </div>
-    <div class="row-fluid">
+    <div class="row">
         <form class="form-horizontal" id="speciesListForm">
             <div class="control-group">
                 <label class="control-label" for="speciesList">List of species<br>(one per line)</label>
