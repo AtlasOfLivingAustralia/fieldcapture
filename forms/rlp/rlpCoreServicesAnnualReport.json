@@ -282,11 +282,6 @@
             }
           },
           {
-            "dataType": "text",
-            "name": "subcontractedWorkforceByFinancialYearDetails",
-            "validate": "maxSize[1250]"
-          },
-          {
             "dataType": "list",
             "name": "organisationWorkForceByFinancialYear",
             "allowRowDelete": "false",
@@ -335,11 +330,6 @@
             "computed": {
               "expression": "organisationWorkForceByFinancialYear[0].organisationWorkforceTotal()/organisationWorkForceByFinancialYear[1].organisationWorkforceTotal()*100"
             }
-          },
-          {
-            "dataType": "text",
-            "name": "organisationWorkforceByFinancialYearDetails",
-            "validate": "maxSize[1250]"
           },
           {
             "dataType": "number",
@@ -852,16 +842,6 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "Would you like to provide more details?",
-                "source": "subcontractedWorkforceByFinancialYearDetails",
-                "type": "textarea"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
                 "title": "<b>9. d) iv) What has been the level of full-time equivalent (FTE) Australian-based workforce within the Service Provider's Organisation engaged to deliver the services where clause 40.2(a)(1)(B) of the agreed Services Agreement applies, in the past 12 months?</b>",
                 "source": "organisationWorkForceByFinancialYear",
                 "type": "table",
@@ -928,16 +908,6 @@
                 "preLabel": "Percentage of Indigenous employees in the organisation workforce",
                 "type": "number",
                 "source": "percentageOfIndigenousEmployees"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "preLabel": "Would you like to provide more details?",
-                "source": "organisationWorkforceByFinancialYearDetails",
-                "type": "textarea"
               }
             ]
           },
