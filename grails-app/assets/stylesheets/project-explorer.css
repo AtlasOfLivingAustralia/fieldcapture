@@ -309,3 +309,15 @@ input.dateControl {
 #dashboardType {
     width: 206px;
 }
+
+#dashboard-content {
+    margin-left: -10px !important;
+}
+
+.loading-message {
+    margin-left: -15px !important;
+}
+
+.dataTables_filter {
+    float: right !important;
+}
