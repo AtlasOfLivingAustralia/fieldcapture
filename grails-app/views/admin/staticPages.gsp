@@ -19,7 +19,7 @@
     <head>
         <meta name="layout" content="adminLayout"/>
         <title>Static pages | Admin | MERIT</title>
-        <asset:stylesheet src="base-bs4.css"/>
+        <asset:stylesheet src="common-bs4.css"/>
     </head>
 
     <body>
@@ -57,6 +57,6 @@
                 </g:each>
             </tbody>
         </table>
-        <asset:javascript src="base-bs4.js"/>
+        <asset:javascript src="common-bs4.js"/>
     </body>
 </html>

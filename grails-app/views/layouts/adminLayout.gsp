@@ -57,7 +57,7 @@
         </div>
 
         <div class="row">
-            <div id="admin" class="nav flex-column nav-pills col-sm-2 pl-2 pr-0">
+            <div id="admin" class="nav flex-column nav-pills col-sm-3 pl-2 pr-0">
                 <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'audit')}" title="Audit" />
                 <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.adminRole) || fc.userInRole(role: grailsApplication.config.security.cas.alaAdminRole)}">
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'staticPages')}" title="Static pages" />
@@ -74,7 +74,7 @@
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'cacheManagement')}" title="Caches" />
                 </g:if>
             </div>
-            <div class="col-sm-9">
+            <div class="col-sm-8 ml-5">
                 <g:if test="${flash.errorMessage}">
                     <div class="${containerType}">
                         <div class="alert alert-danger">

@@ -43,7 +43,7 @@
 
 <button id="userDownload" class="btn btn-sm">Download MERIT User List</button>
 
-<h4>Reef 2050 Plan Action Report</h4>
+<h4 class="mt-4">Reef 2050 Plan Action Report</h4>
 
 <div class="row">
     <div class="col-sm-12">

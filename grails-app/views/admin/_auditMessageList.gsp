@@ -31,6 +31,9 @@
 
     </g:if>
     <g:else>
-        <div>No messages found!</div>
+            <div class="col-sm-11">
+                <div class="p-3 alert-danger text-dark">No messages found!</div>
+            </div>
+
     </g:else>
 </div>
