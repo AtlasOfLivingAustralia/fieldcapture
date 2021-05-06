@@ -219,8 +219,8 @@ table tbody .td1 .accordion .card-header.collapsed:after {
     border-bottom-left-radius: 0.25px;
 }
 
-.reportDropdown {
-    margin-left: -15px;
+.reportDropdown, .loading-message {
+    margin-left: -3px !important;
 }
 
 #reports > .card:not(:last-of-type) {
@@ -310,12 +310,8 @@ input.dateControl {
     width: 206px;
 }
 
-#dashboard-content {
-    margin-left: -10px !important;
-}
-
-.loading-message {
-    margin-left: -15px !important;
+button.btn.facets-toggle {
+    margin-left: 10px !important;
 }
 
 .dataTables_filter {
