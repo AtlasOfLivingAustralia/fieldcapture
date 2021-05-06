@@ -57,11 +57,11 @@
         <div class="col-sm-3" data-bind="visible:stockIcon()">
             <i class="fa fa-4x" data-bind="css:stockIcon"></i>
         </div>
-        <div class="col-sm-3">
+        <div class="ml-3 col-sm-3">
             <!-- ko if:type() !== 'Photo' -->
             <p data-bind="visible:!image() && !stockIcon()">Select or attach an image</p>
 
-            <select class="form-control form-control-sm input-small" data-bind="visible:!image(), value:stockIcon" name="docCategory">
+            <select class="form-control form-control-sm" data-bind="visible:!image(), value:stockIcon" name="docCategory">
                 <option/>
                 <option value="fa-warning">Important<i class="fa fa-warning fa-3x"></i></option>
                 <option value="fa-newspaper-o">News<i class="fa fa-newspaper-o fa-3x"></i></option>
@@ -79,18 +79,17 @@
                   data-bind="stagedImageUpload:documents, visible:!image() && !stockIcon()"><i class="fa fa-plus "></i> <input
                     id="image" type="file" name="files" class="form-control form-control-sm input-small"><span>Attach</span></div>
 
-            <button class="btn main-image-button" data-bind="click:removeBlogImage, visible:image()"><i
+            <button class="btn btn-sm float-right main-image-button" data-bind="click:removeBlogImage, visible:image()"><i
                     class="fa fa-minus"></i> Remove</button>
         </div>
 
         </div>
-    </div>
 
     <div class="form-group row" data-bind="with:image">
         <label class="control-label col-sm-3"
                for="attribution">Image attribution: <fc:iconHelp>Will be displayed alongside the image</fc:iconHelp></label>
         <div class="col-sm-9">
-            <input type="text" id="attribution" class="form-control form-control-sm input-small" data-bind="value:attribution">
+            <input type="text" id="attribution" class="form-control form-control-sm input-medium" data-bind="value:attribution">
         </div>
     </div>
     <div class="form-group row" data-bind="with:image">
