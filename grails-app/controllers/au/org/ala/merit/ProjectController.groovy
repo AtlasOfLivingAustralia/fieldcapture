@@ -748,12 +748,27 @@ class ProjectController {
         }
         else {
             if (model.config.requiresActivityLocking) {
-                Map result = reportService.lockForEditing(model.report)
+                // Don't re-acquire the lock if we already have it, the editable check has already determined that
+                // if a lock exists the current user holds it.
+                if (!model.activity.lock) {
+                    Map result = reportService.lockForEditing(model.report)
+                }
+
                 model.locked = true
             }
             model.saveReportUrl = createLink(action:'saveReport', id:id, params:[reportId:model.report.reportId])
             render model:model, view:'/activity/activityReport'
         }
+    }
+
+    /** Releases a lock if necessary and redirects to the project page */
+    def exitReport(String id, String reportId) {
+        if (!id || !reportId) {
+            error('An invalid report was selected for exiting', id)
+            return
+        }
+        reportService.unlock(reportId)
+        redirect action: 'index', id:id
     }
 
     @PreAuthorise(accessLevel = 'editor')
@@ -860,8 +875,8 @@ class ProjectController {
         model.metaModel = projectService.filterOutputModel(model.metaModel, project, model.activity)
 
         model.context = new HashMap(project)
-        model.returnTo = g.createLink(action:'index', id:projectId)
-        model.contextViewUrl = model.returnTo
+        model.returnTo = g.createLink(action:'exitReport', id:projectId, params:[reportId:reportId])
+        model.contextViewUrl = g.createLink(action:'index', id:projectId)
         model.reportHeaderTemplate = '/project/rlpProjectReportHeader'
         model.config = config
 
