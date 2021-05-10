@@ -1,7 +1,6 @@
 
 <div class="row row-eq-height" id="${containerId}">
-    <div class="col-sm-5">
-        <div class="row-fluid">
+    <div class="col-sm-5 filterDocumentHolder">
             <div id="filter-by-stage" class="document-filter-group btn-group pull-right">
                 <a class="btn dropdown-toggle" href="#">
                     <i class="fa fa-filter"></i> Filter by report
@@ -12,8 +11,6 @@
                 </ul>
 
             </div>
-
-        </div>
         <div></div>
         %{-- The use of the width attribute (as opposed to a css style) is to allow for correct resizing behaviour of the DataTable --}%
         <table class="docs-table table w-100"  style="table-layout:fixed">

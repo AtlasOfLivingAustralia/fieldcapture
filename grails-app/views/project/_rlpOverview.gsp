@@ -210,13 +210,13 @@
     <h2>Project blog</h2>
     <g:if test="${user?.isEditor}">
         <a class="newBlog" href="${g.createLink(controller: 'blog', action: 'create', params: [projectId: project.projectId, returnTo: g.createLink(controller: 'project', action: 'index', id: project.projectId)])}"><button
-                class="btn btn-sm "><i class="fa fa-newspaper-o"></i> New Entry</button></a>
+                class="btn btn-sm "><i class="fa fa-newspaper-o"></i> New Entry</button>
         <button id="gotoEditBlog" class="btn btn-sm "><i class="fa fa-edit"></i> Edit</button>
         </a>
     </g:if>
 
     <g:if test="${publicImages}">
-        <div class="row mb-2">
+        <div class="">
             <h3>Project photos</h3>
             <g:render template="thumbnails" model="${[publicImages: publicImages]}"/>
         </div>
@@ -239,9 +239,7 @@
     </g:if>
 
     <g:if test="${hasProjectStories}">
-        <div class="row mb-2">
             <h3>Project stories</h3>
-
             <div class="blog-section">
                 <g:render template="/shared/blog" model="${[blog: blog, type: 'Project Stories']}"/>
 
@@ -250,7 +248,6 @@
                     <div class="col-sm-10" id="projectStoriesDiv" data-bind="html:projectStories.markdownToHtml()"></div>
                 </div>
             </div>
-        </div>
     </g:if>
 </g:if>
 

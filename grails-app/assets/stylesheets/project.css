@@ -325,3 +325,28 @@ li.select2-search input {
 	margin-top: -13px;
 	margin-right: -20px;
 }
+#sites-table_wrapper .dataTables_filter span#basic-addon1 {
+	border-top-right-radius: unset !important;
+	border-bottom-right-radius: unset !important;
+}
+
+#sites-table_wrapper .dataTables_filter input.form-control.form-control-sm {
+	border-top-left-radius: unset !important;
+	border-bottom-left-radius: unset !important;
+	border-left: unset !important;
+}
+
+#meriPlanDocumentList .dataTables_wrapper .row.col-sm-12, #meriPlanDocumentList .row .col-sm-6 .dataTables_info, #overviewDocumentList .dataTables_wrapper .row.col-sm-12, #overviewDocumentList .row .col-sm-6 .dataTables_info  {
+	margin-left: 15px !important;
+}
+
+#meriPlanDocumentList .row .col-sm-6 .dataTables_paginate, #overviewDocumentList .row .col-sm-6 .dataTables_paginate {
+	margin-right: -15px;
+}
+
+#meriPlanDocumentList .filterDocumentHolder, #overviewDocumentList .filterDocumentHolder{
+	margin-left: -15px !important;
+}
+.mTSThumbContainer {
+	margin-right: 10px !important;
+}

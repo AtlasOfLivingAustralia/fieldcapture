@@ -129,7 +129,7 @@
                 </g:if>
             </g:if>
             <g:else>
-                Projects
+               <li class="breadcrumb-item">Projects</li>
             </g:else>
 
             <li class="breadcrumb-item active" data-bind="text:name"></li>
@@ -155,11 +155,11 @@
             </g:if>
             <g:set var="disabled">${(!user) ? "disabled='disabled' title='login required'" : ''}</g:set>
             <g:if test="${isProjectStarredByUser}">
-                <button class="btn btn-sm mt-4 mb-3" id="starBtn"><i
+                <button class="btn btn-sm mt-4 mb-3 float-right" id="starBtn"><i
                         class="fa fa-star"></i> <span>Remove from favourites</span></button>
             </g:if>
             <g:else>
-                <button class="btn btn-sm mt-4 mb-3" id="starBtn" ${disabled}><i
+                <button class="btn btn-sm mt-4 mb-3 float-right" id="starBtn" ${disabled}><i
                         class="fa fa-star-o"></i> <span>Add to favourites</span></button>
             </g:else>
         </div>
@@ -208,215 +208,115 @@
 </g:if>
 <asset:script>
     var organisations = <fc:modelAsJavascript model="${organisations}"/>;
+    $(function () {
+        var PROJECT_DETAILS_KEY = 'project.custom.details.${project.projectId}';
+        var PROJECT_RISKS_KEY = 'project.risks.${project.projectId}';
 
-        $(function () {
-            var PROJECT_DETAILS_KEY = 'project.custom.details.${project.projectId}';
-            var PROJECT_RISKS_KEY = 'project.risks.${project.projectId}';
-
-            var map;
-            // setup 'read more' for long text
-            $('.more').shorten({
-                moreText: 'read more',
-                showChars: '1000'
-            });
+        var map;
+        // setup 'read more' for long text
+        $('.more').shorten({
+            moreText: 'read more',
+            showChars: '1000'
+        });
 
 
-            $('#project-details-validation').validationEngine();
-            $('#risk-validation').validationEngine();
-            $('#grantmanager-validation').validationEngine();
-            $('#risks-announcements').validationEngine();
-            $('.helphover').popover({animation: true, trigger:'hover'});
+        $('#project-details-validation').validationEngine();
+        $('#risk-validation').validationEngine();
+        $('#grantmanager-validation').validationEngine();
+        $('#risks-announcements').validationEngine();
+        $('.helphover').popover({animation: true, trigger:'hover'});
 
-            $('#cancel').click(function () {
-                document.location.href = "${createLink(action: 'index', id: project.projectId)}";
-            });
+        $('#cancel').click(function () {
+            document.location.href = "${createLink(action: 'index', id: project.projectId)}";
+        });
 
-            $('#risks-cancel').click(function () {
-                amplify.store(PROJECT_RISKS_KEY, null);
-                document.location.href = "${createLink(action: 'index', id: project.projectId)}";
-            });
-            $('#summary-cancel').click(function () {
-                document.location.href = "${createLink(action: 'index', id: project.projectId)}";
-            });
+        $('#risks-cancel').click(function () {
+            amplify.store(PROJECT_RISKS_KEY, null);
+            document.location.href = "${createLink(action: 'index', id: project.projectId)}";
+        });
+        $('#summary-cancel').click(function () {
+            document.location.href = "${createLink(action: 'index', id: project.projectId)}";
+        });
 
-            var userRoles = {
-                editor:${user?.isEditor ?: false},
-                admin:${user?.isAdmin ?: false},
-                grantManager:${user?.isCaseManager ?: false}
+        var userRoles = {
+            editor:${user?.isEditor ?: false},
+            admin:${user?.isAdmin ?: false},
+            grantManager:${user?.isCaseManager ?: false}
     };
 
-    var config = {
-        meriPlanPDFUrl: fcConfig.meriPlanPDFUrl,
-        saveTargetsUrl: fcConfig.projectUpdateUrl,
-        documentUpdateUrl: fcConfig.documentUpdateUrl,
-        projectUpdateUrl: fcConfig.projectUpdateUrl,
-        projectScoresUrl: fcConfig.projectScoresUrl,
-        meriPlanUploadUrl: fcConfig.meriPlanUploadUrl,
-        projectDatesValidationUrl: fcConfig.projectDatesValidationUrl,
-        approvedMeriPlanHistoryUrl: fcConfig.approvedMeriPlanHistoryUrl,
-        viewHistoricalMeriPlanUrl: fcConfig.viewHistoricalMeriPlanUrl,
-        documentDeleteUrl: fcConfig.documentDeleteUrl,
-        meriStorageKey:PROJECT_DETAILS_KEY,
-        activityBasedReporting: ${Boolean.valueOf(projectContent.admin.config.activityBasedReporting)},
-                minimumProjectEndDate: ${projectContent.admin.minimumProjectEndDate ? '"' + projectContent.admin.minimumProjectEndDate + '"' : 'null'},
-                riskChangesReportElementId: 'risk-changes-report',
-                riskChangesReportHtmlUrl: fcConfig.riskChangesReportHtmlUrl,
-                riskChangesReportPdfUrl: fcConfig.riskChangesReportPdfUrl,
-                newDataSetUrl: fcConfig.newDataSetUrl,
-                editDataSetUrl: fcConfig.editDataSetUrl,
-                deleteDataSetUrl: fcConfig.deleteDataSetUrl,
-                returnToUrl: fcConfig.returnTo
-            };
+var config = {
+    meriPlanPDFUrl: fcConfig.meriPlanPDFUrl,
+    saveTargetsUrl: fcConfig.projectUpdateUrl,
+    documentUpdateUrl: fcConfig.documentUpdateUrl,
+    projectUpdateUrl: fcConfig.projectUpdateUrl,
+    projectSitesUrl: fcConfig.projectSitesUrl,
+    projectScoresUrl: fcConfig.projectScoresUrl,
+    meriPlanUploadUrl: fcConfig.meriPlanUploadUrl,
+    projectDatesValidationUrl: fcConfig.projectDatesValidationUrl,
+    approvedMeriPlanHistoryUrl: fcConfig.approvedMeriPlanHistoryUrl,
+    viewHistoricalMeriPlanUrl: fcConfig.viewHistoricalMeriPlanUrl,
+    documentDeleteUrl: fcConfig.documentDeleteUrl,
+    featureServiceUrl: fcConfig.featureServiceUrl,
+    wmsServerUrl: fcConfig.geoserverUrl,
+    spinnerUrl: fcConfig.spinnerUrl,
+    sitesPhotoPointsUrl:fcConfig.sitesPhotoPointsUrl,
+    googleBaseMapUrl: fcConfig.useGoogleBaseMap,
+    meriStorageKey:PROJECT_DETAILS_KEY,
+    activityBasedReporting: ${Boolean.valueOf(projectContent.admin.config.activityBasedReporting)},
+            minimumProjectEndDate: ${projectContent.admin.minimumProjectEndDate ? '"' + projectContent.admin.minimumProjectEndDate + '"' : 'null'},
+            riskChangesReportElementId: 'risk-changes-report',
+            riskChangesReportHtmlUrl: fcConfig.riskChangesReportHtmlUrl,
+            riskChangesReportPdfUrl: fcConfig.riskChangesReportPdfUrl,
+            newDataSetUrl: fcConfig.newDataSetUrl,
+            editDataSetUrl: fcConfig.editDataSetUrl,
+            deleteDataSetUrl: fcConfig.deleteDataSetUrl,
+            returnToUrl: fcConfig.returnTo
+        };
 
-            var programs = <fc:modelAsJavascript model="${programs}"/>;
-            var project = fcConfig.project;
+    var programs = <fc:modelAsJavascript model="${programs}"/>;
+    var project = fcConfig.project;
 
-            var themes = ${config.themes ?: []};
-            config.themes = themes;
-            var services = ${config.services ?: []};
+    var themes = ${config.themes ?: []};
+    config.themes = themes;
+    var services = ${config.services ?: []};
 
-            config.useAlaMap = ${Boolean.valueOf(projectContent.site.useAlaMap)};
-            config.showSiteType = ${Boolean.valueOf(projectContent.site.showSiteType)};
-            config.services = services;
-            config.useRlpTemplate = services.length > 0;
-            config.useRlpRisksModel = config.useRlpTemplate;
-            config.risksStorageKey = PROJECT_RISKS_KEY;
+    config.useAlaMap = ${Boolean.valueOf(projectContent.site.useAlaMap)};
+    config.showSiteType = ${Boolean.valueOf(projectContent.site.showSiteType)};
+    config.services = services;
+    config.useRlpTemplate = services.length > 0;
+    config.useRlpRisksModel = config.useRlpTemplate;
+    config.risksStorageKey = PROJECT_RISKS_KEY;
 
-            config.requireMeriApprovalReason = ${projectContent.admin.requireMeriPlanApprovalReason};
+    config.requireMeriApprovalReason = ${projectContent.admin.requireMeriPlanApprovalReason};
 
-            config.autoSaveIntervalInSeconds = ${grailsApplication.config.fieldcapture.autoSaveIntervalInSeconds ?: 60};
-            config.riskAndThreatTypes = ${config.riskAndThreatTypes ?: 'null'};
-            var programName = <fc:modelAsJavascript
-        model="${(config.program?.acronym ?: project.associatedSubProgram) ?: project.associatedProgram}"/>
+    config.autoSaveIntervalInSeconds = ${grailsApplication.config.fieldcapture.autoSaveIntervalInSeconds ?: 60};
+    config.riskAndThreatTypes = ${config.riskAndThreatTypes ?: 'null'};
+    var programName = <fc:modelAsJavascript model="${(config.program?.acronym ?: project.associatedSubProgram) ?: project.associatedProgram}"/>
     config.programName = programName
 
     config.programObjectives = <fc:modelAsJavascript model="${config.program?.config?.objectives ?: []}"/>
-    config.programActivities = <fc:modelAsJavascript
-        model="${config.program?.config?.activities?.collect { it.name } ?: []}"/>
+    config.programActivities = <fc:modelAsJavascript model="${config.program?.config?.activities?.collect { it.name } ?: []}"/>
     config.excludeFinancialYearData = ${config.program?.config?.excludeFinancialYearData ?: false};
 
-            var viewModel = new ProjectPageViewModel(
-                project,
-                project.sites,
-                project.activities || [],
-                organisations,
-                userRoles,
-                config);
-
-            viewModel.loadPrograms(programs);
-            ko.applyBindings(viewModel);
-            window.validateProjectEndDate = viewModel.validateProjectEndDate;
-
-            autoSaveModel(
-                viewModel.meriPlan.risks,
-                fcConfig.projectUpdateUrl,
-                {
-                    storageKey:PROJECT_RISKS_KEY,
-                    autoSaveIntervalInSeconds:${grailsApplication.config.fieldcapture.autoSaveIntervalInSeconds ?: 60},
-                    restoredDataWarningSelector:'#restoredRisksData',
-                    resultsMessageSelector:'#summary-result-placeholder',
-                    timeoutMessageSelector:'#timeoutMessage',
-                    errorMessage:"Failed to save risks details: ",
-                    successMessage: 'Successfully saved',
-                    defaultDirtyFlag:ko.dirtyFlag,
-                    healthCheckUrl:fcConfig.healthCheckUrl,
-                    preventNavigationIfDirty: true
-                });
-
-
-            function initialiseOverview() {
-                $( '#public-images-slider' ).mThumbnailScroller({});
-                $('#public-images-slider .fancybox').fancybox();
+    project.mapFeatures =  $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
+    var viewModel = new ProjectPageViewModel(project, project.sites, project.activities || [], organisations, userRoles, config);
+    viewModel.loadPrograms(programs);
+    ko.applyBindings(viewModel);
+    window.validateProjectEndDate = viewModel.validateProjectEndDate;
+    var options = {
+                storageKey:PROJECT_RISKS_KEY,
+                autoSaveIntervalInSeconds:${grailsApplication.config.fieldcapture.autoSaveIntervalInSeconds ?: 60},
+                restoredDataWarningSelector:'#restoredRisksData',
+                resultsMessageSelector:'#summary-result-placeholder',
+                timeoutMessageSelector:'#timeoutMessage',
+                errorMessage:"Failed to save risks details: ",
+                successMessage: 'Successfully saved',
+                defaultDirtyFlag:ko.dirtyFlag,
+                healthCheckUrl:fcConfig.healthCheckUrl,
+                preventNavigationIfDirty: true
             }
 
-            var tabs = {
-                'overview': {
-                    default:true,
-                    initialiser: function () {
-                        initialiseOverview();
-                    }
-                },
-                'plan': {
-                    initialiser: function() {
-                        $.event.trigger({type:'planTabShown'});
-                    }
-                },
-                'dashboard': {
-                    initialiser: function() {
-                        $.event.trigger({type:'dashboardShown'});
-                    }
-                },
-                'documents': {
-                    initialiser: function() {
-                        initialiseDocumentTable('#overviewDocumentList');
-                    }
-                },
-                'site': {
-                    initialiser: function () {
-                        L.Browser.touch = false;
-                        var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
-                        var sitesTabOptions = {
-                            featureServiceUrl: fcConfig.featureServiceUrl,
-                            wmsServerUrl: fcConfig.geoserverUrl,
-                            spinnerUrl: fcConfig.spinnerUrl,
-                            mapFeatures: mapFeatures,
-                            sitesPhotoPointsUrl:fcConfig.sitesPhotoPointsUrl,
-                            userIdEditor: userRoles.editor,
-                            bindingElementId:'sitesList',
-                            sitesTableSelector:'#sites-table',
-                            selectAllSelector:'#select-all-sites',
-                            photoPointSelector:'#site-photo-points',
-                            loadingSpinnerSelector:'#img-spinner',
-                            photoScrollerSelector:'.photo-slider',
-                            useAlaMap:config.useAlaMap,
-                            showSiteType:config.showSiteType
-                        };
-                        if (config.useAlaMap) {
-                            sitesTabOptions.mapFeatures = {};
-                            sitesTabOptions.useGoogleBaseMap = fcConfig.useGoogleBaseMap;
-                            var sitesList = $('#'+sitesTabOptions.bindingElementId);
-                            sitesList.children().hide();
-                            sitesList.append('<image class="sites-spinner" width="50" height="50" src="'+sitesTabOptions.spinnerUrl+'" alt="Loading"/>');
-                            $.get(fcConfig.projectSitesUrl).done(function(data) {
-                                sitesList.children().show();
-                                var sitesViewModel = viewModel.initialiseSitesTab(sitesTabOptions);
-
-                                if (data && data.features) {
-                                    sitesViewModel.setFeatures(data.features);
-                                }
-                                sitesList.find('.sites-spinner').remove();
-
-                            });
-                        }
-                        else {
-                            viewModel.initialiseSitesTab(sitesTabOptions);
-                        }
-                    }
-                },
-                'details': {
-                    initialiser: function () {
-                        viewModel.initialiseMeriPlan();
-                    }
-                },
-                'reporting': {
-                    initialiser: function () {
-                        viewModel.initialiseReports();
-                    }
-                },
-                'datasets': {
-                    initialiser: function() {
-                        viewModel.initialiseDataSets();
-                    }
-                },
-                'admin': {
-                    initialiser: function () {
-                        viewModel.initialiseAdminTab();
-                    }
-                }
-            };
-
-            initialiseTabs(tabs, {tabSelector:'.nav-link', tabShownEvent:'shown', tabStorageKey:'project-tab-state', initialisingHtmlSelector:'#spinner'});
-
+    autoSaveModel(viewModel.meriPlan.risks, fcConfig.projectUpdateUrl, options);
 
             var meriPlanVisible = false;
             var risksVisible = false;
@@ -456,9 +356,6 @@
                 }
             });
 
-
-
-
             $('#gotoEditBlog').click(function () {
                 amplify.store('project-admin-tab-state', '#editProjectBlog');
                 $('#admin-tab').tab('show');
@@ -486,7 +383,6 @@
 
 </asset:script>
 <asset:javascript src="common-bs4.js"/>
-<asset:javascript src="tab-init.js"/>
 <asset:javascript src="projects.js"/>
 <asset:javascript src="reporting.js"/>
 <asset:javascript src="select2/4.0.3/js/select2.full"/>

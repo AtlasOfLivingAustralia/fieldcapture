@@ -35,7 +35,7 @@
     }
     </style>
 
-    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="common-bs4.css"/>
     <asset:stylesheet src="project.css"/>
 </head>
 <body>
@@ -66,7 +66,7 @@
     });
     </asset:script>
 </div>
-<asset:javascript src="common.js"/>
+<asset:javascript src="common-bs4.js"/>
 <asset:javascript src="projects.js"/>
 <asset:deferredScripts/>
 </body>

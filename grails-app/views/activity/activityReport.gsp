@@ -111,9 +111,6 @@
         }else{
             reportSite = ${reportSite?.encodeAsJSON() ?: '{}' };
         }
-
-
-        console.log(reportSite.features);
         var projectArea = ${projectArea?.encodeAsJSON() ?: '{}'};
 
         var reportId = '${report.reportId}';

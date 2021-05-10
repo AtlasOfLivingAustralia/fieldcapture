@@ -4,24 +4,24 @@
         <p>No ${wordForSite}s are currently associated with this project.</p>
         <g:if test="${editable}">
             <div class="btn-group btn-group-horizontal ">
-                <button data-bind="click: $root.addSite" type="button" class="btn addSite">Add new ${wordForSite}</button>
-                <button data-bind="click: $root.uploadSites" type="button" class="btn uploadSite">Upload ${wordForSite}s from shapefile</button>
+                <button data-bind="click: $root.addSite" type="button" class="btn btn-sm addSite"><i class="fa fa-plus"></i> Add new ${wordForSite}</button>
+                <button data-bind="click: $root.uploadSites" type="button" class="btn btn-sm uploadSite"> <i class="fa fa-upload"></i> Upload ${wordForSite}s from shapefile</button>
             </div>
         </g:if>
     </div>
 
 
-    <div class="row-fluid"  data-bind="visible: sites.length > 0">
-        <div class="span5">
+    <div class="row"  data-bind="visible: sites.length > 0">
+        <div class="col-sm-5">
 
             <div class="site-actions">
 
                 Actions:
                 <span class="btn-group">
-                    <a data-bind="click: $root.addSite" id="addSite" class="btn" title="Create a new site for your project"><i class="fa fa-plus"></i> New</a>
-                    <a data-bind="click: $root.uploadSites" id="siteUpload" type="button" class="btn" title="Create sites for your project by uploading a file"><i class="fa fa-upload"></i> Upload</a>
-                    <a data-bind="click: $root.downloadShapefile" id="siteDownload" type="button" class="btn" title="Download your project sites in shapefile format"><i class="fa fa-download"></i> Download</a>
-                    <button data-bind="click: $root.removeSelectedSites, enable:$root.selectedSiteIds().length > 0"  id="siteDeleted" type="button" class="btn" title="Delete selected sites"><i class="fa fa-trash"></i> Delete</button>
+                    <a data-bind="click: $root.addSite" id="addSite" class="btn btn-sm" title="Create a new site for your project"><i class="fa fa-plus"></i> New</a>
+                    <a data-bind="click: $root.uploadSites" id="siteUpload" type="button" class="btn btn-sm" title="Create sites for your project by uploading a file"><i class="fa fa-upload"></i> Upload</a>
+                    <a data-bind="click: $root.downloadShapefile" id="siteDownload" type="button" class="btn btn-sm" title="Download your project sites in shapefile format"><i class="fa fa-download"></i> Download</a>
+                    <button data-bind="click: $root.removeSelectedSites, enable:$root.selectedSiteIds().length > 0"  id="siteDeleted" type="button" class="btn btn-sm" title="Delete selected sites"><i class="fa fa-trash"></i> Delete</button>
                 </span>
 
             </div>
@@ -49,9 +49,9 @@
                     <td>
                         <g:if test="${editable}">
                             <span>
-                                <button type="button" data-bind="click:$root.editSite, visible:type != 'compound'" class="btn btn-container"><i class="icon-edit" title="Edit ${wordForSite.capitalize()}"></i></button>
-                                <button type="button" data-bind="click:$root.viewSite" class="btn btn-container"><i class="icon-eye-open" title="View ${wordForSite.capitalize()}"></i></button>
-                                <button type="button" data-bind="click:$root.deleteSite, visible:type != 'compound'" class="btn btn-container"><i class="icon-remove" title="Delete ${wordForSite.capitalize()}"></i></button>
+                                <button type="button" data-bind="click:$root.editSite, visible:type != 'compound'" class="btn btn-sm btn-container"><i class="icon-edit" title="Edit ${wordForSite.capitalize()}"></i></button>
+                                <button type="button" data-bind="click:$root.viewSite" class="btn btn-sm btn-container"><i class="icon-eye-open" title="View ${wordForSite.capitalize()}"></i></button>
+                                <button type="button" data-bind="click:$root.deleteSite, visible:type != 'compound'" class="btn btn-sm btn-container"><i class="icon-remove" title="Delete ${wordForSite.capitalize()}"></i></button>
                             </span>
                         </g:if>
                     </td>
@@ -76,7 +76,7 @@
         </div>
 
 
-        <div class="span7">
+        <div class="col-sm-7">
             <m:map id="map" width="100%"></m:map>
         </div>
     </div>

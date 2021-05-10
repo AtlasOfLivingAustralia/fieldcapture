@@ -572,9 +572,9 @@ function initialiseDocumentTable(containerSelector) {
             ],
             "order":[[2, 'desc'], [3, 'desc']],
             "dom":
-            "<'row-fluid'<'span5'l><'span7'f>r>" +
-            "<'row-fluid'<'span12't>>" +
-            "<'row-fluid'<'span6'i><'span6'p>>"
+            "<'row'<'col-sm-5'l><'col-sm-7'f>r>" +
+            "<'row col-sm-12'<'col-sm-12't>>" +
+            "<'row'<'col-sm-6'i><'col-sm-6'p>>"
 
         });
 

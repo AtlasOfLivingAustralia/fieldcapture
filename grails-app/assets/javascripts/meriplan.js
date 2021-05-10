@@ -1063,6 +1063,10 @@ function OutcomesViewModel(outcomes, config) {
         }]
     }
 
+    if (!outcomes.otherOutcomes){
+        outcomes.otherOutcomes = []
+    }
+
     /**
      * Filters the program outcomes specified in config.outcomes based on the outcome type.
      * Outcomes can be optionally 'primary' or 'secondary'.  Outcomes with no type are both

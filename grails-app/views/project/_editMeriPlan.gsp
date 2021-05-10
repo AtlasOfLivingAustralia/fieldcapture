@@ -38,7 +38,7 @@
 
 </script>
 <script id="completedProjectTmpl" type="text/html">
-<div class="span6 required">
+<div class="col-sm-6 required">
 	%{--<div class="form-actions" >--}%
 		%{--<b>Grant manager actions:</b>--}%
 		%{--<span class="btn-group">--}%
@@ -48,7 +48,7 @@
 </div>
 </script>
 <script id="unlockedProjectTmpl" type="text/html">
-<div class="span6 required">
+<div class="col-sm-6 required">
 	<div class="form-actions" >
 		<b>Grant manager actions:</b>
 		<span class="btn-group">
@@ -60,8 +60,7 @@
 
 <g:render template="/shared/declaration" model="[divId:'unlockPlan', declarationType:au.org.ala.merit.SettingPageType.UNLOCK_PLAN_DECLARATION]"/>
 <g:render template="meriPlanApprovalModal"/>
-<div class="row">
-
+<div class="row mb-4 mt-3">
 	<div class="col-sm-6">
 		<div class="control-group">
 			<div>
@@ -72,7 +71,7 @@
 	</div>
 <g:if test="${showMeriPlanHistory}">
 	<div class="col-sm-6">
-		<div class="pull-right"><a class="btn btn-info meri-history-toggle" data-bind="click:toggleMeriPlanHistory, text:meriPlanHistoryVisible() ? 'Hide approval history' : 'Show approval history'">Show MERI plan approvals</a></div>
+		<div class="pull-right"><a class="btn btn-info btn-sm meri-history-toggle" data-bind="click:toggleMeriPlanHistory, text:meriPlanHistoryVisible() ? 'Hide approval history' : 'Show approval history'">Show MERI plan approvals</a></div>
 	</div>
 </g:if>
 

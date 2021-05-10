@@ -3,7 +3,7 @@
     <!-- ko stopBinding:true -->
     <div id="view-meri-plan">
         <div>
-            <span class="badge" style="font-size: 13px;" data-bind="text:meriPlanStatus().text, css:meriPlanStatus().badgeClass"></span>
+            <span class="badge text-white" style="font-size: 13px;" data-bind="text:meriPlanStatus().text, css:meriPlanStatus().badgeClass"></span>
             <span data-bind="if:detailsLastUpdated"> <br/>Last update date : <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
         </div>
     <g:render template="${meriPlanTemplate}" model="[project: project, risksAndThreatsVisible:risksAndThreatsVisible, announcementsVisible:announcementsVisible]"/>
@@ -13,7 +13,7 @@
     <div class="row space-after">
         <div class="col-sm-12">
             <div class="well well-small">
-                <label><b>MERI attachments:</b></label>
+                <label class="pl-3"><b>MERI attachments:</b></label>
                 <g:render template="/shared/listDocuments"
                           model="[useExistingModel: true,editable:false, filterBy: 'programmeLogic', ignore: [], imageUrl:assetPath(src:'/'),containerId:'meriPlanDocumentList']"/>
             </div>
