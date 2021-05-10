@@ -892,3 +892,6 @@ span.status {
 	 border: 1px solid rgb(247,247,249);
 	 border-radius: 0.25rem;
  }
+ .customImage {
+	 border-radius: 0.25rem !important;
+ }
