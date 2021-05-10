@@ -211,7 +211,7 @@ class EditableMeriPlan extends Module {
         // There is a chance of a race condition here if the save
         // finishes before this check runs, hence catching the assertion
         try {
-            waitFor(3, 0.1) { $('.blockMsg').displayed }
+            waitFor(5, 0.1) { $('.blockMsg').displayed }
         }
         catch (Throwable e) {
             // Don't care, we just need the save to finish, the 3 second
