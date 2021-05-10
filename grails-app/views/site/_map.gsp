@@ -20,33 +20,33 @@
                 </div>
             </g:if>
             <div class="row">
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                     <label for="externalId">External Id
                         <fc:iconHelp title="External id">Identifier code for the site - used in external documents.</fc:iconHelp>
                     </label>
                     <div>
-                        <input data-bind="value:externalId" id="externalId" class="form-control form-control-sm input-medium" type="text"/>
+                        <input data-bind="value:externalId" id="externalId" class="form-control" type="text"/>
                     </div>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                     <label for="siteType">Type</label>
                     %{--<input data-bind="value: type" id="siteType" type="text" class="span12"/>--}%
                     <div>
                         <g:select id="siteType"
                               data-bind="value: type"
-                              class="form-control form-control-sm input-medium"
+                              class="form-control"
                               name='type'
                               from="['Works Area','Project Extent']"
                               keys="['worksArea','projectArea']"/>
                     </div>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                     <label for="siteContext">Context</label>
                     %{--<input data-bind="value: context" id="siteContext" type="text" class="span12"/>--}%
                     <div>
                         <g:select id="siteContext"
                               data-bind="value: context"
-                              class="form-control form-control-sm input-medium"
+                              class="form-control"
                               name='context'
                               from="['choose site context','Pastoral','Industrial','Urban','Coastal', 'Reserve', 'Private land']"
                               keys="['none','Pastoral','Industrial','Urban','Coastal','Reserve', 'Private land']"/>
@@ -76,13 +76,14 @@
 
                 <div class="col-sm-6">
                     <div class="well well-small">
-                        <div>
-                            <h4>Define extent using:
-                            <g:select class="input-medium form-control form-control-sm" data-bind="value: extentSource" data-validation-engine="validate[funcCall[validateSiteExtent]]"
-                                      name='extentSource'
-                                      from="['choose type','point','known shape','draw a shape']"
-                                      keys="['none','point','pid','drawn']"/>
-                            </h4>
+                        <div class="form-group row">
+                            <label for="extentSource" class="col-sm-3 pr-0"><h4>Define extent using:</h4></label>
+                            <div class="col-sm-9 pl-0 extentSelect">
+                                <g:select class="input-small form-control" data-bind="value: extentSource" data-validation-engine="validate[funcCall[validateSiteExtent]]"
+                                          name='extentSource'
+                                          from="['choose type','point','known shape','draw a shape']"
+                                          keys="['none','point','pid','drawn']"/>
+                            </div>
                         </div>
 
                         <div id="map-controls" data-bind="visible: extent().source() == 'drawn' ">
@@ -145,12 +146,12 @@
                             <div class="col-sm-11" data-bind="foreach: poi">
                                 <div>
                                     <div data-bind="template: { name: 'poi'}" ></div>
-                                    <button type="button" class="mt-2 btn btn-sm btn-danger" style="margin-bottom:20px;" data-bind="click: $parent.removePOI, visible:!hasPhotoPointDocuments">Remove</button>
+                                    <button type="button" class="mt-2 ml-4 btn btn-sm btn-danger" style="margin-bottom:20px;" data-bind="click: $parent.removePOI, visible:!hasPhotoPointDocuments">Remove</button>
                                 </div>
                                 <hr/>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row ml-1">
                             <button type="button" data-bind="click: newPOI, visible: poi.length == 0" class="btn btn-sm">Add a POI</button>
                             <button type="button" data-bind="click: newPOI, visible: poi.length > 0" class="btn btn-sm">Add another POI</button>
                         </div>
@@ -205,18 +206,18 @@
 
     <script type="text/html" id="poi">
     <div class="drawLocationDiv row">
-        <div class="col-sm-10">
+        <div class="col-sm-12 pl-4 ml-2">
             <div class="row alert" style="box-sizing:border-box;" data-bind="visible:hasPhotoPointDocuments">
                 This point of interest has documents attached and cannot be removed.
             </div>
             <div class="row controls-row">
-                <fc:textField data-bind="value:name" outerClass="col-sm-4" class="form-control form-control-sm " label="Name" data-validation-engine="validate[required]"/>
+                <fc:textField data-bind="value:name" outerClass="col-sm-8" class="form-control form-control-sm " label="Name" data-validation-engine="validate[required]"/>
             </div>
             <div class="mt-2 row controls-row">
-                <fc:textArea rows="2" data-bind="value:description" outerClass="col-sm-10" class="form-control form-control-sm" label="Description"/>
+                <fc:textArea rows="2" data-bind="value:description" outerClass="col-sm-12 ml-3" class="form-control form-control-sm" label="Description"/>
             </div>
             <div class=" mt-2 row controls-row">
-                <div class="col-sm-10">
+                <div class="col-sm-10 ml-1">
                     <label for="type">Point type</label>
                     <div>
                         <g:select class="from-control form-control-sm custom-input" data-bind="value: type"
@@ -227,11 +228,11 @@
                 </div>
 
             </div>
-            <div class="mt-2 row controls-row">
+            <div class="mt-2 pl-1 row controls-row">
 
                     <fc:textField data-bind="value:geometry().decimalLatitude" outerClass="col-sm-4"  class="form-control form-control-sm" label="Latitude" data-validation-engine="validate[required,custom[number],min[-90],max[0]]" data-prompt-position="topRight:-150"/>
                     <fc:textField data-bind="value:geometry().decimalLongitude" outerClass="col-sm-4" class="form-control form-control-sm" label="Longitude" data-validation-engine="validate[required,custom[number],min[-180],max[180]]"/>
-                    <fc:textField data-bind="value:geometry().bearing" outerClass="col-sm-3" class="form-control form-control-sm" label="Bearing (degrees)" data-validation-engine="validate[custom[number],min[0],max[360]]" data-prompt-position="topRight:-150"/>
+                    <fc:textField data-bind="value:geometry().bearing" outerClass="col-sm-4" class="form-control form-control-sm" label="Bearing (degrees)" data-validation-engine="validate[custom[number],min[0],max[360]]" data-prompt-position="topRight:-150"/>
             </div>
             <div class="row controls-row" style="display:none;">
                 <div class="col-sm-10">
@@ -254,13 +255,13 @@
                 optionsCaption:'Choose a layer...',
                 optionsValue: 'id',
                 optionsText:'name',
-                value: chosenLayer" class="form-control form-control-sm"></select>
+                value: chosenLayer" class="form-control"></select>
             </div>
             <div class="col-sm-4">
                 <select id="chooseShape"   name="chooseShape" data-bind="options: layerObjects, disable: layerObjects().length == 0,
                 optionsCaption:'Choose shape ...',
                 optionsValue: 'pid',
-                optionsText:'name', value: layerObject" class="form-control form-control-sm"></select>
+                optionsText:'name', value: layerObject" class="form-control"></select>
             </div>
         </div>
 
@@ -303,7 +304,7 @@
 
     <script type="text/html" id="drawn">
     <div id="drawnLocationDiv" class="drawLocationDiv row">
-        <div class="col-sm-10">
+        <div class="col-sm-10 ml-3">
 
             <div class="mt-2 row controls-row" style="display:none;">
                 <span class="label label-success">Type</span> <span data-bind="text:geometry().type"></span>

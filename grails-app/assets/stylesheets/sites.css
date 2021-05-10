@@ -46,9 +46,43 @@
      width: 60%;
  }
 
+ .input-small {
+     width: 30%;
+ }
+
  .custom-input {
      padding: 5px;
      border-radius: 0.25rem;
      border: 1px solid #ced4da;
-     width: 207px;
+     width: 250px;
  }
+
+ .extentSelect{
+     margin-left: -48px !important;
+     margin-right: 6px !important;
+ }
+ .badge-warning {
+     color: #fff;
+     padding: 0.25rem;
+ }
+ul.nav.nav-tabs.nav-tab-small.space-before a {
+    padding-left: 17px !important;
+    padding-top: 10px !important;
+    padding-right: 17px !important;
+    border-top-right-radius: 0.25rem !important;
+    border-top-left-radius: 0.25rem !important;
+}
+
+.fn-gantt .row {
+    margin-right: unset !important;
+}
+.fn-gantt .nav-link {
+    padding: 0.5rem 0.5rem !important;
+}
+
+#sites-container input, #sites-container textarea, #sites-container select{
+    border: 1px solid #e3e3e3;
+    border-radius: .25rem;
+    padding: 0.25rem;
+}
+

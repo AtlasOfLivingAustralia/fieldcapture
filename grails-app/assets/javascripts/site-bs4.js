@@ -11,6 +11,7 @@
 //= require knockout-repeat/2.1/knockout-repeat.js
 //= require attach-document-no-ui.js
 //= require jquery.fileDownload/jQuery.fileDownload
+//= require projects.js
 //= require sites.js
 //= require activity.js
 //= require projectActivityPlan.js
