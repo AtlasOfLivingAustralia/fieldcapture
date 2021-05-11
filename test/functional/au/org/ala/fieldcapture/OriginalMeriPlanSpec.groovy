@@ -1,6 +1,5 @@
 package au.org.ala.fieldcapture
 
-
 import pages.RlpProjectPage
 
 class OriginalMeriPlanSpec extends StubbedCasSpec {
@@ -27,37 +26,43 @@ class OriginalMeriPlanSpec extends StubbedCasSpec {
 
         when:
         def meriPlan = openMeriPlanEditTab()
+
+        then:
         meriPlan != null
+
+        when:
         meriPlan.objectivesAndAssets[0].outcome = "Objective 1"
         meriPlan.objectivesAndAssets[0].assets = ['Threatened Species'];
         meriPlan.addObjectiveAndAssetRow()
         meriPlan.objectivesAndAssets[1].outcome = "Objective 2"
         meriPlan.objectivesAndAssets[1].assets = ['Threatened Species'];
+
         meriPlan.save()
 
-        then:
+        def previousLoad = getAtCheckTime()
         to RlpProjectPage, projectId
-        waitFor { at RlpProjectPage }
+        waitFor { getAtCheckTime() > previousLoad }
+        meriPlan = openMeriPlanEditTab()
 
-        def meriPlan1 = openMeriPlanEditTab()
-        meriPlan1 != null
-        meriPlan1.objectivesAndAssets[0].outcome.value() == "Objective 1"
-        meriPlan1.objectivesAndAssets[0].assets.value() == ['Threatened Species']
-        meriPlan1.objectivesAndAssets[1].outcome.value() == "Objective 2"
-        meriPlan1.objectivesAndAssets[1].assets.value() == ['Threatened Species']
+        then:
+        meriPlan.objectivesAndAssets[0].outcome.value() == "Objective 1"
+        meriPlan.objectivesAndAssets[0].assets.value() == ['Threatened Species'];
+        meriPlan.objectivesAndAssets[1].outcome.value() == "Objective 2"
+        meriPlan.objectivesAndAssets[1].assets.value() == ['Threatened Species'];
 
         when:
-        meriPlan1.objectivesAndAssets[1].remove()
-        meriPlan1.save()
+        meriPlan.objectivesAndAssets[1].remove()
+        meriPlan.save()
+
+        previousLoad = getAtCheckTime()
+        to RlpProjectPage, projectId
+        waitFor { getAtCheckTime() > previousLoad }
+        meriPlan = openMeriPlanEditTab()
 
         then:
-        to RlpProjectPage, projectId
-        waitFor { at RlpProjectPage }
+        meriPlan.objectivesAndAssets.size() == 1
+        meriPlan.objectivesAndAssets[0].outcome.value() == "Objective 1"
+        meriPlan.objectivesAndAssets[0].assets.value() == ['Threatened Species'];
 
-        def meriPlan2 = openMeriPlanEditTab()
-        meriPlan2 != null
-        meriPlan2.objectivesAndAssets.size() == 1
-        meriPlan2.objectivesAndAssets[0].outcome.value() == "Objective 1"
-        meriPlan2.objectivesAndAssets[0].assets.value() == ['Threatened Species']
     }
 }
