@@ -5,7 +5,7 @@ import au.org.ala.merit.hub.HubSettings
 import grails.converters.JSON
 import grails.util.Holders
 import groovy.text.GStringTemplateEngine
-import org.codehaus.groovy.grails.web.servlet.mvc.GrailsWebRequest
+import org.grails.web.servlet.mvc.GrailsWebRequest
 import org.springframework.web.context.request.RequestAttributes
 
 class SettingService {

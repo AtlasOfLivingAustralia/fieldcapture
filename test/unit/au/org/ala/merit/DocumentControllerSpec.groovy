@@ -4,9 +4,9 @@ import grails.test.mixin.TestFor
 import org.apache.http.HttpStatus
 import org.springframework.mock.web.MockMultipartFile
 import spock.lang.Specification
+import grails.testing.web.controllers.ControllerUnitTest
 
-@TestFor(DocumentController)
-class DocumentControllerSpec extends Specification {
+class DocumentControllerSpec extends Specification implements ControllerUnitTest<DocumentController>{
 
     DocumentService documentService = Mock(DocumentService)
     def setup() {

@@ -1,4 +1,4 @@
-<%@ page import="au.org.ala.merit.SettingPageType" contentType="text/html;charset=UTF-8" %>
+<%@ page import="au.org.ala.merit.SettingPageType" contentType="text/html;charset=UTF-8" expressionCodec="none"%>
 <!DOCTYPE HTML>
 <html>
 <head>

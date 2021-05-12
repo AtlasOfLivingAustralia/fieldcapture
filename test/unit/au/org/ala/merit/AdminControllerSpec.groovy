@@ -3,9 +3,9 @@ package au.org.ala.merit
 import au.org.ala.web.AuthService
 import grails.test.mixin.TestFor
 import spock.lang.Specification
+import grails.testing.web.controllers.ControllerUnitTest
 
-@TestFor(AdminController)
-class AdminControllerSpec extends Specification {
+class AdminControllerSpec extends Specification implements ControllerUnitTest<AdminController>{
 
     def adminService = Mock(AdminService)
     def authService  = Mock(AuthService)

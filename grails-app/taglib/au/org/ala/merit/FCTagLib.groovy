@@ -6,9 +6,9 @@ import bootstrap.Attribute
 import grails.converters.JSON
 import groovy.xml.MarkupBuilder
 import org.apache.commons.lang.WordUtils
-import org.codehaus.groovy.grails.web.json.JSONArray
-import org.codehaus.groovy.grails.web.json.JSONObject
-import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
+import org.grails.web.json.JSONArray
+import org.grails.web.json.JSONObject
+import grails.web.servlet.mvc.GrailsParameterMap
 
 class FCTagLib {
 

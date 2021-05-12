@@ -1,7 +1,7 @@
 package au.org.ala.merit
 
 import grails.converters.JSON
-import org.codehaus.groovy.grails.web.mapping.LinkGenerator
+import grails.web.mapping.LinkGenerator
 import org.springframework.context.MessageSource
 
 import javax.xml.bind.DatatypeConverter

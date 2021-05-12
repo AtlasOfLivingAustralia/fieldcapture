@@ -15,6 +15,7 @@
 
 package au.org.ala.merit
 import grails.converters.JSON
+import grails.core.GrailsApplication
 import groovy.json.JsonParserType
 import groovy.json.JsonSlurper
 import groovyx.net.http.HTTPBuilder
@@ -23,8 +24,8 @@ import org.apache.http.entity.mime.HttpMultipartMode
 import org.apache.http.entity.mime.MultipartEntity
 import org.apache.http.entity.mime.content.InputStreamBody
 import org.apache.http.entity.mime.content.StringBody
-import org.codehaus.groovy.grails.web.converters.exceptions.ConverterException
-import org.codehaus.groovy.grails.web.servlet.HttpHeaders
+import org.grails.web.converters.exceptions.ConverterException
+import grails.web.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.web.multipart.MultipartFile
 
@@ -39,8 +40,8 @@ class WebService {
     def getUserService() {
         return grailsApplication.mainContext.userService
     }
-    
-    def grailsApplication
+
+    GrailsApplication grailsApplication
 
     def get(String url, boolean includeUserId) {
         def conn = null
@@ -239,11 +240,11 @@ class WebService {
     }
 
     String getCharset(urlConnection) {
-        def charset = 'UTF-8' // default
+        String charset = 'UTF-8' // default
         def contentType = urlConnection.getContentType()
         if (contentType) {
-            def mediaType = MediaType.parseMediaType(contentType)
-            charset = (mediaType.charSet)?mediaType.charSet.toString():'UTF-8'
+            MediaType mediaType = MediaType.parseMediaType(contentType)
+            charset = (mediaType.charset)?mediaType.charset.toString():'UTF-8'
         }
         charset
     }

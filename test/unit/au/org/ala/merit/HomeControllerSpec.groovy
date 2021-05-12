@@ -3,10 +3,10 @@ package au.org.ala.merit
 import au.org.ala.merit.hub.HubSettings
 import grails.test.mixin.TestFor
 import spock.lang.Specification
+import grails.testing.web.controllers.ControllerUnitTest
 
 /** Tests the HomeController */
-@TestFor(HomeController)
-class HomeControllerSpec extends Specification {
+class HomeControllerSpec extends Specification implements ControllerUnitTest<HomeController>{
 
     SearchService searchService = Mock(SearchService)
     UserService userService = Mock(UserService)

@@ -1,17 +1,19 @@
 package au.org.ala.merit
 
 import grails.converters.JSON
+import grails.core.GrailsApplication
 import org.apache.http.HttpStatus
 import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.apache.poi.ss.util.CellReference
-import org.codehaus.groovy.grails.web.json.JSONArray
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.grails.web.json.JSONArray
+import org.grails.web.json.JSONObject
 
 
 class ActivityController {
 
-    def activityService, siteService, projectService, metadataService, userService, excelImportService, webService, grailsApplication, speciesService, documentService, reportService
+    def activityService, siteService, projectService, metadataService, userService, excelImportService, webService, speciesService, documentService, reportService
+    GrailsApplication grailsApplication
 
     static ignore = ['action','controller','id']
     static allowedMethods = [ajaxUnlock:'POST']

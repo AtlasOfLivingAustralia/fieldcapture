@@ -1,0 +1,10 @@
+rootProject.name = 'fieldcapture'
+boolean inplace = false
+
+if (inplace) {
+    include ':ecodata-client-plugin'
+    project(':ecodata-client-plugin').projectDir = new File(settingsDir, '../ecodata-client-plugin')
+}
+
+
+

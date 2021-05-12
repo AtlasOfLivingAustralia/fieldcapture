@@ -1,7 +1,7 @@
 package au.org.ala.merit
 
 import au.org.ala.web.AuthService
-import grails.plugin.cache.GrailsCacheManager
+import org.grails.plugin.cache.GrailsCacheManager
 import grails.plugin.cache.ehcache.GrailsEhcacheCache
 import grails.test.mixin.TestFor
 import spock.lang.Specification

@@ -1,9 +1,11 @@
 package au.org.ala.merit
 
 import grails.converters.JSON
+import grails.core.GrailsApplication
 
 class SearchController {
-    def searchService, webService, speciesService, grailsApplication, commonService, documentService, reportService
+    def searchService, webService, speciesService, commonService, documentService, reportService
+    GrailsApplication grailsApplication
 
     /**
      * Main search page that takes its input from the search bar in the header

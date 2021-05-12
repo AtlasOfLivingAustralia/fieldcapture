@@ -1,7 +1,7 @@
 package au.org.ala.merit
 
 import grails.converters.JSON
-import org.codehaus.groovy.grails.web.json.JSONArray
+import org.grails.web.json.JSONArray
 
 /**
  * Extends the UserController to add report information.

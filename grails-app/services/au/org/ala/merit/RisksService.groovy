@@ -1,6 +1,6 @@
 package au.org.ala.merit
 
-import org.codehaus.groovy.grails.commons.GrailsApplication
+import grails.core.GrailsApplication
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 

@@ -1,7 +1,8 @@
 package au.org.ala.merit
 
 import grails.converters.JSON
-import org.codehaus.groovy.grails.web.json.JSONArray
+import grails.core.GrailsApplication
+import org.grails.web.json.JSONArray
 
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
@@ -21,7 +22,8 @@ class MobileController {
     static String MOBILE_AUTH_GET_KEY_URL = MOBILE_AUTH_BASE_URL+"/mobileauth/mobileKey/generateKey"
     static String MOBILE_AUTH_CHECK_KEY_URL = MOBILE_AUTH_BASE_URL+"/mobileauth/mobileKey/checkKey"
 
-    def metadataService, webService, grailsApplication, userService, projectService, activityService, siteService
+    def metadataService, webService, userService, projectService, activityService, siteService
+    GrailsApplication grailsApplication
 
     def jsRegexp = /(?m)script src="\/(.*)" type="text\/javascript"/
     def cssRegexp = /(?m)link href="\/(.*)" type="text\/css"/

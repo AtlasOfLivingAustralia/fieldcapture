@@ -4,9 +4,9 @@ import au.org.ala.merit.command.SaveReportDataCommand
 import grails.test.mixin.TestFor
 import org.apache.http.HttpStatus
 import spock.lang.Specification
+import grails.testing.web.controllers.ControllerUnitTest
 
-@TestFor(ManagementUnitController)
-class ManagementUnitControllerSpec extends Specification {
+class ManagementUnitControllerSpec extends Specification implements ControllerUnitTest<ManagementUnitController>{
 
     ManagementUnitService managementUnitService = Mock(ManagementUnitService)
     ReportService reportService = Mock(ReportService)

@@ -4,12 +4,12 @@ import grails.converters.JSON
 import grails.test.mixin.TestFor
 import org.apache.http.HttpStatus
 import spock.lang.Specification
+import grails.testing.web.controllers.ControllerUnitTest
 
 /**
  * Tests for the ActivityController
  */
-@TestFor(ActivityController)
-class ActivityControllerSpec extends Specification {
+class ActivityControllerSpec extends Specification implements ControllerUnitTest<ActivityController>{
 
     def activityService = Mock(ActivityService)
     def projectService = Mock(ProjectService)

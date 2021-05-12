@@ -7,8 +7,8 @@ import au.org.ala.merit.reports.ReportOwner
 import grails.converters.JSON
 import org.apache.commons.lang.CharUtils
 import org.apache.http.HttpStatus
-import org.codehaus.groovy.grails.web.json.JSONArray
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.grails.web.json.JSONArray
+import org.grails.web.json.JSONObject
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.Days

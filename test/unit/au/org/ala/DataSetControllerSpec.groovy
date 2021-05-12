@@ -5,9 +5,9 @@ import au.org.ala.merit.ProjectService
 import grails.test.mixin.TestFor
 import org.apache.http.HttpStatus
 import spock.lang.Specification
+import grails.testing.web.controllers.ControllerUnitTest
 
-@TestFor(DataSetController)
-class DataSetControllerSpec extends Specification {
+class DataSetControllerSpec extends Specification implements ControllerUnitTest<DataSetController>{
 
     ProjectService projectService = Mock(ProjectService)
     def setup() {

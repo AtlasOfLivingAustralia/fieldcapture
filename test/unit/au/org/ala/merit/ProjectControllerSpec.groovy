@@ -5,12 +5,12 @@ import au.org.ala.merit.command.SaveReportDataCommand
 import grails.test.mixin.TestFor
 import org.apache.http.HttpStatus
 import spock.lang.Specification
+import grails.testing.web.controllers.ControllerUnitTest
 
 /**
  * Specification for the ProjectController
  */
-@TestFor(ProjectController)
-class ProjectControllerSpec extends Specification {
+class ProjectControllerSpec extends Specification implements ControllerUnitTest<ProjectController>{
 
     def userServiceStub = Stub(UserService)
     def metadataServiceStub = Stub(MetadataService)

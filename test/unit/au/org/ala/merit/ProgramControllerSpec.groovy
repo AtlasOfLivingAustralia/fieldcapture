@@ -5,9 +5,9 @@ import grails.test.mixin.TestFor
 import org.apache.http.HttpStatus
 import org.codehaus.groovy.util.ListHashMap
 import spock.lang.Specification
+import grails.testing.web.controllers.ControllerUnitTest
 
-@TestFor(ProgramController)
-class ProgramControllerSpec extends Specification {
+class ProgramControllerSpec extends Specification implements ControllerUnitTest<ProgramController>{
 
     ProgramService programService = Mock(ProgramService)
     ManagementUnitService managementUnitService = Mock(ManagementUnitService)

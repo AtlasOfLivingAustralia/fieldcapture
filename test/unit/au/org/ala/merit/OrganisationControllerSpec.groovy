@@ -5,12 +5,9 @@ import grails.test.mixin.TestFor
 import org.grails.plugins.excelimport.ExcelImportService
 import org.springframework.mock.web.MockMultipartFile
 import spock.lang.Specification
+import grails.testing.web.controllers.ControllerUnitTest
 
-/**
- * See the API for {@link grails.test.mixin.web.ControllerUnitTestMixin} for usage instructions
- */
-@TestFor(OrganisationController)
-class OrganisationControllerSpec extends Specification {
+class OrganisationControllerSpec extends Specification implements ControllerUnitTest<OrganisationController>{
 
     def organisationService = Mock(OrganisationService)
     def searchService = Stub(SearchService)

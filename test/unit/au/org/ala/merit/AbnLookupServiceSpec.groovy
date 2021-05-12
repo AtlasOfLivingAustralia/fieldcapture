@@ -1,7 +1,7 @@
 package au.org.ala.merit
 
 import grails.test.mixin.TestFor
-import org.codehaus.groovy.grails.commons.GrailsApplication
+import grails.core.GrailsApplication
 import spock.lang.Specification
 
 /**

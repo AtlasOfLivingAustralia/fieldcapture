@@ -4,9 +4,9 @@ import grails.test.mixin.TestFor
 import org.apache.commons.io.IOUtils
 import org.apache.http.HttpStatus
 import spock.lang.Specification
+import grails.testing.web.controllers.ControllerUnitTest
 
-@TestFor(ImageController)
-class ImageControllerSpec extends Specification {
+class ImageControllerSpec extends Specification implements ControllerUnitTest<ImageController>{
 
     File uploadPath
     File temp

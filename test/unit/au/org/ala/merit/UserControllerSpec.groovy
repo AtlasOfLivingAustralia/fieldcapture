@@ -2,9 +2,9 @@ package au.org.ala.merit
 
 import grails.test.mixin.TestFor
 import spock.lang.Specification
+import grails.testing.web.controllers.ControllerUnitTest
 
-@TestFor(UserController)
-class UserControllerSpec extends Specification {
+class UserControllerSpec extends Specification implements ControllerUnitTest<UserController>{
 
 
     UserService userService = Mock(UserService)

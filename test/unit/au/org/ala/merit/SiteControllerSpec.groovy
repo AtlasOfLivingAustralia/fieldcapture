@@ -6,9 +6,9 @@ import net.sf.json.JSONNull
 import org.apache.http.HttpStatus
 import org.springframework.mock.web.MockMultipartFile
 import spock.lang.Specification
+import grails.testing.web.controllers.ControllerUnitTest
 
-@TestFor(SiteController)
-class SiteControllerSpec extends Specification {
+class SiteControllerSpec extends Specification implements ControllerUnitTest<SiteController>{
 
     SiteService siteService = Mock(SiteService)
     UserService userService = Mock(UserService)

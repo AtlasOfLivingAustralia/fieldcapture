@@ -8,7 +8,7 @@ import com.vividsolutions.jts.geom.Point
 import grails.converters.JSON
 import org.apache.commons.lang.StringUtils
 import org.geotools.geojson.geom.GeometryJSON
-import org.grails.plugins.csv.CSVMapReader
+import grails.plugins.csv.CSVMapReader
 import org.joda.time.DateTime
 import org.springframework.web.multipart.MultipartFile
 

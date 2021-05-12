@@ -1,8 +1,11 @@
 package au.org.ala.merit
 
+import grails.core.GrailsApplication
+
 class ResourceController {
 
-    def grailsApplication, webService, commonService
+    def webService, commonService
+    GrailsApplication grailsApplication
 
     def viewer() {}
 

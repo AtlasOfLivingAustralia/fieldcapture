@@ -3,8 +3,8 @@ package au.org.ala.merit
 import au.org.ala.merit.reports.ReportConfig
 import au.org.ala.merit.reports.ReportGenerationOptions
 import au.org.ala.merit.reports.ReportOwner;
-import org.codehaus.groovy.grails.commons.GrailsApplication
-import org.codehaus.groovy.grails.web.json.JSONArray
+import grails.core.GrailsApplication
+import org.grails.web.json.JSONArray
 import org.codehaus.groovy.util.ListHashMap
 
 class ProgramService {

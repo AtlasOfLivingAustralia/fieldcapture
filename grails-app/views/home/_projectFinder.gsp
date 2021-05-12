@@ -320,8 +320,8 @@
 
     var projectListIds = [], facetList = [], mapDataHasChanged = false, mapBounds, projectSites; // globals
     var facetModelViewArgs = {
-        facetsList : ${(facetsList as grails.converters.JSON).toString()},
-        results: ${(results as grails.converters.JSON).toString()},
+        facetsList : ${raw((facetsList as grails.converters.JSON).toString())},
+        results: ${raw((results as grails.converters.JSON).toString())},
         fqLink: "${fqLink}",
         baseUrl: "${baseUrl}",
         projectExplorerUrl: "${g.createLink(controller:'home', action:'projectExplorer')}"

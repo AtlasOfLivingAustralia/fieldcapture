@@ -3,12 +3,12 @@ package au.org.ala.merit
 import grails.test.mixin.TestFor
 import org.apache.http.HttpStatus
 import spock.lang.Specification
+import grails.testing.web.controllers.ControllerUnitTest
 
 /**
  * Specification / tests for the BlogController
  */
-@TestFor(BlogController)
-class BlogControllerSpec extends Specification {
+class BlogControllerSpec extends Specification implements ControllerUnitTest<BlogController>{
 
     def projectService = Mock(ProjectService)
     def blogService = Mock(BlogService)

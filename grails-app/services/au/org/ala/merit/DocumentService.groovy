@@ -3,7 +3,7 @@ package au.org.ala.merit
 import grails.converters.JSON
 import org.apache.commons.io.FilenameUtils
 import org.apache.http.HttpStatus
-import org.codehaus.groovy.grails.commons.GrailsApplication
+import grails.core.GrailsApplication
 import org.springframework.cache.annotation.Cacheable
 
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST

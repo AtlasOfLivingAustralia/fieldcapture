@@ -1,7 +1,7 @@
 package au.org.ala.merit
 
 
-import grails.plugin.cache.GrailsCacheManager
+import org.grails.plugin.cache.GrailsCacheManager
 import grails.plugin.cache.GrailsConcurrentMapCache
 import spock.lang.Specification
 

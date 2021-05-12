@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import grails.converters.JSON
+import grails.core.GrailsApplication
 import groovy.json.JsonSlurper
 import org.apache.commons.io.FilenameUtils
 import org.apache.http.HttpStatus
@@ -12,7 +13,8 @@ class DocumentController {
 
     static allowedMethods = [bulkUpdate: 'POST', documentUpdate: 'POST', deleteDocument: 'POST', downloadProjectDataFile: 'GET']
 
-    def grailsApplication, documentService, webService, userService
+    def documentService, webService, userService
+    GrailsApplication grailsApplication
 
     def index() {}
 

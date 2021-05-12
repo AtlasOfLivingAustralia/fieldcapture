@@ -1,7 +1,7 @@
 package au.org.ala.merit
 
 import au.org.ala.web.CASRoles
-import grails.plugin.cache.GrailsCacheManager
+import org.grails.plugin.cache.GrailsCacheManager
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.web.context.request.RequestContextHolder

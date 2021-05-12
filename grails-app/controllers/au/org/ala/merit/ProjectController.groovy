@@ -7,9 +7,10 @@ import au.org.ala.merit.command.SaveReportDataCommand
 import au.org.ala.merit.reports.ReportConfig
 import au.org.ala.merit.reports.ReportGenerationOptions
 import grails.converters.JSON
+import grails.core.GrailsApplication
 import org.apache.http.HttpStatus
-import org.codehaus.groovy.grails.web.json.JSONArray
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.grails.web.json.JSONArray
+import org.grails.web.json.JSONObject
 import org.joda.time.DateTime
 
 import static ReportService.ReportMode
@@ -25,8 +26,9 @@ class ProjectController {
     static String RLP_MERI_PLAN_TEMPLATE = "rlpMeriPlan"
     static String MERI_PLAN_TEMPLATE = "meriPlan"
 
-    def projectService, metadataService, commonService, activityService, userService, webService, roleService, grailsApplication
+    def projectService, metadataService, commonService, activityService, userService, webService, roleService
     def siteService, documentService, reportService, blogService, pdfGenerationService
+    GrailsApplication grailsApplication
 
     private def espOverview(Map project, Map user) {
 

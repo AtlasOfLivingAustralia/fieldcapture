@@ -2,7 +2,7 @@ package au.org.ala.merit
 
 import grails.test.mixin.TestFor
 import org.apache.http.HttpStatus
-import org.codehaus.groovy.grails.commons.GrailsApplication
+import grails.core.GrailsApplication
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.web.multipart.MultipartFile
 import spock.lang.Specification

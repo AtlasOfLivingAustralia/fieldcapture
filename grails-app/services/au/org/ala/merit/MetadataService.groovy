@@ -1,8 +1,8 @@
 package au.org.ala.merit
 
 import grails.converters.JSON
-import grails.plugin.cache.GrailsCacheManager
-import org.codehaus.groovy.grails.web.json.JSONArray
+import org.grails.plugin.cache.GrailsCacheManager
+import org.grails.web.json.JSONArray
 
 class MetadataService {
 

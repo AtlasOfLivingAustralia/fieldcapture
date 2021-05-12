@@ -4,9 +4,9 @@ import grails.test.mixin.TestFor
 import org.apache.http.HttpStatus
 import org.springframework.mock.web.MockMultipartFile
 import spock.lang.Specification
+import grails.testing.web.controllers.ControllerUnitTest
 
-@TestFor(DownloadController)
-class DownloadControllerSpec extends Specification {
+class DownloadControllerSpec extends Specification implements ControllerUnitTest<DownloadController>{
 
     WebService webService = Mock(WebService)
     def setup() {
