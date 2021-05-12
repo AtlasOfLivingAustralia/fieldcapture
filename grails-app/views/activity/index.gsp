@@ -136,12 +136,14 @@
         var activityId = '${activity.activityId}';
         var projectId = '${activity.projectId}';
         var siteId = '${activity.siteId?:""}';
-        var options = {navigationUrl:url, activityUrl:activityUrl, returnTo:fcConfig.returnTo};
+        var options = {navigationUrl:url, activityUrl:activityUrl};
         options.navContext = '${navContext}';
+        options.returnTo = '${returnToUrl}';
 
 
         ko.applyBindings(new ActivityNavigationViewModel('stayOnPage', projectId, activityId, siteId, options), document.getElementById('activity-nav'));
         </asset:script>
+    </g:if>
     </g:if>
     <g:else>
         <div class="form-actions">
