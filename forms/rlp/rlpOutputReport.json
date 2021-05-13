@@ -1,20 +1,29 @@
 {
-  "id": "5ef55d70c2dcbc2cc13faa36",
-  "dateCreated": "2020-06-26T02:29:04Z",
-  "minOptionalSectionsCompleted": 0,
-  "supportsSites": true,
-  "lastUpdated": "2021-04-07T22:48:28Z",
-  "createdUserId": "1493",
+  "class": "au.org.ala.ecodata.ActivityForm",
+  "id": "5fbdcdf8c2dc57262a163302",
   "activationDate": null,
-  "supportsPhotoPoints": false,
-  "publicationStatus": "published",
+  "category": "RLP Reports",
+  "createdUserId": "1493",
+  "dateCreated": "2020-11-25T03:22:32Z",
+  "formVersion": 6,
   "gmsId": null,
+  "lastUpdated": "2021-04-07T22:41:49Z",
+  "lastUpdatedUserId": "94320",
+  "minOptionalSectionsCompleted": 0,
   "name": "RLP Output Report",
+  "publicationStatus": "published",
   "sections": [
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Output WHS",
+      "optional": false,
+      "optionalQuestionText": null,
       "template": {
         "name": "RLP - Output WHS",
+        "title": "WHS Requirements",
         "dataModel": [
           {
             "name": "whsRequirementsMet",
@@ -59,109 +68,19 @@
               }
             ]
           }
-        ],
-        "title": "WHS Requirements"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpOutputWHS",
-      "optional": false,
-      "optionalQuestionText": null,
-      "title": "WHS Requirements",
-      "name": "RLP - Output WHS"
+      "title": "WHS Requirements"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
-      "template": {
-        "name": "RLP - Adapting to the COVID-19 Pandemic",
-        "dataModel": [
-          {
-            "name": "projectOutcomesImpacted",
-            "dataType": "text",
-            "validate": "required",
-            "constraints": [
-              "Yes",
-              "No"
-            ]
-          },
-          {
-            "name": "adaptiveManagementDetails",
-            "dataType": "text",
-            "validate": "required,maxSize[500]"
-          },
-          {
-            "dataType": "document",
-            "name": "additionalAdaptiveManagement",
-            "description": "Use this if you are unable to complete a description of your adaptive management strategy above",
-            "behaviour": [
-              {
-                "type": "visible",
-                "condition": "length adaptiveManagementDetails >= 490"
-              }
-            ]
-          }
-        ],
-        "viewModel": [
-          {
-            "type": "row",
-            "items": [
-              {
-                "type": "literal",
-                "source": "<p>This section is applicable to Service Providers that agreed in writing to the alternate payment arrangement due to COVID-19 and either have or intend to invoice for the service 'Maintaining organisational capacity (COVID-19)' in the 2019-20 financial year.</p><h4>Maintaining organisational capacity (COVID-19)</h4>"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "type": "selectOne",
-                "source": "projectOutcomesImpacted",
-                "preLabel": "Has COVID-19 impacted on project delivery?"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "type": "literal",
-                "source": "<p><b>What adaptive management actions occurred to address the impacts of COVID-19 on the project in Quarter 4 of the 2019-20 financial year?</b></p><p>Describe how you have adapted the project to minimise the effects of COVID-19 and maximise the delivery of the project outcomes, including redirection of funds, changes to project services and/or changes to project activities.</p><p>If, as a result of these adaptations, it will not be possible to fully deliver the contracted project services over the life of the project and you are likely to require changes to the project work order, please describe in the project change management section below.</p>"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "type": "textarea",
-                "rows": 5,
-                "source": "adaptiveManagementDetails",
-                "preLabel": ""
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "type": "document",
-                "source": "additionalAdaptiveManagement",
-                "preLabel": "If you have reached the character limit, you may attach additional information"
-              }
-            ]
-          }
-        ],
-        "title": "Adapting to the COVID-19 Pandemic"
-      },
       "modelName": null,
-      "templateName": "adaptingToTheCovid19Pandemic",
+      "name": "RLP - Change Management",
       "optional": false,
       "optionalQuestionText": null,
-      "title": "Adapting to the COVID-19 Pandemic",
-      "name": "RLP - Adapting to the COVID-19 Pandemic"
-    },
-    {
-      "collapsedByDefault": false,
       "template": {
         "dataModel": [
           {
@@ -208,6 +127,7 @@
           }
         ],
         "name": "RLP - Change Management",
+        "title": "Project change management",
         "viewModel": [
           {
             "type": "row",
@@ -251,19 +171,21 @@
               }
             ]
           }
-        ],
-        "title": "Project change management"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpChangeManagement",
-      "optional": false,
-      "optionalQuestionText": null,
-      "title": "Project change management",
-      "name": "RLP - Change Management"
+      "title": "Project change management"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Baseline data",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
+        "title": "Collecting or synthesising baseline data",
         "modelName": "RLP - Baseline data",
         "dataModel": [
           {
@@ -360,20 +282,20 @@
             ],
             "type": "section"
           }
-        ],
-        "title": "Collecting or synthesising baseline data"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpBaselineData",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Collecting, or synthesising baseline data",
-      "name": "RLP - Baseline data"
+      "title": "Collecting, or synthesising baseline data"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Communication materials",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
-        "modelName": "RLP - Communication Materials",
         "dataModel": [
           {
             "columns": [
@@ -442,6 +364,8 @@
             ]
           }
         ],
+        "modelName": "RLP - Communication Materials",
+        "title": "Communication Materials",
         "viewModel": [
           {
             "type": "section",
@@ -544,20 +468,20 @@
               }
             ]
           }
-        ],
-        "title": "Communication Materials"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpCommunicationMaterials",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Communication materials",
-      "name": "RLP - Communication materials"
+      "title": "Communication materials"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Community engagement",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
-        "modelName": "RLP - Community engagement",
         "dataModel": [
           {
             "columns": [
@@ -649,6 +573,8 @@
             ]
           }
         ],
+        "modelName": "RLP - Community engagement",
+        "title": "Community/stakeholder engagement",
         "viewModel": [
           {
             "type": "section",
@@ -776,20 +702,20 @@
               }
             ]
           }
-        ],
-        "title": "Community/stakeholder engagement"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpCommunityEngagement",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Community/stakeholder engagement",
-      "name": "RLP - Community engagement"
+      "title": "Community/stakeholder engagement"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Controlling access",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
-        "modelName": "RLP - Controlling access",
         "dataModel": [
           {
             "columns": [
@@ -1045,6 +971,8 @@
             ]
           }
         ],
+        "modelName": "RLP - Controlling access",
+        "title": "Controlling access",
         "viewModel": [
           {
             "type": "section",
@@ -1303,20 +1231,20 @@
               }
             ]
           }
-        ],
-        "title": "Controlling access"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpControllingAccess",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Controlling access",
-      "name": "RLP - Controlling access"
+      "title": "Controlling access"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Pest animal management",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
-        "modelName": "RLP - Pest animal management",
         "dataModel": [
           {
             "columns": [
@@ -1649,6 +1577,8 @@
             ]
           }
         ],
+        "modelName": "RLP - Pest animal management",
+        "title": "Controlling pest animals",
         "viewModel": [
           {
             "type": "section",
@@ -2000,20 +1930,20 @@
               }
             ]
           }
-        ],
-        "title": "Controlling pest animals"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpPestAnimalManagement",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Controlling pest animals",
-      "name": "RLP - Pest animal management"
+      "title": "Controlling pest animals"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Management plan development",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
-        "modelName": "RLP - Management plan development",
         "dataModel": [
           {
             "columns": [
@@ -2214,6 +2144,8 @@
             ]
           }
         ],
+        "modelName": "RLP - Management plan development",
+        "title": "Developing farm / project / site management plan",
         "viewModel": [
           {
             "type": "section",
@@ -2427,20 +2359,20 @@
               }
             ]
           }
-        ],
-        "title": "Developing farm / project / site management plan"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpManagementPlanDevelopment",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Developing farm/project/site management plan",
-      "name": "RLP - Management plan development"
+      "title": "Developing farm/project/site management plan"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Debris removal",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
-        "modelName": "RLP - Debris removal",
         "dataModel": [
           {
             "columns": [
@@ -2665,6 +2597,8 @@
             ]
           }
         ],
+        "modelName": "RLP - Debris removal",
+        "title": "Debris removal",
         "viewModel": [
           {
             "type": "section",
@@ -2899,20 +2833,20 @@
               }
             ]
           }
-        ],
-        "title": "Debris removal"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpDebrisRemoval",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Debris removal",
-      "name": "RLP - Debris removal"
+      "title": "Debris removal"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Erosion Management",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
-        "modelName": "RLP - Erosion Management",
         "dataModel": [
           {
             "columns": [
@@ -3192,6 +3126,8 @@
             ]
           }
         ],
+        "modelName": "RLP - Erosion Management",
+        "title": "Erosion management",
         "viewModel": [
           {
             "type": "section",
@@ -3478,20 +3414,20 @@
               }
             ]
           }
-        ],
-        "title": "Erosion management"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpErosionManagement",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Erosion management",
-      "name": "RLP - Erosion Management"
+      "title": "Erosion management"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Maintaining feral free enclosures",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
-        "modelName": "RLP - Maintaining feral free enclosures",
         "dataModel": [
           {
             "columns": [
@@ -3697,6 +3633,8 @@
             ]
           }
         ],
+        "modelName": "RLP - Maintaining feral free enclosures",
+        "title": "Establishing and maintaining feral-free enclosures",
         "viewModel": [
           {
             "type": "section",
@@ -3952,20 +3890,20 @@
               }
             ]
           }
-        ],
-        "title": "Establishing and maintaining feral-free enclosures"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpFeralFreeEnclosures",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Establishing and maintaining feral-free enclosures",
-      "name": "RLP - Maintaining feral free enclosures"
+      "title": "Establishing and maintaining feral-free enclosures"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Establishing ex-situ breeding programs",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
-        "modelName": "RLP - Establishing ex-situ breeding programs",
         "dataModel": [
           {
             "columns": [
@@ -4117,6 +4055,8 @@
             ]
           }
         ],
+        "modelName": "RLP - Establishing ex-situ breeding programs",
+        "title": "Establishing and maintaining breeding programs",
         "viewModel": [
           {
             "type": "section",
@@ -4287,20 +4227,20 @@
               }
             ]
           }
-        ],
-        "title": "Establishing and maintaining breeding programs"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpExSituBreedingSites",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Establishing ex-situ breeding program",
-      "name": "RLP - Establishing ex-situ breeding programs"
+      "title": "Establishing ex-situ breeding program"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Establishing Agreements",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
-        "modelName": "RLP - Establishing Agreements",
         "dataModel": [
           {
             "columns": [
@@ -4495,6 +4435,8 @@
             ]
           }
         ],
+        "modelName": "RLP - Establishing Agreements",
+        "title": "Establishing and maintaining agreements",
         "viewModel": [
           {
             "type": "section",
@@ -4709,19 +4651,21 @@
               }
             ]
           }
-        ],
-        "title": "Establishing and maintaining agreements"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpEstablishingAgreements",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Establishing and maintaining agreements",
-      "name": "RLP - Establishing Agreements"
+      "title": "Establishing and maintaining agreements"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Establishing monitoring regimes",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
+        "title": "Establishing monitoring regimes",
         "modelName": "RLP - Establishing monitoring regimes",
         "dataModel": [
           {
@@ -4905,19 +4849,21 @@
               }
             ]
           }
-        ],
-        "title": "Establishing monitoring regimes"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpMonitoringRegimes",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Establishing monitoring regimes",
-      "name": "RLP - Establishing monitoring regimes"
+      "title": "Establishing monitoring regimes"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Farm Management Survey",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
+        "title": "Farm management surveys",
         "modelName": "RLP - Farm Management Survey",
         "dataModel": [
           {
@@ -5069,20 +5015,20 @@
             ],
             "type": "section"
           }
-        ],
-        "title": "Farm management surveys"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpFarmManagementSurvey",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Farm management survey",
-      "name": "RLP - Farm Management Survey"
+      "title": "Farm management survey"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Fauna survey",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
-        "modelName": "RLP - Fauna survey",
         "dataModel": [
           {
             "columns": [
@@ -5288,6 +5234,8 @@
             ]
           }
         ],
+        "modelName": "RLP - Fauna survey",
+        "title": "Fauna survey",
         "viewModel": [
           {
             "type": "section",
@@ -5546,20 +5494,20 @@
               }
             ]
           }
-        ],
-        "title": "Fauna survey"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpFaunaSurvey",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Fauna survey",
-      "name": "RLP - Fauna survey"
+      "title": "Fauna survey"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Fire management",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
-        "modelName": "RLP - Fire management",
         "dataModel": [
           {
             "columns": [
@@ -5775,28 +5723,11 @@
                 "name": "sitesBenefittedByFireAction"
               },
               {
-                "defaultValue": {
-                  "type": "computed",
+                "computed": {
                   "expression": "$geom.areaHa(sitesBenefittedByFireAction)"
                 },
                 "dataType": "number",
-                "name": "areaBenefittedByFireActionHa",
-                "validate": [
-                  {
-                    "rule": "min",
-                    "param": {
-                      "type": "computed",
-                      "expression": "$geom.areaHa(sitesBenefittedByFireAction)*0.9"
-                    }
-                  },
-                  {
-                    "rule": "max",
-                    "param": {
-                      "type": "computed",
-                      "expression": "$geom.areaHa(sitesBenefittedByFireAction)*1.1"
-                    }
-                  }
-                ]
+                "name": "areaBenefittedByFireActionHa"
               },
               {
                 "dataType": "text",
@@ -5833,6 +5764,8 @@
             ]
           }
         ],
+        "modelName": "RLP - Fire management",
+        "title": "Implementing fire management actions",
         "viewModel": [
           {
             "type": "section",
@@ -6079,20 +6012,20 @@
               }
             ]
           }
-        ],
-        "title": "Implementing fire management actions"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpFireManagement",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Fire management actions",
-      "name": "RLP - Fire management"
+      "title": "Fire management actions"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Flora survey",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
-        "modelName": "RLP - Flora survey",
         "dataModel": [
           {
             "columns": [
@@ -6303,6 +6236,8 @@
             ]
           }
         ],
+        "modelName": "RLP - Flora survey",
+        "title": "Flora survey",
         "viewModel": [
           {
             "type": "section",
@@ -6566,20 +6501,20 @@
               }
             ]
           }
-        ],
-        "title": "Flora survey"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpFloraSurvey",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Flora survey",
-      "name": "RLP - Flora survey"
+      "title": "Flora survey"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Habitat augmentation",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
-        "modelName": "RLP - Habitat augmentation",
         "dataModel": [
           {
             "columns": [
@@ -6837,6 +6772,8 @@
             ]
           }
         ],
+        "modelName": "RLP - Habitat augmentation",
+        "title": "Habitat augmentation",
         "viewModel": [
           {
             "type": "section",
@@ -7090,19 +7027,21 @@
               }
             ]
           }
-        ],
-        "title": "Habitat augmentation"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpHabitatAugmentation",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Habitat augmentation",
-      "name": "RLP - Habitat augmentation"
+      "title": "Habitat augmentation"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Identifying sites",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
+        "title": "Identifying the location of potential sites",
         "modelName": "RLP - Identifying sites",
         "dataModel": [
           {
@@ -7232,20 +7171,20 @@
             ],
             "type": "section"
           }
-        ],
-        "title": "Identifying the location of potential sites"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpIdentifyingSites",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Identifying the location of potential sites",
-      "name": "RLP - Identifying sites"
+      "title": "Identifying the location of potential sites"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Improving hydrological regimes",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
-        "modelName": "RLP - Improving hydrological regimes",
         "dataModel": [
           {
             "columns": [
@@ -7486,6 +7425,8 @@
             ]
           }
         ],
+        "modelName": "RLP - Improving hydrological regimes",
+        "title": "Improving hydrological regimes",
         "viewModel": [
           {
             "type": "section",
@@ -7771,20 +7712,20 @@
               }
             ]
           }
-        ],
-        "title": "Improving hydrological regimes"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpImprovingHydrologicalRegimes",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Improving hydrological regimes",
-      "name": "RLP - Improving hydrological regimes"
+      "title": "Improving hydrological regimes"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Improving land management practices",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
-        "modelName": "RLP - Improving land management practices",
         "dataModel": [
           {
             "columns": [
@@ -7802,9 +7743,8 @@
                 "name": "implementationSite"
               },
               {
-                "defaultValue": {
-                  "expression": "$geom.areaHa(implementationSite)",
-                  "type": "computed"
+                "computed": {
+                  "expression": "$geom.areaHa(implementationSite)"
                 },
                 "dataType": "number",
                 "name": "calculatedAreaImplementedHa",
@@ -7822,9 +7762,8 @@
                 ]
               },
               {
-                "defaultValue": {
-                  "expression": "$geom.lengthKm(implementationSite)",
-                  "type": "computed"
+                "computed": {
+                  "expression": "$geom.lengthKm(implementationSite)"
                 },
                 "dataType": "number",
                 "name": "calculatedLengthImplementedKm",
@@ -8056,6 +7995,8 @@
             ]
           }
         ],
+        "modelName": "RLP - Improving land management practices",
+        "title": "Improving land management practices",
         "viewModel": [
           {
             "type": "section",
@@ -8313,20 +8254,20 @@
               }
             ]
           }
-        ],
-        "title": "Improving land management practices"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpLandManagementPractices",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Improving land management practices",
-      "name": "RLP - Improving land management practices"
+      "title": "Improving land management practices"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Disease management",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
-        "modelName": "RLP - Disease management",
         "dataModel": [
           {
             "columns": [
@@ -8587,6 +8528,8 @@
             ]
           }
         ],
+        "modelName": "RLP - Disease management",
+        "title": "Managing disease",
         "viewModel": [
           {
             "type": "section",
@@ -8851,20 +8794,20 @@
               }
             ]
           }
-        ],
-        "title": "Managing disease"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpDiseaseManagement",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Managing disease",
-      "name": "RLP - Disease management"
+      "title": "Managing disease"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Negotiations",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
-        "modelName": "RLP - Negotiations",
         "dataModel": [
           {
             "columns": [
@@ -8924,6 +8867,8 @@
             ]
           }
         ],
+        "modelName": "RLP - Negotiations",
+        "title": "Negotiating with the Community, landholders, Traditional Owner groups etc.",
         "viewModel": [
           {
             "type": "section",
@@ -9014,19 +8959,21 @@
               }
             ]
           }
-        ],
-        "title": "Negotiating with the Community, landholders, Traditional Owner groups etc."
+        ]
       },
-      "modelName": null,
       "templateName": "rlpNegotiations",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Negotiating with the Community, Landholders, Farmers, Traditional Owner groups, Agriculture industry groups etc.",
-      "name": "RLP - Negotiations"
+      "title": "Negotiating with the Community, Landholders, Farmers, Traditional Owner groups, Agriculture industry groups etc."
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Obtaining approvals",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
+        "title": "Obtaining relevant approvals",
         "modelName": "RLP - Obtaining approvals",
         "dataModel": [
           {
@@ -9142,20 +9089,20 @@
             ],
             "type": "section"
           }
-        ],
-        "title": "Obtaining relevant approvals"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpObtainingApprovals",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Obtaining relevant approvals",
-      "name": "RLP - Obtaining approvals"
+      "title": "Obtaining relevant approvals"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Pest animal survey",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
-        "modelName": "RLP - Pest animal survey",
         "dataModel": [
           {
             "columns": [
@@ -9383,6 +9330,8 @@
             ]
           }
         ],
+        "modelName": "RLP - Pest animal survey",
+        "title": "Pest animal survey",
         "viewModel": [
           {
             "type": "section",
@@ -9656,20 +9605,20 @@
               }
             ]
           }
-        ],
-        "title": "Pest animal survey"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpPestAnimalSurvey",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Pest animal survey",
-      "name": "RLP - Pest animal survey"
+      "title": "Pest animal survey"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Plant survival survey",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
-        "modelName": "RLP - Plant survival survey",
         "dataModel": [
           {
             "columns": [
@@ -9885,6 +9834,8 @@
             ]
           }
         ],
+        "modelName": "RLP - Plant survival survey",
+        "title": "Plant survival survey",
         "viewModel": [
           {
             "type": "section",
@@ -10149,19 +10100,21 @@
               }
             ]
           }
-        ],
-        "title": "Plant survival survey"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpPlantSurvivalSurvey",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Plant survival survey",
-      "name": "RLP - Plant survival survey"
+      "title": "Plant survival survey"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Project planning",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
+        "title": "Project planning and delivery of documents as required for the delivery of the Project Services and monitoring",
         "modelName": "RLP - Project planning",
         "dataModel": [
           {
@@ -10297,20 +10250,20 @@
             ],
             "type": "section"
           }
-        ],
-        "title": "Project planning and delivery of documents as required for the delivery of the Project Services and monitoring"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpProjectPlanning",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Project planning and delivery of documents as required for the delivery of the Project Services and monitoring",
-      "name": "RLP - Project planning"
+      "title": "Project planning and delivery of documents as required for the delivery of the Project Services and monitoring"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Remediating riparian and aquatic areas",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
-        "modelName": "RLP - Remediating riparian and aquatic areas",
         "dataModel": [
           {
             "columns": [
@@ -10569,6 +10522,8 @@
             ]
           }
         ],
+        "modelName": "RLP - Remediating riparian and aquatic areas",
+        "title": "Remediating riparian and aquatic areas",
         "viewModel": [
           {
             "type": "section",
@@ -10828,20 +10783,20 @@
               }
             ]
           }
-        ],
-        "title": "Remediating riparian and aquatic areas"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpRemediatingRiparianAndAquaticAreas",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Remediating riparian and aquatic areas",
-      "name": "RLP - Remediating riparian and aquatic areas"
+      "title": "Remediating riparian and aquatic areas"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Weed treatment",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
-        "modelName": "RLP - Weed treatment",
         "dataModel": [
           {
             "columns": [
@@ -11119,6 +11074,8 @@
             ]
           }
         ],
+        "modelName": "RLP - Weed treatment",
+        "title": "Removing weeds",
         "viewModel": [
           {
             "type": "section",
@@ -11409,20 +11366,20 @@
               }
             ]
           }
-        ],
-        "title": "Removing weeds"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpWeedTreatment",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Removing weeds",
-      "name": "RLP - Weed treatment"
+      "title": "Removing weeds"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Revegetating habitat",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
-        "modelName": "RLP - Revegetating habitat",
         "dataModel": [
           {
             "columns": [
@@ -11715,6 +11672,8 @@
             ]
           }
         ],
+        "modelName": "RLP - Revegetating habitat",
+        "title": "Revegetating habitat",
         "viewModel": [
           {
             "type": "section",
@@ -12035,20 +11994,20 @@
               }
             ]
           }
-        ],
-        "title": "Revegetating habitat"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpRevegetatingHabitat",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Revegetating habitat",
-      "name": "RLP - Revegetating habitat"
+      "title": "Revegetating habitat"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Site preparation",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
-        "modelName": "RLP - Site preparation",
         "dataModel": [
           {
             "columns": [
@@ -12302,6 +12261,8 @@
             ]
           }
         ],
+        "modelName": "RLP - Site preparation",
+        "title": "Site preparation",
         "viewModel": [
           {
             "type": "section",
@@ -12542,19 +12503,21 @@
               }
             ]
           }
-        ],
-        "title": "Site preparation"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpSitePreparation",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Site preparation",
-      "name": "RLP - Site preparation"
+      "title": "Site preparation"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Skills and knowledge survey",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
+        "title": "Skills and knowledge survey",
         "modelName": "RLP - Skills and knowledge survey",
         "dataModel": [
           {
@@ -12759,20 +12722,20 @@
             ],
             "type": "section"
           }
-        ],
-        "title": "Skills and knowledge survey"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpSkillsAndKnowledgeSurvey",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Skills and knowledge survey",
-      "name": "RLP - Skills and knowledge survey"
+      "title": "Skills and knowledge survey"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Soil testing",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
-        "modelName": "RLP - Soil testing",
         "dataModel": [
           {
             "columns": [
@@ -12890,6 +12853,8 @@
             ]
           }
         ],
+        "modelName": "RLP - Soil testing",
+        "title": "Soil testing",
         "viewModel": [
           {
             "type": "section",
@@ -13022,20 +12987,20 @@
               }
             ]
           }
-        ],
-        "title": "Soil testing"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpSoilTesting",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Soil testing",
-      "name": "RLP - Soil testing"
+      "title": "Soil testing"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Emergency Interventions",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
-        "modelName": "RLP - Emergency Interventions",
         "dataModel": [
           {
             "columns": [
@@ -13192,6 +13157,8 @@
             ]
           }
         ],
+        "modelName": "RLP - Emergency Interventions",
+        "title": "Undertaking emergency interventions to prevent extinctions",
         "viewModel": [
           {
             "type": "section",
@@ -13345,20 +13312,20 @@
               }
             ]
           }
-        ],
-        "title": "Undertaking emergency interventions to prevent extinctions"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpEmergencyInterventions",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Undertaking emergency interventions to prevent extinctions",
-      "name": "RLP - Emergency Interventions"
+      "title": "Undertaking emergency interventions to prevent extinctions"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Water quality survey",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
-        "modelName": "RLP - Water quality survey",
         "dataModel": [
           {
             "columns": [
@@ -13580,6 +13547,8 @@
             ]
           }
         ],
+        "modelName": "RLP - Water quality survey",
+        "title": "Water quality survey",
         "viewModel": [
           {
             "type": "section",
@@ -13844,20 +13813,20 @@
               }
             ]
           }
-        ],
-        "title": "Water quality survey"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpWaterQualitySurvey",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Water quality survey",
-      "name": "RLP - Water quality survey"
+      "title": "Water quality survey"
     },
     {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RLP - Weed distribution survey",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
-        "modelName": "RLP - Weed distribution survey",
         "dataModel": [
           {
             "columns": [
@@ -14060,6 +14029,8 @@
             ]
           }
         ],
+        "modelName": "RLP - Weed distribution survey",
+        "title": "Weed distribution survey",
         "viewModel": [
           {
             "type": "section",
@@ -14318,20 +14289,14 @@
               }
             ]
           }
-        ],
-        "title": "Weed distribution survey"
+        ]
       },
-      "modelName": null,
       "templateName": "rlpWeedDistributionSurvey",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Weed distribution survey",
-      "name": "RLP - Weed distribution survey"
+      "title": "Weed distribution survey"
     }
   ],
-  "type": "Report",
-  "category": "RLP Reports",
   "status": "active",
-  "lastUpdatedUserId": "94320",
-  "formVersion": 5
+  "supportsPhotoPoints": false,
+  "supportsSites": true,
+  "type": "Report"
 }
