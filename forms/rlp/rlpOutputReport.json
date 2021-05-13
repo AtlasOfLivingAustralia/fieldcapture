@@ -12004,6 +12004,347 @@
       "id": null,
       "collapsedByDefault": false,
       "modelName": null,
+      "name": "Seed Collecting - Bushfire Program",
+      "optional": true,
+      "optionalQuestionText": null,
+      "template": {
+        "dataModel": [
+          {
+            "columns": [
+              {
+                "dataType": "text",
+                "name": "initialOrMaintenance",
+                "constraints": [
+                  "Initial",
+                  "Maintenance"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "feature",
+                "name": "siteSeedCollected",
+                "validate": "required"
+              },
+              {
+                "defaultValue": {
+                  "expression": "$geom.areaHa(siteSeedCollected)",
+                  "type": "computed"
+                },
+                "dataType": "number",
+                "name": "calculatedAreaHabitatRevegetedHa",
+                "units": "ha",
+                "decimalPlaces": 3
+              },
+              {
+                "computed": {
+                  "expression": "$geom.lengthKm(siteSeedCollected)"
+                },
+                "dataType": "number",
+                "name": "calculatedLengthHabitatRevegetedKm",
+                "units": "km",
+                "decimalPlaces": 3
+              },
+              {
+                "defaultValue": {
+                  "expression": "calculatedAreaHabitatRevegetedHa",
+                  "type": "computed"
+                },
+                "dataType": "number",
+                "name": "areaHabitatRevegetedHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "validate": "required,min[0]"
+              },
+              {
+                "defaultValue": {
+                  "expression": "calculatedLengthHabitatRevegetedKm",
+                  "type": "computed"
+                },
+                "dataType": "number",
+                "name": "lengthHabitatRevegetedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "species",
+                "name": "species",
+                "validate": "required"
+              },
+              {
+                "name": "noOfDaysSeedCollected",
+                "dataType": "number"
+              },
+              {
+                "dataType": "text",
+                "name": "inKgSeedCollected",
+                "constraints": [
+                  "Individuals",
+                  "Kilograms"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "number",
+                "name": "amountSeedCollected",
+                "decimalPlaces": 5
+              },
+              {
+                "dataType": "number",
+                "name": "numberOfSourcePlants"
+              },
+              {
+                "dataType": "text",
+                "name": "storingFacility"
+              },
+              {
+                "dataType": "number",
+                "name": "noOfPlantsPropogated"
+              },
+              {
+                "dataType": "text",
+                "name": "threatEcoCommunity",
+                "validate": "maxSize[100]"
+              }
+            ],
+            "dataType": "list",
+            "name": "seedCollectionDetails"
+          },
+          {
+            "computed": {
+              "expression": "amountSeedCollected"
+            },
+            "dataType": "number",
+            "name": "totalSeedCollected"
+          },
+          {
+            "computed": {
+              "expression": "numberOfSourcePlants"
+            },
+            "dataType": "number",
+            "name": "totalPlantsPropogated"
+          },
+          {
+            "dataType": "image",
+            "name": "photographicEvidence"
+          },
+          {
+            "dataType": "text",
+            "name": "projectAssuranceDetails",
+            "description": ""
+          },
+          {
+            "dataType": "list",
+            "name": "assuranceDocuments",
+            "columns": [
+              {
+                "dataType": "document",
+                "name": "attachments",
+                "description": "Please attach any Evidence of Service Delivery here"
+              }
+            ]
+          }
+        ],
+        "modelName": "Seed Collecting - Bushfire Program",
+        "title": "Seed Collecting",
+        "viewModel": [
+          {
+            "type": "section",
+            "items": [
+              {
+                "columns": [
+                  {
+                    "width": "5%",
+                    "source": "initialOrMaintenance",
+                    "title": "Initial or Maintenance activity?",
+                    "type": "selectOne"
+                  },
+                  {
+                    "width": "5%",
+                    "type": "col",
+                    "title": "Site/s where collection was undertaken",
+                    "items": [
+                      {
+                        "source": "siteSeedCollected",
+                        "type": "feature"
+                      },
+                      {
+                        "readonly": "readonly",
+                        "source": "calculatedAreaHabitatRevegetedHa",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      },
+                      {
+                        "readonly": "readonly",
+                        "source": "calculatedLengthHabitatRevegetedKm",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "width": "10%",
+                    "type": "col",
+                    "title": "Area (ha) of habitat revegated",
+                    "items": [
+                      {
+                        "source": "areaHabitatRevegetedHa",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "width": "10%",
+                    "type": "col",
+                    "title": "Length (km) of habitat revegeted",
+                    "items": [
+                      {
+                        "source": "lengthHabitatRevegetedKm",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "width": "7%",
+                    "source": "species",
+                    "title": "Species",
+                    "type": "speciesSelect"
+                  },
+                  {
+                    "width": "7%",
+                    "source": "noOfDaysSeedCollected",
+                    "title": "Number of days collecting Seed",
+                    "type": "number"
+                  },
+                  {
+                    "width": "7%",
+                    "source": "inKgSeedCollected",
+                    "title": "Individuals / Kilograms collected",
+                    "type": "selectOne"
+                  },
+                  {
+                    "width": "7%",
+                    "source": "amountSeedCollected",
+                    "title": "Amount collected",
+                    "type": "number"
+                  },
+                  {
+                    "width": "7%",
+                    "source": "numberOfSourcePlants",
+                    "title": "Number of Source plants",
+                    "type": "number"
+                  },
+                  {
+                    "width": "12%",
+                    "source": "storingFacility",
+                    "title": "Storing facility",
+                    "type": "textarea"
+                  },
+                  {
+                    "width": "12%",
+                    "source": "noOfPlantsPropogated",
+                    "title": "Number of plants propogated",
+                    "type": "number"
+                  },
+                  {
+                    "width": "12%",
+                    "source": "threatEcoCommunity",
+                    "title": "Threatened ecological community (if applicable)",
+                    "type": "textarea"
+                  }
+                ],
+                "userAddedRows": true,
+                "source": "seedCollectionDetails",
+                "type": "table"
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "preLabel": "Optionally attach photos",
+                    "source": "photographicEvidence",
+                    "type": "image"
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "preLabel": "Clarification, if needed",
+                    "type": "textarea",
+                    "rows": 4,
+                    "css": "span8",
+                    "source": "comments",
+                    "placeholder": "Clarification comments include points for follow up with the project manager about this service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "type": "literal",
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all <u>Environment</u> projects but optional for Agriculture projects. This field identifies what evidence you have available for this service and where the evidence is stored. This helps the Department and Service Providers during future assurance activities. Refer to the <a href=\"http://nrm.gov.au/publications/rlp-merit-user-guide\" target=\"_evidence\">Evidence Guide</a> for details of the types of acceptable evidence."
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "preLabel": "",
+                    "source": "projectAssuranceDetails",
+                    "type": "textarea",
+                    "rows": 4,
+                    "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "type": "literal",
+                    "source": "<p><b>Evidence of Service Delivery</b></p>This field is mandatory for all <u>Agriculture</u> projects as part of the invoicing process, as well as any environment projects where you have been notified as undergoing an <u>audit or quarterly assurance check</u>. The field allows you to attach evidence against a specific service."
+                  }
+                ]
+              },
+              {
+                "type": "table",
+                "source": "assuranceDocuments",
+                "userAddedRows": true,
+                "disableTableUpload": true,
+                "columns": [
+                  {
+                    "title": "Attached documents",
+                    "source": "attachments",
+                    "type": "document"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "templateName": "statesSeedCollecting",
+      "title": null
+    },
+    {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
       "name": "RLP - Site preparation",
       "optional": true,
       "optionalQuestionText": null,
