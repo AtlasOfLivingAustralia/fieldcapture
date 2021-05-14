@@ -58,13 +58,44 @@ class ReportGenerator {
 
         List<Map> reports = []
         // Single reports are aligned with the owner dates.
-        DateTime start = reportOwner.periodStart.withZone(DateTimeZone.default)
+        DateTime ownerStart = reportOwner.periodStart.withZone(DateTimeZone.default)
+        DateTime end
+        DateTime start
 
-        DateTime end = endDate
-        if (reportConfig.getFirstReportingPeriodEnd()) {
-            end = reportConfig.getFirstReportingPeriodEnd()
-        } else if (reportConfig.reportingPeriodInMonths) {
-            end = start.plus(period)
+        if (reportConfig.alignToOwnerStart && reportConfig.alignToOwnerEnd) {
+            end = endDate
+            start = ownerStart
+        }
+        else if (reportConfig.alignToOwnerStart) {
+            start = ownerStart
+            if (reportConfig.getFirstReportingPeriodEnd()) {
+                end = reportConfig.getFirstReportingPeriodEnd()
+            }
+            else if (reportConfig.reportingPeriodInMonths) {
+                end = start.plus(period)
+            }
+        }
+        else {
+            end = endDate
+            if (reportConfig.reportsAlignedToCalendar) {
+
+                // This is the first period after the end date that matches the requested alignment (e.g. quarterly / semesterly / monthly)
+                DateTime alignedDate = DateUtils.alignToPeriod(endDate, reportConfig.reportingPeriod).minus(reportConfig.reportingPeriod)
+                Interval interval = new Interval(alignedDate, endDate)
+                while (interval.toPeriod(PeriodType.months()).getMonths() < reportConfig.minimumPeriodInMonths) {
+                    alignedDate = alignedDate.minus(reportConfig.reportingPeriod)
+                    interval = new Interval(alignedDate, endDate)
+                }
+                start = interval.start
+            }
+            else {
+                start = endDate.minus(reportConfig.reportingPeriod)
+            }
+        }
+
+        // Clip the report dates to the owner dates if the report falls outside the owner time range
+        if (start < ownerStart) {
+            start = ownerStart
         }
         if (endDate < end) {
             end = endDate
@@ -87,6 +118,18 @@ class ReportGenerator {
         List<Map> reports = []
         Interval reportInterval = determineFirstReportInterval(reportConfig, reportOwner, latestApprovedReportPeriodEnd)
 
+        // If the configuration specifies the skipFinalPeriod, work out the date we need to finish generating
+        // the reports so that the final period is a minimum of reportingPeriodInMonths long, but less than
+        // 2 * reportingPeriodInMonths
+        DateTime start = reportInterval.start
+        Interval finalPeriod = new Interval(start, endDate)
+        if (reportConfig.skipFinalPeriod) {
+            while (finalPeriod.toPeriod(PeriodType.months()).months >= reportConfig.reportingPeriodInMonths) {
+                start = start.plusMonths(reportConfig.reportingPeriodInMonths)
+                finalPeriod = new Interval(start, endDate)
+            }
+            endDate = finalPeriod.start.minusMonths(reportConfig.reportingPeriodInMonths)
+        }
         log.info "Regenerating reports starting at sequence: " + sequenceNo + " from: " + reportInterval.start + " ending at: " + reportInterval.end
 
         while (reportInterval.start < endDate.minusDays(DATE_FUDGE_FACTOR)) {
@@ -132,15 +175,13 @@ class ReportGenerator {
 
             // Don't align the end date if there is only one report and it finishes before the owner end date.
             // This is to support single reports due on year 3 of the project (specifically the RLP Outcomes 1 Report)
-            if ((reports.size() > 1 && !reportConfig.endDates) || reports[-1].toDate > finalToDate) {
+            if ((reports.size() > 1 && !reportConfig.endDates && !reportConfig.skipFinalPeriod) || reports[-1].toDate > finalToDate) {
                 reports[-1].toDate = finalToDate
 
                 if (!reportConfig.canSubmitDuringReportingPeriod) {
                     reports[-1].submissionDate = finalToDate
                 }
-
             }
-
         }
     }
 
