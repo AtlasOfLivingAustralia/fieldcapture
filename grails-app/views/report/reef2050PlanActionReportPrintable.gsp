@@ -5,7 +5,7 @@
     <title>Reef 2050 Plan Action Reporting</title>
     <asset:stylesheet src="reef2050DashboardReport.css"/>
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
-    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="common-bs4.css"/>
     <asset:stylesheet src="homepage.css"/>
 </head>
 
@@ -14,8 +14,8 @@
 
     <g:if test="${flash.error || error}">
         <g:set var="error" value="${flash.error ?: error}"/>
-        <div class="row-fluid">
-            <div class="alert alert-error large-space-before">
+        <div class="row">
+            <div class="alert alert-danger large-space-before">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <span>Error: ${error}</span>
             </div>
@@ -39,7 +39,7 @@
             <div class="report-section">
                 <h3>Action count by status</h3>
 
-                <div class="row-fluid">
+                <div class="row">
 
                     <div style="width:650px; display:inline-block;">
                         <table class="table">
@@ -70,7 +70,7 @@
 
                 <h3>Action status by theme</h3>
 
-                <div class="row-fluid">
+                <div class="row">
                     <g:each in="${actionStatusByTheme}" var="theme">
 
                         <div class="small-chart">
@@ -90,8 +90,8 @@
         <g:each in="${actionsByTheme}" var="actionsForTheme">
             <div class="themeActions">
             <h4>${actionsForTheme.key}</h4>
-            <div class="row-fluid">
-                <div class="span12">
+            <div class="row">
+                <div class="col-sm-12">
 
                         <table class="${tableClass} table table-striped">
 

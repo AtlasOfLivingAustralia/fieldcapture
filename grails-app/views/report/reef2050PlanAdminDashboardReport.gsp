@@ -1,8 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
-    <g:set var="containerType" scope="request" value="container"/>
-    <meta name="layout" content="${grailsApplication.config.layout.skin}"/>
+    <meta name="layout" content="nrm_bs4"/>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}&libraries=visualization"></script>
     <script>
         fcConfig = {

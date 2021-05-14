@@ -32,8 +32,8 @@
     <g:render template="editDataSet" />
 
     <div class="form-actions">
-        <button type="button" id="save" data-bind="click:save" class="btn btn-primary">Create</button>
-        <button type="button" id="cancel" class="btn" data-bind="click:cancel">Cancel</button>
+        <button type="button" id="save" data-bind="click:save" class="btn btn-sm btn-primary">Create</button>
+        <button type="button" id="cancel" class="btn btn-sm btn-danger" data-bind="click:cancel">Cancel</button>
         <label class="checkbox inline mark-complete">
             <input data-bind="checked:markedAsFinished" type="checkbox"> This form is complete
         </label>
@@ -52,7 +52,4 @@
 </script>
 <asset:deferredScripts/>
 </body>
-
-
-
 </html>

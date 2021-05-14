@@ -159,6 +159,26 @@
               }
             ],
             "validate": "required,maxSize[1250]"
+          },
+          {
+            "dataType": "text",
+            "name": "shareCaseStudy",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "document",
+            "name": "caseStudy",
+            "description": "",
+            "behaviour": [
+              {
+                "type": "visible",
+                "condition": "shareCaseStudy == \"Yes\""
+              }
+            ]
           }
         ],
         "modelName": "RLP Annual Report",
@@ -392,6 +412,27 @@
                 "source": "whsPlanChangesDescription",
                 "type": "textarea",
                 "rows": 4
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "6. Do you have a case study for this project you would like the department to promote on your behalf?",
+                "css": "span6",
+                "source": "shareCaseStudy",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "document",
+                "source": "caseStudy",
+                "preLabel": "Please attach the case study here"
               }
             ]
           }

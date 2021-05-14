@@ -93,13 +93,13 @@ table td.report-name, table th.report-name {
     width:45%;
 }
 table td.report-start, table th.report-start {
-    width:15%;
+    width:13%;
 }
 table td.report-end, table th.report-end {
-    width:15%;
+    width:12%;
 }
 table td.report-status, table th.report-status {
-    width:15%;
+    width:20%;
 }
 
 #editor-button-bar .wmd-button-row {

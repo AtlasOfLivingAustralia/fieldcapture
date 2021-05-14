@@ -4,7 +4,7 @@ import geb.Module
 
 class SitesTableContents extends Module {
     static content = {
-        siteName { $("a#siteName") }
+        siteName { $("#siteName") }
         mapMarker {$(".leaflet-marker-pane")}
     }
 }

@@ -141,7 +141,7 @@
             "items": [
               {
                 "source": "projectContactDetailsChanged",
-                "preLabel": "1.1 Has there been a change to key project contacts or their details?",
+                "preLabel": "Has there been a change to key project contacts or their details?",
                 "type": "selectOne",
                 "helpText": "(e.g. Name, position, role, email, telephone or address of key contacts)"
               }
@@ -172,7 +172,7 @@
                 "source": "progressSummary",
                 "type": "textarea",
                 "rows": 5,
-                "preLabel": "1.1 Provide a short summary of what has been achieved to date against your actions outlined in your States project proposal and progress towards meeting your short-term outcome statements outlined in your MERI Plan."
+                "preLabel": "1.1 Provide a short summary of: what has been achieved to date against the activities outlined in the project proposal; and the progress to meet the short-term outcome statement/s outlined in the MERI Plan"
               }
             ],
             "type": "row"
@@ -180,7 +180,7 @@
           {
             "items": [
               {
-                "preLabel": "1.2 Has this project encountered any issues or delays in delivering the actions in the project's proposal and/or short-term outcome statements in the project MERI Plan?  If yes, please outline in the table below:",
+                "preLabel": "1.2 Has this project encountered any issues or delays in delivering the activities in the project's proposal and/or short-term outcome statements in the project MERI Plan?  If yes, please outline in the table below:",
                 "type": "selectOne",
                 "source": "issuesEncountered"
               }
@@ -326,7 +326,7 @@
             "items": [
               {
                 "source": "isExpenditureWithinBudget",
-                "preLabel": "4.1 Is the project's expenditure proceeding in accordance with the Funding Agreement, the expected rate of expenditure and within the total project budget? If you have answered no, please inform the Department of any issue(s) related to the project budget.",
+                "preLabel": "4.1 Is the project's expenditure proceeding in accordance with the: Project Budget included in the project MERI plan; expected rate of expenditure; and is within the total project budget? If you have answered no, please inform the Department of any issue(s) related to the project budget.",
                 "type": "selectOne"
               }
             ],
@@ -335,7 +335,7 @@
           {
             "items": [
               {
-                "source": "</br><strong>Note:</strong> Please de-select <strong>‘Not applicable’</strong> for activities that were undertaken during the reporting period and complete the required fields",
+                "source": "<h4>5. Activity Reporting</h4></br><strong>Note:</strong> Please de-select <strong>‘Not applicable’</strong> for activities that were undertaken during the reporting period and complete the required fields",
                 "type": "literal"
               }
             ],
@@ -11492,6 +11492,7 @@
                     "width": "10%",
                     "type": "col",
                     "title": "Area which has been surveyed/ assessed, where reporting is area based",
+                    "helpText": "Optional for Site Mapping. For sensitive sites, add hectares manually when required and put Site mapping into a document and attach to the field that appears in this column.",
                     "items": [
                       {
                         "source": "surveyArea",
@@ -11579,7 +11580,7 @@
                     "source": "dateRange",
                     "type": "text",
                     "width": "14%",
-                    "helpText": "Refers to when the visit/s occurred. They can be specific dates, dates ranging from/to, months or seasons"
+                    "helpText": "Refers to when the activity occurred. They can be specific dates, dates ranging from/to, months or seasons"
                   }
                 ],
                 "userAddedRows": true,
@@ -11780,6 +11781,7 @@
                     "width": "10%",
                     "type": "col",
                     "title": "Area where cultural site management work or planning has occurred",
+                    "helpText": "Optional for Site Mapping. For sensitive sites, add hectares manually when required and put Site mapping into a document and attach to the field that appears in this column.",
                     "items": [
                       {
                         "source": "planOrWorkArea",
@@ -12059,6 +12061,7 @@
                     "width": "12%",
                     "type": "col",
                     "title": "Area where the visit has occurred",
+                    "helpText": "Optional for Site Mapping. For sensitive sites, add hectares manually when required and put Site mapping into a document and attach to the field that appears in this column.",
                     "items": [
                       {
                         "source": "areaOfVisit",

@@ -66,7 +66,7 @@
                 "name": "investmentPriorities",
                 "columns": [
                   {
-                    "name": "investmentPriorities",
+                    "name": "investmentPriorities2",
                     "dataType": "stringList",
                     "validate": "required",
                     "constraints": {
@@ -91,7 +91,7 @@
                     "behaviour": [
                       {
                         "type": "enable",
-                        "condition": "\"Other\" in investmentPriorities"
+                        "condition": "\"Other\" in investmentPriorities2"
                       }
                     ]
                   },
@@ -301,7 +301,7 @@
                         "behaviour": [
                           {
                             "type": "visible",
-                            "condition": "oagOrEnv == \"Environment\""
+                            "condition": "agOrEnv == \"Environment\""
                           }
                         ],
                         "constraints": {
@@ -1095,7 +1095,7 @@
                               {
                                 "preLabel": "Select the investment priority/s that relate to this outcome",
                                 "type": "select2Many",
-                                "source": "investmentPriorities"
+                                "source": "investmentPriorities2"
                               }
                             ]
                           }
@@ -1382,7 +1382,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "KEQ1 - To what extent are you progressing towards the medium-term outcomes of the program?",
+                "preLabel": "KEQ1 - To what extent are you progressing towards the medium-term project outcome?",
                 "type": "selectOne",
                 "rows": 5,
                 "source": "keq1"
