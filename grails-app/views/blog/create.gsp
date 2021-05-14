@@ -2,8 +2,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="${hubConfig.skin}"/>
-    <title>Create | Blog Entry | Field Capture</title>
+    <meta name="layout" content="nrm_bs4"/>
+    <title>Create | Blog Entry | MERIT</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
     <script>
         var fcConfig = {
@@ -14,35 +14,40 @@
             returnTo: "${params.returnTo?:g.createLink(controller:'project', id:params.projectId)}"
             };
     </script>
-    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="common-bs4.css"/>
+    <asset:stylesheet src="blog.css"/>
+
 
 </head>
 <body>
 <div class="${containerType}">
-    <ul class="breadcrumb">
-        <li>
-            <g:link controller="home">Home</g:link> <span class="divider">/</span>
-        </li>
-        <g:if test="${params.projectId}">
-            <li><g:link controller="project" id="${params.projectId}">Project </g:link>  <span class="divider"> / </span></li>
-        </g:if>
-        <g:if test="${params.programId}">
-            <li><g:link controller="program" id="${params.programId}">Program </g:link>  <span class="divider"> / </span></li>
-        </g:if>
-        <g:if test="${params.managementUnitId}">
-            <li><g:link controller="managementUnit" id="${params.managementUnitId}">Management Unit </g:link>  <span class="divider"> / </span></li>
-        </g:if>
+    <div aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <g:link controller="home">Home</g:link>
+            </li>
+            <g:if test="${params.projectId}">
+                <li class="breadcrumb-item"><g:link controller="project" id="${params.projectId}">Project </g:link></li>
+            </g:if>
+            <g:if test="${params.programId}">
+                <li class="breadcrumb-item"><g:link controller="program" id="${params.programId}">Program </g:link></li>
+            </g:if>
+            <g:if test="${params.managementUnitId}">
+                <li class="breadcrumb-item"><g:link controller="managementUnit" id="${params.managementUnitId}">Management Unit </g:link></li>
+            </g:if>
 
-        <li class="active">
-            New blog entry
-        </li>
-    </ul>
+            <li class=" breadcrumb-item active">
+                New blog entry
+            </li>
+
+        </ol>
+    </div>
 
     <g:render template="editBlogEntry"/>
 
     <div class="form-actions">
-        <button type="button" id="save" data-bind="click:save" class="btn btn-primary">Create</button>
-        <button type="button" id="cancel" data-bind="click:cancel" class="btn">Cancel</button>
+        <button type="button" id="save" data-bind="click:save" class="btn btn-sm btn-primary">Create</button>
+        <button type="button" id="cancel" data-bind="click:cancel" class="btn btn-sm btn-danger">Cancel</button>
     </div>
 </div>
 
@@ -59,7 +64,7 @@
 
 
 </asset:script>
-<asset:javascript src="common.js"/>
+<asset:javascript src="common-bs4.js"/>
 <asset:javascript src="blog.js"/>
 <asset:javascript src="attach-document-no-ui.js"/>
 

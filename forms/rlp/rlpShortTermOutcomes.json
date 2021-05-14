@@ -301,7 +301,7 @@
                         "behaviour": [
                           {
                             "type": "visible",
-                            "condition": "oagOrEnv == \"Environment\""
+                            "condition": "agOrEnv == \"Environment\""
                           }
                         ],
                         "constraints": {

@@ -6,7 +6,7 @@
                 <img data-bind="visible:imageUrl(), attr:{src:imageThumbnailUrl}" class="pull-left" width="50" height="50">
                 <i class="blog-icon floatleft fa fa-3x" data-bind="visible:stockIcon(), css:stockIcon"></i>
                 <div>
-                    <div class="row-fluid">
+                    <div class="row">
                         <strong data-bind="text:title"></strong>
                         <div class="pull-right">
                             <a class="editThisBlog" href data-bind="click:$parent.editBlogEntry">Edit</a> |
