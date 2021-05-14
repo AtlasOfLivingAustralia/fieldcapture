@@ -65,13 +65,6 @@
      color: #fff;
      padding: 0.25rem;
  }
-ul.nav.nav-tabs.nav-tab-small.space-before a {
-    padding-left: 17px !important;
-    padding-top: 10px !important;
-    padding-right: 17px !important;
-    border-top-right-radius: 0.25rem !important;
-    border-top-left-radius: 0.25rem !important;
-}
 
 .fn-gantt .row {
     margin-right: unset !important;
@@ -86,3 +79,16 @@ ul.nav.nav-tabs.nav-tab-small.space-before a {
     padding: 0.25rem;
 }
 
+#activities-plan a.nav-link {
+    border: 1px solid #dedede;
+}
+
+.badge {
+    padding-left: 9px !important;
+    padding-right: 9px !important;
+    -webkit-border-radius: 9px !important;
+    -moz-border-radius: 9px !important;
+    border-radius: 9px !important;
+    font-weight: bold;
+    font-size: 12px;
+}

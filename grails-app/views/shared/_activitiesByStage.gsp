@@ -13,9 +13,9 @@
     </g:if>
 </g:if>
 
-<ul class="nav nav-tabs nav-tab-small space-before">
-    <li class="active"><a href="#tablePlan" data-toggle="tab">Tabular</a></li>
-    <li><a href="#ganttPlan" data-toggle="tab">Gantt chart</a></li>
+<ul class="nav nav-tabs space-before">
+    <li class=" nav-item active"><a href="#tablePlan" data-toggle="tab" class="nav-link active show">Tabular</a></li>
+    <li class=" nav-item"><a href="#ganttPlan" data-toggle="tab" class="nav-link">Gantt chart</a></li>
 </ul>
 
 <div class="tab-content" style="padding:0;border:none;overflow:visible">
@@ -60,11 +60,11 @@
         <a class="icon-link" data-bind="attr:{href:editActivityUrl()}"><i class="fa fa-edit" title="Edit Activity"></i></a>
         <!-- /ko -->
         <!-- ko if:!$parent.canEditActivity() && !$parent.canEditOutputData() -->
-        <button class="btn btn-container" disabled="disabled"><i class="fa fa-edit" title="This activity is not editable"></i></button>
+        <button class="btn btn-sm btn-container" disabled="disabled"><i class="fa fa-edit" title="This activity is not editable"></i></button>
         <!-- /ko -->
         <a class="icon-link" data-bind="attr:{href:viewActivityUrl()}"><i class="fa fa-eye" title="View Activity"></i></a>
         <a class="icon-link" data-bind="attr:{href:printActivityUrl()}" target="activity-print"><i class="fa fa-print" title="Open a blank printable version activity"></i></a>
-        <button type="button" class="btn btn-container" data-bind="click:$root.deleteActivity, enable:$parent.canDeleteActivity"><i class="fa fa-remove" title="Delete activity"></i></button>
+        <button type="button" class="btn btn-sm btn-container" data-bind="click:$root.deleteActivity, enable:$parent.canDeleteActivity"><i class="fa fa-remove" title="Delete activity"></i></button>
     </td>
     <td><span data-bind="text:plannedStartDate.formattedDate"></span></td>
     <td><span data-bind="text:plannedEndDate.formattedDate"></span></td>
@@ -97,8 +97,8 @@
                     <textarea data-bind="value:notes,hasFocus:true" name="reason" rows=4 cols="80" class="validate[required]" style="width:95%;"></textarea>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn" data-bind="click: $parent.displayReasonModal.cancelReasonModal" data-dismiss="modal" aria-hidden="true">Discard status change</button>
-                    <button class="btn btn-primary" data-bind="click:$parent.displayReasonModal.saveReasonDocument">Save reason</button>
+                    <button class="btn btn-sm" data-bind="click: $parent.displayReasonModal.cancelReasonModal" data-dismiss="modal" aria-hidden="true">Discard status change</button>
+                    <button class="btn btn-sm btn-primary" data-bind="click:$parent.displayReasonModal.saveReasonDocument">Save reason</button>
                 </div></form>
         </div>
 
@@ -253,9 +253,9 @@
     </script>
 
     <script id="viewStatusTmpl" type="text/html">
-    <button type="button" class="btn btn-small"
+    <button type="button" class="btn btn-small btn-sm"
             data-bind="activityProgress:progress"
-            style="line-height:16px;min-width:75px;text-align:left;cursor:default;color:white">
+            style="line-height:16px;min-width:75px;text-align:left;cursor:default;color:white; font-size: 0.8rem;">
         <span data-bind="text: progress"></span>
     </button>
     <!-- ko with: deferReason -->

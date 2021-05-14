@@ -67,7 +67,7 @@
                             <button type="button" class="btn btn-sm"><i class="fa fa-download"></i> Download ShapeFile</button>
                         </a>
                         <g:if test="${site?.extent?.geometry?.pid}">
-                            <a href="${grailsApplication.config.spatial.baseUrl}/?pid=${site.extent.geometry.pid}" class="btn"><i class="fa fa-external-link"></i> View in Spatial Portal</a>
+                            <a href="${grailsApplication.config.spatial.baseUrl}/?pid=${site.extent.geometry.pid}" class=" ml-1 btn btn-sm"><i class="fa fa-external-link"></i> View in Spatial Portal</a>
                         </g:if>
                     </div>
                 </div>
