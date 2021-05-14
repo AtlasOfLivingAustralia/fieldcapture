@@ -356,9 +356,10 @@ var config = {
                 }
             });
 
-            $('#gotoEditBlog').click(function () {
-                amplify.store('project-admin-tab-state', '#editProjectBlog');
-                $('#admin-tab').tab('show');
+            $('#goToAdminBlog').click(function () {
+                amplify.store('project-admin-tab-state', '#editProjectBlog-tab');
+                $('a[href="#admin"').addClass("active show");
+
             });
 
 

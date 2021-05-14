@@ -30,7 +30,7 @@
                     <div class="row mb-2">
                         <div class="col-sm-4 header-label">${config.program?.config?.organisationRelationship ?: "Service Provider"}</div>
 
-                        <div class="col-sm-8">
+                        <div class="col-sm-8 organisationName">
                             <a data-bind="visible:organisationId(),attr:{href:fcConfig.organisationLinkBaseUrl+'/'+organisationId()}">
                                 <span data-bind="text:organisationName"></span>
                             </a>
@@ -41,7 +41,7 @@
                     <div class="row mb-2">
                         <div class="col-sm-4 header-label">Project ID</div>
 
-                        <div class="col-sm-8">${project.grantId}</div>
+                        <div class="col-sm-8 projectId">${project.grantId}</div>
                     </div>
 
                     <div class="row mb-2">
@@ -77,27 +77,27 @@
                     <div class="row mb-2">
                         <div class="col-sm-4 header-label">Project start</div>
 
-                        <div class="col-sm-8 value"><span data-bind="text:plannedStartDate.formattedDate"></span></div>
+                        <div class="col-sm-8 value projectStartDate"><span data-bind="text:plannedStartDate.formattedDate"></span></div>
                     </div>
 
                     <div class="row mb-2">
                         <div class="col-sm-4 header-label">Project end</div>
 
-                        <div class="col-sm-8 value"><span data-bind="text:plannedEndDate.formattedDate"></span></div>
+                        <div class="col-sm-8 value projectEndDate"><span data-bind="text:plannedEndDate.formattedDate"></span></div>
                     </div>
 
 
                     <div class="row mb-2" data-bind="if:(funding() && funding() >0)">
                         <div class="col-sm-4 header-label">Project Funding</div>
 
-                        <div class="col-sm-8 value"><span data-bind="text:funding.formattedCurrency"></span></div>
+                        <div class="col-sm-8 value projectFunding"><span data-bind="text:funding.formattedCurrency"></span></div>
                     </div>
 
                     <g:if test="${showOrderNumber}">
                     <div class="row mb-2" data-bind="visible:internalOrderId">
                         <div class="col-sm-4 header-label">Internal order number</div>
 
-                        <div class="col-sm-8">${project.internalOrderId}</div>
+                        <div class="col-sm-8 internalOrderNumber">${project.internalOrderId}</div>
                     </div>
                     </g:if>
                 </div>
@@ -183,7 +183,7 @@
     <h4>Project Description</h4>
     <div class="row mb-2">
         <div class="col-sm-10 value">
-            <p class="well well-small more" data-bind="text:description"></p>
+            <p class="well well-small more projectDescription" data-bind="text:description"></p>
         </div>
     </div>
 
@@ -211,7 +211,7 @@
     <g:if test="${user?.isEditor}">
         <a class="newBlog" href="${g.createLink(controller: 'blog', action: 'create', params: [projectId: project.projectId, returnTo: g.createLink(controller: 'project', action: 'index', id: project.projectId)])}"><button
                 class="btn btn-sm "><i class="fa fa-newspaper-o"></i> New Entry</button>
-        <button id="gotoEditBlog" class="btn btn-sm "><i class="fa fa-edit"></i> Edit</button>
+        <button id="gotoEditBlog goToAdminBlog" class="btn btn-sm "><i class="fa fa-edit"></i> Edit</button>
         </a>
     </g:if>
 
