@@ -356,13 +356,6 @@ var config = {
                 }
             });
 
-            $('#goToAdminBlog').click(function () {
-                amplify.store('project-admin-tab-state', '#editProjectBlog-tab');
-                $('a[href="#admin"').addClass("active show");
-
-            });
-
-
             // Non-editors should get tooltip and popup when trying to click other tabs
             $('#projectTabs li a').not('[data-toggle="tab"]').css('cursor', 'not-allowed') //.data('placement',"right")
             .attr('title','Only available to project members').addClass('tooltips');

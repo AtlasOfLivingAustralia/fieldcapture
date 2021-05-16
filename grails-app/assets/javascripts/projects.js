@@ -1311,6 +1311,11 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
 
     initialiseTabs(tabs, {tabSelector:'#projectTabs.nav a', tabStorageKey:'project-tab-state', initialisingHtmlSelector:'#spinner'});
 
+    $('#gotoEditBlog').click(function () {
+        amplify.store('project-admin-tab-state', '#editProjectBlog');
+        $('#admin-tab').tab('show');
+    });
+
 } // end of view model
 
 
