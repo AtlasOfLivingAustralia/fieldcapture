@@ -79,12 +79,15 @@ class ReportGenerator {
             end = endDate
             if (reportConfig.reportsAlignedToCalendar) {
 
+                // We add a day onto end dates because projects are generally loaded such that they end at
+                // midnight on the last day of the month
+                DateTime fudgedEndDate = endDate.plusDays(DATE_FUDGE_FACTOR)
                 // This is the first period after the end date that matches the requested alignment (e.g. quarterly / semesterly / monthly)
-                DateTime alignedDate = DateUtils.alignToPeriod(endDate, reportConfig.reportingPeriod).minus(reportConfig.reportingPeriod)
-                Interval interval = new Interval(alignedDate, endDate)
-                while (interval.toPeriod(PeriodType.months()).getMonths() < reportConfig.minimumPeriodInMonths) {
+                DateTime alignedDate = DateUtils.alignToPeriod(fudgedEndDate, reportConfig.reportingPeriod).minus(reportConfig.reportingPeriod)
+                Interval interval = new Interval(alignedDate, fudgedEndDate)
+                while (interval.toPeriod(PeriodType.months()).getMonths() < reportConfig.reportingPeriodInMonths) {
                     alignedDate = alignedDate.minus(reportConfig.reportingPeriod)
-                    interval = new Interval(alignedDate, endDate)
+                    interval = new Interval(alignedDate, fudgedEndDate)
                 }
                 start = interval.start
             }
@@ -123,10 +126,10 @@ class ReportGenerator {
             // the reports so that the final period is a minimum of reportingPeriodInMonths long, but less than
             // 2 * reportingPeriodInMonths
             DateTime start = reportInterval.start
-            Interval finalPeriod = new Interval(start, endDate)
+            Interval finalPeriod = new Interval(start, endDate.plusDays(DATE_FUDGE_FACTOR))
             while (finalPeriod.toPeriod(PeriodType.months()).months >= reportConfig.reportingPeriodInMonths) {
                 start = start.plusMonths(reportConfig.reportingPeriodInMonths)
-                finalPeriod = new Interval(start, endDate)
+                finalPeriod = new Interval(start, finalPeriod.end)
             }
             endDate = finalPeriod.start.minusMonths(reportConfig.reportingPeriodInMonths)
         }

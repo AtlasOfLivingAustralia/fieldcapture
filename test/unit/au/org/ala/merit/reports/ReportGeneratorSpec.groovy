@@ -394,7 +394,6 @@ class ReportGeneratorSpec extends Specification {
                 multiple: false,
                 alignToOwnerEnd: true,
                 alignToOwnerStart: false,
-                minimumPeriodInMonths: 3,
                 reportingPeriodInMonths: 3,
                 category: "Final Report",
                 reportsAlignedToCalendar: true,
@@ -415,8 +414,9 @@ class ReportGeneratorSpec extends Specification {
         projectEndDate | expectedFromDate
         '2021-06-30T14:00:00Z' | '2021-03-31T13:00:00Z'
         '2021-08-31T14:00:00Z' | '2021-03-31T13:00:00Z'
-        '2021-09-29T14:00:00Z' | '2021-03-31T13:00:00Z'
+        '2021-09-28T14:00:00Z' | '2021-03-31T13:00:00Z'
         '2021-09-30T14:00:00Z' | '2021-06-30T14:00:00Z'
+        '2021-06-29T14:00:00Z' | '2021-03-31T13:00:00Z'
 
     }
 
@@ -447,8 +447,9 @@ class ReportGeneratorSpec extends Specification {
         projectEndDate         | lastReportToDate       | expectedReportCount
         '2021-06-30T14:00:00Z' | '2021-03-31T13:00:00Z' | 3
         '2021-08-31T14:00:00Z' | '2021-03-31T13:00:00Z' | 3
-        '2021-09-29T14:00:00Z' | '2021-03-31T13:00:00Z' | 3
+        '2021-09-28T14:00:00Z' | '2021-03-31T13:00:00Z' | 3
         '2021-09-30T14:00:00Z' | '2021-06-30T14:00:00Z' | 4
+        '2021-06-29T14:00:00Z' | '2021-03-31T13:00:00Z' | 3 // When loading projects the end date gets set to midnight of the last day of the month so we need to handle this correctly.
 
     }
 
