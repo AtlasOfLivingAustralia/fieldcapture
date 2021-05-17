@@ -15,6 +15,8 @@ class ProjectReports extends Module {
                 return []
             }
         }
+        reportsByCategory { $('#reporting-content .report-category').moduleList(ReportCategory)}
+
         reportDeclaration { $('#declaration') }
         acceptTermsCheckBox { $('#declaration [name="acceptTerms"]') }
     }
@@ -30,4 +32,17 @@ class ProjectReports extends Module {
     def canSubmitDeclaration() {
         $('#declaration [data-bind*="submitReport"]').module(FormElement).enabled
     }
+
+    List<String> getReportCategories() {
+        reportsByCategory.collect{it.category}
+    }
+
+    List<ReportSummaryLine> getReportsForCategory(String category) {
+        getReportCategorySection(category)?.reports
+    }
+    ReportCategory getReportCategorySection(String category) {
+        reportsByCategory.find{it.category == category }
+    }
+
+
 }
