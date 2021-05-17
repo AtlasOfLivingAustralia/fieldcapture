@@ -284,7 +284,7 @@ table tbody .td1 .accordion .card-header.collapsed:after {
 
 #accordionMapView .col-sm-4, #projectsView .col-sm-4, #reportView .col-sm-4, #downloadView .col-sm-4 {
     padding-left: 0px;
-    margin-left: -10px;
+    margin-left: -4px;
 }
 .pt-3 {
     padding-top: 3px !important;
@@ -316,4 +316,14 @@ button.btn.facets-toggle {
 
 .dataTables_filter {
     float: right !important;
+}
+#projectName {
+    width: 41rem;
+}
+#lastUpdated {
+    width: 8rem;
+
+}
+.searchError {
+    overflow-wrap: break-word;
 }
