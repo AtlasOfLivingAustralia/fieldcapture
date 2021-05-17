@@ -31,7 +31,9 @@ class AddActivitySpec extends StubbedCasSpec {
         $("#btnClearMetadataCache").click()
 
         then:
-        waitFor {hasBeenReloaded()}
+        waitFor 20,{
+            hasBeenReloaded()
+        }
     }
 
     def "Generate a Activities"(){
@@ -117,7 +119,7 @@ class AddActivitySpec extends StubbedCasSpec {
         submit()
 
         and:
-        waitFor {
+        waitFor 20,{
             hasBeenReloaded()
         }
         activityDetails.description == "Checking the local storage"

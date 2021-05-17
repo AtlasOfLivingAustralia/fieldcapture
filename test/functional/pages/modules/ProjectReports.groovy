@@ -24,10 +24,11 @@ class ProjectReports extends Module {
         acceptTermsCheckBox.value(true)
     }
     def submitDeclaration() {
-        waitFor { canSubmitDeclaration() }
+        waitFor 10, { canSubmitDeclaration() }
         $('#declaration [data-bind*="submitReport"]').click()
     }
     def canSubmitDeclaration() {
+        Thread.sleep(5000)
         $('#declaration [data-bind*="submitReport"]').module(FormElement).enabled
     }
 }
