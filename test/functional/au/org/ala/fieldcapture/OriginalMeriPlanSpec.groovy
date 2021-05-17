@@ -33,14 +33,16 @@ class OriginalMeriPlanSpec extends StubbedCasSpec {
         when:
         meriPlan.objectivesAndAssets[0].outcome = "Objective 1"
         meriPlan.objectivesAndAssets[0].assets = ['Threatened Species'];
+        Thread.sleep(10000)
         meriPlan.addObjectiveAndAssetRow()
+        Thread.sleep(5000)
         meriPlan.objectivesAndAssets[1].outcome = "Objective 2"
         meriPlan.objectivesAndAssets[1].assets = ['Threatened Species'];
 
         meriPlan.save()
 
         then:
-        waitFor {
+        waitFor 10, {
             meriPlan.objectivesAndAssets[0].outcome.value() == "Objective 1"
             meriPlan.objectivesAndAssets[0].assets.value() == ['Threatened Species'];
             meriPlan.objectivesAndAssets[1].outcome.value() == "Objective 2"
