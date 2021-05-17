@@ -34,7 +34,9 @@ class OriginalMeriPlanSpec extends StubbedCasSpec {
         meriPlan.objectivesAndAssets[0].outcome = "Objective 1"
         meriPlan.objectivesAndAssets[0].assets = ['Threatened Species'];
         Thread.sleep(10000)
-        meriPlan.addObjectiveAndAssetRow()
+       // meriPlan.addObjectiveAndAssetRow()
+        $("button.addOutcomes").displayed
+        $("button.addOutcomes").click()
         Thread.sleep(5000)
         meriPlan.objectivesAndAssets[1].outcome = "Objective 2"
         meriPlan.objectivesAndAssets[1].assets = ['Threatened Species'];
