@@ -366,6 +366,12 @@ var config = {
                 toggleStarred(isStarred, '${user?.userId ?: ''}', '${project.projectId}');
             });
 
+            $('#gotoEditBlog').on("click", function () {
+                amplify.store('project-admin-tab-state', '#editProjectBlog-tab');
+                $('#admin-tab').tab('show');
+                $('#editProjectBlog-tab').tab('show');
+            });
+
             // BS tooltip
             $('.tooltips').tooltip();
 

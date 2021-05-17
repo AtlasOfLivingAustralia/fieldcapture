@@ -145,7 +145,7 @@
                         <g:each status="i" in="${s_outcomes}" var="s_outcome">
                             <tr>
                                 <g:if test="${i == 0}">
-                                    <td row mb-2span="${s_outcomes.size()}" class="header-column">Secondary Outcomes</td>
+                                    <td rowspan="${s_outcomes.size()}" class="header-column">Secondary Outcomes</td>
                                 </g:if>
                                 <td class="outcome">${s_outcome.description}</td>
                                 <td class="priority">
@@ -211,8 +211,8 @@
     <g:if test="${user?.isEditor}">
         <a class="newBlog" href="${g.createLink(controller: 'blog', action: 'create', params: [projectId: project.projectId, returnTo: g.createLink(controller: 'project', action: 'index', id: project.projectId)])}"><button
                 class="btn btn-sm "><i class="fa fa-newspaper-o"></i> New Entry</button>
-        <button id="gotoEditBlog goToAdminBlog" class="btn btn-sm "><i class="fa fa-edit"></i> Edit</button>
         </a>
+        <button id="gotoEditBlog" class="btn btn-sm "><i class="fa fa-edit"></i> Edit</button>
     </g:if>
 
     <g:if test="${publicImages}">

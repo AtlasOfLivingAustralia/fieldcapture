@@ -7,13 +7,19 @@
                 <i class="blog-icon floatleft fa fa-3x" data-bind="visible:stockIcon(), css:stockIcon"></i>
                 <div>
                     <div class="row">
-                        <strong data-bind="text:title"></strong>
-                        <div class="pull-right">
+                        <div class="col-sm-10">
+                            <strong data-bind="text:title"></strong>
+                        </div>
+
+                        <div class="col-sm-2 float-right pull-right">
                             <a class="editThisBlog" href data-bind="click:$parent.editBlogEntry">Edit</a> |
                             <a class="delThisBlog" href data-bind="click:$parent.deleteBlogEntry">Delete</a>
                         </div>
+                        <div class="col-sm-10">
+                            <p data-bind="text:shortContent"></p>
+                        </div>
                     </div>
-                    <p data-bind="text:shortContent"></p>
+
                 </div>
                 <hr/>
             </li>
