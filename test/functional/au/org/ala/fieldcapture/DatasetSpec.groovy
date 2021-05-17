@@ -105,6 +105,7 @@ class DatasetSpec extends StubbedCasSpec{
         $('.bootbox a.btn-primary').click()
 
         then: "The data set is removed"
+        Thread.sleep(20000)
        waitFor 20, {
            $('#project-data-sets tbody[data-bind*=dataSets] tr').size() == 0
        }
