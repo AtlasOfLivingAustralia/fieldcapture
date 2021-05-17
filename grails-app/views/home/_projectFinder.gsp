@@ -4,7 +4,7 @@
 <g:if test="${flash.error || results.error}">
     <g:set var="error" value="${flash.error?:results.error}"/>
     <div class="row">
-        <div class="alert alert-error large-space-before">
+        <div class="col-sm-12 p-3 alert alert-danger large-space-before searchError">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             <span>Error: ${error}</span>
         </div>
@@ -117,8 +117,8 @@
                                         <table class="table" id="projectTable" data-offset="0" data-max="25" style="table-layout: fixed">
                                             <thead>
                                                 <tr>
-                                                    <th width="85%" data-sort="nameSort" scope="col" data-order="ASC" class="header"> Project name</th>
-                                                    <th width="15%" data-sort="lastUpdated" scope="col" data-order="DESC" class="header"> Last updated</th>
+                                                    <th id="projectName" data-sort="nameSort" scope="col" data-order="ASC" class="header"> Project name</th>
+                                                    <th id="lastUpdated" data-sort="lastUpdated" scope="col" data-order="DESC" class="header"> Last updated</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -620,7 +620,12 @@ var urlWithoutDates = '<fc:formatParams params="${params}" requiredParams="sort,
 
             });
         };
-        ko.applyBindings(new DatePickerModel(), document.getElementById('facet-dates'));
+        var error = "${error}";
+
+        if(!error){
+            ko.applyBindings(new DatePickerModel(), document.getElementById('facet-dates'));
+        }
+
         function FacetFilterViewModel (params) {
             this.facetsList = params.facetsList;
             this.results = params.results;
@@ -628,7 +633,10 @@ var urlWithoutDates = '<fc:formatParams params="${params}" requiredParams="sort,
             this.baseUrl = params.baseUrl;
             this.projectExplorerUrl = params.projectExplorerUrl;
         }
-        ko.applyBindings(new FacetFilterViewModel(facetModelViewArgs), document.getElementById('facet-list'));
+        if(!error){
+            ko.applyBindings(new FacetFilterViewModel(facetModelViewArgs), document.getElementById('facet-list'));
+        }
+
         $('#facet-dates').validationEngine('attach', {scroll:false});
 
         $('.helphover').popover({animation: true, trigger:'hover', container:'body'});
