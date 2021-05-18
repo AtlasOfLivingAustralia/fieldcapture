@@ -92,3 +92,7 @@
     font-weight: bold;
     font-size: 12px;
 }
+
+.table th, .table td {
+    padding: 0.5rem 0.2rem 0.5rem 0.2rem !important;
+}

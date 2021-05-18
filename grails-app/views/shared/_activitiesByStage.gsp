@@ -41,13 +41,13 @@
             <thead>
 
             <tr>
-                <th style="min-width:68px; width:5%;">Actions</th>
-                <th style="min-width:90px; width:5%;">From</th>
-                <th style="min-width:90px; width:5%">To</th>
-                <th style="width:40%;" class="description-column">Description<i class="fa fa-expand pull-right" data-bind="click:$parent.toggleDescriptions, css:{'fa-expand':!$parent.descriptionExpanded(), 'fa-compress':$parent.descriptionExpanded()}"></i></th>
-                <th style="width:25%;">Activity</th>
-<g:if test="${showSites}"><th style="width:15%">Site</th></g:if>
-<th style="width:5%; min-width:90px;">Status</th>
+                <th>Actions</th>
+                <th >From</th>
+                <th >To</th>
+                <th class="description-column">Description<i class="fa fa-expand pull-right" data-bind="click:$parent.toggleDescriptions, css:{'fa-expand':!$parent.descriptionExpanded(), 'fa-compress':$parent.descriptionExpanded()}"></i></th>
+                <th >Activity</th>
+<g:if test="${showSites}"><th >Site</th></g:if>
+<th style="">Status</th>
 </tr>
 </thead>
 
