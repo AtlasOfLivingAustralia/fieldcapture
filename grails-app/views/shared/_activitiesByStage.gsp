@@ -41,13 +41,13 @@
             <thead>
 
             <tr>
-                <th>Actions</th>
-                <th >From</th>
-                <th >To</th>
+                <th class="actions">Actions</th>
+                <th class="fromDate">From</th>
+                <th class="toDate">To</th>
                 <th class="description-column">Description<i class="fa fa-expand pull-right" data-bind="click:$parent.toggleDescriptions, css:{'fa-expand':!$parent.descriptionExpanded(), 'fa-compress':$parent.descriptionExpanded()}"></i></th>
-                <th >Activity</th>
-<g:if test="${showSites}"><th >Site</th></g:if>
-<th style="">Status</th>
+                <th class="activity">Activity</th>
+                <g:if test="${showSites}"><th class="sites">Site</th></g:if>
+                <th  class="status" >Status</th>
 </tr>
 </thead>
 

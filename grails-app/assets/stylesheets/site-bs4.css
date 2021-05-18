@@ -3,10 +3,10 @@
 *= require thumbnail.scroller/2.0.3/jquery.mThumbnailScroller.css
 *= require blueimp/fileupload-9.28.0/jquery.fileupload
 *= require fancybox/jquery.fancybox
-*= require project.css
 *= require jquery-gantt/css/style.css
 *= require sites.css
 *= require select2/4.0.3/css/select2
 *= require leaflet-manifest
+*= require activity.css
 *= require_self
 */
