@@ -351,7 +351,7 @@ class ReportGeneratorSpec extends Specification {
 
     }
 
-    def "Generated reports include a tag or label to indentify the configuration they were generated from"() {
+    def "Generated reports include a tag or label to identify the configuration they were generated from"() {
         setup:
         ReportConfig config = new ReportConfig(
                 reportType: "Single",
@@ -383,6 +383,74 @@ class ReportGeneratorSpec extends Specification {
         then:
         reports.size() == 1
         reports[0].generatedBy == config.category
+    }
+
+    def "We can generate a final report"(String projectEndDate, String expectedFromDate) {
+        setup:
+        ReportConfig config = new ReportConfig(
+                reportType: "Single",
+                reportNameFormat: "Final Report",
+                reportDescriptionFormat: "Final Report",
+                multiple: false,
+                alignToOwnerEnd: true,
+                alignToOwnerStart: false,
+                reportingPeriodInMonths: 3,
+                category: "Final Report",
+                reportsAlignedToCalendar: true,
+                activityType:"Final Report")
+        String periodStart = '2020-06-30T14:00:00Z'
+        ReportOwner owner = new ReportOwner(id:[projectid:'p1'], name:"Project 1", periodStart:periodStart, periodEnd:projectEndDate)
+        ReportGenerator reportGenerator = new ReportGenerator()
+
+        when:
+        List  reports = reportGenerator.generateReports(config, owner, 0, null)
+
+        then:
+        reports.size() == 1
+        reports[0].toDate == projectEndDate
+        reports[0].fromDate == expectedFromDate
+
+        where:
+        projectEndDate | expectedFromDate
+        '2021-06-30T14:00:00Z' | '2021-03-31T13:00:00Z'
+        '2021-08-31T14:00:00Z' | '2021-03-31T13:00:00Z'
+        '2021-09-28T14:00:00Z' | '2021-03-31T13:00:00Z'
+        '2021-09-30T14:00:00Z' | '2021-06-30T14:00:00Z'
+        '2021-06-29T14:00:00Z' | '2021-03-31T13:00:00Z'
+
+    }
+
+    def "We can skip the generation of the final report"() {
+        setup:
+        ReportConfig config = new ReportConfig(
+                reportType: "Progress",
+                reportNameFormat: "Progress Report",
+                reportDescriptionFormat: "Progress Report",
+                multiple: true,
+                skipFinalPeriod: true,
+                reportingPeriodInMonths: 3,
+                category: "Progress Report",
+                reportsAlignedToCalendar: true,
+                activityType:"Progress Report")
+        String periodStart = '2020-06-30T14:00:00Z'
+        ReportOwner owner = new ReportOwner(id:[projectid:'p1'], name:"Project 1", periodStart:periodStart, periodEnd:projectEndDate)
+        ReportGenerator reportGenerator = new ReportGenerator()
+
+        when:
+        List  reports = reportGenerator.generateReports(config, owner, 0, null)
+
+        then:
+        reports.size() == expectedReportCount
+        reports[reports.size()-1].toDate == lastReportToDate
+
+        where:
+        projectEndDate         | lastReportToDate       | expectedReportCount
+        '2021-06-30T14:00:00Z' | '2021-03-31T13:00:00Z' | 3
+        '2021-08-31T14:00:00Z' | '2021-03-31T13:00:00Z' | 3
+        '2021-09-28T14:00:00Z' | '2021-03-31T13:00:00Z' | 3
+        '2021-09-30T14:00:00Z' | '2021-06-30T14:00:00Z' | 4
+        '2021-06-29T14:00:00Z' | '2021-03-31T13:00:00Z' | 3 // When loading projects the end date gets set to midnight of the last day of the month so we need to handle this correctly.
+
     }
 
 }

@@ -20,6 +20,13 @@ class ReportConfig {
     /** The period between the start and end date of generated reports */
     Integer reportingPeriodInMonths = 6
 
+    /**
+     * Used only with periodic reports, set to true to not generate the last report in the series. The use
+     * case for this is having a periodic progress report, with a final report containing extra / more / different
+     * fields.
+     */
+    boolean skipFinalPeriod = false
+
     /** True if the start and end dates for generated reports should be aligned from January 1 */
     boolean reportsAlignedToCalendar = false
 
@@ -54,6 +61,18 @@ class ReportConfig {
     /** Multiple reports should be generated from this configuration if they fit into the owner's time constraints.
      * If this value is false, the single report will be aligned with the owners time constraints */
     boolean multiple = true
+
+    /**
+     * Only used for reports with multiple = false, determines whether the report should be generated such that
+     * it starts at the start of the owners date range.
+     */
+    boolean alignToOwnerStart = true
+
+    /**
+     * Only used for reports with multiple = false, determines whether the report should be generated such that
+     * it ends at the end of the owners date range.
+     */
+    boolean alignToOwnerEnd = false
 
     boolean canSubmitDuringReportingPeriod = false
 
