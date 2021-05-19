@@ -152,7 +152,6 @@
           {
             "dataType": "text",
             "name": "communityParticipation",
-            "description": "Quantitative figures can include number of participants, timeframes, dollar value etc)",
             "validate": "required,maxSize[1250]"
           },
           {
@@ -211,19 +210,17 @@
             "validate": "required",
             "constraints": [
               "N/A - Exempt",
-              "General - At least 4%",
-              "Remote - Goal of 20%"
+              "General - At least 4%"
             ]
           },
           {
             "dataType": "text",
             "name": "indigenousParticipationForClause40Point2",
-            "description": "Quantitative figures are to include number of procurements and value of each procurement, number employed full time equivalent",
             "validate": "maxSize[1250]",
             "behaviour": [
               {
                 "type": "conditional_validation",
-                "condition": "indigenousParticipationTarget == \"General - At least 4%\" or indigenousParticipationTarget == \"Remote - Goal of 20%\"",
+                "condition": "indigenousParticipationTarget == \"General - At least 4%\"",
                 "value": {
                   "validate": "required,maxSize[1250]"
                 }
@@ -378,12 +375,11 @@
           {
             "dataType": "text",
             "name": "indigenousParticipation",
-            "description": "Quantitative figures can include number of participants, timeframes, dollar value etc)",
             "validate": "maxSize[1250]",
             "behaviour": [
               {
                 "type": "conditional_validation",
-                "condition": "indigenousParticipationTarget == \"General - At least 4%\" or indigenousParticipationTarget == \"Remote - Goal of 20%\"",
+                "condition": "indigenousParticipationTarget == \"General - At least 4%\"",
                 "value": {
                   "validate": "required,maxSize[1250]"
                 }
@@ -599,7 +595,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "8. b) Please provide the level of community investment that has occurred over the past 12 months that contributes to the requirement that at least 20% of the combined value of RLP Projects delivered by a Service Provider must directly support the delivery of small on-ground projects and related activities that are delivered by, or directly engage with, the local landcare community (the Requirement). Also include whether you are on track to meet the Requirement over the life of the agreed Services Agreement. Note that quantitative figures will be collected in Question 8c), and the investment percentage will be calculated. (1250 character [approx. 250 word] limit).",
+                "preLabel": "8. b) Please provide the level of community investment that has occurred over the past 12 months that contributes to the requirement of clause 3.7(m)(ii) in Schedule 2 Statement of Works that at least 20% of the combined value of RLP Projects delivered by a Service Provider must directly support the delivery of small on-ground projects and related activities that are delivered by, or directly engage with, the local landcare community (the Requirement). Also include whether you are on track to meet the Requirement over the life of the agreed Services Agreement. Note that quantitative figures will be collected in Question 8c), and the investment percentage will be calculated. (1250 character [approx. 250 word] limit).",
                 "source": "communityParticipationFor20PercentRequirement",
                 "type": "textarea"
               }
@@ -680,8 +676,7 @@
               {
                 "preLabel": "9. a) Please describe how Indigenous people have participated in the delivery of any of the Core Services and projects over the past 12 months. (1250 character [approx. 250 word] limit)",
                 "source": "indigenousParticipation",
-                "type": "textarea",
-                "helpText": "Quantitative figures can include number of participants, timeframes, dollar value etc"
+                "type": "textarea"
               }
             ]
           },
@@ -699,7 +694,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "9. c) Please identify level of Indigenous employment and procurement investment you have agreed to provide in your services agreement",
+                "preLabel": "9. c) Please identify level of Indigenous employment and procurement investment you have agreed to provide under your Services Agreement",
                 "source": "indigenousParticipationTarget",
                 "type": "selectOne"
               }
@@ -824,15 +819,9 @@
           },
           {
             "type": "row",
-            "behaviour": [
-              {
-                "type": "if_expression",
-                "condition": "indigenousParticipationTarget == \"General - At least 4%\" or indigenousParticipationTarget == \"Remote - Goal of 20%\""
-              }
-            ],
             "items": [
               {
-                "preLabel": "Percentage of Indigenous subcontractors in subcontracted workforce",
+                "preLabel": "Percentage of Indigenous FTE in subcontracted workforce, calculated from input to table",
                 "type": "number",
                 "source": "percentageOfIndigenousSubcontractors"
               }
@@ -897,15 +886,9 @@
           },
           {
             "type": "row",
-            "behaviour": [
-              {
-                "type": "if_expression",
-                "condition": "indigenousParticipationTarget == \"General - At least 4%\" or indigenousParticipationTarget == \"Remote - Goal of 20%\""
-              }
-            ],
             "items": [
               {
-                "preLabel": "Percentage of Indigenous employees in the organisation workforce",
+                "preLabel": "Percentage of Indigenous FTE in the organisation workforce, calculated from input to table",
                 "type": "number",
                 "source": "percentageOfIndigenousEmployees"
               }
