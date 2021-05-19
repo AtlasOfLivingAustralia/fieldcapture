@@ -40,6 +40,8 @@ programNames = ["Additional Bushfire Projects", "Wildlife Rescue and Rehabilitat
 delete projectReports[0].firstReportingPeriodEnd;
 projectReports[0].activityType = "Wildlife Recovery Progress Report - WRR";
 
-program = db.program.findOne({name:programName});
-program.config.projectReports = projectReports;
-db.program.save(program);
+for (var i=0; i<programNames.length; i++) {
+    var program = db.program.findOne({name:programNames[i]});
+    program.config.projectReports = projectReports;
+    db.program.save(program);
+}
