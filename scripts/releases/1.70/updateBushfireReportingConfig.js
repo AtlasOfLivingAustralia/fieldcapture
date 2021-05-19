@@ -36,7 +36,7 @@ for (var i=0; i<programNames.length; i++) {
 }
 
 
-var programName = "Additional Bushfire Projects"
+programNames = ["Additional Bushfire Projects", "Wildlife Rescue and Rehabilitation", "Wildlife Rescue and Rehabilitation (Round 2)"];
 delete projectReports[0].firstReportingPeriodEnd;
 projectReports[0].activityType = "Wildlife Recovery Progress Report - WRR";
 
