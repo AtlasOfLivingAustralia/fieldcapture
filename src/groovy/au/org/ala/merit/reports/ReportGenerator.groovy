@@ -125,7 +125,7 @@ class ReportGenerator {
             // If the configuration specifies the skipFinalPeriod, work out the date we need to finish generating
             // the reports so that the final period is a minimum of reportingPeriodInMonths long, but less than
             // 2 * reportingPeriodInMonths
-            DateTime start = reportInterval.start
+            DateTime start = reportInterval.end // This is to handle aligning reports to the calendar
             Interval finalPeriod = new Interval(start, endDate.plusDays(DATE_FUDGE_FACTOR))
             while (finalPeriod.toPeriod(PeriodType.months()).months >= reportConfig.reportingPeriodInMonths) {
                 start = start.plusMonths(reportConfig.reportingPeriodInMonths)

@@ -420,7 +420,7 @@ class ReportGeneratorSpec extends Specification {
 
     }
 
-    def "We can skip the generation of the final report"() {
+    def "We can skip the generation of the final report"(String projectStartDate, String projectEndDate, String lastReportToDate, int expectedReportCount) {
         setup:
         ReportConfig config = new ReportConfig(
                 reportType: "Progress",
@@ -432,8 +432,7 @@ class ReportGeneratorSpec extends Specification {
                 category: "Progress Report",
                 reportsAlignedToCalendar: true,
                 activityType:"Progress Report")
-        String periodStart = '2020-06-30T14:00:00Z'
-        ReportOwner owner = new ReportOwner(id:[projectid:'p1'], name:"Project 1", periodStart:periodStart, periodEnd:projectEndDate)
+        ReportOwner owner = new ReportOwner(id:[projectId:'p1'], name:"Project 1", periodStart:projectStartDate, periodEnd:projectEndDate)
         ReportGenerator reportGenerator = new ReportGenerator()
 
         when:
@@ -444,13 +443,19 @@ class ReportGeneratorSpec extends Specification {
         reports[reports.size()-1].toDate == lastReportToDate
 
         where:
-        projectEndDate         | lastReportToDate       | expectedReportCount
-        '2021-06-30T14:00:00Z' | '2021-03-31T13:00:00Z' | 3
-        '2021-08-31T14:00:00Z' | '2021-03-31T13:00:00Z' | 3
-        '2021-09-28T14:00:00Z' | '2021-03-31T13:00:00Z' | 3
-        '2021-09-30T14:00:00Z' | '2021-06-30T14:00:00Z' | 4
-        '2021-06-29T14:00:00Z' | '2021-03-31T13:00:00Z' | 3 // When loading projects the end date gets set to midnight of the last day of the month so we need to handle this correctly.
-
+        projectStartDate       | projectEndDate         | lastReportToDate       | expectedReportCount
+        '2020-06-30T14:00:00Z' | '2021-06-30T14:00:00Z' | '2021-03-31T13:00:00Z' | 3
+        '2020-06-30T14:00:00Z' |'2021-08-31T14:00:00Z' | '2021-03-31T13:00:00Z' | 3
+        '2020-06-30T14:00:00Z' |'2021-09-28T14:00:00Z' | '2021-03-31T13:00:00Z' | 3
+        '2020-06-30T14:00:00Z' |'2021-09-30T14:00:00Z' | '2021-06-30T14:00:00Z' | 4
+        '2020-06-30T14:00:00Z' |'2021-06-29T14:00:00Z' | '2021-03-31T13:00:00Z' | 3 // When loading projects the end date gets set to midnight of the last day of the month so we need to handle this correctly.
+        '2020-06-30T14:00:00Z' |'2022-02-24T13:00:00Z' | '2021-09-30T14:00:00Z' | 5
+        '2020-02-10T13:00:00Z' | '2021-06-30T14:00:00Z' | '2021-03-31T13:00:00Z' | 5
+        '2020-02-10T13:00:00Z' |'2021-08-31T14:00:00Z' | '2021-03-31T13:00:00Z' | 5
+        '2020-02-10T13:00:00Z' |'2021-09-28T14:00:00Z' | '2021-03-31T13:00:00Z' | 5
+        '2020-02-10T13:00:00Z' |'2021-09-30T14:00:00Z' | '2021-06-30T14:00:00Z' | 6
+        '2020-02-10T13:00:00Z' |'2021-06-29T14:00:00Z' | '2021-03-31T13:00:00Z' | 5 // When loading projects the end date gets set to midnight of the last day of the month so we need to handle this correctly.
+        '2020-02-10T13:00:00Z' |'2022-02-24T13:00:00Z' | '2021-09-30T14:00:00Z' | 7
     }
 
 }
