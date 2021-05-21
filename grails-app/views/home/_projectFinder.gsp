@@ -3,27 +3,39 @@
 <div id="projectExplorer">
 <g:if test="${flash.error || results.error}">
     <g:set var="error" value="${flash.error?:results.error}"/>
-    <div class="row-fluid">
-        <div class="alert alert-error large-space-before">
+    <div class="row">
+        <div class="col-sm-12 p-3 alert alert-danger large-space-before searchError">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             <span>Error: ${error}</span>
         </div>
     </div>
 </g:if>
 <g:elseif test="${results?.hits?.total?:0 > 0}">
-
-    <div class="row-fluid ">
-        <div id="facetsCol" class="well well-small" style="display:none;">
+    <div class="row">
+        <div id="facetsCol" class="bg-white" style="display:none;">
             <g:set var="reqParams" value="query,sort,order,max,fq,fromDate,toDate"/>
             <div class="visible-phone pull-right" style="margin-top: 5px;">
-                <a href="#" id="toggleFacetDisplay" rel="facetsContent" role="button" class="btn btn-small btn-inverse" style="color:white;">
+                <a href="#" id="toggleFacetDisplay" rel="facetsContent" role="button" class="btn btn-sm btn-inverse" style="color:white;">
                     <span>show</span> options&nbsp;
                     <b class="caret"></b>
                 </a>
             </div>
             <h3 style="margin-bottom:0;">Filter results</h3>
-            <button class="btn btn-small facetSearch"><i class="icon-filter"></i>Refine</button>
-            <button class="btn btn-small clearFacet"><i class="icon-remove-sign"></i>Clear all</button>
+            <div class="row">
+                <div id="facetFilter">
+                    <div class="col-sm-4" >
+                        <button class="btn btn-sm facetSearch"><i class="fa fa-filter"></i> Refine</button>
+                    </div>
+                </div>
+                <div id="facetClear">
+                    <div class="col-sm-4">
+                        <button class="btn btn-sm clearFacet"><i class="fa fa-remove"></i> Clear all</button>
+
+                    </div>
+                </div>
+
+            </div>
+
             <g:if test="${params.fq}">
                 <div class="currentFilters">
                     <h4>Current filters</h4>
@@ -35,7 +47,7 @@
                             <g:set var="newUrl"><fc:formatParams params="${params}" requiredParams="${reqParams}" excludeParam="${f}"/></g:set>
                             <li><g:message code="label.${fqBits[0]}" default="${fqBits[0]}"/>: <g:message code="label.${fqBits[1]}" default="${fqBits[1]?.capitalize()}"/>
                                 <a href="${newUrl?:"?"}" class="btn btn-inverse btn-mini tooltips" title="remove filter" aria-label="remove filter">
-                                    <i class="icon-white icon-remove"></i></a>
+                                    <i class="text-white fa fa-remove"></i></a>
                             </li>
                         </g:each>
                     </ul>
@@ -45,219 +57,240 @@
                 <g:set var="baseUrl"><fc:formatParams params="${params}" requiredParams="${reqParams}"/></g:set>
                 <g:set var="fqLink" value="${g.createLink(controller: 'home', action: 'projectExplorer') + (baseUrl?:"?")}"/>
             <!-- fqLink = ${fqLink} -->
-                <div><h4 id="facet-dates-header" style="display:inline-block">Project Dates <fc:iconHelp helpTextCode="project.dates.help"/> </h4><a class="accordian-toggle pointer" data-toggle="collapse" data-target="#facet-dates"><i style="float:right; margin-top:10px;" class="fa fa-plus"></i></a></div>
-                <div id="facet-dates" data-name="projectDates" class="collapse validationEngineContainer">
-                    <div><select style="width:100%;" data-bind="options:ranges, optionsText:'display', value:selectedRange"></select></div>
-                    <div><div style="width:4em; display:inline-block;">From:</div> <div class="input-append"><fc:datePicker targetField="fromDate.date" class="input-small" name="fromDate" data-validation-engine="validate[date]"/></div></div>
-                    <div><div style="width:4em; display:inline-block;">To:</div> <div class="input-append"><fc:datePicker targetField="toDate.date" class="input-append input-small" name="toDate" data-validation-engine="validate[date,future[fromDate]]"/></div></div>
-                    <div><button data-bind="click:clearDates, enable:fromDate() || toDate()" class="btn" style="margin-left:4em;"><i class="fa fa-remove"></i> Clear dates</button></div>
+            <div class="accordion">
+                <div class="card customCard">
+                    <div class="card-header collapsed" data-toggle="collapse" href="#facet-dates" id="projectDates">
+                        <a><h4>Project Dates <fc:iconHelp helpTextCode="project.dates.help" container="body"/></h4></a>
+                    </div>
 
+                        <div id="facet-dates" data-name="projectDates" class="collapse facetItems validationEngineContainer">
+                            <div class="card-body cardBody">
+                                <select style="margin-bottom: 10px" data-bind="options:ranges, optionsText:'display', value:selectedRange"></select>
+                                <div class="input-group" style="margin-bottom: 10px"><label for="fromDate" class="dataClass">From:</label><fc:datePicker targetField="fromDate.date" bs4="bs4" class="dateControl form-control form-control-sm" name="fromDate" data-validation-engine="validate[date]"/></div>
+                                <div class="input-group" style="margin-bottom: 10px"><label for="fromDate" class="dataClass">To:</label><fc:datePicker targetField="toDate.date" bs4="bs4" class="dateControl form-control form-control-sm" name="toDate" data-validation-engine="validate[date,future[fromDate]]"/></div>
+                                <div><button data-bind="click:clearDates, enable:fromDate() || toDate()" class="btn btn-sm clearDates"><i class="fa fa-remove"></i> Clear dates</button></div>
+
+            </div>
+                        </div>
                 </div>
+            </div>
                 <div id="facet-list">
                     <facet-filter params="'facetsList' : facetsList, results:  results, fqLink: fqLink, baseUrl: baseUrl, projectExplorerUrl: projectExplorerUrl"></facet-filter>
                 </div>
             </div>
         </div>
-        <div class="span12">
-
-            <div class="accordian" id="project-display-options">
-                <div class="accordion-group">
-                    <div class="accordian-heading">
-                        <a class="accordian-toggle" id="accordionMapView-heading" href="#accordionMapView" data-toggle="collapse" data-parent="#project-display-options">Map <i style="padding-left:50px; padding-top:5px;" class="fa fa-plus pull-right"></i></a>
+        <div class="col-sm-11">
+            <div class="accordion" id="project-display-options">
+                <div class="card cardSection">
+                    <div class="card-header collapsed" id="mapHeading" href="#accordionMapView" data-toggle="collapse">
+                        <a class="text-left text-uppercase">Map</a>
                     </div>
-                    <div id="accordionMapView" class="accordian-body collapse">
-                        <span class="span4 facet-holder"></span>
 
-                        <span class="span8">
-                            <div class="row-fluid">
+                    <div id="accordionMapView" class="collapseItems collapse" aria-labelledby="mapHeading" data-parent="#project-display-options">
+                        <div class="card-body pt-0">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <span class="facet-holder"></span>
+                                </div>
+
+                                <div class="col-sm-8">
                                 <g:render template="searchResultsSummary"/>
+                                <g:render template="/shared/sites" model="${[projectCount:results?.hits?.total?:0]}"/>
+                                </div>
                             </div>
-                            <g:render template="/shared/sites" model="${[projectCount:results?.hits?.total?:0]}"/>
-                        </span>
+                        </div>
                     </div>
+                </div> <!-- Map Section -->
+                <div class="card cardSection">
+                        <div class="card-header collapsed" id="projectHeading" href="#projectsView" data-toggle="collapse">
+                            <a class="text-left text-uppercase">Projects</a>
+                        </div>
+                    <div id="projectsView" class="collapse collapseItems" aria-labelledby="projectHeading" data-parent="#project-display-options">
+                        <div class="card-body pt-0">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <span class="facet-holder"></span>
+                                </div>
+                                <div class="col-sm-8">
+                                    <p><g:render template="searchResultsSummary"/></p>
+                                    <div class="scroll-list clearfix" id="projectList">
+                                        <table class="table" id="projectTable" data-offset="0" data-max="25" style="table-layout: fixed">
+                                            <thead>
+                                                <tr>
+                                                    <th id="projectName" data-sort="nameSort" scope="col" data-order="ASC" class="header"> Project name</th>
+                                                    <th id="lastUpdated" data-sort="lastUpdated" scope="col" data-order="DESC" class="header"> Last updated</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                        <div id="paginateTable" class="d-none" style="text-align: center">
+                                            <span id="paginationInfo"></span>
+                                            <div class="btn-group">
+                                                <button class="btn btn-sm prev"><i class="fa fa-chevron-left" style="margin-top: 2px"></i>&nbsp;previous</button>
+                                                <button class="btn btn-sm next">next&nbsp;<i class="fa fa-chevron-right"></i></button>
+
+                                            </div>
+                                        </div>
+                                    </div> <!-- table -->
+%{--                             template for jQuery DOM injection --}%
+                                    <table id="projectRowTempl" class="d-none">
+                                        <tr>
+                                            <td class="td1">
+                                                <div class="accordion mb-0">
+                                                    <div class="card mb-0 border-0 p-0">
+                                                        <div>
+                                                                <a class="projectTitle collapsed" id="proj_" href="#a_" data-toggle="collapse" data-id="" title="click to show/hide details">
+                                                                    <span class="showHideCaret">&#9658; </span><span class="projectTitleName">$name</span>
+                                                                </a>
+                                                            <a href="#" class="managementUnitLine pull-right">
+                                                                <small><i class="managementUnitName"></i></small>
+                                                            </a>
+                                                        </div>
+                                                        <div class="projectInfo collapse pl-2 pt-1" id="a_" aria-labelledby="proj_">
+                                                            <div class="card-body pt-0 pl-0 pb-0">
+                                                                <div class="homeLine">
+                                                                    <i class="fa fa-home"></i>
+                                                                    <a href="">View project page</a>
+                                                                </div>
+                                                                <div class="orgLine">
+                                                                    <i class="fa fa-user" data-toggle="tooltip" title="Organisation"></i>
+                                                                </div>
+                                                                <div class="associatedProgramLine">
+                                                                    <i class="fa fa-bookmark" data-toggle="tooltip" title="Associated program / sub program"></i>
+                                                                    <span></span>
+                                                                    <i class="associatedSubProgram"></i>
+                                                                </div>
+                                                                <div class="descLine">
+                                                                    <i class="fa fa-info"></i>
+                                                                </div>
+                                                                <g:if test="${fc.userIsSiteAdmin()}">
+                                                                    <div class="downloadLine">
+                                                                        <i class="fa fa-download"></i>
+                                                                        <a href="" target="_blank">Download (.xlsx)</a>
+                                                                    </div>
+                                                                    <div class="downloadJSONLine">
+                                                                        <i class="fa fa-download"></i>
+                                                                        <a href="" target="_blank">Download (.json)</a>
+                                                                    </div>
+                                                                </g:if>
+                                                            </div>
+                                                        </div>
+                                                    </div> <!-- end of card -->
+                                                </div>
+                                            </td>
+                                            <td class="td2">$date</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- Project View -->
+                <div class="card cardSection">
+                <div class="card-header collapsed" id="dashboardHeading" href="#reportView" data-toggle="collapse">
+                    <a class="text-left text-uppercase">Dashboard</a>
                 </div>
-                <div class="accordion-group">
-                    <div class="accordian-heading">
-                        <a class="accordian-toggle" id="projectsView-heading" href="#projectsView" data-toggle="collapse" data-parent="#project-display-options">Projects <i style="padding-left:50px; padding-top:5px;" class="fa fa-plus pull-right"></i></a>
-                    </div>
-                    <div class="accordian-body collapse" id="projectsView">
-                        <span class="span4 facet-holder"></span>
-
-                        <span class="span8">
-                            <div class="row-fluid">
-                                <g:render template="searchResultsSummary"/>
+                    <div id="reportView" class="collapse collapseItems" aria-labelledby="dashboardHeading" data-parent="#project-display-options">
+                        <div class="card-body pt-0">
+                            <div class="row">
+                                <div class="col-sm-4 d-none" data-hidden="true">
+                                    <span class="facet-holder" data-hidden="true"></span>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div>
+                                        <div class="row" style="margin-top:5px;">
+                                            <button class="btn facets-toggle" type="button" style="margin-right: 0.7rem;"><i class="fa fa-bars"></i></button>
+                                            <span style="margin-top: 0.6em;">
+                                            <g:render template="searchResultsSummary"/>
+                                        </span>
+                                        </div>
+                                    </div>
+                                    <div class="reportDropdown">
+                                        <g:if test="${fc.userIsAlaOrFcAdmin()}">
+                                                <h4>Report: </h4>
+                                                <select id="dashboardType"  class="dashboardSelect" name="dashboardType">
+                                                    <option value="dashboard">Activity Outputs</option>
+                                                    <option value="announcements">Announcements</option>
+                                                    <option value="outputTargets">Output Targets By Programme</option>
+                                                    <option value="reef2050PlanActionSelection">Reef 2050 Plan Dashboard</option>
+                                                </select>
+                                        </g:if>
+                                        <g:else>
+                                            <select id="dashboardType" class="dashboardSelect" name="dashboardType">
+                                                <option value="dashboard">Activity Outputs</option>
+                                                <option value="reef2050PlanActionSelection">Reef 2050 Plan Dashboard</option>
+                                            </select>
+                                        </g:else>
+                                    </div>
+                                    <div class="loading-message">
+                                        <asset:image dir="images" src="loading.gif" alt="saving icon"/> Loading...
+                                    </div>
+                                    <div id="dashboard-content"></div>
+                                </div> <!-- col-sm-8 -->
                             </div>
+                            </div>
+                        </div>
+                    </div> <!-- Dashboard -->
+                <g:if test="${includeDownloads}">
+                    <div class="card cardSection">
+                        <div class="card-header collapsed" id="downloadHeading" href="#downloadView" data-toggle="collapse">
+                            <a class="text-left text-uppercase">Download</a>
+                        </div>
+                        <div id="downloadView" class="collapse collapseItems" aria-labelledby="downloadHeading" data-parent="#project-display-options">
+                            <div class="card-body pt-0">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <span class="facet-holder"></span>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <g:render template="searchResultsSummary"/>
+                                        <div class="alert alert-warning" role="alert">Please do not run more than one download at a time as they can place a lot of load on the system</div>
+                                        <h3>Download data for a filtered selection of projects</h3>
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th colspan="2"><b>Project, Site, Activity & Output</b></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td width="50%"><g:render template="downloadAllAsXlsx"/></td>
+                                                    <td width="50%"><a target="_blank" href="${grailsApplication.config.grails.serverURL}/search/downloadAllData<fc:formatParams params="${params}"/>view=json">JSON</a></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table style="width: 100%;">
+                                            <thead>
+                                                <tr>
+                                                    <th><b>Site data (Project Sites)</b></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td width="100%">
+                                                        <a id="shapefile-download" target="_blank" href='<g:createLink controller="search" action="downloadShapefile" params="${params}"/>'>Shapefile</a>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
 
-                            <div class="scroll-list clearfix" id="projectList">
-                                <table class="table table-bordered table-hover" id="projectTable" data-offset="0" data-max="25">
-                                    <thead>
-                                    <tr>
-                                        <th width="85%" data-sort="nameSort" scope="col" data-order="ASC" class="header">Project name</th>
-                                        <th width="15%" data-sort="lastUpdated" scope="col"  data-order="DESC" class="header">Last&nbsp;updated&nbsp;</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                                <div id="paginateTable" class="hide" style="text-align:center;">
-                                    <span id="paginationInfo" style="display:inline-block;float:left;margin-top:4px;"></span>
-                                    <div class="btn-group">
-                                        <button class="btn btn-small prev"><i class="icon-chevron-left"></i>&nbsp;previous</button>
-                                        <button class="btn btn-small next">next&nbsp;<i class="icon-chevron-right"></i></button>
                                     </div>
                                 </div>
                             </div>
-                            %{-- template for jQuery DOM injection --}%
-                            <table id="projectRowTempl" class="hide">
-                                <tr>
-                                    <td class="td1">
-                                        <a href="#" class="projectTitle" id="a_" data-id="" title="click to show/hide details">
-                                            <span class="showHideCaret">&#9658;</span> <span class="projectTitleName">$name</span></a>
-                                        <a href="#" class="managementUnitLine">
-                                            <small><i class="managementUnitName pull-right"></i></small>
-                                        </a>
-                                        <div class="hide projectInfo" id="proj_$id">
-                                            <div class="homeLine">
-                                                <i class="fa fa-home"></i>
-                                                <a href="">View project page</a>
-                                            </div>
-                                            <div class="orgLine">
-                                                <i class="fa fa-user" data-toggle="tooltip"  title="Organisation"></i>
-                                            </div>
-                                            <div class="associatedProgramLine">
-                                                <i class="fa fa-bookmark" data-toggle="tooltip"  title="Associated program / sub program"></i>
-                                                <span></span>
-                                                <i class="associatedSubProgram"></i>
-                                            </div>
 
-                                            <div class="descLine">
-                                                <i class="fa fa-info"></i>
-                                            </div>
-                                            <g:if test="${fc.userIsSiteAdmin()}">
-                                                <div class="downloadLine">
-                                                    <i class="fa fa-download"></i>
-                                                    <a href="" target="_blank">Download (.xlsx)</a>
-                                                </div>
-                                                <div class="downloadJSONLine">
-                                                    <i class="fa fa-download"></i>
-                                                    <a href="" target="_blank">Download (.json)</a>
-                                                </div>
-                                            </g:if>
-
-                                        </div>
-                                    </td>
-                                    <td class="td2">$date</td>
-                                </tr>
-                            </table>
-                        </span>
-                    </div>
-                </div>
-
-                <div class="accordion-group">
-                    <div class="accordian-heading">
-                        <a class="accordian-toggle" id="reportView-heading" href="#reportView" data-toggle="collapse" data-parent="#project-display-options">Dashboard<i style="padding-left:50px; padding-top:5px;" class="fa fa-plus pull-right"></i></a>
-                    </div>
-                    <div class="accordian-body collapse" id="reportView">
-                        <div class="span4 facet-holder" style="display:none;" data-hidden="true"></div>
-
-                        <div style="overflow-x:scroll">
-                            <div class="row-fluid" style="margin-top:5px;">
-                                <button class="btn facets-toggle"><i class="fa fa-bars"></i></button> <span>
-                                <g:render template="searchResultsSummary"/>
-                            </div>
-                            <div class="row-fluid" >
-                                <g:if test="${fc.userIsAlaOrFcAdmin()}">
-                                    <span class="span12">
-                                        <h4>Report: </h4>
-                                        <select id="dashboardType" name="dashboardType">
-                                            <option value="dashboard">Activity Outputs</option>
-                                            <option value="announcements">Announcements</option>
-                                            <option value="outputTargets">Output Targets By Programme</option>
-                                            <option value="reef2050PlanActionSelection">Reef 2050 Plan Dashboard</option>
-                                        </select>
-                                    </span>
-                                </g:if>
-                                <g:else>
-                                    <select id="dashboardType" name="dashboardType">
-                                        <option value="dashboard">Activity Outputs</option>
-                                        <option value="reef2050PlanActionSelection">Reef 2050 Plan Dashboard</option>
-                                    </select>
-                                </g:else>
-                            </div>
-                            <div class="loading-message">
-                                <asset:image dir="images" src="loading.gif" alt="saving icon"/> Loading...
-                            </div>
-                            <div id="dashboard-content">
-
-                            </div>
                         </div>
-                    </div>
-                </div>
-                <g:if test="${includeDownloads}">
-                    <div class="accordion-group">
-                        <div class="accordian-heading">
-                            <a class="accordian-toggle" id="downloadView-heading" href="#downloadView" data-toggle="collapse" data-parent="#project-display-options"><span>Download</span><i style="padding-left:50px; padding-top:5px;" class="fa fa-plus pull-right"></i></a>
-                        </div>
-                        <div class="accordian-body collapse" id="downloadView">
-                            <span class="span4 facet-holder"></span>
-
-                            <span class="span8">
-
-                                <div class="row-fluid">
-                                    <g:render template="searchResultsSummary"/>
-                                </div>
-
-
-                                <div class="alert">Please do not run more than one download at a time as they can place a lot of load on the system</div>
-                                <h3>Download data for a filtered selection of projects</h3>
-
-
-                                <table style="width: 100%;">
-                                    <thead>
-                                    <tr>
-                                        <th colspan="2"><b>Project, Site, Activity & Output</b></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td width="50%">
-
-                                            <g:render template="downloadAllAsXlsx"/>
-
-                                        </td>
-                                        <td width="50%">
-                                            <a target="_blank" href="${grailsApplication.config.grails.serverURL}/search/downloadAllData<fc:formatParams params="${params}"/>view=json">JSON</a>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-
-                                <table style="width: 100%;">
-                                    <thead>
-                                    <tr>
-                                        <th><b>Site data (Project Sites)</b></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td width="100%">
-                                            <a id="shapefile-download" target="_blank" href='<g:createLink controller="search" action="downloadShapefile" params="${params}"/>'>Shapefile</a>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </span>
-                        </div>
-                    </div>
+                    </div> <!-- Download -->
                 </g:if>
-            </div>
-        </div>
-    </div>
+
+            </div> <!-- accordion -->
+        </div> <!-- col-sm-11 -->
+    </div> <!-- End of Row -->
 </g:elseif>
 <g:else>
-    <div class="row-fluid ">
-        <div class="span12">
-            <div class="alert alert-error large-space-before">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="alert alert-danger large-space-before">
                 Error: search index returned 0 results
             </div>
         </div>
@@ -293,8 +326,10 @@
         baseUrl: "${baseUrl}",
         projectExplorerUrl: "${g.createLink(controller:'home', action:'projectExplorer')}"
     };
-    $(function () {
-        var delay = (function(){
+
+    $(function(){
+
+    var delay = (function(){
             var timer = 0;
             return function(callback, ms){
                 clearTimeout (timer);
@@ -321,10 +356,169 @@
             });
         };
 
+
+        function toggleFacets() {
+            var $holder = $('#facetsCol').parent().parent();
+            var hidden = $holder.data('hidden');
+            $holder.data('hidden', !hidden);
+            var $content = $holder.next();
+            if (!hidden) {
+                $holder.animate({width:"toggle" }, function() {
+                    $holder.addClass('d-none');
+                    $content.removeClass('col-sm-8').addClass('col-sm-12')
+                });
+            }
+            else {
+                $holder.animate({width:"toggle" }, function() {
+                    $holder.removeClass('d-none');
+                   $content.removeClass('col-sm-12').addClass('col-sm-8');
+                });
+            }
+        }
+
+        $(".facets-toggle").on('click', function(){
+            toggleFacets();
+        });
+    /**
+    * Update the project table DOM using a plain HTML template (cloned)
+    *
+    * @param data
+    */
+    function populateTable(data) {
+        //console.log("populateTable", data);
+        $.each(data.hits.hits, function(i, el) {
+            //console.log(i, "el", el);
+            var id = el._id;
+            var src = el._source
+            var $tr = $('#projectRowTempl tr').clone(); // template
+            $tr.find(".projectTitle").attr("href", "#a_"+id)
+            $tr.find(".projectTitle").attr("id", "proj_"+id)
+            $tr.find(".projectInfo").attr("aria-labelledby", "proj_"+id)
+            $tr.find('.projectInfo').attr("id", "a_" + id)
+            $tr.find('.td1 .projectTitleName').text(src.name); // projectTitleName
+            if(src.managementUnitName){
+                $tr.find('.td1 .managementUnitName').text(src.managementUnitName);
+                $tr.find('.td1 a.managementUnitLine').attr("href", "${createLink(controller: 'managementUnit')}/" + src.managementUnitId);
+            }
+            if(src.associatedProgram){
+                if (src.programId){
+                    $tr.find('.td1 .associatedProgramLine span').text(src.associatedProgram);
+                    //$tr.find('.td1 .associatedProgramLine a').attr("href", "${createLink(controller: 'program')}/" + src.programId);
+                    }
+                else{
+                    //$tr.find('.td1 .associatedProgramLine a').attr("href", "#");
+                    $tr.find('.td1 .associatedProgramLine a').replaceWith('<span>'+ src.associatedProgram +'</span>')
+                }
+
+                if (src.associatedSubProgram)
+                    $tr.find('.td1 .associatedProgramLine i.associatedSubProgram').text( " - "+src.associatedSubProgram )
+            }
+
+          //  $tr.find('.projectInfo').attr("id", "proj_" + id);
+            $tr.find('.homeLine a').attr("href", "${createLink(controller: 'project')}/" + id);
+            $tr.find('a.zoom-in').data("id", id);
+            $tr.find('a.zoom-out').data("id", id);
+            $tr.find('.orgLine').text(src.organisationName);
+            $tr.find('.descLine').text(src.description);
+        <g:if test="${fc.userIsSiteAdmin()}">
+            $tr.find('.downloadLine a').attr("href", "${createLink(controller: 'project',action: 'downloadProjectData')}" + "?id="+id+"&view=xlsx");
+                    $tr.find('.downloadJSONLine a').attr("href", "${createLink(controller: 'project',action: 'downloadProjectData')}" + "?id="+id+"&view=json");
+        </g:if>
+            $tr.find('.td2').text(formatDate(Date.parse(src.lastUpdated))); // relies on the js_iso8601 resource
+            //console.log("appending row", $tr);
+            $('#projectTable tbody').append($tr);
+        });
+    }
+
+    /**
+    * Dynamically update the project list table via AJAX
+    *
+    * @param facetFilters (an array)
+    */
+    function updateProjectTable(facetFilters) {
+        var url = "${createLink(controller:'nocas', action:'geoService')}";
+        var sort = $('#projectTable').data("sort");
+        var order = $('#projectTable').data("order");
+        var offset = $('#projectTable').data("offset");
+        var max = $('#projectTable').data("max");
+        var params = "max="+max+"&offset="+offset;
+
+        var query = '${params.query ? params.query.replace("'", "\\'") : ""}';
+        if (sort) {
+            params += "&sort="+sort+"&order="+order;
+        }
+        else if (!query) {
+            // Sort by date if no query term has been entered.
+            var defaultSort = "&sort=lastUpdated&order=DESC";
+            params += defaultSort;
+        }
+
+        if (projectListIds.length > 0) {
+            params += "&ids=" + projectListIds.join(",");
+        } else {
+            params += "&query="+encodeURIComponent(query || '*:*');
+        }
+        if (facetFilters) {
+            params += "&fq=" + facetFilters.join("&fq=");
+        }
+
+        <g:if test="${params.fq}">
+            <g:set var="fqList" value="${[params.fq].flatten()}"/>
+            params += "&fq=${fqList.collect{it.encodeAsURL()}.join('&fq=')}";
+        </g:if>
+        <g:if test="${params.fromDate}">
+            params += '&fromDate='+'${params.fromDate}';
+        </g:if>
+        <g:if test="${params.toDate}">
+            params += '&toDate='+'${params.toDate}';
+        </g:if>
+
+        $.post(url, params).done(function(data1) {
+            //console.log("getJSON data", data);
+            var data
+            if (data1.resp) {
+                data = data1.resp;
+            } else if (data1.hits) {
+                data = data1;
+            }
+            if (data.error) {
+                console.error("Error: " + data.error);
+            } else {
+                var total = data.hits.total;
+                $("numberOfProjects").html(total);
+                $('#projectTable').data("total", total);
+                $('#paginateTable').show();
+                if (total == 0) {
+                    $('#paginationInfo').html("Nothing found");
+
+                } else {
+                    var max = data.hits.hits.length
+                    $('#paginationInfo').html((offset+1)+" to "+(offset+max) + " of "+total);
+                    $("#paginateTable").removeClass("d-none");
+                    if (offset == 0) {
+                        $('#paginateTable .prev').addClass("disabled");
+                    } else {
+                        $('#paginateTable .prev').removeClass("disabled");
+                    }
+                    if (offset >= (total - max) ) {
+                        $('#paginateTable .next').addClass("disabled");
+                    } else {
+                        $('#paginateTable .next').removeClass("disabled");
+                    }
+                }
+
+                $('#projectTable tbody').empty();
+                populateTable(data);
+            }
+        }).fail(function (request, status, error) {
+            //console.error("AJAX error", status, error);
+            $('#paginationInfo').html("AJAX error:" + status + " - " + error);
+        });
+    }
+
         var VIEW_STATE_KEY = 'homepage-tab-state';
         var initialisedReport = false, initialisedMap = false, initialisedProjects = false;
-        var initialiseContentSection = function(section) {
-
+        var initialiseContentSection = function(section){
             if (section === '#accordionMapView' && !initialisedMap) {
                 generateMap(facetList);
                 initialisedMap = true;
@@ -348,56 +542,181 @@
             }
         };
 
-        var expandedToggles = amplify.store('facetToggleState') || [];
-        function restoreFacetSelections() {
+var urlWithoutDates = '<fc:formatParams params="${params}" requiredParams="sort,order,max,fq"/>';
+        var fromDate = '${params.fromDate?:''}';
+        var toDate = '${params.toDate?:''}';
+        var DatePickerModel = function() {
+            var formatString = 'YYYY-MM-DD';
+            var self = this;
+            var date = moment('2011-07-01T00:00:00+10:00');
+            var end = moment('2021-01-01T00:00:00+11:00');
 
+            self.ranges = [{display:'select date range', from:undefined, to:undefined}];
+            while (date.isBefore(end)) {
+                var rangeEnd = moment(date).add(6, 'months');
+                self.ranges.push({from:date.format(formatString), to:rangeEnd.format(formatString), display:date.format("MMM YYYY")+' - '+rangeEnd.format("MMM YYYY")});
+
+                date = rangeEnd;
+            }
+            self.selectedRange = ko.observable();
+            self.fromDate = ko.observable().extend({simpleDate:false});
+            if (fromDate) {
+                self.fromDate(moment(fromDate).format());
+            }
+            self.toDate = ko.observable().extend({simpleDate:false});
+            if (toDate) {
+                self.toDate(moment(toDate).format());
+            }
+
+            self.clearDates = function() {
+                if (!urlWithoutDates) {
+                    urlWithoutDates = '?';
+                }
+                document.location.href = urlWithoutDates;
+            };
+
+            var validateAndReload = function(newFromDate, newToDate) {
+
+                var parsedNewFromDate = moment(newFromDate);
+                var parsedNewToDate = moment(newToDate);
+                var parsedFromDate = moment(fromDate);
+                var parsedToDate = moment(toDate);
+
+                if (parsedFromDate.isSame(parsedNewFromDate) && parsedToDate.isSame(parsedNewToDate)) {
+                   return;
+                }
+
+                if ($('#facet-dates').validationEngine('validate')) {
+                    reloadWithDates(newFromDate, newToDate);
+                }
+            }
+
+            var reloadWithDates = function(newFromDate, newToDate) {
+                var parsedNewFromDate = moment(newFromDate);
+                var parsedNewToDate = moment(newToDate);
+                if (newFromDate && parsedNewFromDate.isValid()) {
+                    urlWithoutDates += urlWithoutDates?'&':'?';
+                    urlWithoutDates += 'fromDate='+moment(newFromDate).format(formatString);
+                }
+                if (newToDate && parsedNewToDate.isValid()) {
+                    urlWithoutDates += urlWithoutDates?'&':'?';
+                    urlWithoutDates += 'toDate='+moment(newToDate).format(formatString);
+                }
+                document.location.href = urlWithoutDates;
+            }
+
+            self.fromDate.subscribe(function(a, b) {
+                validateAndReload(self.fromDate(), self.toDate());
+            });
+            self.toDate.subscribe(function(toDate) {
+                validateAndReload(self.fromDate(), self.toDate());
+            });
+
+            self.selectedRange.subscribe(function(value) {
+
+                if (value.from) {
+                    reloadWithDates(value.from, value.to);
+                }
+
+            });
+        };
+        var error = "${error}";
+
+        if(!error){
+            ko.applyBindings(new DatePickerModel(), document.getElementById('facet-dates'));
+        }
+
+        function FacetFilterViewModel (params) {
+            this.facetsList = params.facetsList;
+            this.results = params.results;
+            this.fqLink = params.fqLink;
+            this.baseUrl = params.baseUrl;
+            this.projectExplorerUrl = params.projectExplorerUrl;
+        }
+        if(!error){
+            ko.applyBindings(new FacetFilterViewModel(facetModelViewArgs), document.getElementById('facet-list'));
+        }
+
+        $('#facet-dates').validationEngine('attach', {scroll:false});
+
+        $('.helphover').popover({animation: true, trigger:'hover', container:'body'});
+
+
+        $("#facetsContent").on("shown.bs.collapse", function(e){
+            var $target = $(e.target);
+            var targetId = "#"+e.target.id;
+            var facetValue = amplify.store('facetToggleState') || [];
+            if(!facetValue.includes(targetId)){
+                facetValue.push(targetId)
+            }
+            var section = facetValue;
+            amplify.store('facetToggleState', section);
+
+        });
+        $("#facetsContent").on("hidden.bs.collapse", function(e){
+            var targetId = "#"+e.target.id;
+            var facetStoredTab = amplify.store('facetToggleState') || [];
+            var updatedFacetList = [];
+            facetStoredTab.forEach(function(tab){
+                if(tab !== targetId){
+                    updatedFacetList.push(tab)
+                }
+            })
+            if(updatedFacetList.length > 1){
+                amplify.store('facetToggleState', updatedFacetList)
+            }else{
+                amplify.store('facetToggleState', null);
+            }
+        });
+
+    // retain accordion state for future re-visits
+        function restoreFacetSelections() {
             if ($('#facetsContent').is(':visible')) {
+            var expandedToggles = amplify.store('facetToggleState') || [];
                 if (expandedToggles) {
-                    for (var i=0; i<expandedToggles.length; i++) {
-                        $('[data-name="'+expandedToggles[i]+'"]').collapse('show');
-                    }
+                expandedToggles.forEach(function(section){
+                    $(section).collapse('show');
+                });
                 }
             }
 
         }
-
-        // retain accordian state for future re-visits
-        $('#project-display-options').on('shown', function (e) {
-            // Because the facets use accordion and are inside the main accordion view we need to filter them out.
-            var $target = $(e.target);
-            if ($target.hasClass('accordian-body')) {
-                var targetId = e.target.id;
-                var section = '#'+targetId;
-                amplify.store(VIEW_STATE_KEY, section);
-                initialiseContentSection(section);
-                $('#'+targetId+'-heading').find('i').removeClass('fa-plus').addClass('fa-minus');
-            }
-        });
-        $('#project-display-options').on('show', function (e) {
-
-            // Because the facets use accordion and are inside the main accordion view we need to filter them out.
-            var $target = $(e.target);
-            if ($target.hasClass('accordian-body')) {
-
-                var section = '#'+e.target.id;
-                $('#facetsCol').appendTo($(section).find('.facet-holder'));
-                $('#facetsCol').show();
-                restoreFacetSelections();
-            }
-
-        });
-        $('#project-display-options').on('hidden', function (e) {
-            var targetId = e.target.id;
-            $('#'+targetId+'-heading').find('i').removeClass('fa-minus').addClass('fa-plus');
-        });
-
-        // re-establish the previous view state
+// re-establish the previous view state
         var storedTab = selectedSection || amplify.store(VIEW_STATE_KEY) || '#accordionMapView';
         if (!$('#project-display-options '+storedTab)[0]) {
             storedTab = '#accordionMapView';
         }
         $('#project-display-options '+storedTab).collapse({parent:'#project-display-options'});
-        $('#project-display-options '+storedTab).collapse('show');
+        $('#project-display-options').on("shown.bs.collapse", function(e){
+            var $target = $(e.target)
+            var targetId;
+            if($target.hasClass('collapseItems')){
+                targetId = e.target.id
+               var  section = '#'+targetId
+                amplify.store(VIEW_STATE_KEY, section);
+                initialiseContentSection(section);
+            }
+            // Because the facets use accordion and are inside the main accordion view we need to filter them out.
+            $('#facetsCol').appendTo($(section).find('.facet-holder'));
+            $('#facetsCol').show();
+            restoreFacetSelections();
+        });
+
+        $(".clearFacet").click(function(e){
+            amplify.store('facetToggleState', null);
+       	    window.location.href = facetModelViewArgs.projectExplorerUrl;
+        });
+
+        $('#shapefile-download').click(function(e) {
+            e.preventDefault();
+            var url = $('#shapefile-download').attr('href');
+            $.get(url).done(function() {
+                bootbox.alert("The download may take several minutes to complete.  Once it is complete, an email will be sent to your registed email address.")
+            }).fail(function() {
+                bootbox.alert("There was an error requesting the download");
+            });
+
+        });
 
         // project list filter
         $('.filterinput').keyup(function() {
@@ -423,6 +742,7 @@
 
             return false;
         });
+
 
         $('.clearFilterBtn').click(function () {
             var $filterInput = $(this).prev(),
@@ -564,141 +884,8 @@
                 $(this).find("span").text("hide");
             }
         });
-
-        var projectExplorerUrl = '${g.createLink(controller:'home', action:'projectExplorer')}';
-        $(".clearFacet").click(function(e){
-       	 window.location.href = projectExplorerUrl;
-        });
-
-        $('#shapefile-download').click(function(e) {
-            e.preventDefault();
-            var url = $('#shapefile-download').attr('href');
-            $.get(url).done(function() {
-                bootbox.alert("The download may take several minutes to complete.  Once it is complete, an email will be sent to your registed email address.")
-            }).fail(function() {
-                bootbox.alert("There was an error requesting the download");
-            });
-
-        });
-
-
-        function toggleFacets() {
-
-            var $holder = $('#facetsCol').parent();
-            var hidden = $holder.data('hidden');
-            $holder.data('hidden', !hidden);
-            var $content = $holder.next();
-            if (!hidden) {
-                $holder.animate({width:'toggle'}, 200, 'swing', function() {
-                    $content.removeClass('span8');
-                });
-            }
-            else {
-                $holder.animate({width:'toggle'}, 200, 'swing', function() {
-                   $content.addClass('span8');
-                   restoreFacetSelections();
-
-                });
-            }
-        }
-        $('.facets-toggle').click(function(e) {
-           toggleFacets();
-        });
-
-        var urlWithoutDates = '<fc:formatParams params="${params}" requiredParams="sort,order,max,fq"/>';
-        var fromDate = '${params.fromDate?:''}';
-        var toDate = '${params.toDate?:''}';
-        var DatePickerModel = function() {
-            var formatString = 'YYYY-MM-DD';
-            var self = this;
-            var date = moment('2011-07-01T00:00:00+10:00');
-            var end = moment('2021-01-01T00:00:00+11:00');
-
-            self.ranges = [{display:'select date range', from:undefined, to:undefined}];
-            while (date.isBefore(end)) {
-                var rangeEnd = moment(date).add(6, 'months');
-                self.ranges.push({from:date.format(formatString), to:rangeEnd.format(formatString), display:date.format("MMM YYYY")+' - '+rangeEnd.format("MMM YYYY")});
-
-                date = rangeEnd;
-            }
-            self.selectedRange = ko.observable();
-            self.fromDate = ko.observable().extend({simpleDate:false});
-            if (fromDate) {
-                self.fromDate(moment(fromDate).format());
-            }
-            self.toDate = ko.observable().extend({simpleDate:false});
-            if (toDate) {
-                self.toDate(moment(toDate).format());
-            }
-
-            self.clearDates = function() {
-                if (!urlWithoutDates) {
-                    urlWithoutDates = '?';
-                }
-                document.location.href = urlWithoutDates;
-            };
-
-            var validateAndReload = function(newFromDate, newToDate) {
-
-                var parsedNewFromDate = moment(newFromDate);
-                var parsedNewToDate = moment(newToDate);
-                var parsedFromDate = moment(fromDate);
-                var parsedToDate = moment(toDate);
-
-                if (parsedFromDate.isSame(parsedNewFromDate) && parsedToDate.isSame(parsedNewToDate)) {
-                   return;
-                }
-
-                if ($('#facet-dates').validationEngine('validate')) {
-                    reloadWithDates(newFromDate, newToDate);
-                }
-            }
-
-            var reloadWithDates = function(newFromDate, newToDate) {
-                var parsedNewFromDate = moment(newFromDate);
-                var parsedNewToDate = moment(newToDate);
-                if (newFromDate && parsedNewFromDate.isValid()) {
-                    urlWithoutDates += urlWithoutDates?'&':'?';
-                    urlWithoutDates += 'fromDate='+moment(newFromDate).format(formatString);
-                }
-                if (newToDate && parsedNewToDate.isValid()) {
-                    urlWithoutDates += urlWithoutDates?'&':'?';
-                    urlWithoutDates += 'toDate='+moment(newToDate).format(formatString);
-                }
-                document.location.href = urlWithoutDates;
-            }
-
-            self.fromDate.subscribe(function(a, b) {
-                validateAndReload(self.fromDate(), self.toDate());
-            });
-            self.toDate.subscribe(function(toDate) {
-                validateAndReload(self.fromDate(), self.toDate());
-            });
-
-            self.selectedRange.subscribe(function(value) {
-
-                if (value.from) {
-                    reloadWithDates(value.from, value.to);
-                }
-
-            });
-        };
-        ko.applyBindings(new DatePickerModel(), document.getElementById('facet-dates'));
-
-        function FacetFilterViewModel (params) {
-            this.facetsList = params.facetsList;
-            this.results = params.results;
-            this.fqLink = params.fqLink;
-            this.baseUrl = params.baseUrl;
-            this.projectExplorerUrl = params.projectExplorerUrl;
-        }
-        ko.applyBindings(new FacetFilterViewModel(facetModelViewArgs), document.getElementById('facet-list'));
-        $('#facet-dates').validationEngine('attach', {scroll:false});
-
-        $('.helphover').popover({animation: true, trigger:'hover', container:'body'});
-    });
-
-    /**
+});
+        /**
     * Sort a list by its li elements using the data-foo (dataEl) attribute of the li element
     *
     * @param $list
@@ -716,139 +903,5 @@
             }
             return comp;
         }).appendTo($list);
-    }
-
-
-    /**
-    * Dynamically update the project list table via AJAX
-    *
-    * @param facetFilters (an array)
-    */
-    function updateProjectTable(facetFilters) {
-        var url = "${createLink(controller:'nocas', action:'geoService')}";
-        var sort = $('#projectTable').data("sort");
-        var order = $('#projectTable').data("order");
-        var offset = $('#projectTable').data("offset");
-        var max = $('#projectTable').data("max");
-        var params = "max="+max+"&offset="+offset;
-
-        var query = '${params.query ? params.query.replace("'", "\\'") : ""}';
-        if (sort) {
-            params += "&sort="+sort+"&order="+order;
-        }
-        else if (!query) {
-            // Sort by date if no query term has been entered.
-            var defaultSort = "&sort=lastUpdated&order=DESC";
-            params += defaultSort;
-        }
-
-        if (projectListIds.length > 0) {
-            params += "&ids=" + projectListIds.join(",");
-        } else {
-            params += "&query="+encodeURIComponent(query || '*:*');
-        }
-        if (facetFilters) {
-            params += "&fq=" + facetFilters.join("&fq=");
-        }
-
-        <g:if test="${params.fq}">
-            <g:set var="fqList" value="${[params.fq].flatten()}"/>
-            params += "&fq=${fqList.collect{it.encodeAsURL()}.join('&fq=')}";
-        </g:if>
-        <g:if test="${params.fromDate}">
-            params += '&fromDate='+'${params.fromDate}';
-        </g:if>
-        <g:if test="${params.toDate}">
-            params += '&toDate='+'${params.toDate}';
-        </g:if>
-
-        $.post(url, params).done(function(data1) {
-            //console.log("getJSON data", data);
-            var data
-            if (data1.resp) {
-                data = data1.resp;
-            } else if (data1.hits) {
-                data = data1;
-            }
-            if (data.error) {
-                console.error("Error: " + data.error);
-            } else {
-                var total = data.hits.total;
-                $("numberOfProjects").html(total);
-                $('#projectTable').data("total", total);
-                $('#paginateTable').show();
-                if (total == 0) {
-                    $('#paginationInfo').html("Nothing found");
-
-                } else {
-                    var max = data.hits.hits.length
-                    $('#paginationInfo').html((offset+1)+" to "+(offset+max) + " of "+total);
-                    if (offset == 0) {
-                        $('#paginateTable .prev').addClass("disabled");
-                    } else {
-                        $('#paginateTable .prev').removeClass("disabled");
-                    }
-                    if (offset >= (total - max) ) {
-                        $('#paginateTable .next').addClass("disabled");
-                    } else {
-                        $('#paginateTable .next').removeClass("disabled");
-                    }
-                }
-
-                $('#projectTable tbody').empty();
-                populateTable(data);
-            }
-        }).fail(function (request, status, error) {
-            //console.error("AJAX error", status, error);
-            $('#paginationInfo').html("AJAX error:" + status + " - " + error);
-        });
-    }
-
-    /**
-    * Update the project table DOM using a plain HTML template (cloned)
-    *
-    * @param data
-    */
-    function populateTable(data) {
-        //console.log("populateTable", data);
-        $.each(data.hits.hits, function(i, el) {
-            //console.log(i, "el", el);
-            var id = el._id;
-            var src = el._source
-            var $tr = $('#projectRowTempl tr').clone(); // template
-            $tr.find('.td1 > a').attr("id", "a_" + id).data("id", id);
-            $tr.find('.td1 .projectTitleName').text(src.name); // projectTitleName
-            if(src.managementUnitName){
-                $tr.find('.td1 .managementUnitName').text(src.managementUnitName);
-                $tr.find('.td1 a.managementUnitLine').attr("href", "${createLink(controller: 'managementUnit')}/" + src.managementUnitId);
-            }
-            if(src.associatedProgram){
-                if (src.programId){
-                    $tr.find('.td1 .associatedProgramLine span').text(src.associatedProgram);
-                    //$tr.find('.td1 .associatedProgramLine a').attr("href", "${createLink(controller: 'program')}/" + src.programId);
-                    }
-                else{
-                    //$tr.find('.td1 .associatedProgramLine a').attr("href", "#");
-                    $tr.find('.td1 .associatedProgramLine a').replaceWith('<span>'+ src.associatedProgram +'</span>')
-                }
-
-                if (src.associatedSubProgram)
-                    $tr.find('.td1 .associatedProgramLine i.associatedSubProgram').text( " - "+src.associatedSubProgram )
-            }
-
-            $tr.find('.projectInfo').attr("id", "proj_" + id);
-            $tr.find('.homeLine a').attr("href", "${createLink(controller: 'project')}/" + id);
-            $tr.find('a.zoom-in').data("id", id);
-            $tr.find('a.zoom-out').data("id", id);
-            $tr.find('.orgLine').text(src.organisationName);
-            $tr.find('.descLine').text(src.description);
-        <g:if test="${fc.userIsSiteAdmin()}">
-            $tr.find('.downloadLine a').attr("href", "${createLink(controller: 'project',action: 'downloadProjectData')}" + "?id="+id+"&view=xlsx");
-                    $tr.find('.downloadJSONLine a').attr("href", "${createLink(controller: 'project',action: 'downloadProjectData')}" + "?id="+id+"&view=json");
-        </g:if>
-            $tr.find('.td2').text(formatDate(Date.parse(src.lastUpdated))); // relies on the js_iso8601 resource
-            //console.log("appending row", $tr);
-            $('#projectTable tbody').append($tr);
-        });
     }
 </asset:script>

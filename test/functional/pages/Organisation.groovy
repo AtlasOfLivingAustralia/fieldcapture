@@ -6,7 +6,7 @@ import pages.modules.OrganisationAdminTab
 class Organisation extends Page{
     static url = 'organisation/index'
 
-    static at = { waitFor {name.text() !=null}}
+    static at = {title.endsWith("| MERIT")}
 
     static content = {
         name {$('h2')}

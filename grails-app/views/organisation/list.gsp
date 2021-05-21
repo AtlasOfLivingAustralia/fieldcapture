@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="${hubConfig.skin}"/>
+    <meta name="layout" content="nrm_bs4"/>
     <title>Organisations | Field Capture</title>
     <script>
         var fcConfig = {
@@ -13,17 +13,20 @@
             noLogoImageUrl: "${assetPath(src:'no-image-2.png')}"
             };
     </script>
-    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="common-bs4.css"/>
+    <asset:stylesheet src="organisation.css"/>
 </head>
 
 <body>
 <div class="${containerType}">
-    <ul class="breadcrumb">
-        <li>
-            <g:link controller="home">Home</g:link><span class="divider">/</span>
-        </li>
-        <li class="active">Organisations<span class="divider"></span></li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <g:link controller="home">Home</g:link>
+            </li>
+            <li class="breadcrumb-item active">Organisations</li>
+        </ol>
+    </nav>
 <g:if test="${allowOrganisationRegistration}">
     <div>
         <h2 style="display:inline">Registered
@@ -31,19 +34,22 @@
         Organisations</h2>
 
         <g:if test="${user}">
-            <button class="btn btn-success pull-right" data-bind="click:addOrganisation">Register new organisation</button>
+            <button class="btn btn-success pull-right registerNewOrganisation" data-bind="click:addOrganisation">Register new organisation</button>
         </g:if>
     </div>
 </g:if>
     <fc:getSettingContent settingType="${au.org.ala.merit.SettingPageType.ORGANISATION_LIST_PAGE_HEADER}"/>
     <g:if test="${fc.userIsAlaOrFcAdmin()}">
-        <a href="${g.createLink(action:'create')}"><button class="btn btn-info pull-right">Create Organisation</button></a>
+        <a href="${g.createLink(action:'create')}"><button class="btn btn-info btn-sm pull-right createOrganisation">Create Organisation</button></a>
     </g:if>
-
-    <div class="row-fluid">
-        <div class="span6 input-append">
-            <input type="text" id="searchText" data-bind="value:searchTerm, valueUpdate:'keyup'" class="span12" placeholder="Search organisations..." />
-            <span class="add-on"><i class="fa fa-search"></i> </span>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="input-group">
+                <input type="text" id="searchText" data-bind="value:searchTerm, valueUpdate:'keyup'" class="form-control form-control-sm"   aria-labelledby="Search Organisation" aria-describedby="basic-addon2" placeholder="Search organisations..." >
+                <div class="input-group-append">
+                    <span type="button" class="btn btn-sm btn-secondary disabled orgSearch"><i class="fa fa-search" style="color: #000000"></i></span>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -52,7 +58,7 @@
     <hr/>
 
     <!-- ko foreach : organisations -->
-        <div class="row-fluid organisation">
+        <div class="row organisation">
             <div class="organisation-logo"><img class="logo" data-bind="attr:{'src':logoUrl()?logoUrl():fcConfig.noLogoImageUrl}"></div>
             <div class="organisation-text">
                 <h4>
@@ -66,11 +72,7 @@
     <hr/>
 
     <!-- /ko -->
-
-    <div class="row-fluid">
-        <g:render template="/shared/pagination"/>
-    </div>
-
+    <g:render template="/shared/pagination"/>
 </div>
 
 
@@ -86,7 +88,7 @@
 });
 
 </asset:script>
-<asset:javascript src="common.js"/>
+<asset:javascript src="common-bs4.js"/>
 <asset:javascript src="organisation.js"/>
 <asset:deferredScripts/>
 

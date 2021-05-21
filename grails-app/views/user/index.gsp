@@ -1,8 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
-    <meta name="layout" content="${hubConfig.skin}"/>
-    <title>My Projects | Field Capture</title>
+    <meta name="layout" content="nrm_bs4"/>
+    <title>My Projects | MERIT</title>
     <script>
     var fcConfig = {
         serverUrl: "${grailsApplication.config.grails.serverURL}",
@@ -15,15 +15,14 @@
         here = window.location.href;
 
     </script>
-    <asset:stylesheet src="common.js"/>
-    <asset:stylesheet src="project.css"/>
+    <asset:stylesheet src="my-projects.css"/>
 </head>
 <body>
 <div id="wrapper" class="${containerType}">
     <g:if test="${flash.error || error}">
         <g:set var="error" value="${flash.error?:user?.error}"/>
-        <div class="row-fluid">
-            <div class="alert alert-error large-space-before">
+        <div class="row">
+            <div class="alert alert-danger large-space-before">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <span>Error: ${error}</span>
             </div>
@@ -34,8 +33,8 @@
 
         <h2>My Projects</h2>
         <g:render template="/shared/reports"/>
-        <div class="row-fluid ">
-            <div class="span6">
+        <div class="row ">
+            <div class="col-sm-6">
                 <g:if test="${memberManagementUnits}">
                     <h4>My Management Units</h4>
                     <ul class="management-unit-list">
@@ -46,7 +45,7 @@
                     </ul>
                 </g:if>
             </div>
-            <div class="span6">
+            <div class="col-sm-6">
                 <g:if test="${memberPrograms}">
                     <h4>My Programs</h4>
                     <ul class="program-list">
@@ -57,7 +56,7 @@
                     </ul>
                 </g:if>
             </div>
-            <div class="span6 organisations">
+            <div class="col-sm-6 organisations">
                 <g:if test="${memberOrganisations}">
                     <h4>My Organisations</h4>
                     <ul class="organisation-list">
@@ -83,7 +82,6 @@
     </g:else>
 
 </div>
-<asset:javascript src="common.js"/>
 <asset:javascript src="my-projects.js"/>
 <asset:deferredScripts/>
 <script>

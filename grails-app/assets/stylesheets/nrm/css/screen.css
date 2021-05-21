@@ -2465,3 +2465,31 @@ span.merit {
     width: 16px;
     margin: 0 2px;
 }
+
+.container {
+    padding-left: 0;
+    padding-right: 0;
+}
+@media (min-width: 1200px){
+    .container {
+        padding-left: 0;
+        padding-right: 0;
+        max-width: 1200px;
+    }
+    .page-header-menu .container {
+        max-width: 1200px;
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+.page-header-menu .container #dcNav .navbar {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.row .col-sm-12, .col-sm-11 {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+

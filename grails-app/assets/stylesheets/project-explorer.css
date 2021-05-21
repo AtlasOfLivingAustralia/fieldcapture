@@ -74,3 +74,256 @@
 .facet-collapse.in.height {
     height: auto;
 }
+.accordion .card {
+    border-color: #ddd;
+    padding: 10px 15px;
+    margin-bottom: 5px;
+}
+.accordion .card .card-header {
+    margin-bottom: 0;
+    background-color: rgba(0,0,0,0);
+    padding: 0;
+    border-bottom: 0 solid rgba(0,0,0,0);
+}
+
+
+
+#projectExplorer .accordion .card .card-header a {
+
+    display: inline-block;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: 0 solid white;
+    padding: 0;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    color: #000000;
+
+}
+#projectExplorer .accordion .card .card-header button.btn:hover {
+    background-color: #FFFFFF;
+}
+#projectExplorer .accordion .card .card-header button:active {
+    background-color: #fff;
+    border: 0 solid #fff;
+}
+#projectExplorer .accordion .card .card-header button:hover {
+    background-color: #ffffff;
+}
+
+ul.unstyled,
+ol.unstyled {
+    margin-left: 0;
+    list-style: none;
+}
+
+#downloadView .checkbox input {
+    margin-right: 13px;
+}
+#downloadView .checkbox {
+    margin:4px 0px 0px -40px;
+}
+
+@media (min-width: 576px) {
+#projectExplorer .row .col-sm-11 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+    }
+}
+
+.accordion .card-header:after {
+    font-family: 'FontAwesome';
+    content: "\f068";
+    float: right;
+}
+.accordion .card-header.collapsed:after {
+    /* symbol for "collapsed" panels */
+    content: "\f067";
+}
+.visible-phone{display:none !important;}
+
+.card-body .row #facetFilter .col-sm-4 {
+    flex: 0 0 33.333333%;
+    max-width: 100%;
+    margin-left: 1rem !important;
+
+}
+.card-body .row #facetClear .col-sm-4 {
+    flex: 0 0 33.333333%;
+    max-width: 100%;
+    margin-left: 0rem !important;
+}
+
+div#facetsCol {
+    border: 0px solid white;
+}
+
+.facet-holder #facetsCol {
+    padding-left: 0px;
+}
+
+.helphover {
+    border: 2px;
+    background-clip:content-box;
+}
+select {
+    width: 100%;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    height: 30px;
+    line-height: 30px;
+    color: #555;
+    display: inline-block;
+    padding: 4px 6px;
+    border-radius: 4px;
+    vertical-align: middle;
+    margin-bottom: 10px;
+}
+
+.inputDates {
+    display: inline-block;
+    margin-bottom: 10px;
+    vertical-align: middle;
+    font-size: 0;
+    white-space: nowrap;
+}
+@media (max-width: 576px) {
+    .card-body .row #facetClear .col-sm-4 {
+        padding: 10px;
+    }
+}
+
+table tbody .td1 .accordion .card-header:after {
+    font-family: 'FontAwesome';
+    content: "\f068";
+    float: right;
+    display: none;
+}
+table tbody .td1 .accordion .card-header.collapsed:after {
+    content: "\f067";
+    display: none;
+}
+
+#project-display-options .card:not(:last-of-type) {
+    border-bottom: 1px;
+    border-bottom-right-radius: 0.25px;
+    border-bottom-left-radius: 0.25px;
+}
+
+.reportDropdown, .loading-message {
+    margin-left: -3px !important;
+}
+
+#reports > .card:not(:last-of-type) {
+    border-bottom: 1px solid #dddddd;
+    border-bottom-left-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+}
+#reports .card .card-header:after {
+    font-family: 'FontAwesome';
+    content: "\f068";
+    float: right;
+    display: none;
+}
+#reports .card .card-header.collapse:after {
+    /* symbol for "collapsed" panels */
+    content: "\f067";
+    display: none;
+}
+
+#facetsContent .clearDates {
+    margin-left: 7em;
+}
+#facetsContent .input-group .dataClass {
+    width: 7em;
+}
+
+#facetsContent .input-group-text {
+    padding: 4px 5px;
+    border-radius: 0 4px 4px 0;
+}
+
+#facet-list .customCard, #facetsContent .customCard, #reportContents .customCard {
+    border: 0px solid white;
+    padding-left: 0px;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+
+}
+#facet-list .customCard {
+    padding-top: 0px !important;
+}
+
+#facet-list .facetGroupValues {
+    list-style-type: none;
+    margin-left: 25px;
+    padding-left: 0px;
+}
+
+#facet-list .cardBody {
+    padding: 4px 0px 6px;
+}
+
+#facet-dates .cardBody {
+    padding: 4px 0px 6px;
+}
+#project-display-options > .cardSection {
+    border-bottom: 1px solid #dddddd !important;
+    border-bottom-left-radius: 0.25rem !important;
+    border-bottom-right-radius: 0.25rem !important;
+}
+
+#accordionMapView .col-sm-4, #projectsView .col-sm-4, #reportView .col-sm-4, #downloadView .col-sm-4 {
+    padding-left: 0px;
+    margin-left: -4px;
+}
+.pt-3 {
+    padding-top: 3px !important;
+}
+#paginateTable > #paginationInfo {
+    display:inline-block;
+    float:left;
+    margin-top:4px;
+}
+
+.dashboardSelect {
+    min-width: 220px;
+    max-width: 220px;
+    margin-bottom: .25rem;
+}
+
+input.dateControl {
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: .25rem !important;
+    max-width: 10rem !important;
+}
+#dashboardType {
+    width: 206px;
+}
+
+button.btn.facets-toggle {
+    margin-left: 10px !important;
+}
+
+.dataTables_filter {
+    float: right !important;
+}
+#projectName {
+    width: 41rem;
+}
+#lastUpdated {
+    width: 8rem;
+
+}
+.searchError {
+    overflow-wrap: break-word;
+}

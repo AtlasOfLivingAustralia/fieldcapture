@@ -1,8 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
-    <g:set var="containerType" scope="request" value="container"/>
-    <meta name="layout" content="${grailsApplication.config.layout.skin}"/>
+    <meta name="layout" content="nrm_bs4"/>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}&libraries=visualization"></script>
     <script>
         fcConfig = {
@@ -18,7 +17,7 @@
         };
     </script>
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
-    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="common-bs4.css"/>
     <asset:stylesheet src="homepage.css"/>
 
     <title>Reef 2050 Plan Action Reporting</title>
@@ -28,7 +27,7 @@
 <body>
 <div class="container-fluid">
 
-    <asset:javascript src="common.js"/>
+    <asset:javascript src="common-bs4.js"/>
     <asset:javascript src="projectExplorer.js"/>
     <asset:javascript src="reef2050Report.js"/>
 

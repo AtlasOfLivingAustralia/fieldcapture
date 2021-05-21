@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/html">
 <head>
     <g:set var="containerType" scope="request" value="container"/>
-    <meta name="layout" content="${hubConfig.skin}"/>
+    <meta name="layout" content="nrm_bs4"/>
     <title>Explore | MERIT</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}&libraries=visualization"></script>
     <script>
@@ -21,14 +21,12 @@
         };
     </script>
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
-    <asset:stylesheet src="common.css"/>
     <asset:stylesheet src="homepage.css"/>
-
+    <asset:stylesheet src="common-bs4.css"/>
 </head>
 <body>
 <div id="wrapper" class="${containerType}">
-
-    <div class="row-fluid">
+    <div class="row">
         <g:if test="${flash.errorMessage}">
             <div class="${containerType}">
                 <div class="alert alert-error">
@@ -38,8 +36,8 @@
         </g:if>
 
         <g:if test="${flash.message}">
-            <div class="row-fluid">
-                <div class="span6 alert alert-info" style="margin-bottom:0;">
+            <div class="row">
+                <div class="col-sm-12 alert alert-info" style="margin-bottom:0;">
                     <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
                     ${flash.message}
                 </div>
@@ -47,16 +45,17 @@
         </g:if>
     </div>
 
-    <div class="row-fluid">
-        <div class="span12" id="heading">
-            <h1 class="pull-left"><fc:homePageTitle/></h1>
+    <div class="row">
+        <div class="col-sm-12" id="heading">
+            <h1 class="float-left"><fc:homePageTitle/></h1>
         </div>
     </div>
 
     <g:render template="projectFinder"/>
 </div>
 
-<asset:javascript src="common.js"/>
+%{--<asset:javascript src="common.js"/>--}%
+<asset:javascript src="common-bs4.js"/>
 <asset:javascript src="projectExplorer.js"/>
 
 <asset:deferredScripts/>

@@ -44,6 +44,35 @@ var config = {
         "objective 1",
         "objective 2",
         "objective 3"
+    ],
+    "projectReports": [
+        {
+            "reportType": "Activity",
+            "firstReportingPeriodEnd": "2020-09-30T14:00:00Z",
+            "reportDescriptionFormat": "Progress Report %1d",
+            "reportNameFormat": "Progress Report %1d",
+            "reportingPeriodInMonths": 3,
+            "reportsAlignedToCalendar":true,
+            "skipFinalPeriod":true,
+            "description": "",
+            "category": "Progress Reports",
+            "activityType": "State Intervention Progress Report",
+            "canSubmitDuringReportingPeriod": true
+        },
+        {
+            "reportType": "Single",
+            "alignToOwnerStart": false,
+            "alignToOwnerEnd": true,
+            "reportDescriptionFormat": "Final Report",
+            "reportNameFormat": "Final Report",
+            "reportingPeriodInMonths": 3,
+            "reportsAlignedToCalendar":true,
+            "description": "",
+            "category": "Final Report",
+            "activityType": "Final Report",
+            "canSubmitDuringReportingPeriod": true,
+            "multiple":false
+        }
     ]
 };
 createProgram({
@@ -74,7 +103,13 @@ db.userPermission.insert({entityType: 'au.org.ala.ecodata.Project', entityId: "p
 createProject({projectId: "p2", name: "RLP project", programId: "rlp"});
 db.userPermission.insert({entityType: 'au.org.ala.ecodata.Project', entityId: "p2", userId: '1', accessLevel: 'admin'});
 
-createProject({projectId: "p3", name: "Configurable MERI project", programId: "configurable_meri_plan"});
+createProject({
+    projectId: "p3",
+    name: "Configurable MERI project",
+    programId: "configurable_meri_plan",
+    plannedEndDate: ISODate("2023-06-29T14:00:00Z"),
+    plannedStartDate: ISODate("2020-06-30T14:00Z")
+});
 db.userPermission.insert({entityType: 'au.org.ala.ecodata.Project', entityId: "p3", userId: '1', accessLevel: 'admin'});
 
 config = {

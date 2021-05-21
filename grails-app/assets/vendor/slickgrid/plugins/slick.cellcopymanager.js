@@ -35,7 +35,7 @@
 
         if (e.which == 67 && (e.ctrlKey || e.metaKey)) {
           ranges = _grid.getSelectionModel().getSelectedRanges();
-          if (ranges.length != 0) {
+          if (ranges.length !== 0) {
             e.preventDefault();
             _copiedRanges = ranges;
             markCopySelection(ranges);
@@ -46,10 +46,12 @@
         if (e.which == 86 && (e.ctrlKey || e.metaKey)) {
           if (_copiedRanges) {
             e.preventDefault();
-            clearCopySelection();
             ranges = _grid.getSelectionModel().getSelectedRanges();
             _self.onPasteCells.notify({from: _copiedRanges, to: ranges});
-            _copiedRanges = null;
+            if (!_grid.getOptions().preserveCopiedSelectionOnPaste) {
+              clearCopySelection();
+              _copiedRanges = null;
+            }
           }
         }
       }
@@ -76,6 +78,8 @@
     $.extend(this, {
       "init": init,
       "destroy": destroy,
+      "pluginName": "CellCopyManager",
+
       "clearCopySelection": clearCopySelection,
 
       "onCopyCells": new Slick.Event(),

@@ -1661,7 +1661,8 @@ For production, use the minified jquery.mThumbnailScroller.min.js script.
 	window[pluginNS]=true;
 	
 	/* call plugin fn automatically on default selector with HTML data attributes */
-	$(window).load(function(){
+	/* .onload is deprecated since jQuery 1.8, so replaced with .on("load", function(){..})*/
+	$(window).on('load', function(){
 		var elems=$(defaultSelector),instances=[];
 		if(elems.length){
 			elems.each(function(){

@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="${hubConfig.skin}"/>
+    <meta name="layout" content="nrm_bs4"/>
     <title>Edit | ${organisation.name.encodeAsHTML()} | Field Capture</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
     <script>
@@ -22,21 +22,28 @@
 
             };
     </script>
-    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="common-bs4.css"/>
+    <asset:stylesheet src="organisation.css"/>
 
 </head>
 <body>
 
 <div class="${containerType} organisation-header organisation-banner image-box" data-bind="style:{'backgroundImage':asBackgroundImage(bannerUrl())}">
 
-    <div class="row-fluid">
-        <ul class="breadcrumb demphasise">
-            <li>
-                <g:link controller="home">Home</g:link> <span class="divider">/</span>
-            </li>
-            <li class="active">Organisations <span class="divider">/</span></li>
-            <li class="active" data-bind="text:name"/>
-        </ul>
+    <div class="row">
+        <nav aria-label="breadcrumb" class="ml-3">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <g:link controller="home">Home</g:link>
+                </li>
+                <li class="breadcrumb-item">
+                    <g:link controller="organisation" action="list">Organisations</g:link>
+                </li>
+                <li class="breadcrumb-item active">
+                    ${organisation.name?.encodeAsHTML()}
+                </li>
+            </ol>
+        </nav>
     </div>
     <g:render template="organisationDetails"/>
 
@@ -107,7 +114,7 @@
 
 </asset:script>
 
-<asset:javascript src="common.js"/>
+<asset:javascript src="common-bs4.js"/>
 <asset:javascript src="attach-document-no-ui.js"/>
 <asset:javascript src="organisation.js"/>
 <asset:deferredScripts/>

@@ -27,8 +27,11 @@ class ProjectSiteSpec extends StubbedCasSpec {
         waitFor {siteTabContents.displayed}
         def tableContent = tableContents
         and:
-        tableContent[2].siteName.text() == "Site area for project"
-        siteTabContents.markers.size() == 1
+        waitFor{
+            tableContent[2].siteName.text() == "Site area for project"
+            siteTabContents.markers.size() == 1
+        }
+
     }
 
     def "Edit and Update site name and save successfully" (){
@@ -59,6 +62,6 @@ class ProjectSiteSpec extends StubbedCasSpec {
         waitFor 30,{at SiteIndexPage}
 
         and:
-        name.text() == "Site: Name Change"
+        waitFor { name.text() == "Site: Name Change" }
     }
 }

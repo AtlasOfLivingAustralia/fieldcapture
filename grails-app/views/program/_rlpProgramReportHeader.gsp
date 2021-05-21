@@ -18,14 +18,14 @@
         <div class="span2 header-label">Reporting period start</div>
 
         <div class="span9 value"><g:formatDate format="dd MMM yyyy"
-                                         date="${au.org.ala.merit.DateUtils.parse(report.fromDate).toDate()}"/></div>
+                                               date="${au.org.ala.merit.DateUtils.parse(report.fromDate).toDate()}"/></div>
     </div>
 
     <div class="row-fluid">
         <div class="span2 header-label">Reporting period end</div>
 
         <div class="span9 value"><g:formatDate format="dd MMM yyyy"
-                                         date="${au.org.ala.merit.DateUtils.parse(report.toDate).toDate()}"/></div>
+                                               date="${au.org.ala.merit.DateUtils.parse(report.toDate).toDate()}"/></div>
     </div>
 
     <div class="row-fluid">
@@ -37,11 +37,11 @@
     </div>
 
     <g:if test="${printView}">
-    <div class="row-fluid">
-        <div class="span2 header-label">Report generated</div>
+        <div class="row-fluid">
+            <div class="span2 header-label">Report generated</div>
 
-        <div class="span9 value"><g:formatDate format="yyyy-MM-dd HH:mm:ss" date="${new Date()}"/></div>
-    </div>
+            <div class="span9 value"><g:formatDate format="yyyy-MM-dd HH:mm:ss" date="${new Date()}"/></div>
+        </div>
     </g:if>
 
 </div>

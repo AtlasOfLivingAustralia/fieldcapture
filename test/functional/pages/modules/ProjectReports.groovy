@@ -15,6 +15,8 @@ class ProjectReports extends Module {
                 return []
             }
         }
+        reportsByCategory { $('#reporting-content .report-category').moduleList(ReportCategory)}
+
         reportDeclaration { $('#declaration') }
         acceptTermsCheckBox { $('#declaration [name="acceptTerms"]') }
     }
@@ -24,10 +26,24 @@ class ProjectReports extends Module {
         acceptTermsCheckBox.value(true)
     }
     def submitDeclaration() {
-        waitFor { canSubmitDeclaration() }
+        waitFor 10, { canSubmitDeclaration() }
         $('#declaration [data-bind*="submitReport"]').click()
     }
     def canSubmitDeclaration() {
+        Thread.sleep(5000)
         $('#declaration [data-bind*="submitReport"]').module(FormElement).enabled
     }
+
+    List<String> getReportCategories() {
+        reportsByCategory.collect{it.category}
+    }
+
+    List<ReportSummaryLine> getReportsForCategory(String category) {
+        getReportCategorySection(category)?.reports
+    }
+    ReportCategory getReportCategorySection(String category) {
+        reportsByCategory.find{it.category == category }
+    }
+
+
 }

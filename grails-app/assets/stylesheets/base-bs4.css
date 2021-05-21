@@ -1,9 +1,11 @@
 /*
-*= require bootstrap4/4.0.0/css/bootstrap.css
+*= require bootstrap4/4.6.0/css/bootstrap.css
+*= require bootstrap4/bootstrap-icons/font/bootstrap-icons.css
 *= require font-awesome/4.4.0/css/font-awesome.css
 *= require nrm/css/screen.css
 *= require capture.css
 *= require global-styles.css
+*= require responsive.css
 */
 .validationEngineContainer .required label:after, .validationEngineContainer th.required:after, .validationEngineContainer label.required:after {
     font-size: inherit;

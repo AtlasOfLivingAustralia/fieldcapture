@@ -14,6 +14,23 @@
     #announcementsTable table {
         width:100%;
     }
+    #announcementsTable_wrapper {
+        overflow-x: auto;
+    }
+    div.dataTables_wrapper div.dataTables_filter label {
+        font-weight: normal !important;
+        white-space: nowrap !important;
+        text-align: left !important;
+        margin-left: -0.9rem !important;
+    }
+    div.dt-buttons {
+        position: relative;
+        float: left;
+        margin-left: -14px;
+    }
+    table#announcementsTable {
+        margin-left: -0.9rem;
+    }
     </style>
 </head>
 <table id="announcementsTable" class="table table-striped">

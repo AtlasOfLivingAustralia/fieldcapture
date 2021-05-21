@@ -1,4 +1,4 @@
-//= require slickgrid/lib/jquery.event.drag-2.2.js
+//= require slickgrid/lib/jquery.event.drag-2.3.0.js
 //= require slickgrid/lib/jquery.event.drop-2.2.js
 //= require slickgrid/slick.core.js
 //= require slickgrid/slick.dataview.js

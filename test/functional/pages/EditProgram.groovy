@@ -6,7 +6,7 @@ class EditProgram extends Page {
 
     static url = 'program/edit' // requires a program id parameter
 
-    static at = { title.startsWith('Edit | Management Unit')}
+    static at = { title.startsWith('Edit')}
 
     static content = {
         details { module AddOrEditProgram }

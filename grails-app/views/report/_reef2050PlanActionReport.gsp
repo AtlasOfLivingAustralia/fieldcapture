@@ -3,7 +3,7 @@
 
 <g:if test="${flash.error || error}">
     <g:set var="error" value="${flash.error ?: error}"/>
-    <div class="row-fluid">
+    <div class="row">
         <div class="alert alert-error large-space-before">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             <span>Error: ${error}</span>
@@ -22,7 +22,7 @@
     </g:if>
     <g:else>
 
-        <div class="well">
+        <div class="card customCard">
             <strong>Progress on Reef 2050 Plan for the period <g:formatDate date="${startDate}"
                                                                             format="MMMM"/> to <g:formatDate
                     date="${endDate}" format="dd MMMM yyyy"/></strong>
@@ -35,9 +35,9 @@
         <div class="report-section">
             <h3>Action count by status</h3>
 
-            <div class="row-fluid">
+            <div class="row">
 
-                <div class="span7">
+                <div class="col-sm-7">
                     <table class="table">
 
                         <g:each in="${status}" var="s">
@@ -53,7 +53,7 @@
 
                 </div>
 
-                <div class="span5">
+                <div class="col-sm-5">
                     <fc:renderScore score="${actionStatus}" omitTitle="true" minResults="1"
                                     chartOptions="${[pieSliceText: 'value']}"
                                     sliceColoursByTitle="${statusColours}"/>
@@ -66,10 +66,10 @@
 
             <h3>Action status by theme</h3>
 
-            <div class="row-fluid">
+            <div class="row">
                 <g:each in="${actionStatusByTheme}" var="theme">
 
-                    <div class="span1" style="width:12%; text-align:center">
+                    <div class="col-sm-2" style="text-align:center">
                         <div style="height: 2em;"><strong>${theme.key}</strong></div>
                         <fc:renderScore score="${theme.value}" minResults="1" sliceColoursByTitle="${statusColours}"
                                         chartOptions="${[width: '100%', height: '100%', legend: 'none', pieSliceText: 'value', chartArea: [width: '90%', height: '100%']]}"
@@ -83,9 +83,9 @@
         <div class="report-section">
     <h3>Action summary</h3>
 
-        <div class="row-fluid">
-            <div class="span12">
-                <table class="actions ${tableClass} table table-striped">
+        <div class="row w-100">
+            <div class="col-sm-12">
+                <table class="actions ${tableClass} table table-striped ml-3">
 
                     <thead>
 

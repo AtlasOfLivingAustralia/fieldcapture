@@ -12,3 +12,110 @@
 .smallFont {
     margin: 5px 0;
 }
+
+.w-53 {
+    width: 53% !important;
+}
+
+.prePopBtn {
+    padding: 0px;
+}
+
+#orgTabs li>a {
+    border: solid 1px #dddddd;
+}
+#orgTabs li>a.active {
+    border-bottom-color: transparent;
+}
+div.dataTables_wrapper div.dataTables_length select {
+    width: 206px;
+    display: inline-block;
+}
+
+div.dataTables_wrapper div.dataTables_length label {
+    font-weight: normal;
+    text-align: left;
+    white-space: nowrap;
+    margin-left: -13px;
+}
+div.dataTables_wrapper div.dataTables_filter {
+    text-align: left;
+}
+
+div.dataTables_wrapper div.dataTables_filter label {
+    font-weight: normal;
+    white-space: nowrap;
+    text-align: left;
+    margin-left: -13px;
+}
+
+div.dataTables_wrapper div.dataTables_filter input {
+    margin-left: 0.5em;
+    display: inline-block;
+    width: 190px;
+}
+
+#userAccessForm .form-control-sm {
+    height: calc(1.5em + 0.5rem + 2px);
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    border-radius: 0.2rem;
+    width: 220px;
+}
+
+.table th, .table td {
+    padding: 0.50rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+}
+
+.tab-content #sites {
+    margin-bottom: 77px;
+}
+#map-info{
+    margin-top: 58px;
+}
+
+.organisation-text {
+    margin-left: 40px;
+    margin-top: 5px;
+}
+
+.orgSearch {
+    height: 1.98rem;
+}
+
+.input-group input {
+    margin-left: -0.98rem;
+}
+#dashboardType {
+    width: 300px;
+}
+.customCard {
+    border:unset;
+}
+.no-border {
+    border-top: unset !important;
+    padding: 0px !important;
+    vertical-align: unset;
+}
+
+.popup-edit {
+    padding: 7px;
+}
+.ml-6 {
+    margin-left: 5.66rem !important;
+}
+
+.banner .logo {
+    height: 110px;
+    margin-bottom: 10px;
+    float: left;
+    padding-left: 0px !important;
+    margin-right: 10px;
+}
+
+#selectedYear {
+    width: 200px;
+}

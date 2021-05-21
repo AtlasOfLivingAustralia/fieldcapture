@@ -32,6 +32,15 @@
             line-height: 34px;
             padding: 0 14px;
         }
+        #dashboardType {
+            width: 18rem;
+        }
+        @media (min-width: 1200px){
+            .row {
+                margin-left: 0px !important;
+                zoom: 1;
+            }
+        }
 
         </style>
     </head>

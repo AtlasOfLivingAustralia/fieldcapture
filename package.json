@@ -5,13 +5,17 @@
   "main": "test/unit/javascript",
   "directories": {},
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "bootstrap": "4.6",
+    "bootstrap-icons": "^1.4.0",
+    "slickgrid": "^2.4.34"
+  },
   "devDependencies": {
     "@metahub/karma-jasmine-jquery": "^2.0.1",
-    "chromedriver": "89.0.0",
+    "chromedriver": "^90.0.0",
     "jasmine-core": "^3.5.0",
     "jasmine-jquery": "^2.0.0",
-    "jquery": "^3.5.1",
+    "jquery": "3.6",
     "karma": "^6.1.1",
     "karma-chrome-launcher": "^2.2.0",
     "karma-coverage": "^2.0.2",
@@ -19,7 +23,7 @@
     "karma-jasmine": "^1.1.2",
     "karma-jquery": "^0.2.4",
     "knockout": "^3.5.1",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.21",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.27"
   },
