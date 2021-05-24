@@ -224,7 +224,8 @@ class AddActivitySpec extends StubbedCasSpec {
             it.description == 'Test activity [edited]'
         }
         activity.actionDelete.click()
-        waitFor 5, {iAmSure.click()} // this is animated so takes time to be clickable.
+        Thread.sleep(800) // Wait for the bootbox to animate the "Are you sure?" question
+        iAmSure.click()
 
         then: "the activity is no longer available on the page"
         waitFor 20, {
