@@ -421,20 +421,20 @@ class ActivityController {
             activityService.unlock(id)
         }
 
-        String url = buildReturnToUrl(activity, navigateTo)
+        String url = buildReturnToUrl(activity, navigateTo, false, true)
         redirect uri:url
     }
 
-    private String buildReturnToUrl(Map activity, String navContext, boolean holdsLock = false) {
+    private String buildReturnToUrl(Map activity, String navContext, boolean holdsLock = false, boolean absolute = false) {
         String url
         if (holdsLock) {
             url = g.createLink(action:'exitActivity', id: activity.activityId, params:[navigateTo:navContext])
         }
         else if (navContext == 'site' && activity.siteId) {
-            url = g.createLink(controller:'site', action:'index', id: activity.siteId)
+            url = g.createLink(controller:'site', action:'index', id: activity.siteId, absolute: absolute)
         }
         else {
-            url = g.createLink(controller:'project', action:'index', id: activity.projectId)
+            url = g.createLink(controller:'project', action:'index', id: activity.projectId, absolute: absolute)
         }
         url
     }

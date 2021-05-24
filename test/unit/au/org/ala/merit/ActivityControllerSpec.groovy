@@ -419,9 +419,8 @@ class ActivityControllerSpec extends Specification {
         model.themes == themes
         model.activity.projectStage == report.name
         model.navContext == 'project'
-        model.returnTo == 'project'
 
-        and: "In view mode the navgation mode defaults to stay on page"
+        and: "In view mode the navigation mode defaults to stay on page"
         model.navigationMode == 'stayOnPage'
 
         and: "The return URL will force an unlock"

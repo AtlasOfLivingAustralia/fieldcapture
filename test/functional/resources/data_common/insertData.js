@@ -19,6 +19,7 @@ function createProject(projectProperties) {
     assign(projectProperties,project)
 
     db.project.insert(project);
+    return project;
 }
 
 function createProgram(programProperties) {

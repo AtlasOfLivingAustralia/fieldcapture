@@ -3,6 +3,11 @@ package pages
 import geb.Page
 import pages.modules.ReportContentModule
 
+/**
+ * This page represents a page where a user can view data for an
+ * activity or a report.
+ * At the moment it is used to represent both activity/index.gsp and activity/activityReportView.gsp
+ */
 class ViewReportPage extends Page {
 
     static at = {
