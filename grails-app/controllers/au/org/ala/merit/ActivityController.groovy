@@ -14,11 +14,11 @@ class ActivityController {
     def activityService, siteService, projectService, metadataService, userService, excelImportService, webService, grailsApplication, speciesService, documentService, reportService
 
     static ignore = ['action','controller','id']
-    static allowedMethods = [ajaxUnlock:'POST']
+    static allowedMethods = [ajaxUnlock:'POST', delete:'POST', ajaxUpdate:'POST', 'ajaxDelete':'POST']
 
     private Map activityModel(activity, projectId) {
         // pass the activity
-        def model = [activity: activity, returnTo: params.returnTo]
+        def model = [activity: activity]
 
         // the site
         model.site = model.activity?.siteId ? siteService.get(model.activity.siteId, [view:'brief']) : null
@@ -55,13 +55,16 @@ class ActivityController {
             if (!projectService.canUserViewProject(userService.getCurrentUserId(), activity.projectId)) {
                 flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${activity.projectId}"
                 redirect(controller:'project', action:'index', id: activity.projectId)
+                return
             }
 
             Map model = activityAndOutputModel(activity, activity.projectId)
-            model.putAll(getNavOptions(params.returnTo,[navigationMode:'stayOnPage']))
+            Map navigationOptions = getNavOptions(params.returnTo,[navigationMode:'stayOnPage'], activity)
+            model.putAll(navigationOptions)
             model
         } else {
-            forward(action: 'list', model: [error: 'no such id'])
+            flash.message = 'Not found'
+            redirect controller:'home'
         }
     }
 
@@ -105,6 +108,7 @@ class ActivityController {
             }
 
             model.hasPhotopointData = activity.documents?.find {it.poiId}
+            model.returnTo = buildReturnToUrl(activity, params.returnTo)
             model
         } else {
             forward(controller:'home', action: 'publicHome', model: [error: 'no such id'])
@@ -131,6 +135,7 @@ class ActivityController {
 
                 flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${activity.projectId}"
                 redirect(controller:'project', action:'index', id: activity.projectId)
+                return
             }
             else if (!activityService.canEditActivity(activity)) {
                 chain(action:'index', id:id)
@@ -144,7 +149,7 @@ class ActivityController {
 
             Map programConfig = projectService.getProgramConfiguration(model.project)
             // Temporary until we add this to the program config.
-            if (programConfig.requiredActivityLocking == null) {
+            if (programConfig.requiresActivityLocking == null) {
                 programConfig.requiresActivityLocking = programConfig.name == 'Reef 2050 Plan Action Reporting'
             }
             if (programConfig.activityNavigationMode == null) {
@@ -163,25 +168,36 @@ class ActivityController {
                 model.hideDates = true
             }
 
-            model.putAll(getNavOptions(params.returnTo, programConfig))
+            model.putAll(getNavOptions(params.returnTo, programConfig, activity, model.locked))
 
             model
 
         } else {
-            forward(action: 'list', model: [error: 'no such id'])
+            flash.message = 'Not found'
+            redirect controller:'home'
+            return
         }
     }
 
-    private Map getNavOptions(String returnToUrl, Map programConfig) {
-        Map options = [navigationMode:programConfig.activityNavigationMode?:'stayOnPage']
-        if (returnToUrl) {
+    /**
+     * Determines the options available for displaying the activity navigation bar at the bottom of the
+     * activity edit/view pages, and whether to return back to the associated project or site, depending
+     * on where the activity was first viewed from.
+     * @param navContext project or site - activities can be viewed/edited from either a project or site context
+     * @param programConfig programs can specify the default action when saving an activity (return to context page or stay on activity page)
+     * @param activity the activity being viewed
+     * @param holdsLock locking an activity limits the navigation options as the lock needs to be released when leaving the page.
+     */
+    private Map getNavOptions(String navContext, Map programConfig, Map activity, boolean holdsLock = false) {
+        // We don't support activity locking with the stayOnPage navigation model
+        // due to difficulties around releasing the lock when using the navigation
+        // buttons
+        String navigationMode = holdsLock ? 'returnToProject' : programConfig.activityNavigationMode?:'stayOnPage'
+        Map options = [navigationMode:navigationMode]
+        if (navContext) {
             options.showNav = true
-            if (returnToUrl.indexOf('/project') > 0) {
-                options.navContext = 'project'
-            }
-            else if (returnToUrl.indexOf('/site') > 0) {
-                options.navContext = 'site'
-            }
+            options.navContext = navContext
+            options.returnToUrl = buildReturnToUrl(activity, navContext, holdsLock)
         }
         options
     }
@@ -199,38 +215,11 @@ class ActivityController {
             model.printView = true
             render view: 'enterData', model: model
         } else {
-            forward(action: 'list', model: [error: 'no such id'])
+            flash.message = 'Not found'
+            redirect controller:'home'
+            return
         }
 
-    }
-
-
-    /**
-     * Displays page(s) to create an activity.
-     */
-    @PreAuthorise(projectIdParam = 'projectId')
-    def create(String siteId, String projectId, String type) {
-
-        def activity = [activityId: "", siteId: siteId, projectId: projectId]
-        def model = activityModel(activity, projectId)
-        model.create = true
-
-        if (!type) {
-            def availableTypes = projectService.activityTypesList(projectId)
-            model.activityTypes = availableTypes
-            def activityCount = availableTypes.collect {it.list}.flatten().size()
-            if (activityCount == 1) {
-                type = availableTypes[0].list[0].name
-            }
-        }
-        if (type) {
-            activity.type = type
-            model.returnTo = g.createLink(controller:'project', id:projectId)
-            addOutputModel(model, type)
-        }
-
-
-        render model:model, view:activity.type?'enterData':'create'
     }
 
     /**
@@ -250,7 +239,7 @@ class ActivityController {
     @PreAuthorise(projectIdParam = 'projectId')
     def createPlan(String siteId, String projectId) {
         def activity = [activityId: "", siteId: siteId, projectId: projectId, progress: ActivityService.PROGRESS_PLANNED]
-        def model = [activity: activity, returnTo: params.returnTo, create: true]
+        def model = [activity: activity, returnTo: buildReturnToUrl(activity, params.returnTo, false), create: true]
         model.project = projectId ? projectService.get(projectId) : null
         model.activityTypes = metadataService.activityTypesList(model.project?.associatedProgram, model.project?.associatedSubProgram)
         model.site = siteId ? siteService.get(siteId) : null
@@ -379,26 +368,27 @@ class ActivityController {
             }
 
         }
-        //log.debug "result is " + result
 
         render result as JSON
     }
 
-    def delete(String id) {
-        log.debug "deleting ${id}"
-        def respCode = activityService.delete(id)
-        if (params.returnTo) {
-            redirect(url: params.returnTo)
-        } else {
-            redirect(controller: 'home')
-        }
-    }
-
     def ajaxDelete(String id) {
-        log.debug "deleting ${id}"
-        def respCode = activityService.delete(id)
-        def resp = [code: respCode.toString()]
-        //log.debug "response = ${resp}"
+        Map resp
+        Map activity = activityService.get(id)
+        if (!activity || !projectService.canUserEditProject(userService.getCurrentUserId(), activity.projectId)) {
+            response.status = HttpStatus.SC_UNAUTHORIZED
+            resp = [status:HttpStatus.SC_UNAUTHORIZED, error: "Unauthorized"]
+        }
+        else if (!activityService.canEditActivity(activity)) {
+            response.status = HttpStatus.SC_BAD_REQUEST
+            resp = [status:HttpStatus.SC_BAD_REQUEST, error: "Project status does not allow activity to be editable."]
+        }
+        else {
+            log.debug "deleting activity ${id}"
+            def respCode = activityService.delete(id)
+            resp = [code: respCode.toString()]
+        }
+
         render resp as JSON
     }
 
@@ -413,6 +403,40 @@ class ActivityController {
     def overrideLockAndEdit(String id) {
         Map resp  = activityService.stealLock(id, g.createLink(controller:'activity', action:'index', id:id, absolute: true))
         chain(action:'enterData', id:id)
+    }
+
+    /**
+     * We deliberately don't have a role check for this method as all it does
+     * is release a lock if necessary.
+     * @param id the activity what was being edited.
+     */
+    def exitActivity(String id, String navigateTo) {
+        Map activity = activityService.get(id)
+        if (!activity) {
+            flash.message = 'Not found'
+            redirect controller:'home'
+            return
+        }
+        if (activity && activity.lock?.userId == userService.currentUserId) {
+            activityService.unlock(id)
+        }
+
+        String url = buildReturnToUrl(activity, navigateTo, false, true)
+        redirect uri:url
+    }
+
+    private String buildReturnToUrl(Map activity, String navContext, boolean holdsLock = false, boolean absolute = false) {
+        String url
+        if (holdsLock) {
+            url = g.createLink(action:'exitActivity', id: activity.activityId, params:[navigateTo:navContext])
+        }
+        else if (navContext == 'site' && activity.siteId) {
+            url = g.createLink(controller:'site', action:'index', id: activity.siteId, absolute: absolute)
+        }
+        else {
+            url = g.createLink(controller:'project', action:'index', id: activity.projectId, absolute: absolute)
+        }
+        url
     }
 
     def list() {

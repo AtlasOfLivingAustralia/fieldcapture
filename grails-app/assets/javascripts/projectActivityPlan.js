@@ -110,7 +110,7 @@ var PlannedActivity = function (act, isFirst, project, stage, options) {
             if ((newValue === ActivityProgress.started || newValue === ActivityProgress.finished)) {
                 blockUIWithMessage('Loading activity form...');
                 var url = config.activityEnterDataUrl;
-                document.location.href = url + "/" + self.activityId + "?returnTo=" + encodeURIComponent(here) + '&progress='+newValue;
+                document.location.href = url + "/" + self.activityId + "?returnTo=" + config.originPageType + '&progress='+newValue;
             }
             else {
                 self.saveProgress({progress: newValue, activityId: self.activityId});
@@ -172,7 +172,7 @@ var PlannedActivity = function (act, isFirst, project, stage, options) {
         return stage.editActivityUrl(self.activityId);
     };
     this.viewActivityUrl = function() {
-        return fcConfig.activityViewUrl + "/" + self.activityId + "?returnTo=" + encodeURIComponent(here);
+        return fcConfig.activityViewUrl + "/" + self.activityId + "?returnTo=" + config.originPageType;
     };
     this.printActivityUrl = function() {
         return fcConfig.activityPrintUrl + "/" + self.activityId;
@@ -221,7 +221,7 @@ var PlanStage = function (stage, activities, planViewModel, isCurrentStage, proj
     sortActivities(activitiesInThisStage);
     this.activities = $.map(activitiesInThisStage, function (act, index) {
         act.projectStage = stageLabel;
-        var plannedActivity = new PlannedActivity(act, index === 0, project, self);
+        var plannedActivity = new PlannedActivity(act, index === 0, project, self, options);
         return plannedActivity;
     });
 
@@ -376,12 +376,12 @@ var PlanStage = function (stage, activities, planViewModel, isCurrentStage, proj
     this.editActivityUrl = function(activityId) {
         var url;
         if (self.canEditOutputData()) {
-            url = fcConfig.activityEnterDataUrl + "/" + activityId + "?returnTo=" + encodeURIComponent(here);
+            url = fcConfig.activityEnterDataUrl + "/" + activityId + "?returnTo=" + config.originPageType;
             if (planViewModel.planStatus() == PlanStatus.UNLOCKED) {
                 url += "&progress=corrected";
             }
         } else if (self.canEditActivity()) {
-            url = fcConfig.activityEditUrl + "/" + activityId + "?returnTo=" + encodeURIComponent(here);
+            url = fcConfig.activityEditUrl + "/" + activityId + "?returnTo=" + config.originPageType;
         }
         return url;
     };
@@ -658,7 +658,7 @@ function PlanViewModel(activities, reports, outputTargets, targetMetadata, proje
         // group activities by stage
         $.each(reports, function (index, stageReport) {
             if (stageReport.fromDate < project.plannedEndDate && stageReport.toDate > project.plannedStartDate) {
-                var stage = new PlanStage(stageReport, unallocatedActivities, self, stageReport.name === self.currentProjectStage, project,today, config.rejectionCategories, config.showEmptyStages, userIsEditor);
+                var stage = new PlanStage(stageReport, unallocatedActivities, self, stageReport.name === self.currentProjectStage, project,today, config.rejectionCategories, config.showEmptyStages, userIsEditor, {originPageType: config.originPageType});
                 stages.push(stage);
 
                 // Remove any activities that have been allocated to the stage.
@@ -768,7 +768,12 @@ function PlanViewModel(activities, reports, outputTargets, targetMetadata, proje
 
         bootbox.confirm(message, function(result) {
             if (result) {
-                $.getJSON(config.activityDeleteUrl + '/' + activity.activityId,
+                var url = config.activityDeleteUrl + '/' + activity.activityId;
+                $.ajax({
+                    url:url,
+                    type:'POST',
+                    contentType:'application/json'
+                }).always(
                     function (data) {
                         if (data.code < 400) {
                             if (self.onlyActivityOfType(activity.type)) {
@@ -849,52 +854,3 @@ function PlanViewModel(activities, reports, outputTargets, targetMetadata, proje
         timer = setTimeout(self.adjustTruncations, 50);
     });
 };
-
-
-function ProjectReportingTabViewModel(project, today, config) {
-    var self = this;
-
-    self.planStatus = ko.observable(PlanStatus.APPROVED);
-    self.loadActivities = function (activities, reports) {
-        var stages = [];
-        var unallocatedActivities = _.clone(activities);  // Activities are removed from this array when added to a stage.
-
-        // group activities by stage
-        $.each(reports, function (index, stageReport) {
-            if (stageReport.fromDate < project.plannedEndDate && stageReport.toDate > project.plannedStartDate) {
-                var stage = new PlanStage(stageReport, unallocatedActivities, self, stageReport.name === self.currentProjectStage, project, today, [], true, false);
-
-                stages.push(stage);
-
-                // Remove any activities that have been allocated to the stage.
-                unallocatedActivities = _.reject(unallocatedActivities, function(activity) {
-                    var activityAllocatedToStage = _.find(stage.activities, function(stageActivity) {
-                        return stageActivity.activityId == activity.activityId;
-                    });
-                    return activityAllocatedToStage;
-                });
-
-                if (stage.activities && stage.activities.length == 1) {
-                    stage.reportType = stage.activities[0].type;
-                }
-                else {
-                    stage.reportType = "Default";
-                }
-            }
-        });
-
-        return stages;
-    };
-
-    self.openReport = function(data) {
-        if (data.activities && data.activities.length == 1) {
-            // Report with a single activity, use that...
-            document.location.href = config.activityEnterDataUrl+'/'+data.activities[0].activityId;
-        }
-        else {
-            document.location.href = config.openReportUrl;
-        }
-    };
-    self.reports = self.loadActivities(project.activities, project.reports);
-
-}

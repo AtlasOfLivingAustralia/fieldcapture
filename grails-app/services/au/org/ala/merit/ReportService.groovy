@@ -861,6 +861,15 @@ class ReportService {
         activityService.stealLock(report.activityId, reportUrl)
     }
 
+    /**
+     * Releases a lock if held for a report.
+     * @param reportId the report.
+     * @return the result of unlocking the report
+     */
+    Map unlock(String reportId) {
+        Map report = get(reportId)
+        activityService.unlock(report.activityId)
+    }
 
     Map activityReportModel(String reportId, ReportMode mode, Integer formVersion = null) {
         Map report = get(reportId)

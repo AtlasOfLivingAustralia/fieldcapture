@@ -3,9 +3,11 @@ print("Current working dir: " + pwd());
 load('../data_common/loadMeritHub.js');
 load('../data_common/insertData.js');
 load('../data/settingDefaults.js');
+loadActivityForms();
 
 var config = {
-    optionalProjectContent: ["Risks and Threats", "MERI Plan"]
+    optionalProjectContent: ["Risks and Threats", "MERI Plan"],
+    requiresActivityLocking: true
 };
 createProgram({programId: 'original', config: config});
 
@@ -97,8 +99,14 @@ db.userPermission.insert({
     accessLevel: 'admin'
 });
 
-createProject({projectId: "p1", name: "Original project", programId: "original"});
+var originalProject = createProject({projectId: "p1", name: "Original project", programId: "original", planStatus:'approved'});
 db.userPermission.insert({entityType: 'au.org.ala.ecodata.Project', entityId: "p1", userId: '1', accessLevel: 'admin'});
+db.userPermission.insert({entityType: 'au.org.ala.ecodata.Project', entityId: "p1", userId: '2', accessLevel: 'admin'});
+
+var report = {name:"Stage 1", projectId: "p1", fromDate:originalProject.plannedStartDate, toDate:originalProject.plannedEndDate};
+db.report.insert(report);
+var activity = {activityId:'a1', projectId:originalProject.projectId, type:'Progress Report', description:'An activity', plannedStartDate:report.fromDate, plannedEndDate:report.toDate, progress:'planned', status:'active'};
+db.activity.insert(activity);
 
 createProject({projectId: "p2", name: "RLP project", programId: "rlp"});
 db.userPermission.insert({entityType: 'au.org.ala.ecodata.Project', entityId: "p2", userId: '1', accessLevel: 'admin'});

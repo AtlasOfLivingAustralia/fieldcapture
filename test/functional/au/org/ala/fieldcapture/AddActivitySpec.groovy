@@ -31,9 +31,7 @@ class AddActivitySpec extends StubbedCasSpec {
         $("#btnClearMetadataCache").click()
 
         then:
-        waitFor 20,{
-            hasBeenReloaded()
-        }
+        waitFor {hasBeenReloaded()}
     }
 
     def "Generate a Activities"(){
@@ -116,13 +114,15 @@ class AddActivitySpec extends StubbedCasSpec {
 
         then: "the unsaved edits are present"
         activityDetails.description == "Checking the local storage"
+
+        when:
         submit()
 
-        and:
-        waitFor 20,{
-            hasBeenReloaded()
-        }
-        activityDetails.description == "Checking the local storage"
+        then:
+        waitFor {at ProjectIndex}
+        activitiesTab.click()
+        waitFor 10,{plansAndReports.displayed}
+        plansAndReports.activities[0].description == "Checking the local storage"
     }
 
 

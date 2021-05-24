@@ -16,7 +16,6 @@
     var fcConfig = {
         serverUrl: "${grailsApplication.config.grails.serverURL}",
         activityUpdateUrl: "${createLink(controller: 'activity', action: 'ajaxUpdate', id: activity.activityId)}",
-        activityDeleteUrl: "${createLink(action:'delete',id:activity.activityId, params:[returnTo:grailsApplication.config.grails.serverURL + '/' + returnTo])}",
         projectViewUrl: "${createLink(controller: 'project', action: 'index')}/",
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}/",
         bieUrl: "${grailsApplication.config.bie.baseURL}",
@@ -211,13 +210,12 @@
             <input data-bind="checked:transients.markedAsFinished" type="checkbox"> Mark this activity as finished.
         </label>
     </div>
-
     <g:render template="navigation"></g:render>
 </g:if>
 
 </div>
 
-<g:render template="/shared/timeoutMessage" model="${[url:createLink(action:'enterData', id:activity.activityId, params: [returnTo:returnTo])]}"/>
+<g:render template="/shared/timeoutMessage" model="${[url:createLink(action:'enterData', id:activity.activityId, params: [returnTo:navContext])]}"/>
 
 <g:render template="/shared/documentTemplate"></g:render>
 
@@ -230,7 +228,6 @@
 <script type="text/javascript">
 
     $(function(){
-        var returnTo = "${returnTo}";
         var activity = JSON.parse('${(activity as JSON).toString().encodeAsJavaScript()}');
 
         // Release the lock when leaving the page.  async:false is deprecated but is still the easiest solution to achieve
@@ -290,8 +287,9 @@
         var activityId = '${activity.activityId}';
         var projectId = '${activity.projectId}';
         var siteId = '${activity.siteId?:""}';
-        var options = {navigationUrl:url, activityUrl:activityUrl, returnTo:returnTo};
+        var options = {navigationUrl:url, activityUrl:activityUrl};
         options.navContext = '${navContext}';
+        options.returnTo = '${returnToUrl}';
         options.activityNavSelector = '#activity-nav';
         options.savedNavMessageSelector = '#saved-nav-message-holder';
 
