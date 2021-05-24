@@ -12,20 +12,24 @@
             removeUserDetailsUrl:"${createLink(controller: "admin", action: "removeUserDetails")}"
         };
     </script>
-
-<asset:stylesheet src="base.css"/>
-<asset:stylesheet src="common.css"/>
+<asset:stylesheet src="common-bs4.css"/>
 
 </head>
 <body>
 <h2>Remove User From MERIT</h2>
+<content tag="pageTitle">Remove User from MERIT</content>
 
-<form id="removeUser" class=" validationEngineContainer">
-    <div class="control-group required">
-        <label for="email" class="control-label span2">Enter User's Email Address</label>
-        <input id="email" name="email" type="text" class="form-control" value="" data-bind="value:emailAddress"
-               data-validation-engine="validate[required, custom[email]]" data-errormessage-value-missing="Email is required!">
-        <button class="btn btn-primary searchUserDetails" data-bind="click:searchUserDetails">Search</button>
+<form id="removeUser" class="validationEngineContainer">
+    <div class="form-group row required">
+        <label for="email" class="control-label col-sm-2">Enter User's Email Address</label>
+        <div class="col-sm-3">
+            <input id="email" name="email" type="text" class="form-control form-control-sm" value="" data-bind="value:emailAddress"
+                   data-validation-engine="validate[required, custom[email]]" data-errormessage-value-missing="Email is required!">
+        </div>
+        <div class="col-sm-2">
+            <button class="btn btn-primary btn-sm searchUserDetails" data-bind="click:searchUserDetails">Search</button>
+        </div>
+
     </div>
 
 </form>
@@ -49,7 +53,7 @@
             <td class="emailAddress" data-bind="text:email"></td>
             <td class="firstName" data-bind="text:firstName"></td>
             <td class="lastName" data-bind="text:lastName"></td>
-            <td><button class="btn btn-danger removeUserDetails" data-bind="click:$root.removeUserDetails, disable: !(userId())">Remove</button></td>
+            <td><button class="btn btn-sm btn-danger removeUserDetails" data-bind="click:$root.removeUserDetails, disable: !(userId())">Remove</button></td>
         </tr>
     </tbody>
 
@@ -65,12 +69,9 @@
     });
 
 </asset:script>
-<asset:javascript src="base.js"/>
-<asset:javascript src="common.js"/>
+<asset:javascript src="common-bs4.js"/>
 <asset:javascript src="admin.js"/>
 <asset:deferredScripts/>
 
 </body>
-
-
 </html>

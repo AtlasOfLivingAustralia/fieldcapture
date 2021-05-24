@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="layout" content="adminLayout"/>
-    <title>Edit | Home Page Images  Admin | MERIT</title>
+    <title>Home Page Images | Admin | MERIT</title>
     <script>
         var fcConfig = {
             serverUrl: "${grailsApplication.config.grails.serverURL}",
@@ -11,17 +11,23 @@
             returnTo: "${params.returnTo}"
             };
     </script>
-    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="common-bs4.css"/>
 
 </head>
 
 <body>
-<div class="row-fluid">
+<div class="row">
     <h3>Nominate Images for Display on the Home Page</h3>
-    Sort by: <select data-bind="value:sort"><option value="labels">Thumbs</option><option value="lastUpdated">Date</option></select>
-    <g:render template="gallery"/>
+    <content tag="pageTitle">Home Page Images</content>
+    <div class="col-sm-12">
+        Sort by: <select data-bind="value:sort" class="form-control form-control-sm input-medium"><option value="labels">Thumbs</option><option value="lastUpdated">Date</option></select>
+    </div>
+    <div class="col-sm-12">
+        <g:render template="gallery"/>
+    </div>
+
 </div>
-<asset:javascript src="common.js"/>
+<asset:javascript src="common-bs4.js"/>
 <asset:javascript src="admin.js"/>
 <asset:deferredScripts/>
 </body>

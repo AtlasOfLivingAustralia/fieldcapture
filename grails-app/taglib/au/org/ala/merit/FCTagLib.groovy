@@ -303,8 +303,8 @@ class FCTagLib {
 
         def mb = new MarkupBuilder(out)
         mb.li(class: active == current ? 'active' : '') {
-            a(href:attrs.href) {
-                i(class:'icon-chevron-right') { mkp.yieldUnescaped('&nbsp;')}
+            mb.a(href:attrs.href, class: "nav-link") {
+                i(class:'fa fa-arrow') { mkp.yieldUnescaped('&nbsp;')}
                 mkp.yield(attrs.title)
             }
         }
