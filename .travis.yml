@@ -41,14 +41,15 @@ before_script:
 - sudo systemctl status mongod
 
 script:
-- grails clean; grails refresh-dependencies --non-interactive; grails prod compile
-- node_modules/karma/bin/karma start karma.conf.js --single-run --browsers ChromeHeadless
-- cd scripts
-- chmod +x *.sh
-- ./runFunctionalTests.sh chromeHeadless
-- cd ..
-- grails clean; grails refresh-dependencies --non-interactive && grails test-app -clover.on :unit --non-interactive --stacktrace && ala_travis_grails_build
+#- grails clean; grails refresh-dependencies --non-interactive; grails prod compile
+#- node_modules/karma/bin/karma start karma.conf.js --single-run --browsers ChromeHeadless
+#- cd scripts
+#- chmod +x *.sh
+#- ./runFunctionalTests.sh chromeHeadless
+#- cd ..
+#- grails clean; grails refresh-dependencies --non-interactive && grails test-app -clover.on :unit --non-interactive --stacktrace && ala_travis_grails_build
 
+  - ./gradlew test
 env:
   global:
   - secure: cWYm92Lwc8jyxwd4eYDEEtXJhF5SrFD/eN+e2d6V3Vk22qTlCZDOzKY3XEg5O5KAM0htYdSVcif47fpFJh6GFnvO0C2AiSoWLeqMXwiTijQK/nfc/WirqRK71UtGvQYTVjNn3Si8XETsFB3jwYuqV5T20cJ/13bZxxWCc6cU6M4=

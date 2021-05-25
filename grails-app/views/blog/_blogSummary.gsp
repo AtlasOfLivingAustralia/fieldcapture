@@ -34,7 +34,7 @@
 
 $(function(){
 
-    var blog = ${fc.modelAsJavascript(model:blog, default:'[]')};
+    var blog = <fc:modelAsJavascript model="${blog}" default="[]"/>;
     ko.applyBindings(new BlogSummary(blog), document.getElementById('site-blog'));
 });
 

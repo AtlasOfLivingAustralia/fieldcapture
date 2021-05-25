@@ -104,13 +104,13 @@ class MeriPlanMapper {
         }
         String value = defaultValue
         switch (cell.cellType) {
-            case Cell.CELL_TYPE_STRING:
+            case CellType.STRING:
                 value = cell.getStringCellValue()
                 break
-            case Cell.CELL_TYPE_NUMERIC:
+            case CellType.NUMERIC:
                 value = ((XSSFCell)cell).getRawValue()
                 break
-            case Cell.CELL_TYPE_FORMULA:
+            case CellType.FORMULA:
                 CellValue evaluated = evaluator.evaluate(cell)
                 value = evaluated.formatAsString()
                 break

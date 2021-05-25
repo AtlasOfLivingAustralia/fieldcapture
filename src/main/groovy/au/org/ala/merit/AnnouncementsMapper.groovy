@@ -140,10 +140,11 @@ class AnnouncementsMapper {
     private CellStyle headerStyle(Workbook workbook) {
         CellStyle headerStyle = workbook.createCellStyle()
         headerStyle.setFillBackgroundColor(IndexedColors.BLACK.getIndex())
-        headerStyle.setFillPattern(CellStyle.SOLID_FOREGROUND)
+        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND)
         Font font = workbook.createFont()
-        font.setBoldweight(Font.BOLDWEIGHT_BOLD)
-        font.setColor(HSSFColor.WHITE.index)
+        //font.setBoldweight(Font.BOLDWEIGHT_BOLD)
+        font.setBold(true)
+        font.setColor(HSSFColor.HSSFColorPredefined.WHITE.index)
         headerStyle.setFont(font)
         return headerStyle
     }

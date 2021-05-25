@@ -16,7 +16,7 @@ import static au.org.ala.merit.ScheduledJobContext.withUser
 class StatisticsFactory {
 
     private static final String STATISTICS_CACHE_REGION = 'homePageStatistics'
-    private static final String DEFAULT_CONFIG = "/resources/statistics.json"
+    private static final String DEFAULT_CONFIG = "/statistics.json"
     private static final String CONFIG_KEY = "config"
 
     @Autowired

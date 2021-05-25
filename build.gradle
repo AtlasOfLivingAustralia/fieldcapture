@@ -9,7 +9,7 @@ buildscript {
         classpath "gradle.plugin.com.github.erdi.webdriver-binaries:webdriver-binaries-gradle-plugin:2.0"
         //classpath "org.grails.plugins:hibernate5:7.0.4"
         classpath "com.bertramlabs.plugins:asset-pipeline-gradle:3.2.4"
-        classpath 'com.bmuschko:gradle-clover-plugin:3.0.1'
+        //classpath 'com.bmuschko:gradle-clover-plugin:3.0.1'
         classpath 'org.grails.plugins:quartz:2.0.13'
     }
 }
@@ -26,11 +26,11 @@ apply plugin:"eclipse"
 apply plugin:"idea"
 apply plugin:"war"
 apply plugin:"org.grails.grails-web"
-//apply plugin:"com.github.erdi.webdriver-binaries"
+apply plugin:"com.github.erdi.webdriver-binaries"
 apply plugin:"asset-pipeline"
 //apply plugin:"com.bertramlabs.asset-pipeline"
 apply plugin:"org.grails.grails-gsp"
-apply plugin: 'com.bmuschko.clover'
+//apply plugin: 'com.bmuschko.clover'
 
 repositories {
     mavenLocal()
@@ -91,11 +91,11 @@ dependencies {
     testCompile "org.mockito:mockito-core"
     testCompile "org.grails:grails-web-testing-support"
     testCompile "org.grails.plugins:geb"
-    testCompile "org.seleniumhq.selenium:selenium-remote-driver:3.14.0"
-    testCompile "org.seleniumhq.selenium:selenium-api:3.14.0"
-    testCompile "org.seleniumhq.selenium:selenium-support:3.14.0"
-    testRuntime "org.seleniumhq.selenium:selenium-chrome-driver:3.14.0"
-    testRuntime "org.seleniumhq.selenium:selenium-firefox-driver:3.14.0"
+//    testCompile "org.seleniumhq.selenium:selenium-remote-driver:3.14.0"
+//    testCompile "org.seleniumhq.selenium:selenium-api:3.14.0"
+//    testCompile "org.seleniumhq.selenium:selenium-support:3.14.0"
+//    testRuntime "org.seleniumhq.selenium:selenium-chrome-driver:3.14.0"
+//    testRuntime "org.seleniumhq.selenium:selenium-firefox-driver:3.14.0"
 
 
 
@@ -114,7 +114,7 @@ dependencies {
     compile "org.grails:grails-plugin-services"
     compile "org.grails:grails-plugin-url-mappings"
     compile "org.grails:grails-plugin-interceptors"
-    compile "org.grails.plugins:cache"
+    //compile "org.grails.plugins:cache"
     compile "org.grails.plugins:async"
     compile "org.grails.plugins:scaffolding"
     compile "org.grails.plugins:events"
@@ -176,25 +176,25 @@ dependencies {
     //testCompile "org.grails:grails-gorm-testing-support"
     testCompile "org.grails.plugins:geb"
     //testCompile "org.grails:grails-web-testing-support"
-    testCompile "org.grails.plugins:geb:1.1.2"
+    //testCompile "org.grails.plugins:geb:1.1.2"
     compile "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
     testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
-    compile "org.seleniumhq.selenium:selenium-chrome-driver:2.47.1"
-    clover 'org.openclover:clover:4.2.0'
+    //compile "org.seleniumhq.selenium:selenium-chrome-driver:2.47.1"
+    //clover 'org.openclover:clover:4.3.1'
 
-    testRuntime 'org.openclover:clover:4.3.0'
+    //testRuntime 'org.openclover:clover:4.3.0'
     //compile 'com.github.tomakehurst:wiremock-jre8-standalone:2.24.1'
     //compile 'com.github.tomakehurst:wiremock-jre8-standalone:2.24.1'
-    //testRuntime "org.gebish:geb-spock:1.0"
+    testRuntime "org.gebish:geb-spock"
     compile "org.seleniumhq.selenium:selenium-support:2.53.1"
-    compile "org.seleniumhq.selenium:selenium-firefox-driver:2.53.1"
-    compile "org.seleniumhq.selenium:selenium-chrome-driver:2.53.1"
+//    compile "org.seleniumhq.selenium:selenium-firefox-driver:2.53.1"
+//    compile "org.seleniumhq.selenium:selenium-chrome-driver:2.53.1"
     compile "com.codeborne:phantomjsdriver:1.3.0"
     testRuntime "net.sourceforge.nekohtml:nekohtml:1.9.22"
     compile "com.icegreen:greenmail:1.5.14"
     testCompile "org.grails:grails-test-mixins:3.3.0"
 
-    compile "org.grails.plugins:cache-ehcache:3.0.0"
+    //compile "org.grails.plugins:cache-ehcache:3.0.0"
     //compile "org.hibernate:hibernate-ehcache:5.4.18.Final"
 
     compile ('net.sourceforge.nekohtml:nekohtml:1.9.22'){
@@ -225,12 +225,35 @@ dependencies {
     //compile 'org.grails.plugins:converters:4.0.1'
     compile "org.grails.plugins:converters"
     compile "org.grails:grails-plugin-codecs"
+    compile "commons-io:commons-io:2.6"
+
+    testCompile "org.grails:grails-gorm-testing-support"
+    testCompile "org.grails:grails-web-testing-support"
+    testRuntime "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
+    testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
+    testCompile "com.github.tomakehurst:wiremock-jre8-standalone:2.28.0"
+//    testCompile "org.seleniumhq.selenium:selenium-chrome-driver:2.53.1"
+//    testCompile "org.seleniumhq.selenium:selenium-firefox-driver:2.53.1"
+
+    testCompile "org.grails:grails-gorm-testing-support"
+    testCompile "org.grails.plugins:geb"
+    testCompile "org.grails:grails-web-testing-support"
+    testRuntime "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
+    testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
+    testCompile "com.github.tomakehurst:wiremock-jre8-standalone:2.27.2"
+//    testCompile "org.seleniumhq.selenium:selenium-chrome-driver:2.53.1"
+//    testCompile "org.seleniumhq.selenium:selenium-firefox-driver:2.53.1"
+    compile "org.seleniumhq.selenium:selenium-chrome-driver:2.46.0"
 
     if (!inplace) {
-        compile "org.grails.plugins:ecodata-client-plugin:3.1-SNAPSHOT"
+        compile "org.grails.plugins:ecodata-client-plugin:4.0"
     }
     else{
         compile project(":ecodata-client-plugin")
+
+        assetCompile.dependsOn("ecodata-client-plugin:_Events")
+        compileGroovy.dependsOn("ecodata-client-plugin:_Events")
+        bootRun.dependsOn("ecodata-client-plugin:_Events")
     }
 }
 
@@ -285,3 +308,15 @@ bootJar {
 bootWar {
     enabled = false
 }
+
+task _Events {
+    doLast {
+        println "Running Events.groovy script"
+        println "${project.projectDir}/scripts/Events.groovy"
+        new GroovyScriptEngine(["${project.projectDir}"] as String[]).run("scripts/Events.groovy", new Binding(['projectDir': project.projectDir]))
+    }
+}
+
+assetCompile.dependsOn(_Events)
+compileGroovy.dependsOn(_Events)
+bootRun.dependsOn(_Events)
