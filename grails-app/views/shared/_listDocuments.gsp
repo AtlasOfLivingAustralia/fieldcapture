@@ -30,7 +30,7 @@
 
             </thead>
             <tbody data-bind="foreach: filteredDocuments">
-                <!-- ko if:(role() == '${filterBy}' || 'all' == '${filterBy}') && !(_.contains(${ignore as grails.converters.JSON}, role())) && role() != 'variation' -->
+                <!-- ko if:(role() == '${filterBy}' || 'all' == '${filterBy}') && !(_.contains(${raw((ignore as grails.converters.JSON).toString())}, role())) && role() != 'variation' -->
                 <tr data-bind="click: $parent.selectDocument">
                     <td>
                         <!-- ko if:embeddedVideo() -->

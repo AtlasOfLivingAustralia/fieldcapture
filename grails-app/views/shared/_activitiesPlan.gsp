@@ -311,7 +311,7 @@
 		var programModel = <fc:modelAsJavascript model="${programs}"/>;
         var reports = <fc:modelAsJavascript model="${reports}"/>;
         var userIsEditor = ${user?.isEditor?'true':'false'};
-        var scores = ${scores as grails.converters.JSON};
+        var scores = ${raw((scores as grails.converters.JSON).toString())};
 
         var planViewModel = new ProjectActivitiesTabViewModel(
             fcConfig.project.activities || [],

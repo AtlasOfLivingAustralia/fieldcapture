@@ -252,7 +252,7 @@ function initSiteViewModel() {
 
     // server side generated paths & properties
     var SERVER_CONF = {
-        siteData: ${site?:[] as grails.converters.JSON},
+        siteData: ${raw((site?:[] as grails.converters.JSON).toString())},
         spatialService: '${createLink(controller:'proxy',action:'feature')}',
         intersectService: "${createLink(controller: 'proxy', action: 'intersect')}",
         featuresService: "${createLink(controller: 'proxy', action: 'features')}",

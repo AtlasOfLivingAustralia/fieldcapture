@@ -25,7 +25,7 @@
         speciesListUrl: "${createLink(controller:'proxy', action:'speciesItemsForList')}",
         speciesSearchUrl: "${createLink(controller:'project', action:'searchSpecies', id:activity.projectId, params:[surveyName:metaModel.name])}",
         speciesImageUrl: "${createLink(controller:'species', action:'speciesImage')}",
-        context:${fc.modelAsJavascript(model:context)},
+        context:<fc:modelAsJavascript model="${context}"/>,
         imageLeafletViewer: '${createLink(controller: 'resource', action: 'imageviewer', absolute: true)}',
         readonly:true,
         useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.PRODUCTION},

@@ -33,7 +33,7 @@
 </div>
 
 <script type="text/javascript">
-    var reportConfig = ${reportConfig as grails.converters.JSON};
+    var reportConfig = ${raw((reportConfig as grails.converters.JSON).toString())};
     var reportUrl = '${g.createLink(controller:'report', action:'reef2050PlanActionReportContents')}';
     var options = {
         reportUrl: reportUrl,

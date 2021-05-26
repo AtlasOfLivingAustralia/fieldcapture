@@ -65,8 +65,8 @@
 
 
         var output = <fc:modelAsJavascript model="${output}"/>;
-        var config = ${fc.modelAsJavascript(model:metaModel.outputConfig?.find{it.outputName == outputName}, default:'{}')};
-        config.model = ${fc.modelAsJavascript(model:model)};
+        var config = <fc:modelAsJavascript model="${metaModel.outputConfig?.find{it.outputName == outputName}}" default="{}"/>;
+        config.model = <fc:modelAsJavascript model="${model}"/>;
         config = _.extend({}, outputModelConfig, config);
 
         var context = {

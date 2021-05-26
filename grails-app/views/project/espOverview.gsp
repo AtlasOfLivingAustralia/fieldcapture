@@ -316,7 +316,7 @@
 
 <script type="text/javascript">
     var organisations = <fc:modelAsJavascript model="${organisations}"/>;
-    var sites = JSON.parse('${(sites as grails.converters.JSON).toString()}');
+    var sites = JSON.parse('${raw((sites as grails.converters.JSON).toString())}');
 
     var features = <fc:modelAsJavascript model="${mapFeatures}"/>;
 

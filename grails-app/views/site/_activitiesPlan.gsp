@@ -36,7 +36,7 @@ var today = '${today}';
             var userIsEditor = ${user?.isEditor?'true':'false'};
             var project = <fc:modelAsJavascript model="${project}"/>;
             var activities = <fc:modelAsJavascript model="${activities}"/>;
-            var scores = ${scores as grails.converters.JSON};
+            var scores = ${raw((scores as grails.converters.JSON).toString())};
             var siteId = '${site.siteId}';
 
             var config = {

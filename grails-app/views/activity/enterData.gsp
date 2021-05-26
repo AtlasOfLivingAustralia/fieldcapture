@@ -34,7 +34,7 @@
         speciesSearchUrl:"${createLink(controller:'project', action:'searchSpecies', id:activity.projectId, params:[surveyName:metaModel.name])}",
         speciesImageUrl:"${createLink(controller:'species', action:'speciesImage')}",
         noImageUrl: "${assetPath(src:'nophoto.png')}",
-        project:${fc.modelAsJavascript(model:project)},
+        project:<fc:modelAsJavascript model="${project}"/>,
         featureServiceUrl:"${createLink(controller: 'proxy', action: 'feature')}",
         wmsServiceUrl:"${grailsApplication.config.spatial.geoserverUrl}",
         unlockActivityUrl:"${createLink(controller:'activity', action:'ajaxUnlock')}/<fc:currentUserId/>",
@@ -316,8 +316,8 @@
             var blockId = "${blockId}";
 
             var output = <fc:modelAsJavascript model="${output}"/>;
-            var config = ${fc.modelAsJavascript(model:metaModel.outputConfig?.find{it.outputName == outputName}, default:'{}')};
-            config.model = ${fc.modelAsJavascript(model:model)};
+            var config = <fc:modelAsJavascript model="${metaModel.outputConfig?.find{it.outputName == outputName}}" default="{}"/>;
+            config.model = <fc:modelAsJavascript model="${model}"/>;
             config = _.extend({}, outputModelConfig, config);
 
         var context = {

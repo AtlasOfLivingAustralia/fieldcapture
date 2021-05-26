@@ -233,7 +233,7 @@
             };
         }
 
-        var activitiesViewModel = new ActivitiesViewModel(${activities ?: []}, ${sites ?: []});
+        var activitiesViewModel = new ActivitiesViewModel(${raw(((activities ?: []) as grails.converters.JSON).toString())}, ${raw(((sites ?: [])as grails.converters.JSON).toString())});
         ko.applyBindings(activitiesViewModel, document.getElementById('activityListContainer'));
     });
 

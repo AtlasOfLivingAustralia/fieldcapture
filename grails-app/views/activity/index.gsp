@@ -30,7 +30,7 @@
         speciesProfileUrl: "${createLink(controller: 'species', action: 'speciesProfile')}",
         excelOutputTemplateUrl:"${createLink(controller: 'activity', action:'excelOutputTemplate')}",
         imageLeafletViewer: '${createLink(controller: 'resource', action: 'imageviewer', absolute: true)}',
-        project:${fc.modelAsJavascript(model:project)},
+        project:<fc:modelAsJavascript model="${project}"/>,
         returnTo: "${returnTo}"
         },
         here = document.location.href;

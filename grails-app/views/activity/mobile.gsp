@@ -237,7 +237,7 @@
                 });
             }
 
-            var config = ${fc.modelAsJavascript(model:metaModel.outputConfig?.find{it.outputName == outputName}, default:'{}')};
+            var config = <fc:modelAsJavascript model="${metaModel.outputConfig?.find{it.outputName == outputName}}" default='{}'/>;
             window[viewModelInstance] = new this[viewModelName](savedOutput, config);
             var output = savedOutput.data ? savedOutput.data : {};
 

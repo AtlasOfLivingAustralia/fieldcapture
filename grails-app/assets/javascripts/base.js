@@ -1,5 +1,5 @@
 //= require html5/html5
-//= require jquery/jquery-1.11.1
+//= require webjars/jquery/1.12.4/jquery.js
 //= require jquery-cookie/jquery.cookie
 //= require bootstrap/js/bootstrap
 

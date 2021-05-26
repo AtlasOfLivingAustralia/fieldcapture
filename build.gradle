@@ -11,6 +11,7 @@ buildscript {
         classpath "com.bertramlabs.plugins:asset-pipeline-gradle:3.2.4"
         //classpath 'com.bmuschko:gradle-clover-plugin:3.0.1'
         classpath 'org.grails.plugins:quartz:2.0.13'
+        classpath 'com.bertramlabs.plugins:less-asset-pipeline:3.3.1'
     }
 }
 
@@ -244,6 +245,8 @@ dependencies {
 //    testCompile "org.seleniumhq.selenium:selenium-chrome-driver:2.53.1"
 //    testCompile "org.seleniumhq.selenium:selenium-firefox-driver:2.53.1"
     compile "org.seleniumhq.selenium:selenium-chrome-driver:2.46.0"
+
+    compile 'com.bertramlabs.plugins:less-asset-pipeline:3.3.1'
 
     if (!inplace) {
         compile "org.grails.plugins:ecodata-client-plugin:4.0"

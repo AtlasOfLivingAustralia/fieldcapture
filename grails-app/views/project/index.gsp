@@ -258,7 +258,7 @@
                 documentDeleteUrl: fcConfig.documentDeleteUrl,
                 meriStorageKey:PROJECT_DETAILS_KEY,
                 activityBasedReporting: ${Boolean.valueOf(projectContent.admin.config.activityBasedReporting)},
-                minimumProjectEndDate: ${projectContent.admin.minimumProjectEndDate?'"'+projectContent.admin.minimumProjectEndDate+'"':'null'},
+                minimumProjectEndDate: <fc:modelAsJavascript model="${projectContent.admin.minimumProjectEndDate?: null}"/>,
                 riskChangesReportElementId: 'risk-changes-report',
                 riskChangesReportHtmlUrl: fcConfig.riskChangesReportHtmlUrl,
                 riskChangesReportPdfUrl: fcConfig.riskChangesReportPdfUrl,
@@ -271,9 +271,9 @@
             var programs = <fc:modelAsJavascript model="${programs}"/>;
             var project = fcConfig.project;
 
-            var themes = ${config.themes?:[]};
+            var themes = <fc:modelAsJavascript model="${config.themes}" default="[]"/>;
             config.themes = themes;
-            var services = ${config.services?:[]};
+            var services = <fc:modelAsJavascript model="${config.services}" default="[]"/>;
 
             config.useAlaMap = ${Boolean.valueOf(projectContent.site.useAlaMap)};
             config.showSiteType = ${Boolean.valueOf(projectContent.site.showSiteType)};
@@ -285,7 +285,7 @@
             config.requireMeriApprovalReason = ${projectContent.admin.requireMeriPlanApprovalReason};
 
             config.autoSaveIntervalInSeconds = ${grailsApplication.config.fieldcapture.autoSaveIntervalInSeconds?:60};
-            config.riskAndThreatTypes = ${config.riskAndThreatTypes ?: 'null'};
+            config.riskAndThreatTypes = <fc:modelAsJavascript model="${config.riskAndThreatTypes}" default="null"/>;
             var programName = <fc:modelAsJavascript model="${(config.program?.acronym?:project.associatedSubProgram) ?: project.associatedProgram}"/>
             config.programName = programName
 

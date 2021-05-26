@@ -32,7 +32,7 @@
                 speciesSearchUrl: "${createLink(controller:'project', action:'searchSpecies', id:activity.projectId, params:[surveyName:metaModel.name])}",
                 speciesImageUrl: "${createLink(controller:'species', action:'speciesImage')}",
                 noImageUrl: "${assetPath(src:'nophoto.png')}",
-                context:${fc.modelAsJavascript(model:context)},
+                context:<fc:modelAsJavascript model="${context}"/>,
                 prepopUrlPrefix:"${grailsApplication.config.grails.serverURL}",
                 useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.PRODUCTION},
                 unlockActivityUrl: "${createLink(controller:'activity', action:'ajaxUnlock')}/<fc:currentUserId/>"
@@ -137,7 +137,7 @@
             window.onunload = unlockActivity;
         }
 
-        var metaModel = ${metaModel};
+        var metaModel = <fc:modelAsJavascript model="${metaModel}"/>;
 
         var master = null;
         var mapPopupSelector = '#map-modal';
@@ -248,7 +248,7 @@
         var blockId = "${blockId}";
         var output = <fc:modelAsJavascript model="${output}"/>;
 
-        var config = ${fc.modelAsJavascript(model:metaModel.outputConfig?.find{it.outputName == outputName}, default:'{}')};
+        var config = <fc:modelAsJavascript model="${metaModel.outputConfig?.find{it.outputName == outputName}}" default="{}"/>;
 
         if(amplify.store(recoveryDataStorageKey)){
             let localSavedActivity = amplify.store(recoveryDataStorageKey);
@@ -260,7 +260,7 @@
                 })
             }
 
-        config.model = ${fc.modelAsJavascript(model:model)};
+        config.model = <fc:modelAsJavascript model="${model}"/>;
         config.featureCollection = context.featureCollection;
         config = _.extend({}, outputModelConfig, config);
 
