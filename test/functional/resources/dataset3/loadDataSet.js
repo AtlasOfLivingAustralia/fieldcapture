@@ -253,7 +253,6 @@ db.userPermission.insert({
     accessLevel: 'admin'
 });
 
-loadActivityForms();
 
 config.excludeFinancialYearData = true;
 config.excludes = [];
@@ -993,6 +992,138 @@ db.userPermission.insert({
     accessLevel: 'admin'
 });
 
+var projectESP = {
+    "alaHarvest": false,
+    "associatedProgram": "Environmental Stewardship",
+    "associatedSubProgram": "MEC1",
+    "countries": [],
+    "dateCreated": ISODate("2017-11-17T10:29:12.758Z"),
+    "description": "The Environmental Stewardship Program aims to conserve targeted Threatened Ecological Communities on private land",
+    "ecoScienceType": [],
+    "externalId": "MEC1_MDB_048",
+    "funding": 0,
+    "grantId": "A0000008293G",
+    "industries": [],
+    "isCitizenScience": false,
+    "isExternal": false,
+    "isMERIT": true,
+    "isSciStarter": false,
+    "lastUpdated": ISODate("2017-11-17T11:13:35.589Z"),
+    "name": "ESP Project Generate Report",
+    "organisationName": "",
+    "origin": "merit",
+    "planStatus": "approved",
+    "plannedEndDate": ISODate("2026-06-29T14:00:00.000Z"),
+    "plannedStartDate": ISODate("2017-03-31T13:00:00.000Z"),
+    "projectId": "123456789",
+    "projectType": "works",
+    "promoteOnHomepage": "no",
+    "scienceType": [],
+    "serviceProviderName": "",
+    "status": "active",
+    "tags": [],
+    "uNRegions": [],
+    "workOrderId": "",
+    "privateSites": true,
+    "internalOrderId": "A0000008293G"
+}
+var activity1 = {
+    "activityId": "activity",
+    "assessment": false,
+    "dateCreated": ISODate("2017-11-17T10:59:04.578Z"),
+    "description": "PMU1 Report for site MEC1_MDB_048__PMU1",
+    "endDate": ISODate("2020-03-30T13:00:00.000Z"),
+    "lastUpdated": ISODate("2020-12-16T01:31:34.632Z"),
+    "plannedEndDate": ISODate("2020-03-30T13:00:00.000Z"),
+    "plannedStartDate": ISODate("2019-03-31T13:00:00.000Z"),
+    "progress": "finished",
+    "projectId": "123456789",
+    "startDate": ISODate("2019-03-31T13:00:00.000Z"),
+    "status": "active",
+    "type": "ESP PMU or Zone reporting",
+    "formVersion": NumberInt(4),
+    "projectStage": "Stage 3",
+    "mainTheme": "",
+    "publicationStatus": "published"
+}
+var output = {
+    "activityId": "activity",
+    "dateCreated": ISODate("2020-11-28T00:58:21.680Z"),
+    "lastUpdated": ISODate("2020-12-10T10:21:08.997Z"),
+    "outputId": "efc7cf3f-dcb7-4d85-ae2f-667158f1cf23",
+    "status": "active",
+    "outputNotCompleted": false,
+    "data": {
+        "multiplePaddocks": "No",
+        "grazingPeriods": [],
+        "cost": "0",
+        "notes": "Although grazing management is an approved management action within our Management Plan we have elected not to graze the site for reporting period. This decision had to be  made because of the continued  low rainfall across the site and as a consequence the very low sward height and low groundcover %.Even without any grazing of domestic livestock I believe that the sward height would have been below the required 10 cm and the ground cover %  at approx.  50%\nI have included the Climate data between  the calendar year 2014 - 2020 (not complete) at a weather station that is approximately 5 km west of the PMU that clearly shows the deficient in rainfall.   \nCalendar  Year     2014    2015    2016    2017    2018     2019    2020 (Until 30 Nov)\nAv C                      14.9    14.9    13.9      14.7     15.0       15.1     13.9\nMin C                     -1.3       ?          0        -1.7      -1.7       -3.6      -1.6\nMax C                     42.5     41.1     39.2     40.2     42.7     44.9     43.5\nSum RF (mm)         520.4    384     503      439      352       282      440",
+        "grazingagreement": "No"
+    },
+    "name": "ESP Livestock Grazing Management"
+}
+
+var outputSwan = {
+    "activityId": "activity",
+    "dateCreated": ISODate("2020-11-28T00:58:21.707Z"),
+    "lastUpdated": ISODate("2020-11-28T00:58:21.719Z"),
+    "outputId": "237b17b2-3d88-48f5-a79d-82a6b829f04a",
+    "status": "active",
+    "outputNotCompleted": false,
+    "data": {"groundCoverPercent": [{"dateMeasured": "2020-11-23T13:30:00Z", "groundCoverPercent": "60"}]},
+    "name": "ESP Ground Cover"
+}
+
+var report1 = {
+    "dateCreated": ISODate("2017-11-17T10:29:12.803Z"),
+    "description": "Stage 3 for Environmental Stewardship Program project on property MDB_048",
+    "fromDate": ISODate("2019-03-31T13:00:00.000Z"),
+    "lastUpdated": ISODate("2020-12-16T01:31:34.623Z"),
+    "name": "Stage 3",
+    "projectId": "123456789",
+    "publicationStatus": "published",
+    "reportId": "d5874c66-ee8c-440c-b0f3-76af14a6cdaf",
+    "status": "active",
+    "submissionDate": ISODate("2020-03-31T13:00:00.000Z"),
+    "toDate": ISODate("2020-03-31T13:00:00.000Z"),
+    "type": "Activity",
+    "activityCount": NumberInt(3),
+    "dateSubmitted": ISODate("2020-12-13T22:58:48.771Z"),
+    "submittedBy": "7294",
+    "statusChangeHistory": [{
+        "changedBy": "60237",
+        "dateChanged": ISODate("2020-11-28T01:30:35.668Z"),
+        "status": "submitted"
+    }, {
+        "changedBy": "111283",
+        "comment": "corrections to grazing management reporting as discussed\n\nThanks\n\nAnne",
+        "dateChanged": ISODate("2020-12-09T23:39:54.866Z"),
+        "status": "returned"
+    }, {
+        "changedBy": "7294",
+        "dateChanged": ISODate("2020-12-13T22:58:48.771Z"),
+        "status": "submitted"
+    }, {"changedBy": "7294", "dateChanged": ISODate("2020-12-16T01:31:34.617Z"), "status": "approved"}],
+    "dateReturned": ISODate("2020-12-09T23:39:54.866Z"),
+    "returnedBy": "111283",
+    "approvalDeltaInWeekdays": NumberInt(3),
+    "approvedBy": "7294",
+    "dateApproved": ISODate("2020-12-16T01:31:34.617Z")
+}
+
+
+db.project.insert(projectESP);
+db.activity.insert(activity1)
+db.output.insert(output);
+db.output.insert(outputSwan)
+db.report.insert(report1)
+
+db.userPermission.insert({
+    entityType: 'au.org.ala.ecodata.Project',
+    entityId: "123456789",
+    userId: '1',
+    accessLevel: 'admin'
+});
 
 
 db.setting.insert({"key":"meritservices.config", "value":JSON.stringify(projectDashboardService) ,"version":NumberInt(0)});
@@ -1000,3 +1131,5 @@ db.setting.insert({"key":"meritservices.config", "value":JSON.stringify(projectD
 createProjectNumberBaselineDataSets({ "scoreId":"score_42"});
 createProjectNumberOfCommunicationMaterialsPublished({ "scoreId":"score_43"});
 createProjectWeedAreaSurveyedHaDefault({ "scoreId":"score_44"});
+
+

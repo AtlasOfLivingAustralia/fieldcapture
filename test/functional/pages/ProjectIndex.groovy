@@ -16,7 +16,7 @@ import pages.modules.SitesTableContents
  */
 class ProjectIndex extends ReloadablePage {
     static url = 'project/index' // requires a project id parameter
-    static at = { waitFor { title.endsWith('| Project | Field Capture') } }
+    static at = { waitFor { title != null } }
 
     static content = {
 
@@ -46,6 +46,9 @@ class ProjectIndex extends ReloadablePage {
         editSite {module EditSiteContent}
         tableContents { $("#sites-table tbody td").moduleList(SitesTableContents)}
         mapMarker{ $('#map img[src*="marker-icon.png"]')}
+
+        downloadReportTab { $("#stage-report-pdf-tab")}
+        downloadReportContent{ module DownloadReportContent}
 
 
     }
@@ -190,6 +193,15 @@ class DashboardTab extends Module {
         progresslabel{ $(".progress-label")}
 
     }
+}
+
+class DownloadReportContent extends Module {
+
+    static content = {
+        generateHTML {$("button[data-bind*=generateProjectReportHTML]").first()}
+        generatePDF { $("button[data-bind*=generateProjectReportPDF]").first() }
+    }
+
 }
 
 
