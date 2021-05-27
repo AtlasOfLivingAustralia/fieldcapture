@@ -108,3 +108,7 @@ table td.report-status, table th.report-status {
 .fa.input-group-text {
     display: inherit;
 }
+
+.customBorder {
+    border-bottom: 1px solid #eeeeee;
+}

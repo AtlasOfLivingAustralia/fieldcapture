@@ -58,20 +58,20 @@
 
         <div class="row">
             <div id="admin" class="nav flex-column nav-pills col-sm-3 pl-2 pr-0">
-                <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'audit')}" title="Audit" />
+                <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'audit')}"  class="audit" title="Audit" />
                 <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.adminRole) || fc.userInRole(role: grailsApplication.config.security.cas.alaAdminRole)}">
-                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'staticPages')}" title="Static pages" />
-                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'editHelpLinks')}" title="Help Resources"/>
-                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'editSiteBlog')}" title="Site Blog"/>
-                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'selectHomePageImages')}" title="Home Page Images"/>
-                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'adminReports')}" title="Administrator Reports"/>
-                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'gmsProjectImport')}" title="Load new projects into MERIT"/>
-                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'removeUserPermission')}" title="Remove User from MERIT"/>
+                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'staticPages')}" class="staticPages" title="Static pages" />
+                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'editHelpLinks')}" class="helpResource" title="Help Resources"/>
+                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'editSiteBlog')}" class="siteBlog" title="Site Blog"/>
+                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'selectHomePageImages')}" class="homePageImage" title="Home Page Images"/>
+                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'adminReports')}" class="adminReport" title="Administrator Reports"/>
+                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'gmsProjectImport')}" class="loadProject" title="Load new projects into MERIT"/>
+                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'removeUserPermission')}" class="removeUser" title="Remove User from MERIT"/>
                 </g:if>
                 <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.alaAdminRole)}">
-                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'tools')}" title="Tools" />
-                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'settings')}" title="Settings" />
-                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'cacheManagement')}" title="Caches" />
+                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'tools')}" class="tools" title="Tools" />
+                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'settings')}" class="settings" title="Settings" />
+                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'cacheManagement')}" class="caches" title="Caches" />
                 </g:if>
             </div>
             <div class="col-sm-8 ml-5">
