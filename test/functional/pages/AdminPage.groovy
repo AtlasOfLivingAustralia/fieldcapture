@@ -8,7 +8,7 @@ class AdminPage extends Page {
     static at = { title.startsWith("Admin | MERIT") }
 
     static content = {
-        staticTab { module AdminTabContent}
+        staticTab { module AdminTabContent }
     }
 }
 
@@ -16,6 +16,7 @@ class AdminTabContent extends Module {
 
     static content = {
         adminTab { $("#admin li") }
+        staticPage { $("table tbody tr td") }
     }
 
 }

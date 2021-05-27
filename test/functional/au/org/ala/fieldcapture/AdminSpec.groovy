@@ -35,6 +35,26 @@ class AdminSpec extends StubbedCasSpec {
         staticTab.adminTab[8].text() == " Tools"
         staticTab.adminTab[9].text() == " Settings"
         staticTab.adminTab[10].text() == " Caches"
+    }
+
+    def "Admin Static pages"() {
+        setup:
+        login([userId:'1', role:"ROLE_ADMIN", email:'fc-admin@nowhere.com', firstName: "ALA", lastName:'Admin'], browser)
+
+        when:
+        to AdminPage
+
+        then:
+        waitFor {
+            at AdminPage
+        }
+
+        when:
+        staticTab.adminTab[1].click()
+
+        then:
+        staticTab.staticPage[0].text() == "fielddata.title.text"
+        staticTab.staticPage[3].text() == "fielddata.about.text"
 
 
     }
