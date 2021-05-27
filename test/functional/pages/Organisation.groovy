@@ -6,7 +6,7 @@ import pages.modules.OrganisationAdminTab
 class Organisation extends Page{
     static url = 'organisation/index'
 
-    static at = {title.endsWith("| MERIT")}
+    static at = { $('.organisation-header').displayed }
 
     static content = {
         name {$('h2')}
