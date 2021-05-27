@@ -16,7 +16,7 @@ import pages.modules.SitesTableContents
  */
 class ProjectIndex extends ReloadablePage {
     static url = 'project/index' // requires a project id parameter
-    static at = { waitFor { title != null } }
+    static at = { waitFor { title.endsWith('| Project | Field Capture') } }
 
     static content = {
 

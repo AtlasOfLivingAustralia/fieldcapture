@@ -8,7 +8,7 @@ import spock.lang.Stepwise
 @Stepwise
 class DocumentReportGenerateSpec extends StubbedCasSpec {
 
-    def setupSpec(){
+    def setupSpec() {
         useDataSet("dataset3")
     }
 
@@ -18,21 +18,21 @@ class DocumentReportGenerateSpec extends StubbedCasSpec {
 
     def "Clear the cache to ensure activity forms are loaded"() {
         setup:
-        login([userId:'1', role:"ROLE_ADMIN", email:'fc-admin@nowhere.com', firstName: "ALA", lastName:'Admin'], browser)
+        login([userId: '1', role: "ROLE_ADMIN", email: 'fc-admin@nowhere.com', firstName: "ALA", lastName: 'Admin'], browser)
 
         when:
         to AdminTools
 
-        waitFor {$("#btnClearMetadataCache").displayed}
+        waitFor { $("#btnClearMetadataCache").displayed }
         $("#btnClearMetadataCache").click()
 
         then:
-        waitFor {hasBeenReloaded()}
+        waitFor { hasBeenReloaded() }
     }
 
-    def "generate Document PDF from document report tab" () {
+    def "generate Document PDF from document report tab"() {
         String projectId =
-        login([userId: '1', role: "ROLE_FC_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+                login([userId: '1', role: "ROLE_FC_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
 
         when:
         to ProjectIndex, "123456789"
@@ -48,16 +48,16 @@ class DocumentReportGenerateSpec extends StubbedCasSpec {
         }
         downloadReportTab.click()
 
-       waitFor {
-           downloadReportContent.generateHTML.displayed
+        waitFor {
+            downloadReportContent.generateHTML.displayed
 
-           downloadReportContent.generatePDF.displayed
-       }
+            downloadReportContent.generatePDF.displayed
+        }
         when:
         downloadReportContent.generateHTML.click()
 
         then:
-        withWindow("project-report",{
+        withWindow("project-report", {
             at DownloadReportPDF
             groundCoverPercentage.text() == "60"
         })

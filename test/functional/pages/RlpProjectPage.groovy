@@ -11,7 +11,7 @@ import pages.modules.TimeoutModal
 class RlpProjectPage extends ReloadablePage {
 
     static url = 'project/index' // requires a project id parameter
-    static at = { title != null }
+    static at = { title.endsWith('| Project | Field Capture') }
 
     static content = {
 
