@@ -49,7 +49,9 @@ class ReportPage extends Page {
     }
 
     def markAsComplete() {
-        $("[data-bind*=\"markedAsFinished\"]").value(true)
+        // Clicking on the label instead of the checkbox due to a random (rare) element not clickable exception in the tests
+        // that indicated the label would receive the click
+        $("label.mark-complete").click()
     }
 
     boolean isOptional(String sectionId) {
