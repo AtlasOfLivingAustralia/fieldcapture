@@ -3,19 +3,20 @@
 <html>
 <head>
     <meta name="layout" content="nrm_bs4"/>
-    <title>Edit | Program | MERIT</title>
+    <title>Create | Management Unit | MERIT</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
     <script disposition="head">
         var fcConfig = {
             serverUrl: "${grailsApplication.config.grails.serverURL}",
             managementUnitSaveUrl: "${createLink(action:'ajaxUpdate')}",
-            programViewUrl: "${createLink(action:'index')}",
             documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
             noImageUrl: "${assetPath(src:'nophoto.png')}",
-            returnToUrl: "${params.returnTo}"
+            returnToUrl: "${params.returnTo}",
+            managementUnitViewUrl: "${createLink(action:'index')}"
         };
     </script>
     <asset:stylesheet src="common-bs4.css"/>
+    <asset:stylesheet src="managementUnit.css"/>
 
 </head>
 <body>
@@ -34,28 +35,27 @@
     <g:render template="managementUnitDetails"/>
 
     <div class="form-actions">
-        <button type="button" id="save" data-bind="click:save" class="btn btn-primary">Create</button>
-        <button type="button" id="cancel" class="btn" data-bind="click:cancel">Cancel</button>
+        <button type="button" id="save" data-bind="click:save" class="btn btn-sm btn-primary">Create</button>
+        <button type="button" id="cancel" class="btn btn-sm btn-danger" data-bind="click:cancel">Cancel</button>
     </div>
 </div>
 
 <asset:script>
 
     $(function () {
-        var program = <fc:modelAsJavascript model="${program}"/>;
+        var mu = <fc:modelAsJavascript model="${mu}"/>;
 
-        var programViewModel = new ProgramViewModel(program, fcConfig);
+        var managementUnitViewModel = new ManagementUnitViewModel(mu, fcConfig);
 
-        ko.applyBindings(programViewModel);
+        ko.applyBindings(managementUnitViewModel);
         $('.validationEngineContainer').validationEngine();
-
     });
 
 
 </asset:script>
 <asset:javascript src="common-bs4.js"/>
 <asset:javascript src="attach-document-no-ui.js"/>
-<asset:javascript src="program.js"/>
+<asset:javascript src="managementUnit.js"/>
 <asset:deferredScripts/>
 
 </body>
