@@ -2,8 +2,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta name="layout" content="${hubConfig.skin}"/>
-  <title> ${create ? 'New' : ('Edit | ' + site?.name?.encodeAsHTML())} | Sites | Field Capture</title>
+  <meta name="layout" content="nrm_bs4"/>
+  <title> ${create ? 'New' : ('Edit | ' + site?.name?.encodeAsHTML())} | Sites | MERIT</title>
   <style type="text/css">
     legend {
         border: none;
@@ -46,34 +46,36 @@
         here = window.location.href;
 
     </script>
-    <asset:stylesheet src="common.css"/>
-    <asset:stylesheet src="project.css"/>
+    <asset:stylesheet src="site-bs4.css"/>
 </head>
 <body>
     <div class="${containerType} validationEngineContainer" id="validation-container">
-        <ul class="breadcrumb">
-            <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
-            <li>Sites<span class="divider">/</span></li>
-            <g:if test="${project}">
-                <li class="active">Create new site for ${project?.name?.encodeAsHTML()}</li>
-            </g:if>
-            <g:elseif test="${create}">
-                <li class="active">Create</li>
-            </g:elseif>
-            <g:else>
-                <li><g:link controller="site" action="index" id="${site?.siteId}">
-                    <span data-bind="text: name">${site?.name?.encodeAsHTML()}</span>
-                </g:link><span class="divider">/</span></li>
-                <li class="active">Edit</li>
-            </g:else>
-        </ul>
-
+        <div aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><g:link controller="home">Home</g:link></li>
+                <li class="breadcrumb-item">Sites</li>
+                <g:if test="${project}">
+                    <li class="breadcrumb-item active">Create new site for ${project?.name?.encodeAsHTML()}</li>
+                </g:if>
+                <g:elseif test="${create}">
+                    <li class="breadcrumb-item active">Create</li>
+                </g:elseif>
+                <g:else>
+                    <li class="breadcrumb-item">
+                        <g:link controller="site" action="index" id="${site?.siteId}">
+                            <span data-bind="text: name">${site?.name?.encodeAsHTML()}</span>
+                        </g:link>
+                    </li>
+                    <li class="breadcrumb-item active">Edit</li>
+                </g:else>
+            </ol>
+        </div>
 
         <g:render template="map" />
-        <div class="row-fluid">
-            <div class="form-actions span12">
-                <button type="button" id="save" class="btn btn-primary">Save changes</button>
-                <button type="button" id="cancel" class="btn">Cancel</button>
+        <div class="row p-2">
+            <div class="form-actions col-sm-12">
+                <button type="button" id="save" class="ml-2 btn btn-sm btn-primary">Save changes</button>
+                <button type="button" id="cancel" class="btn btn-sm btn-danger">Cancel</button>
             </div>
         </div>
 
@@ -147,7 +149,7 @@
         });
     });
 </asset:script>
-<asset:javascript src="common.js"/>
+<asset:javascript src="site-bs4.js"/>
 <asset:javascript src="edit-site-manifest.js"/>
 <asset:deferredScripts/>
 

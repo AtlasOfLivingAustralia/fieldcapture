@@ -136,3 +136,30 @@
     padding-left: 30px;
     border-radius: 5px;
 }
+
+.fromDate, .toDate, .status {
+    min-width: 6rem !important;
+    width:8rem !important;
+}
+
+.actions {
+    min-width: 6rem !important;
+    width:8rem !important;
+}
+
+.description-column {
+    width:40% !important;
+}
+.activity {
+    width:25% !important;
+}
+.sites {
+    width:15% !important;
+}
+
+.stage-header {
+    background-color: #d9edf7;
+    border: 1px solid #ddd;
+    border-bottom: 1px solid grey;
+    padding: 10px;
+}

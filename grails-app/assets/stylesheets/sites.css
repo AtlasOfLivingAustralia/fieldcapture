@@ -13,3 +13,108 @@
 #sitesList #map {
     width: 100%;
 }
+.label-info {
+    background-color: #25aed6;
+    border: 1px solid #25aed6;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    color: #FFFFFF;
+}
+
+.label-success {
+    background-color: #006400;
+    border: 1px solid #006400;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    color: #FFFFFF;
+}
+.customCard {
+    border:unset;
+}
+
+ #sitesActivityTab li>a {
+    border: solid 1px #dddddd;
+}
+ #sitesActivityTab li>a.active {
+    border-bottom-color: transparent;
+}
+ .overflow-x-scroll {
+     overflow-x: scroll;
+ }
+
+ .input-medium {
+     width: 60%;
+ }
+
+ .input-small {
+     width: 30%;
+ }
+
+ .custom-input {
+     padding: 5px;
+     border-radius: 0.25rem;
+     border: 1px solid #ced4da;
+     width: 250px;
+ }
+
+ .extentSelect{
+     margin-left: -48px !important;
+     margin-right: 6px !important;
+ }
+ .badge-warning {
+     color: #fff;
+     padding: 0.25rem;
+ }
+
+.fn-gantt .row {
+    margin-right: unset !important;
+}
+.fn-gantt .nav-link {
+    padding: 0.5rem 0.5rem !important;
+}
+
+#sites-container input, #sites-container textarea, #sites-container select{
+    border: 1px solid #e3e3e3;
+    border-radius: .25rem;
+    padding: 0.25rem;
+}
+
+#activities-plan a.nav-link {
+    border: 1px solid #dedede;
+}
+
+.badge {
+    padding-left: 9px !important;
+    padding-right: 9px !important;
+    -webkit-border-radius: 9px !important;
+    -moz-border-radius: 9px !important;
+    border-radius: 9px !important;
+    font-weight: bold;
+    font-size: 12px;
+}
+.fromDate, .toDate, .status {
+    min-width: 6rem !important;
+    width:8rem !important;
+}
+
+.actions {
+    min-width: 6rem !important;
+    width:8rem !important;
+}
+
+.description-column {
+    width:40% !important;
+}
+.activity {
+    width:25% !important;
+}
+.sites {
+    width:15% !important;
+}
+
+.stage-header {
+    background-color: #d9edf7;
+    border: 1px solid #ddd;
+    border-bottom: 1px solid grey;
+    padding: 10px;
+}

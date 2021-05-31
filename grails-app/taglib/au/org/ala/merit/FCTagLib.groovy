@@ -715,7 +715,10 @@ class FCTagLib {
                 def liClass = details.default ? 'active':''
                 def linkAttributes = [href:'#'+name, id:name+'-tab']
                 if (!details.disabled) {
-                    linkAttributes << ["data-toggle":"tab", class:'nav-link ']
+                    linkAttributes << ["data-toggle":"tab", class:'nav-link']
+                }
+                if(details.label =="Activities" && details.default == true){
+                    linkAttributes << ["data-toggle":"tab", class:'nav-link active show']
                 }
 
                 mb.li(class:'nav-item '+liClass) {

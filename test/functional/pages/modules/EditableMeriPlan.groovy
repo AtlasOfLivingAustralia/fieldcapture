@@ -123,12 +123,12 @@ class EditableMeriPlan extends Module {
     static content = {
         primaryOutcome(required: false) { $('.outcome-priority select[data-bind*="primaryOutcome.description"]') }
         primaryPriority(required: false) { $('select[data-bind*="primaryOutcome.asset"]') }
-        primaryPriorityUnstyled(required: false) {$('.priority .unstyled')}
+        primaryPriorityUnstyled(required: false) {$('.priority li label')}
 
         assetType(required: false) {$('.asset-category select')}
         asset(required: false) {$('.asset-detail select[data-bind*="description"]')}
-        otherOutcomeColumn1(required: false) {$('.column-1 ul.unstyled li')}
-        otherOutcomeColumn2(required: false) {$('.column-2 ul.unstyled li')}
+        otherOutcomeColumn1(required: false) {$('.column-1 li label')}
+        otherOutcomeColumn2(required: false) {$('.column-2 li label')}
         secondaryOutcomes(required: false) { $('table.secondary-outcome tbody tr').moduleList(OutcomeRow) }
         shortTermOutcomes(required: false) { $('tbody[data-bind*="shortTermOutcomes"] textarea') }
         mediumTermOutcomes(required: false) {  $('tbody[data-bind*="midTermOutcomes"] textarea') }

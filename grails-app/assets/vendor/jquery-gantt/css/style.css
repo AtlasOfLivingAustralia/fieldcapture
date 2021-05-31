@@ -66,7 +66,7 @@
 .fn-gantt .leftPanel .name, .fn-gantt .leftPanel .desc {
     float: left;
     height: 23px;
-    margin: 0;
+    /*margin: 0;*/                                                                  /* Removing to margin to remove the white space on sites activity gantt chart  unable to override from the sites.css */
     border-bottom: 1px solid #DDD;
     background-color: #f6f6f6;
 }
@@ -319,7 +319,7 @@
     width: 20px;
     height: 20px;
     font-size: 0px;
-    background: #595959 url(../img/icon_sprite.png) !important;
+    background: #595959 url(../img/icon_sprite.png) no-repeat !important;
     border: 1px solid #454546;
     cursor: pointer;
     vertical-align: top;

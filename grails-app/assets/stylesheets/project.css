@@ -11,6 +11,7 @@
 *= require select2/4.0.3/css/select2
 *= require blog
 *= require dataSets
+*= require activity.css
 *= require_self
 */
 

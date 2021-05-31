@@ -2,8 +2,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="${hubConfig.skin}"/>
-    <title>Site | ${site?.name?.encodeAsHTML()} | MERIT</title>
+    <meta name="layout" content="nrm_bs4"/>
+    <title>${site?.name?.encodeAsHTML()} | Site | MERIT</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
     <script disposition="head">
         var fcConfig = {
@@ -28,53 +28,50 @@
             },
             here = window.location.href;
     </script>
-    <asset:stylesheet src="common.css"/>
-    <asset:stylesheet src="project.css"/>
-    <asset:stylesheet src="leaflet-manifest.css"/>
+    <asset:stylesheet src="site-bs4.css"/>
 </head>
 <body>
 <div class="${containerType}">
-    <ul class="breadcrumb">
-        <li>
-            <g:link controller="home">Home</g:link> <span class="divider">/</span>
-        </li>
-        <g:if test="${project}">
-            <li>
-                <a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}">Project </a> <span class="divider">/</span>
-            </li>
-        </g:if>
-        <li class="active">${site.name?.encodeAsHTML()}</li>
-    </ul>
-    <div class="row-fluid space-after">
-        <div class="span6"><!-- left block of header -->
+    <div aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><g:link controller="home">Home</g:link></li>
+            <g:if test="${project}">
+                <li class="breadcrumb-item">
+                    <a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}">Project </a>
+                </li>
+            </g:if>
+            <li class="breadcrumb-item active">${site.name?.encodeAsHTML()}</li>
+        </ol>
+    </div>
+    <div class="row space-after">
+        <div class="col-sm-6"><!-- left block of header -->
             <g:if test="${flash.errorMessage || flash.message}">
                 <div>
-                    <div class="alert alert-error">
+                    <div class="alert alert-danger">
                         <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
                         ${flash.errorMessage?:flash.message}
                     </div>
                 </div>
             </g:if>
 
-            <div class="row-fluid" style="padding-bottom: 10px;">
-                <div class="span12">
+            <div class="row ml-1" style="padding-bottom: 10px;">
+                <div class="col-sm-12">
 
                     Site Actions:
-                    <span class="btn-group">
+                    <div class="btn-group">
                         <g:if test="${site.type != au.org.ala.merit.SiteService.SITE_TYPE_COMPOUND}">
-                        <g:link action="edit" id="${site.siteId}" class="btn"><i class="fa fa-edit"></i> Edit Site</g:link>
+                            <g:link action="edit" id="${site.siteId}"><button type="button" class="btn btn-sm mr-1"><i class="fa fa-edit"></i> Edit Site</button></g:link>
                         </g:if>
 
-                        <a href="${g.createLink(action:'downloadShapefile', id:site.siteId)}" class="btn">
-                            <i class="fa fa-download"></i>
-                            Download ShapeFile
+                        <a href="${g.createLink(action:'downloadShapefile', id:site.siteId)}">
+                            <button type="button" class="btn btn-sm"><i class="fa fa-download"></i> Download ShapeFile</button>
                         </a>
                         <g:if test="${site?.extent?.geometry?.pid}">
-                            <a href="${grailsApplication.config.spatial.baseUrl}/?pid=${site.extent.geometry.pid}" class="btn"><i class="fa fa-external-link"></i> View in Spatial Portal</a>
+                            <a href="${grailsApplication.config.spatial.baseUrl}/?pid=${site.extent.geometry.pid}" class=" ml-1 btn btn-sm"><i class="fa fa-external-link"></i> View in Spatial Portal</a>
                         </g:if>
-                    </span>
+                    </div>
                 </div>
-            </div>
+            </div> <!-- end of row -->
 
             <div>
                 <div class="clearfix">
@@ -82,7 +79,7 @@
 
                 </div>
                 <g:if test="${site.description?.encodeAsHTML()}">
-                    <div class="clearfix well well-small">
+                    <div class="clearfix card customCard">
                         <p>${site.description?.encodeAsHTML()}</p>
                     </div>
                 </g:if>
@@ -134,41 +131,43 @@
             </div>
 
         </div>
-        <div class="span6">
-            <div id="siteNotDefined" class="hide pull-right">
+        <div class="col-sm-6">
+            <div id="siteNotDefined" class="d-none pull-right">
                 <span class="label label-important">This site does not have a georeference associated with it.</span>
             </div>
-            <m:map id="smallMap" style="width:100%;height:500px;"></m:map>
+            <m:map id="smallMap" class="w-100" style="height:500px;"></m:map>
         </div>
     </div>
 
     <g:if test="${site.projects}">
-        <div class="row-fluid">
-            <hr/>
-            <g:if test="${project}">
-                <h3>Project: ${project.name.encodeAsHTML()}</h3>
-            </g:if>
-            <g:else>
-                <g:if test="${site.projects.size() > 1}">
-                    <h3>Filter by project</h3>
-                    <g:select id="selectedProject" class="input-xxlarge" name="projectId" from="${site.projects}" noSelection="${['null':'All projects...']}" optionKey="projectId" optionValue="name" value="${project?.projectId}"></g:select>
+        <div class="row ml-1">
+            <div class="col-sm-11">
+                <g:if test="${project}">
+                    <h3>Project: ${project.name.encodeAsHTML()}</h3>
                 </g:if>
+                <g:else>
+                    <g:if test="${site.projects.size() > 1}">
+                        <h3>Filter by project</h3>
+                        <g:select id="selectedProject" class="input-xxlarge" name="projectId" from="${site.projects}" noSelection="${['null':'All projects...']}" optionKey="projectId" optionValue="name" value="${project?.projectId}"></g:select>
+                    </g:if>
 
-            </g:else>
+                </g:else>
+            </div>
+
         </div>
-        <div class="row-fluid">
-            <ul class="nav nav-tabs big-tabs">
+
+            <ul class="nav nav-tabs" role="tabList" id="sitesActivityTab">
                 <fc:tabList tabs="${tabs}"/>
             </ul>
-        </div>
-        <div class="tab-content">
+
+        <div class="tab-content" id="tabContent">
             <fc:tabContent tabs="${tabs}"/>
         </div>
     </g:if>
 
-    <div class="row-fluid">
-        <div class="span12 metadata">
-            <span class="span6">
+    <div class="row ml-1">
+        <div class="col-sm-12 metadata">
+            <span class="col-sm-6">
                 <p><span class="label">Created:</span> ${site.dateCreated}</p>
                 <p><span class="label">Last updated:</span> ${site.lastUpdated}</p>
             </span>
@@ -227,8 +226,7 @@
 
 
 </asset:script>
-<asset:javascript src="common.js"/>
-<asset:javascript src="projects.js"/>
+<asset:javascript src="site-bs4.js"/>
 <asset:javascript src="leaflet-manifest.js"/>
 <asset:deferredScripts/>
 
