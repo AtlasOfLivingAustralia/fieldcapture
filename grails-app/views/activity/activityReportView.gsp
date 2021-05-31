@@ -40,7 +40,7 @@
 <body>
 <div class="${containerType} validationEngineContainer" id="validation-container">
     <g:if test="${activity.lock && params.attemptedEdit}">
-        <div class="alert alert-error">
+        <div class="alert alert-error report-locked">
             This form has been locked for editing by <fc:userDisplayName userId="${activity.lock.userId}" defaultValue="an unknown user"/> since ${au.org.ala.merit.DateUtils.displayFormatWithTime(activity.lock.dateCreated)}
             <p>
                 To edit anyway, click the button below.  Note that if the user is currently making edits, those edits will be lost.

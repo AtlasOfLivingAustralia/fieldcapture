@@ -196,8 +196,11 @@ class RlpReportingSpec extends StubbedCasSpec {
 
 
         when:
-        projectReports.acceptTerms()
-        projectReports.submitDeclaration()
+        waitFor 20, {
+            projectReports.acceptTerms()
+            projectReports.submitDeclaration()
+        }
+
 
         then:
         waitFor { hasBeenReloaded() }

@@ -4,11 +4,15 @@
     <head>
         <meta name="layout" content="adminLayout"/>
         <title>Users | Admin | Data capture | Atlas of Living Australia</title>
-        <asset:stylesheet src="base.css"/>
+        <asset:stylesheet src="base-bs4.css"/>
     </head>
 
     <body>
-        <content tag="pageTitle">Users - Bulk Load User Permissions</content>
+    <div class="container">
+        <h3>Users - Bulk Load User Permissions</h3>
+    </div>
+
+        <content tag="pageTitle">Tools</content>
         <div class="container">
             <div class="well">Logged in user is <b class="tooltips" title="${user}">${user.displayName}</b></div>
             <div>
@@ -27,18 +31,18 @@
                 </p>
             </div>
             <g:uploadForm class="form-horizontal" action="uploadUserPermissionsCSV" enctype="multipart/form-data">
-                <div class="control-group">
-                    <label class="control-label" for="userPermissions">
+                <div class="form-group row">
+                    <label class="control-label col-sm-2 mr-3" for="userPermissions">
                         Select a CSV file to upload
                     </label>
-                    <div class="controls">
-                        <input type="file" accept="text/csv" name="projectData" />
+                    <div class="col-sm-4">
+                        <input id="userPermissions" class="border" type="file" accept="text/csv" name="projectData" />
                     </div>
                 </div>
 
-                <div class="control-group">
-                    <div class="controls">
-                        <g:submitButton name="uploadCSV" value="Load Permissions" class="btn btn-primary" />
+                <div class="form-group row">
+                    <div class="col-sm-6 text-center">
+                        <g:submitButton name="uploadCSV" value="Load Permissions" class="btn btn-sm text-center btn-primary" />
                     </div>
                 </div>
 
@@ -54,6 +58,6 @@
             </div>
             </g:if>
         </div>
-        <asset:javascript src="base.js"/>
+        <asset:javascript src="base-bs4.js"/>
     </body>
 </html>

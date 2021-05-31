@@ -10,7 +10,7 @@ class ImportProjectsSpec extends StubbedCasSpec {
     }
 
     //Once a project is imported, the status of the project should be Application
-    def "New project can be imported into MERßIT"() {
+    def "New project can be imported into MERIT"() {
 
         setup:
         File csv = new File(getClass().getResource("/resources/single-project-import-data.csv").toURI())
@@ -43,7 +43,7 @@ class ImportProjectsSpec extends StubbedCasSpec {
         to Organisation, 'test_organisation'
 
         then:
-        waitFor {at Organisation}
+        waitFor {projectTab.displayed}
         projectTab.click()
 
         and:
@@ -53,7 +53,7 @@ class ImportProjectsSpec extends StubbedCasSpec {
 
     }
 
-    def "New projects can be imported into MERßIT"() {
+    def "New projects can be imported into MERIT"() {
 
         setup:
         File csv = new File(getClass().getResource("/resources/multiple-project-import-data.csv").toURI())
@@ -86,7 +86,7 @@ class ImportProjectsSpec extends StubbedCasSpec {
         to Organisation, 'test_organisation'
 
         then:
-        waitFor {at Organisation}
+        waitFor {projectTab.displayed}
         projectTab.click()
 
         and:

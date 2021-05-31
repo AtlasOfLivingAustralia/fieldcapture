@@ -225,3 +225,9 @@
 .terminationReasonSection {
 	padding-bottom: 20px;
 }
+.col-sm-10.customCol {
+	margin-left: 2rem;
+}
+.customBorder {
+	border-bottom: 1px solid #eeeeee;
+}

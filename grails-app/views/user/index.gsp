@@ -82,7 +82,7 @@
     </g:else>
 
 </div>
-<asset:javascript src="my-projects.js"/>
+<asset:javascript src="my-projects-manifest.js"/>
 <asset:deferredScripts/>
 <script>
     $(function () {

@@ -3,12 +3,12 @@
 <html>
 <head>
     <meta name="layout" content="adminLayout"/>
-    <title>Tools | Admin | Data capture | Atlas of Living Australia</title>
-    <asset:stylesheet src="base.css"/>
+    <title>Tools | Admin | MERIT</title>
+    <asset:stylesheet src="base-bs4.css"/>
 </head>
 
 <body>
-<asset:javascript src="base.js"/>
+<asset:javascript src="base-bs4.js"/>
 <script type="text/javascript">
 
     $(document).ready(function() {
@@ -167,7 +167,7 @@
     <tbody>
     <tr>
         <td>
-            <button id="btnReloadConfig" class="btn btn-small btn-info">Reload&nbsp;External&nbsp;Config</button>
+            <button id="btnReloadConfig" class="btn btn-sm btn-info">Reload&nbsp;External&nbsp;Config</button>
         </td>
         <td>
             Reads any defined config files and merges new config with old. Usually used after a change is
@@ -177,7 +177,7 @@
     </tr>
     <tr>
         <td>
-            <button id="btnClearMetadataCache" class="btn btn-small btn-info">Clear&nbsp;Metadata&nbsp;Cache</button>
+            <button id="btnClearMetadataCache" class="btn btn-sm btn-info">Clear&nbsp;Metadata&nbsp;Cache</button>
             <label class="checkbox" style="padding-top:5px;"><input type="checkbox" id="clearEcodataCache" checked="checked">Also clear ecodata cache</label>
         </td>
         <td>
@@ -188,38 +188,57 @@
 
     <tr>
         <td>
-            <a style="color:white" class="btn btn-small btn-info" href="${createLink(controller:'admin', action:'bulkLoadUserPermissions')}">Bulk Load Permissions</a>
+            <a style="color:white" class="btn btn-sm btn-info" href="${createLink(controller:'admin', action:'bulkLoadUserPermissions')}">Bulk Load Permissions</a>
         </td>
         <td>
             Loads user project roles from a csv file
         </td>
     </tr>
     <tr>
-        <td><button id="btnReindexAll" class="btn btn-small btn-info" title="Re-index all data">Re-index all</button>
+        <td><button id="btnReindexAll" class="btn btn-sm btn-info" title="Re-index all data">Re-index all</button>
         </td>
         <td>
             Re-indexes all data in the search index.
         </td>
     </tr>
     <tr>
-        <td><button id="generateReports" class="btn btn-small btn-info" title="Generate project activities">Generate project activities</button>
+        <td><button id="generateReports" class="btn btn-sm btn-info" title="Generate project activities">Generate project activities</button>
         </td>
         <td>
             Create project reporting activities for a project based on one activity per period.
             <g:form id="projectActivitiesForm" url="[action:'generateProjectReports']">
-                Project ID <input type="text" name="projectId"><br/>
-                Activity Type <input type="text" name="activityType"><br/>
-                Period (months) <input type="text" name="period">
+                <div class="row mb-2">
+                    <label for="projectId" class="col-sm-2">Project ID</label>
+                    <div class="col-sm-3">
+                        <input id="projectId" class="form-control form-control-sm input-small" type="text" name="projectId">
+                    </div>
+
+                </div>
+
+                <div class="row mb-2">
+                    <label for="activityType" class="col-sm-2">Activity Type</label>
+                    <div class="col-sm-3">
+                        <input id="activityType" class="form-control form-control-sm input-small" type="text" name="activityType">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label for="period" class="col-sm-2">Period (months)</label>
+                    <div class="col-sm-3">
+                        <input id="period" class="form-control form-control-sm input-small" type="text" name="period">
+                    </div>
+                </div>
+
             </g:form>
         </td>
     </tr>
     <tr>
-        <td><button disabled id="btnBulkUploadSites" class="btn btn-small btn-info" title="Bulk load sites">Bulk load sites</button>
+        <td><button disabled id="btnBulkUploadSites" class="btn btn-sm btn-info" title="Bulk load sites">Bulk load sites</button>
         </td>
         <td>
 
         <p><g:uploadForm class="bulkUploadSites" action="bulkUploadSites">
-            <div><input id="bulkUploadSites" type="file" name="shapefile"/></div>
+            <div><input id="bulkUploadSites"  type="file" name="shapefile"/></div>
             Bulk loads sites from a shapefile.
         </g:uploadForm>
 
@@ -227,12 +246,12 @@
         </td>
     </tr>
     <tr>
-        <td><button disabled id="btnBulkUploadESPSites" class="btn btn-small btn-info" title="Bulk load ESP sites">Bulk load ESP sites</button>
+        <td><button disabled id="btnBulkUploadESPSites" class="btn btn-sm btn-info" title="Bulk load ESP sites">Bulk load ESP sites</button>
         </td>
         <td>
 
         <p><g:uploadForm class="bulkUploadESPSites" action="bulkUploadESPSites">
-            <div><input id="bulkUploadESPSites" type="file" name="shapefile"/></div>
+            <div><input id="bulkUploadESPSites"  type="file" name="shapefile"/></div>
             Bulk loads sites from a shapefile.
         </g:uploadForm>
 
@@ -240,16 +259,14 @@
         </td>
     </tr>
     <tr>
-        <td><button disabled id="btnCreateOrgs" class="btn btn-small btn-info" title="Bulk create organisations">Bulk create organisations</button>
+        <td><button disabled id="btnCreateOrgs" class="btn btn-sm btn-info" title="Bulk create organisations">Bulk create organisations</button>
         </td>
         <td>
             Bulk creates organisations and updates projects.
-        <p><g:uploadForm class="createOrgs" action="createMissingOrganisations">
+        <g:uploadForm class="createOrgs" action="createMissingOrganisations">
             <div><input id="createOrgs" type="file" name="orgData"/></div>
-
         </g:uploadForm>
 
-        </p>
         </td>
     </tr>
 

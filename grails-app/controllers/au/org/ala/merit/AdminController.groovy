@@ -45,27 +45,6 @@ class AdminController {
     @PreAuthorise(accessLevel = 'alaAdmin', redirectController = "admin")
     def tools() {}
 
-    /**
-     * Admin page for checking or modifying user/project roles, requires CAS admin role
-     * for access (see Config.groovy "security.cas.officerRole" for actual role)
-     *
-     * @return
-     */
-    def users() {
-        def user = authService.userDetails()
-        def projects = projectService.list(true)
-        def roles = metadataService.getAccessLevels().collect {
-            it.name
-        }
-
-        if (user && projects) {
-            [ projects: projects, user: user, roles: roles]
-        } else {
-            flash.message = "Error: ${!user?'Logged-in user could not be determined ':' '}${!userList?'List of all users not found ':' '}${!projects?'List of all projects not found ':''}"
-            redirect(action: "index")
-        }
-    }
-
     @PreAuthorise(accessLevel = 'alaAdmin', redirectController = "admin")
     def bulkLoadUserPermissions() {
         def user = authService.userDetails()

@@ -36,7 +36,7 @@
     <g:layoutHead/>
     <g:set var="containerType" scope="request" value="${containerType ?: 'container'}"/>
     <script type="text/javascript">
-        if (fcConfig) {
+        if (window.hasOwnProperty("fcConfig")) {
             fcConfig.healthCheckUrl = "${createLink(controller: 'ajax', action:'keepSessionAlive')}";
         }
     </script>

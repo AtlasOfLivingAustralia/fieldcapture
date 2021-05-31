@@ -313,6 +313,14 @@
         var userIsEditor = ${user?.isEditor?'true':'false'};
         var scores = ${raw((scores as grails.converters.JSON).toString())};
 
+        var options = {
+            rejectionCategories: ['Minor', 'Moderate', 'Major'],
+            saveTargetsUrl:fcConfig.projectUpdateUrl,
+            updateProjectDatesUrl:fcConfig.updateProjectDatesUrl,
+            originPageType: 'project'
+        };
+
+
         var planViewModel = new ProjectActivitiesTabViewModel(
             fcConfig.project.activities || [],
             reports,
@@ -321,7 +329,7 @@
             fcConfig.project,
             programModel,
             today,
-            {rejectionCategories: ['Minor', 'Moderate', 'Major'], saveTargetsUrl:fcConfig.projectUpdateUrl, updateProjectDatesUrl:fcConfig.updateProjectDatesUrl },
+            options,
             userIsEditor
         );
         ko.applyBindings(planViewModel, document.getElementById('planContainer'));

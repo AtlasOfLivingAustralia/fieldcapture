@@ -38,6 +38,7 @@ var today = '${today}';
             var activities = <fc:modelAsJavascript model="${activities}"/>;
             var scores = ${raw((scores as grails.converters.JSON).toString())};
             var siteId = '${site.siteId}';
+            var originPageType = 'site';
 
             var config = {
                 rejectionCategories: ['Minor', 'Moderate', 'Major'],
@@ -45,7 +46,8 @@ var today = '${today}';
                 showEmptyStages:false,
                 defaultSiteId: siteId,
                 activityDisplayFilter : function(activity) { return activity.siteId === siteId },
-                saveTargetsUrl: "${createLink(controller:'project', action: 'ajaxUpdate', id: project.projectId)}"
+                saveTargetsUrl: "${createLink(controller:'project', action: 'ajaxUpdate', id: project.projectId)}",
+                originPageType: originPageType
             };
             var planViewModel = new PlanViewModel(
                 activities || [],

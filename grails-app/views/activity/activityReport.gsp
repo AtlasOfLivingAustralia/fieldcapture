@@ -112,8 +112,6 @@
             reportSite = ${reportSite?.encodeAsJSON() ?: '{}' };
         }
 
-
-        console.log(reportSite.features);
         var projectArea = ${projectArea?.encodeAsJSON() ?: '{}'};
 
         var reportId = '${report.reportId}';
@@ -132,7 +130,7 @@
         var locked = ${locked};
         if (locked) {
             var unlockActivity = function () {
-                $.ajax(fcConfig.unlockActivityUrl + '/' + activity.activityId, {method: 'POST', async: false});
+                amplify.store("leaving", "leaving");
             };
             window.onunload = unlockActivity;
         }

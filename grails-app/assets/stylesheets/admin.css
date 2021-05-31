@@ -1,0 +1,58 @@
+.breadcrumb {
+    background-color: #ffffff !important;
+}
+
+#admin .nav-link {
+    border: 1px solid #EEEEEE;
+    border-radius: unset;
+}
+#admin .nav-link:hover {
+    background-color: #EEEEEE;
+}
+#admin nav-link:first-child {
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+}
+#admin nav-link:last-child {
+    border-bottom: 1px solid #EEEEEE;
+    border-bottom-right-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+}
+
+#admin .nav-link:after {
+    font-family: 'FontAwesome';
+    content: "\f054";
+    float: right;
+    color: #dad7d7;
+}
+#admin li.active{
+    color:#000;
+    background-color: #eee;
+    border-radius: unset;
+}
+#admin .nav-link{
+    border: 1px solid #eee;
+    border-radius: unset;
+}
+.input-medium {
+    width: 300px;
+}
+
+.report {
+    margin-left: 0px !important
+}
+
+.input-small {
+    width: 200px;
+}
+#bulkUploadSites, #bulkUploadESPSites, #createOrgs {
+    border: 1px solid #dee2e6 !important;
+    border-radius: 0.25rem;
+}
+
+#tabs li>a {
+    border: solid 1px #dddddd;
+}
+#tabs li>a.active {
+    border-bottom-color: transparent;
+}
