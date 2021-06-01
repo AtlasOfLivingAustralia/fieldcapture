@@ -14,6 +14,7 @@
 //= require momentjs/moment-timezone-with-data.min.js
 //= require vkbeautify/vkbeautify.0.99.00.beta.js
 //= require bootstrap-combobox/bootstrap-combobox
+//= require lockService
 //= require fieldcapture-application
 //= require healthCheck
 //= require knockout-utils

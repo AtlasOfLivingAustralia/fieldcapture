@@ -105,8 +105,8 @@
         var recoveryDataStorageKey = "activity-${activity.activityId}";
 
         if(amplify.store(recoveryDataStorageKey)){
-            let localStorage = amplify.store(recoveryDataStorageKey);
-            let restoredSite = $.parseJSON(localStorage);
+            var localStorage = amplify.store(recoveryDataStorageKey);
+            var restoredSite = $.parseJSON(localStorage);
             reportSite = restoredSite.site
         }else{
             reportSite = ${reportSite?.encodeAsJSON() ?: '{}' };
@@ -124,17 +124,7 @@
             site: activity.site
         };
 
-
-        // Release the lock when leaving the page.  async:false is deprecated but is still the easiest solution to achieve
-        // an unconditional lock release when leaving a page.
         var locked = ${locked};
-        if (locked) {
-            var unlockActivity = function () {
-                amplify.store("leaving", "leaving");
-            };
-            window.onunload = unlockActivity;
-        }
-
         var metaModel = ${metaModel};
 
         var master = null;
@@ -184,10 +174,10 @@
                 console.log("Unable to initialise map, could be because no map elements are on display: " + e);
             }
 
-            var master = new ReportMaster(reportId, activity.activityId, reportSite, formFeatures, {activityUpdateUrl: fcConfig.activityUpdateUrl});
+            var master = new ReportMaster(reportId, activity.activityId, reportSite, formFeatures, {locked: locked, activityUpdateUrl: fcConfig.activityUpdateUrl});
         }
         else {
-            master = new ReportMaster(reportId, activity.activityId, undefined, undefined, {activityUpdateUrl: fcConfig.activityUpdateUrl});
+            master = new ReportMaster(reportId, activity.activityId, undefined, undefined, {locked: locked, activityUpdateUrl: fcConfig.activityUpdateUrl});
         }
 
 
@@ -249,14 +239,14 @@
         var config = ${fc.modelAsJavascript(model:metaModel.outputConfig?.find{it.outputName == outputName}, default:'{}')};
 
         if(amplify.store(recoveryDataStorageKey)){
-            let localSavedActivity = amplify.store(recoveryDataStorageKey);
-            let restored = $.parseJSON(localSavedActivity);
+            var localSavedActivity = amplify.store(recoveryDataStorageKey);
+            var restored = $.parseJSON(localSavedActivity);
             restored.activity.outputs.forEach(function (storedOutput) {
                     if(storedOutput.name === output.name){
                         output = storedOutput;
                     }
                 })
-            }
+        }
 
         config.model = ${fc.modelAsJavascript(model:model)};
         config.featureCollection = context.featureCollection;

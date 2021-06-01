@@ -19,7 +19,8 @@ var Master = function (activityId, config) {
         timeoutMessageSelector:'#timeoutMessage',
         activityUpdateUrl:fcConfig.activityUpdateUrl,
         minOptionalSectionsCompleted: 1,
-        activityStorageKey: 'activity-'+activityId
+        activityStorageKey: 'activity-'+activityId,
+        locked: false
     };
 
     var options = _.extend({}, defaults, config);
@@ -287,7 +288,15 @@ var Master = function (activityId, config) {
         }
     };
 
-    autoSaveModel(self, null, {preventNavigationIfDirty:true, healthCheckUrl:options.healthCheckUrl});
+    var autoSaveConfig = {
+        preventNavigationIfDirty:true,
+        healthCheckUrl:options.healthCheckUrl,
+        storageKey:activityStorageKey
+    };
+    if (config.locked) {
+        autoSaveConfig.lockedEntity = activityId;
+    }
+    autoSaveModel(self, null, autoSaveConfig);
 
     if (amplify.store(activityStorageKey)) {
         bootbox.alert("Unsaved data has been found for this form.  Please press 'Save' to keep this data or 'Cancel' to discard it");
