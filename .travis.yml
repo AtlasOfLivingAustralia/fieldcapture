@@ -8,7 +8,6 @@ branches:
   only:
   - master
   - dev
-  - /^feature\/.*$/
   - /^hotfix\/.*$/
 
 before_install:
