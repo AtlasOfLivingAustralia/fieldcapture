@@ -249,7 +249,7 @@ dependencies {
     compile 'com.bertramlabs.plugins:less-asset-pipeline:3.3.1'
 
     if (!inplace) {
-        compile "org.grails.plugins:ecodata-client-plugin:4.0"
+        compile "org.grails.plugins:ecodata-client-plugin:4.0-SNAPSHOT"
     }
     else{
         compile project(":ecodata-client-plugin")
