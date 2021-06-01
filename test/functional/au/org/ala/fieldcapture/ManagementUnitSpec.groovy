@@ -178,7 +178,7 @@ class ManagementUnitSpec extends StubbedCasSpec {
         create.save()
 
         then:
-        waitFor 30, {
+        waitFor 10, {
             at ManagementUnitPage
         }
         overviewBtn.click()
@@ -194,18 +194,16 @@ class ManagementUnitSpec extends StubbedCasSpec {
         to ManagementUnitPage, "test_mu"
 
         then:
-        waitFor {
-            at ManagementUnitPage
-        }
+        at ManagementUnitPage
 
         when:
         sitesTab.click()
 
         then:
-        Thread.sleep(8000)
         waitFor 10, {
-            $("#map-info").text() == "0 projects with 0 sites No georeferenced points for the selected projects"
+            mapInfo.displayed
         }
+        mapInfo.text() == "0 projects with 0 sites No georeferenced points for the selected projects"
     }
 
     def "Management Unit Admin Page"() {
@@ -216,15 +214,12 @@ class ManagementUnitSpec extends StubbedCasSpec {
         to ManagementUnitPage, "test_mu"
 
         then:
-        waitFor {
-            at ManagementUnitPage
-        }
+        at ManagementUnitPage
 
         when:
         adminTab.click()
 
         then:
-        Thread.sleep(8000)
         waitFor 10, {
             adminTabPane.displayed
         }
