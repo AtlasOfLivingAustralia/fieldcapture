@@ -1,41 +1,33 @@
 <!-- This section is bound to a secondary KO viewModel. The following line prevents binding
          to the main viewModel. -->
 <!-- ko stopBinding: true -->
-<div class="row-fluid" id="species-container">
-    <div class="row-fluid">
-        <div class="clearfix">
+<div id="species-container">
+    <div class="row">
+        <div class="col-sm-10">
             <h3 class="pull-left">Species of Interest</h3>
-            %{--<g:link style="margin-bottom:10px;" action="species" id="${project.projectId}" class="btn pull-right title-edit">Edit Species Lists</a></g:link>--}%
         </div>
-        <p class="well well-small">Species lists can be selected to be used by this project when species information is required to be supplied as a part of activity reporting.
-            Lists are created and managed using the <a href="http://lists.ala.org.au">ALA Species List tool</a>.
+        <div class="col-sm-10">
+            <p class="well well-small">Species lists can be selected to be used by this project when species information is required to be supplied as a part of activity reporting.
+            Lists are created and managed using the <a href="http://lists.ala.org.au">ALA Species List tool</a>.</p>
             <g:if test="${project.listId}">
-                <br><br>
                 <g:set var="listUrl">${grailsApplication.config.lists.baseURL}/speciesListItem/list/${project.listId}</g:set>
                 ALA Species List URL: <a href="${listUrl}" target="speciesList">${listUrl}</a>
             </g:if>
-        </p>
+        </div>
     </div>
-    <div class="row-fluid">
-        <form class="form-horizontal" id="speciesListForm">
-            <div class="control-group">
+    <div class="row">
+        <div class="col-sm-10">
+            <form class="form-group" id="speciesListForm">
                 <label class="control-label" for="speciesList">List of species<br>(one per line)</label>
-                <div class="controls">
-                    <textarea id="speciesList" rows="10" class="input-block-level validate[required]"></textarea>
-                </div>
-            </div>
-
-            <div class="control-group">
-                <div class="controls">
-                    <button id="submitSpeciesList" class="btn btn-primary">${project.listId ? "Update" : "Submit"}</button>
-                    <asset:image src="spinner.gif" id="spinner1" class="hide spinner" alt="spinner icon"/>
-                </div>
-            </div>
-        </form>
-    </div><!-- /.row-fluid -->
+                <textarea id="speciesList" rows="10" class="input-block-level validate[required] form-control"></textarea>
+            </form>
+            <button id="submitSpeciesList" class="btn btn-primary">${project.listId ? "Update" : "Submit"}</button>
+            <asset:image src="spinner.gif" id="spinner1" class="hide spinner" alt="spinner icon"/>
+        </div>
+    </div>
 </div>
 <asset:script>
-    $(window).load(function(){
+    $(window).on("load", function(){
         // click event for submit species List
         $("#submitSpeciesList").click(function(e) {
             e.preventDefault();

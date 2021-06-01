@@ -1,14 +1,14 @@
 <form class="form-horizontal" id="userAccessForm">
-    <div class="control-group form-group row row-fluid">
-        <label class="control-label col-form-label span2 col-sm-2" for="emailAddress">User's email address</label>
-        <div class="controls span2 col-sm-2">
-            <input class="input-xlarge form-control form-control-sm validate[required,custom[email]]" id="emailAddress" placeholder="enter a user's email address" type="text"/>
+    <div class="control-group form-group row">
+        <label class="control-label col-form-label col-sm-2" for="emailAddress">User's email address</label>
+        <div class="controls col-sm-2">
+            <input class="form-control form-control-sm input-medium validate[required,custom[email]]" id="emailAddress" placeholder="enter a user's email address" type="text"/>
         </div>
     </div>
     <div class="control-group form-group row">
-        <label class="control-label col-form-label span2 col-sm-2" for="addUserRole">Permission level</label>
-        <div class="controls span2 col-sm-2" id="rolesSelect">
-            <g:render id="addUserRole" template="/admin/userRolesSelect" model="[roles:roles, includeEmptyOption: true, selectClass:'form-control']"/>
+        <label class="control-label col-form-label col-sm-2" for="addUserRole">Permission level</label>
+        <div class="controls col-sm-2" id="rolesSelect">
+            <g:render id="addUserRole" template="/admin/userRolesSelect" model="[roles:roles, includeEmptyOption: true, selectClass:'input-medium']"/>
         </div>
     </div>
     <g:if test="${entityId}">
@@ -23,8 +23,8 @@
         </div>
     </g:elseif>
     <g:else><div class="alert alert-danger">Missing model - either <code>projectId</code> or <code>projects</code> must be provided</div></g:else>
-    <div class="row row-fluid">
-        <div class="span5 col-sm-5">
+    <div class="row">
+        <div class="col-sm-5">
             <div class="form-group text-center" >
                 <div class="group">
                     <button id="addUserRoleBtn" class="btn btn-sm btn-primary text-center">Submit</button>

@@ -1,6 +1,8 @@
-//= require jquery.dataTables/jquery.dataTables.js
-//= require jquery.dataTables/jquery.dataTables.bootstrap.js
-//= require jquery.dataTables/dataTables.tableTools.js
+//= require tab-init.js
+//= require datatables/1.10.16/js/jquery.dataTables
+//= require datatables/1.10.16/js/dataTables.bootstrap4
+//= require datatables/1.10.16/js/dataTables.moment
+//= require datatables/buttons/1.5.1/dataTables.buttons
 //= require wms
 //= require mapWithFeatures.js
 //= require fancybox/jquery.fancybox
@@ -764,7 +766,7 @@ function toggleStarred(isProjectStarredByUser, userId, projectId) {
             if (data.error) {
                 alert(data.error);
             } else {
-                $("#starBtn i").removeClass("icon-star").addClass("icon-star-empty");
+                $("#starBtn i").removeClass("fa-star").addClass("fa-star-o");
                 $("#starBtn span").text("Add to favourites");
             }
         }).fail(function(j,t,e){ alert(t + ":" + e);}).done();
@@ -774,7 +776,7 @@ function toggleStarred(isProjectStarredByUser, userId, projectId) {
             if (data.error) {
                 alert(data.error);
             } else {
-                $("#starBtn i").removeClass("icon-star-empty").addClass("icon-star");
+                $("#starBtn i").removeClass("fa-star-o").addClass("fa-star");
                 $("#starBtn span").text("Remove from favourites");
             }
         }).fail(function(j,t,e){ alert(t + ":" + e);}).done();
@@ -985,7 +987,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
                 ],
                 "order":[4, "desc"],
                 "language": {
-                    "search":'<div class="input-prepend"><span class="add-on"><i class="fa fa-search"></i></span>_INPUT_</div>',
+                    "search":'<div class="input-group-prepend"><span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>_INPUT_</div>',
                     "searchPlaceholder":"Search sites..."
 
                 },
@@ -1214,6 +1216,105 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
 
     self.initialiseReports = function() {
     };
+
+
+    function initialiseOverview() {
+        $( '#public-images-slider' ).mThumbnailScroller({});
+        $('#public-images-slider .fancybox').fancybox();
+    }
+
+    var tabs = {
+        'overview': {
+            default:true,
+            initialiser: function () {
+                initialiseOverview();
+            }
+        },
+        'plan': {
+            initialiser: function() {
+                $.event.trigger({type:'planTabShown'});
+            }
+        },
+        'dashboard': {
+            initialiser: function() {
+                $.event.trigger({type:'dashboardShown'});
+            }
+        },
+        'documents': {
+            initialiser: function() {
+                initialiseDocumentTable('#overviewDocumentList');
+            }
+        },
+        'site': {
+            initialiser: function () {
+                L.Browser.touch = false;
+                var mapFeatures = project.mapFeatures;
+                var sitesTabOptions = {
+                    featureServiceUrl: config.featureServiceUrl,
+                    wmsServerUrl: config.wmsServerUrl,     // geoServerUrl
+                    spinnerUrl: config.spinnerUrl,
+                    mapFeatures: mapFeatures,
+                    sitesPhotoPointsUrl:config.sitesPhotoPointsUrl,
+                    userIdEditor: userRoles.editor,
+                    bindingElementId:'sitesList',
+                    sitesTableSelector:'#sites-table',
+                    selectAllSelector:'#select-all-sites',
+                    photoPointSelector:'#site-photo-points',
+                    loadingSpinnerSelector:'#img-spinner',
+                    photoScrollerSelector:'.photo-slider',
+                    useAlaMap:config.useAlaMap,
+                    showSiteType:config.showSiteType
+                };
+                if (config.useAlaMap) {
+                    sitesTabOptions.mapFeatures = {};
+                    sitesTabOptions.useGoogleBaseMap = config.googleBaseMapUrl;
+                    var sitesList = $('#'+sitesTabOptions.bindingElementId);
+                    sitesList.children().hide();
+                    sitesList.append('<image class="sites-spinner" width="50" height="50" src="'+sitesTabOptions.spinnerUrl+'" alt="Loading"/>');
+                    $.get(config.projectSitesUrl).done(function(data) {
+                        sitesList.children().show();
+                        var sitesViewModel = self.initialiseSitesTab(sitesTabOptions);
+
+                        if (data && data.features) {
+                            sitesViewModel.setFeatures(data.features);
+                        }
+                        sitesList.find('.sites-spinner').remove();
+
+                    });
+                }
+                else {
+                    self.initialiseSitesTab(sitesTabOptions);
+                }
+            }
+        },
+        'details': {
+            initialiser: function () {
+                self.initialiseMeriPlan();
+            }
+        },
+        'reporting': {
+            initialiser: function () {
+                self.initialiseReports();
+            }
+        },
+        'datasets': {
+            initialiser: function() {
+                self.initialiseDataSets();
+            }
+        },
+        'admin': {
+            initialiser: function () {
+                self.initialiseAdminTab();
+            }
+        }
+    };
+
+    initialiseTabs(tabs, {tabSelector:'#projectTabs.nav a', tabStorageKey:'project-tab-state', initialisingHtmlSelector:'#spinner'});
+
+    $('#gotoEditBlog').click(function () {
+        amplify.store('project-admin-tab-state', '#editProjectBlog');
+        $('#admin-tab').tab('show');
+    });
 
 } // end of view model
 

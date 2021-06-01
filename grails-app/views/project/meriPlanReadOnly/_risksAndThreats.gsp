@@ -1,4 +1,4 @@
-<div class="row-fluid space-after">
+<div class="row space-after">
     <div class="required">
         <div id="project-risks-threats" class="well well-small">
             <h4>Project risks & threats</h4>

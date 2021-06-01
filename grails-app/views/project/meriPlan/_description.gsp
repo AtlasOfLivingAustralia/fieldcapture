@@ -1,6 +1,6 @@
 <g:if test="${tableFormatting}">
-    <div class="row-fluid">
-        <div class="span12">
+    <div class="row">
+        <div class="col-sm-12">
             <table class="table">
                 <tbody>
                 <tr class="header required">
@@ -21,9 +21,9 @@
     <g:if test="${explanation}">
         ${explanation}
     </g:if>
-    <div class="project-description row-fluid">
+    <div class="project-description row">
 
-        <textarea class="span12" rows="5" data-validation-engine="validate[required,maxSize[${maxSize ?: 1500}]]"
+        <textarea class="col-sm-12" rows="5" data-validation-engine="validate[required,maxSize[${maxSize ?: 1500}]]"
                   data-bind="value:details.description, disable: isProjectDetailsLocked()"
                   placeholder="${placeholder ?: ""}"></textarea>
 

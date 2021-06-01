@@ -1,6 +1,6 @@
 <!-- ko stopBinding:true -->
-<div class="row row-fluid">
-    <div class="col-sm-6 span6">
+<div class="row">
+    <div class="col-sm-6">
         <table class="table table-condensed" id="existingMembersTable" style="">
             <thead><tr><th width="10%">User&nbsp;Id</th><th>User&nbsp;Name</th><th width="15%">Role</th><th width="5%">&nbsp;</th><th width="5%">&nbsp;</th></tr></thead>
             <tbody class="membersTbody">
@@ -16,7 +16,7 @@
             </tbody>
         </table>
     </div>
-    <div class="com-sm-5 span5">
+    <div class="com-sm-5">
         <div id="formStatus" class="hide d-none alert alert-success">
             <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
             <span></span>

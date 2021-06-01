@@ -1,6 +1,6 @@
 <!-- ko stopBinding: true -->
-<div id="attachDocument" class="modal fade" style="display:none;">
-    <div class="modal-dialog">
+<div id="attachDocument" class="modal fade hide" tabindex="-1" role="dialog" style="display:none;">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="title">Attach Document</h4>
@@ -139,21 +139,25 @@
                         </div>
 
                         <div class="control-group form-group row" data-bind="visible:progress() > 0">
-                            <label class="control-label col-form-label col-4">Progress</label>
+                            <label class="control-label col-form-label col-sm-4">Progress</label>
 
-                            <div class="col-8">
-                            <div id="progress" class="controls progress progress-info active input-large"
-                                 data-bind="visible:!error() && progress() <= 100, css:{'progress-info':progress()<100, 'progress-success':complete()}">
-                                <div class="bar progress-bar" data-bind="style:{width:progress()+'%'}, css:{'bg-info':progress()<100, 'bg-success':complete(), 'bg-error':error()}"></div>
+                            <div class="col-sm-8">
+                                <div id="progress" class="controls progress progress-info active input-small"
+                                     data-bind="visible:!error() && progress() <= 100, css:{'progress-info':progress()<100, 'progress-success':complete()}">
+                                    <div class="bar progress-bar" data-bind="style:{width:progress()+'%'}, css:{'bg-info':progress()<100, 'bg-success':complete(), 'bg-error':error()}"></div>
+                                </div>
                             </div>
-
-                            <div id="successmessage" class="controls" data-bind="visible:complete()">
-                                <span class="alert alert-success">File successfully uploaded</span>
+                            <div class="col-sm-4" data-bind="visible:complete()"></div>
+                            <div class="col-sm-8">
+                                <div id="successmessage" class="controls" data-bind="visible:complete()">
+                                    <span class="alert alert-success">File successfully uploaded</span>
+                                </div>
                             </div>
-
-                            <div id="message" class="controls" data-bind="visible:error()">
-                                <span class="alert alert-error" data-bind="text:error"></span>
-                            </div>
+                            <div class="col-sm-4" data-bind="visible:error()"></div>
+                            <div class="col-sm-8">
+                                <div id="message" class="controls" data-bind="visible:error()">
+                                    <span class="alert alert-danger" data-bind="text:error"></span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -162,10 +166,10 @@
             </div>
             <div class="modal-footer control-group">
                 <div class="controls">
-                    <button type="button" class="btn btn-success" name="uploadingDocument"
+                    <button type="button" class="btn btn-sm btn-success" name="uploadingDocument"
                             data-bind="enable:saveEnabled, click:save, visible:!complete(), attr:{'title':saveHelp}">Save</button>
-                    <button class="btn" data-bind="click:cancel, visible:!complete()">Cancel</button>
-                    <button class="btn" data-bind="click:close, visible:complete()">Close</button>
+                    <button class="btn btn-sm btn-danger" data-bind="click:cancel, visible:!complete()">Cancel</button>
+                    <button class="btn btn-sm btn-danger" data-bind="click:close, visible:complete()">Close</button>
 
                 </div>
             </div>

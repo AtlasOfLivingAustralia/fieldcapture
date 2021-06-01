@@ -357,3 +357,12 @@ a.meri-history-toggle {
     background-color: #dc3545;
 }
 
+input, textarea, select{
+    border: 1px solid #e3e3e3;
+    border-radius: .25rem;
+    padding: 0.25rem;
+}
+
+.unstyled {
+    list-style-type: none;
+}

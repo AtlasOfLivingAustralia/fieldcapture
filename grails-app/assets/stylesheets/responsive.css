@@ -46,6 +46,14 @@
         margin-left: -11px !important;
     }
 
+    .btn-group.pull-left.float-left.document-edit-buttons {
+        margin-left: -17px;
+    }
+    .btn-group.pull-left.float-left.embeddedVideo {
+        margin-left: -17px;
+    }
+
+
 }
 
 @media only screen and (max-width: 1440px) {
@@ -110,6 +118,13 @@
     }
     .organisation-banner label {
         text-align: right;
+    }
+
+    .btn-group.pull-left.float-left.document-edit-buttons {
+        margin-right: 10px;
+    }
+    .btn-group.pull-left.float-left.embeddedVideo {
+        margin-right: 10px;
     }
 }
 @media only screen and (max-width: 425px) {

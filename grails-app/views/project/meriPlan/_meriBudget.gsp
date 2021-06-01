@@ -68,7 +68,7 @@
         <g:set var="colspan" value="${(showActivityColumn || showThemeColumn) ? 8 : 7 }"/>
         <tr>
             <td data-bind="attr:{colspan:details.budget.columnTotal.length+${colspan}}">
-                <button type="button" class="btn btn-small" data-bind="disable: isProjectDetailsLocked(), click: addBudget">
+                <button type="button" class="btn btn-sm" data-bind="disable: isProjectDetailsLocked(), click: addBudget">
                     <i class="fa fa-plus"></i> Add a row</button>
             </td>
         </tr>

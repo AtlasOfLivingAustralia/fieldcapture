@@ -65,7 +65,7 @@
 <tfoot>
 <tr>
     <td colspan="${useCategorySelection || autoSelectCategory ? 4: 3}">
-        <button type="button" class="btn btn-small"
+        <button type="button" class="btn btn-sm"
                 data-bind="disable: isProjectDetailsLocked(), click: addAsset">
             <i class="fa fa-plus"></i> Add a row</button></td>
 </tr>

@@ -1,5 +1,5 @@
-<div id="adaptive-management" class="row-fluid">
-    <div class="span12">
+<div id="adaptive-management" class="row">
+    <div class="col-sm-12">
         <g:if test="${title}">
             <h4>${title}</h4>
             <g:if test="${explanation}">

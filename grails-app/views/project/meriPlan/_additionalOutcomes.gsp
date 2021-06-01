@@ -37,7 +37,7 @@
     <tfoot>
     <tr>
         <td colspan="3">
-            <button type="button" class="btn btn-small"
+            <button type="button" class="btn btn-sm"
                     data-bind="disable: details.outcomes.secondaryOutcomes().length >= ${maxAdditonalOutcomes ?: 5} || isProjectDetailsLocked(), click: addSecondaryOutcome">
                 <i class="fa fa-plus"></i> Add a row</button></td>
     </tr>

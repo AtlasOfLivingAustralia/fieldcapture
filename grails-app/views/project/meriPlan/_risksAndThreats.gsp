@@ -64,7 +64,7 @@
         <tfoot>
         <tr>
             <td colspan="8" style="text-align:right;">
-                <button type="button" class="btn btn-small" data-bind="click: addRisks, disable:risksDisabled">
+                <button type="button" class="btn btn-sm" data-bind="click: addRisks, disable:risksDisabled">
                     <i class="fa fa-plus"></i> Add a row</button></td>
         </tr>
         </tfoot>

@@ -2,7 +2,7 @@
 <h3>MERI Plan</h3>
 <div id="edit-meri-plan">
 <script id="submittedPlanTmpl" type="text/html">
-<div class="span6 required">
+<div class="col-sm-6 required">
 	<div class="form-actions" >
 		<b>Grant manager actions:</b>
 		<div data-bind="if:!canApprove()">
@@ -22,10 +22,10 @@
 </div>
 </script>
 <script id="approvedPlanTmpl" type="text/html">
-<div class="span6 required">
+<div class="col-sm-6 required">
 	<div class="form-actions">
 		<b>Grant manager actions:</b>
-		<button type="button" data-bind="click: modifyPlan"  id="modify-plan" class="btn btn-info">Modify MERI Plan</button>
+		<button type="button" data-bind="click: modifyPlan"  id="modify-plan" class="btn btn-sm btn-info">Modify MERI Plan</button>
 		<br/><br/>
 		<ul>
 			<li>"Modify MERI Plan" will allow project admin's to edit MERI plan information. </li>
@@ -38,7 +38,7 @@
 
 </script>
 <script id="completedProjectTmpl" type="text/html">
-<div class="span6 required">
+<div class="col-sm-6 required">
 	%{--<div class="form-actions" >--}%
 		%{--<b>Grant manager actions:</b>--}%
 		%{--<span class="btn-group">--}%
@@ -48,11 +48,11 @@
 </div>
 </script>
 <script id="unlockedProjectTmpl" type="text/html">
-<div class="span6 required">
+<div class="col-sm-6 required">
 	<div class="form-actions" >
 		<b>Grant manager actions:</b>
 		<span class="btn-group">
-			<button type="button" data-bind="click:finishCorrections" class="btn btn-success"><i class="fa fa-lock icon-white"></i> Finished corrections</button>
+			<button type="button" data-bind="click:finishCorrections" class="btn btn-sm btn-success"><i class="fa fa-lock icon-white"></i> Finished corrections</button>
 		</span>
 	</div>
 </div>
@@ -60,19 +60,18 @@
 
 <g:render template="/shared/declaration" model="[divId:'unlockPlan', declarationType:au.org.ala.merit.SettingPageType.UNLOCK_PLAN_DECLARATION]"/>
 <g:render template="meriPlanApprovalModal"/>
-<div class="row-fluid">
-
-	<div class="span6">
+<div class="row mb-4 mt-3">
+	<div class="col-sm-6">
 		<div class="control-group">
 			<div>
-				<span class="badge" style="font-size: 13px;" data-bind="text:meriPlanStatus().text, css:meriPlanStatus().badgeClass"></span>
+				<span class="badge text-white" style="font-size: 13px;" data-bind="text:meriPlanStatus().text, css:meriPlanStatus().badgeClass"></span>
 				<span data-bind="if:detailsLastUpdated"> <br/>Last update date : <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
 			</div>
 		</div>
 	</div>
 <g:if test="${showMeriPlanHistory}">
-	<div class="span6">
-		<div class="pull-right"><a class="btn btn-info meri-history-toggle" data-bind="click:toggleMeriPlanHistory, text:meriPlanHistoryVisible() ? 'Hide approval history' : 'Show approval history'">Show MERI plan approvals</a></div>
+	<div class="col-sm-6">
+		<div class="pull-right"><a class="btn btn-info btn-sm meri-history-toggle" data-bind="click:toggleMeriPlanHistory, text:meriPlanHistoryVisible() ? 'Hide approval history' : 'Show approval history'">Show MERI plan approvals</a></div>
 	</div>
 </g:if>
 
@@ -125,15 +124,15 @@
 
 <!--  Case manager actions -->
 <g:if test="${user?.isCaseManager}">
-<div class="row-fluid space-after">
+<div class="row space-after">
 	<div data-bind="template:meriGrantManagerActionsTemplate"></div>
 </div>
 </g:if>
 
 <g:if test="${projectContent.details.visible}">
 	<div class="save-details-result-placeholder"></div>
-	<div class="row-fluid space-after">
-		<div class="span12">
+	<div class="row space-after">
+		<div class="col-sm-12">
 			<div class="form-actions">
 				<div>
 					<label><input class="pull-left" type="checkbox"  data-bind="checked: meriPlan().caseStudy, disable: isProjectDetailsLocked()" />
@@ -141,9 +140,9 @@
 				</div>
 				<br/>
 
-				<button type="button" data-bind="click: saveProjectDetails, disable: isProjectDetailsLocked()" class="btn btn-primary">Save changes</button>
-				<button type="button" class="btn" data-bind="click: cancelProjectDetailsEdits">Cancel</button>
-				<button type="button" class="btn btn-info" data-bind="click: meriPlanPDF">Generate PDF</button>
+				<button type="button" data-bind="click: saveProjectDetails, disable: isProjectDetailsLocked()" class="btn btn-sm btn-primary">Save changes</button>
+				<button type="button" class="btn btn-sm btn-danger" data-bind="click: cancelProjectDetailsEdits">Cancel</button>
+				<button type="button" class="btn btn-sm btn-info" data-bind="click: meriPlanPDF">Generate PDF</button>
 
 				<!--  Admin - submit to approval. -->
 				<g:if test="${user?.isAdmin}">
@@ -158,10 +157,10 @@
 						</g:if>
 						<g:if test="${allowMeriPlanUpload}">
 							<div class="btn fileinput-button"
-								 data-bind="fileUploadNoImage:meriPlanUploadConfig"><i class="icon-plus"></i> <input
+								 data-bind="fileUploadNoImage:meriPlanUploadConfig"><i class="fa fa-plus"></i> <input
 									type="file" name="meriPlan"><span>Upload MERI Plan</span></div>
 						</g:if>
-						<button type="button" data-bind="click: saveAndSubmitChanges" class="btn btn-info">Submit for approval</button>
+						<button type="button" data-bind="click: saveAndSubmitChanges" class="btn btn-sm btn-info">Submit for approval</button>
 					</div>
 					<div data-bind="if: isSubmittedOrApproved()">
                         <g:if test="${showMERIActivityWarning}">
@@ -190,8 +189,8 @@
 
 <div class="save-details-result-placeholder"></div>
 
-<div class="row-fluid space-after">
-	<div class="span12">
+<div class="row space-after">
+	<div class="col-sm-12">
 		<div class="form-actions">
 			<div>
 				<label><input class="pull-left" type="checkbox"  data-bind="checked: meriPlan().caseStudy, disable: isProjectDetailsLocked()" />
@@ -199,9 +198,9 @@
 			</div>
 			<br/>
 
-			<button type="button" data-bind="click: saveProjectDetails, disable: isProjectDetailsLocked()" class="btn btn-primary">Save changes</button>
-			<button type="button" class="btn" data-bind="click: cancelProjectDetailsEdits">Cancel</button>
-			<g:if test="${projectContent.details.visible}"><button type="button" class="btn btn-info" data-bind="click: meriPlanPDF">Generate PDF</button></g:if>
+			<button type="button" data-bind="click: saveProjectDetails, disable: isProjectDetailsLocked()" class="btn btn-sm btn-primary">Save changes</button>
+			<button type="button" class="btn btn-sm btn-danger" data-bind="click: cancelProjectDetailsEdits">Cancel</button>
+			<g:if test="${projectContent.details.visible}"><button type="button" class="btn btn-sm btn-info" data-bind="click: meriPlanPDF">Generate PDF</button></g:if>
 
 			<!--  Admin - submit to approval. -->
 			<g:if test="${user?.isAdmin}">
@@ -220,7 +219,7 @@
 							<input type="file" name="meriPlan"><span>Upload MERI Plan</span>
 						</div>
 					</g:if>
-					<button type="button" data-bind="click: saveAndSubmitChanges" class="btn btn-info">Submit for approval</button>
+					<button type="button" data-bind="click: saveAndSubmitChanges" class="btn btn-sm btn-info">Submit for approval</button>
 				</div>
 				<div data-bind="if: isSubmittedOrApproved()">
                     <g:if test="${showMERIActivityWarning}">
@@ -240,7 +239,7 @@
 
 <div id="floating-save" style="display:none;">
 	<div class="transparent-background"></div>
-	<div><button class="right btn btn-info" data-bind="click: saveProjectDetails">Save changes</button></div>
+	<div><button class="right btn btn-sm btn-info" data-bind="click: saveProjectDetails">Save changes</button></div>
 </div>
 </div>
 <!-- /ko -->

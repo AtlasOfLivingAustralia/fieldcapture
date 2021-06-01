@@ -1,6 +1,6 @@
 /*
-*= require jquery.dataTables/dataTables.bootstrap.css
-*= require jquery.dataTables/dataTables.tableTools.css
+*= require datatables/1.10.16/css/dataTables.bootstrap4
+*= require datatables/buttons/1.5.1/css/buttons.bootstrap4
 *= require thumbnail.scroller/2.0.3/jquery.mThumbnailScroller.css
 *= require blueimp/fileupload-9.28.0/jquery.fileupload
 *= require fancybox/jquery.fancybox
@@ -225,6 +225,131 @@
 }
 .terminationReasonSection {
 	padding-bottom: 20px;
+}
+#projectTabs li>a {
+	border: solid 1px #dddddd;
+}
+#projectTabs li>a.active {
+	border-bottom-color: transparent;
+}
+input.dateControl {
+	max-width: 9.5rem !important;
+}
+
+span.progress-label {
+	padding-top: 7px !important;
+}
+
+#adminNav .nav-link:after {
+	font-family: 'FontAwesome';
+	content: "\f054";
+	float: right;
+}
+#adminNav .nav-link.active{
+	color:#000;
+	background-color: #eee;
+	border-radius: unset;
+}
+#adminNav .nav-link{
+	border: 1px solid #eee;
+	border-radius: unset;
+}
+#admin .tab-content {
+	border-left: unset !important;
+	border-right: unset !important;
+	border-bottom: unset !important;
+	padding-top: unset !important;
+
+}
+#adminNav .nav-link:first-child {
+	border-top-left-radius: 0.25rem;
+	border-top-right-radius: 0.25rem;
+}
+#adminNav .nav-link:last-child {
+	border-bottom-left-radius: 0.25rem;
+	border-bottom-right-radius: 0.25rem;
+}
+
+.input-medium {
+	width: 20rem; !important;
+}
+
+form .form-group label {
+	margin-bottom: 5px;
+}
+
+#admin form .form-group .input-group-text {
+	padding: 4px 5px;
+	border-radius: 0 4px 4px 0;
+}
+#admin .col-sm-12 {
+	padding-right: 15px;
+	padding-left: 15px;
+}
+.attachDocumentModal {
+	border-bottom: 1px solid #EEEEEE;
+	padding-bottom: 1rem;
+}
+#addUserRoleBtn {
+	margin-left: 16rem;
+}
+
+.overall-risk-label {
+	-ms-flex: 0 0 13.666667% !important;
+	flex: 0 0 13.666667% !important;
+	max-width: 13.666667% !important;
+}
+.input-small {
+	width: 12rem !important;
+}
+
+.mr-6 {
+	margin-right: 2.5rem !important;
+}
+
+.input-large {
+	width: 49rem !important;
+}
+li.select2-search input {
+	border-radius: unset;
+	border: unset;
+}
+.modal-body {
+	max-height: calc(100vh - 143px);
+	overflow-y: auto;
+}
+#adminDocumentList .col-sm-12 {
+	padding: 0px !important;
+}
+
+.media-body-template .customMargin {
+	margin-top: -13px;
+	margin-right: -20px;
+}
+#sites-table_wrapper .dataTables_filter span#basic-addon1 {
+	border-top-right-radius: unset !important;
+	border-bottom-right-radius: unset !important;
+}
+
+#sites-table_wrapper .dataTables_filter input.form-control.form-control-sm {
+	border-top-left-radius: unset !important;
+	border-bottom-left-radius: unset !important;
+	border-left: unset !important;
+}
+
+#meriPlanDocumentList .dataTables_wrapper .row.col-sm-12, #meriPlanDocumentList .row .col-sm-6 .dataTables_info, #overviewDocumentList .dataTables_wrapper .row.col-sm-12, #overviewDocumentList .row .col-sm-6 .dataTables_info  {
+	margin-left: 15px !important;
+}
+
+#meriPlanDocumentList .row .col-sm-6 .dataTables_paginate, #overviewDocumentList .row .col-sm-6 .dataTables_paginate {
+	margin-right: -15px;
+}
+
+#meriPlanDocumentList .filterDocumentHolder, #overviewDocumentList .filterDocumentHolder{
+	margin-left: -15px !important;
+}
+.mTSThumbContainer {
+	margin-right: 10px !important;
 }
 .col-sm-10.customCol {
 	margin-left: 2rem;

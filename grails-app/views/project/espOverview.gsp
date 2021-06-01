@@ -73,10 +73,10 @@
             </g:if>
             <g:set var="disabled">${(!user) ? "disabled='disabled' title='login required'" : ''}</g:set>
             <g:if test="${isProjectStarredByUser}">
-                <button class="btn" id="starBtn"><i class="icon-star"></i> <span>Remove from favourites</span></button>
+                <button class="btn btn-sm float-right" id="starBtn"><i class="icon-star"></i> <span>Remove from favourites</span></button>
             </g:if>
             <g:else>
-                <button class="btn" id="starBtn" ${disabled}><i class="icon-star-empty"></i> <span>Add to favourites</span></button>
+                <button class="btn btn-sm float-right" id="starBtn" ${disabled}><i class="icon-star-empty"></i> <span>Add to favourites</span></button>
             </g:else>
         </div>
     </div>
@@ -174,7 +174,7 @@
                     <!-- ko foreach:siteReports() -->
                         <tr>
                             <td><a data-bind="attr:{href:editActivityUrl()}"><span data-bind="text:description"></span></a></td>
-                            <td><button type="button" class="btn btn-small"   data-bind="activityProgress:progress">
+                            <td><button type="button" class="btn btn-sm"   data-bind="activityProgress:progress">
                                 <span data-bind="text: progress"></span>
                             </button>
                             </td>
