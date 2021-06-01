@@ -2,11 +2,11 @@ package au.org.ala.fieldcapture
 
 import pages.AdminTools
 import pages.DownloadReportPDF
-import pages.ProjectIndex
+import pages.ESPProjectIndex
 import spock.lang.Stepwise
 
 @Stepwise
-class DocumentReportGenerateSpec extends StubbedCasSpec {
+class ESPProjectSpec extends StubbedCasSpec {
 
     def setupSpec() {
         useDataSet("dataset3")
@@ -31,16 +31,15 @@ class DocumentReportGenerateSpec extends StubbedCasSpec {
     }
 
     def "generate Document PDF from document report tab"() {
-        String projectId =
-                login([userId: '1', role: "ROLE_FC_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+        setup:
+        login([userId: '1', role: "ROLE_FC_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
 
         when:
-        to ProjectIndex, "123456789"
+        to ESPProjectIndex, "123456789"
 
         then:
-        waitFor 10, {
-            at ProjectIndex
-        }
+        at ESPProjectIndex
+
 
         and:
         waitFor {
