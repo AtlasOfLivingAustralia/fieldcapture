@@ -110,6 +110,12 @@ class ReportServiceFilteringSpec extends StubbedCasSpec {
 
         and: "All of the output sections are displayed."
         getFormSections().size() == 37
+
+        when: "We leave the report to release the lock"
+        exitReport()
+
+        then:
+        waitFor { at RlpProjectPage }
     }
 
     def "When services are selected in the MERI plan only mandatory and selected services will be shown on the outputs report"() {
