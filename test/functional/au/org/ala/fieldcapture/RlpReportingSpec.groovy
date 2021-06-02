@@ -331,17 +331,11 @@ class RlpReportingSpec extends StubbedCasSpec {
         waitFor 20, { timeoutModal.displayed }
 
         when: "Click the re-login link and log back in"
-        waitFor {timeoutModal.loginLink.click() }
+        Thread.sleep(1000) // wait for the timeoutModal animation to complete.
+        timeoutModal.loginLink.click()
 
-        then:
-        waitFor {
-            at ReportPage
-            editAnyway.click()
-        }
-
-
-        and: "A dialog is displayed to say there are unsaved edits"
-        waitFor {unsavedEdits.displayed}
+        then: "The page will be reloaded, and dialog is displayed to say there are unsaved edits"
+        waitFor 20, { unsavedEdits.displayed }
 
         when:
         okBootbox()
