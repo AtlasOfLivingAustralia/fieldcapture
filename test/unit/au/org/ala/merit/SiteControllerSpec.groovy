@@ -104,8 +104,9 @@ class SiteControllerSpec extends Specification {
         controller.createSitesFromShapefile()
 
         then:
-        1 * siteService.createSiteFromUploadedShapefile(data.shapeFileId, data.sites[0].id, data.sites[0].externalId, data.sites[0].name, data.sites[0].description, data.projectId, false) >> [success:true, siteId:'s1']
-        response.json == [progress:[total:1, uploaded:1, finished:true, errors:[]], message:"success"]
+        // Site creation is now done asynchronously
+        //1 * siteService.createSiteFromUploadedShapefile(data.shapeFileId, data.sites[0].id, data.sites[0].externalId, data.sites[0].name, data.sites[0].description, data.projectId, false) >> [success:true, siteId:'s1']
+        response.json == [progress:[total:1, uploaded:0, errors:[]], message:"success"]
     }
 
 }
