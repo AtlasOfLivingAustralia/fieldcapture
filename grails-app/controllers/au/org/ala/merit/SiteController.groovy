@@ -6,6 +6,8 @@ import org.apache.commons.io.FilenameUtils
 import org.apache.commons.io.IOUtils
 import org.apache.http.HttpStatus
 import org.springframework.web.multipart.MultipartFile
+import static grails.async.Promises.task
+import static au.org.ala.merit.ScheduledJobContext.withUser
 
 class SiteController {
 
@@ -343,21 +345,25 @@ class SiteController {
         }
         else {
             Map progress = [total:siteData.sites.size(), uploaded:0, errors:[]].asSynchronized()
-
-            try {
-                session.uploadProgress = progress
-
-                while (!progress.cancelling && progress.uploaded < progress.total) {
-                    Map site = siteData.sites[progress.uploaded]
-                    Map result = siteService.createSiteFromUploadedShapefile(siteData.shapeFileId, site.id, asString(site.externalId), asString(site.name), asString(site.description, 'No description supplied'), siteData.projectId, false)
-                    if (!result.success) {
-                        progress.errors << [error:result.error, detail:result.detail]
+            session.uploadProgress = progress
+            UserDetails user = userService.getUser()
+            task {
+                withUser([userid: user.userId, name:user.userName, email:user.userName]) {
+                    try {
+                        while (!progress.cancelling && progress.uploaded < progress.total) {
+                            Map site = siteData.sites[progress.uploaded]
+                            Map result = siteService.createSiteFromUploadedShapefile(siteData.shapeFileId, site.id, asString(site.externalId), asString(site.name), asString(site.description, 'No description supplied'), siteData.projectId, false)
+                            if (!result.success) {
+                                progress.errors << [error: result.error, detail: result.detail]
+                            }
+                            progress.uploaded = progress.uploaded + 1
+                        }
                     }
-                    progress.uploaded = progress.uploaded + 1
+                    finally {
+                        progress.finished = true
+                    }
+
                 }
-            }
-            finally {
-                progress.finished = true
             }
 
             def result = [message:'success', progress:progress]

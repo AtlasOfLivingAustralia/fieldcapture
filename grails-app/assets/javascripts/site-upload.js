@@ -1,4 +1,4 @@
-var SiteViewModel = function(shape) {
+var UploadableSiteViewModel = function(shape) {
     var self = this;
 
     self.id = shape.id;
@@ -80,22 +80,15 @@ var SiteUploadViewModel = function(attributeNames, shapes, projectId, shapeFileI
             data: JSON.stringify(payload)
         }).done(function (data) {
             if (data && data.progress && !data.progress.cancelling) {
-                var word = 'Uploaded ';
                 if (data.progress.errors) {
                     self.progressErrors(data.progress.errors);
-                    word = 'Processed ';
                 }
-                self.progressText(word + payload.sites.length + ' of ' + payload.sites.length + ' sites');
-                self.progress('100%');
-
             }
 
         }).fail(function () {
             $(config.progressSelector).modal('hide');
 
             alert('There was a problem uploading sites.');
-        }).always(function() {
-            self.finished(true);
         });
 
 
@@ -129,6 +122,10 @@ var SiteUploadViewModel = function(attributeNames, shapes, projectId, shapeFileI
             if (!finished) {
                 setTimeout(self.showProgress, 2000);
             }
+            else {
+                self.finished(true);
+                self.progress('100%');
+            }
         });
     };
 
@@ -153,7 +150,7 @@ var SiteUploadViewModel = function(attributeNames, shapes, projectId, shapeFileI
     };
 
     $.each(shapes, function(i, obj) {
-        var site = new SiteViewModel(obj);
+        var site = new UploadableSiteViewModel(obj);
         site.selected.subscribe(self.countSelectedSites);
         self.sites.push(site);
     });

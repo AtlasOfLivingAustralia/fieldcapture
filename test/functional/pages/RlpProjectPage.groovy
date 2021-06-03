@@ -39,6 +39,7 @@ class RlpProjectPage extends ReloadablePage {
         addNewDataset(required: false) {$('.btn-primary')}
 
         meriPlanTabContent {module MeriPlanTabContent }
+        sites { module SitesTab }
     }
 
     def openDocumentDialog() {
