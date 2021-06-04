@@ -38,7 +38,7 @@ class SiteUploadSpec extends StubbedCasSpec {
         createSites()
 
         then: "Wait for the site upload to complete, this can be very slow"
-        waitFor 120, { uploadProgress.ok.displayed }
+        waitFor 240, { uploadProgress.ok.displayed }
 
         when:
         uploadProgress.ok.click()
