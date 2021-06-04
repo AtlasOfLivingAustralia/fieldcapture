@@ -15,7 +15,7 @@
     }
 
     #image-map {
-        width: 100%;
+        width: 97%;
     }
     </style>
 </head>

@@ -357,3 +357,8 @@ li.select2-search input {
 .customBorder {
 	border-bottom: 1px solid #eeeeee;
 }
+.modal .modal-dialog {
+	max-width: 500px !important;
+	margin: 1.75rem auto !important;
+	height: auto !important;
+}

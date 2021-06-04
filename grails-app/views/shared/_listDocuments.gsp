@@ -79,7 +79,7 @@
 
 <script id="iframeViewer" type="text/html">
 <div class="well fc-resource-preview-well">
-    <iframe class="fc-resource-preview" data-bind="attr: {src: selectedDocumentFrameUrl}">
+    <iframe class="fc-resource-preview" data-bind="attr: {src: selectedDocumentFrameUrl}" style="width: 94%">
         <p>Your browser does not support iframes <i class="fa fa-frown-o"></i>.</p>
     </iframe>
 </div>

@@ -1,5 +1,5 @@
 <div class="row">
-    <div id="adminNav" class="nav flex-column nav-pills col-sm-3 pl-2 pr-0">
+    <div id="adminNav" class="nav flex-column nav-pills col-sm-2 pl-2 pr-0">
         <g:if test="${fc.userIsAlaOrFcAdmin()}">
             <a class="nav-link active" data-toggle="pill" href="#settings" id="settings-tab" role="tab">Project Settings</a>
         </g:if>
@@ -31,7 +31,7 @@
             <a class="nav-link" href="#project-audit" id="project-audit-tab" data-toggle="pill" role="tab" >Audit</a>
         </g:if>
     </div> <!-- end of side nav -->
-    <div class="col-9">
+    <div class="col-10">
         <div class="pill-content tab-content">
             <g:set var="activeClass" value="active"/>
             <g:if test="${fc.userIsAlaOrFcAdmin()}">

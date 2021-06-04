@@ -168,7 +168,7 @@ class UserController {
         String email = params.email
 
         if (email) {
-            render userService.checkEmailExists(email)
+            render userService.checkEmailExists(email) ?: ""
         } else {
             render status:400, text: 'Required param not provided: email'
         }
