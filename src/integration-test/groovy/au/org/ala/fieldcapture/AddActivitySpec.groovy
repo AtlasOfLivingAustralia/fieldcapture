@@ -114,13 +114,15 @@ class AddActivitySpec extends StubbedCasSpec {
 
         then: "the unsaved edits are present"
         activityDetails.description == "Checking the local storage"
+
+        when:
         submit()
 
-        and:
-        waitFor {
-            hasBeenReloaded()
-        }
-        activityDetails.description == "Checking the local storage"
+        then:
+        waitFor {at ProjectIndex}
+        activitiesTab.click()
+        waitFor 10,{plansAndReports.displayed}
+        plansAndReports.activities[0].description == "Checking the local storage"
     }
 
 
@@ -222,7 +224,8 @@ class AddActivitySpec extends StubbedCasSpec {
             it.description == 'Test activity [edited]'
         }
         activity.actionDelete.click()
-        waitFor 5, {iAmSure.click()} // this is animated so takes time to be clickable.
+        Thread.sleep(800) // Wait for the bootbox to animate the "Are you sure?" question
+        iAmSure.click()
 
         then: "the activity is no longer available on the page"
         waitFor 20, {

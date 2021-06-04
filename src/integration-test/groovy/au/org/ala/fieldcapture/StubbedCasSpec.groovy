@@ -2,13 +2,7 @@ package au.org.ala.fieldcapture
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer
-import com.github.tomakehurst.wiremock.http.HttpHeaders
-import com.icegreen.greenmail.junit.GreenMailRule
-import com.icegreen.greenmail.util.ServerSetup
-import com.icegreen.greenmail.util.ServerSetupTest
 import geb.Browser
-import org.grails.io.support.PathMatchingResourcePatternResolver
-import org.junit.Rule
 import spock.lang.Shared
 import wiremock.com.github.jknack.handlebars.EscapingStrategy
 import wiremock.com.github.jknack.handlebars.Handlebars

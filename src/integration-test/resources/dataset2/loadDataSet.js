@@ -127,7 +127,8 @@ var grantProgram = db.program.findOne({programId:"grants"});
 grantProgram.config.projectTemplate=null;
 grantProgram.config.meriPlanTemplate=null;
 db.program.save(grantProgram);
-createProject({name:'Grants project', projectId:"grants_project", programId:"grants", status:"active", planStatus:''});
+createProject({name:'Grants project', projectId:"grants_project", programId:"grants", status:"active", planStatus:'',
+    custom: {details: {objectives: {rows1:[{assets:["Threatened Species"], description:"Objective 1"}, {assets: ["Threatened Species"], description: "Objective 2"}]}}}});
 db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'grants_project', userId:'2', accessLevel:'admin'});
 
 addSetting('meritfielddata.rlp.report.declaration', 'Report declaration text');

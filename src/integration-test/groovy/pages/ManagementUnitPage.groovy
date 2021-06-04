@@ -1,12 +1,14 @@
 package pages
 
+import geb.Page
+import pages.modules.AddOrEditManagementUnit
 import pages.modules.ManagementUnitAdminTab
 import pages.modules.ManagementUnitReports
 
 
 class ManagementUnitPage extends ReloadablePage {
 
-    static url = 'managementUnit/index/test_mu'
+    static url = 'managementUnit/index'
 
     static at = { waitFor {name.text() != null } }
 
@@ -82,4 +84,13 @@ class ManagementUnitPage extends ReloadablePage {
         reportsTabPane
     }
 
+}
+
+class CreateManagementUnit extends Page {
+    static url = "managementUnit/create"
+    static at = { title.startsWith("Create | Management Unit") }
+
+    static content = {
+        create { module AddOrEditManagementUnit }
+    }
 }

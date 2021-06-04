@@ -7,6 +7,7 @@ load('../data/activityForms/CoreServicesReport.js');
 load('../data/activityForms/ProgressReport.js');
 load('../data/activityForms/Revegetation.js');
 load('../data/activityForms/PlantPropogation.js')
+load('../data/activityForms/ESPActivityReport.js')
 load('../data/scoreDefaults.js');
 load('../data/activityDefaults.js');
 load('../data/outputDefaults.js');
@@ -19,6 +20,7 @@ function createProject(projectProperties) {
     assign(projectProperties,project)
 
     db.project.insert(project);
+    return project;
 }
 
 function createProgram(programProperties) {
@@ -167,6 +169,8 @@ function loadActivityForms() {
     db.activityForm.insert(progressReport);
     db.activityForm.insert(revegetation);
     db.activityForm.insert(plantPropogation);
+    db.activityForm.insert(espPMUReport);
+
     var forms = db.activityForm.find({});
     print("Total Forms in DB: " + forms.count());
     forms.forEach( function (form){
@@ -195,7 +199,7 @@ function loadActivityForms() {
 function assign(src, des){
     for(var prop in src){
         if(src.hasOwnProperty(prop)){
-            if(src[prop] && isObject(src[prop])) {
+            if(src[prop] && isObject(src[prop]) && !(src[prop] instanceof Date)) {
                 if ( Array.isArray(src[prop]))
                     des[prop] = []
                 else

@@ -1,8 +1,6 @@
 package au.org.ala.merit
 
-import grails.test.mixin.*
 import grails.testing.spring.AutowiredTest
-import org.junit.*
 
 /**
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions

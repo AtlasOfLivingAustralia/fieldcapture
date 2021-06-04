@@ -1,9 +1,7 @@
 package au.org.ala.merit
 
 import grails.testing.spring.AutowiredTest
-import org.joda.time.DateTime
 import org.joda.time.DateTimeUtils
-import org.joda.time.DateTimeZone
 import spock.lang.Specification
 
 /**

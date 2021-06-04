@@ -323,6 +323,28 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         view == '/activity/activityReport'
     }
 
+    def "if the project uses pessimistic locking for reports, if the user already holds the lock, the lock should not be re-obtained"() {
+        setup:
+        String projectId = 'p1'
+        String reportId = 'r1'
+        stubProjectAdmin('1234', projectId)
+        Map project = this.project(projectId, true)
+        projectService.get(projectId) >> project
+        Map activityReportModel = [editable:true, metaModel:[:], outputModels:[:], activity:[activityId:'a1', lock:'1234'], report:project.reports[0]]
+
+
+        when:
+        reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> activityReportModel
+        projectService.getProgramConfiguration(project) >> new ProgramConfig([requiresActivityLocking: true])
+        controller.editReport(projectId, reportId)
+
+        then:
+        0 * reportService.lockForEditing(project.reports[0])
+        1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity) >> activityReportModel.metaModel
+
+        view == '/activity/activityReport'
+    }
+
     def "report data shouldn't be saved if the project id of the report doesn't match the project id checked by the annotation"() {
         setup:
         Map props = [
@@ -515,6 +537,15 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         and:
         response.json == expected
 
+    }
+
+    def "The controller delegates to the reportService to release locks when existing a report"() {
+        when:
+        controller.exitReport('p1', 'r1')
+
+        then:
+        1 * reportService.unlock('r1')
+        response.redirectUrl == '/project/index/p1'
     }
 
     private Map stubPublicUser() {

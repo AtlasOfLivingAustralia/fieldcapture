@@ -6,7 +6,14 @@ class AdminTools extends ReloadablePage {
 
     static url = "admin/tools"
 
-    static at = { waitFor { title.startsWith("Tools | Admin")}}
+    // The sleep at the end is to allow the javascript to initialise the button event handlers after the page loads
+    static at = {
+        def result = waitFor { title.startsWith("Tools | Admin") }
+        if (result) {
+            Thread.sleep(300) // If we are on the page, wait for the javascript to run.
+        }
+        result
+    }
 
     static content = {
         reindexButton { $('#btnReindexAll') }
@@ -21,7 +28,7 @@ class AdminTools extends ReloadablePage {
 
     void reindex() {
         reindexButton().click()
-        waitFor { hasBeenReloaded() }
+        waitFor 60, { hasBeenReloaded() }
     }
 
     void clearCache() {

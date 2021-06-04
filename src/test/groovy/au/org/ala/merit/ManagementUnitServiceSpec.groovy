@@ -2,7 +2,6 @@ package au.org.ala.merit
 
 import au.org.ala.merit.reports.ReportGenerationOptions
 import grails.testing.spring.AutowiredTest
-import org.apache.http.HttpStatus
 import spock.lang.Specification
 
 class ManagementUnitServiceSpec extends Specification implements AutowiredTest{

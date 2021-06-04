@@ -1,11 +1,7 @@
 package au.org.ala.merit
 
 import grails.converters.JSON
-import grails.testing.spring.AutowiredTest
-import grails.web.JSONBuilder
-import groovy.json.JsonBuilder
 import grails.plugins.csv.CSVMapReader
-import org.junit.Before
 import spock.lang.Specification
 
 /**

@@ -10,6 +10,7 @@ class ManagementUnitAdminTab extends Module {
 
         reportingSectionTab(required:false) { $('[href="#reporting"]') }
         reportingSection(required:false) { $('#reporting').module ManagementUnitAdminReportSection }
+        adminColumn { $("#admin .flex-column a") }
     }
 
     def attachDocument() {

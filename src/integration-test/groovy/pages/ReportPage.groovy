@@ -6,6 +6,11 @@ import geb.navigator.Navigator
 import pages.modules.ReportContentModule
 import pages.modules.TimeoutModal
 
+/**
+ * This page represents a page where a user can enter data for an
+ * activity or a report.
+ * At the moment it is used to represent both activity/enterData.gsp and activity/activityReport.gsp
+ */
 class ReportPage extends Page {
 
     static at = {
@@ -15,7 +20,8 @@ class ReportPage extends Page {
     static content = {
         reportContent {module ReportContentModule }
         saveButton { $('#nav-buttons button[data-bind$=save') }
-        exitButton { $('#nav-buttons button[data-bind*=exitReport') }
+        exitButton(required:false) { $('#nav-buttons button[data-bind*=exitReport') } // activityReport.gsp
+        cancelButton(required:false) { $('#cancel')} // enterData.gsp
         timeoutModal(required: false) { $('div.bootbox.modal').module TimeoutModal }
         unsavedEdits(required: false) { $('div.bootbox') }
         editAnyway (required: false) { $(".alert .btn")}
@@ -43,7 +49,9 @@ class ReportPage extends Page {
     }
 
     def markAsComplete() {
-        $("[data-bind*=\"markedAsFinished\"]").value(true)
+        // Clicking on the label instead of the checkbox due to a random (rare) element not clickable exception in the tests
+        // that indicated the label would receive the click
+        $("label.mark-complete").click()
     }
 
     boolean isOptional(String sectionId) {
@@ -71,7 +79,16 @@ class ReportPage extends Page {
     }
 
     def exitReport() {
-        exitButton.click()
+        if (exitButton.displayed) {
+            exitButton.click()
+        }
+        else if (cancelButton.displayed) {
+            cancelButton.click()
+        }
+        else {
+            throw new RuntimeException("The page has neither the exit nor cancel button")
+        }
+
     }
 
     def getReport() {

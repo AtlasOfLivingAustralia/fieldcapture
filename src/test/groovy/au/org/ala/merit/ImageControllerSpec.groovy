@@ -1,6 +1,5 @@
 package au.org.ala.merit
 
-import org.apache.commons.io.IOUtils
 import org.apache.http.HttpStatus
 import spock.lang.Specification
 import grails.testing.web.controllers.ControllerUnitTest

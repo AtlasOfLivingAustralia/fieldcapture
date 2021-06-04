@@ -420,4 +420,14 @@ class ReportServiceSpec extends Specification implements AutowiredTest{
         1 * activityService.stealLock('a1', 'report/url')
 
     }
+
+    def "the report service can interact with the activity service to unlock a report"() {
+        when:
+        service.unlock("r1")
+
+        then:
+        1 * webService.getJson({it.endsWith('report/r1')}) >> [reportId:'r1', activityId:'a1']
+        1 * activityService.unlock('a1')
+
+    }
 }

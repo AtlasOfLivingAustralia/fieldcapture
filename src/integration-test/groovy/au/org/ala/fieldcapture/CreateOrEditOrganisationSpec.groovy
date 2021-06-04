@@ -99,10 +99,10 @@ class CreateOrEditOrganisationSpec extends StubbedCasSpec {
         adminTab.click()
         waitFor 10, { adminTabContent.displayed }
         waitFor 10, { adminTabContent.editButton.displayed }
-        waitFor { adminTabContent.editButton.click() }
+        adminTabContent.editButton.click()
 
         then:
-        waitFor  {at EditOrganisation}
+        waitFor 10, {at EditOrganisation}
 
         when:
         details.abn = "11111111111"

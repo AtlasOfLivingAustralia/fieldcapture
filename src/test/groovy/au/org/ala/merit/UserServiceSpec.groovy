@@ -2,12 +2,15 @@
 //
 //import au.org.ala.web.AuthService
 //import grails.plugin.cache.ehcache.GrailsEhcacheCache
+//import grails.testing.spring.AutowiredTest
 //import org.grails.plugin.cache.GrailsCacheManager
-//import grails.test.mixin.TestFor
 //import spock.lang.Specification
 //
-//@TestFor(UserService)
-//class UserServiceSpec extends Specification {
+//class UserServiceSpec extends Specification implements AutowiredTest{
+//
+//    Closure doWithSpring() {{ ->
+//        service UserService
+//    }}
 //
 //    def webService = Mock(WebService)
 //    def authService = Mock(AuthService)

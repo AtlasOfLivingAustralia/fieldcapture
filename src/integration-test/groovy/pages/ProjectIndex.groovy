@@ -2,9 +2,13 @@ package pages
 
 import geb.Module
 import geb.Page
+import pages.modules.DocumentDialog
+import pages.modules.EditSiteContent
 import pages.modules.ProjectAdminTab
 import pages.modules.ProjectDashboardSection
 import pages.modules.RisksAndThreats
+import pages.modules.SiteTabContent
+import pages.modules.SitesTableContents
 
 
 /**
@@ -12,7 +16,7 @@ import pages.modules.RisksAndThreats
  */
 class ProjectIndex extends ReloadablePage {
     static url = 'project/index' // requires a project id parameter
-    static at = { title.endsWith('| Project | Field Capture')}
+    static at = { waitFor { title.endsWith('| Project | Field Capture') } }
 
     static content = {
 
@@ -35,7 +39,17 @@ class ProjectIndex extends ReloadablePage {
         siteLists {module sitesTable }
 
         addSites{ module AddSites }
-        editDocumentForm {module AttachDocumentForm}
+        editDocumentForm {module DocumentDialog}
+
+        editMap {$('button[data-bind*="editSite"]')}
+        siteTabContents{module SiteTabContent}
+        editSite {module EditSiteContent}
+        tableContents { $("#sites-table tbody td").moduleList(SitesTableContents)}
+        mapMarker{ $('#map img[src*="marker-icon.png"]')}
+
+        downloadReportTab { $("#stage-report-pdf-tab")}
+        downloadReportContent{ module DownloadReportContent}
+
 
     }
 
@@ -47,6 +61,13 @@ class ProjectIndex extends ReloadablePage {
     void openAdminTab() {
         adminTab.click()
         waitFor { admin.displayed }
+    }
+
+    void clickAddSiteButton(){
+        sitesTab.click()
+        waitFor {siteTabContents.displayed}
+        waitFor {siteTabContents.addSites.displayed}
+        siteTabContents.addSites.click()
     }
 }
 
@@ -102,6 +123,10 @@ class ActivityRow extends Module {
         type { cell(5).text() }
         site { cell(6).text() }
         status { cell(7).text() }
+    }
+
+    def edit() {
+        actionEdit.click()
     }
 
 }
@@ -168,6 +193,15 @@ class DashboardTab extends Module {
         progresslabel{ $(".progress-label")}
 
     }
+}
+
+class DownloadReportContent extends Module {
+
+    static content = {
+        generateHTML {$("button[data-bind*=generateProjectReportHTML]").first()}
+        generatePDF { $("button[data-bind*=generateProjectReportPDF]").first() }
+    }
+
 }
 
 

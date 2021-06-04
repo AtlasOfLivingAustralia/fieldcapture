@@ -1,5 +1,6 @@
 package au.org.ala.fieldcapture
 
+import pages.CreateManagementUnit
 import pages.EditManagementUnitPage
 import pages.ManagementUnitPage
 
@@ -20,10 +21,10 @@ class ManagementUnitSpec extends StubbedCasSpec {
 
     def "Only the about tab is visible to unauthenticated users"() {
         when:
-        to ManagementUnitPage
+        to ManagementUnitPage, "test_mu"
 
         then:
-        waitFor {at ManagementUnitPage}
+        waitFor { at ManagementUnitPage }
         overviewBtn.displayed
         !reportsTab.displayed
         !sitesTab.displayed
@@ -39,13 +40,13 @@ class ManagementUnitSpec extends StubbedCasSpec {
         if (userId == GRANT_MANAGER_USER) {
             role = "ROLE_FC_OFFICER"
         }
-        login([userId:userId, role:role, email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
+        login([userId: userId, role: role, email: 'user@nowhere.com', firstName: "MERIT", lastName: 'User'], browser)
 
         when:
-        to ManagementUnitPage
+        to ManagementUnitPage, "test_mu"
 
         then:
-        waitFor {at ManagementUnitPage}
+        waitFor { at ManagementUnitPage }
         overviewBtn.displayed == aboutVisible
         reportsTab.displayed == reportsVisible
         sitesTab.displayed == sitesVisible
@@ -53,22 +54,22 @@ class ManagementUnitSpec extends StubbedCasSpec {
 
         where:
         userId              | aboutVisible | reportsVisible | sitesVisible | adminVisible
-        NO_PERMISSIONS_USER | true | false | false | false
-        EDITOR_USER         | true | true | true | false
-        ADMIN_USER          | true | true | true | true
-        GRANT_MANAGER_USER  | true | true | true | true
+        NO_PERMISSIONS_USER | true         | false          | false        | false
+        EDITOR_USER         | true         | true           | true         | false
+        ADMIN_USER          | true         | true           | true         | true
+        GRANT_MANAGER_USER  | true         | true           | true         | true
 
     }
 
     def "The management unit about tab displays information about programs and projects with activity in the management unit"() {
         setup:
-        login([userId:ADMIN_USER, role:"ROLE_USER", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
+        login([userId: ADMIN_USER, role: "ROLE_USER", email: 'user@nowhere.com', firstName: "MERIT", lastName: 'User'], browser)
 
         when:
-        to ManagementUnitPage
+        to ManagementUnitPage, "test_mu"
 
         then:
-        waitFor {at ManagementUnitPage}
+        waitFor { at ManagementUnitPage }
 
         and:
         overviewBtn().click()
@@ -82,31 +83,31 @@ class ManagementUnitSpec extends StubbedCasSpec {
         then:
 
         grantIds() == ['RLP-Test-Program-Project-1']
-        projectLinks().size()>=1
+        projectLinks().size() >= 1
         gotoProgram().size() >= 1
 
         primaryOutcomes() == ['o1', 'o2']
-        targetedPrimaryOutcomes()  == ['o1']
+        targetedPrimaryOutcomes() == ['o1']
         secondaryOutcomes() == ['o2', 'o3']
         targetedSecondaryOutcomes() == ['o2', 'o3']
     }
 
-    def "Checking Security Vulnerability after injecting Script tag"(){
+    def "Checking Security Vulnerability after injecting Script tag"() {
         setup:
-        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+        login([userId: '1', role: "ROLE_FC_ADMIN", email: 'fc-admin@nowhere.com', firstName: "FC", lastName: 'Admin'], browser)
 
         when:
-        to ManagementUnitPage
+        to ManagementUnitPage, "test_mu"
 
         and:
         editManagementUnit()
 
         then:
-        waitFor { at EditManagementUnitPage}
+        waitFor { at EditManagementUnitPage }
 
         when:
-        details.name= "Testing <script>alert('Test')</script>"
-        details.description= "Testing"
+        details.name = "Testing <script>alert('Test')</script>"
+        details.description = "Testing"
         details.save()
 
         then:
@@ -122,12 +123,12 @@ class ManagementUnitSpec extends StubbedCasSpec {
     }
 
 
-    def "As an fc admin, I can update the reporting period for reports relating to this Management Unit"(){
+    def "As an fc admin, I can update the reporting period for reports relating to this Management Unit"() {
         setup:
-        login([userId:'1', role:"ROLE_FC_ADMIN", email:'user@nowhere.com', firstName: "MERIT", lastName:'FC_ADMIN'], browser)
+        login([userId: '1', role: "ROLE_FC_ADMIN", email: 'user@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
 
         when:
-        to ManagementUnitPage
+        to ManagementUnitPage, "test_mu"
         at ManagementUnitPage
         displayReportsTab()
 
@@ -139,7 +140,7 @@ class ManagementUnitSpec extends StubbedCasSpec {
 
         then:
         adminTabPane.reportingSection.coreServicesGroup.value() == "Quarterly - Group B (First period ends 31 August 2018)"
-        adminTabPane.reportingSection.projectOutputReportingGroup.value()  == "Quarterly (First period ends 30 September 2018)"
+        adminTabPane.reportingSection.projectOutputReportingGroup.value() == "Quarterly (First period ends 30 September 2018)"
 
         when:
         adminTabPane.reportingSection.coreServicesGroup = "Monthly (First period ends 31 July 2018)"
@@ -160,5 +161,79 @@ class ManagementUnitSpec extends StubbedCasSpec {
         }
     }
 
+    def "Create mu page"() {
+        setup:
+        login([userId: '1', role: "ROLE_FC_ADMIN", email: 'user@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
 
+        when:
+        to CreateManagementUnit
+
+        then:
+        waitFor {
+            at CreateManagementUnit
+        }
+        when:
+        create.name = "Creating a management unit"
+        create.description = "Management Unit Description"
+        create.save()
+
+        then:
+        waitFor 30, {
+            at ManagementUnitPage
+        }
+        overviewBtn.click()
+        headerTitle.text() == "Creating a management unit"
+        description.text() == "Management Unit Description"
+    }
+
+    def "Management Unit Sites"() {
+        setup:
+        login([userId: '1', role: "ROLE_FC_ADMIN", email: 'fc-admin@nowhere.com', firstName: "FC", lastName: 'Admin'], browser)
+
+        when:
+        to ManagementUnitPage, "test_mu"
+
+        then:
+        waitFor {
+            at ManagementUnitPage
+        }
+
+        when:
+        sitesTab.click()
+
+        then:
+        Thread.sleep(8000)
+        waitFor 10, {
+            $("#map-info").text() == "0 projects with 0 sites No georeferenced points for the selected projects"
+        }
+    }
+
+    def "Management Unit Admin Page"() {
+        setup:
+        login([userId: '1', role: "ROLE_FC_ADMIN", email: 'fc-admin@nowhere.com', firstName: "FC", lastName: 'Admin'], browser)
+
+        when:
+        to ManagementUnitPage, "test_mu"
+
+        then:
+        waitFor {
+            at ManagementUnitPage
+        }
+
+        when:
+        adminTab.click()
+
+        then:
+        Thread.sleep(8000)
+        waitFor 10, {
+            adminTabPane.displayed
+        }
+       adminTabPane.adminColumn.size() == 6
+       adminTabPane.adminColumn[0].text() == "Edit"
+       adminTabPane.adminColumn[1].text() == "Permissions"
+       adminTabPane.adminColumn[2].text() == "Documents"
+       adminTabPane.adminColumn[3].text() == "Reporting"
+       adminTabPane.adminColumn[4].text() == "Priorities"
+       adminTabPane.adminColumn[5].text() == "Configuration"
+    }
 }

@@ -7,7 +7,6 @@ import groovy.json.JsonSlurper
 import org.apache.http.HttpStatus
 import org.grails.web.converters.marshaller.json.CollectionMarshaller
 import org.grails.web.converters.marshaller.json.MapMarshaller
-import org.grails.web.json.parser.JSONParser
 import org.joda.time.Period
 import spock.lang.Specification
 import spock.lang.Unroll

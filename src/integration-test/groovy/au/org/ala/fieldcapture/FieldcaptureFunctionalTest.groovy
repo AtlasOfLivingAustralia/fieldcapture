@@ -1,12 +1,8 @@
 package au.org.ala.fieldcapture
 
 import geb.Browser
-import geb.Page
 import geb.spock.GebReportingSpec
 import groovy.util.logging.Slf4j
-import org.apache.log4j.Logger
-import org.openqa.selenium.StaleElementReferenceException
-import pages.EntryPage
 import pages.HomePage
 import spock.lang.Shared
 
