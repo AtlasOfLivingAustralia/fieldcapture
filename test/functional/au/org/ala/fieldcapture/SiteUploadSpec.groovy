@@ -1,8 +1,8 @@
 package au.org.ala.fieldcapture
 
+import geb.module.FormElement
 import pages.RlpProjectPage
 import pages.SiteUpload
-import pages.SiteUploadProgressDialog
 
 class SiteUploadSpec extends StubbedCasSpec {
 
@@ -33,7 +33,6 @@ class SiteUploadSpec extends StubbedCasSpec {
 
         then:
         waitFor 30, { sites.size() == 5 }
-        sites*.name == ['Site 1', 'Site 2', 'Site 3', 'Site 4', 'Site 5']
 
         when:
         createSites()

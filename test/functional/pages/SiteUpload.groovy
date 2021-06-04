@@ -32,7 +32,7 @@ class SiteUpload extends Page {
 
 class SiteToUpload extends Module {
     static content = {
-        name {$('[data-bind*=name]')}
+        siteName {$('input[data-bind*="site.name"]')}
         description({$('[data-bind*=description]') })
         id { $('[data-bind*=externalId]') }
     }

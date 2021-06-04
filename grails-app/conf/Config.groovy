@@ -363,6 +363,7 @@ environments {
                 overflowToDisk false
             }
         }
+        spatial.baseUrl = "http://localhost:${wiremock.port}"
         reports.filterableActivityTypes = ['RLP Output Report', 'Wildlife Recovery Progress Report - WRR', 'Progress Report']
         grails.mail.port = com.icegreen.greenmail.util.ServerSetupTest.SMTP.port
     }

@@ -1,0 +1,10 @@
+{
+  "request": {
+    "urlPath": "/shape/upload",
+
+    "method": "DELETE"
+  },
+  "response" : {
+    "status": 200
+  }
+}
