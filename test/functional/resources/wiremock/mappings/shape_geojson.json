@@ -1,6 +1,6 @@
 {
   "request": {
-    "urlPath": "/shape/geojson/.+",
+    "urlPattern": "/ws/shape/geojson/.+",
 
     "method": "GET"
   },

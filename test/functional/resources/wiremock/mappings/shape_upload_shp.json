@@ -1,6 +1,6 @@
 {
   "request": {
-    "urlPath": "/shape/upload/shp",
+    "urlPath": "/ws/shape/upload/shp",
 
     "method": "POST"
   },

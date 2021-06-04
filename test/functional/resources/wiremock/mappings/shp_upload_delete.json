@@ -1,6 +1,6 @@
 {
   "request": {
-    "urlPath": "/shape/upload",
+    "urlPattern": "/ws/shape/upload/.+",
 
     "method": "DELETE"
   },
