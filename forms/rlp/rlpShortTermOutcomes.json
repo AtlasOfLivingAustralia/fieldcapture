@@ -896,6 +896,11 @@
                     "validate": "required"
                   },
                   {
+                    "name": "howDataDemonstratesProgress",
+                    "dataType": "text",
+                    "validate": "required,maxSize[5000]"
+                  },
+                  {
                     "name": "unableToQuantifyOutcomeReason",
                     "dataType": "text",
                     "validate": "required,maxSize[800]"
@@ -1287,6 +1292,23 @@
                         "preLabel": "Appropriateness",
                         "type": "selectOne",
                         "source": "appropriateness"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "behaviour": [
+                      {
+                        "type": "if_expression",
+                        "condition": "canQuantifyOutcomeAgainstBaseline == \"Yes\""
+                      }
+                    ],
+                    "items": [
+                      {
+                        "preLabel": "Please detail how your supporting data demonstrate progress against your selected Outcome Statement.",
+                        "type": "textarea",
+                        "rows": 4,
+                        "source": "howDataDemonstratesProgress"
                       }
                     ]
                   },
