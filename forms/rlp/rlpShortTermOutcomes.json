@@ -1305,7 +1305,7 @@
                     ],
                     "items": [
                       {
-                        "preLabel": "Please detail how your supporting data demonstrate progress against your selected Outcome Statement.",
+                        "preLabel": "Please detail how your supporting data demonstrates progress against your selected Outcome Statement.",
                         "type": "textarea",
                         "rows": 4,
                         "source": "howDataDemonstratesProgress"
