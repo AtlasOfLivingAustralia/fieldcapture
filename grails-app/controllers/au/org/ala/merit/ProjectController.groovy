@@ -940,6 +940,38 @@ class ProjectController {
         render results as JSON
     }
 
+    @PreAuthorise(accessLevel = 'editor')
+    def projectTargetsAndScores(String id) {
+        boolean approvedDataOnly = params.getBoolean("approvedDataOnly", true)
+        Map result = projectService.getServiceDashboardData(id, approvedDataOnly)
+        // Transform the result to match that returned by the scoresByFinancialYear method
+        List targets = []
+        result?.services?.each { Map service ->
+
+            service.scores.each { Map score ->
+                targets << [
+                        service:service.name,
+                        targetMeasure: score.label,
+                        projectTarget: score.target,
+                        result: score.result?.result ?: 0
+                ]
+            }
+        }
+        boolean onlyNonZeroTargets = params.getBoolean("onlyNonZeroTargets", false)
+        if (onlyNonZeroTargets) {
+            targets = targets.findAll{hasTarget(it.projectTarget)}
+        }
+        Map response = [
+                projectId: id,
+                targets: targets
+        ]
+        render response as JSON
+    }
+
+    private boolean hasTarget(value) {
+        value != 0 && value != "0"
+    }
+
     private boolean hasFinancialYearTarget(Map targetRow) {
         def financialYearTarget = targetRow.financialYearTarget
         financialYearTarget != 0 && financialYearTarget != "0"

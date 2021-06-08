@@ -549,6 +549,60 @@ class ProjectControllerSpec extends Specification {
         response.redirectUrl == '/project/index/p1'
     }
 
+    def "the controller can return a list of targets and progress towards those targets for the final report"(boolean approvedDataOnly) {
+        setup:
+        Map stubResults = [services: [[
+              id: 1,
+              name: "Service 1",
+              scores: [[
+                       scoreId: "score-1",
+                       label: "score 1",
+                       isOutputTarget: true,
+                       target: "2",
+                       periodTarget:[],
+                       result:[result:1]
+               ]]
+          ],
+          [
+              id: 2,
+              name: "Service 2",
+              scores: [[
+                       scoreId: "score-2",
+                       label: "score 2",
+                       isOutputTarget: true,
+                       target: "3",
+                       periodTarget:[],
+                       result:[result:3]
+               ]]
+          ]]]
+        when:
+        params.approvedDataOnly = approvedDataOnly
+        params.onlyNonZeroTargets = true
+        controller.projectTargetsAndScores('p1')
+
+        then:
+        1 * projectService.getServiceDashboardData('p1', approvedDataOnly) >> stubResults
+        response.json.projectId == 'p1'
+        response.json.targets == [[
+                service: "Service 1",
+                targetMeasure:"score 1",
+                projectTarget: "2",
+                result:1
+            ], [
+                 service: "Service 2",
+                 targetMeasure:"score 2",
+                 projectTarget: "3",
+                 result:3
+          ]
+        ]
+
+        where:
+        approvedDataOnly | _
+        true | _
+        false | _
+
+    }
+
     private Map stubPublicUser() {
         userServiceStub.getUser() >> null
         null
