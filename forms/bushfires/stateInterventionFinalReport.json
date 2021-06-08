@@ -11495,13 +11495,16 @@
                 "source": "outcomeStatement",
                 "title": "Outcome",
                 "rows": 5,
-                "readonly": true
+                "readonly": true,
+                "width": "45%"
               },
+
               {
                 "type": "textarea",
                 "source": "achievement",
                 "title": "Achievement against the outcome",
-                "rows": 5
+                "rows": 5,
+                "width": "50%"
               }
             ]
           },
