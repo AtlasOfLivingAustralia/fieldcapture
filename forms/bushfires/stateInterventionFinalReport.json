@@ -11560,7 +11560,7 @@
             ],
             "userAddedRows": false,
             "source": "projectTargets",
-            "title": "<b>7.3 If relevant to your project, please detail outputs against each activity minimum target.</b><br/>Where an activity minimum target has not been fully delivered, please provide a short explanation detailing why.",
+            "title": "<b>7.3 If relevant to your project, please detail outputs against each activity minimum target in your MERI Plan.</b><br/>Please ensure the total amount delivered is consistent with progress reporting. Where an activity minimum target has not been fully delivered, please provide a short explanation detailing why. This section is not required to be completed for State Government Emergency projects.",
             "type": "table"
           },
           {
