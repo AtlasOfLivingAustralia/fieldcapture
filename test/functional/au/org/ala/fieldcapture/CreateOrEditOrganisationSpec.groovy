@@ -37,7 +37,7 @@ class CreateOrEditOrganisationSpec extends StubbedCasSpec {
         details.prePopulateABN.click()
         waitFor { details.name.displayed}
         details.description = "Test Organisation Description test"
-        waitFor (10) {details.save()}
+        details.save()
 
         then:
         waitFor (10){ at Organisation}
@@ -71,7 +71,7 @@ class CreateOrEditOrganisationSpec extends StubbedCasSpec {
         waitFor { details.name.displayed}
         details.name.value("Test Organisation Test 2")
         details.description = "Test Organisation Description test"
-        waitFor (10) {details.save()}
+        details.save()
 
         then:
         waitFor (10){ at Organisation}
@@ -92,17 +92,20 @@ class CreateOrEditOrganisationSpec extends StubbedCasSpec {
         to Organisation, orgId
 
         then:
-        waitFor 10, { at Organisation }
-
-        and:
         waitFor {adminTab.displayed}
+
+        when:
         adminTab.click()
+
+        then:
         waitFor 10, { adminTabContent.displayed }
         waitFor 10, { adminTabContent.editButton.displayed }
+
+        when:
         adminTabContent.editButton.click()
 
         then:
-        waitFor 10, {at EditOrganisation}
+        waitFor 20, {at EditOrganisation}
 
         when:
         details.abn = "11111111111"
@@ -111,7 +114,7 @@ class CreateOrEditOrganisationSpec extends StubbedCasSpec {
         waitFor { details.name.displayed}
         details.name = "Test Organisation Test 2 <script>alert('Test')</script>"
         details.description = "Test Organisation Description test"
-        waitFor (10) {details.save()}
+        details.save()
 
         then:
         waitFor { at Organisation}
