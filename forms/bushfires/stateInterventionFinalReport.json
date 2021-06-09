@@ -11659,7 +11659,12 @@
             "source": {
               "context-path": "owner"
             },
-            "merge": true,
+            "merge": {
+              "projectOutcomes": {
+                "deleteUnmatchedExistingRows": true,
+                "addUnmatchedNewRows": true
+              }
+            },
             "mapping": [
               {
                 "target": "projectOutcomes",
