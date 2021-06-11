@@ -2,7 +2,7 @@
 <h3>MERI Plan</h3>
 <div id="edit-meri-plan">
 <script id="submittedPlanTmpl" type="text/html">
-<div class="col-sm-6 required">
+<div class="required">
 	<div class="form-actions" >
 		<b>Grant manager actions:</b>
 		<div data-bind="if:!canApprove()">
@@ -14,15 +14,15 @@
 			<input id="internalOrderId" type="text" placeholder="If unavailable, use 'TBA'" data-bind="value:internalOrderId, valueUpdate:'keyup'">
 		</div>
 		</div>
-		<span class="btn-group grantManagerActionSpan">
-			<button type="button" data-bind="enable:canApprove() || internalOrderId(), click:approvePlan" class="btn btn-success"><i class="fa fa-check icon-white"></i> Approve</button>
-			<button type="button" data-bind="click:rejectPlan" class="btn btn-danger"><i class="fa fa-remove icon-white"></i> Reject</button>
+		<span class="grantManagerActionSpan">
+			<button type="button" data-bind="enable:canApprove() || internalOrderId(), click:approvePlan" class="btn btn-sm btn-success"><i class="fa fa-check icon-white"></i> Approve</button>
+			<button type="button" data-bind="click:rejectPlan" class="btn btn-sm btn-danger"><i class="fa fa-remove icon-white"></i> Reject</button>
 		</span>
 	</div>
 </div>
 </script>
 <script id="approvedPlanTmpl" type="text/html">
-<div class="col-sm-6 required">
+<div class="required">
 	<div class="form-actions">
 		<b>Grant manager actions:</b>
 		<button type="button" data-bind="click: modifyPlan"  id="modify-plan" class="btn btn-sm btn-info">Modify MERI Plan</button>
@@ -38,7 +38,7 @@
 
 </script>
 <script id="completedProjectTmpl" type="text/html">
-<div class="col-sm-6 required">
+<div class="required">
 	%{--<div class="form-actions" >--}%
 		%{--<b>Grant manager actions:</b>--}%
 		%{--<span class="btn-group">--}%
@@ -48,10 +48,10 @@
 </div>
 </script>
 <script id="unlockedProjectTmpl" type="text/html">
-<div class="col-sm-6 required">
+<div class="required">
 	<div class="form-actions" >
 		<b>Grant manager actions:</b>
-		<span class="btn-group">
+		<span class="unlockGroup">
 			<button type="button" data-bind="click:finishCorrections" class="btn btn-sm btn-success"><i class="fa fa-lock icon-white"></i> Finished corrections</button>
 		</span>
 	</div>
@@ -125,7 +125,7 @@
 <!--  Case manager actions -->
 <g:if test="${user?.isCaseManager}">
 <div class="row space-after">
-	<div data-bind="template:meriGrantManagerActionsTemplate"></div>
+	<div data-bind="template:meriGrantManagerActionsTemplate" class="col-sm-6"></div>
 </div>
 </g:if>
 
