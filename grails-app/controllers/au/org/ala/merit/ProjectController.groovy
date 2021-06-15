@@ -950,6 +950,7 @@ class ProjectController {
 
             service.scores.each { Map score ->
                 targets << [
+                        scoreId:score.scoreId,
                         service:service.name,
                         targetMeasure: score.label,
                         projectTarget: score.target,

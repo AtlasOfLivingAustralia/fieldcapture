@@ -584,11 +584,13 @@ class ProjectControllerSpec extends Specification {
         1 * projectService.getServiceDashboardData('p1', approvedDataOnly) >> stubResults
         response.json.projectId == 'p1'
         response.json.targets == [[
+                scoreId:'score-1',
                 service: "Service 1",
                 targetMeasure:"score 1",
                 projectTarget: "2",
                 result:1
             ], [
+                scoreId:'score-2',
                  service: "Service 2",
                  targetMeasure:"score 2",
                  projectTarget: "3",

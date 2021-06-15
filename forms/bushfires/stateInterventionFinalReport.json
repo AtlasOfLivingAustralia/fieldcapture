@@ -11662,7 +11662,10 @@
             "merge": {
               "projectOutcomes": {
                 "deleteUnmatchedExistingRows": true,
-                "addUnmatchedNewRows": true
+                "addUnmatchedNewRows": true,
+                "keys": [
+                  "outcomeStatement"
+                ]
               }
             },
             "mapping": [
@@ -11713,10 +11716,10 @@
                   "serviceName",
                   "targetMeasure"
                 ],
-                "annualTarget": {
+                "projectTarget": {
                   "replaceExisting": true
                 },
-                "result": {
+                "delivered": {
                   "replaceExisting": true
                 },
                 "sort": [
@@ -11741,6 +11744,10 @@
                 {
                   "name": "onlyNonZeroTargets",
                   "value": true
+                },
+                {
+                  "name": "approvedDataOnly",
+                  "value": false
                 }
               ],
               "url": "/project/projectTargetsAndScores/"
