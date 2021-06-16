@@ -1,6 +1,6 @@
 
 <g:set var="disableCondition" value="${disableConditionPrefix}\$parent.isProjectDetailsLocked()"/>
-<div class="well well-small">
+<div class="card well well-small">
     <label>
         <b>Projects Announcements
         <fc:iconHelp title="Projects Announcements">This section provides Grantee’s a place to provide key forward (planned) announcables and invite the Australian Government to participate in launches, communication and media opportunities related to this requirement. This includes opportunities to announce recipients of small projects and related activities.</fc:iconHelp>

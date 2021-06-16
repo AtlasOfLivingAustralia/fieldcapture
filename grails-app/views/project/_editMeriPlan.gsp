@@ -124,9 +124,9 @@
 
 <!--  Case manager actions -->
 <g:if test="${user?.isCaseManager}">
-<div class="row space-after">
-	<div data-bind="template:meriGrantManagerActionsTemplate" class="col-sm-6"></div>
-</div>
+	<div class="row space-after">
+		<div data-bind="template:meriGrantManagerActionsTemplate" class="col-sm-12"></div>
+	</div>
 </g:if>
 
 <g:if test="${projectContent.details.visible}">
