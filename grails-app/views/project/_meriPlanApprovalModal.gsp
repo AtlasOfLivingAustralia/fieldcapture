@@ -28,7 +28,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-success" data-bind="click:submit, text:buttonText, enable:reason() && referenceDocument()" data-dismiss="modal" aria-hidden="true"></button>
-                <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                <button class="btn btn-sm" data-dismiss="modal" aria-hidden="true">Cancel</button>
             </div>
         </div>
     </div>

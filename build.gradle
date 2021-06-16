@@ -7,11 +7,8 @@ buildscript {
     dependencies {
         classpath "org.grails:grails-gradle-plugin:$grailsVersion"
         classpath "gradle.plugin.com.github.erdi.webdriver-binaries:webdriver-binaries-gradle-plugin:2.0"
-        //classpath "org.grails.plugins:hibernate5:7.0.4"
-        classpath "com.bertramlabs.plugins:asset-pipeline-gradle:3.2.4"
-        //classpath 'com.bmuschko:gradle-clover-plugin:3.0.1'
         classpath 'org.grails.plugins:quartz:2.0.13'
-        classpath 'com.bertramlabs.plugins:less-asset-pipeline:3.3.1'
+        classpath "com.bertramlabs.plugins:asset-pipeline-gradle:3.3.1"
     }
 }
 
@@ -29,9 +26,7 @@ apply plugin:"war"
 apply plugin:"org.grails.grails-web"
 apply plugin:"com.github.erdi.webdriver-binaries"
 apply plugin:"asset-pipeline"
-//apply plugin:"com.bertramlabs.asset-pipeline"
 apply plugin:"org.grails.grails-gsp"
-//apply plugin: 'com.bmuschko.clover'
 
 repositories {
     mavenLocal()
@@ -55,6 +50,7 @@ def metadataExtractorVersion = "2.6.2"
 def imgscalrVersion = "4.2"
 def httpmimeVersion = "4.2.1"
 def jtsVersion = "1.8"
+def ecodataClientPluginVersion = "4.0"
 boolean inplace = false // Set to true it needed only for development
 
 dependencies {
@@ -76,66 +72,14 @@ dependencies {
     compile "org.grails.plugins:async"
     compile "org.grails.plugins:scaffolding"
     compile "org.grails.plugins:events"
-    //compile "org.grails.plugins:hibernate5"
-    //compile "org.hibernate:hibernate-core:5.4.18.Final"
     compile "org.grails.plugins:gsp"
-    compileOnly "io.micronaut:micronaut-inject-groovy"
-    console "org.grails:grails-console"
-    profile "org.grails.profiles:web"
-    runtime "org.glassfish.web:el-impl:2.1.2-b03"
-    runtime "com.h2database:h2"
-    runtime "org.apache.tomcat:tomcat-jdbc"
-    runtime "javax.xml.bind:jaxb-api:2.3.1"
-    runtime "com.bertramlabs.plugins:asset-pipeline-grails:3.2.4"
-    testCompile "io.micronaut:micronaut-inject-groovy"
-    testCompile "org.grails:grails-gorm-testing-support"
-    testCompile "org.mockito:mockito-core"
-    testCompile "org.grails:grails-web-testing-support"
-    testCompile "org.grails.plugins:geb"
-//    testCompile "org.seleniumhq.selenium:selenium-remote-driver:3.14.0"
-//    testCompile "org.seleniumhq.selenium:selenium-api:3.14.0"
-//    testCompile "org.seleniumhq.selenium:selenium-support:3.14.0"
-//    testRuntime "org.seleniumhq.selenium:selenium-chrome-driver:3.14.0"
-//    testRuntime "org.seleniumhq.selenium:selenium-firefox-driver:3.14.0"
 
-
-
-
-    compile "org.springframework.boot:spring-boot-starter-logging"
-    compile "org.springframework.boot:spring-boot-autoconfigure"
-    compile "org.grails:grails-core"
-    compile 'javax.media:jai-core:1.1.3'
-    compile "org.springframework.boot:spring-boot-starter-actuator"
-    compile "org.springframework.boot:spring-boot-starter-tomcat"
-    compile "org.grails:grails-web-boot"
-    compile "org.grails:grails-logging"
-    compile "org.grails:grails-plugin-rest"
-    compile "org.grails:grails-plugin-databinding"
-    compile "org.grails:grails-plugin-i18n"
-    compile "org.grails:grails-plugin-services"
-    compile "org.grails:grails-plugin-url-mappings"
-    compile "org.grails:grails-plugin-interceptors"
-    //compile "org.grails.plugins:cache"
-    compile "org.grails.plugins:async"
-    compile "org.grails.plugins:scaffolding"
-    compile "org.grails.plugins:events"
-    //compile "org.grails.plugins:hibernate5"
-    //compile "org.hibernate:hibernate-core:5.1.16.Final"
-    //compile "org.grails.plugins:gsp"
-    console "org.grails:grails-console"
-    profile "org.grails.profiles:web"
-//    runtime "org.glassfish.web:el-impl:2.1.2-b03"
-//    runtime "com.h2database:h2"
-    //runtime "org.apache.tomcat:tomcat-jdbc"
-
-    runtime 'com.bertramlabs.plugins:asset-pipeline-grails:3.0.10'
     compile "org.elasticsearch:elasticsearch:1.7.1"
     compile "org.grails.plugins:ala-auth:3.2.3"
     compile "org.grails.plugins:ala-admin-plugin:2.1"
     runtime "org.grails.plugins:ala-bootstrap3:3.2.3"
     compile "au.org.ala:userdetails-service-client:1.5.0"
     compile "org.grails.plugins:ala-ws-plugin:2.0"
-    //compile "org.apache.httpcomponents:httpclient:4.5.7"
     compile 'org.grails.plugins:excel-export:2.1'
     compile 'org.grails.plugins:mail:2.0.0'
     compile 'org.grails.plugins:quartz:2.0.13'
@@ -147,16 +91,12 @@ dependencies {
     compile "org.geotools:gt-geojson:${geoToolsVersion}"
     compile "com.drewnoakes:metadata-extractor:${metadataExtractorVersion}"
     compile "org.imgscalr:imgscalr-lib:${imgscalrVersion}"
-    //compile "org.apache.httpcomponents:httpmime:${httpmimeVersion}"
     compile "com.vividsolutions:jts:${jtsVersion}"
     compile "org.geotools.xsd:gt-xsd-kml:${geoToolsVersion}"
-    //compile 'org.grails.plugins:joda-time:2.1.0'
     compile 'joda-time:joda-time:2.3'
     compile "org.codehaus.groovy.modules.http-builder:http-builder:0.7.1"
     compile "org.apache.httpcomponents:httpcore:4.4.13"
-    //compile "org.apache.httpcomponents:httpclient:4.4.1"
     compile "org.apache.httpcomponents:httpclient:4.5.7"
-    //compile "org.apache.httpcomponents:httpmime:4.5.9"
     compile "org.apache.httpcomponents:httpmime:4.2.1"
     compile "org.apache.pdfbox:pdfbox:2.0.4"
     compile 'org.grails.plugins:excel-export:2.1'
@@ -168,53 +108,19 @@ dependencies {
     compile "org.grails.plugins:ala-ws-security-plugin:2.0"
 
     compile "org.grails.plugins:grails-google-visualization:2.2.1"
-    runtime "com.bertramlabs.plugins:asset-pipeline-grails:3.2.4"
+    compile 'javax.media:jai-core:1.1.3'
+    compile "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
 
-
-    runtime "net.java.dev.jna:jna:4.5.1"
-    provided "io.methvin:directory-watcher:0.4.0"
-
-    //testCompile "org.grails:grails-gorm-testing-support"
-    testCompile "org.grails.plugins:geb"
-    //testCompile "org.grails:grails-web-testing-support"
-    //testCompile "org.grails.plugins:geb:1.1.2"
-    //compile "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
-    //testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
-    //compile "org.seleniumhq.selenium:selenium-chrome-driver:2.47.1"
-    //clover 'org.openclover:clover:4.3.1'
-
-    //testRuntime 'org.openclover:clover:4.3.0'
-    //compile 'com.github.tomakehurst:wiremock-jre8-standalone:2.24.1'
-    //compile 'com.github.tomakehurst:wiremock-jre8-standalone:2.24.1'
-    testRuntime "org.gebish:geb-spock"
-//    compile "org.seleniumhq.selenium:selenium-support:2.53.1"
-//    compile "org.seleniumhq.selenium:selenium-firefox-driver:2.53.1"
-//    compile "org.seleniumhq.selenium:selenium-chrome-driver:2.53.1"
+    compile "org.seleniumhq.selenium:selenium-support:2.53.1"
     compile "com.codeborne:phantomjsdriver:1.3.0"
-    testRuntime "net.sourceforge.nekohtml:nekohtml:1.9.22"
     compile "com.icegreen:greenmail:1.5.14"
-    testCompile "org.grails:grails-test-mixins:3.3.0"
-
-    //compile "org.grails.plugins:cache-ehcache:3.0.0"
-    //compile "org.hibernate:hibernate-ehcache:5.4.18.Final"
 
     compile ('net.sourceforge.nekohtml:nekohtml:1.9.22'){
         exclude module: "xercesImpl"
     }
-
-    //if (Environment.current != Environment.DEVELOPMENT) {
-
-    //}
-
     compile 'org.grails.plugins:grails-cookie:2.0.3'
     compile 'org.grails.plugins:grails-markdown:3.0.0'
-    runtime 'org.webjars:jquery:1.12.4'
-    //compile "org.codehaus.groovy:groovy-all:2.4.17"
-//    compile 'com.google.guava:guava:18.0'
-    runtime("org.springframework.boot:spring-boot-properties-migrator")
-
-    //compile "com.bertramlabs.plugins:asset-pipeline-grails:$assetPipelineVersion"
-    compile "com.bertramlabs.plugins:asset-pipeline-core:$assetPipelineVersion"
+    //compile 'com.google.guava:guava:18.0'
 
     compile 'org.apache.poi:ooxml-schemas:1.4'
     compile 'org.apache.poi:poi:4.1.2'
@@ -223,33 +129,42 @@ dependencies {
     compile 'org.codehaus.groovy:groovy-dateutil:2.5.0'
 
     compile 'au.org.ala:ala-cas-client:2.5'
-    //compile 'org.grails.plugins:converters:4.0.1'
     compile "org.grails.plugins:converters"
     compile "org.grails:grails-plugin-codecs"
     compile "commons-io:commons-io:2.6"
+    compile "org.seleniumhq.selenium:selenium-chrome-driver:2.46.0"
+    compile 'com.bertramlabs.plugins:asset-pipeline-grails:3.3.1'
 
-    testCompile "org.grails:grails-gorm-testing-support"
-    testCompile "org.grails:grails-web-testing-support"
-//    testRuntime "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
-//    testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
-    testCompile "com.github.tomakehurst:wiremock-jre8-standalone:2.28.0"
-//    testCompile "org.seleniumhq.selenium:selenium-chrome-driver:2.53.1"
-//    testCompile "org.seleniumhq.selenium:selenium-firefox-driver:2.53.1"
+    compileOnly "io.micronaut:micronaut-inject-groovy"
+    console "org.grails:grails-console"
+    profile "org.grails.profiles:web"
+    runtime "org.glassfish.web:el-impl:2.1.2-b03"
+    runtime "com.h2database:h2"
+    runtime "org.apache.tomcat:tomcat-jdbc"
+    runtime "javax.xml.bind:jaxb-api:2.3.1"
 
+    runtime "net.java.dev.jna:jna:4.5.1"
+    runtime("org.springframework.boot:spring-boot-properties-migrator")
+
+    testCompile "io.micronaut:micronaut-inject-groovy"
     testCompile "org.grails:grails-gorm-testing-support"
-//    testCompile "org.grails.plugins:geb"
+    testCompile "org.mockito:mockito-core"
     testCompile "org.grails:grails-web-testing-support"
-//    testRuntime "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
+    testCompile "org.grails.plugins:geb"
     testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
-//    testCompile "com.github.tomakehurst:wiremock-jre8-standalone:2.27.2"
-//    testCompile "org.seleniumhq.selenium:selenium-chrome-driver:2.53.1"
-//    testCompile "org.seleniumhq.selenium:selenium-firefox-driver:2.53.1"
-//    compile "org.seleniumhq.selenium:selenium-chrome-driver:2.46.0"
+    testRuntime "org.gebish:geb-spock"
+    testRuntime "net.sourceforge.nekohtml:nekohtml:1.9.22"
+    testCompile "org.grails:grails-test-mixins:3.3.0"
+    testCompile "org.grails:grails-gorm-testing-support"
+    testCompile "org.grails:grails-web-testing-support"
+    testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
+    testCompile "com.github.tomakehurst:wiremock-jre8-standalone:2.28.0"
+    testRuntime "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
 
-    compile 'com.bertramlabs.plugins:less-asset-pipeline:3.3.1'
+    provided "io.methvin:directory-watcher:0.4.0"
 
     if (!inplace) {
-        compile "org.grails.plugins:ecodata-client-plugin:4.0-SNAPSHOT"
+        compile "org.grails.plugins:ecodata-client-plugin:${ecodataClientPluginVersion}-SNAPSHOT"
     }
     else{
         compile project(":ecodata-client-plugin")
@@ -262,16 +177,15 @@ dependencies {
 
 springBoot {
     buildInfo()
-    //layout = WAR
 }
 
 bootRun {
     ignoreExitValue true
     jvmArgs(
-        '-Dspring.output.ansi.enabled=always', 
-        '-noverify', 
-        '-XX:TieredStopAtLevel=1',
-        '-Xmx1024m')
+            '-Dspring.output.ansi.enabled=always',
+            '-noverify',
+            '-XX:TieredStopAtLevel=1',
+            '-Xmx1024m')
     sourceResources sourceSets.main
     String springProfilesActive = 'spring.profiles.active'
     systemProperty springProfilesActive, System.getProperty(springProfilesActive)
@@ -282,11 +196,6 @@ tasks.withType(GroovyCompile) {
         forkOptions.jvmArgs = ['-Xmx1024m']
     }
 }
-
-//webdriverBinaries {
-//    chromedriver '2.45.0'
-//    geckodriver '0.24.0'
-//}
 
 tasks.withType(Test) {
     systemProperty "geb.env", System.getProperty('geb.env')
@@ -299,6 +208,10 @@ tasks.withType(Test) {
 assets {
     minifyJs = true
     minifyCss = true
+    maxThreads = 4 //useful for concurrent asset processing during build
+    configOptions = [:] //useful for custom config on extension libraries
+    includes = []
+    excludes = ['**/build/hintrc.js', 'hintrc.unminified.js', '**/spec/spec.hintrc.js', 'spec.hintrc.unminified.js'] //Example Exclude GLOB pattern
 }
 
 bootJar {
