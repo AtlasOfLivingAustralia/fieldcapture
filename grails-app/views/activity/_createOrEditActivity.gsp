@@ -440,16 +440,16 @@
             activity = JSON.parse(restored); // this parse will converted into JSON object
             bootbox.alert("Unsaved data has been found for this form.  Please press 'Save' to keep this data or 'Cancel' to discard it");
         }else {
-            activity = ${fc.modelAsJavascript([model:activity?:[:]])};
+            activity = <fc:modelAsJavascript model="${activity ?: [:]}"/>;
         };
 
         var viewModel = new ViewModel(
     activity,
-    ${site ?: 'null'},
-    ${project ?: 'null'},
-    ${(activityTypes as JSON).toString()},
-    ${themes},
-     ${fc.modelAsJavascript(model:outputTargetMetadata ?: [:])});
+    <fc:modelAsJavascript model="${site ?: null}"/>,
+    <fc:modelAsJavascript model="${project?: null}"/>,
+    <fc:modelAsJavascript model="${activityTypes}"/>,
+    <fc:modelAsJavascript model="${themes ?: null}"/>,
+    <fc:modelAsJavascript model="${outputTargetMetadata ?: [:]}"/>);
 
         var mapFeatures = $.parseJSON('${mapFeatures?mapFeatures.encodeAsJavaScript():"{}"}');
 

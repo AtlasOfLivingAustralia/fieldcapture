@@ -22,7 +22,9 @@ class ManagementUnitReportingSpec extends StubbedCasSpec {
     }
 
     def cleanup() {
-        logout(browser)
+        waitFor {
+            logout(browser)
+        }
     }
 
 
@@ -33,7 +35,7 @@ class ManagementUnitReportingSpec extends StubbedCasSpec {
         login([userId: '1', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'Admin'], browser)
 
         when: "Display the reporting tab"
-        to ManagementUnitPage
+        to ManagementUnitPage, managementUnitId
         reportsTab.click()
 
         then:
@@ -47,7 +49,7 @@ class ManagementUnitReportingSpec extends StubbedCasSpec {
         login([userId: '3', role: "ROLE_FC_OFFICER", email: 'fc_officer@nowhere.com', firstName: "MERIT", lastName: 'FC_OFFICER'], browser)
 
         when: "Display the reporting tab"
-        to ManagementUnitPage
+        to ManagementUnitPage, managementUnitId
         adminTab.click()
 
         then:
@@ -78,7 +80,7 @@ class ManagementUnitReportingSpec extends StubbedCasSpec {
         login([userId: '1', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MU", lastName: 'Admin'], browser)
 
         when: "Display the reporting tab and edit the first report"
-        to ManagementUnitPage
+        to ManagementUnitPage, managementUnitId
         reportsTab.click()
         waitFor { reportsTabPane.displayed }
         reportsTabPane.reports[0].edit()
@@ -140,7 +142,7 @@ class ManagementUnitReportingSpec extends StubbedCasSpec {
         login([userId: '3', role: "ROLE_FC_OFFICER", email: 'fc_officer@nowhere.com', firstName: "MERIT", lastName: 'FC_OFFICER'], browser)
 
         when: "Display the reporting tab"
-        to ManagementUnitPage
+        to ManagementUnitPage, managementUnitId
         reportsTab.click()
         waitFor { reportsTabPane.displayed }
 

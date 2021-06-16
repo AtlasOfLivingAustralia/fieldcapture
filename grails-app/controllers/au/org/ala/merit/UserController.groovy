@@ -1,11 +1,13 @@
 package au.org.ala.merit
 
 import grails.converters.JSON
+import groovy.util.logging.Slf4j
 import org.grails.web.json.JSONArray
 
 /**
  * Extends the UserController to add report information.
  */
+@Slf4j
 class UserController {
 
     ReportService reportService

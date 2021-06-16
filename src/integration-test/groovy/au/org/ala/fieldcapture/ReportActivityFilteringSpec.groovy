@@ -12,7 +12,9 @@ class ReportActivityFilteringSpec extends StubbedCasSpec {
     }
 
     def cleanup() {
-        logout(browser)
+        waitFor {
+            logout(browser)
+        }
     }
 
 

@@ -14,7 +14,7 @@ if (!System.getProperty("webdriver.chrome.driver")) {
     System.setProperty("webdriver.chrome.driver", "node_modules/chromedriver/bin/chromedriver")
 }
 driver = { new ChromeDriver() }
-baseUrl = 'http://devt.ala.org.au:8087/fieldcapture'
+baseUrl = 'http://devt.ala.org.au:8087/fieldcapture/'
 environments {
 
 

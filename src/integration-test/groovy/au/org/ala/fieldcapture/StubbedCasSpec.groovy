@@ -82,7 +82,7 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
     }
 
     private String getMappingsPath() {
-        new File(getClass().getResource("/wiremock.mappings").toURI())
+        new File(getClass().getResource("/wiremock").toURI())
     }
 
     def login(Map userDetails, Browser browser) {

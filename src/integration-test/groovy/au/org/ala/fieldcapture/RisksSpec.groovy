@@ -22,7 +22,9 @@ class RisksSpec extends StubbedCasSpec {
     }
 
     def cleanup() {
-        logout(browser)
+        waitFor {
+            logout(browser)
+        }
     }
 
     def "The risks and threats appears on the activity tab on the original MERIT template"() {
@@ -107,6 +109,7 @@ class RisksSpec extends StubbedCasSpec {
 
         when:
         at RlpProjectPage // reset at check time.
+        adminContent.openRisksAndThreats()
         adminContent.risksAndThreats.overallRisk == 'Medium'
         adminContent.risksAndThreats.cancel()
 

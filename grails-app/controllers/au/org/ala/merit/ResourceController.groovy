@@ -1,7 +1,9 @@
 package au.org.ala.merit
 
 import grails.core.GrailsApplication
+import groovy.util.logging.Slf4j
 
+@Slf4j
 class ResourceController {
 
     def webService, commonService

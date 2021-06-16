@@ -111,7 +111,7 @@ class ManagementUnitSpec extends StubbedCasSpec {
         details.save()
 
         then:
-        at ManagementUnitPage
+        waitFor {at ManagementUnitPage }
 
         and:
         overviewBtn.click()

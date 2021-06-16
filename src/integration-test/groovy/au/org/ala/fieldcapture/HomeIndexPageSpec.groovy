@@ -26,7 +26,9 @@ class HomeIndexPageSpec extends StubbedCasSpec {
 
         when: "Reindex to ensure the project explorer will have predictable data"
         reindex()
-        logout(browser)
+        waitFor {
+            logout(browser)
+        }
         login([userId: '2', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ALA_ADMIN'], browser)
         to AdminTools
 

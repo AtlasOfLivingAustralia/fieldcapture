@@ -48,14 +48,14 @@ class ProjectIndexSpec extends StubbedCasSpec {
         admin.documents.attachDocumentDialog.reportOptions.size() == 2
 
         when:
-        File toAttach = new File(getClass().getResource('/resources/testImage.png').toURI())
+        File toAttach = new File(getClass().getResource('/testImage.png').toURI())
         admin.documents.attachDocumentDialog.report = 'report_1'
         admin.documents.attachDocumentDialog.title = 'test 2'
         admin.documents.attachDocumentDialog.file =(toAttach.absolutePath)
         admin.documents.attachDocumentDialog.save()
 
         then:
-        waitFor{hasBeenReloaded()}
+        waitFor 10, {hasBeenReloaded()}
         at ProjectIndex // Do another at check or the next call to "hasBeenReloaded" will return regardless of whether the page has been reloaded again.
 
         waitFor {admin.documents.documentSummaryList().size() == 2}
@@ -123,7 +123,7 @@ class ProjectIndexSpec extends StubbedCasSpec {
         admin.projectSettings.saveChangesButton.click()
 
         then:
-        waitFor{hasBeenReloaded()}
+        waitFor 20, {hasBeenReloaded()}
         at ProjectIndex
 
         !admin.projectSettings.internalOrderIdErrorDisplayed()

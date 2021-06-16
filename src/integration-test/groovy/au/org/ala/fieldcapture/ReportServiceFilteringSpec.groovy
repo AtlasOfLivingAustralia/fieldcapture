@@ -14,7 +14,9 @@ class ReportServiceFilteringSpec extends StubbedCasSpec {
     }
 
     def cleanup() {
-        logout(browser)
+        waitFor {
+            logout(browser)
+        }
     }
 
     // Clear the metadata cache to ensure the services and scores are loaded correctly.

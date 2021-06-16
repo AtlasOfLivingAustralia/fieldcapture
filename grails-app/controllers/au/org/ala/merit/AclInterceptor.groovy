@@ -1,12 +1,14 @@
 package au.org.ala.merit
 
 import grails.core.GrailsApplication
+import groovy.util.logging.Slf4j
 
 /**
  * Grails Filter to check for controller methods annotated with <code>@{@link PreAuthorise}</code>
  *
  * @see PreAuthorise
  */
+@Slf4j
 class AclInterceptor {
     def userService, projectService, roleService
     GrailsApplication grailsApplication

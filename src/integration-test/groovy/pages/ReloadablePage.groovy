@@ -50,4 +50,8 @@ class ReloadablePage extends Page {
         }
     }
 
+    void setHealthCheckUrl() {
+        js.exec("window.fcConfig = {healthCheckUrl:'/health'};")
+    }
+
 }

@@ -80,8 +80,10 @@ class RemoveUserPermissionSpec extends StubbedCasSpec {
         waitFor {adminContent.projectAccess.displayed}
 
         and:
-        adminContent.projectAccess.size() == 1
-        adminContent.projectAccess[0].messageRow.text() ==  "No project members set"
+        waitFor {
+            adminContent.projectAccess.size() == 1
+            adminContent.projectAccess[0].messageRow.text() == "No project members set"
+        }
     }
 
     def "Check ROLE_USER can access the page or not"() {

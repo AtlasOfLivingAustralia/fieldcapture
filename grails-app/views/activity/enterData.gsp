@@ -240,7 +240,7 @@
             window.onunload = unlockActivity;
         }
 
-        var metaModel = ${metaModel};
+        var metaModel = <fc:modelAsJavascript model="${metaModel}"/>;
         var minOptionalSections = 1;
         if (!_.isUndefined(metaModel.minOptionalSectionsCompleted)) {
             minOptionalSections = metaModel.minOptionalSectionsCompleted;

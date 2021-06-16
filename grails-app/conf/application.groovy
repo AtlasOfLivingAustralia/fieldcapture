@@ -300,9 +300,13 @@ security {
     cas {
         appServerName = 'http://devt.ala.org.au:8087' // or similar, up to the request path part
         // service = 'http://devt.ala.org.au:8080' // optional, if set it will always be used as the return path from CAS
-        uriFilterPattern = '.*/user/.*,.*/site/(?!index).*,.*/project/(?!(index|viewReportCallback)).*,.*/activity/(?!ajaxUnlock).*,.*/output/(?!index).*,.*/image/delete.*,.*/image/upload.*,.*/admin/.*,.*/proxy/speciesListPost,.*/document/documentUpdate,.*/document/deleteDocument,.*/document/downloadProjectDataFile/.*,.*/home/advanced,.*/organisation/(?!index).*,.*/organisation/(?!list).*,.*/blog/.*,.*/report/performanceAssessmentSummaryReport,.*/report/performanceAssessmentComparisonReport.*,.*/report/update.*,.*/program/(?!(index|viewReportCallback)).*,.*/programme/.*,.*/rlp/(?!(index|viewReportCallback)).*,.*/home/login.*,.*/ajax/keepSessionAlive'
+        casServerUrlPrefix = 'https://auth.ala.org.au/cas'
+        loginUrl = 'https://auth.ala.org.au/cas/login'
+        logoutUrl = 'https://auth.ala.org.au/cas/logout'
+        casServerName = 'https://auth.ala.org.au'
+        uriFilterPattern = '/user/.*,/site/(?!index).*,/project/(?!(index|viewReportCallback)).*,/activity/(?!ajaxUnlock).*,/output/(?!index).*,/image/delete.*,/image/upload.*,/admin/.*,/proxy/speciesListPost,/document/documentUpdate,/document/deleteDocument,/document/downloadProjectDataFile/.*,/home/advanced,/organisation/(?!index).*,/organisation/(?!list).*,/blog/.*,/report/performanceAssessmentSummaryReport,/report/performanceAssessmentComparisonReport.*,/report/update.*,/program/(?!(index|viewReportCallback)).*,/programme/.*,/rlp/(?!(index|viewReportCallback)).*,/home/login.*,/ajax/keepSessionAlive'
         uriExclusionFilterPattern = '/assets/.*,/images/.*,/css/.*,/js/.*,/less/.*' // this is the default value
-        authenticateOnlyIfLoggedInPattern =  '/,/;.*,/[A-Za-z0-9]+/?,.*/project/index.*,.*/site/index.*,.*/activity/ajaxUnlock.*,.*/output/index.*,.*/image/.*,.*/search/.*,.*/home/.*,.*/organisation/index.*,.*/organisation/list.*,.*/report/loadReport.*,.*/report/reef2050PlanActionReport.*,.*/explore.*,.*/rlp/reportPDF.*,.*/rlp/index.*,.*/program/index.*'
+        authenticateOnlyIfLoggedInPattern =  '/,/;.*,/[A-Za-z0-9]+/?,/project/index.*,/site/index.*,/activity/ajaxUnlock.*,/output/index.*,/image/.*,/search/.*,/home/.*,/organisation/index.*,/organisation/list.*,/report/loadReport.*,/report/reef2050PlanActionReport.*,/explore.*,/rlp/reportPDF.*,/rlp/index.*,/program/index.*'
     }
 }
 pdfbox.fontcache="/data/${appName}/cache/"
@@ -351,8 +355,8 @@ environments {
         userDetailsUrl = "${userDetatails.url}getUserListFull"
         logging.dir = '.'
         upload.images.path = '/tmp'
-        ecodata.baseUrl = 'http://devt.ala.org.au:8080/ecodata/ws/'
-        ecodata.service.url = 'http://devt.ala.org.au:8080/ecodata/ws'
+        ecodata.baseUrl = 'http://devt.ala.org.au:8080/ws/'
+        ecodata.service.url = 'http://devt.ala.org.au:8080/ws'
         pdfgen.baseURL = "http://devt.ala.org.au:${wiremock.port}/"
         abn.abnUrl= "http://localhost:${wiremock.port}/json/AbnDetails.aspx?abn="
         abn.abnLookupToken = "123456"

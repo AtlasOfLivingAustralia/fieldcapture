@@ -13,7 +13,7 @@ class ImportProjectsSpec extends StubbedCasSpec {
     def "New project can be imported into MERIT"() {
 
         setup:
-        File csv = new File(getClass().getResource("/resources/single-project-import-data.csv").toURI())
+        File csv = new File(getClass().getResource("/single-project-import-data.csv").toURI())
         login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
 
         when:
@@ -56,7 +56,7 @@ class ImportProjectsSpec extends StubbedCasSpec {
     def "New projects can be imported into MERIT"() {
 
         setup:
-        File csv = new File(getClass().getResource("/resources/multiple-project-import-data.csv").toURI())
+        File csv = new File(getClass().getResource("/multiple-project-import-data.csv").toURI())
         login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
 
         when:

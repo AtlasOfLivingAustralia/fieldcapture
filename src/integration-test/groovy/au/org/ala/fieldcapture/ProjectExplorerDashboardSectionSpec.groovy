@@ -31,7 +31,9 @@ class ProjectExplorerDashboardSectionSpec extends StubbedCasSpec {
 
         reindex()
 
-        logout(browser)
+        waitFor {
+            logout(browser)
+        }
 
         boolean empty = true
         while (empty) {

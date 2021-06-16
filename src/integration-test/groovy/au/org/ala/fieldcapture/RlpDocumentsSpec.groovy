@@ -41,7 +41,7 @@ class RlpDocumentsSpec extends StubbedCasSpec {
         dialog.license = "CC-BY"
         dialog.publiclyViewable = true
         dialog.stage = 'Outcomes Report 1'
-        dialog.attachFile("/resources/testImage.png")
+        dialog.attachFile("/testImage.png")
 
         then: "We cannot save a public image without ticking the privacy declaration"
         dialog.saveEnabled() == false
@@ -82,7 +82,7 @@ class RlpDocumentsSpec extends StubbedCasSpec {
 
         dialog.title = "Contract assurance document"
         dialog.type = "contractAssurance"
-        dialog.attachFile("/resources/testImage.png")
+        dialog.attachFile("/testImage.png")
 
         then: "The project assurance documents cannot be made public"
         dialog.publiclyViewable.@disabled == 'true'

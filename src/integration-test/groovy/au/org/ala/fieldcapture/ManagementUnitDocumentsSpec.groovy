@@ -21,7 +21,7 @@ class ManagementUnitDocumentsSpec extends StubbedCasSpec {
         login([userId: '1', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'Admin'], browser)
 
         when: "Display the admin tab, navigate to the documents section then press the attach button"
-        to ManagementUnitPage
+        to ManagementUnitPage, managementUnitId
         openDocumentDialog()
 
         Thread.sleep(1500) // Wait for the animation to finish
@@ -31,11 +31,11 @@ class ManagementUnitDocumentsSpec extends StubbedCasSpec {
 
         then: "The default document type is contract assurance"
         dialog.type == "contractAssurance"
-        dialog.publiclyViewable == false
+        dialog.publiclyViewable.@disabled
 
         when:
         dialog.title = "Test doc"
-        dialog.attachFile("/resources/testDocument.txt")
+        dialog.attachFile("/testDocument.txt")
 
         waitFor 20, {
             dialog.saveButton.displayed

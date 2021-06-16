@@ -16,7 +16,7 @@ import pages.modules.SitesTableContents
  */
 class ProjectIndex extends ReloadablePage {
     static url = 'project/index' // requires a project id parameter
-    static at = { waitFor { title.endsWith('| Project | Field Capture') } }
+    static at = { waitFor { title.contains('| Project |') } }
 
     static content = {
 
@@ -35,7 +35,7 @@ class ProjectIndex extends ReloadablePage {
         dashboard { $("#services-dashboard div.dashboard-section").moduleList ( ProjectDashboardSection) }
         admin { module ProjectAdminTab }
 
-        iAmSure(wait: true) { $('.modal a', text:'OK') }
+        iAmSure(wait: true) { $('button[data-bb-handler="confirm"]') }
         siteLists {module sitesTable }
 
         addSites{ module AddSites }

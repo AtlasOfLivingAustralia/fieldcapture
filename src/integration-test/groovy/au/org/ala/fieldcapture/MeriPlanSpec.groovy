@@ -150,7 +150,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         when:
         okBootbox()
 
-        meriPlan = adminContent.meriPlan
+        meriPlan = openMeriPlanEditTab()
 
         then: "the unsaved edits are present"
         meriPlan.projectMethodology == "Project methodology"

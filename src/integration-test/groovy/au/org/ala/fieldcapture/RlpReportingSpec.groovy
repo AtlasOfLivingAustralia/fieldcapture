@@ -22,7 +22,9 @@ class RlpReportingSpec extends StubbedCasSpec {
     }
 
     def cleanup() {
-        logout(browser)
+        waitFor 20, {
+            logout(browser)
+        }
     }
 
 
@@ -258,12 +260,14 @@ class RlpReportingSpec extends StubbedCasSpec {
         waitFor { at RlpProjectPage }
 
         when:
+        setHealthCheckUrl()
         reportingTab.click()
 
         then:
         waitFor { projectReports.displayed }
 
         when:
+        setHealthCheckUrl()
         projectReports.reports[1].edit()
 
         then:

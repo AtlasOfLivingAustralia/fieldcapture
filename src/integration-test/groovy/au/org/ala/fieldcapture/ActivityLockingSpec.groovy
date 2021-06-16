@@ -11,7 +11,9 @@ class ActivityLockingSpec extends StubbedCasSpec {
     }
 
     def cleanup() {
-        logout(browser)
+        waitFor {
+            logout(browser)
+        }
     }
 
     /** The project we are working with in this spec */

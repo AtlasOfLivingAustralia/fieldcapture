@@ -139,7 +139,7 @@
 
         var master = null;
         var mapPopupSelector = '#map-modal';
-        var features = ${features?.encodeAsJSON() ?: '[]'}  ;
+        var features = <fc:modelAsJavascript model="${features}" default="[]"/>;
         if (metaModel.supportsSites) {
             // Workaround for problems with IE11 and leaflet draw
             L.Browser.touch = false;

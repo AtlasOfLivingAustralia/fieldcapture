@@ -1,8 +1,10 @@
 package au.org.ala.merit
 
 import au.org.ala.merit.hub.HubSettings
+import grails.core.GrailsApplication
 import groovy.json.JsonSlurper
 import org.apache.commons.lang.StringUtils
+import org.springframework.beans.factory.annotation.Autowired
 
 import javax.annotation.PostConstruct
 import java.math.RoundingMode
@@ -12,7 +14,8 @@ import java.math.RoundingMode
  */
 class SearchService {
     def webService, commonService, cacheService, metadataService, projectService, documentService
-    def grailsApplication
+    @Autowired
+    GrailsApplication grailsApplication
     def elasticBaseUrl
     def userService
 

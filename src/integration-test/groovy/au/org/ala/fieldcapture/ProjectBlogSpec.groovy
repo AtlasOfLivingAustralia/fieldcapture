@@ -37,7 +37,7 @@ class ProjectBlogSpec extends StubbedCasSpec {
         when:
         blogDetails.title = 'uploading photo to blog'
         blogDetails.description = 'uploading photo to blog'
-        File toAttach = new File(getClass().getResource('/resources/testImage.png').toURI())
+        File toAttach = new File(getClass().getResource('/testImage.png').toURI())
         blogDetails.uploadingFile =toAttach.absolutePath
 
         then:
@@ -77,7 +77,7 @@ class ProjectBlogSpec extends StubbedCasSpec {
         blogDetails.type = 'Project Stories'
         blogDetails.title = 'Project story test'
         blogDetails.description = 'Project story content'
-        toAttach = new File(getClass().getResource('/resources/testImage.png').toURI())
+        toAttach = new File(getClass().getResource('/testImage.png').toURI())
         blogDetails.uploadingFile = toAttach.absolutePath
         waitFor {blogDetails.privacy.displayed}
         blogDetails.privacy = true
@@ -110,8 +110,10 @@ class ProjectBlogSpec extends StubbedCasSpec {
         blogModule.gotoBlogEditBtn.click()
 
         then:
-        blogModule.editBlogPanelTitle() == 'Edit Project Blog'
-        blogModule.editBlogBtn.size() == 1
+        waitFor {
+            blogModule.editBlogPanelTitle() == 'Edit Project Blog'
+            blogModule.editBlogBtn.size() == 1
+        }
 
         when:
         blogModule.editBlogBtn.click()

@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import grails.converters.JSON
+import groovy.util.logging.Slf4j
 import org.apache.commons.io.FilenameUtils
 import org.springframework.http.HttpHeaders
 import org.springframework.web.multipart.MultipartFile
@@ -8,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 
+@Slf4j
 class ImageController {
 
     WebService webService
@@ -41,7 +43,7 @@ class ImageController {
 
     def upload() {
         log.debug "-------------------------------upload action"
-        params.each { log.debug it }
+        params.each { log.debug it.toString() }
         def result = []
         if (request.respondsTo('getFile')) {
             MultipartFile file = request.getFile('files')
@@ -84,7 +86,7 @@ class ImageController {
                 result = [files: [md]]
             }
         }
-        log.debug result
+        log.debug result.toString()
         render result as JSON
     }
 
