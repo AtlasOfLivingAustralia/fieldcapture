@@ -40,7 +40,19 @@
             <td class="event-type"> <textarea rows="2"  class="input-xlarge"  data-bind="value: name, disable: ${disableCondition}"></textarea></td>
             <td class="event-date"> <div><input data-bind="datepicker:scheduledDate.date, disable: ${disableCondition}" type="text" /></div></td>
             <td class="grant-date"> <div><input data-bind="value:grantAnnouncementDate, disable: ${disableCondition}" type="text" /></div></td>
-            <td class="amount"> <div class="input-append input-prepend"><span class="add-on">$</span><input type="text" class="form-control" style="width:3em;" data-bind="value:funding, disable: ${disableCondition}" data-validation-engine="validate[custom[number]]"><span class="add-on">.00</span></div></td>
+
+            <td class="amount">
+                <div class="input-group">
+                    <div class="input-group-prepend customAdOn">
+                        <span class="input-group-text">$</span>
+                    </div>
+                    <input type="text" class="form-control form-control-sm" style="width:3em;" data-bind="value:funding, disable: ${disableCondition}" data-validation-engine="validate[custom[number]]">
+                    <div class="input-group-append customAdOn">
+                        <span class="input-group-text">.00</span>
+                    </div>
+                </div>
+            </td>
+
             <td class="information"> <textarea maxlength="1000" rows="3"  class="input-xlarge"  data-bind="value: description, disable: ${disableCondition}"></textarea></td>
             <td class="remove"> <span><i class="icon-remove" data-bind="click: $parent.removeEvents"></i></span></td>
 

@@ -339,7 +339,7 @@ var config = {
 
 
             var newsAndEventsInitialised = false;
-            $('#editNewsAndEvents-tab').on('shown', function() {
+            $('#editNewsAndEvents-tab').on('shown.bs.tab', function() {
                 if (!newsAndEventsInitialised) {
                     var newsAndEventsViewModel = new window.newsAndEventsViewModel(viewModel, project.newsAndEvents);
                     ko.applyBindings(newsAndEventsViewModel, $('#editnewsAndEventsContent')[0]);
@@ -348,7 +348,7 @@ var config = {
 
             });
             var projectStoriesInitialised = false;
-            $('#editProjectStories-tab').on('shown', function() {
+            $('#editProjectStories-tab').on('shown.bs.tab', function() {
                 if (!projectStoriesInitialised) {
                     var projectStoriesViewModel = new window.projectStoriesViewModel(viewModel, project.projectStories);
                     ko.applyBindings(projectStoriesViewModel, $('#editprojectStoriesContent')[0]);

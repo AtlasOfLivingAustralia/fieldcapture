@@ -2,7 +2,7 @@
 <div id="edit${attributeName}Content">
 <h3>${header}</h3>
 <div class="row">
-    <div class="col-sm-5 alert" data-bind="visible:message(), css:{'alert-error':error(), 'alert-success':success()}">
+    <div class="col-sm-5 alert d-none" data-bind="visible:message(), css:{'alert-error':error(), 'alert-success':success()}">
         <button class="close" data-bind="click:clearMessage" href="#">×</button>
         <span data-bind="text:message"></span>
     </div>
@@ -10,16 +10,16 @@
 <div class="row space-after well well-small">
 
         <h4>Update project "${header}"</h4>
-        <div id="${attributeName}-button-bar" style="width:100%;background-color: white;"></div>
+        <div id="${attributeName}-button-bar" class="w-100 bg-white mb-3"></div>
         <div style="padding-right:12px;">
-            <g:textArea name="${attributeName}Input" id="${attributeName}Input" class="w-100 m-0" value="${project[attributeName]}" rows="16"
-                        cols="120" />
+            <g:textArea name="${attributeName}Input" id="${attributeName}Input" class="border w-100 m-0" value="${project[attributeName]}" rows="16"
+                        cols="310" />
         </div>
-        <div class="hide"><input type="text" name="${attributeName}Output" id="${attributeName}Output" class="hide"></div>
+        <div class="d-none"><input type="text" name="${attributeName}Output" id="${attributeName}Output" class="d-none"></div>
 </div>
-<div class="row">
+<div>
         <h4>Preview</h4>
-        <div id="${attributeName}-preview" class="well well-small"></div>
+        <div id="${attributeName}-preview"></div>
 </div>
 <div class="row">
     <span class="col-sm-3">
