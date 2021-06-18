@@ -366,3 +366,6 @@ input, textarea, select{
 .unstyled {
     list-style-type: none;
 }
+.customAdOn {
+    height: 30px;
+}

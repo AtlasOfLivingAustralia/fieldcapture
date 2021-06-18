@@ -1,6 +1,6 @@
 <script id="imageDocTmpl" type="text/html">
 <span class="pull-left float-left" style="width:32px;height:32px;">
-    <img class="media-object img-rounded col-sm-1" data-bind="attr:{src:thumbnailUrl}, alt:name" style="width:32px;height:32px;" width="32" height="32" alt="image preview icon">
+    <img class="media-object img-rounded col-sm-1" data-bind="attr:{src:thumbnailUrl}" style="width:32px;height:32px;" width="32" height="32">
 </span>
 <div class="media-body">
     <a class="pull-right float-right" data-bind="attr:{href:url}" target="_blank">
@@ -17,7 +17,7 @@
 
 <script id="objDocTmpl" type="text/html">
 <span class="pull-left float-left">
-    <img class="media-object" data-bind="attr:{src:filetypeImg(), alt:name}" alt="document icon">
+    <img class="media-object" data-bind="attr:{src:filetypeImg()}">
 </span>
 <div class="media-body">
     <a class="pull-right float-right" data-bind="attr:{href:url}" target="_blank">
@@ -41,7 +41,7 @@
     </div>
 
 <a class="pull-left float-left ml-2" data-bind="attr:{href:url}" target="_blank">
-    <img class="media-object img-rounded" data-bind="attr:{src:thumbnailUrl, alt:name}"  alt="image preview icon">
+    <img class="media-object img-rounded" data-bind="attr:{src:thumbnailUrl}">
 </a>
 <div data-bind="template:'mediaBody'" class="media-body-template col-sm-10"></div>
 </script>
@@ -54,7 +54,7 @@
         </div>
     </div>
     <a class="pull-left float-left ml-2" data-bind="attr:{href:url}">
-        <img class="media-object img-fluid" data-bind="attr:{src:filetypeImg(), alt:name}" alt="document icon">
+        <img class="media-object img-fluid" data-bind="attr:{src:filetypeImg()}">
     </a>
     <div data-bind="template:'mediaBody'" class="media-body-template col-sm-10"></div>
 </script>

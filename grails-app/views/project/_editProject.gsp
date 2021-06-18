@@ -131,15 +131,24 @@
 <div class="row mb-2">
     <div class="col-sm-4">
         <label class="control-label" for="programme">Programme name</label>
+
         <div class="control">
-            <select id="programme" data-bind="value:associatedProgram,options:transients.programs,optionsCaption: 'Choose...',enable:${canChangeProjectDates?:'false'}"
-                    data-validation-engine="validate[required]" class="form-control form-control-sm input-small"></select>
+            <select id="programme"
+                    data-bind="value:associatedProgram,options:transients.programs,optionsCaption: 'Choose...',enable:${canChangeProjectDates ?: 'false'}"
+                    data-validation-engine="validate[required]"
+                    class="form-control form-control-sm input-small"></select>
         </div>
 
     </div>
+
     <div class="col-sm-4">
         <label class="control-label" for="subProgramme">Sub-programme name</label>
-        <select id="subProgramme" data-bind="value:associatedSubProgram,options:transients.subprogramsToDisplay,optionsCaption: 'Choose...',,enable:${canChangeProjectDates?:'false'}"></select>
+
+        <div class="control">
+            <select id="subProgramme" class="form-control form-control-sm input-small"
+                    data-bind="value:associatedSubProgram,options:transients.subprogramsToDisplay,optionsCaption: 'Choose...',,enable:${canChangeProjectDates ?: 'false'}"></select>
+        </div>
+
     </div>
 </div>
 </g:if>

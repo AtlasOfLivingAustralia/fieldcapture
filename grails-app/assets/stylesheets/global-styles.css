@@ -895,3 +895,10 @@ span.status {
  .customImage {
 	 border-radius: 0.25rem !important;
  }
+.noContent {
+	margin-bottom: 40px;
+}
+.noPhotos {
+	height: 50px;
+	width: 50px;
+}
