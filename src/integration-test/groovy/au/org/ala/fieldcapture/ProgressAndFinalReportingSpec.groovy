@@ -12,7 +12,9 @@ class ProgressAndFinalReportingSpec extends StubbedCasSpec {
     }
 
     def cleanup() {
-        logout(browser)
+        waitFor {
+            logout(browser)
+        }
     }
 
 

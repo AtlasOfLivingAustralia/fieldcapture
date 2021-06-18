@@ -4,7 +4,7 @@ import geb.Module
 
 class AdminProjectSettingsTab extends Module {
     static content = {
-        internalOrderId {$('#internalOrderId')}
+        internalOrderId {$('input[name="internalOrderId"]')}
         projectState {$('#projectState')}
         regenerateReportsButton {$('button[data-bind*=regenerateStageReports]')}
         saveChangesButton {$('button[data-bind*=saveSettings]')}

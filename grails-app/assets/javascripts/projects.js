@@ -869,7 +869,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
         }
         if (!self.changeActivityDates()) {
 
-            if (config.minimumProjectEndDate && (endDate < config.minimumProjectEndDate)) {
+            if (config.minimumProjectEndDate && config.minimumProjectEndDate !== '' && (endDate < config.minimumProjectEndDate)) {
                 return "The project end date must be after "+convertToSimpleDate(config.minimumProjectEndDate);
             }
         }

@@ -263,7 +263,7 @@ var config = {
     googleBaseMapUrl: fcConfig.useGoogleBaseMap,
     meriStorageKey:PROJECT_DETAILS_KEY,
     activityBasedReporting: ${Boolean.valueOf(projectContent.admin.config.activityBasedReporting)},
-                minimumProjectEndDate: <fc:modelAsJavascript model="${projectContent.admin.minimumProjectEndDate?: null}"/>,
+            minimumProjectEndDate: '${projectContent.admin.minimumProjectEndDate?:null}',
             riskChangesReportElementId: 'risk-changes-report',
             riskChangesReportHtmlUrl: fcConfig.riskChangesReportHtmlUrl,
             riskChangesReportPdfUrl: fcConfig.riskChangesReportPdfUrl,

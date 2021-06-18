@@ -13,7 +13,9 @@ class ProjectDashboardTabSpec extends StubbedCasSpec {
     }
 
     void cleanup() {
-        logout(browser)
+        waitFor {
+            logout(browser)
+        }
     }
     def"I can view Project Dashboard tab as FC_ADMIN "(){
         setup: "log in as userId=1 who is a program admin for the program with programId=test_program"
