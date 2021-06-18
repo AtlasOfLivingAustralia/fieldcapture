@@ -26,7 +26,7 @@
                                         data-bind="value: data3, disable: $parent.isProjectDetailsLocked()"
                                         rows="5"></textarea></td>
         <td class="remove">
-            <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()"><i class="icon-remove"
+            <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()"><i class="fa fa-remove"
                                                                                    data-bind="click: $parent.removeNationalAndRegionalPriorities"></i>
             </span>
         </td>

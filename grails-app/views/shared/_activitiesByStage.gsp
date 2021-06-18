@@ -171,7 +171,7 @@
                                 <span data-bind="visible:filename()">
                                     <input type="text" readonly="readonly" data-bind="value:fileLabel"/>
                                     <button class="btn" data-bind="click:removeFile">
-                                        <span class="icon-remove"></span>
+                                        <span class="fa fa-remove"></span>
                                     </button>
                                 </span>
                             </div>

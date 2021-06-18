@@ -54,7 +54,7 @@
             </td>
 
             <td class="information"> <textarea maxlength="1000" rows="3"  class="input-xlarge"  data-bind="value: description, disable: ${disableCondition}"></textarea></td>
-            <td class="remove"> <span><i class="icon-remove" data-bind="click: $parent.removeEvents"></i></span></td>
+            <td class="remove"> <span><i class="fa fa-remove" data-bind="click: $parent.removeEvents"></i></span></td>
 
         </tr>
         </tbody>

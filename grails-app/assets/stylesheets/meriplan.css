@@ -35,9 +35,9 @@ table tr.header th {
     width: 100%;
 }
 .meri-plan .index {
-    min-width: 1em;
-    max-width: 1em;
-    width: 1em;
+    min-width: 2em;
+    max-width: 2em;
+    width: 2em;
 }
 
 .meri-plan .footer-index {
@@ -57,9 +57,9 @@ table tr.header th {
 }
 
 .meri-plan .remove {
-    min-width: 1em;
-    max-width: 1em;
-    width: 0.1%;
+    min-width: 2em;
+    max-width: 2em;
+    width: 2em;
 
 }
 
@@ -259,9 +259,9 @@ table tr.header th {
 }
 
 .meri-plan .assets .remove {
-    min-width: 1em;
-    max-width: 1em;
-    width: 1em;
+    min-width: 2em;
+    max-width: 2em;
+    width: 2em;
 }
 
 #project-risks-threats table {
