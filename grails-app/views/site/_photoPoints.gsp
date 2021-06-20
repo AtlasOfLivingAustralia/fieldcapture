@@ -36,7 +36,7 @@
                                     </td>
                                     <td style="text-align: right; width:15%">
                                         <g:if test="${!readOnly}">
-                                            <a class="btn" data-bind="click:$parent.removePhoto"><i class="icon-remove"></i> Remove</a>
+                                            <a class="btn" data-bind="click:$parent.removePhoto"><i class="fa fa-remove"></i> Remove</a>
                                         </g:if>
                                     </td>
                                 </tr>

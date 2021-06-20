@@ -63,7 +63,7 @@
 
 
         <td class="remove">
-            <span data-bind="if: $index() && !$root.isProjectDetailsLocked()"><i class="icon-remove"
+            <span data-bind="if: $index() && !$root.isProjectDetailsLocked()"><i class="fa fa-remove"
                                                                                  data-bind="click: $parent.removeService"></i>
             </span>
         </td>

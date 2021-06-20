@@ -105,7 +105,7 @@
                     data-bind="value: data2, disable: $parent.isProjectDetailsLocked()"
                     rows="4"></textarea></td>
             <td class="remove">
-                <span data-bind="if: $index() > 1 && !$parent.isProjectDetailsLocked()"><i class="icon-remove"
+                <span data-bind="if: $index() > 1 && !$parent.isProjectDetailsLocked()"><i class="fa fa-remove"
                                                                                        data-bind="click: $parent.removeKEQ"></i>
                 </span>
             </td>

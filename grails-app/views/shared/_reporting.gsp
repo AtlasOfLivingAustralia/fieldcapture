@@ -164,7 +164,7 @@
 
 <g:if test="${fc.userIsAlaOrFcAdmin()}">
     <p>
-    <button type="button" data-bind="click:rejectReport" class="btn btn-danger"><i class="icon-remove icon-white"></i> Withdraw approval</button></g:if>
+    <button type="button" data-bind="click:rejectReport" class="btn btn-danger"><i class="fa fa-remove icon-white"></i> Withdraw approval</button></g:if>
     </p>
 </script>
 <script id="submitted" type="text/html">
@@ -173,7 +173,7 @@
 
     <span class="btn-group">
         <button type="button" data-bind="click:approveReport" class="btn btn-success"><i class="icon-ok icon-white"></i> Confirm</button>
-        <button type="button" data-bind="click:rejectReport" class="btn btn-danger"><i class="icon-remove icon-white"></i> More Information Required</button>
+        <button type="button" data-bind="click:rejectReport" class="btn btn-danger"><i class="fa fa-remove icon-white"></i> More Information Required</button>
     </span>
     </p>
 </g:if>

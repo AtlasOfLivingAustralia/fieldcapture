@@ -42,7 +42,7 @@
                                               data-bind="text: rowTotal.formattedCurrency, disable: $parent.isProjectDetailsLocked()"></span>
         </td>
         <td>
-            <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()"><i class="icon-remove"
+            <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()"><i class="fa fa-remove"
                                                                                    data-bind="click: $parent.removeBudget"></i>
             </span>
         </td>
