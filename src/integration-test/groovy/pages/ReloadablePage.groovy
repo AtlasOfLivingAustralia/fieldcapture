@@ -49,9 +49,4 @@ class ReloadablePage extends Page {
             saveAtCheckTime()
         }
     }
-
-    void setHealthCheckUrl() {
-        js.exec("window.fcConfig = {healthCheckUrl:'/health'};")
-    }
-
 }

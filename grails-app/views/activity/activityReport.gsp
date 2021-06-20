@@ -184,10 +184,10 @@
                 console.log("Unable to initialise map, could be because no map elements are on display: " + e);
             }
 
-            var master = new ReportMaster(reportId, activity.activityId, reportSite, formFeatures, {activityUpdateUrl: fcConfig.activityUpdateUrl});
+            var master = new ReportMaster(reportId, activity.activityId, reportSite, formFeatures, {activityUpdateUrl: fcConfig.activityUpdateUrl, healthCheckUrl:fcConfig.healthCheckUrl});
         }
         else {
-            master = new ReportMaster(reportId, activity.activityId, undefined, undefined, {activityUpdateUrl: fcConfig.activityUpdateUrl});
+            master = new ReportMaster(reportId, activity.activityId, undefined, undefined, {activityUpdateUrl: fcConfig.activityUpdateUrl, healthCheckUrl:fcConfig.healthCheckUrl});
         }
 
 
