@@ -27,7 +27,7 @@
             </div>
 
             %{-- The use of the width attribute (as opposed to a css style) is to allow for correct resizing behaviour of the DataTable --}%
-            <table id="sites-table" class="sites-table table">
+            <table id="sites-table" class="sites-table table w-100">
                 <thead>
                 <tr>
                     <th><input type="checkbox" id="select-all-sites"></th>
@@ -49,8 +49,8 @@
                     <td>
                         <g:if test="${editable}">
                             <span>
-                                <button type="button" data-bind="click:$root.editSite, visible:type != 'compound'" class="btn btn-sm btn-container"><i class="icon-edit" title="Edit ${wordForSite.capitalize()}"></i></button>
-                                <button type="button" data-bind="click:$root.viewSite" class="btn btn-sm btn-container"><i class="icon-eye-open" title="View ${wordForSite.capitalize()}"></i></button>
+                                <button type="button" data-bind="click:$root.editSite, visible:type != 'compound'" class="btn btn-sm btn-container"><i class="fa fa-edit" title="Edit ${wordForSite.capitalize()}"></i></button>
+                                <button type="button" data-bind="click:$root.viewSite" class="btn btn-sm btn-container"><i class="fa fa-eye" title="View ${wordForSite.capitalize()}"></i></button>
                                 <button type="button" data-bind="click:$root.deleteSite, visible:type != 'compound'" class="btn btn-sm btn-container"><i class="fa fa-remove" title="Delete ${wordForSite.capitalize()}"></i></button>
                             </span>
                         </g:if>
