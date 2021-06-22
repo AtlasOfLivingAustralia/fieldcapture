@@ -1,5 +1,5 @@
 <div class="row space-after ml-4" data-bind="if: isProjectDetailsLocked()">
-    <div class="validationEngineContainer announcements">
+    <div class="col-sm-12 validationEngineContainer announcements">
         <!-- ko stopBinding:true -->
 
         <div id="edit-announcements" data-bind="let:{details:meriPlan()}">
