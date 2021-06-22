@@ -9,7 +9,7 @@ import spock.lang.Specification
  */
 class GmsMapperSpec extends Specification{
 
-    def gmsMapper = new GmsMapper()
+    def gmsMapper
     AbnLookupService abnLookupService = Mock(AbnLookupService)
     def scores = [
             [scoreId:'1', label:'Area of revegetation works (Ha)', units:'Ha', externalId:'RVA', isOutputTarget:true],
@@ -23,7 +23,9 @@ class GmsMapperSpec extends Specification{
         activitiesModel = JSON.parse(new InputStreamReader(getClass().getResourceAsStream('/activities-model.json')))
         Map programModel = [programs:[[name:'Green Army']]]
         List organisations = [[ organisationId: "123", name:'Test org 1', abn:'12345678901']]
+        TimeZone.setDefault(TimeZone.getTimeZone('Australia/Sydney'))
         gmsMapper = new GmsMapper(activitiesModel, programModel, organisations, abnLookupService,scores)
+        gmsMapper.SHORT_GMS_DATE_FORMAT.calendar.setTimeZone(TimeZone.getTimeZone('Australia/Sydney'))
     }
 
     /**
