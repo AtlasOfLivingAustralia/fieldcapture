@@ -1218,9 +1218,6 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
     self.initialiseReports = function() {
     };
 
-
-
-
     $('#gotoEditBlog').click(function () {
         amplify.store('project-admin-tab-state', '#editProjectBlog');
         $('#admin-tab').tab('show');
