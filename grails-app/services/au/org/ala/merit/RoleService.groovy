@@ -1,7 +1,9 @@
 package au.org.ala.merit
 
+import groovy.util.logging.Slf4j
 import org.grails.web.json.JSONObject
 
+@Slf4j
 class RoleService {
     def metadataService, cacheService
 

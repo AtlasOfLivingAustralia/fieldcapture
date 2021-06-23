@@ -1,5 +1,7 @@
 package au.org.ala.merit
 
+import groovy.util.logging.Slf4j
+
 /**
  * The ProjectConfigurationService is responsible for obtaining the configuration used to present a project in MERIT.
  *
@@ -8,6 +10,7 @@ package au.org.ala.merit
  *
  * It is mostly based on the program under which the project is being run.
  */
+@Slf4j
 class ProjectConfigurationService {
 
     ProgramService programService

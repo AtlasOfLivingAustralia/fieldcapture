@@ -21,9 +21,7 @@ class ProjectExplorerCrossSiteInjectionSpec  extends StubbedCasSpec{
 
         when: "Reindex to ensure the project explorer will have predictable data"
         reindex()
-        waitFor {
-            logout(browser)
-        }
+        logout(browser)
         to ProjectExplorer
 
 //        boolean empty = true

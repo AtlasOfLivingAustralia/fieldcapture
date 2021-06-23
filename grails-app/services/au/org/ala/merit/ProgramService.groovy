@@ -4,9 +4,11 @@ import au.org.ala.merit.reports.ReportConfig
 import au.org.ala.merit.reports.ReportGenerationOptions
 import au.org.ala.merit.reports.ReportOwner;
 import grails.core.GrailsApplication
+import groovy.util.logging.Slf4j
 import org.grails.web.json.JSONArray
 import org.codehaus.groovy.util.ListHashMap
 
+@Slf4j
 class ProgramService {
 
     private static final String PROGRAM_DOCUMENT_FILTER = "className:au.org.ala.ecodata.Program"

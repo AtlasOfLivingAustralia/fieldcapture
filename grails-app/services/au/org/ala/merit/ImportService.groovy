@@ -6,6 +6,7 @@ import com.vividsolutions.jts.geom.GeometryCollection
 import com.vividsolutions.jts.geom.GeometryFactory
 import com.vividsolutions.jts.geom.Point
 import grails.converters.JSON
+import groovy.util.logging.Slf4j
 import org.apache.commons.lang.StringUtils
 import org.geotools.geojson.geom.GeometryJSON
 import grails.plugins.csv.CSVMapReader
@@ -17,6 +18,7 @@ import java.text.SimpleDateFormat
 /**
  * Handles data import into ecodata.
  */
+@Slf4j
 class ImportService {
 
     public static final List CSV_HEADERS = ['Program', 'Round Name', 'GMS Round Name', 'Grant ID', 'Grant External ID', 'Sub-project ID', 'Grant Name', 'Grant Description', 'Grantee Organisation Legal Name','ABN', 'Grant Original Approved Amount', 'Grant Current Grant Funding (Ex. GST)', 'Start', 'Finish', 'Location Description']

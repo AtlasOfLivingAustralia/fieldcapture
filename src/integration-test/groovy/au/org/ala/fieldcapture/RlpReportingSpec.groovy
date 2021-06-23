@@ -22,9 +22,7 @@ class RlpReportingSpec extends StubbedCasSpec {
     }
 
     def cleanup() {
-        waitFor 20, {
-            logout(browser)
-        }
+        logout(browser)
     }
 
 

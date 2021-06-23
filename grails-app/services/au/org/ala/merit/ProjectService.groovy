@@ -5,6 +5,7 @@ import au.org.ala.merit.reports.ReportGenerationOptions
 import au.org.ala.merit.reports.ReportGenerator
 import au.org.ala.merit.reports.ReportOwner
 import grails.converters.JSON
+import groovy.util.logging.Slf4j
 import org.apache.commons.lang.CharUtils
 import org.apache.http.HttpStatus
 import org.grails.web.json.JSONArray
@@ -19,6 +20,7 @@ import org.springframework.cache.annotation.Cacheable
 import java.math.RoundingMode
 import java.text.SimpleDateFormat
 
+@Slf4j
 class ProjectService  {
 
     static final String OUTCOMES_OUTPUT_TYPE = 'Outcomes'

@@ -2,6 +2,7 @@ package au.org.ala.merit
 
 import com.vividsolutions.jts.geom.Geometry
 import grails.converters.JSON
+import groovy.util.logging.Slf4j
 import org.apache.http.HttpStatus
 import org.geotools.geojson.geom.GeometryJSON
 import org.geotools.kml.v22.KMLConfiguration
@@ -12,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
+@Slf4j
 class SiteService {
 
     def webService, grailsApplication, commonService, metadataService, userService, reportService
@@ -376,7 +378,7 @@ class SiteService {
 
         def asJSON = featuresMap as JSON
 
-        log.debug asJSON
+        log.debug asJSON.toString()
 
         asJSON
     }

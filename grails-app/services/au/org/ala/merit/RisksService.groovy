@@ -1,12 +1,14 @@
 package au.org.ala.merit
 
 import grails.core.GrailsApplication
+import groovy.util.logging.Slf4j
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 
 /**
  * Manages the scheduling of a task to periodically check for changes to project risks and threats.
  */
+@Slf4j
 class RisksService {
 
     GrailsApplication grailsApplication

@@ -22,9 +22,7 @@ class RisksSpec extends StubbedCasSpec {
     }
 
     def cleanup() {
-        waitFor {
-            logout(browser)
-        }
+       logout(browser)
     }
 
     def "The risks and threats appears on the activity tab on the original MERIT template"() {

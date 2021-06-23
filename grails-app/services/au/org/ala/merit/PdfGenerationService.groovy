@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import grails.core.GrailsApplication
+import groovy.util.logging.Slf4j
 
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServletResponse
  * Interacts with the ALA pdfgen service to produce a PDF version of an HTML page.
  * Handles basic authorization.
  */
+@Slf4j
 class PdfGenerationService {
 
     WebService webService

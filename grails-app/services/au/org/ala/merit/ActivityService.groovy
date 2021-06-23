@@ -2,10 +2,12 @@ package au.org.ala.merit
 
 import au.org.ala.ecodata.forms.ActivityFormService
 import au.org.ala.merit.DateUtils
+import groovy.util.logging.Slf4j
 import org.joda.time.DateTime
 import org.joda.time.Period
 import org.joda.time.format.DateTimeFormat
 
+@Slf4j
 class ActivityService {
 
     def webService, grailsApplication, metadataService, reportService, projectService, emailService, userService

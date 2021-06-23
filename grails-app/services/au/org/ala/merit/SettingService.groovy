@@ -5,9 +5,11 @@ import au.org.ala.merit.hub.HubSettings
 import grails.converters.JSON
 import grails.util.Holders
 import groovy.text.GStringTemplateEngine
+import groovy.util.logging.Slf4j
 import org.grails.web.servlet.mvc.GrailsWebRequest
 import org.springframework.web.context.request.RequestAttributes
 
+@Slf4j
 class SettingService {
 
     private static def ThreadLocal localHubConfig = new ThreadLocal()

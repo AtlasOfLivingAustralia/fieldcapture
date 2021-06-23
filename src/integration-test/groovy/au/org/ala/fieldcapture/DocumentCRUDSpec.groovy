@@ -11,10 +11,8 @@ import spock.lang.Stepwise
 public class DocumentCRUDSpec extends CasIntegrationTest {
 
     def setupSpec() {
-        waitFor 30, {
-            logout(browser)
-            loginAsProjectAdmin(browser)
-        }
+        logout(browser)
+        loginAsProjectAdmin(browser)
     }
     def projectId = "cb5497a9-0f36-4fef-9f6a-9ea832c5b68c"
 

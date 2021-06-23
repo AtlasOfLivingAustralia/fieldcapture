@@ -3,6 +3,7 @@ package au.org.ala.merit
 import au.org.ala.merit.hub.HubSettings
 import grails.core.GrailsApplication
 import groovy.json.JsonSlurper
+import groovy.util.logging.Slf4j
 import org.apache.commons.lang.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 
@@ -12,6 +13,7 @@ import java.math.RoundingMode
 /**
  * Service for ElasticSearch running on ecodata
  */
+@Slf4j
 class SearchService {
     def webService, commonService, cacheService, metadataService, projectService, documentService
     @Autowired

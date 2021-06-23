@@ -9,9 +9,7 @@ class DatasetSpec extends StubbedCasSpec{
     }
 
     def cleanup() {
-        waitFor {
-            logout(browser)
-        }
+       logout(browser)
     }
 
     def "Add new data set in to project"() {

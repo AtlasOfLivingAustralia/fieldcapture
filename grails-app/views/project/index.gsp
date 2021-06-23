@@ -1,4 +1,4 @@
-<%@ page import="au.org.ala.merit.ProjectController" contentType="text/html;charset=UTF-8" %>
+<%@ page import="au.org.ala.merit.ProjectController" contentType="text/html;charset=UTF-8" expressionCodec="none"%>
 <!DOCTYPE html>
 <html>
 <head>

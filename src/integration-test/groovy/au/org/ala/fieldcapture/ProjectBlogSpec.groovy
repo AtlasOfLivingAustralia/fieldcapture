@@ -38,10 +38,10 @@ class ProjectBlogSpec extends StubbedCasSpec {
         blogDetails.title = 'uploading photo to blog'
         blogDetails.description = 'uploading photo to blog'
         File toAttach = new File(getClass().getResource('/testImage.png').toURI())
-        blogDetails.uploadingFile =toAttach.absolutePath
+        blogDetails.uploadingFile = toAttach.absolutePath
 
         then:
-        waitFor {blogDetails.privacy.displayed}
+        waitFor 30, {blogDetails.privacy.displayed}
 
         when:
         blogDetails.privacy = true
@@ -67,7 +67,7 @@ class ProjectBlogSpec extends StubbedCasSpec {
         blogModule.deleteBlogBtn[0].click()
 
         then:
-        waitFor {blogModule.deleteBlogBtn.size() == 1 && editProjectBlogPane().isDisplayed()}
+        waitFor {blogModule.deleteBlogBtn.size() == 1}
 
         when:
         overviewBtn().click()
@@ -79,7 +79,7 @@ class ProjectBlogSpec extends StubbedCasSpec {
         blogDetails.description = 'Project story content'
         toAttach = new File(getClass().getResource('/testImage.png').toURI())
         blogDetails.uploadingFile = toAttach.absolutePath
-        waitFor {blogDetails.privacy.displayed}
+        waitFor 30, {blogDetails.privacy.displayed}
         blogDetails.privacy = true
         submit()
 
@@ -124,7 +124,7 @@ class ProjectBlogSpec extends StubbedCasSpec {
         //Do not need to test 'save', rely on test case of 'create blog'
 
         when:
-        File outputFile = File.createTempFile('test', '.png')
+        File outputFile = new File(getClass().getResource('/testImage.png').toURI())
         String filename = outputFile.absolutePath
         blogDetails.uploadingFile =(filename)
         saveBtn.click()

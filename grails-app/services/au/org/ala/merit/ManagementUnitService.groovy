@@ -4,10 +4,12 @@ import au.org.ala.merit.reports.ReportConfig
 import au.org.ala.merit.reports.ReportGenerationOptions
 import au.org.ala.merit.reports.ReportOwner
 import grails.core.GrailsApplication
+import groovy.util.logging.Slf4j
 import org.grails.web.json.JSONArray
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 
+@Slf4j
 class ManagementUnitService {
 
     private static final String MU_DOCUMENT_FILTER = "className:au.org.ala.ecodata.ManagementUnit"

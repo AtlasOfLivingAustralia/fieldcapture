@@ -170,11 +170,11 @@
         });
 
         var viewModel = new ActivityViewModel(
-            ${(activity as JSON).toString()},
-            ${site ?: 'null'},
+            <fc:modelAsJavascript model="${activity}"/>,
+            <fc:modelAsJavascript model="${site?: null}"/>,
             fcConfig.project,
-            ${metaModel ?: 'null'},
-            ${themes ?: 'null'});
+            <fc:modelAsJavascript model="${metaModel?: null}"/>,
+            <fc:modelAsJavascript model="${themes?: null}"/>);
 
         ko.applyBindings(viewModel);
 

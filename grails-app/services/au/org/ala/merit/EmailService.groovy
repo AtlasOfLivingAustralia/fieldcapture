@@ -1,10 +1,13 @@
 package au.org.ala.merit
 
+import groovy.util.logging.Slf4j
+
 
 /**
  * Sends email messages on behalf of MERIT users to notify interested parties of project lifecycle changes.
  * These include changes to project plan status and when reports are submitted, approved or rejected.
  */
+@Slf4j
 class EmailService {
 
     def projectService, userService, mailService, settingService, grailsApplication, organisationService

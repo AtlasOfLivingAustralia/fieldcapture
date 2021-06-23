@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import au.org.ala.web.CASRoles
+import groovy.util.logging.Slf4j
 import org.grails.plugin.cache.GrailsCacheManager
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
@@ -8,6 +9,7 @@ import org.springframework.web.context.request.RequestContextHolder
 
 import javax.annotation.PostConstruct
 
+@Slf4j
 class UserService {
 
     private static final String USER_PROFILE_CACHE_REGION = 'userProfileCache'

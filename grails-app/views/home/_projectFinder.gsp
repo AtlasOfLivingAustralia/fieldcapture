@@ -1,4 +1,4 @@
-<%@ page import="au.org.ala.merit.SettingPageType" %>
+<%@ page import="au.org.ala.merit.SettingPageType" expressionCodec="none"%>
 
 <div id="projectExplorer">
 <g:if test="${flash.error || results.error}">
