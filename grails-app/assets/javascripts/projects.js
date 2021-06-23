@@ -15,6 +15,7 @@
 //= require knockout-repeat/2.1/knockout-repeat.js
 //= require attach-document-no-ui.js
 //= require jquery.fileDownload/jQuery.fileDownload
+//= require document.js
 //= require meriplan.js
 //= require risks.js
 //= require sites.js
@@ -1218,98 +1219,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
     };
 
 
-    function initialiseOverview() {
-        $( '#public-images-slider' ).mThumbnailScroller({});
-        $('#public-images-slider .fancybox').fancybox();
-    }
 
-    var tabs = {
-        'overview': {
-            default:true,
-            initialiser: function () {
-                initialiseOverview();
-            }
-        },
-        'plan': {
-            initialiser: function() {
-                $.event.trigger({type:'planTabShown'});
-            }
-        },
-        'dashboard': {
-            initialiser: function() {
-                $.event.trigger({type:'dashboardShown'});
-            }
-        },
-        'documents': {
-            initialiser: function() {
-                initialiseDocumentTable('#overviewDocumentList');
-            }
-        },
-        'site': {
-            initialiser: function () {
-                L.Browser.touch = false;
-                var mapFeatures = project.mapFeatures;
-                var sitesTabOptions = {
-                    featureServiceUrl: config.featureServiceUrl,
-                    wmsServerUrl: config.wmsServerUrl,     // geoServerUrl
-                    spinnerUrl: config.spinnerUrl,
-                    mapFeatures: mapFeatures,
-                    sitesPhotoPointsUrl:config.sitesPhotoPointsUrl,
-                    userIdEditor: userRoles.editor,
-                    bindingElementId:'sitesList',
-                    sitesTableSelector:'#sites-table',
-                    selectAllSelector:'#select-all-sites',
-                    photoPointSelector:'#site-photo-points',
-                    loadingSpinnerSelector:'#img-spinner',
-                    photoScrollerSelector:'.photo-slider',
-                    useAlaMap:config.useAlaMap,
-                    showSiteType:config.showSiteType
-                };
-                if (config.useAlaMap) {
-                    sitesTabOptions.mapFeatures = {};
-                    sitesTabOptions.useGoogleBaseMap = config.googleBaseMapUrl;
-                    var sitesList = $('#'+sitesTabOptions.bindingElementId);
-                    sitesList.children().hide();
-                    sitesList.append('<image class="sites-spinner" width="50" height="50" src="'+sitesTabOptions.spinnerUrl+'" alt="Loading"/>');
-                    $.get(config.projectSitesUrl).done(function(data) {
-                        sitesList.children().show();
-                        var sitesViewModel = self.initialiseSitesTab(sitesTabOptions);
-
-                        if (data && data.features) {
-                            sitesViewModel.setFeatures(data.features);
-                        }
-                        sitesList.find('.sites-spinner').remove();
-
-                    });
-                }
-                else {
-                    self.initialiseSitesTab(sitesTabOptions);
-                }
-            }
-        },
-        'details': {
-            initialiser: function () {
-                self.initialiseMeriPlan();
-            }
-        },
-        'reporting': {
-            initialiser: function () {
-                self.initialiseReports();
-            }
-        },
-        'datasets': {
-            initialiser: function() {
-                self.initialiseDataSets();
-            }
-        },
-        'admin': {
-            initialiser: function () {
-                self.initialiseAdminTab();
-            }
-        }
-    };
-
-    initialiseTabs(tabs, {tabSelector:'#projectTabs.nav a', tabStorageKey:'project-tab-state', initialisingHtmlSelector:'#spinner'});
 
     $('#gotoEditBlog').click(function () {
         amplify.store('project-admin-tab-state', '#editProjectBlog');
