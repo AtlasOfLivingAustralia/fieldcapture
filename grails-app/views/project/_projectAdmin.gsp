@@ -54,7 +54,7 @@
                     <!-- Edit project details -->
                     <g:render template="/shared/restoredData" model="[id:'restoredData', saveButton:'Save', cancelButton:'Cancel']"/>
                     <div class="row">
-                        <div class="validationEngineContainer" id="project-details-validation">
+                        <div class="validationEngineContainer col-sm-12" id="project-details-validation">
                             <g:render template="editMeriPlan" model="[project: project]"/>
                         </div>
                     </div>

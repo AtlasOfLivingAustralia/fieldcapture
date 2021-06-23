@@ -165,17 +165,15 @@
     </g:if>
 
     <g:if test="${hasProjectStories}">
-    <div class="row col-sm-12">
         <h3>Project stories</h3>
         <div class="blog-section">
             <g:render template="/shared/blog" model="${[blog:blog, type:'Project Stories']}"/>
 
             %{-- Legacy news & events section--}%
             <div class="row" data-bind="visible:projectStories()">
-                <div class="col-sm-10" id="projectStoriesDiv" data-bind="html:projectStories.markdownToHtml()"></div>
+                <div class="col-sm-12" id="projectStoriesDiv" data-bind="html:projectStories.markdownToHtml()"></div>
             </div>
         </div>
-    </div>
     </g:if>
 </g:if>
 

@@ -336,7 +336,98 @@ var config = {
                     risksVisible = (e.target.hash  == '#plan' || e.target.hash == '#risks');
                 }
             });
+    function initialiseOverview() {
+        $( '#public-images-slider' ).mThumbnailScroller({});
+        $('#public-images-slider .fancybox').fancybox();
+    }
 
+    var tabs = {
+        'overview': {
+            default:true,
+            initialiser: function () {
+                initialiseOverview();
+            }
+        },
+        'plan': {
+            initialiser: function() {
+                $.event.trigger({type:'planTabShown'});
+            }
+        },
+        'dashboard': {
+            initialiser: function() {
+                $.event.trigger({type:'dashboardShown'});
+            }
+        },
+        'documents': {
+            initialiser: function() {
+                initialiseDocumentTable('#overviewDocumentList');
+            }
+        },
+        'site': {
+            initialiser: function () {
+                L.Browser.touch = false;
+                var mapFeatures = project.mapFeatures;
+                var sitesTabOptions = {
+                    featureServiceUrl: config.featureServiceUrl,
+                    wmsServerUrl: config.wmsServerUrl,     // geoServerUrl
+                    spinnerUrl: config.spinnerUrl,
+                    mapFeatures: mapFeatures,
+                    sitesPhotoPointsUrl:config.sitesPhotoPointsUrl,
+                    userIdEditor: userRoles.editor,
+                    bindingElementId:'sitesList',
+                    sitesTableSelector:'#sites-table',
+                    selectAllSelector:'#select-all-sites',
+                    photoPointSelector:'#site-photo-points',
+                    loadingSpinnerSelector:'#img-spinner',
+                    photoScrollerSelector:'.photo-slider',
+                    useAlaMap:config.useAlaMap,
+                    showSiteType:config.showSiteType
+                };
+                if (config.useAlaMap) {
+                    sitesTabOptions.mapFeatures = {};
+                    sitesTabOptions.useGoogleBaseMap = config.googleBaseMapUrl;
+                    var sitesList = $('#'+sitesTabOptions.bindingElementId);
+                    sitesList.children().hide();
+                    sitesList.append('<image class="sites-spinner" width="50" height="50" src="'+sitesTabOptions.spinnerUrl+'" alt="Loading"/>');
+                    $.get(config.projectSitesUrl).done(function(data) {
+                        sitesList.children().show();
+                        var sitesViewModel = self.initialiseSitesTab(sitesTabOptions);
+
+                        if (data && data.features) {
+                            sitesViewModel.setFeatures(data.features);
+                        }
+                        sitesList.find('.sites-spinner').remove();
+
+                    });
+                }
+                else {
+                    viewModel.initialiseSitesTab(sitesTabOptions);
+                }
+            }
+        },
+        'details': {
+            initialiser: function () {
+                viewModel.initialiseMeriPlan();
+            }
+        },
+        'reporting': {
+            initialiser: function () {
+                viewModel.initialiseReports();
+            }
+        },
+        'datasets': {
+            initialiser: function() {
+                viewModel.initialiseDataSets();
+            }
+        },
+        'admin': {
+            initialiser: function () {
+                viewModel.initialiseAdminTab();
+            }
+        }
+    };
+
+    initialiseTabs(tabs, {tabSelector:'#projectTabs.nav a', tabStorageKey:'project-tab-state', initialisingHtmlSelector:'#spinner'});
 
             var newsAndEventsInitialised = false;
             $('#editNewsAndEvents-tab').on('shown.bs.tab', function() {
@@ -361,8 +452,8 @@ var config = {
             .attr('title','Only available to project members').addClass('tooltips');
 
             // Star button click event
-            $("#starBtn").click(function(e) {
-                var isStarred = ($("#starBtn i").attr("class") == "fa-star");
+            $("#starBtn").on("click", function(e) {
+                var isStarred = ($("#starBtn i").attr("class") === "fa fa-star");
                 toggleStarred(isStarred, '${user?.userId ?: ''}', '${project.projectId}');
             });
 
@@ -383,7 +474,9 @@ var config = {
 
 </asset:script>
 <asset:javascript src="common-bs4.js"/>
+<asset:javascript src="tab-init.js"/>
 <asset:javascript src="projects.js"/>
+<asset:javascript src="document.js"/>
 <asset:javascript src="reporting.js"/>
 <asset:javascript src="select2/4.0.3/js/select2.full"/>
 <asset:javascript src="knockout-custom-bindings.js"/>

@@ -445,7 +445,7 @@
 
         // Star button click event
         $("#starBtn").click(function(e) {
-            var isStarred = ($("#starBtn i").attr("class") == "icon-star");
+            var isStarred = ($("#starBtn i").attr("class") === "fa fa-star");
             toggleStarred(isStarred, '${user?.userId?:''}', '${project.projectId}');
         });
     });

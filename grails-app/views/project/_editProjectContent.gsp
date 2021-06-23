@@ -7,13 +7,13 @@
         <span data-bind="text:message"></span>
     </div>
 </div>
-<div class="row space-after well well-small">
+<div class="row space-after ml-1 well well-small">
 
         <h4>Update project "${header}"</h4>
-        <div id="${attributeName}-button-bar" class="w-100 bg-white mb-3"></div>
-        <div style="padding-right:12px;">
+        <div id="${attributeName}-button-bar" class="w-100 bg-white mb-2"></div>
+        <div style="padding-right:12px;" class="w-100">
             <g:textArea name="${attributeName}Input" id="${attributeName}Input" class="border w-100 m-0" value="${project[attributeName]}" rows="16"
-                        cols="310" />
+                        cols="120" />
         </div>
         <div class="d-none"><input type="text" name="${attributeName}Output" id="${attributeName}Output" class="d-none"></div>
 </div>

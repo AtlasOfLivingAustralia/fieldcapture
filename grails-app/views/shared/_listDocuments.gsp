@@ -1,13 +1,13 @@
 
 <div class="row row-eq-height" id="${containerId}">
     <div class="col-sm-5 filterDocumentHolder">
-            <div id="filter-by-stage" class="document-filter-group btn-group pull-right">
-                <a class="btn dropdown-toggle" href="#">
+            <div id="filter-by-stage" class="document-filter-group btn-group pull-right dropdown">
+                <a class="btn dropdown-toggle" data-toggle="dropdown" id="filterDropDown" href="#">
                     <i class="fa fa-filter"></i> Filter by report
                     <span class="caret"></span>
                 </a>
-                <ul class="dropdown-menu" data-bind="foreach:distinctDocumentProperty('reportName')">
-                    <li><a href="#"><label class="checkbox"> <input data-column="2" name="doc-filter" class="checkbox" type="checkbox" data-bind="attr:{value:$data}"> <span data-bind="text:$data"></span></label></a> </li>
+                <ul class="dropdown-menu" aria-labelledby="filterDropDown" data-bind="foreach:distinctDocumentProperty('reportName')">
+                    <li><a href="#" class="dropdown-item"><label class="checkbox"> <input data-column="2" name="doc-filter" class="checkbox" type="checkbox" data-bind="attr:{value:$data}"> <span data-bind="text:$data"></span></label></a> </li>
                 </ul>
 
             </div>

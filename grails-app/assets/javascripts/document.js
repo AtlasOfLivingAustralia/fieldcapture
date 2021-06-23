@@ -606,23 +606,6 @@ function initialiseDocumentTable(containerSelector) {
         searchStage(column, searchString);
 
     });
-
-    var filterSelector = containerSelector + ' .document-filter-group';
-    $(filterSelector + ' a').on('click', function (event) {
-        if (event.target == this) {
-            event.preventDefault();
-            $(this).parent().toggleClass('open');
-        }
-
-    });
-    $('body').on('click', function(e) {
-        if (!$(filterSelector).is(e.target)
-            && $(filterSelector).has(e.target).length === 0
-            && $('.open').has(e.target).length === 0
-        ) {
-            $(filterSelector).removeClass('open');
-        }
-    });
 }
 
 

@@ -16,10 +16,10 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-10">
+        <div class="col-sm-12">
             <form class="form-group" id="speciesListForm">
                 <label class="control-label" for="speciesList">List of species<br>(one per line)</label>
-                <textarea id="speciesList" rows="10" class="input-block-level validate[required] form-control"></textarea>
+                <textarea id="speciesList" rows="10" class="input-block-level validate[required] form-control w-100"></textarea>
             </form>
             <button id="submitSpeciesList" class="btn btn-primary">${project.listId ? "Update" : "Submit"}</button>
             <asset:image src="spinner.gif" id="spinner1" class="hide spinner" alt="spinner icon"/>
