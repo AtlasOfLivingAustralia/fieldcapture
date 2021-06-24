@@ -1446,11 +1446,11 @@
           {
             "dataType": "list",
             "name": "projectOutcomes",
-            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
-                "name": "outcomeStatement"
+                "name": "outcomeStatement",
+                "validate": "required,maxSize[5000]"
               },
               {
                 "dataType": "text",
@@ -1551,7 +1551,7 @@
             "type": "row",
             "items": [
               {
-                "source": "<b>7.2 Describe achievements made against each outcome statement in the MERI plan, including measurable information where applicable. </b><p>Supporting evidence to demonstrate achievement against the outcome (e.g. report, monitoring data sets, photos, media articles, etc) should be provided as attachments to this report via the Admin tab > Documents sub-tab of MERIT. Supporting evidence should be labelled to reference the applicable outcome statement/s. Where supporting evidence contains sensitive or confidential information, please send to your Grant Manager by email.  Where an intended outcome is not relevant to the project, please put ‘Not applicable’.</p>",
+                "source": "<b>7.2 Describe achievements made by the project against each relevant intended outcome of the Wildlife Rescue and Rehabilitation program, including measurable information where available.</b><p>Supporting evidence to demonstrate achievement against intended outcomes (e.g. report, monitoring data sets, photos, media articles, etc) should be provided as attachments to this report via the Admin tab > Documents sub-tab of MERIT. Supporting evidence should be labelled to reference the applicable outcome. Where supporting evidence contains sensitive or confidential information, please send to your Grant Manager by email.</p>",
                 "type": "literal"
               }
             ]
@@ -1559,7 +1559,7 @@
           {
             "source": "projectOutcomes",
             "type": "table",
-            "disableTableUpload": true,
+            "userAddedRows": true,
             "columns": [
               {
                 "source": "",
@@ -1575,7 +1575,6 @@
                 "source": "outcomeStatement",
                 "title": "Intended Outcome as per Grant Agreement",
                 "rows": 5,
-                "readonly": true,
                 "width": "45%"
               },
 
@@ -1655,60 +1654,6 @@
               }
             ]
 
-          }
-        ],
-        "pre-populate": [
-          {
-            "source": {
-              "type": "literal",
-              "literal": {
-                "projectOutcomes": [
-                  {
-                    "outcomeStatement": "Increased numbers of native wildlife rescued, treated, rehabilitated and re-introduced into suitable environments and humane treatment for those that cannot be rehabilitated"
-                  },
-                  {
-                    "outcomeStatement": "Improved security of threatened species at risk of extinction"
-                  },
-                  {
-                    "outcomeStatement": "Improved preparedness for dealing with native wildlife emergencies"
-                  },
-                  {
-                    "outcomeStatement": "Increased community awareness of the important role of wildlife rehabilitators and how to access their services"
-                  },
-                  {
-                    "outcomeStatement": "Improved safety, efficiency and effectiveness of native wildlife emergency response operations"
-                  },
-                  {
-                    "outcomeStatement": "Improved standards of care and facilities for treating, housing and rehabilitating native wildlife for release"
-                  },
-                  {
-                    "outcomeStatement": "Increased numbers of volunteer wildlife rehabilitators, including emergency responders"
-                  },
-                  {
-                    "outcomeStatement": "Reduced financial burden on volunteer native wildlife rehabilitators and veterinarians that care for wildlife"
-                  },
-                  {
-                    "outcomeStatement": "Native wildlife rehabilitators (including veterinarians) have improved support, knowledge of, skills in, and resources for, caring for affected native wildlife"
-                  },
-                  {
-                    "outcomeStatement": "Funds are used properly (efficiently, effectively, economically and ethically) and adequate books and records are kept"
-                  }
-                ]
-              }
-            },
-
-            "mapping": [
-              {
-                "target": "projectOutcomes",
-                "mapping": [
-                  {
-                    "target": "outcomeStatement",
-                    "source-path": "outcomeStatement"
-                  }
-                ],
-                "source-path": "projectOutcomes"
-              }
-            ]
           }
         ],
         "title": "Final Report",
