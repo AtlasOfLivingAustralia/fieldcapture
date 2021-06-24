@@ -226,10 +226,10 @@
 .terminationReasonSection {
 	padding-bottom: 20px;
 }
-#projectTabs li>a {
+#projectTabs li>a, #espProjectsTab li>a {
 	border: solid 1px #dddddd;
 }
-#projectTabs li>a.active {
+#projectTabs li>a.active, #espProjectsTab li>a.active {
 	border-bottom-color: transparent;
 }
 input.dateControl {

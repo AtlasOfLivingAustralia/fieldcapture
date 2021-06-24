@@ -5,8 +5,8 @@
     <g:render template="activityFormContents"/>
     <g:if test="${params.includeFormActions}">
         <div class="form-actions">
-            <button type="button" id="save" class="btn btn-primary">Save changes</button>
-            <button type="button" id="cancel" class="btn">Cancel</button>
+            <button type="button" id="save" class="btn btn-sm btn-primary">Save changes</button>
+            <button type="button" id="cancel" class="btn btn-sm">Cancel</button>
         </div>
     </g:if>
 </div>

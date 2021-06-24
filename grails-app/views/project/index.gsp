@@ -149,20 +149,23 @@
             </g:if>
         </div>
 
-        <div class="col-sm-2">
+    <div class="col-sm-2">
+        <div class="float-right pull-right">
             <g:if test="${showAlternateTemplate}">
-                <a class="btn" href="${createLink(action: 'index', id: project.projectId)}">User View</a>
+                <a href="${createLink(action: 'index', id: project.projectId)}"><button class="btn btn-sm " type="button">User View</button></a>
             </g:if>
             <g:set var="disabled">${(!user) ? "disabled='disabled' title='login required'" : ''}</g:set>
             <g:if test="${isProjectStarredByUser}">
-                <button class="btn btn-sm mt-4 mb-3 float-right" id="starBtn"><i
+                <button class="btn btn-sm" id="starBtn"><i
                         class="fa fa-star"></i> <span>Remove from favourites</span></button>
             </g:if>
             <g:else>
-                <button class="btn btn-sm mt-4 mb-3 float-right" id="starBtn" ${disabled}><i
+                <button class="btn btn-sm" id="starBtn" ${disabled}><i
                         class="fa fa-star-o"></i> <span>Add to favourites</span></button>
             </g:else>
         </div>
+
+    </div>
     </section> <!-- end of project title section -->
 
 <!-- content tabs -->

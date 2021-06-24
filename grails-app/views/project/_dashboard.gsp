@@ -13,7 +13,7 @@
     <g:if test="${other}">
 
         <h3>Progress of Outputs without targets</h3>
-        <div class="row-fluid outputs-without-targets">
+        <div class="row outputs-without-targets">
         <g:each in="${other?.entrySet()}" var="metric" status="i">
 
             <div class="well well-small">
@@ -28,7 +28,7 @@
     </g:if>
 </g:if>
 <g:else>
-    <p>No activities or output targets have been defined for this project.</p>
+    <p class="ml-3">No activities or output targets have been defined for this project.</p>
 </g:else>
 
 <asset:script>

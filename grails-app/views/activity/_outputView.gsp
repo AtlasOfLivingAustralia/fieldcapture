@@ -11,7 +11,7 @@
         </label>
     </div>
 
-    <div id="${blockId}-content" data-bind="visible:!outputNotCompleted()">
+    <div id="${blockId}-content" data-bind="visible:!outputNotCompleted()" class="pl-3 pr-3 p-1">
         <!-- add the dynamic components -->
         <md:modelView model="${model}" site="${site}" edit="true" output="${outputName}"
                       printable="${printView}"/>

@@ -2,8 +2,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="${hubConfig.skin}"/>
-    <title>${project?.name.encodeAsHTML()} | Project | Field Capture</title>
+    <meta name="layout" content="nrm_bs4"/>
+    <title>${project?.name.encodeAsHTML()} | Project | MERIT</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
     <script>
     var fcConfig = {
@@ -29,9 +29,6 @@
         featuresService: "${createLink(controller: 'proxy', action: 'features')}",
         featureService: "${createLink(controller: 'proxy', action: 'feature')}",
         spatialWms: "${grailsApplication.config.spatial.geoserverUrl}",
-        spatialBaseUrl: "${grailsApplication.config.spatial.baseURL}",
-        spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
-        spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
         tabbedActivityUrl: "${createLink(controller: 'activity', action:'ajaxLoadActivityForm')}",
         dashboardUrl:"${createLink(action:'projectDashboard', id:project.projectId)}",
         searchBieUrl:"${createLink(controller:'species', action:'searchBie')}",
@@ -54,49 +51,51 @@
 
     </script>
 
-    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="common-bs4.css"/>
     <asset:stylesheet src="esp-overview.css"/>
 </head>
 <body>
 <div class="${containerType}">
-    <div>
-        <ul class="breadcrumb pull-left">
-            <li>
-                <g:link controller="home">Home</g:link> <span class="divider">/</span>
+    <section aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <g:link controller="home">Home</g:link>
             </li>
-            <li class="active">Projects <span class="divider">/</span></li>
-            <li class="active">Project</li>
-        </ul>
+            <li class="breadcrumb-item">Project</li>
+            <li class="breadcrumb-item">${project?.name}</li>
+        </ol>
         <div class="pull-right">
             <g:if test="${fc.userIsSiteAdmin()}">
-                <a class="btn" href="${createLink(action:'index', id:project.projectId, params:[template:'index'])}">Grant Manager View</a>
+                <a href="${createLink(action:'index', id:project.projectId, params:[template:'index'])}"><button type="button" class="btn btn-sm">Grant Manager View</button></a>
             </g:if>
             <g:set var="disabled">${(!user) ? "disabled='disabled' title='login required'" : ''}</g:set>
             <g:if test="${isProjectStarredByUser}">
-                <button class="btn btn-sm float-right" id="starBtn"><i class="icon-star"></i> <span>Remove from favourites</span></button>
+                <button class="btn btn-sm float-right" id="starBtn"><i class="fa fa-star"></i> <span>Remove from favourites</span></button>
             </g:if>
             <g:else>
-                <button class="btn btn-sm float-right" id="starBtn" ${disabled}><i class="icon-star-empty"></i> <span>Add to favourites</span></button>
+                <button class="btn btn-sm float-right" id="starBtn" ${disabled}><i class="fa fa-star-o"></i> <span>Add to favourites</span></button>
             </g:else>
         </div>
-    </div>
+    </section>
+
+
 
     <h2>${project.name}</h2>
     <g:if test="${flash.errorMessage || flash.message}">
-        <div class="span5">
-            <div class="alert alert-error">
+        <div class="col-sm-5">
+            <div class="alert alert-danger">
                 <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
                 ${flash.errorMessage?:flash.message}
             </div>
         </div>
     </g:if>
     <p>${project.description}</p>
-    <div class="row-fluid">
-        <span class="span6">
+    <div class="row">
+        <span class="col-sm-6">
             <span class="label label-info label-small">Project ID:</span> ${project.externalId}<br/>
             <span class="label label-info label-small">Reporting Period:</span> <span data-bind="text:reportingFinancialYear"></span><br/>
         </span>
-        <span class="span6">
+        <span class="col-sm-6">
             <g:if test="${projectArea}">
                 <ul class="unstyled">
                     <li><fc:siteFacet site="${projectArea}" facet="state" label="State / Territory"/></li>
@@ -111,14 +110,14 @@
 
 
 
-    <ul class="nav nav-tabs">
-        <li class="active"><a id='sites-tab' href="#mysites">My ESP Sites</a></li>
-        <li><a href="#species-records-tab">My Species Records</a></li>
-        <li><a href="#dashboard-tab">Dashboard</a></li>
-        <li><a href="#photographs-tab">Photographs</a></li>
-        <li><a href="#documents-tab">Documents</a></li>
-        <li><a id="annual-submission-report-tab" href="#reporting-tab">Annual Report Submission</a></li>
-        <li><a id="stage-report-pdf-tab" href="#stage-report-pdf">Download Report</a></li>
+    <ul class="nav nav-tabs" data-tab="tab" id="espProjectsTab" role="tablist">
+        <li class="nav-item active"><a class="nav-link active" id='sites-tab' href="#mysites">My ESP Sites</a></li>
+        <li class="nav-item"><a class="nav-link" href="#species-records-tab">My Species Records</a></li>
+        <li class="nav-item"><a class="nav-link" href="#dashboard-tab">Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" href="#photographs-tab">Photographs</a></li>
+        <li class="nav-item"><a class="nav-link" href="#documents-tab">Documents</a></li>
+        <li class="nav-item"><a class="nav-link" id="annual-submission-report-tab" href="#reporting-tab">Annual Report Submission</a></li>
+        <li class="nav-item"><a class="nav-link" id="stage-report-pdf-tab" href="#stage-report-pdf">Download Report</a></li>
     </ul>
 
     <div id="saved-nav-message-holder"></div>
@@ -127,9 +126,9 @@
         <div class="tab-pane active" id="mysites">
             <p>Click on a site to fill out the report for that site.</p>
             <p>Green sites have finished reports.  Red sites have unfinished reports.</p>
-            <div class="row-fluid">
+            <div class="row">
                 <!-- ko stopBinding:true -->
-                <div id="map" class="span12" style="height:500px; width:100%"></div>
+                <div id="map" class="col-sm-12" style="height:500px; width:100%"></div>
                 <!-- /ko -->
             </div>
 
@@ -141,7 +140,7 @@
         </div>
         <div class="tab-pane" id="dashboard-tab">
             <h3>Dashboard</h3>
-            <div class="row-fluid">
+            <div class="row">
                 <div id="dashboard">
                 </div>
             </div>
@@ -218,29 +217,30 @@
                 <hr/>
 
                 <form class="form-horizontal" id = "stageReportPDF">
-                    <div class="control-group">
-                        <label class="control-label" for="stageToReport">Report of financial year: </label>
-                        <div class="controls">
-                            <select id="stageToReport" data-bind="value:stageToReport, options:reportableStages, optionsText: 'financialYear', optionsValue: 'stage' " ></select>
+
+                    <div class="form-group row ml-3">
+                        <label class="col-sm-1 col-form-label" for="stageToReport">Report of financial year: </label>
+                        <div class="col-sm-1">
+                            <select id="stageToReport" class="form-control form-control-sm" data-bind="value:stageToReport, options:reportableStages, optionsText: 'financialYear', optionsValue: 'stage' " ></select>
                         </div>
                     </div>
-
-                    <div class="control-group">
-                        <label class="control-label">PDF Orientation: <fc:iconHelp>If your PDF includes activities with wide tables, the Landscape setting may improve the result.  This setting has no effect on the HTML view. </fc:iconHelp></label>
-                        <div class="controls">
-                            <select data-bind="value:orientation">
+                    <div class="form-group row ml-3">
+                        <label class="col-sm-1 col-form-label" for="orientation">PDF Orientation: <fc:iconHelp>If your PDF includes activities with wide tables, the Landscape setting may improve the result.  This setting has no effect on the HTML view. </fc:iconHelp></label>
+                        <div class="col-sm-1">
+                            <select class="form-control form-control-sm" id="orientation" data-bind="value:orientation">
                                 <option value="portrait">Portrait</option>
                                 <option value="landscape">Landscape</option>
                             </select>
                         </div>
                     </div>
+                    <div class="form-group ml-3">
+                        <button type="button" class="btn btn-sm btn-success"
+                                data-bind="click:generateProjectReportHTML">Generate Report (HTML)</button>
+                        <button type="button" class="btn btn-sm btn-success"
+                                data-bind="click:generateProjectReportPDF">Generate Report (PDF)</button>
+                    </div>
                 </form>
-                <div class="control-group">
-                        <button type="button" class="btn btn-success"
-                             data-bind="click:generateProjectReportHTML">Generate Report (HTML)</button>
-                         <button type="button" class="btn btn-success"
-                            data-bind="click:generateProjectReportPDF">Generate Report (PDF)</button>
-                 </div>
+
             </div>
         </div>
     </div>
@@ -262,13 +262,13 @@
                     <div class="control-group">
                         <label class="control-label">Reporting period start: </label>
                         <div class="controls">
-                            <fc:datePicker class="input input-small" targetField="reportingPeriodStart"></fc:datePicker>
+                            <fc:datePicker class="input input-small form-control form-control-sm" bs4="true" targetField="reportingPeriodStart"/>
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label">Reporting period end: </label>
                         <div class="controls">
-                            <input type="text" class="input input-small" readonly="readonly" data-bind="value:reportingPeriodEnd.formattedDate">
+                            <input type="text" class="input input-small form-control form-control-sm" readonly="readonly" data-bind="value:reportingPeriodEnd.formattedDate">
                         </div>
                     </div>
 
@@ -309,7 +309,7 @@
 <g:render template="/shared/declaration" model="${[declarationType:au.org.ala.merit.SettingPageType.ESP_DECLARATION]}"/>
 <!-- /ko -->
 
-<asset:javascript src="common.js"/>
+<asset:javascript src="common-bs4.js"/>
 <asset:javascript src="projects.js"/>
 <asset:javascript src="esp-overview.js"/>
 <asset:deferredScripts/>
