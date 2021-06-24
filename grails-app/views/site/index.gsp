@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta name="layout" content="${hubConfig.skin}"/>
-    <title>${site?.name?.encodeAsHTML()} | Field Capture</title>
+    <title>Site | ${site?.name?.encodeAsHTML()} | MERIT</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
     <script disposition="head">
         var fcConfig = {

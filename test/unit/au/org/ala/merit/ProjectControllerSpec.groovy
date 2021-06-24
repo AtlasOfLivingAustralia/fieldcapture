@@ -324,6 +324,28 @@ class ProjectControllerSpec extends Specification {
         view == '/activity/activityReport'
     }
 
+    def "if the project uses pessimistic locking for reports, if the user already holds the lock, the lock should not be re-obtained"() {
+        setup:
+        String projectId = 'p1'
+        String reportId = 'r1'
+        stubProjectAdmin('1234', projectId)
+        Map project = this.project(projectId, true)
+        projectService.get(projectId) >> project
+        Map activityReportModel = [editable:true, metaModel:[:], outputModels:[:], activity:[activityId:'a1', lock:'1234'], report:project.reports[0]]
+
+
+        when:
+        reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> activityReportModel
+        projectService.getProgramConfiguration(project) >> new ProgramConfig([requiresActivityLocking: true])
+        controller.editReport(projectId, reportId)
+
+        then:
+        0 * reportService.lockForEditing(project.reports[0])
+        1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity) >> activityReportModel.metaModel
+
+        view == '/activity/activityReport'
+    }
+
     def "report data shouldn't be saved if the project id of the report doesn't match the project id checked by the annotation"() {
         setup:
         Map props = [
@@ -515,6 +537,71 @@ class ProjectControllerSpec extends Specification {
 
         and:
         response.json == expected
+
+    }
+
+    def "The controller delegates to the reportService to release locks when existing a report"() {
+        when:
+        controller.exitReport('p1', 'r1')
+
+        then:
+        1 * reportService.unlock('r1')
+        response.redirectUrl == '/project/index/p1'
+    }
+
+    def "the controller can return a list of targets and progress towards those targets for the final report"(boolean approvedDataOnly) {
+        setup:
+        Map stubResults = [services: [[
+              id: 1,
+              name: "Service 1",
+              scores: [[
+                       scoreId: "score-1",
+                       label: "score 1",
+                       isOutputTarget: true,
+                       target: "2",
+                       periodTarget:[],
+                       result:[result:1]
+               ]]
+          ],
+          [
+              id: 2,
+              name: "Service 2",
+              scores: [[
+                       scoreId: "score-2",
+                       label: "score 2",
+                       isOutputTarget: true,
+                       target: "3",
+                       periodTarget:[],
+                       result:[result:3]
+               ]]
+          ]]]
+        when:
+        params.approvedDataOnly = approvedDataOnly
+        params.onlyNonZeroTargets = true
+        controller.projectTargetsAndScores('p1')
+
+        then:
+        1 * projectService.getServiceDashboardData('p1', approvedDataOnly) >> stubResults
+        response.json.projectId == 'p1'
+        response.json.targets == [[
+                scoreId:'score-1',
+                service: "Service 1",
+                targetMeasure:"score 1",
+                projectTarget: "2",
+                result:1
+            ], [
+                scoreId:'score-2',
+                 service: "Service 2",
+                 targetMeasure:"score 2",
+                 projectTarget: "3",
+                 result:3
+          ]
+        ]
+
+        where:
+        approvedDataOnly | _
+        true | _
+        false | _
 
     }
 

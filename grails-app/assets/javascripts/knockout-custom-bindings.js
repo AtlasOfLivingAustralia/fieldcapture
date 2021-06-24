@@ -22,7 +22,7 @@ ko.bindingHandlers.popover = {
         $('body').on('click', function(e) {
 
           if (e.target != element && $element.find(e.target).length == 0) {
-            $element.popover('hide');
+            $element.popover('destroy');
           }
         });
       }

@@ -4,10 +4,11 @@
     "method": "ANY"
   },
   "response": {
+    "transformers": ["response-template"],
     "status": 200,
     "headers": {
       "Content-Type": "application/json"
     },
-    "body": "{\"userName\":\"auser@nowhere.com.au\", \"userId\":\"1\"}"
+    "body": "{\"userName\":\"auser@nowhere.com.au\", \"userId\":\"{{request.query.userName}}\"}"
   }
 }

@@ -2,20 +2,25 @@
 <div id="site-blog">
     <g:if test="${blog.size() > 0}">
         <ul class="unstyled list-unstyled" data-bind="foreach:entries">
-            <li>
-                <img data-bind="visible:imageUrl(), attr:{src:imageThumbnailUrl}" class="pull-left" width="50" height="50">
+            <li class="customBorder mb-2">
+                <img data-bind="visible:imageUrl(), attr:{src:imageThumbnailUrl}" class="pull-left mr-2 customImage" width="50" height="50">
                 <i class="blog-icon floatleft fa fa-3x" data-bind="visible:stockIcon(), css:stockIcon"></i>
                 <div>
                     <div class="row">
-                        <strong data-bind="text:title"></strong>
-                        <div class="pull-right">
+                        <strong class="col-sm-8" data-bind="text:title"></strong>
+                        <div class="col-sm-4 text-right pull-right">
                             <a class="editThisBlog" href data-bind="click:$parent.editBlogEntry">Edit</a> |
                             <a class="delThisBlog" href data-bind="click:$parent.deleteBlogEntry">Delete</a>
                         </div>
                     </div>
-                    <p data-bind="text:shortContent"></p>
+
+                    <div class="row">
+                        <div class="col-sm-10 customCol">
+                            <p data-bind="text:shortContent"></p>
+                        </div>
+                    </div>
+
                 </div>
-                <hr/>
             </li>
 
         </ul>

@@ -748,12 +748,27 @@ class ProjectController {
         }
         else {
             if (model.config.requiresActivityLocking) {
-                Map result = reportService.lockForEditing(model.report)
+                // Don't re-acquire the lock if we already have it, the editable check has already determined that
+                // if a lock exists the current user holds it.
+                if (!model.activity.lock) {
+                    Map result = reportService.lockForEditing(model.report)
+                }
+
                 model.locked = true
             }
             model.saveReportUrl = createLink(action:'saveReport', id:id, params:[reportId:model.report.reportId])
             render model:model, view:'/activity/activityReport'
         }
+    }
+
+    /** Releases a lock if necessary and redirects to the project page */
+    def exitReport(String id, String reportId) {
+        if (!id || !reportId) {
+            error('An invalid report was selected for exiting', id)
+            return
+        }
+        reportService.unlock(reportId)
+        redirect action: 'index', id:id
     }
 
     @PreAuthorise(accessLevel = 'editor')
@@ -860,8 +875,8 @@ class ProjectController {
         model.metaModel = projectService.filterOutputModel(model.metaModel, project, model.activity)
 
         model.context = new HashMap(project)
-        model.returnTo = g.createLink(action:'index', id:projectId)
-        model.contextViewUrl = model.returnTo
+        model.returnTo = g.createLink(action:'exitReport', id:projectId, params:[reportId:reportId])
+        model.contextViewUrl = g.createLink(action:'index', id:projectId)
         model.reportHeaderTemplate = '/project/rlpProjectReportHeader'
         model.config = config
 
@@ -923,6 +938,39 @@ class ProjectController {
         }
         Map results = [projectId:id, targets:targets]
         render results as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'editor')
+    def projectTargetsAndScores(String id) {
+        boolean approvedDataOnly = params.getBoolean("approvedDataOnly", true)
+        Map result = projectService.getServiceDashboardData(id, approvedDataOnly)
+        // Transform the result to match that returned by the scoresByFinancialYear method
+        List targets = []
+        result?.services?.each { Map service ->
+
+            service.scores.each { Map score ->
+                targets << [
+                        scoreId:score.scoreId,
+                        service:service.name,
+                        targetMeasure: score.label,
+                        projectTarget: score.target,
+                        result: score.result?.result ?: 0
+                ]
+            }
+        }
+        boolean onlyNonZeroTargets = params.getBoolean("onlyNonZeroTargets", false)
+        if (onlyNonZeroTargets) {
+            targets = targets.findAll{hasTarget(it.projectTarget)}
+        }
+        Map response = [
+                projectId: id,
+                targets: targets
+        ]
+        render response as JSON
+    }
+
+    private boolean hasTarget(value) {
+        value != 0 && value != "0"
     }
 
     private boolean hasFinancialYearTarget(Map targetRow) {

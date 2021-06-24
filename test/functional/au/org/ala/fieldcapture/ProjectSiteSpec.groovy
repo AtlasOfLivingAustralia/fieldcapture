@@ -1,7 +1,7 @@
 package au.org.ala.fieldcapture
 
 import pages.EditSitePage
-import pages.ProjectPage
+import pages.ProjectIndex
 import pages.SiteIndexPage
 
 class ProjectSiteSpec extends StubbedCasSpec {
@@ -19,11 +19,11 @@ class ProjectSiteSpec extends StubbedCasSpec {
         login([userId: '2', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ALA_ADMIN'], browser)
 
         when:
-        to ProjectPage
+        to ProjectIndex, 'project_10'
 
         then:
         overviewTab.click()
-        siteTab.click()
+        sitesTab.click()
         waitFor {siteTabContents.displayed}
         def tableContent = tableContents
         and:
@@ -40,11 +40,11 @@ class ProjectSiteSpec extends StubbedCasSpec {
         login([userId: '2', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ALA_ADMIN'], browser)
 
         when:
-        to ProjectPage
+        to ProjectIndex, 'project_10'
 
         then:
         overviewTab.click()
-        siteTab.click()
+        sitesTab.click()
         waitFor {siteTabContents.displayed}
 
         when:
@@ -58,8 +58,7 @@ class ProjectSiteSpec extends StubbedCasSpec {
         edit.saveBtn.click()
 
         then:
-        Thread.sleep(18000)
-        waitFor 30,{at SiteIndexPage}
+        waitFor 60,{at SiteIndexPage}
 
         and:
         waitFor { name.text() == "Site: Name Change" }

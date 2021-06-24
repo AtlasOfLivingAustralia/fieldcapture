@@ -38,8 +38,8 @@
     <g:render template="managementUnitDetails"/>
 
     <div class="form-actions">
-        <button type="button" id="save" data-bind="click:save" class="btn btn-primary">Save</button>
-        <button type="button" id="cancel" class="btn" data-bind="click:cancel">Cancel</button>
+        <button type="button" id="save" data-bind="click:save" class="btn btn-sm btn-primary">Save</button>
+        <button type="button" id="cancel" class="btn btn-sm btn-danger" data-bind="click:cancel">Cancel</button>
     </div>
 </div>
 

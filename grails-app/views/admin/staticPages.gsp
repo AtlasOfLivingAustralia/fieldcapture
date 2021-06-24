@@ -18,11 +18,12 @@
 <html>
     <head>
         <meta name="layout" content="adminLayout"/>
-        <title>Static pages | Admin | Data capture | Atlas of Living Australia</title>
-        <asset:stylesheet src="base.css"/>
+        <title>Static pages | Admin | MERIT</title>
+        <asset:stylesheet src="common-bs4.css"/>
     </head>
 
     <body>
+    <h3>Static pages</h3>
         <content tag="pageTitle">Static pages</content>
         <table class="table table-bordered table-striped">
             <thead>
@@ -39,13 +40,13 @@
                             ${setting.key}
                         </td>
                         <td>
-                            <a href="${createLink(controller: 'home', action: 'staticPage', id: setting.name)}" class="btn btn-small">
-                                <i class="icon-file"></i>&nbsp;View</a>
+                            <a href="${createLink(controller: 'home', action: 'staticPage', id: setting.name)}" class="btn btn-sm">
+                                <i class="fa fa-file"></i>&nbsp;View</a>
                         </td>
                         <td style="max-width:500px;overflow-wrap:break-word;">
                             <g:if test="${setting.editLink}">
-                                <a href="${setting.editLink}/${setting.name}" class="btn btn-small">
-                                    <i class="icon-edit"></i>&nbsp;Edit
+                                <a href="${setting.editLink}/${setting.name}" class="btn btn-sm">
+                                    <i class="fa fa-edit"></i>&nbsp;Edit
                                 </a>
                             </g:if>
                             <g:else>
@@ -56,6 +57,6 @@
                 </g:each>
             </tbody>
         </table>
-        <asset:javascript src="base.js"/>
+        <asset:javascript src="common-bs4.js"/>
     </body>
 </html>

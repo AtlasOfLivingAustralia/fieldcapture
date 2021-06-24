@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="layout" content="adminLayout"/>
-    <title>Admin Reports | Admin | Data capture | Atlas of Living Australia</title>
+    <title>Admin Reports | Admin | MERIT</title>
     <script>
         fcConfig = {
             performanceComparisonReportUrl: "${g.createLink(controller: 'report', action: 'performanceAssessmentComparisonReport')}",
@@ -14,62 +14,67 @@
 
         }
     </script>
-    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="common-bs4.css"/>
     <g:set var="here" value="${g.createLink(action: 'editSiteBlog')}"/>
 </head>
 
 <body>
 <h3>Administrator Reports</h3>
+<content tag="pageTitle">Administrator Reports</content>
 
 <h4>Organisation data download:</h4>
 
-<a id="orgDataDownload" class="btn" href="#">Download Organisation Report Data</a>
+<a id="orgDataDownload" class="btn btn-sm" href="#">Download Organisation Report Data</a>
 
 <h4>Management unit report download:</h4>
-<div class="control-group">
+<div class="form-group">
     <label class="control-label">Select reporting period: </label>
     <div class="controls">
-        <select id="reportPeriodOfManagementUnit">
+        <select id="reportPeriodOfManagementUnit" class="form-control form-control-sm input-medium">
             <g:each var="financialYear" in="${reportsPeriodsOfManagementUnit}">
                 <option value="startDate=${financialYear}-07-01&endDate=${financialYear+1}-06-30">01 July ${financialYear} - 30 June ${financialYear+1} </option>
             </g:each>
         </select>
     </div>
 </div>
-<a id="muReportDownload" class="btn" href="#">Download Management Unit Report</a>
+<a id="muReportDownload" class="btn btn-sm" href="#">Download Management Unit Report</a>
 
 <h4>User Report</h4>
 
-<a id="userDownload" class="btn">Download MERIT User List</a>
+<button id="userDownload" class="btn btn-sm">Download MERIT User List</button>
 
-<h4>Reef 2050 Plan Action Report</h4>
+<h4 class="mt-4">Reef 2050 Plan Action Report</h4>
 
-<div class="row-fluid">
-    <p>Configure the report options below then press View Report to open the report in a new tab</p>
-    <form id="reef-report-selector" class="report-selector form-horizontal">
-        <div class="control-group">
-            <label class="control-label">Select period: </label>
-            <div class="controls">
-                <select data-bind="options:reportPeriods, optionsText:'label', value:selectedPeriod" class="input-xlarge"></select>
-            </div>
-
-        </div>
-        <div class="control-group">
-            <label class="control-label">Report format:</label>
-            <div class="controls">
-                <select classs="controls" data-bind="options:formatOptions, value:format"></select>
+<div class="row">
+    <div class="col-sm-12">
+        <p>Configure the report options below then press View Report to open the report in a new tab</p>
+    </div>
+    <form id="reef-report-selector" class="report-selector">
+        <div class="form-group row">
+            <div class="col-sm-1"></div>
+            <label for="reportPeriods" class="col-sm-3 pl-2 m-0 control-label">Select period: </label>
+            <div class="col-sm-4">
+            <select id="reportPeriods" data-bind="options:reportPeriods, optionsText:'label', value:selectedPeriod" class="form-control form-control-sm input-medium"></select>
             </div>
         </div>
-        <div class="control-group">
-
+        <div class="form-group row">
+            <div class="col-sm-1"></div>
+            <label for="reportFormats" class="col-sm-3 pl-2 pr-2 m-0 control-label">Report format:</label>
+            <div class="col-sm-8">
+                <select id="reportFormats" class="form-control form-control-sm" data-bind="options:formatOptions, value:format"></select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-4 mr-3"></div>
             <div class="controls">
                 <input class="checkbox" type="checkbox" data-bind="checked:approvedActivitiesOnly"> Approved reports only?
             </div>
         </div>
 
-        <div class="control-group">
+        <div class="form-group row">
+            <div class="col-sm-4 mr-3"></div>
             <div class="controls">
-            <button class="btn btn-success" data-bind="click:go">View Report</button>
+            <button class="btn btn-sm btn-success" data-bind="click:go">View Report</button>
             </div>
         </div>
 
@@ -79,7 +84,7 @@
 
 <g:render template="/shared/dashboard"/>
 
-<asset:javascript src="common.js"/>
+<asset:javascript src="common-bs4.js"/>
 <asset:javascript src="reef2050Report.js"/>
 <script>
     $(function () {

@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta name="layout" content="adminLayout"/>
-		<title>Admin - Audit | Data capture | Atlas of Living Australia</title>
+		<title>Audit | Admin | MERIT</title>
 		<style type="text/css" media="screen">
 		</style>
         <script disposition="head">
@@ -16,20 +16,21 @@
 	</head>
 	<body>
         <h3>Audit</h3>
-        <form class="form-inline">
+        <content tag="pageTitle">Audit</content>
+        <form class="form-inline mb-3">
             Search for a :
-            <g:select id="searchType" name="searchType" value="${searchType}" from="${['Project', 'Organisation', 'Setting / Site Blog']}">
+            <g:select id="searchType" class="form-control form-control-sm mr-2" name="searchType" value="${searchType}" from="${['Project', 'Organisation', 'Setting / Site Blog']}">
             </g:select>
-            <g:textField id="searchTerm" name="searchTerm" placeholder="Search term..." value="${searchTerm}"></g:textField>
-            <button class="btn" id="btnSearch"><i class="icon-search"></i></button>
+            <g:textField id="searchTerm" class="form-control form-control-sm mr-2" name="searchTerm" placeholder="Search term..." value="${searchTerm}"/>
+            <button class="btn btn-sm" id="btnSearch"><i class="fa fa-search"></i></button>
         </form>
         <g:if test="${results}">
         <g:set var="searchTerm" value="${params.searchTerm}"/>
         <div class="well well-small">
-            <table style="width: 95%;" class="table table-striped table-bordered table-hover" id="results-list">
+            <table class="table table-striped table-bordered table-hover w-100" id="results-list">
                 <thead>
-                    <th>Name</th>
-                    <th>Description</th>
+                    <th style="width:30%">Name</th>
+                    <th style="width:70%">Description</th>
                 </thead>
                 <tbody>
                     <g:each in="${results.hits?.hits}" var="hit">
@@ -50,5 +51,3 @@
 
     </body>
 </html>
-
-

@@ -32,29 +32,16 @@ class RlpReportingSpec extends StubbedCasSpec {
         String projectId = '1'
         login([userId: '1', role: "ROLE_FC_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
 
-        when:
-        to RlpProjectPage, projectId
-
-        then:
-        waitFor { at RlpProjectPage }
-
         when: "Display the admin tab, navigate to the settings section then press the re-generate reports button"
+        to RlpProjectPage, projectId
         adminTab.click()
-
-        then:
         waitFor { adminContent.displayed }
-
-        when: "Click on the project settings"
         adminContent.projectSettingsTab.click()
-
-        then:
         waitFor { adminContent.projectSettings.displayed }
-
-        when:
         adminContent.projectSettings.regenerateReports()
 
         then:
-        waitFor { at RlpProjectPage }
+        waitFor 20, { hasBeenReloaded() }
 
         when:
         reportingTab.click()
@@ -331,17 +318,11 @@ class RlpReportingSpec extends StubbedCasSpec {
         waitFor 20, { timeoutModal.displayed }
 
         when: "Click the re-login link and log back in"
-        waitFor {timeoutModal.loginLink.click() }
+        Thread.sleep(1000) // wait for the timeoutModal animation to complete.
+        timeoutModal.loginLink.click()
 
-        then:
-        waitFor {
-            at ReportPage
-            editAnyway.click()
-        }
-
-
-        and: "A dialog is displayed to say there are unsaved edits"
-        waitFor {unsavedEdits.displayed}
+        then: "The page will be reloaded, and dialog is displayed to say there are unsaved edits"
+        waitFor 20, { unsavedEdits.displayed }
 
         when:
         okBootbox()

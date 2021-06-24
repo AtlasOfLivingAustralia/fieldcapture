@@ -510,14 +510,14 @@ var ActivityNavigationViewModel = function(navigationMode, projectId, activityId
     };
     self.nextActivityUrl = function() {
         if (self.hasNext()) {
-            return config.activityUrl + '/' + self.nextActivity().activityId + (config.returnTo ? '?returnTo=' + encodeURIComponent(config.returnTo) : '');
+            return config.activityUrl + '/' + self.nextActivity().activityId + (config.navContext ? '?returnTo=' + config.navContext : '');
         }
         return '#';
 
     };
     self.previousActivityUrl = function() {
         if (self.hasPrevious()) {
-            return config.activityUrl + '/' + self.previousActivity().activityId + (config.returnTo ? '?returnTo=' + encodeURIComponent(config.returnTo) : '');
+            return config.activityUrl + '/' + self.previousActivity().activityId + (config.navContext ? '?returnTo=' + config.navContext : '');
         }
         return '#';
 
@@ -542,7 +542,7 @@ var ActivityNavigationViewModel = function(navigationMode, projectId, activityId
 
     self.navigateUrl = ko.computed(function() {
         if (self.selectedActivity()) {
-            return config.activityUrl + '/' +self.selectedActivity().activityId + (config.returnTo ? '?returnTo=' + encodeURIComponent(config.returnTo) : '');
+            return config.activityUrl + '/' +self.selectedActivity().activityId + (config.navContext ? '?returnTo=' + config.navContext : '');
         }
         return '#';
 

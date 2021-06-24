@@ -13,24 +13,28 @@
             },
             returnTo = "${params.returnTo}";
     </script>
-    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="common-bs4.css"/>
     <asset:stylesheet src="blueimp/fileupload-9.28.0/jquery.fileupload.css"/>
 </head>
 
 <body>
-<content tag="pageTitle">Import Projects from CSV</content>
+<content tag="pageTitle">Load new projects into MERIT</content>
 
 <h2>CSV Project Import</h2>
 <p>
 
 </p>
-<div class="row-fluid" data-bind="visible:!finished() && !finishedPreview()">
-    <div class="span4">
+<div class="row" data-bind="visible:!finished() && !finishedPreview()">
+    <div class="col-sm-4">
         Select the (cp1252 encoded) CSV file containing the project data.  The file will be uploaded automatically.
     </div>
-     <div class="span2 btn fileinput-button" style="margin-left:5px">
-        <input id="fileUpload" type="file" accept="text/csv" data-bind="fileUploadNoImage:uploadOptions, enable:!finished() && !finishedPreview()">Select file</button>
-</div>
+    <div class="col-sm-3">
+        <button class="btn btn-sm fileinput-button" style="margin-left:5px">
+            <input id="fileUpload" class="form-control form-control-sm" type="file" accept="text/csv" data-bind="fileUploadNoImage:uploadOptions, enable:!finished() && !finishedPreview()">
+            Select file
+        </button>
+    </div>
+
 </div>
 
 
@@ -38,14 +42,14 @@
 
 
     <h3> Results </h3>
-    <div class="row-fluid">
+    <div class="row">
     <span data-bind="text:progressSummary"></span>
-    <button class="btn" data-bind="click:doImport, visible:finishedPreview() && !finished(), enabled:!importing()">Import Projects</button>
-        <br/>
+    <button class="ml-1 btn btn-sm mb-3" data-bind="click:doImport, visible:finishedPreview() && !finished(), enabled:!importing()">Import Projects</button>
+
     <table class="table">
         <thead>
         <tr>
-            <td>Grant ID</td><td>External ID</td><td>Success?</td><td>Messages</td>
+            <th>Grant ID</th><th>External ID</th><th>Success?</th><th>Messages</th>
         </tr>
         </thead>
         <tbody>
@@ -76,7 +80,7 @@
 <script id="template-upload" type="text/x-tmpl">{% %}</script>
 <script id="template-download" type="text/x-tmpl">{% %}</script>
 
-<asset:javascript src="common.js"/>
+<asset:javascript src="common-bs4.js"/>
 <asset:javascript src="attach-document-no-ui.js"/>
 
 <script>

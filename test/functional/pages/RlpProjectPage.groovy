@@ -1,8 +1,6 @@
 package pages
 
-import pages.modules.DatasetPageModule
 import pages.modules.DocumentsTab
-import pages.modules.EditableMeriPlan
 import pages.modules.MeriPlanTabContent
 import pages.modules.ProjectAdminTab
 import pages.modules.ProjectReports
@@ -41,6 +39,7 @@ class RlpProjectPage extends ReloadablePage {
         addNewDataset(required: false) {$('.btn-primary')}
 
         meriPlanTabContent {module MeriPlanTabContent }
+        sites { module SitesTab }
     }
 
     def openDocumentDialog() {

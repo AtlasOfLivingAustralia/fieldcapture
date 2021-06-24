@@ -19,7 +19,8 @@ var Master = function (activityId, config) {
         timeoutMessageSelector:'#timeoutMessage',
         activityUpdateUrl:fcConfig.activityUpdateUrl,
         minOptionalSectionsCompleted: 1,
-        activityStorageKey: 'activity-'+activityId
+        activityStorageKey: 'activity-'+activityId,
+        locked: false
     };
 
     var options = _.extend({}, defaults, config);
@@ -150,15 +151,23 @@ var Master = function (activityId, config) {
         return jsData ? JSON.stringify(jsData) : undefined;
     };
 
+    self.getErrors = function(resp) {
+        var errors = resp.error || resp.errors || (resp.resp && (resp.resp.error || resp.resp.errors))
+        if (errors && !_.isArray(errors)) {
+            errors = [{error: errors}];
+        }
+        return errors;
+    }
+
     self.displayErrors = function(errors) {
         var errorText =
             "<span class='label label-important'>Important</span><h4>There was an error while trying to save your changes.</h4>";
 
         $.each(errors, function (i, error) {
-            errorText += "<p>Saving <b>" +  (error.name === 'activity' ? 'the activity context' : error.name) +
+            errorText += "<p>Saving <b>" +  (error.name || 'the report') +
                 "</b> threw the following error:<br><blockquote>" + error.error + "</blockquote></p>";
         });
-        errorText += "<p>Any other changes should have been saved.</p>";
+        errorText += "<p>Please make a note of the edits you have made and reload the page, or open this report in another tab and try again.  If the problem persists, please contact support.</p>";
         bootbox.alert(errorText);
     };
 
@@ -231,9 +240,10 @@ var Master = function (activityId, config) {
                 contentType: 'application/json'
 
             }).done(function (data) {
-                if (data.error || data.errors) {
+                var errors = self.getErrors(data);
+                if (errors) {
                     $.unblockUI();
-                    self.displayErrors(data.errors || [{name:'Activity', error: data.error}]);
+                    self.displayErrors(errors);
                 } else {
                     self.cancelAutosave();
                     self.dirtyFlag.reset();
@@ -287,7 +297,15 @@ var Master = function (activityId, config) {
         }
     };
 
-    autoSaveModel(self, null, {preventNavigationIfDirty:true, healthCheckUrl:options.healthCheckUrl});
+    var autoSaveConfig = {
+        preventNavigationIfDirty:true,
+        healthCheckUrl:options.healthCheckUrl,
+        storageKey:activityStorageKey
+    };
+    if (config.locked) {
+        autoSaveConfig.lockedEntity = activityId;
+    }
+    autoSaveModel(self, null, autoSaveConfig);
 
     if (amplify.store(activityStorageKey)) {
         bootbox.alert("Unsaved data has been found for this form.  Please press 'Save' to keep this data or 'Cancel' to discard it");

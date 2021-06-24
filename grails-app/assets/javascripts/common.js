@@ -13,6 +13,7 @@
 //= require momentjs/2.24.0/locales/en-au.js
 //= require momentjs/moment-timezone-with-data.min.js
 //= require vkbeautify/vkbeautify.0.99.00.beta.js
+//= require lockService
 //= require fieldcapture-application
 //= require knockout-utils
 //= require knockout-dates
