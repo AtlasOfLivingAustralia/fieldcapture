@@ -36,12 +36,7 @@ repositories {
     jcenter()
 }
 
-configurations {
-    developmentOnly
-    runtimeClasspath {
-        extendsFrom developmentOnly
-    }
-}
+
 
 def openhtmltopdfversion = '0.0.1-RC4'
 def geoToolsVersion = "11.1"
@@ -52,6 +47,13 @@ def httpmimeVersion = "4.2.1"
 def jtsVersion = "1.8"
 def ecodataClientPluginVersion = "4.0"
 boolean inplace = false // Set to true it needed only for development
+
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+}
 
 dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
@@ -167,13 +169,6 @@ dependencies {
     if (!inplace) {
         compile "org.grails.plugins:ecodata-client-plugin:${ecodataClientPluginVersion}-SNAPSHOT"
     }
-    else{
-        compile project(":ecodata-client-plugin")
-
-        assetCompile.dependsOn("ecodata-client-plugin:_Events")
-        compileGroovy.dependsOn("ecodata-client-plugin:_Events")
-        bootRun.dependsOn("ecodata-client-plugin:_Events")
-    }
 }
 
 springBoot {
@@ -224,6 +219,21 @@ bootJar {
 
 bootWar {
     enabled = false
+}
+
+if (inplace) {
+    grails {
+        exploded = true
+        plugins {
+            compile(project(':ecodata-client-plugin'))
+
+        }
+    }
+
+    // Make ecodata-client-plugin _Events task is called
+    assetCompile.dependsOn("ecodata-client-plugin:_Events")
+    compileGroovy.dependsOn("ecodata-client-plugin:_Events")
+    bootRun.dependsOn("ecodata-client-plugin:_Events")
 }
 
 task _Events {
