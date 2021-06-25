@@ -13,12 +13,11 @@ branches:
 
 before_install:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+  - rm -fr $HOME/.gradle/caches
 
 cache:
   directories:
     - $HOME/.m2
-    - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 
 script:
