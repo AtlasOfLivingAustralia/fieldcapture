@@ -47,10 +47,6 @@ class ProjectIndex extends ReloadablePage {
         tableContents { $("#sites-table tbody td").moduleList(SitesTableContents)}
         mapMarker{ $('#map img[src*="marker-icon.png"]')}
 
-        downloadReportTab { $("#stage-report-pdf-tab")}
-        downloadReportContent{ module DownloadReportContent}
-
-
     }
 
     void openActivitiesTab() {
@@ -193,15 +189,6 @@ class DashboardTab extends Module {
         progresslabel{ $(".progress-label")}
 
     }
-}
-
-class DownloadReportContent extends Module {
-
-    static content = {
-        generateHTML {$("button[data-bind*=generateProjectReportHTML]").first()}
-        generatePDF { $("button[data-bind*=generateProjectReportPDF]").first() }
-    }
-
 }
 
 

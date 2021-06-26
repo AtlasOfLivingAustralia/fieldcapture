@@ -6,7 +6,7 @@ import pages.modules.OrganisationAdminTab
 class Organisation extends Page{
     static url = 'organisation/index'
 
-    static at = { $('.organisation-header').displayed }
+    static at = { $('#organisationDetails').displayed }
 
     static content = {
         name {$('h2')}

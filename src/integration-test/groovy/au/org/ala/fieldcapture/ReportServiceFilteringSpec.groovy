@@ -43,33 +43,19 @@ class ReportServiceFilteringSpec extends StubbedCasSpec {
         String projectId = '1'
         login([userId: '1', role: "ROLE_FC_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
 
-        when:
-        to RlpProjectPage, projectId
-
-        then:
-        waitFor { at RlpProjectPage }
-
         when: "Display the admin tab, navigate to the settings section then press the re-generate reports button"
+        to RlpProjectPage, projectId
         adminTab.click()
-
-        then:
         waitFor { adminContent.displayed }
-
-        when: "Click on the project settings"
         adminContent.projectSettingsTab.click()
-
-        then:
         waitFor { adminContent.projectSettings.displayed }
-
-        when:
         adminContent.projectSettings.regenerateReports()
 
         then:
-        waitFor { at RlpProjectPage }
+        waitFor 20, { hasBeenReloaded() }
 
         when:
         reportingTab.click()
-
 
         then:
         waitFor { projectReports.displayed }
@@ -112,6 +98,12 @@ class ReportServiceFilteringSpec extends StubbedCasSpec {
 
         and: "All of the output sections are displayed."
         getFormSections().size() == 37
+
+        when: "We leave the report to release the lock"
+        exitReport()
+
+        then:
+        waitFor { at RlpProjectPage }
     }
 
     def "When services are selected in the MERI plan only mandatory and selected services will be shown on the outputs report"() {
