@@ -208,15 +208,20 @@ function autoSaveModel(viewModel, saveUrl, options) {
         throw "Missing mandatory option: healthCheckUrl"
     }
 
+    var lockService = new LockService({});
+    var flagForUnlockCallback = function() {
+        lockService.exitingWithLock(config.lockedEntity);
+    }
+    if (config.lockedEntity) {
+        lockService.lock(config.lockedEntity);
+        window.addEventListener("unload", flagForUnlockCallback);
+    }
+
     var autosaving = false;
 
     var deleteAutoSaveData = function() {
         amplify.store(config.storageKey, null);
     };
-    var saveLocally = function(data) {
-        amplify.store(config.storageKey, data);
-    };
-
 
     function confirmOnPageExit(e) {
 
@@ -253,6 +258,10 @@ function autoSaveModel(viewModel, saveUrl, options) {
         deleteAutoSaveData();
         if (config.preventNavigationIfDirty) {
             unloadHandler.removeCallback(onunloadHandler);
+        }
+        if (config.lockedEntity) {
+            lockService.clearLock(config.lockedEntity);
+            window.removeEventListener("unload", flagForUnlockCallback);
         }
     };
 

@@ -1,26 +1,18 @@
 {
-  "class": "au.org.ala.ecodata.ActivityForm",
-  "id": "5d133339e4b00a475b28e296",
-  "activationDate": null,
-  "category": "RLP Reports",
-  "createdUserId": "<anon>",
-  "dateCreated": "2019-06-26T08:56:25Z",
-  "formVersion": 1,
-  "gmsId": null,
-  "lastUpdated": "2021-03-10T00:39:55Z",
-  "lastUpdatedUserId": "94320",
+  "id": "603ea53e0858465681ea6788",
+  "dateCreated": "2021-03-02T20:51:10Z",
   "minOptionalSectionsCompleted": 1,
-  "name": "RLP Short term project outcomes",
+  "supportsSites": false,
+  "lastUpdated": "2021-06-16T06:22:37Z",
+  "createdUserId": "1493",
+  "activationDate": null,
+  "supportsPhotoPoints": false,
   "publicationStatus": "published",
+  "gmsId": null,
+  "name": "RLP Short term project outcomes",
   "sections": [
     {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
       "collapsedByDefault": false,
-      "modelName": null,
-      "name": "RLP Short-term outcomes",
-      "optional": false,
-      "optionalQuestionText": null,
       "template": {
         "modelName": "RLP Short-term outcomes",
         "templateName": "rlpShortTermOutcomes",
@@ -896,6 +888,11 @@
                     "validate": "required"
                   },
                   {
+                    "name": "howDataDemonstratesProgress",
+                    "dataType": "text",
+                    "validate": "required,maxSize[5000]"
+                  },
+                  {
                     "name": "unableToQuantifyOutcomeReason",
                     "dataType": "text",
                     "validate": "required,maxSize[800]"
@@ -1074,15 +1071,15 @@
                 "removeRowText": "Remove investment priority",
                 "items": [
                   {
-                  "type": "row",
-                  "items": [
-                    {
-                      "preLabel": "Is this an Environment or Agriculture outcome",
-                      "type": "selectOne",
-                      "source": "agOrEnv"
-                    }]
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "Is this an Environment or Agriculture outcome",
+                        "type": "selectOne",
+                        "source": "agOrEnv"
+                      }
+                    ]
                   },
-
                   {
                     "type": "row",
                     "items": [
@@ -1099,7 +1096,6 @@
                               }
                             ]
                           }
-
                         ]
                       },
                       {
@@ -1116,10 +1112,8 @@
                               }
                             ]
                           }
-
                         ]
                       }
-
                     ]
                   },
                   {
@@ -1127,7 +1121,7 @@
                     "items": [
                       {
                         "type": "literal",
-                        "source": "<span class=\"preLabel required\"><label><b>Select the relevant outcome indicator (project monitoring indicator in your MERI plan)</b></label></span><span>If it has been agreed that your project will measure against Services rather than Outcomes,</span><span> select ‘Other (please specify)’ from the bottom of the drop-down list and list the Services in the free-text box.</span>"
+                        "source": "<span class=\"preLabel required\"><label><b>Select the relevant outcome indicator</b></label></span><span>If it has been agreed that your project will measure against Services rather than Outcomes,</span><span> select ‘Other (please specify)’ from the bottom of the drop-down list and list the Services in the free-text box.</span>"
                       }
                     ]
                   },
@@ -1287,6 +1281,23 @@
                         "preLabel": "Appropriateness",
                         "type": "selectOne",
                         "source": "appropriateness"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "behaviour": [
+                      {
+                        "type": "if_expression",
+                        "condition": "canQuantifyOutcomeAgainstBaseline == \"Yes\""
+                      }
+                    ],
+                    "items": [
+                      {
+                        "preLabel": "Please detail how your supporting data demonstrates progress against your selected Outcome Statement.",
+                        "type": "textarea",
+                        "rows": 4,
+                        "source": "howDataDemonstratesProgress"
                       }
                     ]
                   },
@@ -1561,12 +1572,17 @@
           }
         ]
       },
+      "modelName": null,
       "templateName": null,
-      "title": null
+      "optional": false,
+      "optionalQuestionText": null,
+      "title": null,
+      "name": "RLP Short-term outcomes"
     }
   ],
+  "type": "Report",
+  "category": "RLP Reports",
   "status": "active",
-  "supportsPhotoPoints": false,
-  "supportsSites": false,
-  "type": "Report"
+  "lastUpdatedUserId": "1493",
+  "formVersion": 4
 }

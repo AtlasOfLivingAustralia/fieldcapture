@@ -14,11 +14,12 @@
 //= require momentjs/moment-timezone-with-data.min.js
 //= require vkbeautify/vkbeautify.0.99.00.beta.js
 //= require bootstrap-combobox/bootstrap-combobox
+//= require lockService
 //= require fieldcapture-application
 //= require healthCheck
 //= require knockout-utils
 //= require knockout-dates
-//= require knockout-custom-bindings
+//= require knockout-custom-bindings-bs4
 //= require wmd/wmd.js
 //= require wmd/showdown.js
 //= require pagination.js

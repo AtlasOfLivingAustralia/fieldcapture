@@ -89,6 +89,7 @@
                 newDataSetUrl: "${createLink(controller:'dataSet', action:'create', id:project.projectId)}",
                 editDataSetUrl: "${createLink(controller:'dataSet', action:'edit', id:project.projectId)}",
                 deleteDataSetUrl: "${createLink(controller:'dataSet', action:'delete', id:project.projectId)}",
+                unlockActivityUrl:"${createLink(controller:'activity', action:'ajaxUnlock')}",
 
                 returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 
@@ -473,7 +474,10 @@ var config = {
 			$('.spinner').hide();
         	$('.tab-content').fadeIn();
         	$('.programId').select2({theme: "bootstrap4"});
-        });// end window.load
+
+        	new LockService({unlockUrl:fcConfig.unlockActivityUrl}).unlockAll();
+
+        });// end document.ready
 
 </asset:script>
 <asset:javascript src="common-bs4.js"/>
