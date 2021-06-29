@@ -1,6 +1,6 @@
 // please make sure project Id is correct
 var sites = db.site.find({ projects:"a3347117-4530-45f4-b173-678557c5b9f5",
-     type: 'worksArea'});
+    dateCreated: {$gte: new ISODate('2021-06-15T05:40:36.549+00:00')}, type: 'worksArea', status: 'active'});
 
 print(sites.count());
 
