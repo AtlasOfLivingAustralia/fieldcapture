@@ -15,7 +15,8 @@ node_js:
 addons:
   chrome: stable
   hosts: devt.ala.org.au
-
+services:
+  - elasticsearch
 before_install:
 - export TZ=Australia/Canberra
 - wget -q https://raw.githubusercontent.com/AtlasOfLivingAustralia/travis-build-configuration/master/ala_common.sh
