@@ -902,3 +902,7 @@ span.status {
 	height: 50px;
 	width: 50px;
 }
+
+a.input-group-text.customspecialSelect {
+	height: 1.9rem;
+}
