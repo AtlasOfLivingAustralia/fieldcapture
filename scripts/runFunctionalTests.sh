@@ -19,7 +19,7 @@ fi
 
 BRANCH=$3
 if [ -z $BRANCH]; then
-    BRANCH=feature/es7
+    BRANCH=grails4
 fi
 
 ECODATA_LOCAL_DIR=$2
@@ -45,7 +45,6 @@ mongo ecodata-functional-test --eval 'db.project.count();'
 
 echo "Starting ecodata from $ECODATA_LOCAL_DIR"
 #Run ecodata with Grails 4
-export _JAVA_OPTIONS="-Xms768m -Xmx768m"
 ./gradlew bootRun -Dgrails.env=meritfunctionaltest &
 
 cd $MERIT_DIR/..
