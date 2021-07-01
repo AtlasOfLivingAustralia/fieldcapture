@@ -277,7 +277,7 @@ class ProjectService  {
     }
 
     def update(String id, Map projectDetails) {
-        TimeZone.setDefault(TimeZone.getTimeZone('UTC'))
+        //TimeZone.setDefault(TimeZone.getTimeZone('UTC'))
         projectDetails?.custom?.details?.lastUpdated = new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'")
 
         def resp = [:]
