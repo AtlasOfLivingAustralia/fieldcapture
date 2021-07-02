@@ -163,3 +163,7 @@
     border-bottom: 1px solid grey;
     padding: 10px;
 }
+input.form-control.customCurrency {
+    max-width: 7rem !important;
+     min-width: 7rem !important;
+}

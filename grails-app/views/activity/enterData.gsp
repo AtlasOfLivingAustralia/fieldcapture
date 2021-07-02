@@ -50,13 +50,13 @@
 <div class="${containerType} validationEngineContainer" id="validation-container">
 <div id="koActivityMainBlock">
     <g:if test="${!printView}">
-        <ul class="breadcrumb">
-            <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
-            <li><a data-bind="click:goToProject" class="clickable">Project</a> <span class="divider">/</span></li>
-            <li class="active">
-                <span data-bind="text:type"></span>
-            </li>
-        </ul>
+        <section aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><g:link controller="home">Home</g:link></li>
+                <li class="breadcrumb-item"><g:link controller="project" action="index" id="${project.projectId}">Project</g:link></li>
+                <li class="breadcrumb-item active"><span data-bind="text:type"></span></li>
+            </ol>
+        </section>
     </g:if>
 
     <g:if test="${metaModel.type == 'Report'}">
@@ -74,7 +74,7 @@
                 <div class="row space-after">
                     <div class="col-sm-6">
                         <label class="for-readonly inline">Report status</label>
-                        <button type="button" class="btn btn-small"
+                        <button type="button" class="btn btn-sm"
                                 data-bind="activityProgress:progress"
                                 style="line-height:16px;cursor:default;color:white">
                             <span data-bind="text: progress"></span>
@@ -84,25 +84,26 @@
             </div>
             <g:if test="${metaModel.supportsSites && activity.siteId}">
             <div class="col-sm-3" id="map-holder">
-                <div id="smallMap" style="width:100%"></div>
+                <div id="smallMap"  class="w-100"></div>
             </div>
             </g:if>
         </div>
 
     </g:if>
     <g:else>
+
         <div class="row title-block well well-small input-block-level">
-            <div class="col-sm-12 title-attribute">
+            <div class="col-sm-10 title-attribute">
                 <h1><span data-bind="click:goToProject" class="clickable">${project?.name?.encodeAsHTML() ?: 'no project defined!!'}</span></h1>
                 <g:if test="${metaModel.supportsSites}">
                     <div class="row">
                         <div class="col-sm-1">
                             Site:
                         </div>
-                        <div class="col-sm-8">
-                            <fc:select data-bind='options:transients.project.sites,optionsText:"name",optionsValue:"siteId",value:siteId,optionsCaption:"Choose a site..."' printable="${printView}"/>
-                            Leave blank if this activity is not associated with a specific site.
+                        <div class="col-sm-2">
+                            <fc:select class="form-control form-control-sm" data-bind='options:transients.project.sites,optionsText:"name",optionsValue:"siteId",value:siteId,optionsCaption:"Choose a site..."' printable="${printView}"/>
                         </div>
+                        <div class="col-sm-3">Leave blank if this activity is not associated with a specific site.</div>
                     </div>
                 </g:if>
                 <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">Activity: <span data-bind="text:type"></span></h3>
@@ -162,12 +163,15 @@
                         </label>
                         <g:if test="${printView}">
                             <div class="row">
-                                <fc:datePicker targetField="startDate.date" bs4="true" name="startDate" data-validation-engine="validate[required,funcCall[validateDateField]]" printable="${printView}"/>
+                                <div class="input-group">
+                                    <fc:datePicker targetField="startDate.date" bs4="true" class="form-control form-control-sm col-sm-2" name="startDate" data-validation-engine="validate[required,funcCall[validateDateField]]" printable="${printView}"/>
+                                </div>
+
                             </div>
                         </g:if>
                         <g:else>
-                            <div class="input-append">
-                                <fc:datePicker targetField="startDate.date" bs4="true" name="startDate" data-validation-engine="validate[required,funcCall[validateDateField]]" printable="${printView}"/>
+                            <div class="input-group">
+                                <fc:datePicker targetField="startDate.date" bs4="true" class="form-control form-control-sm col-sm-2" name="startDate" data-validation-engine="validate[required,funcCall[validateDateField]]" printable="${printView}"/>
                             </div>
                         </g:else>
                     </div>
@@ -177,12 +181,15 @@
                         </label>
                         <g:if test="${printView}">
                             <div class="row">
-                                <fc:datePicker targetField="endDate.date" bs4="true" name="endDate" data-validation-engine="validate[future[startDate]]" printable="${printView}" />
+                                <div class="input-group">
+                                    <fc:datePicker targetField="endDate.date" bs4="true" class="form-control form-control-sm col-sm-2" name="endDate" data-validation-engine="validate[future[startDate]]" printable="${printView}" />
+                                </div>
+
                             </div>
                         </g:if>
                         <g:else>
-                            <div class="input-append">
-                                <fc:datePicker targetField="endDate.date" bs4="true" name="endDate" data-validation-engine="validate[future[startDate]]" printable="${printView}" />
+                            <div class="input-group">
+                                <fc:datePicker targetField="endDate.date" bs4="true" class="form-control form-control-sm col-sm-2" name="endDate" data-validation-engine="validate[future[startDate]]" printable="${printView}" />
                             </div>
                         </g:else>
                     </div>
@@ -192,7 +199,7 @@
             </div>
 
             <div class="col-sm-3" id="map-holder">
-                <div id="smallMap" style="width:100%"></div>
+                <div id="smallMap" class="w-100"></div>
             </div>
 
         </div>
@@ -205,19 +212,19 @@
 <g:if test="${!printView}">
     <div class="form-actions">
         <button type="button" id="save" class="btn btn-sm btn-primary">Save changes</button>
-        <button type="button" id="cancel" class="btn btn-sm ">Cancel</button>
+        <button type="button" id="cancel" class="btn btn-sm btn-danger">Cancel</button>
         <label class="checkbox inline" data-bind="visible:progress() != 'corrected'">
             <input data-bind="checked:transients.markedAsFinished" type="checkbox"> Mark this activity as finished.
         </label>
     </div>
-    <g:render template="navigation"></g:render>
+    <g:render template="navigation"/>
 </g:if>
 
 </div>
 
 <g:render template="/shared/timeoutMessage" model="${[url:createLink(action:'enterData', id:activity.activityId, params: [returnTo:navContext])]}"/>
 
-<g:render template="/shared/documentTemplate"></g:render>
+<g:render template="/shared/documentTemplate"/>
 
 %{--The modal view containing the contents for a modal dialog used to attach a document--}%
 <g:render template="/shared/attachDocument"/>

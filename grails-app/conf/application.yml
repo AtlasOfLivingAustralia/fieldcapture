@@ -14,3 +14,7 @@ environments:
     test:
       server:
         contextPath: '/fieldcapture'
+spring:
+  devtools:
+    livereload:
+      enabled: true

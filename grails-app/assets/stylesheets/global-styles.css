@@ -906,3 +906,12 @@ span.status {
 a.input-group-text.customspecialSelect {
 	height: 1.9rem;
 }
+
+.customInput {
+	height: 31px !important;
+}
+
+super {
+	vertical-align: super;
+	font-size: smaller;
+}
