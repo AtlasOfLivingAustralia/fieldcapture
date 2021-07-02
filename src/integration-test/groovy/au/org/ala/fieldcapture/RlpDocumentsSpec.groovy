@@ -52,6 +52,7 @@ class RlpDocumentsSpec extends StubbedCasSpec {
 
         then: "the file will be uploaded and the page will be reloaded with the new document displayed in the list"
         waitFor { hasBeenReloaded() }
+        adminContent.documentsTab.click()
         adminContent.documents.documentSummaryList().size() == 1
         def document = adminContent.documents.documents[0]
 
@@ -96,6 +97,7 @@ class RlpDocumentsSpec extends StubbedCasSpec {
 
         then: "the file will be uploaded and the page will be reloaded with the new document displayed in the list"
         waitFor { hasBeenReloaded() }
+        adminContent.documentsTab.click()
         adminContent.documents.documentSummaryList().size() == 2
 
         when: "The list can be filtered to only show contract assurance documents"
