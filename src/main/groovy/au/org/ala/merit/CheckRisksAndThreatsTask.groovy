@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import groovy.util.logging.Slf4j
 import org.apache.log4j.Logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled
@@ -9,8 +10,8 @@ import static au.org.ala.merit.ScheduledJobContext.withUser
 /**
  * Task to be scheduled by the spring scheduler.
  */
+@Slf4j
 class CheckRisksAndThreatsTask {
-    private Logger log = Logger.getLogger(CheckRisksAndThreatsTask.class)
 
     @Autowired
     RisksService risksService

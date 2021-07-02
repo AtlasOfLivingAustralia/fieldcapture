@@ -277,7 +277,8 @@ class ProjectService  {
     }
 
     def update(String id, Map projectDetails) {
-        //TimeZone.setDefault(TimeZone.getTimeZone('UTC'))
+        def defaultTimeZone = TimeZone.default
+        TimeZone.setDefault(TimeZone.getTimeZone('UTC'))
         projectDetails?.custom?.details?.lastUpdated = new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'")
 
         def resp = [:]
@@ -323,6 +324,7 @@ class ProjectService  {
             generateProjectStageReports(id, new ReportGenerationOptions())
         }
 
+        TimeZone.setDefault(defaultTimeZone)
         return resp
     }
 
