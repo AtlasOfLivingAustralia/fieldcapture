@@ -167,3 +167,7 @@ input.form-control.customCurrency {
     max-width: 7rem !important;
      min-width: 7rem !important;
 }
+
+select, input {
+    margin-bottom: 1rem;
+}

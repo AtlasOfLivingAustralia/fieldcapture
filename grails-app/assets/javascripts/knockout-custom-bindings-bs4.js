@@ -41,6 +41,9 @@ ko.bindingHandlers.popover = {
   initPopover: function(element, valueAccessor) {
     var options = ko.utils.unwrapObservable(valueAccessor());
 
+    if (typeof(options.content) === "undefined"){
+      options.content = ""
+    }
     var combinedOptions = ko.utils.extend({}, ko.bindingHandlers.popover.defaultOptions);
     var content = ko.utils.unwrapObservable(options.content);
     ko.utils.extend(combinedOptions, options);
