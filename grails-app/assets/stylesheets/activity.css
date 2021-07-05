@@ -167,7 +167,22 @@ input.form-control.customCurrency {
     max-width: 7rem !important;
      min-width: 7rem !important;
 }
-
+select {
+    min-width: 220px !important;
+    max-width: 220px !important;
+}
 select, input {
     margin-bottom: 1rem;
+}
+.currency-input input {
+    min-width: 5rem !important;
+    max-width: 5rem !important;
+}
+
+ul.checkbox-list {
+    padding-left: 0 !important;
+}
+div.row.col-sm-12 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
 }
