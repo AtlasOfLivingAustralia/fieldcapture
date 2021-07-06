@@ -915,3 +915,13 @@ super {
 	vertical-align: super;
 	font-size: smaller;
 }
+.input-small {
+	margin-bottom: 1rem !important;
+}
+.input-group {
+	margin-bottom: 1rem !important;
+}
+.fa-check {
+	font-family: 'FontAwesome';
+	content: "\f00c";
+}

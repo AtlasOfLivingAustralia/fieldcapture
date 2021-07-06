@@ -84,7 +84,7 @@
             </div>
             <g:if test="${metaModel.supportsSites && activity.siteId}">
             <div class="col-sm-3" id="map-holder">
-                <div id="smallMap"  class="w-100"></div>
+                <div id="smallMap"  class="w-100 h-100"></div>
             </div>
             </g:if>
         </div>

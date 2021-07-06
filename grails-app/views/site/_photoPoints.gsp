@@ -71,7 +71,7 @@
 
                                 <tr>
                                     <td colspan="3" >
-                                        <span class="btn fileinput-button"><i class="icon-plus"></i> <input type="file" name="files"><span>Attach Photo</span></span>
+                                        <span class="btn btn-sm fileinput-button"><i class="fa fa-plus"></i> <input type="file" name="files"><span>Attach Photo</span></span>
 
                                     </td>
                                 </tr>
@@ -87,10 +87,10 @@
             <tfoot>
                 <tr>
                     <td>
-                        <button type="button" class="btn" data-bind="click:addPhotoPoint"><i class="icon-plus"></i> New Photo Point</button>
+                        <button type="button" class="btn btn-sm" data-toggle="modal" data-bind="click:addPhotoPoint"><i class="fa fa-plus"></i> New Photo Point</button>
                     </td>
                     <td>
-                        <div data-bind="photoPointUpload:newPhotoPointFromPhotoUploadConfig"> <span class="btn fileinput-button"><i class="icon-plus"></i> <input type="file" name="files" accept="image/jpeg,.jpg,.jpeg"><span>New Photo Point Using GPS Information from a Photo</span></span></div>
+                        <div data-bind="photoPointUpload:newPhotoPointFromPhotoUploadConfig"> <span class="btn fileinput-button"><i class="fa fa-plus"></i> <input type="file" name="files" accept="image/jpeg,.jpg,.jpeg"><span>New Photo Point Using GPS Information from a Photo</span></span></div>
                     </td>
                 </tr>
             </tfoot>
@@ -117,72 +117,79 @@
 
     </style>
 <!-- ko stopBinding:true -->
-    <div id="edit-photopoint" class="modal hide fade validationEngineContainer">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h3 data-bind="text:title"></h3>
-        </div>
-        <div class="modal-body">
-            <p>
-                This photo point will be <span data-bind="text:newOrEditText"></span> when you press submit and
-                <span data-bind="text:newOrEditText2">the updates</span> will remain even if you press "Cancel" on the activity form.
-            </p>
-            <div class="row-fluid">
+    <div id="edit-photopoint" class="modal validationEngineContainer" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="model-title"><h3 data-bind="text:title"></h3></div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" aria-hidden="true">&times;</button>
 
-                <div class="span6">
-                    <div id="photoPointMapHolder" class="smallMap span6" style="width:100%;"></div>
                 </div>
+                <div class="modal-body">
+                    <p>
+                        This photo point will be <span data-bind="text:newOrEditText"></span> when you press submit and
+                        <span data-bind="text:newOrEditText2">the updates</span> will remain even if you press "Cancel" on the activity form.
+                    </p>
+                    <div class="row">
 
-                <div class="span6">
-                    <div class="clearfix">
-                        <p><strong>Enter the details of the new photo point below.</strong></p>
-                        %{--<p>If you attach a photo, the latitude and longitude will be populated from the information in the photo, if available.</p>--}%
-                    </div>
-
-                    <div class="form-horizontal">
-                        <div class="control-group required">
-                            <label class="control-label">Name: </label>
-                            <div class="controls"><input type="text" data-bind="value:photoPoint.name" data-validation-engine="validate[required]"></div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label">Description: </label>
-                            <div class="controls"><input type="text" data-bind="value:photoPoint.description"></div>
-                        </div>
-                        <div class="control-group required">
-                            <label class="control-label">Latitude: </label>
-                            <div class="controls"><input type="text" data-bind="value:photoPoint.geometry.decimalLatitude" data-validation-engine="validate[required,custom[number],min[-90],max[0]]"></div>
+                        <div class="col-sm-6">
+                            <div id="photoPointMapHolder" class="smallMap w-100 h-100"></div>
                         </div>
 
-                        <div class="control-group required">
-                            <label class="control-label">Longitude: </label>
-                            <div class="controls"><input type="text" data-bind="value:photoPoint.geometry.decimalLongitude" data-validation-engine="validate[required,custom[number],min[-180],max[180]]"></div>
-                        </div>
+                        <div class="col-sm-6">
+                            <div class="clearfix">
+                                <p><strong>Enter the details of the new photo point below.</strong></p>
+                                %{--<p>If you attach a photo, the latitude and longitude will be populated from the information in the photo, if available.</p>--}%
+                            </div>
 
-                        <div class="control-group required">
-                            <label class="control-label">Bearing: </label>
-                            <div class="controls"><input type="text" data-bind="value:photoPoint.geometry.bearing" data-validation-engine="validate[required]"></div>
+                            <div class="form-horizontal">
+                                <div class="row control-group required">
+                                    <label for="photoPointName" class="control-label col-sm-2">Name: </label>
+                                    <input type="text" class="form-control form-control-sm col-sm-4" id="photoPointName" data-bind="value:photoPoint.name" data-validation-engine="validate[required]">
+                                </div>
+                                <div class="row control-group">
+                                    <label for="photoPointDescription" class="control-label col-sm-2">Description: </label>
+                                    <input type="text" class="form-control form-control-sm col-sm-4" id="photoPointDescription" data-bind="value:photoPoint.description">
+                                </div>
+                                <div class="row control-group required">
+                                    <label class="control-label col-sm-2" for="photoPointLatitude">Latitude: </label>
+                                    <input type="text" data-bind="value:photoPoint.geometry.decimalLatitude" class="form-control form-control-sm col-sm-4" id="photoPointLatitude" data-validation-engine="validate[required,custom[number],min[-90],max[0]]">
+                                </div>
+
+                                <div class="row control-group required">
+                                    <label for="photoPointLongitude" class="control-label col-sm-2">Longitude: </label>
+                                    <input type="text" class="form-control form-control-sm col-sm-4" id="photoPointLongitude" data-bind="value:photoPoint.geometry.decimalLongitude" data-validation-engine="validate[required,custom[number],min[-180],max[180]]">
+                                </div>
+
+                                <div class="row control-group required">
+                                    <label for="photoPointBearing" class="control-label col-sm-2">Bearing: </label>
+                                    <input type="text" class="form-control form-control-sm col-sm-4" id="photoPointBearing" data-bind="value:photoPoint.geometry.bearing" data-validation-engine="validate[required]">
+                                </div>
+
+                            </div>
                         </div>
 
                     </div>
                 </div>
-
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-success" data-bind="click:save" aria-hidden="true">Submit</button>
+                    <button class="btn btn-sm btn-danger" data-dismiss="modal" data-bind="click:cancel" aria-hidden="true">Cancel</button>
+                </div>
             </div>
+
         </div>
-        <div class="modal-footer">
-            <button class="btn btn-success" data-bind="click:save" aria-hidden="true">Submit</button>
-            <button class="btn" data-dismiss="modal" data-bind="click:cancel" aria-hidden="true">Cancel</button>
-        </div>
+
     </div>
 <!-- /ko -->
 
 <script type="text/html" id="readOnlyPhotoPoint">
 
-    <div><b><span data-bind="text:photoPoint.name"/></b></div>
-    <div><span data-bind="text:photoPoint.description"/></div>
+    <div><b><span data-bind="text:photoPoint.name"></span></b></div>
+    <div><span data-bind="text:photoPoint.description"></span></div>
 
-    <div>Latitude : <b><span data-bind="text:photoPoint.geometry.decimalLatitude"/></b></div>
-    <div>Longitude: <b><span data-bind="text:photoPoint.geometry.decimalLongitude"/></b></div>
-    <div>Bearing  : <b><span data-bind="text:photoPoint.geometry.bearing"/></b></div>
+    <div>Latitude : <b><span data-bind="text:photoPoint.geometry.decimalLatitude"></span></b></div>
+    <div>Longitude: <b><span data-bind="text:photoPoint.geometry.decimalLongitude"></span></b></div>
+    <div>Bearing  : <b><span data-bind="text:photoPoint.geometry.bearing"></span></b></div>
 </script>
 
 <script type="text/html" id="editablePhotoPoint">
@@ -190,40 +197,40 @@
         <a class="btn" data-bind="click:$parent.editPhotoPoint"><i class="fa fa-edit"></i> Edit</a>
         <a class="btn" data-bind="click:$parent.removePhotoPoint"><i class="fa fa-remove"></i> Remove</a>
     </div>
-    <div><b><span data-bind="text:photoPoint.name"/></b></div>
-    <div><span data-bind="text:photoPoint.description"/></div>
+    <div><b><span data-bind="text:photoPoint.name"></span></b></div>
+    <div><span data-bind="text:photoPoint.description"></span></div>
 
-    <div>Latitude : <b><span data-bind="text:photoPoint.geometry.decimalLatitude"/></b></div>
-    <div>Longitude: <b><span data-bind="text:photoPoint.geometry.decimalLongitude"/></b></div>
-    <div>Bearing  : <b><span data-bind="text:photoPoint.geometry.bearing"/></b></div>
+    <div>Latitude : <b><span data-bind="text:photoPoint.geometry.decimalLatitude"></span></b></div>
+    <div>Longitude: <b><span data-bind="text:photoPoint.geometry.decimalLongitude"></span></b></div>
+    <div>Bearing  : <b><span data-bind="text:photoPoint.geometry.bearing"></span></b></div>
 
 </script>
 <script id="photoEditTemplate" type="text/html">
 <div class="form-horizontal">
-    <div class="control-group required">
-        <label class="control-label">Title: </label>
-        <div class="controls"><input type="text" data-bind="value:name" data-validation-engine="validate[required]"></div>
+    <div class="row control-group required">
+        <label for="name" class="col-sm-2 control-label">Title: </label>
+        <input type="text" class="col-sm-5 form-control form-control-sm" id="name" data-bind="value:name" data-validation-engine="validate[required]">
     </div>
-    <div class="control-group required">
-        <label class="control-label">Date Taken: <i class="fa fa-question-circle" data-bind="popover:{container:'body', content:'Please ensure that this information is accurate and the date that the photograph was taken, not the date it was uploaded (unless they are the same date).', placement:'top'}">&nbsp;</i></label>
-        <div class="controls"><div class="input-append"><fc:datePicker size="input-small" targetField="dateTaken.date" name="dateTaken" data-validation-engine="validate[required]"/></div></div>
+    <div class="row control-group required">
+        <label for="dateTaken" class="control-label col-sm-2">Date Taken: <i class="fa fa-question-circle" data-bind="popover:{container:'body', content:'Please ensure that this information is accurate and the date that the photograph was taken, not the date it was uploaded (unless they are the same date).', placement:'top'}">&nbsp;</i></label>
+        <div class="input-group col-sm-5 dateInput"><fc:datePicker size="input-small" bs4="true" class="form-control form-control-sm" targetField="dateTaken.date" id="dateTaken" name="dateTaken" data-validation-engine="validate[required]"/></div>
     </div>
-    <div class="control-group">
-        <label class="control-label">Attribution: <i class="fa fa-question-circle" data-bind="popover:{content:'The name of the photographer', placement:'top'}">&nbsp;</i></label>
-        <div class="controls"><input type="text" data-bind="value:attribution"></div>
+    <div class="row control-group">
+        <label for="attribution" class="control-label col-sm-2">Attribution: <i class="fa fa-question-circle" data-bind="popover:{content:'The name of the photographer', placement:'top'}">&nbsp;</i></label>
+        <input type="text" class="form-control form-control-sm col-sm-5" id="attribution" data-bind="value:attribution">
     </div>
-    <div class="control-group">
-        <label class="control-label">Notes: <i class="fa fa-question-circle" data-bind="popover:{content:'Additional notes you would like to supply regarding the photo point or photograph.', placement:'top'}">&nbsp;</i></label>
-        <div class="controls"><input type="text" data-bind="value:notes"></div>
+    <div class="row control-group">
+        <label for="notes" class="control-label col-sm-2">Notes: <i class="fa fa-question-circle" data-bind="popover:{content:'Additional notes you would like to supply regarding the photo point or photograph.', placement:'top'}">&nbsp;</i></label>
+        <input type="text" class="form-control form-control-sm col-sm-5" id="notes" data-bind="value:notes">
     </div>
 
-    <div class="control-group readonly">
-        <label class="control-label">File Name: </label>
-        <div class="controls"><label style="padding-top:5px;" data-bind="text:filename"/></div>
+    <div class="row control-group readonly">
+        <label class="control-label col-sm-2">File Name: </label>
+        <label style="padding-top:5px;" class="col-sm-5" data-bind="text:filename"></label>
     </div>
-    <div class="control-group readonly">
-        <label class="control-label">File Size: </label>
-        <div class="controls"><label style="padding-top:5px;" data-bind="text:formattedSize"/></div>
+    <div class="row control-group readonly">
+        <label class="control-label col-sm-2">File Size: </label>
+        <label style="padding-top:5px;" class="col-sm-5" data-bind="text:formattedSize"></label>
     </div>
 </div>
 </script>

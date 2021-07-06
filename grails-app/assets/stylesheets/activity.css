@@ -108,6 +108,14 @@
     height: 30px;
 }
 
+.output-block table .input-group input[type="text"] {
+    max-width: 100% !important;
+    width: 251px !important;
+}
+
+table .autocompleteSpecies .input-group-text {
+    height: 30px !important;
+}
 .report-header .header-label {
     font-weight: bold;
 }
@@ -185,4 +193,20 @@ ul.checkbox-list {
 div.row.col-sm-12 {
     padding-left: 0 !important;
     padding-right: 0 !important;
+}
+
+.output-section>.col-sm-12 {
+    padding: 10px !important;
+}
+
+.dateInput {
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+}
+
+div#data\.fireLastBurnDateDate {
+    padding-left: 0 !important;
+}
+div#data\.fireLastBurnDateDate input.form-control.form-control-sm.inputDatePicker {
+    max-width: 167px !important;
 }
