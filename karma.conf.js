@@ -31,7 +31,7 @@ module.exports = function (config) {
 
         // list of files / patterns to load in the browser
         files: [
-            'src/test/groovy/js/util/*.js',
+            'src/test/js/util/*.js',
             'grails-app/assets/vendor/knockout/3.5.0/knockout.js',
             'grails-app/assets/vendor/knockout/3.5.0/knockout.mapping-latest.js',
             'grails-app/assets/vendor/jquery.validationEngine/jquery.validationEngine.js',
@@ -49,7 +49,7 @@ module.exports = function (config) {
             'grails-app/assets/components/components.js',
             'grails-app/assets/components/compile/*.js',
             'grails-app/assets/components/javascript/*.js',
-            'src/test/groovy/js/spec/**/*.js'
+            'src/test/js/spec/**/*.js'
         ],
 
 

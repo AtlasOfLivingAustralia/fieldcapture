@@ -1,7 +1,5 @@
-package au.org.ala
+package au.org.ala.merit
 
-import au.org.ala.merit.DataSetController
-import au.org.ala.merit.ProjectService
 import org.apache.http.HttpStatus
 import spock.lang.Specification
 import grails.testing.web.controllers.ControllerUnitTest
