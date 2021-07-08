@@ -7,7 +7,7 @@
         <title>${report.name}</title>
     </g:if>
     <g:else>
-        <meta name="layout" content="${hubConfig.skin}"/>
+        <meta name="layout" content="nrm_bs4"/>
         <title>View | ${report.name} | MERIT</title>
     </g:else>
 
@@ -34,7 +34,7 @@
         },
         here = document.location.href;
     </script>
-    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="common-bs4.css"/>
     <asset:stylesheet src="activity.css"/>
 </head>
 <body>
@@ -120,7 +120,7 @@
 <!-- templates -->
 <g:render template="/shared/documentTemplate"/>
 
-<asset:javascript src="common.js"/>
+<asset:javascript src="common-bs4.js"/>
 <asset:javascript src="forms-manifest.js"/>
 
 <script>

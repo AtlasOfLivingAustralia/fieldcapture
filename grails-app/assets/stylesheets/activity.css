@@ -109,8 +109,7 @@
 }
 
 .output-block table .input-group input[type="text"] {
-    max-width: 100% !important;
-    width: 251px !important;
+    width: 173px !important;
 }
 
 table .autocompleteSpecies .input-group-text {
@@ -176,12 +175,13 @@ input.form-control.customCurrency {
      min-width: 7rem !important;
 }
 select {
-    min-width: 220px !important;
-    max-width: 220px !important;
+    min-width: 300px !important;
+    max-width: 300px !important;
 }
-select, input {
+select, input, textarea {
     margin-bottom: 1rem;
 }
+
 .currency-input input {
     min-width: 5rem !important;
     max-width: 5rem !important;
@@ -210,3 +210,6 @@ div#data\.fireLastBurnDateDate {
 div#data\.fireLastBurnDateDate input.form-control.form-control-sm.inputDatePicker {
     max-width: 167px !important;
 }
+ table td select {
+     max-width: 100% !important;
+ }

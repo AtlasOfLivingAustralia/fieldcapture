@@ -4,11 +4,11 @@
 <head>
     <g:if test="${printView}">
         <meta name="layout" content="nrmPrint"/>
-        <title>Print | ${activity.type} | Field Capture</title>
+        <title>Print | ${activity.type} | MERIT</title>
     </g:if>
     <g:else>
-        <meta name="layout" content="${hubConfig.skin}"/>
-        <title>Edit | ${activity.type} | Field Capture</title>
+        <meta name="layout" content="nrm_bs4"/>
+        <title>Edit | ${activity.type} | MERIT</title>
     </g:else>
 
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
@@ -23,7 +23,7 @@
         },
         here = document.location.href;
     </script>
-    <asset:stylesheet src="common.js"/>
+    <asset:stylesheet src="common-bs4.css"/>
 
 </head>
 <body>
@@ -43,7 +43,7 @@
         <g:render template="createOrEditActivity"/>
     </div>
 </div>
-<asset:javascript src="common.js"/>
+<asset:javascript src="common-bs4.js"/>
 <asset:javascript src="projects.js"/>
 <asset:javascript src="forms-manifest.js"/>
 <asset:deferredScripts/>

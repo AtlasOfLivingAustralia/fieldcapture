@@ -2,8 +2,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="${hubConfig.skin}"/>
-    <title>Create | Activity | Field Capture</title>
+    <meta name="layout" content="nrm_bs4"/>
+    <title>Create | Activity | MERIT</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
 
     <script disposition="head">
@@ -14,7 +14,7 @@
         },
         here = document.location.href;
     </script>
-    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="common-bs4.css"/>
 
 </head>
 <body>
@@ -33,7 +33,7 @@
         <g:render template="createOrEditActivity"/>
     </div>
 </div>
-<asset:javascript src="common.js"/>
+<asset:javascript src="common-bs4.js"/>
 <asset:javascript src="forms-manifest.js"/>
 <asset:deferredScripts/>
 </body>

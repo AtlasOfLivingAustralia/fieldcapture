@@ -2,8 +2,8 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
-  <meta name="layout" content="${hubConfig.skin}"/>
-  <title>Create | Activity | Field Capture</title>
+  <meta name="layout" content="nrm_bs4"/>
+  <title>Create | Activity | MERIT</title>
   <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
   <script>
     var fcConfig = {
@@ -16,7 +16,7 @@
         },
         here = document.location.href;
   </script>
-  <asset:stylesheet src="common.css"/>
+  <asset:stylesheet src="common-bs4.css"/>
   <asset:stylesheet src="editAnnouncements.css"/>
 
     <style type="text/css">
@@ -537,7 +537,7 @@
     });
 
 </asset:script>
-<asset:javascript src="common.js"/>
+<asset:javascript src="common-bs4.js"/>
 <asset:javascript src="editAnnouncements.js"/>
 <asset:deferredScripts/>
 

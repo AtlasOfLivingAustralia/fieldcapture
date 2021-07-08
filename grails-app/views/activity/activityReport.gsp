@@ -7,7 +7,7 @@
         <title>${report.name}</title>
     </g:if>
     <g:else>
-        <meta name="layout" content="${hubConfig.skin}"/>
+        <meta name="layout" content="nrm_bs4"/>
         <title>Edit | ${report.name} | MERIT</title>
     </g:else>
 
@@ -39,7 +39,7 @@
             },
             here = document.location.href;
     </script>
-    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="common-bs4.css"/>
     <asset:stylesheet src="activity.css"/>
 
 </head>
@@ -50,18 +50,17 @@
 <div class="${containerType} validationEngineContainer" id="validation-container">
     <div id="koActivityMainBlock">
         <g:if test="${!printView}">
-            <ul class="breadcrumb">
-                <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
-                <li><a href="${contextViewUrl}">${context.name.encodeAsHTML()}</a> <span class="divider">/</span></li>
-                <li class="active">
-                    ${report.name}
-                </li>
-            </ul>
+            <section aria-labelledby="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <g:link controller="home">Home</g:link>
+                    </li>
+                    <li class="breadcrumb-item"><a href="${contextViewUrl}">${context.name.encodeAsHTML()}</a></li>
+                    <li class="breadcrumb-item active">${report.name}</li>
+                </ol>
+            </section>
         </g:if>
-
-
         <g:render template="${reportHeaderTemplate}"/>
-
     </div>
 
     <g:render template="/activity/activityFormContents"/>
@@ -72,8 +71,8 @@
         <div id="floating-save" style="display:none;">
             <div class="transparent-background"></div>
             <div id="nav-buttons">
-                <button class="right btn btn-success" data-bind="enable:dirtyFlag.isDirty(), click: save">Save changes</button>
-                <button class="right btn" data-bind="click: exitReport, class: saveAndExitButtonClass">Exit report</button>
+                <button class="right  btn-sm btn-success" data-bind="enable:dirtyFlag.isDirty(), click: save">Save changes</button>
+                <button class="right btn btn-sm" data-bind="click: exitReport, class: saveAndExitButtonClass">Exit report</button>
                 <label class="checkbox inline mark-complete" data-bind="visible:activity.progress() != 'corrected'">
                         <input data-bind="checked:activity.transients.markedAsFinished" type="checkbox"> Mark this report as complete.
                 </label>
@@ -93,7 +92,7 @@
 %{--The modal view containing the contents for a modal dialog used to attach a document--}%
 <g:render template="/shared/attachDocument"/>
 
-<asset:javascript src="common.js"/>
+<asset:javascript src="common-bs4.js"/>
 <asset:javascript src="enterActivityData.js"/>
 
 <script type="text/javascript">
@@ -124,11 +123,11 @@
                 var restoredSite = $.parseJSON(localStorage);
                 reportSite = restoredSite.site
             } else {
-                reportSite = ${reportSite?.encodeAsJSON() ?: '{}' };
+
+                reportSite = <fc:modelAsJavascript model="${reportSite}" default="{}"/>
             }
 
-            var projectArea = ${projectArea?.encodeAsJSON() ?: '{}'};
-
+            var projectArea = <fc:modelAsJavascript model="${projectArea}" default="{}"/>
             var reportId = '${report.reportId}';
 
             var context = {
@@ -140,11 +139,10 @@
             };
 
             var locked = ${locked};
-            var metaModel = ${metaModel};
-
+            var metaModel = <fc:modelAsJavascript model="${metaModel}" default="{}"/>
             var master = null;
             var mapPopupSelector = '#map-modal';
-            var features = ${features?.encodeAsJSON() ?: '[]'};
+            var features = <fc:modelAsJavascript model="${features}" default="{}"/>
             if (metaModel.supportsSites) {
                 // Workaround for problems with IE11 and leaflet draw
                 L.Browser.touch = false;

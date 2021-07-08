@@ -4,11 +4,11 @@
 <head>
     <g:if test="${printView}">
         <meta name="layout" content="nrmPrint"/>
-        <title>Print | ${activity.type} | Field Capture</title>
+        <title>Print | ${activity.type} | MERIT</title>
     </g:if>
     <g:else>
-        <meta name="layout" content="${hubConfig.skin}"/>
-        <title>View | ${activity.type} | Field Capture</title>
+        <meta name="layout" content="nrm_bs4"/>
+        <title>View | ${activity.type} | MERIT</title>
     </g:else>
 
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
@@ -31,11 +31,11 @@
         excelOutputTemplateUrl:"${createLink(controller: 'activity', action:'excelOutputTemplate')}",
         imageLeafletViewer: '${createLink(controller: 'resource', action: 'imageviewer', absolute: true)}',
         project:<fc:modelAsJavascript model="${project}"/>,
-        returnTo: "${returnTo}"
+        returnTo: "${createLink(controller: "project", action: "index", id: activity.projectId)}"
         },
         here = document.location.href;
     </script>
-    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="common-bs4.css"/>
     <asset:stylesheet src="activity.css"/>
 </head>
 <body>
@@ -53,18 +53,20 @@
     </g:if>
     <div id="koActivityMainBlock">
         <g:if test="${!printView}">
-            <ul class="breadcrumb">
-                <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
-                <li><a data-bind="click:goToProject" class="clickable">Project</a> <span class="divider">/</span></li>
-                <li class="active">
-                    <span data-bind="text:type"></span>
-                    <span data-bind="text:startDate.formattedDate"></span><span data-bind="visible:endDate">/</span><span data-bind="text:endDate.formattedDate"></span>
-                </li>
-            </ul>
+            <section aria-labelledby="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><g:link controller="home">Home</g:link></li>
+                    <li class="breadcrumb-item"><g:link controller="project" action="index" id="${project?.projectId}">Project</g:link></li>
+                    <li class="breadcrumb-item active">
+                        <span data-bind="text:type"></span>
+                        <span data-bind="text:startDate.formattedDate"></span><span data-bind="visible:endDate">/</span><span data-bind="text:endDate.formattedDate"></span>
+                    </li>
+                </ol>
+            </section>
         </g:if>
 
-        <div class="row-fluid title-block well well-small input-block-level">
-            <div class="span12 title-attribute">
+        <div class="row title-block well well-small input-block-level">
+            <div class="col-sm-10 title-attribute">
                 <h1><span data-bind="click:goToProject" class="clickable">${project?.name?.encodeAsHTML() ?: 'no project defined!!'}</span></h1>
                 <g:if test="${site}">
                     <h2><span data-bind="click:goToSite" class="clickable">Site: ${site.name?.encodeAsHTML()}</span></h2>
@@ -73,28 +75,27 @@
                 <h4><span>${project.associatedProgram?.encodeAsHTML()}</span> <span>${project.associatedSubProgram?.encodeAsHTML()}</span></h4>
             </div>
         </div>
-
         <div class="row">
-            <div class="${mapFeatures.toString() != '{}' ? 'span9' : 'span12'}" style="font-size: 1.2em">
+            <div class="${mapFeatures.toString() != '{}' ? 'col-sm-9' : 'col-sm-10'}" style="font-size: 1.2em">
                 <!-- Common activity fields -->
-                <div class="row-fluid">
-                    <span class="span6"><span class="label">Description:</span> <span data-bind="text:description"></span></span>
-                    <span class="span6"><span class="label">Type:</span> <span data-bind="text:type"></span></span>
+                <div class="row">
+                    <span class="col-sm-6"><span class="label">Description:</span> <span data-bind="text:description"></span></span>
+                    <span class="col-sm-6"><span class="label">Type:</span> <span data-bind="text:type"></span></span>
                 </div>
-                <div class="row-fluid">
-                    <span class="span6"><span class="label">Starts:</span> <span data-bind="text:startDate.formattedDate"></span></span>
-                    <span class="span6"><span class="label">Ends:</span> <span data-bind="text:endDate.formattedDate"></span></span>
+                <div class="row">
+                    <span class="col-sm-6"><span class="label">Starts:</span> <span data-bind="text:startDate.formattedDate"></span></span>
+                    <span class="col-sm-6"><span class="label">Ends:</span> <span data-bind="text:endDate.formattedDate"></span></span>
                 </div>
-                <div class="row-fluid">
-                    <span class="span6"><span class="label">Project stage:</span> <span data-bind="text:projectStage"></span></span>
-                    <span class="span6"><span class="label">Major theme:</span> <span data-bind="text:mainTheme"></span></span>
+                <div class="row">
+                    <span class="col-sm-6"><span class="label">Project stage:</span> <span data-bind="text:projectStage"></span></span>
+                    <span class="col-sm-6"><span class="label">Major theme:</span> <span data-bind="text:mainTheme"></span></span>
                 </div>
-                <div class="row-fluid">
-                    <span class="span6"><span class="label">Activity status:</span> <span data-bind="text:progress"></span></span>
+                <div class="row">
+                    <span class="col-sm-6"><span class="label">Activity status:</span> <span data-bind="text:progress"></span></span>
                 </div>
             </div>
             <g:if test="${mapFeatures.toString() != '{}'}">
-                <div class="span3">
+                <div class="col-sm-3">
                     <div id="smallMap" style="width:100%"></div>
                 </div>
             </g:if>
@@ -155,7 +156,7 @@
 <!-- templates -->
 <g:render template="/shared/documentTemplate"/>
 
-<asset:javascript src="common.js"/>
+<asset:javascript src="common-bs4.js"/>
 <asset:javascript src="forms-manifest.js"/>
 <asset:deferredScripts/>
 
@@ -166,7 +167,7 @@
         $('.helphover').popover({animation: true, trigger:'hover'});
 
         $('#cancel').click(function () {
-            document.location.href = returnTo;
+            document.location.href = fcConfig.returnTo;
         });
 
         var viewModel = new ActivityViewModel(
