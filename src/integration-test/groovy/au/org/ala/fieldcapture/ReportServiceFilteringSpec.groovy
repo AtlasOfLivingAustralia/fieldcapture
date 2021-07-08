@@ -63,7 +63,7 @@ class ReportServiceFilteringSpec extends StubbedCasSpec {
         and: "The new reports are displayed"
 
         waitFor {
-            projectReports.reports.size() == 17
+            projectReports.reports.size() == 19
             projectReports.reports[1].name != ""
         }
         projectReports.reports[0].name == "Year 2018/2019 - Quarter 1 Outputs Report"
