@@ -45,7 +45,6 @@ def metadataExtractorVersion = "2.6.2"
 def imgscalrVersion = "4.2"
 def httpmimeVersion = "4.2.1"
 def jtsVersion = "1.8"
-def ecodataClientPluginVersion = "4.0"
 boolean inplace = false // Set to true it needed only for development
 
 configurations {
@@ -168,7 +167,7 @@ dependencies {
     provided "io.methvin:directory-watcher:0.4.0"
 
     if (!inplace) {
-        compile "org.grails.plugins:ecodata-client-plugin:${ecodataClientPluginVersion}-SNAPSHOT"
+        compile "org.grails.plugins:ecodata-client-plugin:4.0-SNAPSHOT"
     }
 }
 
