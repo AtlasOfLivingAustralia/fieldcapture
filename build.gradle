@@ -9,6 +9,7 @@ buildscript {
         classpath "gradle.plugin.com.github.erdi.webdriver-binaries:webdriver-binaries-gradle-plugin:2.0"
         classpath 'org.grails.plugins:quartz:2.0.13'
         classpath "com.bertramlabs.plugins:asset-pipeline-gradle:3.3.1"
+        classpath 'com.bmuschko:gradle-clover-plugin:3.0.1'
     }
 }
 
@@ -28,6 +29,11 @@ apply plugin:"com.github.erdi.webdriver-binaries"
 apply plugin:"asset-pipeline"
 apply plugin:"org.grails.grails-gsp"
 
+if (Boolean.valueOf(enableClover)) {
+    apply from: "${project.projectDir}/gradle/clover.gradle"
+}
+apply from: "${project.projectDir}/gradle/publish.gradle"
+
 repositories {
     mavenLocal()
     maven { url "https://repo.osgeo.org/repository/release/" }
@@ -40,7 +46,6 @@ repositories {
 
 def openhtmltopdfversion = '0.0.1-RC4'
 def geoToolsVersion = "11.1"
-def tomcatVersion = '7.0.55'
 def metadataExtractorVersion = "2.6.2"
 def imgscalrVersion = "4.2"
 def httpmimeVersion = "4.2.1"
