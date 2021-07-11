@@ -26,6 +26,7 @@ class DocumentDialog extends Module {
     def attachFile(String filename) {
         File toAttach = new File(getClass().getResource(filename).toURI())
         file = toAttach
+        Thread.sleep(1000) // Wait for preview, save button to be enabled.
     }
 
     def save() {

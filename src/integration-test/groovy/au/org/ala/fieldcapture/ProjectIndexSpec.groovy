@@ -44,14 +44,14 @@ class ProjectIndexSpec extends StubbedCasSpec {
 
 
         then:
+        Thread.sleep(500) // Wait for the modal animation to finish
         waitFor { admin.documents.attachDocumentDialog.title.displayed &&  admin.documents.attachDocumentDialog.report.displayed}
         admin.documents.attachDocumentDialog.reportOptions.size() == 2
 
         when:
-        File toAttach = new File(getClass().getResource('/testImage.png').toURI())
         admin.documents.attachDocumentDialog.report = 'report_1'
         admin.documents.attachDocumentDialog.title = 'test 2'
-        admin.documents.attachDocumentDialog.file =(toAttach.absolutePath)
+        admin.documents.attachDocumentDialog.attachFile('/testImage.png')
         admin.documents.attachDocumentDialog.save()
 
         then:

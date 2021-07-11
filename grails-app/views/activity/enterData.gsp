@@ -268,14 +268,11 @@
 
         ko.applyBindings(viewModel);
         viewModel.initialiseMap(mapFeatures);
-        // We need to reset the dirty flag after binding but doing so can miss a transition from planned -> started
-        // as the "mark activity as finished" will have already updated the progress to started.
-        if (activity.progress == viewModel.progress()) {
-            viewModel.dirtyFlag.reset();
-        }
+
         if (metaModel.formVersion != activity.formVersion) {
             viewModel.formVersion(metaModel.formVersion);
         }
+        viewModel.dirtyFlag.reset();
 
     <g:if test="${params.progress}">
         var newProgress = '${params.progress}';
