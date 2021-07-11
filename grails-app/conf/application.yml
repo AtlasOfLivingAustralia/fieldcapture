@@ -3,8 +3,9 @@ appName:
   "fieldcapture"
 
 server:
-  session:
-    timeout: 3600
+  servlet:
+    session:
+      timeout: 3600
 
 environments:
     development:
