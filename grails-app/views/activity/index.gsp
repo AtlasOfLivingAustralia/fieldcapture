@@ -11,11 +11,11 @@
         <title>View | ${activity.type} | MERIT</title>
     </g:else>
 
-    <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
+    <script type="text/javascript" src="${grailsApplication.config.getProperty('google.maps.url')}"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.4/jstz.min.js"></script>
     <script>
     var fcConfig = {
-        serverUrl: "${grailsApplication.config.grails.serverURL}",
+        serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
         activityUpdateUrl: "${createLink(controller: 'activity', action: 'ajaxUpdate')}",
         activityDeleteUrl: "${createLink(controller: 'activity', action: 'ajaxDelete')}",
         projectViewUrl: "${createLink(controller: 'project', action: 'index')}/",

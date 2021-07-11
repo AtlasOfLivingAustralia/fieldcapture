@@ -104,7 +104,7 @@ class DocumentController {
             render "A download ID is required"
         } else {
             String fileExtension = params.fileExtension ?: 'xlsx'
-            webService.proxyGetRequest(response, "${grailsApplication.config.ecodata.baseUrl}search/downloadProjectDataFile/${params.id}?fileExtension=${fileExtension}", true, true)
+            webService.proxyGetRequest(response, "${grailsApplication.config.getProperty('ecodata.baseUrl')}search/downloadProjectDataFile/${params.id}?fileExtension=${fileExtension}", true, true)
         }
     }
 }

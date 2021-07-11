@@ -470,7 +470,7 @@ class ProjectController {
             } else {
                 path += ".json"
             }
-            def url = grailsApplication.config.ecodata.baseUrl + path
+            def url = grailsApplication.config.getProperty('ecodata.baseUrl') + path
             webService.proxyGetRequest(response, url, true, true, 120000)
         }
     }
@@ -478,7 +478,7 @@ class ProjectController {
     @PreAuthorise(accessLevel = 'admin', redirectController = 'home', redirectAction = 'index')
     def downloadShapefile(String id) {
 
-        def url = grailsApplication.config.ecodata.baseUrl + "project/${id}.shp"
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "project/${id}.shp"
         def resp = webService.proxyGetRequest(response, url, true, true, 960000)
         if (resp.status != 200) {
             render view: '/error', model: [error: resp.error]

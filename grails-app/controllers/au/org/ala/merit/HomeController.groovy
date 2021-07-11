@@ -54,7 +54,7 @@ class HomeController {
             response.addCookie(alaAuth)
         }
 
-        redirect(url:grailsApplication.config.grails.serverURL)
+        redirect(url:grailsApplication.config.getProperty('grails.serverURL'))
     }
 
     def projectExplorer() {

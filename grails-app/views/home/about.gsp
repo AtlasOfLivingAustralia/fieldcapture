@@ -7,7 +7,7 @@
   <title>${settingType.title?:'About'} | Field Capture</title>
   <script>
     window.fcConfig = {
-        baseUrl: "${grailsApplication.config.grails.serverURL}",
+        baseUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
         spatialBaseUrl: "${grailsApplication.config.spatial.baseUrl}",
         spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
         spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",

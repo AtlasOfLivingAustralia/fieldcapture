@@ -11,10 +11,10 @@
         <title>Edit | ${activity.type} | MERIT</title>
     </g:else>
 
-    <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
+    <script type="text/javascript" src="${grailsApplication.config.getProperty('google.maps.url')}"></script>
     <script type="text/javascript">
     var fcConfig = {
-        serverUrl: "${grailsApplication.config.grails.serverURL}",
+        serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
         activityUpdateUrl: "${createLink(controller: 'activity', action: 'ajaxUpdate', id: activity.activityId)}",
         projectViewUrl: "${createLink(controller: 'project', action: 'index')}/",
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}/",

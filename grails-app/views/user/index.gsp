@@ -5,7 +5,7 @@
     <title>My Projects | MERIT</title>
     <script>
     var fcConfig = {
-        serverUrl: "${grailsApplication.config.grails.serverURL}",
+        serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
         projectViewUrl: "${createLink(controller:'project', action:'index')}",
         projectUpdateUrl: "${createLink(controller:'project', action:'ajaxUpdate')}",
         projectReportsUrl:"${createLink(controller: 'project', action:'reportingHistory')}",

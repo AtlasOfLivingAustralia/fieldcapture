@@ -19,7 +19,7 @@ class DownloadController {
             response.setStatus(400)
             render "A download ID is required"
         } else {
-            String url = "${grailsApplication.config.ecodata.baseUrl}" +'download/'+id
+            String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}" +'download/'+id
 
             def resp = webService.proxyGetRequest(response, url, true, true, 120000)
             if (resp.status != 200) {

@@ -55,7 +55,7 @@ class MobileController {
             enterActivityDataHtml = enterActivityDataHtml.replaceAll(cssRegexp, /link href="$1" type="text\/css"/)
             enterActivityDataHtml = enterActivityDataHtml.replaceAll(imgRegexp, /img src="$1"/)
             if (params.targetServer) {
-                enterActivityDataHtml = enterActivityDataHtml.replaceAll(grailsApplication.config.grails.serverURL, params.targetServer)
+                enterActivityDataHtml = enterActivityDataHtml.replaceAll(grailsApplication.config.getProperty('grails.serverURL'), params.targetServer)
             }
 
             zip.putNextEntry(new ZipEntry(type.replaceAll(' ', '_')+'.html'))
@@ -88,7 +88,7 @@ class MobileController {
             if (!alreadyAdded.contains(url)) {
                 try {
                     def page = ""
-                    def fullUrl = grailsApplication.config.serverName +'/'+ path + url
+                    def fullUrl = grailsApplication.config.getProperty('serverName') +'/'+ path + url
                     byte[] pageBytes
                     if (isImageUrl(url)) {
                         pageBytes = readBinaryUrl(fullUrl)
@@ -395,7 +395,7 @@ class MobileController {
         if (!result.statusCode && result.resp?.status == 'success') {
             // success!
             params = [userName:username]
-            url = grailsApplication.config.userDetails.url+"/userDetails/getUserDetails"
+            url = grailsApplication.config.getProperty('userDetails.url')+"/userDetails/getUserDetails"
             result = webService.doPostWithParams(url, params)
             if (!result.statusCode && result.resp) {
                 return new UserDetails(result.resp.firstName+result.resp.lastName, result.resp.userName, result.resp.userId)

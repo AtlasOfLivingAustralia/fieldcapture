@@ -10,7 +10,7 @@
 
     <script>
         var fcConfig = {
-            serverUrl: "${grailsApplication.config.grails.serverURL}",
+            serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
             viewProjectUrl: "${createLink(controller:'project', action:'index')}",
             updateProjectUrl: "${createLink(controller: 'project', action:'ajaxUpdate')}",
             documentUpdateUrl: '${g.createLink(controller:"document", action:"documentUpdate")}',

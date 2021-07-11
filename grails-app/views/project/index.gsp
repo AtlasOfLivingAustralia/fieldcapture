@@ -4,10 +4,10 @@
 <head>
     <meta name="layout" content="nrm_bs4"/>
     <title>${project?.name.encodeAsHTML()} | Project | MERIT</title>
-    <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
+    <script type="text/javascript" src="${grailsApplication.config.getProperty('google.maps.url')}"></script>
     <script>
         var fcConfig = {
-                serverUrl: "${grailsApplication.config.grails.serverURL}",
+                serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
                 projectUpdateUrl: "${createLink(action: 'ajaxUpdate', id: project.projectId)}",
                 updateProjectDatesUrl: "${createLink(controller: 'project', action: 'updateProjectDates')}/",
                 sitesDeleteUrl: "${createLink(controller: 'site', action: 'ajaxDeleteSitesFromProject', id:project.projectId)}",

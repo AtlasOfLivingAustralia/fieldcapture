@@ -51,7 +51,7 @@ class AclInterceptor {
 
             switch (accessLevel) {
                 case 'alaAdmin':
-                    if (!userService.userInRole(grailsApplication.config.security.cas.alaAdminRole)) {
+                    if (!userService.userInRole(grailsApplication.config.getProperty('security.cas.alaAdminRole'))) {
                         errorMsg = "Access denied: User does not have <b>alaAdmin</b> permission"
                     }
                     break

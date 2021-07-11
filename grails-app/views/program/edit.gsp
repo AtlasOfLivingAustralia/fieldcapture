@@ -4,10 +4,10 @@
 <head>
     <meta name="layout" content="nrm_bs4"/>
     <title>Edit | ${program.name?.encodeAsHTML()} | MERIT</title>
-    <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
+    <script type="text/javascript" src="${grailsApplication.config.getProperty('google.maps.url')}"></script>
     <script disposition="head">
         var fcConfig = {
-            serverUrl: "${grailsApplication.config.grails.serverURL}",
+            serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
             programSaveUrl: "${createLink(action:'ajaxUpdate', id:program.programId)}",
             programViewUrl: "${createLink(action:'index')}",
             documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",

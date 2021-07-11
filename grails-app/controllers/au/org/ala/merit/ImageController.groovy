@@ -54,7 +54,7 @@ class ImageController {
                 filename = imageService.nextUniqueFileName(FilenameUtils.getBaseName(filename) + '.' + ext)
 
                 def thumbFilename = FilenameUtils.removeExtension(filename) + "-thumb." + ext
-                def colDir = new File(grailsApplication.config.upload.images.path as String)
+                def colDir = new File(grailsApplication.config.getProperty('upload.images.path'))
                 colDir.mkdirs()
                 File f = new File(imageService.fullPath(filename))
                 //println "saving ${filename} to ${f.absoluteFile}"
@@ -79,9 +79,9 @@ class ImageController {
                         verbatimLongitude: exifMd.longitude,
                         bearing          : exifMd.bearing,
                         bearingRef       : exifMd.bearingRef,
-                        url              : imageService.encodeImageURL(grailsApplication.config.upload.images.url, filename),
-                        thumbnail_url    : imageService.encodeImageURL(grailsApplication.config.upload.images.url, thumbCreated ? thumbFilename : filename),
-                        delete_url       : imageService.encodeImageURL(grailsApplication.config.grails.serverURL + "/image/delete?filename=", filename),
+                        url              : imageService.encodeImageURL(grailsApplication.config.getProperty('upload.images.url'), filename),
+                        thumbnail_url    : imageService.encodeImageURL(grailsApplication.config.getProperty('upload.images.url'), thumbCreated ? thumbFilename : filename),
+                        delete_url       : imageService.encodeImageURL(grailsApplication.config.getProperty('grails.serverURL') + "/image/delete?filename=", filename),
                         delete_type      : 'DELETE']
                 result = [files: [md]]
             }

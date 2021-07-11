@@ -5,10 +5,10 @@
     <meta name="layout" content="nrmPrint"/>
     <title>Project Summary | Project | MERIT</title>
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
-    <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
+    <script type="text/javascript" src="${grailsApplication.config.getProperty('google.maps.url')}"></script>
     <script>
     var fcConfig = {
-        serverUrl: "${grailsApplication.config.grails.serverURL}",
+        serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}",
         activityViewUrl: "${createLink(controller: 'activity', action: 'index')}",
         spatialBaseUrl: "${grailsApplication.config.spatial.baseUrl}",

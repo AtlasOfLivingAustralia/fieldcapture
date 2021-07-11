@@ -3,10 +3,10 @@
 <head>
     <meta name="layout" content="nrmPrint"/>
     <title>MERI Plan - ${project.name}</title>
-    <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
+    <script type="text/javascript" src="${grailsApplication.config.getProperty('google.maps.url')}"></script>
     <script>
     var fcConfig = {
-        serverUrl: "${grailsApplication.config.grails.serverURL}",
+        serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
         imageLocation:"${assetPath(src:'/')}",
         healthCheckUrl:"${createLink(controller:'ajax', action:'keepSessionAlive')}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"

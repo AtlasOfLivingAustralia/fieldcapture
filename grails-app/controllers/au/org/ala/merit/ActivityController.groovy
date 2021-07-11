@@ -607,7 +607,7 @@ class ActivityController {
      */
     def excelOutputTemplate() {
 
-        String url =  "${grailsApplication.config.ecodata.baseUrl}metadata/excelOutputTemplate"
+        String url =  "${grailsApplication.config.getProperty('ecodata.baseUrl')}metadata/excelOutputTemplate"
 
         if (params.data) {
             webService.proxyPostRequest(response, url,

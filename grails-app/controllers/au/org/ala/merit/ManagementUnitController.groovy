@@ -277,7 +277,7 @@ class ManagementUnitController {
 
             def params = [fq: 'programId:' + id, query: "docType:project"]
 
-            def url = grailsApplication.config.ecodata.service.url + '/search/downloadShapefile' + commonService.buildUrlParamsFromMap(params)
+            def url = grailsApplication.config.getProperty('ecodata.service.url') + '/search/downloadShapefile' + commonService.buildUrlParamsFromMap(params)
             def resp = webService.proxyGetRequest(response, url, true, true, 960000)
             if (resp.status != 200) {
                 render view: '/error', model: [error: resp.error]
@@ -529,8 +529,8 @@ class ManagementUnitController {
             def extras =[:]
 
             String email = user.userName
-            extras.put("systemEmail", grailsApplication.config.fieldcapture.system.email.address)
-            extras.put("senderEmail", grailsApplication.config.fieldcapture.system.email.address)
+            extras.put("systemEmail", grailsApplication.config.getProperty('fieldcapture.system.email.address'))
+            extras.put("senderEmail", grailsApplication.config.getProperty('fieldcapture.system.email.address'))
             extras.put("email", email)
 
             String reportDownloadBaseUrl= grailsLinkGenerator.link(controller:'download',action:'get', absolute: true)

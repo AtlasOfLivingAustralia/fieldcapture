@@ -5,7 +5,7 @@
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}&libraries=visualization"></script>
     <script>
         fcConfig = {
-            baseUrl: "${grailsApplication.config.grails.serverURL}",
+            baseUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
             spatialBaseUrl: "${grailsApplication.config.spatial.baseUrl}",
             spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
             spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",

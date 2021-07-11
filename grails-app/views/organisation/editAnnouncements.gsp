@@ -2,7 +2,7 @@
 <head>
     <meta name="layout" content="nrm_bs4"/>
     <title>Edit | Announcements | Field Capture</title>
-    <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
+    <script type="text/javascript" src="${grailsApplication.config.getProperty('google.maps.url')}"></script>
     <script>
     var fcConfig = {
         organisationViewUrl: "${createLink(controller:'organisation', action:'index', id:organisation.organisationId)}",

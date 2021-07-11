@@ -4,22 +4,19 @@ class OutputService {
 
     def webService, grailsApplication
 
-    def list() {
-        def resp = webService.getJson(grailsApplication.config.ecodata.baseUrl + 'output/')
-        resp.list
-    }
+    private final String outputPath = grailsApplication.config.getProperty('ecodata.baseUrl')+'output/'
 
-    def get(id) {
-        def record = webService.getJson(grailsApplication.config.ecodata.baseUrl + 'output/' + id)
+    def get(String id) {
+        def record = webService.getJson(outputPath + id)
         record
     }
 
-    def update(id, body) {
-        webService.doPost(grailsApplication.config.ecodata.baseUrl + 'output/' + id, body)
+    def update(String id, Map body) {
+        webService.doPost(outputPath + id, body)
     }
 
-    def delete(id) {
-        webService.doDelete(grailsApplication.config.ecodata.baseUrl + 'output/' + id)
+    def delete(String id) {
+        webService.doDelete(outputPath + id)
     }
 
 }

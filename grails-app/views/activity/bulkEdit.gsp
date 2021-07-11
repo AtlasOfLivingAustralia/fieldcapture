@@ -4,11 +4,11 @@
 <head>
   <meta name="layout" content="nrm_bs4"/>
   <title>Create | Activity | MERIT</title>
-  <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
+  <script type="text/javascript" src="${grailsApplication.config.getProperty('google.maps.url')}"></script>
   <script>
     var fcConfig = {
         organisationViewUrl: "${createLink(controller:'organisation', action:'index', id:organisation.organisationId)}",
-        serverUrl: "${grailsApplication.config.grails.serverURL}",
+        serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
         projectViewUrl: "${createLink(controller: 'project', action: 'index')}/",
         saveUrl: "${createLink(controller:'activity', action:'ajaxUpdate')}",
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}/",

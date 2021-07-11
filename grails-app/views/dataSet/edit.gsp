@@ -4,10 +4,10 @@
 <head>
     <meta name="layout" content="nrm_bs4"/>
     <title>Edit | Data Set Summary | MERIT</title>
-    <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
+    <script type="text/javascript" src="${grailsApplication.config.getProperty('google.maps.url')}"></script>
     <script disposition="head">
         var fcConfig = {
-            serverUrl: "${grailsApplication.config.grails.serverURL}",
+            serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
             dataSetUpdateUrl: "${createLink(action:'save', id:projectId)}",
             returnToUrl: "${g.createLink(controller:'project', action:'index', id:projectId)}"
         };

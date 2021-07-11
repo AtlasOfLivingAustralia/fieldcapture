@@ -6,7 +6,7 @@
     <title>Import Projects | Admin | Field Capture</title>
     <script>
             var fcConfig = {
-                serverUrl: "${grailsApplication.config.grails.serverURL}",
+                serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
                 importUrl: "${createLink(action: 'gmsImport')}",
                 projectUrl:"${createLink(controller:'project', action:'index')}",
                 importProgressUrl: "${createLink(action: 'importStatus')}"

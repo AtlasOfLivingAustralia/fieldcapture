@@ -134,7 +134,7 @@ class SiteController {
                 redirect(controller: 'home', action: 'index')
             }
         }
-        def url = grailsApplication.config.ecodata.baseUrl + "site/${id}.shp"
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "site/${id}.shp"
         def resp = webService.proxyGetRequest(response, url, true, true,960000)
         if (resp.status != 200) {
             render view:'/error', model:[error:resp.error]

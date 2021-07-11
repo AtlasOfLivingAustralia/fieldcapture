@@ -11,10 +11,10 @@
         <title>View | ${report.name} | MERIT</title>
     </g:else>
 
-    <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
+    <script type="text/javascript" src="${grailsApplication.config.getProperty('google.maps.url')}"></script>
     <script>
     var fcConfig = {
-        serverUrl: "${grailsApplication.config.grails.serverURL}",
+        serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
         ownerViewUrl: "${ownerViewURL}",
         bieUrl: "${grailsApplication.config.bie.baseURL}",
         imageLocation:"${assetPath(src:'/')}",
@@ -29,7 +29,7 @@
         imageLeafletViewer: '${createLink(controller: 'resource', action: 'imageviewer', absolute: true)}',
         readonly:true,
         useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.PRODUCTION},
-        prepopUrlPrefix:"${grailsApplication.config.grails.serverURL}",
+        prepopUrlPrefix:"${grailsApplication.config.getProperty('grails.serverURL')}",
         returnTo: "${returnTo}"
         },
         here = document.location.href;

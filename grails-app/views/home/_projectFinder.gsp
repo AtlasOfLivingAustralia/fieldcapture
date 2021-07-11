@@ -256,7 +256,7 @@
                                             <tbody>
                                                 <tr>
                                                     <td width="50%"><g:render template="downloadAllAsXlsx"/></td>
-                                                    <td width="50%"><a target="_blank" href="${grailsApplication.config.grails.serverURL}/search/downloadAllData<fc:formatParams params="${params}"/>view=json">JSON</a></td>
+                                                    <td width="50%"><a target="_blank" href=""${grailsApplication.config.getProperty('grails.serverURL')}"/search/downloadAllData<fc:formatParams params="${params}"/>view=json">JSON</a></td>
                                                 </tr>
                                             </tbody>
                                         </table>

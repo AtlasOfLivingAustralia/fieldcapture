@@ -11,10 +11,10 @@
         <title>Edit | ${report.name} | MERIT</title>
     </g:else>
 
-    <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
+    <script type="text/javascript" src="${grailsApplication.config.getProperty('google.maps.url')}"></script>
     <script type="text/javascript">
         var fcConfig = {
-                serverUrl: "${grailsApplication.config.grails.serverURL}",
+                serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
                 activityUpdateUrl: "${saveReportUrl}",
                 contextViewUrl: "${contextViewUrl}/",
                 bieUrl: "${grailsApplication.config.bie.baseURL}",
@@ -33,7 +33,7 @@
                 speciesImageUrl: "${createLink(controller:'species', action:'speciesImage')}",
                 noImageUrl: "${assetPath(src:'nophoto.png')}",
                 context:<fc:modelAsJavascript model="${context}"/>,
-                prepopUrlPrefix:"${grailsApplication.config.grails.serverURL}",
+                prepopUrlPrefix:"${grailsApplication.config.getProperty('grails.serverURL')}",
                 useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.PRODUCTION},
                 unlockActivityUrl: "${createLink(controller:'activity', action:'ajaxUnlock')}/<fc:currentUserId/>"
             },

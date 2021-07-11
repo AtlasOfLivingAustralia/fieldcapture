@@ -181,7 +181,7 @@ class OrganisationController {
                 def params = [fq: 'organisationFacet:' + organisation.name, query :"docType:project"]
 
                 def path = "search/downloadShapefile"
-                def url = grailsApplication.config.ecodata.baseUrl + path + commonService.buildUrlParamsFromMap(params)
+                def url = grailsApplication.config.getProperty('ecodata.baseUrl') + path + commonService.buildUrlParamsFromMap(params)
                 def resp = webService.proxyGetRequest(response, url, true, true,960000)
                 if (resp.status != 200) {
                     render view:'/error', model:[error:resp.error]
