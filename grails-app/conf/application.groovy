@@ -330,8 +330,6 @@ environments {
         logging.dir = '.'
         ecodata.service.url = 'http://devt.ala.org.au:8080/ws'
         espSupportEmail='ESPmonitoring@environment.gov.au'
-        api_key='7c7d100c-10af-4d5b-8e6c-013c9ccff600'
-        google_maps_api_key='AIzaSyA0HqqmZZT8n7bSeQ5rMZdhaCGTj4Kf_VA'
     }
     test {
         server.port = "8087"
