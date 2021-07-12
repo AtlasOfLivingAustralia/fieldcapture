@@ -25,7 +25,7 @@ class ManagementUnitService {
     ProjectService projectService
 
     Map get(String id) {
-        String url = "${grailsApplication.config.ecodata.baseUrl}managementUnit/$id"
+        String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}managementUnit/$id"
         Map mu = webService.getJson(url)
 
         boolean isAdmin = userService.isUserAdminForManagementUnit(userService.getCurrentUserId(), id)
@@ -48,7 +48,7 @@ class ManagementUnitService {
     }
 
     List get(String[] ids) {
-        String url = "${grailsApplication.config.ecodata.baseUrl}managementUnits"
+        String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}managementUnits"
         Map result  = webService.doPost(url,[managementUnitIds:ids])
         List mues
         if(result.resp){
@@ -73,7 +73,7 @@ class ManagementUnitService {
     Map getByName(String name) {
 
         String encodedName = URLEncoder.encode(name, 'UTF-8')
-        String url = "${grailsApplication.config.ecodata.baseUrl}managementUnit/findByName?name=$encodedName"
+        String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}managementUnit/findByName?name=$encodedName"
         Map mu = webService.getJson(url)
 
         if(mu && mu.statusCode == 404) {
@@ -120,7 +120,7 @@ class ManagementUnitService {
             result.error = error
             result.detail = ''
         } else {
-            String url = "${grailsApplication.config.ecodata.baseUrl}managementUnit/$id"
+            String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}managementUnit/$id"
             result = webService.doPost(url, mu)
         }
         result
@@ -220,7 +220,7 @@ class ManagementUnitService {
     }
 
     Map getProjects(String id) {
-        String url = "${grailsApplication.config.ecodata.baseUrl}managementUnit/$id/projects?view=flat"
+        String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}managementUnit/$id/projects?view=flat"
         Map resp = webService.getJson(url)
         return resp
     }
@@ -306,7 +306,7 @@ class ManagementUnitService {
      * feature containing a type property that can be used to colour the map.
      */
     Map managementUnitFeatures() {
-        String url = "${grailsApplication.config.ecodata.baseUrl}${MU_MAP_PATH}"
+        String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}${MU_MAP_PATH}"
         // This is a very slow call as all MU features are simplified and intersected with each other to
         // build a collection ready for mapping.  Hence the 30 second timeout.  Caching has been applied to
         // the controller.
@@ -318,7 +318,7 @@ class ManagementUnitService {
      * @return
      */
     def downloadReports(String id){
-        String url = "${grailsApplication.config.ecodata.baseUrl}" + "managementunit/"+id+"/report"
+        String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}" + "managementunit/"+id+"/report"
         webService.getJson(url)
     }
     /**
@@ -339,7 +339,7 @@ class ManagementUnitService {
         String isoStartDate = DateUtils.format(start.withZone(DateTimeZone.UTC))
         String isoEndDate = DateUtils.format(end.withZone(DateTimeZone.UTC))
 
-        String url = "${grailsApplication.config.ecodata.baseUrl}" + "managementunit/generateReportsInPeriod?startDate=${isoStartDate}&endDate=${isoEndDate}"
+        String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}" + "managementunit/generateReportsInPeriod?startDate=${isoStartDate}&endDate=${isoEndDate}"
 
         url += '&' + extras.collect { k,v -> "$k=$v" }.join('&')
         def resp = webService.getJson(url)

@@ -16,7 +16,7 @@
     var fcConfig = {
         serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
         ownerViewUrl: "${ownerViewURL}",
-        bieUrl: "${grailsApplication.config.bie.baseURL}",
+        bieUrl: "${grailsApplication.config.getProperty('bie.baseURL')}",
         imageLocation:"${assetPath(src:'/')}",
         imageUploadUrl: "${createLink(controller: 'image', action: 'upload')}",
         speciesProfileUrl: "${createLink(controller: 'species', action: 'speciesProfile')}",

@@ -110,7 +110,7 @@ class SettingService {
     }
 
     private def get(key) {
-        String url = grailsApplication.config.ecodata.baseUrl + "setting/ajaxGetSettingTextForKey?key=${key}"
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "setting/ajaxGetSettingTextForKey?key=${key}"
         def res = cacheService.get(key,{ webService.getJson(url) })
         return res?.settingText?:""
     }
@@ -124,7 +124,7 @@ class SettingService {
 
     private def set(key, settings) {
         cacheService.clear(key)
-        String url = grailsApplication.config.ecodata.baseUrl + "setting/ajaxSetSettingText/${key}"
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "setting/ajaxSetSettingText/${key}"
         webService.doPost(url, [settingText: settings, key: key])
     }
 
@@ -161,7 +161,7 @@ class SettingService {
     HubSettings getHubSettings(String urlPath) {
 
         cacheService.get(hubCacheKey(urlPath), {
-            String url = grailsApplication.config.ecodata.baseUrl+'hub/findByUrlPath/'+urlPath
+            String url = grailsApplication.config.getProperty('ecodata.baseUrl')+'hub/findByUrlPath/'+urlPath
             Map json = webService.getJson(url)
 
             json.hubId ? new HubSettings(new HashMap(json)) : null
@@ -172,13 +172,13 @@ class SettingService {
         cacheService.clear(HUB_LIST_CACHE_KEY)
         cacheService.clear(hubCacheKey(settings.urlPath))
 
-        String url = grailsApplication.config.ecodata.baseUrl+'hub/'+(settings.hubId?:'')
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl')+'hub/'+(settings.hubId?:'')
         webService.doPost(url, settings)
     }
 
     List listHubs() {
         cacheService.get(HUB_LIST_CACHE_KEY, {
-            String url = grailsApplication.config.ecodata.baseUrl + 'hub/'
+            String url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'hub/'
             Map resp = webService.getJson(url)
             resp.list ?: []
         })

@@ -4,7 +4,7 @@
 <head>
     <meta name="layout" content="nrm_bs4"/>
     <title>${organisation.name.encodeAsHTML()} | MERIT</title>
-    <script type="text/javascript" src="${grailsApplication.config.google.maps.url}&libraries=visualization"></script>
+    <script type="text/javascript" src="${grailsApplication.config.getProperty('google.maps.url')}&libraries=visualization"></script>
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
     <g:set var="loadPermissionsUrl" value="${createLink(controller: 'organisation', action: 'getMembersForOrganisation', id:organisation.organisationId)}"/>
 

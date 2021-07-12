@@ -1,6 +1,6 @@
 <!-- ko stopBinding: true -->
 <div id="sitemap">
-    <script type="text/javascript" src="${grailsApplication.config.google.drawmaps.url}"></script>
+    <script type="text/javascript" src="${grailsApplication.config.getProperty('google.drawmaps.url')}"></script>
 
     <div class="row-fluid">
 
@@ -257,7 +257,7 @@ function initSiteViewModel() {
         intersectService: "${createLink(controller: 'proxy', action: 'intersect')}",
         featuresService: "${createLink(controller: 'proxy', action: 'features')}",
         featureService: "${createLink(controller: 'proxy', action: 'feature')}",
-        spatialWms: '${grailsApplication.config.spatial.geoserverUrl}'
+        spatialWms: '${grailsApplication.config.getProperty("spatial.geoserverUrl")}'
     };
 
     var savedSiteData = {

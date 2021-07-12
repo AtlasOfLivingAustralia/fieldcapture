@@ -26,7 +26,7 @@ class ProgramService {
     ProjectService projectService
 
     Map get(String id) {
-        String url = "${grailsApplication.config.ecodata.baseUrl}program/$id"
+        String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}program/$id"
         Map program = webService.getJson(url)
         Map results = documentService.search(programId:id)
         if (results && results.documents) {
@@ -41,7 +41,7 @@ class ProgramService {
     }
 
     List get(String[] ids) {
-        String url = "${grailsApplication.config.ecodata.baseUrl}programs"
+        String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}programs"
         Map result  = webService.doPost(url,[programIds:ids])
         List programs
         if(result.resp){
@@ -55,7 +55,7 @@ class ProgramService {
     Map getByName(String name) {
 
         String encodedName = URLEncoder.encode(name, 'UTF-8')
-        String url = "${grailsApplication.config.ecodata.baseUrl}program/findByName?name=$encodedName"
+        String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}program/findByName?name=$encodedName"
         Map program = webService.getJson(url)
 
         if(program && program.statusCode == 404) {
@@ -102,7 +102,7 @@ class ProgramService {
             result.error = error
             result.detail = ''
         } else {
-            String url = "${grailsApplication.config.ecodata.baseUrl}program/$id"
+            String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}program/$id"
             result = webService.doPost(url, program)
         }
         result
@@ -183,7 +183,7 @@ class ProgramService {
     }
 
     Map getProgramProjects(String id) {
-        String url = "${grailsApplication.config.ecodata.baseUrl}program/$id/projects?view=flat"
+        String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}program/$id/projects?view=flat"
         Map resp = webService.getJson(url)
         return resp
     }
@@ -289,7 +289,7 @@ class ProgramService {
     }
 
     List<Map> listOfAllPrograms(){
-        return webService.getJson("${grailsApplication.config.ecodata.baseUrl}program/listOfAllPrograms")
+        return webService.getJson("${grailsApplication.config.getProperty('ecodata.baseUrl')}program/listOfAllPrograms")
     }
 
 }

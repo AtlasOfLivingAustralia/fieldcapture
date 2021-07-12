@@ -3,6 +3,7 @@ package au.org.ala.merit
 import au.com.bytecode.opencsv.CSVReader
 import au.org.ala.merit.command.Reef2050PlanActionReportSummaryCommand
 import au.org.ala.merit.reports.ReportGenerationOptions
+import grails.config.Config
 import grails.converters.JSON
 import groovy.util.logging.Slf4j
 import org.grails.plugin.cache.GrailsCacheManager
@@ -198,16 +199,20 @@ class AdminController {
         redirect(uri: returnUrl)
     }
 
-    def reloadConfig = {
+    @PreAuthorise(accessLevel = 'siteAdmin', redirectController = "admin")
+    def reloadConfig() {
         // reload system config
-        def resolver = new PathMatchingResourcePatternResolver()
-        def resource = resolver.getResource(grailsApplication.config.reloadable.cfgs[0])
-        if (!resource) {
+        List reloadableConfigs = grailsApplication.config.getProperty('grails.config.locations', List, [])
+        String fileConfig = reloadableConfigs.find{it.endsWith('properties')}
+
+        if (!fileConfig) {
             def warning = "No external config to reload. grailsApplication.config.grails.config.locations is empty."
             println warning
             flash.message = warning
             render warning
         } else {
+            def resolver = new PathMatchingResourcePatternResolver()
+            def resource = resolver.getResource(fileConfig)
             def stream = null
 
             try {
@@ -225,7 +230,8 @@ class AdminController {
                 }
                 flash.message = "Configuration reloaded."
                 String res = "<ul>"
-                grailsApplication.config.each { key, value ->
+
+                grailsApplication.config.toProperties().each { key, value ->
                     if (value instanceof Map) {
                         res += "<p>" + key + "</p>"
                         res += "<ul>"
@@ -241,7 +247,7 @@ class AdminController {
                 render res + "</ul>"
             }
             catch (FileNotFoundException fnf) {
-                def error = "No external config to reload configuration. Looking for ${grailsApplication.config.grails.config.locations[0]}"
+                def error = "No external config to reload configuration. Looking for ${grailsApplication.config.getProperty('grails.config.locations', List, [])[0]}"
                 log.error error
                 flash.message = error
                 render error

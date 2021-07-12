@@ -153,18 +153,18 @@ class SiteService {
         if (!siteId) {
             throw new IllegalArgumentException("The siteId parameter cannot be null")
         }
-        def url = "${grailsApplication.config.ecodata.baseUrl}site/${siteId}/poi"
+        def url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}site/${siteId}/poi"
         webService.doPost(url, poi)
     }
 
     int deletePOI(String siteId, String poiId) {
-        def url = "${grailsApplication.config.ecodata.baseUrl}site/${siteId}/poi/${poiId}"
+        def url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}site/${siteId}/poi/${poiId}"
         webService.doDelete(url)
     }
 
     def get(id, Map urlParams = [:]) {
         if (!id) return null
-        webService.getJson(grailsApplication.config.ecodata.baseUrl + 'site/' + id +
+        webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') + 'site/' + id +
                 commonService.buildUrlParamsFromMap(urlParams))
     }
 
@@ -189,15 +189,15 @@ class SiteService {
     }
 
     def create(body){
-        webService.doPost(grailsApplication.config.ecodata.baseUrl + 'site/', body)
+        webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl') + 'site/', body)
     }
 
     def update(id, body) {
-        webService.doPost(grailsApplication.config.ecodata.baseUrl + 'site/' + id, body)
+        webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl') + 'site/' + id, body)
     }
 
     def updateProjectAssociations(body) {
-        webService.doPost(grailsApplication.config.ecodata.baseUrl + 'project/updateSites/' + body.projectId, body)
+        webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl') + 'project/updateSites/' + body.projectId, body)
     }
 
     /**
@@ -210,7 +210,7 @@ class SiteService {
 
 
     Map getProjectSites(String projectId) {
-        webService.getJson(grailsApplication.config.ecodata.baseUrl + "site/projectSites/$projectId")
+        webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') + "site/projectSites/$projectId")
     }
     /**
      * Creates a site for a specified project from the supplied site data.
@@ -345,11 +345,11 @@ class SiteService {
     }
 
     def delete(id) {
-        webService.doDelete(grailsApplication.config.ecodata.baseUrl + 'site/' + id)
+        webService.doDelete(grailsApplication.config.getProperty('ecodata.baseUrl') + 'site/' + id)
     }
 
     def deleteSitesFromProject(String projectId, List siteIds, boolean deleteOrphans = true){
-        webService.doPost(grailsApplication.config.ecodata.baseUrl + 'project/deleteSites/' + projectId, [siteIds:siteIds, deleteOrphans:deleteOrphans])
+        webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl') + 'project/deleteSites/' + projectId, [siteIds:siteIds, deleteOrphans:deleteOrphans])
     }
 
     /**
@@ -384,11 +384,11 @@ class SiteService {
     }
 
     Map getSiteGeoJson(String siteId) {
-        webService.getJson(grailsApplication.config.ecodata.baseUrl + 'site/' + siteId+'.geojson')
+        webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') + 'site/' + siteId+'.geojson')
     }
 
     def lookupLocationMetadataForSite(Map site) {
-        Map resp = webService.doPost(grailsApplication.config.ecodata.baseUrl + 'site/lookupLocationMetadataForSite', site)
+        Map resp = webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl') + 'site/lookupLocationMetadataForSite', site)
         if (resp.resp) {
             return resp.resp
         }

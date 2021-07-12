@@ -27,13 +27,13 @@ class DocumentService {
     UserService userService
 
     def get(String id) {
-        def url = "${grailsApplication.config.ecodata.baseUrl}document/${id}"
+        def url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}document/${id}"
         return webService.getJson(url)
     }
 
     def delete(String id) {
         if (canDelete(id)) {
-            def url = "${grailsApplication.config.ecodata.baseUrl}document/${id}"
+            def url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}document/${id}"
             return webService.doDelete(url)
         }
         else {
@@ -48,7 +48,7 @@ class DocumentService {
 
     @Cacheable(DocumentService.HELP_DOCUMENTS_CACHE_REGION)
     def findAllHelpResources() {
-        def url = "${grailsApplication.config.ecodata.baseUrl}document/search"
+        def url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}document/search"
         def result = webService.doPost(url, [role:'helpResource'])
         if (result.statusCode == SC_OK) {
             return result.resp.documents
@@ -59,7 +59,7 @@ class DocumentService {
     def updateDocument(Map doc) {
         Map result
         if (canEdit(doc)) {
-            def url = "${grailsApplication.config.ecodata.baseUrl}document/${doc.documentId?:''}"
+            def url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}document/${doc.documentId?:''}"
             result = webService.doPost(url, doc)
         }
         else {
@@ -80,7 +80,7 @@ class DocumentService {
                 result = [statusCode:SC_BAD_REQUEST, error:"Files with the extension '.${extension}' are not permitted."]
             }
             else {
-                def url = grailsApplication.config.ecodata.baseUrl + "document"
+                def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "document"
                 if (doc.documentId) {
                     url+="/"+doc.documentId
                 }
@@ -95,7 +95,7 @@ class DocumentService {
     }
 
     def getDocumentsForSite(id) {
-        def url = "${grailsApplication.config.ecodata.baseUrl}site/${id}/documents"
+        def url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}site/${id}/documents"
         return webService.doPost(url, [:])
     }
 
@@ -142,7 +142,7 @@ class DocumentService {
     }
 
     Map search(Map params) {
-        def url = "${grailsApplication.config.ecodata.baseUrl}document/search"
+        def url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}document/search"
         def resp = webService.doPost(url, params)
         if (resp && !resp.error) {
             return resp.resp

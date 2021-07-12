@@ -32,7 +32,7 @@ class UserService {
 
     @PostConstruct
     private void init() {
-        auditBaseUrl = grailsApplication.config.ecodata.baseUrl + 'audit'
+        auditBaseUrl = grailsApplication.config.getProperty('ecodata.baseUrl') + 'audit'
     }
 
     def getCurrentUserDisplayName() {
@@ -69,15 +69,15 @@ class UserService {
     }
 
     def userIsSiteAdmin() {
-        authService.userInRole(grailsApplication.config.security.cas.officerRole) || authService.userInRole(grailsApplication.config.security.cas.adminRole) || authService.userInRole(grailsApplication.config.security.cas.alaAdminRole)
+        authService.userInRole(grailsApplication.config.security.cas.officerRole) || authService.userInRole(grailsApplication.config.getProperty('security.cas.adminRole')) || authService.userInRole(grailsApplication.config.getProperty('security.cas.alaAdminRole'))
     }
 
     def userIsAlaAdmin() {
-        authService.userInRole(grailsApplication.config.security.cas.alaAdminRole)
+        authService.userInRole(grailsApplication.config.getProperty('security.cas.alaAdminRole'))
     }
 
     def userIsAlaOrFcAdmin() {
-        authService.userInRole(grailsApplication.config.security.cas.adminRole) || authService.userInRole(grailsApplication.config.security.cas.alaAdminRole)
+        authService.userInRole(grailsApplication.config.getProperty('security.cas.adminRole')) || authService.userInRole(grailsApplication.config.getProperty('security.cas.alaAdminRole'))
     }
 
     def userHasReadOnlyAccess() {
@@ -90,48 +90,48 @@ class UserService {
     }
 
     def getProjectsForUserId(userId) {
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/getProjectsForUserId/${userId}"
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/getProjectsForUserId/${userId}"
         webService.getJson(url)
     }
 
     def getOrganisationIdsForUserId(userId) {
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/getOrganisationIdsForUserId/${userId}"
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/getOrganisationIdsForUserId/${userId}"
         webService.getJson(url)
     }
 
     @Cacheable(value=UserService.USER_PROFILE_CACHE_REGION, key=UserService.USER_ORGANISATIONS_CACHE_KEY_EXPRESSION, unless="#result instanceof T(java.util.Map)")
     def getOrganisationsForUserId(userId) {
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/getOrganisationsForUserId/${userId}"
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/getOrganisationsForUserId/${userId}"
         webService.getJson(url)
     }
 
     def getProgramsForUserId(userId) {
-        String url = grailsApplication.config.ecodata.baseUrl + "program/findAllForUser/${userId}"
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "program/findAllForUser/${userId}"
         webService.getJson(url)
     }
 
     def getManagementUnitsForUserId(userId) {
-        String url = grailsApplication.config.ecodata.baseUrl + "managementUnit/findAllForUser/${userId}"
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "managementUnit/findAllForUser/${userId}"
         webService.getJson(url)
     }
 
     def getStarredProjectsForUserId(userId) {
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/getStarredProjectsForUserId/${userId}"
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/getStarredProjectsForUserId/${userId}"
         webService.getJson(url)
     }
 
     def isProjectStarredByUser(String userId, String projectId) {
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/isProjectStarredByUser?userId=${userId}&projectId=${projectId}"
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/isProjectStarredByUser?userId=${userId}&projectId=${projectId}"
         webService.getJson(url)
     }
 
     def addStarProjectForUser(String userId, String projectId) {
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/addStarProjectForUser?userId=${userId}&projectId=${projectId}"
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/addStarProjectForUser?userId=${userId}&projectId=${projectId}"
         webService.getJson(url)
     }
 
     def removeStarProjectForUser(String userId, String projectId) {
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/removeStarProjectForUser?userId=${userId}&projectId=${projectId}"
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/removeStarProjectForUser?userId=${userId}&projectId=${projectId}"
         webService.getJson(url)
     }
 
@@ -144,7 +144,7 @@ class UserService {
         if (!projectService.isUserAdminForProject(submittingUser.userId, projectId)) {
             return [error:'Permission denied']
         }
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/addUserAsRoleToProject?userId=${userId}&projectId=${projectId}&role=${role}"
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/addUserAsRoleToProject?userId=${userId}&projectId=${projectId}&role=${role}"
         webService.getJson(url)
     }
 
@@ -166,7 +166,7 @@ class UserService {
             return [error:'No user exists with id: '+userId]
         }
 
-        if (!userDetails.hasRole(grailsApplication.config.security.cas.adminRole) && !userDetails.hasRole(CASRoles.ROLE_ADMIN)) {
+        if (!userDetails.hasRole(grailsApplication.config.getProperty('security.cas.adminRole')) && !userDetails.hasRole(CASRoles.ROLE_ADMIN)) {
 
             if (userDetails.hasRole(grailsApplication.config.security.cas.officerRole)) {
                 if (!(role in roleService.allowedGrantManagerRoles)) {
@@ -183,7 +183,7 @@ class UserService {
     }
 
     def removeUserWithRole(projectId, userId, role) {
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/removeUserWithRoleFromProject?projectId=${projectId}&userId=${userId}&role=${role}"
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/removeUserWithRoleFromProject?projectId=${projectId}&userId=${userId}&role=${role}"
         webService.getJson(url)
     }
 
@@ -198,13 +198,13 @@ class UserService {
             return [error:'Permission denied']
         }
 
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/addUserAsRoleToOrganisation?userId=${userId}&organisationId=${organisationId}&role=${role}"
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/addUserAsRoleToOrganisation?userId=${userId}&organisationId=${organisationId}&role=${role}"
         webService.getJson(url)
     }
 
     @CacheEvict(value=UserService.USER_PROFILE_CACHE_REGION, key=UserService.USER_ORGANISATIONS_CACHE_KEY_EXPRESSION)
     def removeUserWithRoleFromOrganisation(String userId, String organisationId, String role) {
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/removeUserWithRoleFromOrganisation?organisationId=${organisationId}&userId=${userId}&role=${role}"
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/removeUserWithRoleFromOrganisation?organisationId=${organisationId}&userId=${userId}&role=${role}"
         webService.getJson(url)
     }
 
@@ -216,12 +216,12 @@ class UserService {
      * @param programId the id of the program of interest
      */
     Map getMembersOfManagementUnit(String managementUnitId) {
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/getMembersOfManagementUnit/${managementUnitId}"
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/getMembersOfManagementUnit/${managementUnitId}"
         webService.getJson(url)
     }
 
     def removeUserWithRoleFromManagementUnit(String userId, String managementUnitId, String role) {
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/removeUserWithRoleFromManagementUnit?managementUnitId=${managementUnitId}&userId=${userId}&role=${role}"
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/removeUserWithRoleFromManagementUnit?managementUnitId=${managementUnitId}&userId=${userId}&role=${role}"
         webService.getJson(url)
     }
 
@@ -236,7 +236,7 @@ class UserService {
             return [error:'Permission denied']
         }
 
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/addUserWithRoleToManagementUnit?userId=${userId}&managementUnitId=${managementUnitId}&role=${role}"
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/addUserWithRoleToManagementUnit?userId=${userId}&managementUnitId=${managementUnitId}&role=${role}"
         webService.getJson(url)
     }
 
@@ -246,7 +246,7 @@ class UserService {
      * @param programId the id of the program of interest
      */
     Map getMembersOfProgram(String programId) {
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/getMembersOfProgram/${programId}"
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/getMembersOfProgram/${programId}"
         webService.getJson(url)
     }
 
@@ -260,17 +260,17 @@ class UserService {
             return [error:'Permission denied']
         }
 
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/addUserWithRoleToProgram?userId=${userId}&programId=${programId}&role=${role}"
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/addUserWithRoleToProgram?userId=${userId}&programId=${programId}&role=${role}"
         webService.getJson(url)
     }
 
     def removeUserWithRoleFromProgram(String userId, String programId, String role) {
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/removeUserWithRoleFromProgram?programId=${programId}&userId=${userId}&role=${role}"
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/removeUserWithRoleFromProgram?programId=${programId}&userId=${userId}&role=${role}"
         webService.getJson(url)
     }
 
     List getUserRoles(String userId) {
-        String url = grailsApplication.config.ecodata.baseUrl + "permissions/getUserRolesForUserId/${userId}"
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/getUserRolesForUserId/${userId}"
         Map result = webService.getJson(url)
 
         result.roles ?: []
@@ -393,13 +393,13 @@ class UserService {
         if (userIsSiteAdmin()) {
            return true
         }
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/isUserAdminForProject?projectId=${projectId}&userId=${userId}"
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/isUserAdminForProject?projectId=${projectId}&userId=${userId}"
         def results = webService.getJson(url)
         return results?.userIsAdmin
     }
 
     def isUserCaseManagerForProject(userId, projectId) {
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/isUserCaseManagerForProject?projectId=${projectId}&userId=${userId}"
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/isUserCaseManagerForProject?projectId=${projectId}&userId=${userId}"
         def results = webService.getJson(url)
         return results?.userIsCaseManager
     }
@@ -414,7 +414,7 @@ class UserService {
         if (userIsSiteAdmin()) {
             userCanEdit = true
         } else {
-            def url = grailsApplication.config.ecodata.baseUrl + "permissions/canUserEditProject?projectId=${projectId}&userId=${userId}"
+            def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/canUserEditProject?projectId=${projectId}&userId=${userId}"
             userCanEdit = webService.getJson(url)?.userIsEditor?:false
         }
 
@@ -442,13 +442,13 @@ class UserService {
     }
 
     def isUserAdminForOrganisation(userId, organisationId) {
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/isUserAdminForOrganisation?organisationId=${organisationId}&userId=${userId}"
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/isUserAdminForOrganisation?organisationId=${organisationId}&userId=${userId}"
         def results = webService.getJson(url)
         return results?.userIsAdmin
     }
 
     def isUserGrantManagerForOrganisation(userId, organisationId) {
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/isUserGrantManagerForOrganisation?organisationId=${organisationId}&userId=${userId}"
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/isUserGrantManagerForOrganisation?organisationId=${organisationId}&userId=${userId}"
         def results = webService.getJson(url)
         return results?.userIsGrantManager
     }

@@ -17,11 +17,11 @@
             activityUpdateUrl: "${createLink(controller: 'activity', action: 'ajaxUpdate')}",
             activityDeleteUrl: "${createLink(controller: 'activity', action: 'ajaxDelete')}",
             activityViewUrl: "${createLink(controller: 'activity', action: 'index')}",
-            spatialBaseUrl: "${grailsApplication.config.spatial.baseUrl}",
-            spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
-            spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
-            sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
-            sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
+            spatialBaseUrl: "${grailsApplication.config.getProperty('spatial.baseUrl')}",
+            spatialWmsCacheUrl: "${grailsApplication.config.getProperty('spatial.wms.cache.url')}",
+            spatialWmsUrl: "${grailsApplication.config.getProperty('spatial.wms.url')}",
+            sldPolgonDefaultUrl: "${grailsApplication.config.getProperty('sld.polgon.default.url')}",
+            sldPolgonHighlightUrl: "${grailsApplication.config.getProperty('sld.polgon.highlight.url')}",
             featureService: "${createLink(controller: 'proxy', action:'feature')}",
             sitesPhotoPointsUrl:"${createLink(controller:'project', action:'projectSitePhotos', id:project.projectId)}",
             useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.PRODUCTION}
@@ -67,7 +67,7 @@
                             <button type="button" class="btn btn-sm"><i class="fa fa-download"></i> Download ShapeFile</button>
                         </a>
                         <g:if test="${site?.extent?.geometry?.pid}">
-                            <a href="${grailsApplication.config.spatial.baseUrl}/?pid=${site.extent.geometry.pid}" class=" ml-1 btn btn-sm"><i class="fa fa-external-link"></i> View in Spatial Portal</a>
+                            <a href="${grailsApplication.config.getProperty('spatial.baseUrl')}/?pid=${site.extent.geometry.pid}" class=" ml-1 btn btn-sm"><i class="fa fa-external-link"></i> View in Spatial Portal</a>
                         </g:if>
                     </div>
                 </div>

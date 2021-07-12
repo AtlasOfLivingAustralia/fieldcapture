@@ -1,10 +1,13 @@
 package au.org.ala.merit
 
+import org.springframework.beans.factory.annotation.Value
+
 class OutputService {
 
-    def webService, grailsApplication
+    WebService webService
 
-    private final String outputPath = grailsApplication.config.getProperty('ecodata.baseUrl')+'output/'
+    @Value('${ecodata.baseUrl}+output/')
+    private String outputPath
 
     def get(String id) {
         def record = webService.getJson(outputPath + id)

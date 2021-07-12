@@ -5,15 +5,15 @@
     <g:set var="containerType" scope="request" value="container"/>
     <meta name="layout" content="nrm_bs4"/>
     <title>Explore | MERIT</title>
-    <script type="text/javascript" src="${grailsApplication.config.google.maps.url}&libraries=visualization"></script>
+    <script type="text/javascript" src="${grailsApplication.config.getProperty('google.maps.url')}&libraries=visualization"></script>
     <script>
     var fcConfig = {
         baseUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
-        spatialBaseUrl: "${grailsApplication.config.spatial.baseUrl}",
-        spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
-        spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
-        sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
-        sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
+        spatialBaseUrl: "${grailsApplication.config.getProperty('spatial.baseUrl')}",
+        spatialWmsCacheUrl: "${grailsApplication.config.getProperty('spatial.wms.cache.url')}",
+        spatialWmsUrl: "${grailsApplication.config.getProperty('spatial.wms.url')}",
+        sldPolgonDefaultUrl: "${grailsApplication.config.getProperty('sld.polgon.default.url')}",
+        sldPolgonHighlightUrl: "${grailsApplication.config.getProperty('sld.polgon.highlight.url')}",
         viewProjectUrl: "${g.createLink(controller: 'project', action:'index')}",
         dashboardUrl: "${g.createLink(controller: 'report', action: 'loadReport', params: params+[showOrganisations:true])}",%{--// Hack for the announcements report to distinguish it from the report on the org page.--}%
         dashboardCategoryUrl: "${g.createLink(controller: 'report', action: 'activityOutputs', params: params+[showOrganisations:true])}",

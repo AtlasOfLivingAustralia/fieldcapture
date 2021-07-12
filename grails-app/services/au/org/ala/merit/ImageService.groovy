@@ -29,7 +29,7 @@ class ImageService {
             }
         }
 
-        webService.postMultipart(grailsApplication.config.ecodata.baseUrl + "document/createThumbnail", [size: size], imageIn, contentType, thumbnailFile.name, 'image', saveThumbnail)
+        webService.postMultipart(grailsApplication.config.getProperty('ecodata.baseUrl') + "document/createThumbnail", [size: size], imageIn, contentType, thumbnailFile.name, 'image', saveThumbnail)
 
         return thumbnailFile.exists()
 
