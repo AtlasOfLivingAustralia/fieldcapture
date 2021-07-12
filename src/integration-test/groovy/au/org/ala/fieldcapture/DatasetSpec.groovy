@@ -101,9 +101,7 @@ class DatasetSpec extends StubbedCasSpec{
 
         when: "Delete the data set"
         $("#project-data-sets .fa-remove").click()
-        waitFor{ $('.bootbox a.btn-primary').displayed }
-        Thread.sleep(1000) // Wait for the animation to finish
-        $('.bootbox a.btn-primary').click()
+        okBootbox()
 
         then: "The data set is removed"
         waitFor 10, {
