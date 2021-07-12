@@ -19,3 +19,8 @@ spring:
   devtools:
     livereload:
       enabled: true
+    restart:
+      additional-exclude:
+        - '**/*.gsp'
+        - '**/*.css'
+        - '**/*.js'
