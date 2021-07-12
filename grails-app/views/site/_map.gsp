@@ -378,22 +378,22 @@ function initSiteViewModel() {
     };
 
     var savedSiteData = {
-        siteId: "${site?.siteId}",
+        siteId: "${raw(site?.siteId)}",
         name : "${site?.name?.encodeAsJavaScript()}",
         externalId : "${site?.externalId?.encodeAsJavaScript()}",
-        context : "${site?.context}",
-        type : "${site?.type}",
-        extent: ${site?.extent?:'null'},
-        poi: ${site?.poi?:'[]'},
-        area : "${site?.area}",
-        description : "${site?.description?.encodeAsJavaScript()}",
-        notes : "${site?.notes?.encodeAsJavaScript()}",
-        documents : JSON.parse('${(siteDocuments?:documents).encodeAsJavaScript()}'),
+        context : "${site?.context?.encodeAsJavaScript()}",
+        type : "${site?.type?.encodeAsJavaScript()}",
+        extent: <fc:modelAsJavascript model="${site?.extent}"/>,
+        poi: <fc:modelAsJavascript model="${site?.poi}" default="[]"/>,
+        area : <fc:modelAsJavascript model="${site?.area}"/>,
+        description : <fc:modelAsJavascript model="${site?.description}"/>,
+        notes : <fc:modelAsJavascript model="${site?.notes?.encodeAsJavaScript()}"/>,
+        documents : <fc:modelAsJavascript model="${siteDocuments?:documents}"/>,
     <g:if test="${project}">
-        projects : ['${project.projectId}'],
+        projects : ['${raw(project.projectId)}'],
     </g:if>
     <g:else>
-        projects : ${site?.projects?:'[]'}
+        projects : <fc:modelAsJavascript model="${site?.projects}" default="[]"/>
     </g:else>
     };
 
