@@ -133,7 +133,7 @@
 </div>
 
 <!-- templates -->
-<g:render template="/shared/timeoutMessage" model="${[url:grailsApplication.config.security.cas.loginUrl+'?service='+createLink(action:'edit', id:activity.activityId, absolute: true)]}"/>
+<g:render template="/shared/timeoutMessage" model="${[url:grailsApplication.config.getProperty('security.cas.loginUrl')+'?service='+createLink(action:'edit', id:activity.activityId, absolute: true)]}"/>
 
 <asset:script>
 
@@ -462,7 +462,7 @@
                 zoomToBounds:true,
                 zoomLimit:16,
                 featureService: "${createLink(controller: 'proxy', action:'feature')}",
-                wmsServer: "${grailsApplication.config.spatial.geoserverUrl}",
+                wmsServer: "${grailsApplication.config.getProperty('spatial.geoserverUrl')}",
                 polygonMarkerAreaKm2:-1
             },
             mapFeatures

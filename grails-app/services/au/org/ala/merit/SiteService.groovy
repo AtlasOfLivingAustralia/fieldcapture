@@ -447,7 +447,7 @@ class SiteService {
     Map validate(Map site) {
         // Check it's OK, valid (no duplicate coordinates or self intersection) and not too many points.
         Map result = [:]
-        int recommendedPointCount = grailsApplication.config.site.pointWarningThreshold ?: 50
+        int recommendedPointCount = grailsApplication.config.getProperty('site.pointWarningThreshold', Integer, 50)
         int count = getPointCount(site)
         if (count > recommendedPointCount) {
             result = [warning:"Consider reducing the number of points in this polygon if this site is to be used in reporting as performance may be affected"]

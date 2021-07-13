@@ -25,18 +25,18 @@
         intersectService: "${createLink(controller: 'proxy', action: 'intersect')}",
         featuresService: "${createLink(controller: 'proxy', action: 'features')}",
         featureService: "${createLink(controller: 'proxy', action: 'feature')}",
-        spatialWms: "${grailsApplication.config.spatial.geoserverUrl}",
-        geocodeUrl: "${grailsApplication.config.google.geocode.url}",
+        spatialWms: "${grailsApplication.config.getProperty('spatial.geoserverUrl')}",
+        geocodeUrl: "${grailsApplication.config.getProperty('google.geocode.url')}",
         siteMetaDataUrl: "${createLink(controller:'site', action:'lookupLocationMetadataForSite')}",
         <g:if test="${project}">
-            pageUrl : "${grailsApplication.config.grails.serverName}${createLink(controller:'site', action:'createForProject', params:[projectId:project.projectId,checkForState:true])}",
-            projectUrl : "${grailsApplication.config.grails.serverName}${createLink(controller:'project', action:'index', id:project.projectId)}",
+            pageUrl : "${grailsApplication.config.getProperty('grails.serverName')}${createLink(controller:'site', action:'createForProject', params:[projectId:project.projectId,checkForState:true])}",
+            projectUrl : "${grailsApplication.config.getProperty('grails.serverName')}${createLink(controller:'project', action:'index', id:project.projectId)}",
         </g:if>
         <g:elseif test="${site}">
-            pageUrl : "${grailsApplication.config.grails.serverName}${createLink(controller:'site', action:'edit', id: site?.siteId, params:[checkForState:true])}",
+            pageUrl : "${grailsApplication.config.getProperty('grails.serverName')}${createLink(controller:'site', action:'edit', id: site?.siteId, params:[checkForState:true])}",
         </g:elseif>
         <g:else>
-            pageUrl : "${grailsApplication.config.grails.serverName}${createLink(controller:'site', action:'create', params:[checkForState:true])}",
+            pageUrl : "${grailsApplication.config.getProperty('grails.serverName')}${createLink(controller:'site', action:'create', params:[checkForState:true])}",
         </g:else>
         sitePageUrl : "${createLink(action: 'index', id: site?.siteId)}",
         homePageUrl : "${createLink(controller: 'home', action: 'index')}",

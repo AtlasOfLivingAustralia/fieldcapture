@@ -10,7 +10,7 @@
             <p class="well well-small">Species lists can be selected to be used by this project when species information is required to be supplied as a part of activity reporting.
             Lists are created and managed using the <a href="http://lists.ala.org.au">ALA Species List tool</a>.</p>
             <g:if test="${project.listId}">
-                <g:set var="listUrl">${grailsApplication.config.lists.baseURL}/speciesListItem/list/${project.listId}</g:set>
+                <g:set var="listUrl">${grailsApplication.config.getProperty('lists.baseURL')}/speciesListItem/list/${project.listId}</g:set>
                 ALA Species List URL: <a href="${listUrl}" target="speciesList">${listUrl}</a>
             </g:if>
         </div>

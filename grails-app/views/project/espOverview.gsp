@@ -8,7 +8,7 @@
     <script>
     var fcConfig = {
         serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
-        espSupportEmail: "${grailsApplication.config.espSupportEmail}",
+        espSupportEmail: "${grailsApplication.config.getProperty('espSupportEmail')}",
         activityEditUrl: "${createLink(controller: 'activity', action: 'edit')}",
         activityEnterDataUrl: "${createLink(controller: 'activity', action: 'enterData')}",
         activityUpdateUrl: "${createLink(controller: 'activity', action: 'ajaxUpdate')}",
@@ -28,7 +28,7 @@
         approveReportUrl: "${createLink(controller: 'project', action: 'ajaxApproveReport', id:project.projectId)}/",
         featuresService: "${createLink(controller: 'proxy', action: 'features')}",
         featureService: "${createLink(controller: 'proxy', action: 'feature')}",
-        spatialWms: "${grailsApplication.config.spatial.geoserverUrl}",
+        spatialWms: "${grailsApplication.config.getProperty('spatial.geoserverUrl')}",
         tabbedActivityUrl: "${createLink(controller: 'activity', action:'ajaxLoadActivityForm')}",
         dashboardUrl:"${createLink(action:'projectDashboard', id:project.projectId)}",
         searchBieUrl:"${createLink(controller:'species', action:'searchBie')}",
@@ -36,8 +36,8 @@
         speciesSearchUrl:"${createLink(controller:'project', action:'searchSpecies', id:project.projectId)}",
         speciesImageUrl:"${createLink(controller:'species', action:'speciesImage')}",
         speciesProfileUrl: "${createLink(controller: 'species', action: 'speciesProfile')}", imageUploadUrl: "${createLink(controller: 'image', action: 'upload')}",
-        sightingsActivityType: "${grailsApplication.config.esp.activities.sightings ?: ""}",
-        adminActivityType: "${grailsApplication.config.esp.activities.admin ?: ""}",
+        sightingsActivityType: "${grailsApplication.config.getProperty('esp.activities.sightings', String, "")}",
+        adminActivityType: "${grailsApplication.config.getProperty('esp.activities.admin', String, ""}",
         excelOutputTemplateUrl: "${createLink(controller: 'activity', action:'excelOutputTemplate')}",
         excelDataUploadUrl: "${createLink(controller:'activity', action:'ajaxUpload')}",
         saveReportingDatesUrl:"${createLink(controller:'project', action:'ajaxUpdate', id:project.projectId)}",
@@ -273,7 +273,7 @@
                     </div>
 
                     <p>
-                        If you do not know or are having any issues with this, please email: <a href="mailto:${grailsApplication.config.espSupportEmail}">${grailsApplication.config.espSupportEmail}</a>
+                        If you do not know or are having any issues with this, please email: <a href="mailto:${grailsApplication.config.getProperty('espSupportEmail')}">${grailsApplication.config.getProperty('espSupportEmail')}</a>
                     </p>
                 </form>
             </div>

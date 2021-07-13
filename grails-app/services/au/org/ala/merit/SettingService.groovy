@@ -52,7 +52,7 @@ class SettingService {
     }
 
     public void withDefaultHub(Closure closure) {
-        String hub = Holders.grailsApplication.config.app.default.hub?:'default'
+        String hub = Holders.grailsApplication.config.getProperty('app.default.hub', String, 'default')
 
         withHub(hub, closure)
     }
@@ -68,7 +68,7 @@ class SettingService {
     def loadHubConfig(hub) {
 
         if (!hub) {
-            hub = grailsApplication.config.app.default.hub?:'default'
+            hub = grailsApplication.config.getProperty('app.default.hub', String, 'default')
             String previousHub = cookieService.getCookie(LAST_ACCESSED_HUB)
             if (!previousHub) {
                 cookieService.setCookie(LAST_ACCESSED_HUB, hub, -1 /* -1 means the cookie expires when the browser is closed */)
@@ -86,7 +86,7 @@ class SettingService {
             settings = new HubSettings(
                     title:'Default',
                     skin:'ala2',
-                    urlPath:grailsApplication.config.app.default.hub?:'default',
+                    urlPath:grailsApplication.config.getProperty('app.default.hub', String, 'default'),
                     availableFacets: ['status', 'organisationFacet','associatedProgramFacet','associatedSubProgramFacet','mainThemeFacet','stateFacet','nrmFacet','lgaFacet','mvgFacet','ibraFacet','imcra4_pbFacet','otherFacet', 'gerSubRegionFacet','electFacet'],
                     adminFacets: ['electFacet'],
                     availableMapFacets: ['status', 'organisationFacet','associatedProgramFacet','associatedSubProgramFacet','stateFacet','nrmFacet','lgaFacet','mvgFacet','ibraFacet','imcra4_pbFacet','electFacet']

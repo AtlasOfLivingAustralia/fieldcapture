@@ -458,7 +458,7 @@ class FCTagLib {
     }
 
     def loginInNewWindow = { attr, body ->
-        def casLoginUrl = grailsApplication.config.security.cas.loginUrl ?: "https://auth.ala.org.au/cas/login"
+        def casLoginUrl = grailsApplication.config.getProperty('security.cas.loginUrl', String, "https://auth.ala.org.au/cas/login")
         out << "<a href=\"${casLoginUrl}?service=${createLink(absolute: true, controller: 'home', action:'close')}\" target=\"fieldcapture-login\">${body}</a>"
     }
 

@@ -17,7 +17,7 @@
                 serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
                 activityUpdateUrl: "${saveReportUrl}",
                 contextViewUrl: "${contextViewUrl}/",
-                bieUrl: "${grailsApplication.config.bie.baseURL}",
+                bieUrl: "${grailsApplication.config.getProperty('bie.baseURL')}",
                 speciesProfileUrl: "${createLink(controller: 'species', action: 'speciesProfile')}",
                 documentUpdateUrl: "${g.createLink(controller:"document", action:"documentUpdate")}",
                 documentDeleteUrl: "${g.createLink(controller:"document", action:"deleteDocument")}",
@@ -85,7 +85,7 @@
 </div>
 
 <g:render template="/shared/timeoutMessage"
-          model="${[url:grailsApplication.config.security.cas.loginUrl+'?service='+ createLink(controller: 'project', action: 'editReport', absolute: true, id: activity.projectId, params: [reportId: report.reportId])]}"/>
+          model="${[url:grailsApplication.config.getProperty('security.cas.loginUrl')+'?service='+ createLink(controller: 'project', action: 'editReport', absolute: true, id: activity.projectId, params: [reportId: report.reportId])]}"/>
 
 <g:render template="/shared/documentTemplate"></g:render>
 

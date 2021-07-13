@@ -248,7 +248,7 @@
                     scrollwheel: false,
                     zoomLimit:16,
                     featureService: "${createLink(controller: 'proxy', action:'feature')}",
-                    wmsServer: "${grailsApplication.config.spatial.geoserverUrl}"
+                    wmsServer: "${grailsApplication.config.getProperty('spatial.geoserverUrl')}"
                 },
                 mapData
         );

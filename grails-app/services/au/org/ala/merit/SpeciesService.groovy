@@ -72,7 +72,7 @@ class SpeciesService {
      * @return a JSON formatted String of the form {"autoCompleteList":[{...results...}]}
      */
     private def filterSpeciesList(String query, String listId) {
-        def listContents = webService.getJson("${grailsApplication.config.lists.baseURL}/ws/speciesListItems/${listId}?q=${query}")
+        def listContents = webService.getJson("${grailsApplication.config.getProperty('lists.baseURL')}/ws/speciesListItems/${listId}?q=${query}")
 
         def filtered = listContents.collect({[id: it.id, listId: listId, name: it.name, commonName: it.commonName, scientificName: it.scientificName, scientificNameMatches:[it.name], guid:it.lsid]})
 
@@ -88,7 +88,7 @@ class SpeciesService {
             limit = 10
         }
         def encodedQuery = URLEncoder.encode(searchTerm ?: '', "UTF-8")
-        String url = "${grailsApplication.config.bie.baseURL}/ws"
+        String url = "${grailsApplication.config.getProperty('bie.baseURL')}/ws"
         if (fq) {
             String encodedFacetQuery = URLEncoder.encode(fq, 'UTF-8')
             url += "/search.json?q=${encodedQuery}&fq=${encodedFacetQuery}&pageSize=${limit}"
@@ -103,7 +103,7 @@ class SpeciesService {
 
     def searchSpeciesList(String sort = 'listName', Integer max = 100, Integer offset = 0, String guid = null, String order = "asc", String searchTerm = null) {
         def list
-        String url = "${grailsApplication.config.lists.baseURL}/ws/speciesList?sort=${sort}&max=${max}&offset=${offset}&order=${order}"
+        String url = "${grailsApplication.config.getProperty('lists.baseURL')}/ws/speciesList?sort=${sort}&max=${max}&offset=${offset}&order=${order}"
 
         if (!guid & !searchTerm) {
             list = webService.getJson(url)
@@ -226,12 +226,12 @@ class SpeciesService {
     }
 
     def addSpeciesList(postBody) {
-        webService.doPost("${grailsApplication.config.lists.baseURL}/ws/speciesList", postBody)
+        webService.doPost("${grailsApplication.config.getProperty('lists.baseURL')}/ws/speciesList", postBody)
     }
 
     def getAllSpeciesList(){
         // 1000 is the maximum that species list could give right now.
-        String url = "${grailsApplication.config.lists.baseURL}/ws/speciesList?sort=listName&offset=0&max=1000"
+        String url = "${grailsApplication.config.getProperty('lists.baseURL')}/ws/speciesList?sort=listName&offset=0&max=1000"
         webService.getJson(url)
     }
 
@@ -249,7 +249,7 @@ class SpeciesService {
     Map speciesProfile(String id) {
 
         // While the BIE is in the process of being cut over to the new version we have to handle both APIs.
-        def url = "${grailsApplication.config.bie.baseURL}/ws/species/shortProfile/${id}"
+        def url = "${grailsApplication.config.getProperty('bie.baseURL')}/ws/species/shortProfile/${id}"
         webService.getJson(url)
     }
 }

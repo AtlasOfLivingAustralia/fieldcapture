@@ -76,7 +76,7 @@ class DocumentService {
         }
         else {
             def extension = FilenameUtils.getExtension(filename)?.toLowerCase()
-            if (!extension || grailsApplication.config.upload.extensions.blacklist.contains(extension)) {
+            if (!extension || grailsApplication.config.getProperty('upload.extensions.blacklist', List, []).contains(extension)) {
                 result = [statusCode:SC_BAD_REQUEST, error:"Files with the extension '.${extension}' are not permitted."]
             }
             else {
@@ -109,7 +109,7 @@ class DocumentService {
         def result
         if (!document.documentId) {
             document.remove('url')
-            File file = new File(grailsApplication.config.upload.images.path, document.filename)
+            File file = new File(grailsApplication.config.getProperty('upload.images.path'), document.filename)
             if (file.exists()) {
                 // Documents used as logos or banner images should be made public or they won't appear
                 // on view pages.

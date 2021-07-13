@@ -179,7 +179,7 @@
         <fc:tabContent tabs="${projectContent}"/>
     </div>
     <g:render template="/shared/timeoutMessage"
-              model="${[url: grailsApplication.config.security.cas.loginUrl + '?service=' + createLink(action: 'index', id: project.projectId, absolute: true)]}"/>
+              model="${[url: grailsApplication.config.getProperty('security.cas.loginUrl') + '?service=' + createLink(action: 'index', id: project.projectId, absolute: true)]}"/>
     <g:render template="/shared/unsavedChanges" model="${[id: 'meriPlanUnsavedChanges', unsavedData: 'MERI Plan']}"/>
     <g:render template="/shared/unsavedChanges" model="${[id: 'risksUnsavedChanges', unsavedData: 'Risks & Threats']}"/>
 
@@ -293,7 +293,7 @@ var config = {
 
     config.requireMeriApprovalReason = ${projectContent.admin.requireMeriPlanApprovalReason};
 
-    config.autoSaveIntervalInSeconds = ${grailsApplication.config.fieldcapture.autoSaveIntervalInSeconds ?: 60};
+    config.autoSaveIntervalInSeconds = ${grailsApplication.config.getProperty('fieldcapture.autoSaveIntervalInSeconds', Integer, 60)};
             config.riskAndThreatTypes = <fc:modelAsJavascript model="${config.riskAndThreatTypes}" default="null"/>;
     var programName = <fc:modelAsJavascript model="${(config.program?.acronym ?: project.associatedSubProgram) ?: project.associatedProgram}"/>
     config.programName = programName
@@ -309,7 +309,7 @@ var config = {
     window.validateProjectEndDate = viewModel.validateProjectEndDate;
     var options = {
                 storageKey:PROJECT_RISKS_KEY,
-                autoSaveIntervalInSeconds:${grailsApplication.config.fieldcapture.autoSaveIntervalInSeconds ?: 60},
+                autoSaveIntervalInSeconds:${grailsApplication.config.getProperty('fieldcapture.autoSaveIntervalInSeconds', Integer, 60)},
                 restoredDataWarningSelector:'#restoredRisksData',
                 resultsMessageSelector:'#summary-result-placeholder',
                 timeoutMessageSelector:'#timeoutMessage',

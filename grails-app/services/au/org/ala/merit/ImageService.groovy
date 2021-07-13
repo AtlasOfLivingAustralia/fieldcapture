@@ -104,7 +104,7 @@ class ImageService {
 
     String fullPath(filename) {
 
-        return grailsApplication.config.upload.images.path + File.separator + filename
+        return grailsApplication.config.getProperty('upload.images.path') + File.separator + filename
     }
 
     URL encodeImageURL(prefix, filename) {

@@ -19,7 +19,7 @@ class RisksService {
     private static final String RISKS_REPORT_PATH = "/project/projectReport/"
 
     private int getScheduleCheckPeriod() {
-        grailsApplication.config.risks.scheduleCheckingPeriod
+        grailsApplication.config.getProperty('risks.scheduleCheckingPeriod')
     }
 
     private DateTime getLastCheckTime() {
@@ -80,7 +80,7 @@ class RisksService {
      * @param projects the list of changed projects.
      */
     private void notifyGrantManagers(List projects, DateTime fromDate, DateTime toDate) {
-        String systemEmail = grailsApplication.config.merit.support.email
+        String systemEmail = grailsApplication.config.getProperty('merit.support.email')
         log.info("Found ${projects.size()} projects with modified risks and threats")
         projects.each { Map project ->
             // Using the PROJECT_ADMIN_ROLE as the initiator has the effect of sending the email to grant managers.
@@ -91,7 +91,7 @@ class RisksService {
     }
 
     private String buildReportUrl(String projectId, DateTime fromDate, DateTime toDate) {
-        grailsApplication.config.grails.serverURL+RISKS_REPORT_PATH+projectId +
+        grailsApplication.config.getProperty('grails.serverURL')+RISKS_REPORT_PATH+projectId +
                 "?fromDate="+DateUtils.format(fromDate)+
                 "&toDate="+DateUtils.format(toDate)+
                 "&sections=Project+risks+changes&orientation=portrait"

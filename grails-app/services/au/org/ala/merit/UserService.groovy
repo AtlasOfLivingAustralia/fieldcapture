@@ -69,7 +69,7 @@ class UserService {
     }
 
     def userIsSiteAdmin() {
-        authService.userInRole(grailsApplication.config.security.cas.officerRole) || authService.userInRole(grailsApplication.config.getProperty('security.cas.adminRole')) || authService.userInRole(grailsApplication.config.getProperty('security.cas.alaAdminRole'))
+        authService.userInRole(grailsApplication.config.getProperty('security.cas.officerRole')) || authService.userInRole(grailsApplication.config.getProperty('security.cas.adminRole')) || authService.userInRole(grailsApplication.config.getProperty('security.cas.alaAdminRole'))
     }
 
     def userIsAlaAdmin() {
@@ -81,7 +81,7 @@ class UserService {
     }
 
     def userHasReadOnlyAccess() {
-        authService.userInRole(grailsApplication.config.security.cas.readOnlyOfficerRole)
+        authService.userInRole(grailsApplication.config.getProperty('security.cas.readOnlyOfficerRole'))
     }
 
     def getRecentEditsForUserId(userId) {
@@ -168,7 +168,7 @@ class UserService {
 
         if (!userDetails.hasRole(grailsApplication.config.getProperty('security.cas.adminRole')) && !userDetails.hasRole(CASRoles.ROLE_ADMIN)) {
 
-            if (userDetails.hasRole(grailsApplication.config.security.cas.officerRole)) {
+            if (userDetails.hasRole(grailsApplication.config.getProperty('security.cas.officerRole'))) {
                 if (!(role in roleService.allowedGrantManagerRoles)) {
                     return [error: 'User '+userDetails.displayName+' doesn\'t have the correct level of system access to be assigned an '+role+' role.  Please contact <a href="mailto:merit@environment.gov.au">merit@environment.gov.au</a> if this is an issue.']
                 }
@@ -540,7 +540,7 @@ class UserService {
         if (!user) {
             roles = new HashSet()
         }
-        else if (user.hasRole(grailsApplication.config.security.cas.officerRole)) {
+        else if (user.hasRole(grailsApplication.config.getProperty('security.cas.officerRole'))) {
             // Don't allow grant managers to be assigned admin / editor roles
             roles = roleService.allowedGrantManagerRoles
         }

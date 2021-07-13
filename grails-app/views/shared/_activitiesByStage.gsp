@@ -4,7 +4,7 @@
    title="Plan cannot be modified once it has been submitted for approval"></i>
 <g:if test="${user?.isEditor}">
     <button type="button" class="btn btn-link btn-info" data-bind="visible:isPlanEditable,click:newActivity" style="vertical-align: baseline"><i class="fa fa-plus"></i> Add new activity</button>
-    <g:if test="${grailsApplication.config.simulateCaseManager}">
+    <g:if test="${grailsApplication.config.getProperty('simulateCaseManager')}">
         <span class="pull-right">
             <label class="checkbox inline" style="font-size:0.8em;">
                 <input data-bind="checked:userIsCaseManager" type="checkbox"> Impersonate grant manager
@@ -199,16 +199,6 @@
                                 <span class="alert alert-error" data-bind="text:error"></span>
                             </div>
                         </div>
-
-                        <g:if test="${grailsApplication.config.debugUI}">
-                            <div class="expandable-debug">
-                                <h3>Debug</h3>
-                                <div>
-                                    <h4>Document model</h4>
-                                    <pre class="row-fluid" data-bind="text:toJSONString()"></pre>
-                                </div>
-                            </div>
-                        </g:if>
 
                     </form>
                 </div>

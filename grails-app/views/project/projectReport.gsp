@@ -18,7 +18,7 @@
         imageLocation:"${assetPath(src:'/')}",
         excelOutputTemplateUrl:"${createLink(controller: 'activity', action:'excelOutputTemplate')}",
         speciesProfileUrl: "${createLink(controller: 'species', action: 'speciesProfile')}",
-        bieUrl: "${grailsApplication.config.bie.baseURL}",
+        bieUrl: "${grailsApplication.config.getProperty('bie.baseURL')}",
         searchBieUrl:"${createLink(controller:'species', action:'searchBie')}",
         speciesListUrl:"${createLink(controller:'proxy', action:'speciesItemsForList')}",
         speciesImageUrl:"${createLink(controller:'species', action:'speciesImage')}",

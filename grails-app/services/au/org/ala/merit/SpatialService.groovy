@@ -24,7 +24,7 @@ class SpatialService {
      * @return the status code of the delete operation (200 OK if successful)
      */
     Integer deleteFromSpatialPortal(String pid) {
-        String url = "${grailsApplication.config.spatial.layersUrl}${DELETE_SHAPE_PATH}/$pid"
+        String url = "${grailsApplication.config.getProperty('spatial.layersUrl')}${DELETE_SHAPE_PATH}/$pid"
 
         webService.doDelete(url)
     }
@@ -42,7 +42,7 @@ class SpatialService {
      */
     Map uploadShapefile(MultipartFile shapefile) {
         String userId = userService.getCurrentUserId()
-        String url = "${grailsApplication.config.spatial.layersUrl}${UPLOAD_SHAPE_PATH}?user_id=${userId}&api_key=${grailsApplication.config.api_key}"
+        String url = "${grailsApplication.config.getProperty('spatial.layersUrl')}${UPLOAD_SHAPE_PATH}?user_id=${userId}&api_key=${grailsApplication.config.getProperty('api_key')}"
 
         webService.postMultipart(url, [:], shapefile)
     }
@@ -59,10 +59,10 @@ class SpatialService {
      * e.g [statusCode:200, resp:[id:12345]] or [statusCode:500, error:"Failed to create object"]
      */
     Map createObjectFromShapefileFeature(String shapeFileId, String featureId, String objectName, String objectDescription) {
-        String baseUrl = "${grailsApplication.config.spatial.layersUrl}${UPLOAD_SHAPE_PATH}"
+        String baseUrl = "${grailsApplication.config.getProperty('spatial.layersUrl')}${UPLOAD_SHAPE_PATH}"
         String userId = userService.getCurrentUserId()
 
-        Map site = [name:objectName, description: objectDescription, user_id:userId, api_key:grailsApplication.config.api_key]
+        Map site = [name:objectName, description: objectDescription, user_id:userId, api_key:grailsApplication.config.getProperty('api_key')]
 
         String url = "${baseUrl}/${shapeFileId}/${featureId}"
 
@@ -75,7 +75,7 @@ class SpatialService {
      * @return geojson formatted Map.
      */
     Map objectGeometry(String spatialPortalObjectId) {
-        String getGeoJsonUrl = "${grailsApplication.config.spatial.layersUrl}${SHAPE_GEOJSON_PATH}"
+        String getGeoJsonUrl = "${grailsApplication.config.getProperty('spatial.layersUrl')}${SHAPE_GEOJSON_PATH}"
         webService.getJson2("${getGeoJsonUrl}/${spatialPortalObjectId}")
     }
 

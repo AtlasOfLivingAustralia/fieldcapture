@@ -18,7 +18,7 @@
         activityUpdateUrl: "${createLink(controller: 'activity', action: 'ajaxUpdate', id: activity.activityId)}",
         projectViewUrl: "${createLink(controller: 'project', action: 'index')}/",
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}/",
-        bieUrl: "${grailsApplication.config.bie.baseURL}",
+        bieUrl: "${grailsApplication.config.getProperty('bie.baseURL')}",
         speciesProfileUrl: "${createLink(controller: 'species', action: 'speciesProfile')}",
         documentUpdateUrl: "${g.createLink(controller:"document", action:"documentUpdate")}",
         documentDeleteUrl: "${g.createLink(controller:"document", action:"deleteDocument")}",
@@ -35,7 +35,7 @@
         noImageUrl: "${assetPath(src:'nophoto.png')}",
         project:<fc:modelAsJavascript model="${project}"/>,
         featureServiceUrl:"${createLink(controller: 'proxy', action: 'feature')}",
-        wmsServiceUrl:"${grailsApplication.config.spatial.geoserverUrl}",
+        wmsServiceUrl:"${grailsApplication.config.getProperty('spatial.geoserverUrl')}",
         unlockActivityUrl:"${createLink(controller:'activity', action:'ajaxUnlock')}/<fc:currentUserId/>",
         projectActivitiesUrl:"${createLink(controller:'project', action:'searchActivities', id:activity.projectId)}",
         healthCheckUrl:"${createLink(controller:'ajax', action:'keepSessionAlive')}"

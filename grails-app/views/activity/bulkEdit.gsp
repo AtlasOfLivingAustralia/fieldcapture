@@ -29,7 +29,7 @@
 
     </style>
     <g:set var="thisPage" value="${g.createLink(absolute: true, action:'report', params:params)}"/>
-    <g:set var="loginUrl" value="${grailsApplication.config.security.cas.loginUrl ?: 'https://auth.ala.org.au/cas/login'}?service=${thisPage.encodeAsURL()}"/>
+    <g:set var="loginUrl" value="${grailsApplication.config.getProperty('security.cas.loginUrl', String, 'https://auth.ala.org.au/cas/login')}?service=${thisPage.encodeAsURL()}"/>
 </head>
 <body>
 

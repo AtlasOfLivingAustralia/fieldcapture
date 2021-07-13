@@ -20,7 +20,7 @@
         activityDeleteUrl: "${createLink(controller: 'activity', action: 'ajaxDelete')}",
         projectViewUrl: "${createLink(controller: 'project', action: 'index')}/",
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}/",
-        bieUrl: "${grailsApplication.config.bie.baseURL}",
+        bieUrl: "${grailsApplication.config.getProperty('bie.baseURL')}",
         searchBieUrl:"${createLink(controller:'species', action:'searchBie')}",
         speciesListUrl:"${createLink(controller:'proxy', action:'speciesItemsForList')}",
         speciesSearchUrl:"${createLink(controller:'project', action:'searchSpecies', id:activity.projectId, params:[surveyName:metaModel.name])}",
