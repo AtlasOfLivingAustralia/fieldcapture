@@ -29,7 +29,7 @@ class SiteUploadSpec extends StubbedCasSpec {
         waitFor { at SiteUpload }
 
         when:
-        uploadShapefile("/resources/TestPointShapefile.zip")
+        uploadShapefile("/TestPointShapefile.zip")
 
         then:
         waitFor 30, { sites.size() == 5 }
