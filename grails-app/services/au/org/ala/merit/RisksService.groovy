@@ -19,7 +19,7 @@ class RisksService {
     private static final String RISKS_REPORT_PATH = "/project/projectReport/"
 
     private int getScheduleCheckPeriod() {
-        grailsApplication.config.getProperty('risks.scheduleCheckingPeriod')
+        grailsApplication.config.getProperty('risks.scheduleCheckingPeriod', Integer, 7)
     }
 
     private DateTime getLastCheckTime() {

@@ -1,19 +1,13 @@
 package au.org.ala.merit
 
-import grails.testing.spring.AutowiredTest
+import grails.testing.services.ServiceUnitTest
 import org.joda.time.DateTimeUtils
 import spock.lang.Specification
 
 /**
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
  */
-class RisksServiceSpec extends Specification implements AutowiredTest{
-
-    Closure doWithSpring() {{ ->
-        service RisksService
-    }}
-
-    RisksService service
+class RisksServiceSpec extends Specification implements ServiceUnitTest<RisksService> {
 
     ProjectService projectService = Mock(ProjectService)
     SearchService searchService = Mock(SearchService)
@@ -23,8 +17,6 @@ class RisksServiceSpec extends Specification implements AutowiredTest{
         service.projectService = projectService
         service.searchService = searchService
         service.settingService = settingService
-        service.grailsApplication = grailsApplication
-
     }
 
     def cleanup() {

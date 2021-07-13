@@ -1,10 +1,13 @@
 package au.org.ala.merit
 
 import au.org.ala.merit.reports.ReportGenerationOptions
+import grails.config.Config
 import grails.converters.JSON
+import grails.testing.services.ServiceUnitTest
 import grails.testing.spring.AutowiredTest
 import groovy.json.JsonSlurper
 import org.apache.http.HttpStatus
+import org.grails.config.PropertySourcesConfig
 import org.grails.web.converters.marshaller.json.CollectionMarshaller
 import org.grails.web.converters.marshaller.json.MapMarshaller
 import org.joda.time.Period
@@ -14,13 +17,7 @@ import spock.lang.Unroll
 /**
  * Tests the ProjectService class.
  */
-class ProjectServiceSpec extends Specification implements AutowiredTest{
-
-    Closure doWithSpring() {{ ->
-        service ProjectService
-    }}
-
-    ProjectService service
+class ProjectServiceSpec extends Specification implements ServiceUnitTest<ProjectService> {
 
     WebService webService = Mock(WebService)
     ReportService reportService = Mock(ReportService)
@@ -51,7 +48,8 @@ class ProjectServiceSpec extends Specification implements AutowiredTest{
         // Delegate activity description to the implementation in the ActivityService while retaining the ability to mock other methods.
         au.org.ala.merit.ActivityService realService = new au.org.ala.merit.ActivityService()
         activityService.defaultDescription(_ as Map) >> {Map activity -> realService.defaultDescription(activity) }
-        service.grailsApplication = [config:[ecodata:[baseUrl:''], reports:[filterableActivityTypes:['output']]]]
+        grailsApplication.config.ecodata.baseUrl = ''
+        grailsApplication.config.reports.filterableActivityTypes = ['output']
         service.reportService = reportService
         service.userService = userService
         service.metadataService = metadataService

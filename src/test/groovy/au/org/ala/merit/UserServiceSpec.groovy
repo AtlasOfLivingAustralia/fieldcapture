@@ -15,8 +15,8 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
 
 
     def setup() {
-        def grailsApplication = [:]
-        grailsApplication.config = [ecodata:[baseUrl:"/"], security:[cas:[officerRole:'FC_OFFICER', adminRole:'FC_ADMIN', alaAdminRole:'ADMIN', readOnlyOfficerRole:'FC_READ_ONLY']]]
+        grailsApplication.config.ecodata.baseUrl = "/"
+        grailsApplication.config.security.cas = [officerRole:'FC_OFFICER', adminRole:'FC_ADMIN', alaAdminRole:'ADMIN', readOnlyOfficerRole:'FC_READ_ONLY']
         service.grailsApplication = grailsApplication
         service.webService = webService
         service.authService = authService
