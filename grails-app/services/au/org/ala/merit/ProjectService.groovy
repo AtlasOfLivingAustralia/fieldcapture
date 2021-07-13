@@ -1553,7 +1553,7 @@ class ProjectService  {
     }
 
     private boolean isFilterable(Map activityModel) {
-        List filterableActivityTypes = grailsApplication.config.getProperty('reports.filterableActivityTypes')
+        List filterableActivityTypes = grailsApplication.config.getProperty('reports.filterableActivityTypes', List, [])
         return activityModel?.name in filterableActivityTypes
     }
 
