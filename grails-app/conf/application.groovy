@@ -228,74 +228,15 @@ reports.filterableActivityTypes = ['RLP Output Report', 'Wildlife Recovery Progr
 
 risks.scheduleCheckingPeriod = 7
 
-if (!grails.cache.ehcache) {
-    grails {
-        cache {
-            enabled = true
-            ehcache {
-                cacheManagerName = appName + '-ehcache'
-                reloadable = true
-            }
+grails {
+    cache {
+        ehcache {
+            ehcacheXmlLocation = 'classpath:merit-ehcache.xml'
+            lockTimeout = 1000
         }
     }
 }
-grails.cache.config = {
 
-    provider {
-        name "${appName}-ehcache"
-    }
-    diskStore {
-        path "/data/${appName}/ehcache"
-    }
-    cache {
-        name 'homePageImages'
-        overflowToDisk false
-        maxElementsInMemory 1
-        timeToLiveSeconds 600
-    }
-    cache {
-        name 'homePageBlog'
-        maxElementsInMemory 1
-        overflowToDisk false
-        timeToLiveSeconds  60*60
-    }
-    cache {
-        name 'homePageDocuments'
-        eternal true
-        overflowToDisk false
-        maxElementsInMemory 1
-        timeToLiveSeconds 60*60*24
-    }
-    cache {
-        name 'homePageStatistics'
-        eternal true
-        diskPersistent true
-        maxElementsInMemory 10
-        maxElementsOnDisk 10
-    }
-
-    cache {
-        name 'userProfileCache'
-        eternal false
-        overflowToDisk false
-        maxElementsInMemory 200
-    }
-
-    cache {
-        name 'userDetailsCache'
-        timeToLiveSeconds 60*60*24
-        maxElementsInMemory 2000
-        overflowToDisk false
-    }
-
-    cache {
-        name 'speciesFieldConfig'
-        timeToLiveSeconds 60*60*24
-        maxElementsInMemory 2000
-        maxElementsOnDisk 2000
-    }
-
-}
 security {
     cas {
         appServerName = 'http://devt.ala.org.au:8087' // or similar, up to the request path part

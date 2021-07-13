@@ -3,6 +3,8 @@ package au.org.ala.merit
 
 import org.grails.plugin.cache.GrailsCacheManager
 import grails.plugin.cache.GrailsConcurrentMapCache
+import org.grails.web.converters.marshaller.json.CollectionMarshaller
+import org.grails.web.converters.marshaller.json.MapMarshaller
 import spock.lang.Specification
 
 class StatisticsFactorySpec extends Specification {
@@ -13,6 +15,8 @@ class StatisticsFactorySpec extends Specification {
     ReportService reportService = Mock(ReportService)
 
     def setup() {
+        grails.converters.JSON.registerObjectMarshaller(new MapMarshaller())
+        grails.converters.JSON.registerObjectMarshaller(new CollectionMarshaller())
         Map caches = [:].withDefault { key -> new GrailsConcurrentMapCache(key) }
         grailsCacheManager.getCache(_) >> { String name -> caches.get(name) }
         factory.grailsCacheManager = grailsCacheManager

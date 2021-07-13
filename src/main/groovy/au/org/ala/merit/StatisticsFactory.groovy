@@ -1,10 +1,10 @@
 package au.org.ala.merit
 
+import grails.converters.JSON
 import groovy.util.logging.Slf4j
 import org.grails.plugin.cache.GrailsCacheManager
 import groovy.json.JsonSlurper
-import org.apache.log4j.Logger
-import grails.core.GrailsApplication
+
 import grails.core.GrailsApplication
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.Cache
@@ -60,16 +60,30 @@ class StatisticsFactory {
     public synchronized List<Map> getStatisticsGroup(int groupNumber) {
 
         Map config = getConfig()
-        List<Map> statistics = grailsCacheManager.getCache(STATISTICS_CACHE_REGION).get(groupNumber)?.get()
+        List<Map> statistics = fromCache(groupNumber)
         if (!statistics) {
             log.info("Cache miss for homepage stats, key: ${groupNumber}")
             statistics = this.config.groups[groupNumber].collect { statisticName ->
                 Map statistic = config.statistics[statisticName]
                 evaluateStatistic(statistic)
             }
-            grailsCacheManager.getCache(STATISTICS_CACHE_REGION).put(groupNumber, statistics)
+            cache(groupNumber, statistics)
         }
         statistics
+    }
+
+    private void cache(int groupNumber, List<Map> statistics) {
+        String serializedStats = (statistics as JSON).toString(false)
+        grailsCacheManager.getCache(STATISTICS_CACHE_REGION).put(Integer.toString(groupNumber), serializedStats)
+    }
+
+    private List<Map> fromCache(int groupNumber) {
+        String value = grailsCacheManager.getCache(STATISTICS_CACHE_REGION).get(Integer.toString(groupNumber))?.get()
+        List stats = null
+        if (value) {
+            stats = new JsonSlurper().parseText(value)
+        }
+        stats
     }
 
     public Map randomGroup(int exclude = -1) {
