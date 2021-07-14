@@ -486,14 +486,6 @@ class ReportController {
         render view:'_statistics', layout:'ajax', model:[statistics:statistics.statistics]
     }
 
-    def update(String id) {
-        Map report = request.JSON
-
-        Map result = reportService.update(report)
-
-        render result as JSON
-    }
-
     /**
      * Provides a way for the pdf generation service to callback into MERIT without requiring user credentials.
      * (It uses an IP filter / API Key instead).

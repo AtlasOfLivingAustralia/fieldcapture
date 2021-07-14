@@ -245,9 +245,9 @@ security {
         loginUrl = 'https://auth.ala.org.au/cas/login'
         logoutUrl = 'https://auth.ala.org.au/cas/logout'
         casServerName = 'https://auth.ala.org.au'
-        uriFilterPattern = ['/user/.*','/site/(?!index).*','/project/(?!(index|viewReportCallback)).*','/activity/(?!ajaxUnlock).*','/output/(?!index).*','/image/delete.*','/image/upload.*','/admin/.*','/proxy/speciesListPost','/document/documentUpdate','/document/deleteDocument','/document/downloadProjectDataFile/.*','/home/advanced,/organisation/(?!index).*','/organisation/(?!list).*','/blog/.*','/report/performanceAssessmentSummaryReport','/report/performanceAssessmentComparisonReport.*','/report/update.*','/program/(?!(index|viewReportCallback)).*','/programme/.*','/rlp/(?!(index|viewReportCallback)).*','/home/login.*','/ajax/keepSessionAlive']
-        uriExclusionFilterPattern = ['/assets/.*','/images/.*','/css/.*','/js/.*','/less/.*'] // this is the default value
-        authenticateOnlyIfLoggedInPattern =  ['/','/;.*','/[A-Za-z0-9]+/?','/project/index.*','/site/index.*','/activity/ajaxUnlock.*','/output/index.*','/image/.*','/search/.*','/home/.*','/organisation/index.*','/organisation/list.*','/report/loadReport.*','/report/reef2050PlanActionReport.*','/explore.*','/rlp/reportPDF.*','/rlp/index.*','/program/index.*']
+        uriFilterPattern = ['/user/*','/site/*','/project/*','/activity/*','/output/*','/image/*','/admin/.*','/proxy/*','/document/*','/organisation/*','/blog/*','/report/performanceAssessmentSummaryReport','/report/performanceAssessmentComparisonReport.*','/program/*','/rlp/*','/home/login.*','/ajax/keepSessionAlive']
+        gatewayIfCookieFilterPattern = ['/', '/home/*', '/site/index/*', '/project/index/*', '/activity/ajaxUnlock/*', '/organisation/index/*', '/organisation/list', '/program/index/*', '/rlp/index/*', '/search/*', '/report/loadReport', '/report/reef2050PlanActionReport', '/explore/*']
+        uriExclusionFilterPattern = ['/assets/.*','/images/.*','/css/.*','/js/.*','/less/.*', '/project/viewReportCallback.*', '/program/viewReportCallback.*', '/rlp/viewReportCallback.*', '/managementUnit/viewReportCallback.*']
     }
 }
 pdfbox.fontcache="/data/${appName}/cache/"
