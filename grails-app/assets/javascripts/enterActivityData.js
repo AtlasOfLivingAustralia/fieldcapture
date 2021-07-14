@@ -553,24 +553,28 @@ var ReportNavigationViewModel = function(reportMaster, activityViewModel, option
         if (self.dirtyFlag.isDirty()) {
             var message = "<b>Unsaved data found</b>"+
                 "<p>The form you are working on has unsaved changes. Please confirm if you would like to:</p>";
-            bootbox.dialog(message,[
-                {
-                    label:'Save and exit',
-                    class:'btn-success',
-                    callback: self.saveAndExit
-                },
-                {
-                    label:'Exit without saving',
-                    class:'btn-warning',
-                    callback: self.cancel
-                },
-                {
-                    label:'Return to reporting form',
-                    class:'btn-info',
-                    // do nothing, just close the dialog
-                    callback:function() {}
+            bootbox.dialog({
+                message: message,
+                buttons: {
+                    saveAndExit: {
+                        label: 'Save and exit',
+                        className: 'btn-success',
+                        callback: self.saveAndExit
+                    },
+                    exitWithoutSaving: {
+                        label: 'Exit without saving',
+                        className: 'btn-warning',
+                        callback: self.cancel
+                    },
+                    returnToForm: {
+                        label: 'Return to reporting form',
+                        className: 'btn-info',
+                        // do nothing, just close the dialog
+                        callback: function () {
+                        }
+                    }
                 }
-            ]);
+            });
         }
         else {
             reportMaster.cancelAutosave();
