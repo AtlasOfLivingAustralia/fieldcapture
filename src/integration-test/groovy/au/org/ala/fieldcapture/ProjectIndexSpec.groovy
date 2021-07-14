@@ -57,6 +57,7 @@ class ProjectIndexSpec extends StubbedCasSpec {
         then:
         waitFor 10, {hasBeenReloaded()}
         at ProjectIndex // Do another at check or the next call to "hasBeenReloaded" will return regardless of whether the page has been reloaded again.
+        admin.documentsTab.click()
 
         waitFor {admin.documents.documentSummaryList().size() == 2}
         admin.documents.documentSummaryList().size() == 2

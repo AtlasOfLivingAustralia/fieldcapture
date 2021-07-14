@@ -37,7 +37,7 @@
         speciesImageUrl:"${createLink(controller:'species', action:'speciesImage')}",
         speciesProfileUrl: "${createLink(controller: 'species', action: 'speciesProfile')}", imageUploadUrl: "${createLink(controller: 'image', action: 'upload')}",
         sightingsActivityType: "${grailsApplication.config.getProperty('esp.activities.sightings', String, "")}",
-        adminActivityType: "${grailsApplication.config.getProperty('esp.activities.admin', String, ""}",
+        adminActivityType: "${grailsApplication.config.getProperty('esp.activities.admin', String, "")}",
         excelOutputTemplateUrl: "${createLink(controller: 'activity', action:'excelOutputTemplate')}",
         excelDataUploadUrl: "${createLink(controller:'activity', action:'ajaxUpload')}",
         saveReportingDatesUrl:"${createLink(controller:'project', action:'ajaxUpdate', id:project.projectId)}",

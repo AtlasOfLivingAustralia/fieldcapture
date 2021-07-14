@@ -5,7 +5,7 @@ import geb.Page
 
 class ESPProjectIndex extends Page {
     static url = 'project/index' // requires a project id parameter
-    static at = { waitFor { title.endsWith('| Project | Field Capture') } }
+    static at = { waitFor { title.contains('| Project | ') } }
 
     static content = {
 
