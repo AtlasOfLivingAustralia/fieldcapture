@@ -139,8 +139,7 @@ table .autocompleteSpecies .input-group-text {
 
 #nav-buttons .mark-complete {
     background-color: #f5f5f5;
-    padding: 5px;
-    padding-left: 30px;
+    padding: 5px 5px 5px 30px;
     border-radius: 5px;
 }
 
@@ -190,15 +189,18 @@ select, input, textarea {
 ul.checkbox-list {
     padding-left: 0 !important;
 }
-div.row.col-sm-12 {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-}
+/*div.row.col-sm-12 {*/
+/*    padding-left: 0 !important;*/
+/*    padding-right: 0 !important;*/
+/*}*/
 
 .output-section>.col-sm-12 {
     padding: 10px !important;
 }
 
+.row.space-after > .col-sm-12 {
+    padding: 10px !important;
+}
 .dateInput {
     padding-right: 0 !important;
     padding-left: 0 !important;
@@ -213,3 +215,28 @@ div#data\.fireLastBurnDateDate input.form-control.form-control-sm.inputDatePicke
  table td select {
      max-width: 100% !important;
  }
+input.input-small[type="number"] {
+    max-width: 125px !important;
+}
+.output-section .col-sm-12 .row .col-sm-12 {
+    padding: 10px !important;
+}
+table .col-sm-12 .row .input-group .input-group-append .input-group-text,
+.col-sm-3 .row .col-sm-12 .input-group-append .input-group-text,
+.col-sm-4 .row .col-sm-12 .input-group-append .input-group-text{
+    height: 31px;
+}
+
+.col-sm-3 > .row > .input-group {
+    padding: 10px !important;
+}
+.col-sm-3 > .row > .input-group > .input-group-append > .input-group-text {
+    height: 31px;
+}
+.btn.edit-feature {
+    width: 100% !important;
+    height: unset !important;
+    max-height:unset !important;
+    max-width:unset !important;
+    margin-bottom: 10px !important;
+}
