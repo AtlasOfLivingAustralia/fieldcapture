@@ -52,13 +52,13 @@
     </g:if>
     <div id="koActivityMainBlock">
         <g:if test="${!printView}">
-            <ul class="breadcrumb">
-                <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
-                <li><a href="${contextViewUrl}">${context.name.encodeAsHTML()}</a> <span class="divider">/</span></li>
-                <li class="active">
-                    ${report.name}
-                </li>
-            </ul>
+            <section aria-labelledby="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><g:link controller="home">Home</g:link></li>
+                    <li class="breadcrumb-item"><a href="${contextViewUrl}">${context.name.encodeAsHTML()}</a></li>
+                    <li class="breadcrumb-item active">${report.name}</li>
+                </ol>
+            </section>
         </g:if>
         <g:render template="/output/mapInDialogViewTemplate" plugin="ecodata-client-plugin"/>
 
@@ -133,8 +133,8 @@
             document.location.href = fcConfig.returnTo;
         });
 
-        var metaModel = JSON.parse('${metaModel ? metaModel.toString().replace("'", "\\u0027") : '{}'}');
-        var activity = JSON.parse('${(activity as JSON).toString().encodeAsJavaScript()}');
+        var metaModel = <fc:modelAsJavascript model="${metaModel}" default="{}"/>
+        var activity = <fc:modelAsJavascript model="${activity}" default="{}"/>
         var site = ${site?.encodeAsJSON() ?: 'null' };
         var viewModel = new ActivityViewModel(
             activity,
@@ -145,7 +145,7 @@
 
         ko.applyBindings(viewModel);
         if (metaModel && metaModel.supportsSites) {
-            var reportSite =  ${reportSite?.encodeAsJSON() ?: '{}' };
+            var reportSite =  <fc:modelAsJavascript model="${reportSite}" default="{}"/>
             var formFeatures = new ecodata.forms.FeatureCollection(reportSite ? reportSite.features : []);
             fcConfig.featureCollection = formFeatures;
             <g:if test="${!printView}">
