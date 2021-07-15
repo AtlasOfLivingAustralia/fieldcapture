@@ -6,7 +6,7 @@ function validateDateField(dateField) {
 
     if (!isValidDate(date)) {
         return "Date must be in the format dd-MM-YYYY";
-    };
+    }
 }
 
 /* Master controller for page. This handles saving each model as required. */
@@ -189,7 +189,7 @@ var Master = function (activityId, config) {
             bootbox.alert(" <b>Please do not leave this page</b><br/>Your save failed due to a network error or login timeout.  Please open a new tab and log back into MERIT, then attempt to save this data again.");
         }
 
-    };
+    }
 
     /**
      * Makes an ajax call to save any sections that have been modified. This includes the activity
@@ -503,7 +503,7 @@ function ActivityHeaderViewModel (activity, site, project, metaModel, themes, co
             }
         }
     };
-};
+}
 
 /** Responsible for navigation at the bottom of report forms */
 var ReportNavigationViewModel = function(reportMaster, activityViewModel, options) {
@@ -558,20 +558,19 @@ var ReportNavigationViewModel = function(reportMaster, activityViewModel, option
                 buttons: {
                     saveAndExit: {
                         label: 'Save and exit',
-                        className: 'btn-success',
+                        className: 'btn-sm btn-success',
                         callback: self.saveAndExit
                     },
                     exitWithoutSaving: {
                         label: 'Exit without saving',
-                        className: 'btn-warning',
+                        className: 'btn-sm btn-warning',
                         callback: self.cancel
                     },
                     returnToForm: {
                         label: 'Return to reporting form',
-                        className: 'btn-info',
+                        className: 'btn-sm btn-info',
                         // do nothing, just close the dialog
-                        callback: function () {
-                        }
+                        callback: function ()  {}
                     }
                 }
             });
