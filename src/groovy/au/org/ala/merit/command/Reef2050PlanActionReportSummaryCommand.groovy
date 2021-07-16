@@ -34,6 +34,9 @@ class Reef2050PlanActionReportSummaryCommand {
         // Sort by newest first
         availableReports = availableReports.sort{it.periodEnd}.reverse()
 
+        // Add the final text based report converting July 1 2020 - June 30 2021, no future reports after this
+        availableReports.add(0, new Reef2050PlanActionReportConfig(type: Reef2050PlanActionReportConfig.REEF_2050_PLAN_FINAL_ACTION_REPORT, periodStart: "2020-06-30T14:00:00Z", periodEnd: "2021-06-30T14:00:00Z"))
+
         availableReports
     }
 
@@ -60,6 +63,4 @@ class Reef2050PlanActionReportSummaryCommand {
         }
         availableReports
     }
-
-
 }
