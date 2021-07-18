@@ -1,9 +1,12 @@
 package au.org.ala.fieldcapture
 
+import pages.AdminTools
 import pages.CreateManagementUnit
 import pages.EditManagementUnitPage
 import pages.ManagementUnitPage
+import spock.lang.Stepwise
 
+@Stepwise
 class ManagementUnitSpec extends StubbedCasSpec {
 
     static final String NO_PERMISSIONS_USER = "10"
@@ -11,7 +14,7 @@ class ManagementUnitSpec extends StubbedCasSpec {
     static final String ADMIN_USER = "1"
     static final String GRANT_MANAGER_USER = "3"
 
-    def setup() {
+    def setupSpec() {
         useDataSet('dataset_mu')
     }
 
@@ -188,6 +191,11 @@ class ManagementUnitSpec extends StubbedCasSpec {
 
     def "Management Unit Sites"() {
         setup:
+        login([userId:'110', role:"ROLE_ADMIN", email:"ala-admin@nowhere.com", firstName:"ALA", lastName:"Admin"], browser)
+        // Re-index the search engine as the sites tab relies on the search index
+        to AdminTools
+        reindex()
+
         login([userId: '1', role: "ROLE_FC_ADMIN", email: 'fc-admin@nowhere.com', firstName: "FC", lastName: 'Admin'], browser)
 
         when:
