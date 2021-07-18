@@ -50,7 +50,7 @@ def metadataExtractorVersion = "2.6.2"
 def imgscalrVersion = "4.2"
 def httpmimeVersion = "4.2.1"
 def jtsVersion = "1.8"
-boolean inplace = false // Set to true it needed only for development
+boolean inplace = true // Set to true it needed only for development
 
 configurations {
     developmentOnly
@@ -236,9 +236,9 @@ if (inplace) {
     }
 
     // Make ecodata-client-plugin _Events task is called
-    assetCompile.dependsOn("ecodata-client-plugin:_Events")
+    /*assetCompile.dependsOn("ecodata-client-plugin:_Events")
     compileGroovy.dependsOn("ecodata-client-plugin:_Events")
-    bootRun.dependsOn("ecodata-client-plugin:_Events")
+    bootRun.dependsOn("ecodata-client-plugin:_Events")*/
 }
 
 task _Events {
