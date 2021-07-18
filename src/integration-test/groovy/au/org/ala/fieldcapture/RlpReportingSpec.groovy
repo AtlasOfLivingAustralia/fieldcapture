@@ -328,12 +328,14 @@ class RlpReportingSpec extends StubbedCasSpec {
         okBootbox()
 
         then:
-        field('whsRequirementsMet').value('Met requirements')
-        field('variationSubmitted').value('No')
-        field('meriOrWorkOrderChangesRequired').value('No')
+        field('whsRequirementsMet').value() == 'Met requirements'
+        field('variationSubmitted').value() == 'No'
+        field('meriOrWorkOrderChangesRequired').value() == 'No'
+
+        when:
         save()
 
-        and:
+        then:
         waitFor 20, {
             field('whsRequirementsMet').value('Met requirements')
             field('variationSubmitted').value('No')

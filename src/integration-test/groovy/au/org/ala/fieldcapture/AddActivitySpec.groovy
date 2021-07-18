@@ -143,11 +143,9 @@ class AddActivitySpec extends StubbedCasSpec {
         logout(browser)
         login([userId:'2', role:"ROLE_USER", email:'admin@nowhere.com', firstName: "project", lastName:'admin'], browser)
 
-        def returnToUrl = getConfig().baseUrl+ProjectIndex.url+'/'+projectId
-
         when: "go to new activity page"
 
-        to AddActivityPage, projectId:projectId, returnTo: returnToUrl
+        to AddActivityPage, projectId:projectId, returnTo: 'project'
 
         activityDetails.type = 'Revegetation'
         activityDetails.description = 'Test activity'
@@ -224,8 +222,7 @@ class AddActivitySpec extends StubbedCasSpec {
             it.description == 'Test activity [edited]'
         }
         activity.actionDelete.click()
-        Thread.sleep(800) // Wait for the bootbox to animate the "Are you sure?" question
-        iAmSure.click()
+        okBootbox()
 
         then: "the activity is no longer available on the page"
         waitFor 20, {

@@ -35,7 +35,6 @@ class ProjectIndex extends ReloadablePage {
         dashboard { $("#services-dashboard div.dashboard-section").moduleList ( ProjectDashboardSection) }
         admin { module ProjectAdminTab }
 
-        iAmSure(wait: true) { $('button[data-bb-handler="confirm"]') }
         siteLists {module sitesTable }
 
         addSites{ module AddSites }

@@ -22,7 +22,7 @@ class ActivityPage extends ReloadablePage {
 class AddActivityPage extends ActivityPage {
     static url = "activity/createPlan"
 
-    static at = { title == "Create | Activity | Field Capture"}
+    static at = { title == "Create | Activity | MERIT"}
 
     static content = {
         activityDetails { module ActivityDetails }
