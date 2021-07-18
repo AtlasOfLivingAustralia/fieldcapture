@@ -1,8 +1,7 @@
 package au.org.ala.fieldcapture
 
 import pages.EditProgram
-import pages.RLPEditPageWithNoParent
-import pages.RLPProgramPage
+import pages.ProgramPage
 
 class EditProgramSpec extends StubbedCasSpec {
 
@@ -19,7 +18,7 @@ class EditProgramSpec extends StubbedCasSpec {
         login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
 
         when:
-        to RLPProgramPage
+        to ProgramPage
 
         and:
         edit()
@@ -36,7 +35,7 @@ class EditProgramSpec extends StubbedCasSpec {
 
 
         then:
-        at RLPProgramPage
+        waitFor {at ProgramPage}
         overviewTab.click()
         overviewTab.displayed
         description.text() == "Testing"
@@ -51,7 +50,7 @@ class EditProgramSpec extends StubbedCasSpec {
         login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
 
         when:
-        to RLPEditPageWithNoParent
+        to ProgramPage
 
         and:
         edit()
@@ -68,7 +67,7 @@ class EditProgramSpec extends StubbedCasSpec {
 
 
         then:
-        at RLPEditPageWithNoParent
+        waitFor {at ProgramPage}
         overviewTab.click()
         overviewTab.displayed
         description.text() == "Testing"
@@ -83,7 +82,7 @@ class EditProgramSpec extends StubbedCasSpec {
         login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
 
         when:
-        to RLPEditPageWithNoParent
+        to ProgramPage
 
         and:
         edit()
@@ -101,7 +100,7 @@ class EditProgramSpec extends StubbedCasSpec {
 
 
         then:
-        at RLPEditPageWithNoParent
+        waitFor { at ProgramPage }
         overviewTab.click()
         overviewTab.displayed
         description.text() == "Testing"

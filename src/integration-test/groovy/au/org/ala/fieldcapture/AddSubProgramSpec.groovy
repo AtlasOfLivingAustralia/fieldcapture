@@ -1,7 +1,7 @@
 package au.org.ala.fieldcapture
 
 import pages.AddSubProgram
-import pages.RLPProgramPage
+import pages.ProgramPage
 
 class AddSubProgramSpec extends StubbedCasSpec {
 
@@ -19,7 +19,7 @@ class AddSubProgramSpec extends StubbedCasSpec {
         login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
 
         when:
-        to RLPProgramPage
+        to ProgramPage
 
         and:
         addSubProgram()
@@ -34,7 +34,7 @@ class AddSubProgramSpec extends StubbedCasSpec {
 
 
         then:
-        at RLPProgramPage
+        waitFor { at ProgramPage }
 
 
         when:

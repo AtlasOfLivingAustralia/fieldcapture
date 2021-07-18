@@ -28,8 +28,13 @@ class CreateProgramSpec extends StubbedCasSpec {
 
         then:
         waitFor 30, {at ProgramPage}
+
+        when:
+        overviewTab.click()
+
+        then:
         name.text() == "A test program"
-        waitFor {description.text() == 'A test description'}
+        waitFor {description.text().contains('A test description')} // markdowntohtml wrap this in <p> tags
     }
 
 }

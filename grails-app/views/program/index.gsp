@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta name="layout" content="nrm_bs4"/>
-    <title>${program.name.encodeAsHTML()} | MERIT</title>
+    <title>${program.name.encodeAsHTML()} | Program | MERIT</title>
     <script type="text/javascript" src="${grailsApplication.config.getProperty('google.maps.url')}&libraries=visualization"></script>
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
     <script disposition="head">
@@ -37,7 +37,7 @@
 </head>
 
 <body>
-<div class="container-fluid">
+<div class="container-fluid program-view">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item">

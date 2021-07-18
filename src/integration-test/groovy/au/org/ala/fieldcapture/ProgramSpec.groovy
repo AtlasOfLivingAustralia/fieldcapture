@@ -1,6 +1,6 @@
 package au.org.ala.fieldcapture
 
-import pages.RLPProgramPage
+import pages.ProgramPage
 
 class ProgramSpec extends StubbedCasSpec {
 
@@ -17,7 +17,7 @@ class ProgramSpec extends StubbedCasSpec {
         login([userId:'1', role:"ROLE_USER", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
 
         when:
-        to RLPProgramPage
+        to ProgramPage
 
         and:
         //force to overview tab
@@ -30,7 +30,7 @@ class ProgramSpec extends StubbedCasSpec {
 
 
         then:
-        waitFor(10d,{at RLPProgramPage})
+        waitFor(10d,{at ProgramPage})
 
         when:
         interact {
