@@ -320,6 +320,7 @@
             var output = <fc:modelAsJavascript model="${output}"/>;
             var config = <fc:modelAsJavascript model="${metaModel.outputConfig?.find{it.outputName == outputName}}" default="{}"/>;
             config.model = <fc:modelAsJavascript model="${model}"/>;
+            config.namespace = blockId;
             config = _.extend({}, outputModelConfig, config);
 
         var context = {
@@ -329,9 +330,7 @@
             site:activity.site
         };
 
-        var viewModel = ecodata.forms.initialiseOutputViewModel(blockId, config.model.dataModel, output, config, context);
-        // register with the master controller so this model can participate in the save cycle
-        master.register(viewModel, viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
+        master.createAndBindOutput(output, context, config);
 
         </g:if>
     </g:each>

@@ -143,6 +143,11 @@
             var master = null;
             var mapPopupSelector = '#map-modal';
             var features = <fc:modelAsJavascript model="${features}" default="{}"/>
+            var reportMasterOptions = {
+                locked: locked,
+                activityUpdateUrl: fcConfig.activityUpdateUrl,
+                healthCheckUrl: fcConfig.healthCheckUrl
+            };
             if (metaModel.supportsSites) {
                 // Workaround for problems with IE11 and leaflet draw
                 L.Browser.touch = false;
@@ -189,15 +194,9 @@
                     console.log("Unable to initialise map, could be because no map elements are on display: " + e);
                 }
 
-                var master = new ReportMaster(reportId, activity.activityId, reportSite, formFeatures, {
-                    locked: locked,
-                    activityUpdateUrl: fcConfig.activityUpdateUrl
-                });
+                master = new ReportMaster(reportId, activity.activityId, reportSite, formFeatures,  reportMasterOptions);
             } else {
-                master = new ReportMaster(reportId, activity.activityId, undefined, undefined, {
-                    locked: locked,
-                    activityUpdateUrl: fcConfig.activityUpdateUrl
-                });
+                master = new ReportMaster(reportId, activity.activityId, undefined, undefined, reportMasterOptions);
             }
 
             var themes = ${themes};
@@ -242,35 +241,27 @@
             outputModelConfig = _.extend(fcConfig, outputModelConfig);
 
             <g:each in="${metaModel?.outputs}" var="outputName">
-            <g:if test="${outputName != 'Photo Points'}">
-            <g:set var="blockId" value="${fc.toSingleWord([name: outputName])}"/>
-            <g:set var="model" value="${outputModels[outputName]}"/>
-            <g:set var="output" value="${activity.outputs.find {it.name == outputName} ?: [name: outputName]}"/>
 
-            var blockId = "${blockId}";
-            var output = <fc:modelAsJavascript model="${output}"/>;
+                <g:if test="${outputName != 'Photo Points'}">
+                <g:set var="blockId" value="${fc.toSingleWord([name: outputName])}"/>
+                <g:set var="model" value="${outputModels[outputName]}"/>
+                <g:set var="output" value="${activity.outputs.find {it.name == outputName} ?: [name: outputName]}"/>
 
-        var config = <fc:modelAsJavascript model="${metaModel.outputConfig?.find{it.outputName == outputName}}" default="{}"/>;
+                var blockId = "${blockId}";
+                var output = <fc:modelAsJavascript model="${output}"/>;
 
-            if (amplify.store(recoveryDataStorageKey)) {
-                var localSavedActivity = amplify.store(recoveryDataStorageKey);
-                var restored = $.parseJSON(localSavedActivity);
-                restored.activity.outputs.forEach(function (storedOutput) {
-                    if (storedOutput.name === output.name) {
-                        output = storedOutput;
-                    }
-                })
-            }
+                var config = <fc:modelAsJavascript model="${metaModel.outputConfig?.find{it.outputName == outputName}}" default="{}"/>;
 
-            config.model = <fc:modelAsJavascript model="${model}"/>;
-            config.featureCollection = context.featureCollection;
-            config = _.extend({}, outputModelConfig, config);
+                config.recoveryDataStorageKey = recoveryDataStorageKey;
+                config.model = <fc:modelAsJavascript model="${model}"/>;
+                config.featureCollection = context.featureCollection;
+                config.namespace = blockId;
 
-            var outputViewModel = ecodata.forms.initialiseOutputViewModel(blockId, config.model.dataModel, output, config, context);
-            // register with the master controller so this model can participate in the save cycle
-            master.register(outputViewModel, outputViewModel.modelForSaving, outputViewModel.dirtyFlag.isDirty, outputViewModel.dirtyFlag.reset);
+                config = _.extend({}, outputModelConfig, config);
+                master.createAndBindOutput(output, context, config);
 
-            </g:if>
+                </g:if>
+
             </g:each>
 
             if (config.featureCollection) {

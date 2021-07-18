@@ -171,6 +171,63 @@ var Master = function (activityId, config) {
         bootbox.alert(errorText);
     };
 
+    self.findLocallySavedData = function(output, config) {
+        var savedData = amplify.store(config.recoveryDataStorageKey);
+        var savedOutput = null;
+        if (savedData) {
+            savedData = $.parseJSON(savedData);
+
+            var savedOutput;
+            if (savedData.name && savedData.name == output.name) {
+                savedOutput = savedData.data;
+            } else if (savedData.outputs || (savedData.activity && savedData.activity.outputs)) {
+                var savedOutputs = savedData.outputs || savedData.activity.outputs;
+                $.each(savedOutputs, function (i, tmpOutput) {
+                    if (tmpOutput.name === output.name) {
+                        if (tmpOutput.data) {
+                            savedOutput = tmpOutput.data;
+                        }
+                    }
+                });
+            }
+        }
+        return savedOutput;
+    }
+
+    self.createAndBindOutput = function(output, context, options) {
+        var defaults = {
+            constructorFunction: ecodata.forms[options.namespace + 'ViewModel'],
+            dirtyFlag: ko.simpleDirtyFlag,
+            viewRootElementId: 'ko' + options.namespace
+        };
+        var config = _.defaults(options, defaults);
+        var viewModel = new config.constructorFunction(output, config.model.dataModel, context, config);
+
+        viewModel.initialise(output.data).done(function () {
+
+            // Check for locally saved data for this output - this will happen in the event of a session timeout
+            // for example.
+            viewModel.dirtyFlag = config.dirtyFlag(viewModel, false);
+            var savedOutput = self.findLocallySavedData(output, config);
+            if (savedOutput) {
+                viewModel.loadData(savedOutput);
+            }
+
+            ko.applyBindings(viewModel, document.getElementById(config.viewRootElementId));
+
+            // We need to reset the dirty flag after applying bindings as bindings e.g. (expressions) can
+            // trigger model updates.  However we don't want to reset it if saved data was found as we want the
+            // form marked dirty in that case.
+            if (!savedOutput) {
+                viewModel.dirtyFlag.reset();
+            }
+
+            // register with the master controller so this model can participate in the save cycle
+            self.register(viewModel, viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
+
+        });
+    }
+
     function handleSessionTimeout(localStorageFailed) {
 
         if (!localStorageFailed) {
