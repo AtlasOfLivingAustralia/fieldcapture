@@ -189,11 +189,11 @@
         // Admin JS code only exposed to admin users
         $(function () {
             // remember state of admin nav (vertical tabs)
-            $('#adminNav a[data-toggle="tab"]').on('shown', function (e) {
+            $('#adminNav a.nav-link').on('shown.bs.tab', function (e) {
                 var tab = e.currentTarget.hash;
                 amplify.store('project-admin-tab-state', tab);
             });
-            $('#admin-tab').on('shown', function() {
+            $('#admin-tab').on('shown.bs.tab', function() {
                 var storedAdminTab = amplify.store('project-admin-tab-state');
                 // restore state if saved
                 if (storedAdminTab === '') {
