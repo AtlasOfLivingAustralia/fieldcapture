@@ -19,105 +19,115 @@
 
         <g:if test="${user?.isAdmin || user?.isCaseManager}">
             <div data-bind="visible:canModifyProjectStart && isPlanEditable()">
-                <span class="pull-right"><button type="button" class="btn btn-sm btn-warning" data-bind="click:changeProjectDates">Change project dates</button><fc:iconHelp>Use this to adjust the start and end date of your project, if required. The dates for all project activities will be adjusted to reflect the date you select. The administrative reports will also be updated to reflect the start date you select</fc:iconHelp> </span>
+                <div class="pull-right"><button type="button" class="btn btn-sm btn-warning" data-bind="click:changeProjectDates">Change project dates</button><fc:iconHelp>Use this to adjust the start and end date of your project, if required. The dates for all project activities will be adjusted to reflect the date you select. The administrative reports will also be updated to reflect the start date you select</fc:iconHelp> </div>
             </div>
-            <div class="modal hide" id="changeProjectDates">
-                <div class="modal-dialog">
+            <div class="modal" tabindex="-1" role="dialog" id="changeProjectDates">
+                <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4 class="modal-title">Change project dates</h4>
+                            <h4 class="modal-title">Change Project Dates</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"> &times;</button>
                         </div>
-
                         <div class="modal-body">
                             <form id="projectDatesForm">
                                 <p>Changing the project dates will also adjust the dates of all project activities and update any administrative reports currently listed against your project.</p>
-                                <p>New project start date: <fc:datePicker class="input-small" targetField="plannedStartDate.date" name="plannedStartDate" data-validation-engine="validate[funcCall[validateProjectStartDate]]"/></p>
-                                <p>New project end date: &nbsp;<fc:datePicker class="input-small" targetField="plannedEndDate.date" name="plannedEndDate" data-validation-engine="validate[future[plannedStartDate]]"/></p>
-                                <p>Automatically adjust end date to maintain project duration: <input type="checkbox" data-bind="checked:autoUpdateEndDate"></p>
+                                <div class="form-group row">
+                                    <label for="plannedStartDate" class="col-sm-6 col-form-label">New Project Start Date: </label>
+                                    <div class="col-sm-6">
+                                        <div class="input-group">
+                                            <fc:datePicker class="form-control form-control-sm" bs4="true" targetField="plannedStartDate.date" name="plannedStartDate" data-validation-engine="validate[funcCall[validateProjectStartDate]]"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="plannedEndDate" class="col-sm-6 col-form-label">New Project End Date</label>
+                                    <div class="col-sm-6">
+                                        <div class="input-group">
+                                            <fc:datePicker class="form-control form-control-sm" bs4="true" targetField="plannedEndDate.date" name="plannedEndDate" data-validation-engine="validate[future[plannedStartDate]]"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-10">
+                                        <p>Automatically adjust end date to maintain project duration: <input type="checkbox" data-bind="checked:autoUpdateEndDate"></p>
+                                    </div>
+                                </div>
+
                             </form>
+                            <div class="alert row" data-bind="visible:showDurationWarning">
+                                <div class="col-sm-10">
+                                    Warning: Significant changes to the project duration will require grant manager approval.
+                                </div>
+                            </div>
                         </div>
-                        <div class="alert" data-bind="visible:showDurationWarning">
-                            Warning: Significant changes to the project duration will require grant manager approval.
-                        </div>
-                    </div>
-                    <div class="modal-footer control-group">
-                        <div class="controls">
-                            <button type="button" class="btn btn-sm btn-success"
-                                    data-bind="click:saveProjectDates">Save</button>
-                            <button class="btn btn-sm btn-danger" data-bind="click:cancelChangeProjectDates">Cancel</button>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-sm btn-success" data-bind="click:saveProjectDates">Save</button>
+                            <button class="btn btn-sm btn-danger" type="button" data-dismiss="modal">Cancel</button>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="project-report" data-bind="visible:!canModifyProjectStart || !isPlanEditable()">
-                <span class="pull-right">
+                <div class="pull-right">
                     <button class="btn btn-sm btn-info" data-bind="click:configureProjectReport">Project Summary</button><fc:iconHelp>Generate a project summary covering activities from the selected stages. The report will open in a new window.</fc:iconHelp>
-                </span>
+                </div>
             </div>
-            <div class="modal hide" id="projectReportOptions">
-                <div class="modal-dialog">
+            <div class="modal" role="dialog" tabindex="-1" id="projectReportOptions">
+                <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4 class="modal-title">Project Summary Options</h4>
+                            <h4 class="modal-title"> Project Summary Options</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
                         </div>
-
                         <div class="modal-body">
-                            <form class="form-horizontal">
-                                <div class="control-group">
-                                    <label class="control-label" for="fromStage">From: </label>
-                                    <div class="controls">
-                                        <select id="fromStage" data-bind="value:reportFromStage, options:reportableStages"></select>
-                                    </div>
+                            <form>
+                                <div class="form-group row">
+                                    <label for="fromStage" class="col-sm-3 col-form-label">From:</label>
+                                    <select id="fromStage" class="col-sm-2 form-control form-control-sm" data-bind="value:reportFromStage, options:reportableStages"></select>
                                 </div>
-                                <div class="control-group">
-                                    <label class="control-label" for="toStage">To: </label>
-                                    <div class="controls">
-                                        <select id="toStage" data-bind="value:reportToStage, options:reportableToStages"></select>
-                                    </div>
+                                <div class="form-group row">
+                                    <label for="toStage" class="col-form-label col-sm-3">To: </label>
+                                    <select id="toStage" class="form-control form-control-sm col-sm-2" data-bind="value:reportToStage, options:reportableToStages"></select>
+
                                 </div>
-                                <div class="control-group">
-                                    <label class="control-label">Optional content: </label>
-                                    <div class="controls">
+                                <div class="form-group">
+                                    <div class="col-form-label">Optional Content: </div>
+                                    <div class="row">
                                         <!-- ko foreach:projectReportSections -->
-                                            <label class="checkbox"><input type="checkbox" data-bind="checkedValue: $data.value, checked: $parent.reportIncludedSections, disable:$parent.disabledSection($data)">
-                                                <span data-bind="text:$data.text"></span>
-                                                <!-- ko if:$data.help -->
-                                                    <i class="icon-question-sign" data-bind="popover:{content:$data.help, placement:'top'}"></i>
-                                                <!-- /ko -->
-                                            </label>
+                                            <div class="col-sm-8 ml-3">
+                                                <label class="checkbox"><input type="checkbox" data-bind="checkedValue: $data.value, checked: $parent.reportIncludedSections, disable:$parent.disabledSection($data)">
+                                                    <span data-bind="text:$data.text"></span>
+                                                    <!-- ko if:$data.help -->
+                                                    <i class="fa fa-question-circle" data-bind="popover:{content:$data.help, placement:'top'}"></i>
+                                                    <!-- /ko -->
+                                                </label>
+                                            </div>
                                         <!-- /ko -->
                                     </div>
                                 </div>
-                                <div class="control-group">
-                                    <label class="control-label">PDF Orientation: <fc:iconHelp>If your PDF includes activities with wide tables, the Landscape setting may improve the result.  This setting has no effect on the HTML view. </fc:iconHelp></label>
-                                    <div class="controls">
-                                        <select data-bind="value:orientation">
+                                <div class="form-group row">
+                                    <label for="orientation" class="col-sm-4 col-form-label">PDF Orientation: <fc:iconHelp>If your PDF includes activities with wide tables, the Landscape setting may improve the result.  This setting has no effect on the HTML view. </fc:iconHelp></label>
+                                    <div class="col-sm-3">
+                                        <select name="orientation" id="orientation" class="form-control form-control-sm col-sm-3" data-bind="value:orientation">
                                             <option value="portrait">Portrait</option>
                                             <option value="landscape">Landscape</option>
                                         </select>
                                     </div>
+
+
                                 </div>
-
                             </form>
+
                         </div>
-
-                    </div>
-
-                    <div class="modal-footer control-group">
-
-                        <div class="controls">
-
-                            <button type="button" class="btn btn-sm btn-success"
-                                    data-bind="click:generateProjectReportHTML">Generate Report (HTML)</button>
-                            <button type="button" class="btn btn-sm btn-success"
-                                    data-bind="click:generateProjectReportPDF">Generate Report (PDF)</button>
-                            <button class="btn btn-sm btn-danger" data-bind="click:cancelGenerateReport">Cancel</button>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-sm btn-success" data-bind="click:generateProjectReportHTML">Generate Report (HTML)</button>
+                            <button type="button" class="btn btn-sm btn-warning" data-bind="click:generateProjectReportPDF">Generate Report (PDF)</button>
+                            <button class="btn btn-sm btn-danger" data-dismiss="modal" aria-label="Cancel">Cancel</button>
                         </div>
                     </div>
                 </div>
             </div>
-
         </g:if>
 
             <g:render template="/shared/activitiesByStage"/>
@@ -280,22 +290,22 @@
 <g:render template="/shared/declaration"/>
 
 <!-- ko stopBinding: true -->
-<div id="reason-modal" class="modal hide fade">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h3><span data-bind="text:title"></span> reason</h3>
-    </div>
-    <div class="modal-body">
-        %{--<p data-bind="visible:rejectionCategories">--}%
-            %{--Rejection Category:<br/>--}%
-            %{--<select data-bind="options:rejectionCategories, value:rejectionCategory"></select>--}%
-        %{--</p>--}%
-        <p>Please enter a reason.  This reason will be included in the email sent to the project administrator(s).</p>
-        <textarea rows="5" style="width:97%" data-bind="textInput:reason"></textarea>
-    </div>
-    <div class="modal-footer">
-        <button class="btn btn-sm btn-success" data-bind="click:submit, text:buttonText, enable:reason" data-dismiss="modal" aria-hidden="true"></button>
-        <button class="btn btn-sm btn-danger" data-dismiss="modal" aria-hidden="true">Cancel</button>
+<div class="modal" id="reason-modal" role="dialog" tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><span data-bind="text: title"> reason</span></h3>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Please enter a reason.  This reason will be included in the email sent to the project administrator(s).</p>
+                <textarea rows="5" class="form-control form-control-sm" data-bind="textInput:reason"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-success" data-bind="click:submit, text:buttonText, enable:reason" data-dismiss="modal" aria-hidden="true"></button>
+                <button class="btn btn-sm btn-danger" type="button" data-dismiss="modal" aria-hidden="true">Cancel</button>
+            </div>
+        </div>
     </div>
 </div>
 <!-- /ko -->
