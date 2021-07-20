@@ -1,5 +1,5 @@
-//= require datatables/buttons/1.5.1/buttons.bootstrap4.js
-//= require datatables/buttons/1.5.1/datatables.buttons.js
+//= require datatables/buttons/1.5.1/js/buttons.bootstrap4.js
+//= require datatables/buttons/1.5.1/js/datatables.buttons.js
 //= require wms
 //= require mapWithFeatures.js
 //= require forms-knockout-bindings.js
