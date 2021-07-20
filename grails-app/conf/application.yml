@@ -11,10 +11,6 @@ environments:
     development:
       server:
         port: 8087
-        contextPath: '/fieldcapture'
-    test:
-      server:
-        contextPath: '/fieldcapture'
 spring:
   devtools:
     livereload:

@@ -264,7 +264,7 @@ environments {
         grails.serverURL = serverName + "/${appName}"
         layout.skin = "nrm"
         security.cas.appServerName = serverName
-        security.cas.contextPath = "/" + appName
+        security.cas.contextPath =
         ecodata.baseUrl = 'http://devt.ala.org.au:8080/ws/'
         upload.images.url = grails.serverURL+'/image/'
         emailFilter = /[A-Z0-9._%-]+@csiro\.au|chris\.godwin\.ala@gmail.com/
@@ -276,7 +276,7 @@ environments {
         server.port = "8087"
         grails.host = "http://devt.ala.org.au"
         serverName = "${grails.host}:${server.port}"
-        grails.serverURL = serverName + "/${appName}"
+        grails.serverURL = serverName
         layout.skin = "nrm"
         app.default.hub='merit'
         runWithNoExternalConfig = true
