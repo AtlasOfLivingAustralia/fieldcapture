@@ -216,14 +216,14 @@ assets {
 }
 
 bootJar {
-    enabled = false
+    enabled = true
+    classifier = 'exec'
+    launchScript()
 }
 
 
 bootWar {
-    enabled = true
-    classifier = 'exec'
-    launchScript()
+    enabled = false
 }
 
 if (inplace) {
