@@ -20,17 +20,22 @@
 <body>
 <div class="${containerType} validationEngineContainer" id="validation-container">
     <div id="koActivityMainBlock">
-        <ul class="breadcrumb">
-            <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
-            <g:if test="${project}">
-                <li><a data-bind="click:goToProject" class="clickable">Project</a> <span class="divider">/</span></li>
-            </g:if>
-            <g:if test="${site}">
-                <li><a data-bind="click:goToSite" class="clickable">Site</a> <span class="divider">/</span></li>
-            </g:if>
-            <li class="active">Create new activity</li>
-        </ul>
-        <g:render template="createOrEditActivity"/>
+        <section aria-labelledby="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><g:link controller="home">Home</g:link></li>
+                <g:if test="${project}">
+                    <li class="breadcrumb-item"><g:link controller="project" action="index" id="${project.projectId}">Project</g:link> </li>
+                </g:if>
+                <g:if test="${site}">
+                    <li class="breadcrumb-item"><a data-bind="click:goToSite" class="clickable">Site</a></li>
+                </g:if>
+                <li class="breadcrumb-item active">Create New Activity</li>
+            </ol>
+        </section>
+        <div class="createOrEditActivity">
+            <g:render template="createOrEditActivity"/>
+        </div>
+
     </div>
 </div>
 <asset:javascript src="common-bs4.js"/>

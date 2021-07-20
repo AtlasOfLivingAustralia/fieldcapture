@@ -3,7 +3,7 @@
 <i class="icon-lock" data-bind="visible:planStatus()==='submitted'"
    title="Plan cannot be modified once it has been submitted for approval"></i>
 <g:if test="${user?.isEditor}">
-    <button type="button" class="btn btn-link btn-info" data-bind="visible:isPlanEditable,click:newActivity" style="vertical-align: baseline"><i class="fa fa-plus"></i> Add new activity</button>
+    <button type="button" class="btn btn-sm btn-link btn-info" data-bind="visible:isPlanEditable,click:newActivity" style="vertical-align: baseline"><i class="fa fa-plus"></i> Add new activity</button>
     <g:if test="${grailsApplication.config.getProperty('simulateCaseManager')}">
         <span class="pull-right">
             <label class="checkbox inline" style="font-size:0.8em;">

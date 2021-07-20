@@ -30,14 +30,15 @@
 <div class="${containerType} validationEngineContainer" id="validation-container">
     <div id="koActivityMainBlock">
         <g:if test="${!printView}">
-            <ul class="breadcrumb">
-                <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
-                <li><a data-bind="click:goToProject" class="clickable">Project</a> <span class="divider">/</span></li>
-                <li class="active">
-                    <span data-bind="text:type"></span>
-                    <span data-bind="text:startDate.formattedDate"></span><span data-bind="visible:endDate">/</span><span data-bind="text:endDate.formattedDate"></span>
-                </li>
-            </ul>
+            <section aria-labelledby="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><g:link controller="home">Home</g:link></li>
+                    <li class="breadcrumb-item"><g:link controller="project" action="index" id="${project.projectId}">Project</g:link></li>
+                    <li class="breadcrumb-item"><span data-bind="text:type"></span></li>
+                    <li class="breadcrumb-item active" data-bind="visible:startDate"><span data-bind="text:startDate.formattedDate"></span></li>
+                    <li class="breadcrumb-item active" data-bind="visible:endDate"><span data-bind="text:endDate.formattedDate"></span></li>
+                </ol>
+            </section>
         </g:if>
 
         <g:render template="createOrEditActivity"/>
