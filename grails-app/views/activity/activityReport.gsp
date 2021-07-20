@@ -99,7 +99,7 @@
 
     $(function () {
         var returnTo = "${returnTo}";
-        var activity = JSON.parse('${(activity as JSON).toString().encodeAsJavaScript()}');
+        var activity = <fc:modelAsJavascript model="${activity}" default="{}"/>
         var reportSite;
         var recoveryDataStorageKey = "activity-${activity.activityId}";
 
