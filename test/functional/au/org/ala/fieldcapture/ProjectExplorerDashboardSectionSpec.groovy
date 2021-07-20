@@ -2,6 +2,7 @@ package au.org.ala.fieldcapture
 
 import pages.AdminTools
 import pages.ProjectExplorer
+import pages.ProjectIndex
 
 class ProjectExplorerDashboardSectionSpec extends StubbedCasSpec {
 
@@ -61,6 +62,29 @@ class ProjectExplorerDashboardSectionSpec extends StubbedCasSpec {
 
         and:
         waitFor {dashboardContentList.size() == 3}
+    }
+
+    def "Reef 2050 Final Plan Action Report for July 2020 to June 2021 "() {
+        setup:
+        login([userId: '2', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ALA_ADMIN'], browser)
+        when:
+        to ProjectExplorer
+
+        then:
+        at ProjectExplorer
+
+        and:
+        dashboardToggle.click()
+        waitFor {reportView.displayed}
+        waitFor (5){dashboardContent.displayed}
+
+        then:
+        waitFor 20, { dashboardType.displayed }
+        dashboardType.value("reef2050PlanActionSelection").click()
+
+        and:
+        waitFor 20, { reefReportContent.displayed }
+        reefReportContent.text() == "This is a dummy text"
     }
 
 }

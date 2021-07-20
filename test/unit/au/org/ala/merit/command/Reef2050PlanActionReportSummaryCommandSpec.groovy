@@ -50,6 +50,20 @@ class Reef2050PlanActionReportSummaryCommandSpec extends Specification {
         reports.size() == 5
     }
 
+    def "The project Start Date and End Date of final Report"() {
+
+        when:
+        List reports = command.reportSummary()
+
+        then:
+        1 * activityService.search( [type    : Reef2050PlanActionReportConfig.REEF_2050_PLAN_ACTION_REPORTING_2018_ACTIVITY_TYPE,
+                                     progress: ActivityService.PROGRESS_FINISHED, publicationStatus: ReportService.REPORT_APPROVED]) >> [reports:[]]
+
+        and:
+        reports[0].periodStart == "2020-06-30T14:00:00Z"
+        reports[0].periodEnd == "2021-06-30T14:00:00Z"
+        reports[0].type == "final_Report"
+    }
 
 
 }

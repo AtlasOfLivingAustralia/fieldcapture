@@ -3,6 +3,7 @@ package au.org.ala.merit.command
 import au.org.ala.merit.ActivityService
 import au.org.ala.merit.ProjectService
 import au.org.ala.merit.ReportService
+import au.org.ala.merit.SettingPageType
 import au.org.ala.merit.SettingService
 import au.org.ala.merit.UserService
 import grails.converters.JSON
@@ -65,6 +66,34 @@ class Reef2050PlanActionReportCommandSpec extends Specification {
 
         println command.errors
         command.validate() == true
+
+    }
+
+    def "The command needs a periodStart and periodEnd and type to be valid"() {
+        expect:
+        !createCommand().validate()
+
+        when:
+
+        command = createCommand([periodStart: "2020-06-30T14:00:00Z", periodEnd: "2021-06-30T14:00:00Z"])
+
+        then:
+        !command.validate()
+
+        when:
+        command = createCommand(type:Reef2050PlanActionReportCommand.REEF_2050_PLAN_FINAL_ACTION_REPORT)
+
+        then:
+        !command.validate()
+
+
+        when:
+        command = createCommand([periodStart: "2020-06-30T14:00:00Z", periodEnd: "2021-06-30T14:00:00Z", type:Reef2050PlanActionReportCommand.REEF_2050_PLAN_FINAL_ACTION_REPORT])
+        command.validate()
+        then:
+
+        println command.errors
+        command.validate()
 
     }
 

@@ -31,6 +31,8 @@ class ProjectExplorer extends Page {
         dashboardContent (required: false) {$("div#dashboard-content")}
         dashboardContentList (required: false) {$(".dashboard-activities")}
         reportView (required: false) {$("#reportView")}
+        dashboardType (required: false) { $("#dashboardType") }
+        reefReportContent (required: false) { $("#reportContents") }
     }
 
     /** When we reindex the index is destroyed and project explorer shows an error message about no data */

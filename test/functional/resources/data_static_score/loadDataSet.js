@@ -688,6 +688,10 @@ db.setting.insert({"key":"meritservices.config", "value":JSON.stringify(projectD
 db.setting.update({key:"meritstatistics.config"},{$set:{version:NumberInt(3)}});
 db.setting.update({key:"meritservices.config"},{$set:{version:NumberInt(0)}});
 
+var reef2050FinalReportValue = "This is a dummy text";
+db.setting.insert({key: "meritfielddata.reef2050Final.report", "value": reef2050FinalReportValue, "version": NumberInt(0)});
+
+
 db.document.insert({externalUrl:'https://ala.org.au/1', name:'Link 1', role:'helpResource', documentId:'1'});
 db.document.insert({externalUrl:'https://ala.org.au/2', name:'Link 2', role:'helpResource', documentId:'2'});
 db.document.insert({externalUrl:'https://ala.org.au/3', name:'Link 3', role:'helpResource', documentId:'3'});
