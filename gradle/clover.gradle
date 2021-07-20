@@ -14,7 +14,6 @@ dependencies {
 }
 
 clover {
-    licenseLocation = File.createTempFile('clover', '.license').absolutePath
 
     excludes = ['**/Application.groovy',
                 '**/BootStrap.groovy',
@@ -36,15 +35,16 @@ clover {
         // used to add debug information for Spring applications
         debug = true
         additionalArgs = '-parameters'
-        additionalGroovycOpts = [configscript: project.file('cloverGroovyConfig.groovy').absolutePath]
+        //additionalGroovycOpts = [configscript: project.file('cloverGroovyConfig.groovy').absolutePath]
     }
 
 
     testIncludes = ['**/*Spec.groovy']
+    includeTasks = ['test'] // We are only running unit tests with coverage
     report {
         html = true
         xml = true
     }
 
-    targetPercentage = '39%'
+    targetPercentage = '32.5%' // This is unit test coverage
 }

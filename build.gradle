@@ -194,7 +194,7 @@ bootRun {
 
 tasks.withType(GroovyCompile) {
     configure(groovyOptions) {
-        forkOptions.jvmArgs = ['-Xmx1024m']
+        forkOptions.jvmArgs = ['-Xmx2048m']
     }
 }
 
@@ -247,6 +247,10 @@ task _Events {
         println "${project.projectDir}/scripts/Events.groovy"
         new GroovyScriptEngine(["${project.projectDir}"] as String[]).run("scripts/Events.groovy", new Binding(['projectDir': project.projectDir]))
     }
+}
+
+integrationTest {
+    systemProperties System.properties
 }
 
 assetCompile.dependsOn(_Events)
