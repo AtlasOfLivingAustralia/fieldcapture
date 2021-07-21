@@ -15,7 +15,6 @@
 //= require sites.js
 //= require activity.js
 //= require projectActivityPlan.js
-//= require projectActivity.js
 //= require projectService
 //= require_self
 

@@ -6,7 +6,6 @@
 //= require sites.js
 //= require activity.js
 //= require projectActivityPlan.js
-//= require projectActivity.js
 //= require enterActivityData.js
 //= require keydragzoom/keydragzoom.js
 //= require forms.js

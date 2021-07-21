@@ -54,7 +54,6 @@
     <g:render template="projectFinder"/>
 </div>
 
-%{--<asset:javascript src="common.js"/>--}%
 <asset:javascript src="common-bs4.js"/>
 <asset:javascript src="projectExplorer.js"/>
 
