@@ -62,8 +62,8 @@ cache:
     - $HOME/.gradle/wrapper/
 
 script:
-  - node_modules/karma/bin/karma start karma.conf.js --single-run --browsers ChromeHeadless
   - ./gradlew -PenableClover=true cloverGenerateReport
+  - node_modules/karma/bin/karma start karma.conf.js --single-run --browsers ChromeHeadless
 
 after_success:
   - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && ./gradlew clean && travis_retry ./gradlew publish'
