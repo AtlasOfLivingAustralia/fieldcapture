@@ -23,9 +23,9 @@ describe("Facet filter component unit tests", function () {
         vm = {
             facetsList : ["status", "organisationFacet"],
             results: {"facets":{"status":{"terms":[{"term":"Completed","count":2}]},"organisationFacet":{"terms":[{"term":"Rangelands","count":2},{"term":"Rangelands NRM Co-ordinating Group (Inc.) ","count":2}]}}},
-            fqLink: "/fieldcapture/home/projectExplorer?fq=ibraFacet%3AAvon+Wheatbelt",
+            fqLink: "/home/projectExplorer?fq=ibraFacet%3AAvon+Wheatbelt",
             baseUrl: "?fq=ibraFacet%3AAvon+Wheatbelt",
-            projectExplorerUrl: "/fieldcapture/home/projectExplorer",
+            projectExplorerUrl: "/home/projectExplorer",
             max: 1
         };
 
@@ -41,7 +41,7 @@ describe("Facet filter component unit tests", function () {
     it("should map data correctly to component view model", function() {
         facetFilterVM = ko.dataFor($(mockElement).find('facet-filter div')[0]);
         expect(facetFilterVM.getFQForTerm('organisationFacet', 'Rangelands NRM Co-ordinating Group (Inc.) ')).toEqual("fq=organisationFacet:Rangelands%20NRM%20Co-ordinating%20Group%20(Inc.)%20");
-        expect(facetFilterVM.generateFQLink('organisationFacet', 'Rangelands NRM Co-ordinating Group (Inc.) ')).toEqual("/fieldcapture/home/projectExplorer?fq=ibraFacet%3AAvon+Wheatbelt&fq=organisationFacet:Rangelands%20NRM%20Co-ordinating%20Group%20(Inc.)%20");
+        expect(facetFilterVM.generateFQLink('organisationFacet', 'Rangelands NRM Co-ordinating Group (Inc.) ')).toEqual("/home/projectExplorer?fq=ibraFacet%3AAvon+Wheatbelt&fq=organisationFacet:Rangelands%20NRM%20Co-ordinating%20Group%20(Inc.)%20");
         expect(facetFilterVM.getFacetTermsLength('organisationFacet')).toEqual(2);
         expect(facetFilterVM.getSelectedTerms().length).toEqual(0);
         facetFilterVM.getFacetTerms('organisationFacet')[0].selected(1);

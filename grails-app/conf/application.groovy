@@ -1,3 +1,4 @@
+import com.icegreen.greenmail.util.ServerSetupTest
 import grails.util.Environment
 
 /******************************************************************************\
@@ -261,7 +262,7 @@ environments {
         server.port = 8087
         grails.host = "http://devt.ala.org.au"
         serverName = "${grails.host}:${server.port}"
-        grails.serverURL = serverName + "/${appName}"
+        grails.serverURL = serverName
         layout.skin = "nrm"
         security.cas.appServerName = serverName
         security.cas.contextPath =
@@ -283,8 +284,8 @@ environments {
         wiremock.port = 8018
         def casBaseUrl = "http://devt.ala.org.au:${wiremock.port}"
 
-        security.cas.appServerName="${serverName}"
-        security.cas.contextPath="/${appName}"
+        security.cas.appServerName=serverName
+        security.cas.contextPath=
         security.cas.casServerName="${casBaseUrl}"
         security.cas.casServerUrlPrefix="${casBaseUrl}/cas"
         security.cas.loginUrl="${security.cas.casServerUrlPrefix}/login"
@@ -310,7 +311,7 @@ environments {
             }
         }
         reports.filterableActivityTypes = ['RLP Output Report', 'Wildlife Recovery Progress Report - WRR', 'Progress Report']
-        grails.mail.port = com.icegreen.greenmail.util.ServerSetupTest.SMTP.port
+        grails.mail.port = ServerSetupTest.SMTP.port
     }
     production {
         grails.logging.jul.usebridge = false
