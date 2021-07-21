@@ -3,7 +3,7 @@
 <html>
     <head>
         <meta name="layout" content="adminLayout"/>
-        <title>Users | Admin | Data capture | Atlas of Living Australia</title>
+        <title>Users | Admin | MERIT</title>
         <asset:stylesheet src="base-bs4.css"/>
     </head>
 
