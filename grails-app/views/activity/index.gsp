@@ -41,15 +41,16 @@
 <body>
 <div class="${containerType} validationEngineContainer" id="validation-container">
     <g:if test="${activity.lock}">
-        <div class="alert alert-error report-locked">
-            This form has been locked for editing by <fc:userDisplayName userId="${activity.lock.userId}" defaultValue="an unknown user"/> since ${au.org.ala.merit.DateUtils.displayFormatWithTime(activity.lock.dateCreated)}
-            <p>
-                To edit anyway, click the button below.  Note that if the user is currently making edits, those edits will be lost.
-            </p>
-            <p>
-                <a class="btn" href="${createLink(controller:'activity', action:'overrideLockAndEdit', id:activity.activityId)}">Edit Anyway</a>
-            </p>
+        <div class="row mb-2">
+            <div class="col-sm-12 pl-3 pr-3">
+                <div class="alert alert-danger report-locked">
+                    <div class="text-dark">This form has been locked for editing by <fc:userDisplayName userId="${activity.lock.userId}" defaultValue="an unknown user"/> since ${au.org.ala.merit.DateUtils.displayFormatWithTime(activity.lock.dateCreated)}</div>
+                    <div class="text-dark">To edit anyway, click the button below.  Note that if the user is currently making edits, those edits will be lost.</div>
+                    <a href="${createLink(controller:'activity', action:'overrideLockAndEdit', id:activity.activityId)}"><button type="button" class="btn btn-sm btn-danger"><i class="fa fa-edit"></i> Edit Anyway</button></a>
+                </div>
+            </div>
         </div>
+
     </g:if>
     <div id="koActivityMainBlock">
         <g:if test="${!printView}">
