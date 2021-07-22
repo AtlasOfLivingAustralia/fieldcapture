@@ -90,16 +90,8 @@ class Reef2050PlanActionReportCommand extends Reef2050PlanActionReportConfig {
     Map originalReportModel() {
         List activities = findActivities()
         List actions = produceActionList(activities)
-
         DateTime periodEndDate = DateUtils.parse(periodEnd).withZone(DateTimeZone.default)
-
-        DateTime periodStartDate
-        if (type == REEF_2050_PLAN_FINAL_ACTION_REPORT){
-            periodStartDate = DateUtils.parse(periodStart).withZone(DateTimeZone.default)
-        }else {
-            periodStartDate = DateUtils.parse(periodStart()).withZone(DateTimeZone.default)
-        }
-
+        DateTime periodStartDate = DateUtils.parse(periodStart()).withZone(DateTimeZone.default)
         String tableClass = type == REEF_2050_PLAN_ACTION_REPORTING_2018_ACTIVITY_TYPE ? 'action-table-2018' : 'action-table'
         Map model =  [endDate:periodEndDate.minusHours(15).toDate(), startDate:periodStartDate.toDate(), actions: actions, type:type, tableClass:tableClass]
         model.putAll(actionStatusBreakdownByStatusAndTheme())

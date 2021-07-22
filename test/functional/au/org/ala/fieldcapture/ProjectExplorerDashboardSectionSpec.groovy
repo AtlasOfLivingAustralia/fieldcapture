@@ -71,18 +71,13 @@ class ProjectExplorerDashboardSectionSpec extends StubbedCasSpec {
         to ProjectExplorer
 
         then:
-        at ProjectExplorer
-
-        and:
         dashboardToggle.click()
         waitFor {reportView.displayed}
         waitFor (5){dashboardContent.displayed}
-
-        then:
         waitFor 20, { dashboardType.displayed }
-        dashboardType.value("reef2050PlanActionSelection").click()
 
         and:
+        dashboardType.value("reef2050PlanActionSelection").click()
         waitFor 20, { reefReportContent.displayed }
         reefReportContent.text() == "This is a dummy text"
     }

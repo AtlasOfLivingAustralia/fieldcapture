@@ -43,21 +43,17 @@ class Reef2050PlanActionReportConfig {
         if (!periodEnd) {
             return null
         }
-        DateTime labelPeriodStart
-        DateTime labelPeriodEnd = DateUtils.parse(periodEnd).withZone(DateTimeZone.default)
-        if (!periodStart){
+
+
         // To produce the labels we have to work with our local time zone because MERIT stores things as
         // UTC end dates will typically be yyyy-12-31T13:00:00Z / yyyy-06-30T14:00:00Z.  If we subtract 6 months
         // from June 30 we get December 30 for the start period, when we want January 1.  Converting to australian
         // timezones puts these dates to the 1st of each month which makes subtracting 6 months more predictable.
 
-            labelPeriodStart = labelPeriodEnd.minus(REPORTING_PERIOD)
-            labelPeriodStart = labelPeriodStart.plusHours(11)
-            return LABEL_FORMATTER.print(labelPeriodStart.plusHours(11)) + " - " + LABEL_FORMATTER.print(labelPeriodEnd.minusHours(11))
-        } else {
-            labelPeriodStart = DateUtils.parse(periodStart).withZone(DateTimeZone.default)
-            return LABEL_FORMATTER.print(labelPeriodStart.plusHours(11)) + " - " + LABEL_FORMATTER.print(labelPeriodEnd.minusHours(11))
-        }
+        DateTime labelPeriodStart = DateUtils.parse(periodStart()).withZone(DateTimeZone.default)
+        DateTime labelPeriodEnd = DateUtils.parse(periodEnd).withZone(DateTimeZone.default)
+        return LABEL_FORMATTER.print(labelPeriodStart.plusHours(11)) + " - " + LABEL_FORMATTER.print(labelPeriodEnd.minusHours(11))
+
     }
 
     String settingsPageKey() {
@@ -72,7 +68,12 @@ class Reef2050PlanActionReportConfig {
 
     String periodStart() {
         DateTime periodEndDate = DateUtils.parse(periodEnd).withZone(DateTimeZone.default)
-        DateTime startDate = DateUtils.alignToPeriod(periodEndDate.minus(REPORTING_PERIOD), REPORTING_PERIOD)
+        DateTime startDate
+        if (!periodStart) {
+            startDate = DateUtils.alignToPeriod(periodEndDate.minus(REPORTING_PERIOD), REPORTING_PERIOD)
+        }else {
+            startDate = DateUtils.parse(periodStart).withZone(DateTimeZone.default)
+        }
         DateUtils.format(startDate.withZone(DateTimeZone.UTC))
     }
 
