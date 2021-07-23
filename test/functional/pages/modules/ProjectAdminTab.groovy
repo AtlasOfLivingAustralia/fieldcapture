@@ -43,4 +43,10 @@ class ProjectAdminTab extends Module {
         waitFor { risksAndThreats.displayed }
         return risksAndThreats
     }
+
+    def openProjectSettings() {
+        projectSettingsTab.click()
+        waitFor { projectSettings.displayed }
+        return projectSettings
+    }
 }
