@@ -947,30 +947,48 @@
                     "organisationWorkforceType": "TOTAL FTE Australian-based-workforce within the Service Provider's organisation engaged in delivering the Services"
                   }
                 ]
+              }
+
+            },
+            "mapping": [
+              {
+                "source-path": "subcontractedWorkForceByFinancialYear",
+                "target": "subcontractedWorkForceByFinancialYear",
+                "mapping": [
+                  {
+                    "source-path": "contractWorkforceType",
+                    "target": "contractWorkforceType"
+                  }
+                ]
               },
-              "mapping": [
-                {
-                  "source-path": "subcontractedWorkForceByFinancialYear",
-                  "target": "subcontractedWorkForceByFinancialYear",
-                  "mapping": [
-                    {
-                      "source-path": "contractWorkforceType",
-                      "target": "contractWorkforceType"
-                    }
-                  ]
-                },
-                {
-                  "source-path": "organisationWorkForceByFinancialYear",
-                  "target": "organisationWorkForceByFinancialYear",
-                  "mapping": [
-                    {
-                      "source-path": "organisationWorkforceType",
-                      "target": "organisationWorkforceType"
-                    }
-                  ]
-                }
-              ]
+              {
+                "source-path": "organisationWorkForceByFinancialYear",
+                "target": "organisationWorkForceByFinancialYear",
+                "mapping": [
+                  {
+                    "source-path": "organisationWorkforceType",
+                    "target": "organisationWorkforceType"
+                  }
+                ]
+              }
+            ],
+            "merge": {
+              "subcontractedWorkForceByFinancialYear": {
+                "keys": [
+                  "contractWorkforceType"
+                ],
+                "addUnmatchedNewRows": true,
+                "deleteUnmatchedExistingRows": true
+              },
+              "organisationWorkForceByFinancialYear": {
+                "keys": [
+                  "organisationWorkforceType"
+                ],
+                "addUnmatchedNewRows": true,
+                "deleteUnmatchedExistingRows": true
+              }
             }
+
           }
         ]
       },
