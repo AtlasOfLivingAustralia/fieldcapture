@@ -276,7 +276,6 @@ class ProjectService  {
 
     def update(String id, Map projectDetails) {
         TimeZone.setDefault(TimeZone.getTimeZone('UTC'))
-        projectDetails?.custom?.details?.lastUpdated = new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'")
 
         def resp = [:]
 
@@ -310,7 +309,20 @@ class ProjectService  {
                     }
                 }
             }
+
+            // The update algorithm only merges updates at the project base level, so we need to manually merge
+            // the "custom" Map which can contain properties "details" (the MERI plan) and "dataSets" (data set summaries)
+            // The longer term solution for this is to model Projects explicitly/correctly in ecodata
+            if (projectDetails.custom) {
+                projectDetails.custom.details?.lastUpdated = DateUtils.format(new Date())
+
+                Map custom = currentProject.custom ?: [:]
+                custom.putAll(projectDetails.custom)
+
+                projectDetails.custom = custom
+            }
         }
+
         if (projectDetails) {
             resp = updateUnchecked(id, projectDetails)
         }
@@ -1891,7 +1903,7 @@ class ProjectService  {
             project.custom.dataSets[i] = dataSet
         }
 
-        update(projectId, [custom: project.custom])
+        updateUnchecked(projectId, [custom: project.custom])
     }
 
     Map deleteDataSet(String projectId, String dataSetId) {
@@ -1903,6 +1915,6 @@ class ProjectService  {
         if (!found)  {
             throw new IllegalArgumentException("Data set "+dataSetId+" does not exist")
         }
-        update(projectId, [custom: project.custom])
+        updateUnchecked(projectId, [custom: project.custom])
     }
 }
