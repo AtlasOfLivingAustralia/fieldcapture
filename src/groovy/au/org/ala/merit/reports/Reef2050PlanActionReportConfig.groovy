@@ -67,11 +67,11 @@ class Reef2050PlanActionReportConfig {
     }
 
     String periodStart() {
-        DateTime periodEndDate = DateUtils.parse(periodEnd).withZone(DateTimeZone.default)
         DateTime startDate
         if (!periodStart) {
+            DateTime periodEndDate = DateUtils.parse(periodEnd).withZone(DateTimeZone.default)
             startDate = DateUtils.alignToPeriod(periodEndDate.minus(REPORTING_PERIOD), REPORTING_PERIOD)
-        }else {
+        } else {
             startDate = DateUtils.parse(periodStart).withZone(DateTimeZone.default)
         }
         DateUtils.format(startDate.withZone(DateTimeZone.UTC))

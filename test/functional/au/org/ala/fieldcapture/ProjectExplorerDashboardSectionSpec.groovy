@@ -2,7 +2,6 @@ package au.org.ala.fieldcapture
 
 import pages.AdminTools
 import pages.ProjectExplorer
-import pages.ProjectIndex
 
 class ProjectExplorerDashboardSectionSpec extends StubbedCasSpec {
 
@@ -70,16 +69,20 @@ class ProjectExplorerDashboardSectionSpec extends StubbedCasSpec {
         when:
         to ProjectExplorer
 
-        then:
+        and:
         dashboardToggle.click()
-        waitFor {reportView.displayed}
-        waitFor (5){dashboardContent.displayed}
-        waitFor 20, { dashboardType.displayed }
+
+        then:
+        waitFor { viewReef2050PlanReport.displayed }
+        waitFor { viewReef2050PlanReport.dashboardType.displayed }
+
+        when:
+        viewReef2050PlanReport.dashboardType.value("reef2050PlanActionSelection").click()
+
+        then:
+        waitFor 10, { viewReef2050PlanReport.reefReportContent.displayed }
 
         and:
-        dashboardType.value("reef2050PlanActionSelection").click()
-        waitFor 20, { reefReportContent.displayed }
-        reefReportContent.text() == "This is a dummy text"
+        viewReef2050PlanReport.reefReportContent.text() == "This is a dummy text"
     }
-
 }
