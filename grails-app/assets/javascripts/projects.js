@@ -987,7 +987,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
                 ],
                 "order":[4, "desc"],
                 "language": {
-                    "search":'<div class="input-group-prepend"><span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>_INPUT_</div>',
+                    "search":'<div class="input-group"><span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>_INPUT_</div>',
                     "searchPlaceholder":"Search sites..."
 
                 },

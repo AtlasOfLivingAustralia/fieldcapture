@@ -141,8 +141,8 @@
     </g:else>
 </div>
 
-<div class="modal hide" id="uploadProgress">
-    <div class="modal-dialog">
+<div class="modal" id="uploadProgress" role="dialog" tabindex="-1">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-title"><strong>Uploading sites...</strong></div>
@@ -158,13 +158,13 @@
                     </ul>
                 </div>
                 <div data-bind="text:progressText"></div>
-                <div class="progress progress-popup">
-                    <div class="bar" data-bind="style:{width:progress}"></div>
+                <div class="progress">
+                    <div class="progress-bar bg-success" data-bind="style:{width:progress}"></div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-warning" data-bind="click:cancelUpload, visible:!finished()">Cancel</button>
-                <button class="btn btn-sm btn-info" data-bind="visible:finished, click:finish">OK</button>
+                <button class="btn btn-sm btn-warning" type="button" data-bind="click:cancelUpload, visible:!finished()">Cancel</button>
+                <button class="btn btn-sm btn-info" type="button" data-bind="visible:finished, click:finish">OK</button>
             </div>
         </div>
     </div>

@@ -118,3 +118,11 @@
     border-bottom: 1px solid grey;
     padding: 10px;
 }
+
+select.customType {
+    min-width: 76px !important;
+}
+
+div#sites-table_length select {
+    min-width: 76px !important;
+}
