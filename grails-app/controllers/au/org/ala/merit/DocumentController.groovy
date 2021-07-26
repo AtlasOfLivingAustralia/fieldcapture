@@ -11,7 +11,7 @@ import static org.apache.http.HttpStatus.SC_OK;
 
 class DocumentController {
 
-    static allowedMethods = [bulkUpdate: 'POST', documentUpdate: 'POST', deleteDocument: 'POST', downloadProjectDataFile: 'GET']
+    static allowedMethods = [bulkUpdate: 'POST', documentUpdate: 'POST', deleteDocument: 'POST']
 
     def documentService, webService, userService
     GrailsApplication grailsApplication
@@ -95,16 +95,5 @@ class DocumentController {
     def deleteDocument(String id) {
         def responseCode = documentService.delete(id)
         render status: responseCode
-    }
-
-    @PreAuthorise(accessLevel = "siteReadOnly")
-    def downloadProjectDataFile() {
-        if (!params.id) {
-            response.setStatus(400)
-            render "A download ID is required"
-        } else {
-            String fileExtension = params.fileExtension ?: 'xlsx'
-            webService.proxyGetRequest(response, "${grailsApplication.config.getProperty('ecodata.baseUrl')}search/downloadProjectDataFile/${params.id}?fileExtension=${fileExtension}", true, true)
-        }
     }
 }

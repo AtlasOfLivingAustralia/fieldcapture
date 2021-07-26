@@ -34,10 +34,7 @@ class SearchController {
 
     @PreAuthorise(accessLevel = 'siteReadOnly', redirectController ='home', redirectAction = 'index')
     def downloadAllData() {
-        params.put("downloadUrl", g.createLink(controller:'document', action:'downloadProjectDataFile', absolute: true)+'/')
-        params.put("systemEmail", grailsApplication.config.getProperty('fieldcapture.system.email.address'))
-        params.put("senderEmail", grailsApplication.config.getProperty('fieldcapture.system.email.address'))
-
+        params.putAll(downloadParams())
         def response = searchService.downloadAllData(params)
 
         render response as JSON
@@ -53,9 +50,7 @@ class SearchController {
         facets.addAll(params.getList("fq"))
         facets << "className:au.org.ala.ecodata.Organisation"
         params.put("fq", facets)
-        params.put("downloadUrl", g.createLink(controller:'document', action:'downloadProjectDataFile', absolute: true)+'/')
-        params.put("systemEmail", grailsApplication.config.getProperty('fieldcapture.system.email.address'))
-        params.put("senderEmail", grailsApplication.config.getProperty('fieldcapture.system.email.address'))
+        params.putAll(downloadParams())
         searchService.addDefaultFacetQuery(params)
         def url = grailsApplication.config.getProperty('ecodata.baseUrl') + path +  commonService.buildUrlParamsFromMap(params)
         def response = webService.doPostWithParams(url, [:]) // POST because the URL can get long.
@@ -66,11 +61,8 @@ class SearchController {
     @PreAuthorise(accessLevel = 'siteAdmin', redirectController ='home', redirectAction = 'index')
     def downloadUserData() {
 
-        def path = "search/downloadUserList"
-
-        params.put("downloadUrl", g.createLink(controller:'document', action:'downloadProjectDataFile', absolute: true)+'/')
-        params.put("systemEmail", grailsApplication.config.getProperty('fieldcapture.system.email.address'))
-        params.put("senderEmail", grailsApplication.config.getProperty('fieldcapture.system.email.address'))
+        String path = "search/downloadUserList"
+        params.putAll(downloadParams())
         searchService.addDefaultFacetQuery(params)
         def url = grailsApplication.config.getProperty('ecodata.baseUrl') + path +  commonService.buildUrlParamsFromMap(params)
         def response = webService.doPostWithParams(url, [:]) // POST because the URL can get long.
@@ -86,14 +78,21 @@ class SearchController {
 
     @PreAuthorise(accessLevel = 'siteAdmin', redirectController ='home', redirectAction = 'index')
     def downloadShapefile() {
-        params.put("downloadUrl", g.createLink(controller:'document', action:'downloadProjectDataFile', absolute: true)+'/')
-        params.put("systemEmail", grailsApplication.config.getProperty('fieldcapture.system.email.address'))
-        params.put("senderEmail", grailsApplication.config.getProperty('fieldcapture.system.email.address'))
-
+        params.putAll(downloadParams())
         def resp = searchService.downloadShapefile(params, response)
         if (resp.status != 200) {
             render view:'/error', model:[error:resp.error]
         }
+        resp
+    }
+
+    private Map downloadParams() {
+        String systemEmailAddress = grailsApplication.config.getProperty('fieldcapture.system.email.address')
+        [
+            downloadUrl: g.createLink(controller:'download', absolute: true)+'/',
+            systemEmail: systemEmailAddress,
+            senderEmail: systemEmailAddress
+        ]
     }
 
     Map findPotentialHomePageImages() {
