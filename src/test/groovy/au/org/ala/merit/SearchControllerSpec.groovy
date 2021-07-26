@@ -36,10 +36,11 @@ class SearchControllerSpec extends Specification implements ControllerUnitTest<S
         controller.downloadShapefile()
 
         then:
-        1 * searchService.downloadShapefile(params, response) >> [status:HttpStatus.SC_OK]
+        1 * searchService.downloadShapefile(params) >> true
 
         and:
         response.status == HttpStatus.SC_OK
+        response.json.status == HttpStatus.SC_OK
 
         and:
         params.downloadUrl.endsWith('download/')

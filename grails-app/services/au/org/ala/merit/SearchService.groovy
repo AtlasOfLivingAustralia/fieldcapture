@@ -5,6 +5,7 @@ import grails.core.GrailsApplication
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
 import org.apache.commons.lang.StringUtils
+import org.apache.http.HttpStatus
 import org.springframework.beans.factory.annotation.Autowired
 
 import javax.annotation.PostConstruct
@@ -273,12 +274,19 @@ class SearchService {
         webService.proxyGetRequest(response, url, true, true,960000)
     }
 
-    def downloadShapefile(params, response) {
+    /**
+     * Triggers an asynchronous download of a shapefile, returning true if the request was successful, false otherwise.
+     */
+    boolean downloadShapefile(params) {
 
         configureProjectQuery(params)
 
         def path = "search/downloadShapefile"
         def url = grailsApplication.config.getProperty('ecodata.baseUrl') + path + commonService.buildUrlParamsFromMap(params)
-        webService.proxyGetRequest(response, url, true, true,960000)
+        def result = webService.get(url)
+        // WebService::get returns a string if the response status is 200, otherwise a map with a status and error code.
+        boolean error = result instanceof Map
+        !error
+
     }
 }

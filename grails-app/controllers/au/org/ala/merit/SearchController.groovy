@@ -2,6 +2,7 @@ package au.org.ala.merit
 
 import grails.converters.JSON
 import grails.core.GrailsApplication
+import org.apache.http.HttpStatus
 
 class SearchController {
     def searchService, webService, speciesService, commonService, documentService, reportService
@@ -79,11 +80,12 @@ class SearchController {
     @PreAuthorise(accessLevel = 'siteAdmin', redirectController ='home', redirectAction = 'index')
     def downloadShapefile() {
         params.putAll(downloadParams())
-        def resp = searchService.downloadShapefile(params, response)
-        if (resp.status != 200) {
-            render view:'/error', model:[error:resp.error]
+        boolean success = searchService.downloadShapefile(params)
+        Map resp = [status: success ? HttpStatus.SC_OK : HttpStatus.SC_INTERNAL_SERVER_ERROR]
+        if (!success) {
+            resp.status = HttpStatus.SC_INTERNAL_SERVER_ERROR
         }
-        resp
+        render resp as JSON
     }
 
     private Map downloadParams() {

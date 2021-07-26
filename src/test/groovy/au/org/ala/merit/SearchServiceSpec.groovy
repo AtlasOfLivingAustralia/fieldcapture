@@ -72,6 +72,15 @@ class SearchServiceSpec extends Specification implements AutowiredTest{
         result == geoData
     }
 
+    def "The service can request a shapefile download from ecodata"() {
+        when:
+        boolean result = service.downloadShapefile([:])
+
+        then:
+        1 * webService.get({it.contains('search/downloadShapefile')}) >> true
+        result == true
+    }
+
     private List stubGeoReponseFromCoordinateList(List coords) {
         List results = new ArrayList(coords.size())
         coords.each { List coord ->
