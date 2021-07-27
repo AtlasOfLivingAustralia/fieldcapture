@@ -936,7 +936,8 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             wmsServerUrl: config.wmsServerUrl,
             leafletIconPath:options.leafletIconPath,
             useAlaMap: config.useAlaMap,
-            useGoogleBaseMap: config.useGoogleBaseMap
+            useGoogleBaseMap: config.useGoogleBaseMap,
+            fullscreenControl:false
         };
 
         var map = createMap(mapOptions);

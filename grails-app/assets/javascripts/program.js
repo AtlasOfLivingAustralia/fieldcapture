@@ -403,7 +403,8 @@ var ProgramPageViewModel = function(props, options) {
                     useAlaMap:true,
                     mapContainerId:'muMap',
                     width: '100%',
-                    styles: styles
+                    styles: styles,
+                    fullscreenControl:false
                 });
 
                 self.loadManagementUnits(map);

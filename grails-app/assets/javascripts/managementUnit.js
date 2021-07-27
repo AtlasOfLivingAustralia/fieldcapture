@@ -399,7 +399,8 @@ var ManagementUnitPageViewModel = function(props, options) {
                     showFitBoundsToggle:false,
                     useMyLocation:false,
                     mapContainerId:'managementUnitSiteMap',
-                    width: '100%'
+                    width: '100%',
+                    fullscreenControl:false
 
                 });
                 if (self.managementUnitSiteId){
