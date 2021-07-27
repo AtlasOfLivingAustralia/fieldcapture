@@ -14,12 +14,10 @@ if (!System.getProperty("webdriver.chrome.driver")) {
     System.setProperty("webdriver.chrome.driver", "node_modules/chromedriver/bin/chromedriver")
 }
 driver = { new ChromeDriver() }
-baseUrl = 'http://devt.ala.org.au:8087/fieldcapture/'
+baseUrl = 'http://devt.ala.org.au:8087/'
 environments {
 
-
-
-    reportsDir = 'target/geb-reports'
+    reportsDir = 'build/reports/geb-reports'
 
     // run as grails -Dgeb.env=chrome test-app
     chrome {

@@ -209,9 +209,9 @@ class ManagementUnitSpec extends StubbedCasSpec {
 
         then:
         waitFor 10, {
-            mapInfo.displayed
+            mapInfo.displayed && mapInfo.text() == "0 projects with 0 sites No georeferenced points for the selected projects"
         }
-        mapInfo.text() == "0 projects with 0 sites No georeferenced points for the selected projects"
+
     }
 
     def "Management Unit Admin Page"() {
