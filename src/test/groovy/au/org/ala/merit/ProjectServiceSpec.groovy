@@ -1127,7 +1127,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         Map result = service.saveDataSet(projectId, dataset)
 
         then:
-        2 * webService.getJson({it.contains("project/"+projectId)}) >> project
+        1 * webService.getJson({it.contains("project/"+projectId)}) >> project
         1 * webService.doPost({it.endsWith('project/'+projectId)}, _) >> { id, data ->
             postData = data
             [status: HttpStatus.SC_OK]
@@ -1153,7 +1153,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         Map result = service.saveDataSet(projectId, dataset)
 
         then:
-        2 * webService.getJson({it.contains("project/"+projectId)}) >> project
+        1 * webService.getJson({it.contains("project/"+projectId)}) >> project
         1 * webService.doPost({it.endsWith('project/'+projectId)}, _) >> { id, data ->
             postData = data
             [status: HttpStatus.SC_OK]
@@ -1195,7 +1195,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         Map result = service.deleteDataSet(projectId, datasetId)
 
         then:
-        2 * webService.getJson({it.contains("project/"+projectId)}) >> project
+        1 * webService.getJson({it.contains("project/"+projectId)}) >> project
         1 * webService.doPost({it.endsWith('project/'+projectId)}, _) >> { id, data ->
             postData = data
             [status: HttpStatus.SC_OK]
@@ -1259,6 +1259,37 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         metadataService.getProjectServices() >> services
         1 * projectConfigurationService.getProjectConfiguration(project) >> setupMockServiceProgramConfig(services)
         filteredModel.outputs == ['o1', 'o2', 'o4', 'non service']
+    }
+
+    def "When updating the MERI plan or data sets, the contents of the Project custom attribute will be merged"() {
+        setup:
+        String projectId = 'p1'
+        Map meriPlan = [details:[outcomes:[]]]
+        Map dataSets = [dataSets:[[dataSetId:1]]]
+        Map baseProject = [projectId:'p1', name:'Project 1', description:'Description 1']
+        Map postData
+
+        when:
+        service.update(projectId, [custom:meriPlan])
+
+        then:
+        1 * webService.getJson({it.contains("project/"+projectId)}) >> baseProject+[custom:dataSets]
+        1 * webService.doPost({it.endsWith('project/'+projectId)}, _) >> { id, data ->
+            postData = data
+            [status: HttpStatus.SC_OK]
+        }
+        postData == [custom:(dataSets+meriPlan)]
+
+        when:
+        service.update(projectId, [custom:dataSets])
+
+        then:
+        1 * webService.getJson({it.contains("project/"+projectId)}) >> baseProject+[custom:meriPlan]
+        1 * webService.doPost({it.endsWith('project/'+projectId)}, _) >> { id, data ->
+            postData = data
+            [status: HttpStatus.SC_OK]
+        }
+        postData == [custom:(dataSets+meriPlan)]
     }
 
     private Map setupActivityModelForFiltering(List services) {

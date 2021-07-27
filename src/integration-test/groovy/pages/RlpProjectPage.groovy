@@ -35,7 +35,7 @@ class RlpProjectPage extends ReloadablePage {
         unsavedEdits(required: false) { $('.unsaved-changes') }
 
         datasetTab(required: false) {$('#datasets-tab')}
-        datasetDetails(required: false) {module DatasetPage}
+        datasetDetails(required: false) {module DataSetSummary}
         addNewDataset(required: false) {$('.btn-primary')}
 
         meriPlanTabContent {module MeriPlanTabContent }
@@ -60,6 +60,15 @@ class RlpProjectPage extends ReloadablePage {
     def openAdminTab() {
         adminTab.click()
         waitFor { adminContent.displayed }
+    }
+
+    def openDataSetSummaryTab() {
+        datasetTab.click()
+        waitFor {
+            datasetDetails.displayed
+            datasetDetails.statusColumn.displayed
+        }
+        datasetDetails
     }
 
     def openMeriPlanEditTab() {
