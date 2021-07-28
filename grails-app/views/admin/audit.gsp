@@ -46,7 +46,7 @@
 
         </div>
         </g:if>
-
+        <asset:javascript src="base-bs4.js"/>
         <asset:javascript src="audit.js"/>
 
     </body>

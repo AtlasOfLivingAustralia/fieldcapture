@@ -100,7 +100,7 @@
 
     </div>
 
-
+    <asset:javascript src="base-bs4.js"/>
     <asset:javascript src="audit.js"/>
     <script type="text/javascript">
         $(document).ready(function() {
