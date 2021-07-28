@@ -2,11 +2,11 @@
 *= require forms.css
 *= require fancybox/jquery.fancybox
 *= require select2/4.0.3/css/select2
+*= require select2-bootstrap4/select2-bootstrap4.css
 *= require jquery-ui/css/base/jquery-ui-1.9.2.custom.min.css
 *= require jquery-ui/jquery-autocomplete
 *= require blueimp/fileupload-9.28.0/jquery.fileupload
 *= require leaflet-manifest.css
-*= require modal-fullscreen-bootstrap-2.3.2/css/bootstrap-modal-fullscreen
 *= require feature.css
 */
 
@@ -189,10 +189,6 @@ select, input, textarea {
 ul.checkbox-list {
     padding-left: 0 !important;
 }
-/*div.row.col-sm-12 {*/
-/*    padding-left: 0 !important;*/
-/*    padding-right: 0 !important;*/
-/*}*/
 
 .output-section>.col-sm-12 {
     padding: 10px !important;
