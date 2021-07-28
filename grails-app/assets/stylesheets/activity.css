@@ -236,3 +236,8 @@ table .col-sm-12 .row .input-group .input-group-append .input-group-text,
     max-width:unset !important;
     margin-bottom: 10px !important;
 }
+div#RLP_-_Output_WHS-content > .model-form > .space-after > .col-sm-6, div#RLP_-_Output_WHS-content > .model-form > .space-after > .col-sm-12,
+div#RLP_-_Change_Management-content > .model-form > .space-after > .col-sm-6, div#RLP_-_Change_Management-content > .model-form > .space-after > .col-sm-12 {
+    padding-left: 0px !important;
+}
+
