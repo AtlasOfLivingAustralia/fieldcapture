@@ -79,7 +79,8 @@ class ProjectExplorerDashboardSectionSpec extends StubbedCasSpec {
         waitFor { viewReef2050PlanReport.dashboardType.displayed }
 
         when:
-        viewReef2050PlanReport.dashboardType.value("reef2050PlanActionSelection").click()
+        viewReef2050PlanReport.dashboardType.click()
+        viewReef2050PlanReport.dashboardType.find("option").find{ it.value() == "reef2050PlanActionSelection" }.click()
 
         then:
         waitFor 10, { viewReef2050PlanReport.reefReportContent.displayed }

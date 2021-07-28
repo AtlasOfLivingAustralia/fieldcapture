@@ -173,10 +173,7 @@ input.form-control.customCurrency {
     max-width: 7rem !important;
      min-width: 7rem !important;
 }
-select {
-    min-width: 300px !important;
-    max-width: 300px !important;
-}
+
 select, input, textarea {
     margin-bottom: 1rem;
 }
@@ -195,31 +192,10 @@ ul.checkbox-list {
     padding-left: 0 !important;
 }
 
-div#data\.fireLastBurnDateDate {
-    padding-left: 0 !important;
-}
-div#data\.fireLastBurnDateDate input.form-control.form-control-sm.inputDatePicker {
-    max-width: 167px !important;
-}
  table td select {
      max-width: 100% !important;
  }
-input.input-small[type="number"] {
-    max-width: 125px !important;
-}
 
-table .col-sm-12 .row .input-group .input-group-append .input-group-text,
-.col-sm-3 .row .col-sm-12 .input-group-append .input-group-text,
-.col-sm-4 .row .col-sm-12 .input-group-append .input-group-text{
-    height: 31px;
-}
-
-.col-sm-3 > .row > .input-group {
-    padding: 10px !important;
-}
-.col-sm-3 > .row > .input-group > .input-group-append > .input-group-text {
-    height: 31px;
-}
 .btn.edit-feature {
     width: 100% !important;
     height: unset !important;
@@ -229,6 +205,9 @@ table .col-sm-12 .row .input-group .input-group-append .input-group-text,
 }
 
 .output-section {
-    margin-left: 0px;
+    margin-left: 0 !important;
 }
 
+div.output-block {
+    padding: 0 15px !important;
+}
