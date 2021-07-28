@@ -190,13 +190,6 @@ ul.checkbox-list {
     padding-left: 0 !important;
 }
 
-.output-section>.col-sm-12 {
-    padding: 10px !important;
-}
-
-.row.space-after > .col-sm-12 {
-    padding: 10px !important;
-}
 .dateInput {
     padding-right: 0 !important;
     padding-left: 0 !important;
@@ -214,9 +207,7 @@ div#data\.fireLastBurnDateDate input.form-control.form-control-sm.inputDatePicke
 input.input-small[type="number"] {
     max-width: 125px !important;
 }
-.output-section .col-sm-12 .row .col-sm-12 {
-    padding: 10px !important;
-}
+
 table .col-sm-12 .row .input-group .input-group-append .input-group-text,
 .col-sm-3 .row .col-sm-12 .input-group-append .input-group-text,
 .col-sm-4 .row .col-sm-12 .input-group-append .input-group-text{
@@ -236,8 +227,8 @@ table .col-sm-12 .row .input-group .input-group-append .input-group-text,
     max-width:unset !important;
     margin-bottom: 10px !important;
 }
-div#RLP_-_Output_WHS-content > .model-form > .space-after > .col-sm-6, div#RLP_-_Output_WHS-content > .model-form > .space-after > .col-sm-12,
-div#RLP_-_Change_Management-content > .model-form > .space-after > .col-sm-6, div#RLP_-_Change_Management-content > .model-form > .space-after > .col-sm-12 {
-    padding-left: 0px !important;
+
+.output-section {
+    margin-left: 0px;
 }
 
