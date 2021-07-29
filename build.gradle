@@ -241,8 +241,8 @@ if (inplace) {
 task _Events {
     doLast {
         println "Running Events.groovy script"
-        println "${project.projectDir}/scripts/Events.groovy"
-        new GroovyScriptEngine(["${project.projectDir}"] as String[]).run("scripts/Events.groovy", new Binding(['projectDir': project.projectDir]))
+        println "${project.projectDir}/src/main/scripts/Events.groovy"
+        new GroovyScriptEngine(["${project.projectDir}"] as String[]).run("src/main/scripts/Events.groovy", new Binding(['projectDir': project.projectDir]))
     }
 }
 
