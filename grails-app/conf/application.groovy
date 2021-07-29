@@ -246,7 +246,7 @@ security {
         logoutUrl = 'https://auth.ala.org.au/cas/logout'
         casServerName = 'https://auth.ala.org.au'
         uriFilterPattern = ['/home/login', '/ajax/keepSessionAlive']
-        gatewayIfCookieFilterPattern = ['/', '/*']
+        authenticateOnlyIfCookieFilterPattern = ['/', '/*']
         uriExclusionFilterPattern = ['/assets/.*','/images/.*','/css/.*','/js/.*','/less/.*', '/project/viewReportCallback.*', '/program/viewReportCallback.*', '/rlp/viewReportCallback.*', '/managementUnit/viewReportCallback.*']
     }
 }

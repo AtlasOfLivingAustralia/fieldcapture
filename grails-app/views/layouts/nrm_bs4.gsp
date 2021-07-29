@@ -81,6 +81,7 @@
 
                 <div class="btn-group login-logout">
                     <auth:loginLogout
+                            ignoreCookie="true"
                             loginReturnToUrl="${createLink(controller:'home', action:'login', absolute:true)}"
                             logoutReturnToUrl="${grailsApplication.config.getProperty('grails.serverURL')}"
                             logoutUrl="${createLink(controller: 'logout', action: 'logout')}"
