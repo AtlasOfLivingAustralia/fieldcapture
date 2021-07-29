@@ -32,6 +32,10 @@ before_install:
   - sudo chown -R elasticsearch:elasticsearch /etc/default/elasticsearch
   - sudo sh -c 'echo ES_JAVA_OPTS=\"-Xmx512m -Xms512m\" >> /etc/default/elasticsearch'
   - sudo service elasticsearch restart
+  - sudo mkdir -p /data/fieldcapture/cache
+  - sudo chmod o+xw /data
+  - sudo chmod o+xw /data/fieldcapture
+  - sudo chmod o+xw /data/fieldcapture/cache
 
 # This is to prevent an unnecessary gradlew assemble by travis, as the asset compile is very slow and we have to
 # clean before publishing (and hence assemble will happen a second time) to remove the clover instrumentation from the compiled classes.
