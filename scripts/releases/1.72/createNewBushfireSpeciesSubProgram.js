@@ -4,7 +4,7 @@
 
 load("uuid.js");
 let parentProgram = "Bushfire Recovery for Species and Landscapes Program";
-var subprograms = ["Multiregional - Species and Strategic Projects Program", "Multiregional - Species and Strategic Projects - NRM"]
+var subprograms = ["Multiregional Species and Strategic Program", "Multiregional Species and Strategic Program - NRM"]
 
 var parent = db.program.find({name: parentProgram}).next();
 print(parent.programId)
@@ -4731,11 +4731,11 @@ subprograms.forEach(function (subprogram){
     var program = db.program.find({name: subprogram});
     while(program.hasNext()){
         var p = program.next();
-        if (p.name === "Multiregional - Species and Strategic Projects Program"){
+        if (p.name === "Multiregional Species and Strategic Program"){
             p.config = projectConfig.config
             p.priorities = projectConfig.priorities
         }
-        if (p.name === "Multiregional - Species and Strategic Projects - NRM"){
+        if (p.name === "Multiregional Species and Strategic Program - NRM"){
             p.config = nrmConfig.config
             p.outcomes = nrmConfig.outcome
         }
