@@ -60,13 +60,11 @@
 
 <g:render template="/shared/declaration" model="[divId:'unlockPlan', declarationType:au.org.ala.merit.SettingPageType.UNLOCK_PLAN_DECLARATION]"/>
 <g:render template="meriPlanApprovalModal"/>
-<div class="row mb-4 mt-3">
+<div class="row mb-4">
 	<div class="col-sm-6">
 		<div class="control-group">
-			<div>
-				<span class="badge text-white" style="font-size: 13px;" data-bind="text:meriPlanStatus().text, css:meriPlanStatus().badgeClass"></span>
-				<span data-bind="if:detailsLastUpdated"> <br/>Last update date : <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
-			</div>
+			<span class="badge text-white" style="font-size: 13px;" data-bind="text:meriPlanStatus().text, css:meriPlanStatus().badgeClass"></span>
+			<span data-bind="if:detailsLastUpdated"> <br/>Last update date : <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
 		</div>
 	</div>
 <g:if test="${showMeriPlanHistory}">
@@ -134,12 +132,11 @@
 	<div class="row space-after">
 		<div class="col-sm-12">
 			<div class="form-actions">
-				<div>
-					<label><input class="pull-left" type="checkbox"  data-bind="checked: meriPlan().caseStudy, disable: isProjectDetailsLocked()" />
-					<span>&nbsp;Are you willing for your project to be used as a case study by the Department?</span></label>
+				<div class="form-check">
+					<input type="checkbox" class="form-check-input" id="caseStudy" data-bind="checked: meriPlan().caseStudy, disable: isProjectDetailsLocked()">
+					<label for="caseStudy" class="form-check-label">&nbsp;Are you willing for your project to be used as a case study by the Department?</label>
 				</div>
 				<br/>
-
 				<button type="button" data-bind="click: saveProjectDetails, disable: isProjectDetailsLocked()" class="btn btn-sm btn-primary">Save changes</button>
 				<button type="button" class="btn btn-sm btn-danger" data-bind="click: cancelProjectDetailsEdits">Cancel</button>
 				<button type="button" class="btn btn-sm btn-info" data-bind="click: meriPlanPDF">Generate PDF</button>
@@ -192,9 +189,9 @@
 <div class="row space-after">
 	<div class="col-sm-12">
 		<div class="form-actions">
-			<div>
-				<label><input class="pull-left" type="checkbox"  data-bind="checked: meriPlan().caseStudy, disable: isProjectDetailsLocked()" />
-				<span>&nbsp;Are you willing for your project to be used as a case study by the Department?</span></label>
+			<div class="form-check">
+				<input class="form-check-input" id="caseStudy2" type="checkbox"  data-bind="checked: meriPlan().caseStudy, disable: isProjectDetailsLocked()" />
+				<label for="caseStudy2" class="form-check-label">&nbsp;Are you willing for your project to be used as a case study by the Department?</label>
 			</div>
 			<br/>
 

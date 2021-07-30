@@ -13,7 +13,7 @@
             </div>
         <div></div>
         %{-- The use of the width attribute (as opposed to a css style) is to allow for correct resizing behaviour of the DataTable --}%
-        <table class="docs-table table w-100"  style="table-layout:fixed">
+        <table class="docs-table table"  style="table-layout:fixed">
             <thead>
             <tr>
                 <th style="width:35px"></th>

@@ -47,41 +47,43 @@
         <div class="col-sm-3" data-bind="visible:status" style="margin-bottom: 0">
             <span data-bind="if: status().toLowerCase() == 'active'">
                 Project Status:
-                <span style="text-transform:uppercase;" data-bind="text:status" class="badge badge-success" style="font-size: 13px;"></span>
+                <span data-bind="text:status" class="badge badge-success text-uppercase" style="font-size: 13px;"></span>
             </span>
             <span data-bind="if: status().toLowerCase() == 'completed'">
                 Project Status:
-                <span style="text-transform:uppercase;" data-bind="text:status" class="badge badge-info" style="font-size: 13px;"></span>
+                <span  data-bind="text:status" class="badge badge-info text-uppercase" style="font-size: 13px;"></span>
             </span>
             <span data-bind="if: status().toLowerCase() == 'terminated'">
                 Project Status:
-                <span style="text-transform:uppercase;" data-bind="text:status" class="badge badge-danger" style="font-size: 13px;"></span>
+                <span  data-bind="text:status" class="badge badge-danger text-uppercase" style="font-size: 13px;"></span>
             </span>
         </div>
-        <div class="col-sm-3" data-bind="visible:grantId" style="margin-bottom: 0">
+        <div class="col-sm-3" data-bind="visible:grantId">
             Grant Id:
             <span data-bind="text:grantId"></span>
         </div>
-        <div class="span3" data-bind="visible:externalId" style="margin-bottom: 0">
+        <div class="col-sm-3" data-bind="visible:externalId">
             External Id:
             <span data-bind="text:externalId"></span>
         </div>
-        <div class="col-sm-3" data-bind="visible:manager" style="margin-bottom: 0">
+        <div class="col-sm-3" data-bind="visible:manager">
             Manager:
             <span data-bind="text:manager"></span>
         </div>
 
     </div>
-    <g:if test="${fc.userIsAlaOrFcAdmin()}">
-        <span data-bind="if: status().toLowerCase() == 'terminated'">
-            <div class="row">
+<g:if test="${fc.userIsAlaOrFcAdmin()}">
+    <div class="row mt-2" data-bind="if: status().toLowerCase() == 'terminated'">
+            <div class="col-sm-12">
                 <div class="terminationReasonSection">
                     <strong>Termination Reason: </strong>
-                    <span class="terminationReason" data-bind="text: terminationReason"></span>
                 </div>
             </div>
-        </span>
-    </g:if>
+            <div class="col-sm-12">
+                    <span class="terminationReason" data-bind="text: terminationReason"></span>
+            </div>
+    </div>
+</g:if>
 <div class="mt-4 row">
     <div class="col-sm-12 p-3">
         <strong>Project Description</strong>
@@ -137,18 +139,20 @@
     <h2>Project blog</h2>
     <g:if test="${user?.isEditor}">
         <a class="newBlog" href="${g.createLink(controller: 'blog', action: 'create', params:[projectId:project.projectId, returnTo:g.createLink(controller: 'project', action:'index', id:project.projectId)])}">
-            <button class="btn"><i class="fa fa-newspaper-o"></i> New Entry</button></a>
-        <button id="gotoEditBlog" class="btn"><i class="fa fa-edit"></i> Edit</button>
+            <button class="btn btn-sm"><i class="fa fa-newspaper-o"></i> New Entry</button>
         </a>
+        <button id="gotoEditBlog" class="btn btn-sm"><i class="fa fa-edit"></i> Edit</button>
     </g:if>
 
     <g:if test="${publicImages}">
-        <div class="row col-sm-12">
-            <h3>Project photos</h3>
-            <g:render template="thumbnails" model="${[publicImages:publicImages]}"/>
+        <div class="row">
+            <div class="col-sm-12">
+                <h3>Project photos</h3>
+                <g:render template="thumbnails" model="${[publicImages:publicImages]}"/>
+            </div>
+
         </div>
         <hr/>
-
     </g:if>
 
 

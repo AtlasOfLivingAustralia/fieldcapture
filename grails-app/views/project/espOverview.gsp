@@ -82,12 +82,15 @@
 
     <h2>${project.name}</h2>
     <g:if test="${flash.errorMessage || flash.message}">
-        <div class="col-sm-5">
-            <div class="alert alert-danger">
-                <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
-                ${flash.errorMessage?:flash.message}
+        <div class="row">
+            <div class="col-sm-5">
+                <div class="alert alert-danger">
+                    <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
+                    ${flash.errorMessage?:flash.message}
+                </div>
             </div>
         </div>
+
     </g:if>
     <p>${project.description}</p>
     <div class="row">
@@ -128,7 +131,10 @@
             <p>Green sites have finished reports.  Red sites have unfinished reports.</p>
             <div class="row">
                 <!-- ko stopBinding:true -->
-                <div id="map" class="col-sm-12" style="height:500px; width:100%"></div>
+                <div class="col-sm-12">
+                <div id="map" class="w-100" style="height:500px;"></div>
+            </div>
+
                 <!-- /ko -->
             </div>
 
@@ -139,10 +145,12 @@
             </div>
         </div>
         <div class="tab-pane" id="dashboard-tab">
-            <h3>Dashboard</h3>
             <div class="row">
-                <div id="dashboard">
+                <div class="col-sm-12">
+                    <h3>Dashboard</h3>
+                    <div id="dashboard"></div>
                 </div>
+
             </div>
         </div>
         <div class="tab-pane" id="photographs-tab">
@@ -211,20 +219,20 @@
         </div>
 
         <div class="tab-pane " id="stage-report-pdf">
-            <div>
+
                 <h4 class="modal-title">Download Report</h4>
                 <p>Select the financial year of the report you want to download then press the "Generate Report (PDF)" button</p>
                 <hr/>
 
                 <form class="form-horizontal" id = "stageReportPDF">
 
-                    <div class="form-group row ml-3">
+                    <div class="form-group row">
                         <label class="col-sm-1 col-form-label" for="stageToReport">Report of financial year: </label>
                         <div class="col-sm-1">
                             <select id="stageToReport" class="form-control form-control-sm" data-bind="value:stageToReport, options:reportableStages, optionsText: 'financialYear', optionsValue: 'stage' " ></select>
                         </div>
                     </div>
-                    <div class="form-group row ml-3">
+                    <div class="form-group row">
                         <label class="col-sm-1 col-form-label" for="orientation">PDF Orientation: <fc:iconHelp>If your PDF includes activities with wide tables, the Landscape setting may improve the result.  This setting has no effect on the HTML view. </fc:iconHelp></label>
                         <div class="col-sm-1">
                             <select class="form-control form-control-sm" id="orientation" data-bind="value:orientation">
@@ -233,15 +241,13 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group ml-3">
+                    <div class="form-group">
                         <button type="button" class="btn btn-sm btn-success"
                                 data-bind="click:generateProjectReportHTML">Generate Report (HTML)</button>
                         <button type="button" class="btn btn-sm btn-success"
                                 data-bind="click:generateProjectReportPDF">Generate Report (PDF)</button>
                     </div>
                 </form>
-
-            </div>
         </div>
     </div>
 

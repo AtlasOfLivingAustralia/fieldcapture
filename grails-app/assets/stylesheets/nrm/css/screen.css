@@ -2454,6 +2454,9 @@ div#announcement p {
     float: left;
     margin-top: 12px;
 }
+.container-fluid .merit {
+    margin-top: 12px !important
+}
 
 span.merit {
     font-size: 24px;
