@@ -72,11 +72,6 @@
     margin-left: 0 !important;
 }
 
-.preLabel {
-    margin-right: 10px;
-    font-weight: bold;
-}
-
 .preLabel label {
     font-weight: bold;
 }
@@ -616,7 +611,7 @@ ul.facetValues {
     -ms-transform:rotate(180deg);
 }
 
-div.output-block, div.admin-section {
+div.admin-section {
     border-top: #999 solid 2px;
     /*-webkit-border-radius: 3px;*/
     /*-moz-border-radius: 3px;*/

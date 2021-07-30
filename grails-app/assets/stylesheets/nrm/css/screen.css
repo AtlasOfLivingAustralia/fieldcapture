@@ -2351,11 +2351,6 @@ span.new {
     background-position: 100% 65%;
 }
 
-/* Output styling
---------------------------------------------------------*/
-.output-section { background-color: #f5f5f5; padding-top:10px; border: 1px solid #e3e3e3; border-radius: 3px;}
-.output-section > [class^=col] {padding:7px;}
-.output-section > [class^=row] {padding:7px;}
 /*.output-section > table {border:10px #ebe6dc solid; background-color: #faf8f1;}*/
 /* Override the 220px wide select elements nested in tables */
 table select {
