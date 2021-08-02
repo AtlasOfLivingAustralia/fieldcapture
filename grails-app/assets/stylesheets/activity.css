@@ -102,19 +102,6 @@
     color:black;
 }
 
-.output-block table input[type="text"] {
-    width: 100%;
-    box-sizing: border-box;
-    height: 30px;
-}
-
-.output-block table .input-group input[type="text"] {
-    width: 173px !important;
-}
-
-table .autocompleteSpecies .input-group-text {
-    height: 30px !important;
-}
 .report-header .header-label {
     font-weight: bold;
 }
