@@ -45,7 +45,7 @@ class SiteUploadSpec extends StubbedCasSpec {
 
         then:
         waitFor { at RlpProjectPage }
-        waitFor { sites.siteName*.text() == ['Site 1', 'Site 2', 'Site 3', 'Site 4', 'Site 5', 'Test site 1'] }
+        waitFor { sites.siteName*.text() == ['Test site 1', 'Site 1', 'Site 2', 'Site 3', 'Site 4', 'Site 5'] }
 
     }
 }
