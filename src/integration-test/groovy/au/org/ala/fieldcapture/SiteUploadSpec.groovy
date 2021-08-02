@@ -32,7 +32,7 @@ class SiteUploadSpec extends StubbedCasSpec {
         uploadShapefile("/TestPointShapefile.zip")
 
         then:
-        waitFor 30, { sites.size() == 5 }
+        waitFor 60, { sites.size() == 5 }
 
         when:
         createSites()
