@@ -199,7 +199,7 @@
                 master = new ReportMaster(reportId, activity.activityId, undefined, undefined, reportMasterOptions);
             }
 
-            var themes = ${themes};
+            var themes = <fc:modelAsJavascript model="${themes}" default="{}"/>
 
             var viewModel = new ActivityHeaderViewModel(activity, {}, fcConfig.context, metaModel, themes);
 

@@ -34,14 +34,14 @@
 <body>
 
 <div class="container-fluid">
-    <ul class="breadcrumb">
-        <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
-        <li><a href="${createLink(controller:'organisation', action:'index', id:organisation.organisationId)}" class="clickable">Organisation</a> <span class="divider">/</span></li>
-        <li class="active">
-            ${title}
-        </li>
-    </ul>
-    <div class="row-fluid">
+    <section aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><g:link controller="home">Home</g:link></li>
+            <li class="breadcrumb-item"><g:link controller="organisation" action="index" id="${organisation.organisationId}">Home</g:link></li>
+            <li class="breadcrumb-item active"> ${title}</li>
+        </ol>
+    </section>
+    <div class="row">
         <h2>${title}</h2>
     </div>
 
@@ -53,17 +53,17 @@
     <g:render template="/shared/restoredData" model="[id:'restoredData', cancelButton:'Cancel']"/>
 
 
-    <div class="row-fluid">
-        <span class="span12">
+    <div class="row">
+        <div class="col-sm-12">
         <div id="myGrid" class="validationEngineContainer" style="width:100%;"></div>
-        </span>
+        </div>
     </div>
 
 
-    <div class="row-fluid">
+    <div class="row">
 
         <div class="form-actions" >
-            <span class="span3">
+            <span class="col-sm-3">
                 <button type="button" id ="bulkUploadTrigger" class="btn btn-small"><i class="icon-upload"></i> Upload data for this table</button>
                 <div id="bulkUpload" style="display:none;">
                     <div class="text-left" style="margin:5px">
@@ -77,10 +77,10 @@
                     </div>
                 </div>
             </span>
-            <span class="span9"style="text-align:right">
-                <button type="button" id="save" class="btn btn-primary" title="Save edits and return to the previous page">Save</button>
-                <buttom type="button" id="cancel" class="btn btn" title="Cancel edits and return to previous page">Cancel</buttom>
-            </span>
+            <div class="col-sm-9" style="text-align:right">
+                <button type="button" id="save" class="btn btn-sm btn-primary" title="Save edits and return to the previous page">Save</button>
+                <button type="button" id="cancel" class="btn btn-sm btn-danger" title="Cancel edits and return to previous page">Cancel</button>
+            </div>
         </div>
     </div>
 

@@ -120,7 +120,7 @@
                     <!-- ko if:transients.themes.length -->
                     <div class="col-sm-6">
                         <label for="theme">Major theme</label>
-                        <select id="theme" data-bind="value:mainTheme, options:transients.themes, optionsCaption:'Choose..'" class="input-xlarge">
+                        <select id="theme" data-bind="value:mainTheme, options:transients.themes, optionsCaption:'Choose..'" class="form-control form-control-sm input-xlarge">
                         </select>
                     </div>
                     <!-- /ko -->
@@ -137,7 +137,7 @@
                     </div>
                     <div class="col-sm-6">
                         <label class="for-readonly inline">Activity progress</label>
-                        <button type="button" class="btn btn-small"
+                        <button type="button" class="btn btn-sm btn-small"
                                 data-bind="activityProgress:progress"
                                 style="line-height:16px;cursor:default;color:white">
                             <span data-bind="text: progress"></span>
@@ -259,10 +259,10 @@
 
         var site = null;
     <g:if test="${site}">
-        site = JSON.parse('${(site as JSON).toString().encodeAsJavaScript()}');
+        site = <fc:modelAsJavascript model="${site}" default="{}"/>
     </g:if>
 
-        var themes = ${themes};
+        var themes = <fc:modelAsJavascript model="${themes}" default="{}"/>
         var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
         var viewModel = new ActivityHeaderViewModel(activity, site, fcConfig.project, metaModel, themes);
 
