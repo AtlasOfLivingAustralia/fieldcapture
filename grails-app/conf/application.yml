@@ -12,6 +12,10 @@ environments:
       server:
         port: 8087
 spring:
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
   devtools:
     livereload:
       enabled: true
@@ -20,3 +24,9 @@ spring:
         - '**/*.gsp'
         - '**/*.css'
         - '**/*.js'
+
+grails:
+  controllers:
+    upload:
+      maxFileSize: 1024000000
+      maxRequestSize: 1024000000
