@@ -43,7 +43,7 @@ chmod u+x src/main/scripts/loadFunctionalTestData.sh
 
 echo "Running functional tests"
 
-./gradlew integrationTest -Dgeb.env=$GEB_ENV
+./gradlew integrationTest --stacktrace --debug -Dgeb.env=$GEB_ENV
 
 RETURN_VALUE=$?
 
