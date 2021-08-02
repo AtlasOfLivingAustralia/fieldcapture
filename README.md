@@ -1,14 +1,18 @@
 ### MERIT   
-## Build status [![Build Status](https://travis-ci.org/AtlasOfLivingAustralia/fieldcapture.svg?branch=grails-2.4)](https://travis-ci.org/AtlasOfLivingAustralia/fieldcapture)
+## Build status 
+Master: [![Build Status](https://travis-ci.com/AtlasOfLivingAustralia/fieldcapture.svg?branch=master)](https://travis-ci.com/AtlasOfLivingAustralia/fieldcapture)
+Dev: [![Build Status](https://travis-ci.com/AtlasOfLivingAustralia/fieldcapture.svg?branch=dev)](https://travis-ci.com/AtlasOfLivingAustralia/fieldcapture)
+Grails 4: [![Build Status](https://travis-ci.com/AtlasOfLivingAustralia/fieldcapture.svg?branch=feature/grails4)](https://travis-ci.com/AtlasOfLivingAustralia/fieldcapture)
+
 ## About
 MERIT is a web application designed to collect and store planning, monitoring and reporting data associated with natural resource management projects.
 It is currently in use by the Australian Government Department of the environment and energy. 
 
 ## General Information
 ### Technologies
-* Grails framework 2.5.6
+* Grails framework 4.0.10
 * Knockout JS
-* Bootstap 2/4
+* Bootstap 4
 
 ## Setup
 * Clone the repository to your development machine.

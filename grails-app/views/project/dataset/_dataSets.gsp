@@ -2,8 +2,12 @@
 <div id="project-data-sets">
     <h3>Project data set summaries</h3>
     <fc:getSettingContent settingType="${au.org.ala.merit.SettingPageType.DATA_SET_DESCRIPTION}"/>
-    <div class="form-group row col-sm-12 form-actions ml-0 p-3">
-        <button class="btn btn-sm btn-primary float-left" data-bind="click:newDataSet">New data set summary</button>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="form-group form-actions">
+                <button class="btn btn-sm btn-primary" type="button" data-bind="click:newDataSet">New data set summary</button>
+            </div>
+        </div>
     </div>
     <table class="table table-striped">
         <thead>
@@ -16,10 +20,10 @@
         <tbody data-bind="foreach:dataSets">
         <tr>
             <td class="actions">
-                <a class="btn btn-container" data-bind="attr:{href:editUrl}">
+                <a class="btn btn-container btn-sm" data-bind="attr:{href:editUrl}">
                     <i class="fa fa-edit" title="Edit this dataset"></i>
                 </a>
-                <a class="btn btn-container" href="#" data-bind="click:deleteDataSet">
+                <a class="btn btn-container btn-sm" href="#" data-bind="click:deleteDataSet">
                     <i class="fa fa-remove" title="Delete this dataset"></i>
                 </a>
             </td>
