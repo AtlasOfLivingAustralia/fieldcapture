@@ -337,14 +337,6 @@ li.select2-search input {
 	border-left: unset !important;
 }
 
-#meriPlanDocumentList .dataTables_wrapper .row.col-sm-12, #meriPlanDocumentList .row .col-sm-6 .dataTables_info, #overviewDocumentList .dataTables_wrapper .row.col-sm-12, #overviewDocumentList .row .col-sm-6 .dataTables_info  {
-	margin-left: 15px !important;
-}
-
-#meriPlanDocumentList .row .col-sm-6 .dataTables_paginate, #overviewDocumentList .row .col-sm-6 .dataTables_paginate {
-	margin-right: -15px;
-}
-
 #meriPlanDocumentList .filterDocumentHolder, #overviewDocumentList .filterDocumentHolder{
 	margin-left: -15px !important;
 }

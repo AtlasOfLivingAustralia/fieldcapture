@@ -12,7 +12,7 @@
 
             </div>
         <div></div>
-        <table class="docs-table table"  style="table-layout:fixed">
+        <table class="docs-table table w-100"  style="table-layout:fixed">
             <thead>
             <tr>
                 <th style="width:35px"></th>
