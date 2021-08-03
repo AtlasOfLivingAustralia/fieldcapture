@@ -1,8 +1,10 @@
 rootProject.name = 'fieldcapture'
-boolean inplace = false
-gradle.ext.inplace = inplace
 
-if (inplace) {
+if (settings.hasProperty('inplace') && Boolean.valueOf(settings.inplace)) {
+    println "********************************************"
+    println "* Running the ecodata-client-plugin inline *"
+    println "********************************************"
+
     include ':ecodata-client-plugin'
     project(':ecodata-client-plugin').projectDir = new File(settingsDir, '../ecodata-client-plugin')
 }

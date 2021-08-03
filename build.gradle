@@ -50,7 +50,6 @@ def metadataExtractorVersion = "2.6.2"
 def imgscalrVersion = "4.2"
 def httpmimeVersion = "4.2.1"
 def jtsVersion = "1.8"
-boolean inplace = gradle.ext.inplace // Set to true in settings.gradle if needed for development
 
 configurations {
     developmentOnly
@@ -168,7 +167,7 @@ dependencies {
 
     provided "io.methvin:directory-watcher:0.4.0"
 
-    if (!inplace) {
+    if (!Boolean.valueOf(inplace)) {
         compile "org.grails.plugins:ecodata-client-plugin:4.0-SNAPSHOT"
     }
 }
@@ -223,7 +222,7 @@ bootWar {
     enabled = false
 }
 
-if (inplace) {
+if (Boolean.valueOf(inplace)) {
     grails {
         exploded = true
         plugins {
