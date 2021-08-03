@@ -61,8 +61,17 @@ node_modules/karma/bin/karma start karma.conf.js
 ## Running
 MERIT depends on a running instance of [ecodata](https://github.com/AtlasOfLivingAustralia/ecodata) and CAS so ensure these dependencies are running and configured correctly in fieldcapture-config.properties.
 ```
-grails run-app -Dgrails.server.port.http=8087
+./gradlew bootRun
 ```
+
+To run MERIT with support for hot-reloading of changes to the ecodata-client-plugin, clone the ecodata-client-plugin repository into the same parent folder as the fieldcapture project.
+Run MERIT with additonal parameters:
+```
+./gradlew :bootRun -DDgrails.run.active=true -Pinplace=true
+```
+
+Note the leading colon before the bootRun task - this is required as when inplace=true gradle is configured in a multi-project build configuration.
+
 # MacOS Catalina
 if you getting this error in MacOS
 ```
