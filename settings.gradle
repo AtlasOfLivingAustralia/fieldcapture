@@ -1,5 +1,6 @@
 rootProject.name = 'fieldcapture'
 boolean inplace = false
+gradle.ext.inplace = inplace
 
 if (inplace) {
     include ':ecodata-client-plugin'
