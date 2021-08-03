@@ -114,7 +114,7 @@
                                 <div class="col-sm-8">
                                     <p><g:render template="searchResultsSummary"/></p>
                                     <div class="scroll-list clearfix" id="projectList">
-                                        <table class="table" id="projectTable" data-offset="0" data-max="25" style="table-layout: fixed">
+                                        <table class="table w-100" id="projectTable" data-offset="0" data-max="25">
                                             <thead>
                                                 <tr>
                                                     <th id="projectName" data-sort="nameSort" scope="col" data-order="ASC" class="header"> Project name</th>

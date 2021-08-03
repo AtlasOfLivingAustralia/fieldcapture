@@ -13,12 +13,12 @@
         };
     </script>
     <asset:stylesheet src="common-bs4.css"/>
-    <asset:stylesheet src="project.css"/>
+    <asset:stylesheet src="dataSets.css"/>
 
 </head>
 <body>
 <div class="${containerType}">
-    <nav aria-label="breadcrumb">
+    <section aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <g:link controller="home">Home</g:link>
@@ -27,7 +27,7 @@
             <li class="breadcrumb-item active">Edit data set summary</li>
         </ol>
 
-    </nav>
+    </section>
     <h2>Edit data set summary</h2>
     <g:render template="editDataSet" />
 
