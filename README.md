@@ -37,9 +37,9 @@ npm install -g karma
 ```
 
 ## Testing
-* To run the grails unit tests, use:
+* To run the grails unit tests with clover test coverage, use:
 ```
-grails test-app
+./gradlew test -PenableClover=true
 ```
 
 * Javascript user tests are run using npm/karma.
