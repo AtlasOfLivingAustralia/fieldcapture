@@ -12,7 +12,6 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
     UserService userService = Mock(UserService)
     ActivityService activityService = Mock(ActivityService)
     RoleService roleService = Mock(RoleService)
-    BlogService blogService = Mock(BlogService)
     ProgramService programService = Mock(ProgramService)
     ProjectService projectService = Mock(ProjectService)
 
@@ -26,7 +25,6 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
         controller.roleService = roleService
         controller.activityService = activityService
         controller.userService = userService
-        controller.blogService = blogService
         controller.managementUnitService = managementUnitService
         controller.programService = programService
         controller.projectService = projectService
@@ -84,7 +82,6 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
         Map model = controller.index(managementUnitId)
 
         then:
-        1 * userService.canEditManagementUnitBlog("u1", managementUnitId) >> true
         1 * userService.canUserEditManagementUnit("u1", managementUnitId) >> true
 
         model.content.size() == 4
@@ -348,7 +345,6 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
         then:
         1 * programService.getPrimaryOutcomes(program) >> [[outcome:"Outcome 1", shortDescription:"o1"], [outcome:"Outcome 2", shortDescription:"o2"], [outcome:"Outcome 3", shortDescription:"o3", type:"primary"]]
         1 * programService.getSecondaryOutcomes(program) >> [[outcome:"Outcome 1", shortDescription:"o1"], [outcome:"Outcome 2", shortDescription:"o2"], [outcome:"Outcome 4", shortDescription:"o4", type:"secondary"]]
-        1 * userService.canEditManagementUnitBlog("u1", managementUnitId) >> true
         1 * userService.canUserEditManagementUnit("u1", managementUnitId) >> true
 
         model.content.about.displayedPrograms.size() == 1

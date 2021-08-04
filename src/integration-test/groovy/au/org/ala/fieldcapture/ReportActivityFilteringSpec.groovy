@@ -122,10 +122,8 @@ class ReportActivityFilteringSpec extends StubbedCasSpec {
 
         and: "Only the mandatory and selected activities are displayed."
         $('#koMandatory_section_1').displayed
-        !$('#koOutput_1').displayed
+        $('#koOutput_1').displayed
         $('#koOutput_2').displayed
-
-
     }
 
 }

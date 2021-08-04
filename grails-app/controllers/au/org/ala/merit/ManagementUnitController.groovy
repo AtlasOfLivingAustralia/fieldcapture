@@ -21,7 +21,6 @@ class ManagementUnitController {
     ReportService reportService
     ActivityService activityService
     PdfGenerationService pdfGenerationService
-    BlogService blogService
     ProjectService projectService
 
     GrailsApplication grailsApplication
@@ -58,7 +57,6 @@ class ManagementUnitController {
     protected Map content(Map mu, Map userRole) {
 
         def hasAdminAccess = userService.userIsSiteAdmin() || userRole?.role == RoleService.PROJECT_ADMIN_ROLE
-        boolean hasEditAccessOfBlog = userService.canEditManagementUnitBlog(userService.getUser()?.userId, mu.managementUnitId)
 
         boolean canViewNonPublicTabs = userService.canUserEditManagementUnit(userService.getUser()?.userId, mu.managementUnitId)
 
@@ -114,7 +112,7 @@ class ManagementUnitController {
                     ],
          projects: [label: 'MU Reporting', visible: canViewNonPublicTabs, stopBinding: false, type:'tab', mu:mu, reports: mu.reports, reportOrder:reportOrder, hideDueDate:true, displayedPrograms:displayedPrograms],
          sites   : [label: 'MU Sites', visible: canViewNonPublicTabs, stopBinding: true, type:'tab'],
-         admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab', mu:mu, blog: [editable: hasEditAccessOfBlog]]
+         admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab', mu:mu]
         ]
 
     }

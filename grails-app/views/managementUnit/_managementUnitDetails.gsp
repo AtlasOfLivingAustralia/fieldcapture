@@ -22,7 +22,7 @@
                       data-validation-engine="validate[required]" id="description"
                       placeholder="${g.message(code: 'managementUnit.description.placeholder')}"></textarea>
             <br/><button class="btn popup-edit" data-bind="click:editDescription"><i
-                class="icon-edit"></i> Edit with Markdown Editor</button>
+                class="fa fa-edit"></i> Edit with Markdown Editor</button>
         </div>
     </div>
 

@@ -185,6 +185,14 @@ select {
     vertical-align: middle;
     margin-bottom: 10px;
 }
+
+.inputDates {
+    display: inline-block;
+    margin-bottom: 10px;
+    vertical-align: middle;
+    font-size: 0;
+    white-space: nowrap;
+}
 @media (max-width: 576px) {
     .card-body .row #facetClear .col-sm-4 {
         padding: 10px;

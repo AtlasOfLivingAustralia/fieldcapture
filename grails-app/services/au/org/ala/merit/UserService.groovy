@@ -339,20 +339,6 @@ class UserService {
                 isUserGrantManagerForProgram(userId, programId)
     }
 
-    /**
-     * Check if the current user has permission to edit blogs of the program.
-     * @param userId
-     * @param programId
-     * @return
-     */
-    boolean canEditManagementUnitBlog(userId, String programId){
-        return  userIsSiteAdmin() ||
-                isUserAdminForManagementUnit(userId, programId) ||
-                isUserEditorForManagementUnit(userId, programId) ||
-                isUserGrantManagerForManagementUnit(userId, programId)
-    }
-
-
     boolean isUserAdminForManagementUnit(String userId, String managementUnitId) {
         if (userIsSiteAdmin()) {
             return true
