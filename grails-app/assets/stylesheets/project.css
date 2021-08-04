@@ -75,6 +75,9 @@
 	}
 }
 
+.btn.activity-progress {
+	font-size: 13px;
+}
 .btn.activity-progress .caret {
 	margin-top:6px;
 	position: absolute;

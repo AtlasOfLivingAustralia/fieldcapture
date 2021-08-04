@@ -206,3 +206,18 @@ div.output-block {
     border-top: #999 solid 2px;
     margin: 20px 0 10px 0;
 }
+#edit-photopoint.modal {
+    width: 80%;
+    left: 10%;
+    margin-left: 0;
+}
+.modal .controls {
+    margin-left: 8em;
+}
+#edit-photopoint.modal .control-label {
+    width: 7em;
+}
+
+#edit-photopoint .modal-dialog {
+    max-width: 100%;
+}
