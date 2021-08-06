@@ -10,7 +10,7 @@ class ImportProjectsSpec extends StubbedCasSpec {
     def setup() {
         useDataSet('dataset2')
     }
-/*
+
     //Once a project is imported, the status of the project should be Application
     def "New project can be imported into MERIT"() {
 
@@ -98,7 +98,7 @@ class ImportProjectsSpec extends StubbedCasSpec {
             $("#projectList tbody tr td .badge.badge-info")[1].text() == 'APPLICATION'
         }
     }
-*/
+
     def "Grants hub projects can be imported into MERIT"() {
         // This is an extended test to capture the additional functionality required when importing projects
         // from the grants hub.

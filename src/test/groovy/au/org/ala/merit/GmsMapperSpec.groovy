@@ -366,7 +366,7 @@ class GmsMapperSpec extends Specification{
 
         when:
         def result = gmsMapper.mapProject([projectData])
-        Map meriPlan = result.custom.details
+        Map meriPlan = result.project.custom.details
 
         then:
         result.project.grantId == projectData.APP_ID

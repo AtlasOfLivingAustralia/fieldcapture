@@ -189,6 +189,17 @@ class GmsMapper {
         return errors
     }
 
+    private Map findProgram(String name) {
+        Map program = programModel.programs.find {it.name == name}
+        if (!program) {
+            programModel.programs.find {
+                program = it.subprograms.find{ it.name == name}
+                program
+            }
+        }
+        program
+    }
+
     def mapProject(projectRows) {
 
         def errors = []
@@ -207,16 +218,9 @@ class GmsMapper {
             project.programId = programId
         }
         else {
-            def program = programModel.programs.find {it.name == project.associatedProgram}
+            String program = findProgram(project.associatedSubProgram ?: project.associatedProgram)
             if (!program) {
                 errors << "Programme ${project.associatedProgram} doesn't match an existing MERIT programme"
-            }
-            else {
-                if (project.associatedSubProgram) {
-                    if (!program.subprograms.find{it.name == project.associatedSubProgram}) {
-                        errors << "Sub-programme ${project.associatedSubProgram} doesn't match any MERIT programme"
-                    }
-                }
             }
         }
 
