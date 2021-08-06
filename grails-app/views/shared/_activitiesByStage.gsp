@@ -81,38 +81,41 @@
         <span data-bind="template:$parent.canUpdateStatus() ? 'updateStatusTmpl' : 'viewStatusTmpl'"></span>
 
         <!-- Modal for getting reasons for status change -->
-        <div id="activityStatusReason" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
-             data-bind="showModal:displayReasonModal(),with:deferReason">
-            <form class="reasonModalForm">
+        <div id="activityStatusReason" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-bind="showModal:displayReasonModal(),with:deferReason">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content reasonModalForm">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                            data-bind="click:$parent.displayReasonModal.cancelReasonModal">×</button>
-                    <h3 id="myModalLabel">Reason for deferring or cancelling an activity</h3>
+                    <h4 class="modal-title"id="myModalLabel">Reason for deferring or cancelling an activity</h4>
+                    <button type="button" class="close" aria-hidden="true"
+                            data-bind="click:$parent.displayReasonModal.cancelReasonModal">&times;</button>
                 </div>
                 <div class="modal-body">
                     <p data-bind="visible:$parent.displayReasonModal.showWarning"><b style="color:red;">WARNING: The data recorded for this activity will be deleted</b></p>
                     <p>If you wish to defer or cancel a planned activity you must provide an explanation. Your case
                     manager will use this information when assessing your report.</p>
                     <p>You can simply refer to a document that has been uploaded to the project if you like.</p>
-                    <textarea data-bind="value:notes,hasFocus:true" name="reason" rows=4 cols="80" class="validate[required]" style="width:95%;"></textarea>
+                    <textarea data-bind="value:notes,hasFocus:true" name="reason" rows=4 cols="80" class="form-control form-control-sm validate[required]"></textarea>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-sm" data-bind="click: $parent.displayReasonModal.cancelReasonModal" data-dismiss="modal" aria-hidden="true">Discard status change</button>
-                    <button class="btn btn-sm btn-primary" data-bind="click:$parent.displayReasonModal.saveReasonDocument">Save reason</button>
-                </div></form>
+                    <button type="button" class="btn btn-sm btn-danger" data-bind="click: $parent.displayReasonModal.cancelReasonModal" data-dismiss="modal" aria-hidden="true">Discard status change</button>
+                    <button class="btn btn-sm btn-primary" type="button" data-bind="click:$parent.displayReasonModal.saveReasonDocument">Save reason</button>
+                </div>
+            </div>
+        </div>
         </div>
 
-        <div id="viewActivityStatusReason" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
-             data-bind="showModal:displayReasonModalReadOnly(),with:deferReason">
-            <div class="reasonModalForm">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                            data-bind="click:function() {$parent.displayReasonModalReadOnly(false);}">×</button>
-                    <h3>Reason for deferring or cancelling an activity</h3>
-                </div>
-                <div class="modal-body">
-
-                    <textarea readonly="readonly" data-bind="value:notes,hasFocus:true" name="reason" rows=4 cols="80" class="validate[required]" style="width:95%;"></textarea>
+        <div id="viewActivityStatusReason" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-bind="showModal:displayReasonModalReadOnly(),with:deferReason">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content reasonModalForm">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Reason for deferring or cancelling an activity</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                                data-bind="click:function() {$parent.displayReasonModalReadOnly(false);}">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <textarea readonly="readonly" data-bind="value:notes,hasFocus:true" name="reason"
+                                  rows=4 cols="80" class="form-control form-control-sm validate[required]"></textarea>
+                    </div>
                 </div>
             </div>
         </div>
