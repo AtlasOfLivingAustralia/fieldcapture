@@ -219,11 +219,11 @@
 
 
     <script id="updateStatusTmpl" type="text/html">
-    <div class="btn-group">
-        <button type="button" class="btn btn-small dropdown-toggle activity-progress" data-toggle="dropdown"
+    <div class="dropdown activity">
+        <button type="button" class="btn btn-sm activity-progress" data-toggle="dropdown"
                 data-bind="activityProgress:progress"
                 style="line-height:16px;min-width:86px;text-align:left;">
-            <span data-bind="text: progress"></span> <span class="caret pull-right"></span>
+            <span data-bind="text: progress"></span> <span class="pull-right"> <i class="fa fa-caret-down"></i></span>
         </button>
         <ul class="dropdown-menu" data-bind="foreach:$root.progressOptions" style="min-width:100px;">
             <!-- Disable item if selected -->

@@ -221,3 +221,20 @@ div.output-block {
 #edit-photopoint .modal-dialog {
     max-width: 100%;
 }
+.activity > .dropdown-menu > .disabled > a, .activity > .dropdown-menu > .disabled > a:hover, .activity > .dropdown-menu > .disabled > a:focus {
+    color: #999;
+}
+.activity .dropdown-menu > li > a {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 20px;
+    color: #333;
+    white-space: nowrap;
+}
+
+.activity > .dropdown-menu > li:not(.disabled) > a:hover {
+    color: #fff;
+    background-color: #005f8f;
+}
