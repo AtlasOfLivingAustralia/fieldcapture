@@ -9,19 +9,27 @@
     </g:if>
 
     <g:if test="${singleSelection}">
-        <select data-bind="optionsCaption:'Please select... ', value:details.activities.activities.singleSelection, options:details.activities.activities.selectableActivities" class="input-xxlarge">
-        </select>
-
+        <select data-bind="optionsCaption:'Please select... ', value:details.activities.activities.singleSelection, options:details.activities.activities.selectableActivities" class="form-control form-control-sm"></select>
         <input type="text" data-bind="enable:details.activities.activities.otherChecked() && !isProjectDetailsLocked(), value:details.activities.activities.otherValue">
     </g:if>
     <g:else>
         <g:each var="activity" in="${config.program?.config?.activities?.collect{it.name} ?: []}">
-            <label class="checkbox"><input type="checkbox" data-bind="checked:details.activities.activities, disable: isProjectDetailsLocked()" value="${activity}">${activity}</label>
+            <div class="form-check">
+                <label class="checkbox">
+                    <input type="checkbox" data-bind="checked:details.activities.activities, disable: isProjectDetailsLocked()" value="${activity}">
+                    ${activity}
+                </label>
+            </div>
         </g:each>
         <g:if test="${includeOther}">
-            <label class="checkbox"><input type="checkbox" data-bind="checked:details.activities.activities.otherChecked" value="Other">Other</label>
-            <input type="text" data-bind="enable:details.activities.activities.otherChecked() && !isProjectDetailsLocked(), value:details.activities.activities.otherValue">
+            <div class="form-check">
+                <label class="checkbox">
+                    <input type="checkbox" data-bind="checked:details.activities.activities.otherChecked" value="Other">
+                    Other
+                </label>
+                <input type="text" data-bind="enable:details.activities.activities.otherChecked() && !isProjectDetailsLocked(), value:details.activities.activities.otherValue">
+            </div>
+
         </g:if>
     </g:else>
-
 </div>

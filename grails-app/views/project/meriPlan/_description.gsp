@@ -22,10 +22,10 @@
         ${explanation}
     </g:if>
     <div class="project-description row">
-
-        <textarea class="col-sm-12" rows="5" data-validation-engine="validate[required,maxSize[${maxSize ?: 1500}]]"
-                  data-bind="value:details.description, disable: isProjectDetailsLocked()"
-                  placeholder="${placeholder ?: ""}"></textarea>
-
+        <div class="col-sm-12">
+            <textarea class="form-control form-control-sm" rows="5" data-validation-engine="validate[required,maxSize[${maxSize ?: 1500}]]"
+                      data-bind="value:details.description, disable: isProjectDetailsLocked()"
+                      placeholder="${placeholder ?: ""}"></textarea>
+        </div>
     </div>
 </g:else>

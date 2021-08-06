@@ -6,7 +6,7 @@
     <tr>
         <th class="index" rowspan="2"></th>
         <th class="service required" rowspan="2">${serviceName ?: "Service"}</th>
-        <th class="score required" rowspan="2">Target measure</th>
+        <th class="score required" rowspan="2" style="width: 20px">Target measure</th>
         <th class="budget-cell required" rowspan="2">Total to be delivered <g:if test="${totalHelpText}"> <fc:iconHelp> ${totalHelpText} </fc:iconHelp></g:if> <g:else><fc:iconHelp html="true">The overall total of Project Services to be delivered during the project delivery period.
             <b>Note: this total is not necessarily the sum of the minimum annual targets set out for the service.</b></fc:iconHelp></g:else> </th>
         <g:if test="${showTargetDate}">
@@ -44,11 +44,13 @@
 
         <g:if test="${showTargetDate}">
             <td class="target-date">
-                <div class="input-append">
-                <input class="input-small" data-bind="datepicker:targetDate.date, disable: $root.isProjectDetailsLocked()" type="text" size="16" data-validation-engine="validate[required]">
-                <span class="add-on open-datepicker">
-                    <i class="fa fa-th ">&nbsp;</i>
-                </span>
+                <div class="input-group">
+                    <input class="form-control form-control-sm" data-bind="datepicker:targetDate.date, disable: $root.isProjectDetailsLocked()" type="text" size="16" data-validation-engine="validate[required]">
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="fa fa-th ">&nbsp;</i>
+                        </span>
+                    </div>
                 </div>
             </td>
         </g:if>
