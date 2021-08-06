@@ -3,17 +3,12 @@ package au.org.ala.merit
 import au.com.bytecode.opencsv.CSVReader
 import au.org.ala.merit.command.Reef2050PlanActionReportSummaryCommand
 import au.org.ala.merit.reports.ReportGenerationOptions
-import grails.config.Config
 import grails.converters.JSON
-import groovy.util.logging.Slf4j
-import org.grails.plugin.cache.GrailsCacheManager
 import grails.util.Environment
 import grails.util.GrailsNameUtils
-import org.apache.poi.ss.usermodel.Row
-import org.apache.poi.ss.usermodel.Sheet
-import org.apache.poi.ss.usermodel.Workbook
-import org.apache.poi.ss.usermodel.WorkbookFactory
-import grails.plugins.csv.CSVMapReader
+import grails.web.http.HttpHeaders
+import groovy.util.logging.Slf4j
+import org.grails.plugin.cache.GrailsCacheManager
 import org.joda.time.Period
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.springframework.web.multipart.MultipartHttpServletRequest
@@ -408,6 +403,15 @@ class AdminController {
 
     def importStatus() {
         render session.status as JSON
+    }
+
+    /** Produces and responds with a CSV file in the correct format to upload MERIT projects */
+    def meritImportCSVTemplate() {
+        response.setContentType('text/csv')
+        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, 'attachment; filename="merit-project-import.csv"')
+        new GmsMapper().buildMeritImportCSVTemplate(response.writer)
+        response.writer.flush()
+        null
     }
 
     def generateProjectReports() {

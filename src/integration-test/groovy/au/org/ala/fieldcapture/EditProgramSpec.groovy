@@ -18,7 +18,7 @@ class EditProgramSpec extends StubbedCasSpec {
         login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
 
         when:
-        to ProgramPage
+        to ProgramPage, 'test_program'
 
         and:
         edit()

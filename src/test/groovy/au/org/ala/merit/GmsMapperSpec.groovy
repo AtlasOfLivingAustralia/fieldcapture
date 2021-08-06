@@ -1,7 +1,9 @@
 package au.org.ala.merit
 
+import au.com.bytecode.opencsv.CSVReader
 import grails.converters.JSON
 import grails.plugins.csv.CSVMapReader
+import grails.plugins.csv.CSVReaderUtils
 import spock.lang.Specification
 
 /**
@@ -355,5 +357,65 @@ class GmsMapperSpec extends Specification{
 
         and:
         result.errors[1].toString() != "12345678900 is invalid abn number. Please Enter the correct one"
+    }
+
+    def "The new fields for the grants hub import can be mapped"() {
+        setup:
+        Map projectData = [APP_ID:'p1', FUNDING_TYPE:'Grant', PROJECT_STATUS:'Completed', MERI_PLAN_STATUS:'Approved',
+            FUNDING_TYPE:'Grant', ORIGIN_SYSTEM:'Grants Hub', FINANCIAL_YEAR_FUNDING_DESCRIPTION:'Project funding', FUNDING_18_19:'100', FUNDING_19_20:'200.01', FUNDING_20_21:'300.50']
+
+        when:
+        def result = gmsMapper.mapProject([projectData])
+        Map meriPlan = result.custom.details
+
+        then:
+        result.project.grantId == projectData.APP_ID
+        result.project.fundingType == projectData.FUNDING_TYPE
+        result.project.status == 'completed'
+        result.project.planStatus == 'approved'
+        result.project.originSystem == projectData.ORIGIN_SYSTEM
+        meriPlan.budget.overallTotal == 600.51
+        meriPlan.budget.headers == [[data:"2018/2019"], [data:"2019/2020"], [data:"2020/2021"]]
+        meriPlan.budget.rows.size() == 1
+        meriPlan.budget.rows[0].rowTotal == 600.51
+        meriPlan.budget.rows[0].costs == [[dollar:'100'], [dollar:'200.01'], [dollar:'300.50']]
+        meriPlan.budget.rows[0].description == projectData.FINANCIAL_YEAR_FUNDING_DESCRIPTION
+    }
+
+    def "The project status defaults to application, and the plan status to not approved"() {
+        when:
+        Map results = gmsMapper.mapProject([[APP_ID:'p1']])
+
+        then:
+        results.project.status == 'application'
+        results.project.planStatus == 'not approved'
+    }
+
+    def "Errors are returned if a non-numeric amount is supplied"() {
+        setup:
+        Map project = [APP_ID:'p1', FUNDING_TYPE:'Grant', PROJECT_STATUS:'Completed', MERI_PLAN_STATUS:'Approved',
+                           FUNDING_TYPE:'Grant', ORIGIN_SYSTEM:'Grants Hub', FINANCIAL_YEAR_FUNDING_DESCRIPTION:'Project funding', FUNDING_18_19:'100a', FUNDING_19_20:'200.01', FUNDING_20_21:'300.50']
+
+        when:
+        Map results = gmsMapper.mapProject([project])
+
+        then:
+        results.errors.contains("Error converting column: FUNDING_18_19 value: 100a to a dollar amount")
+    }
+
+    def "The GMS mapper can produce an annotated CSV file in the correct format for uploads"() {
+        setup:
+        StringWriter writer = new StringWriter()
+
+        when:
+        gmsMapper.buildMeritImportCSVTemplate(writer)
+        CSVReader reader = CSVReaderUtils.toCsvReader(writer.toString(),[:])
+        List<String[]> lines = reader.readAll()
+
+        then: "We are just checking every value in the spreadsheet is mappable and has a description"
+        lines.size() == 4
+        lines[3].every {String value ->
+            gmsMapper.projectMapping[value].description != null
+        }
     }
 }

@@ -4,15 +4,15 @@ import geb.Module
 
 class RlpOverviewTab extends Module {
     static content = {
-        program { $('.overview .row .col-sm-8 div', text:'Program').siblings()[0] }
-        managementUnit { $('.overview .row .col-sm-8 div', text:'Management Unit').siblings()[0] }
-        serviceProvider { $('.overview .row .col-sm-8 div', text:'Service Provider').siblings()[0] }
-        projectId { $('.overview .row .col-sm-8 div', text:'Project ID').siblings()[0] }
-        status { $('.overview .row .col-sm-8 div', text:'Project status').siblings()[0] }
-        projectStart { $('.overview .row .col-sm-8 div', text:'Project start').siblings()[0] }
-        projectEnd { $('.overview .row .col-sm-8 div', text:'Project end').siblings()[0] }
-        funding { $('.overview .row .col-sm-8 div', text:'Project Funding').siblings()[0] }
-        internalOrderNumber { $('.overview .row .col-sm-8 div', text:'Internal order number').siblings()[0]}
+        program { $('.overview div.programName') }
+        managementUnit { $('.overview div.managementUnitName') }
+        serviceProvider { $('.overview div.organisationName').siblings()[0] }
+        projectId { $('.overview div.projectId') }
+        status { $('.overview span.projectStatus.badge-info') }
+        projectStart { $('.overview div.projectStartDate span') }
+        projectEnd { $('.overview div.projectStartDate span') }
+        funding { $('.overview div.projectFunding span') }
+        internalOrderNumber { $('.overview div.internalOrderNumber') }
 
         description { $('p[data-bind*=description]') }
         newsAndEvents { $('div', text:'').siblings()[0] }

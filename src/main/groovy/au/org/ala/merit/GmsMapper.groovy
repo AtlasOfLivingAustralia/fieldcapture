@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.com.bytecode.opencsv.CSVWriter
 import org.apache.commons.validator.EmailValidator
 
 import java.text.DecimalFormat
@@ -9,7 +10,7 @@ import java.text.SimpleDateFormat
  */
 class GmsMapper {
 
-    public static final List GMS_COLUMNS = ['PROGRAM_NM',	'ROUND_NM',	'APP_ID', 'EXTERNAL_ID', 'APP_NM', 'APP_DESC',	'START_DT',	'FINISH_DT', 'FUNDING',	'APPLICANT_NAME', 'ORG_TRADING_NAME','ABN','MANAGEMENT_UNIT', 'APPLICANT_EMAIL', 'AUTHORISEDP_CONTACT_TYPE', 'AUTHORISEDP_EMAIL', 'GRANT_MGR_EMAIL', 'GRANT_MGR_EMAIL_2','DATA_TYPE', 'ENV_DATA_TYPE',	'PGAT_PRIORITY', 'PGAT_GOAL_CATEGORY',	'PGAT_GOALS', 'PGAT_OTHER_DETAILS','PGAT_PRIMARY_ACTIVITY','PGAT_ACTIVITY_DELIVERABLE_GMS_CODE','PGAT_ACTIVITY_DELIVERABLE','PGAT_ACTIVITY_TYPE','PGAT_ACTIVITY_UNIT','PGAT_ACTIVITY_DESCRIPTION','PGAT_UOM', 'UNITS_COMPLETED', 'EDITOR_EMAIL', 'EDITOR_EMAIL_2', 'TAGS']
+    public static final List GMS_COLUMNS = ['PROGRAM_NM',	'ROUND_NM',	'APP_ID', 'EXTERNAL_ID', 'APP_NM', 'APP_DESC',	'START_DT',	'FINISH_DT', 'FUNDING',	'APPLICANT_NAME', 'ORG_TRADING_NAME','ABN','MANAGEMENT_UNIT', 'APPLICANT_EMAIL', 'AUTHORISEDP_CONTACT_TYPE', 'AUTHORISEDP_EMAIL', 'GRANT_MGR_EMAIL', 'GRANT_MGR_EMAIL_2','DATA_TYPE', 'ENV_DATA_TYPE',	'PGAT_PRIORITY', 'PGAT_GOAL_CATEGORY',	'PGAT_GOALS', 'PGAT_OTHER_DETAILS','PGAT_PRIMARY_ACTIVITY','PGAT_ACTIVITY_DELIVERABLE_GMS_CODE','PGAT_ACTIVITY_DELIVERABLE','PGAT_ACTIVITY_TYPE','PGAT_ACTIVITY_UNIT','PGAT_ACTIVITY_DESCRIPTION','PGAT_UOM', 'UNITS_COMPLETED', 'EDITOR_EMAIL', 'EDITOR_EMAIL_2', 'TAGS', 'FINANCIAL_YEAR_FUNDING_DESCRIPTION']
 
     // These identify the data contained in the row.
     static final LOCATION_DATA_TYPE = 'Location Data'
@@ -25,6 +26,7 @@ class GmsMapper {
     static final DATA_SUB_TYPE_COLUMN = 'ENV_DATA_TYPE'
     static final REPORTING_THEME_COLUMN = 'PGAT_PRIORITY'
 
+    static final FINANCIAL_YEAR_FUNDING_PREFIX = 'FUNDING_'
 
     static MERIT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
 
@@ -55,38 +57,43 @@ class GmsMapper {
     private Map managementUnits
 
     def projectMapping = [
-            (GRANT_ID_COLUMN):[name:'grantId', type:'string'],
-            APP_NM:[name:'name', type:'string'],
-            APP_DESC:[name:'description', type:'string'],
-            PROGRAM_NM:[name:'associatedProgram', type:'string'],
+            (GRANT_ID_COLUMN):[name:'grantId', type:'string', mandatory:true,description:'The grant id of the project.  The combination of grantId and externalId must be unique.'],
+            EXTERNAL_ID:[name:'externalId', type:'string',description:'The id of this project in an external system (e.g. grants hub)'],
+            APP_NM:[name:'name', type:'string', mandatory:true, description:'The project name as it will appear in MERIT'],
+            APP_DESC:[name:'description', type:'string', description:'The project description as it will appear in MERIT'],
+            PROGRAM_NM:[name:'associatedProgram', type:'string',mandatory:true,description:'Must match the name of an existing MERIT program or sub-program'],
             ROUND_NM:[name:'associatedSubProgram', type:'string'],
-            EXTERNAL_ID:[name:'externalId', type:'string'],
-            ORG_TRADING_NAME:[name:'organisationName', type:'string'],
-            ABN:[name: 'abn', type: 'string'],
-            START_DT:[name:'plannedStartDate', type:'date', mandatory:true],
-            FINISH_DT:[name:'plannedEndDate', type:'date', mandatory:true],
+            MANAGEMENT_UNIT:[name:'managementUnitName', type:'string'],
+            ABN:[name: 'abn', type: 'string', description:'The ABN of the organisation receiving the funding'],
+            ORG_TRADING_NAME:[name:'organisationName', type:'string',description:'The trading name of the organisation receiving the funding (only used if the ABN is not supplied)'],
+            START_DT:[name:'plannedStartDate', type:'date', mandatory:true, description:'The planned start date of the project'],
+            FINISH_DT:[name:'plannedEndDate', type:'date', mandatory:true, description:'The planned end date of the project'],
             CONTRACT_START_DT:[name:'contractStartDate', type:'date'],
             CONTRACT_END_DT:[name:'contractEndDate', type:'date'],
-            ORDER_NO: [name: 'internalOrderId', type:'string'],
+            ORDER_NO: [name: 'internalOrderId', type:'string',description:'The SAP Internal Order Number for this project'],
             WORK_ORDER_ID:[name:'workOrderId', type:'string'],
-            FUNDING:[name:'funding', type:'decimal'],
-            AUTHORISEDP_EMAIL:[name:'adminEmail', type:'email'],
-            GRANT_MGR_EMAIL:[name:'grantManagerEmail', type:'email'],
-            GRANT_MGR_EMAIL_2:[name:'grantManagerEmail2', type:'email'],
+            FUNDING:[name:'funding', type:'decimal',description:'Total funding for this project (displayed on project overview)'],
+            AUTHORISEDP_EMAIL:[name:'adminEmail', type:'email', description:'This user will be added as an admin to the project'],
+            GRANT_MGR_EMAIL:[name:'grantManagerEmail', type:'email', description:'This user will be added as a project grant manager to the project'],
+            GRANT_MGR_EMAIL_2:[name:'grantManagerEmail2', type:'email', description:'This user will be added as a project grant manager to the project'],
             SERVICE_PROVIDER:[name:'serviceProviderName', type:'string'],
-            APPLICANT_EMAIL:[name:'applicantEmail', type:'email'],
-            ADMIN_EMAIL:[name:'adminEmail2', type:'email'],
-            EDITOR_EMAIL:[name:'editorEmail', type:'email'],
-            EDITOR_EMAIL_2:[name:'editorEmail2', type:'email'],
-            MANAGEMENT_UNIT:[name:'managementUnitName', type:'string'],
-            TAGS:[name:'tags', type:'list']
+            APPLICANT_EMAIL:[name:'applicantEmail', type:'email',description:'This user will be added as a project admin'],
+            ADMIN_EMAIL:[name:'adminEmail2', type:'email', description:'This user will be added as a project admin'],
+            EDITOR_EMAIL:[name:'editorEmail', type:'email', description:'This user will be added as a project editor'],
+            EDITOR_EMAIL_2:[name:'editorEmail2', type:'email', description:'This user will be added as a project editor'],
+            TAGS:[name:'tags', type:'list',description:'Can be used to facet projects on the project explorer.  Currently used to tag projects as being a part of the bushfire response'],
+            PROJECT_STATUS:[name:'status', type:'lookup', values:['Active':'active', 'Terminated':'terminated', 'Completed':'completed'], default:'application', description:'The project status - Application (default), Active, Completed, Terminated'],
+            MERI_PLAN_STATUS:['name':'planStatus', type:'lookup', values:['Approved':'approved'], default:'not approved', description:'The MERI plan status - not approved (default), Approved'],
+            FUNDING_TYPE:[name:'fundingType', type:'string', description:'The funding model used for this project (Grant, Procurement, SPP)'],
+            ORIGIN_SYSTEM:[name:'originSystem', type:'string', description:'The owning system for this project (e.g. Business Grants Hub)'],
     ]
 
     def siteMapping = [
             LOC_DESC:[name:'description', type:'string'],
             LOC_URL:[name:'kmlUrl',type:'url'],
             LOC_LATITUDE:[name:'lat',type:'decimal'],
-            LOC_LONGITUDE:[name:'lon',type:'decimal']
+            LOC_LONGITUDE:[name:'lon',type:'decimal'],
+            ELECTORATE:[name:'electorate', type:'string']
     ]
 
     def activityMapping = [
@@ -134,6 +141,26 @@ class GmsMapper {
         this.programs = programs
         this.managementUnits = managementUnits
         this.abnLookupService = abnLookup
+    }
+
+    /** Creates a CSV file in the format required to import projects into MERIT with additional instructions */
+    void buildMeritImportCSVTemplate(Writer writer) {
+        CSVWriter csvWriter = new CSVWriter(writer)
+        csvWriter.writeNext("Delete the top three lines before importing this file into MERIT")
+        List descriptions = []
+        List mandatoryFlags = []
+        List headers = []
+        projectMapping.each { String key, Map value ->
+           // Deliberately omit fields without a description as they are largely deprecated.
+            if (value.description) {
+                headers << key
+                mandatoryFlags << (value.mandatory ? 'Mandatory' : 'Optional')
+                descriptions << value.description
+           }
+        }
+        csvWriter.writeNext(descriptions as String[])
+        csvWriter.writeNext(mandatoryFlags as String[])
+        csvWriter.writeNext(headers as String[])
     }
 
     def validateHeaders(projectRows) {
@@ -247,7 +274,7 @@ class GmsMapper {
         }
 
         errors.addAll(result.errors)
-        project.planStatus = 'not approved'
+        project.planStatus = project.planStatus ?: 'not approved'
 
         mapRisks(projectRows, project, errors)
 
@@ -255,10 +282,53 @@ class GmsMapper {
 
         def activities = mapActivities(projectRows, project, errors)
 
+        Map meriPlan = mapMeriPlan(projectRows, errors)
+        if (meriPlan) {
+            project.custom = [details:meriPlan]
+        }
 
         [project:project, sites:sites, activities:activities, errors:errors]
 
     }
+
+    /**
+     * Currently maps a single row of MERI plan budget information into the MERI plan.
+     * @param projectRows All of the rows relating to a project.  Only the first row with budget info is used.
+     * @param errors Holder for any validation errors raised.
+     * @return a Map containing the MERI plan.
+     */
+    private Map mapMeriPlan(List projectRows, List errors) {
+        Map meriPlan = null
+        // We only support loading a single budget row, so we exit the loop after the first one we find.
+        projectRows.find { Map rowMap ->
+
+            String description = rowMap.FINANCIAL_YEAR_FUNDING_DESCRIPTION
+            if (description) {
+                meriPlan = [budget:[headers:[], rows:[[rowTotal:0, costs:[]]], overallTotal:0]]
+                meriPlan.budget.rows[0].description = description
+                for (int i : (10..50)) {
+                    String key = FINANCIAL_YEAR_FUNDING_PREFIX+i+"_"+(i+1)
+                    String amount = rowMap[key]
+                    if (amount) {
+                        meriPlan.budget.headers << [data:Integer.toString(i+2000)+'/'+Integer.toString(i+2001)]
+
+                        try {
+                            BigDecimal numericAmount = new BigDecimal(amount)
+                            meriPlan.budget.rows[0].costs << [dollar:amount]
+                            meriPlan.budget.rows[0].rowTotal += numericAmount
+                            meriPlan.budget.overallTotal+=numericAmount
+                        }
+                        catch (Exception e) {
+                            errors << "Error converting column: "+key+" value: "+amount+" to a dollar amount"
+                        }
+                    }
+                }
+            }
+            return description != null
+        }
+        meriPlan
+    }
+
     private def mapSites(projectRows, project, errors) {
         // TODO more than one location row?
         def siteRows = projectRows.findAll{it[DATA_TYPE_COLUMN] == LOCATION_DATA_TYPE}
@@ -492,11 +562,13 @@ class GmsMapper {
                 }
                 return value
             case 'lookup':
-                def lookupValue = mapping.values[value]
-                if (!(lookupValue)) {
+                def lookupValue = value ? mapping.values[value] : mapping.default
+                if (lookupValue == null) {
                     throw new IllegalArgumentException("${value} is not in ${mapping.values}")
                 }
                 return lookupValue
+
+
             case 'list':
                 return value?.split(',').collect{it.trim()}
         }
@@ -649,6 +721,8 @@ class GmsMapper {
                 return value
             case 'list':
                 return value?.join(',')
+            case 'lookup':
+                return value
         }
         throw new IllegalArgumentException("Unsupported type: ${type}")
     }

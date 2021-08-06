@@ -24,17 +24,23 @@
 <p>
 
 </p>
-<div class="row" data-bind="visible:!finished() && !finishedPreview()">
-    <div class="col-sm-4">
-        Select the (cp1252 encoded) CSV file containing the project data.  The file will be uploaded automatically.
-    </div>
-    <div class="col-sm-3">
-        <button class="btn btn-sm fileinput-button" style="margin-left:5px">
-            <input id="fileUpload" class="form-control form-control-sm" type="file" accept="text/csv" data-bind="fileUploadNoImage:uploadOptions, enable:!finished() && !finishedPreview()">
-            Select file
-        </button>
-    </div>
 
+<p data-bind="visible:!finished() && !finishedPreview()">
+    <p class="alert alert-dark">
+    Click <strong><a href="${createLink(action:'meritImportCSVTemplate')}">HERE</a></strong> to download a template to use for MERIT project imports
+    </p>
+
+    <div class="row">
+        <div class="col-sm-4">
+            Select the (cp1252 encoded) CSV file containing the project data.  The file will be uploaded automatically.
+        </div>
+        <div class="col-sm-3">
+            <button class="btn btn-sm fileinput-button" style="margin-left:5px">
+                <input id="fileUpload" class="form-control form-control-sm" type="file" accept="text/csv" data-bind="fileUploadNoImage:uploadOptions, enable:!finished() && !finishedPreview()">
+                Select file
+            </button>
+        </div>
+    </div>
 </div>
 
 

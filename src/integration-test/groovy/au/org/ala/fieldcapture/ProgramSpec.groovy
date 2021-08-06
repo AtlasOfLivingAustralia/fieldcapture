@@ -17,7 +17,7 @@ class ProgramSpec extends StubbedCasSpec {
         login([userId:'1', role:"ROLE_USER", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
 
         when:
-        to ProgramPage
+        to ProgramPage, 'test_program'
 
         and:
         //force to overview tab

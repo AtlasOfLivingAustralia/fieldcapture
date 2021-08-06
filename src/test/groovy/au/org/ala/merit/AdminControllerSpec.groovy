@@ -1,6 +1,9 @@
 package au.org.ala.merit
 
+import au.com.bytecode.opencsv.CSVReader
 import au.org.ala.web.AuthService
+import grails.plugins.csv.CSVReaderUtils
+import grails.web.http.HttpHeaders
 import spock.lang.Specification
 import grails.testing.web.controllers.ControllerUnitTest
 
@@ -110,5 +113,17 @@ class AdminControllerSpec extends Specification implements ControllerUnitTest<Ad
         and:
         results.status == 500
         results.error == "Downloading issue"
+    }
+
+    def "The AdminController can download an example CSV for MERIT import"() {
+        when:
+        controller.meritImportCSVTemplate()
+        CSVReader reader = CSVReaderUtils.toCsvReader(response.text,[:])
+        List<String[]> lines = reader.readAll()
+
+        then:
+        response.header(HttpHeaders.CONTENT_DISPOSITION) == 'attachment; filename="merit-project-import.csv"'
+        response.contentType == 'text/csv'
+        lines.size() == 4
     }
 }

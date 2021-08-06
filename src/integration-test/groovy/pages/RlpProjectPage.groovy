@@ -86,4 +86,9 @@ class RlpProjectPage extends ReloadablePage {
     def openReadOnlyMeriPlan() {
         openMERIPlanTab()
     }
+
+    def displayOverview() {
+        overviewTab.click()
+        waitFor{overview.displayed}
+    }
 }
