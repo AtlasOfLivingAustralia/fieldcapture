@@ -202,7 +202,8 @@ class ProjectController {
             model.site.visible = model.site.visible && userHasViewAccess
             model.details.visible = model.details.visible && userHasViewAccess
 
-            Map reportingTab = [label: 'Reporting', visible:userHasViewAccess, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true, services: config.services, scores:scores, hideDueDate:true, isAdmin:user?.isAdmin, isGrantManager:user?.isCaseManager]
+            boolean reportsVisible = config.includesContent(ProgramConfig.ProjectContent.REPORTING) && userHasViewAccess
+            Map reportingTab = [label: 'Reporting', visible:reportsVisible, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true, services: config.services, scores:scores, hideDueDate:true, isAdmin:user?.isAdmin, isGrantManager:user?.isCaseManager]
             if (reportingTab.visible) {
                 reportingTab.reportOrder = config?.projectReports?.collect{[category:it.category, description:it.description]} ?: []
                 project.reports?.each { Map report ->

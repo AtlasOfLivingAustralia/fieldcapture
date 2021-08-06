@@ -20,7 +20,7 @@ class ProgramConfig implements Map {
     public static final String REPORT_ADJUSTED_EMAIL_TEMPLATE_CONFIG_ITEM = "reportAdjustedEmailTemplate"
 
     /** Items that can be omitted or included in the default project view */
-    enum ProjectContent { MERI_PLAN, RISKS_AND_THREATS, SITES, DASHBOARD, DOCUMENTS, DATA_SETS }
+    enum ProjectContent { MERI_PLAN, RISKS_AND_THREATS, SITES, DASHBOARD, DOCUMENTS, DATA_SETS, REPORTING }
 
     /** Different project views */
     enum ProjectTemplate {

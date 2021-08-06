@@ -500,7 +500,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         projectService.get(projectId, _, _) >> project(projectId)
         stubProjectAdmin('1234', projectId)
 
-        when: "retrieving the project index page"
+        when: "retrieving the project index page for an original MERIT project"
         controller.index(projectId)
 
         then: "Only the overview and documents tabs are enabled"
@@ -521,6 +521,30 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         model.projectContent.site.visible == false
         model.projectContent.dashboard.visible == false
         model.projectContent.datasets.visible == false
+
+        when: "retrieving the project index page for an RLP MERIT project"
+        controller.index(projectId)
+
+        then: "Only the overview and documents tabs are enabled"
+        1 * projectService.getProgramConfiguration(_) >> new ProgramConfig(
+                [name:"Test Program", projectTemplate:'rlp', excludes:[
+                        ProgramConfig.ProjectContent.SITES.toString(),
+                        ProgramConfig.ProjectContent.DOCUMENTS.toString(),
+                        ProgramConfig.ProjectContent.RISKS_AND_THREATS.toString(),
+                        ProgramConfig.ProjectContent.MERI_PLAN.toString(),
+                        ProgramConfig.ProjectContent.DASHBOARD.toString(),
+                        ProgramConfig.ProjectContent.DATA_SETS.toString(),
+                        ProgramConfig.ProjectContent.REPORTING.toString()
+                ]])
+
+        view == '/project/index'
+        !model.projectContent.overview.disabled
+        model.projectContent.documents.visible == false
+        model.projectContent.details.visible == false
+        model.projectContent.site.visible == false
+        model.projectContent.serviceDelivery.visible == false
+        model.projectContent.datasets.visible == false
+        model.projectContent.reporting.visible == false
     }
 
     def "The controller delegates to the projectService to list project priorities and returns a JSON encoded response"() {
