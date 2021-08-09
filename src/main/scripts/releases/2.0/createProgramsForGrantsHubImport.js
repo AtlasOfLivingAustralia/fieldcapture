@@ -16,7 +16,7 @@ var config = {
     "excludes": [
         "DATA_SETS",
         "DASHBOARD",
-        "REPORTS",
+        "REPORTING",
         "RISKS_AND_THREATS",
         "DOCUMENTS"
     ],
