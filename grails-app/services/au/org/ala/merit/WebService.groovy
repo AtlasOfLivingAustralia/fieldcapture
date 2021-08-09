@@ -22,6 +22,7 @@ import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
 import groovyx.net.http.HTTPBuilder
 import groovyx.net.http.Method
+import org.apache.http.HttpStatus
 import org.apache.http.entity.mime.HttpMultipartMode
 import org.apache.http.entity.mime.MultipartEntity
 import org.apache.http.entity.mime.content.InputStreamBody
@@ -64,6 +65,26 @@ class WebService {
         }
     }
 
+    Map getString(String url, boolean includeAuth) {
+        URLConnection conn = null
+        Map resp = [:]
+        try {
+            conn = includeAuth ? configureConnection(url, true) : createAndConfigureConnection(url)
+            resp.resp = responseText(conn)
+            resp.statusCode = conn.responseCode
+        } catch (SocketTimeoutException e) {
+            resp.error = "Timed out calling web service. URL= ${url}."
+            resp.statusCode = HttpStatus.CONNECTION_TIMED_OUT
+            log.warn resp.error
+        } catch (Exception e) {
+            resp = [error: "Failed calling web service. ${e.getClass()} ${e.getMessage()} URL= ${url}.",
+                         statusCode: conn?.responseCode?:"",
+                         detail: conn?.errorStream?.text]
+            log.warn error.error
+        }
+        resp
+    }
+
     private int defaultTimeout() {
         grailsApplication.config.getProperty('webservice.readTimeout', Integer, 20000)
     }
@@ -73,16 +94,22 @@ class WebService {
     }
 
     private URLConnection configureConnection(String url, boolean includeUserId, Integer timeout = null) {
-        URLConnection conn = new URL(url).openConnection()
-
-        def readTimeout = timeout?:defaultTimeout()
-        conn.setConnectTimeout(connectTimeout())
-        conn.setReadTimeout(readTimeout)
+        URLConnection conn = createAndConfigureConnection(url, timeout)
         conn.setRequestProperty("Authorization", grailsApplication.config.getProperty('api_key'));
         def user = getUserService().getUser()
         if (user) {
             conn.setRequestProperty(grailsApplication.config.getProperty('app.http.header.userId'), user.userId)
         }
+        conn
+    }
+
+    private URLConnection createAndConfigureConnection(String url, Integer timeout = null) {
+        URLConnection conn = new URL(url).openConnection()
+
+        def readTimeout = timeout?:defaultTimeout()
+        conn.setConnectTimeout(connectTimeout())
+        conn.setReadTimeout(readTimeout)
+
         conn
     }
 

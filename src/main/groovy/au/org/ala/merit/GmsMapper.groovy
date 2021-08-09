@@ -232,40 +232,7 @@ class GmsMapper {
             }
         }
 
-        def organisation
-        Map abnLookup
-        if (project.organisationName || project.abn){
-             organisation = organisations.find{  it.abn == project.abn || it.name == project.organisationName}
-            if (organisation){
-                project.organisationId = organisation.organisationId
-            }else {
-                String abn = project.abn
-                if (!abn){
-                    if (!organisation && project.organisationName){
-                        errors << "No organisation exists with organisation name ${project.organisationName}"
-                    }
-                }else{
-                    abnLookup = abnLookupService.lookupOrganisationNameByABN(abn)
-                    if (abnLookup){
-                        organisation = organisations.find{it.name == abnLookup.entityName}
-                        if (organisation){
-                            project.organisationId = organisation.organisationId
-                        }else{
-                            if(abnLookup.entityName == ""){
-                                errors << "${project.abn} is invalid abn number. Please Enter the correct one"
-                            }else{
-                                project.organisationName = abnLookup.entityName
-                            }
-                        }
-                    }else{
-                        errors << "${project.abn} is invalid. Please Enter the correct one"
-                    }
-                }
-
-            }
-        }else{
-            errors << "No organisation exists with abn  ${project.abn} number and organisation name ${project.organisationName}"
-        }
+        lookupOrganisation(project, errors)
 
         if (project.serviceProviderName) {
             def serviceProviderOrganisation = organisations.find{it.name == project.serviceProviderName}
@@ -294,6 +261,43 @@ class GmsMapper {
         [project:project, sites:sites, activities:activities, errors:errors]
 
     }
+
+    private void lookupOrganisation(Map project, List errors) {
+        def organisation
+        Map abnLookup
+        if (project.organisationName || project.abn) {
+            organisation = organisations.find{ it.abn == project.abn || it.name == project.organisationName }
+            if (organisation) {
+                project.organisationId = organisation.organisationId
+            } else {
+                String abn = project.abn
+                if (!abn) {
+                    if (!organisation && project.organisationName) {
+                        errors << "No organisation exists with organisation name ${project.organisationName}"
+                    }
+                } else {
+                    abnLookup = abnLookupService.lookupOrganisationNameByABN(abn)
+                    if (abnLookup && !abnLookup.error) {
+                        organisation = organisations.find{ it.name == abnLookup.entityName }
+                        if (organisation) {
+                            project.organisationId = organisation.organisationId
+                        } else {
+                            if (abnLookup.entityName == "") {
+                                errors << "${project.abn} is invalid abn number. Please Enter the correct one"
+                            } else {
+                                project.organisationName = abnLookup.entityName
+                            }
+                        }
+                    } else {
+                        errors << "${project.abn} is invalid. Please Enter the correct one"
+                    }
+                }
+            }
+        } else {
+            errors << "No organisation exists with abn  ${project.abn} number and organisation name ${project.organisationName}"
+        }
+    }
+
 
     /**
      * Currently maps a single row of MERI plan budget information into the MERI plan.

@@ -2,6 +2,7 @@ package au.org.ala.merit
 
 import grails.core.GrailsApplication
 import grails.testing.spring.AutowiredTest
+import org.apache.http.HttpStatus
 import org.springframework.beans.factory.annotation.Autowired
 import spock.lang.Specification
 
@@ -44,7 +45,7 @@ class AbnLookupServiceSpec extends Specification implements AutowiredTest{
                 "             \"Gst\":\"2000-07-01\",\"Message\":\"\"})"
 
         Map expected = [abn:"41687119230", entityName: "COMMONWEALTH SCIENTIFIC AND INDUSTRIAL RESEARCH ORGANISATION"]
-
+        Map wsResponse = [resp:abnValue, statusCode: HttpStatus.SC_OK]
 
 
         String abnLookupToken = grailsApplication.config.abn.abnLookupToken
@@ -55,7 +56,7 @@ class AbnLookupServiceSpec extends Specification implements AutowiredTest{
         Map actual = service.lookupOrganisationNameByABN(abn)
 
         then:
-        1* webService.get(abnLookupUrlString) >> abnValue
+        1 * webService.getString(abnLookupUrlString, false) >> wsResponse
 
         expect:
         expected == actual
@@ -65,31 +66,21 @@ class AbnLookupServiceSpec extends Specification implements AutowiredTest{
     void "Providing a Wrong ABN Number"() {
         setup:
         String abn = "41687119231"
-        String abnValue = "callback({\"Abn\":\"\",\n" +
-                "             \"AbnStatus\":\"\",\n" +
-                "             \"Acn\":\"\",\n" +
-                "             \"AddressDate\":\"\",\n" +
-                "             \"AddressPostcode\":\"\",\n" +
-                "             \"AddressState\":\"\",\n" +
-                "             \"BusinessName\":[],\n" +
-                "             \"EntityName\":\"\",\n" +
-                "             \"EntityTypeCode\":\"\",\n" +
-                "             \"EntityTypeName\":\"\",\n" +
-                "             \"Gst\":\"\",\"Message\":\"\"})"
 
         String abnLookupToken = grailsApplication.config.abn.abnLookupToken
         String url = grailsApplication.config.abn.abnUrl
         String abnLookupUrlString = url + abn + "&guid=" + abnLookupToken
+        Map wsResponse = [error:"Error", statusCode: HttpStatus.SC_BAD_REQUEST]
 
         when:
         Map actual = service.lookupOrganisationNameByABN(abn)
 
         then:
-        1 * webService.get(abnLookupUrlString) >> abnValue
+        1 * webService.getString(abnLookupUrlString, false) >> wsResponse
 
         expect:
-        actual.abn == ""
-        actual.entityName == ""
+        actual.abn == null
+        actual.entityName == null
     }
 
 }
