@@ -12,21 +12,18 @@
 
 
     <div class="row"  data-bind="visible: sites.length > 0">
-        <div class="col-sm-5">
-
-            <div class="site-actions">
-
-                Actions:
-                <span class="btn-group">
-                    <a data-bind="click: $root.addSite" id="addSite" class="btn btn-sm" title="Create a new site for your project"><i class="fa fa-plus"></i> New</a>
+        <div class="col-sm-12 site-actions">
+                <div class="btn-group ml-3" role="group">
+                    <span>Actions:</span>
+                    <a data-bind="click: $root.addSite" id="addSite" class="btn btn-sm" type="button" title="Create a new site for your project"><i class="fa fa-plus"></i> New</a>
                     <a data-bind="click: $root.uploadSites" id="siteUpload" type="button" class="btn btn-sm" title="Create sites for your project by uploading a file"><i class="fa fa-upload"></i> Upload</a>
                     <a data-bind="click: $root.downloadShapefile" id="siteDownload" type="button" class="btn btn-sm" title="Download your project sites in shapefile format"><i class="fa fa-download"></i> Download</a>
                     <button data-bind="click: $root.removeSelectedSites, enable:$root.selectedSiteIds().length > 0"  id="siteDeleted" type="button" class="btn btn-sm" title="Delete selected sites"><i class="fa fa-trash"></i> Delete</button>
-                </span>
-
-            </div>
-
-            %{-- The use of the width attribute (as opposed to a css style) is to allow for correct resizing behaviour of the DataTable --}%
+                </div>
+        </div>
+    </div>
+    <div class="row" data-bind="visible: sites.length > 0">
+        <div class="col-sm-5">
             <table id="sites-table" class="sites-table table w-100">
                 <thead>
                 <tr>
@@ -72,12 +69,9 @@
 
                 </tbody>
             </table>
-
         </div>
-
-
         <div class="col-sm-7">
-            <m:map id="map" width="100%"></m:map>
+            <m:map id="map" width="100%"/>
         </div>
     </div>
-</div>
+</div> <!-- end of siteList -->

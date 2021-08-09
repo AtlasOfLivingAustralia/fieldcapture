@@ -126,3 +126,8 @@ select.customType {
 div#sites-table_length select {
     min-width: 76px !important;
 }
+.site-actions > .btn-group > #addSite {
+    border-bottom-left-radius: 0.25rem;
+    border-top-left-radius: 0.25rem;
+    margin-left: 5px;
+}
