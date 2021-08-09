@@ -13,7 +13,7 @@
     <div class="row space-after">
         <div class="col-sm-12">
             <div class="well well-small">
-                <label class="pl-3"><b>MERI attachments:</b></label>
+                <label><b>MERI attachments:</b></label>
                 <g:render template="/shared/listDocuments"
                           model="[useExistingModel: true,editable:false, filterBy: 'programmeLogic', ignore: [], imageUrl:assetPath(src:'/'),containerId:'meriPlanDocumentList']"/>
             </div>

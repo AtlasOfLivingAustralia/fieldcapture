@@ -22,11 +22,7 @@
         text-align: left !important;
         margin-left: -0.9rem !important;
     }
-    div.dt-buttons {
-        position: relative;
-        float: left;
-        margin-left: -14px;
-    }
+
     table#outputTargets {
         margin-left: -0.9rem;
     }

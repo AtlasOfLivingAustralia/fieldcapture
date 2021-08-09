@@ -1,8 +1,6 @@
 /*
 *= require base-bs4.css
-*= require datatables/1.10.16/css/dataTables.bootstrap4
-*= require datatables/buttons/1.5.1/css/buttons.bootstrap4
-*= require jquery.dataTables/dataTables.tableTools.css
+*= require datatables/1.10.25/datatables.css
 *= require prettytextdiff/pretty_text_diff_basic.css
 *= require_self
 */

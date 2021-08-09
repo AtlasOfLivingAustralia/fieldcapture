@@ -6,14 +6,19 @@
     </div>
 </g:if>
 <g:if test="${organisation.projects}">
-    <table id="projectList" class="table table-striped" style="width:100%;">
-        <thead></thead>
-        <tbody></tbody>
-        <tfoot>
-        <tr></tr>
+    <div class="row">
+        <div class="col-sm-12">
+            <table id="projectList" class="table table-striped w-100">
+                <thead></thead>
+                <tbody></tbody>
+                <tfoot>
+                <tr></tr>
 
-        </tfoot>
-    </table>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
 </g:if>
 <g:else>
     <div class="row">

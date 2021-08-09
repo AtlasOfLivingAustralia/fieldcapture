@@ -13,7 +13,7 @@
 
     <div class="row"  data-bind="visible: sites.length > 0">
         <div class="col-sm-12 site-actions">
-                <div class="btn-group ml-3" role="group">
+                <div class="btn-group" role="group">
                     <span>Actions:</span>
                     <a data-bind="click: $root.addSite" id="addSite" class="btn btn-sm" type="button" title="Create a new site for your project"><i class="fa fa-plus"></i> New</a>
                     <a data-bind="click: $root.uploadSites" id="siteUpload" type="button" class="btn btn-sm" title="Create sites for your project by uploading a file"><i class="fa fa-upload"></i> Upload</a>

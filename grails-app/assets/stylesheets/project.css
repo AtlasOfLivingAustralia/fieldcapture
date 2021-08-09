@@ -1,6 +1,5 @@
 /*
-*= require datatables/1.10.16/css/dataTables.bootstrap4
-*= require datatables/buttons/1.5.1/css/buttons.bootstrap4
+*= require datatables/1.10.25/datatables.css
 *= require thumbnail.scroller/2.0.3/jquery.mThumbnailScroller.css
 *= require blueimp/fileupload-9.28.0/jquery.fileupload
 *= require fancybox/jquery.fancybox
@@ -340,9 +339,6 @@ li.select2-search input {
 	border-left: unset !important;
 }
 
-#meriPlanDocumentList .filterDocumentHolder, #overviewDocumentList .filterDocumentHolder{
-	margin-left: -15px !important;
-}
 .mTSThumbContainer {
 	margin-right: 10px !important;
 }

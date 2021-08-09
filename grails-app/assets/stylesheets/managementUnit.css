@@ -110,11 +110,6 @@ form #start-date, form #end-date {
     margin-top: 0.6rem;
 }
 
-div.dataTables_wrapper .row .col-sm-12 {
-    padding-left: 1rem;
-    padding-right: 1rem;
-}
-
 .tab-content #sites {
     margin-bottom: 50px;
 }

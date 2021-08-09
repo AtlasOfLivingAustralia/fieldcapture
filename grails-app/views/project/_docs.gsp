@@ -1,5 +1,5 @@
 <div class="well" >
-    <h4 class="ml-3">Project documents</h4>
+    <h4>Project documents</h4>
     <div class="row text-center">
         <div class="col-sm-12 text-left">
             <div id="documents">

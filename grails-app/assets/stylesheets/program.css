@@ -135,25 +135,6 @@ input.dateControl {
     margin-top: 25px !important;
 }
 
-div.dataTables_wrapper div.dataTables_length label {
-    font-weight: normal;
-    white-space: nowrap;
-    text-align: left;
-    margin-left: 13px;
-}
-
-div.dataTables_wrapper div.dataTables_filter input {
-    display: inline-block;
-    width: 190px;
-}
-
-div.dataTables_wrapper div.dataTables_filter label {
-    padding-right: 10px !important;
-}
-#projectList_wrapper .row .col-sm-12, #projectOverviewList_wrapper .row .col-sm-12 {
-    padding-right: 4px !important;
-    padding-left: 4px !important;
-}
 .input-group-text {
     display: -ms-flexbox;
     display: flex;

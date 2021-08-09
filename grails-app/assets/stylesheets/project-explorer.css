@@ -311,9 +311,6 @@ button.btn.facets-toggle {
     margin-left: 10px !important;
 }
 
-.dataTables_filter {
-    float: right !important;
-}
 #projectName {
     width: 41rem;
 }
