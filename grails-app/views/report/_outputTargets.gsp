@@ -57,17 +57,17 @@
             "dom": 'Blfrtip',
 
             buttons: [
-                'copyHtml5',
+                'copy',
                 {
-                    extend: 'excelHtml5',
+                    extend: 'excel',
                     title: 'Output targets '+date
                 },
                 {
-                    extend: 'pdfHtml5',
+                    extend: 'pdf',
                     title: 'Output targets '+date
                 },
                 {
-                    extend: 'csvHtml5',
+                    extend: 'csv',
                     title: 'Output targets '+date
                 }
             ]

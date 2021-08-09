@@ -95,13 +95,13 @@
             "dom": 'Blfrtip',
 
             buttons: [
-                'copyHtml5',
+                'copy',
                 {
-                    extend: 'excelHtml5',
+                    extend: 'excel',
                     title: title
                 },
                 {
-                    extend: 'csvHtml5',
+                    extend: 'csv',
                     title: title
                 }
             ]
