@@ -2,7 +2,7 @@ package au.org.ala.merit
 
 import au.org.ala.merit.reports.ReportGenerationOptions
 import grails.converters.JSON
-import grails.testing.spring.AutowiredTest
+import grails.testing.services.ServiceUnitTest
 import org.apache.http.HttpStatus
 import org.springframework.mock.web.MockMultipartFile
 import spock.lang.Specification
@@ -10,9 +10,7 @@ import spock.lang.Specification
 /**
  * Specification for the InputService.
  */
-class ImportServiceSpec extends Specification implements AutowiredTest{
-
-    static def HEADER_ROW = "${GmsMapper.GRANT_ID_COLUMN},${GmsMapper.EXTERNAL_ID_COLUMN},${GmsMapper.DATA_TYPE_COLUMN},${GmsMapper.DATA_SUB_TYPE_COLUMN},PGAT_ACTIVITY_DELIVERABLE_GMS_CODE,UNITS_COMPLETED"
+class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportService> {
 
     def scores = [
             [scoreId:'1', label:'Area of revegetation works (Ha)', units:'Ha', externalId:'RVA', isOutputTarget:true],
@@ -22,7 +20,6 @@ class ImportServiceSpec extends Specification implements AutowiredTest{
 
     ]
     GmsMapper mapper
-    ImportService importService
     ProjectService projectService = Mock(ProjectService)
     def activitiesModel = JSON.parse(new InputStreamReader(getClass().getResourceAsStream('/activities-model.json')))
     UserService userService = Mock(UserService)
@@ -33,15 +30,14 @@ class ImportServiceSpec extends Specification implements AutowiredTest{
     AbnLookupService abnLookupService = Mock(AbnLookupService)
 
     def setup() {
-        importService = new ImportService()
-        importService.cacheService = new CacheService()
-        importService.projectService = projectService
-        importService.userService = userService
-        importService.siteService = siteService
-        importService.managementUnitService = managementUnitService
-        importService.metadataService = metadataService
-        importService.programService = programService
-        importService.abnLookupService = abnLookupService
+        service.cacheService = new CacheService()
+        service.projectService = projectService
+        service.userService = userService
+        service.siteService = siteService
+        service.managementUnitService = managementUnitService
+        service.metadataService = metadataService
+        service.programService = programService
+        service.abnLookupService = abnLookupService
 
         metadataService.activitiesModel() >> activitiesModel
         metadataService.getOutputTargetScores() >> [[externalId:'RVA', scoreId:1, label:'label 1']]
@@ -53,7 +49,7 @@ class ImportServiceSpec extends Specification implements AutowiredTest{
         String shapefileId = 's1'
 
         when:
-        Map result = importService.bulkImportSites(shapefile)
+        Map result = service.bulkImportSites(shapefile)
 
         then:
         1 * siteService.uploadShapefile(shapefile) >> [statusCode: HttpStatus.SC_OK, resp:[shp_id:shapefileId, "0":["GRANT_ID":"g1", "EXTERNAL_I":"e1"]]]
@@ -84,7 +80,7 @@ class ImportServiceSpec extends Specification implements AutowiredTest{
         String projectId = 'p1'
 
         when:
-        importService.importAll(projectRows, status, mapper)
+        service.importAll(projectRows, status, mapper)
 
         then:
         1 * projectService.update('', _) >> [resp:[projectId:projectId]]
@@ -94,14 +90,14 @@ class ImportServiceSpec extends Specification implements AutowiredTest{
         status[0].grantId == projectRows[0].APP_ID
     }
 
-    def "The ImportService provides the means for the GMSMapper to dynamically lookup management units"() {
+    def "The service provides the means for the GMSMapper to dynamically lookup management units"() {
 
         setup:
         def csv = getClass().getResourceAsStream("/projectTestData.csv")
 
         when:
         List status = []
-        Map result = importService.gmsImport(csv, status, true)
+        Map result = service.gmsImport(csv, status, true)
 
         then:
         1 * metadataService.organisationList() >> [list:[[name:"Test Organisation 2", organisationId:'org2Id', abn:'12345678901']]]
@@ -119,14 +115,14 @@ class ImportServiceSpec extends Specification implements AutowiredTest{
 
     }
 
-    def "The ImportService will apply management unit permissions to projects loaded with a defined management unit"() {
+    def "The service will apply management unit permissions to projects loaded with a defined management unit"() {
 
         setup:
         def csv = getClass().getResourceAsStream("/projectTestData.csv")
 
         when:
         List status = []
-        Map result = importService.gmsImport(csv, status, false)
+        Map result = service.gmsImport(csv, status, false)
 
         then:
         1 * metadataService.organisationList() >> [list:[[name:"Test Organisation 2", organisationId:'org2Id', abn:'12345678901']]]
@@ -156,18 +152,18 @@ class ImportServiceSpec extends Specification implements AutowiredTest{
 
     }
 
+    def "Projects can be found by grantId and externalId or just grantId"() {
+        when:
+        service.findProjectByGrantAndExternalId("g1", "e1")
 
+        then:
+        1 * projectService.search([grantId:"g1", externalId:"e1"])
 
-    private Map buildTestProject() {
-        [
-                projectId:'project1234',
-                grantId:'G1234',
-                externalId:'E1234',
-                plannedStartDate:'20150101T00:00:00Z',
-                plannedEndDate:'20150201T00:00:00Z',
-                activities:[]
-        ]
+        when:
+        service.findProjectByGrantAndExternalId("g1", null)
+
+        then:
+        1 * projectService.search([grantId:"g1"])
     }
-
 
 }
