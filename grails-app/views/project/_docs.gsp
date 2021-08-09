@@ -1,9 +1,7 @@
 <div class="well" >
-    <h4>Project documents</h4>
+    <h4 class="ml-3">Project documents</h4>
     <div class="row text-center">
-
         <div class="col-sm-12 text-left">
-            <!-- <div id="documents" data-bind="css: { span3: primaryImages() != null, span7: primaryImages() == null }"> -->
             <div id="documents">
                 <div  class="ml-3" data-bind="visible:documents().length == 0">
                     No documents are currently attached to this project.

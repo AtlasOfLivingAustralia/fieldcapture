@@ -1,6 +1,7 @@
 
-<div class="row row-eq-height" id="${containerId}">
-    <div class="col-sm-5 filterDocumentHolder">
+<div class="row-eq-height" id="${containerId}">
+    <div class="row">
+        <div class="col-sm-5 filterDocumentHolder">
             <div id="filter-by-stage" class="document-filter-group btn-group pull-right dropdown">
                 <a class="btn dropdown-toggle" data-toggle="dropdown" id="filterDropDown" href="#">
                     <i class="fa fa-filter"></i> Filter by report
@@ -11,21 +12,24 @@
                 </ul>
 
             </div>
-        <div></div>
-        <table class="docs-table table w-100"  style="table-layout:fixed">
-            <thead>
-            <tr>
-                <th style="width:35px"></th>
-                <th style="width:40%">Name</th>
-                <th style="width:30%; min-width:60px;">Related report</th>
-                <th style="width:20%">Date last updated</th>
-                <th></th>
-                <th></th>
-                <th style="width:2em"></th>
-            </tr>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-5">
+            <table class="docs-table table w-100"  style="table-layout:fixed">
+                <thead>
+                <tr>
+                    <th style="width:35px"></th>
+                    <th style="width:40%">Name</th>
+                    <th style="width:30%; min-width:60px;">Related report</th>
+                    <th style="width:20%">Date last updated</th>
+                    <th></th>
+                    <th></th>
+                    <th style="width:2em"></th>
+                </tr>
 
-            </thead>
-            <tbody data-bind="foreach: filteredDocuments">
+                </thead>
+                <tbody data-bind="foreach: filteredDocuments">
                 <!-- ko if:(role() == '${filterBy}' || 'all' == '${filterBy}') && !(_.contains(${raw((ignore as grails.converters.JSON).toString())}, role())) && role() != 'variation' -->
                 <tr data-bind="click: $parent.selectDocument">
                     <td>
@@ -37,7 +41,7 @@
                         <!-- /ko -->
                     </td>
                     <td style="word-wrap:break-word">
-                         <span data-bind="text:name() || filename()"></span>
+                        <span data-bind="text:name() || filename()"></span>
                     </td>
                     <td>
                         <span data-bind="text:reportName()"></span>
@@ -69,12 +73,12 @@
                     </td>
                 </tr>
                 <!-- /ko -->
-            </tbody>
-        </table>
-
+                </tbody>
+            </table>
+        </div>
+        <div class="fc-resource-preview-container col-sm-7" data-bind="{ template: { name: previewTemplate } }"></div>
     </div>
-    <div class="fc-resource-preview-container col-sm-7" data-bind="{ template: { name: previewTemplate } }"></div>
-</div>
+</div> <!-- end of row-eq-height -->
 
 <script id="iframeViewer" type="text/html">
 <div class="well fc-resource-preview-well">
