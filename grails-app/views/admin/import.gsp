@@ -21,11 +21,8 @@
 <content tag="pageTitle">Load new projects into MERIT</content>
 
 <h2>CSV Project Import</h2>
-<p>
 
-</p>
-
-<p data-bind="visible:!finished() && !finishedPreview()">
+    <p data-bind="visible:!finished() && !finishedPreview()">
     <p class="alert alert-dark">
     Click <strong><a href="${createLink(action:'meritImportCSVTemplate')}">HERE</a></strong> to download a template to use for MERIT project imports
     </p>
@@ -41,7 +38,6 @@
             </button>
         </div>
     </div>
-</div>
 
 
 <div class="results" data-bind="visible:progressSummary()">
@@ -81,7 +77,7 @@
 
     </table>
     </div>
-
+</div>
 </div>
 <script id="template-upload" type="text/x-tmpl">{% %}</script>
 <script id="template-download" type="text/x-tmpl">{% %}</script>
