@@ -239,17 +239,14 @@ class ImportService {
             }
         }
         status
-
-        // TODO not creating missing institutions in the collectory at this time.
-//        def institution = metadataService.getInstitutionByName(project.organisationName)
-//        if (!institution) {
-//            def potentialMatches = matchInstitution(project.organisationName)
-//        }
-
     }
 
     def findProjectByGrantAndExternalId(grantId, externalId) {
-        Map resp = projectService.search(grantId:grantId, externalId:externalId)
+        Map searchParams = [grantId:grantId]
+        if (externalId) {
+            searchParams.externalId = externalId
+        }
+        Map resp = projectService.search(searchParams)
         if (resp?.resp?.projects) {
             if (resp.resp.projects.size() ==1) {
                 return resp.resp.projects[0]
@@ -532,14 +529,18 @@ class ImportService {
 
 
                 if (!grantId && !externalId) {
-                    errors << "Shape is missing GRANT_ID and EXTERNAL_I attributes: ${shape.attributes}"
+                    String error = "Shape is missing GRANT_ID and EXTERNAL_I attributes: ${shape.attributes}"
+                    errors << error
+                    log.warn(error)
                     return
                 }
 
                 def project = findProjectByGrantAndExternalId(grantId, externalId)
 
                 if (!project) {
-                    errors << "No project found with grant id=${grantId} and external id=${externalId}"
+                    String error = "No project found with grant id=${grantId} and external id=${externalId}"
+                    errors << error
+                    log.warn(error)
                 }
                 else {
                     def projectDetails = projectsWithSites[project.projectId]
@@ -559,11 +560,14 @@ class ImportService {
                     if (resp?.siteId) {
                         projectDetails.sites << [siteId:resp.siteId, name:name, description:description]
                         sites << name
+                        log.info("Imported site: "+name)
                     }
                     else {
                         errors << resp
+                        log.warn("Error importing site: "+resp?.error?:"")
                     }
                 }
+
             }
             return [success:true, message:[errors:errors, sites:sites]]
 

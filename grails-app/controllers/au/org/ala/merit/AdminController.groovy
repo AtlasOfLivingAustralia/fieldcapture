@@ -30,13 +30,10 @@ class AdminController {
     def auditService
     def searchService
     def settingService
-    def siteService
-    def outputService
     def documentService
     def organisationService
     def reportService
     RisksService risksService
-    UserService userService
 
     def index() {}
 
@@ -382,7 +379,7 @@ class AdminController {
         }
 
         if (file) {
-            def status = [finished: false, projects: []]
+            Map status = [finished: false, projects: []].asSynchronized()
             session.status = status
             def fileIn = new FileInputStream(file)
             try {

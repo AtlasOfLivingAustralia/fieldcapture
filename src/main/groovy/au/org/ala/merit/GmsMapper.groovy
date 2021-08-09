@@ -84,7 +84,7 @@ class GmsMapper {
             TAGS:[name:'tags', type:'list',description:'Can be used to facet projects on the project explorer.  Currently used to tag projects as being a part of the bushfire response'],
             PROJECT_STATUS:[name:'status', type:'lookup', values:['Active':'active', 'Terminated':'terminated', 'Completed':'completed'], default:'application', description:'The project status - Application (default), Active, Completed, Terminated'],
             MERI_PLAN_STATUS:['name':'planStatus', type:'lookup', values:['Approved':'approved'], default:'not approved', description:'The MERI plan status - not approved (default), Approved'],
-            FUNDING_TYPE:[name:'fundingType', type:'string', description:'The funding model used for this project (Grant, Procurement, SPP)'],
+            FUNDING_TYPE:[name:'fundingType', type:'string', description:'The funding model used for this project (Grant, Procurement, Special Purpose Payment)'],
             ORIGIN_SYSTEM:[name:'originSystem', type:'string', description:'The owning system for this project (e.g. Business Grants Hub)'],
     ]
 
