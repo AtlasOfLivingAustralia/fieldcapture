@@ -291,12 +291,8 @@ class MeriPlanSpec extends StubbedCasSpec {
         at ProjectIndex
 
         when:
-        adminTab.click()
-
-        then:
-        waitFor { admin.projectSettingsTab.click() }
-
-        when:
+        openAdminTab()
+        admin.openProjectSettings()
         admin.projectSettings.internalOrderId = '12345'
         admin.projectSettings.saveChangesButton.click()
 
