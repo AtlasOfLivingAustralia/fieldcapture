@@ -25,21 +25,6 @@
 	box-shadow: inset 0 1px 1px rgba(0,0,0,0.05);
 }
 
-.progress {
-	border: 1px solid #bfbfbf;
-	margin-top: 5px;
-}
-
-.progress .bar {
-	background-image: none;
-	background-color: #02baf2;
-}
-
-.progress-info .bar,.progress .bar-info {
-	background-image: none;
-	background-color: #02baf2;
-}
-
 .project-report .form-actions {
 	margin-top:0px;
 }
@@ -236,10 +221,6 @@
 }
 input.dateControl {
 	max-width: 9.5rem !important;
-}
-
-span.progress-label {
-	padding-top: 7px !important;
 }
 
 #adminNav .nav-link:after {

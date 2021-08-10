@@ -43,24 +43,6 @@ form #start-date, form #end-date {
     display:inline-block;
 }
 
-.progress {
-    background-color: #f7f7f7;
-    height:20px;
-    margin-bottom: 20px;
-    border: 1px solid #bfbfbf;
-    margin-top: 5px;
-}
-
-.progress .bar {
-    background-image: none;
-    background-color: #02baf2;
-}
-
-.progress-info .bar,.progress .bar-info {
-    background-image: none;
-    background-color: #02baf2;
-}
-
 .program-organisation {
     padding-left: 5px;
     margin-bottom: 5px;
@@ -105,9 +87,6 @@ form #start-date, form #end-date {
 #admin .tab-content {
     border-right: none;
     border-bottom: none;
-}
-.dashboard-section .progress span {
-    margin-top: 0.6rem;
 }
 
 .tab-content #sites {

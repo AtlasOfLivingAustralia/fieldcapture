@@ -922,3 +922,24 @@ super {
 	font-family: 'FontAwesome';
 	content: "\f00c";
 }
+
+.progress {
+	background-color: #f7f7f7;
+	height: 20px;
+	margin-bottom: 20px;
+	border: 1px solid #bfbfbf;
+	margin-top: 5px;
+}
+.progress .bar {
+	background-image: none;
+	background-color: #02baf2;
+}
+
+.progress-info .bar,.progress .bar-info {
+	background-image: none;
+	background-color: #02baf2;
+}
+
+.dashboard-section > .progress > span {
+	margin-top: 0.6rem;
+}
