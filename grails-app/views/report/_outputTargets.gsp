@@ -1,3 +1,4 @@
+<%@page expressionCodec="none" %>
 <html>
 
 <head>
@@ -16,25 +17,20 @@
     #outputTargets_wrapper{
         overflow-x: auto;
     }
-    div.dataTables_wrapper div.dataTables_filter label {
-        font-weight: normal !important;
-        white-space: nowrap !important;
-        text-align: left !important;
-        margin-left: -0.9rem !important;
+
+    div.dt-buttons {
+        position: relative;
+        float: left;
+        margin-right: 0.8rem;
     }
 
-    table#outputTargets {
-        margin-left: -0.9rem;
-    }
     </style>
 </head>
-<table id="outputTargets" class="table table-striped">
+<table id="outputTargets" class="table table-striped w-100">
 
 </table>
     <script type="text/javascript">
     $(function() {
-
-
         var date = moment().format('YYYY-MM-DD');
         var scores = <fc:modelAsJavascript model="${scores}"></fc:modelAsJavascript>;
         var columns =  [
@@ -51,7 +47,6 @@
             "autoWidth":false,
             "columns": columns,
             "dom": 'Blfrtip',
-
             buttons: [
                 'copy',
                 {
@@ -68,12 +63,6 @@
                 }
             ]
         });
-
-
     });
-
-
 </script>
-
-
 </html>
