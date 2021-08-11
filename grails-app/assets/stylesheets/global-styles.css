@@ -940,6 +940,7 @@ super {
 	background-color: #02baf2;
 }
 
-.dashboard-section > .progress > span {
+.dashboard-section > .progress > span,
+.outputTargets > .col-sm-4 > .well > .progress > span.progress-label {
 	margin-top: 0.6rem;
 }
