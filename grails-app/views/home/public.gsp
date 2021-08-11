@@ -29,21 +29,26 @@
             <g:render template="/report/statistics"/>
         </div>
         <div class="row">
-            <div id="latest-news" class="col-sm-6">
-                <h4>Latest news</h4>
-                <g:render template="/shared/blog" />
+            <div class="col-sm-6">
+                <div id="latest-news">
+                    <h4>Latest news</h4>
+                    <g:render template="/shared/blog" />
+                </div>
             </div>
-            <div id="poi" class="col-sm-6">
-                <g:render template="/shared/poi"/>
+            <div class="col-sm-6">
+                <div id="poi">
+                    <g:render template="/shared/poi"/>
+                </div>
             </div>
+
         </div>
         <div id="help-links-container">
             <fc:getSettingContent settingType="${au.org.ala.merit.SettingPageType.HELP_LINKS_TITLE}"/>
             <g:render template="helpLinks"/>
         </div>
         <a id="project-explorer-holder" href="${g.createLink(controller: 'home', action:'projectExplorer')}">
-            <button>
-                <div id="project-explorer-icon"><i class="text-center fa fa-search"></i></div>
+            <button id="project-explorer-icon">
+                <i class="text-center fa fa-search"></i>
                 <h2 class="col-sm-12 text-center project-explorer-text">PROJECT EXPLORER</h2>
             </button>
         </a>
