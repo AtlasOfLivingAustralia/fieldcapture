@@ -58,7 +58,9 @@ db.userPermission.insert({
 
 for (var i = 1; i < 10; i++) {
     var id = '' + i;
-    createProject({name: 'Project ' + id, projectId: id});
+    createProject({name: 'Project ' + id, projectId: id, outputTargets: [{scoreId: "score_44", target: 1, periodTargets:[{period:"2018/2019", target: 1}] }]});
+
+
     createSite({name: "Test site " + id, siteId: 'test_site_' + id, projects: [id]});
     if (i < 4) {
         db.userPermission.insert({
@@ -141,3 +143,7 @@ addSetting('meritfielddata.rlp.report.submitted.emailBody', 'Report approved bod
 createProjectNumberBaselineDataSets({ "scoreId":"score_42"});
 createProjectNumberOfCommunicationMaterialsPublished({ "scoreId":"score_43"});
 createProjectWeedAreaSurveyedHaDefault({ "scoreId":"score_44"});
+
+
+
+

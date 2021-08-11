@@ -1,10 +1,10 @@
 <!-- ko stopBinding: true -->
-<div id="${divId ?: 'declaration'}" class="modal hide fade" tabindex="-1" role="dialog">
+<div id="${divId ?: 'declaration'}" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5>Declaration</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" data-bind="click:cancelMeriPlanDeclaration" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -21,7 +21,7 @@
 
                 <button class="btn btn-sm btn-success" data-bind="click:submitReport, enable:termsAccepted"
                         data-dismiss="modal" aria-hidden="true">Submit</button>
-                <button class="btn btn-sm btn-danger" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                <button class="btn btn-sm btn-danger" data-dismiss="modal" data-bind="click:cancelMeriPlanDeclaration" aria-hidden="true">Cancel</button>
             </div>
         </div>
     </div>

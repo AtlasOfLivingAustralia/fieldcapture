@@ -214,6 +214,48 @@ class MeriPlanSpec extends StubbedCasSpec {
         }
     }
 
+    def "cancel MERI Plan dialog declaration"() {
+        // submit meri plan
+        // dialog box appear
+        // cancel should return to meri plan and unblock the UI
+
+        setup:
+        login([userId: '2', role: "ROLE_FC_OFFICER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_OFFICER'], browser)
+
+        when:
+        to ProjectIndex, '1'
+        waitFor { at ProjectIndex }
+        adminTab.click()
+        def meriplan = waitFor { admin.openMeriPlan() }
+
+        then:
+        meriplan.shortTermOutcomes[0].value("Short term outcome 1 Text updated")
+
+        and:
+        waitFor {
+            meriplan.saveAndSubmitChanges.displayed
+        }
+        meriplan.saveAndSubmitChanges.click()
+
+        then:
+        waitFor 10, {
+            $("#meriSubmissionDeclaration").displayed
+        }
+        def cancel = $('.btn[data-bind*="cancelMeriPlanDeclaration"]').find{it.text() =="Cancel"}
+
+        when: "save the meri plan and reload the page and it should unlock the UI"
+        cancel.click()
+
+        and:
+        waitFor {at ProjectIndex }
+        adminTab.click()
+        def meriPlanUpdated = admin.openMeriPlan()
+
+        then:
+        meriPlanUpdated.shortTermOutcomes[0].value() == "Short term outcome 1 Text updated"
+    }
+
+
     def "A program can set a default primary outcome"()  {
         setup:
         String projectId = 'defaultOutcome'
@@ -250,9 +292,6 @@ class MeriPlanSpec extends StubbedCasSpec {
         waitFor {
             meriPlan.primaryOutcome.value() == "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
         }
-
-
-
     }
 
     def "Try to approve MERI plan of a project with the application status and no internal order Id"() {

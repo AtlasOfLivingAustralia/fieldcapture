@@ -111,6 +111,9 @@ function MERIPlan(project, projectService, config) {
                 submitReport: function () {
                     var declarationText = $declaration.find('declaration-text').text();
                     self.submitPlan(declarationText);
+                },
+                cancelMeriPlanDeclaration: function() {
+                    self.saveMeriPlan(false)
                 }
             };
             ko.applyBindings(declarationViewModel, $declaration[0]);
