@@ -331,3 +331,6 @@ li.select2-search input {
 	margin: 1.75rem auto !important;
 	height: auto !important;
 }
+.outputs-without-targets .well, .outputTargets .well {
+	margin-bottom: 1rem;
+}
