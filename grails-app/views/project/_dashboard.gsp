@@ -33,14 +33,14 @@
 
 <asset:script>
     $(document).on('dashboardShown', function (){
+        setTimeout(function() {
         var content = $('.outputs-without-targets');
-            console.log({content})
         var columnized = content.find('.column').length > 0;
         if (!columnized){
             content.columnize({ columns: 2, lastNeverTallest:true, buildOnce:false, accuracy: 10 });
         }
         $('.helphover').data('popover', null);
         $('.helphover').popover({container:'body', animation: true, trigger:'hover'});
-    });
+    }, 100)});
 </asset:script>
 
