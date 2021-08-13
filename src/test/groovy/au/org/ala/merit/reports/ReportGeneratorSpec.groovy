@@ -385,6 +385,110 @@ class ReportGeneratorSpec extends Specification {
         reports[0].generatedBy == config.category
     }
 
+    def "Generated reports using onlyGenerateReportsForDatesBefore"() {
+        setup:
+        ReportConfig config = new ReportConfig(
+                reportType: "Single",
+                firstReportingPeriodEnd: "2023-06-30T14:00:00Z",
+                reportNameFormat: "Outcomes Report 2",
+                reportDescriptionFormat: "Outcomes report 2 for %4\$s",
+                multiple: false,
+                "reportingPeriodInMonths": 60,
+                onlyGenerateReportsForDatesBefore: "2019-06-30T14:00:00Z",
+                "minimumPeriodInMonths": 36,
+                category: "Outcomes Report 2",
+                reportsAlignedToCalendar: false,
+                activityType:"RLP Medium term project outcomes",
+                label:"Test label")
+        String periodStart = '2018-06-30T14:00:00Z'
+        String periodEnd = '2023-06-30T14:00:00Z'
+        ReportOwner owner = new ReportOwner(id:[managementUnitId:'mu1'], name:"MU 1", periodStart:periodStart, periodEnd:periodEnd)
+        ReportGenerator reportGenerator = new ReportGenerator()
+
+        when:
+        List reports = reportGenerator.generateReports(config, owner, 0, null)
+
+        then:
+        reports.size() == 1
+        reports[0].generatedBy == config.label
+
+        when:
+        config.label = null
+        reports = reportGenerator.generateReports(config, owner, 0, null)
+
+        then:
+        reports.size() == 1
+        reports[0].generatedBy == config.category
+    }
+
+    def "Report will not generate if project start date after the onlyGenerateReportsForDatesBefore"() {
+        setup:
+        ReportConfig config = new ReportConfig(
+                reportType: "Single",
+                firstReportingPeriodEnd: "2023-06-30T14:00:00Z",
+                reportNameFormat: "Outcomes Report 2",
+                reportDescriptionFormat: "Outcomes report 2 for %4\$s",
+                multiple: false,
+                "reportingPeriodInMonths": 60,
+                onlyGenerateReportsForDatesBefore: "2019-06-30T14:00:00Z",
+                "minimumPeriodInMonths": 36,
+                category: "Outcomes Report 2",
+                reportsAlignedToCalendar: false,
+                activityType:"RLP Medium term project outcomes",
+                label:"Test label")
+        String periodStart = '2019-07-1T14:00:00Z'
+        String periodEnd = '2023-06-30T14:00:00Z'
+        ReportOwner owner = new ReportOwner(id:[managementUnitId:'mu1'], name:"MU 1", periodStart:periodStart, periodEnd:periodEnd)
+        ReportGenerator reportGenerator = new ReportGenerator()
+
+        when:
+        List reports = reportGenerator.generateReports(config, owner, 0, null)
+
+        then:
+        reports == null
+
+        when:
+        reports = reportGenerator.generateReports(config, owner, 0, null)
+
+        then:
+        reports == null
+    }
+
+    def "report should generate without passing onlyGenerateReportsForDatesBefore"() {
+        setup:
+        ReportConfig config = new ReportConfig(
+                reportType: "Single",
+                firstReportingPeriodEnd: "2023-06-30T14:00:00Z",
+                reportNameFormat: "Outcomes Report 2",
+                reportDescriptionFormat: "Outcomes report 2 for %4\$s",
+                multiple: false,
+                "reportingPeriodInMonths": 60,
+                "minimumPeriodInMonths": 36,
+                category: "Outcomes Report 2",
+                reportsAlignedToCalendar: false,
+                activityType:"RLP Medium term project outcomes",
+                label:"Test label")
+        String periodStart = '2018-06-30T14:00:00Z'
+        String periodEnd = '2023-06-30T14:00:00Z'
+        ReportOwner owner = new ReportOwner(id:[managementUnitId:'mu1'], name:"MU 1", periodStart:periodStart, periodEnd:periodEnd)
+        ReportGenerator reportGenerator = new ReportGenerator()
+
+        when:
+        List reports = reportGenerator.generateReports(config, owner, 0, null)
+
+        then:
+        reports.size() == 1
+        reports[0].generatedBy == config.label
+
+        when:
+        config.label = null
+        reports = reportGenerator.generateReports(config, owner, 0, null)
+
+        then:
+        reports.size() == 1
+        reports[0].generatedBy == config.category
+    }
+
     def "We can generate a final report"(String projectEndDate, String expectedFromDate) {
         setup:
         ReportConfig config = new ReportConfig(

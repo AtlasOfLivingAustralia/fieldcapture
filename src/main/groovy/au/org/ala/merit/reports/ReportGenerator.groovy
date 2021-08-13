@@ -38,19 +38,25 @@ class ReportGenerator {
         Period period = Period.months(reportConfig.reportingPeriodInMonths)
 
         DateTime endDate = reportOwner.periodEnd.withZone(DateTimeZone.default)
+        DateTime onlyGenerateReportsForDatesBefore
+        if (reportConfig.onlyGenerateReportsForDatesBefore) {
+                onlyGenerateReportsForDatesBefore = reportConfig.getOnlyGenerateReportsForDatesBefore()
+        }
 
         List<Map> reports
-        if (reportConfig.multiple && !reportConfig.endDates) {
-            reports = generatePeriodicReports(reportConfig, reportOwner, latestApprovedReportPeriodEnd, startingSequenceNo, endDate, period)
-        }
-        else if (reportConfig.endDates) {
-            reports = generateNonPeriodicReportsByDate(latestApprovedReportPeriodEnd, reportOwner, reportConfig, endDate, startingSequenceNo)
-        }
-        else {
-            reports = generateSingleReport(reportOwner, endDate, reportConfig, period)
-        }
-        alignEndDates(reports, reportOwner.periodEnd, reportConfig)
+        if (!reportConfig.onlyGenerateReportsForDatesBefore || reportOwner.periodStart.isBefore(onlyGenerateReportsForDatesBefore)) {
+            if (reportConfig.multiple && !reportConfig.endDates) {
+                reports = generatePeriodicReports(reportConfig, reportOwner, latestApprovedReportPeriodEnd, startingSequenceNo, endDate, period)
+            }
+            else if (reportConfig.endDates) {
+                reports = generateNonPeriodicReportsByDate(latestApprovedReportPeriodEnd, reportOwner, reportConfig, endDate, startingSequenceNo)
+            }
+            else {
+                reports = generateSingleReport(reportOwner, endDate, reportConfig, period)
 
+            }
+            alignEndDates(reports, reportOwner.periodEnd, reportConfig)
+        }
         reports
     }
 

@@ -2,6 +2,7 @@ package au.org.ala.merit.reports
 
 import au.org.ala.merit.DateUtils
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import org.joda.time.Period
 
 /**
@@ -14,6 +15,8 @@ class ReportConfig {
     /** The date the first reporting period should end.  Used to align reports across programs */
     String firstReportingPeriodEnd = null
 
+    /** The generate report before.  Used to align reports across programs */
+    String onlyGenerateReportsForDatesBefore = null
     /** Allows reporting dates to be explicitly specified if they are not periodic */
     List<String> endDates
 
@@ -86,6 +89,7 @@ class ReportConfig {
     Integer minimumPeriodInMonths = null
 
 
+
     DateTime getFirstReportingPeriodEnd() {
         DateTime end = null
         if (firstReportingPeriodEnd) {
@@ -120,5 +124,13 @@ class ReportConfig {
      */
     boolean isAdjustable() {
         return adjustmentActivityType != null
+    }
+
+    DateTime getOnlyGenerateReportsForDatesBefore() {
+        DateTime beforeDate = null
+        if (onlyGenerateReportsForDatesBefore){
+            beforeDate =  DateUtils.parse(onlyGenerateReportsForDatesBefore).withZone(DateTimeZone.default)
+        }
+        beforeDate
     }
 }
