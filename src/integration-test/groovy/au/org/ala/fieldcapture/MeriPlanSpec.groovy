@@ -233,7 +233,7 @@ class MeriPlanSpec extends StubbedCasSpec {
 
         and:
         waitFor {
-            meriplan.saveAndSubmitChanges.displayed
+           meriplan.saveAndSubmitChanges.displayed
         }
         meriplan.saveAndSubmitChanges.click()
 

@@ -157,7 +157,7 @@
 								 data-bind="fileUploadNoImage:meriPlanUploadConfig"><i class="fa fa-plus"></i> <input
 									type="file" name="meriPlan"><span>Upload MERI Plan</span></div>
 						</g:if>
-						<button type="button" data-bind="click: saveAndSubmitChanges" class="btn btn-sm btn-info">Submit for approval</button>
+						<button type="button" data-bind="click: saveAndSubmitChanges" class="btn btn-sm btn-info saveAndSubmitChanges">Submit for approval</button>
 					</div>
 					<div data-bind="if: isSubmittedOrApproved()">
                         <g:if test="${showMERIActivityWarning}">
@@ -216,7 +216,7 @@
 							<input type="file" name="meriPlan"><span>Upload MERI Plan</span>
 						</div>
 					</g:if>
-					<button type="button" data-bind="click: saveAndSubmitChanges" class="btn btn-sm btn-info">Submit for approval</button>
+					<button type="button" data-bind="click: saveAndSubmitChanges" class="btn btn-sm btn-info saveAndSubmitChanges">Submit for approval</button>
 				</div>
 				<div data-bind="if: isSubmittedOrApproved()">
                     <g:if test="${showMERIActivityWarning}">
