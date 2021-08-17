@@ -15,7 +15,9 @@
             <g:renderException exception="${exception}"/>
         </g:if>
         <g:else>
+            <p>
             ${exception.getMessage()}
+            </p>
         </g:else>
     </g:if>
     <g:elseif test="${response.status == 404}">
