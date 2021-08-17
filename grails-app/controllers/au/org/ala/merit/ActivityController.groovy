@@ -307,9 +307,6 @@ class ActivityController {
             id = postBody.remove('activityId')
             if (!id) {id=''}
         }
-        //log.debug "Body: " + postBody
-        //log.debug "Params:"
-        //params.each { log.debug it }
 
         List duplicateStages = postBody.remove('duplicateStages')
 
@@ -320,7 +317,6 @@ class ActivityController {
                 values[k] = v
             }
         }
-        log.debug (values as JSON).toString()
 
         Map result = [:]
 
