@@ -32,13 +32,13 @@ module.exports = function (config) {
         // list of files / patterns to load in the browser
         files: [
             'src/test/js/util/*.js',
-            'grails-app/assets/vendor/knockout/3.5.0/knockout.js',
-            'grails-app/assets/vendor/knockout/3.5.0/knockout.mapping-latest.js',
+            'grails-app/assets/vendor-ext/knockout/knockout-latest.js',
+            'grails-app/assets/vendor-ext/knockout-mapping/knockout.mapping.js',
             'grails-app/assets/vendor/jquery.validationEngine/jquery.validationEngine.js',
-            'grails-app/assets/vendor/underscorejs/1.8.3/underscore.js',
+            'grails-app/assets/vendor-ext/underscore/underscore.js',
             'grails-app/assets/vendor/wmd/showdown.js',
             'grails-app/assets/vendor/wmd/wmd.js',
-            'grails-app/assets/vendor/datatables/1.10.25/datatables.js',
+            'grails-app/assets/vendor-ext/datatables.net/js/jquery.dataTables.js',
             'grails-app/assets/vendor/jquery.appear/jquery.appear.js',
             'grails-app/assets/vendor/amplifyjs/amplify.min.js',
             'grails-app/assets/vendor/vkbeautify/vkbeautify.0.99.00.beta.js',

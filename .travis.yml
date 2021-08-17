@@ -63,6 +63,7 @@ cache:
 
 script:
   - ./gradlew -PenableClover=true cloverGenerateReport
+  - ./gradlew clean && ./gradlew build
   - node_modules/karma/bin/karma start karma.conf.js --single-run --browsers ChromeHeadless
 #  - ./src/main/scripts/runFunctionalTests.sh
 

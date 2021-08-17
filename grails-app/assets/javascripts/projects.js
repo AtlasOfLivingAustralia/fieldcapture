@@ -2,7 +2,7 @@
 //= require wms
 //= require mapWithFeatures.js
 //= require fancybox/jquery.fancybox
-//= require bootstrap-combobox/bootstrap-combobox.js
+//= require @danielfarrell/bootstrap-combobox/js/bootstrap-combobox.js
 //= require jquery.shorten/jquery.shorten.js
 //= require jquery.appear/jquery.appear.js
 //= require thumbnail.scroller/2.0.3/jquery.mThumbnailScroller.js

@@ -1,6 +1,6 @@
 //= require wms
 //= require mapWithFeatures.js
-//= require bootstrap-combobox/bootstrap-combobox.js
+//= require @danielfarrell/bootstrap-combobox/js/bootstrap-combobox.js
 //= require fancybox/jquery.fancybox
 //= require slider-pro-master/js/jquery.sliderPro.min.js
 //= require sites.js
