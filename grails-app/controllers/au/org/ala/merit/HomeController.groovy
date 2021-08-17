@@ -51,6 +51,7 @@ class HomeController {
             alaAuth.setDomain("ala.org.au")
             alaAuth.setPath("/")
             alaAuth.setHttpOnly(true)
+            alaAuth.setSecure(true)
             response.addCookie(alaAuth)
         }
 
