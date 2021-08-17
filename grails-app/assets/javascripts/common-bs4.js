@@ -1,11 +1,11 @@
 //= require base-bs4
 //= require js-iso8601/js-iso8601.js
-//= require underscorejs/1.8.3/underscore
+//= require underscore/underscore
 //= require amplifyjs/amplify.min.js
-//= require bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js
-//= require bootbox/5.5.2/bootbox.all
-//= require knockout/3.5.0/knockout
-//= require knockout/3.5.0/knockout.mapping-latest
+//= require bootstrap-datepicker/js/bootstrap-datepicker.js
+//= require bootbox/bootbox.all.min.js
+//= require knockout/knockout-latest.js
+//= require knockout-mapping/knockout.mapping.js
 //= require jquery.validationEngine/3.1.0/jquery.validationEngine
 //= require jquery.validationEngine/3.1.0/jquery.validationEngine-en
 //= require jquery.blockUI/jquery.blockUI
@@ -23,8 +23,11 @@
 //= require wmd/wmd.js
 //= require wmd/showdown.js
 //= require pagination.js
-//= require datatables/1.10.25/datatables
-//= require datatables/1.10.25/dataTables.moment
+//= require datatables.net/js/jquery.dataTables.js
+//= require datatables.net-bs4/js/dataTables.bootstrap4.js
+//= require datatables.net-buttons/js/dataTables.buttons.js
+//= require datatables.net-buttons-bs4/js/buttons.bootstrap4.js
+//= require datatables/dataTables.moment.js
 
 
 ActivityProgress = {

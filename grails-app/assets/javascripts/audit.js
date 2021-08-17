@@ -1,5 +1,8 @@
-//= require datatables/1.10.25/datatables.js
-//= require datatables/1.10.25/dataTables.moment.js
+//= require datatables.net/js/jquery.dataTables.js
+//= require datatables.net-bs4/js/dataTables.bootstrap4.js
+//= require datatables.net-buttons/js/dataTables.buttons.js
+//= require datatables.net-buttons-bs4/js/buttons.bootstrap4.js
+//= require datatables/dataTables.moment.js
 //= require prettytextdiff/jquery.pretty-text-diff.min.js
 //= require prettytextdiff/diff_match_patch.js
 //= require_self
