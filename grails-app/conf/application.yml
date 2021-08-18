@@ -6,7 +6,8 @@ server:
   servlet:
     session:
       timeout: 3600
-
+    cookie:
+      secure: true
 environments:
     development:
       server:
@@ -16,9 +17,6 @@ spring:
     multipart:
       max-file-size: 1024MB
       max-request-size: 1024MB
-    session:
-      cookie:
-        secure: true
   devtools:
     livereload:
       enabled: true
@@ -27,6 +25,9 @@ spring:
         - '**/*.gsp'
         - '**/*.css'
         - '**/*.js'
+management:
+  endpoints:
+    enabled-by-default: false
 
 grails:
   controllers:
