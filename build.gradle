@@ -208,7 +208,7 @@ clientDependencies {
     installDir = "grails-app/assets/vendor-ext"
     npm {
         'bootstrap'('4.6.0', transitive:false)
-        'bootbox'('5.5.2', transitive:false) {
+        'bootbox'('5.5.2') {
             include 'bootbox.all.min.js'
         }
         'jquery'('3.6.0')
@@ -220,11 +220,36 @@ clientDependencies {
         'underscore'('1.12.1') {
             include 'underscore.js'
         }
-        'datatables.net'("1.10.25")
-        'datatables.net-buttons'('1.7.1')
+        'datatables.net-bs4'("1.10.25")
+        "datatables.net-buttons-dt"("1.7.1")
         'datatables.net-buttons-bs4'("1.7.1")
-        '@danielfarrell/bootstrap-combobox'('1.1.8')
+        '@danielfarrell/bootstrap-combobox'('1.1.8', transitive:false)
+        'fancybox'('3.0.1')
+        "fuelux"("3.17.2")
+        "fuse.js"("6.4.6", transitive:false)
+        "leaflet"("0.7.7")
+        "select2-theme-bootstrap4"("1.0.0")
+        "slickgrid"("2.4.38")
+        "slider-pro"("1.6.0" , transitive:false)
+        "jquery-appear-original"("0.4.1")
+        "jquery-file-download"("1.4.6", from: "src/Scripts") {
+            include "jquery.fileDownload.js"
+        }
+        "jquery.shorten"("1.0.0", from: "src", transitive:false)
+        "js-cookie"("3.0.0", transitive:false)
+        "@taitems/jquery-gantt"("1.1.2", transitive:false)
+        "jstimezonedetect"("1.0.7", transitive:false)
+        "jszip"("3.7.1", transitive:false)
+        "pdfmake"("0.1.36", transitive:false)
+        "typeahead.js"("0.11.1")
+        'frigus02-vkbeautify'("1.0.1") {
+            include "vkbeautify.js"
+        }
 
+    }
+    bower {
+        'html5shiv'("3.7.3", transitive:false)
+        "blockui"("2.69")
     }
 }
 

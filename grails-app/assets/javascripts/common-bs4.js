@@ -8,12 +8,12 @@
 //= require knockout-mapping/knockout.mapping.js
 //= require jquery.validationEngine/3.1.0/jquery.validationEngine
 //= require jquery.validationEngine/3.1.0/jquery.validationEngine-en
-//= require jquery.blockUI/jquery.blockUI
+//= require blockui/jquery.blockUI.js
 //= require momentjs/2.24.0/moment.min.js
 //= require momentjs/2.24.0/locales/en-au.js
 //= require momentjs/moment-timezone-with-data.min.js
-//= require vkbeautify/vkbeautify.0.99.00.beta.js
-//= require bootstrap-combobox/bootstrap-combobox
+//= require frigus02-vkbeautify/vkbeautify.js
+//= require @danielfarrell/bootstrap-combobox/js/bootstrap-combobox.js
 //= require lockService
 //= require fieldcapture-application
 //= require healthCheck
@@ -25,9 +25,10 @@
 //= require pagination.js
 //= require datatables.net/js/jquery.dataTables.js
 //= require datatables.net-bs4/js/dataTables.bootstrap4.js
+//= require datatables.net-buttons-dt/js/buttons.dataTables.js
 //= require datatables.net-buttons/js/dataTables.buttons.js
 //= require datatables.net-buttons-bs4/js/buttons.bootstrap4.js
-//= require datatables/dataTables.moment.js
+//= require dataTables.moment.js
 
 
 ActivityProgress = {

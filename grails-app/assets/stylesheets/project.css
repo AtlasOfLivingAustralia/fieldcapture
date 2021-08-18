@@ -1,14 +1,15 @@
 /*
 *= require datatables.net-bs4/css/dataTables.bootstrap4.css
+*= require datatables.net-buttons-dt/css/buttons.dataTables.css
 *= require datatables.net-buttons-bs4/css/buttons.bootstrap4.css
 *= require thumbnail.scroller/2.0.3/jquery.mThumbnailScroller.css
 *= require blueimp/fileupload-9.28.0/jquery.fileupload
-*= require fancybox/jquery.fancybox
-*= require jquery-gantt/css/style.css
+*= require fancybox/css/jquery.fancybox.css
+*= require @taitems/jquery-gantt/css/style.css
 *= require gantt.css
 *= require meriplan.css
 *= require sites.css
-*= require select2/4.0.3/css/select2
+*= require select2/css/select2
 *= require blog
 *= require dataSets
 *= require activity.css

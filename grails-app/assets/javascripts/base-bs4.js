@@ -1,4 +1,4 @@
-//= require html5/html5
+//= require html5shiv/html5shiv.js
 //= require jquery/jquery.js
-//= require jquery-cookie/jquery.cookie
-//= require bootstrap/js/bootstrap.bundle
+//= require js-cookie/js.cookie.js
+//= require bootstrap/js/bootstrap.bundle.js
