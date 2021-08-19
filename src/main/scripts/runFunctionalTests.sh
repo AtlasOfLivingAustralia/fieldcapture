@@ -38,7 +38,7 @@ sleep 60
 
 cd $MERIT_DIR
 GRADLE_OPTS="-Xmx512m" ./gradlew bootRun --no-daemon "-Dorg.gradle.jvmargs=-Xmx512m" -Dgrails.env=test -Dgrails.server.port.http=8087 &
-sleep 30
+sleep 180
 
 chmod u+x src/main/scripts/loadFunctionalTestData.sh
 
