@@ -238,3 +238,8 @@ div.output-block {
     color: #fff;
     background-color: #005f8f;
 }
+.media-object {
+    width: 32px;
+    min-width: 32px;
+    height: 32px;
+}
