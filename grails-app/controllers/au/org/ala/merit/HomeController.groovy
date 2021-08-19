@@ -2,6 +2,7 @@ package au.org.ala.merit
 
 import au.org.ala.merit.hub.HubSettings
 import grails.converters.JSON
+import grails.core.GrailsApplication
 import org.apache.commons.lang.StringUtils
 
 import javax.servlet.http.Cookie
@@ -9,8 +10,6 @@ import javax.servlet.http.Cookie
 class HomeController {
 
     def projectService
-    def siteService
-    def activityService
     def searchService
     def settingService
     def metadataService
@@ -20,6 +19,10 @@ class HomeController {
     def statisticsFactory
     def blogService
     def commonService
+    GrailsApplication grailsApplication
+
+    /** Cookie issued by the ALA authentication system that indicates an SSO session may be available*/
+    static final String ALA_AUTH = "ALA-Auth"
 
     def index() {
         HubSettings hubSettings = SettingService.hubConfig
@@ -38,7 +41,6 @@ class HomeController {
      */
     def login() {
 
-        final String ALA_AUTH = "ALA-Auth"
         Cookie[] cookies = request.getCookies()
         boolean found = false
         for (Cookie cookie:cookies) {
@@ -47,15 +49,24 @@ class HomeController {
             }
         }
         if (!found) {
-            Cookie alaAuth = new Cookie(ALA_AUTH, userService.getUser().userName)
-            alaAuth.setDomain("ala.org.au")
-            alaAuth.setPath("/")
-            alaAuth.setHttpOnly(true)
-            alaAuth.setSecure(true)
+            Cookie alaAuth = createAlaCookie()
             response.addCookie(alaAuth)
         }
 
         redirect(url:grailsApplication.config.getProperty('grails.serverURL'))
+    }
+
+    /** The CAS session & ALA cookies can get out of sync, this puts them back in sync */
+    private Cookie createAlaCookie() {
+
+        // Don't want the cookie secure in dev environments as HTTPS is generally not used.
+        boolean useSecureCookie = grailsApplication.config.getProperty('server.servlet.session.cookie.secure', Boolean, false)
+        Cookie alaAuth = new Cookie(ALA_AUTH, userService.getUser().userName)
+        alaAuth.setDomain("ala.org.au")
+        alaAuth.setPath("/")
+        alaAuth.setHttpOnly(true)
+        alaAuth.setSecure(useSecureCookie)
+        alaAuth
     }
 
     def projectExplorer() {

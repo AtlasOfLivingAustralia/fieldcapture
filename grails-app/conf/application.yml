@@ -6,8 +6,6 @@ server:
   servlet:
     session:
       timeout: 3600
-      cookie:
-        secure: true
 environments:
     development:
       server:
