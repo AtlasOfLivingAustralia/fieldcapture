@@ -188,12 +188,6 @@ bootRun {
     systemProperty springProfilesActive, System.getProperty(springProfilesActive)
 }
 
-tasks.withType(GroovyCompile) {
-    configure(groovyOptions) {
-        forkOptions.jvmArgs = ['-Xmx2048m']
-    }
-}
-
 tasks.withType(Test) {
     systemProperty "geb.env", System.getProperty('geb.env')
     systemProperty "geb.build.reportsDir", reporting.file("geb/integrationTest")
