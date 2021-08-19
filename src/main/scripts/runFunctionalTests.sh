@@ -32,7 +32,7 @@ mongo ecodata-functional-test --eval 'db.dropDatabase();'
 mongo ecodata-functional-test --eval 'db.project.count();'
 
 echo "Starting ecodata from $ECODATA_LOCAL_DIR"
-GRADLE_OPTS="-Xmx512m" ./gradlew bootRun --no-daemon "-Dorg.gradle.jvmargs=-Xmx512m" "-Dgrails.env=meritfunctionaltest"&
+GRADLE_OPTS="-Xmx512m" ./gradlew bootRun --no-daemon "-Dorg.gradle.jvmargs=-Xmx512m" -Dgrails.env=meritfunctionaltest &
 sleep 40
 
 cd $MERIT_DIR
