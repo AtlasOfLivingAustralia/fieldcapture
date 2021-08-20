@@ -22,6 +22,7 @@
 <body>
 <div id="image-map"></div>
 
+<asset:javascript src="jquery/jquery.js"/>
 <asset:javascript src="leaflet-manifest.js"/>
 <script>
     // Using leaflet.js to pan and zoom a big image.
