@@ -6,7 +6,6 @@ server:
   servlet:
     session:
       timeout: 3600
-
 environments:
     development:
       server:
@@ -24,6 +23,9 @@ spring:
         - '**/*.gsp'
         - '**/*.css'
         - '**/*.js'
+management:
+  endpoints:
+    enabled-by-default: false
 
 grails:
   controllers:

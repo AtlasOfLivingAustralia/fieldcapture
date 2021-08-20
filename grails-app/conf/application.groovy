@@ -89,6 +89,8 @@ grails.hibernate.cache.queries = false
 
 // revert to grails 2.2 behaviour for html escaping until such time as every page can be reviewed.
 grails.views.default.codec = "none"
+grails.plugins.cookie.secure.default = true
+grails.plugins.cookie.httpOnly.default = true
 
 /******************************************************************************\
  *  EXTERNAL SERVERS

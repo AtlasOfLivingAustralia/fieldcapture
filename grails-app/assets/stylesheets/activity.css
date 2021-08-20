@@ -129,8 +129,8 @@
     border-radius: 5px;
 }
 
-.fromDate, .toDate, .status {
-    min-width: 6rem !important;
+#tablePlan .table .fromDate, #tablePlan .table .toDate, #tablePlan .table .status {
+    min-width: 7rem !important;
     width:8rem !important;
 }
 
@@ -236,4 +236,9 @@ div.output-block {
 .activity > .dropdown-menu > li:not(.disabled) > a:hover {
     color: #fff;
     background-color: #005f8f;
+}
+.media-object {
+    width: 32px;
+    min-width: 32px;
+    height: 32px;
 }

@@ -11,7 +11,14 @@
 <div id="wrapper" class="${containerType}">
     <h1 style="margin:20px 0;">An error occurred</h1>
     <g:if test="${exception}">
-        <g:renderException exception="${exception}"/>
+        <g:if test="${grails.util.Environment.isDevelopmentRun()}">
+            <g:renderException exception="${exception}"/>
+        </g:if>
+        <g:else>
+            <p>
+            ${exception.getMessage()}
+            </p>
+        </g:else>
     </g:if>
     <g:elseif test="${response.status == 404}">
         <p>404 - The requested page was not found</p>

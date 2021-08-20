@@ -1,6 +1,5 @@
 package au.org.ala.merit
 
-import au.org.ala.merit.SettingPageType
 import au.org.ala.merit.hub.HubSettings
 import grails.converters.JSON
 import grails.util.Holders
@@ -12,7 +11,7 @@ import org.springframework.web.context.request.RequestAttributes
 @Slf4j
 class SettingService {
 
-    private static def ThreadLocal localHubConfig = new ThreadLocal()
+    private static ThreadLocal localHubConfig = new ThreadLocal()
     private static final String HUB_LIST_CACHE_KEY = 'hubList'
     private static final String HUB_CACHE_KEY_SUFFIX = '_hub'
     public static final String HUB_CONFIG_ATTRIBUTE_NAME = 'hubConfig'
@@ -65,19 +64,20 @@ class SettingService {
         hubs.find{it.urlPath == hubUrlPath}
     }
 
-    def loadHubConfig(hub) {
-
+    def loadHubConfig(String hub) {
+        // Don't want the cookie secure in dev environments as HTTPS is generally not used.
+        boolean useSecureCookie = grailsApplication.config.getProperty('server.servlet.session.cookie.secure', Boolean, false)
         if (!hub) {
             hub = grailsApplication.config.getProperty('app.default.hub', String, 'default')
             String previousHub = cookieService.getCookie(LAST_ACCESSED_HUB)
             if (!previousHub) {
-                cookieService.setCookie(LAST_ACCESSED_HUB, hub, -1 /* -1 means the cookie expires when the browser is closed */)
+                cookieService.setCookie(LAST_ACCESSED_HUB, hub, -1, '/', null, useSecureCookie, true)
             }
         }
         else {
             // Store the most recently accessed hub in a cookie so that 404 errors can be presented with the
             // correct skin.
-            cookieService.setCookie(LAST_ACCESSED_HUB, hub, -1 /* -1 means the cookie expires when the browser is closed */)
+            cookieService.setCookie(LAST_ACCESSED_HUB, hub, -1, '/', null, useSecureCookie, true)
         }
 
         def settings = getHubSettings(hub)
@@ -183,6 +183,4 @@ class SettingService {
             resp.list ?: []
         })
     }
-
-
 }

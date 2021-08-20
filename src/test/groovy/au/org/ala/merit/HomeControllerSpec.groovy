@@ -4,6 +4,8 @@ import au.org.ala.merit.hub.HubSettings
 import spock.lang.Specification
 import grails.testing.web.controllers.ControllerUnitTest
 
+import javax.servlet.http.Cookie
+
 /** Tests the HomeController */
 class HomeControllerSpec extends Specification implements ControllerUnitTest<HomeController>{
 
@@ -115,14 +117,6 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
 
     }
 
-
-
-
-
-
-
-
-
     def "The geoservice method delegates to SearchService.allProjectsWithSites if the geo param is present"() {
         setup:
         Map searchResponse = [projects:[[geo:[]]]]
@@ -154,6 +148,27 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
         and:
         Map response = response.json
         response == searchResponse
+    }
+
+    def "The login method can add an ALA cookie if required"() {
+        when:
+        Cookie authCookie = new Cookie(HomeController.ALA_AUTH, "me")
+        request.setCookies(authCookie)
+        controller.login()
+
+        then:
+        response.redirectUrl == grailsApplication.config.getProperty('grails.serverURL')
+
+
+        when:
+        response.reset()
+        request.setCookies([] as Cookie[])
+        controller.login()
+
+        then:
+        1 * userService.getUser() >> [userName:'me']
+        response.getCookie(HomeController.ALA_AUTH).value == 'me'
+        response.redirectUrl == grailsApplication.config.getProperty('grails.serverURL')
     }
 
 
