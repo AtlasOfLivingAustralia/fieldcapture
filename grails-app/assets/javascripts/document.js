@@ -417,7 +417,7 @@ function showDocumentAttachInModal(uploadUrl, documentViewModel, modalSelector, 
 
     // Decorate the model so it can handle the button presses and close the modal window.
     documentViewModel.cancel = function() {
-        result.resolve();
+        result.resolve(ko.toJS(documentViewModel));
         closeModal();
     };
     documentViewModel.close = function() {
