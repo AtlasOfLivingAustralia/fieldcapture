@@ -2444,10 +2444,10 @@ div#announcement p {
     margin: 0;
 }
 
-.merit {
+.container-fluid form.search.merit {
+    margin-top: 12px;
     display: block;
     float: left;
-    margin-top: 12px;
 }
 
 span.merit {
