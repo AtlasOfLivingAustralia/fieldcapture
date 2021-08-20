@@ -69,7 +69,7 @@ script:
   - ./src/main/scripts/runFunctionalTests.sh
 
 after_success:
-  - 'travis_wait 30 [ "${TRAVIS_PULL_REQUEST}" = "false" ] && ./gradlew clean && travis_retry ./gradlew publish'
+  - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && ./gradlew clean && travis_wait 30 ./gradlew publish'
 
 env:
   global:
