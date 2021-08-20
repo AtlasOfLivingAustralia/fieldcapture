@@ -67,7 +67,7 @@ MERIT depends on a running instance of [ecodata](https://github.com/AtlasOfLivin
 To run MERIT with support for hot-reloading of changes to the ecodata-client-plugin, clone the ecodata-client-plugin repository into the same parent folder as the fieldcapture project.
 Run MERIT with additonal parameters:
 ```
-./gradlew :bootRun -DDgrails.run.active=true -Pinplace=true
+./gradlew :bootRun -Dgrails.run.active=true -Pinplace=true
 ```
 
 Note the leading colon before the bootRun task - this is required as when inplace=true gradle is configured in a multi-project build configuration.
