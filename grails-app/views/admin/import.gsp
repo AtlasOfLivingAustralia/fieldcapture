@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta name="layout" content="adminLayout"/>
-    <title>Import Projects | Admin | Field Capture</title>
+    <title>Import Projects | Admin | MERIT</title>
     <script>
             var fcConfig = {
                 serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",

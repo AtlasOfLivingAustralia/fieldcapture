@@ -83,9 +83,9 @@
         <div class="report-section">
     <h3>Action summary</h3>
 
-        <div class="row w-100">
+        <div class="row">
             <div class="col-sm-12">
-                <table class="actions ${tableClass} table table-striped ml-3">
+                <table class="actions ${tableClass} table table-striped">
 
                     <thead>
 

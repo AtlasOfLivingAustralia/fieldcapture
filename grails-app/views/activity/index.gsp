@@ -12,7 +12,7 @@
     </g:else>
 
     <script type="text/javascript" src="${grailsApplication.config.getProperty('google.maps.url')}"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.4/jstz.min.js"></script>
+    <asset:javascript src="jstimezonedetect/jstz.js"/>
     <script>
     var fcConfig = {
         serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",

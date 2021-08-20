@@ -23,9 +23,9 @@ div.report-section {
 
 .action-table {
     table-layout:fixed;
-    width: 97%;
-    margin-left: 16px;
+    width: 100%;
 }
+
 .action-table th {
     white-space: normal;
 }
@@ -50,7 +50,9 @@ div.report-section {
 .action-table-2018 .actionProgress { width: 38%; white-space: pre-wrap; }
 .action-table-2018 .webLink { width: 6%; }
 .action-table-2018 .deliveryPartners { width: 14%; }
-
+.simple_numbers {
+    float: right;
+}
 
 .status-row { height: 60px; }
 .themeActions {

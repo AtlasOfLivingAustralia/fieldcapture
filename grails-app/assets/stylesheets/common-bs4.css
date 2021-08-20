@@ -1,8 +1,10 @@
 /*
 *= require base-bs4
-*= require bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css
+*= require bootstrap-datepicker/css/bootstrap-datepicker.css
 *= require jquery.validationEngine/3.1.0/validationEngine.jquery
-*= require datatables/1.10.25/datatables.css
+*= require datatables.net-bs4/css/dataTables.bootstrap4.css
+*= require datatables.net-buttons-dt/css/buttons.dataTables.css
+*= require datatables.net-buttons-bs4/css/buttons.bootstrap4.css
 *= require blueimp/fileupload-9.28.0/jquery.fileupload.css
 *= require wmd/wmd.css
 */

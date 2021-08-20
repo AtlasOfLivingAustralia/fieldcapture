@@ -103,7 +103,8 @@
     <asset:stylesheet src="project.css"/>
     <asset:stylesheet src="leaflet-manifest.css"/>
     <asset:stylesheet src="feature.css"/>
-    <asset:stylesheet src="select2-bootstrap4/select2-bootstrap4.css"/>
+    <asset:stylesheet src="select2/css/select2.css"/>
+    <asset:stylesheet src="select2-theme-bootstrap4/select2-bootstrap.css"/>
 
 </head>
 
@@ -485,7 +486,7 @@ var config = {
 <asset:javascript src="projects.js"/>
 <asset:javascript src="document.js"/>
 <asset:javascript src="reporting.js"/>
-<asset:javascript src="select2/4.0.3/js/select2.full"/>
+<asset:javascript src="select2/js/select2.full.js"/>
 <asset:javascript src="knockout-custom-bindings.js"/>
 <asset:javascript src="forms-knockout-bindings.js"/>
 <asset:javascript src="leaflet-manifest.js"/>

@@ -91,18 +91,8 @@ class CreateOrEditOrganisationSpec extends StubbedCasSpec {
         when:
         to Organisation, orgId
 
-        then:
-        waitFor {adminTab.displayed}
-
-        when:
-        adminTab.click()
-
-        then:
-        waitFor 10, { adminTabContent.displayed }
-        waitFor 10, { adminTabContent.editButton.displayed }
-
-        when:
-        adminTabContent.editButton.click()
+        and:
+        edit()
 
         then:
         waitFor 20, {at EditOrganisation}

@@ -17,8 +17,8 @@
     </script>
     <asset:stylesheet src="common-bs4.css"/>
     <asset:stylesheet src="program.css"/>
-    <asset:stylesheet src="select2/4.0.3/css/select2.css"/>
-    <asset:stylesheet src="select2-bootstrap4/select2-bootstrap4.css"/>
+    <asset:stylesheet src="select2/css/select2.css"/>
+    <asset:stylesheet src="select2-theme-bootstrap4/select2-bootstrap.css"/>
 
 
 </head>
@@ -37,8 +37,8 @@
     <g:render template="programDetails"/>
 
     <div class="form-actions">
-        <button type="button" id="save" data-bind="click:save" class="btn btn-primary">Save</button>
-        <button type="button" id="cancel" class="btn" data-bind="click:cancel">Cancel</button>
+        <button type="button" id="save" data-bind="click:save" class="btn btn-sm btn-primary">Save</button>
+        <button type="button" id="cancel" class="btn btn-sm btn-danger" data-bind="click:cancel">Cancel</button>
     </div>
 </div>
 
@@ -61,7 +61,7 @@
 <asset:javascript src="attach-document-no-ui.js"/>
 <asset:javascript src="program.js"/>
 <asset:javascript src="forms-knockout-bindings.js"/>
-<asset:javascript src="select2/4.0.3/js/select2.full"/>
+<asset:javascript src="select2/js/select2.full.js"/>
 <asset:deferredScripts/>
 
 </body>

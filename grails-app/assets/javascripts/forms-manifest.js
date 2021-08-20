@@ -1,8 +1,8 @@
-//= require fancybox/jquery.fancybox
-//= require select2/4.0.3/js/select2.full
-//= require typeahead/0.11.1/bloodhound
+//= require fancybox/js/jquery.fancybox
+//= require select2/js/select2.full.js
+//= require typeahead.js/bloodhound
 //= require attach-document.js
-//= require jquery.fileDownload/jQuery.fileDownload
+//= require jquery-file-download/jquery.fileDownload.js
 //= require forms.js
 //= require wms
 //= require mapWithFeatures.js
