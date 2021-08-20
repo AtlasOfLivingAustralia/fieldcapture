@@ -51,5 +51,4 @@ RETURN_VALUE=$?
 kill %2
 kill %1
 
-#exit $RETURN_VALUE
-exit 0
+exit $RETURN_VALUE
