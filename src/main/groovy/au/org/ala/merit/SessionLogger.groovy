@@ -24,10 +24,5 @@ class SessionLogger implements HttpSessionListener {
     @Override
     void sessionDestroyed(HttpSessionEvent httpSessionEvent) {
         log.info("${httpSessionEvent.session.id} destroyed with lastAccessedTime=${new DateTime(httpSessionEvent.session.lastAccessedTime)}")
-        StackTraceElement[] stack = Thread.currentThread().getStackTrace()
-
-        for (StackTraceElement e in stack) {
-            log.info("${httpSessionEvent.session.id}...${e}")
-        }
     }
 }
