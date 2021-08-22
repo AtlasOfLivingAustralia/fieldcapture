@@ -6,7 +6,6 @@ import au.org.ala.merit.SessionLogger
 import grails.boot.GrailsApp
 import grails.boot.config.GrailsAutoConfiguration
 import grails.converters.JSON
-import grails.plugin.cache.ehcache.GrailsEhcacheCacheManager
 import grails.util.BuildSettings
 import grails.util.Environment
 import groovy.util.logging.Slf4j
@@ -20,14 +19,6 @@ import org.springframework.boot.web.servlet.ServletListenerRegistrationBean
 class Application extends GrailsAutoConfiguration {
     static void main(String[] args) {
         GrailsApp.run(Application, args)
-    }
-
-    GrailsEhcacheCacheManager grailsCacheManager
-
-    @Override
-    void doWithApplicationContext() {
-        log.info("doWithApplicationContext....")
-        grailsCacheManager = applicationContext.grailsCacheManager
     }
 
     @Override
@@ -60,6 +51,6 @@ class Application extends GrailsAutoConfiguration {
     @Override
     void onShutdown(Map<String, Object> event) {
         log.info("Shutting down - destroying the cache manager")
-        grailsCacheManager.destroy()
+        applicationContext.grailsCacheManager.destroy()
     }
 }
