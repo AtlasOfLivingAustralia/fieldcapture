@@ -319,5 +319,6 @@ environments {
     production {
         grails.logging.jul.usebridge = false
         grails.resources.work.dir = "/data/${appName}/cache"
+        server.servlet.session.cookie.secure = true
     }
 }
