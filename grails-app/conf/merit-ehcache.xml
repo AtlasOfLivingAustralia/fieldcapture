@@ -36,7 +36,7 @@
         <value-type>java.lang.String</value-type>
         <resources>
             <heap unit="entries">10</heap>
-            <disk unit="MB">2</disk>
+            <disk unit="MB" persistent="true">2</disk>
         </resources>
     </cache>
 
