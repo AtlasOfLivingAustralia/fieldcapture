@@ -36,8 +36,8 @@
             {title:'Output Target measure', width:'200px', data:'score'}
         ];
         <g:each in="${programs}" var="program">
-            columns.push({title:"${program} - Target", data:"${program.encodeAsRaw()} - Target", width:'50px'});
-            columns.push({title:"${program} - Delivered", data:"${program.encodeAsRaw()} - Value", width:'50px'});
+            columns.push({title:"${program} - Target", data:"${program.encodeAsJavaScript()} - Target", width:'50px'});
+            columns.push({title:"${program} - Delivered", data:"${program.encodeAsJavaScript()} - Value", width:'50px'});
         </g:each>
 
         $('#outputTargets').dataTable({
