@@ -92,11 +92,6 @@
     font-weight: bold;
     font-size: 12px;
 }
-.fromDate, .toDate, .status {
-    min-width: 6rem !important;
-    width:8rem !important;
-}
-
 .actions {
     min-width: 6rem !important;
     width:8rem !important;

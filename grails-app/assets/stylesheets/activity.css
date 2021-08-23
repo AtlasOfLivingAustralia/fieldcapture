@@ -129,9 +129,9 @@
     border-radius: 5px;
 }
 
-#tablePlan .table .fromDate, #tablePlan .table .toDate, #tablePlan .table .status {
-    min-width: 7rem !important;
-    width:8rem !important;
+.fromDate, .toDate, .status {
+    min-width: 7rem;
+    width:8rem;
 }
 
 .actions {

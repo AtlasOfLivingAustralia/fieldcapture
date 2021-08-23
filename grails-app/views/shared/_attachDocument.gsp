@@ -112,7 +112,7 @@
 
                                 <span data-bind="visible:filename()" class="input-group">
                                     <input id="fileLabel" class="form-control form-control-sm" type="text" readonly="readonly" data-bind="value:fileLabel"/>
-                                    <button class="btn" data-bind="click:removeFile">
+                                    <button class="btn btn-sm" type="button" data-bind="click:removeFile">
                                         <span class="fa fa-remove"></span>
                                     </button>
                                 </span>
@@ -122,28 +122,28 @@
                         <div class="form-group row" data-bind="visible:hasPreview">
                             <label class="col-form-label col-sm-4">Preview</label>
 
-                            <div id="preview" class="controls col-sm-8"></div>
+                            <div id="preview" class="col-sm-8"></div>
                         </div>
 
                         <div class="form-group row" data-bind="visible:progress() > 0">
                             <label class="col-form-label col-sm-4">Progress</label>
 
                             <div class="col-sm-8">
-                                <div id="progress" class="controls progress progress-info active input-small"
+                                <div id="progress" class="progress progress-info active"
                                      data-bind="visible:!error() && progress() <= 100, css:{'progress-info':progress()<100, 'progress-success':complete()}">
                                     <div class="bar progress-bar" data-bind="style:{width:progress()+'%'}, css:{'bg-info':progress()<100, 'bg-success':complete(), 'bg-error':error()}"></div>
                                 </div>
                             </div>
                             <div class="col-sm-4" data-bind="visible:complete()"></div>
                             <div class="col-sm-8">
-                                <div id="successmessage" class="controls" data-bind="visible:complete()">
-                                    <span class="alert alert-success">File successfully uploaded</span>
+                                <div id="successmessage" data-bind="visible:complete()">
+                                    <p class="alert alert-success">File successfully uploaded</p>
                                 </div>
                             </div>
                             <div class="col-sm-4" data-bind="visible:error()"></div>
                             <div class="col-sm-8">
-                                <div id="message" class="controls" data-bind="visible:error()">
-                                    <span class="alert alert-danger" data-bind="text:error"></span>
+                                <div id="message" data-bind="visible:error()">
+                                    <p class="alert alert-danger" data-bind="text:error"></p>
                                 </div>
                             </div>
                         </div>
