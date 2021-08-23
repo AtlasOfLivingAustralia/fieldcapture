@@ -81,35 +81,40 @@
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
                         </div>
                         <div class="modal-body">
-                            <form>
-                                <div class="form-group row">
-                                    <label for="fromStage" class="col-sm-3 col-form-label">From:</label>
-                                    <select id="fromStage" class="col-sm-2 form-control form-control-sm" data-bind="value:reportFromStage, options:reportableStages"></select>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="toStage" class="col-form-label col-sm-3">To: </label>
-                                    <select id="toStage" class="form-control form-control-sm col-sm-2" data-bind="value:reportToStage, options:reportableToStages"></select>
+                                <div class="row">
+                                    <label for="fromStage" class="col-sm-4 col-form-label">From:</label>
+                                    <div class="col-sm-8">
+                                        <select id="fromStage" class="form-control form-control-sm" data-bind="value:reportFromStage, options:reportableStages"></select>
+                                    </div>
 
                                 </div>
-                                <div class="form-group">
-                                    <div class="col-form-label">Optional Content: </div>
+                                <div class="row">
+                                    <label for="toStage" class="col-sm-4 col-form-label">To: </label>
+                                    <div class="col-sm-8">
+                                        <select id="toStage" class="form-control form-control-sm" data-bind="value:reportToStage, options:reportableToStages"></select>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-form-label col-sm-12">Optional Content: </div>
+                                </div>
+                                <!-- ko foreach:projectReportSections -->
                                     <div class="row">
-                                        <!-- ko foreach:projectReportSections -->
-                                            <div class="col-sm-8 ml-3">
+                                    <div class="col-sm-2"></div>
+                                        <div class="col-sm-10">
                                                 <label class="checkbox"><input type="checkbox" data-bind="checkedValue: $data.value, checked: $parent.reportIncludedSections, disable:$parent.disabledSection($data)">
                                                     <span data-bind="text:$data.text"></span>
                                                     <!-- ko if:$data.help -->
                                                     <i class="fa fa-question-circle" data-bind="popover:{content:$data.help, placement:'top'}"></i>
                                                     <!-- /ko -->
                                                 </label>
-                                            </div>
-                                        <!-- /ko -->
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group row">
+                                <!-- /ko -->
+                                <div class="row">
                                     <label for="orientation" class="col-sm-4 col-form-label">PDF Orientation: <fc:iconHelp>If your PDF includes activities with wide tables, the Landscape setting may improve the result.  This setting has no effect on the HTML view. </fc:iconHelp></label>
-                                    <div class="col-sm-3">
-                                        <select name="orientation" id="orientation" class="form-control form-control-sm col-sm-3" data-bind="value:orientation">
+                                    <div class="col-sm-8">
+                                        <select name="orientation" id="orientation" class="form-control form-control-sm" data-bind="value:orientation">
                                             <option value="portrait">Portrait</option>
                                             <option value="landscape">Landscape</option>
                                         </select>
@@ -117,8 +122,6 @@
 
 
                                 </div>
-                            </form>
-
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-sm btn-success" data-bind="click:generateProjectReportHTML">Generate Report (HTML)</button>
