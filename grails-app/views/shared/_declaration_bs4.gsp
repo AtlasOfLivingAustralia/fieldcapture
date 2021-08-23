@@ -1,4 +1,3 @@
-<g:set var="legalDeclaration"><fc:getSettingContent settingType="${declarationType ?: au.org.ala.merit.SettingPageType.DECLARATION}"/></g:set>
 <div id="${divId ?: 'declaration'}" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog  modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -9,7 +8,7 @@
                 </button>
             </div>
             <div class="modal-body declaration-text">
-                ${legalDeclaration}
+                <fc:getSettingContent settingType="${declarationType ?: au.org.ala.merit.SettingPageType.DECLARATION}"/>
             </div>
             <div class="modal-footer">
                 <label class="mr-auto">
