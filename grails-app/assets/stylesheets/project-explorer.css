@@ -185,7 +185,6 @@ select {
     vertical-align: middle;
     margin-bottom: 10px;
 }
-
 @media (max-width: 576px) {
     .card-body .row #facetClear .col-sm-4 {
         padding: 10px;
