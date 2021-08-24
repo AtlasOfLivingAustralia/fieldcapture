@@ -67,6 +67,61 @@ class RlpReportingSpec extends StubbedCasSpec {
 
     }
 
+    def "Report Attach Document should not be add a new empty doc in the table when the dialog box is cancel"() {
+        setup:
+        String projectId = '1'
+        login([userId: '1', role: "ROLE_FC_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+
+        when:
+        to RlpProjectPage, projectId
+
+        then:
+        waitFor { at RlpProjectPage }
+
+        when:
+        reportingTab.click()
+
+        then:
+        waitFor { projectReports.displayed }
+
+        when:
+        projectReports.reports[2].edit()
+
+        then:
+        waitFor { at ReportPage }
+
+        when: "Click on Attach Document"
+        interact {
+            moveToElement($("#RLP_-_Baseline_data-content .model-form .table.assuranceDocuments"))
+        }
+        then:
+        waitFor 20, {
+            doAttach.displayed
+        }
+
+        when:
+        doAttach.click()
+
+        then:
+        waitFor 10, {
+            attachDocumentModal.displayed
+            attachDocumentModal.cancelButton.displayed
+        }
+
+        when:
+        waitFor 10, {
+            attachDocumentModal.cancelButton.click()
+        }
+
+        then:
+        attachDocument[1].displayed
+
+        and:
+        //when the document is attached, attach document btn will be remove and swap with document
+        // otherwise it will not remove the attach document btn
+        attachDocument[1].text() == "Attach Document"
+    }
+
     def "A project editor can edit the report"() {
         setup:
         String projectId = '1'

@@ -3,6 +3,7 @@ package pages
 import geb.Page
 import geb.module.Checkbox
 import geb.navigator.Navigator
+import pages.modules.DocumentDialog
 import pages.modules.ReportContentModule
 import pages.modules.TimeoutModal
 
@@ -25,6 +26,9 @@ class ReportPage extends Page {
         timeoutModal(required: false) { $('div.bootbox.modal').module TimeoutModal }
         unsavedEdits(required: false) { $('div.bootbox') }
         editAnyway (required: false) { $(".alert .btn")}
+        attachDocumentModal (required: false) { $("#attachDocument").module(DocumentDialog) }
+        doAttach (required: false) { $("#RLP_-_Baseline_data-content .model-form .table.assuranceDocuments .btn#doAttach") }
+        attachDocument (required: false) { $("#RLP_-_Baseline_data-content .model-form .table.assuranceDocuments tr td div[data-bind*=attachments]") }
     }
 
     def field(String name) {

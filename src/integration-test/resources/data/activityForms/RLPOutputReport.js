@@ -174,10 +174,6 @@ var rlpOutputReport = {
     },
     {
       "collapsedByDefault": false,
-      "modelName": null,
-      "name": "RLP - Baseline data",
-      "optional": true,
-      "optionalQuestionText": null,
       "template": {
         "title": "Collecting or synthesising baseline data",
         "modelName": "RLP - Baseline data",
@@ -195,9 +191,18 @@ var rlpOutputReport = {
           },
           {
             "dataType": "text",
-            "name": "projectAssuranceDetails",
-            "validate": "required",
-            "description": "Refer to [insert URL for: RLP Project Services – evidence guide] for details of the types of acceptable evidence."
+            "name": "projectAssuranceDetails"
+          },
+          {
+            "dataType": "list",
+            "name": "assuranceDocuments",
+            "columns": [
+              {
+                "dataType": "document",
+                "name": "attachments",
+                "description": "Please attach any Evidence of Service Delivery here"
+              }
+            ]
           }
         ],
         "viewModel": [
@@ -225,11 +230,42 @@ var rlpOutputReport = {
                 "type": "row",
                 "items": [
                   {
-                    "preLabel": "Auditable Evidence",
+                    "type": "literal",
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all <u>Environment</u> projects but optional for Agriculture projects. This field identifies what evidence you have available for this service and where the evidence is stored. This helps the Department and Service Providers during future assurance activities. Refer to the <a href=\"http://nrm.gov.au/publications/rlp-merit-user-guide\" target=\"_evidence\">Evidence Guide</a> for details of the types of acceptable evidence."
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "preLabel": "",
                     "source": "projectAssuranceDetails",
                     "type": "textarea",
                     "rows": 4,
                     "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "type": "literal",
+                    "source": "<p><b>Evidence of Service Delivery</b></p>This field is mandatory for all <u>Agriculture</u> projects as part of the invoicing process, as well as any environment projects where you have been notified as undergoing an <u>audit or quarterly assurance check</u>. The field allows you to attach evidence against a specific service."
+                  }
+                ]
+              },
+              {
+                "type": "table",
+                "source": "assuranceDocuments",
+                "userAddedRows": true,
+                "disableTableUpload": true,
+                "columns": [
+                  {
+                    "title": "Attached documents",
+                    "source": "attachments",
+                    "type": "document"
                   }
                 ]
               }
@@ -238,8 +274,12 @@ var rlpOutputReport = {
           }
         ]
       },
+      "modelName": null,
       "templateName": "rlpBaselineData",
-      "title": "Collecting, or synthesising baseline data"
+      "optional": true,
+      "optionalQuestionText": null,
+      "title": "Collecting, or synthesising baseline data",
+      "name": "RLP - Baseline data"
     },
     {
       "collapsedByDefault": false,
