@@ -160,7 +160,7 @@ input.form-control.customCurrency {
      min-width: 7rem !important;
 }
 
-select, input, textarea {
+.model-form select, .model-form input, .model-form textarea {
     margin-bottom: 1rem;
 }
 
