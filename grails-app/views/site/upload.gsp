@@ -159,7 +159,8 @@
                 </div>
                 <div data-bind="text:progressText"></div>
                 <div class="progress">
-                    <div class="progress-bar bg-success" data-bind="style:{width:progress}"></div>
+                    <div class="progress-bar progress-bar-striped" role="progressbar" data-bind="visible: !finished(), style:{width:progress}"></div>
+                    <div class="progress-bar bg-success" role="progressbar" data-bind="visible: finished(), style:{width:progress}"></div>
                 </div>
             </div>
             <div class="modal-footer">

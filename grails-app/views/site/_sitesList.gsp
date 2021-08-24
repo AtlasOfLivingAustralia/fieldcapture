@@ -30,7 +30,7 @@
                     <th><input type="checkbox" id="select-all-sites"></th>
                     <th></th>
                     <th>Type <fc:iconHelp html="true">Planning site (P) or Reporting site (R)</fc:iconHelp><br/>
-                        <select class="customType" data-bind="value:typeFilter, options:typeOptions">
+                        <select data-bind="value:typeFilter, options:typeOptions">
 
                         </select>
                     </th>
