@@ -3,9 +3,11 @@ appName:
   "fieldcapture"
 
 server:
+  address: localhost
   servlet:
     session:
       timeout: 3600
+
 environments:
     development:
       server:
