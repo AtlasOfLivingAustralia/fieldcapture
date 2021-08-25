@@ -136,5 +136,5 @@
         Please attach programme logic to your MERI plan using the documents function on the Admin tab.  A "Document type" of "Programme Logic" should be selected when uploading the document.
     </p>
 
-    <g:render template="/shared/declaration" model="[divId:'meriSubmissionDeclaration', meriPlan: true, declarationType:au.org.ala.merit.SettingPageType.RLP_MERI_DECLARATION]"/>
+    <g:render template="/shared/declaration" model="[divId:'meriSubmissionDeclaration', declarationType:au.org.ala.merit.SettingPageType.RLP_MERI_DECLARATION]"/>
 </div>

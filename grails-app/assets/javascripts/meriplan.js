@@ -111,13 +111,11 @@ function MERIPlan(project, projectService, config) {
                 submitReport: function () {
                     var declarationText = $declaration.find('declaration-text').text();
                     self.submitPlan(declarationText);
-                },
-                cancelMeriPlanDeclaration: function() {
-                    self.saveMeriPlan(false)
                 }
             };
             ko.applyBindings(declarationViewModel, $declaration[0]);
-            $declaration.modal({backdrop: 'static', keyboard: true, show: true}).on('hidden', function () {
+            $declaration.modal({backdrop: 'static', keyboard: true, show: true}).on('hidden.bs.modal', function () {
+                $.unblockUI()
                 ko.cleanNode($declaration[0]);
             });
 

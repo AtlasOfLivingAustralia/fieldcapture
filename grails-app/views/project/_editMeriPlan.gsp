@@ -58,7 +58,7 @@
 </div>
 </script>
 
-<g:render template="/shared/declaration" model="[divId:'unlockPlan', meriPlan:true,  declarationType:au.org.ala.merit.SettingPageType.UNLOCK_PLAN_DECLARATION]"/>
+<g:render template="/shared/declaration" model="[divId:'unlockPlan',  declarationType:au.org.ala.merit.SettingPageType.UNLOCK_PLAN_DECLARATION]"/>
 <g:render template="meriPlanApprovalModal"/>
 <div class="row mb-4">
 	<div class="col-sm-6">
