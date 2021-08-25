@@ -242,3 +242,7 @@ div.output-block {
     min-width: 32px;
     height: 32px;
 }
+
+.titleModified {
+    font-size: 13px;
+}

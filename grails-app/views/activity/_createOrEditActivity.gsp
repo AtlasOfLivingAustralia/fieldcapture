@@ -28,7 +28,7 @@
 
 
         </g:else>
-        <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">Activity: <span data-bind="text:type"></span><i class="fa fa-asterisk" data-bind="visible:dirtyFlag.isDirty" title="Has been modified"></i></h3>
+        <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">Activity: <span data-bind="text:type"></span><span class="titleModified"><i class="fa fa-asterisk" data-bind="visible:dirtyFlag.isDirty" title="Has been modified"></i></h3></span>
         <h4><span>${project.associatedProgram?.encodeAsHTML()}</span> <span>${project.associatedSubProgram?.encodeAsHTML()}</span></h4>
     </div>
 </div>

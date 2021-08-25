@@ -15,6 +15,7 @@
         here = document.location.href;
     </script>
     <asset:stylesheet src="common-bs4.css"/>
+    <asset:stylesheet src="activity.css"/>
 
 </head>
 <body>
