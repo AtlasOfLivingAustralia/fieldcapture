@@ -241,7 +241,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         waitFor 10, {
             $("#meriSubmissionDeclaration").displayed
         }
-        def cancel = $('.btn[data-bind*="cancelMeriPlanDeclaration"]').find{it.text() =="Cancel"}
+        def cancel = $('#meriSubmissionDeclaration .btn.btn-danger').find{it.text() =="Cancel"}
 
         when: "save the meri plan and reload the page and it should unlock the UI"
         cancel.click()
