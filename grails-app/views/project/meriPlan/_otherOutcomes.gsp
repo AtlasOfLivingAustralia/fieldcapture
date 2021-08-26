@@ -9,16 +9,16 @@
     <tbody>
     <tr>
         <td class="outcome-priority column-1" <g:if test="${hideTableOne == true}">style="display: none"</g:if>>
-            <ul class="unstyled" data-bind="foreach:details.outcomes.listOfOtherOutcomeCategory('${otherOutcomeCategoryTableOne}')">
-                <li>
-                    <label class="checkbox"><input type="checkbox" name="fdf" data-validation-engine="validate[minCheckbox[${minimumCheckTableOne?: '2'}],maxCheckbox[${maximumCheckTableOne?:'4'}]" data-bind="value:$data, checked:details.outcomes.otherOutcomes, disable: $parent.isProjectDetailsLocked()"> <!--ko text: $data--><!--/ko--></label>
+            <ul class="list-unstyled" data-bind="foreach:details.outcomes.listOfOtherOutcomeCategory('${otherOutcomeCategoryTableOne}')">
+                <li class="form-check">
+                    <label class="form-check-label"><input type="checkbox" class="form-check-input" name="fdf" data-validation-engine="validate[minCheckbox[${minimumCheckTableOne?: '2'}],maxCheckbox[${maximumCheckTableOne?:'4'}]" data-bind="value:$data, checked:details.outcomes.otherOutcomes, disable: $parent.isProjectDetailsLocked()"> <!--ko text: $data--><!--/ko--></label>
                 </li>
             </ul>
         </td>
         <td class="outcome-priority column-2" <g:if test="${hideTableTwo == true}">style="display: none"</g:if> >
-            <ul class="unstyled" data-bind="foreach:details.outcomes.listOfOtherOutcomeCategory('${otherOutcomeCategoryTableTwo}')">
-                <li>
-                    <label class="checkbox"><input type="checkbox" name="nrm" data-validation-engine="validate[minCheckbox[${minimumCheckTableTwo?: '2'}],maxCheckbox[${maximumCheckTableTwo?:'4'}]" data-bind="value:$data, checked:details.outcomes.otherOutcomes, disable: $parent.isProjectDetailsLocked()"> <!--ko text: $data--><!--/ko--></label>
+            <ul class="list-unstyled" data-bind="foreach:details.outcomes.listOfOtherOutcomeCategory('${otherOutcomeCategoryTableTwo}')">
+                <li class="form-check">
+                    <label class="form-check-label"><input type="checkbox" class="form-check-input" name="nrm" data-validation-engine="validate[minCheckbox[${minimumCheckTableTwo?: '2'}],maxCheckbox[${maximumCheckTableTwo?:'4'}]" data-bind="value:$data, checked:details.outcomes.otherOutcomes, disable: $parent.isProjectDetailsLocked()"> <!--ko text: $data--><!--/ko--></label>
                 </li>
             </ul>
         </td>

@@ -15,16 +15,16 @@
     <g:else>
         <g:each var="activity" in="${config.program?.config?.activities?.collect{it.name} ?: []}">
             <div class="form-check">
-                <label class="checkbox">
-                    <input type="checkbox" data-bind="checked:details.activities.activities, disable: isProjectDetailsLocked()" value="${activity}">
+                <label class="form-check-label">
+                    <input type="checkbox" class="form-check-input" data-bind="checked:details.activities.activities, disable: isProjectDetailsLocked()" value="${activity}">
                     ${activity}
                 </label>
             </div>
         </g:each>
         <g:if test="${includeOther}">
             <div class="form-check">
-                <label class="checkbox">
-                    <input type="checkbox" data-bind="checked:details.activities.activities.otherChecked" value="Other">
+                <label class="form-check-label">
+                    <input type="checkbox" class="form-check-input" data-bind="checked:details.activities.activities.otherChecked" value="Other">
                     Other
                 </label>
                 <input type="text" data-bind="enable:details.activities.activities.otherChecked() && !isProjectDetailsLocked(), value:details.activities.activities.otherValue">
