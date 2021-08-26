@@ -7,7 +7,7 @@
   "dateCreated": "2021-06-24T09:24:44Z",
   "formVersion": 1,
   "gmsId": null,
-  "lastUpdated": "2021-08-26T03:06:39Z",
+  "lastUpdated": "2021-08-26T06:22:49Z",
   "lastUpdatedUserId": "94320",
   "minOptionalSectionsCompleted": 1,
   "name": "State Intervention Final Report",
@@ -846,7 +846,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(areaInstalledHa, sitesInstalledCalculatedAreaHa, 0.1) and within(lengthInstalledKm, sitesInstalledCalculatedLengthKm, 0.1)) or roundTo(areaInstalledHa, 2) != roundTo(sitesInstalledCalculatedAreaHa, 2) or roundTo(lengthInstalledKm, 2) != roundTo(sitesInstalledCalculatedLengthKm, 2)",
+                    "condition": "not (within(areaInstalledHa, sitesInstalledCalculatedAreaHa, 0.1) and within(lengthInstalledKm, sitesInstalledCalculatedLengthKm, 0.1))",
                     "type": "visible"
                   }
                 ],
@@ -1392,7 +1392,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(areaControlledHa, siteCalculatedAreaHa, 0.1) and within(lengthControlledKm, siteCalculatedLengthKm, 0.1)) or roundTo(areaControlledHa, 2) != roundTo(siteCalculatedAreaHa, 2)",
+                    "condition": "not (within(areaControlledHa, siteCalculatedAreaHa, 0.1) and within(lengthControlledKm, siteCalculatedLengthKm, 0.1))",
                     "type": "if"
                   }
                 ]
@@ -1801,7 +1801,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not within(areaCoveredByPlanHa, calculatedAreaHa, 0.1) or (roundTo(areaCoveredByPlanHa, 2) != roundTo(calculatedAreaHa, 2))",
+                    "condition": "not within(areaCoveredByPlanHa, calculatedAreaHa, 0.1)",
                     "type": "visible"
                   }
                 ],
@@ -2109,7 +2109,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(debrisRemovedHa, calculatedDebrisRemovedHa, 0.1)) or roundTo(debrisRemovedHa, 2) != roundTo(calculatedDebrisRemovedHa, 2)",
+                    "condition": "not (within(debrisRemovedHa, calculatedDebrisRemovedHa, 0.1) and within(debrisRemovedKm, calculatedDebrisRemovedKm, 0.1))",
                     "type": "visible"
                   }
                 ]
@@ -2452,7 +2452,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(areaOfErosionControlHa, calculatedAreaOfErosionControlHa, 0.1) and within(lengthOfErosionControlKm, calculatedLengthOfErosionControlKm, 0.1)) or roundTo(areaOfErosionControlHa, 2) != roundTo(calculatedAreaOfErosionControlHa, 2) or roundTo(lengthOfErosionControlKm, 2) != roundTo(calculatedLengthOfErosionControlKm, 2)",
+                    "condition": "not (within(areaOfErosionControlHa, calculatedAreaOfErosionControlHa, 0.1) and within(lengthOfErosionControlKm, calculatedLengthOfErosionControlKm, 0.1))",
                     "type": "visible"
                   }
                 ],
@@ -2938,7 +2938,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not within(areaOfEnclosuresHa, calculatedAreaOfEnclosuresHa, 0.1) or roundTo(areaOfEnclosuresHa, 2) != roundTo(calculatedAreaOfEnclosuresHa, 2)",
+                    "condition": "not within(areaOfEnclosuresHa, calculatedAreaOfEnclosuresHa, 0.1)",
                     "type": "if"
                   }
                 ],
@@ -3589,7 +3589,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedAreaCoveredByAgreementsHa, areaCoveredByAgreementsHa, 0.1)) or roundTo(areaCoveredByAgreementsHa, 2) != roundTo(calculatedAreaCoveredByAgreementsHa, 2)",
+                    "condition": "not (within(areaCoveredByAgreementsHa, calculatedAreaCoveredByAgreementsHa, 0.1))",
                     "type": "visible"
                   }
                 ],
@@ -4107,7 +4107,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1) or roundTo(areaSurveyedHa, 2) != roundTo(siteCalculatedAreaHa, 2)",
+                    "condition": "not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1)",
                     "type": "if"
                   }
                 ],
@@ -4455,7 +4455,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1)) or roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedTreatedHa, 2)",
+                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1) and within(lengthTreatedKm, calculatedLengthTreatedKm, 0.1))",
                     "type": "visible"
                   }
                 ]
@@ -4869,7 +4869,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1) or roundTo(areaSurveyedHa, 2) != roundTo(areaInvoicedHa, 2)",
+                    "condition": "not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1)",
                     "type": "if"
                   }
                 ],
@@ -5201,7 +5201,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedAreaAugmentedHa, areaAugmentedHa, 0.1)) or roundTo(areaAugmentedHa, 2) != roundTo(calculatedAreaAugmentedHa, 2)",
+                    "condition": "not (within(areaAugmentedHa, calculatedAreaAugmentedHa, 0.1) and within(lengthAugmentedKm, calculatedLengthAugmentedKm, 0.1))",
                     "type": "visible"
                   }
                 ]
@@ -5671,7 +5671,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedAreaCoveringRegimeChangeHa, areaCoveringRegimeChangeHa, 0.1) and within(calculatedLengthOfRegimeChangeKm, lengthOfRegimeChangeKm, 0.1)) or roundTo(calculatedAreaCoveringRegimeChangeHa, 2) != roundTo(areaCoveringRegimeChangeHa, 2) or roundTo(calculatedLengthOfRegimeChangeKm, 2) != roundTo(lengthOfRegimeChangeKm, 2)",
+                    "condition": "not (within(areaCoveringRegimeChangeHa, calculatedAreaCoveringRegimeChangeHa, 0.1) and within(lengthOfRegimeChangeKm, calculatedLengthOfRegimeChangeKm, 0.1))",
                     "type": "visible"
                   }
                 ]
@@ -6126,7 +6126,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedAreaImplementedHa, areaImplementedHa, 0.1)) or roundTo(areaImplementedHa, 2) != roundTo(calculatedAreaImplementedHa, 2)",
+                    "condition": "not (within(areaImplementedHa, calculatedAreaImplementedHa, 0.1) and within(lengthImplementedKm, calculatedLengthImplementedKm, 0.1))",
                     "type": "visible"
                   }
                 ],
@@ -6546,7 +6546,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1)) or roundTo(areaTreatedHa, 2) != roundTo(calculatedAreaTreatedHa, 2)",
+                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1) and within(lengthTreatedKm, calculatedLengthTreatedKm, 0.1))",
                     "type": "visible"
                   }
                 ],
@@ -7138,7 +7138,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1) or roundTo(areaSurveyedHa, 2) != roundTo(siteCalculatedAreaHa, 2)",
+                    "condition": "not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1)",
                     "type": "if"
                   }
                 ],
@@ -7525,7 +7525,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1) or roundTo(areaSurveyedHa, 2) != roundTo(siteCalculatedAreaHa, 2)",
+                    "condition": "not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1)",
                     "type": "if"
                   }
                 ],
@@ -7977,7 +7977,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedAreaRemediatedHa, areaRemediatedHa, 0.1) and within(calculatedLengthRemediatedKm, lengthRemediatedKm, 0.1)) or roundTo(areaRemediatedHa, 2) != roundTo(calculatedAreaRemediatedHa, 2) or roundTo(lengthRemediatedKm, 2) != roundTo(calculatedLengthRemediatedKm, 2)",
+                    "condition": "not (within(areaRemediatedHa, calculatedAreaRemediatedHa, 0.1) and within(lengthRemediatedKm, calculatedLengthRemediatedKm, 0.1))",
                     "type": "visible"
                   }
                 ],
@@ -8402,7 +8402,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not within(areaRevegetatedHa, siteCalculatedAreaHa, 0.1) or roundTo(areaRevegetatedHa, 2) != roundTo(siteCalculatedAreaHa, 2)",
+                    "condition": "not (within(areaRevegetatedHa, siteCalculatedAreaHa, 0.1) and within(lengthRevegetatedKm, siteCalculatedLengthKm, 0.1))",
                     "type": "if"
                   }
                 ]
@@ -8921,7 +8921,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(areaTreatedHa, siteCalculatedAreaHa, 0.1) and within(lengthTreatedKm, siteCalculatedLengthKm, 0.1)) or roundTo(areaTreatedHa, 2) != roundTo(siteCalculatedAreaHa, 2) or roundTo(lengthTreatedKm, 2) != roundTo(siteCalculatedLengthKm, 2)",
+                    "condition": "not (within(areaTreatedHa, siteCalculatedAreaHa, 0.1) and within(lengthTreatedKm, siteCalculatedLengthKm, 0.1))",
                     "type": "if"
                   }
                 ],
@@ -9572,7 +9572,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedAreaPreparedHa, areaPreparedHa, 0.1)) or roundTo(areaPreparedHa, 2) != roundTo(calculatedAreaPreparedHa, 2)",
+                    "condition": "not (within(areaPreparedHa, calculatedAreaPreparedHa, 0.1) and within(lengthPreparedKm, calculatedLengthPreparedKm, 0.1))",
                     "type": "visible"
                   }
                 ],
@@ -10749,7 +10749,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1) or roundTo(areaSurveyedHa, 2) != roundTo(siteCalculatedAreaHa, 2)",
+                    "condition": "not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1)",
                     "type": "if"
                   }
                 ],
@@ -11121,7 +11121,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1) or roundTo(areaSurveyedHa, 2) != roundTo(siteCalculatedAreaHa, 2)",
+                    "condition": "not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1)",
                     "type": "if"
                   }
                 ],
