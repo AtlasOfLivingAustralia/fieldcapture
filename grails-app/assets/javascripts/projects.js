@@ -970,7 +970,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
                     },
                     {
                         "targets":4,
-                        "orderData":[4],
+                        "orderData":[5],
                         "width":"6em",
                         "searchable": false,
                         "orderable":true
