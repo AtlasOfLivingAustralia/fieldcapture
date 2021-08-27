@@ -9,7 +9,7 @@ class OutcomeRow extends Module {
         outcome { $('.outcome-priority select') }
         priority { $('.priority select') }
         remove { $('i.icon-remove') }
-        priorityUnstyle{$('.unstyled')}
+        priorityUnstyle{$('.list-unstyled')}
     }
 }
 
