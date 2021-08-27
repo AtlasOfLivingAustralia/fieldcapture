@@ -681,7 +681,7 @@ class FCTagLib {
     def announcementContent = { attrs ->
         def content = settingService.getSettingText(SettingPageType.ANNOUNCEMENT) as String
         if (content) {
-            out << content
+            out << content.markdownToHtml()
         }
     }
 

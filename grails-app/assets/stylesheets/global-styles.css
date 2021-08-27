@@ -905,24 +905,6 @@ span.status {
 	width: 50px;
 }
 
-a.input-group-text.customspecialSelect {
-	height: 1.9rem;
-}
-
-.customInput {
-	height: 31px !important;
-}
-
-super {
-	vertical-align: super;
-	font-size: smaller;
-}
-
-.fa-check {
-	font-family: 'FontAwesome';
-	content: "\f00c";
-}
-
 .progress {
 	background-color: #f7f7f7;
 	height: 20px;

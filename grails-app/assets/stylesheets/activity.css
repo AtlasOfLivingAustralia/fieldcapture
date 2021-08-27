@@ -154,39 +154,26 @@
     border-bottom: 1px solid grey;
     padding: 10px;
 }
-input.form-control.customCurrency {
-    max-width: 7rem !important;
-     min-width: 7rem !important;
-}
 
 .model-form select, .model-form input, .model-form textarea {
     margin-bottom: 1rem;
 }
 
-.currency-input input {
-    min-width: 5rem !important;
-    max-width: 5rem !important;
-}
-
-ul.checkbox-list {
-    padding-left: 0 !important;
-}
-
 .dateInput {
-    padding-right: 0 !important;
-    padding-left: 0 !important;
+    padding-right: 0;
+    padding-left: 0;
 }
 
  table td select {
-     max-width: 100% !important;
+     max-width: 100%;
  }
 
 .btn.edit-feature {
-    width: 100% !important;
-    height: unset !important;
-    max-height:unset !important;
-    max-width:unset !important;
-    margin-bottom: 10px !important;
+    width: 100% ;
+    height: unset ;
+    max-height:unset;
+    max-width:unset;
+    margin-bottom: 10px;
 }
 
 .row.output-section {

@@ -106,9 +106,3 @@ table td.report-status, table th.report-status {
 .customBorder {
     border-bottom: 1px solid #eeeeee;
 }
-
-.customSpecialSelect {
-    border-top-right-radius: .25rem !important;
-    border-bottom-right-radius: .25rem !important;
-    height: 29px !important;
-}

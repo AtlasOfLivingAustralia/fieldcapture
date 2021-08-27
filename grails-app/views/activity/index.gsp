@@ -77,7 +77,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="${mapFeatures.toString() != '{}' ? 'col-sm-9' : 'col-sm-10'}" style="font-size: 1.2em">
+            <div class="${mapFeatures.toString() != '{}' ? 'col-sm-9' : 'col-sm-12'}" style="font-size: 1.2em">
                 <!-- Common activity fields -->
                 <div class="row">
                     <span class="col-sm-6"><span class="label">Description:</span> <span data-bind="text:description"></span></span>
