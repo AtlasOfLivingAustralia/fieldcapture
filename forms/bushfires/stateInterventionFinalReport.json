@@ -7,7 +7,7 @@
   "dateCreated": "2021-06-24T09:24:44Z",
   "formVersion": 1,
   "gmsId": null,
-  "lastUpdated": "2021-08-26T06:22:49Z",
+  "lastUpdated": "2021-08-27T00:28:16Z",
   "lastUpdatedUserId": "94320",
   "minOptionalSectionsCompleted": 1,
   "name": "State Intervention Final Report",
@@ -1343,7 +1343,7 @@
                 "validate": "required",
                 "behaviour": [
                   {
-                    "condition": "not (within(lengthControlledKm, siteCalculatedLengthKm, 0.1))",
+                    "condition": "not (within(areaControlledHa, siteCalculatedAreaHa, 0.1) and within(lengthControlledKm, siteCalculatedLengthKm, 0.1))",
                     "type": "if"
                   }
                 ]
@@ -2124,7 +2124,7 @@
                 "validate": "required",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedDebrisRemovedHa, debrisRemovedHa, 0.1))",
+                    "condition": "not (within(debrisRemovedHa, calculatedDebrisRemovedHa, 0.1) and within(debrisRemovedKm, calculatedDebrisRemovedKm, 0.1))",
                     "type": "visible"
                   }
                 ]
@@ -4432,7 +4432,7 @@
                 "validate": "required",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1))",
+                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1) and within(lengthTreatedKm, calculatedLengthTreatedKm, 0.1))",
                     "type": "visible"
                   }
                 ]
@@ -5216,7 +5216,7 @@
                 "validate": "required",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedAreaAugmentedHa, areaAugmentedHa, 0.1))",
+                    "condition": "not (within(areaAugmentedHa, calculatedAreaAugmentedHa, 0.1) and within(lengthAugmentedKm, calculatedLengthAugmentedKm, 0.1))",
                     "type": "visible"
                   }
                 ]
@@ -6099,7 +6099,7 @@
                 "name": "mappingNotAlignedReason",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedAreaImplementedHa, areaImplementedHa, 0.1))",
+                    "condition": "not (within(areaImplementedHa, calculatedAreaImplementedHa, 0.1) and within(lengthImplementedKm, calculatedLengthImplementedKm, 0.1))",
                     "type": "visible"
                   }
                 ],
@@ -6519,7 +6519,7 @@
                 "name": "mappingNotAlignedReason",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1))",
+                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1) and within(lengthTreatedKm, calculatedLengthTreatedKm, 0.1))",
                     "type": "visible"
                   }
                 ],
@@ -8379,7 +8379,7 @@
                 "validate": "required",
                 "behaviour": [
                   {
-                    "condition": "not within(areaRevegetatedHa, siteCalculatedAreaHa, 0.1)",
+                    "condition": "not (within(areaRevegetatedHa, siteCalculatedAreaHa, 0.1) and within(lengthRevegetatedKm, siteCalculatedLengthKm, 0.1))",
                     "type": "if"
                   }
                 ]
@@ -9217,6 +9217,7 @@
       "optional": true,
       "optionalQuestionText": null,
       "template": {
+        "modelName": "Seed Collecting - Bushfire Program",
         "dataModel": [
           {
             "columns": [
@@ -9274,6 +9275,44 @@
                 "units": "km",
                 "decimalPlaces": 3,
                 "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedReason",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaHabitatRevegetedHa, calculatedAreaHabitatRevegetedHa, 0.1) and within(lengthHabitatRevegetedKm, calculatedLengthHabitatRevegetedKm, 0.1))",
+                    "type": "visible"
+                  }
+                ],
+                "constraints": [
+                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedComments",
+                "behaviour": [
+                  {
+                    "condition": "\"Other\" == mappingNotAlignedReason",
+                    "type": "visible"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "document",
+                "name": "extraMappingDetails",
+                "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaHabitatRevegetedHa, calculatedAreaHabitatRevegetedHa, 0.1) and within(lengthHabitatRevegetedKm, calculatedLengthHabitatRevegetedKm, 0.1))",
+                    "type": "visible"
+                  }
+                ],
+                "validate": "required"
               },
               {
                 "dataType": "species",
@@ -9334,8 +9373,6 @@
             "name": "totalPlantsPropogated"
           }
         ],
-        "modelName": "Seed Collecting - Bushfire Program",
-        "title": "Seed Collecting",
         "viewModel": [
           {
             "type": "section",
@@ -9343,13 +9380,13 @@
               {
                 "columns": [
                   {
-                    "width": "5%",
+                    "width": "6%",
                     "source": "initialOrMaintenance",
                     "title": "Initial or Maintenance activity?",
                     "type": "selectOne"
                   },
                   {
-                    "width": "5%",
+                    "width": "7%",
                     "type": "col",
                     "title": "Site/s where collection was undertaken",
                     "items": [
@@ -9372,13 +9409,23 @@
                         "displayOptions": {
                           "displayUnits": true
                         }
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Please attach mapping details",
+                            "source": "extraMappingDetails",
+                            "type": "document"
+                          }
+                        ]
                       }
                     ]
                   },
                   {
-                    "width": "10%",
+                    "width": "12%",
                     "type": "col",
-                    "title": "Area (ha) of habitat revegated",
+                    "title": "Area (ha) / Length (km) of habitat revegeted",
                     "items": [
                       {
                         "source": "areaHabitatRevegetedHa",
@@ -9386,49 +9433,63 @@
                         "displayOptions": {
                           "displayUnits": true
                         }
-                      }
-                    ]
-                  },
-                  {
-                    "width": "10%",
-                    "type": "col",
-                    "title": "Length (km) of habitat revegeted",
-                    "items": [
+                      },
                       {
                         "source": "lengthHabitatRevegetedKm",
                         "type": "number",
                         "displayOptions": {
                           "displayUnits": true
                         }
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Reason for actual being different to mapped amount",
+                            "source": "mappingNotAlignedReason",
+                            "type": "selectOne"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                            "source": "mappingNotAlignedComments",
+                            "type": "textarea",
+                            "rows": 5
+                          }
+                        ]
                       }
                     ]
                   },
                   {
-                    "width": "7%",
+                    "width": "8%",
                     "source": "species",
                     "title": "Species",
                     "type": "speciesSelect"
                   },
                   {
-                    "width": "7%",
+                    "width": "8%",
                     "source": "noOfDaysSeedCollected",
                     "title": "Number of days collecting Seed",
                     "type": "number"
                   },
                   {
-                    "width": "7%",
+                    "width": "8%",
                     "source": "inKgSeedCollected",
                     "title": "Individuals / Kilograms collected",
                     "type": "selectOne"
                   },
                   {
-                    "width": "7%",
+                    "width": "8%",
                     "source": "amountSeedCollected",
                     "title": "Amount collected",
                     "type": "number"
                   },
                   {
-                    "width": "7%",
+                    "width": "8%",
                     "source": "numberOfSourcePlants",
                     "title": "Number of Source plants",
                     "type": "number"
@@ -9458,7 +9519,8 @@
               }
             ]
           }
-        ]
+        ],
+        "title": "Seed Collecting"
       },
       "templateName": "siSeedCollecting",
       "title": null
@@ -9472,6 +9534,7 @@
       "optional": true,
       "optionalQuestionText": null,
       "template": {
+        "modelName": "RLP - Site preparation",
         "dataModel": [
           {
             "columns": [
@@ -9545,7 +9608,7 @@
                 "name": "mappingNotAlignedReason",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedAreaPreparedHa, areaPreparedHa, 0.1))",
+                    "condition": "not (within(areaPreparedHa, calculatedAreaPreparedHa, 0.1) and within(lengthPreparedKm, calculatedLengthPreparedKm, 0.1))",
                     "type": "visible"
                   }
                 ],
@@ -9695,8 +9758,6 @@
             ]
           }
         ],
-        "modelName": "RLP - Site preparation",
-        "title": "Site preparation",
         "viewModel": [
           {
             "type": "section",
@@ -9845,7 +9906,8 @@
               }
             ]
           }
-        ]
+        ],
+        "title": "Site preparation"
       },
       "templateName": "siSitePreparation",
       "title": null
@@ -10119,6 +10181,44 @@
               },
               {
                 "dataType": "text",
+                "name": "mappingNotAlignedReason",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaTestedChangeHa, areaTestedHa, 0.1) and within(lengthTestedChangeKm, lengthTestedKm, 0.1))",
+                    "type": "visible"
+                  }
+                ],
+                "constraints": [
+                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedComments",
+                "behaviour": [
+                  {
+                    "condition": "\"Other\" == mappingNotAlignedReason",
+                    "type": "visible"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "document",
+                "name": "extraMappingDetails",
+                "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaTestedChangeHa, areaTestedHa, 0.1) and within(lengthTestedChangeKm, lengthTestedKm, 0.1))",
+                    "type": "visible"
+                  }
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
                 "name": "testingTechnique",
                 "description": "What/How will these tests capture information",
                 "validate": "required,maxSize[100]"
@@ -10213,6 +10313,16 @@
                             "readonly": true
                           }
                         ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Please attach mapping details",
+                            "source": "extraMappingDetails",
+                            "type": "document"
+                          }
+                        ]
                       }
                     ],
                     "title": "Project site/s where soil tests were conducted"
@@ -10244,6 +10354,27 @@
                             "displayOptions": {
                               "displayUnits": true
                             }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Reason for actual being different to mapped amount",
+                            "source": "mappingNotAlignedReason",
+                            "type": "selectOne"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                            "source": "mappingNotAlignedComments",
+                            "type": "textarea",
+                            "rows": 5
                           }
                         ]
                       }
