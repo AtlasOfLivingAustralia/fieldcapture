@@ -330,12 +330,15 @@ ko.bindingHandlers.warningPopup = {
       if (!target.popoverInitialised) {
         var popoverWarningOptions = {
           placement:'top',
-          trigger:'manual',
-          template: '<div class="popover warning"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+          trigger:'click',
+          template: '<div class="popover warning"><h3 class="popover-header"></h3><div class="popover-body"></div><div class="arrow"></div></div>'
         };
         var warning = $element.data('warningmessage');
         $element.popover(_.extend({content:warning}, popoverWarningOptions));
-        $element.data('popover').tip().click(function() {
+
+        var popover = $element.data('bs.popover');
+        $(popover.getTipElement()).click(function() {
+          console.log('clicked');
           $element.popover('hide');
         });
         target.popoverInitialised = true;

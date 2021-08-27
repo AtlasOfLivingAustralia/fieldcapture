@@ -487,7 +487,6 @@ var config = {
 <asset:javascript src="document.js"/>
 <asset:javascript src="reporting.js"/>
 <asset:javascript src="select2/js/select2.full.js"/>
-<asset:javascript src="knockout-custom-bindings.js"/>
 <asset:javascript src="forms-knockout-bindings.js"/>
 <asset:javascript src="leaflet-manifest.js"/>
 <asset:javascript src="feature.js"/>

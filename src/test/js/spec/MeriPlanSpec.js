@@ -3,7 +3,6 @@ describe("Loading the MERI plan is handled correctly", function () {
     var meriPlanData;
 
     beforeAll(function () {
-        $.fn.popover = function(){};
         meriPlanData = {
             "outcomes": {
                 "primaryOutcome": {
