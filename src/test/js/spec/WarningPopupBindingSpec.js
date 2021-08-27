@@ -1,4 +1,4 @@
-describe("multiSelect2 binding handler Spec", function () {
+describe("warningPopup binding handler Spec", function () {
 
     var mockElement;
     var model;
