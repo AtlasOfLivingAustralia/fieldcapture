@@ -129,7 +129,7 @@ class ReportConfig {
     DateTime getOnlyGenerateReportsForDatesBefore() {
         DateTime beforeDate = null
         if (onlyGenerateReportsForDatesBefore){
-            beforeDate =  DateUtils.parse(onlyGenerateReportsForDatesBefore).withZone(DateTimeZone.default)
+            beforeDate =  DateUtils.parse(onlyGenerateReportsForDatesBefore)
         }
         beforeDate
     }
