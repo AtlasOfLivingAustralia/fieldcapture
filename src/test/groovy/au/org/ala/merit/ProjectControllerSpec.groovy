@@ -23,6 +23,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
     def reportService = Mock(ReportService)
     def activityService = Mock(ActivityService)
     def siteService = Mock(SiteService)
+    WebService webService = Mock(WebService)
 
     ProjectService realProjectService
 
@@ -44,6 +45,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         controller.siteService = siteService
         controller.activityService = activityService
         controller.grailsApplication = grailsApplication
+        controller.webService = webService
 
         projectService.getMembersForProjectId(_) >> []
         projectService.getProgramConfiguration(_) >> new ProgramConfig([requiresActivityLocking: true])
@@ -626,6 +628,34 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         true | _
         false | _
 
+    }
+
+    def "Data can be downloaded for a project in xlsx or json format, with json the default"(String inputFormat, String expectedOutputFormat) {
+        setup:
+        String projectId = 'p1'
+
+        when:
+        params.id = projectId
+        params.view = inputFormat
+        Map result = controller.downloadProjectData()
+
+        then:
+        1 * webService.proxyGetRequest(response, {it.endsWith('project/downloadProjectData/'+projectId+'.'+expectedOutputFormat)}, true, true, _)
+        result == null
+
+        where:
+        inputFormat | expectedOutputFormat
+        'json'      | 'json'
+        'xlsx'      | 'xlsx'
+        ''          | 'json'
+    }
+
+    def "If no project id is supplied for a project download, an error is returned"() {
+        when:
+        controller.downloadProjectData()
+
+        then:
+        response.status == HttpStatus.SC_BAD_REQUEST
     }
 
     private Map stubPublicUser() {

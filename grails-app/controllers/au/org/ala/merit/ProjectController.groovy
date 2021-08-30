@@ -473,6 +473,7 @@ class ProjectController {
             }
             def url = grailsApplication.config.getProperty('ecodata.baseUrl') + path
             webService.proxyGetRequest(response, url, true, true, 120000)
+            null
         }
     }
 

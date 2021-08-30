@@ -1,6 +1,7 @@
 package au.org.ala.fieldcapture
 
 import pages.AdminTools
+import pages.Facet
 import pages.ProjectExplorer
 import spock.lang.Stepwise
 
@@ -15,6 +16,13 @@ class ProjectExplorerSpec extends StubbedCasSpec {
 
         setup:
         login([userId: '2', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ALA_ADMIN'], browser)
+        def expectedProjects = new HashSet((1..9).collect{"Project $it"})
+        expectedProjects.add("Configurable MERI plan project")
+        expectedProjects.add("Default outcome project")
+        expectedProjects.add("project completed")
+        expectedProjects.add("project active")
+        expectedProjects.add("Grants project")
+        expectedProjects.add("project application")
 
         when:
         to AdminTools
@@ -51,41 +59,60 @@ class ProjectExplorerSpec extends StubbedCasSpec {
         waitFor { map.displayed == false }
 
         when: "expand the projects section"
-        def expectedProjects = new HashSet((1..9).collect{"Project $it"})
-        expectedProjects.add("Configurable MERI plan project")
-        expectedProjects.add("Default outcome project")
-        expectedProjects.add("project completed")
-        expectedProjects.add("project active")
-        expectedProjects.add("Grants project")
-        expectedProjects.add("project application")
-        if (!projectPagination.displayed) {
-            projectsToggle.click()
-            waitFor 10,{ projectPagination.displayed }
-        }
+        displayProjectList()
 
         then:
         waitFor 20, {
-
-            to ProjectExplorer
-            waitFor { projectPagination.displayed }
-
             projects.size() == 15
-            facets.size() == 18
-                chooseMoreFacetTerms.size() == 0
+            facets.size() == 12
+            chooseMoreFacetTerms.size() == 0
         }
 
         new HashSet(projects.collect{it.name}) == expectedProjects
 
         when:
-        facetAccordion.eq(1).click()
-        waitFor {
-            facetTerms.eq(0).displayed
-        }
-
-        facetTerms.eq(0).click()
+        Facet projectStatus = findFacetByName("Project Status")
+        projectStatus.expand()
 
         then:
-        waitFor {at ProjectExplorer}
+        projectStatus.items*.name == ['Active', 'Application', 'Completed']
 
+        when:
+        projectStatus.findItemByName("Application").select()
+
+        then:
+        waitFor { hasBeenReloaded() }
+        projects.size() == 1
+
+        when: "We expand the project to view the details"
+        projects[0].toggle()
+
+        then:
+        projects[0].description() == "Project 1 description"
+
+        and: "The downloads are not visible as the user is not an FC_ADMIN"
+        !projects[0].downloadXlsx.displayed
+        !projects[0].downloadJson.displayed
     }
+
+    def "FC_ADMINs can download project information via the project explorer"() {
+        setup:
+        login([userId: '22', role: "ROLE_FC_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+
+        when:
+        to ProjectExplorer
+        displayProjectList()
+        projects[0].toggle()
+
+        then:
+        projects[0].downloadXlsx.displayed
+        projects[0].downloadJson.displayed
+
+        when:
+        def xlsx = downloadBytes(projects[0].downloadXlsx.@href)
+
+        then:
+        xlsx != null
+    }
+
 }
