@@ -19,7 +19,7 @@ fi
 
 BRANCH=$3
 if [ -z $BRANCH]; then
-    BRANCH=feature/es7
+    BRANCH=grails3
 fi
 
 ECODATA_LOCAL_DIR=$2
