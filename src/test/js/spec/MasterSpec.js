@@ -113,4 +113,89 @@ describe("The Master is responsible for saving activity and output data for acti
         errors = master.getErrors({resp:{error:'test'}});
         expect(errors).toEqual([{error:'test'}]);
     });
+
+    it("The report Master will return null from findLocallySavedData if no data can be found", function() {
+        var master = new Master('a1', {});
+        spyOn(amplify, 'store');
+
+        var output = {name: "output-1"}
+        var config = {recoveryDataStorageKey: 'key'};
+
+        var result = master.findLocallySavedData(output, config);
+        expect(result).toBeNull();
+        expect(amplify.store).toHaveBeenCalledWith(config.recoveryDataStorageKey);
+    });
+
+    it("The report Master can initialise the model data from data saved in local storage", function() {
+        var output = {name: "output-1"}
+        var outputData = {data:{test:'test'}};
+        var storedData = {
+            activity:{
+                outputs:[
+                    {
+                        name:output.name,
+                        data:outputData.data
+                    }
+                ]
+            }
+        };
+        var master = new Master('a1', {});
+        spyOn(amplify, 'store').and.returnValue(JSON.stringify(storedData));
+
+        var config = {recoveryDataStorageKey: 'key'};
+
+        amplify.store(config.recoveryDataStorageKey, storedData);
+        var result = master.findLocallySavedData(output, config);
+        expect(result).toEqual(outputData.data);
+
+    });
+
+    it("The report Master can initialise an output model and bind it to the correct section of the page", function() {
+        var output = {name: "output1"}
+
+        spyOn(amplify, 'store');
+
+        var output1ViewModel = function() {
+            var self = this;
+            self.initialise = function () {
+                var deferred = $.Deferred();
+                deferred.resolve({});
+                return deferred;
+            }
+        };
+
+        ecodata = {
+            forms: {
+                output1ViewModel: output1ViewModel
+            }
+        };
+        var config = {
+            recoveryDataStorageKey: 'key'
+        };
+
+        var master = new Master('a1', config);
+        var context = {};
+
+        var dirtyFlagStub = {
+            reset:function() {},
+            isDirty: function() { return false}
+        };
+
+        var options = {
+            namespace:output.name,
+            model: { dataModel : {} },
+            dirtyFlag: function(model, value) {
+                return dirtyFlagStub;
+            }
+        };
+
+        spyOn(ko, 'applyBindings');
+        spyOn(dirtyFlagStub, 'reset');
+
+        master.createAndBindOutput(output, context, options);
+        expect(ko.applyBindings).toHaveBeenCalled();
+        expect(dirtyFlagStub.reset).toHaveBeenCalled();
+
+    });
+
 });

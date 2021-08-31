@@ -171,6 +171,13 @@ var Master = function (activityId, config) {
         bootbox.alert(errorText);
     };
 
+    /**
+     * Checks the local storage for saved data relevant to the supplied output and returns it.  If none is found,
+     * null is returned.
+     * @param output The output to check for saved data
+     * @param config The class configuration, the key/value "recoveryDataStorageKey" is required for this method.
+     * @return object an object containing saved output data, or null if none exists.
+     */
     self.findLocallySavedData = function(output, config) {
         var savedData = amplify.store(config.recoveryDataStorageKey);
         var savedOutput = null;
