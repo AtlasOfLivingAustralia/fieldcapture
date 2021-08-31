@@ -48,7 +48,7 @@
 <g:set var="userLoggedIn"><fc:userIsLoggedIn/></g:set>
 <g:if test="${fc.announcementContent()}">
     <div id="announcement">
-        ${raw(fc.announcementContent())}
+        <fc:getSettingContent settingType="${SettingPageType.ANNOUNCEMENT}"/>
     </div>
 </g:if>
 
