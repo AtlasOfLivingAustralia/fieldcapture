@@ -39,13 +39,12 @@ class ReportGenerator {
 
         DateTime endDate = reportOwner.periodEnd.withZone(DateTimeZone.default)
         DateTime onlyGenerateReportsForDatesBefore = reportConfig.onlyGenerateReportsForDatesBefore
-        List<String> reportingEndDates = reportConfig.endDates
 
         List<Map> reports
-        if (!reportConfig.onlyGenerateReportsForDatesBefore || reportOwner.periodStart.isBefore(onlyGenerateReportsForDatesBefore)) {
-            if (reportConfig.multiple && !reportingEndDates) {
+        if (!onlyGenerateReportsForDatesBefore || reportOwner.periodStart.isBefore(onlyGenerateReportsForDatesBefore)) {
+            if (reportConfig.multiple && !reportConfig.endDates) {
                 reports = generatePeriodicReports(reportConfig, reportOwner, latestApprovedReportPeriodEnd, startingSequenceNo, endDate, period)
-            } else if (reportingEndDates) {
+            } else if (reportConfig.endDates) {
                 reports = generateNonPeriodicReportsByDate(latestApprovedReportPeriodEnd, reportOwner, reportConfig, endDate, startingSequenceNo)
             } else {
                 reports = generateSingleReport(reportOwner, endDate, reportConfig, period)
