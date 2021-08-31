@@ -338,7 +338,6 @@ ko.bindingHandlers.warningPopup = {
 
         var popover = $element.data('bs.popover');
         $(popover.getTipElement()).click(function() {
-          console.log('clicked');
           $element.popover('hide');
         });
         target.popoverInitialised = true;
