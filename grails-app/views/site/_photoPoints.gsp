@@ -51,18 +51,18 @@
                                     </td>
                                         <td >
 
-                                            <label for="progress" class="control-label">Uploading Photo...</label>
+                                            <label for="progress">Uploading Photo...</label>
 
-                                            <div id="progress" class="controls progress progress-info active input-large"
+                                            <div id="progress" class="progress progress-info active"
                                                  data-bind="visible:!error() && progress() <= 100, css:{'progress-info':progress()<100, 'progress-success':complete()}">
                                                 <div class="bar" data-bind="style:{width:progress()+'%'}"></div>
                                             </div>
 
-                                            <div id="successmessage" class="controls" data-bind="visible:complete()">
+                                            <div id="successmessage"data-bind="visible:complete()">
                                                 <span class="alert alert-success">File successfully uploaded</span>
                                             </div>
 
-                                            <div id="message" class="controls" data-bind="visible:error()">
+                                            <div id="message" data-bind="visible:error()">
                                                 <span class="alert alert-error" data-bind="text:error"></span>
                                             </div>
                                         </td>
@@ -203,53 +203,53 @@
 </script>
 <script id="photoEditTemplate" type="text/html">
 <div class="form-horizontal">
-    <div class="row control-group required">
-        <label for="name" class="col-sm-2 control-label">Title: </label>
-        <input type="text" class="col-sm-5 form-control form-control-sm" id="name" data-bind="value:name" data-validation-engine="validate[required]">
+    <div class="row form-group required">
+        <label for="name" class="col-sm-4">Title: </label>
+        <input type="text" class="col-sm-8 form-control form-control-sm" id="name" data-bind="value:name" data-validation-engine="validate[required]">
     </div>
-    <div class="row control-group required">
-        <label for="dateTaken" class="control-label col-sm-2">Date Taken: <i class="fa fa-question-circle" data-bind="popover:{container:'body', content:'Please ensure that this information is accurate and the date that the photograph was taken, not the date it was uploaded (unless they are the same date).', placement:'top'}">&nbsp;</i></label>
-        <div class="input-group col-sm-5 dateInput"><fc:datePicker size="input-small" bs4="true" class="form-control form-control-sm" targetField="dateTaken.date" id="dateTaken" name="dateTaken" data-validation-engine="validate[required]"/></div>
+    <div class="row form-group required">
+        <label for="dateTaken" class="col-sm-4">Date Taken: <i class="fa fa-question-circle" data-bind="popover:{container:'body', content:'Please ensure that this information is accurate and the date that the photograph was taken, not the date it was uploaded (unless they are the same date).', placement:'top'}">&nbsp;</i></label>
+        <div class="input-group col-sm-8 dateInput"><fc:datePicker size="input-small" bs4="true" class="form-control form-control-sm" targetField="dateTaken.date" id="dateTaken" name="dateTaken" data-validation-engine="validate[required]"/></div>
     </div>
-    <div class="row control-group">
-        <label for="attribution" class="control-label col-sm-2">Attribution: <i class="fa fa-question-circle" data-bind="popover:{content:'The name of the photographer', placement:'top'}">&nbsp;</i></label>
-        <input type="text" class="form-control form-control-sm col-sm-5" id="attribution" data-bind="value:attribution">
+    <div class="row form-group">
+        <label for="attribution" class="col-sm-4">Attribution: <i class="fa fa-question-circle" data-bind="popover:{content:'The name of the photographer', placement:'top'}">&nbsp;</i></label>
+        <input type="text" class="form-control form-control-sm col-sm-8" id="attribution" data-bind="value:attribution">
     </div>
-    <div class="row control-group">
-        <label for="notes" class="control-label col-sm-2">Notes: <i class="fa fa-question-circle" data-bind="popover:{content:'Additional notes you would like to supply regarding the photo point or photograph.', placement:'top'}">&nbsp;</i></label>
-        <input type="text" class="form-control form-control-sm col-sm-5" id="notes" data-bind="value:notes">
+    <div class="row form-group">
+        <label for="notes" class="col-sm-4">Notes: <i class="fa fa-question-circle" data-bind="popover:{content:'Additional notes you would like to supply regarding the photo point or photograph.', placement:'top'}">&nbsp;</i></label>
+        <input type="text" class="form-control form-control-sm col-sm-8" id="notes" data-bind="value:notes">
     </div>
 
-    <div class="row control-group readonly">
-        <label class="control-label col-sm-2">File Name: </label>
-        <label style="padding-top:5px;" class="col-sm-5" data-bind="text:filename"></label>
+    <div class="row form-group readonly">
+        <label class="col-sm-4">File Name: </label>
+        <label class="col-sm-8" data-bind="text:filename"></label>
     </div>
-    <div class="row control-group readonly">
-        <label class="control-label col-sm-2">File Size: </label>
-        <label style="padding-top:5px;" class="col-sm-5" data-bind="text:formattedSize"></label>
+    <div class="row form-group readonly">
+        <label class="col-sm-4">File Size: </label>
+        <label class="col-sm-8" data-bind="text:formattedSize"></label>
     </div>
 </div>
 </script>
 
 <script id="photoViewTemplate" type="text/html">
-<div class="control-group">
-    <label class="control-label">Title: <span data-bind="text:name"></span></label>
+<div class="form-group">
+    <label>Title: <span data-bind="text:name"></span></label>
 </div>
-<div class="control-group">
-    <label class="control-label">Date Taken: <span data-bind="text:dateTaken"></span></label>
+<div class="form-group">
+    <label>Date Taken: <span data-bind="text:dateTaken"></span></label>
 </div>
-<div class="control-group">
-    <label class="control-label">Attribution : <span data-bind="text:attribution"></span></label>
+<div class="form-group">
+    <label>Attribution : <span data-bind="text:attribution"></span></label>
 </div>
-<div class="control-group">
-    <label class="control-label">Notes: <span data-bind="text:notes"></span></label>
+<div class="form-group">
+    <label>Notes: <span data-bind="text:notes"></span></label>
 </div>
 
-<div class="control-group readonly">
-    <label class="control-label">File Name: <span data-bind="text:filename"></span></label>
+<div class="form-group readonly">
+    <label>File Name: <span data-bind="text:filename"></span></label>
 </div>
-<div class="control-group readonly">
-    <label class="control-label">File Size: <span data-bind="text:formattedSize"></span></label>
+<div class="form-group readonly">
+    <label>File Size: <span data-bind="text:formattedSize"></span></label>
 </div>
 </script>
 </g:if>
