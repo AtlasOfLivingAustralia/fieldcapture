@@ -91,4 +91,11 @@ class RlpProjectPage extends ReloadablePage {
         overviewTab.click()
         waitFor{overview.displayed}
     }
+
+    def displayReportingTab() {
+        reportingTab.click()
+        waitFor 10, {
+            projectReports.displayed
+        }
+    }
 }

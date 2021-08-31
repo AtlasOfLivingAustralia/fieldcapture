@@ -28,7 +28,7 @@ class ReportPage extends Page {
         editAnyway (required: false) { $(".alert .btn")}
         attachDocumentModal (required: false) { $("#attachDocument").module(DocumentDialog) }
         doAttach (required: false) { $("#RLP_-_Baseline_data-content .model-form .table.assuranceDocuments .btn#doAttach") }
-        attachDocument (required: false) { $("#RLP_-_Baseline_data-content .model-form .table.assuranceDocuments tr td div[data-bind*=attachments]") }
+        attachDocument (required: false) { $("#RLP_-_Baseline_data-content .model-form .table.assuranceDocuments tr td").first() }
     }
 
     def field(String name) {
@@ -97,5 +97,11 @@ class ReportPage extends Page {
 
     def getReport() {
         return reportContent
+    }
+
+    def moveToDocumentAttachSection() {
+        interact {
+            moveToElement($("#RLP_-_Baseline_data-content .model-form .table.assuranceDocuments"))
+        }
     }
 }

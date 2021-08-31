@@ -76,30 +76,18 @@ class RlpReportingSpec extends StubbedCasSpec {
         to RlpProjectPage, projectId
 
         then:
-        waitFor { at RlpProjectPage }
-
-        when:
-        reportingTab.click()
-
-        then:
-        waitFor { projectReports.displayed }
+        displayReportingTab()
 
         when:
         projectReports.reports[2].edit()
 
         then:
-        waitFor { at ReportPage }
+        waitFor 10, {
+            at ReportPage
+        }
 
         when: "Click on Attach Document"
-        interact {
-            moveToElement($("#RLP_-_Baseline_data-content .model-form .table.assuranceDocuments"))
-        }
-        then:
-        waitFor 20, {
-            doAttach.displayed
-        }
-
-        when:
+        moveToDocumentAttachSection()
         doAttach.click()
 
         then:
@@ -109,17 +97,15 @@ class RlpReportingSpec extends StubbedCasSpec {
         }
 
         when:
-        waitFor 10, {
             attachDocumentModal.cancelButton.click()
-        }
 
         then:
-        attachDocument[1].displayed
+        attachDocument.displayed
 
         and:
         //when the document is attached, attach document btn will be remove and swap with document
         // otherwise it will not remove the attach document btn
-        attachDocument[1].text() == "Attach Document"
+        attachDocument.text() == "Attach Document"
     }
 
     def "A project editor can edit the report"() {
