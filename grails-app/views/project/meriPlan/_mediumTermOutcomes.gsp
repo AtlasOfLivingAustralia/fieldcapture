@@ -16,7 +16,7 @@
     <tbody data-bind="foreach:details.outcomes.midTermOutcomes">
     <tr>
         <td class="index" data-bind="text:$index()+1"></td>
-        <td class="outcome"><textarea data-bind="value:description, disable: $parent.isProjectDetailsLocked()"></textarea></td>
+        <td class="outcome"><textarea class="form-control form-control-sm" data-bind="value:description, disable: $parent.isProjectDetailsLocked()"></textarea></td>
         <td class="remove">
             <span data-bind="if: !$parent.isProjectDetailsLocked()">
                 <i class="fa fa-remove" data-bind="click: $parent.removeMidTermOutcome"></i>

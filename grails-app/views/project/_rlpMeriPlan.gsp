@@ -23,7 +23,7 @@
         <tr>
             <td class="index" data-bind="text:$index()+1"></td>
             <td class="outcome">
-                <textarea data-validation-engine="validate[required]" data-bind="value:description, disable: $parent.isProjectDetailsLocked()"></textarea>
+                <textarea class="form-control form-control-sm" data-validation-engine="validate[required]" data-bind="value:description, disable: $parent.isProjectDetailsLocked()"></textarea>
             </td>
             <td class="remove">
                 <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()"><i class="fa fa-remove"
@@ -54,13 +54,13 @@
                     <th class="required">Project name (150 characters) <fc:iconHelp>The project name will be visible on project overview page in MERIT</fc:iconHelp></th>
                 </tr>
                 <tr>
-                    <td><input type="text"  data-validation-engine="validate[required,maxSize[150]]" data-bind="value:details.name, disable: isProjectDetailsLocked()"></td>
+                    <td><input type="text" class="form-control form-control-sm" data-validation-engine="validate[required,maxSize[150]]" data-bind="value:details.name, disable: isProjectDetailsLocked()"></td>
                 </tr>
                 <tr class="header required">
                     <th class="required">Project description (1000 character limit [approx. 150 words]) <fc:iconHelp>Project description will be visible on project overview page in MERIT.</fc:iconHelp></th>
                 </tr>
                 <tr>
-                    <td><textarea rows="5"  data-validation-engine="validate[required,maxSize[1500]]" data-bind="value:details.description, disable: isProjectDetailsLocked()"></textarea></td>
+                    <td><textarea rows="5"  class="form-control form-control-sm" data-validation-engine="validate[required,maxSize[1500]]" data-bind="value:details.description, disable: isProjectDetailsLocked()"></textarea></td>
                 </tr>
 
                 <!-- ko if:isAgricultureProject() -->
@@ -68,7 +68,7 @@
                     <th class="required">Project rationale (3000 character limit [approx 500 words]) <fc:iconHelp>Provide a rationale of why the targeted investment priorities are being addressed and explain (using evidence) how the methodology will address them.</fc:iconHelp></th>
                 </tr>
                 <tr>
-                    <td><textarea rows="5" data-validation-engine="validate[required,maxSize[4000]]" data-bind="value:details.rationale, disable: isProjectDetailsLocked()"></textarea></td>
+                    <td><textarea class="form-control form-control-sm" rows="5" data-validation-engine="validate[required,maxSize[4000]]" data-bind="value:details.rationale, disable: isProjectDetailsLocked()"></textarea></td>
                 </tr>
                 <!-- /ko -->
                 </tbody>
@@ -97,11 +97,11 @@
         <tr>
             <td class="index"><span data-bind="text:$index()+1"></span></td>
             <td class="baseline">
-                <textarea rows="4" data-validation-engine="validate[required]"
+                <textarea class="form-control form-control-sm" rows="4" data-validation-engine="validate[required]"
                           data-bind="value: data1, disable: $parent.isProjectDetailsLocked()">
                 </textarea>
             </td>
-            <td class="baseline-method"><textarea data-validation-engine="validate[required]"
+            <td class="baseline-method"><textarea class="form-control form-control-sm" data-validation-engine="validate[required]"
                     data-bind="value: data2, disable: $parent.isProjectDetailsLocked()"
                     rows="4"></textarea></td>
             <td class="remove">

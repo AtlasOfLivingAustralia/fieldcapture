@@ -12,6 +12,6 @@
               maxlength="3000"
               data-validation-engine="validate[required,maxSize[3000]"
               data-bind="value:details.adaptiveManagement, disable: isProjectDetailsLocked()"
-              class="input-xlarge" rows="5" ></textarea>
+              class="form-control form-control-sm" rows="5" ></textarea>
     </div>
 </div>

@@ -30,15 +30,15 @@
     <tr>
         <td class="index"><span data-bind="text:$index()+1"></span></td>
         <td class="service">
-            <select data-bind="options: selectableServices, optionsText:'name', optionsValue:'id', optionsCaption: 'Please select', value:serviceId, disable: $root.isProjectDetailsLocked()"
+            <select class="form-control form-control-sm" data-bind="options: selectableServices, optionsText:'name', optionsValue:'id', optionsCaption: 'Please select', value:serviceId, disable: $root.isProjectDetailsLocked()"
                     data-validation-engine="validate[required]"></select>
         </td>
         <td class="score">
-            <select data-bind="options: selectableScores, optionsText:'label', optionsValue:'scoreId', optionsCaption: 'Please select', value:scoreId, disable: $root.isProjectDetailsLocked()"
+            <select class="form-control form-control-sm" data-bind="options: selectableScores, optionsText:'label', optionsValue:'scoreId', optionsCaption: 'Please select', value:scoreId, disable: $root.isProjectDetailsLocked()"
                     data-validation-engine="validate[required]"></select>
         </td>
         <td class="budget-cell">
-            <input type="number" data-bind="value: target, disable: $root.isProjectDetailsLocked(), warningPopup:minimumTargetsValid"
+            <input class="form-control form-control-sm" type="number" data-bind="value: target, disable: $root.isProjectDetailsLocked(), warningPopup:minimumTargetsValid"
                    data-validation-engine="validate[min[0.01]]"  data-warningmessage="The sum of the minimum targets must be less than or equal to the overall target">
         </td>
 
@@ -57,7 +57,7 @@
 
         <!-- ko foreach: periodTargets -->
         <td class="budget-cell">
-            <input type="number"
+            <input class="form-control form-control-sm" type="number"
                    data-bind="value: target, disable: $root.isProjectDetailsLocked()"
                    data-validation-engine="validate[custom[number],min[0]]"/>
         </td>

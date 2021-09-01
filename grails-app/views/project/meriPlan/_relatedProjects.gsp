@@ -6,7 +6,7 @@
     </thead>
     <tbody>
     <tr>
-        <td><textarea class="form-control col-sm-12" rows="5"
+        <td><textarea class="form-control form-control-sm" rows="5"
                       data-validation-engine="validate[required,maxSize[${maxSize ?: 1500}]]"
                       data-bind="value:details.relatedProjects, disable: isProjectDetailsLocked()"
                       placeholder="${placeholder ?: ""}"></textarea></td>

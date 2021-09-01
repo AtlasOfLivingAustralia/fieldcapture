@@ -16,7 +16,7 @@
         <g:if test="${includeOther}">
             <div class="form-check">
                 <label class="form-check-label"><input type="checkbox" class="form-check-input" data-bind="checked:details.objectives.simpleObjectives.otherChecked, disable: isProjectDetailsLocked()" value="Other">Other</label>
-                <input type="text" data-bind="enable:details.objectives.simpleObjectives.otherChecked(), value:details.objectives.simpleObjectives.otherValue">
+                <input type="text" class="form-control form-control-sm" data-bind="enable:details.objectives.simpleObjectives.otherChecked(), value:details.objectives.simpleObjectives.otherValue">
             </div>
         </g:if>
     </fieldset>

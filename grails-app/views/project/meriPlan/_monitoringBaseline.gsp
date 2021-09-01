@@ -11,11 +11,11 @@
     <tr>
         <td class="index"><span data-bind="text:$index()+1"></span></td>
         <td class="baseline">
-            <textarea rows="4" data-validation-engine="validate[required]"
+            <textarea rows="4" class="form-control form-control-sm" data-validation-engine="validate[required]"
                       data-bind="value: baseline, disable: $root.isProjectDetailsLocked()">
             </textarea>
         </td>
-        <td class="baseline-method"><textarea data-validation-engine="validate[required]"
+        <td class="baseline-method"><textarea class="form-control form-control-sm" data-validation-engine="validate[required]"
                                               data-bind="value: method, disable: $root.isProjectDetailsLocked()"
                                               rows="4"></textarea></td>
         <td class="remove">

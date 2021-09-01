@@ -15,10 +15,10 @@
         <tr>
             <td class="index"> <span data-bind="text:$index()+1"></span></td>
             <td class="baseline">
-                <textarea style="width: 97%;" rows="3" class="input-xlarge"  data-bind="value: data1, disable: $parent.isProjectDetailsLocked()">
+                <textarea rows="3" class="form-control form-control-sm"  data-bind="value: data1, disable: $parent.isProjectDetailsLocked()">
                 </textarea>
             </td>
-            <td class="baseline-method"><textarea class="input-xlarge" data-bind="value: data2, disable: $parent.isProjectDetailsLocked()"  rows="5"></textarea></td>
+            <td class="baseline-method"><textarea class="form-control form-control-sm" data-bind="value: data2, disable: $parent.isProjectDetailsLocked()"  rows="5"></textarea></td>
             <td class="remove">
                 <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()" ><i class="fa fa-remove" data-bind="click: $parent.removeKEQ"></i></span>
             </td>

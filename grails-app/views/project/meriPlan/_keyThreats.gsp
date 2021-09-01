@@ -16,11 +16,11 @@
     <tr>
         <td class="index"><span data-bind="text:$index()+1"></span></td>
         <td class="threat">
-            <textarea rows="4" data-validation-engine="validate[required]"
+            <textarea rows="4" class="form-control form-control-sm" data-validation-engine="validate[required]"
                       data-bind="value: threat, disable: $root.isProjectDetailsLocked()">
             </textarea>
         </td>
-        <td class="intervention"><textarea data-validation-engine="validate[required]"
+        <td class="intervention"><textarea class="form-control form-control-sm" data-validation-engine="validate[required]"
                                            data-bind="value: intervention, disable: $root.isProjectDetailsLocked()"
                                            rows="4"></textarea></td>
         <td class="remove">

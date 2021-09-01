@@ -9,7 +9,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <input type="text" data-validation-engine="validate[required,maxSize[${maxSize ?: 150}]]]"
+                        <input class="form-control form-control-sm" type="text" data-validation-engine="validate[required,maxSize[${maxSize ?: 150}]]]"
                                data-bind="value:details.name, disable: isProjectDetailsLocked()" placeholder="${placeholder ?: ""}">
                     </td>
                 </tr>
@@ -24,9 +24,11 @@
         ${explanation}
     </g:if>
     <div class="project-name row">
-        <input class="col-sm-12" type="text" data-validation-engine="validate[required,maxSize[${maxSize ?: 150}]]"
-               data-bind="value:details.name, disable: isProjectDetailsLocked()"
-               placeholder="${placeholder ?: ""}"></input>
+        <div class="col-sm-12">
+            <input class="form-control form-control-sm" type="text" data-validation-engine="validate[required,maxSize[${maxSize ?: 150}]]"
+                   data-bind="value:details.name, disable: isProjectDetailsLocked()"
+                   placeholder="${placeholder ?: ""}">
+        </div>
     </div>
 </g:else>
 

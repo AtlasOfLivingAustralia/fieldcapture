@@ -12,14 +12,14 @@
     <tbody>
     <tr>
         <td class="outcome-priority">
-            <select data-validation-engine="validate[required]" data-bind="options:details.outcomes.selectablePrimaryOutcomes, value:details.outcomes.primaryOutcome.description, optionsCaption: 'Please select', disable: isProjectDetailsLocked()" >
+            <select class="form-control form-control-sm" data-validation-engine="validate[required]" data-bind="options:details.outcomes.selectablePrimaryOutcomes, value:details.outcomes.primaryOutcome.description, optionsCaption: 'Please select', disable: isProjectDetailsLocked()" >
             </select>
 
         </td>
         <td colspan="2" class="priority">
             <!-- ko if:!isAgricultureProject() && !details.outcomes.primaryOutcomeSupportsMultiplePriorities() -->
 
-            <select style="width:100%" class="asset" data-validation-engine="validate[required]" data-bind="options:details.outcomes.outcomePriorities(details.outcomes.primaryOutcome.description()), optionsCaption: 'Please select', value:details.outcomes.primaryOutcome.asset, select2:{},  disable: isProjectDetailsLocked()" >
+            <select class="form-control form-control-sm asset w-100" data-validation-engine="validate[required]" data-bind="options:details.outcomes.outcomePriorities(details.outcomes.primaryOutcome.description()), optionsCaption: 'Please select', value:details.outcomes.primaryOutcome.asset, select2:{},  disable: isProjectDetailsLocked()" >
             </select>
             <!-- /ko -->
             <!-- ko if:isAgricultureProject() || details.outcomes.primaryOutcomeSupportsMultiplePriorities() -->

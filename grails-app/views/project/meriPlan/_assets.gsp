@@ -24,7 +24,7 @@
     <td class="index" data-bind="text:$index()+1"></td>
     <g:if test="${fromPriorities && useCategorySelection}">
         <td class="asset-category required">
-            <select data-validation-engine="validate[required]"
+            <select class="form-control form-control-sm" data-validation-engine="validate[required]"
                     data-bind="select2:{}, value:category, optionsCaption:'${placeHolder  ?: "Please select..."}', options: $root.assetCategories(<fc:modelAsJavascript model="${priorityCategories}"/>), disable: $parent.isProjectDetailsLocked()">
             </select>
         </td>
@@ -32,25 +32,25 @@
     <td class="${assetClass}">
         <g:if test="${fromPriorities}">
             <g:if test="${useCategorySelection}">
-                <select data-validation-engine="validate[required]"
+                <select class="form-control form-control-sm" data-validation-engine="validate[required]"
                         data-bind="select2:{}, value:description, optionsCaption:'${placeHolder  ?: "Please select..."}', options: $root.priorityAssets(category()), disable: !category() || $parent.isProjectDetailsLocked()">
                 </select>
             </g:if>
             <g:else>
-                <select data-validation-engine="validate[required]"
+                <select class="form-control form-control-sm" data-validation-engine="validate[required]"
                         data-bind="select2:{}, value:description, optionsCaption:'${placeHolder  ?: "Please select..."}', options: $root.priorityAssets(<fc:modelAsJavascript model="${priorityCategories}" default=""/>), disable: $parent.isProjectDetailsLocked()">
                 </select>
             </g:else>
 
         </g:if>
         <g:else>
-            <textarea placeholder="${placeHolder}" data-validation-engine="validate[required]" data-bind="value:description, disable: $parent.isProjectDetailsLocked()"></textarea>
+            <textarea class="form-control form-control-sm" placeholder="${placeHolder}" data-validation-engine="validate[required]" data-bind="value:description, disable: $parent.isProjectDetailsLocked()"></textarea>
         </g:else>
 
     </td>
     <g:if test="${fromPriorities && autoSelectCategory}">
         <td class="asset-category required">
-                <select type="text" readonly="readonly" placeholder="${categoryPlaceholder ?:"Select an asset..."}"
+                <select type="text" class="form-control form-control-sm" readonly="readonly" placeholder="${categoryPlaceholder ?:"Select an asset..."}"
                         data-bind="value:category, options:[$root.assetCategory(description())], disable: $parent.isProjectDetailsLocked()"></select>
 
         </td>
