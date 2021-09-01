@@ -923,6 +923,6 @@ span.status {
 }
 
 .dashboard-section > .progress > span,
-.outputTargets > .col-sm-4 > .well > .progress > span.progress-label {
+.outputTargets > .col-sm-4 > .well > .progress > span.progress-label, .progress > .progress-label {
 	margin-top: 0.6rem;
 }

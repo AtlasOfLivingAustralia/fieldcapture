@@ -205,7 +205,7 @@
                         </div>
                         <div class="col-sm-4">
                     </g:if>
-                    <div class="well">
+                    <div class="well mb-2">
                         <h3>${metric.key}</h3>
                         <g:each in="${metric.value}" var="score">
                             <fc:renderScore score="${score}" printable="${printable}"></fc:renderScore>
