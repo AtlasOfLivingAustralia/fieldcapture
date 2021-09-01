@@ -634,7 +634,6 @@ class ProjectController {
         if (!result) {
             render view: '/error', model: [error: "An error occurred generating the MERI plan report."]
         }
-        null
     }
 
     /**
