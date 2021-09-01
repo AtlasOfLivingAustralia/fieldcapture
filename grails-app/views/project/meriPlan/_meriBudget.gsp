@@ -34,7 +34,7 @@
             <g:if test="${showThemeColumn}">
             <td class="budget-category"><select class="form-control form-control-sm" data-bind="options: $parent.projectThemes, optionsCaption: 'Please select', value:shortLabel, disable: $parent.isProjectDetailsLocked()"> </select></td>
             </g:if>
-            <td class="budget-description"><textarea class="form-control form-control-sm" class="form-control form-control-sm" data-bind="value: description, disable: $parent.isProjectDetailsLocked()" rows="3"></textarea></td>
+            <td class="budget-description"><textarea class="form-control form-control-sm" data-bind="value: description, disable: $parent.isProjectDetailsLocked()" rows="3"></textarea></td>
             <g:if test="${showActivityColumn}">
                 <td class="budget-activities"><select class="form-control form-control-sm" multiple="multiple" data-bind="options:details.services.selectedServices, multiSelect2:{value:activities}, disable: $parent.isProjectDetailsLocked()"></select></td>
             </g:if>
