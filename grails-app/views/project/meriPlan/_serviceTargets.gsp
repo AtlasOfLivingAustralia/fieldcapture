@@ -46,7 +46,7 @@
             <td class="target-date">
                 <div class="input-group">
                     <input class="form-control form-control-sm" data-bind="datepicker:targetDate.date, disable: $root.isProjectDetailsLocked()" type="text" size="16" data-validation-engine="validate[required]">
-                    <div class="input-group-append">
+                    <div class="input-group-append open-datepicker">
                         <span class="input-group-text">
                             <i class="fa fa-th ">&nbsp;</i>
                         </span>
