@@ -23,13 +23,10 @@
         </g:each>
         <g:if test="${includeOther}">
             <div class="form-check">
-                <label class="form-check-label">
-                    <input type="checkbox" class="form-check-input" data-bind="checked:details.activities.activities.otherChecked" value="Other">
-                    Other
-                </label>
-                <input type="text" data-bind="enable:details.activities.activities.otherChecked() && !isProjectDetailsLocked(), value:details.activities.activities.otherValue">
+                <input type="checkbox" class="form-check-input" id="otherActivity" data-bind="checked:details.activities.activities.otherChecked, disable: isProjectDetailsLocked()" value="Other">
+                <label class="form-check-label" for="otherActivity">Other</label>
             </div>
-
+            <input type="text" class="form-control form-control-sm" data-bind="enable:details.activities.activities.otherChecked() && !isProjectDetailsLocked(), value:details.activities.activities.otherValue">
         </g:if>
     </g:else>
 </div>

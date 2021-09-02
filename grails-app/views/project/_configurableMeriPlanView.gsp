@@ -1,4 +1,4 @@
-<div class="meri-plan" data-bind="let:{details:meriPlan()}">
+<div class="meri-plan space-after" data-bind="let:{details:meriPlan()}">
 
 <g:each var="content" in="${config?.meriPlanContents}">
     <div class="row">

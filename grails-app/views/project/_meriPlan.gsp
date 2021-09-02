@@ -1,4 +1,4 @@
-<div class="meri-plan" data-bind="let:{details:meriPlan()}">
+<div class="meri-plan space-after" data-bind="let:{details:meriPlan()}">
 <div class="row space-after">
     <div class="col-sm-12">
         <div class="well well-small">
