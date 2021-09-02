@@ -130,8 +130,8 @@ var projectConfig = {
                     "itemName": "Budget item",
                     "showThemeColumn": false,
                     "showActivityColumn": false,
-                    "explanation": "Please detail how project funding will be allocated to project services (action). Expenditure should align with the approved project grant application (including the amount identified for project reporting and administration). Each action should be identified as a different line item",
-                    "projectHeadingHelpText": "Planned budget expenditure for each service (action)",
+                    "explanation": "Please detail how project funding will be allocated to project services (action) by species, if more than one species is benefitting from the project. Expenditure should align with the approved project grant application (including the amount identified for project reporting and administration). Each action should be identified as a different line item",
+                    "projectHeadingHelpText": "Planned budget expenditure for each service (action) by species",
                     "hideHelpText": true
                 }
             }
@@ -153,22 +153,6 @@ var projectConfig = {
             "Natural Environment"
         ],
         "projectReports": [
-            {
-                "reportType": "Activity",
-                "reportDescriptionFormat": "Progress Report %1d",
-                "reportNameFormat": "Progress Report %1d",
-                "reportingPeriodInMonths": 6,
-                "description": "",
-                "category": "Progress Reports",
-                "activityType": "Bushfires States Progress Report",
-                "reportsAlignedToCalendar": true,
-                "endDates": [
-                    "2021-03-31T13:00:00Z",
-                    "2021-09-30T14:00:00Z",
-                    "2022-03-31T13:00:00Z"
-                ],
-                "canSubmitDuringReportingPeriod": true
-            },
             {
                 "reportType": "Single",
                 "firstReportingPeriodEnd": "2022-06-30T14:00:00Z",
