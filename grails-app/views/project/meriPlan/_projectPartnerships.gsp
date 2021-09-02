@@ -20,10 +20,10 @@
             <td class="partner-organisation-type">
                 <select class="form-control form-control-sm" data-bind="addValueToOptionsIfMissing:true, options: $parent.organisations, value:data3,optionsCaption: 'Please select', disable: $parent.isProjectDetailsLocked()"></select>
                 <%-- Use an if for the parent details test rather than an enable binding to avoid interaction with the enableAndClear binding --%>
-                <div data-bind="if:$parent.isProjectDetailsLocked()">
+                <div class="mb-1" data-bind="if:$parent.isProjectDetailsLocked()">
                     <input class="form-control form-control-sm" disabled="disabled" type="text" data-bind="value:otherOrganisationType">
                 </div>
-                <div data-bind="if:!$parent.isProjectDetailsLocked()">
+                <div class="mb-1" data-bind="if:!$parent.isProjectDetailsLocked()">
                     <input class="form-control form-control-sm" placeholder="Organisation type, if 'Other'" type="text" data-bind="enableAndClear: data3() == 'Other', value:otherOrganisationType">
                 </div>
             </td>
