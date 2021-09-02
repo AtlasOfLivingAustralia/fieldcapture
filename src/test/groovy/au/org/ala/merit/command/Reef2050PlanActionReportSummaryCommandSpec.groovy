@@ -35,7 +35,7 @@ class Reef2050PlanActionReportSummaryCommandSpec extends Specification implement
         then:
         1 * activityService.search( [type    : Reef2050PlanActionReportConfig.REEF_2050_PLAN_ACTION_REPORTING_2018_ACTIVITY_TYPE,
                                      progress: ActivityService.PROGRESS_FINISHED, publicationStatus: ReportService.REPORT_APPROVED]) >> [reports:[]]
-        reports.size() == 4
+        reports.size() == 3
     }
 
     def "The new format reports will be returned if there is appropriate activity data for them"() {
@@ -45,10 +45,10 @@ class Reef2050PlanActionReportSummaryCommandSpec extends Specification implement
         then:
         1 * activityService.search( [type    : Reef2050PlanActionReportConfig.REEF_2050_PLAN_ACTION_REPORTING_2018_ACTIVITY_TYPE,
                                      progress: ActivityService.PROGRESS_FINISHED, publicationStatus: ReportService.REPORT_APPROVED]) >> [resp:[activities:[[plannedEndDate:'2018-07-01T00:00:00Z']]]]
-        reports.size() == 5
+        reports.size() == 4
     }
 
-    def "The project Start Date and End Date of final Report"() {
+    def "The project End Date Reef 2050 Plan Action Reporting 2018 Stage 3 Report"() {
 
         when:
         List reports = command.reportSummary()
@@ -58,9 +58,9 @@ class Reef2050PlanActionReportSummaryCommandSpec extends Specification implement
                                      progress: ActivityService.PROGRESS_FINISHED, publicationStatus: ReportService.REPORT_APPROVED]) >> [reports:[]]
 
         and:
-        reports[0].periodStart == "2020-06-30T14:00:00Z"
-        reports[0].periodEnd == "2021-06-30T14:00:00Z"
-        reports[0].type == "final_Report"
+        reports[0].periodStart == null
+        reports[0].periodEnd == "2018-06-30T14:00:00Z"
+        reports[0].type == "settings"
     }
 
 

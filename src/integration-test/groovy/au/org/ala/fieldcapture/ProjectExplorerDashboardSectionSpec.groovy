@@ -83,6 +83,12 @@ class ProjectExplorerDashboardSectionSpec extends StubbedCasSpec {
         viewReef2050PlanReport.dashboardType.find("option").find{ it.value() == "reef2050PlanActionSelection" }.click()
 
         then:
+        $("#selectPeriod").displayed
+
+        when:
+        $("#selectPeriod").find("option").find{it.text()=="01 January 2018 - 30 June 2018"}.click()
+
+        then:
         waitFor 10, { viewReef2050PlanReport.reefReportContent.displayed }
 
         and:
