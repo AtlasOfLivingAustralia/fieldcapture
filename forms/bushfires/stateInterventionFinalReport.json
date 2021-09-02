@@ -11578,7 +11578,7 @@
               },
               {
                 "readonly": true,
-                "width": "15%",
+                "width": "13%",
                 "source": "serviceName",
                 "type": "textarea",
                 "rows": 3,
@@ -11586,7 +11586,7 @@
               },
               {
                 "readonly": true,
-                "width": "20%",
+                "width": "15%",
                 "source": "targetMeasure",
                 "type": "textarea",
                 "rows": 3,
@@ -11614,7 +11614,7 @@
                 "rows": 3
               },
               {
-                "width": "35%",
+                "width": "30%",
                 "source": "reasonTargetNotMet",
                 "type": "textarea",
                 "rows": 3,
