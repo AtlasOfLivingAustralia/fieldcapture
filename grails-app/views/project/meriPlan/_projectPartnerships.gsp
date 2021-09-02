@@ -18,12 +18,12 @@
             <td class="partner-name"> <textarea placeholder="${namePlaceHolder}" class="form-control form-control-sm"  data-bind="value: data1, disable: $parent.isProjectDetailsLocked()" rows="3"></textarea> </td>
             <td class="partnership-nature"><textarea placeholder="${partnershipPlaceHolder}" class="form-control form-control-sm" data-bind="value: data2, disable: $parent.isProjectDetailsLocked()"  rows="5"></textarea></td>
             <td class="partner-organisation-type">
-                <select class="form-control form-control-sm" data-bind="addValueToOptionsIfMissing:true, options: $parent.organisations, value:data3,optionsCaption: 'Please select', disable: $parent.isProjectDetailsLocked()"></select>
+                <select class="form-control form-control-sm mb-1" data-bind="addValueToOptionsIfMissing:true, options: $parent.organisations, value:data3,optionsCaption: 'Please select', disable: $parent.isProjectDetailsLocked()"></select>
                 <%-- Use an if for the parent details test rather than an enable binding to avoid interaction with the enableAndClear binding --%>
-                <div class="mb-1" data-bind="if:$parent.isProjectDetailsLocked()">
+                <div data-bind="if:$parent.isProjectDetailsLocked()">
                     <input class="form-control form-control-sm" disabled="disabled" type="text" data-bind="value:otherOrganisationType">
                 </div>
-                <div class="mb-1" data-bind="if:!$parent.isProjectDetailsLocked()">
+                <div data-bind="if:!$parent.isProjectDetailsLocked()">
                     <input class="form-control form-control-sm" placeholder="Organisation type, if 'Other'" type="text" data-bind="enableAndClear: data3() == 'Other', value:otherOrganisationType">
                 </div>
             </td>
