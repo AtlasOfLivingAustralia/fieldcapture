@@ -1,26 +1,18 @@
 {
-  "class": "au.org.ala.ecodata.ActivityForm",
   "id": "60d44f5cc2dccca01c79088a",
-  "activationDate": null,
-  "category": "Reports",
-  "createdUserId": "1493",
   "dateCreated": "2021-06-24T09:24:44Z",
-  "formVersion": 1,
-  "gmsId": null,
-  "lastUpdated": "2021-08-27T00:28:16Z",
-  "lastUpdatedUserId": "94320",
   "minOptionalSectionsCompleted": 1,
-  "name": "State Intervention Final Report",
+  "supportsSites": true,
+  "lastUpdated": "2021-09-02T02:24:04Z",
+  "createdUserId": "1493",
+  "activationDate": null,
+  "supportsPhotoPoints": false,
   "publicationStatus": "published",
+  "gmsId": null,
+  "name": "State Intervention Final Report",
   "sections": [
     {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
       "collapsedByDefault": false,
-      "modelName": null,
-      "name": "State Government Emergency Progress Report",
-      "optional": false,
-      "optionalQuestionText": null,
       "template": {
         "pre-populate": [
           {
@@ -421,17 +413,15 @@
           }
         ]
       },
+      "modelName": null,
       "templateName": "stateGovernmentInterventionFinalReport",
-      "title": null
+      "optional": false,
+      "optionalQuestionText": null,
+      "title": null,
+      "name": "State Government Emergency Progress Report"
     },
     {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
       "collapsedByDefault": true,
-      "modelName": null,
-      "name": "Baseline data",
-      "optional": true,
-      "optionalQuestionText": null,
       "template": {
         "title": "Collecting or synthesising baseline data",
         "modelName": "RLP - Baseline data",
@@ -489,17 +479,15 @@
           }
         ]
       },
-      "templateName": "siBaselineData",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Communication materials",
+      "templateName": "siBaselineData",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Baseline data"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -605,17 +593,15 @@
           }
         ]
       },
-      "templateName": "siCommunicationMaterials",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Community engagement",
+      "templateName": "siCommunicationMaterials",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Communication materials"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -778,17 +764,15 @@
           }
         ]
       },
-      "templateName": "siCommunityEngagement",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Controlling access",
+      "templateName": "siCommunityEngagement",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Community engagement"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -1177,17 +1161,15 @@
           }
         ]
       },
-      "templateName": "siControllingAccess",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Pest animal management",
+      "templateName": "siControllingAccess",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Controlling access"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -1708,17 +1690,15 @@
           }
         ]
       },
-      "templateName": "siPestAnimalManagement",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Management plan development",
+      "templateName": "siPestAnimalManagement",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Pest animal management"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -2014,17 +1994,15 @@
           }
         ]
       },
-      "templateName": "siManagementPlanDevelopment",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Debris removal",
+      "templateName": "siManagementPlanDevelopment",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Management plan development"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -2365,17 +2343,15 @@
           }
         ]
       },
-      "templateName": "siDebrisRemoval",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Erosion Management",
+      "templateName": "siDebrisRemoval",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Debris removal"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -2816,17 +2792,15 @@
           }
         ]
       },
-      "templateName": "siErosionManagement",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Maintaining feral free enclosures",
+      "templateName": "siErosionManagement",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Erosion Management"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -3165,17 +3139,15 @@
           }
         ]
       },
-      "templateName": "siFeralFreeEnclosures",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Establishing ex-situ breeding programs",
+      "templateName": "siFeralFreeEnclosures",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Maintaining feral free enclosures"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -3441,17 +3413,15 @@
           }
         ]
       },
-      "templateName": "siExSituBreedingSites",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Establishing Agreements",
+      "templateName": "siExSituBreedingSites",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Establishing ex-situ breeding programs"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -3742,17 +3712,15 @@
           }
         ]
       },
-      "templateName": "siEstablishingAgreements",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Establishing monitoring regimes",
+      "templateName": "siEstablishingAgreements",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Establishing Agreements"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "title": "Establishing monitoring regimes",
         "modelName": "RLP - Establishing monitoring regimes",
@@ -3879,17 +3847,15 @@
           }
         ]
       },
-      "templateName": "siMonitoringRegimes",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Farm Management Survey",
+      "templateName": "siMonitoringRegimes",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Establishing monitoring regimes"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "title": "Farm management surveys",
         "modelName": "RLP - Farm Management Survey",
@@ -3984,17 +3950,15 @@
           }
         ]
       },
-      "templateName": "siFarmManagementSurvey",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Fauna survey",
+      "templateName": "siFarmManagementSurvey",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Farm Management Survey"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -4334,17 +4298,15 @@
           }
         ]
       },
-      "templateName": "siFaunaSurvey",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Fire management",
+      "templateName": "siFaunaSurvey",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Fauna survey"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -4746,17 +4708,15 @@
           }
         ]
       },
-      "templateName": "isiFireManagement",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Flora survey",
+      "templateName": "isiFireManagement",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Fire management"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -5106,17 +5066,15 @@
           }
         ]
       },
-      "templateName": "siFloraSurvey",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Habitat augmentation",
+      "templateName": "siFloraSurvey",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Flora survey"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -5509,17 +5467,15 @@
           }
         ]
       },
-      "templateName": "siHabitatAugmentation",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Identifying sites",
+      "templateName": "siHabitatAugmentation",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Habitat augmentation"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "title": "Identifying the location of potential sites",
         "modelName": "RLP - Identifying sites",
@@ -5592,17 +5548,15 @@
           }
         ]
       },
-      "templateName": "siIdentifyingSites",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Improving hydrological regimes",
+      "templateName": "siIdentifyingSites",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Identifying sites"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -6006,17 +5960,15 @@
           }
         ]
       },
-      "templateName": "siImprovingHydrologicalRegimes",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Improving land management practices",
+      "templateName": "siImprovingHydrologicalRegimes",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Improving hydrological regimes"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -6425,17 +6377,15 @@
           }
         ]
       },
-      "templateName": "siLandManagementPractices",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Disease management",
+      "templateName": "siLandManagementPractices",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Improving land management practices"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -6842,17 +6792,15 @@
           }
         ]
       },
-      "templateName": "siDiseaseManagement",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Negotiations",
+      "templateName": "siDiseaseManagement",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Disease management"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -6946,17 +6894,15 @@
           }
         ]
       },
-      "templateName": "siNegotiations",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Obtaining approvals",
+      "templateName": "siNegotiations",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Negotiations"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "title": "Obtaining relevant approvals",
         "modelName": "RLP - Obtaining approvals",
@@ -7015,17 +6961,15 @@
           }
         ]
       },
-      "templateName": "siObtainingApprovals",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Pest animal survey",
+      "templateName": "siObtainingApprovals",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Obtaining approvals"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -7402,17 +7346,15 @@
           }
         ]
       },
-      "templateName": "siPestAnimalSurvey",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Plant survival survey",
+      "templateName": "siPestAnimalSurvey",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Pest animal survey"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -7768,17 +7710,15 @@
           }
         ]
       },
-      "templateName": "siPlantSurvivalSurvey",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Project planning",
+      "templateName": "siPlantSurvivalSurvey",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Plant survival survey"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "title": "Project planning and delivery of documents as required for the delivery of the Project and monitoring",
         "modelName": "RLP - Project planning",
@@ -7857,17 +7797,15 @@
           }
         ]
       },
-      "templateName": "siProjectPlanning",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Remediating riparian and aquatic areas",
+      "templateName": "siProjectPlanning",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Project planning"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -8260,17 +8198,15 @@
           }
         ]
       },
-      "templateName": "siRemediatingRiparianAndAquaticAreas",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Revegetating habitat",
+      "templateName": "siRemediatingRiparianAndAquaticAreas",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Remediating riparian and aquatic areas"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -8759,17 +8695,15 @@
           }
         ]
       },
-      "templateName": "siRevegetatingHabitat",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Weed treatment",
+      "templateName": "siRevegetatingHabitat",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Revegetating habitat"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -9205,17 +9139,15 @@
           }
         ]
       },
-      "templateName": "siWeedTreatment",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Seed Collecting - Bushfire Program",
+      "templateName": "siWeedTreatment",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Weed treatment"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "modelName": "Seed Collecting - Bushfire Program",
         "dataModel": [
@@ -9522,17 +9454,15 @@
         ],
         "title": "Seed Collecting"
       },
-      "templateName": "siSeedCollecting",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Site preparation",
+      "templateName": "siSeedCollecting",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Seed Collecting - Bushfire Program"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "modelName": "RLP - Site preparation",
         "dataModel": [
@@ -9909,17 +9839,15 @@
         ],
         "title": "Site preparation"
       },
-      "templateName": "siSitePreparation",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Skills and knowledge survey",
+      "templateName": "siSitePreparation",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Site preparation"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "title": "Skills and knowledge survey",
         "modelName": "RLP - Skills and knowledge survey",
@@ -10067,17 +9995,15 @@
           }
         ]
       },
-      "templateName": "siSkillsAndKnowledgeSurvey",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Soil testing",
+      "templateName": "siSkillsAndKnowledgeSurvey",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Skills and knowledge survey"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -10411,17 +10337,15 @@
           }
         ]
       },
-      "templateName": "siSoilTesting",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Supplementary food and water",
+      "templateName": "siSoilTesting",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Soil testing"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "modelName": "Supplementary food and water",
         "dataModel": [
@@ -10476,17 +10400,15 @@
         ],
         "title": "Supplementary food and water"
       },
-      "templateName": "siSupplementaryFoodAndWater",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Emergency Interventions",
+      "templateName": "siSupplementaryFoodAndWater",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Supplementary food and water"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -10757,17 +10679,15 @@
           }
         ]
       },
-      "templateName": "siEmergencyInterventions",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Water quality survey",
+      "templateName": "siEmergencyInterventions",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Emergency Interventions"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -11129,17 +11049,15 @@
           }
         ]
       },
-      "templateName": "siWaterQualitySurvey",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Weed distribution survey",
+      "templateName": "siWaterQualitySurvey",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Water quality survey"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -11476,17 +11394,15 @@
           }
         ]
       },
+      "modelName": null,
       "templateName": "siWeedDistributionSurvey",
-      "title": null
+      "optional": true,
+      "optionalQuestionText": null,
+      "title": null,
+      "name": "Weed distribution survey"
     },
     {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
       "collapsedByDefault": false,
-      "modelName": "State Intervention Final Report",
-      "name": "State Intervention Final Report",
-      "optional": false,
-      "optionalQuestionText": null,
       "template": {
         "dataModel": [
           {
@@ -11533,6 +11449,17 @@
               {
                 "dataType": "text",
                 "name": "delivered"
+              },
+              {
+                "dataType": "text",
+                "name": "actualTotalDeliveredIfDifferent",
+                "behaviour": [
+                  {
+                    "condition": "delivered > projectTarget",
+                    "type": "enable_and_clear"
+                  }
+                ],
+                "validate": "required"
               },
               {
                 "dataType": "text",
@@ -11678,6 +11605,13 @@
                 "source": "delivered",
                 "type": "text",
                 "title": "Total delivered"
+              },
+              {
+                "width": "12%",
+                "source": "actualTotalDeliveredIfDifferent",
+                "type": "textarea",
+                "title": "Actual Total Delivered (if different)",
+                "rows": 3
               },
               {
                 "width": "35%",
@@ -11879,12 +11813,17 @@
         "templateName": "stateInterventionFinalReport",
         "modelName": "State Intervention Final Report"
       },
+      "modelName": "State Intervention Final Report",
       "templateName": null,
-      "title": null
+      "optional": false,
+      "optionalQuestionText": null,
+      "title": null,
+      "name": "State Intervention Final Report"
     }
   ],
+  "type": "Report",
+  "category": "Reports",
   "status": "active",
-  "supportsPhotoPoints": false,
-  "supportsSites": true,
-  "type": "Report"
+  "lastUpdatedUserId": "94320",
+  "formVersion": 1
 }
