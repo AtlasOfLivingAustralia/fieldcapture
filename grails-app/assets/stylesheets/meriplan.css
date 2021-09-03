@@ -373,3 +373,7 @@ input, textarea, select{
 .meri-budget td.remove {
     width: 0.1% !important;
 }
+
+.service-targets .input-group .input-group-append .input-group-text {
+    height: unset;
+}
