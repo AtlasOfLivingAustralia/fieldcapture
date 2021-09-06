@@ -9,9 +9,11 @@
 		<div class="alert alert-info">
 			Insert the allocated Internal Order number for this project. If the Internal Order number is not available, insert ‘TBA’ as a placeholder to allow you to complete the MERI plan. The Internal Order number must be inserted as soon as it becomes available
 		</div>
-		<div>
-			<label for="internalOrderId">Internal order number:</label>
-			<input id="internalOrderId" type="text" placeholder="If unavailable, use 'TBA'" data-bind="value:internalOrderId, valueUpdate:'keyup'">
+		<div class="form-group row">
+			<label for="internalOrderId" class="col-form-label col-sm-2">Internal order number:</label>
+			<div class="col-sm-10">
+				<input id="internalOrderId" class="form-control form-control-sm internalOrderNumber" type="text" placeholder="If unavailable, use 'TBA'" data-bind="value:internalOrderId, valueUpdate:'keyup'">
+			</div>
 		</div>
 		</div>
 		<span class="grantManagerActionSpan">

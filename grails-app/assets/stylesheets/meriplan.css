@@ -377,3 +377,7 @@ input, textarea, select{
 .service-targets .input-group .input-group-append .input-group-text {
     height: 30px;
 }
+
+input.internalOrderNumber {
+    width: 12rem;
+}
