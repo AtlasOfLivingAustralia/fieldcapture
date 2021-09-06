@@ -148,7 +148,7 @@ function MERIPlan(project, projectService, config) {
                 }
             };
             ko.applyBindings(planApprovalViewModel, $planApprovalModal[0]);
-            $planApprovalModal.modal({backdrop: 'static', keyboard:true, show:true}).on('hidden', function() {ko.cleanNode($planApprovalModal[0])});
+            $planApprovalModal.modal({backdrop: 'static', keyboard:true, show:true}).on('hidden.bs.modal', function() {ko.cleanNode($planApprovalModal[0])});
         }
         else {
             projectService.approvePlan({dateApproved:convertToIsoDate(new Date())}, self.internalOrderId());
