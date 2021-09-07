@@ -103,7 +103,7 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
         1 * metadataService.organisationList() >> [list:[[name:"Test Organisation 2", organisationId:'org2Id', abn:'12345678901']]]
         1 * metadataService.programsModel() >> [programs:[[name:'Green Army', subprograms:[[name:"Green Army Round 1"]]]]]
         1 * managementUnitService.getByName("ACT") >> [managementUnitId:"actId", name:"ACT"]
-        1 * programService.getByName("Green Army") >> null
+        1 * programService.getByName("Green Army Round 1") >> null
 
         and: "The project was processed without errors"
         !result.error
@@ -128,7 +128,7 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
         1 * metadataService.organisationList() >> [list:[[name:"Test Organisation 2", organisationId:'org2Id', abn:'12345678901']]]
         1 * metadataService.programsModel() >> [programs:[[name:'Green Army', subprograms:[[name:"Green Army Round 1"]]]]]
         1 * managementUnitService.getByName("ACT") >> [managementUnitId:"actId", name:"ACT"]
-        1 * programService.getByName("Green Army") >> null
+        1 * programService.getByName("Green Army Round 1") >> null
         1 * projectService.update('', _) >> [resp:[projectId:'p1']]
         1 * managementUnitService.getMembersOfManagementUnit("actId") >> [[userId:"u1", role:"admin"], [userId:"u2", role:"caseManager"]]
         1 * userService.checkEmailExists('editor@test.com') >> "u3"

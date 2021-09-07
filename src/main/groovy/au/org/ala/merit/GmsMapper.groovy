@@ -211,14 +211,14 @@ class GmsMapper {
         project.origin = 'merit'
 
 
-        String programName = project.associatedProgram
+        String programName = project.associatedSubProgram ?: project.associatedProgram
         String programId = programs[programName]
         if (programId) {
             project.remove('associatedProgram')
             project.programId = programId
         }
         else {
-            String program = findProgram(project.associatedSubProgram ?: project.associatedProgram)
+            String program = findProgram(programName)
             if (!program) {
                 errors << "Programme ${project.associatedProgram} doesn't match an existing MERIT programme"
             }
