@@ -72,6 +72,10 @@ class Reef2050PlanActionReportCommand extends Reef2050PlanActionReportConfig {
                     String reportStaticText = settingService.getSettingText(SettingPageType.getForKey(settingsPageKey()))
                     model.reportText = reportStaticText
                     break
+                case REEF_2050_PLAN_FINAL_ACTION_REPORT:
+                    String reportStaticText = settingService.getSettingText(SettingPageType.getForKey(settingsPageKey()));
+                    model.reportText = reportStaticText
+                    break
                 default:
                     model = originalReportModel()
                     break
@@ -86,7 +90,6 @@ class Reef2050PlanActionReportCommand extends Reef2050PlanActionReportConfig {
     Map originalReportModel() {
         List activities = findActivities()
         List actions = produceActionList(activities)
-
         DateTime periodEndDate = DateUtils.parse(periodEnd).withZone(DateTimeZone.default)
         DateTime periodStartDate = DateUtils.parse(periodStart()).withZone(DateTimeZone.default)
         String tableClass = type == REEF_2050_PLAN_ACTION_REPORTING_2018_ACTIVITY_TYPE ? 'action-table-2018' : 'action-table'

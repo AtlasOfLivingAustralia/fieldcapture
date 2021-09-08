@@ -60,6 +60,4 @@ class Reef2050PlanActionReportSummaryCommand {
         }
         availableReports
     }
-
-
 }

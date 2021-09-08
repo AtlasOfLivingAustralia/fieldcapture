@@ -29,7 +29,7 @@ class Reef2050PlanActionReportSummaryCommandSpec extends Specification {
         command.approvedActivitiesOnly == true
     }
 
-    def "The three legacy reports will always be returned"() {
+    def "The 3 legacy report and the 2020/2021 report will always be returned"() {
 
         when:
         List reports = command.reportSummary()
@@ -50,6 +50,20 @@ class Reef2050PlanActionReportSummaryCommandSpec extends Specification {
         reports.size() == 4
     }
 
+    def "The project End Date Reef 2050 Plan Action Reporting 2018 Stage 3 Report"() {
+
+        when:
+        List reports = command.reportSummary()
+
+        then:
+        1 * activityService.search( [type    : Reef2050PlanActionReportConfig.REEF_2050_PLAN_ACTION_REPORTING_2018_ACTIVITY_TYPE,
+                                     progress: ActivityService.PROGRESS_FINISHED, publicationStatus: ReportService.REPORT_APPROVED]) >> [reports:[]]
+
+        and:
+        reports[0].periodStart == null
+        reports[0].periodEnd == "2018-06-30T14:00:00Z"
+        reports[0].type == "settings"
+    }
 
 
 }

@@ -983,7 +983,11 @@ outcomes = [
     }
 ];
 createProgram({programId:"fdFundProgram", name: "Future Drought Fund Program", description: "", config:config, outcomes: outcomes});
-createProject({projectId: "fdFundProject", name: "fdFund Projects", programId: "fdFundProgram", managementUnitId: "bushfireManagement1"})
+createProject({projectId: "fdFundProject", name: "fdFund Projects", programId: "fdFundProgram", managementUnitId: "bushfireManagement1",
+    custom:{details:{outcomes:{
+                otherOutcomes:["Partnerships and engagement is built between stakeholders responsible for managing natural resources",
+                    "More primary producers adopt risk management practices to improve their sustainability and resilience",
+                    "More primary producers and agricultural communities are experimenting with adaptive or transformative NRM practices, systems and approaches that link and contribute to building drought resilience"]}}}})
 
 db.userPermission.insert({
     entityType: 'au.org.ala.ecodata.Project',

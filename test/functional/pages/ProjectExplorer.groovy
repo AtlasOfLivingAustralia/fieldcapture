@@ -2,6 +2,7 @@ package pages
 
 import geb.Module
 import geb.Page
+import pages.modules.ViewReef2050PlanReport
 
 class ProjectExplorer extends Page {
 
@@ -31,17 +32,13 @@ class ProjectExplorer extends Page {
         dashboardContent (required: false) {$("div#dashboard-content")}
         dashboardContentList (required: false) {$(".dashboard-activities")}
         reportView (required: false) {$("#reportView")}
+        viewReef2050PlanReport(required: false) {module ViewReef2050PlanReport}
     }
 
     /** When we reindex the index is destroyed and project explorer shows an error message about no data */
     boolean emptyIndex() {
         return mapToggle.empty
     }
-//
-//    void searchProject(){
-//        waitFor {search.displayed}
-//        search.click()
-//    }
 
 }
 
@@ -52,12 +49,3 @@ class ProjectsList extends Module {
         managementUnit { $(".managementUnitName").text()}
     }
 }
-
-
-////class DashboardContent extends Module{
-////    static content = {
-////        heading{$("")}
-////
-////
-////    }
-//}
