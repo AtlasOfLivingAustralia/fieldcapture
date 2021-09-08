@@ -63,7 +63,7 @@ class ProjectExplorerDashboardSectionSpec extends StubbedCasSpec {
         waitFor {dashboardContentList.size() == 3}
     }
 
-    def "Reef 2050 Final Plan Action Report for July 2020 to June 2021 "() {
+    def "Reef 2050 Plan Action Report for June 2018"() {
         setup:
         login([userId: '2', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ALA_ADMIN'], browser)
         when:
@@ -80,8 +80,16 @@ class ProjectExplorerDashboardSectionSpec extends StubbedCasSpec {
         viewReef2050PlanReport.dashboardType.value("reef2050PlanActionSelection").click()
 
         then:
-        waitFor 10, { viewReef2050PlanReport.reefReportContent.displayed }
+        waitFor 10, {
+            $("#selectPeriod").displayed
+        }
+        when:
+        $("#selectPeriod").find("option").find{it.text() == "01 January 2018 - 30 June 2018"}.click()
 
+        then:
+        waitFor 10, {
+            viewReef2050PlanReport.reefReportContent.displayed
+        }
         and:
         viewReef2050PlanReport.reefReportContent.text() == "This is a dummy text"
     }
