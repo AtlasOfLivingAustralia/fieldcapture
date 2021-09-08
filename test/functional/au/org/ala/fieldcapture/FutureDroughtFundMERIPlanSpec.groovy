@@ -2,7 +2,7 @@ package au.org.ala.fieldcapture
 
 import pages.RlpProjectPage
 
-class FutureDroughtFundMERIPlanTest extends StubbedCasSpec {
+class FutureDroughtFundMERIPlanSpec extends StubbedCasSpec {
     def setupSpec() {
         useDataSet('dataset3')
     }
@@ -28,9 +28,6 @@ class FutureDroughtFundMERIPlanTest extends StubbedCasSpec {
 
         meriPlan.primaryOutcome = "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
         meriPlan.primaryPriorityUnstyled[0].click()
-        meriPlan.otherOutcomeColumn1[0].click()
-        meriPlan.otherOutcomeColumn2[0].click()
-        meriPlan.otherOutcomeColumn2[1].click()
         meriPlan.shortTermOutcomes[0].value("Short term outcome 1")
         meriPlan.addMediumTermOutcome("Medium term outcome 1")
         meriPlan.projectDescription = "MERI plan edited description"
