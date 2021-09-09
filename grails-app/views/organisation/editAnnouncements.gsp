@@ -80,7 +80,7 @@
     $(function() {
 
         function controlsFormatter() {
-            return "<button class='btn btn-container btn-sm add-row' title='Adds a new announcement for this project in the row below this'><i class='icon-plus add-row fa fa-plus'></i></button> <button class='btn btn-container remove-row' title='Deletes this announcement'><i class='fa fa-remove remove-row fa fa-remove'></i></button>";
+            return "<button class='btn btn-container btn-sm add-row' title='Adds a new announcement for this project in the row below this'><i class='add-row fa fa-plus'></i></button> <button class='btn btn-container remove-row' title='Deletes this announcement'><i class='fa fa-remove remove-row fa fa-remove'></i></button>";
         }
 
         var events = <fc:modelAsJavascript model="${events}"></fc:modelAsJavascript>;

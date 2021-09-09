@@ -167,7 +167,7 @@
 
                             <div class="controls">
                                 <span class="btn fileinput-button" data-bind="visible:!filename()">
-                                    <i class="icon-plus"></i>
+                                    <i class="fa fa-plus"></i>
                                     <input id="documentFile" type="file" name="files"/>
                                     Attach file
                                 </span>

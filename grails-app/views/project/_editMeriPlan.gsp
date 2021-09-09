@@ -214,7 +214,7 @@
 					</g:if>
 					<g:if test="${allowMeriPlanUpload}">
 						<div class="btn fileinput-button"
-							 data-bind="fileUploadNoImage:meriPlanUploadConfig"><i class="icon-plus"></i>
+							 data-bind="fileUploadNoImage:meriPlanUploadConfig"><i class="fa fa-plus"></i>
 							<input type="file" name="meriPlan"><span>Upload MERI Plan</span>
 						</div>
 					</g:if>
