@@ -801,12 +801,6 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
     _.extend(this, projectService);
     _.extend(this, new ProjectViewModel(project, userRoles.editor, organisations));
 
-    var meriPlanConfig = _.extend({}, config, {
-        declarationModalSelector: '#unlockPlan',
-        meriSubmissionDeclarationSelector: '#meriSubmissionDeclaration'
-    });
-    self.meriPlan = new MERIPlan(project, projectService, meriPlanConfig);
-
     self.internalOrderId = ko.observable(project.internalOrderId);
     self.userIsCaseManager = ko.observable(userRoles.grantManager);
     self.userIsAdmin = ko.observable(userRoles.admin);
@@ -856,6 +850,16 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
     self.years = [];
     self.years = self.allYears();
 
+    self.canEditStartDate = ko.computed(function() {
+        return !project.hasApprovedOrSubmittedReports || self.includeSubmittedReports();
+    });
+
+    var meriPlanConfig = _.extend({}, config, {
+        declarationModalSelector: '#unlockPlan',
+        meriSubmissionDeclarationSelector: '#meriSubmissionDeclaration',
+        editProjectStartDate: self.canEditStartDate()
+    });
+    self.meriPlan = new MERIPlan(project, projectService, meriPlanConfig);
 
     self.validateProjectEndDate = function() {
 
@@ -1117,10 +1121,6 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
         ko.applyBindings(self.meriPlan, document.getElementById("view-meri-plan"));
         initialiseDocumentTable('#meriPlanDocumentList');
     };
-
-    self.canEditStartDate = ko.computed(function() {
-        return !project.hasApprovedOrSubmittedReports || self.includeSubmittedReports();
-    });
 
     self.validateProjectStartDate = function() {
 
