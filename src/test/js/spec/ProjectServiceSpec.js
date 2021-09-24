@@ -70,13 +70,15 @@ describe("ProjectService Spec", function () {
 
         spyOn($, 'blockUI');
 
-        projectService.approvePlan({reason: 'test'}, "IO1");
+        var data = {internalOrderNumber:"IO1", plannedStartDate:'2020-01-01T00:00:00Z'};
+
+        projectService.approvePlan({reason: 'test'}, data);
 
         expect($.ajax).toHaveBeenCalled();
         expect($.blockUI).toHaveBeenCalled();
 
         expect(savedOptions1.url).toEqual('/update/p1');
-        expect(savedOptions1.data).toEqual('{"internalOrderId":"IO1"}');
+        expect(savedOptions1.data).toEqual('{"internalOrderId":"IO1","plannedStartDate":"2020-01-01T00:00:00Z"}');
 
         result.resolve({});
 
