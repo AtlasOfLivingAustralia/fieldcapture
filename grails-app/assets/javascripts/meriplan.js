@@ -136,8 +136,6 @@ function MERIPlan(project, projectService, config) {
             var $planApprovalModal = $(planApprovalModal);
             var planApprovalViewModel = {
                 referenceDocument: ko.observable(),
-                canEditStartDate: self.canEditStartDate(),
-                plannedStartDate: self.plannedStartDate(),
                 reason:ko.observable(),
                 title:'Approve MERI Plan',
                 dateApproved: ko.observable(new Date()).extend({simpleDate:true}),

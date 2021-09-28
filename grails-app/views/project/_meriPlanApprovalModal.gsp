@@ -15,14 +15,6 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="projectStartDate" class="col-form-label col-sm-5"> Project Start Date</label>
-                        <div class="col-sm-7">
-                            <div class="input-group">
-                                <fc:datePicker size="form-control form-control-sm" targetField="plannedStartDate.date" id="projectStartDate" bs4="true" name="startDate" data-bind="disable:!canEditStartDate(), datepicker:plannedStartDate.date" data-validation-engine="validate[required, past[plannedEndDate]]" printable="${printView}"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
                         <label class="required col-form-label col-sm-5" for="meri-plan-approval-document-reference">Change order numbers </label>
                         <div class="col-sm-7">
                             <input id="meri-plan-approval-document-reference" type="text" class="required form-control form-control-sm" data-bind="value:referenceDocument">
