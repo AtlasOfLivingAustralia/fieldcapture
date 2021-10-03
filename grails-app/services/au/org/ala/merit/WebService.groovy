@@ -90,7 +90,7 @@ class WebService {
     }
 
     private int connectTimeout() {
-        grailsApplication.config.getProperty('webservice.connectTimeout ', Integer, 2000)
+        grailsApplication.config.getProperty('webservice.connectTimeout', Integer, 2000)
     }
 
     private URLConnection configureConnection(String url, boolean includeUserId, Integer timeout = null) {
