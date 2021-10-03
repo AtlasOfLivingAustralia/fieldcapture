@@ -5,6 +5,7 @@ import org.apache.commons.io.FilenameUtils
 import org.apache.http.HttpStatus
 import grails.core.GrailsApplication
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.cache.annotation.EnableCaching
 
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST
 import static org.apache.http.HttpStatus.SC_OK
@@ -13,6 +14,7 @@ import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
 /**
  * Proxies to the ecodata DocumentController/DocumentService.
  */
+@EnableCaching
 class DocumentService {
     private static final String HELP_DOCUMENTS_CACHE_REGION = 'homePageDocuments'
 

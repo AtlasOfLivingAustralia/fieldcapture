@@ -16,11 +16,13 @@ import org.joda.time.Days
 import org.joda.time.Interval
 import org.joda.time.Period
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.cache.annotation.EnableCaching
 
 import java.math.RoundingMode
 import java.text.SimpleDateFormat
 
 @Slf4j
+@EnableCaching
 class ProjectService  {
 
     static final String OUTCOMES_OUTPUT_TYPE = 'Outcomes'

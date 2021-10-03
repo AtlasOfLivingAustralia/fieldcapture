@@ -6,12 +6,15 @@ import grails.core.GrailsApplication
 import grails.web.mapping.LinkGenerator
 import org.apache.http.HttpStatus
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.cache.annotation.EnableCaching
+
 import java.text.ParseException
 import static ReportService.ReportMode
 
 /**
  * Processes requests relating to MUs
  */
+@EnableCaching
 class ManagementUnitController {
 
     static allowedMethods = [regenerateManagementUnitReports: "POST", ajaxDelete: "POST", delete: "POST", ajaxUpdate: "POST", saveReport: "POST", ajaxSubmitReport: "POST", ajaxApproveReport: "POST", ajaxRejectReport: "POST"]
