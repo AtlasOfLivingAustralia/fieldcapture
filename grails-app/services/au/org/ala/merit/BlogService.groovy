@@ -1,13 +1,10 @@
 package au.org.ala.merit
 
 import grails.converters.JSON
+import grails.plugin.cache.Cacheable
 import org.grails.plugin.cache.GrailsCacheManager
 import org.grails.web.json.JSONArray
-import org.grails.web.json.JSONObject
-import org.springframework.cache.annotation.Cacheable
-import org.springframework.cache.annotation.EnableCaching
 
-@EnableCaching
 class BlogService {
 
     public static final String HOMEPAGE_BLOG_CACHE_REGION = 'homePageBlog'

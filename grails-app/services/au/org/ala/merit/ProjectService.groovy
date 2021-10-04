@@ -5,6 +5,7 @@ import au.org.ala.merit.reports.ReportGenerationOptions
 import au.org.ala.merit.reports.ReportGenerator
 import au.org.ala.merit.reports.ReportOwner
 import grails.converters.JSON
+import grails.plugin.cache.Cacheable
 import groovy.util.logging.Slf4j
 import org.apache.commons.lang.CharUtils
 import org.apache.http.HttpStatus
@@ -15,14 +16,11 @@ import org.joda.time.DateTimeZone
 import org.joda.time.Days
 import org.joda.time.Interval
 import org.joda.time.Period
-import org.springframework.cache.annotation.Cacheable
-import org.springframework.cache.annotation.EnableCaching
 
 import java.math.RoundingMode
 import java.text.SimpleDateFormat
 
 @Slf4j
-@EnableCaching
 class ProjectService  {
 
     static final String OUTCOMES_OUTPUT_TYPE = 'Outcomes'

@@ -1,22 +1,19 @@
 package au.org.ala.merit
 
 import au.org.ala.web.CASRoles
+import grails.plugin.cache.CacheEvict
+import grails.plugin.cache.Cacheable
 import groovy.util.logging.Slf4j
 import org.grails.plugin.cache.GrailsCacheManager
-import org.springframework.cache.annotation.CacheEvict
-import org.springframework.cache.annotation.Cacheable
-import org.springframework.cache.annotation.EnableCaching
 import org.springframework.web.context.request.RequestContextHolder
 
 import javax.annotation.PostConstruct
 
 @Slf4j
-@EnableCaching
 class UserService {
 
     private static final String USER_PROFILE_CACHE_REGION = 'userProfileCache'
     private static final String USER_DETAILS_CACHE_REGION = 'userDetailsCache'
-    private static final String USER_ORGANISATIONS_CACHE_KEY_EXPRESSION = '#userId+"_organisations"'
 
 
     static final String PROJECT = 'au.org.ala.ecodata.Project'
@@ -101,8 +98,8 @@ class UserService {
         webService.getJson(url)
     }
 
-    @Cacheable(value=UserService.USER_PROFILE_CACHE_REGION, key=UserService.USER_ORGANISATIONS_CACHE_KEY_EXPRESSION, unless="#result instanceof T(java.util.Map)")
-    def getOrganisationsForUserId(userId) {
+    @Cacheable(value=UserService.USER_PROFILE_CACHE_REGION, key={userId+"_organisations"})
+    def getOrganisationsForUserId(String userId) {
         def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/getOrganisationsForUserId/${userId}"
         webService.getJson(url)
     }
@@ -189,7 +186,7 @@ class UserService {
         webService.getJson(url)
     }
 
-    @CacheEvict(value=UserService.USER_PROFILE_CACHE_REGION, key=UserService.USER_ORGANISATIONS_CACHE_KEY_EXPRESSION)
+    @CacheEvict(value=UserService.USER_PROFILE_CACHE_REGION, key={userId+"_organisations"})
     def addUserAsRoleToOrganisation(String userId, String organisationId, String role) {
         Map result = checkRoles(userId, role)
         if (result.error) {
@@ -204,7 +201,7 @@ class UserService {
         webService.getJson(url)
     }
 
-    @CacheEvict(value=UserService.USER_PROFILE_CACHE_REGION, key=UserService.USER_ORGANISATIONS_CACHE_KEY_EXPRESSION)
+    @CacheEvict(value=UserService.USER_PROFILE_CACHE_REGION, key={userId+"_organisations"})
     def removeUserWithRoleFromOrganisation(String userId, String organisationId, String role) {
         def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/removeUserWithRoleFromOrganisation?organisationId=${organisationId}&userId=${userId}&role=${role}"
         webService.getJson(url)

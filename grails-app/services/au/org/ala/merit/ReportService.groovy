@@ -3,15 +3,13 @@ package au.org.ala.merit
 import au.org.ala.merit.reports.ReportConfig
 import au.org.ala.merit.reports.ReportGenerator
 import au.org.ala.merit.reports.ReportOwner
+import grails.plugin.cache.Cacheable
 import groovy.util.logging.Slf4j
 import org.apache.commons.io.FilenameUtils
 import org.joda.time.DateTime
 import org.joda.time.Period
-import org.springframework.cache.annotation.Cacheable
-import org.springframework.cache.annotation.EnableCaching
 
 @Slf4j
-@EnableCaching
 class ReportService {
 
     public static final String REPORT_APPROVED = 'published'
