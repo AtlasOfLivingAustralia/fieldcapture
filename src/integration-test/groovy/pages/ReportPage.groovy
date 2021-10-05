@@ -104,4 +104,9 @@ class ReportPage extends Page {
             moveToElement($("#RLP_-_Baseline_data-content .model-form .table.assuranceDocuments"))
         }
     }
+
+    def openAttachDocumentDialog() {
+        doAttach.click()
+        Thread.sleep(1000) // wait for the modal to animate onto the page.
+    }
 }
