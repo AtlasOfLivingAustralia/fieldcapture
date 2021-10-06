@@ -67,6 +67,35 @@ class RlpReportingSpec extends StubbedCasSpec {
 
     }
 
+    def "a user with ROLE_FC_READ_ONLY role can view a report"() {
+        setup:
+        String projectId = '1'
+        login([userId: '1', role: "ROLE_FC_READ_ONLY", email: 'read@nowhere.com', firstName: "MERIT", lastName: 'FC_READ'], browser)
+
+        when:
+        to RlpProjectPage, projectId
+
+        then:
+        waitFor { at RlpProjectPage }
+
+        when: "Displays the report tab page"
+        reportingTab.click()
+
+        then: "List of reports will be displayed, report categories will be asserted"
+        waitFor { projectReports.displayed }
+        waitFor {
+            projectReports.reportCategories == ["Outputs Reporting", "Annual Progress Reporting", "Outcomes Report 1", "Outcomes Report 2"]
+        }
+
+        when: "Edit a report, user with ROLE_FC_READ_ONLY should not be able to navigate to the selected report page"
+        projectReports.reportsByCategory[0].showAllReports()
+        projectReports.reports[0].edit()
+
+        then:
+        waitFor { at ReportPage }
+
+    }
+
     def "Report Attach Document should not be add a new empty doc in the table when the dialog box is cancel"() {
         setup:
         String projectId = '1'

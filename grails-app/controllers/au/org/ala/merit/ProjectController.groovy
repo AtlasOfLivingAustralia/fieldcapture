@@ -775,7 +775,7 @@ class ProjectController {
         redirect action: 'index', id:id
     }
 
-    @PreAuthorise(accessLevel = 'editor')
+    @PreAuthorise(accessLevel = 'readOnly')
     def viewReport(String id, String reportId) {
         if (!id || !reportId) {
             error('An invalid report was selected for data entry', id)

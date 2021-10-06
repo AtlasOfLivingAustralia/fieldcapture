@@ -73,6 +73,11 @@ class AclInterceptor {
 
                 case 'caseManager':
                 case 'admin':
+                case 'readOnly':
+                    if (!(userService.userIsAlaOrFcAdmin() || userService.checkRole(userId, accessLevel, entityId, entity) || userService.userHasReadOnlyAccess())) {
+                        errorMsg = "Access denied: User does not have <b>${accessLevel}</b> permission"
+                    }
+                    break
                 case 'editor':
                     if (!(userService.userIsAlaOrFcAdmin() || userService.checkRole(userId, accessLevel, entityId, entity))) {
                         errorMsg = "Access denied: User does not have <b>${accessLevel}</b> permission"
