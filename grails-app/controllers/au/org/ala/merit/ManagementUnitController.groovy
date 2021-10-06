@@ -3,9 +3,10 @@ package au.org.ala.merit
 import au.org.ala.merit.command.SaveReportDataCommand
 import grails.converters.JSON
 import grails.core.GrailsApplication
+import grails.plugin.cache.Cacheable
 import grails.web.mapping.LinkGenerator
 import org.apache.http.HttpStatus
-import org.springframework.cache.annotation.Cacheable
+
 import java.text.ParseException
 import static ReportService.ReportMode
 

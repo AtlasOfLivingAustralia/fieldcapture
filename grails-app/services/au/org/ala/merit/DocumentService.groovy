@@ -1,10 +1,10 @@
 package au.org.ala.merit
 
 import grails.converters.JSON
+import grails.plugin.cache.Cacheable
 import org.apache.commons.io.FilenameUtils
 import org.apache.http.HttpStatus
 import grails.core.GrailsApplication
-import org.springframework.cache.annotation.Cacheable
 
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST
 import static org.apache.http.HttpStatus.SC_OK

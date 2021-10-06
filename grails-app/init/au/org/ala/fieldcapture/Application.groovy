@@ -17,6 +17,7 @@ import org.springframework.boot.web.servlet.ServletListenerRegistrationBean
 
 @Slf4j
 class Application extends GrailsAutoConfiguration {
+
     static void main(String[] args) {
         GrailsApp.run(Application, args)
     }

@@ -30,6 +30,7 @@ class DocumentDialog extends Module {
     }
 
     def save() {
+        waitFor{saveEnabled()} // Often this is called immediately after modifying the data in the dialog
         saveButton.click()
     }
 
@@ -44,5 +45,10 @@ class DocumentDialog extends Module {
 
     def uploadComplete() {
         $('#successMessage').displayed
+    }
+
+    def cancel() {
+        cancelButton.click()
+        Thread.sleep(500) // Wait for the modal to animate closed.
     }
 }
