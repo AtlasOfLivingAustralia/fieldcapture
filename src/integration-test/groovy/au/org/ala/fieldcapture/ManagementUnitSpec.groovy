@@ -22,6 +22,18 @@ class ManagementUnitSpec extends StubbedCasSpec {
         logout(browser)
     }
 
+    def "Only the about tab is visible to unauthenticated users"() {
+        when:
+        to ManagementUnitPage, "test_mu"
+
+        then:
+        waitFor { at ManagementUnitPage }
+        overviewBtn.displayed
+        !reportsTab.displayed
+        !sitesTab.displayed
+        !adminTab.displayed
+    }
+
     def "Only the about tab is visible to users with no permissions for the management unit"(
             String userId, boolean aboutVisible, boolean reportsVisible, boolean sitesVisible, boolean adminVisible) {
 
