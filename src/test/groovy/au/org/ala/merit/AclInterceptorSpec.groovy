@@ -185,4 +185,28 @@ class AclInterceptorSpec extends Specification implements GrailsWebUnitTest {
         canView == false
     }
 
+    def "This checks an admin access level, user with non-admin access will not be able to pass authentication check"() {
+        setup:
+        GrailsApplication grailsApp = Mock(GrailsApplication)
+        GrailsClass grailsClass = Mock(GrailsClass)
+        aclInterceptor.grailsApplication = grailsApp
+        aclInterceptor.webRequest.controllerName = "ProjectController"
+        aclInterceptor.webRequest.actionName = "viewMeriPlan"
+        params.id = "p1"
+
+        when: "The interceptor is invoked"
+        boolean canView = aclInterceptor.before()
+
+        then:
+        1 * aclInterceptor.grailsApplication.getArtefactByLogicalPropertyName("Controller", _) >> grailsClass
+        1 * aclInterceptor.roleService.getAugmentedRoles() >> ["alaAdmin","siteAdmin","officer","siteReadOnly","readOnly"]
+        1 * grailsClass.getClazz() >> ProjectController.class
+        1 * aclInterceptor.userService.getCurrentUserId() >> "test"
+        1 * aclInterceptor.userService.userIsAlaOrFcAdmin() >> false
+
+
+
+        canView == false
+    }
+
 }
