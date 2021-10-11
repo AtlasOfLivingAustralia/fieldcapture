@@ -72,14 +72,23 @@ class ProjectConfigurationService {
                 programConfig.projectReports = []
             }
             config.projectReports?.each { Map configuration ->
-                Map programReport = programConfig.projectReports?.find {
+                Map projectReport = programConfig.projectReports?.find {
                     return it.category == configuration.category && it.activityType == configuration.activityType
                 }
-                if (programReport) {
+                if (projectReport) {
                     // Both the frequency and start date are required so the report dates
                     // align correctly.
-                    programReport.reportingPeriodInMonths = configuration.reportingPeriodInMonths
-                    programReport.firstReportingPeriodEnd = configuration.firstReportingPeriodEnd
+                    if (configuration.reportingPeriodInMonths) {
+                        projectReport.reportingPeriodInMonths = configuration.reportingPeriodInMonths
+                    }
+                    if (configuration.firstReportingPeriodEnd) {
+                        projectReport.firstReportingPeriodEnd = configuration.firstReportingPeriodEnd
+                    }
+                    // RLP projects label 3 monthly reports as "Quarter" and 6 monthly reports as "Semester"
+                    // to simplify downstream reporting.
+                    if (configuration.label) {
+                        projectReport.label = configuration.label
+                    }
                 }
             }
             programConfig.projectReports?.addAll(extraReports)
