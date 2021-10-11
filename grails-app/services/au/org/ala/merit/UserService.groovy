@@ -364,7 +364,7 @@ class UserService {
 
     boolean canUserEditManagementUnit(String userId, String managementUnitId) {
         boolean userCanEdit
-        if (userIsSiteAdmin() || userHasReadOnlyAccess()) {
+        if (userIsSiteAdmin()) {
             userCanEdit = true
         } else {
             Map managementUnitRole = getEntityRole(userId, managementUnitId)

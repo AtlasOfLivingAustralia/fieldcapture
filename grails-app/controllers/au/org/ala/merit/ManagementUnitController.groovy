@@ -59,7 +59,7 @@ class ManagementUnitController {
 
         def hasAdminAccess = userService.userIsSiteAdmin() || userRole?.role == RoleService.PROJECT_ADMIN_ROLE
 
-        boolean canViewNonPublicTabs = userService.canUserEditManagementUnit(userService.getUser()?.userId, mu.managementUnitId)
+        boolean canViewNonPublicTabs = userService.canUserEditManagementUnit(userService.getUser()?.userId, mu.managementUnitId) || userService.userHasReadOnlyAccess()
 
         Map result = managementUnitService.getProjects(mu.managementUnitId)
         List projects = result?.projects ?: []
