@@ -91,6 +91,27 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
         model.content.admin.visible == true
     }
 
+    def "read only users should not be able to see the admin content"() {
+        String managementUnitId = 'p1'
+        userService.getUser() >> [userId: 'u1']
+        managementUnitService.get(managementUnitId) >> [managementUnitId: managementUnitId, name: "test"]
+        userService.getMembersOfManagementUnit(managementUnitId) >> [members:[]]
+        managementUnitService.getProjects(managementUnitId) >>[projects:[]]
+
+        when:
+        Map model = controller.index(managementUnitId)
+
+        then:
+        1 * userService.canUserEditManagementUnit("u1", managementUnitId) >> false
+        1 * userService.userHasReadOnlyAccess() >> true
+
+        model.content.size() == 4
+        model.content.about.visible == true
+        model.content.projects.visible == true
+        model.content.sites.visible == true
+        model.content.admin.visible == false
+    }
+
     def "programs should be sorted in reverse alphabetical order so the RLP appears first"() {
 
         setup:
@@ -394,6 +415,14 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
         def userId = adminUserId
         userService.getUser() >> [userId:userId]
         userService.userHasReadOnlyAccess() >> false
+        userService.userIsSiteAdmin() >> false
+        userService.userIsAlaOrFcAdmin() >> false
+    }
+
+    private void setupReadOnlyUser() {
+        def userId = adminUserId
+        userService.getUser() >> [userId:userId]
+        userService.userHasReadOnlyAccess() >> true
         userService.userIsSiteAdmin() >> false
         userService.userIsAlaOrFcAdmin() >> false
     }
