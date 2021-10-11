@@ -419,12 +419,4 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
         userService.userIsAlaOrFcAdmin() >> false
     }
 
-    private void setupReadOnlyUser() {
-        def userId = adminUserId
-        userService.getUser() >> [userId:userId]
-        userService.userHasReadOnlyAccess() >> true
-        userService.userIsSiteAdmin() >> false
-        userService.userIsAlaOrFcAdmin() >> false
-    }
-
 }
