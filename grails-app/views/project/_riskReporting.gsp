@@ -5,13 +5,13 @@
     <p>Select the date range over which to view the changes to the project risks and threats then press the "Generate Report" button</p>
     <hr/>
 
-    <form class="form-horizontal" id="risks-changes-report">
-        <div class="control-group">
+    <form class="form-horizontal mb-2" id="risks-changes-report">
+        <div class="control-group mb-2">
             <label class="control-label" for="risks-changes-from-date">From date (baseline for comparison):</label>
 
             <div class="controls">
-                <div class="input-append">
-                <fc:datePicker class="input-small" id="risks-changes-from-date" targetField="fromDate.date"></fc:datePicker>
+                <div class=" input-group input-append">
+                <fc:datePicker class="form-control form-control-sm input-small dateControl" id="risks-changes-from-date" bs4="true" targetField="fromDate.date"/>
                 </div>
             </div>
         </div>
@@ -19,8 +19,8 @@
             <label class="control-label" for="risks-changes-to-date">To date:</label>
 
             <div class="controls">
-                <div class="input-append">
-                <fc:datePicker id="risks-changes-to-date" class="input-small" targetField="toDate.date"></fc:datePicker>
+                <div class="input-group input-append">
+                <fc:datePicker id="risks-changes-to-date" bs4="true" class="form-control form-control-sm input-small dateControl" targetField="toDate.date"/>
                 </div>
             </div>
         </div>
@@ -38,7 +38,7 @@
     </form>
 
     <div class="control-group">
-        <button type="button" class="btn btn-success"
+        <button type="button" class="btn btn-sm btn-success"
                 data-bind="click:generateRisksReportHTML">Generate Report</button>
         %{--        Commenting this out as the PDF report needs work--}%
 %{--        <button type="button" class="btn btn-success"--}%

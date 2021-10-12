@@ -1,0 +1,298 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        maven { url "https://repo.grails.org/grails/core" }
+        maven { url "https://nexus.ala.org.au/content/groups/public/" }
+        jcenter()
+    }
+    dependencies {
+        classpath "org.grails:grails-gradle-plugin:$grailsVersion"
+        classpath "gradle.plugin.com.github.erdi.webdriver-binaries:webdriver-binaries-gradle-plugin:2.0"
+        classpath 'org.grails.plugins:quartz:2.0.13'
+        classpath "com.bertramlabs.plugins:asset-pipeline-gradle:3.3.1"
+        classpath 'com.bmuschko:gradle-clover-plugin:3.0.1'
+        classpath 'com.craigburke.gradle:client-dependencies:1.4.1'
+    }
+}
+
+plugins {
+    id 'war'
+}
+
+version "2.0-SNAPSHOT"
+group "au.org.ala"
+description "Fieldcapture"
+
+apply plugin:"eclipse"
+apply plugin:"idea"
+apply plugin:"war"
+apply plugin:"org.grails.grails-web"
+apply plugin:"com.github.erdi.webdriver-binaries"
+apply plugin:"asset-pipeline"
+apply plugin:"org.grails.grails-gsp"
+apply plugin: 'com.craigburke.client-dependencies'
+
+if (Boolean.valueOf(enableClover)) {
+    apply from: "${project.projectDir}/gradle/clover.gradle"
+}
+apply from: "${project.projectDir}/gradle/publish.gradle"
+
+repositories {
+    mavenLocal()
+    maven { url "https://repo.osgeo.org/repository/release/" }
+    maven { url "https://repo.grails.org/grails/core" }
+    maven { url "https://nexus.ala.org.au/content/groups/public/" }
+    jcenter()
+}
+
+
+
+def openhtmltopdfversion = '0.0.1-RC4'
+def geoToolsVersion = "11.1"
+def metadataExtractorVersion = "2.6.2"
+def imgscalrVersion = "4.2"
+def httpmimeVersion = "4.2.1"
+def jtsVersion = "1.8"
+
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+}
+
+dependencies {
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
+    compile "org.springframework.boot:spring-boot-starter-logging"
+    compile "org.springframework.boot:spring-boot-autoconfigure"
+    compile "org.grails:grails-core"
+    compile "org.springframework.boot:spring-boot-starter-actuator"
+    compile "org.springframework.boot:spring-boot-starter-tomcat"
+    compile "org.grails:grails-web-boot"
+    compile "org.grails:grails-logging"
+    compile "org.grails:grails-plugin-rest"
+    compile "org.grails:grails-plugin-databinding"
+    compile "org.grails:grails-plugin-i18n"
+    compile "org.grails:grails-plugin-services"
+    compile "org.grails:grails-plugin-url-mappings"
+    compile "org.grails:grails-plugin-interceptors"
+    compile "org.grails.plugins:cache"
+    compile "org.grails.plugins:cache-ehcache:3.0.0"
+    compile "org.grails.plugins:async"
+    compile "org.grails.plugins:scaffolding"
+    compile "org.grails.plugins:events"
+    compile "org.grails.plugins:gsp"
+    compile "org.grails.plugins:external-config:2.0.0"
+    compile "org.grails.plugins:ala-auth:3.2.3"
+    compile "org.grails.plugins:ala-admin-plugin:2.1"
+    runtime "org.grails.plugins:ala-bootstrap3:3.2.3"
+    compile "au.org.ala:userdetails-service-client:1.5.0"
+    compile "org.grails.plugins:ala-ws-plugin:2.0"
+    compile 'org.grails.plugins:excel-export:2.1'
+    compile 'org.grails.plugins:mail:2.0.0'
+    compile 'org.grails.plugins:quartz:2.0.13'
+    compile 'org.quartz-scheduler:quartz:2.2.1'
+    compile "com.openhtmltopdf:openhtmltopdf-core:${openhtmltopdfversion}"
+    compile "com.openhtmltopdf:openhtmltopdf-pdfbox:${openhtmltopdfversion}"
+    compile "com.openhtmltopdf:openhtmltopdf-jsoup-dom-converter:${openhtmltopdfversion}"
+    compile "com.openhtmltopdf:openhtmltopdf-log4j:${openhtmltopdfversion}"
+    compile "org.geotools:gt-geojson:${geoToolsVersion}"
+    compile "com.drewnoakes:metadata-extractor:${metadataExtractorVersion}"
+    compile "org.imgscalr:imgscalr-lib:${imgscalrVersion}"
+    compile "com.vividsolutions:jts:${jtsVersion}"
+    compile "org.geotools.xsd:gt-xsd-kml:${geoToolsVersion}"
+    compile 'joda-time:joda-time:2.3'
+    compile "org.codehaus.groovy.modules.http-builder:http-builder:0.7.1"
+    compile "org.apache.httpcomponents:httpcore:4.4.13"
+    compile "org.apache.httpcomponents:httpclient:4.5.7"
+    compile "org.apache.httpcomponents:httpmime:4.2.1"
+    compile "org.apache.pdfbox:pdfbox:2.0.4"
+    compile 'org.grails.plugins:excel-export:2.1'
+    compile 'org.grails.plugins:excel-import:3.0.2'
+
+    compile 'au.com.bytecode:opencsv:2.4'
+    compile 'org.grails.plugins:csv:1.0.1'
+
+    compile "org.grails.plugins:ala-ws-security-plugin:2.0"
+
+    compile "org.grails.plugins:grails-google-visualization:2.2.1"
+    compile 'javax.media:jai-core:1.1.3'
+
+    compile ('net.sourceforge.nekohtml:nekohtml:1.9.22'){
+        exclude module: "xercesImpl"
+    }
+    compile 'org.grails.plugins:grails-cookie:2.0.3'
+    compile 'org.grails.plugins:grails-markdown:3.0.0'
+
+    compile 'org.apache.poi:ooxml-schemas:1.4'
+    compile 'org.apache.poi:poi:4.1.2'
+    compile 'org.apache.poi:poi-ooxml:4.1.2'
+    compile 'org.apache.poi:poi-ooxml-schemas:4.1.2'
+    compile 'org.codehaus.groovy:groovy-dateutil:2.5.0'
+
+    compile 'au.org.ala:ala-cas-client:2.5'
+    compile "org.grails.plugins:converters"
+    compile "org.grails:grails-plugin-codecs"
+    compile "commons-io:commons-io:2.6"
+    compile "org.seleniumhq.selenium:selenium-chrome-driver:3.14.0"
+    compile 'com.bertramlabs.plugins:asset-pipeline-grails:3.3.1'
+
+    compileOnly "io.micronaut:micronaut-inject-groovy"
+    console "org.grails:grails-console"
+    profile "org.grails.profiles:web"
+    runtime "org.glassfish.web:el-impl:2.1.2-b03"
+    runtime "com.h2database:h2"
+    runtime "org.apache.tomcat:tomcat-jdbc"
+    runtime "javax.xml.bind:jaxb-api:2.3.1"
+
+    runtime "net.java.dev.jna:jna:4.5.1"
+    runtime("org.springframework.boot:spring-boot-properties-migrator")
+
+    testCompile "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
+    testCompile "org.seleniumhq.selenium:selenium-support:2.53.1"
+    testCompile "com.codeborne:phantomjsdriver:1.3.0"
+    testCompile "com.icegreen:greenmail:1.5.14"
+    testCompile "io.micronaut:micronaut-inject-groovy"
+    testCompile "org.grails:grails-gorm-testing-support"
+    testCompile "org.mockito:mockito-core"
+    testCompile "org.grails:grails-web-testing-support"
+    testCompile "org.grails.plugins:geb"
+    testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
+    testRuntime "org.gebish:geb-spock"
+    testRuntime "net.sourceforge.nekohtml:nekohtml:1.9.22"
+    testCompile "org.grails:grails-test-mixins:3.3.0"
+    testCompile "org.grails:grails-gorm-testing-support"
+    testCompile "org.grails:grails-web-testing-support"
+    testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
+    testCompile "com.github.tomakehurst:wiremock-jre8-standalone:2.28.0"
+
+    assets 'com.bertramlabs.plugins:less-asset-pipeline:3.3.1'
+
+    provided "io.methvin:directory-watcher:0.4.0"
+
+    if (!Boolean.valueOf(inplace)) {
+        compile "org.grails.plugins:ecodata-client-plugin:4.0-SNAPSHOT"
+    }
+}
+
+springBoot {
+    buildInfo()
+}
+
+bootRun {
+    ignoreExitValue true
+    jvmArgs(
+            '-Dspring.output.ansi.enabled=always',
+            '-noverify',
+            '-XX:TieredStopAtLevel=1',
+            '-Xmx2048m')
+    sourceResources sourceSets.main
+    String springProfilesActive = 'spring.profiles.active'
+    systemProperty springProfilesActive, System.getProperty(springProfilesActive)
+}
+
+tasks.withType(Test) {
+    systemProperty "geb.env", System.getProperty('geb.env')
+    systemProperty "geb.build.reportsDir", reporting.file("geb/integrationTest")
+    systemProperty "webdriver.chrome.driver", System.getProperty('webdriver.chrome.driver')
+    systemProperty "webdriver.gecko.driver", System.getProperty('webdriver.gecko.driver')
+}
+
+clientDependencies {
+    installDir = "grails-app/assets/vendor-ext"
+    npm {
+        'bootstrap'('4.6.0', transitive:false)
+        'bootbox'('5.5.2') {
+            include 'bootbox.all.min.js'
+        }
+        'jquery'('3.6.0')
+        'font-awesome'('4.7.0')
+        'knockout'('3.5.1', from:'build/output')
+        'knockout-mapping'('2.6.0')
+        'bootstrap-datepicker'('1.9.0')
+        'select2'('4.0.13')
+        'underscore'('1.12.1') {
+            include 'underscore.js'
+        }
+        'datatables.net-bs4'("1.10.25")
+        "datatables.net-buttons-dt"("1.7.1")
+        'datatables.net-buttons-bs4'("1.7.1")
+        '@danielfarrell/bootstrap-combobox'('1.1.8', transitive:false)
+        'fancybox'('3.0.1')
+        "fuelux"("3.17.2", transitive:false)
+        "fuse.js"("6.4.6", transitive:false)
+        "leaflet"("0.7.7")
+        "select2-theme-bootstrap4"("1.0.0")
+        "slickgrid"("2.4.38")
+        "slider-pro"("1.6.0", transitive:false)
+        "jquery-appear-original"("0.4.1", transitive:false)
+        "jquery-file-download"("1.4.6", from: "src/Scripts") {
+            include "jquery.fileDownload.js"
+        }
+        "jquery.shorten"("1.0.0", from: "src")
+        "js-cookie"("3.0.0")
+        "@taitems/jquery-gantt"("1.1.2")
+        "jstimezonedetect"("1.0.7")
+        "jszip"("3.7.1", transitive:false)
+        "pdfmake"("0.1.36", from: "build", transitive:false)
+        "typeahead.js"("0.11.1")
+        'frigus02-vkbeautify'("1.0.1") {
+            include "vkbeautify.js"
+        }
+
+    }
+    bower {
+        'html5shiv'("3.7.3", transitive:false)
+        "blockui"("2.69")
+        'jquery-ui'('1.12.1')
+    }
+}
+
+assets {
+    minifyJs = true
+    minifyCss = true
+    maxThreads = 4 //useful for concurrent asset processing during build
+    configOptions = [:] //useful for custom config on extension libraries
+    includes = []
+    excludes = ['**/*.less','**/build/hintrc.js', 'hintrc.unminified.js', '**/spec/spec.hintrc.js', 'spec.hintrc.unminified.js'] //Example Exclude GLOB pattern
+}
+
+bootJar {
+    enabled = true
+    classifier = 'exec'
+    launchScript()
+}
+
+bootWar {
+    enabled = false
+}
+
+if (Boolean.valueOf(inplace)) {
+    grails {
+        exploded = true
+        plugins {
+            compile(project(':ecodata-client-plugin'))
+        }
+    }
+
+    // Make ecodata-client-plugin _Events task is called
+    assetCompile.dependsOn("ecodata-client-plugin:_Events")
+    compileGroovy.dependsOn("ecodata-client-plugin:_Events")
+    bootRun.dependsOn("ecodata-client-plugin:_Events")
+}
+
+task _Events {
+    doLast {
+        println "Running Events.groovy script"
+        println "${project.projectDir}/Events.groovy"
+        new GroovyScriptEngine(["${project.projectDir}"] as String[]).run("Events.groovy", new Binding(['projectDir': project.projectDir]))
+    }
+}
+
+integrationTest {
+    systemProperties System.properties
+}
+
+assetCompile.dependsOn(_Events)
+compileGroovy.dependsOn(_Events)
+bootRun.dependsOn(_Events)

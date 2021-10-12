@@ -39,3 +39,4 @@
 # others
 /.slcache
 /node_modules
+grails-app/assets/vendor-ext

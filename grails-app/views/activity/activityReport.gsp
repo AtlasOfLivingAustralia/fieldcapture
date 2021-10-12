@@ -1,4 +1,4 @@
-<%@ page import="au.org.ala.merit.ActivityService; grails.converters.JSON; org.codehaus.groovy.grails.web.json.JSONArray" contentType="text/html;charset=UTF-8" %>
+<%@ page import="au.org.ala.merit.ActivityService; grails.converters.JSON; org.grails.web.json.JSONArray" contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/html">
 <head>
@@ -7,17 +7,17 @@
         <title>${report.name}</title>
     </g:if>
     <g:else>
-        <meta name="layout" content="${hubConfig.skin}"/>
+        <meta name="layout" content="nrm_bs4"/>
         <title>Edit | ${report.name} | MERIT</title>
     </g:else>
 
-    <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
+    <script type="text/javascript" src="${grailsApplication.config.getProperty('google.maps.url')}"></script>
     <script type="text/javascript">
         var fcConfig = {
-                serverUrl: "${grailsApplication.config.grails.serverURL}",
+                serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
                 activityUpdateUrl: "${saveReportUrl}",
                 contextViewUrl: "${contextViewUrl}/",
-                bieUrl: "${grailsApplication.config.bie.baseURL}",
+                bieUrl: "${grailsApplication.config.getProperty('bie.baseURL')}",
                 speciesProfileUrl: "${createLink(controller: 'species', action: 'speciesProfile')}",
                 documentUpdateUrl: "${g.createLink(controller:"document", action:"documentUpdate")}",
                 documentDeleteUrl: "${g.createLink(controller:"document", action:"deleteDocument")}",
@@ -32,14 +32,14 @@
                 speciesSearchUrl: "${createLink(controller:'project', action:'searchSpecies', id:activity.projectId, params:[surveyName:metaModel.name])}",
                 speciesImageUrl: "${createLink(controller:'species', action:'speciesImage')}",
                 noImageUrl: "${assetPath(src:'nophoto.png')}",
-                context:${fc.modelAsJavascript(model:context)},
-                prepopUrlPrefix:"${grailsApplication.config.grails.serverURL}",
+                context:<fc:modelAsJavascript model="${context}"/>,
+                prepopUrlPrefix:"${grailsApplication.config.getProperty('grails.serverURL')}",
                 useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.PRODUCTION},
                 unlockActivityUrl: "${createLink(controller:'activity', action:'ajaxUnlock')}/<fc:currentUserId/>"
             },
             here = document.location.href;
     </script>
-    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="common-bs4.css"/>
     <asset:stylesheet src="activity.css"/>
 
 </head>
@@ -50,18 +50,17 @@
 <div class="${containerType} validationEngineContainer" id="validation-container">
     <div id="koActivityMainBlock">
         <g:if test="${!printView}">
-            <ul class="breadcrumb">
-                <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
-                <li><a href="${contextViewUrl}">${context.name.encodeAsHTML()}</a> <span class="divider">/</span></li>
-                <li class="active">
-                    ${report.name}
-                </li>
-            </ul>
+            <section aria-labelledby="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <g:link controller="home">Home</g:link>
+                    </li>
+                    <li class="breadcrumb-item"><a href="${contextViewUrl}">${context.name.encodeAsHTML()}</a></li>
+                    <li class="breadcrumb-item active">${report.name}</li>
+                </ol>
+            </section>
         </g:if>
-
-
         <g:render template="${reportHeaderTemplate}"/>
-
     </div>
 
     <g:render template="/activity/activityFormContents"/>
@@ -72,8 +71,8 @@
         <div id="floating-save" style="display:none;">
             <div class="transparent-background"></div>
             <div id="nav-buttons">
-                <button class="right btn btn-success" data-bind="enable:dirtyFlag.isDirty(), click: save">Save changes</button>
-                <button class="right btn" data-bind="click: exitReport, class: saveAndExitButtonClass">Exit report</button>
+                <button type="button" class="right btn btn-sm btn-success" data-bind="enable:dirtyFlag.isDirty(), click: save">Save changes</button>
+                <button type="button" class="right btn btn-sm" data-bind="click: exitReport, class: saveAndExitButtonClass">Exit report</button>
                 <label class="checkbox inline mark-complete" data-bind="visible:activity.progress() != 'corrected'">
                         <input data-bind="checked:activity.transients.markedAsFinished" type="checkbox"> Mark this report as complete.
                 </label>
@@ -86,21 +85,21 @@
 </div>
 
 <g:render template="/shared/timeoutMessage"
-          model="${[url:grailsApplication.config.security.cas.loginUrl+'?service='+ createLink(controller: 'project', action: 'editReport', absolute: true, id: activity.projectId, params: [reportId: report.reportId])]}"/>
+          model="${[url:grailsApplication.config.getProperty('security.cas.loginUrl')+'?service='+ createLink(controller: 'project', action: 'editReport', absolute: true, id: activity.projectId, params: [reportId: report.reportId])]}"/>
 
 <g:render template="/shared/documentTemplate"></g:render>
 
 %{--The modal view containing the contents for a modal dialog used to attach a document--}%
 <g:render template="/shared/attachDocument"/>
 
-<asset:javascript src="common.js"/>
+<asset:javascript src="common-bs4.js"/>
 <asset:javascript src="enterActivityData.js"/>
 
 <script type="text/javascript">
 
     $(function () {
         var returnTo = "${returnTo}";
-        var activity = JSON.parse('${(activity as JSON).toString().encodeAsJavaScript()}');
+        var activity = <fc:modelAsJavascript model="${activity}" default="{}"/>
         var reportSite;
         var recoveryDataStorageKey = "activity-${activity.activityId}";
 
@@ -124,11 +123,11 @@
                 var restoredSite = $.parseJSON(localStorage);
                 reportSite = restoredSite.site
             } else {
-                reportSite = ${reportSite?.encodeAsJSON() ?: '{}' };
+
+                reportSite = <fc:modelAsJavascript model="${reportSite}" default="{}"/>
             }
 
-            var projectArea = ${projectArea?.encodeAsJSON() ?: '{}'};
-
+            var projectArea = <fc:modelAsJavascript model="${projectArea}" default="{}"/>
             var reportId = '${report.reportId}';
 
             var context = {
@@ -140,11 +139,15 @@
             };
 
             var locked = ${locked};
-            var metaModel = ${metaModel};
-
+            var metaModel = <fc:modelAsJavascript model="${metaModel}" default="{}"/>
             var master = null;
             var mapPopupSelector = '#map-modal';
-            var features = ${features?.encodeAsJSON() ?: '[]'};
+            var features = <fc:modelAsJavascript model="${features}" default="{}"/>
+            var reportMasterOptions = {
+                locked: locked,
+                activityUpdateUrl: fcConfig.activityUpdateUrl,
+                healthCheckUrl: fcConfig.healthCheckUrl
+            };
             if (metaModel.supportsSites) {
                 // Workaround for problems with IE11 and leaflet draw
                 L.Browser.touch = false;
@@ -191,31 +194,21 @@
                     console.log("Unable to initialise map, could be because no map elements are on display: " + e);
                 }
 
-                var master = new ReportMaster(reportId, activity.activityId, reportSite, formFeatures, {
-                    locked: locked,
-                    activityUpdateUrl: fcConfig.activityUpdateUrl
-                });
+                master = new ReportMaster(reportId, activity.activityId, reportSite, formFeatures,  reportMasterOptions);
             } else {
-                master = new ReportMaster(reportId, activity.activityId, undefined, undefined, {
-                    locked: locked,
-                    activityUpdateUrl: fcConfig.activityUpdateUrl
-                });
+                master = new ReportMaster(reportId, activity.activityId, undefined, undefined, reportMasterOptions);
             }
 
-            var themes = ${themes};
+            var themes = <fc:modelAsJavascript model="${themes}" default="{}"/>
 
             var viewModel = new ActivityHeaderViewModel(activity, {}, fcConfig.context, metaModel, themes);
 
             ko.applyBindings(viewModel);
 
-            // We need to reset the dirty flag after binding but doing so can miss a transition from planned -> started
-            // as the "mark activity as finished" will have already updated the progress to started.
-            if (activity.progress == viewModel.progress()) {
-                viewModel.dirtyFlag.reset();
-            }
             if (metaModel.formVersion != activity.formVersion) {
                 viewModel.formVersion(metaModel.formVersion);
             }
+            viewModel.dirtyFlag.reset();
 
             <g:if test="${params.progress}">
             var newProgress = '${params.progress}';
@@ -248,35 +241,27 @@
             outputModelConfig = _.extend(fcConfig, outputModelConfig);
 
             <g:each in="${metaModel?.outputs}" var="outputName">
-            <g:if test="${outputName != 'Photo Points'}">
-            <g:set var="blockId" value="${fc.toSingleWord([name: outputName])}"/>
-            <g:set var="model" value="${outputModels[outputName]}"/>
-            <g:set var="output" value="${activity.outputs.find {it.name == outputName} ?: [name: outputName]}"/>
 
-            var blockId = "${blockId}";
-            var output = <fc:modelAsJavascript model="${output}"/>;
+                <g:if test="${outputName != 'Photo Points'}">
+                <g:set var="blockId" value="${fc.toSingleWord([name: outputName])}"/>
+                <g:set var="model" value="${outputModels[outputName]}"/>
+                <g:set var="output" value="${activity.outputs.find {it.name == outputName} ?: [name: outputName]}"/>
 
-            var config = ${fc.modelAsJavascript(model:metaModel.outputConfig?.find{it.outputName == outputName}, default:'{}')};
+                var blockId = "${blockId}";
+                var output = <fc:modelAsJavascript model="${output}"/>;
 
-            if (amplify.store(recoveryDataStorageKey)) {
-                var localSavedActivity = amplify.store(recoveryDataStorageKey);
-                var restored = $.parseJSON(localSavedActivity);
-                restored.activity.outputs.forEach(function (storedOutput) {
-                    if (storedOutput.name === output.name) {
-                        output = storedOutput;
-                    }
-                })
-            }
+                var config = <fc:modelAsJavascript model="${metaModel.outputConfig?.find{it.outputName == outputName}}" default="{}"/>;
 
-            config.model = ${fc.modelAsJavascript(model:model)};
-            config.featureCollection = context.featureCollection;
-            config = _.extend({}, outputModelConfig, config);
+                config.recoveryDataStorageKey = recoveryDataStorageKey;
+                config.model = <fc:modelAsJavascript model="${model}"/>;
+                config.featureCollection = context.featureCollection;
+                config.namespace = blockId;
 
-            var outputViewModel = ecodata.forms.initialiseOutputViewModel(blockId, config.model.dataModel, output, config, context);
-            // register with the master controller so this model can participate in the save cycle
-            master.register(outputViewModel, outputViewModel.modelForSaving, outputViewModel.dirtyFlag.isDirty, outputViewModel.dirtyFlag.reset);
+                config = _.extend({}, outputModelConfig, config);
+                master.createAndBindOutput(output, context, config);
 
-            </g:if>
+                </g:if>
+
             </g:each>
 
             if (config.featureCollection) {

@@ -4,10 +4,10 @@
 <head>
     <meta name="layout" content="nrm_bs4"/>
     <title>Edit | ${organisation.name.encodeAsHTML()} | Field Capture</title>
-    <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
+    <script type="text/javascript" src="${grailsApplication.config.getProperty('google.maps.url')}"></script>
     <script>
         var fcConfig = {
-            serverUrl: "${grailsApplication.config.grails.serverURL}",
+            serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
             viewProjectUrl: "${createLink(controller:'project', action:'index')}",
             documentUpdateUrl: '${g.createLink(controller:"document", action:"documentUpdate")}',
             documentDeleteUrl: '${g.createLink(controller:"document", action:"deleteDocument")}',

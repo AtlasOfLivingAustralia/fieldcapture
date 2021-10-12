@@ -42,7 +42,7 @@
                                               data-bind="text: rowTotal.formattedCurrency, disable: $parent.isProjectDetailsLocked()"></span>
         </td>
         <td>
-            <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()"><i class="icon-remove"
+            <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()"><i class="fa fa-remove"
                                                                                    data-bind="click: $parent.removeBudget"></i>
             </span>
         </td>
@@ -52,9 +52,9 @@
     <tr>
         <td></td>
         <td colspan="0" style="text-align:left;">
-            <button type="button" class="btn btn-small"
+            <button type="button" class="btn btn-sm"
                     data-bind="disable: isProjectDetailsLocked(), click: addBudget">
-                <i class="icon-plus"></i> Add a row</button></td>
+                <i class="fa fa-plus"></i> Add a row</button></td>
         <td style="text-align: right;"><b>Total</b></td>
         <!-- ko foreach: details.budget.columnTotal -->
         <td style="text-align: center;" width="10%"><span data-bind="text:data.formattedCurrency"></span>

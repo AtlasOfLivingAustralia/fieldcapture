@@ -14,7 +14,7 @@
 </g:if>
 <g:else>
     <h4>${title ?: "Project rationale"}</h4>
-    <div class="consultation-view row-fluid">
-        <span class="span12" data-bind="text:details.rationale"></span>
+    <div class="consultation-view row">
+        <span class="col-sm-12" data-bind="text:details.rationale"></span>
     </div>
 </g:else>

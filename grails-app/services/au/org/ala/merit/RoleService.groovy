@@ -1,7 +1,9 @@
 package au.org.ala.merit
 
-import org.codehaus.groovy.grails.web.json.JSONObject
+import groovy.util.logging.Slf4j
+import org.grails.web.json.JSONObject
 
+@Slf4j
 class RoleService {
     def metadataService, cacheService
 
@@ -45,7 +47,7 @@ class RoleService {
 
     public List getAugmentedRoles() {
         def rolesCopy = getRoles().clone()
-        rolesCopy.addAll(["alaAdmin","siteAdmin","officer","siteReadOnly"]) // augment roles with these extra ones TODO: refactor this
+        rolesCopy.addAll(["alaAdmin","siteAdmin","officer","siteReadOnly","readOnly"]) // augment roles with these extra ones TODO: refactor this
 
         return rolesCopy
     }

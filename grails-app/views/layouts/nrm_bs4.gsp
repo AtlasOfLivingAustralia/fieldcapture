@@ -48,7 +48,7 @@
 <g:set var="userLoggedIn"><fc:userIsLoggedIn/></g:set>
 <g:if test="${fc.announcementContent()}">
     <div id="announcement">
-        ${fc.announcementContent()}
+        <fc:announcementContent/>
     </div>
 </g:if>
 
@@ -81,8 +81,9 @@
 
                 <div class="btn-group login-logout">
                     <auth:loginLogout
+                            ignoreCookie="true"
                             loginReturnToUrl="${createLink(controller:'home', action:'login', absolute:true)}"
-                            logoutReturnToUrl="${grailsApplication.config.grails.serverURL}"
+                            logoutReturnToUrl="${grailsApplication.config.getProperty('grails.serverURL')}"
                             logoutUrl="${createLink(controller: 'logout', action: 'logout')}"
                             cssClass="btn btn-small btn-inverse btn-login"/>
                 </div>

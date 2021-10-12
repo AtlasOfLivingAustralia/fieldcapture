@@ -3,10 +3,10 @@
 <html>
 <head>
     <meta name="layout" content="adminLayout"/>
-    <title>Import Projects | Admin | Field Capture</title>
+    <title>Import Projects | Admin | MERIT</title>
     <script>
             var fcConfig = {
-                serverUrl: "${grailsApplication.config.grails.serverURL}",
+                serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
                 importUrl: "${createLink(action: 'gmsImport')}",
                 projectUrl:"${createLink(controller:'project', action:'index')}",
                 importProgressUrl: "${createLink(action: 'importStatus')}"
@@ -21,21 +21,23 @@
 <content tag="pageTitle">Load new projects into MERIT</content>
 
 <h2>CSV Project Import</h2>
-<p>
 
-</p>
-<div class="row" data-bind="visible:!finished() && !finishedPreview()">
-    <div class="col-sm-4">
-        Select the (cp1252 encoded) CSV file containing the project data.  The file will be uploaded automatically.
-    </div>
-    <div class="col-sm-3">
-        <button class="btn btn-sm fileinput-button" style="margin-left:5px">
-            <input id="fileUpload" class="form-control form-control-sm" type="file" accept="text/csv" data-bind="fileUploadNoImage:uploadOptions, enable:!finished() && !finishedPreview()">
-            Select file
-        </button>
-    </div>
+    <p data-bind="visible:!finished() && !finishedPreview()">
+    <p class="alert alert-dark">
+    Click <strong><a href="${createLink(action:'meritImportCSVTemplate')}">HERE</a></strong> to download a template to use for MERIT project imports
+    </p>
 
-</div>
+    <div class="row">
+        <div class="col-sm-4">
+            Select the (cp1252 encoded) CSV file containing the project data.  The file will be uploaded automatically.
+        </div>
+        <div class="col-sm-3">
+            <button class="btn btn-sm fileinput-button" style="margin-left:5px">
+                <input id="fileUpload" class="form-control form-control-sm" type="file" accept="text/csv" data-bind="fileUploadNoImage:uploadOptions, enable:!finished() && !finishedPreview()">
+                Select file
+            </button>
+        </div>
+    </div>
 
 
 <div class="results" data-bind="visible:progressSummary()">
@@ -75,7 +77,7 @@
 
     </table>
     </div>
-
+</div>
 </div>
 <script id="template-upload" type="text/x-tmpl">{% %}</script>
 <script id="template-download" type="text/x-tmpl">{% %}</script>

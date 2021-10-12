@@ -2,9 +2,11 @@
 <g:if test="${flash.error || error}">
     <g:set var="error" value="${flash.error ?: error}"/>
     <div class="row">
-        <div class="alert alert-danger large-space-before">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <span>Error: ${error}</span>
+        <div class="col-sm-12">
+            <div class="alert alert-danger large-space-before">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <span>Error: ${error}</span>
+            </div>
         </div>
     </div>
 </g:if>
@@ -33,7 +35,7 @@
 </div>
 
 <script type="text/javascript">
-    var reportConfig = ${reportConfig as grails.converters.JSON};
+    var reportConfig = ${raw((reportConfig as grails.converters.JSON).toString())};
     var reportUrl = '${g.createLink(controller:'report', action:'reef2050PlanActionReportContents')}';
     var options = {
         reportUrl: reportUrl,

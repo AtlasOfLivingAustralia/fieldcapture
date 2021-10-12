@@ -14,7 +14,7 @@ ko.bindingHandlers.popover = {
   update: function(element, valueAccessor) {
 
     var $element = $(element);
-    $element.popover('destroy');
+    $element.popover('dispose');
     var options = ko.bindingHandlers.popover.initPopover(element, valueAccessor);
     if (options.autoShow) {
       if ($element.data('firstPopover') === false) {
@@ -22,7 +22,7 @@ ko.bindingHandlers.popover = {
         $('body').on('click', function(e) {
 
           if (e.target != element && $element.find(e.target).length == 0) {
-            $element.popover('destroy');
+            $element.popover('dispose');
           }
         });
       }
@@ -41,6 +41,10 @@ ko.bindingHandlers.popover = {
   initPopover: function(element, valueAccessor) {
     var options = ko.utils.unwrapObservable(valueAccessor());
 
+    if (typeof(options.content) === "undefined"){
+      options.content = ""
+    }
+
     var combinedOptions = ko.utils.extend({}, ko.bindingHandlers.popover.defaultOptions);
     var content = ko.utils.unwrapObservable(options.content);
     ko.utils.extend(combinedOptions, options);
@@ -49,7 +53,7 @@ ko.bindingHandlers.popover = {
     $(element).popover(combinedOptions);
 
     ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
-      $(element).popover("destroy");
+      $(element).popover("dispose");
     });
     return options;
   }
@@ -327,11 +331,13 @@ ko.bindingHandlers.warningPopup = {
         var popoverWarningOptions = {
           placement:'top',
           trigger:'manual',
-          template: '<div class="popover warning"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+          template: '<div class="popover warning"><h3 class="popover-header"></h3><div class="popover-body"></div><div class="arrow"></div></div>'
         };
         var warning = $element.data('warningmessage');
         $element.popover(_.extend({content:warning}, popoverWarningOptions));
-        $element.data('popover').tip().click(function() {
+
+        var popover = $element.data('bs.popover');
+        $(popover.getTipElement()).click(function() {
           $element.popover('hide');
         });
         target.popoverInitialised = true;

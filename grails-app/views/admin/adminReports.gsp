@@ -141,7 +141,7 @@
                 })
         });
 
-        var reportConfig = ${reef2050Reports as grails.converters.JSON};
+        var reportConfig = ${raw((reef2050Reports as grails.converters.JSON).toString())};
         var reportUrl = '${g.createLink(controller:'report', action:'reef2050PlanActionReport')}';
         var options = {
             reportUrl: reportUrl,

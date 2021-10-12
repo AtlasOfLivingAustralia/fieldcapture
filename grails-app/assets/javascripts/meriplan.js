@@ -114,7 +114,8 @@ function MERIPlan(project, projectService, config) {
                 }
             };
             ko.applyBindings(declarationViewModel, $declaration[0]);
-            $declaration.modal({backdrop: 'static', keyboard: true, show: true}).on('hidden', function () {
+            $declaration.modal({backdrop: 'static', keyboard: true, show: true}).on('hidden.bs.modal', function () {
+                $.unblockUI()
                 ko.cleanNode($declaration[0]);
             });
 
@@ -126,6 +127,7 @@ function MERIPlan(project, projectService, config) {
     self.modifyPlan = function () {
         projectService.modifyPlan();
     };
+    self.canEditStartDate = ko.observable(config.editProjectStartDate)
     // approve plan and handle errors
     self.approvePlan = function () {
 
@@ -143,14 +145,19 @@ function MERIPlan(project, projectService, config) {
                         referenceDocument:viewModel.referenceDocument(),
                         reason: viewModel.reason(),
                         dateApproved: viewModel.dateApproved()
-                    }, self.internalOrderId());
+                    }, { internalOrderNumber: self.internalOrderId(),
+                        plannedStartDate: self.plannedStartDate()});
                 }
             };
             ko.applyBindings(planApprovalViewModel, $planApprovalModal[0]);
-            $planApprovalModal.modal({backdrop: 'static', keyboard:true, show:true}).on('hidden', function() {ko.cleanNode($planApprovalModal[0])});
+            $planApprovalModal.modal({backdrop: 'static', keyboard:true, show:true}).on('hidden.bs.modal', function() {ko.cleanNode($planApprovalModal[0])});
         }
         else {
-            projectService.approvePlan({dateApproved:convertToIsoDate(new Date())}, self.internalOrderId());
+            var data = {
+                internalOrderNumber: self.internalOrderId(),
+                plannedStartDate: self.plannedStartDate()
+            }
+            projectService.approvePlan({dateApproved:convertToIsoDate(new Date())}, data)
         }
 
 
@@ -491,15 +498,9 @@ function MERIPlan(project, projectService, config) {
      * @type {Observable<string>}
      */
     self.internalOrderId = ko.observable(project.internalOrderId);
+    self.plannedStartDate = ko.observable(project.plannedStartDate).extend({simpleDate: false});
 
-    self.canApprove = function() {
-        var canApprove = projectService.canApproveMeriPlan();
-        if(!canApprove) {
-            $('.grantManagerActionSpan').popover({content:'*An internal order number must be supplied before the MERI Plan can be approved', placement:'top', trigger:'hover'})
-        }
-        return canApprove
-    };
-};
+}
 
 function ReadOnlyMeriPlan(project, projectService, config) {
     var self = this;
@@ -1061,6 +1062,10 @@ function OutcomesViewModel(outcomes, config) {
         outcomes.secondaryOutcomes = [{
             description: null, asset: ''
         }]
+    }
+
+    if (!outcomes.otherOutcomes){
+        outcomes.otherOutcomes = []
     }
 
     /**

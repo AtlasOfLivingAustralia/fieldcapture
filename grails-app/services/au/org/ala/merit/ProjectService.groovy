@@ -5,20 +5,22 @@ import au.org.ala.merit.reports.ReportGenerationOptions
 import au.org.ala.merit.reports.ReportGenerator
 import au.org.ala.merit.reports.ReportOwner
 import grails.converters.JSON
+import grails.plugin.cache.Cacheable
+import groovy.util.logging.Slf4j
 import org.apache.commons.lang.CharUtils
 import org.apache.http.HttpStatus
-import org.codehaus.groovy.grails.web.json.JSONArray
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.grails.web.json.JSONArray
+import org.grails.web.json.JSONObject
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.Days
 import org.joda.time.Interval
 import org.joda.time.Period
-import org.springframework.cache.annotation.Cacheable
 
 import java.math.RoundingMode
 import java.text.SimpleDateFormat
 
+@Slf4j
 class ProjectService  {
 
     static final String OUTCOMES_OUTPUT_TYPE = 'Outcomes'
@@ -47,7 +49,7 @@ class ProjectService  {
 
         params += levelOfDetail ? "view=${levelOfDetail}&" : ''
         params += "includeDeleted=${includeDeleted}"
-        Map project = webService.getJson(grailsApplication.config.ecodata.baseUrl + 'project/' + id + params)
+        Map project = webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') + 'project/' + id + params)
         if (!project.reports) {
             project.reports = reportService.getReportsForProject(id)
         }
@@ -89,7 +91,7 @@ class ProjectService  {
         def activities = props.remove('selectedActivities')
 
         // create a project in ecodata
-        def result = webService.doPost(grailsApplication.config.ecodata.baseUrl + 'project/', props)
+        def result = webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl') + 'project/', props)
         if (result?.resp?.projectId) {
             def projectId = result.resp.projectId
             // Add the user who created the project as an admin of the project
@@ -108,7 +110,7 @@ class ProjectService  {
      * @return the returned status
      */
     def delete(id) {
-        webService.doDelete(grailsApplication.config.ecodata.baseUrl + 'project/' + id)
+        webService.doDelete(grailsApplication.config.getProperty('ecodata.baseUrl') + 'project/' + id)
     }
 
     /**
@@ -117,7 +119,7 @@ class ProjectService  {
      * @return the returned status
      */
     def destroy(id) {
-        webService.doDelete(grailsApplication.config.ecodata.baseUrl + 'project/' + id + '?destroy=true')
+        webService.doDelete(grailsApplication.config.getProperty('ecodata.baseUrl') + 'project/' + id + '?destroy=true')
     }
 
     boolean isComplete(Map project) {
@@ -132,7 +134,7 @@ class ProjectService  {
      */
     def summary(String id, boolean approvedDataOnly = false, List scoreIds = null) {
 
-        String url = grailsApplication.config.ecodata.baseUrl + 'project/projectMetrics/' + id+"?approvedDataOnly="+approvedDataOnly
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'project/projectMetrics/' + id+"?approvedDataOnly="+approvedDataOnly
         if (scoreIds) {
             scoreIds.each{scoreId ->
                 url+="&scoreIds="+scoreId
@@ -151,7 +153,7 @@ class ProjectService  {
     }
 
     def search(params) {
-        webService.doPost(grailsApplication.config.ecodata.baseUrl + 'project/search', params)
+        webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl') + 'project/search', params)
     }
 
     /**
@@ -161,7 +163,7 @@ class ProjectService  {
      * @return
      */
     def getMembersForProjectId(projectId) {
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/getMembersForProject/${projectId}"
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/getMembersForProject/${projectId}"
         webService.getJson(url)
     }
 
@@ -201,7 +203,7 @@ class ProjectService  {
         if (userService.userIsSiteAdmin()) {
             userIsAdmin = true
         } else {
-            def url = grailsApplication.config.ecodata.baseUrl + "permissions/isUserAdminForProject?projectId=${projectId}&userId=${userId}"
+            def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/isUserAdminForProject?projectId=${projectId}&userId=${userId}"
             userIsAdmin = webService.getJson(url)?.userIsAdmin  // either will be true or false
         }
 
@@ -216,7 +218,7 @@ class ProjectService  {
      * @return
      */
     def isUserCaseManagerForProject(userId, projectId) {
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/isUserCaseManagerForProject?projectId=${projectId}&userId=${userId}"
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/isUserCaseManagerForProject?projectId=${projectId}&userId=${userId}"
         webService.getJson(url)?.userIsCaseManager // either will be true or false
     }
 
@@ -275,6 +277,7 @@ class ProjectService  {
     }
 
     def update(String id, Map projectDetails) {
+        def defaultTimeZone = TimeZone.default
         TimeZone.setDefault(TimeZone.getTimeZone('UTC'))
 
         def resp = [:]
@@ -333,6 +336,7 @@ class ProjectService  {
             generateProjectStageReports(id, new ReportGenerationOptions())
         }
 
+        TimeZone.setDefault(defaultTimeZone)
         return resp
     }
 
@@ -358,7 +362,7 @@ class ProjectService  {
     }
 
     private updateUnchecked(String id, Map projectDetails) {
-        webService.doPost(grailsApplication.config.ecodata.baseUrl + 'project/' + id, projectDetails)
+        webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl') + 'project/' + id, projectDetails)
     }
 
     /**
@@ -375,7 +379,7 @@ class ProjectService  {
         if (userService.userIsSiteAdmin()) {
             userCanEdit = true
         } else {
-            def url = grailsApplication.config.ecodata.baseUrl + "permissions/canUserEditProject?projectId=${projectId}&userId=${userId}"
+            def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/canUserEditProject?projectId=${projectId}&userId=${userId}"
             userCanEdit = webService.getJson(url)?.userIsEditor?:false
         }
 
@@ -1561,7 +1565,7 @@ class ProjectService  {
     }
 
     private boolean isFilterable(Map activityModel) {
-        List filterableActivityTypes = grailsApplication.config.reports.filterableActivityTypes
+        List filterableActivityTypes = grailsApplication.config.getProperty('reports.filterableActivityTypes', List, [])
         return activityModel?.name in filterableActivityTypes
     }
 

@@ -1,0 +1,36 @@
+---
+appName:
+  "fieldcapture"
+
+server:
+  address: localhost
+  servlet:
+    session:
+      timeout: 3600
+
+environments:
+    development:
+      server:
+        port: 8087
+spring:
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      additional-exclude:
+        - '**/*.gsp'
+        - '**/*.css'
+        - '**/*.js'
+management:
+  endpoints:
+    enabled-by-default: false
+
+grails:
+  controllers:
+    upload:
+      maxFileSize: 1024000000
+      maxRequestSize: 1024000000

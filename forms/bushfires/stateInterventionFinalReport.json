@@ -1,26 +1,18 @@
 {
-  "class": "au.org.ala.ecodata.ActivityForm",
-  "id": "5f362a01c2dc7eba0f107d4a",
-  "activationDate": null,
-  "category": "Reports",
-  "createdUserId": "1493",
-  "dateCreated": "2020-08-14T06:06:57Z",
-  "formVersion": 1,
-  "gmsId": null,
-  "lastUpdated": "2021-01-05T00:40:11Z",
-  "lastUpdatedUserId": "94320",
+  "id": "60d44f5cc2dccca01c79088a",
+  "dateCreated": "2021-06-24T09:24:44Z",
   "minOptionalSectionsCompleted": 1,
-  "name": "State Intervention Final Report",
+  "supportsSites": true,
+  "lastUpdated": "2021-09-02T02:24:04Z",
+  "createdUserId": "1493",
+  "activationDate": null,
+  "supportsPhotoPoints": false,
   "publicationStatus": "published",
+  "gmsId": null,
+  "name": "State Intervention Final Report",
   "sections": [
     {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
       "collapsedByDefault": false,
-      "modelName": null,
-      "name": "State Government Emergency Progress Report",
-      "optional": false,
-      "optionalQuestionText": null,
       "template": {
         "pre-populate": [
           {
@@ -421,17 +413,15 @@
           }
         ]
       },
+      "modelName": null,
       "templateName": "stateGovernmentInterventionFinalReport",
-      "title": null
+      "optional": false,
+      "optionalQuestionText": null,
+      "title": null,
+      "name": "State Government Emergency Progress Report"
     },
     {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
       "collapsedByDefault": true,
-      "modelName": null,
-      "name": "Baseline data",
-      "optional": true,
-      "optionalQuestionText": null,
       "template": {
         "title": "Collecting or synthesising baseline data",
         "modelName": "RLP - Baseline data",
@@ -489,17 +479,15 @@
           }
         ]
       },
-      "templateName": "siBaselineData",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Communication materials",
+      "templateName": "siBaselineData",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Baseline data"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -605,17 +593,15 @@
           }
         ]
       },
-      "templateName": "siCommunicationMaterials",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Community engagement",
+      "templateName": "siCommunicationMaterials",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Communication materials"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -778,17 +764,15 @@
           }
         ]
       },
-      "templateName": "siCommunityEngagement",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Controlling access",
+      "templateName": "siCommunityEngagement",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Community engagement"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -846,7 +830,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(areaInstalledHa, sitesInstalledCalculatedAreaHa, 0.1) and within(lengthInstalledKm, sitesInstalledCalculatedLengthKm, 0.1)) or roundTo(areaInstalledHa, 2) != roundTo(areaInvoicedHa, 2) or roundTo(lengthInstalledKm, 2) != roundTo(lengthInvoicedKm, 2)",
+                    "condition": "not (within(areaInstalledHa, sitesInstalledCalculatedAreaHa, 0.1) and within(lengthInstalledKm, sitesInstalledCalculatedLengthKm, 0.1))",
                     "type": "visible"
                   }
                 ],
@@ -1177,17 +1161,15 @@
           }
         ]
       },
-      "templateName": "siControllingAccess",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Pest animal management",
+      "templateName": "siControllingAccess",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Controlling access"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -1343,7 +1325,7 @@
                 "validate": "required",
                 "behaviour": [
                   {
-                    "condition": "not (within(lengthControlledKm, siteCalculatedLengthKm, 0.1))",
+                    "condition": "not (within(areaControlledHa, siteCalculatedAreaHa, 0.1) and within(lengthControlledKm, siteCalculatedLengthKm, 0.1))",
                     "type": "if"
                   }
                 ]
@@ -1392,7 +1374,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(areaControlledHa, siteCalculatedAreaHa, 0.1) and within(lengthControlledKm, siteCalculatedLengthKm, 0.1)) or roundTo(areaControlledHa, 2) != roundTo(areaInvoicedHa, 2)",
+                    "condition": "not (within(areaControlledHa, siteCalculatedAreaHa, 0.1) and within(lengthControlledKm, siteCalculatedLengthKm, 0.1))",
                     "type": "if"
                   }
                 ]
@@ -1708,17 +1690,15 @@
           }
         ]
       },
-      "templateName": "siPestAnimalManagement",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Management plan development",
+      "templateName": "siPestAnimalManagement",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Pest animal management"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -1801,7 +1781,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not within(areaCoveredByPlanHa, calculatedAreaHa, 0.1) or (roundTo(areaCoveredByPlanHa, 2) != roundTo(areaInvoicedHa, 2))",
+                    "condition": "not within(areaCoveredByPlanHa, calculatedAreaHa, 0.1)",
                     "type": "visible"
                   }
                 ],
@@ -2014,17 +1994,15 @@
           }
         ]
       },
-      "templateName": "siManagementPlanDevelopment",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Debris removal",
+      "templateName": "siManagementPlanDevelopment",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Management plan development"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -2109,7 +2087,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(debrisRemovedHa, calculatedDebrisRemovedHa, 0.1)) or roundTo(debrisRemovedHa, 2) != roundTo(areaOfRemovedDebrisInvoicedHa, 2)",
+                    "condition": "not (within(debrisRemovedHa, calculatedDebrisRemovedHa, 0.1) and within(debrisRemovedKm, calculatedDebrisRemovedKm, 0.1))",
                     "type": "visible"
                   }
                 ]
@@ -2124,7 +2102,7 @@
                 "validate": "required",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedDebrisRemovedHa, debrisRemovedHa, 0.1))",
+                    "condition": "not (within(debrisRemovedHa, calculatedDebrisRemovedHa, 0.1) and within(debrisRemovedKm, calculatedDebrisRemovedKm, 0.1))",
                     "type": "visible"
                   }
                 ]
@@ -2365,17 +2343,15 @@
           }
         ]
       },
-      "templateName": "siDebrisRemoval",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Erosion Management",
+      "templateName": "siDebrisRemoval",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Debris removal"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -2452,7 +2428,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(areaOfErosionControlHa, calculatedAreaOfErosionControlHa, 0.1) and within(lengthOfErosionControlKm, calculatedLengthOfErosionControlKm, 0.1)) or roundTo(areaOfErosionControlHa, 2) != roundTo(areaOfErosionControlInvoicedHa, 2) or roundTo(lengthOfErosionControlKm, 2) != roundTo(lengthOfErosionControlInvoicedKm, 2)",
+                    "condition": "not (within(areaOfErosionControlHa, calculatedAreaOfErosionControlHa, 0.1) and within(lengthOfErosionControlKm, calculatedLengthOfErosionControlKm, 0.1))",
                     "type": "visible"
                   }
                 ],
@@ -2816,17 +2792,15 @@
           }
         ]
       },
-      "templateName": "siErosionManagement",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Maintaining feral free enclosures",
+      "templateName": "siErosionManagement",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Erosion Management"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -2938,7 +2912,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not within(areaOfEnclosuresHa, calculatedAreaOfEnclosuresHa, 0.1) or roundTo(areaOfEnclosuresHa, 2) != roundTo(areaInvoicedHa, 2)",
+                    "condition": "not within(areaOfEnclosuresHa, calculatedAreaOfEnclosuresHa, 0.1)",
                     "type": "if"
                   }
                 ],
@@ -3165,17 +3139,15 @@
           }
         ]
       },
-      "templateName": "siFeralFreeEnclosures",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Establishing ex-situ breeding programs",
+      "templateName": "siFeralFreeEnclosures",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Maintaining feral free enclosures"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -3441,17 +3413,15 @@
           }
         ]
       },
-      "templateName": "siExSituBreedingSites",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Establishing Agreements",
+      "templateName": "siExSituBreedingSites",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Establishing ex-situ breeding programs"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -3589,7 +3559,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedAreaCoveredByAgreementsHa, areaCoveredByAgreementsHa, 0.1)) or roundTo(areaCoveredByAgreementsHa, 2) != roundTo(areaOfCoveredByAgreementsInvoicedHa, 2)",
+                    "condition": "not (within(areaCoveredByAgreementsHa, calculatedAreaCoveredByAgreementsHa, 0.1))",
                     "type": "visible"
                   }
                 ],
@@ -3742,17 +3712,15 @@
           }
         ]
       },
-      "templateName": "siEstablishingAgreements",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Establishing monitoring regimes",
+      "templateName": "siEstablishingAgreements",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Establishing Agreements"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "title": "Establishing monitoring regimes",
         "modelName": "RLP - Establishing monitoring regimes",
@@ -3879,17 +3847,15 @@
           }
         ]
       },
-      "templateName": "siMonitoringRegimes",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Farm Management Survey",
+      "templateName": "siMonitoringRegimes",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Establishing monitoring regimes"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "title": "Farm management surveys",
         "modelName": "RLP - Farm Management Survey",
@@ -3984,17 +3950,15 @@
           }
         ]
       },
-      "templateName": "siFarmManagementSurvey",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Fauna survey",
+      "templateName": "siFarmManagementSurvey",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Farm Management Survey"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -4107,7 +4071,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1) or roundTo(areaSurveyedHa, 2) != roundTo(areaInvoicedHa, 2)",
+                    "condition": "not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1)",
                     "type": "if"
                   }
                 ],
@@ -4334,17 +4298,15 @@
           }
         ]
       },
-      "templateName": "siFaunaSurvey",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Fire management",
+      "templateName": "siFaunaSurvey",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Fauna survey"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -4432,7 +4394,7 @@
                 "validate": "required",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1))",
+                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1) and within(lengthTreatedKm, calculatedLengthTreatedKm, 0.1))",
                     "type": "visible"
                   }
                 ]
@@ -4455,7 +4417,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1)) or roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedTreatedHa, 2)",
+                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1) and within(lengthTreatedKm, calculatedLengthTreatedKm, 0.1))",
                     "type": "visible"
                   }
                 ]
@@ -4746,17 +4708,15 @@
           }
         ]
       },
-      "templateName": "isiFireManagement",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Flora survey",
+      "templateName": "isiFireManagement",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Fire management"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -4869,7 +4829,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1) or roundTo(areaSurveyedHa, 2) != roundTo(areaInvoicedHa, 2)",
+                    "condition": "not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1)",
                     "type": "if"
                   }
                 ],
@@ -5106,17 +5066,15 @@
           }
         ]
       },
-      "templateName": "siFloraSurvey",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Habitat augmentation",
+      "templateName": "siFloraSurvey",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Flora survey"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -5201,7 +5159,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedAreaAugmentedHa, areaAugmentedHa, 0.1)) or roundTo(areaAugmentedHa, 2) != roundTo(areaInvoicedAumentationHa, 2)",
+                    "condition": "not (within(areaAugmentedHa, calculatedAreaAugmentedHa, 0.1) and within(lengthAugmentedKm, calculatedLengthAugmentedKm, 0.1))",
                     "type": "visible"
                   }
                 ]
@@ -5216,7 +5174,7 @@
                 "validate": "required",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedAreaAugmentedHa, areaAugmentedHa, 0.1))",
+                    "condition": "not (within(areaAugmentedHa, calculatedAreaAugmentedHa, 0.1) and within(lengthAugmentedKm, calculatedLengthAugmentedKm, 0.1))",
                     "type": "visible"
                   }
                 ]
@@ -5509,17 +5467,15 @@
           }
         ]
       },
-      "templateName": "siHabitatAugmentation",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Identifying sites",
+      "templateName": "siHabitatAugmentation",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Habitat augmentation"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "title": "Identifying the location of potential sites",
         "modelName": "RLP - Identifying sites",
@@ -5592,17 +5548,15 @@
           }
         ]
       },
-      "templateName": "siIdentifyingSites",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Improving hydrological regimes",
+      "templateName": "siIdentifyingSites",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Identifying sites"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -5671,7 +5625,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedAreaCoveringRegimeChangeHa, areaCoveringRegimeChangeHa, 0.1) and within(calculatedLengthOfRegimeChangeKm, lengthOfRegimeChangeKm, 0.1))",
+                    "condition": "not (within(areaCoveringRegimeChangeHa, calculatedAreaCoveringRegimeChangeHa, 0.1) and within(lengthOfRegimeChangeKm, calculatedLengthOfRegimeChangeKm, 0.1))",
                     "type": "visible"
                   }
                 ]
@@ -6006,17 +5960,15 @@
           }
         ]
       },
-      "templateName": "siImprovingHydrologicalRegimes",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Improving land management practices",
+      "templateName": "siImprovingHydrologicalRegimes",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Improving hydrological regimes"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -6099,7 +6051,7 @@
                 "name": "mappingNotAlignedReason",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedAreaImplementedHa, areaImplementedHa, 0.1))",
+                    "condition": "not (within(areaImplementedHa, calculatedAreaImplementedHa, 0.1) and within(lengthImplementedKm, calculatedLengthImplementedKm, 0.1))",
                     "type": "visible"
                   }
                 ],
@@ -6126,7 +6078,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedAreaImplementedHa, areaImplementedHa, 0.1)) or roundTo(areaImplementedHa, 2) != roundTo(areaImplementedInvoicedHa, 2)",
+                    "condition": "not (within(areaImplementedHa, calculatedAreaImplementedHa, 0.1) and within(lengthImplementedKm, calculatedLengthImplementedKm, 0.1))",
                     "type": "visible"
                   }
                 ],
@@ -6425,17 +6377,15 @@
           }
         ]
       },
-      "templateName": "siLandManagementPractices",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Disease management",
+      "templateName": "siLandManagementPractices",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Improving land management practices"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -6519,7 +6469,7 @@
                 "name": "mappingNotAlignedReason",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1))",
+                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1) and within(lengthTreatedKm, calculatedLengthTreatedKm, 0.1))",
                     "type": "visible"
                   }
                 ],
@@ -6546,7 +6496,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1)) or roundTo(areaTreatedHa, 2) != roundTo(areaTreatedInvoicedHa, 2)",
+                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1) and within(lengthTreatedKm, calculatedLengthTreatedKm, 0.1))",
                     "type": "visible"
                   }
                 ],
@@ -6842,17 +6792,15 @@
           }
         ]
       },
-      "templateName": "siDiseaseManagement",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Negotiations",
+      "templateName": "siDiseaseManagement",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Disease management"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -6946,17 +6894,15 @@
           }
         ]
       },
-      "templateName": "siNegotiations",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Obtaining approvals",
+      "templateName": "siNegotiations",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Negotiations"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "title": "Obtaining relevant approvals",
         "modelName": "RLP - Obtaining approvals",
@@ -7015,17 +6961,15 @@
           }
         ]
       },
-      "templateName": "siObtainingApprovals",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Pest animal survey",
+      "templateName": "siObtainingApprovals",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Obtaining approvals"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -7138,7 +7082,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1) or roundTo(areaSurveyedHa, 2) != roundTo(areaInvoicedHa, 2)",
+                    "condition": "not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1)",
                     "type": "if"
                   }
                 ],
@@ -7402,17 +7346,15 @@
           }
         ]
       },
-      "templateName": "siPestAnimalSurvey",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Plant survival survey",
+      "templateName": "siPestAnimalSurvey",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Pest animal survey"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -7525,7 +7467,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1) or roundTo(areaSurveyedHa, 2) != roundTo(areaInvoicedHa, 2)",
+                    "condition": "not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1)",
                     "type": "if"
                   }
                 ],
@@ -7768,17 +7710,15 @@
           }
         ]
       },
-      "templateName": "siPlantSurvivalSurvey",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Project planning",
+      "templateName": "siPlantSurvivalSurvey",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Plant survival survey"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "title": "Project planning and delivery of documents as required for the delivery of the Project and monitoring",
         "modelName": "RLP - Project planning",
@@ -7857,17 +7797,15 @@
           }
         ]
       },
-      "templateName": "siProjectPlanning",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Remediating riparian and aquatic areas",
+      "templateName": "siProjectPlanning",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Project planning"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -7977,7 +7915,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedAreaRemediatedHa, areaRemediatedHa, 0.1) and within(calculatedLengthRemediatedKm, lengthRemediatedKm, 0.1)) or roundTo(areaRemediatedHa, 2) != roundTo(areaRemediatedInvoicedHa, 2) or roundTo(lengthRemediatedKm, 2) != roundTo(lengthRemediatedInvoicedKm, 2)",
+                    "condition": "not (within(areaRemediatedHa, calculatedAreaRemediatedHa, 0.1) and within(lengthRemediatedKm, calculatedLengthRemediatedKm, 0.1))",
                     "type": "visible"
                   }
                 ],
@@ -8260,17 +8198,15 @@
           }
         ]
       },
-      "templateName": "siRemediatingRiparianAndAquaticAreas",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Revegetating habitat",
+      "templateName": "siRemediatingRiparianAndAquaticAreas",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Remediating riparian and aquatic areas"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -8379,7 +8315,7 @@
                 "validate": "required",
                 "behaviour": [
                   {
-                    "condition": "not within(areaRevegetatedHa, siteCalculatedAreaHa, 0.1)",
+                    "condition": "not (within(areaRevegetatedHa, siteCalculatedAreaHa, 0.1) and within(lengthRevegetatedKm, siteCalculatedLengthKm, 0.1))",
                     "type": "if"
                   }
                 ]
@@ -8402,7 +8338,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not within(areaRevegetatedHa, siteCalculatedAreaHa, 0.1) or roundTo(areaRevegetatedHa, 2) != roundTo(areaInvoicedHa, 2)",
+                    "condition": "not (within(areaRevegetatedHa, siteCalculatedAreaHa, 0.1) and within(lengthRevegetatedKm, siteCalculatedLengthKm, 0.1))",
                     "type": "if"
                   }
                 ]
@@ -8759,17 +8695,15 @@
           }
         ]
       },
-      "templateName": "siRevegetatingHabitat",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Weed treatment",
+      "templateName": "siRevegetatingHabitat",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Revegetating habitat"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -8921,7 +8855,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(areaTreatedHa, siteCalculatedAreaHa, 0.1) and within(lengthTreatedKm, siteCalculatedLengthKm, 0.1)) or roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedHa, 2) or roundTo(lengthTreatedKm, 2) != roundTo(lengthInvoicedKm, 2)",
+                    "condition": "not (within(areaTreatedHa, siteCalculatedAreaHa, 0.1) and within(lengthTreatedKm, siteCalculatedLengthKm, 0.1))",
                     "type": "if"
                   }
                 ],
@@ -9205,18 +9139,17 @@
           }
         ]
       },
-      "templateName": "siWeedTreatment",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Seed Collecting - Bushfire Program",
+      "templateName": "siWeedTreatment",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Weed treatment"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
+        "modelName": "Seed Collecting - Bushfire Program",
         "dataModel": [
           {
             "columns": [
@@ -9274,6 +9207,44 @@
                 "units": "km",
                 "decimalPlaces": 3,
                 "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedReason",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaHabitatRevegetedHa, calculatedAreaHabitatRevegetedHa, 0.1) and within(lengthHabitatRevegetedKm, calculatedLengthHabitatRevegetedKm, 0.1))",
+                    "type": "visible"
+                  }
+                ],
+                "constraints": [
+                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedComments",
+                "behaviour": [
+                  {
+                    "condition": "\"Other\" == mappingNotAlignedReason",
+                    "type": "visible"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "document",
+                "name": "extraMappingDetails",
+                "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaHabitatRevegetedHa, calculatedAreaHabitatRevegetedHa, 0.1) and within(lengthHabitatRevegetedKm, calculatedLengthHabitatRevegetedKm, 0.1))",
+                    "type": "visible"
+                  }
+                ],
+                "validate": "required"
               },
               {
                 "dataType": "species",
@@ -9334,8 +9305,6 @@
             "name": "totalPlantsPropogated"
           }
         ],
-        "modelName": "Seed Collecting - Bushfire Program",
-        "title": "Seed Collecting",
         "viewModel": [
           {
             "type": "section",
@@ -9343,13 +9312,13 @@
               {
                 "columns": [
                   {
-                    "width": "5%",
+                    "width": "6%",
                     "source": "initialOrMaintenance",
                     "title": "Initial or Maintenance activity?",
                     "type": "selectOne"
                   },
                   {
-                    "width": "5%",
+                    "width": "7%",
                     "type": "col",
                     "title": "Site/s where collection was undertaken",
                     "items": [
@@ -9372,13 +9341,23 @@
                         "displayOptions": {
                           "displayUnits": true
                         }
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Please attach mapping details",
+                            "source": "extraMappingDetails",
+                            "type": "document"
+                          }
+                        ]
                       }
                     ]
                   },
                   {
-                    "width": "10%",
+                    "width": "12%",
                     "type": "col",
-                    "title": "Area (ha) of habitat revegated",
+                    "title": "Area (ha) / Length (km) of habitat revegeted",
                     "items": [
                       {
                         "source": "areaHabitatRevegetedHa",
@@ -9386,49 +9365,63 @@
                         "displayOptions": {
                           "displayUnits": true
                         }
-                      }
-                    ]
-                  },
-                  {
-                    "width": "10%",
-                    "type": "col",
-                    "title": "Length (km) of habitat revegeted",
-                    "items": [
+                      },
                       {
                         "source": "lengthHabitatRevegetedKm",
                         "type": "number",
                         "displayOptions": {
                           "displayUnits": true
                         }
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Reason for actual being different to mapped amount",
+                            "source": "mappingNotAlignedReason",
+                            "type": "selectOne"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                            "source": "mappingNotAlignedComments",
+                            "type": "textarea",
+                            "rows": 5
+                          }
+                        ]
                       }
                     ]
                   },
                   {
-                    "width": "7%",
+                    "width": "8%",
                     "source": "species",
                     "title": "Species",
                     "type": "speciesSelect"
                   },
                   {
-                    "width": "7%",
+                    "width": "8%",
                     "source": "noOfDaysSeedCollected",
                     "title": "Number of days collecting Seed",
                     "type": "number"
                   },
                   {
-                    "width": "7%",
+                    "width": "8%",
                     "source": "inKgSeedCollected",
                     "title": "Individuals / Kilograms collected",
                     "type": "selectOne"
                   },
                   {
-                    "width": "7%",
+                    "width": "8%",
                     "source": "amountSeedCollected",
                     "title": "Amount collected",
                     "type": "number"
                   },
                   {
-                    "width": "7%",
+                    "width": "8%",
                     "source": "numberOfSourcePlants",
                     "title": "Number of Source plants",
                     "type": "number"
@@ -9458,20 +9451,20 @@
               }
             ]
           }
-        ]
+        ],
+        "title": "Seed Collecting"
       },
-      "templateName": "siSeedCollecting",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Site preparation",
+      "templateName": "siSeedCollecting",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Seed Collecting - Bushfire Program"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
+        "modelName": "RLP - Site preparation",
         "dataModel": [
           {
             "columns": [
@@ -9545,7 +9538,7 @@
                 "name": "mappingNotAlignedReason",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedAreaPreparedHa, areaPreparedHa, 0.1))",
+                    "condition": "not (within(areaPreparedHa, calculatedAreaPreparedHa, 0.1) and within(lengthPreparedKm, calculatedLengthPreparedKm, 0.1))",
                     "type": "visible"
                   }
                 ],
@@ -9572,7 +9565,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedAreaPreparedHa, areaPreparedHa, 0.1)) or roundTo(areaPreparedHa, 2) != roundTo(areaPreparedInvoicedHa, 2)",
+                    "condition": "not (within(areaPreparedHa, calculatedAreaPreparedHa, 0.1) and within(lengthPreparedKm, calculatedLengthPreparedKm, 0.1))",
                     "type": "visible"
                   }
                 ],
@@ -9695,8 +9688,6 @@
             ]
           }
         ],
-        "modelName": "RLP - Site preparation",
-        "title": "Site preparation",
         "viewModel": [
           {
             "type": "section",
@@ -9845,19 +9836,18 @@
               }
             ]
           }
-        ]
+        ],
+        "title": "Site preparation"
       },
-      "templateName": "siSitePreparation",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Skills and knowledge survey",
+      "templateName": "siSitePreparation",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Site preparation"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "title": "Skills and knowledge survey",
         "modelName": "RLP - Skills and knowledge survey",
@@ -10005,17 +9995,15 @@
           }
         ]
       },
-      "templateName": "siSkillsAndKnowledgeSurvey",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Soil testing",
+      "templateName": "siSkillsAndKnowledgeSurvey",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Skills and knowledge survey"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -10119,6 +10107,44 @@
               },
               {
                 "dataType": "text",
+                "name": "mappingNotAlignedReason",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaTestedChangeHa, areaTestedHa, 0.1) and within(lengthTestedChangeKm, lengthTestedKm, 0.1))",
+                    "type": "visible"
+                  }
+                ],
+                "constraints": [
+                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedComments",
+                "behaviour": [
+                  {
+                    "condition": "\"Other\" == mappingNotAlignedReason",
+                    "type": "visible"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "document",
+                "name": "extraMappingDetails",
+                "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaTestedChangeHa, areaTestedHa, 0.1) and within(lengthTestedChangeKm, lengthTestedKm, 0.1))",
+                    "type": "visible"
+                  }
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
                 "name": "testingTechnique",
                 "description": "What/How will these tests capture information",
                 "validate": "required,maxSize[100]"
@@ -10213,6 +10239,16 @@
                             "readonly": true
                           }
                         ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Please attach mapping details",
+                            "source": "extraMappingDetails",
+                            "type": "document"
+                          }
+                        ]
                       }
                     ],
                     "title": "Project site/s where soil tests were conducted"
@@ -10244,6 +10280,27 @@
                             "displayOptions": {
                               "displayUnits": true
                             }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Reason for actual being different to mapped amount",
+                            "source": "mappingNotAlignedReason",
+                            "type": "selectOne"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                            "source": "mappingNotAlignedComments",
+                            "type": "textarea",
+                            "rows": 5
                           }
                         ]
                       }
@@ -10280,17 +10337,15 @@
           }
         ]
       },
-      "templateName": "siSoilTesting",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Supplementary food and water",
+      "templateName": "siSoilTesting",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Soil testing"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "modelName": "Supplementary food and water",
         "dataModel": [
@@ -10345,17 +10400,15 @@
         ],
         "title": "Supplementary food and water"
       },
-      "templateName": "siSupplementaryFoodAndWater",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Emergency Interventions",
+      "templateName": "siSupplementaryFoodAndWater",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Supplementary food and water"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -10626,17 +10679,15 @@
           }
         ]
       },
-      "templateName": "siEmergencyInterventions",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Water quality survey",
+      "templateName": "siEmergencyInterventions",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Emergency Interventions"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -10749,7 +10800,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1) or roundTo(areaSurveyedHa, 2) != roundTo(areaInvoicedHa, 2)",
+                    "condition": "not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1)",
                     "type": "if"
                   }
                 ],
@@ -10998,17 +11049,15 @@
           }
         ]
       },
-      "templateName": "siWaterQualitySurvey",
-      "title": null
-    },
-    {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
-      "collapsedByDefault": true,
       "modelName": null,
-      "name": "Weed distribution survey",
+      "templateName": "siWaterQualitySurvey",
       "optional": true,
       "optionalQuestionText": null,
+      "title": null,
+      "name": "Water quality survey"
+    },
+    {
+      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -11121,7 +11170,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1) or roundTo(areaSurveyedHa, 2) != roundTo(areaInvoicedHa, 2)",
+                    "condition": "not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1)",
                     "type": "if"
                   }
                 ],
@@ -11345,17 +11394,15 @@
           }
         ]
       },
+      "modelName": null,
       "templateName": "siWeedDistributionSurvey",
-      "title": null
+      "optional": true,
+      "optionalQuestionText": null,
+      "title": null,
+      "name": "Weed distribution survey"
     },
     {
-      "class": "au.org.ala.ecodata.FormSection",
-      "id": null,
       "collapsedByDefault": false,
-      "modelName": "State Intervention Final Report",
-      "name": "State Intervention Final Report",
-      "optional": false,
-      "optionalQuestionText": null,
       "template": {
         "dataModel": [
           {
@@ -11378,7 +11425,6 @@
                 "validate": "required,maxSize[5000]"
               }
             ]
-
           },
           {
             "columns": [
@@ -11403,6 +11449,17 @@
               {
                 "dataType": "text",
                 "name": "delivered"
+              },
+              {
+                "dataType": "text",
+                "name": "actualTotalDeliveredIfDifferent",
+                "behaviour": [
+                  {
+                    "condition": "delivered > projectTarget",
+                    "type": "enable_and_clear"
+                  }
+                ],
+                "validate": "required"
               },
               {
                 "dataType": "text",
@@ -11498,7 +11555,6 @@
                 "readonly": true,
                 "width": "45%"
               },
-
               {
                 "type": "textarea",
                 "source": "achievement",
@@ -11522,7 +11578,7 @@
               },
               {
                 "readonly": true,
-                "width": "15%",
+                "width": "13%",
                 "source": "serviceName",
                 "type": "textarea",
                 "rows": 3,
@@ -11530,7 +11586,7 @@
               },
               {
                 "readonly": true,
-                "width": "20%",
+                "width": "15%",
                 "source": "targetMeasure",
                 "type": "textarea",
                 "rows": 3,
@@ -11551,7 +11607,14 @@
                 "title": "Total delivered"
               },
               {
-                "width": "35%",
+                "width": "12%",
+                "source": "actualTotalDeliveredIfDifferent",
+                "type": "textarea",
+                "title": "Actual Total Delivered (if different)",
+                "rows": 3
+              },
+              {
+                "width": "30%",
                 "source": "reasonTargetNotMet",
                 "type": "textarea",
                 "rows": 3,
@@ -11571,7 +11634,6 @@
                 "type": "literal"
               }
             ]
-
           },
           {
             "type": "row",
@@ -11583,7 +11645,6 @@
                 "preLabel": "8.1 Did project implementation occur as planned? Describe the effectiveness of the project delivery and monitoring methodology and whether alternative methods might be more effective / efficient."
               }
             ]
-
           },
           {
             "type": "row",
@@ -11595,7 +11656,6 @@
                 "preLabel": "8.2 Summarise the overall lessons learned during the project."
               }
             ]
-
           },
           {
             "type": "row",
@@ -11605,7 +11665,6 @@
                 "type": "literal"
               }
             ]
-
           },
           {
             "type": "row",
@@ -11617,7 +11676,6 @@
                 "preLabel": "9.1 To what extent has the project risk assessment and risk management been appropriate and effective?"
               }
             ]
-
           },
           {
             "type": "row",
@@ -11627,7 +11685,6 @@
                 "type": "literal"
               }
             ]
-
           },
           {
             "type": "row",
@@ -11639,7 +11696,6 @@
                 "preLabel": "10.1 Describe how co-contributions were used to achieve the project outcomes, if applicable."
               }
             ]
-
           },
           {
             "type": "row",
@@ -11651,7 +11707,6 @@
                 "preLabel": "10.2 Summarise the role of project partners in achieving project outcomes, if applicable."
               }
             ]
-
           }
         ],
         "pre-populate": [
@@ -11757,11 +11812,18 @@
         "title": "Final Report",
         "templateName": "stateInterventionFinalReport",
         "modelName": "State Intervention Final Report"
-      }
+      },
+      "modelName": "State Intervention Final Report",
+      "templateName": null,
+      "optional": false,
+      "optionalQuestionText": null,
+      "title": null,
+      "name": "State Intervention Final Report"
     }
   ],
+  "type": "Report",
+  "category": "Reports",
   "status": "active",
-  "supportsPhotoPoints": false,
-  "supportsSites": true,
-  "type": "Report"
+  "lastUpdatedUserId": "94320",
+  "formVersion": 1
 }

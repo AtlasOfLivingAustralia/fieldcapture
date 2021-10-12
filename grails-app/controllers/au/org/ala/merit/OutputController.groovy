@@ -36,59 +36,6 @@ class OutputController {
         }
     }
 
-    /* Old output editing:
-
-    private Map fatten(output) {
-        def map = [activity: activityService.get(output.activityId)]
-        map.projects = map.activity.projectId ? [projectService.get(map.activity.projectId)] : []
-        map.site = map.activity.siteId ? siteService.get(map.activity.siteId) : [:]
-        if (!map.projects && map.site) {
-            map.projects = map.site.projects
-        }
-        // Add the species lists that are relevant to this activity.
-        map.speciesLists = new JSONArray()
-        map.projects?.each {
-            it.speciesLists?.each { list ->
-                if (list.purpose == map.activity.type) {
-                    map.speciesLists.add(list)
-                }
-            }
-        }
-
-        map.model = metadataService.getDataModelFromOutputName(output.name)
-        map
-    }
-
-    def index(String id) {
-        def output = outputService.get(id)
-        if (!output || output.error) {
-            forward(action: 'list', model: [error: output.error])
-        } else {
-            def fat = fatten output
-            [output: output, activity: fat.activity, site: fat.site, projects: fat.projects,
-                    model: fat.model, speciesLists: fat.speciesLists, returnTo: params.returnTo]
-        }
-    }
-
-    def edit(String id) {
-        def output = outputService.get(id)
-        if (!output || output.error) {
-            forward(action: 'list', model: [error: output.error])
-        } else {
-            def fat = fatten output
-            [output: output, activity: fat.activity, site: fat.site, projects: fat.projects,
-             model: fat.model, speciesLists: fat.speciesLists, returnTo: params.returnTo]
-        }
-    }
-
-    def create(String activityId, String outputName) {
-        def output = [activityId: activityId, name: outputName]
-        def fat = fatten output
-        render view: 'edit', model:
-                [output: output, activity: fat.activity, site: fat.site, projects: fat.projects,
-                 model: fat.model, speciesLists: fat.speciesLists, returnTo: params.returnTo]
-    }*/
-
     /**
      * Updates existing or creates new output.
      *
@@ -125,21 +72,11 @@ class OutputController {
     def delete(String id) {
         outputService.delete(id);
         if (params.returnTo) {
-            redirect url: grailsApplication.config.grails.serverURL + '/' +
+            redirect url: grailsApplication.config.getProperty('grails.serverURL') + '/' +
                     params.returnTo
         } else {
             redirect controller: 'home'
         }
-    }
-
-    def verifyTest1() {
-        def t1 = new Databindings()
-        render "ok"
-    }
-
-    def verifyTest2() {
-        def t1 = new AttributeMap()
-        render "ok"
     }
 
 }

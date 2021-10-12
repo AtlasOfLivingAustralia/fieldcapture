@@ -1,12 +1,12 @@
 //= require forms-manifest.js
-//= require jquery.appear/jquery.appear.js
+//= require jquery-appear-original/index.js
 //= require_self
 function validateDateField(dateField) {
     var date = stringToDate($(dateField).val());
 
     if (!isValidDate(date)) {
         return "Date must be in the format dd-MM-YYYY";
-    };
+    }
 }
 
 /* Master controller for page. This handles saving each model as required. */
@@ -171,6 +171,70 @@ var Master = function (activityId, config) {
         bootbox.alert(errorText);
     };
 
+    /**
+     * Checks the local storage for saved data relevant to the supplied output and returns it.  If none is found,
+     * null is returned.
+     * @param output The output to check for saved data
+     * @param config The class configuration, the key/value "recoveryDataStorageKey" is required for this method.
+     * @return object an object containing saved output data, or null if none exists.
+     */
+    self.findLocallySavedData = function(output, config) {
+        var savedData = amplify.store(config.recoveryDataStorageKey);
+        var savedOutput = null;
+        if (savedData) {
+            savedData = $.parseJSON(savedData);
+
+            var savedOutput;
+            if (savedData.name && savedData.name == output.name) {
+                savedOutput = savedData.data;
+            } else if (savedData.outputs || (savedData.activity && savedData.activity.outputs)) {
+                var savedOutputs = savedData.outputs || savedData.activity.outputs;
+                $.each(savedOutputs, function (i, tmpOutput) {
+                    if (tmpOutput.name === output.name) {
+                        if (tmpOutput.data) {
+                            savedOutput = tmpOutput.data;
+                        }
+                    }
+                });
+            }
+        }
+        return savedOutput;
+    }
+
+    self.createAndBindOutput = function(output, context, options) {
+        var defaults = {
+            constructorFunction: ecodata.forms[options.namespace + 'ViewModel'],
+            dirtyFlag: ko.simpleDirtyFlag,
+            viewRootElementId: 'ko' + options.namespace
+        };
+        var config = _.defaults(options, defaults);
+        var viewModel = new config.constructorFunction(output, config.model.dataModel, context, config);
+
+        viewModel.initialise(output.data).done(function () {
+
+            // Check for locally saved data for this output - this will happen in the event of a session timeout
+            // for example.
+            viewModel.dirtyFlag = config.dirtyFlag(viewModel, false);
+            var savedOutput = self.findLocallySavedData(output, config);
+            if (savedOutput) {
+                viewModel.loadData(savedOutput);
+            }
+
+            ko.applyBindings(viewModel, document.getElementById(config.viewRootElementId));
+
+            // We need to reset the dirty flag after applying bindings as bindings e.g. (expressions) can
+            // trigger model updates.  However we don't want to reset it if saved data was found as we want the
+            // form marked dirty in that case.
+            if (!savedOutput) {
+                viewModel.dirtyFlag.reset();
+            }
+
+            // register with the master controller so this model can participate in the save cycle
+            self.register(viewModel, viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
+
+        });
+    }
+
     function handleSessionTimeout(localStorageFailed) {
 
         if (!localStorageFailed) {
@@ -189,7 +253,7 @@ var Master = function (activityId, config) {
             bootbox.alert(" <b>Please do not leave this page</b><br/>Your save failed due to a network error or login timeout.  Please open a new tab and log back into MERIT, then attempt to save this data again.");
         }
 
-    };
+    }
 
     /**
      * Makes an ajax call to save any sections that have been modified. This includes the activity
@@ -503,7 +567,7 @@ function ActivityHeaderViewModel (activity, site, project, metaModel, themes, co
             }
         }
     };
-};
+}
 
 /** Responsible for navigation at the bottom of report forms */
 var ReportNavigationViewModel = function(reportMaster, activityViewModel, options) {
@@ -553,24 +617,27 @@ var ReportNavigationViewModel = function(reportMaster, activityViewModel, option
         if (self.dirtyFlag.isDirty()) {
             var message = "<b>Unsaved data found</b>"+
                 "<p>The form you are working on has unsaved changes. Please confirm if you would like to:</p>";
-            bootbox.dialog(message,[
-                {
-                    label:'Save and exit',
-                    class:'btn-success',
-                    callback: self.saveAndExit
-                },
-                {
-                    label:'Exit without saving',
-                    class:'btn-warning',
-                    callback: self.cancel
-                },
-                {
-                    label:'Return to reporting form',
-                    class:'btn-info',
-                    // do nothing, just close the dialog
-                    callback:function() {}
+            bootbox.dialog({
+                message: message,
+                buttons: {
+                    saveAndExit: {
+                        label: 'Save and exit',
+                        className: 'btn-sm btn-success',
+                        callback: self.saveAndExit
+                    },
+                    exitWithoutSaving: {
+                        label: 'Exit without saving',
+                        className: 'btn-sm btn-warning',
+                        callback: self.cancel
+                    },
+                    returnToForm: {
+                        label: 'Return to reporting form',
+                        className: 'btn-sm btn-info',
+                        // do nothing, just close the dialog
+                        callback: function ()  {}
+                    }
                 }
-            ]);
+            });
         }
         else {
             reportMaster.cancelAutosave();

@@ -9,7 +9,7 @@ beans = {
     task.'annotation-driven'('proxy-target-class': true)
 
     // Overriding the default grailsLinkGenerator with our class that can include the hub path in generated URLs
-    grailsLinkGenerator(HubAwareLinkGenerator, grailsApplication.config.grails.serverURL)
+    grailsLinkGenerator(HubAwareLinkGenerator, grailsApplication.config.getProperty('grails.serverURL'))
 
     statisticsFactory(StatisticsFactory)
 

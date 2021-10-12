@@ -38,7 +38,7 @@
     </table>
 </div>
 <asset:script>
-    $(window).load(function () {
+    $(window).on('load', function () {
         function ActivitiesViewModel(activities, sites) {
             var self = this;
             this.loadActivities = function (activities) {
@@ -151,7 +151,7 @@
             };
         }
 
-        var activitiesViewModel = new ActivitiesViewModel(${activities ?: []}, ${sites ?: []});
+        var activitiesViewModel = new ActivitiesViewModel(${raw(((activities ?: []) as grails.converters.JSON).toString())}, ${raw(((sites ?: [])as grails.converters.JSON).toString())});
         ko.applyBindings(activitiesViewModel, document.getElementById('activityListContainer'));
     });
 

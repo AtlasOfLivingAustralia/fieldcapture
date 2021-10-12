@@ -2,17 +2,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="${hubConfig.skin}"/>
-    <title> Upload | Sites | Field Capture</title>
-    <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
+    <meta name="layout" content="nrm_bs4"/>
+    <title> Upload | Sites | MERIT</title>
+    <script type="text/javascript" src="${grailsApplication.config.getProperty('google.maps.url')}"></script>
     <script>
             var fcConfig = {
-                serverUrl: "${grailsApplication.config.grails.serverURL}",
-                spatialBaseUrl: "${grailsApplication.config.spatial.baseUrl}",
-                spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
-                spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
-                sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
-                sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
+                serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
+                spatialBaseUrl: "${grailsApplication.config.getProperty('spatial.baseUrl')}",
+                spatialWmsCacheUrl: "${grailsApplication.config.getProperty('spatial.wms.cache.url')}",
+                spatialWmsUrl: "${grailsApplication.config.getProperty('spatial.wms.url')}",
+                sldPolgonDefaultUrl: "${grailsApplication.config.getProperty('sld.polgon.default.url')}",
+                sldPolgonHighlightUrl: "${grailsApplication.config.getProperty('sld.polgon.highlight.url')}",
                 saveSitesUrl: "${createLink(action: 'createSitesFromShapefile')}",
                 siteUploadProgressUrl: "${createLink(action: 'siteUploadProgress')}",
                 cancelSiteUploadUrl: "${createLink(action:'cancelSiteUpload')}"
@@ -20,15 +20,17 @@
             },
             returnTo = "${params.returnTo}";
     </script>
-    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="site-bs4.css"/>
 </head>
 <body>
 <div class="${containerType} validationEngineContainer" id="validation-container">
-    <ul class="breadcrumb">
-        <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
-        <li>Sites<span class="divider">/</span></li>
-        <li class="active">Upload Sites</li>
-    </ul>
+    <div aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><g:link controller="home">Home</g:link></li>
+            <li class="breadcrumb-item">Sites</li>
+            <li class="breadcrumb-item active">Upload Sites</li>
+        </ol>
+    </div>
 </div>
 
 <div class="${containerType}">
@@ -38,9 +40,9 @@
         <h2>Upload project sites from file</h2>
 
         <g:if test="${flash.errorMessage || flash.message}">
-            <div class="row-fluid">
-                <div class="span5">
-                    <div class="alert alert-error">
+            <div class="row ml-1">
+                <div class="col-sm-5">
+                    <div class="alert alert-danger">
                         <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
                         ${flash.errorMessage?:flash.message}
                     </div>
@@ -53,7 +55,7 @@
             <input type="hidden" name="projectId" value="${projectId}">
             <label for="shapefile">Attach shape file (zip format)</label>
             <input id="shapefile" type="file" accept="application/zip, .kml, .kmz" name="shapefile"/>
-            <button id="uploadShapeFile" type="button" class="btn btn-success" >Upload Shapefile</button>
+            <button id="uploadShapeFile" type="button" class="btn btn-sm btn-success" >Upload Shapefile</button>
         </g:uploadForm>
     </g:if>
     <g:else>
@@ -61,41 +63,43 @@
 
     <h3>Create project sites from the shape file</h3>
 
-    <div class="row-fluid">
-        <div class="well">
+    <div class="row">
+        <div class="well p-3">
             You can select attributes from the uploaded shape file to be used for the name, description and ID for the sites to upload.
             De-select any sites you do not want to upload.
         </div>
     </div>
     <form id="sites">
-        <div class="row-fluid">
+        <div class="row">
 
         </div>
-        <div class="row-fluid">
-
-            <fieldset>
-                <div class="span4">
-                    <label for="nameAttribute">Shapefile attribute to use as the site name:</label>
-                    <select id="nameAttribute" name="nameAttribute" data-bind="value:nameAttribute,options:attributeNames,optionsCaption:'Select an attribute'"></select>
+        <div class="row mb-3">
+            <div class="col-sm-4">
+                <label for="nameAttribute">Shapefile attribute to use as the site name:</label>
+                <div>
+                <select id="nameAttribute" name="nameAttribute" class="form-control form-control-sm input-medium" data-bind="value:nameAttribute,options:attributeNames,optionsCaption:'Select an attribute'"></select>
                 </div>
-                <div class="span4">
-                    <label for="nameAttribute">Shapefile attribute to use as the site description:</label>
-                    <select id="descriptionAttribute" name="descriptionAttribute" data-bind="value:descriptionAttribute,options:attributeNames,optionsCaption:'Select an attribute'"></select>
+            </div>
+            <div class="col-sm-4">
+                <label for="descriptionAttribute">Shapefile attribute to use as the site description:</label>
+                <div>
+                    <select id="descriptionAttribute" class="form-control form-control-sm input-medium" name="descriptionAttribute" data-bind="value:descriptionAttribute,options:attributeNames,optionsCaption:'Select an attribute'"></select>
                 </div>
-                <div class="span4">
-                    <label for="nameAttribute">Shapefile attribute to use as the site ID:</label>
-                    <select id="externalIdAttribute" name="externalIdAttribute" data-bind="value:externalIdAttribute,options:attributeNames,optionsCaption:'Select an attribute'"></select>
+            </div>
+            <div class="col-sm-4">
+                <label for="externalIdAttribute">Shapefile attribute to use as the site ID:</label>
+                <div>
+                    <select id="externalIdAttribute" class="form-control form-control-sm input-medium" name="externalIdAttribute" data-bind="value:externalIdAttribute,options:attributeNames,optionsCaption:'Select an attribute'"></select>
                 </div>
-            </fieldset>
-
+            </div>
         </div>
-        <div class="row-fluid" style="margin-top:10px; margin-bottom: 20px;">
-           <span class="span3"> <button class="btn btn-success" data-bind="click:save,disable:selectedCount()<=0">Create sites</button> <button class="btn" data-bind="click:cancel">Cancel</button></span>
+        <div class="row" style="margin-top:10px; margin-bottom: 20px;">
+           <span class="col-sm-3"> <button class="btn btn-success" data-bind="click:save,disable:selectedCount()<=0">Create sites</button> <button class="btn" data-bind="click:cancel">Cancel</button></span>
         </div>
     </form>
 
-    <div class="row-fluid">
-    <form id="sites-container">
+    <div class="row p-3">
+    <form id="sites-container" class="overflow-x-scroll">
     <table>
       <thead>
       <tr>
@@ -137,8 +141,8 @@
     </g:else>
 </div>
 
-<div class="modal hide" id="uploadProgress">
-    <div class="modal-dialog">
+<div class="modal" id="uploadProgress" role="dialog" tabindex="-1">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-title"><strong>Uploading sites...</strong></div>
@@ -154,13 +158,14 @@
                     </ul>
                 </div>
                 <div data-bind="text:progressText"></div>
-                <div class="progress progress-popup">
-                    <div class="bar" data-bind="style:{width:progress}"></div>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped" role="progressbar" data-bind="visible: !finished(), style:{width:progress}"></div>
+                    <div class="progress-bar bg-success" role="progressbar" data-bind="visible: finished(), style:{width:progress}"></div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-warning" data-bind="click:cancelUpload, visible:!finished()">Cancel</button>
-                <button class="btn btn-info" data-bind="visible:finished, click:finish">OK</button>
+                <button class="btn btn-sm btn-warning" type="button" data-bind="click:cancelUpload, visible:!finished()">Cancel</button>
+                <button class="btn btn-sm btn-info" type="button" data-bind="visible:finished, click:finish">OK</button>
             </div>
         </div>
     </div>
@@ -207,7 +212,7 @@ $(function() {
     });
 </g:else>
 </asset:script>
-<asset:javascript src="common.js"/>
+<asset:javascript src="site-bs4.js"/>
 <asset:javascript src="site-upload.js"/>
 <asset:deferredScripts/>
 </body>

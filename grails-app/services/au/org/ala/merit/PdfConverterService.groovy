@@ -15,7 +15,7 @@ class PdfConverterService {
     @PostConstruct
     void init() {
         // PDF converter initialisation
-        System.setProperty('pdfbox.fontcache', grailsApplication.config.pdfbox.fontcache)
+        System.setProperty('pdfbox.fontcache', grailsApplication.config.getProperty('pdfbox.fontcache'))
         XRLog.setLoggingEnabled(true);
         XRLog.setLoggerImpl(new Log4JXRLogger());
     }
@@ -23,7 +23,7 @@ class PdfConverterService {
     def convertToPDF(String page, OutputStream out) {
         PdfRendererBuilder builder = new PdfRendererBuilder();
         org.w3c.dom.Document document = html5ParseDocument(page)
-        builder.withW3cDocument(document, grailsApplication.config.grails.serverURL).toStream(out).run()
+        builder.withW3cDocument(document, grailsApplication.config.getProperty('grails.serverURL')).toStream(out).run()
     }
 
     private org.w3c.dom.Document html5ParseDocument(String page) throws IOException {

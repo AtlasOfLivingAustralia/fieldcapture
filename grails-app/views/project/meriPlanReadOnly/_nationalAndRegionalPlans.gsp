@@ -1,4 +1,5 @@
 <h4>${headingTitle ?: "Relevant national and regional plans"}</h4>
+
 <p>${explanation ?:"Explain how the project aligns with all applicable national and regional priorities, plans and strategies."}</p>
 <table class="table plans-view">
     <thead>

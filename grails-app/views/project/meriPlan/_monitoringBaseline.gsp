@@ -11,15 +11,15 @@
     <tr>
         <td class="index"><span data-bind="text:$index()+1"></span></td>
         <td class="baseline">
-            <textarea rows="4" data-validation-engine="validate[required]"
+            <textarea rows="4" class="form-control form-control-sm" data-validation-engine="validate[required]"
                       data-bind="value: baseline, disable: $root.isProjectDetailsLocked()">
             </textarea>
         </td>
-        <td class="baseline-method"><textarea data-validation-engine="validate[required]"
+        <td class="baseline-method"><textarea class="form-control form-control-sm" data-validation-engine="validate[required]"
                                               data-bind="value: method, disable: $root.isProjectDetailsLocked()"
                                               rows="4"></textarea></td>
         <td class="remove">
-            <span data-bind="if: $index() && !$root.isProjectDetailsLocked()"><i class="icon-remove"
+            <span data-bind="if: $index() && !$root.isProjectDetailsLocked()"><i class="fa fa-remove"
                                                                                  data-bind="click: $parent.removeRow"></i>
             </span>
         </td>
@@ -28,7 +28,7 @@
     <tfoot>
     <tr>
         <td colspan="4">
-            <button type="button" class="btn btn-small"
+            <button type="button" class="btn btn-sm"
                     data-bind="disable: $root.isProjectDetailsLocked(), click: addRow">
                 <i class="fa fa-plus"></i> Add a row</button></td>
     </tr>

@@ -1,25 +1,25 @@
 package au.org.ala.merit
 
+import org.springframework.beans.factory.annotation.Value
+
 class OutputService {
 
-    def webService, grailsApplication
+    WebService webService
 
-    def list() {
-        def resp = webService.getJson(grailsApplication.config.ecodata.baseUrl + 'output/')
-        resp.list
-    }
+    @Value('${ecodata.baseUrl}+output/')
+    private String outputPath
 
-    def get(id) {
-        def record = webService.getJson(grailsApplication.config.ecodata.baseUrl + 'output/' + id)
+    def get(String id) {
+        def record = webService.getJson(outputPath + id)
         record
     }
 
-    def update(id, body) {
-        webService.doPost(grailsApplication.config.ecodata.baseUrl + 'output/' + id, body)
+    def update(String id, Map body) {
+        webService.doPost(outputPath + id, body)
     }
 
-    def delete(id) {
-        webService.doDelete(grailsApplication.config.ecodata.baseUrl + 'output/' + id)
+    def delete(String id) {
+        webService.doDelete(outputPath + id)
     }
 
 }

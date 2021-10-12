@@ -20,14 +20,14 @@
             var viewModelInstance = "${blockId}Instance";
 
             var output = <fc:modelAsJavascript model="${output}"/>;
-            var config = ${fc.modelAsJavascript(model:activityModel.outputConfig?.find{it.outputName == outputName}, default:'{}')};
+            var config = <fc:modelAsJavascript model="${activityModel.outputConfig?.find{it.outputName == outputName}}" default='{}'/>;
             config = _.defaults(config, fcConfig);
-            config.model = ${fc.modelAsJavascript(model:outputModel)};
+            config.model = <fc:modelAsJavascript model="${outputModel}" />;
             config.excelOutputTemplateUrl = fcConfig.excelOutputTemplateUrl;
             config.disablePrepop = ${disablePrepop != null ? Boolean.valueOf(disablePrepop) : true};
             config.readonly = true;
 
-            var activity = ${fc.modelAsJavascript(model:activity)};
+            var activity = <fc:modelAsJavascript model="${activity}" />;
             var reportId = '${report.reportId}'
 
             var context = {

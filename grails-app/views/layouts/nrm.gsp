@@ -85,7 +85,7 @@
             <div class="btn-group pull-right login-logout">
                 <auth:loginLogout
                         loginReturnToUrl="${createLink(controller:'home', action:'login', absolute:true)}"
-                        logoutReturnToUrl="${grailsApplication.config.grails.serverURL}"
+                        logoutReturnToUrl="${grailsApplication.config.getProperty('grails.serverURL')}"
                         logoutUrl="${createLink(controller:'logout', action:'logout')}"
                         cssClass="btn btn-small btn-inverse btn-login"/>
             </div>

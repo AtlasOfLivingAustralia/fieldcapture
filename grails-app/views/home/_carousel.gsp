@@ -17,7 +17,7 @@
 					<p class="sp-layer sp-white sp-padding" 
 						data-vertical="10" data-horizontal="2%" data-width="96%" 
 						data-show-transition="down" data-show-delay="400" data-hide-transition="up">
-						${p.description} <a target="_blank" href="${grailsApplication.config.grails.serverURL}/project/index/${p.projectId}">more...</a>
+						${p.description} <a target="_blank" href=""${grailsApplication.config.getProperty('grails.serverURL')}"/project/index/${p.projectId}">more...</a>
 					</p>
 					<p class="sp-layer sp-black sp-padding" 
 						data-position="centerLeft"  data-horizontal="2%" data-vertical="-50" 

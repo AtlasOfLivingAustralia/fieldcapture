@@ -7,9 +7,10 @@ import au.org.ala.merit.command.SaveReportDataCommand
 import au.org.ala.merit.reports.ReportConfig
 import au.org.ala.merit.reports.ReportGenerationOptions
 import grails.converters.JSON
+import grails.core.GrailsApplication
 import org.apache.http.HttpStatus
-import org.codehaus.groovy.grails.web.json.JSONArray
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.grails.web.json.JSONArray
+import org.grails.web.json.JSONObject
 import org.joda.time.DateTime
 
 import static ReportService.ReportMode
@@ -25,8 +26,9 @@ class ProjectController {
     static String RLP_MERI_PLAN_TEMPLATE = "rlpMeriPlan"
     static String MERI_PLAN_TEMPLATE = "meriPlan"
 
-    def projectService, metadataService, commonService, activityService, userService, webService, roleService, grailsApplication
+    def projectService, metadataService, commonService, activityService, userService, webService, roleService
     def siteService, documentService, reportService, blogService, pdfGenerationService
+    GrailsApplication grailsApplication
 
     private def espOverview(Map project, Map user) {
 
@@ -200,7 +202,8 @@ class ProjectController {
             model.site.visible = model.site.visible && userHasViewAccess
             model.details.visible = model.details.visible && userHasViewAccess
 
-            Map reportingTab = [label: 'Reporting', visible:userHasViewAccess, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true, services: config.services, scores:scores, hideDueDate:true, isAdmin:user?.isAdmin, isGrantManager:user?.isCaseManager]
+            boolean reportsVisible = config.includesContent(ProgramConfig.ProjectContent.REPORTING) && userHasViewAccess
+            Map reportingTab = [label: 'Reporting', visible:reportsVisible, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true, services: config.services, scores:scores, hideDueDate:true, isAdmin:user?.isAdmin, isGrantManager:user?.isCaseManager]
             if (reportingTab.visible) {
                 reportingTab.reportOrder = config?.projectReports?.collect{[category:it.category, description:it.description]} ?: []
                 project.reports?.each { Map report ->
@@ -468,15 +471,16 @@ class ProjectController {
             } else {
                 path += ".json"
             }
-            def url = grailsApplication.config.ecodata.baseUrl + path
+            def url = grailsApplication.config.getProperty('ecodata.baseUrl') + path
             webService.proxyGetRequest(response, url, true, true, 120000)
+            null
         }
     }
 
     @PreAuthorise(accessLevel = 'admin', redirectController = 'home', redirectAction = 'index')
     def downloadShapefile(String id) {
 
-        def url = grailsApplication.config.ecodata.baseUrl + "project/${id}.shp"
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "project/${id}.shp"
         def resp = webService.proxyGetRequest(response, url, true, true, 960000)
         if (resp.status != 200) {
             render view: '/error', model: [error: resp.error]
@@ -771,7 +775,7 @@ class ProjectController {
         redirect action: 'index', id:id
     }
 
-    @PreAuthorise(accessLevel = 'editor')
+    @PreAuthorise(accessLevel = 'readOnly')
     def viewReport(String id, String reportId) {
         if (!id || !reportId) {
             error('An invalid report was selected for data entry', id)

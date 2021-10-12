@@ -816,7 +816,9 @@ a.icon-link {
 	border: none;
 	padding-top: 0;
 	padding-bottom: 0;
-	padding-left: 20px;
+}
+.navbar {
+	padding: 0 !important;
 }
 
 .page-header-bs4 #keywords {
@@ -895,3 +897,32 @@ span.status {
  .customImage {
 	 border-radius: 0.25rem !important;
  }
+.noContent {
+	margin-bottom: 40px;
+}
+.noPhotos {
+	height: 50px;
+	width: 50px;
+}
+
+.progress {
+	background-color: #f7f7f7;
+	height: 20px;
+	margin-bottom: 20px;
+	border: 1px solid #bfbfbf;
+	margin-top: 5px;
+}
+.progress .bar {
+	background-image: none;
+	background-color: #02baf2;
+}
+
+.progress-info .bar,.progress .bar-info {
+	background-image: none;
+	background-color: #02baf2;
+}
+
+.dashboard-section > .progress > span,
+.outputTargets > .col-sm-4 > .well > .progress > span.progress-label, .progress > .progress-label {
+	margin-top: 0.6rem;
+}

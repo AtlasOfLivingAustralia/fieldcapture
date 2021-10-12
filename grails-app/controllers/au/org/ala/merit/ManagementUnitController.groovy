@@ -2,8 +2,11 @@ package au.org.ala.merit
 
 import au.org.ala.merit.command.SaveReportDataCommand
 import grails.converters.JSON
+import grails.core.GrailsApplication
+import grails.plugin.cache.Cacheable
+import grails.web.mapping.LinkGenerator
 import org.apache.http.HttpStatus
-import org.springframework.cache.annotation.Cacheable
+
 import java.text.ParseException
 import static ReportService.ReportMode
 
@@ -19,11 +22,10 @@ class ManagementUnitController {
     ReportService reportService
     ActivityService activityService
     PdfGenerationService pdfGenerationService
-    BlogService blogService
     ProjectService projectService
 
-    def grailsApplication
-    def grailsLinkGenerator
+    GrailsApplication grailsApplication
+    LinkGenerator grailsLinkGenerator
 
     def index(String id) {
         def mu = managementUnitService.get(id)
@@ -56,9 +58,8 @@ class ManagementUnitController {
     protected Map content(Map mu, Map userRole) {
 
         def hasAdminAccess = userService.userIsSiteAdmin() || userRole?.role == RoleService.PROJECT_ADMIN_ROLE
-        boolean hasEditAccessOfBlog = userService.canEditManagementUnitBlog(userService.getUser()?.userId, mu.managementUnitId)
 
-        boolean canViewNonPublicTabs = userService.canUserEditManagementUnit(userService.getUser()?.userId, mu.managementUnitId)
+        boolean canViewNonPublicTabs = userService.canUserEditManagementUnit(userService.getUser()?.userId, mu.managementUnitId) || userService.userHasReadOnlyAccess()
 
         Map result = managementUnitService.getProjects(mu.managementUnitId)
         List projects = result?.projects ?: []
@@ -112,7 +113,7 @@ class ManagementUnitController {
                     ],
          projects: [label: 'MU Reporting', visible: canViewNonPublicTabs, stopBinding: false, type:'tab', mu:mu, reports: mu.reports, reportOrder:reportOrder, hideDueDate:true, displayedPrograms:displayedPrograms],
          sites   : [label: 'MU Sites', visible: canViewNonPublicTabs, stopBinding: true, type:'tab'],
-         admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab', mu:mu, blog: [editable: hasEditAccessOfBlog]]
+         admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab', mu:mu]
         ]
 
     }
@@ -275,7 +276,7 @@ class ManagementUnitController {
 
             def params = [fq: 'programId:' + id, query: "docType:project"]
 
-            def url = grailsApplication.config.ecodata.service.url + '/search/downloadShapefile' + commonService.buildUrlParamsFromMap(params)
+            def url = grailsApplication.config.getProperty('ecodata.service.url') + '/search/downloadShapefile' + commonService.buildUrlParamsFromMap(params)
             def resp = webService.proxyGetRequest(response, url, true, true, 960000)
             if (resp.status != 200) {
                 render view: '/error', model: [error: resp.error]
@@ -527,8 +528,8 @@ class ManagementUnitController {
             def extras =[:]
 
             String email = user.userName
-            extras.put("systemEmail", grailsApplication.config.fieldcapture.system.email.address)
-            extras.put("senderEmail", grailsApplication.config.fieldcapture.system.email.address)
+            extras.put("systemEmail", grailsApplication.config.getProperty('fieldcapture.system.email.address'))
+            extras.put("senderEmail", grailsApplication.config.getProperty('fieldcapture.system.email.address'))
             extras.put("email", email)
 
             String reportDownloadBaseUrl= grailsLinkGenerator.link(controller:'download',action:'get', absolute: true)

@@ -1,4 +1,4 @@
-<%@ page import="au.org.ala.merit.SettingPageType" contentType="text/html;charset=UTF-8" %>
+<%@ page import="au.org.ala.merit.SettingPageType" contentType="text/html;charset=UTF-8" expressionCodec="none"%>
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -7,12 +7,12 @@
   <title>${settingType.title?:'About'} | Field Capture</title>
   <script>
     window.fcConfig = {
-        baseUrl: "${grailsApplication.config.grails.serverURL}",
-        spatialBaseUrl: "${grailsApplication.config.spatial.baseUrl}",
-        spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
-        spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
-        sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
-        sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}"
+        baseUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
+        spatialBaseUrl: "${grailsApplication.config.getProperty('spatial.baseUrl')}",
+        spatialWmsCacheUrl: "${grailsApplication.config.getProperty('spatial.wms.cache.url')}",
+        spatialWmsUrl: "${grailsApplication.config.getProperty('spatial.wms.url')}",
+        sldPolgonDefaultUrl: "${grailsApplication.config.getProperty('sld.polgon.default.url')}",
+        sldPolgonHighlightUrl: "${grailsApplication.config.getProperty('sld.polgon.highlight.url')}"
     }
   </script>
   <asset:stylesheet src="base-bs4.css"/>
@@ -22,7 +22,7 @@
         <div class="row">
             <div class="col-md-8" id="">
                 <h1>${settingType.title?:'About the website'}
-                    <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.alaAdminRole) || fc.userInRole(role: grailsApplication.config.security.cas.adminRole)}">
+                    <g:if test="${fc.userInRole(role: grailsApplication.config.getProperty('security.cas.alaAdminRole')) || fc.userInRole(role: grailsApplication.config.getProperty('security.cas.adminRole'))}">
                         <span style="display: inline-block; margin: 0 10px;">
                             <a href="${g.createLink(controller:"admin",action:"editSettingText", id: settingType.name, params: [layout:layoutName,returnUrl: g.createLink(controller: params.controller, action: params.action, id: params.id, absolute: true)])}"
                                class="btn"><i class="fa fa-edit"></i> Edit</a>
@@ -40,7 +40,7 @@
             <g:if test="${showNews}">
             <g:set var="newsText"><fc:getSettingContent settingType="${SettingPageType.NEWS}"/></g:set>
             <div class="col-md-5">
-                <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.alaAdminRole) || fc.userInRole(role: grailsApplication.config.security.cas.adminRole)}">
+                <g:if test="${fc.userInRole(role: grailsApplication.config.getProperty('security.cas.alaAdminRole')) || fc.userInRole(role: grailsApplication.config.getProperty('security.cas.adminRole'))}">
                     <a href="${g.createLink(controller:"admin",action:"editSettingText", id: SettingPageType.NEWS.name, params: [layout:layoutName,returnUrl: g.createLink(controller: params.controller, action: params.action, absolute: true)])}"
                        class="btn pull-right"><i class="fa fa-edit"></i> Edit</a>
                 </g:if>

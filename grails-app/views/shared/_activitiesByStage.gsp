@@ -3,8 +3,8 @@
 <i class="icon-lock" data-bind="visible:planStatus()==='submitted'"
    title="Plan cannot be modified once it has been submitted for approval"></i>
 <g:if test="${user?.isEditor}">
-    <button type="button" class="btn btn-link btn-info" data-bind="visible:isPlanEditable,click:newActivity" style="vertical-align: baseline"><i class="fa fa-plus"></i> Add new activity</button>
-    <g:if test="${grailsApplication.config.simulateCaseManager}">
+    <button type="button" class="btn btn-sm btn-link btn-info" data-bind="visible:isPlanEditable,click:newActivity" style="vertical-align: baseline"><i class="fa fa-plus"></i> Add new activity</button>
+    <g:if test="${grailsApplication.config.getProperty('simulateCaseManager')}">
         <span class="pull-right">
             <label class="checkbox inline" style="font-size:0.8em;">
                 <input data-bind="checked:userIsCaseManager" type="checkbox"> Impersonate grant manager
@@ -13,9 +13,9 @@
     </g:if>
 </g:if>
 
-<ul class="nav nav-tabs nav-tab-small space-before">
-    <li class="active"><a href="#tablePlan" data-toggle="tab">Tabular</a></li>
-    <li><a href="#ganttPlan" data-toggle="tab">Gantt chart</a></li>
+<ul class="nav nav-tabs space-before">
+    <li class=" nav-item active"><a href="#tablePlan" data-toggle="tab" class="nav-link active show">Tabular</a></li>
+    <li class=" nav-item"><a href="#ganttPlan" data-toggle="tab" class="nav-link">Gantt chart</a></li>
 </ul>
 
 <div class="tab-content" style="padding:0;border:none;overflow:visible">
@@ -41,13 +41,13 @@
             <thead>
 
             <tr>
-                <th style="min-width:68px; width:5%;">Actions</th>
-                <th style="min-width:90px; width:5%;">From</th>
-                <th style="min-width:90px; width:5%">To</th>
-                <th style="width:40%;" class="description-column">Description<i class="fa fa-expand pull-right" data-bind="click:$parent.toggleDescriptions, css:{'fa-expand':!$parent.descriptionExpanded(), 'fa-compress':$parent.descriptionExpanded()}"></i></th>
-                <th style="width:25%;">Activity</th>
-<g:if test="${showSites}"><th style="width:15%">Site</th></g:if>
-<th style="width:5%; min-width:90px;">Status</th>
+                <th class="actions">Actions</th>
+                <th class="fromDate">From</th>
+                <th class="toDate">To</th>
+                <th class="description-column">Description<i class="fa fa-expand pull-right" data-bind="click:$parent.toggleDescriptions, css:{'fa-expand':!$parent.descriptionExpanded(), 'fa-compress':$parent.descriptionExpanded()}"></i></th>
+                <th class="activity">Activity</th>
+                <g:if test="${showSites}"><th class="sites">Site</th></g:if>
+                <th  class="status" >Status</th>
 </tr>
 </thead>
 
@@ -60,11 +60,11 @@
         <a class="icon-link" data-bind="attr:{href:editActivityUrl()}"><i class="fa fa-edit" title="Edit Activity"></i></a>
         <!-- /ko -->
         <!-- ko if:!$parent.canEditActivity() && !$parent.canEditOutputData() -->
-        <button class="btn btn-container" disabled="disabled"><i class="fa fa-edit" title="This activity is not editable"></i></button>
+        <button class="btn btn-sm btn-container" disabled="disabled"><i class="fa fa-edit" title="This activity is not editable"></i></button>
         <!-- /ko -->
         <a class="icon-link" data-bind="attr:{href:viewActivityUrl()}"><i class="fa fa-eye" title="View Activity"></i></a>
         <a class="icon-link" data-bind="attr:{href:printActivityUrl()}" target="activity-print"><i class="fa fa-print" title="Open a blank printable version activity"></i></a>
-        <button type="button" class="btn btn-container" data-bind="click:$root.deleteActivity, enable:$parent.canDeleteActivity"><i class="fa fa-remove" title="Delete activity"></i></button>
+        <button type="button" class="btn btn-sm btn-container" data-bind="click:$root.deleteActivity, enable:$parent.canDeleteActivity"><i class="fa fa-remove" title="Delete activity"></i></button>
     </td>
     <td><span data-bind="text:plannedStartDate.formattedDate"></span></td>
     <td><span data-bind="text:plannedEndDate.formattedDate"></span></td>
@@ -81,38 +81,41 @@
         <span data-bind="template:$parent.canUpdateStatus() ? 'updateStatusTmpl' : 'viewStatusTmpl'"></span>
 
         <!-- Modal for getting reasons for status change -->
-        <div id="activityStatusReason" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
-             data-bind="showModal:displayReasonModal(),with:deferReason">
-            <form class="reasonModalForm">
+        <div id="activityStatusReason" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-bind="showModal:displayReasonModal(),with:deferReason">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content reasonModalForm">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                            data-bind="click:$parent.displayReasonModal.cancelReasonModal">×</button>
-                    <h3 id="myModalLabel">Reason for deferring or cancelling an activity</h3>
+                    <h4 class="modal-title"id="myModalLabel">Reason for deferring or cancelling an activity</h4>
+                    <button type="button" class="close" aria-hidden="true"
+                            data-bind="click:$parent.displayReasonModal.cancelReasonModal">&times;</button>
                 </div>
                 <div class="modal-body">
                     <p data-bind="visible:$parent.displayReasonModal.showWarning"><b style="color:red;">WARNING: The data recorded for this activity will be deleted</b></p>
                     <p>If you wish to defer or cancel a planned activity you must provide an explanation. Your case
                     manager will use this information when assessing your report.</p>
                     <p>You can simply refer to a document that has been uploaded to the project if you like.</p>
-                    <textarea data-bind="value:notes,hasFocus:true" name="reason" rows=4 cols="80" class="validate[required]" style="width:95%;"></textarea>
+                    <textarea data-bind="value:notes,hasFocus:true" name="reason" rows=4 cols="80" class="form-control form-control-sm validate[required]"></textarea>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn" data-bind="click: $parent.displayReasonModal.cancelReasonModal" data-dismiss="modal" aria-hidden="true">Discard status change</button>
-                    <button class="btn btn-primary" data-bind="click:$parent.displayReasonModal.saveReasonDocument">Save reason</button>
-                </div></form>
+                    <button type="button" class="btn btn-sm btn-danger" data-bind="click: $parent.displayReasonModal.cancelReasonModal" data-dismiss="modal" aria-hidden="true">Discard status change</button>
+                    <button class="btn btn-sm btn-primary" type="button" data-bind="click:$parent.displayReasonModal.saveReasonDocument">Save reason</button>
+                </div>
+            </div>
+        </div>
         </div>
 
-        <div id="viewActivityStatusReason" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
-             data-bind="showModal:displayReasonModalReadOnly(),with:deferReason">
-            <div class="reasonModalForm">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                            data-bind="click:function() {$parent.displayReasonModalReadOnly(false);}">×</button>
-                    <h3>Reason for deferring or cancelling an activity</h3>
-                </div>
-                <div class="modal-body">
-
-                    <textarea readonly="readonly" data-bind="value:notes,hasFocus:true" name="reason" rows=4 cols="80" class="validate[required]" style="width:95%;"></textarea>
+        <div id="viewActivityStatusReason" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-bind="showModal:displayReasonModalReadOnly(),with:deferReason">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content reasonModalForm">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Reason for deferring or cancelling an activity</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                                data-bind="click:function() {$parent.displayReasonModalReadOnly(false);}">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <textarea readonly="readonly" data-bind="value:notes,hasFocus:true" name="reason"
+                                  rows=4 cols="80" class="form-control form-control-sm validate[required]"></textarea>
+                    </div>
                 </div>
             </div>
         </div>
@@ -164,14 +167,14 @@
 
                             <div class="controls">
                                 <span class="btn fileinput-button" data-bind="visible:!filename()">
-                                    <i class="icon-plus"></i>
+                                    <i class="fa fa-plus"></i>
                                     <input id="documentFile" type="file" name="files"/>
                                     Attach file
                                 </span>
                                 <span data-bind="visible:filename()">
                                     <input type="text" readonly="readonly" data-bind="value:fileLabel"/>
                                     <button class="btn" data-bind="click:removeFile">
-                                        <span class="icon-remove"></span>
+                                        <span class="fa fa-remove"></span>
                                     </button>
                                 </span>
                             </div>
@@ -200,16 +203,6 @@
                             </div>
                         </div>
 
-                        <g:if test="${grailsApplication.config.debugUI}">
-                            <div class="expandable-debug">
-                                <h3>Debug</h3>
-                                <div>
-                                    <h4>Document model</h4>
-                                    <pre class="row-fluid" data-bind="text:toJSONString()"></pre>
-                                </div>
-                            </div>
-                        </g:if>
-
                     </form>
                 </div>
                 <div class="modal-footer control-group">
@@ -229,11 +222,11 @@
 
 
     <script id="updateStatusTmpl" type="text/html">
-    <div class="btn-group">
-        <button type="button" class="btn btn-small dropdown-toggle activity-progress" data-toggle="dropdown"
+    <div class="dropdown activity">
+        <button type="button" class="btn btn-sm activity-progress" data-toggle="dropdown"
                 data-bind="activityProgress:progress"
                 style="line-height:16px;min-width:86px;text-align:left;">
-            <span data-bind="text: progress"></span> <span class="caret pull-right"></span>
+            <span data-bind="text: progress"></span> <span class="pull-right"> <i class="fa fa-caret-down"></i></span>
         </button>
         <ul class="dropdown-menu" data-bind="foreach:$root.progressOptions" style="min-width:100px;">
             <!-- Disable item if selected -->
@@ -253,9 +246,9 @@
     </script>
 
     <script id="viewStatusTmpl" type="text/html">
-    <button type="button" class="btn btn-small"
+    <button type="button" class="btn btn-small btn-sm"
             data-bind="activityProgress:progress"
-            style="line-height:16px;min-width:75px;text-align:left;cursor:default;color:white">
+            style="line-height:16px;min-width:75px;text-align:left;cursor:default;color:white; font-size: 0.8rem;">
         <span data-bind="text: progress"></span>
     </button>
     <!-- ko with: deferReason -->

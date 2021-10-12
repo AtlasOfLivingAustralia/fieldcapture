@@ -154,13 +154,10 @@ ol.unstyled {
 .card-body .row #facetFilter .col-sm-4 {
     flex: 0 0 33.333333%;
     max-width: 100%;
-    margin-left: 1rem !important;
-
 }
 .card-body .row #facetClear .col-sm-4 {
     flex: 0 0 33.333333%;
     max-width: 100%;
-    margin-left: 0rem !important;
 }
 
 div#facetsCol {
@@ -187,14 +184,6 @@ select {
     border-radius: 4px;
     vertical-align: middle;
     margin-bottom: 10px;
-}
-
-.inputDates {
-    display: inline-block;
-    margin-bottom: 10px;
-    vertical-align: middle;
-    font-size: 0;
-    white-space: nowrap;
 }
 @media (max-width: 576px) {
     .card-body .row #facetClear .col-sm-4 {
@@ -282,10 +271,10 @@ table tbody .td1 .accordion .card-header.collapsed:after {
     border-bottom-right-radius: 0.25rem !important;
 }
 
-#accordionMapView .col-sm-4, #projectsView .col-sm-4, #reportView .col-sm-4, #downloadView .col-sm-4 {
-    padding-left: 0px;
-    margin-left: -4px;
+#projectExplorer .card-body {
+    padding: 0px;
 }
+
 .pt-3 {
     padding-top: 3px !important;
 }
@@ -314,9 +303,6 @@ button.btn.facets-toggle {
     margin-left: 10px !important;
 }
 
-.dataTables_filter {
-    float: right !important;
-}
 #projectName {
     width: 41rem;
 }

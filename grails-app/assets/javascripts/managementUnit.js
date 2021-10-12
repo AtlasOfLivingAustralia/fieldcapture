@@ -1,5 +1,5 @@
 //= require tab-init.js
-//= require slider-pro-master/js/jquery.sliderPro.min.js
+//= require slider-pro/js/jquery.sliderPro.js
 //= require mapWithFeatures.js
 //= require sites
 //= require attach-document-no-ui
@@ -399,7 +399,8 @@ var ManagementUnitPageViewModel = function(props, options) {
                     showFitBoundsToggle:false,
                     useMyLocation:false,
                     mapContainerId:'managementUnitSiteMap',
-                    width: '100%'
+                    width: '100%',
+                    fullscreenControl:false
 
                 });
                 if (self.managementUnitSiteId){

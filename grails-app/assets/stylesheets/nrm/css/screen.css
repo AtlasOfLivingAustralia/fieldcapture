@@ -2100,7 +2100,7 @@ span.btn-orange-input input{ background: url(../images/btn_sprites.png) no-repea
 span.btn-orange-input-arrow { background: url(../images/btn_sprites.png) no-repeat 100% -30px; display: inline-block; color: #000; text-decoration: none; padding-right: 19px; cursor: pointer; }
 span.btn-orange-input-arrow input{ background: url(../images/btn_sprites.png) no-repeat 0 0; display: inline-block; font-size: 1.1em; padding: 5px 7px 7px 10px; text-shadow: 1px 1px 1px #F7F4EB; border: none; font-weight: bold; }
 
-.clearfix { clear: left; }
+.clearfix { clear: both; }
 
 /* Social Media links */
 .sm-icons { width: 957px; height: 44px; }
@@ -2351,11 +2351,6 @@ span.new {
     background-position: 100% 65%;
 }
 
-/* Output styling
---------------------------------------------------------*/
-.output-section { background-color: #f5f5f5; padding-top:10px; border: 1px solid #e3e3e3; border-radius: 3px;}
-.output-section > [class^=span] {padding:7px;}
-.output-section > [class^=row] {padding:7px;}
 /*.output-section > table {border:10px #ebe6dc solid; background-color: #faf8f1;}*/
 /* Override the 220px wide select elements nested in tables */
 table select {
@@ -2449,10 +2444,9 @@ div#announcement p {
     margin: 0;
 }
 
-.merit {
+.container-fluid form.search.merit {
     display: block;
     float: left;
-    margin-top: 12px;
 }
 
 span.merit {
@@ -2486,10 +2480,6 @@ span.merit {
 .page-header-menu .container #dcNav .navbar {
     padding-left: 0px;
     padding-right: 0px;
-}
-.row .col-sm-12, .col-sm-11 {
-    padding-left: 0;
-    padding-right: 0;
 }
 
 

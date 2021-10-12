@@ -1,12 +1,12 @@
-<%@ page import="au.org.ala.merit.ActivityService; grails.converters.JSON; org.codehaus.groovy.grails.web.json.JSONArray" contentType="text/html;charset=UTF-8" %>
+<%@ page import="au.org.ala.merit.ActivityService; grails.converters.JSON; org.grails.web.json.JSONArray" contentType="text/html;charset=UTF-8" %>
 
 <div id="activity-${activity.activityId}" class="validationEngineContainer">
 
     <g:render template="activityFormContents"/>
     <g:if test="${params.includeFormActions}">
         <div class="form-actions">
-            <button type="button" id="save" class="btn btn-primary">Save changes</button>
-            <button type="button" id="cancel" class="btn">Cancel</button>
+            <button type="button" id="save" class="btn btn-sm btn-primary">Save changes</button>
+            <button type="button" id="cancel" class="btn btn-sm">Cancel</button>
         </div>
     </g:if>
 </div>
@@ -65,8 +65,8 @@
 
 
         var output = <fc:modelAsJavascript model="${output}"/>;
-        var config = ${fc.modelAsJavascript(model:metaModel.outputConfig?.find{it.outputName == outputName}, default:'{}')};
-        config.model = ${fc.modelAsJavascript(model:model)};
+        var config = <fc:modelAsJavascript model="${metaModel.outputConfig?.find{it.outputName == outputName}}" default="{}"/>;
+        config.model = <fc:modelAsJavascript model="${model}"/>;
         config = _.extend({}, outputModelConfig, config);
 
         var context = {

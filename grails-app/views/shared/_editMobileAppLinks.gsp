@@ -6,7 +6,7 @@
             <td><img data-bind="attr:{alt:name,title:name,src:logo('${imageUrl}')}"/></td>
             <td><input type="url" data-bind="value:link.url"
                        data-validation-engine="validate[required,custom[url]]"/></td>
-            <td><a href="#" data-bind="click:remove"><i class="icon-remove"></i></a></td>
+            <td><a href="#" data-bind="click:remove"><i class="fa fa-remove"></i></a></td>
         </tr>
         </tbody>
         <tfoot data-bind="visible:transients.mobileAppsUnspecified().length > 0">

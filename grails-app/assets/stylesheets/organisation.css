@@ -1,5 +1,5 @@
 /*
-*= require slider-pro-master/css/slider-pro.min.css
+*= require slider-pro/css/slider-pro.css
 *= require_self
 */
 
@@ -26,33 +26,6 @@
 }
 #orgTabs li>a.active {
     border-bottom-color: transparent;
-}
-div.dataTables_wrapper div.dataTables_length select {
-    width: 206px;
-    display: inline-block;
-}
-
-div.dataTables_wrapper div.dataTables_length label {
-    font-weight: normal;
-    text-align: left;
-    white-space: nowrap;
-    margin-left: -13px;
-}
-div.dataTables_wrapper div.dataTables_filter {
-    text-align: left;
-}
-
-div.dataTables_wrapper div.dataTables_filter label {
-    font-weight: normal;
-    white-space: nowrap;
-    text-align: left;
-    margin-left: -13px;
-}
-
-div.dataTables_wrapper div.dataTables_filter input {
-    margin-left: 0.5em;
-    display: inline-block;
-    width: 190px;
 }
 
 #userAccessForm .form-control-sm {

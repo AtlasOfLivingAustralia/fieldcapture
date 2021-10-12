@@ -35,9 +35,9 @@ table tr.header th {
     width: 100%;
 }
 .meri-plan .index {
-    min-width: 1em;
-    max-width: 1em;
-    width: 1em;
+    min-width: 2em;
+    max-width: 2em;
+    width: 2em;
 }
 
 .meri-plan .footer-index {
@@ -57,9 +57,9 @@ table tr.header th {
 }
 
 .meri-plan .remove {
-    min-width: 1em;
-    max-width: 1em;
-    width: 0.1%;
+    min-width: 2em;
+    max-width: 2em;
+    width: 2em;
 
 }
 
@@ -143,7 +143,7 @@ table tr.header th {
     width: 30%;
 }
 .meri-plan .service-targets td.score {
-    width: 50%;
+    width: 40%;
 }
 
 .meri-plan .service-targets td.target {
@@ -259,9 +259,9 @@ table tr.header th {
 }
 
 .meri-plan .assets .remove {
-    min-width: 1em;
-    max-width: 1em;
-    width: 1em;
+    min-width: 2em;
+    max-width: 2em;
+    width: 2em;
 }
 
 #project-risks-threats table {
@@ -278,11 +278,6 @@ span.helphover {
     width: 100%;
 }
 
-#meri-plan-approval-modal input {
-    box-sizing: border-box;
-    width: 100%;
-    height: 30px;
-}
 
 .meri-approval-history {
     width:75%;
@@ -357,3 +352,32 @@ a.meri-history-toggle {
     background-color: #dc3545;
 }
 
+input, textarea, select{
+    border: 1px solid #e3e3e3;
+    border-radius: .25rem;
+    padding: 0.25rem;
+}
+
+.unstyled {
+    list-style-type: none;
+}
+.customAdOn {
+    height: 30px;
+}
+
+.meri-budget td.remove {
+    width: 0.1% !important;
+}
+
+.service-targets .input-group .input-group-append .input-group-text {
+    height: 30px;
+}
+
+input.internalOrderNumber {
+    width: 12rem;
+}
+input#changeProjectStartDate {
+    width: 9.5rem;
+    max-width: 9.5rem;
+    min-width: 9.5rem;
+}

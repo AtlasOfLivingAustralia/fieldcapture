@@ -4,19 +4,17 @@ import au.com.bytecode.opencsv.CSVReader
 import au.org.ala.merit.command.Reef2050PlanActionReportSummaryCommand
 import au.org.ala.merit.reports.ReportGenerationOptions
 import grails.converters.JSON
-import grails.plugin.cache.GrailsCacheManager
 import grails.util.Environment
 import grails.util.GrailsNameUtils
-import org.apache.poi.ss.usermodel.Row
-import org.apache.poi.ss.usermodel.Sheet
-import org.apache.poi.ss.usermodel.Workbook
-import org.apache.poi.ss.usermodel.WorkbookFactory
-import org.grails.plugins.csv.CSVMapReader
+import grails.web.http.HttpHeaders
+import groovy.util.logging.Slf4j
+import org.grails.plugin.cache.GrailsCacheManager
 import org.joda.time.Period
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.springframework.web.multipart.MultipartHttpServletRequest
 
 @PreAuthorise(accessLevel = 'officer', redirectController = "home")
+@Slf4j
 class AdminController {
     static allowedMethods = [ searchUserDetails: "GET", removeUserDetails:"POST"]
 
@@ -32,13 +30,10 @@ class AdminController {
     def auditService
     def searchService
     def settingService
-    def siteService
-    def outputService
     def documentService
     def organisationService
     def reportService
     RisksService risksService
-    UserService userService
 
     def index() {}
 
@@ -196,16 +191,20 @@ class AdminController {
         redirect(uri: returnUrl)
     }
 
-    def reloadConfig = {
+    @PreAuthorise(accessLevel = 'siteAdmin', redirectController = "admin")
+    def reloadConfig() {
         // reload system config
-        def resolver = new PathMatchingResourcePatternResolver()
-        def resource = resolver.getResource(grailsApplication.config.reloadable.cfgs[0])
-        if (!resource) {
+        List reloadableConfigs = grailsApplication.config.getProperty('grails.config.locations', List, [])
+        String fileConfig = reloadableConfigs.find{it.endsWith('properties')}
+
+        if (!fileConfig) {
             def warning = "No external config to reload. grailsApplication.config.grails.config.locations is empty."
             println warning
             flash.message = warning
             render warning
         } else {
+            def resolver = new PathMatchingResourcePatternResolver()
+            def resource = resolver.getResource(fileConfig)
             def stream = null
 
             try {
@@ -223,7 +222,8 @@ class AdminController {
                 }
                 flash.message = "Configuration reloaded."
                 String res = "<ul>"
-                grailsApplication.config.each { key, value ->
+
+                grailsApplication.config.toProperties().each { key, value ->
                     if (value instanceof Map) {
                         res += "<p>" + key + "</p>"
                         res += "<ul>"
@@ -239,7 +239,7 @@ class AdminController {
                 render res + "</ul>"
             }
             catch (FileNotFoundException fnf) {
-                def error = "No external config to reload configuration. Looking for ${grailsApplication.config.grails.config.locations[0]}"
+                def error = "No external config to reload configuration. Looking for ${grailsApplication.config.getProperty('grails.config.locations', List, [])[0]}"
                 log.error error
                 flash.message = error
                 render error
@@ -379,7 +379,7 @@ class AdminController {
         }
 
         if (file) {
-            def status = [finished: false, projects: []]
+            Map status = [finished: false, projects: []].asSynchronized()
             session.status = status
             def fileIn = new FileInputStream(file)
             try {
@@ -400,6 +400,15 @@ class AdminController {
 
     def importStatus() {
         render session.status as JSON
+    }
+
+    /** Produces and responds with a CSV file in the correct format to upload MERIT projects */
+    def meritImportCSVTemplate() {
+        response.setContentType('text/csv')
+        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, 'attachment; filename="merit-project-import.csv"')
+        new GmsMapper().buildMeritImportCSVTemplate(response.writer)
+        response.writer.flush()
+        null
     }
 
     def generateProjectReports() {

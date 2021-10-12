@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import grails.converters.JSON
+import groovy.util.logging.Slf4j
 import org.apache.commons.io.FilenameUtils
 import org.springframework.http.HttpHeaders
 import org.springframework.web.multipart.MultipartFile
@@ -8,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 
+@Slf4j
 class ImageController {
 
     WebService webService
@@ -41,7 +43,7 @@ class ImageController {
 
     def upload() {
         log.debug "-------------------------------upload action"
-        params.each { log.debug it }
+        params.each { log.debug it.toString() }
         def result = []
         if (request.respondsTo('getFile')) {
             MultipartFile file = request.getFile('files')
@@ -52,7 +54,7 @@ class ImageController {
                 filename = imageService.nextUniqueFileName(FilenameUtils.getBaseName(filename) + '.' + ext)
 
                 def thumbFilename = FilenameUtils.removeExtension(filename) + "-thumb." + ext
-                def colDir = new File(grailsApplication.config.upload.images.path as String)
+                def colDir = new File(grailsApplication.config.getProperty('upload.images.path'))
                 colDir.mkdirs()
                 File f = new File(imageService.fullPath(filename))
                 //println "saving ${filename} to ${f.absoluteFile}"
@@ -77,14 +79,14 @@ class ImageController {
                         verbatimLongitude: exifMd.longitude,
                         bearing          : exifMd.bearing,
                         bearingRef       : exifMd.bearingRef,
-                        url              : imageService.encodeImageURL(grailsApplication.config.upload.images.url, filename),
-                        thumbnail_url    : imageService.encodeImageURL(grailsApplication.config.upload.images.url, thumbCreated ? thumbFilename : filename),
-                        delete_url       : imageService.encodeImageURL(grailsApplication.config.grails.serverURL + "/image/delete?filename=", filename),
+                        url              : imageService.encodeImageURL(grailsApplication.config.getProperty('upload.images.url'), filename),
+                        thumbnail_url    : imageService.encodeImageURL(grailsApplication.config.getProperty('upload.images.url'), thumbCreated ? thumbFilename : filename),
+                        delete_url       : imageService.encodeImageURL(grailsApplication.config.getProperty('grails.serverURL') + "/image/delete?filename=", filename),
                         delete_type      : 'DELETE']
                 result = [files: [md]]
             }
         }
-        log.debug result
+        log.debug result.toString()
         render result as JSON
     }
 

@@ -1,8 +1,12 @@
 package au.org.ala.merit
 
 import au.org.ala.merit.hub.HubSettings
+import grails.core.GrailsApplication
 import groovy.json.JsonSlurper
+import groovy.util.logging.Slf4j
 import org.apache.commons.lang.StringUtils
+import org.apache.http.HttpStatus
+import org.springframework.beans.factory.annotation.Autowired
 
 import javax.annotation.PostConstruct
 import java.math.RoundingMode
@@ -10,9 +14,11 @@ import java.math.RoundingMode
 /**
  * Service for ElasticSearch running on ecodata
  */
+@Slf4j
 class SearchService {
     def webService, commonService, cacheService, metadataService, projectService, documentService
-    def grailsApplication
+    @Autowired
+    GrailsApplication grailsApplication
     def elasticBaseUrl
     def userService
 
@@ -20,7 +26,7 @@ class SearchService {
 
     @PostConstruct
     private void init() {
-        elasticBaseUrl = grailsApplication.config.ecodata.baseUrl + 'search/elastic'
+        elasticBaseUrl = grailsApplication.config.getProperty('ecodata.baseUrl') + 'search/elastic'
     }
 
     def addDefaultFacetQuery(params) {
@@ -67,7 +73,7 @@ class SearchService {
 
         params.facets = "statesFacet,lgasFacet,nrmsFacet,organisationFacet,mvgsFacet"
         //def url = elasticBaseUrl + commonService.buildUrlParamsFromMap(params)
-        def url = grailsApplication.config.ecodata.baseUrl + 'search/elasticHome' + commonService.buildUrlParamsFromMap(params)
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'search/elasticHome' + commonService.buildUrlParamsFromMap(params)
         log.debug "url = $url"
         Map response = webService.getJson2(url)
         // For compatibility of the return value with getJson which the client is expecting.
@@ -83,7 +89,7 @@ class SearchService {
             searchParams.query += " AND " + searchTerm
         }
 
-        def url = grailsApplication.config.ecodata.baseUrl + 'search/elasticGeo' + commonService.buildUrlParamsFromMap(searchParams)
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'search/elasticGeo' + commonService.buildUrlParamsFromMap(searchParams)
         log.debug "url = $url"
         Map result = webService.getJson2(url)
 
@@ -116,7 +122,7 @@ class SearchService {
 //        params.query = "docType:site"
         params.fq = "docType:site"
         //def url = elasticBaseUrl + commonService.buildUrlParamsFromMap(params)
-        def url = grailsApplication.config.ecodata.baseUrl + 'search/elasticHome' + commonService.buildUrlParamsFromMap(params)
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'search/elasticHome' + commonService.buildUrlParamsFromMap(params)
         log.debug "url = $url"
         webService.getJson(url)
     }
@@ -128,7 +134,7 @@ class SearchService {
         HubSettings settings = SettingService.getHubConfig()
         params.facets = params.facets ?: StringUtils.join(settings.availableFacets, ',')
 
-        def url = grailsApplication.config.ecodata.baseUrl + 'search/elasticHome' + commonService.buildUrlParamsFromMap(params)
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'search/elasticHome' + commonService.buildUrlParamsFromMap(params)
         log.debug "url = $url"
         def jsonstring = webService.get(url)
         try {
@@ -194,7 +200,7 @@ class SearchService {
             def idList = ids.tokenize(",")
             params.query = "_id:" + idList.join(" OR _id:")
             params.facets = "stateFacet,nrmFacet,lgaFacet,mvgFacet"
-            def url = grailsApplication.config.ecodata.baseUrl + 'search/elasticPost'
+            def url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'search/elasticPost'
             webService.doPost(url, params)
         } else if (params.query) {
             def url = elasticBaseUrl + commonService.buildUrlParamsFromMap(params)
@@ -209,7 +215,7 @@ class SearchService {
             addDefaultFacetQuery(params)
             params.query = params.query ?: 'docType:project'
             handleActivityDateFilters(params)
-            def url = grailsApplication.config.ecodata.baseUrl + 'search/dashboardReport' + commonService.buildUrlParamsFromMap(params)
+            def url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'search/dashboardReport' + commonService.buildUrlParamsFromMap(params)
             webService.getJson(url, 1200000)
         })
 
@@ -219,7 +225,7 @@ class SearchService {
     def outputTargetsReport(params) {
         addDefaultFacetQuery(params)
         handleDateFilters(params)
-        def url = grailsApplication.config.ecodata.baseUrl + 'search/targetsReport' + commonService.buildUrlParamsFromMap(params)
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'search/targetsReport' + commonService.buildUrlParamsFromMap(params)
 
         def results = cacheService.get("outputTargets-"+params, {
             webService.getJson(url, 300000)
@@ -232,7 +238,7 @@ class SearchService {
         if (facets) {
             reportParams.fq = facets
         }
-        def url = grailsApplication.config.ecodata.baseUrl + 'search/scoresByLabel' + commonService.buildUrlParamsFromMap(reportParams)
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'search/scoresByLabel' + commonService.buildUrlParamsFromMap(reportParams)
         webService.getJson(url, 1200000)
     }
 
@@ -249,7 +255,7 @@ class SearchService {
         List facets = params.getList("fq")
         facets += "className:au.org.ala.ecodata.Project"
 
-        def url = grailsApplication.config.ecodata.baseUrl + path +  commonService.buildUrlParamsFromMap(params)
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + path +  commonService.buildUrlParamsFromMap(params)
         webService.doPostWithParams(url, [:]) // POST because the URL can get long.
     }
 
@@ -264,16 +270,23 @@ class SearchService {
         }
 
         configureProjectQuery(params)
-        def url = grailsApplication.config.ecodata.baseUrl + path + commonService.buildUrlParamsFromMap(params)
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + path + commonService.buildUrlParamsFromMap(params)
         webService.proxyGetRequest(response, url, true, true,960000)
     }
 
-    def downloadShapefile(params, response) {
+    /**
+     * Triggers an asynchronous download of a shapefile, returning true if the request was successful, false otherwise.
+     */
+    boolean downloadShapefile(params) {
 
         configureProjectQuery(params)
 
         def path = "search/downloadShapefile"
-        def url = grailsApplication.config.ecodata.baseUrl + path + commonService.buildUrlParamsFromMap(params)
-        webService.proxyGetRequest(response, url, true, true,960000)
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + path + commonService.buildUrlParamsFromMap(params)
+        def result = webService.get(url)
+        // WebService::get returns a string if the response status is 200, otherwise a map with a status and error code.
+        boolean error = result instanceof Map
+        !error
+
     }
 }

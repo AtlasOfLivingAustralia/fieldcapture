@@ -72,11 +72,6 @@
     margin-left: 0 !important;
 }
 
-.preLabel {
-    margin-right: 10px;
-    font-weight: bold;
-}
-
 .preLabel label {
     font-weight: bold;
 }
@@ -371,11 +366,11 @@ th.sort i {
     margin-left: 10px;
 }
 
-i.open-datepicker {
-    margin-left:6px;
-    opacity:0.6;
-    cursor:pointer;
-}
+/*i.open-datepicker {*/
+/*    margin-left:6px;*/
+/*    opacity:0.6;*/
+/*    cursor:pointer;*/
+/*}*/
 
 #accordion2  .accordion-group {
     margin-bottom: -1px;
@@ -616,7 +611,7 @@ ul.facetValues {
     -ms-transform:rotate(180deg);
 }
 
-div.output-block, div.admin-section {
+div.admin-section {
     border-top: #999 solid 2px;
     /*-webkit-border-radius: 3px;*/
     /*-moz-border-radius: 3px;*/
@@ -625,7 +620,7 @@ div.output-block, div.admin-section {
 }
 
 h3.modified {
-    color: #396419;
+    color: #2e2e2e;
 }
 
 i.modified-icon {
@@ -800,8 +795,6 @@ select:focus:invalid:focus {
     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
 }
-
-input[type="checkbox"] { -webkit-appearance: checkbox; !important }
 
 .fancybox-nav {
     width: 60px;

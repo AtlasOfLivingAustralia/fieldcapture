@@ -1,12 +1,11 @@
 /*
 *= require forms.css
-*= require fancybox/jquery.fancybox
-*= require select2/4.0.3/css/select2
-*= require jquery-ui/css/base/jquery-ui-1.9.2.custom.min.css
-*= require jquery-ui/jquery-autocomplete
+*= require fancybox/css/jquery.fancybox.css
+*= require select2/css/select2
+*= require select2-theme-bootstrap4/select2-bootstrap.css
+*= require jquery-ui/themes/base/all.css
 *= require blueimp/fileupload-9.28.0/jquery.fileupload
 *= require leaflet-manifest.css
-*= require modal-fullscreen-bootstrap-2.3.2/css/bootstrap-modal-fullscreen
 *= require feature.css
 */
 
@@ -30,8 +29,8 @@
     font-weight: bold;
 
 }
-.select2-selection.select2-selection--single {
-    border:none;
+.select2-container--default .select2-selection.select2-selection--single, .select2-selection.select2-selection--single {
+    border: 1px solid #cccccc;
 }
 
 .select2-results__group {
@@ -76,7 +75,6 @@
 .select2-container--default .select2-selection--single .select2-selection__rendered {
     font-size: 14px;
     border-radius: 4px;
-    border: 1px solid #cccccc;
     color: #555555;
 }
 .input-append .select2-container--default .select2-selection--single .select2-selection__rendered {
@@ -100,12 +98,6 @@
 
 .output-block .helphover {
     color:black;
-}
-
-.output-block table input[type="text"] {
-    width: 100%;
-    box-sizing: border-box;
-    height: 30px;
 }
 
 .report-header .header-label {
@@ -132,7 +124,111 @@
 
 #nav-buttons .mark-complete {
     background-color: #f5f5f5;
-    padding: 5px;
-    padding-left: 30px;
+    padding: 5px 5px 5px 30px;
     border-radius: 5px;
+}
+
+.fromDate, .toDate, .status {
+    min-width: 7rem;
+    width:8rem;
+}
+
+.actions {
+    min-width: 6rem !important;
+    width:8rem !important;
+}
+
+.description-column {
+    width:40% !important;
+}
+.activity {
+    width:25% !important;
+}
+.sites {
+    width:15% !important;
+}
+
+.stage-header {
+    background-color: #d9edf7;
+    border: 1px solid #ddd;
+    border-bottom: 1px solid grey;
+    padding: 10px;
+}
+
+.model-form select, .model-form input, .model-form textarea {
+    margin-bottom: 1rem;
+}
+
+.dateInput {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+ table td select {
+     max-width: 100%;
+ }
+
+.btn.edit-feature {
+    width: 100% ;
+    height: unset ;
+    max-height:unset;
+    max-width:unset;
+    margin-bottom: 10px;
+}
+
+.row.output-section {
+    margin-left: 0;
+    margin-right: 0;
+    padding-top: 15px;
+}
+.output-section {
+    background-color: #f5f5f5;
+    padding-top:10px;
+    border: 1px solid #e3e3e3;
+    border-radius: 3px;
+}
+div.output-block {
+    border-top: #999 solid 2px;
+    margin: 20px 0 10px 0;
+}
+#edit-photopoint.modal {
+    width: 80%;
+    left: 10%;
+    margin-left: 0;
+}
+.modal .controls {
+    margin-left: 8em;
+}
+#edit-photopoint.modal .control-label {
+    width: 7em;
+}
+
+#edit-photopoint .modal-dialog {
+    max-width: 100%;
+}
+.activity > .dropdown-menu > .disabled > a, .activity > .dropdown-menu > .disabled > a:hover, .activity > .dropdown-menu > .disabled > a:focus {
+    color: #999;
+}
+.activity .dropdown-menu > li > a {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 20px;
+    color: #333;
+    white-space: nowrap;
+}
+
+.activity > .dropdown-menu > li:not(.disabled) > a:hover {
+    color: #fff;
+    background-color: #005f8f;
+}
+.media-object {
+    width: 32px;
+    min-width: 32px;
+    height: 32px;
+}
+
+.titleModified {
+    font-size: 13px;
 }

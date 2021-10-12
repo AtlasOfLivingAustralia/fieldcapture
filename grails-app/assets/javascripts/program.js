@@ -1,5 +1,5 @@
 //= require tab-init.js
-//= require slider-pro-master/js/jquery.sliderPro.min.js
+//= require slider-pro/js/jquery.sliderPro.js
 //= require mapWithFeatures.js
 //= require sites
 //= require document
@@ -403,7 +403,8 @@ var ProgramPageViewModel = function(props, options) {
                     useAlaMap:true,
                     mapContainerId:'muMap',
                     width: '100%',
-                    styles: styles
+                    styles: styles,
+                    fullscreenControl:false
                 });
 
                 self.loadManagementUnits(map);

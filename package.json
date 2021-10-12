@@ -7,7 +7,6 @@
   "private": true,
   "dependencies": {
     "bootstrap": "4.6",
-    "bootstrap-icons": "^1.4.0",
     "slickgrid": "^2.4.34"
   },
   "devDependencies": {
