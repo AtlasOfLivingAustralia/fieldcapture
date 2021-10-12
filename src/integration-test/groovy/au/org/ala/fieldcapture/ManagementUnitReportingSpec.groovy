@@ -7,6 +7,7 @@ import com.icegreen.greenmail.util.ServerSetupTest
 import org.junit.Rule
 import pages.ManagementUnitPage
 import pages.ReportPage
+import pages.ViewReportPage
 import spock.lang.Stepwise
 
 import javax.mail.internet.MimeMessage
@@ -81,8 +82,7 @@ class ManagementUnitReportingSpec extends StubbedCasSpec {
 
         when: "Display the reporting tab and edit the first report"
         to ManagementUnitPage, managementUnitId
-        reportsTab.click()
-        waitFor { reportsTabPane.displayed }
+        displayReportsTab()
         reportsTabPane.reports[0].edit()
 
         then:
@@ -101,8 +101,7 @@ class ManagementUnitReportingSpec extends StubbedCasSpec {
         }
 
         when:
-        reportsTab.click()
-        waitFor { reportsTabPane.displayed }
+        displayReportsTab()
 
         then:
         reportsTabPane.reports[0].markedAsComplete()
@@ -143,8 +142,7 @@ class ManagementUnitReportingSpec extends StubbedCasSpec {
 
         when: "Display the reporting tab"
         to ManagementUnitPage, managementUnitId
-        reportsTab.click()
-        waitFor { reportsTabPane.displayed }
+        displayReportsTab()
 
         then: "The first report is marked as submitted"
         reportsTabPane.reports[0].isSubmitted()
@@ -161,6 +159,33 @@ class ManagementUnitReportingSpec extends StubbedCasSpec {
 
         then:
         reportsTabPane.reports[0].isApproved()
+
+    }
+
+    def "A user with the FC_READ_ONLY role can view, but not edit management unit reports"() {
+        String managementUnitId = 'test_mu'
+        login([userId: '3', role: "ROLE_FC_READ_ONLY", email: 'fc_read_only@nowhere.com', firstName: "MERIT", lastName: 'FC_READ_ONLY'], browser)
+
+        when: "Display the reporting tab, then view the approved report"
+        to ManagementUnitPage, managementUnitId
+        displayReportsTab()
+        reportsTabPane.reports[0].view()
+
+        then: "The report view page should be displayed"
+        waitFor { at ViewReportPage }
+
+        when: "The user exits the report view page"
+        exitReport()
+
+        then: "The user should be returned to the management unit page"
+        waitFor { at ManagementUnitPage }
+
+        when: "The user attempts to edit the second report"
+        displayReportsTab()
+        reportsTabPane.reports[1].edit()
+
+        then: "The user should be returned to the management unit page"
+        waitFor {hasBeenReloaded()}
 
     }
 }

@@ -367,7 +367,7 @@ class ManagementUnitController {
         model
     }
 
-    @PreAuthorise(accessLevel = 'editor')
+    @PreAuthorise(accessLevel = 'readOnly', redirectController = 'managementUnit')
     def viewReport(String id, String reportId) {
         if (!id || !reportId) {
             error('An invalid report was selected for viewing', id)
@@ -379,7 +379,7 @@ class ManagementUnitController {
         render model:model, view:'/activity/activityReportView'
     }
 
-    @PreAuthorise(accessLevel = 'editor')
+    @PreAuthorise(accessLevel = 'readOnly', redirectController = 'managementUnit')
     def reportPDF(String id, String reportId) {
 
         if (!id || !reportId) {

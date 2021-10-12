@@ -172,6 +172,7 @@ class ManagementUnitServiceSpec extends Specification implements AutowiredTest{
         then:
         1 * userService.getCurrentUserId() >> userId
         1 * userService.isUserAdminForManagementUnit(userId, muId) >> false
+        1 * userService.userHasReadOnlyAccess() >> false
         1 * webService.getJson({it.endsWith("/managementUnit/${muId}")}) >> [managementUnitId: muId]
         1 * documentService.search([managementUnitId: muId, public: true]) >> [documents:[], count:0]
         0 * reportService.findReportsForManagementUnit(muId)
@@ -189,6 +190,23 @@ class ManagementUnitServiceSpec extends Specification implements AutowiredTest{
         then:
         1 * webService.getJson(
                 {it.endsWith('managementunit/generateReportsInPeriod?startDate=2020-07-02T14:00:00Z&endDate=2021-01-01T13:00:00Z&test=test')})
+    }
+
+    def "Users with the FC_READ_ONLY role can retrieve management unit reports and documents"() {
+        setup:
+        String muId = 'mu1'
+        String userId = 'u1'
+
+        when:
+        service.get(muId)
+
+        then:
+        1 * userService.getCurrentUserId() >> userId
+        1 * userService.isUserAdminForManagementUnit(userId, muId) >> false
+        1 * userService.userHasReadOnlyAccess() >> true
+        1 * webService.getJson({it.endsWith("/managementUnit/${muId}")}) >> [managementUnitId: muId]
+        1 * documentService.search([managementUnitId: muId]) >> [documents:[], count:0]
+        1 * reportService.findReportsForManagementUnit(muId)
     }
 
 }

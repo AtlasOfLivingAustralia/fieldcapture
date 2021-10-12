@@ -28,9 +28,12 @@ class ManagementUnitService {
         String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}managementUnit/$id"
         Map mu = webService.getJson(url)
 
-        boolean isAdmin = userService.isUserAdminForManagementUnit(userService.getCurrentUserId(), id)
+        // If the user is an admin for a management unit or has the FC_READ_ONLY role, they are allowed
+        // to view the reports and all documents.
+        boolean hasExtendedAccess = userService.isUserAdminForManagementUnit(userService.getCurrentUserId(), id) || userService.userHasReadOnlyAccess()
+
         Map documentSearchParameters = [managementUnitId:id]
-        if (!isAdmin) {
+        if (!hasExtendedAccess) {
             documentSearchParameters['public'] = true
         }
         else {
