@@ -34,7 +34,6 @@ class ManagementUnitSpec extends StubbedCasSpec {
         !adminTab.displayed
     }
 
-
     def "Only the about tab is visible to users with no permissions for the management unit"(
             String userId, boolean aboutVisible, boolean reportsVisible, boolean sitesVisible, boolean adminVisible) {
 
@@ -64,9 +63,27 @@ class ManagementUnitSpec extends StubbedCasSpec {
 
     }
 
+    def "Admin tab is not visible to users with Read Only Access role for the management unit"() {
+
+        setup:
+        String role = "ROLE_FC_READ_ONLY"
+        login([userId: NO_PERMISSIONS_USER, role: role, email: 'user@nowhere.com', firstName: "MERIT", lastName: 'User'], browser)
+
+        when:
+        to ManagementUnitPage, "test_mu"
+
+        then:
+        waitFor { at ManagementUnitPage }
+        overviewBtn.displayed == true
+        reportsTab.displayed == true
+        sitesTab.displayed == true
+        adminTab.displayed == false
+
+    }
+
     def "The management unit about tab displays information about programs and projects with activity in the management unit"() {
         setup:
-        login([userId: ADMIN_USER, role: "ROLE_USER", email: 'user@nowhere.com', firstName: "MERIT", lastName: 'User'], browser)
+        login([userId: GRANT_MANAGER_USER, role: "ROLE_FC_READ_ONLY", email: 'user@nowhere.com', firstName: "MERIT", lastName: 'User'], browser)
 
         when:
         to ManagementUnitPage, "test_mu"
