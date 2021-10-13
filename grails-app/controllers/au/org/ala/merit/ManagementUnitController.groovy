@@ -316,7 +316,7 @@ class ManagementUnitController {
         render programService.search(offset, max, searchTerm, sort) as JSON
     }
 
-    @PreAuthorise(accessLevel = 'editor')
+    @PreAuthorise(accessLevel = 'editor', redirectController = 'managementUnit')
     def editReport(String id, String reportId) {
         if (!id || !reportId) {
             error('An invalid report was selected for data entry', id)
