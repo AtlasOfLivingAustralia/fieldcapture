@@ -89,11 +89,7 @@ class AclInterceptor {
 
             if (errorMsg) {
                 flash.message = errorMsg
-                if (params.returnTo) {
-                    redirect(url: params.returnTo)
-                } else {
-                    redirect(controller: pa.redirectController(), action: pa.redirectAction(), id: entityId)
-                }
+                redirect(controller: pa.redirectController(), action: pa.redirectAction(), id: entityId)
                 return false
             }
         }

@@ -5,6 +5,8 @@ import grails.core.GrailsApplication
 import grails.core.GrailsClass
 import grails.testing.web.GrailsWebUnitTest
 import grails.testing.web.interceptor.InterceptorUnitTest
+import grails.web.http.HttpHeaders
+import org.apache.http.HttpStatus
 import spock.lang.Specification
 
 class AclInterceptorSpec extends Specification implements GrailsWebUnitTest {
@@ -85,6 +87,8 @@ class AclInterceptorSpec extends Specification implements GrailsWebUnitTest {
 
 
         canView == false
+        response.status == HttpStatus.SC_MOVED_TEMPORARILY
+        response.getHeader(HttpHeaders.LOCATION).endsWith('/project/index/p1')
     }
 
 
@@ -110,6 +114,8 @@ class AclInterceptorSpec extends Specification implements GrailsWebUnitTest {
 
 
         canView == false
+        response.status == HttpStatus.SC_MOVED_TEMPORARILY
+        response.getHeader(HttpHeaders.LOCATION).endsWith('/project/index/p1')
     }
 
     def "This checks an officer access level"() {
@@ -132,8 +138,9 @@ class AclInterceptorSpec extends Specification implements GrailsWebUnitTest {
         1 * aclInterceptor.userService.userIsSiteAdmin() >> false
 
 
-
         canView == false
+        response.status == HttpStatus.SC_MOVED_TEMPORARILY
+        response.getHeader(HttpHeaders.LOCATION).endsWith('/project/index/p1')
     }
 
     def "This checks a siteReadOnly access level"() {
@@ -159,6 +166,8 @@ class AclInterceptorSpec extends Specification implements GrailsWebUnitTest {
 
 
         canView == false
+        response.status == HttpStatus.SC_MOVED_TEMPORARILY
+        response.getHeader(HttpHeaders.LOCATION).endsWith('/project/index/p1')
     }
 
     def "This checks a siteAdmin access level"() {
@@ -183,6 +192,8 @@ class AclInterceptorSpec extends Specification implements GrailsWebUnitTest {
 
 
         canView == false
+        response.status == HttpStatus.SC_MOVED_TEMPORARILY
+        response.getHeader(HttpHeaders.LOCATION).endsWith('/project/index/p1')
     }
 
     def "This checks an admin access level, user with non-admin access will not be able to pass authentication check"() {
@@ -207,6 +218,8 @@ class AclInterceptorSpec extends Specification implements GrailsWebUnitTest {
 
 
         canView == false
+        response.status == HttpStatus.SC_MOVED_TEMPORARILY
+        response.getHeader(HttpHeaders.LOCATION).endsWith('/project/index/p1')
     }
 
 }
