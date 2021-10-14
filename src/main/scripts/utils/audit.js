@@ -1,14 +1,16 @@
 /** Inserts a document into the auditMessage collection */
-function audit(entity, entityId, type, userId) {
+function audit(entity, entityId, type, userId, projectId) {
     var auditMessage = {
         date: ISODate(),
         entity: entity,
         eventType: 'Update',
         entityType: type,
         entityId: entityId,
-        userId: userId,
-        projectId: entity.projectId
+        userId: userId
     };
+    if (entity.projectId || projectId) {
+        auditMessage.projectId = (entity.projectId || projectId);
+    }
     db.auditMessage.insert(auditMessage);
 }
 
