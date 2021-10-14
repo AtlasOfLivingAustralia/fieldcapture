@@ -145,19 +145,7 @@
           {
             "dataType": "text",
             "description": "",
-            "name": "monitoringAndEvaluationActivities",
-            "validate": "required,maxSize[5000]"
-          },
-          {
-            "dataType": "text",
-            "description": "",
-            "name": "keyFindingsAndLearnings",
-            "validate": "required,maxSize[5000]"
-          },
-          {
-            "dataType": "text",
-            "description": "",
-            "name": "projectChanges",
+            "name": "projectLearningsSummary",
             "validate": "required,maxSize[5000]"
           },
           {
@@ -379,10 +367,18 @@
           {
             "items": [
               {
+                "source": "<b>2.1 Provide a short summary of what was achieved in the final period against the Activity identified in your Funding Agreement and the actions outlined in your MERI plan.</b><br/>Where possible, please quantify key outputs or achievements. Supporting evidence of your activities and achievements (e.g. media releases, articles, photos, etc.), should be provided as attachments to this report via the Admin tab > Documents sub-tab of MERIT.",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
                 "source": "progressSummary",
                 "type": "textarea",
-                "rows": 5,
-                "preLabel": "2.1 Provide a short summary of what was achieved in the final period against the Activity identified in your Funding Agreement and the actions outlined in your MERI plan.<br/><i>Where possible, please quantify key outputs or achievements. Supporting evidence of your activities and achievements (e.g. media releases, articles, photos, etc.), should be provided as attachments to this report via the Admin tab > Documents sub-tab of MERIT.</i>"
+                "rows": 5
               }
             ],
             "type": "row"
@@ -512,37 +508,15 @@
             "type": "row"
           },
           {
+            "type": "row",
             "items": [
               {
-                "preLabel": "a) what project monitoring and/or evaluation activities have been undertaken this period.",
+                "preLabel": "a) what project monitoring and/or evaluation activities have been undertaken this period;<br>b) any key findings and/or learnings gained this period from the projects; and<br>c) any changes you have made in response to theses during the period.",
+                "source": "projectLearningsSummary",
                 "type": "textarea",
-                "rows": 5,
-                "source": "monitoringAndEvaluationActivities"
+                "rows": 3
               }
-            ],
-            "type": "row"
-          },
-          {
-            "items": [
-              {
-                "preLabel": "b) any key findings and/or learnings gained this period from the project.",
-                "type": "textarea",
-                "rows": 5,
-                "source": "keyFindingsAndLearnings"
-              }
-            ],
-            "type": "row"
-          },
-          {
-            "items": [
-              {
-                "source": "projectChanges",
-                "type": "textarea",
-                "rows": 5,
-                "preLabel": "c) any changes you have made in response to these during the reporting period."
-              }
-            ],
-            "type": "row"
+            ]
           },
           {
             "items": [
@@ -767,7 +741,7 @@
           {
             "items": [
               {
-                "preLabel": "If yes, please detail any preliminary website activity,including new accounts, views/downloads of Florabank Guidelines and other resources, and access to training. Please comment on the functionality of the redeveloped website.",
+                "preLabel": "If yes, please detail any preliminary website activity, including new accounts, views/downloads of Florabank Guidelines and other resources, and access to training. Please comment on the functionality of the redeveloped website.",
                 "source": "yesHasDatabase",
                 "type": "textarea",
                 "rows": 3
@@ -801,15 +775,6 @@
                 "source": "yesUnderObjective5",
                 "type": "textarea",
                 "rows": 3
-              }
-            ],
-            "type": "row"
-          },
-          {
-            "items": [
-              {
-                "source": "<b>Please provide aggregated details below for all flora surveys undertaken by the project.</b>",
-                "type": "literal"
               }
             ],
             "type": "row"
@@ -1005,6 +970,15 @@
           }
         ],
         "viewModel": [
+          {
+            "items": [
+              {
+                "source": "<b>Please provide aggregated details below for all flora surveys undertaken by the project.</b>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
           {
             "type": "section",
             "items": [
@@ -1397,6 +1371,15 @@
         "title": "Seed Collecting",
         "viewModel": [
           {
+            "items": [
+              {
+                "source": "<b>Please provide aggregated details below for all seed collection undertaken by the project.</b>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
             "type": "section",
             "items": [
               {
@@ -1656,7 +1639,7 @@
           {
             "items": [
               {
-                "source": "<b>Objective 8: Establishing sound governance arrangements in consultation with the Department to ensure proper use of funds (efficient, effective, economical, and ethical). This includes the establishment of a Steering Committee to oversee the implmentation of the activity. The Steering Committee must have membership and Terms of Reference to be agreed with the Department.</b>",
+                "source": "<b>Objective 8: Establishing sound governance arrangements in consultation with the Department to ensure proper use of funds (efficient, effective, economical, and ethical). This includes the establishment of a Steering Committee to oversee the implementation of the activity. The Steering Committee must have membership and Terms of Reference to be agreed with the Department.</b>",
                 "type": "literal"
               }
             ],
@@ -1807,7 +1790,7 @@
             "type": "row",
             "items": [
               {
-                "source": "<b>7.2 Describe achievements made by the project against each relevant intended outcome of the program, including measurable information where available.</b><p>Supporting evidence to demonstrate achievement against outcome/s (e.g. report, monitoring data sets, photos, media articles, etc) should be provided as attachments to this report via the Admin tab > Documents sub-tab of MERIT. Supporting evidence should be labelled to reference the applicable outcome statement/s. Where supporting evidence contains sensitive or confidential information, please send to your Grant Manager by email.</p>",
+                "source": "<b>7.2 Describe achievements made against each outcome statement in the MERI plan, including measurable information where applicable.</b><p>Supporting evidence to demonstrate achievement against outcome/s (e.g. report, monitoring data sets, photos, media articles, etc) should be provided as attachments to this report via the Admin tab > Documents sub-tab of MERIT. Supporting evidence should be labelled to reference the applicable outcome statement/s. Where supporting evidence contains sensitive or confidential information, please send to your Grant Manager by email.</p>",
                 "type": "literal"
               }
             ]
@@ -1876,7 +1859,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "KEQ2 - To what extent has the problem contributed to understanding the seed supply needs and industry capacity to restore vegetation and wildlife habitat across fire impacted regions?",
+                "preLabel": "KEQ2 - To what extent has the program contributed to understanding the seed supply needs and industry capacity to restore vegetation and wildlife habitat across fire impacted regions?",
                 "type": "textarea",
                 "rows": 5,
                 "source": "keq2"
