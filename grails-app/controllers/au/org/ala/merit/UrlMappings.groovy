@@ -95,6 +95,15 @@ class UrlMappings {
             controller = 'program'
         }
 
+        /**
+         * This overrides the default mapping to prevent the extension being interpreted as a content negotiation
+         * which prevents homepage images from being displayed correctly due to the way the URL is generated.
+         */
+        "/image/get/$id" {
+            controller = 'image'
+            action = 'get'
+        }
+
         "500"(view:'/error')
         "404"(view:'/404')
         "/$hub/$controller/ws/$action/$id" {
