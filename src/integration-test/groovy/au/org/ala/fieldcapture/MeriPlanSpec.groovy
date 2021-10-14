@@ -442,7 +442,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         meriplan.approvePlanDialog.changeOrderNumbers = 'test'
         meriplan.approvePlanDialog.comment = 'test'
 
-        meriplan.approvePlanDialog.approvePlanButton.click()
+        meriplan.approvePlanDialog.approve()
 
         then:
         waitFor{hasBeenReloaded()}
@@ -553,7 +553,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         meriplan.approvePlanDialog.changeOrderNumbers = 'test'
         meriplan.approvePlanDialog.comment = 'test'
 
-        meriplan.approvePlanDialog.approvePlanButton.click()
+        meriplan.approvePlanDialog.approve()
 
         then:
         waitFor{hasBeenReloaded()}
