@@ -1,0 +1,1993 @@
+{
+  "name": "GA Final Reporting",
+  "type": "Report",
+  "sections": [
+    {
+      "name": "Final Period Progress Reporting",
+      "optionalQuestionText": null,
+      "optional": false,
+      "collapsedByDefault": false,
+      "templateName": "final_period_progress_reporting",
+      "template": {
+        "pre-populate": [
+          {
+            "mapping": [
+              {
+                "mapping": [
+                  {
+                    "source-path": "storyDetails",
+                    "target": "storyDetails"
+                  }
+                ],
+                "source-path": "goodNewsStories",
+                "target": "goodNewsStories"
+              }
+            ],
+            "merge": false,
+            "source": {
+              "literal": {
+                "goodNewsStories": [
+                  {
+                    "storyDetails": ""
+                  },
+                  {
+                    "storyDetails": ""
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "mapping": [
+              {
+                "mapping": [],
+                "source-path": "issue",
+                "target": "issue"
+              }
+            ],
+            "merge": false,
+            "source": {
+              "literal": {
+                "issue": []
+              }
+            }
+          }
+        ],
+        "dataModel": [
+          {
+            "dataType": "text",
+            "name": "projectContactDetailsChanged",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "detailsOfProjectContacts",
+            "validate": "required,maxSize[1000]",
+            "behaviour": [
+              {
+                "type": "enable",
+                "condition": "projectContactDetailsChanged == \"Yes\""
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "description": "Summary of Project Progress for the Period",
+            "name": "progressSummary",
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "list",
+            "description": "",
+            "name": "issue",
+            "columns": [
+              {
+                "dataType": "text",
+                "name": "nature",
+                "validate": "required,maxSize[5000]"
+              },
+              {
+                "dataType": "text",
+                "description": "How you are managing, or proposing to manage, the issue?",
+                "name": "how",
+                "validate": "required,maxSize[5000]"
+              },
+              {
+                "dataType": "text",
+                "description": "Implications for the project",
+                "name": "implication",
+                "validate": "required,maxSize[5000]"
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "hasReportableIncidents",
+            "description": "Has reportable WHS incidents",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "whsIncidentDetails",
+            "description": "Please provide a description of the incident/s",
+            "behaviour": [
+              {
+                "type": "enable",
+                "condition": "hasReportableIncidents == \"Yes\""
+              }
+            ],
+            "validate": "required,maxSize[1000]"
+          },
+          {
+            "dataType": "list",
+            "description": "",
+            "name": "goodNewsStories",
+            "columns": [
+              {
+                "dataType": "text",
+                "description": "",
+                "name": "storyDetails",
+                "validate": "required,maxSize[5000]"
+              },
+              {
+                "dataType": "image",
+                "name": "photo"
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "monitoringAndEvaluationActivities",
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "keyFindingsAndLearnings",
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "projectChanges",
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "stringList",
+            "name": "isExpenditureWithinBudget",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "reasonOfOverBudget",
+            "behaviour": [
+              {
+                "condition": "isExpenditureWithinBudget == \"No\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "stringList",
+            "name": "isActivitiesUnderObjective1",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "yesUnderObjective1",
+            "behaviour": [
+              {
+                "condition": "isActivitiesUnderObjective1 == \"Yes\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "understandingNativeSeed",
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "stringList",
+            "name": "isActivitiesUnderObjective2",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "yesUnderObjective2",
+            "behaviour": [
+              {
+                "condition": "isActivitiesUnderObjective2 == \"Yes\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "stringList",
+            "name": "isActivitiesUnderObjective3",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "yesUnderObjective3",
+            "behaviour": [
+              {
+                "condition": "isActivitiesUnderObjective3 == \"Yes\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "text",
+            "name": "has10yearDevelopedPublished",
+            "description": "Has 10 year been developed and published",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "dataType": "stringList",
+            "name": "isActivitiesUnderObjective4",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "yesUnderObjective4",
+            "behaviour": [
+              {
+                "condition": "isActivitiesUnderObjective4 == \"Yes\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "stringList",
+            "name": "hasRedevelopedWebsite",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "yesRedevelopedWebsite",
+            "behaviour": [
+              {
+                "condition": "hasRedevelopedWebsite == \"Yes\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "stringList",
+            "name": "hasDatabase",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "yesHasDatabase",
+            "behaviour": [
+              {
+                "condition": "hasDatabase == \"Yes\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "stringList",
+            "name": "isActivitiesUnderObjective5",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "yesUnderObjective5",
+            "behaviour": [
+              {
+                "condition": "isActivitiesUnderObjective5 == \"Yes\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,maxSize[5000]"
+          }
+        ],
+        "modelName": "Final Period Progress Reporting",
+        "title": "Final Period Progress Reporting",
+        "viewModel": [
+          {
+            "items": [
+              {
+                "source": "<h4>1. Organisation and Contact Details</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "projectContactDetailsChanged",
+                "preLabel": "1.1 Has there been a change to key project contacts or their details?",
+                "type": "selectOne",
+                "helpText": "(e.g. Name, position, role, email, telephone or address of key contacts)",
+                "css": "span4"
+              },
+              {
+                "source": "detailsOfProjectContacts",
+                "preLabel": "If 'Yes', please provide updated details to the department",
+                "type": "textarea",
+                "css": "span8",
+                "rows": 4
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>2. Project Progress for the Final Period</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "progressSummary",
+                "type": "textarea",
+                "rows": 5,
+                "preLabel": "2.1 Provide a short summary of what was achieved in the final period against the Activity identified in your Funding Agreement and the actions outlined in your MERI plan.<br/><i>Where possible, please quantify key outputs or achievements. Supporting evidence of your activities and achievements (e.g. media releases, articles, photos, etc.), should be provided as attachments to this report via the Admin tab > Documents sub-tab of MERIT.</i>"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<b>2.2 Did the project encounter any issues or delays in delivering activities and/or outcomes in the final period? If yes, please outline in the table below.</b>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "columns": [
+              {
+                "source": "",
+                "type": "literal",
+                "preLabel": {
+                  "computed": "\\'No. \\' || (index + 1)"
+                },
+                "title": "Issue No."
+              },
+              {
+                "source": "nature",
+                "type": "textarea",
+                "title": "Nature of the issue"
+              },
+              {
+                "source": "how",
+                "type": "textarea",
+                "title": "How did you manage the issue?"
+              },
+              {
+                "source": "implication",
+                "type": "textarea",
+                "title": "Implications for project outputs/outcomes",
+                "helpText": "(e.g. Impacts on timeframes, feasibility, costs, ability to meet contracted deliverables)"
+              }
+            ],
+            "userAddedRows": true,
+            "source": "issue",
+            "type": "table"
+          },
+          {
+            "items": [
+              {
+                "source": "hasReportableIncidents",
+                "preLabel": "2.3 Have you had any reportable Workplace Health and Safety incidents this reporting period?",
+                "type": "selectOne"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<i><b style=\"background-color:yellow\">If 'Yes', please provide details to the Department.</b></i>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>3. Good News Stories</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<b>Please provide good news stories that highlight what the project achieved in the final period.</b><br/>This information is intended for potential use by the Department in publicly promoting the program. Photos may be attached to this report, however, please ensure permissions of persons in the photos are obtained prior to the photos being attached and used for promotional purposes.",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "columns": [
+              {
+                "source": "",
+                "type": "literal",
+                "width": "5%",
+                "preLabel": {
+                  "computed": "\\'No. \\' || (index + 1)"
+                },
+                "title": "Story No."
+              },
+              {
+                "source": "storyDetails",
+                "type": "textarea",
+                "rows": 4,
+                "title": "Good News Story Details",
+                "width": "50%"
+              },
+              {
+                "type": "image",
+                "source": "photo",
+                "title": "",
+                "width": "45%"
+              }
+            ],
+            "userAddedRows": true,
+            "source": "goodNewsStories",
+            "type": "table"
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>4. Monitoring, Evaluation and Project Learnings</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<b>4.1 Provide a summary of:</b>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "preLabel": "a) what project monitoring and/or evaluation activities have been undertaken this period.",
+                "type": "textarea",
+                "rows": 5,
+                "source": "monitoringAndEvaluationActivities"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "preLabel": "b) any key findings and/or learnings gained this period from the project.",
+                "type": "textarea",
+                "rows": 5,
+                "source": "keyFindingsAndLearnings"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "projectChanges",
+                "type": "textarea",
+                "rows": 5,
+                "preLabel": "c) any changes you have made in response to these during the reporting period."
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>5. Project Income and Expenditure</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "isExpenditureWithinBudget",
+                "preLabel": "5.1 Has the project funding been expended in accordance with the budget, and have funds been fully expensed?",
+                "type": "selectOne"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "preLabel": "5.2 If you have answered no, please provide details:",
+                "source": "reasonOfOverBudget",
+                "type": "textarea",
+                "rows": 3
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>6. Reporting activities for the final period</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<b>6.1 Report progress of activities undertaken during the final reporting period under each Project Objective using the fields below. Where activity outputs <u>have not</u> been reported in MERIT previously, please combine progress in this report. Please ensure all mapping is completed for the project in the Sites tab of MERIT where required.</b>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<b>Objective 1: Understanding the native seed supply needs to restore vegetation and wildlife habitat across fire impacted regions.</b>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "isActivitiesUnderObjective1",
+                "preLabel": "Were any activities and/or related actions under Objective 1 undertaken in this reporting period?",
+                "type": "selectOne"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "preLabel": "If yes, please detail what activities/related actions were undertaken to understand the native seed supply needs to restore vegetation and wildlife habitat across fire impacted regions.",
+                "source": "yesUnderObjective1",
+                "type": "textarea",
+                "rows": 3
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "preLabel": "What is Greening Australia's current understanding of the native seed supply to restore vegetation wildlife habitat across fire impacted areas?",
+                "type": "textarea",
+                "rows": 5,
+                "source": "understandingNativeSeed"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<b>Objective 2: Building the capacity of the native seed and nursery industry in bushfire affected areas and other vulnerable landscapes.</b>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "isActivitiesUnderObjective2",
+                "preLabel": "Were any activities and/or related actions under Objective 2 undertaken in this reporting period?",
+                "type": "selectOne"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "preLabel": "If yes, please detail what activities/related actions were undertaken to build the capacity of the native seed and nursery industry.",
+                "source": "yesUnderObjective2",
+                "type": "textarea",
+                "rows": 3
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<b>Objective 3: Developing and coordinating a ten-year native seed and landscape restoration strategy, including engagement with key stakeholders.</b>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "isActivitiesUnderObjective3",
+                "preLabel": "Were any activities and/or related actions under Objective 3 undertaken in this reporting period?",
+                "type": "selectOne"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "preLabel": "If yes, please detail what activities/related actions were undertaken to develop, coordinate, promote or implement a ten-year strategy, including any stakeholder engagement.",
+                "source": "yesUnderObjective3",
+                "type": "textarea",
+                "rows": 3
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "has10yearDevelopedPublished",
+                "preLabel": "Has the ten-year native seed and landscape restoration strategy been developed and published?",
+                "type": "selectOne"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<b>Objective 4: Relaunching Florabank as a national tool for native seed best practice management in collaboration with the Florabank consortia partners. Providing access to the Florabank Guidelines, redeveloping a functional and accessible Florabank website, including development of a database to monitor website activity.</b>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "isActivitiesUnderObjective4",
+                "preLabel": "Were any activities and/or related actions under Objective 4 undertaken in this reporting period?",
+                "type": "selectOne"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "preLabel": "If yes, please detail what activities/related actions were undertaken in collaboration with the Florabank consortia to redevelop and/or relaunch Florabank as a national tool for native seed best practice management?",
+                "source": "yesUnderObjective4",
+                "type": "textarea",
+                "rows": 3
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "hasRedevelopedWebsite",
+                "preLabel": "Has a redeveloped Florabank website been relaunched with access to the Florabank Guidelines?",
+                "type": "selectOne"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "preLabel": "If yes, please provide detail of the relaunch event, including any relevant stakeholder engagement.",
+                "source": "yesRedevelopedWebsite",
+                "type": "textarea",
+                "rows": 3
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "hasDatabase",
+                "preLabel": "Has a database been developed to monitor Florabank website activity?",
+                "type": "selectOne"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "preLabel": "If yes, please detail any preliminary website activity,including new accounts, views/downloads of Florabank Guidelines and other resources, and access to training. Please comment on the functionality of the redeveloped website.",
+                "source": "yesHasDatabase",
+                "type": "textarea",
+                "rows": 3
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<b>Objective 5: In collaboration with existing resources and expertise, supporting conservation seed banks for future safeguarding against local extinctions and adaptation, including co-ordination of seed collection activities.</b>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "isActivitiesUnderObjective5",
+                "preLabel": "Were any activities and/or related actions under Objective 5 undertaken in this reporting period?",
+                "type": "selectOne"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "preLabel": "If yes, what activities/related actions were undertaken to support conservation seed banks for future safeguarding against local extinctions and adaptation, including coordination of seed collection?",
+                "source": "yesUnderObjective5",
+                "type": "textarea",
+                "rows": 3
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<b>Please provide aggregated details below for all flora surveys undertaken by the project.</b>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Floral Survey",
+      "optionalQuestionText": null,
+      "optional": false,
+      "collapsedByDefault": false,
+      "templateName": "floral_survey",
+      "template": {
+        "modelName": "Floral Survey",
+        "dataModel": [
+          {
+            "columns": [
+              {
+                "dataType": "text",
+                "name": "baselineOrIndicatorSurvey",
+                "description": "",
+                "constraints": [
+                  "Baseline",
+                  "Indicator"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "number",
+                "name": "numberOfFloraSurveys",
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "dateRange",
+                "description": "What time of year (eg. Dates by dd/mm/yyyyy, Months, Season/s)",
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "feature",
+                "name": "sitesSurveyed"
+              },
+              {
+                "computed": {
+                  "expression": "$geom.areaHa(sitesSurveyed)"
+                },
+                "dataType": "number",
+                "name": "siteCalculatedAreaHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "behaviour": [
+                  {
+                    "condition": "areaInvoicedHa > 0",
+                    "type": "conditional_validation",
+                    "value": {
+                      "message": "The surveyed area must be mapped",
+                      "validate": "required,min[0.0001]"
+                    }
+                  }
+                ]
+              },
+              {
+                "defaultValue": {
+                  "expression": "$geom.areaHa(sitesSurveyed)",
+                  "type": "computed"
+                },
+                "dataType": "number",
+                "name": "areaSurveyedHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "number",
+                "name": "areaInvoicedHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "areaSurveyedHa",
+                      "type": "computed"
+                    },
+                    "rule": "max"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedReason",
+                "behaviour": [
+                  {
+                    "condition": "not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1)",
+                    "type": "if"
+                  }
+                ],
+                "constraints": [
+                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedComments",
+                "behaviour": [
+                  {
+                    "condition": "\"Other\" == mappingNotAlignedReason",
+                    "type": "if"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "document",
+                "name": "extraMappingDetails",
+                "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                "behaviour": [
+                  {
+                    "condition": "not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1) or roundTo(areaSurveyedHa, 2) != roundTo(areaInvoicedHa, 2)",
+                    "type": "if"
+                  }
+                ],
+                "validate": "required"
+              },
+              {
+                "columns": [
+                  {
+                    "dataType": "species",
+                    "name": "species",
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "threatenedEcologicalCommunity",
+                    "validate": "maxSize[300]"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "surveyTechnique",
+                    "description": "What/how will the survey capture the flora data",
+                    "validate": "required,maxSize[300]"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "individualsOrGroups",
+                    "constraints": [
+                      "Individuals",
+                      "Groups"
+                    ],
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "numberOfIndividualsOrGroups",
+                    "validate": "required,min[0]"
+                  }
+                ],
+                "dataType": "list",
+                "name": "floraSurveyDetails"
+              }
+            ],
+            "dataType": "list",
+            "name": "floraSurveys",
+            "minSize": 1
+          },
+          {
+            "dataType": "image",
+            "name": "photographicEvidence"
+          },
+          {
+            "dataType": "text",
+            "name": "projectAssuranceDetails",
+            "description": ""
+          },
+          {
+            "dataType": "list",
+            "name": "assuranceDocuments",
+            "columns": [
+              {
+                "dataType": "document",
+                "name": "attachments",
+                "description": "Please attach any Evidence of Service Delivery here"
+              }
+            ]
+          }
+        ],
+        "viewModel": [
+          {
+            "type": "section",
+            "items": [
+              {
+                "addRowText": "New survey site",
+                "userAddedRows": true,
+                "source": "floraSurveys",
+                "type": "repeat",
+                "items": [
+                  {
+                    "css": "border-bottom",
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "Baseline survey or indicator (follow-up) survey?",
+                        "css": "span3",
+                        "source": "baselineOrIndicatorSurvey",
+                        "type": "selectOne"
+                      },
+                      {
+                        "preLabel": "Number of flora surveys conducted",
+                        "css": "span3",
+                        "source": "numberOfFloraSurveys",
+                        "type": "number"
+                      },
+                      {
+                        "preLabel": "Date range",
+                        "css": "span3",
+                        "source": "dateRange",
+                        "type": "text"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "css": "span3 col-border-right",
+                        "type": "col",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Site/s covered by flora surveys",
+                                "source": "sitesSurveyed",
+                                "type": "feature"
+                              }
+                            ]
+                          },
+                          {
+                            "readonly": true,
+                            "source": "siteCalculatedAreaHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Please attach mapping details",
+                                "source": "extraMappingDetails",
+                                "type": "document"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "css": "span4 col-border-right",
+                        "type": "col",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Actual area (ha) covered by flora surveys",
+                                "helpText": "Manually enter correct figure for this reporting period if different to mapped value.",
+                                "source": "areaSurveyedHa",
+                                "type": "number",
+                                "displayOptions": {
+                                  "displayUnits": true
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Reason for actual being different to mapped amount",
+                                "source": "mappingNotAlignedReason",
+                                "type": "selectOne"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                                "source": "mappingNotAlignedComments",
+                                "type": "textarea",
+                                "rows": 5
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "columns": [
+                      {
+                        "width": "30%",
+                        "source": "species",
+                        "title": "Target species recorded",
+                        "type": "speciesSelect"
+                      },
+                      {
+                        "width": "25%",
+                        "source": "threatenedEcologicalCommunity",
+                        "title": "Threatened ecological communities (if applicable)",
+                        "type": "text"
+                      },
+                      {
+                        "width": "20%",
+                        "source": "surveyTechnique",
+                        "title": "Survey technique",
+                        "type": "text"
+                      },
+                      {
+                        "width": "15%",
+                        "source": "individualsOrGroups",
+                        "title": "Individuals or groups?",
+                        "type": "selectOne"
+                      },
+                      {
+                        "width": "10%",
+                        "source": "numberOfIndividualsOrGroups",
+                        "title": "Number of groups / individuals in flora survey",
+                        "type": "number"
+                      }
+                    ],
+                    "userAddedRows": true,
+                    "source": "floraSurveyDetails",
+                    "type": "table"
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "preLabel": "Optionally attach photos",
+                    "source": "photographicEvidence",
+                    "type": "image"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "title": ""
+      }
+    },
+    {
+      "name": "Seed Collecting",
+      "optionalQuestionText": null,
+      "optional": false,
+      "collapsedByDefault": false,
+      "templateName": "seed_collecting",
+      "template": {
+        "dataModel": [
+          {
+            "columns": [
+              {
+                "dataType": "text",
+                "name": "initialOrMaintenance",
+                "constraints": [
+                  "Initial",
+                  "Maintenance"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "feature",
+                "name": "siteSeedCollected",
+                "validate": "required"
+              },
+              {
+                "defaultValue": {
+                  "expression": "$geom.areaHa(siteSeedCollected)",
+                  "type": "computed"
+                },
+                "dataType": "number",
+                "name": "calculatedAreaHabitatRevegetedHa",
+                "units": "ha",
+                "decimalPlaces": 3
+              },
+              {
+                "computed": {
+                  "expression": "$geom.lengthKm(siteSeedCollected)"
+                },
+                "dataType": "number",
+                "name": "calculatedLengthHabitatRevegetedKm",
+                "units": "km",
+                "decimalPlaces": 3
+              },
+              {
+                "defaultValue": {
+                  "expression": "calculatedAreaHabitatRevegetedHa",
+                  "type": "computed"
+                },
+                "dataType": "number",
+                "name": "areaHabitatRevegetedHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "validate": "required,min[0]"
+              },
+              {
+                "defaultValue": {
+                  "expression": "calculatedLengthHabitatRevegetedKm",
+                  "type": "computed"
+                },
+                "dataType": "number",
+                "name": "lengthHabitatRevegetedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "species",
+                "name": "species",
+                "validate": "required"
+              },
+              {
+                "name": "noOfDaysSeedCollected",
+                "dataType": "number"
+              },
+              {
+                "dataType": "text",
+                "name": "inKgSeedCollected",
+                "constraints": [
+                  "Individuals",
+                  "Kilograms"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "number",
+                "name": "amountSeedCollected",
+                "decimalPlaces": 5
+              },
+              {
+                "dataType": "number",
+                "name": "numberOfSourcePlants"
+              },
+              {
+                "dataType": "text",
+                "name": "storingFacility"
+              },
+              {
+                "dataType": "number",
+                "name": "noOfPlantsPropogated"
+              },
+              {
+                "dataType": "text",
+                "name": "threatEcoCommunity",
+                "validate": "maxSize[100]"
+              }
+            ],
+            "dataType": "list",
+            "name": "seedCollectionDetails"
+          },
+          {
+            "computed": {
+              "expression": "amountSeedCollected"
+            },
+            "dataType": "number",
+            "name": "totalSeedCollected"
+          },
+          {
+            "computed": {
+              "expression": "numberOfSourcePlants"
+            },
+            "dataType": "number",
+            "name": "totalPlantsPropogated"
+          },
+          {
+            "dataType": "stringList",
+            "name": "isActivitiesUnderObjective6",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "yesUnderObjective6",
+            "behaviour": [
+              {
+                "condition": "isActivitiesUnderObjective6 == \"Yes\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "stringList",
+            "name": "hasNewTrainingPackage",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "yesNewTrainingPackage",
+            "behaviour": [
+              {
+                "condition": "hasNewTrainingPackage == \"Yes\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "indigenousLocalGroupBeenInvolved",
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "number",
+            "name": "noStakeholderInvolved"
+          },
+          {
+            "dataType": "number",
+            "name": "noIndividualsInvolved"
+          },
+          {
+            "dataType": "number",
+            "name": "noIndigenousInvolved"
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "otherComments",
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "stringList",
+            "name": "isActivitiesUnderObjective7",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "yesUnderObjective7",
+            "behaviour": [
+              {
+                "condition": "isActivitiesUnderObjective7 == \"Yes\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "governanceArrangements",
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "governanceArrangementsUtilised",
+            "validate": "required,maxSize[5000]"
+          }
+        ],
+        "modelName": "Seed Collecting",
+        "title": "Seed Collecting",
+        "viewModel": [
+          {
+            "type": "section",
+            "items": [
+              {
+                "columns": [
+                  {
+                    "width": "5%",
+                    "source": "initialOrMaintenance",
+                    "title": "Initial or Maintenance activity?",
+                    "type": "selectOne"
+                  },
+                  {
+                    "width": "5%",
+                    "type": "col",
+                    "title": "Site/s where collection was undertaken",
+                    "items": [
+                      {
+                        "source": "siteSeedCollected",
+                        "type": "feature"
+                      },
+                      {
+                        "readonly": "readonly",
+                        "source": "calculatedAreaHabitatRevegetedHa",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      },
+                      {
+                        "readonly": "readonly",
+                        "source": "calculatedLengthHabitatRevegetedKm",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "width": "10%",
+                    "type": "col",
+                    "title": "Area (ha) of habitat revegated",
+                    "items": [
+                      {
+                        "source": "areaHabitatRevegetedHa",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "width": "10%",
+                    "type": "col",
+                    "title": "Length (km) of habitat revegeted",
+                    "items": [
+                      {
+                        "source": "lengthHabitatRevegetedKm",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "width": "7%",
+                    "source": "species",
+                    "title": "Species",
+                    "type": "speciesSelect"
+                  },
+                  {
+                    "width": "7%",
+                    "source": "noOfDaysSeedCollected",
+                    "title": "Number of days collecting Seed",
+                    "type": "number"
+                  },
+                  {
+                    "width": "7%",
+                    "source": "inKgSeedCollected",
+                    "title": "Individuals / Kilograms collected",
+                    "type": "selectOne"
+                  },
+                  {
+                    "width": "7%",
+                    "source": "amountSeedCollected",
+                    "title": "Amount collected",
+                    "type": "number"
+                  },
+                  {
+                    "width": "7%",
+                    "source": "numberOfSourcePlants",
+                    "title": "Number of Source plants",
+                    "type": "number"
+                  },
+                  {
+                    "width": "12%",
+                    "source": "storingFacility",
+                    "title": "Storing facility",
+                    "type": "textarea"
+                  },
+                  {
+                    "width": "12%",
+                    "source": "noOfPlantsPropogated",
+                    "title": "Number of plants propogated",
+                    "type": "number"
+                  },
+                  {
+                    "width": "12%",
+                    "source": "threatEcoCommunity",
+                    "title": "Threatened ecological community (if applicable)",
+                    "type": "textarea"
+                  }
+                ],
+                "userAddedRows": true,
+                "source": "seedCollectionDetails",
+                "type": "table"
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "source": "<b>Objective 6: Developing and utilising national native seed capacity and employment/training opportunities, with particular emphasis on indigenous and local communities.</b>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "isActivitiesUnderObjective6",
+                "preLabel": "Were any activities and/or related actions under Objective 6 undertaken in this reporting period?",
+                "type": "selectOne"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "preLabel": "If yes, please detail what activities/related actions were undertaken to develop native seed training or employment opportunities for Indigenous and local communities.",
+                "source": "yesUnderObjective6",
+                "type": "textarea",
+                "rows": 3
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "hasNewTrainingPackage",
+                "preLabel": "Has a new training package/s, targeting local and Indigenous communities, been developed?",
+                "type": "selectOne"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "preLabel": "If yes, please provide further detail of the new training package/s, including summary of content / skills provided, format of delivery (e.g. online) and accessibility of training to Indigenous and local communities.",
+                "source": "yesNewTrainingPackage",
+                "type": "textarea",
+                "rows": 3
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "preLabel": "Have any Indigenous and/or local community groups, or other stakeholders, been involved in the development, testing or delivery of training packages? If so, please provide detail.",
+                "type": "textarea",
+                "rows": 5,
+                "source": "indigenousLocalGroupBeenInvolved"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "preLabel": "Number of stakeholder organisations involved this reporting period:",
+                "type": "number",
+                "rows": 5,
+                "source": "noStakeholderInvolved"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "preLabel": "Number of individuals involved this reporting period:",
+                "type": "number",
+                "rows": 5,
+                "source": "noIndividualsInvolved"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "preLabel": "Number of Indigenous participants involved this reporting period:",
+                "type": "number",
+                "rows": 5,
+                "source": "noIndigenousInvolved"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "preLabel": "Other comments:",
+                "type": "textarea",
+                "rows": 5,
+                "source": "otherComments"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<b>Objective 7: Keeping participants safe, with particular regard to working in or near fire-grounds.</b>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "isActivitiesUnderObjective7",
+                "preLabel": "Were any on-ground activities undertaken in or near fire-grounds during the reporting period?",
+                "type": "selectOne"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "preLabel": "If yes, please detail what safety measures have been implemented to keep particicpants safe during this reporting period.",
+                "source": "yesUnderObjective7",
+                "type": "textarea",
+                "rows": 3
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<b>Objective 8: Establishing sound governance arrangements in consultation with the Department to ensure proper use of funds (efficient, effective, economical, and ethical). This includes the establishment of a Steering Committee to oversee the implmentation of the activity. The Steering Committee must have membership and Terms of Reference to be agreed with the Department.</b>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "preLabel": "Describe what governance arrangement/s have been established or maintained in this reporting period.",
+                "type": "textarea",
+                "rows": 5,
+                "source": "governanceArrangements"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "preLabel": "Explain how these governance arrangements have been utilised to ensure funds are used correctly.",
+                "type": "textarea",
+                "rows": 5,
+                "source": "governanceArrangementsUtilised"
+              }
+            ],
+            "type": "row"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Final Project Reporting Fields",
+      "optionalQuestionText": null,
+      "optional": false,
+      "collapsedByDefault": false,
+      "templateName": "final_project_reporting_fields",
+      "template": {
+        "modelName": "Final Project Reporting Fields",
+        "dataModel": [
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "projectOutcomesSummary",
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "list",
+            "name": "projectOutcomes",
+            "columns": [
+              {
+                "dataType": "text",
+                "name": "outcomeStatement",
+                "validate": "required,maxSize[5000]"
+              },
+              {
+                "dataType": "text",
+                "name": "achievement",
+                "validate": "required,maxSize[5000]"
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "keq1",
+            "validate": "required,maxSize[3000]"
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "keq2",
+            "validate": "required,maxSize[3000]"
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "keq3",
+            "validate": "required,maxSize[3000]"
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "keq4",
+            "validate": "required,maxSize[3000]"
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "keq5",
+            "validate": "required,maxSize[3000]"
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "keq6",
+            "validate": "required,maxSize[3000]"
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "keq7",
+            "validate": "required,maxSize[3000]"
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "riskManagement",
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "governanceSummary",
+            "validate": "required,maxSize[5000]"
+          }
+        ],
+        "viewModel": [
+          {
+            "items": [
+              {
+                "source": "<h4>7. Project Outcomes</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<b>7.1 Provide a summary of what was achieved during the project, including but not limited to:</b>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "a) environmental outcomes<br>b) impact and legacy of the project<br>c) ay social outcomes, such as engagement with Indigenous Owners, landholders and local community",
+                "source": "projectOutcomesSummary",
+                "type": "textarea",
+                "rows": 3
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "<b>7.2 Describe achievements made by the project against each relevant intended outcome of the program, including measurable information where available.</b><p>Supporting evidence to demonstrate achievement against outcome/s (e.g. report, monitoring data sets, photos, media articles, etc) should be provided as attachments to this report via the Admin tab > Documents sub-tab of MERIT. Supporting evidence should be labelled to reference the applicable outcome statement/s. Where supporting evidence contains sensitive or confidential information, please send to your Grant Manager by email.</p>",
+                "type": "literal"
+              }
+            ]
+          },
+          {
+            "source": "projectOutcomes",
+            "type": "table",
+            "userAddedRows": true,
+            "columns": [
+              {
+                "source": "",
+                "type": "literal",
+                "width": "5%",
+                "preLabel": {
+                  "computed": "\\'No. \\' || (index + 1)"
+                },
+                "title": "Outcome No."
+              },
+              {
+                "type": "textarea",
+                "source": "outcomeStatement",
+                "title": "Outcome",
+                "rows": 5,
+                "width": "45%"
+              },
+
+              {
+                "type": "textarea",
+                "source": "achievement",
+                "title": "Achievement against the outcome",
+                "rows": 5,
+                "width": "50%"
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>8. Project Evaluation</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "<b>8.1 Provide overall evaluation of the project by addressing the Key Evaluation Questions from your MERI plan below.</b><p>If an evaluation report for the project has been developed, this can be provided as an attachment to this report via the Admin tab > Documents sub-tab of MERIT.</p>",
+                "type": "literal"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "KEQ1 - To what extent has the program efficiently and effectively address the eight priority objectives?",
+                "type": "textarea",
+                "rows": 5,
+                "source": "keq1"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "KEQ2 - To what extent has the problem contributed to understanding the seed supply needs and industry capacity to restore vegetation and wildlife habitat across fire impacted regions?",
+                "type": "textarea",
+                "rows": 5,
+                "source": "keq2"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "KEQ3 - To what extent has the program been able to effectively and efficiently build the capacity of the sector to meet future demands?",
+                "type": "textarea",
+                "rows": 5,
+                "source": "keq3"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "KEQ4 - To what extent has the program contributed towards creating a sustainable and commercial native seed sector?",
+                "type": "textarea",
+                "rows": 5,
+                "source": "keq4"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "KEQ5 - To what extent has the program been able to build partnerships to coordinate seed collection and develop seedbanks for future safeguarding against local extinctions?",
+                "type": "textarea",
+                "rows": 5,
+                "source": "keq5"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "KEQ6 - How sustainable are the outcomes progressed by the project? Will the benefits be sustained beyond the life of the projects?",
+                "type": "textarea",
+                "rows": 5,
+                "source": "keq6"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "KEQ7 - What lessons have been learned from program implementation that could inform future initiatives in this area?",
+                "type": "textarea",
+                "rows": 5,
+                "source": "keq7"
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>9. Risk Management</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "9.1 To what extent has the project risk assessment and risk management been appropriate and effective?",
+                "type": "textarea",
+                "rows": 5,
+                "source": "riskManagement"
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>10. Governance</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "10.1 Summarise the role of External Steering Committee in achieving project outcomes.",
+                "type": "textarea",
+                "rows": 5,
+                "source": "governanceSummary"
+              }
+            ]
+          }
+        ],
+        "title": "Final Project Reporting Fields"
+      }
+    }
+  ],
+  "formVersion": 1,
+  "category": null,
+  "status": "active",
+  "gmsId": null,
+  "supportsSites": false,
+  "supportsPhotoPoints": false,
+  "minOptionalSectionsCompleted": 1
+}
