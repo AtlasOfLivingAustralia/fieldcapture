@@ -65,17 +65,6 @@
           },
           {
             "dataType": "text",
-            "name": "detailsOfProjectContacts",
-            "validate": "required,maxSize[1000]",
-            "behaviour": [
-              {
-                "type": "enable",
-                "condition": "projectContactDetailsChanged == \"Yes\""
-              }
-            ]
-          },
-          {
-            "dataType": "text",
             "description": "Summary of Project Progress for the Period",
             "name": "progressSummary",
             "validate": "required,maxSize[5000]"
@@ -341,16 +330,16 @@
               {
                 "source": "projectContactDetailsChanged",
                 "preLabel": "1.1 Has there been a change to key project contacts or their details?",
-                "type": "selectOne",
-                "helpText": "(e.g. Name, position, role, email, telephone or address of key contacts)",
-                "css": "span4"
-              },
+                "type": "selectOne"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
               {
-                "source": "detailsOfProjectContacts",
-                "preLabel": "If 'Yes', please provide updated details to the department",
-                "type": "textarea",
-                "css": "span8",
-                "rows": 4
+                "source": "<i><b style=\"background-color:yellow\">If 'Yes', please provide updated details to the Department.</b></i>",
+                "type": "literal"
               }
             ],
             "type": "row"
@@ -783,13 +772,13 @@
       }
     },
     {
-      "name": "Floral Survey",
+      "name": "Flora Survey",
       "optionalQuestionText": null,
       "optional": false,
       "collapsedByDefault": false,
-      "templateName": "floral_survey",
+      "templateName": "flora_survey",
       "template": {
-        "modelName": "Floral Survey",
+        "modelName": "Flora Survey",
         "dataModel": [
           {
             "columns": [
@@ -1958,6 +1947,34 @@
                 "type": "textarea",
                 "rows": 5,
                 "source": "governanceSummary"
+              }
+            ]
+          }
+        ],
+        "pre-populate": [
+          {
+            "source": {
+              "context-path": "owner"
+            },
+            "merge": {
+              "projectOutcomes": {
+                "deleteUnmatchedExistingRows": true,
+                "addUnmatchedNewRows": true,
+                "keys": [
+                  "outcomeStatement"
+                ]
+              }
+            },
+            "mapping": [
+              {
+                "target": "projectOutcomes",
+                "mapping": [
+                  {
+                    "target": "outcomeStatement",
+                    "source-path": "description"
+                  }
+                ],
+                "source-path": "custom.details.outcomes.shortTermOutcomes"
               }
             ]
           }
