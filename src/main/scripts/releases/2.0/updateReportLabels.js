@@ -44,3 +44,13 @@ while (rlpProjects.hasNext()) {
     }
 
 }
+
+// Correct some Semester labels back to Quarter
+db.report.update({activityId:'71973372-5699-424a-8745-d611c56c8ca4'}, {$set:{generatedBy:'Quarter'}});
+db.report.update({activityId:'dccd28db-cd0a-4ab7-a1e5-6b0565a3c8a0'}, {$set:{generatedBy:'Quarter'}});
+db.report.update({activityId:'9dc95c8c-1d54-49b8-b04d-c89337d705d5'}, {$set:{generatedBy:'Quarter'}});
+
+db.report.update({activityId:'a952baa4-52e3-48ff-9630-ee59a0170c03'}, {$set:{generatedBy:'Quarter'}});
+db.report.update({activityId:'19e79418-760d-417e-aa89-6447dd091b2a'}, {$set:{generatedBy:'Quarter'}});
+db.report.update({activityId:'6b560e65-54b1-4df7-86ac-24784e936d8a'}, {$set:{generatedBy:'Quarter'}});
+
