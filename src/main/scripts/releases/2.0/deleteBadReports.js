@@ -32,3 +32,16 @@ var outputReport2ReportId = 'ff38b6cf-bfde-4be7-a65d-52af8c8df5e0';
 var outputReport2 = db.report.findOne({reportId:outputReport2ReportId});
 updateReportDetails(outputReport2ReportId, outputReport2.description, report.fromDate, outputReport2.toDate, userId);
 updateActivity(outputReport2, userId);
+
+
+// Delete duplicate Outcomes Report 1 for RLP-MU11-P5
+report = db.report.findOne({reportId:'4f404f45-3dd2-4531-a7cb-01510491f614'});
+var activity = db.activity.findOne({activityId:report.activityId});
+
+report.status = 'deleted';
+db.report.save(report);
+audit(report, report.reportId, 'au.org.ala.ecodata.Report', userId);
+
+activity.status = 'deleted';
+db.activity.save(activity);
+audit(activity, activity.activityId, 'au.org.ala.ecodata.Activity', userId);
