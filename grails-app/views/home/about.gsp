@@ -4,7 +4,7 @@
 <head>
   <g:set var="layoutName" value="nrm_bs4"/>
   <meta name="layout" content="${layoutName}"/>
-  <title>${settingType.title?:'About'} | Field Capture</title>
+  <title>${settingType.title?:'About'} | MERIT</title>
   <script>
     window.fcConfig = {
         baseUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
@@ -24,7 +24,7 @@
                 <h1>${settingType.title?:'About the website'}
                     <g:if test="${fc.userInRole(role: grailsApplication.config.getProperty('security.cas.alaAdminRole')) || fc.userInRole(role: grailsApplication.config.getProperty('security.cas.adminRole'))}">
                         <span style="display: inline-block; margin: 0 10px;">
-                            <a href="${g.createLink(controller:"admin",action:"editSettingText", id: settingType.name, params: [layout:layoutName,returnUrl: g.createLink(controller: params.controller, action: params.action, id: params.id, absolute: true)])}"
+                            <a href="${g.createLink(controller:"admin",action:"editSettingText", id: settingType.name, params: [returnTo: params.action])}"
                                class="btn"><i class="fa fa-edit"></i> Edit</a>
                         </span>
                     </g:if>
@@ -41,7 +41,7 @@
             <g:set var="newsText"><fc:getSettingContent settingType="${SettingPageType.NEWS}"/></g:set>
             <div class="col-md-5">
                 <g:if test="${fc.userInRole(role: grailsApplication.config.getProperty('security.cas.alaAdminRole')) || fc.userInRole(role: grailsApplication.config.getProperty('security.cas.adminRole'))}">
-                    <a href="${g.createLink(controller:"admin",action:"editSettingText", id: SettingPageType.NEWS.name, params: [layout:layoutName,returnUrl: g.createLink(controller: params.controller, action: params.action, absolute: true)])}"
+                    <a href="${g.createLink(controller:"admin",action:"editSettingText", id: SettingPageType.NEWS.name, params: [returnTo: params.action])}"
                        class="btn pull-right"><i class="fa fa-edit"></i> Edit</a>
                 </g:if>
                 ${newsText}

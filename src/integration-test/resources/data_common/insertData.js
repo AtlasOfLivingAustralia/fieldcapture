@@ -212,6 +212,13 @@ function assign(src, des){
     }
 
 }
+function addStaticContentSettings() {
+    addSetting('meritfielddata.help.text', "This is help content")
+    addSetting('meritfielddata.contacts.text', "This is contacts content")
+    addSetting('meritfielddata.about.text', "This is about content")
+    addSetting('meritfielddata.news.text', "This is news content")
+
+}
 
 function addSetting(key, value) {
     db.setting.insert({key:key, value:value});
