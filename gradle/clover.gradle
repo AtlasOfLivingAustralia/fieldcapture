@@ -46,5 +46,5 @@ clover {
         xml = true
     }
 
-    targetPercentage = '34.9%' // This is unit test coverage
+    targetPercentage = '35.1%' // This is unit test coverage
 }
