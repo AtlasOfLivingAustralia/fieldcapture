@@ -4,6 +4,7 @@ import au.com.bytecode.opencsv.CSVReader
 import au.org.ala.web.AuthService
 import grails.plugins.csv.CSVReaderUtils
 import grails.web.http.HttpHeaders
+import org.apache.http.HttpStatus
 import spock.lang.Specification
 import grails.testing.web.controllers.ControllerUnitTest
 
@@ -129,7 +130,7 @@ class AdminControllerSpec extends Specification implements ControllerUnitTest<Ad
         lines.size() == 4
     }
 
-    def "The edit setting text something something"(String setting, String returnTo, String expectedReturnUrl, String expectedReturnLabel) {
+    def "The AdminController configures navigation and settings based on the setting being edited"(String setting, String returnTo, String expectedReturnUrl, String expectedReturnLabel) {
         setup:
         String content = "test"
 
@@ -152,5 +153,14 @@ class AdminControllerSpec extends Specification implements ControllerUnitTest<Ad
         'contacts' | 'contacts' | '/home/contacts' | 'Contacts'
         'rlpMeriDeclaration' | null | '/admin/staticPages' | 'Static pages'
 
+    }
+
+    def "If an invalid setting name is supplied, the AdminController will return and error"() {
+        when:
+        controller.editSettingText("invalid")
+
+        then:
+        response.status == HttpStatus.SC_NOT_FOUND
+        0 * settingService._
     }
 }
