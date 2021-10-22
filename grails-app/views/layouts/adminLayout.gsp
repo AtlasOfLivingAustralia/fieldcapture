@@ -59,7 +59,7 @@
         <div class="row">
             <div id="admin" class="nav flex-column nav-pills col-sm-3 pl-2 pr-0">
                 <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'audit')}"  class="audit" title="Audit" />
-                <g:if test="${fc.userIsAlaOrFcAdmin())}">
+                <g:if test="${fc.userIsAlaOrFcAdmin()}">
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'staticPages')}" class="staticPages" title="Static pages" />
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'editHelpLinks')}" class="helpResource" title="Help Resources"/>
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'editSiteBlog')}" class="siteBlog" title="Site Blog"/>
