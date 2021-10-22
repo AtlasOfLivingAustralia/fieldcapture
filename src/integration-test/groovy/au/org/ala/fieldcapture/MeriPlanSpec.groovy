@@ -221,10 +221,9 @@ class MeriPlanSpec extends StubbedCasSpec {
 
         when: "We open the MERI plan and press the Submit button"
         to ProjectIndex, '1'
-        waitFor { at ProjectIndex }
-        adminTab.click()
+        openAdminTab()
         def meriplan = admin.openMeriPlan()
-        meriplan.saveAndSubmitChanges.click()
+        meriplan.submit()
 
         then: "The MERI plan submission declaration is displayed"
         waitFor 20, {

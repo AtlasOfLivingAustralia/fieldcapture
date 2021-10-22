@@ -173,7 +173,7 @@ class EditableMeriPlan extends Module {
         floatingSaveButton { $('#floating-save [data-bind*="saveProjectDetails"]') }
         saveButton { $('.form-actions [data-bind*="saveProjectDetails"]').first() }
         pdfButton { $('.btn[data-bind*="meriPlanPDF"]').first() }
-        saveAndSubmitChanges { $('.saveAndSubmitChanges').first() }
+        saveAndSubmitChanges { $('button.saveAndSubmitChanges').first() }
         approveButton(required:false){ $('[data-bind*="approvePlan"]') }
         rejectButton(required:false) { $('[data-bind*="rejectPlan"]') }
         modifyApprovedPlanButton(required:false){ $('[data-bind*="modifyPlan"]') }
@@ -239,7 +239,12 @@ class EditableMeriPlan extends Module {
     }
 
     void submit() {
-        saveAndSubmitChanges.click()
+        if (saveAndSubmitChanges.module(FormElement).enabled) {
+            saveAndSubmitChanges.click()
+        }
+        else {
+            throw new RuntimeException("Submit button is disabled")
+        }
     }
 
     List selectablePrimaryOutcomes() {
