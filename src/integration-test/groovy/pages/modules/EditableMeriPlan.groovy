@@ -117,6 +117,16 @@ class ObjectivesAndAssets extends Module {
     }
 }
 
+class SubmissionModal extends Module {
+    static content = {
+        cancelButton { $('.btn.btn-danger') }
+    }
+
+    void cancel() {
+        cancelButton.click()
+    }
+}
+
 class EditableMeriPlan extends Module {
 
 
@@ -162,15 +172,16 @@ class EditableMeriPlan extends Module {
 
         floatingSaveButton { $('#floating-save [data-bind*="saveProjectDetails"]') }
         saveButton { $('.form-actions [data-bind*="saveProjectDetails"]').first() }
-        pdfButton { $('.btn[data-bind*="meriPlanPDF"').first() }
+        pdfButton { $('.btn[data-bind*="meriPlanPDF"]').first() }
         saveAndSubmitChanges { $('.saveAndSubmitChanges').first() }
         approveButton(required:false){ $('[data-bind*="approvePlan"]') }
-        rejectButton(required:false) { $('[data-bind*="rejectPlan"') }
-        modifyApprovedPlanButton(required:false){ $('[data-bind*="modifyPlan"') }
+        rejectButton(required:false) { $('[data-bind*="rejectPlan"]') }
+        modifyApprovedPlanButton(required:false){ $('[data-bind*="modifyPlan"]') }
 
         approvePlanDialog(required:false) { $('#meri-plan-approval-modal').module(MeriPlanApproveDialog) }
 
         internalOrderNumber(required:false) { $('#internalOrderId') }
+        submissionModal(required:false) { $("#meriSubmissionDeclaration").module(SubmissionModal) }
     }
 
     void addBudgetRow() {
@@ -225,6 +236,10 @@ class EditableMeriPlan extends Module {
                 return true // This indicates a page reload
             }
         }
+    }
+
+    void submit() {
+        saveAndSubmitChanges.click()
     }
 
     List selectablePrimaryOutcomes() {
