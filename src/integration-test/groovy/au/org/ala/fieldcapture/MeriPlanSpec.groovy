@@ -215,44 +215,27 @@ class MeriPlanSpec extends StubbedCasSpec {
     }
 
     def "cancel MERI Plan dialog declaration"() {
-        // submit meri plan
-        // dialog box appear
-        // cancel should return to meri plan and unblock the UI
 
         setup:
         login([userId: '2', role: "ROLE_FC_OFFICER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_OFFICER'], browser)
 
-        when:
+        when: "We open the MERI plan and press the Submit button"
         to ProjectIndex, '1'
         waitFor { at ProjectIndex }
         adminTab.click()
-        def meriplan = waitFor { admin.openMeriPlan() }
-
-        then:
-        meriplan.shortTermOutcomes[0].value("Short term outcome 1 Text updated")
-
-        and:
-        waitFor {
-           meriplan.saveAndSubmitChanges.displayed
-        }
+        def meriplan = admin.openMeriPlan()
         meriplan.saveAndSubmitChanges.click()
 
-        then:
-        waitFor 10, {
-            $("#meriSubmissionDeclaration").displayed
+        then: "The MERI plan submission declaration is displayed"
+        waitFor 20, {
+            meriplan.submissionModal.displayed
         }
-        def cancel = $('#meriSubmissionDeclaration .btn.btn-danger').find{it.text() =="Cancel"}
 
-        when: "save the meri plan and reload the page and it should unlock the UI"
-        cancel.click()
+        when: "The cancel button is pressed on the declaration"
+        meriplan.submissionModal.cancel()
 
-        and:
-        waitFor {at ProjectIndex }
-        adminTab.click()
-        def meriPlanUpdated = admin.openMeriPlan()
-
-        then:
-        meriPlanUpdated.shortTermOutcomes[0].value() == "Short term outcome 1 Text updated"
+        then: "The declaration is closed"
+        waitFor { !meriplan.submissionModal.displayed }
     }
 
 
