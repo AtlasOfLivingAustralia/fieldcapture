@@ -145,11 +145,13 @@ class AdminController {
 
     @PreAuthorise(accessLevel = 'siteAdmin', redirectController = "admin")
     def editSettingText(String id) {
-        def content
-        def layout = params.layout?:"adminLayout"
-        def returnUrl = params.returnUrl?:g.createLink(controller:'admin', action:'staticPages', absolute: true )
-        def returnAction = returnUrl.tokenize("/")[-1]
-        def returnLabel = GrailsNameUtils.getScriptName(returnAction).replaceAll('-',' ').capitalize()
+        String content
+
+        String returnController = params.returnTo ? 'home' : 'admin'
+        String returnAction = params.returnTo ?: 'staticPages'
+
+        String returnUrl = g.createLink(controller:returnController, action:returnAction)
+        String returnLabel = GrailsNameUtils.getScriptName(returnAction).replaceAll('-',' ').capitalize()
         SettingPageType type = SettingPageType.getForName(id)
 
         if (type) {
@@ -161,8 +163,6 @@ class AdminController {
 
         render(view:'editTextAreaSetting', model:[
                 textValue: content,
-                layout: layout,
-                ajax: (layout =~ /ajax/) ? true : false,
                 returnUrl: returnUrl,
                 returnLabel: returnLabel,
                 settingTitle: type.title,

@@ -4,17 +4,20 @@ import au.com.bytecode.opencsv.CSVReader
 import au.org.ala.web.AuthService
 import grails.plugins.csv.CSVReaderUtils
 import grails.web.http.HttpHeaders
+import org.apache.http.HttpStatus
 import spock.lang.Specification
 import grails.testing.web.controllers.ControllerUnitTest
 
 class AdminControllerSpec extends Specification implements ControllerUnitTest<AdminController>{
 
-    def adminService = Mock(AdminService)
-    def authService  = Mock(AuthService)
+    AdminService adminService = Mock(AdminService)
+    AuthService authService  = Mock(AuthService)
+    SettingService settingService = Mock(SettingService)
 
     def setup(){
         controller.adminService = adminService
         controller.authService = authService
+        controller.settingService = settingService
     }
 
     void "Search User Details using email Address"(){
@@ -125,5 +128,39 @@ class AdminControllerSpec extends Specification implements ControllerUnitTest<Ad
         response.header(HttpHeaders.CONTENT_DISPOSITION) == 'attachment; filename="merit-project-import.csv"'
         response.contentType == 'text/csv'
         lines.size() == 4
+    }
+
+    def "The AdminController configures navigation and settings based on the setting being edited"(String setting, String returnTo, String expectedReturnUrl, String expectedReturnLabel) {
+        setup:
+        String content = "test"
+
+        when:
+        params.returnTo = returnTo
+        controller.editSettingText(setting)
+
+        then:
+        view == '/admin/editTextAreaSetting'
+        model.textValue == content
+        model.returnUrl == expectedReturnUrl
+        model.returnLabel == expectedReturnLabel
+        1 * settingService.getSettingText(_) >> content
+
+        where:
+
+        setting    | returnTo | expectedReturnUrl | expectedReturnLabel
+        'about'    | 'about' | '/home/about'     | 'About'
+        'help'     | 'help' | '/home/help'      | 'Help'
+        'contacts' | 'contacts' | '/home/contacts' | 'Contacts'
+        'rlpMeriDeclaration' | null | '/admin/staticPages' | 'Static pages'
+
+    }
+
+    def "If an invalid setting name is supplied, the AdminController will return and error"() {
+        when:
+        controller.editSettingText("invalid")
+
+        then:
+        response.status == HttpStatus.SC_NOT_FOUND
+        0 * settingService._
     }
 }

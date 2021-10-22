@@ -148,4 +148,5 @@ var activity = {
     "description":"Description Test",
     "endDate":ISODate("2015-06-30T00:00:00.000Z")
 }
-db.activity.insert(activity)
+db.activity.insert(activity);
+addStaticContentSettings();
