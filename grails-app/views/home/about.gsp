@@ -22,7 +22,7 @@
         <div class="row">
             <div class="col-md-8" id="">
                 <h1>${settingType.title?:'About the website'}
-                    <g:if test="${fc.userInRole(role: grailsApplication.config.getProperty('security.cas.alaAdminRole')) || fc.userInRole(role: grailsApplication.config.getProperty('security.cas.adminRole'))}">
+                    <g:if test="${fc.userIsAlaOrFcAdmin()}">
                         <span style="display: inline-block; margin: 0 10px;">
                             <a href="${g.createLink(controller:"admin",action:"editSettingText", id: settingType.name, params: [returnTo: params.action])}"
                                class="btn"><i class="fa fa-edit"></i> Edit</a>
@@ -40,7 +40,7 @@
             <g:if test="${showNews}">
             <g:set var="newsText"><fc:getSettingContent settingType="${SettingPageType.NEWS}"/></g:set>
             <div class="col-md-5">
-                <g:if test="${fc.userInRole(role: grailsApplication.config.getProperty('security.cas.alaAdminRole')) || fc.userInRole(role: grailsApplication.config.getProperty('security.cas.adminRole'))}">
+                <g:if test="${fc.userIsAlaOrFcAdmin())}">
                     <a href="${g.createLink(controller:"admin",action:"editSettingText", id: SettingPageType.NEWS.name, params: [returnTo: params.action])}"
                        class="btn pull-right"><i class="fa fa-edit"></i> Edit</a>
                 </g:if>

@@ -469,17 +469,6 @@ class FCTagLib {
     }
 
     /**
-     * Check if the logged in user has the requested role
-     *
-     * @attr role REQUIRED
-     */
-    def userInRole = { attrs ->
-        if (userService.userInRole(attrs.role)) {
-            out << true
-        }
-    }
-
-    /**
      * Check if the logged in user is a site admin
      *
      */
