@@ -43,7 +43,6 @@ sleep 180
 chmod u+x src/main/scripts/loadFunctionalTestData.sh
 
 echo "Running functional tests"
-./gradlew integrationTest -Dgeb.env=chromeHeadless --tests au.org.ala.fieldcapture.MeriPlanSpec
 ./gradlew integrationTest --stacktrace -Dgeb.env=$GEB_ENV
 
 RETURN_VALUE=$?
