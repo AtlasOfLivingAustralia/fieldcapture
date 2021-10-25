@@ -10,10 +10,13 @@ class RoleService {
     public static final String GRANT_MANAGER_ROLE = 'caseManager'
     public static final String PROJECT_ADMIN_ROLE = 'admin'
     public static final String PROJECT_EDITOR_ROLE = 'editor'
+    public static final String PROJECT_FC_READ_ONLY_ROLE = 'ROLE_FC_READ_ONLY'
+    public static final String PROJECT_FC_OFFICER_ROLE = 'ROLE_FC_OFFICER'
+    public static final String PROJECT_FC_ADMIN_ROLE = 'ROLE_FC_ADMIN'
+
 
     /** MERIT only uses a subset of the roles that ecodata supports */
     private static final List MERIT_PROJECT_ROLES = [GRANT_MANAGER_ROLE, PROJECT_ADMIN_ROLE, PROJECT_EDITOR_ROLE]
-
 
     private List roles(Boolean clearCache = false) {
         if (clearCache) {
@@ -57,6 +60,12 @@ class RoleService {
     }
 
     public Set getAllowedUserRoles() {
-        return new HashSet([PROJECT_ADMIN_ROLE, PROJECT_EDITOR_ROLE])
+        return new HashSet([PROJECT_ADMIN_ROLE, PROJECT_EDITOR_ROLE, PROJECT_FC_READ_ONLY_ROLE, PROJECT_FC_OFFICER_ROLE, PROJECT_FC_ADMIN_ROLE])
+    }
+
+    public Set getHubRoles() {
+        //todo: refactor this to call a webservice
+        def roles = [ PROJECT_FC_READ_ONLY_ROLE, PROJECT_FC_OFFICER_ROLE, PROJECT_FC_ADMIN_ROLE]
+        return roles
     }
 }

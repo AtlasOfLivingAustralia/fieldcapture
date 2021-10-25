@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.hub.HubSettings
 import grails.converters.JSON
 import groovy.util.logging.Slf4j
 import org.grails.web.json.JSONArray
@@ -71,6 +72,7 @@ class UserController {
 
         if (userId && projectId && role) {
             Map response = userService.addUserAsRoleToProject(userId, projectId, role)
+            println response
             if (response.error) {
                 render status: 400, text: response.error
             } else {
@@ -213,6 +215,65 @@ class UserController {
             render status: 403, text: 'User not logged-in or does not have permission'
         } else {
             render status: 500, text: 'Unexpected error'
+        }
+    }
+
+    def getMembersOfHub() {
+        println params: params
+        String hubId = params.id
+        def adminUserId = userService.getCurrentUserId()
+
+        if (hubId && adminUserId) {
+            if (authService.userInRole(grailsApplication.config.getProperty('security.cas.adminRole'))) {
+                /* HubSettings can't be used to reflect list values as it caches the results
+                HubSettings hubSettings = SettingService.getHubConfig()
+                render hubSettings.userPermissions as JSON*/
+                def results = userService.getByHub(hubId)
+                render results as JSON
+            } else {
+                render status: 403, text: 'Permission denied'
+            }
+        } else if (adminUserId) {
+            render status: 400, text: 'Required params not provided: id'
+        } else if (projectId) {
+            render status: 403, text: 'User not logged-in or does not have permission'
+        } else {
+            render status: 500, text: 'Unexpected error'
+        }
+    }
+
+    def addUserToHub() {
+        String userId = params.userId
+        String hubId = params.entityId
+        String role = params.role
+        def adminUser = authService.userDetails()
+
+        if (userId && hubId && role) {
+            Map response = userService.addUserToHub(userId, hubId, role)
+            if (response.error) {
+                render status: 400, text: response.error
+            } else {
+                render response as JSON
+            }
+        } else {
+            render status:400, text: 'Required params not provided: userId, role, projectId'
+        }
+    }
+
+    def removeUserWithHubRole() {
+        String userId = params.userId
+        String role = params.role
+        String hubId = params.entityId
+        def adminUser = authService.userDetails()
+
+        if (adminUser && hubId && role && userId) {
+            if (authService.userInRole(grailsApplication.config.getProperty('security.cas.adminRole'))) {
+                render userService.removeHubUser(hubId, userId, role) as JSON
+            } else {
+                render status:403, text: 'Permission denied'
+            }
+        } else {
+            render status:400, text: 'Required params not provided: userId, projectId, role'
         }
     }
 

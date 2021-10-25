@@ -534,4 +534,27 @@ class UserService {
         }
         roles
     }
+
+    def getByHub(hubId) {
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/getByHub/${hubId}"
+        webService.getJson(url)
+    }
+
+    def addUserToHub(String userId, String hubId, String role) {
+        Map result = checkRoles(userId, role)
+        if (result.error) {
+            return result
+        }
+        def submittingUser = authService.userDetails()
+        if (!projectService.isUserAdminForProject(submittingUser.userId, hubId)) {
+            return [error:'Permission denied']
+        }
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/addUserWithRoleToHub?userId=${userId}&hubId=${hubId}&role=${role}"
+        webService.getJson(url)
+    }
+
+    def removeHubUser(String hubId, String userId, String role) {
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/removeUserWithRoleFromHub?userId=${userId}&hubId=${hubId}&role=${role}"
+        webService.getJson(url)
+    }
 }

@@ -2,6 +2,7 @@ package au.org.ala.merit
 
 import au.com.bytecode.opencsv.CSVReader
 import au.org.ala.merit.command.Reef2050PlanActionReportSummaryCommand
+import au.org.ala.merit.hub.HubSettings
 import au.org.ala.merit.reports.ReportGenerationOptions
 import grails.converters.JSON
 import grails.util.Environment
@@ -33,6 +34,8 @@ class AdminController {
     def documentService
     def organisationService
     def reportService
+    def roleService
+    def userService
     RisksService risksService
 
     def index() {}
@@ -75,6 +78,13 @@ class AdminController {
 
     @PreAuthorise(accessLevel = 'siteAdmin', redirectController = "admin")
     def removeUserPermission(){
+    }
+
+    @PreAuthorise(accessLevel = 'siteAdmin', redirectController = "admin")
+    def createUserHubPermission(){
+        HubSettings hubSettings = SettingService.getHubConfig()
+        def user = userService.getUser()
+        render(view: "createUserHubPermission", model:[roles: roleService.getHubRoles(), user: user, hubId: hubSettings.hubId])
     }
 
     @PreAuthorise(accessLevel = 'siteAdmin', redirectController = "admin")
