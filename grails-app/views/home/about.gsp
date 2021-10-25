@@ -40,7 +40,7 @@
             <g:if test="${showNews}">
             <g:set var="newsText"><fc:getSettingContent settingType="${SettingPageType.NEWS}"/></g:set>
             <div class="col-md-5">
-                <g:if test="${fc.userIsAlaOrFcAdmin())}">
+                <g:if test="${fc.userIsAlaOrFcAdmin()}">
                     <a href="${g.createLink(controller:"admin",action:"editSettingText", id: SettingPageType.NEWS.name, params: [returnTo: params.action])}"
                        class="btn pull-right"><i class="fa fa-edit"></i> Edit</a>
                 </g:if>
