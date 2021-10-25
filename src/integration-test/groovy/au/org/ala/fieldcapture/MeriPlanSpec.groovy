@@ -214,6 +214,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         }
     }
 
+    /*
     def "cancel MERI Plan dialog declaration"() {
 
         setup:
@@ -236,6 +237,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         then: "The declaration is closed"
         waitFor { !meriplan.submissionModal.displayed }
     }
+    */
 
 
     def "A program can set a default primary outcome"()  {
