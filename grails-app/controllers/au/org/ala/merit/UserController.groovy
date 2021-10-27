@@ -146,23 +146,6 @@ class UserController {
     }
 
     /**
-     * Get a list of projects and roles for a given userId
-     *
-     * @return
-     */
-    def viewPermissionsForUserId() {
-        String userId = params.userId
-
-        if (authService.userDetails() && (authService.userInRole(grailsApplication.config.getProperty('security.cas.alaAdminRole')) || authService.userInRole(grailsApplication.config.getProperty('security.cas.officerRole'))) && userId) {
-            render userService.getProjectsForUserId(userId) as JSON
-        } else if (!userId) {
-            render status:400, text: 'Required params not provided: userId, role, projectId'
-        } else {
-            render status:403, text: 'Permission denied'
-        }
-    }
-
-    /**
      * Check if an email address exists in AUTH and return the userId (number) if true,
      * otherwise return an empty String
      *

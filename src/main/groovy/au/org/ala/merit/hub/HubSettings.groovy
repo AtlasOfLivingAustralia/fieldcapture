@@ -1,5 +1,6 @@
 package au.org.ala.merit.hub
 
+import org.grails.web.json.JSONArray
 import org.grails.web.json.JSONObject
 
 /**
@@ -18,6 +19,11 @@ class HubSettings extends JSONObject {
 
     public boolean overridesHomePage() {
         return optString('homePagePath', null) as boolean
+    }
+
+    List getUserPermissions() {
+        JSONArray permissions = optJSONArray('userPermissions')
+        new ArrayList(permissions)
     }
 
     /**

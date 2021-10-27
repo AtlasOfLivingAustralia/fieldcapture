@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.hub.HubSettings
 import au.org.ala.web.CASRoles
 import grails.plugin.cache.CacheEvict
 import grails.plugin.cache.Cacheable
@@ -63,24 +64,28 @@ class UserService {
         authService.getUserForUserId(userId, false)
     }
 
-    def userInRole(role) {
-        authService.userInRole(role)
+    boolean userIsSiteAdmin() {
+        userIsFcOfficer() || userIsFcAdmin() || userIsAlaAdmin()
     }
 
-    def userIsSiteAdmin() {
-        authService.userInRole(grailsApplication.config.getProperty('security.cas.officerRole')) || authService.userInRole(grailsApplication.config.getProperty('security.cas.adminRole')) || authService.userInRole(grailsApplication.config.getProperty('security.cas.alaAdminRole'))
+    boolean userIsFcAdmin() {
+        authService.userInRole(grailsApplication.config.getProperty('security.cas.adminRole'))
     }
 
-    def userIsAlaAdmin() {
+    boolean userIsAlaAdmin() {
         authService.userInRole(grailsApplication.config.getProperty('security.cas.alaAdminRole'))
     }
 
-    def userIsAlaOrFcAdmin() {
-        authService.userInRole(grailsApplication.config.getProperty('security.cas.adminRole')) || authService.userInRole(grailsApplication.config.getProperty('security.cas.alaAdminRole'))
+    boolean userIsAlaOrFcAdmin() {
+        userIsFcAdmin() || userIsAlaAdmin()
     }
 
-    def userHasReadOnlyAccess() {
+    boolean userHasReadOnlyAccess() {
         authService.userInRole(grailsApplication.config.getProperty('security.cas.readOnlyOfficerRole'))
+    }
+
+    boolean userIsFcOfficer() {
+        authService.userInRole(grailsApplication.config.getProperty('security.cas.officerRole'))
     }
 
     def getRecentEditsForUserId(userId) {
@@ -145,6 +150,28 @@ class UserService {
         }
         def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/addUserAsRoleToProject?userId=${userId}&projectId=${projectId}&role=${role}"
         webService.getJson(url)
+    }
+
+    /**
+     * MERIT has three special roles granted to administrators, grant managers and researchers
+     * @param role the role to check.
+     * @param userId the id of the user to check.  If null, the currently logged in userid will be used.
+     * @return true if the user has the supplied role.
+     */
+    private boolean doesUserHaveHubRole(String role, String userId = null) {
+        if (!role in RoleService.MERIT_HUB_ROLES) {
+            throw new IllegalArgumentException("Role "+role+" not supported as a hub role")
+        }
+        HubSettings settings = SettingService.getHubConfig()
+        userId = userId ?: getUser()?.userId
+        if (!userId) {
+            return false
+        }
+        if (userIsAlaAdmin()) {
+            return true
+        }
+
+        return role == settings.userPermissions?.find({it.userId == userId})?.role
     }
 
     private Map checkRoles(String userId, String role) {
@@ -516,23 +543,6 @@ class UserService {
             log.error("Failed to remove user with email: "+email+" from the cache. ",e)
         }
 
-    }
-
-    Set getAllowedUserRoles(String email) {
-        def user = authService.getUserForEmailAddress(email)
-
-        def roles
-        if (!user) {
-            roles = new HashSet()
-        }
-        else if (user.hasRole(grailsApplication.config.getProperty('security.cas.officerRole'))) {
-            // Don't allow grant managers to be assigned admin / editor roles
-            roles = roleService.allowedGrantManagerRoles
-        }
-        else {
-            roles = roleService.allowedUserRoles
-        }
-        roles
     }
 
     def getByHub(hubId) {
