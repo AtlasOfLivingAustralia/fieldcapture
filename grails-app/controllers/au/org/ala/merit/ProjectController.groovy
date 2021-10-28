@@ -786,7 +786,7 @@ class ProjectController {
         render view:'/activity/activityReportView', model:model
     }
 
-    @PreAuthorise(accessLevel = 'editor')
+    @PreAuthorise(accessLevel = 'readOnly')
     def printableReport(String id, String reportId) {
         if (!id || !reportId) {
             error('An invalid report was selected for printing', id)
