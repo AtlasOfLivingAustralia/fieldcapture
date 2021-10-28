@@ -54,3 +54,6 @@ db.report.update({activityId:'a952baa4-52e3-48ff-9630-ee59a0170c03'}, {$set:{gen
 db.report.update({activityId:'19e79418-760d-417e-aa89-6447dd091b2a'}, {$set:{generatedBy:'Quarter'}});
 db.report.update({activityId:'6b560e65-54b1-4df7-86ac-24784e936d8a'}, {$set:{generatedBy:'Quarter'}});
 
+// Delete an outcomes report 2 that is no longer needed.
+db.report.update({activityId:'96a525ac-810f-41be-b1a5-d7b95db3a654'}, {$set:{status:'deleted'}});
+db.activity.update({activityId:'96a525ac-810f-41be-b1a5-d7b95db3a654'}, {$set:{status:'deleted'}});
