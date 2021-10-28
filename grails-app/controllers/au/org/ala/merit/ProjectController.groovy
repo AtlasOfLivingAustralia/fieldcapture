@@ -817,7 +817,7 @@ class ProjectController {
         chain(action:'editReport', id:id, params:[reportId:reportId])
     }
 
-    @PreAuthorise(accessLevel = 'editor')
+    @PreAuthorise(accessLevel = 'readOnly')
     def reportPDF(String id, String reportId) {
         if (!id || !reportId) {
             error('An invalid report was selected for download', id)
