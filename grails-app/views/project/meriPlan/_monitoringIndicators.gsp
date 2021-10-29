@@ -7,7 +7,7 @@
             <thead>
             <tr>
                 <th class="index"></th>
-                <g:if test="${monitoringValidation == true}">
+                <g:if test="${monitoringValidation == false}">
                     <th class="baseline required">${indicatorHeading} <g:if test="${indicatorHelpText}"><fc:iconHelp title="${indicatorHeading}">${indicatorHelpText}</fc:iconHelp></g:if></th>
                     <th class="baseline-method required">${approachHeading} <g:if test="${approachHelpText}"><fc:iconHelp title="${approachHeading}">${approachHelpText}</fc:iconHelp></g:if></th>
                 </g:if>
