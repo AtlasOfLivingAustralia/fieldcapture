@@ -2,6 +2,8 @@
 // New Subprogram:  Regional Fund - Co-design Koalas
 
 load("uuid.js");
+load('../../utils/audit.js');
+var userId = '129333';
 let parentProgram = "Bushfire Recovery for Species and Landscapes Program";
 var subprograms = ["Regional Fund - Co-design Koalas"]
 
@@ -377,12 +379,10 @@ if (!newSubProg) {
         var proj = db.project.find({name: regionalProject});
         if(proj.hasNext()){
             var p = proj.next();
-            delete p.programId
-            delete p.associatedSubProgram
             p.lastUpdated = now
             p.programId = newSubProg.programId
-            p.associatedSubProgram = newSubProg.name
             db.project.save(p);
+            audit(p, p.projectId, 'au.org.ala.ecodata.Project', userId);
         }else{
             print("Project is not existing - " + regionalProject)
         }
