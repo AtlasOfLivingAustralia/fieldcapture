@@ -362,6 +362,7 @@ input, textarea, select{
     list-style-type: none;
 }
 .customAdOn {
+    font-size: 0.875rem;
     height: 30px;
 }
 
