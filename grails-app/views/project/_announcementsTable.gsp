@@ -36,10 +36,10 @@
         <tbody data-bind="foreach : details.events">
         <tr>
             <td class="index">  <span data-bind="text:$index()+1"></span></td>
-            <td class="event"> <select data-bind="value:type, disable: ${disableCondition}" style="text-align: center; width: 90%;" data-errormessage="*This field is required. If you do not have any announcement information available yet then please delete this row via the X icon" class="validate[required]" data-validation-engine="validate[required]"><option value="">Please select</option><option>1: funding announcements</option><option>2: non-funding opportunities</option></select></td>
-            <td class="event-type"> <textarea rows="2"  class="input-xlarge"  data-bind="value: name, disable: ${disableCondition}"></textarea></td>
-            <td class="event-date"> <div><input data-bind="datepicker:scheduledDate.date, disable: ${disableCondition}" type="text" /></div></td>
-            <td class="grant-date"> <div><input data-bind="value:grantAnnouncementDate, disable: ${disableCondition}" type="text" /></div></td>
+            <td class="event"> <select class="form-control form-control-sm" data-bind="value:type, disable: ${disableCondition}" style="text-align: center; width: 90%;" data-errormessage="*This field is required. If you do not have any announcement information available yet then please delete this row via the X icon" class="validate[required]" data-validation-engine="validate[required]"><option value="">Please select</option><option>1: funding announcements</option><option>2: non-funding opportunities</option></select></td>
+            <td class="event-type"> <textarea rows="2"  class="form-control form-control-sm"  data-bind="value: name, disable: ${disableCondition}"></textarea></td>
+            <td class="event-date"> <div><input class="form-control form-control-sm" data-bind="datepicker:scheduledDate.date, disable: ${disableCondition}" type="text" /></div></td>
+            <td class="grant-date"> <div><input class="form-control form-control-sm" data-bind="value:grantAnnouncementDate, disable: ${disableCondition}" type="text" /></div></td>
 
             <td class="amount">
                 <div class="input-group">
@@ -48,12 +48,12 @@
                     </div>
                     <input type="text" class="form-control form-control-sm" style="width:3em;" data-bind="value:funding, disable: ${disableCondition}" data-validation-engine="validate[custom[number]]">
                     <div class="input-group-append customAdOn">
-                        <span class="input-group-text">.00</span>
+                        <span class="input-group-text customAdOn">.00</span>
                     </div>
                 </div>
             </td>
 
-            <td class="information"> <textarea maxlength="1000" rows="3"  class="input-xlarge"  data-bind="value: description, disable: ${disableCondition}"></textarea></td>
+            <td class="information"> <textarea maxlength="1000" rows="3"  class="form-control form-control-sm"  data-bind="value: description, disable: ${disableCondition}"></textarea></td>
             <td class="remove"> <span><i class="fa fa-remove" data-bind="click: $parent.removeEvents"></i></span></td>
 
         </tr>
