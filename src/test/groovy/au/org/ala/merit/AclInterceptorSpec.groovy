@@ -57,7 +57,7 @@ class AclInterceptorSpec extends Specification implements GrailsWebUnitTest {
         1 * grailsClass.getClazz() >> ProjectController.class
         1 * aclInterceptor.userService.getCurrentUserId() >> "test"
         1 * aclInterceptor.userService.userIsAlaOrFcAdmin() >> false
-        1 * aclInterceptor.userService.checkRole("test", "readOnly", "p1", UserService.PROJECT ) >> false
+        1 * aclInterceptor.userService.checkRole("test", "editor", "p1", UserService.PROJECT ) >> false
         1 * aclInterceptor.userService.userHasReadOnlyAccess() >> true
 
 
@@ -82,7 +82,7 @@ class AclInterceptorSpec extends Specification implements GrailsWebUnitTest {
         1 * grailsClass.getClazz() >> ProjectController.class
         1 * aclInterceptor.userService.getCurrentUserId() >> "test"
         1 * aclInterceptor.userService.userIsAlaOrFcAdmin() >> false
-        1 * aclInterceptor.userService.checkRole("test", "readOnly", "p1", UserService.PROJECT ) >> false
+        1 * aclInterceptor.userService.checkRole("test", "editor", "p1", UserService.PROJECT ) >> false
         1 * aclInterceptor.userService.userHasReadOnlyAccess() >> false
 
 
