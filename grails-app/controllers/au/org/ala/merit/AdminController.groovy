@@ -84,7 +84,7 @@ class AdminController {
     def createUserHubPermission(){
         HubSettings hubSettings = SettingService.getHubConfig()
         def user = userService.getUser()
-        render(view: "createUserHubPermission", model:[roles: roleService.getHubRoles(), user: user, hubId: hubSettings.hubId])
+        render(view: "createUserHubPermission", model:[roles: roleService.MERIT_HUB_ROLES, user: user, hubId: hubSettings.hubId, hubFlg:true])
     }
 
     @PreAuthorise(accessLevel = 'siteAdmin', redirectController = "admin")

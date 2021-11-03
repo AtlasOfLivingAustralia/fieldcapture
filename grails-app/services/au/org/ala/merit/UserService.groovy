@@ -159,7 +159,7 @@ class UserService {
      * @return true if the user has the supplied role.
      */
     private boolean doesUserHaveHubRole(String role, String userId = null) {
-        if (!role in RoleService.MERIT_HUB_ROLES) {
+        if (!(role in RoleService.MERIT_HUB_ROLES)) {
             throw new IllegalArgumentException("Role "+role+" not supported as a hub role")
         }
         HubSettings settings = SettingService.getHubConfig()
@@ -547,20 +547,29 @@ class UserService {
 
     def getByHub(hubId) {
         def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/getByHub/${hubId}"
-        webService.getJson(url)
+        return convertValueUiLabel(webService.getJson(url))
+    }
+
+    def convertValueUiLabel(results) {
+        def map = [admin: "siteAdmin", caseManager: "officer", readOnly: "siteReadOnly"]
+        results.each { it ->
+            it.role = map[it.role]
+        }
     }
 
     def addUserToHub(String userId, String hubId, String role) {
-        Map result = checkRoles(userId, role)
-        if (result.error) {
-            return result
-        }
-        def submittingUser = authService.userDetails()
-        if (!projectService.isUserAdminForProject(submittingUser.userId, hubId)) {
-            return [error:'Permission denied']
-        }
+//        Map result = checkRoles(userId, role)
+//        if (result.error) {
+//            return result
+//        }
+        role = convertValueToSave(role)
         def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/addUserWithRoleToHub?userId=${userId}&hubId=${hubId}&role=${role}"
         webService.getJson(url)
+    }
+
+    def convertValueToSave(role) {
+        def map = [siteAdmin: "admin", officer: "caseManager", siteReadOnly: "readOnly"]
+        return map[role]
     }
 
     def removeHubUser(String hubId, String userId, String role) {

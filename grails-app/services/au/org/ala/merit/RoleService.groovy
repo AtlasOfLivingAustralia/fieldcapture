@@ -109,8 +109,7 @@ class RoleService {
     }
 
     public Set getHubRoles() {
-        //todo: refactor this to call a webservice
-        def roles = [ PROJECT_FC_READ_ONLY_ROLE, PROJECT_FC_OFFICER_ROLE, PROJECT_FC_ADMIN_ROLE]
-        return roles
+        return new HashSet([PROJECT_FC_READ_ONLY_ROLE, PROJECT_FC_OFFICER_ROLE, PROJECT_FC_ADMIN_ROLE])
     }
+
 }
