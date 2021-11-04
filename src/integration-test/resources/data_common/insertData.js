@@ -34,6 +34,9 @@ function createProgram(programProperties) {
 }
 
 function createOrganisation(organisationProperties){
+    if (!organisationProperties.hubId) {
+        organisationProperties.hubId = "merit";
+    }
     db.organisation.insert(organisationProperties)
 }
 

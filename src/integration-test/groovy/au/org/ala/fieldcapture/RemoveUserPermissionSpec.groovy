@@ -21,18 +21,10 @@ class RemoveUserPermissionSpec extends StubbedCasSpec {
 
         when:
         to RemoveUserPermissionPage
-
-        then:
-        waitFor {at RemoveUserPermissionPage}
-
-        when:
         adminContent.email = "auser@nowhere.com.au"
         adminContent.searchButton.click()
 
         then:
-        waitFor 20, {at RemoveUserPermissionPage}
-
-        and:
         waitFor { adminContent.userId.text() == "1" }
         adminContent.emailAddress.text() == "auser@nowhere.com.au"
         adminContent.firstName.text() == "Test"
@@ -51,25 +43,16 @@ class RemoveUserPermissionSpec extends StubbedCasSpec {
         then:
         waitFor {at RemoveUserPermissionPage}
 
-        when:
+        when: "We search for a user and remove their permissions"
         adminContent.email = "auser@nowhere.com.au"
         adminContent.searchButton.click()
-
-        then:
-        waitFor 10, {at RemoveUserPermissionPage}
-
-        and:
+        waitFor { adminContent.userId.text() == "1" }
         adminContent.removeButton.click()
 
-        when: "Check user if exist in project admin access tab after removing from admin section"
-
-         waitFor 20, { to RlpProjectPage, "project_1"}
-
-        then:
-        waitFor 10, {at RlpProjectPage}
-
-        when:
+        and: "Check user if exist in project admin access tab after removing from admin section"
+        to RlpProjectPage, "project_1"
         adminTab.click()
+
         then:
         waitFor {adminContent.projectAccessTab.displayed}
 
@@ -92,13 +75,9 @@ class RemoveUserPermissionSpec extends StubbedCasSpec {
 
         when:
         via RemoveUserPermissionPage
-        to HomePage
 
         then:"the user did not have permission to view the page"
-        waitFor 10, {at HomePage}
-
-        and:
-        title =="Home | MERIT"
+        at HomePage
 
     }
 }

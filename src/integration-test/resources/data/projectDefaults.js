@@ -38,7 +38,8 @@ var projectDefaults = {
             "tags": [],
             "uNRegions": [],
             "workOrderId": "1234565",
-            "internalOrderId": "1234565"
+            "internalOrderId": "1234565",
+            "hubId":"merit"
 
         }
     }
