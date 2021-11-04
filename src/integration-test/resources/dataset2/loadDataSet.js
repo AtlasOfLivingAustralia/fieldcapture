@@ -136,8 +136,10 @@ db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'gra
 addSetting('meritfielddata.rlp.report.declaration', 'Report declaration text');
 addSetting('meritfielddata.rlp.report.submitted.emailSubject', 'Report submitted subject');
 addSetting('meritfielddata.rlp.report.submitted.emailBody', 'Report submitted body');
-addSetting('meritfielddata.rlp.report.submitted.emailSubject', 'Report approved subject');
-addSetting('meritfielddata.rlp.report.submitted.emailBody', 'Report approved body');
+addSetting('meritfielddata.rlp.report.approved.emailSubject', 'Report approved subject');
+addSetting('meritfielddata.rlp.report.approved.emailBody', 'Report approved body');
+addSetting('meritfielddata.rlp.report.returned.emailSubject', 'Report returned subject');
+addSetting('meritfielddata.rlp.report.returned.emailBody', 'Report returned body');
 
 // Load scores used by RLP services to enable their selection in the MERI plan.
 createProjectNumberBaselineDataSets({ "scoreId":"score_42"});

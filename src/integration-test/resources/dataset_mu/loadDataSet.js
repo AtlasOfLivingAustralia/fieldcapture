@@ -212,4 +212,11 @@ var activity1 = {
 db.report.insert(report1);
 db.activity.insert(activity1);
 
+addSetting('meritfielddata.rlp.cs_report.submitted.emailSubject', 'Report submitted subject');
+addSetting('meritfielddata.rlp.cs_report.submitted.emailBody', 'Report submitted body');
+addSetting('meritfielddata.rlp.cs_report.approved.emailSubject', 'Report approved subject');
+addSetting('meritfielddata.rlp.cs_report.approved.emailBody', 'Report approved body');
+addSetting('meritfielddata.rlp.cs_report.returned.emailSubject', 'Report returned subject');
+addSetting('meritfielddata.rlp.cs_report.returned.emailBody', 'Report returned body');
+
 
