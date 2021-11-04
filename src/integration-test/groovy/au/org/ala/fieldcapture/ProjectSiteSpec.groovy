@@ -27,7 +27,7 @@ class ProjectSiteSpec extends StubbedCasSpec {
         waitFor {siteTabContents.displayed}
         def tableContent = tableContents
         and:
-        waitFor{
+        waitFor 30, {
             tableContent[2].siteName.text() == "Site area for project"
             siteTabContents.markers.size() == 1
         }
