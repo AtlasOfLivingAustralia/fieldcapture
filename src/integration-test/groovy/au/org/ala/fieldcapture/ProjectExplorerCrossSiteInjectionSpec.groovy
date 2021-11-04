@@ -18,9 +18,9 @@ class ProjectExplorerCrossSiteInjectionSpec  extends StubbedCasSpec{
 
         when:
         to ProjectExplorer
+        waitForIndexing()
 
         then: "The downloads accordion is not visible to unauthenticated users"
-        Thread.sleep(2000) // there are some animations that make this difficult to do waiting on conditions.
         downloadsToggle.empty == true
 
         when: "collapse the map section"

@@ -18,15 +18,9 @@ class ProjectExplorerMapTabSpec extends StubbedCasSpec {
         logout(browser)
 
         when:
-        boolean empty = true
-        while (empty) {
-            to ProjectExplorer
-            empty = emptyIndex()
-        }
-
+        waitForIndexing()
 
         then: "The downloads accordion is not visible to unauthenticated users"
-        Thread.sleep(2000) // there are some animations that make this difficult to do waiting on conditions.
         downloadsToggle.empty == true
 
         when: "open the map section"

@@ -34,17 +34,9 @@ class ProjectExplorerSpec extends StubbedCasSpec {
         reindex()
         and: "Logout so the rest of the test is run as an unauthenticated user"
         logout(browser)
-
-
-        boolean empty = true
-        while (empty) {
-            to ProjectExplorer
-            empty = emptyIndex()
-        }
-
+        waitForIndexing()
 
         then: "The downloads accordion is not visible to unauthenticated users"
-        Thread.sleep(2000) // there are some animations that make this difficult to do waiting on conditions.
         downloadsToggle.empty == true
 
         when: "collapse the map section"

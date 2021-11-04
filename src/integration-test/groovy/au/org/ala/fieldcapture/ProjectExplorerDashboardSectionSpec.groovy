@@ -26,40 +26,24 @@ class ProjectExplorerDashboardSectionSpec extends StubbedCasSpec {
         logout(browser)
 
         when:
-        boolean empty = true
-        while (empty) {
-            to ProjectExplorer
-            empty = emptyIndex()
-        }
+        waitForIndexing()
 
         then: "The downloads accordion is not visible to unauthenticated users"
-        Thread.sleep(2000) // there are some animations that make this difficult to do waiting on conditions.
         downloadsToggle.empty == true
 
         when: "collapse the map section"
-        if(map.displayed == true){
-            waitFor {
-                map.displayed
-            }
-            mapToggle.click()
-        }
+        displayDashboardSection()
 
         then:
-        waitFor { map.displayed == false }
-        dashboardToggle.click()
-        waitFor {reportView.displayed}
-        waitFor (5){dashboardContent.displayed}
-
-
-        and:
         waitFor {dashboardContentList.size() == 3}
     }
 
     def "Reef 2050 Final Plan Action Report for July 2020 to June 2021 "() {
         when:
         to ProjectExplorer
+        displayDashboardSection()
 
-        then: "The dashboard toggle will be remembered from the previous test"
+        then:
         waitFor { viewReef2050PlanReport.displayed }
         waitFor { viewReef2050PlanReport.dashboardType.displayed }
 
