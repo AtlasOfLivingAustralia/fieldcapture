@@ -34,6 +34,7 @@ class ProjectExplorerSpec extends StubbedCasSpec {
         reindex()
         and: "Logout so the rest of the test is run as an unauthenticated user"
         logout(browser)
+        to ProjectExplorer
         waitForIndexing()
 
         then: "The downloads accordion is not visible to unauthenticated users"

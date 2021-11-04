@@ -26,6 +26,7 @@ class ProjectExplorerDashboardSectionSpec extends StubbedCasSpec {
         logout(browser)
 
         when:
+        to ProjectExplorer
         waitForIndexing()
 
         then: "The downloads accordion is not visible to unauthenticated users"

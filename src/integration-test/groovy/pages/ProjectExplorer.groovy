@@ -79,7 +79,7 @@ class ProjectExplorer extends ReloadablePage {
     void waitForIndexing() {
         boolean empty = true
         while (empty) {
-            to ProjectExplorer
+            driver.navigate().refresh()
             empty = emptyIndex()
         }
         Thread.sleep(2000) // there are some animations that make this difficult to do waiting on conditions.
