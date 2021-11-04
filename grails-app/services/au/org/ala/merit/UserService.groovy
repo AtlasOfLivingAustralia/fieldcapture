@@ -185,7 +185,7 @@ class UserService {
 
         HubSettings settings = SettingService.getHubConfig()
         userId = userId ?: getUser()?.userId
-        if (!userId) {
+        if (!userId || !settings) {
             return false
         }
         if (userIsAlaAdmin()) {

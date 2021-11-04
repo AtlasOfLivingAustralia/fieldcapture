@@ -9,6 +9,22 @@
     "headers": {
       "Content-Type": "application/json"
     },
-    "body": "{\"success\":true, \"users\":{ \"1\":{ \"userName\":\"user1@user.com\"}, \"30\":{ \"userName\":\"user30@user.com\"} }}"
+    "jsonBody": {
+      "success":true,
+      "users": {
+        "1": {
+          "userName":"user1@user.com"
+        },
+        "10": {
+          "userName": "user10@user.com"
+        },
+        "30": {
+          "userName":"user30@user.com"
+        },
+        "1001": {
+          "userName":"user1001@user.com"
+        }
+      }
+    }
   }
 }
