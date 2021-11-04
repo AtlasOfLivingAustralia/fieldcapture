@@ -78,7 +78,7 @@ for (var i = 1; i < 10; i++) {
         db.userPermission.insert({
             entityType: 'au.org.ala.ecodata.Project',
             entityId: id,
-            userId: '30',
+            userId: '1001',
             accessLevel: 'caseManager'
         });
     }
@@ -119,9 +119,9 @@ createProject({name:'project active', projectId:"project_active", status:"active
 createProject({name:'project application', projectId:"project_application", status:"application", planStatus:'submitted', internalOrderId:''})
 createProject({name:'project completed', projectId:"project_completed", status:"completed", planStatus:'submitted', internalOrderId:'12345'})
 
-db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_active', userId:'2', accessLevel:'caseManager'});
-db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_application', userId:'2', accessLevel:'caseManager'});
-db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_completed', userId:'2', accessLevel:'caseManager'});
+db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_active', userId:'1001', accessLevel:'caseManager'});
+db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_application', userId:'1001', accessLevel:'caseManager'});
+db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_completed', userId:'1001', accessLevel:'caseManager'});
 
 
 createProgram({programId:"grants", name:"Grant Program"});

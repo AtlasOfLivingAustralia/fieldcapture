@@ -15,7 +15,7 @@ class SearchSpec extends StubbedCasSpec {
 
     def "Search project using search bar in header"(){
         setup:
-        login([userId: '2', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ALA_ADMIN'], browser)
+        loginAsAlaAdmin(browser)
 
         when:
         to AdminTools

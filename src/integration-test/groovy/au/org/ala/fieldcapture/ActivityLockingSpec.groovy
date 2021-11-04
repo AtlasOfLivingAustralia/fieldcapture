@@ -27,7 +27,7 @@ class ActivityLockingSpec extends StubbedCasSpec {
     def "A user obtains a lock on an activity"() {
 
         setup: "Login as a project admin and open the activity"
-        login([userId: '1', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'User'], browser)
+        loginAsUser('1', browser)
 
         when: "We open a report for editing"
         editFirstActivity()
@@ -42,7 +42,7 @@ class ActivityLockingSpec extends StubbedCasSpec {
     def "A new user should not be able to edit the report"() {
         setup: "Login another admin user for the project"
 
-        login([userId: '2', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'User'], browser)
+        loginAsUser('2', browser)
 
         when: "a new user opens the same report as the one already being edited"
         editFirstActivity()
@@ -54,7 +54,7 @@ class ActivityLockingSpec extends StubbedCasSpec {
 
     def "A user releases the lock on a report"() {
         setup: "Login as a project admin and open the activity"
-        login([userId: '1', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'User'], browser)
+        loginAsUser('1', browser)
 
         when: "We open a report for editing"
         editFirstActivity()
@@ -72,7 +72,7 @@ class ActivityLockingSpec extends StubbedCasSpec {
     def "The new user can now edit the report"() {
         setup: "Login another admin user for the project"
 
-        login([userId: '2', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'User'], browser)
+        loginAsUser('2', browser)
 
         when: "a new user opens the same report as the one already being edited"
         editFirstActivity()

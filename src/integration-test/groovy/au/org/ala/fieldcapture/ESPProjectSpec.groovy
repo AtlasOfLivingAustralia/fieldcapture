@@ -18,7 +18,7 @@ class ESPProjectSpec extends StubbedCasSpec {
 
     def "Clear the cache to ensure activity forms are loaded"() {
         setup:
-        login([userId: '1', role: "ROLE_ADMIN", email: 'fc-admin@nowhere.com', firstName: "ALA", lastName: 'Admin'], browser)
+        loginAsAlaAdmin(browser)
 
         when:
         to AdminTools
@@ -32,7 +32,7 @@ class ESPProjectSpec extends StubbedCasSpec {
 
     def "generate Document PDF from document report tab"() {
         setup:
-        login([userId: '1', role: "ROLE_FC_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+        loginAsUser('1', browser)
 
         when:
         to ESPProjectIndex, "123456789"

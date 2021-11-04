@@ -11,7 +11,7 @@ class ProjectCrossSiteInjectionSpec extends StubbedCasSpec {
 
     def "Project Explorer Cross Site Script injection"(){
         setup:
-        login([userId: '2', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ALA_ADMIN'], browser)
+        loginAsUser('1', browser)
 
         when:
         to ProjectIndex, projectId

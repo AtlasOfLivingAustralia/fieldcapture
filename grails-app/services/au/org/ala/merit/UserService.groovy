@@ -35,15 +35,15 @@ class UserService {
         auditBaseUrl = grailsApplication.config.getProperty('ecodata.baseUrl') + 'audit'
     }
 
-    def getCurrentUserDisplayName() {
+    String getCurrentUserDisplayName() {
         getUser()?.displayName?:""
     }
 
-    def getCurrentUserId() {
+    String getCurrentUserId() {
         getUser()?.userId?:""
     }
 
-    public UserDetails getUser() {
+    UserDetails getUser() {
 
         def user = null
         // Attempting to call authService.userDetails outside of a HTTP request results in an exception
@@ -64,28 +64,46 @@ class UserService {
         authService.getUserForUserId(userId, false)
     }
 
-    boolean userIsSiteAdmin() {
-        userIsFcOfficer() || userIsFcAdmin() || userIsAlaAdmin()
+    /**
+     * This is a method with a misleading name that checks if the user has the
+     * caseManager or admin role on the MERIT hub, or the ALA_ADMIN CAS role.
+     * @param userId The id of the user to check, if not supplied, the currently logged in
+     * user is used.
+     */
+    boolean userIsSiteAdmin(String userId = null) {
+        userIsFcOfficer(userId) || userIsFcAdmin(userId) || userIsAlaAdmin(userId)
     }
 
-    boolean userIsFcAdmin() {
-        authService.userInRole(grailsApplication.config.getProperty('security.cas.adminRole'))
+    boolean userIsFcAdmin(String userId = null) {
+        doesUserHaveHubRole(RoleService.PROJECT_ADMIN_ROLE, userId)
     }
 
-    boolean userIsAlaAdmin() {
-        authService.userInRole(grailsApplication.config.getProperty('security.cas.alaAdminRole'))
+    /** The ALA admin role is the only role that is checked against a CAS role */
+    boolean userIsAlaAdmin(String userId = null) {
+        String adminRole = grailsApplication.config.getProperty('security.cas.alaAdminRole')
+        boolean isAdmin = false
+        if (!userId || userId == getCurrentUserId()) {
+            // Use the currently logged in user
+            isAdmin = authService.userInRole(adminRole)
+        }
+        else {
+            // Lookup the user role in user details
+            au.org.ala.web.UserDetails userDetails = authService.getUserForUserId(userId)
+            isAdmin = userDetails?.hasRole(adminRole)
+        }
+        isAdmin
     }
 
-    boolean userIsAlaOrFcAdmin() {
-        userIsFcAdmin() || userIsAlaAdmin()
+    boolean userIsAlaOrFcAdmin(String userId = null) {
+        userIsFcAdmin(userId) || userIsAlaAdmin(userId)
     }
 
-    boolean userHasReadOnlyAccess() {
-        authService.userInRole(grailsApplication.config.getProperty('security.cas.readOnlyOfficerRole'))
+    boolean userHasReadOnlyAccess(String userId = null) {
+        doesUserHaveHubRole(RoleService.PROJECT_READ_ONLY_ROLE, userId)
     }
 
-    boolean userIsFcOfficer() {
-        authService.userInRole(grailsApplication.config.getProperty('security.cas.officerRole'))
+    boolean userIsFcOfficer(String userId) {
+        doesUserHaveHubRole(RoleService.GRANT_MANAGER_ROLE, userId)
     }
 
     def getRecentEditsForUserId(userId) {
@@ -343,7 +361,7 @@ class UserService {
      */
     boolean canUserViewNonPublicProgramInformation(String userId, String programId) {
         boolean userCanView
-        if (userIsSiteAdmin() || userHasReadOnlyAccess()) {
+        if (userIsSiteAdmin(userId) || userHasReadOnlyAccess(userId)) {
             userCanView = true
         } else {
             userCanView = canUserEditProgramReport(userId, programId)
@@ -509,7 +527,7 @@ class UserService {
 
     }
 
-    def checkEmailExists(String email) {
+    String checkEmailExists(String email) {
         def user = authService.getUserForEmailAddress(email)
 
         if (!user?.userId || user.locked) {

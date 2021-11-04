@@ -1,6 +1,7 @@
 package pages
 
 import geb.Module
+import geb.module.FormElement
 
 class AddOrEditOrganisation extends Module {
     static content = {
@@ -16,6 +17,10 @@ class AddOrEditOrganisation extends Module {
 
         saveButton { $('#save') }
         cancelButton { $('#cancel') }
+    }
+
+    boolean isNameReadOnly() {
+        name.module(FormElement).readOnly
     }
 
     def save() {

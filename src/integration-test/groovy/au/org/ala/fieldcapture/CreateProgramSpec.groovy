@@ -10,10 +10,10 @@ class CreateProgramSpec extends StubbedCasSpec {
     def setup() {
         useDataSet('dataset1')
     }
-    def "I can create a program as an FC_ADMIN"() {
+    def "I can create a program as a MERIT Admin"() {
 
         setup:
-        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to AddProgram

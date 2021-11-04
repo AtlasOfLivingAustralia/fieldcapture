@@ -22,7 +22,7 @@ class AddActivitySpec extends StubbedCasSpec {
 
     def "Clear the cache to ensure activity forms are loaded"() {
         setup:
-        login([userId:'1', role:"ROLE_ADMIN", email:'fc-admin@nowhere.com', firstName: "ALA", lastName:'Admin'], browser)
+        loginAsAlaAdmin(browser)
 
         when:
         to AdminTools
@@ -37,7 +37,7 @@ class AddActivitySpec extends StubbedCasSpec {
     def "Generate a Activities"(){
 
         setup: "log in as userId=1 who is a program admin for the program with programId=test_program"
-        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to ProjectIndex, projectId
@@ -69,7 +69,7 @@ class AddActivitySpec extends StubbedCasSpec {
 
     def "Edit Activity Forms and timing out issue"() {
         setup: "log in as userId=1 who is a program admin for the program with programId=test_program"
-        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to ProjectIndex, projectId
@@ -130,7 +130,7 @@ class AddActivitySpec extends StubbedCasSpec {
 
         // This user has no permissions on the project
         logout(browser)
-        login([userId:'3', role:"ROLE_USER", email:'editor@nowhere.com', firstName: "project", lastName:'editor'], browser)
+        loginAsUser('3', browser)
         when: "go to new activity page"
         via AddActivityPage, projectId:projectId
 
@@ -141,7 +141,7 @@ class AddActivitySpec extends StubbedCasSpec {
     def "Add an activity"() {
 
         logout(browser)
-        login([userId:'2', role:"ROLE_USER", email:'admin@nowhere.com', firstName: "project", lastName:'admin'], browser)
+        loginAsUser('2', browser)
 
         when: "go to new activity page"
 

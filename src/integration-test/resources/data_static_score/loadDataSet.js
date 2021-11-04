@@ -681,7 +681,7 @@ db.project.update({ projectId: "project_10"},{$set:{'custom.details.serviceIds':
                         NumberInt(34),
                         NumberInt(35)
                 ]}});
-
+db.userPermission.insert({userId:'2', entityType:'au.org.ala.ecodata.Project', entityId:'project_10', accessLevel:'editor'});
 
 db.setting.insert({"key":"meritstatistics.config", "value": JSON.stringify(homePageStatisticValues), "version":NumberInt(3)});
 db.setting.insert({"key":"meritservices.config", "value":JSON.stringify(projectDashboardService) ,"version":NumberInt(0)});

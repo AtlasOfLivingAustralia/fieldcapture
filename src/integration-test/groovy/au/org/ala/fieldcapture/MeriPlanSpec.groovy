@@ -17,9 +17,9 @@ class MeriPlanSpec extends StubbedCasSpec {
     }
 
     def "Primary and secondary outcome selection lists can be different"() {
-        setup:
+        setup: "The user with userId 1 is an admin for project with projectId 1"
         String projectId = '1'
-        login([userId: '2', role: "ROLE_FC_OFFICER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+        loginAsUser('1', browser)
 
         when:
         to RlpProjectPage, projectId
@@ -35,9 +35,9 @@ class MeriPlanSpec extends StubbedCasSpec {
 
     def "The MERI Plan can be completed and saved"() {
 
-        setup:
+        setup: "The user with userId 1 is an admin for project with projectId 1"
         String projectId = '1'
-        login([userId: '2', role: "ROLE_FC_OFFICER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+        loginAsUser('1', browser)
 
         when:
         to RlpProjectPage, projectId
@@ -118,7 +118,7 @@ class MeriPlanSpec extends StubbedCasSpec {
     def "The MERI Plan can be recover from a save failure due to login timeout"() {
         setup:
         String projectId = '1'
-        login([userId: '2', role: "ROLE_FC_OFFICER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+        loginAsUser('1', browser)
 
         when:
         to RlpProjectPage, projectId
@@ -174,7 +174,7 @@ class MeriPlanSpec extends StubbedCasSpec {
     def "A PDF can be generated from a MERI plan"() {
         setup:
         String projectId = '1'
-        login([userId: '2', role: "ROLE_FC_OFFICER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+        loginAsUser('1', browser)
 
         when:
         to RlpProjectPage, projectId
@@ -218,7 +218,7 @@ class MeriPlanSpec extends StubbedCasSpec {
     def "cancel MERI Plan dialog declaration"() {
 
         setup:
-        login([userId: '2', role: "ROLE_FC_OFFICER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_OFFICER'], browser)
+        loginAsUser('1', browser)
 
         when: "We open the MERI plan and press the Submit button"
         to ProjectIndex, '1'
@@ -243,7 +243,7 @@ class MeriPlanSpec extends StubbedCasSpec {
     def "A program can set a default primary outcome"()  {
         setup:
         String projectId = 'defaultOutcome'
-        login([userId: '1', email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'Admin'], browser)
+        loginAsUser('1', browser)
 
         when:
         to RlpProjectPage, projectId
@@ -281,9 +281,8 @@ class MeriPlanSpec extends StubbedCasSpec {
     def "Try to approve MERI plan of a project with the application status and no internal order Id"() {
 
         setup:
-        logout(browser)
         String projectId = 'project_application'
-        login([userId: '2', role: "ROLE_FC_OFFICER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_OFFICER'], browser)
+        loginAsGrantManager(browser)
 
         when:
         to ProjectIndex, projectId
@@ -304,8 +303,7 @@ class MeriPlanSpec extends StubbedCasSpec {
     def "Try to approve MERI plan of a project with the application status and internal order Id"() {
 
         setup:
-        logout(browser)
-        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'FC_ADMIN'], browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to ProjectIndex, 'project_application'
@@ -328,7 +326,7 @@ class MeriPlanSpec extends StubbedCasSpec {
 
         when:
         logout(browser)
-        login([userId: '2', role: "ROLE_FC_OFFICER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+        loginAsGrantManager(browser)
 
         to ProjectIndex, 'project_application'
 
@@ -348,8 +346,7 @@ class MeriPlanSpec extends StubbedCasSpec {
     def "Try to approve MERI plan of a project with the active status"() {
 
         setup:
-        logout(browser)
-        login([userId: '2', role: "ROLE_FC_OFFICER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+        loginAsGrantManager(browser)
 
         when:
         to ProjectIndex, 'project_active'
@@ -370,8 +367,7 @@ class MeriPlanSpec extends StubbedCasSpec {
     def "Approve MERI plan of a project with the application status and internal order Id"() {
 
         setup:
-        logout(browser)
-        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to ProjectIndex, 'project_application'
@@ -397,9 +393,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         admin.projectSettings.internalOrderId == '12345'
 
         when:
-        logout(browser)
-        login([userId: '2', role: "ROLE_FC_OFFICER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_OFFICER'], browser)
-
+        loginAsGrantManager(browser)
         to ProjectIndex, 'project_application'
 
         then:
@@ -449,8 +443,7 @@ class MeriPlanSpec extends StubbedCasSpec {
     def "Approve MERI plan of a project with the active status and internal order Id"() {
 
         setup:
-        logout(browser)
-        login([userId: '2', role: "ROLE_FC_OFFICER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+        loginAsGrantManager(browser)
 
         when:
         to ProjectIndex, 'project_active'
@@ -504,7 +497,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         setup:
         // Refresh the data set, the rest of the spec relies on progressively modifying the data so the dataset is only loaded once
         useDataSet('dataset2')
-        login([userId: '2', role: "ROLE_FC_OFFICER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_OFFICER'], browser)
+        loginAsGrantManager(browser)
 
         when:
         to ProjectIndex, 'project_application'

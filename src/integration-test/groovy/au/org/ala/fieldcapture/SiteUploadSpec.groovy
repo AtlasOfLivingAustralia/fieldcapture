@@ -13,7 +13,7 @@ class SiteUploadSpec extends StubbedCasSpec {
     def "I can upload a file"() {
         setup:
         String projectId = '1'
-        login([userId: '1', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'Admin'], browser)
+        loginAsUser('1', browser)
 
         when:
         to RlpProjectPage, projectId

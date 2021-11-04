@@ -1,12 +1,18 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.hub.HubSettings
 import au.org.ala.web.AuthService
 import grails.plugin.cache.GrailsCache
 import grails.testing.services.ServiceUnitTest
+import grails.testing.web.GrailsWebUnitTest
 import org.grails.plugin.cache.GrailsCacheManager
 import spock.lang.Specification
 
-class UserServiceSpec extends Specification implements ServiceUnitTest<UserService> {
+/**
+ * Tests the UserService.
+ * We are implementing GrailsWe
+ */
+class UserServiceSpec extends Specification implements ServiceUnitTest<UserService>, GrailsWebUnitTest {
 
     def webService = Mock(WebService)
     def authService = Mock(AuthService)
@@ -104,7 +110,7 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         grailsCacheManager.getCache(_) >> cache
 
         when:
-        Map result = service.checkEmailExists(email)
+        String result = service.checkEmailExists(email)
 
         then:
         1 * authService.getUserForEmailAddress(email) >> null
@@ -126,7 +132,7 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         grailsCacheManager.getCache(_) >> cache
 
         when:
-        Map result = service.checkEmailExists(email)
+        String result = service.checkEmailExists(email)
 
         then:
         1 * authService.getUserForEmailAddress(email) >> [userId:'test', locked:true]
@@ -144,7 +150,7 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         boolean canEdit = service.canUserEditActivity(userId, activityId)
 
         then:
-        canEdit == true
+        canEdit
 
         and:
         1 * activityService.get(activityId) >> [projectId:projectId, activityId:activityId]
@@ -163,7 +169,7 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         boolean canEdit = service.canUserEditActivity(userId, activityId)
 
         then:
-        canEdit == false
+        !canEdit
 
         and:
         1 * activityService.get(activityId) >> [activityId:activityId]
@@ -183,7 +189,7 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         then:
         3 * webService.getJson(_) >> [:]
 
-        result == false
+        !result
 
     }
 
@@ -196,6 +202,18 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         if (programEditorRole) {
             programRole = [entityId:programId, entityType:'au.org.ala.ecodata.Program', userId:userId, accessLevel:programEditorRole]
         }
+        HubSettings hubSettings = new HubSettings(userPermissions:[])
+
+        if (readOnlyRole) {
+            hubSettings.userPermissions << [userId:userId, role:RoleService.PROJECT_READ_ONLY_ROLE]
+        }
+        if (fcOfficerRole) {
+            hubSettings.userPermissions << [userId:userId, role:RoleService.GRANT_MANAGER_ROLE]
+        }
+        if (fcAdminRole) {
+            hubSettings.userPermissions << [userId:userId, role:RoleService.PROJECT_ADMIN_ROLE]
+        }
+        SettingService.setHubConfig(hubSettings)
 
         when:
         boolean canView = service.canUserViewNonPublicProgramInformation(userId, programId)
@@ -203,10 +221,6 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
 
         then:
         canView == expectedResult
-
-        _ * authService.userInRole('FC_READ_ONLY') >> readOnlyRole
-        _ * authService.userInRole('FC_OFFICER') >> fcOfficerRole
-        _ * authService.userInRole('FC_ADMIN') >> fcAdminRole
         _ * webService.getJson("/permissions/getUserRolesForUserId/${userId}") >> [roles:[programRole]]
 
 

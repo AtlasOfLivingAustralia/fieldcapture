@@ -12,7 +12,7 @@ class ManagementUnitSpec extends StubbedCasSpec {
     static final String NO_PERMISSIONS_USER = "10"
     static final String EDITOR_USER = "4"
     static final String ADMIN_USER = "1"
-    static final String GRANT_MANAGER_USER = "3"
+    static final String GRANT_MANAGER_USER = "1001"
 
     def setupSpec() {
         useDataSet('dataset_mu')
@@ -38,11 +38,7 @@ class ManagementUnitSpec extends StubbedCasSpec {
             String userId, boolean aboutVisible, boolean reportsVisible, boolean sitesVisible, boolean adminVisible) {
 
         setup:
-        String role = "ROLE_USER"
-        if (userId == GRANT_MANAGER_USER) {
-            role = "ROLE_FC_OFFICER"
-        }
-        login([userId: userId, role: role, email: 'user@nowhere.com', firstName: "MERIT", lastName: 'User'], browser)
+        loginAsUser(userId, browser)
 
         when:
         to ManagementUnitPage, "test_mu"
@@ -66,8 +62,7 @@ class ManagementUnitSpec extends StubbedCasSpec {
     def "Admin tab is not visible to users with Read Only Access role for the management unit"() {
 
         setup:
-        String role = "ROLE_FC_READ_ONLY"
-        login([userId: NO_PERMISSIONS_USER, role: role, email: 'user@nowhere.com', firstName: "MERIT", lastName: 'User'], browser)
+        loginAsReadOnlyUser(browser)
 
         when:
         to ManagementUnitPage, "test_mu"
@@ -83,7 +78,7 @@ class ManagementUnitSpec extends StubbedCasSpec {
 
     def "The management unit about tab displays information about programs and projects with activity in the management unit"() {
         setup:
-        login([userId: GRANT_MANAGER_USER, role: "ROLE_FC_READ_ONLY", email: 'user@nowhere.com', firstName: "MERIT", lastName: 'User'], browser)
+        loginAsGrantManager(browser)
 
         when:
         to ManagementUnitPage, "test_mu"
@@ -114,7 +109,7 @@ class ManagementUnitSpec extends StubbedCasSpec {
 
     def "Checking Security Vulnerability after injecting Script tag"() {
         setup:
-        login([userId: '1', role: "ROLE_FC_ADMIN", email: 'fc-admin@nowhere.com', firstName: "FC", lastName: 'Admin'], browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to ManagementUnitPage, "test_mu"
@@ -145,7 +140,7 @@ class ManagementUnitSpec extends StubbedCasSpec {
 
     def "As an fc admin, I can update the reporting period for reports relating to this Management Unit"() {
         setup:
-        login([userId: '1', role: "ROLE_FC_ADMIN", email: 'user@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to ManagementUnitPage, "test_mu"
@@ -183,7 +178,7 @@ class ManagementUnitSpec extends StubbedCasSpec {
 
     def "Create mu page"() {
         setup:
-        login([userId: '1', role: "ROLE_FC_ADMIN", email: 'user@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to CreateManagementUnit
@@ -208,12 +203,12 @@ class ManagementUnitSpec extends StubbedCasSpec {
 
     def "Management Unit Sites"() {
         setup:
-        login([userId:'110', role:"ROLE_ADMIN", email:"ala-admin@nowhere.com", firstName:"ALA", lastName:"Admin"], browser)
+        loginAsAlaAdmin(browser)
         // Re-index the search engine as the sites tab relies on the search index
         to AdminTools
         reindex()
 
-        login([userId: '1', role: "ROLE_FC_ADMIN", email: 'fc-admin@nowhere.com', firstName: "FC", lastName: 'Admin'], browser)
+        loginAsUser('1', browser)
 
         when:
         to ManagementUnitPage, "test_mu"
@@ -233,7 +228,7 @@ class ManagementUnitSpec extends StubbedCasSpec {
 
     def "Management Unit Admin Page"() {
         setup:
-        login([userId: '1', role: "ROLE_FC_ADMIN", email: 'fc-admin@nowhere.com', firstName: "FC", lastName: 'Admin'], browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to ManagementUnitPage, "test_mu"

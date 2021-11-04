@@ -5,7 +5,7 @@ import pages.ProjectExplorer
 
 class ProjectExplorerDashboardSectionSpec extends StubbedCasSpec {
 
-    void setup(){
+    def setupSpec() {
         useDataSet("data_static_score")
     }
 
@@ -15,32 +15,22 @@ class ProjectExplorerDashboardSectionSpec extends StubbedCasSpec {
 
     def "The Project Explorer Dashboard display the output programme  and activity"(){
 
-        setup:
-        login([userId: '2', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ALA_ADMIN'], browser)
+        setup: "Clear the cache to make the data reflect the dataset, then reindex"
+        loginAsAlaAdmin(browser)
 
-        when:
         to AdminTools
-
-        then:
-        at AdminTools
-
-        when: "Clear the cache to make the data reflect the dataset, then reindex"
         clearCache()
         waitFor { hasBeenReloaded() }
         at AdminTools // Reset the at check for the next reload with the reindex call.
-
         reindex()
+        logout(browser)
 
-        waitFor {
-            logout(browser)
-        }
-
+        when:
         boolean empty = true
         while (empty) {
             to ProjectExplorer
             empty = emptyIndex()
         }
-
 
         then: "The downloads accordion is not visible to unauthenticated users"
         Thread.sleep(2000) // there are some animations that make this difficult to do waiting on conditions.
@@ -66,15 +56,10 @@ class ProjectExplorerDashboardSectionSpec extends StubbedCasSpec {
     }
 
     def "Reef 2050 Final Plan Action Report for July 2020 to June 2021 "() {
-        setup:
-        login([userId: '2', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ALA_ADMIN'], browser)
         when:
         to ProjectExplorer
 
-        and:
-        dashboardToggle.click()
-
-        then:
+        then: "The dashboard toggle will be remembered from the previous test"
         waitFor { viewReef2050PlanReport.displayed }
         waitFor { viewReef2050PlanReport.dashboardType.displayed }
 

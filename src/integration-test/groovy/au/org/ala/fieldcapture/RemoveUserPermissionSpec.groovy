@@ -14,10 +14,10 @@ class RemoveUserPermissionSpec extends StubbedCasSpec {
         logout(browser)
     }
 
-    def "I can search user details using email Address as an ROLE_ADMIN"() {
+    def "I can search user details using email Address as an ALA administrator"() {
 
         setup:
-        login([userId:'1', role:"ROLE_ADMIN", email:'role-admin@nowhere.com', firstName: "ROLE", lastName:'Admin'], browser)
+        loginAsAlaAdmin(browser)
 
         when:
         to RemoveUserPermissionPage
@@ -40,10 +40,10 @@ class RemoveUserPermissionSpec extends StubbedCasSpec {
 
     }
 
-    def "I can search user details using email Address and remove user as an FC_ADMIN"() {
+    def "I can search user details using email Address and remove user as a MERIT administrator"() {
 
         setup:
-        login([userId:'1', role:"ROLE_FC_ADMIN", email:'role-admin@nowhere.com', firstName: "ROLE", lastName:'Admin'], browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to RemoveUserPermissionPage
@@ -88,7 +88,7 @@ class RemoveUserPermissionSpec extends StubbedCasSpec {
 
     def "Check ROLE_USER can access the page or not"() {
         setup:
-        login([userId:'1', role:"ROLE_USER", email:'role-user@nowhere.com', firstName: "ROLE", lastName:'User'], browser)
+        loginAsUser('1', browser)
 
         when:
         via RemoveUserPermissionPage

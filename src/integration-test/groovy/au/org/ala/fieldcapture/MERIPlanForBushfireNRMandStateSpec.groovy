@@ -1,6 +1,6 @@
 package au.org.ala.fieldcapture
 
-import pages.AdminClearCachePage
+
 import pages.AdminTools
 import pages.RlpProjectPage
 import spock.lang.Stepwise
@@ -19,20 +19,10 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
     // Clear the metadata cache to ensure the services and scores are loaded correctly.
     def clearCache() {
         setup:
-        login([userId: '2', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ALA_ADMIN'], browser)
-
-        when:
+        loginAsAlaAdmin(browser)
         to AdminTools
+        clearMetadata()
 
-        then:
-        at AdminTools
-
-        when:
-        waitFor { $("#btnClearMetadataCache").displayed }
-        $("#btnClearMetadataCache").click()
-
-        then:
-        waitFor 5, { to AdminClearCachePage }
     }
 
     //  Regional Fund for Wildlife and Habitat Bushfire Recovery (the Regional Fund) - States
@@ -40,7 +30,7 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
 
         setup:
         String projectId = 'bushfireProject'
-        login([userId: '1', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'USER'], browser)
+        loginAsUser('1', browser)
 
         when:
         to RlpProjectPage, projectId
@@ -161,7 +151,7 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
     def "The MERI Plan will only display only specific section for the Bushfire Recovery (the Regional Fund) - NRM"() {
         setup:
         String projectId = 'bushfireProjectNRM'
-        login([userId: '1', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'USER'], browser)
+        loginAsUser('1', browser)
 
         when:
         to RlpProjectPage, projectId

@@ -39,7 +39,7 @@ class ReportLockingSpec extends StubbedCasSpec {
 
         setup: "Login as an admin, regenerate the reports as the test data doesn't load reports"
         String projectId = '1'
-        login([userId: '1', role: "ROLE_FC_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+        loginAsMeritAdmin(browser)
         regenerateReports(projectId)
 
         when: "We open a report for editing"
@@ -55,9 +55,9 @@ class ReportLockingSpec extends StubbedCasSpec {
     }
 
     def "A new user should not be able to edit the report"() {
-        setup: "Login as an admin, regenerate the reports as the test data doesn't load reports"
+        setup: "Login as a project editor"
         String projectId = '1'
-        login([userId: '2', role: "ROLE_FC_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+        loginAsUser('10', browser)
 
         when: "a new user opens the same report as the one already being edited"
         editFirstReport(projectId)
@@ -68,9 +68,9 @@ class ReportLockingSpec extends StubbedCasSpec {
     }
 
     def "A user releases the lock on a report"() {
-        setup: "Login as an admin, regenerate the reports as the test data doesn't load reports"
+        setup: "Login as a project admin"
         String projectId = '1'
-        login([userId: '1', role: "ROLE_FC_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+        loginAsUser('1', browser)
 
         when:
         editFirstReport(projectId)
@@ -88,7 +88,7 @@ class ReportLockingSpec extends StubbedCasSpec {
     def "The new user can now edit the report"() {
         setup: "Login as a user who doesn't hold a lock"
         String projectId = '1'
-        login([userId: '2', role: "ROLE_FC_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+        loginAsUser('10', browser)
 
         when: "a new user opens the same report the previous user just exited"
         editFirstReport(projectId)

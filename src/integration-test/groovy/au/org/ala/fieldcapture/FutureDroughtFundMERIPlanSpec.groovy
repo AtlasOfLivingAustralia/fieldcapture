@@ -15,7 +15,7 @@ class FutureDroughtFundMERIPlanSpec extends StubbedCasSpec {
     def "MERI Plan Future Drought Fund"() {
         setup:
         String projectId = 'fdFundProject'
-        login([userId: '1', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'USER'], browser)
+        loginAsUser('1', browser)
 
         when:
         to RlpProjectPage, projectId

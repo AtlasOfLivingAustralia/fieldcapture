@@ -10,7 +10,7 @@ class MyProjectsSpec extends StubbedCasSpec {
 
     def "As a user, I can view a list of my projects"() {
         setup:
-        login([userId:'1', role:"ROLE_USER", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
+        loginAsUser('1', browser)
 
         when:
         to MyProjects

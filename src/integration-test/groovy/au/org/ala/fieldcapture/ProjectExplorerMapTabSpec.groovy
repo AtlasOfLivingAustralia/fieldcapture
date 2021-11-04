@@ -11,19 +11,13 @@ class ProjectExplorerMapTabSpec extends StubbedCasSpec {
 
     void "The project explorer displays a list of projects"() {
 
-        setup:
-        login([userId: '2', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ALA_ADMIN'], browser)
-
-        when:
+        setup:"Reindex to ensure the project explorer will have predictable data"
+        loginAsAlaAdmin(browser)
         to AdminTools
-
-        then:
-        at AdminTools
-
-        when: "Reindex to ensure the project explorer will have predictable data"
         reindex()
         logout(browser)
 
+        when:
         boolean empty = true
         while (empty) {
             to ProjectExplorer

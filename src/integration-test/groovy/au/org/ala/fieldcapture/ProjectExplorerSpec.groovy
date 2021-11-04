@@ -15,7 +15,7 @@ class ProjectExplorerSpec extends StubbedCasSpec {
     void "The project explorer displays a list of projects"() {
 
         setup:
-        login([userId: '2', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ALA_ADMIN'], browser)
+        loginAsAlaAdmin(browser)
         def expectedProjects = new HashSet((1..9).collect{"Project $it"})
         expectedProjects.add("Configurable MERI plan project")
         expectedProjects.add("Default outcome project")
@@ -32,9 +32,9 @@ class ProjectExplorerSpec extends StubbedCasSpec {
 
         when: "Reindex to ensure the project explorer will have predictable data"
         reindex()
-        waitFor {
-            logout(browser)
-        }
+        and: "Logout so the rest of the test is run as an unauthenticated user"
+        logout(browser)
+
 
         boolean empty = true
         while (empty) {
@@ -90,14 +90,14 @@ class ProjectExplorerSpec extends StubbedCasSpec {
         then:
         projects[0].description() == "Project 1 description"
 
-        and: "The downloads are not visible as the user is not an FC_ADMIN"
+        and: "The downloads are not visible as the user is not an MERIT administrator"
         !projects[0].downloadXlsx.displayed
         !projects[0].downloadJson.displayed
     }
 
-    def "FC_ADMINs can download project information via the project explorer"() {
+    def "MERIT administrators can download project information via the project explorer"() {
         setup:
-        login([userId: '22', role: "ROLE_FC_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to ProjectExplorer

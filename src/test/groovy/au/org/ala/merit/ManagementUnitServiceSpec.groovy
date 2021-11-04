@@ -192,7 +192,7 @@ class ManagementUnitServiceSpec extends Specification implements AutowiredTest{
                 {it.endsWith('managementunit/generateReportsInPeriod?startDate=2020-07-02T14:00:00Z&endDate=2021-01-01T13:00:00Z&test=test')})
     }
 
-    def "Users with the FC_READ_ONLY role can retrieve management unit reports and documents"() {
+    def "Users with the MERIT siteReadOnly role can retrieve management unit reports and documents"() {
         setup:
         String muId = 'mu1'
         String userId = 'u1'

@@ -13,7 +13,7 @@ class AdminSpec extends StubbedCasSpec {
 
     def "Admin Index"() {
         setup:
-        login([userId:'1', role:"ROLE_ADMIN", email:'fc-admin@nowhere.com', firstName: "ALA", lastName:'Admin'], browser)
+        loginAsAlaAdmin(browser)
 
         when:
         to MERITAdministrationPage
@@ -39,7 +39,7 @@ class AdminSpec extends StubbedCasSpec {
 
     def "Admin Static pages"() {
         setup:
-        login([userId:'1', role:"ROLE_ADMIN", email:'fc-admin@nowhere.com', firstName: "ALA", lastName:'Admin'], browser)
+        loginAsAlaAdmin(browser)
 
         when:
         to MERITAdministrationPage
