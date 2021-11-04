@@ -75,7 +75,7 @@ class UserService {
     }
 
     boolean userIsFcAdmin(String userId = null) {
-        doesUserHaveHubRole(RoleService.PROJECT_ADMIN_ROLE, userId)
+        doesUserHaveHubRole(RoleService.HUB_ADMIN_ROLE, userId)
     }
 
     /** The ALA admin role is the only role that is checked against a CAS role */
@@ -99,11 +99,11 @@ class UserService {
     }
 
     boolean userHasReadOnlyAccess(String userId = null) {
-        doesUserHaveHubRole(RoleService.PROJECT_READ_ONLY_ROLE, userId)
+        doesUserHaveHubRole(RoleService.HUB_READ_ONLY_ROLE, userId)
     }
 
     boolean userIsFcOfficer(String userId) {
-        doesUserHaveHubRole(RoleService.GRANT_MANAGER_ROLE, userId)
+        doesUserHaveHubRole(RoleService.HUB_OFFICER_ROLE, userId)
     }
 
     def getRecentEditsForUserId(userId) {
@@ -180,6 +180,9 @@ class UserService {
         if (!(role in RoleService.MERIT_HUB_ROLES)) {
             throw new IllegalArgumentException("Role "+role+" not supported as a hub role")
         }
+
+        String ecodataAclAccessLevel = convertHubRoleToAccesLevel(role)
+
         HubSettings settings = SettingService.getHubConfig()
         userId = userId ?: getUser()?.userId
         if (!userId) {
@@ -189,7 +192,7 @@ class UserService {
             return true
         }
 
-        return role == settings.userPermissions?.find({it.userId == userId})?.role
+        return ecodataAclAccessLevel == settings.userPermissions?.find({it.userId == userId})?.role
     }
 
     private Map checkRoles(String userId, String role) {
@@ -580,13 +583,21 @@ class UserService {
 //        if (result.error) {
 //            return result
 //        }
-        role = convertValueToSave(role)
+        role = convertHubRoleToAccesLevel(role)
         def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/addUserWithRoleToHub?userId=${userId}&hubId=${hubId}&role=${role}"
         webService.getJson(url)
     }
 
-    def convertValueToSave(role) {
-        def map = [siteAdmin: "admin", officer: "caseManager", siteReadOnly: "readOnly"]
+    /**
+     * MERIT has higher level roles siteAdmin, officer, siteReadOnly that provide
+     * access to various MERIT features.  These roles are implemented in ecodata as
+     * permissions on the MERIT hub entity.  This method is responsible for converting
+     * a MERIT role into the ecodata AccessLevel that is stored in the database.
+     * @param role the role to convert.
+     * @return the accessLevel used to represent the supplied role
+     */
+    private String convertHubRoleToAccesLevel(String role) {
+        Map map = [siteAdmin: "admin", officer: "caseManager", siteReadOnly: "readOnly"]
         return map[role]
     }
 
