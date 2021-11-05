@@ -188,8 +188,8 @@ class RlpProjectSpec extends StubbedCasSpec {
         waitFor { sitesTabContent.map.displayed }
 
         then:
-        sitesTabContent.sites.size() == 1
-        sitesTabContent.sites[0].name == "Test site 1"
+        sitesTabContent.sitesTableRows.size() == 1
+        sitesTabContent.sitesTableRows[0].name == "Test site 1"
         waitFor { sitesTabContent.markerCount() == 1 } // The map is initialised asynchronously
 
     }

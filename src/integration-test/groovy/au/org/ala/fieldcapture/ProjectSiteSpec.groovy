@@ -20,16 +20,17 @@ class ProjectSiteSpec extends StubbedCasSpec {
 
         when:
         to ProjectIndex, 'project_10'
+        sitesTab.click()
 
         then:
-        overviewTab.click()
-        sitesTab.click()
         waitFor {siteTabContents.displayed}
 
         and:
         waitFor 30, {
-            siteTabContents.sitesTableRows[0].siteName.text() == "Site area for project"
-            siteTabContents.markers.size() == 1
+            siteTabContents.sitesTableRows.size() == 1
+            siteTabContents.markerCount() == 1
+            siteTabContents.sitesTableRows[0].name == "Site area for project"
+
         }
 
     }
@@ -41,10 +42,9 @@ class ProjectSiteSpec extends StubbedCasSpec {
 
         when:
         to ProjectIndex, 'project_10'
+        sitesTab.click()
 
         then:
-        overviewTab.click()
-        sitesTab.click()
         waitFor {siteTabContents.displayed}
 
         when:

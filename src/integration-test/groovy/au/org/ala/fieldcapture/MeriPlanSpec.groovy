@@ -120,13 +120,8 @@ class MeriPlanSpec extends StubbedCasSpec {
         String projectId = '1'
         loginAsUser('1', browser)
 
-        when:
+        when: "Make an edit, simulate a timeout then attempt to save"
         to RlpProjectPage, projectId
-
-        then:
-        waitFor { at RlpProjectPage }
-
-        when: "Make an edit after the session times out and attempt to save"
         def meriPlan = openMeriPlanEditTab()
 
         meriPlan.projectMethodology == "Project methodology"

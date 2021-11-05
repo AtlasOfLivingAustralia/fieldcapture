@@ -6,6 +6,7 @@ import pages.modules.ProjectAdminTab
 import pages.modules.ProjectReports
 import pages.modules.RlpOverviewTab
 import pages.modules.RlpSitesTab
+import pages.modules.SiteTabContent
 import pages.modules.TimeoutModal
 
 class RlpProjectPage extends ReloadablePage {
@@ -29,7 +30,7 @@ class RlpProjectPage extends ReloadablePage {
         adminContent(required: false) { module ProjectAdminTab }
         documents(required: false) { module DocumentsTab }
         projectReports(required: false) { module ProjectReports }
-        sitesTabContent(required: false) { module RlpSitesTab }
+        sitesTabContent(required: false) { module SiteTabContent }
 
         timeoutModal(required: false) { $('div.bootbox.modal').module TimeoutModal }
         unsavedEdits(required: false) { $('.unsaved-changes') }
@@ -39,7 +40,6 @@ class RlpProjectPage extends ReloadablePage {
         addNewDataset(required: false) {$('.btn-primary')}
 
         meriPlanTabContent {module MeriPlanTabContent }
-        sites { module SitesTab }
     }
 
     def openDocumentDialog() {

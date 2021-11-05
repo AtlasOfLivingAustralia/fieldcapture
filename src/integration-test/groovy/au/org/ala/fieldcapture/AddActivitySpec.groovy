@@ -1,7 +1,6 @@
 package au.org.ala.fieldcapture
 
 import pages.AddActivityPage
-import pages.AdminClearCachePage
 import pages.AdminTools
 import pages.EditActivityPage
 import pages.ProjectIndex
@@ -68,28 +67,25 @@ class AddActivitySpec extends StubbedCasSpec {
     }
 
     def "Edit Activity Forms and timing out issue"() {
-        setup: "log in as userId=1 who is a program admin for the program with programId=test_program"
-        loginAsMeritAdmin(browser)
+        setup: "log in as userId=1 who is an editor for this project"
+        loginAsUser('1', browser)
 
         when:
         to ProjectIndex, projectId
-
-        then:
-        waitFor {at ProjectIndex}
         activitiesTab.click()
         waitFor 10,{plansAndReports.displayed}
 
         $(".icon-link")[0].click()
 
-        when: "Make an edit after the session times out and attempt to save"
+        then:
         waitFor { at EditActivityPage }
+
+        when: "Make an edit after the session times out and attempt to save"
         activityDetails.description = "Checking the local storage"
 
         simulateTimeout(browser)
+        submit()
 
-        waitFor 20, {
-            submit()
-        }
 
         then: "The save will fail an a dialog is displayed to explain the situation"
         waitFor 20, { timeoutModal.displayed }
