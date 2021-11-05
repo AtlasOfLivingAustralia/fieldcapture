@@ -1,5 +1,9 @@
 package au.org.ala.fieldcapture
 
+import com.icegreen.greenmail.junit.GreenMailRule
+import com.icegreen.greenmail.util.ServerSetup
+import com.icegreen.greenmail.util.ServerSetupTest
+import org.junit.Rule
 import pages.MeriPlanPDFPage
 import pages.ProjectIndex
 import pages.RlpProjectPage
@@ -7,6 +11,9 @@ import spock.lang.Stepwise
 
 @Stepwise
 class MeriPlanSpec extends StubbedCasSpec {
+
+    @Rule
+    public final GreenMailRule greenMail = new GreenMailRule(ServerSetup.verbose(ServerSetupTest.SMTP))
 
     def setupSpec() {
         useDataSet('dataset2')
