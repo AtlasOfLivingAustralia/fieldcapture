@@ -8,6 +8,7 @@ class SiteTabContent extends Module {
         uploadSites{$(".uploadSite")}
         markers{$('.leaflet-marker-pane img')}
 
+        sitesTableRows { $("#sites-table tbody tr").moduleList(SitesTableContents)}
     }
 }
 

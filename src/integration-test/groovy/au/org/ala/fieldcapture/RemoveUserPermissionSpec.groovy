@@ -49,7 +49,10 @@ class RemoveUserPermissionSpec extends StubbedCasSpec {
         waitFor { adminContent.userId.text() == "1" }
         adminContent.removeButton.click()
 
-        and: "Check user if exist in project admin access tab after removing from admin section"
+        then:
+        waitFor { hasBeenReloaded() }
+
+        when: "Check user if exist in project admin access tab after removing from admin section"
         to RlpProjectPage, "project_1"
         adminTab.click()
 

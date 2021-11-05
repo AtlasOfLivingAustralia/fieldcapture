@@ -141,6 +141,20 @@ addSetting('meritfielddata.rlp.report.approved.emailBody', 'Report approved body
 addSetting('meritfielddata.rlp.report.returned.emailSubject', 'Report returned subject');
 addSetting('meritfielddata.rlp.report.returned.emailBody', 'Report returned body');
 
+addSetting('meritfielddata.rlp.meriPlanSubmitted.emailSubject', 'Plan submitted subject');
+addSetting('meritfielddata.rlp.meriPlanApproved.emailSubject', 'Plan submitted body');
+addSetting('meritfielddata.rlp.meriPlanRejected.emailSubject', 'Plan approved subject');
+addSetting('meritfielddata.rlp.meriPlanSubmitted.emailText', 'Plan submitted subject');
+addSetting('meritfielddata.rlp.meriPlanApproved.emailText', 'Plan submitted body');
+addSetting('meritfielddata.rlp.meriPlanRejected.emailText', 'Plan approved subject');
+addSetting('meritfielddata.rlp.planSubmitted.emailSubject', 'Plan submitted subject');
+addSetting('meritfielddata.rlp.planApproved.emailSubject', 'Plan submitted body');
+addSetting('meritfielddata.rlp.planRejected.emailSubject', 'Plan approved subject');
+addSetting('meritfielddata.rlp.planSubmitted.emailText', 'Plan submitted subject');
+addSetting('meritfielddata.rlp.planApproved.emailText', 'Plan submitted body');
+addSetting('meritfielddata.rlp.planRejected.emailText', 'Plan approved subject');
+
+
 // Load scores used by RLP services to enable their selection in the MERI plan.
 createProjectNumberBaselineDataSets({ "scoreId":"score_42"});
 createProjectNumberOfCommunicationMaterialsPublished({ "scoreId":"score_43"});

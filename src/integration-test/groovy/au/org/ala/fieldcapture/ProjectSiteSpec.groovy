@@ -25,10 +25,10 @@ class ProjectSiteSpec extends StubbedCasSpec {
         overviewTab.click()
         sitesTab.click()
         waitFor {siteTabContents.displayed}
-        def tableContent = tableContents
+
         and:
         waitFor 30, {
-            tableContent[2].siteName.text() == "Site area for project"
+            siteTabContents.sitesTableRows[0].siteName.text() == "Site area for project"
             siteTabContents.markers.size() == 1
         }
 
