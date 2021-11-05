@@ -256,4 +256,117 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
 
     }
 
+    def "This retrieves the lists of HUB users"() {
+        setup:
+        String hubId = '00cf9ffd-e30c-45f8-99db-abce8d05c0d8'
+
+        when:
+        service.getByHub(hubId)
+
+        then:
+        1 * webService.getJson({it.endsWith("permissions/getByHub/${hubId}")}) >> [[role:'officer', displayName:null, userName:null, userId:130205], [role:'siteAdmin', displayName:null, userName:null, userId:129333]]
+
+    }
+
+    def "This inserts a user into HUB"() {
+        setup:
+        String userId = '129333'
+        String role = 'siteAdmin'
+        HubSettings hubSettings = new HubSettings(userPermissions:[],hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
+        SettingService.setHubConfig(hubSettings)
+
+        when:
+        def result = service.addUserToHub(userId,role)
+
+        then:
+        result == null
+
+    }
+
+    def "This converts a MERIT role to Ecodata AccessLevel"() {
+        setup:
+        String role = 'siteAdmin'
+
+        when:
+        def result = service.convertHubRoleToAccesLevel(role)
+
+        then:
+        result == 'admin'
+
+    }
+
+    def "This converts a Ecodata AccessLevel to a HUB role"() {
+        setup:
+        def results = [[role:'admin', displayName:null, userName:null, userId:'129333'],[role:'caseManager', displayName:null, userName:null, userId:'130205']]
+
+        when:
+        def results2 = service.convertAccessLevelToHubRole(results)
+
+        then:
+        results2.size() > 0
+
+    }
+
+    def "This removes a user from HUB"() {
+        setup:
+        String userId = '129333'
+        String role = 'siteAdmin'
+        HubSettings hubSettings = new HubSettings(userPermissions:[])
+        SettingService.setHubConfig(hubSettings)
+
+        when:
+        def result = service.removeHubUser(userId,role)
+
+        then:
+        result == null
+
+    }
+
+    def "This validates if user who have a role on any existing MERIT project cannot be assigned the Read Only role in the HUB"() {
+        setup:
+        String userId = '129333'
+        String role = 'siteReadOnly'
+        HubSettings hubSettings = new HubSettings(hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
+        SettingService.setHubConfig(hubSettings)
+
+        when:
+        def result = service.saveHubUser(userId,role)
+
+        then:
+        1 * webService.getJson({it.endsWith("permissions/getProjectsForUserId/${userId}")}) >> [[accessLevel:[code:'100', name:'admin'], project:[associatedProgram:'Green Army', projectId:'fd0289c5-ac99-44de-8538-6eb361c1a51a', status:'Active']]]
+        result == [error:'User have a role on an existing MERIT project, cannot be assigned the Site Read Only role.']
+
+    }
+
+    def "This validates if user who doesn't have a role on any existing MERIT project can be assigned the Read Only role in the HUB"() {
+        setup:
+        String userId = '129333'
+        String role = 'siteReadOnly'
+        HubSettings hubSettings = new HubSettings(hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
+        SettingService.setHubConfig(hubSettings)
+
+        when:
+        def result = service.saveHubUser(userId,role)
+
+        then:
+        1 * webService.getJson({it.endsWith("permissions/getProjectsForUserId/${userId}")}) >> []
+        result == null
+
+    }
+
+    def "This validates if user can be assigned a role in the HUB"() {
+        setup:
+        String userId = '129333'
+        String role = 'siteAdmin'
+        HubSettings hubSettings = new HubSettings(hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
+        SettingService.setHubConfig(hubSettings)
+
+        when:
+        def result = service.saveHubUser(userId,role)
+
+        then:
+        1 * webService.getJson({it.endsWith("permissions/getProjectsForUserId/${userId}")}) >> []
+        result == null
+
+    }
 }

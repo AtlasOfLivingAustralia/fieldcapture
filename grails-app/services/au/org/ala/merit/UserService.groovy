@@ -568,23 +568,27 @@ class UserService {
 
     def getByHub(hubId) {
         def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/getByHub/${hubId}"
-        return convertValueUiLabel(webService.getJson(url))
+        return convertAccessLevelToHubRole(webService.getJson(url))
     }
 
-    def convertValueUiLabel(results) {
+    /**
+     *
+     * @param results
+     * @return the Hub Role to be displayed in the UI (user permission table)
+     */
+    private List convertAccessLevelToHubRole(results) {
         def map = [admin: "siteAdmin", caseManager: "officer", readOnly: "siteReadOnly"]
         results.each { it ->
             it.role = map[it.role]
         }
     }
 
-    def addUserToHub(String userId, String hubId, String role) {
-//        Map result = checkRoles(userId, role)
-//        if (result.error) {
-//            return result
-//        }
-        role = convertHubRoleToAccesLevel(role)
-        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/addUserWithRoleToHub?userId=${userId}&hubId=${hubId}&role=${role}"
+    def addUserToHub(String userId, String role) {
+        String ecodataAclAccessLevel = convertHubRoleToAccesLevel(role)
+        HubSettings hubSettings = SettingService.getHubConfig()
+        String hubId = hubSettings.hubId
+
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/addUserWithRoleToHub?userId=${userId}&hubId=${hubId}&role=${ecodataAclAccessLevel}"
         webService.getJson(url)
     }
 
@@ -601,8 +605,21 @@ class UserService {
         return map[role]
     }
 
-    def removeHubUser(String hubId, String userId, String role) {
-        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/removeUserWithRoleFromHub?userId=${userId}&hubId=${hubId}&role=${role}"
+    def removeHubUser(String userId, String role) {
+        String ecodataAclAccessLevel = convertHubRoleToAccesLevel(role)
+        HubSettings hubSettings = SettingService.getHubConfig()
+        String hubId = hubSettings.hubId
+
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/removeUserWithRoleFromHub?userId=${userId}&hubId=${hubId}&role=${ecodataAclAccessLevel}"
         webService.getJson(url)
     }
+
+    def saveHubUser(String userId, String role) {
+        if (getProjectsForUserId(userId) && role == RoleService.HUB_READ_ONLY_ROLE) {
+            return [error:'User have a role on an existing MERIT project, cannot be assigned the Site Read Only role.']
+        } else {
+            addUserToHub(userId, role)
+        }
+    }
+
 }

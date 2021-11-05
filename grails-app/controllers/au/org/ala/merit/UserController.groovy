@@ -205,22 +205,16 @@ class UserController {
         def adminUserId = userService.getCurrentUserId()
 
         if (adminUserId) {
-            if (authService.userInRole(grailsApplication.config.getProperty('security.cas.adminRole'))) {
-                /* HubSettings can't be used to reflect list values as it caches the results
-                HubSettings hubSettings = SettingService.getHubConfig()
-                render hubSettings.userPermissions as JSON*/
-//                def results = userService.getByHub(hubId)
+            if (userService.userIsAlaOrFcAdmin()) {
                 HubSettings hubSettings = SettingService.getHubConfig()
                 def results = userService.getByHub(hubSettings.hubId)
                 render results as JSON
             } else {
                 render status: 403, text: 'Permission denied'
             }
-        } else if (adminUserId) {
+        } else if (!adminUserId) {
             render status: 400, text: 'Required params not provided: id'
-        } else if (projectId) {
-            render status: 403, text: 'User not logged-in or does not have permission'
-        } else {
+        }  else {
             render status: 500, text: 'Unexpected error'
         }
     }
@@ -230,12 +224,15 @@ class UserController {
         String role = params.role
 
         if (userId && role) {
-            HubSettings hubSettings = SettingService.getHubConfig()
-            Map response = userService.addUserToHub(userId, hubSettings.hubId, role)
-            if (response.error) {
-                render status: 400, text: response.error
+            if (userService.userIsAlaOrFcAdmin()) {
+                Map response = userService.saveHubUser(userId, role)
+                if (response.error) {
+                    render status: 400, text: response.error
+                } else {
+                    render response as JSON
+                }
             } else {
-                render response as JSON
+                render status:403, text: 'Permission denied'
             }
         } else {
             render status:400, text: 'Required params not provided: userId, role'
@@ -245,12 +242,10 @@ class UserController {
     def removeUserWithHubRole() {
         String userId = params.userId
         String role = params.role
-        String hubId = params.entityId
-        def adminUser = authService.userDetails()
 
-        if (adminUser && hubId && role && userId) {
-            if (authService.userInRole(grailsApplication.config.getProperty('security.cas.adminRole'))) {
-                render userService.removeHubUser(hubId, userId, role) as JSON
+        if (role && userId) {
+            if (userService.userIsAlaOrFcAdmin()) {
+                render userService.removeHubUser(userId, role) as JSON
             } else {
                 render status:403, text: 'Permission denied'
             }

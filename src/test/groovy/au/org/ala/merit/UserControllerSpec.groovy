@@ -1,5 +1,7 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.hub.HubSettings
+import au.org.ala.web.AuthService
 import spock.lang.Specification
 import grails.testing.web.controllers.ControllerUnitTest
 
@@ -8,6 +10,7 @@ class UserControllerSpec extends Specification implements ControllerUnitTest<Use
 
     UserService userService = Mock(UserService)
     ReportService reportService = Mock(ReportService)
+    AuthService authService = Mock(AuthService)
 
     def setup() {
         controller.userService = userService
@@ -72,6 +75,113 @@ class UserControllerSpec extends Specification implements ControllerUnitTest<Use
         isSiteAdmin | canRecommendProjects
         false       | false
         true        | true
+    }
+
+    void "Retrieving HUB Users"(){
+        setup:
+        HubSettings hubSettings = new HubSettings(userPermissions:[], hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
+        SettingService.setHubConfig(hubSettings)
+
+        when:
+        controller.getMembersOfHub()
+        def results = response.getJson()
+
+        then:
+        1 * userService.getCurrentUserId() >> [userId:'129333', userName: 'jsalomon']
+        1 * userService.userIsAlaOrFcAdmin() >> true
+        1 * userService.getByHub(hubSettings.hubId) >> [[userId:'123'],[userId: '456']]
+
+        and:
+        results.userId.size() > 0
+
+    }
+
+    void "Adding a HUB User"(){
+        setup:
+        String userId = '129333'
+        params.userId = userId
+        String role = 'siteReadOnly'
+        params.role = role
+        HubSettings hubSettings = new HubSettings(userPermissions:[], hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
+        SettingService.setHubConfig(hubSettings)
+        Map res = [:]
+
+        when:
+        controller.addUserToHub()
+        def results = response.getJson()
+
+        then:
+        1 * userService.userIsAlaOrFcAdmin() >> true
+        1 * userService.saveHubUser(userId,role) >> res
+
+        and:
+        results == [:]
+
+    }
+
+    void "Adding a HUB User with invalid permission"(){
+        setup:
+        String userId = '129333'
+        params.userId = userId
+        String role = 'siteReadOnly'
+        params.role = role
+        HubSettings hubSettings = new HubSettings(userPermissions:[], hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
+        SettingService.setHubConfig(hubSettings)
+
+        when:
+        controller.addUserToHub()
+
+        then:
+        1 * userService.userIsAlaOrFcAdmin() >> false
+
+        and:
+        response.status == 403
+        response.text == 'Permission denied'
+
+    }
+
+    void "Deleting a HUB Users"(){
+        setup:
+        String userId = '129333'
+        params.userId = userId
+        String role = 'siteReadOnly'
+        params.role = role
+        HubSettings hubSettings = new HubSettings(userPermissions:[], hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
+        SettingService.setHubConfig(hubSettings)
+        Map res = [:]
+
+        when:
+        controller.removeUserWithHubRole()
+        def results = response.getJson()
+
+        then:
+        1 * userService.userIsAlaOrFcAdmin() >> true
+        1 * userService.removeHubUser(userId,role) >> res
+
+        and:
+        results == [:]
+
+    }
+
+    void "Deleting a HUB User with invalid permission"(){
+        setup:
+        String userId = '129333'
+        params.userId = userId
+        String role = 'siteReadOnly'
+        params.role = role
+        HubSettings hubSettings = new HubSettings(userPermissions:[], hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
+        SettingService.setHubConfig(hubSettings)
+
+        when:
+        controller.removeUserWithHubRole()
+
+        then:
+        1 * userService.userIsAlaOrFcAdmin() >> false
+
+        and:
+        response.status == 403
+        response.text == 'Permission denied'
+
     }
 
 }

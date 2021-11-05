@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import au.com.bytecode.opencsv.CSVReader
+import au.org.ala.merit.hub.HubSettings
 import au.org.ala.web.AuthService
 import grails.plugins.csv.CSVReaderUtils
 import grails.web.http.HttpHeaders
@@ -13,11 +14,15 @@ class AdminControllerSpec extends Specification implements ControllerUnitTest<Ad
     AdminService adminService = Mock(AdminService)
     AuthService authService  = Mock(AuthService)
     SettingService settingService = Mock(SettingService)
+    UserService userService = Mock(UserService)
+    RoleService roleService = Mock(RoleService)
 
     def setup(){
         controller.adminService = adminService
         controller.authService = authService
         controller.settingService = settingService
+        controller.userService = userService
+        controller.roleService = roleService
     }
 
     void "Search User Details using email Address"(){
@@ -162,5 +167,26 @@ class AdminControllerSpec extends Specification implements ControllerUnitTest<Ad
         then:
         response.status == HttpStatus.SC_NOT_FOUND
         0 * settingService._
+    }
+
+    void "Retriever HUB Roles"(){
+        setup:
+        HubSettings hubSettings = new HubSettings(hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
+        SettingService.setHubConfig(hubSettings)
+        def roles = roleService.MERIT_HUB_ROLES
+        def hubFlg = true
+
+        when:
+        def results = controller.createUserHubPermission()
+
+        then:
+        1 * userService.getUser() >> [userId:'129333', userName: 'jsalomon']
+
+        and:
+        view == '/admin/createUserHubPermission'
+        model.roles == roles
+        model.hubId == '00cf9ffd-e30c-45f8-99db-abce8d05c0d8'
+        model.hubFlg == true
+
     }
 }
