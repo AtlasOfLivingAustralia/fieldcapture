@@ -23,26 +23,24 @@ class CreateUserHubPermissionSpec extends StubbedCasSpec {
         via CreateUserHubPermissionPage
 
         then: "the user did not have permission to view the page"
-        waitFor 10, { at HomePage }
+        waitFor 30, { at HomePage }
 
         and:
         title == "Home | MERIT"
 
     }
 
-    // Temporarily commenting this out as it leaves an alert dialog open which causes
-    // the rest of the tests to fail.
-//    def "I can access the page as a MERIT administrator"() {
-//
-//        setup:
-//        loginAsMeritAdmin(browser)
-//
-//        when:
-//        to CreateUserHubPermissionPage
-//
-//        then:
-//        waitFor 20, { at CreateUserHubPermissionPage }
-//
-//
-//    }
+    def "I can access the page as a MERIT administrator"() {
+
+        setup:
+        loginAsMeritAdmin(browser)
+
+        when:
+        to CreateUserHubPermissionPage
+
+        then:
+        waitFor 30, { at CreateUserHubPermissionPage }
+
+
+    }
 }
