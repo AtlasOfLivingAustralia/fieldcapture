@@ -18,7 +18,7 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
     def authService = Mock(AuthService)
     def grailsCacheManager = Mock(GrailsCacheManager)
     def activityService = Mock(ActivityService)
-
+    def settingService = Mock(SettingService)
 
     def setup() {
         grailsApplication.config.ecodata.baseUrl = "/"
@@ -28,7 +28,8 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         service.authService = authService
         service.grailsCacheManager = grailsCacheManager
         service.activityService = activityService
-
+        service.cacheService = new CacheService()
+        service.settingService = settingService
         authService.userInRole(_) >> false
     }
 
@@ -264,7 +265,7 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         service.getByHub(hubId)
 
         then:
-        1 * webService.getJson({it.endsWith("permissions/getByHub/${hubId}")}) >> [[role:'officer', displayName:null, userName:null, userId:130205], [role:'siteAdmin', displayName:null, userName:null, userId:129333]]
+        1 * webService.getJson({it.endsWith("permissions/getByHub/${hubId}")},300000) >> [[role:'officer', displayName:null, userName:null, userId:130205], [role:'siteAdmin', displayName:null, userName:null, userId:129333]]
 
     }
 
@@ -276,7 +277,7 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         SettingService.setHubConfig(hubSettings)
 
         when:
-        def result = service.addUserToHub(userId,role)
+        def result = service.addUserToHub(userId,role,hubSettings.hubId)
 
         then:
         result == null
@@ -311,11 +312,12 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         setup:
         String userId = '129333'
         String role = 'siteAdmin'
-        HubSettings hubSettings = new HubSettings(userPermissions:[])
+        HubSettings hubSettings = new HubSettings(userPermissions:[],hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
         SettingService.setHubConfig(hubSettings)
+        //settingService.getHubSettings("merit") >> hubSettings
 
         when:
-        def result = service.removeHubUser(userId,role)
+        def result = service.removeHubUser(userId,role,hubSettings.hubId)
 
         then:
         result == null
@@ -330,7 +332,7 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         SettingService.setHubConfig(hubSettings)
 
         when:
-        def result = service.saveHubUser(userId,role)
+        def result = service.saveHubUser(userId,role,hubSettings.hubId)
 
         then:
         1 * webService.getJson({it.endsWith("permissions/getProjectsForUserId/${userId}")}) >> [[accessLevel:[code:'100', name:'admin'], project:[associatedProgram:'Green Army', projectId:'fd0289c5-ac99-44de-8538-6eb361c1a51a', status:'Active']]]
@@ -346,7 +348,7 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         SettingService.setHubConfig(hubSettings)
 
         when:
-        def result = service.saveHubUser(userId,role)
+        def result = service.saveHubUser(userId,role,hubSettings.hubId)
 
         then:
         1 * webService.getJson({it.endsWith("permissions/getProjectsForUserId/${userId}")}) >> []
@@ -362,7 +364,7 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         SettingService.setHubConfig(hubSettings)
 
         when:
-        def result = service.saveHubUser(userId,role)
+        def result = service.saveHubUser(userId,role,hubSettings.hubId)
 
         then:
         1 * webService.getJson({it.endsWith("permissions/getProjectsForUserId/${userId}")}) >> []

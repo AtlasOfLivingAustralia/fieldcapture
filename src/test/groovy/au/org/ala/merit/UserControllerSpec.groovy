@@ -81,6 +81,8 @@ class UserControllerSpec extends Specification implements ControllerUnitTest<Use
         setup:
         HubSettings hubSettings = new HubSettings(userPermissions:[], hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
         SettingService.setHubConfig(hubSettings)
+        String hubId = '00cf9ffd-e30c-45f8-99db-abce8d05c0d8'
+        params.id = hubId
 
         when:
         controller.getMembersOfHub()
@@ -89,7 +91,7 @@ class UserControllerSpec extends Specification implements ControllerUnitTest<Use
         then:
         1 * userService.getCurrentUserId() >> [userId:'129333', userName: 'jsalomon']
         1 * userService.userIsAlaOrFcAdmin() >> true
-        1 * userService.getByHub(hubSettings.hubId) >> [[userId:'123'],[userId: '456']]
+        1 * userService.getByHub(params.id) >> [[userId:'123'],[userId: '456']]
 
         and:
         results.userId.size() > 0
@@ -102,6 +104,8 @@ class UserControllerSpec extends Specification implements ControllerUnitTest<Use
         params.userId = userId
         String role = 'siteReadOnly'
         params.role = role
+        String hubId = '00cf9ffd-e30c-45f8-99db-abce8d05c0d8'
+        params.id = hubId
         HubSettings hubSettings = new HubSettings(userPermissions:[], hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
         SettingService.setHubConfig(hubSettings)
         Map res = [:]
@@ -112,7 +116,7 @@ class UserControllerSpec extends Specification implements ControllerUnitTest<Use
 
         then:
         1 * userService.userIsAlaOrFcAdmin() >> true
-        1 * userService.saveHubUser(userId,role) >> res
+        1 * userService.saveHubUser(userId,role, params.id) >> res
 
         and:
         results == [:]
@@ -146,6 +150,8 @@ class UserControllerSpec extends Specification implements ControllerUnitTest<Use
         params.userId = userId
         String role = 'siteReadOnly'
         params.role = role
+        String hubId = '00cf9ffd-e30c-45f8-99db-abce8d05c0d8'
+        params.id = hubId
         HubSettings hubSettings = new HubSettings(userPermissions:[], hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
         SettingService.setHubConfig(hubSettings)
         Map res = [:]
@@ -156,7 +162,7 @@ class UserControllerSpec extends Specification implements ControllerUnitTest<Use
 
         then:
         1 * userService.userIsAlaOrFcAdmin() >> true
-        1 * userService.removeHubUser(userId,role) >> res
+        1 * userService.removeHubUser(userId,role,params.id) >> res
 
         and:
         results == [:]
