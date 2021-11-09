@@ -203,11 +203,11 @@ class UserController {
 
     def getMembersOfHub() {
         def adminUserId = userService.getCurrentUserId()
+        HubSettings hubSettings = SettingService.getHubConfig()
 
         if (adminUserId) {
             if (userService.userIsAlaOrFcAdmin()) {
-                HubSettings hubSettings = SettingService.getHubConfig()
-                def results = userService.getByHub(hubSettings.hubId)
+                def results = userService.getByHub(params.id)
                 render results as JSON
             } else {
                 render status: 403, text: 'Permission denied'
@@ -225,7 +225,7 @@ class UserController {
 
         if (userId && role) {
             if (userService.userIsAlaOrFcAdmin()) {
-                Map response = userService.saveHubUser(userId, role)
+                Map response = userService.saveHubUser(userId, role, params.id)
                 if (response.error) {
                     render status: 400, text: response.error
                 } else {
@@ -245,7 +245,7 @@ class UserController {
 
         if (role && userId) {
             if (userService.userIsAlaOrFcAdmin()) {
-                render userService.removeHubUser(userId, role) as JSON
+                render userService.removeHubUser(userId, role, params.id) as JSON
             } else {
                 render status:403, text: 'Permission denied'
             }

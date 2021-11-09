@@ -12,8 +12,8 @@
 
     <div id="permissions" class="pill-pane tab-pane">
         <h4>Add Permissions</h4>
-        <g:render template="/admin/addPermissions" model="[addUserUrl:g.createLink(controller:'user', action:'addUserToHub'), entityId:hubId, hubFlg:hubFlg]"/>
-        <g:render template="/admin/permissionTable" model="[loadPermissionsUrl:g.createLink(controller:'user', action:'getMembersOfHub'), removeUserUrl:g.createLink(controller:'user', action:'removeUserWithHubRole'), user:user]"/>
+        <g:render template="/admin/addPermissions" model="[addUserUrl:g.createLink(controller:'user', action:'addUserToHub', id:hubId), entityId:hubId, hubFlg:hubFlg]"/>
+        <g:render template="/admin/permissionTable" model="[loadPermissionsUrl:g.createLink(controller:'user', action:'getMembersOfHub', id:hubId), removeUserUrl:g.createLink(controller:'user', action:'removeUserWithHubRole', id:hubId), user:user]"/>
 
     </div>
 

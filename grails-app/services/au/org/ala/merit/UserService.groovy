@@ -22,9 +22,11 @@ class UserService {
     static final String PROGRAM = 'au.org.ala.ecodata.Program'
     static final String MANAGEMENTUNIT = 'au.org.ala.ecodata.ManagementUnit'
 
+    private static final String HUB_CACHE_KEY = 'merit_hub'
+    private static final String HUB_URLPATH = 'merit'
 
 
-    def grailsApplication, authService, webService, roleService, projectService, organisationService, activityService
+    def grailsApplication, authService, webService, roleService, projectService, organisationService, activityService, settingService, cacheService
 
     GrailsCacheManager grailsCacheManager
 
@@ -568,7 +570,7 @@ class UserService {
 
     def getByHub(hubId) {
         def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/getByHub/${hubId}"
-        return convertAccessLevelToHubRole(webService.getJson(url))
+        return convertAccessLevelToHubRole(webService.getJson(url, 300000))
     }
 
     /**
@@ -583,13 +585,14 @@ class UserService {
         }
     }
 
-    def addUserToHub(String userId, String role) {
+    def addUserToHub(String userId, String role, String hubId) {
         String ecodataAclAccessLevel = convertHubRoleToAccesLevel(role)
-        HubSettings hubSettings = SettingService.getHubConfig()
-        String hubId = hubSettings.hubId
 
         def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/addUserWithRoleToHub?userId=${userId}&hubId=${hubId}&role=${ecodataAclAccessLevel}"
-        webService.getJson(url)
+        def resp = webService.getJson(url)
+        reloadHubSettings()
+
+        return resp
     }
 
     /**
@@ -605,21 +608,27 @@ class UserService {
         return map[role]
     }
 
-    def removeHubUser(String userId, String role) {
+    def removeHubUser(String userId, String role, String hubId) {
         String ecodataAclAccessLevel = convertHubRoleToAccesLevel(role)
-        HubSettings hubSettings = SettingService.getHubConfig()
-        String hubId = hubSettings.hubId
 
         def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/removeUserWithRoleFromHub?userId=${userId}&hubId=${hubId}&role=${ecodataAclAccessLevel}"
-        webService.getJson(url)
+        def resp = webService.getJson(url)
+        reloadHubSettings()
+
+        return resp
     }
 
-    def saveHubUser(String userId, String role) {
+    def saveHubUser(String userId, String role, String hubId) {
         if (getProjectsForUserId(userId) && role == RoleService.HUB_READ_ONLY_ROLE) {
             return [error:'User have a role on an existing MERIT project, cannot be assigned the Site Read Only role.']
         } else {
-            addUserToHub(userId, role)
+            addUserToHub(userId, role, hubId)
         }
+    }
+
+    void reloadHubSettings() {
+        cacheService.clear(HUB_CACHE_KEY)
+        HubSettings hubSettings = settingService.getHubSettings(HUB_URLPATH)
     }
 
 }
