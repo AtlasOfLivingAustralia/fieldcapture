@@ -5,7 +5,10 @@ import au.org.ala.web.AuthService
 import grails.plugin.cache.GrailsCache
 import grails.testing.services.ServiceUnitTest
 import grails.testing.web.GrailsWebUnitTest
+import org.apache.http.HttpStatus
 import org.grails.plugin.cache.GrailsCacheManager
+import org.joda.time.DateTime
+import org.joda.time.DateTimeUtils
 import spock.lang.Specification
 
 /**
@@ -31,6 +34,10 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         service.cacheService = new CacheService()
         service.settingService = settingService
         authService.userInRole(_) >> false
+    }
+
+    def cleanup() {
+        DateTimeUtils.setCurrentMillisSystem()
     }
 
     def "ACL project checks should be delegated to appropriate web service calls"(String role, String url) {
@@ -369,6 +376,20 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         then:
         1 * webService.getJson({it.endsWith("permissions/getProjectsForUserId/${userId}")}) >> []
         result == null
+
+    }
+
+    def "record user login"() {
+
+        setup: "The code uses the current time, so we mock it so we can test.  This is undone in the cleanup"
+        String mockedNow = "2021-01-01T00:00:00Z"
+        DateTimeUtils.setCurrentMillisFixed(DateUtils.parse(mockedNow).toInstant().millis)
+
+        when:
+        service.recordUserLogin("u1", "h1")
+
+        then:
+        1 * webService.doPost({it.endsWith("/user/recordUserLogin")}, [userId:"u1", hubId:"h1", loginTime:mockedNow]) >> [statusCode: HttpStatus.SC_OK]
 
     }
 }

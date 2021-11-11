@@ -8,6 +8,8 @@ import org.grails.web.json.JSONObject
  */
 class HubSettings extends JSONObject {
 
+    String hubId
+
     public HubSettings() {
         super()
     }
@@ -15,6 +17,7 @@ class HubSettings extends JSONObject {
     public HubSettings(Map settings) {
         super()
         putAll(settings)
+        hubId = settings.hubId
     }
 
     public boolean overridesHomePage() {

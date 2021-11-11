@@ -5,7 +5,9 @@ import au.org.ala.web.CASRoles
 import grails.plugin.cache.CacheEvict
 import grails.plugin.cache.Cacheable
 import groovy.util.logging.Slf4j
+import org.apache.http.HttpStatus
 import org.grails.plugin.cache.GrailsCacheManager
+import org.joda.time.DateTimeZone
 import org.springframework.web.context.request.RequestContextHolder
 
 import javax.annotation.PostConstruct
@@ -629,6 +631,25 @@ class UserService {
     void reloadHubSettings() {
         cacheService.clear(HUB_CACHE_KEY)
         HubSettings hubSettings = settingService.getHubSettings(HUB_URLPATH)
+    }
+
+    /**
+     * Records the time a user logged into MERIT with ecodata.
+     */
+    void recordUserLogin(String userId, String hubId) {
+        Map params = [
+                userId:userId,
+                hubId:hubId,
+                loginTime:DateUtils.format(DateUtils.now().withZone(DateTimeZone.UTC))
+        ]
+        if (log.isInfoEnabled()) {
+            log.info("User "+userId+" logged in at "+params.loginTime)
+        }
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'user/recordUserLogin'
+        Map response = webService.doPost(url, params)
+        if (response.statusCode != HttpStatus.SC_OK) {
+            log.error("Failed to record login for user "+userId+" "+response.error)
+        }
     }
 
 }
