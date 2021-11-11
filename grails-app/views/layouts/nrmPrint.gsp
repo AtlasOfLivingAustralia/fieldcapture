@@ -8,6 +8,11 @@
     <link href="${grailsApplication.config.getProperty('ala.baseURL', String, 'http://www.ala.org.au')}/wp-content/themes/ala2011/images/favicon.ico" rel="shortcut icon" />
     <title><g:layoutTitle /></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-color: white !important;
+        }
+    </style>
     <g:layoutHead />
     <g:set var="containerType" scope="request" value="${containerType?:'container'}"/>
 </head>
