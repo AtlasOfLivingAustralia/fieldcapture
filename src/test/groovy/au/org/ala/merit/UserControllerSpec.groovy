@@ -105,7 +105,7 @@ class UserControllerSpec extends Specification implements ControllerUnitTest<Use
         String role = 'siteReadOnly'
         params.role = role
         String hubId = '00cf9ffd-e30c-45f8-99db-abce8d05c0d8'
-        params.id = hubId
+        params.entityId = hubId
         HubSettings hubSettings = new HubSettings(userPermissions:[], hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
         SettingService.setHubConfig(hubSettings)
         Map res = [:]
@@ -116,7 +116,7 @@ class UserControllerSpec extends Specification implements ControllerUnitTest<Use
 
         then:
         1 * userService.userIsAlaOrFcAdmin() >> true
-        1 * userService.saveHubUser(userId,role, params.id) >> res
+        1 * userService.saveHubUser(userId,role, params.entityId) >> res
 
         and:
         results == [:]
@@ -151,7 +151,7 @@ class UserControllerSpec extends Specification implements ControllerUnitTest<Use
         String role = 'siteReadOnly'
         params.role = role
         String hubId = '00cf9ffd-e30c-45f8-99db-abce8d05c0d8'
-        params.id = hubId
+        params.entityId = hubId
         HubSettings hubSettings = new HubSettings(userPermissions:[], hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
         SettingService.setHubConfig(hubSettings)
         Map res = [:]
@@ -162,7 +162,7 @@ class UserControllerSpec extends Specification implements ControllerUnitTest<Use
 
         then:
         1 * userService.userIsAlaOrFcAdmin() >> true
-        1 * userService.removeHubUser(userId,role,params.id) >> res
+        1 * userService.removeHubUser(userId,role,params.entityId) >> res
 
         and:
         results == [:]
@@ -187,6 +187,27 @@ class UserControllerSpec extends Specification implements ControllerUnitTest<Use
         and:
         response.status == 403
         response.text == 'Permission denied'
+
+    }
+
+    void "Retrieving HUB Users, supports pagination"(){
+        setup:
+        HubSettings hubSettings = new HubSettings(userPermissions:[], hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
+        SettingService.setHubConfig(hubSettings)
+        String hubId = '00cf9ffd-e30c-45f8-99db-abce8d05c0d8'
+        params.id = hubId
+
+        when:
+        controller.getMembersForHubPaginated()
+        def results = response.getJson()
+
+        then:
+        1 * userService.getCurrentUserId() >> [userId:'129333', userName: 'jsalomon']
+        1 * userService.userIsAlaOrFcAdmin() >> true
+        1 * userService.getMembersForHubPerPage(params.id, params.int('start'), params.int('length')) >> [totalNbrOfAdmins: 1, data:[[userId: '1', role: 'admin']], count:1]
+
+        and:
+        results.data.size() > 0
 
     }
 

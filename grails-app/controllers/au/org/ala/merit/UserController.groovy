@@ -5,6 +5,10 @@ import grails.converters.JSON
 import groovy.util.logging.Slf4j
 import org.grails.web.json.JSONArray
 
+import static org.apache.http.HttpStatus.SC_BAD_REQUEST
+import static org.apache.http.HttpStatus.SC_FORBIDDEN
+import static org.apache.http.HttpStatus.SC_INTERNAL_SERVER_ERROR
+
 /**
  * Extends the UserController to add report information.
  */
@@ -72,7 +76,6 @@ class UserController {
 
         if (userId && projectId && role) {
             Map response = userService.addUserAsRoleToProject(userId, projectId, role)
-            println response
             if (response.error) {
                 render status: 400, text: response.error
             } else {
@@ -219,13 +222,38 @@ class UserController {
         }
     }
 
+    def getMembersForHubPaginated() {
+        String hubId = params.id
+        def adminUserId = userService.getCurrentUserId()
+
+        if (hubId && adminUserId) {
+            if (userService.userIsAlaOrFcAdmin()) {
+                def results = userService.getMembersForHubPerPage(hubId, params.int('start'), params.int('length'))
+                asJson results
+
+            } else {
+                response.sendError(SC_FORBIDDEN, 'Permission denied')
+            }
+        } else if (adminUserId) {
+            response.sendError(SC_BAD_REQUEST, 'Required params not provided: id')
+        } else if (projectId) {
+            response.sendError(SC_FORBIDDEN, 'User not logged-in or does not have permission')
+        } else {
+            response.sendError(SC_INTERNAL_SERVER_ERROR, 'Unexpected error')
+        }
+    }
+
+    def asJson(json) {
+        render(contentType: 'application/json', text: json as JSON)
+    }
+
     def addUserToHub() {
         String userId = params.userId
         String role = params.role
 
         if (userId && role) {
             if (userService.userIsAlaOrFcAdmin()) {
-                Map response = userService.saveHubUser(userId, role, params.id)
+                Map response = userService.saveHubUser(userId, role, params.entityId)
                 if (response.error) {
                     render status: 400, text: response.error
                 } else {
@@ -245,7 +273,7 @@ class UserController {
 
         if (role && userId) {
             if (userService.userIsAlaOrFcAdmin()) {
-                render userService.removeHubUser(userId, role, params.id) as JSON
+                render userService.removeHubUser(userId, role, params.entityId) as JSON
             } else {
                 render status:403, text: 'Permission denied'
             }

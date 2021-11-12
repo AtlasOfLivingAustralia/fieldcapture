@@ -272,7 +272,7 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         service.getByHub(hubId)
 
         then:
-        1 * webService.getJson({it.endsWith("permissions/getByHub/${hubId}")},300000) >> [[role:'officer', displayName:null, userName:null, userId:130205], [role:'siteAdmin', displayName:null, userName:null, userId:129333]]
+        1 * webService.getJson({it.endsWith("permissions/getByHub/${hubId}")},300000) >> [data:[[role:'officer', displayName:null, userName:null, userId:130205], [role:'siteAdmin', displayName:null, userName:null, userId:129333]]]
 
     }
 
@@ -305,7 +305,7 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
 
     def "This converts a Ecodata AccessLevel to a HUB role"() {
         setup:
-        def results = [[role:'admin', displayName:null, userName:null, userId:'129333'],[role:'caseManager', displayName:null, userName:null, userId:'130205']]
+        def results = [data:[[role:'admin', displayName:null, userName:null, userId:'129333'],[role:'caseManager', displayName:null, userName:null, userId:'130205']]]
 
         when:
         def results2 = service.convertAccessLevelToHubRole(results)
@@ -390,6 +390,21 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
 
         then:
         1 * webService.doPost({it.endsWith("/user/recordUserLogin")}, [userId:"u1", hubId:"h1", loginTime:mockedNow]) >> [statusCode: HttpStatus.SC_OK]
+
+    }
+
+    def "This retrieves the lists of HUB users, support pagination"() {
+        setup:
+        String hubId = '00cf9ffd-e30c-45f8-99db-abce8d05c0d8'
+        int pageStart= 0
+        int pageSize = 10
+
+        when:
+        def resp = service.getMembersForHubPerPage(hubId, pageStart, pageSize)
+
+        then:
+        1 * webService.getJson({it.endsWith("permissions/getMembersForHubPerPage?hubId=${hubId}&offset=${pageStart}&max=${pageSize}")}) >> [totalNbrOfAdmins: 1, data:[[userId: '1', role: 'admin']], count:1]
+        resp.data.size() > 0
 
     }
 }

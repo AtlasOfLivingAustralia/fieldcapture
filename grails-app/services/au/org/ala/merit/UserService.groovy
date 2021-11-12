@@ -575,6 +575,13 @@ class UserService {
         return convertAccessLevelToHubRole(webService.getJson(url, 300000))
     }
 
+    def getMembersForHubPerPage(hubId, pageStart, pageSize) {
+        def url = grailsApplication.config.ecodata.service.url + "/permissions/getMembersForHubPerPage?hubId=${hubId}&offset=${pageStart}&max=${pageSize}"
+        def resp = webService.getJson(url)
+        convertAccessLevelToHubRole(resp)
+        return resp
+    }
+
     /**
      *
      * @param results
@@ -582,7 +589,7 @@ class UserService {
      */
     private List convertAccessLevelToHubRole(results) {
         def map = [admin: "siteAdmin", caseManager: "officer", readOnly: "siteReadOnly"]
-        results.each { it ->
+        results.data.each { it ->
             it.role = map[it.role]
         }
     }

@@ -121,6 +121,9 @@
         // project page - trigger user table refresh
         if (typeof(populatePermissionsTable) != "undefined") {
             populatePermissionsTable();
+        } else {
+        // Hub User's table refresh
+            reloadMembers();
         }
 
     }
