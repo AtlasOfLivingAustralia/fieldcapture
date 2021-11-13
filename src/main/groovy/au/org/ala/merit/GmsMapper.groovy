@@ -578,7 +578,7 @@ class GmsMapper {
 
 
             case 'list':
-                return value?.split(',').collect{it.trim()}
+                return value?.split(',').collect{it.trim()}.findAll{it}
         }
         throw new IllegalArgumentException("Unsupported type: ${type}")
     }

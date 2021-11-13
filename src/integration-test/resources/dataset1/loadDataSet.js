@@ -5,6 +5,7 @@ load("../data_common/insertData.js");
 loadActivityForms();
 
 var  activityProject = {
+    "hubId":"merit",
     "alaHarvest":false,
     "associatedProgram":"Biodiversity Fund",
     "associatedSubProgram":"Round 1",
@@ -103,19 +104,9 @@ var  activityProject = {
             "threat":"Seasonal conditions (eg. drought, flood, etc.)","riskRating":"Significant"}],"status":"active"},
     "serviceProviderName":"",
     "status":"active",
-    "timeline":[{"fromDate":"2014-12-31T13:00:00.000Z","name":"Stage 1","toDate":"2015-06-30T14:00:00.000Z"},
-        {"fromDate":"2015-06-30T14:00:00.000Z","name":"Stage 2","toDate":"2015-12-31T13:00:00.000Z"},
-        {"fromDate":"2015-12-31T13:00:00.000Z","name":"Stage 3","toDate":"2016-06-30T14:00:00.000Z"},
-        {"fromDate":"2016-06-30T14:00:00.000Z","name":"Stage 4","toDate":"2016-12-31T13:00:00.000Z"},
-        {"fromDate":"2016-12-31T13:00:00.000Z","name":"Stage 5","toDate":"2017-06-30T14:00:00.000Z"},
-        {"fromDate":"2017-06-30T14:00:00.000Z","name":"Stage 6","toDate":"2017-12-31T13:00:00.000Z"},
-        {"fromDate":"2017-12-31T13:00:00.000Z","name":"Stage 7","toDate":"2018-06-30T14:00:00.000Z"},
-        {"fromDate":"2018-06-30T14:00:00.000Z","name":"Stage 8","toDate":"2018-12-31T13:00:00.000Z"},
-        {"fromDate":"2018-12-31T13:00:00.000Z","name":"Stage 9","toDate":"2019-06-30T14:00:00.000Z"},
-        {"fromDate":"2019-06-30T14:00:00.000Z","name":"Stage 10","toDate":"2019-12-31T13:00:00.000Z"},
-        {"fromDate":"2019-12-31T13:00:00.000Z","name":"Stage 11","toDate":"2020-06-30T14:00:00.000Z"},
-        {"fromDate":"2020-06-30T14:00:00.000Z","name":"Stage 12","toDate":"2020-12-31T13:00:00.000Z"}]
-    ,"workOrderId":""
+    "workOrderId":"",
+    "hubId":"merit"
+
 };
 db.project.insert(activityProject)
 db.userPermission.insert({

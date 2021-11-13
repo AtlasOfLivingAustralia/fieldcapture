@@ -418,4 +418,22 @@ class GmsMapperSpec extends Specification{
             gmsMapper.projectMapping[value].description != null
         }
     }
+
+    def "Tags will be converted to an empty array if not supplied"() {
+        when:
+        Map result = gmsMapper.mapProject([[APP_ID:'g1', TAGS:'', PROGRAM_NM:"Green Army", ORG_TRADING_NAME:'Test org 1', ABN:'12345678901', FUNDING_TYPE:"RLP", FUNDING:"1000", START_DT:'2019/07/01', FINISH_DT:'2020/07/01']])
+
+        then:
+        !result.project.tags
+        !result.errors
+    }
+
+    def "Tags will be converted from a comma separated list, and empty elements removed"() {
+        when:
+        Map result = gmsMapper.mapProject([[APP_ID:'g1', TAGS:"tag 1,,tag 3", PROGRAM_NM:"Green Army", ORG_TRADING_NAME:'Test org 1', ABN:'12345678901', FUNDING_TYPE:"RLP", FUNDING:"1000", START_DT:'2019/07/01', FINISH_DT:'2020/07/01']])
+
+        then:
+        result.project.tags == ["tag 1", "tag 3"]
+        !result.errors
+    }
 }

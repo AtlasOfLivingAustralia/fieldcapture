@@ -1,16 +1,12 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.hub.HubSettings
 import au.org.ala.merit.reports.ReportGenerationOptions
-import grails.testing.spring.AutowiredTest
+import grails.testing.services.ServiceUnitTest
+import org.apache.http.HttpStatus
 import spock.lang.Specification
 
-class ManagementUnitServiceSpec extends Specification implements AutowiredTest{
-
-    Closure doWithSpring() {{ ->
-        service ManagementUnitService
-    }}
-
-    ManagementUnitService service
+class ManagementUnitServiceSpec extends Specification implements ServiceUnitTest<ManagementUnitService> {
 
     ReportService reportService = Mock(ReportService)
     WebService webService = Mock(WebService)
@@ -209,4 +205,57 @@ class ManagementUnitServiceSpec extends Specification implements AutowiredTest{
         1 * reportService.findReportsForManagementUnit(muId)
     }
 
+    def "The management unit service will assign the MERIT hubId when creating a new Management Unit"() {
+        setup:
+        SettingService.setHubConfig(new HubSettings(hubId:"merit"))
+
+        when:
+        Map result = service.update("", [name:"test", description:"test"])
+
+        then:
+        1 * webService.doPost({it.endsWith('managementUnit/')},  [name:"test", description:"test", hubId:"merit"]) >> [statusCode: HttpStatus.SC_OK, resp:[message:'created']]
+        result.statusCode == HttpStatus.SC_OK
+    }
+
+    def "The name & description are mandatory when creating a management unit"() {
+        setup:
+        SettingService.setHubConfig(new HubSettings(hubId:"merit"))
+
+        when:
+        Map result = service.update("", [description:"test"])
+
+        then:
+        0 * webService._
+        result.error
+
+        when:
+        result = service.update("", [name:"test"])
+
+        then:
+        0 * webService._
+        result.error
+    }
+
+    def "When an id is supplied to an update, it must be for an existing management unit"() {
+        setup:
+        String muId = "m1"
+        SettingService.setHubConfig(new HubSettings(hubId:"merit"))
+
+        when:
+        Map result = service.update(muId, [description:"new description"])
+
+        then:
+        1 * webService.getJson({it.endsWith("/managementUnit/$muId")}) >> [managementUnitId:"mu1"]
+        1 * webService.doPost({it.endsWith("/managementUnit/$muId")}, [description:"new description"]) >> [statusCode: HttpStatus.SC_OK, resp:[message:'updated']]
+
+        !result.error
+
+        when:
+        result = service.update(muId, [description:"new description"])
+
+        then:
+        1 * webService.getJson({it.endsWith("/managementUnit/$muId")}) >> [error:'an error', statusCode:HttpStatus.SC_NOT_FOUND]
+        0 * webService.doPost(_, _)
+        result.error
+    }
 }

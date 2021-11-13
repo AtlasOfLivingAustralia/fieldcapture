@@ -124,6 +124,10 @@ class ManagementUnitService {
             result.error = error
             result.detail = ''
         } else {
+            if (!id) {
+                // Assign the MERIT hubId to the management unit when craeting a new management unit
+                mu.hubId = SettingService.hubConfig?.hubId
+            }
             String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}managementUnit/$id"
             result = webService.doPost(url, mu)
         }
