@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.hub.HubSettings
 import au.org.ala.merit.reports.ReportGenerationOptions
 import grails.testing.spring.AutowiredTest
 import spock.lang.Specification
@@ -171,6 +172,18 @@ class ProgramServiceSpec extends Specification implements AutowiredTest{
         expect:
         service.getPrimaryOutcomes(program) == [[outcome:"Outcome 1", shortDescription:"o1"], [outcome:"Outcome 2", shortDescription:"o2"], [outcome:"Outcome 3", shortDescription:"o3", type:"primary"]]
         service.getSecondaryOutcomes(program) == [[outcome:"Outcome 1", shortDescription:"o1"], [outcome:"Outcome 2", shortDescription:"o2"], [outcome:"Outcome 4", shortDescription:"o4", type:"secondary"]]
+    }
+
+    def "A hubId is added to the program when creating a new program"() {
+        setup:
+        SettingService.setHubConfig(new HubSettings(hubId:"merit"))
+
+        when:
+        service.update("", [name:"Program 1", description:"Program description 1"])
+
+        then:
+        1 * webService.getJson({it.endsWith("program/findByName?name=Program+1")}) >> [:]
+        1 * webService.doPost({it.endsWith('program/')}, [name:"Program 1", description:"Program description 1", hubId:"merit"])
     }
 
 }

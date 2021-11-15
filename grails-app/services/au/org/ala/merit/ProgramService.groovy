@@ -102,6 +102,10 @@ class ProgramService {
             result.error = error
             result.detail = ''
         } else {
+            if (!id) {
+                // Assign the MERIT hubId to the program when creating a new program
+                program.hubId = SettingService.hubConfig?.hubId
+            }
             String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}program/$id"
             result = webService.doPost(url, program)
         }
