@@ -32,8 +32,8 @@ class LoginRecordingInterceptor {
             HubSettings hub = SettingService.hubConfig
             // Only record a login if a user is logged in and we have a hubId
             if (userId && hub) {
-                userService.recordUserLogin(userId, hub.hubId)
-                session.setAttribute(LOGIN_RECORDED, true)
+                boolean success = userService.recordUserLogin(userId, hub.hubId)
+                session.setAttribute(LOGIN_RECORDED, success)
             }
         }
         true

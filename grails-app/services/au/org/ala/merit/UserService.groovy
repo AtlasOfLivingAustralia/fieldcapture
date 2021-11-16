@@ -643,7 +643,7 @@ class UserService {
     /**
      * Records the time a user logged into MERIT with ecodata.
      */
-    void recordUserLogin(String userId, String hubId) {
+    boolean recordUserLogin(String userId, String hubId) {
         Map params = [
                 userId:userId,
                 hubId:hubId,
@@ -654,9 +654,11 @@ class UserService {
         }
         String url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'user/recordUserLogin'
         Map response = webService.doPost(url, params)
-        if (response.statusCode != HttpStatus.SC_OK) {
+        boolean success = response.statusCode == HttpStatus.SC_OK
+        if (!success) {
             log.error("Failed to record login for user "+userId+" "+response.error)
         }
+        success
     }
 
 }

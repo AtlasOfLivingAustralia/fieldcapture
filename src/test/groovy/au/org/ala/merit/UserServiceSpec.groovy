@@ -386,11 +386,11 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         DateTimeUtils.setCurrentMillisFixed(DateUtils.parse(mockedNow).toInstant().millis)
 
         when:
-        service.recordUserLogin("u1", "h1")
+        boolean result = service.recordUserLogin("u1", "h1")
 
         then:
         1 * webService.doPost({it.endsWith("/user/recordUserLogin")}, [userId:"u1", hubId:"h1", loginTime:mockedNow]) >> [statusCode: HttpStatus.SC_OK]
-
+        result
     }
 
     def "This retrieves the lists of HUB users, support pagination"() {

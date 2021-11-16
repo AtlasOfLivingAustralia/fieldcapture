@@ -28,10 +28,28 @@ class LoginRecordingInterceptorSpec extends Specification implements GrailsWebUn
 
         then:"The interceptor retrieves the userId and delegates to the UserService to record the login"
         1 * userService.getCurrentUserId() >> "u1"
-        1 * userService.recordUserLogin("u1", "h1")
+        1 * userService.recordUserLogin("u1", "h1") >> true
 
         and: "A flag is added to the session to indicate the recording has been completed"
         session.getAttribute(LoginRecordingInterceptor.LOGIN_RECORDED)
+
+    }
+
+    void "The interceptor will try again if the attempt to record the login fails"() {
+
+        setup:
+        HubSettings hubSettings = new HubSettings(hubId:"h1")
+        SettingService.setHubConfig(hubSettings)
+
+        when:"the interceptor is invoked"
+        interceptor.before()
+
+        then:"The interceptor retrieves the userId and delegates to the UserService to record the login"
+        1 * userService.getCurrentUserId() >> "u1"
+        1 * userService.recordUserLogin("u1", "h1") >> false // return a failed attempt
+
+        and: "The session flag is not set, so the interceptor will try again next time"
+        !session.getAttribute(LoginRecordingInterceptor.LOGIN_RECORDED)
 
     }
 
