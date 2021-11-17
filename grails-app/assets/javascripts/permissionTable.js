@@ -7,7 +7,7 @@ function initialise(roles, currentUserId, hubId) {
         "bFilter": false,
         "processing": true,
         "serverSide": true,
-        "ajax": fcConfig.getMembersForHubPaginatedUrl + "/" + '00cf9ffd-e30c-45f8-99db-abce8d05c0d8',
+        "ajax": fcConfig.getMembersForHubPaginatedUrl + "/" + hubId,
         "columns": [{
             data: 'userId',
             name: 'userId',
