@@ -2,6 +2,7 @@ package au.org.ala.merit
 
 import au.org.ala.merit.hub.HubSettings
 import au.org.ala.web.AuthService
+import org.apache.http.HttpStatus
 import spock.lang.Specification
 import grails.testing.web.controllers.ControllerUnitTest
 
@@ -108,18 +109,17 @@ class UserControllerSpec extends Specification implements ControllerUnitTest<Use
         params.entityId = hubId
         HubSettings hubSettings = new HubSettings(userPermissions:[], hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
         SettingService.setHubConfig(hubSettings)
-        Map res = [:]
+        Map res = [status:HttpStatus.SC_OK]
 
         when:
         controller.addUserToHub()
-        def results = response.getJson()
 
         then:
         1 * userService.userIsAlaOrFcAdmin() >> true
-        1 * userService.saveHubUser(userId,role, params.entityId) >> res
+        1 * userService.saveHubUser(params) >>  res
 
         and:
-        results == [:]
+        response.status == HttpStatus.SC_OK
 
     }
 
@@ -154,7 +154,7 @@ class UserControllerSpec extends Specification implements ControllerUnitTest<Use
         params.entityId = hubId
         HubSettings hubSettings = new HubSettings(userPermissions:[], hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
         SettingService.setHubConfig(hubSettings)
-        Map res = [:]
+        Map res = [status:HttpStatus.SC_OK]
 
         when:
         controller.removeUserWithHubRole()
@@ -162,10 +162,10 @@ class UserControllerSpec extends Specification implements ControllerUnitTest<Use
 
         then:
         1 * userService.userIsAlaOrFcAdmin() >> true
-        1 * userService.removeHubUser(userId,role,params.entityId) >> res
+        1 * userService.removeHubUser(params) >> res
 
         and:
-        results == [:]
+        response.status == HttpStatus.SC_OK
 
     }
 
@@ -175,6 +175,7 @@ class UserControllerSpec extends Specification implements ControllerUnitTest<Use
         params.userId = userId
         String role = 'siteReadOnly'
         params.role = role
+        params.entityId = '00cf9ffd-e30c-45f8-99db-abce8d05c0d8'
         HubSettings hubSettings = new HubSettings(userPermissions:[], hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
         SettingService.setHubConfig(hubSettings)
 
@@ -182,7 +183,7 @@ class UserControllerSpec extends Specification implements ControllerUnitTest<Use
         controller.removeUserWithHubRole()
 
         then:
-        1 * userService.userIsAlaOrFcAdmin() >> false
+        0 * userService.userIsAlaOrFcAdmin(params) >> false
 
         and:
         response.status == 403

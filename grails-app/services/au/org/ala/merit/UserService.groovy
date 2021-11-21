@@ -7,6 +7,7 @@ import grails.plugin.cache.Cacheable
 import groovy.util.logging.Slf4j
 import org.apache.http.HttpStatus
 import org.grails.plugin.cache.GrailsCacheManager
+import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.springframework.web.context.request.RequestContextHolder
 
@@ -594,14 +595,13 @@ class UserService {
         }
     }
 
-    def addUserToHub(String userId, String role, String hubId) {
-        String ecodataAclAccessLevel = convertHubRoleToAccesLevel(role)
-
-        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/addUserWithRoleToHub?userId=${userId}&hubId=${hubId}&role=${ecodataAclAccessLevel}"
-        def resp = webService.getJson(url)
+    def addUserToHub(Map params) {
+        String ecodataAclAccessLevel = convertHubRoleToAccesLevel(params.role)
+        Map param = [userId: params.userId, entityId: params.entityId, role: ecodataAclAccessLevel, expiryDate: params.expiryDate]
+        Map response = webService.doPost("${grailsApplication.config.getProperty('ecodata.baseUrl')}permissions/addUserWithRoleToHub", param)
         reloadHubSettings()
 
-        return resp
+        return response
     }
 
     /**
@@ -617,21 +617,22 @@ class UserService {
         return map[role]
     }
 
-    def removeHubUser(String userId, String role, String hubId) {
-        String ecodataAclAccessLevel = convertHubRoleToAccesLevel(role)
+    def removeHubUser(Map params) {
+        String ecodataAclAccessLevel = convertHubRoleToAccesLevel(params.role)
 
-        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/removeUserWithRoleFromHub?userId=${userId}&hubId=${hubId}&role=${ecodataAclAccessLevel}"
-        def resp = webService.getJson(url)
+        Map param = [userId: params.userId, entityId: params.entityId, role: ecodataAclAccessLevel, expiryDate: params.expiryDate]
+        Map response = webService.doPost("${grailsApplication.config.getProperty('ecodata.baseUrl')}permissions/removeUserWithRoleFromHub", param)
+
         reloadHubSettings()
 
-        return resp
+        return response
     }
 
-    def saveHubUser(String userId, String role, String hubId) {
-        if (getProjectsForUserId(userId) && role == RoleService.HUB_READ_ONLY_ROLE) {
+    def saveHubUser(Map params) {
+        if (getProjectsForUserId(params.userId) && params.role == RoleService.HUB_READ_ONLY_ROLE) {
             return [error:'User have a role on an existing MERIT project, cannot be assigned the Site Read Only role.']
         } else {
-            addUserToHub(userId, role, hubId)
+            addUserToHub(params)
         }
     }
 

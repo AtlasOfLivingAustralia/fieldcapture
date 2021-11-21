@@ -8,7 +8,8 @@
         var fcConfig = {
             loadPermissionsUrl: "${createLink(controller:'user', action:'getMembersOfHub')}",
             getMembersForHubPaginatedUrl: "${createLink(controller: 'user', action: 'getMembersForHubPaginated')}",
-            removeUserUrl: "${createLink(controller: 'user', action: 'removeUserWithHubRole')}"
+            removeHubUserUrl: "${createLink(controller: 'user', action: 'removeUserWithHubRole')}",
+            userExpiryUrl: "${createLink(controller: 'user', action: 'addUserToHub')}"
 
         }
     </script>
@@ -17,14 +18,17 @@
 </head>
 <body>
 <content tag="pageTitle">User Permission for MERIT</content>
+<div class="com-sm-5">
+    <div id="formStatus" class="hide d-none alert alert-success">
+        <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
+        <span></span>
+    </div>
+</div>
 <div id="permissions" class="pill-pane tab-pane">
     <h4>Add Permissions</h4>
     <g:render template="/admin/addPermissions" model="[addUserUrl:g.createLink(controller:'user', action:'addUserToHub'), entityId:hubId]"/>
-%{--    <g:render template="/admin/permissionTable" model="[loadPermissionsUrl:g.createLink(controller:'user', action:'getMembersOfHub', id:hubId), removeUserUrl:g.createLink(controller:'user', action:'removeUserWithHubRole'), entityId:hubId, user:user]"/>--}%
     <g:render template="/admin/permissionTablePaginated"/>
-
 </div>
-
 
 
 <asset:script>

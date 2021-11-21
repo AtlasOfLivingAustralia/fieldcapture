@@ -39,7 +39,7 @@ class CreateUserHubPermissionSpec extends StubbedCasSpec {
         to CreateUserHubPermissionPage
 
         then:
-        waitFor 30, { at CreateUserHubPermissionPage }
+        waitFor 50, { at CreateUserHubPermissionPage }
 
 
     }

@@ -3,6 +3,7 @@ package au.org.ala.merit
 import au.org.ala.merit.hub.HubSettings
 import grails.converters.JSON
 import groovy.util.logging.Slf4j
+import org.apache.http.HttpStatus
 import org.grails.web.json.JSONArray
 
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST
@@ -253,7 +254,7 @@ class UserController {
 
         if (userId && role) {
             if (userService.userIsAlaOrFcAdmin()) {
-                Map response = userService.saveHubUser(userId, role, params.entityId)
+                Map response = userService.saveHubUser(params)
                 if (response.error) {
                     render status: 400, text: response.error
                 } else {
@@ -269,11 +270,17 @@ class UserController {
 
     def removeUserWithHubRole() {
         String userId = params.userId
-        String role = params.role
+        String hubId = params.entityId
 
-        if (role && userId) {
+        if (hubId && userId) {
             if (userService.userIsAlaOrFcAdmin()) {
-                render userService.removeHubUser(userId, role, params.entityId) as JSON
+                Map response = userService.removeHubUser(params)
+                if (response.error) {
+                    render status: 400, text: response.error
+                } else {
+                    flash.message = "user was removed."
+                    render response as JSON
+                }
             } else {
                 render status:403, text: 'Permission denied'
             }

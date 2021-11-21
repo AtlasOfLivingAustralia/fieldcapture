@@ -280,11 +280,12 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         setup:
         String userId = '129333'
         String role = 'siteAdmin'
+        Map params = [userId:'129333', role: 'siteAdmin']
         HubSettings hubSettings = new HubSettings(userPermissions:[],hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
         SettingService.setHubConfig(hubSettings)
 
         when:
-        def result = service.addUserToHub(userId,role,hubSettings.hubId)
+        def result = service.addUserToHub(params)
 
         then:
         result == null
@@ -319,12 +320,12 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         setup:
         String userId = '129333'
         String role = 'siteAdmin'
+        Map param = [userId: 129333, entityId: '00cf9ffd-e30c-45f8-99db-abce8d05c0d8', role: 'siteAdmin', expiryDate: '2022-06-01T00:00:00Z']
         HubSettings hubSettings = new HubSettings(userPermissions:[],hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
         SettingService.setHubConfig(hubSettings)
-        //settingService.getHubSettings("merit") >> hubSettings
 
         when:
-        def result = service.removeHubUser(userId,role,hubSettings.hubId)
+        def result = service.removeHubUser(param)
 
         then:
         result == null
@@ -335,11 +336,12 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         setup:
         String userId = '129333'
         String role = 'siteReadOnly'
+        Map params = [userId:'129333', role: 'siteReadOnly']
         HubSettings hubSettings = new HubSettings(hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
         SettingService.setHubConfig(hubSettings)
 
         when:
-        def result = service.saveHubUser(userId,role,hubSettings.hubId)
+        def result = service.saveHubUser(params)
 
         then:
         1 * webService.getJson({it.endsWith("permissions/getProjectsForUserId/${userId}")}) >> [[accessLevel:[code:'100', name:'admin'], project:[associatedProgram:'Green Army', projectId:'fd0289c5-ac99-44de-8538-6eb361c1a51a', status:'Active']]]
@@ -351,11 +353,12 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         setup:
         String userId = '129333'
         String role = 'siteReadOnly'
+        Map params = [userId:'129333', role: 'siteReadOnly']
         HubSettings hubSettings = new HubSettings(hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
         SettingService.setHubConfig(hubSettings)
 
         when:
-        def result = service.saveHubUser(userId,role,hubSettings.hubId)
+        def result = service.saveHubUser(params)
 
         then:
         1 * webService.getJson({it.endsWith("permissions/getProjectsForUserId/${userId}")}) >> []
@@ -367,11 +370,12 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         setup:
         String userId = '129333'
         String role = 'siteAdmin'
+        Map params = [userId:'129333', role: 'siteAdmin']
         HubSettings hubSettings = new HubSettings(hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
         SettingService.setHubConfig(hubSettings)
 
         when:
-        def result = service.saveHubUser(userId,role,hubSettings.hubId)
+        def result = service.saveHubUser(params)
 
         then:
         1 * webService.getJson({it.endsWith("permissions/getProjectsForUserId/${userId}")}) >> []

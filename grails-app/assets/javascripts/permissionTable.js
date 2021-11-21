@@ -3,55 +3,76 @@
  */
 
 function initialise(roles, currentUserId, hubId) {
-    var table = $('#member-list').DataTable({
-        "bFilter": false,
-        "processing": true,
-        "serverSide": true,
-        "ajax": fcConfig.getMembersForHubPaginatedUrl + "/" + hubId,
-        "columns": [{
+    var col = [
+        {
             data: 'userId',
             name: 'userId',
             bSortable: false
         },
-            {
-                data: 'displayName',
-                name: 'displayName',
-                bSortable: false
-            },
-            {
-                data: 'role',
-                render: function (data, type, row) {
-                    var $select = $("<select></select>", {
-                        "id": "role_" + row.userId,
-                        "value": data
+        {
+            data: 'displayName',
+            name: 'displayName',
+            bSortable: false
+        },
+        {
+            data: 'role',
+            render: function (data, type, row) {
+
+                var $select = $("<select class=\"form-control form-control-sm\"></select>", {
+                    "id": "role_" + row.userId,
+                    "value": data
+                });
+                $.each(roles, function (i, value) {
+                    var $option = $("<option></option>", {
+                        "text": decodeCamelCase(value).replace('Case', 'Grant'),
+                        "value": value
                     });
-                    $.each(roles, function (i, value) {
-                        var $option = $("<option></option>", {
-                            "text": decodeCamelCase(value).replace('Case', 'Grant'),
-                            "value": value
-                        });
-                        if (data === value) {
-                            $option.attr("selected", "selected")
-                        }
-                        $select.append($option);
-                    });
-                    return $select.prop("outerHTML");
-                },
-                bSortable: false
-            },
-            {
-                render: function (data, type, row) {
-                    // cannot delete the last admin
-                    if (table.ajax.json().totalNbrOfAdmins == 1 && row.role == "admin") {
-                        return '';
-                    } else {
-                        // return '<a class="btn btn-small tooltips href="" title="remove this user and role combination"><i class="icon-remove"></i></a>';
-                        return '<a class="fa fa-remove tooltips href="" title="remove this user and role combination"><i class="icon-remove"></i></a>';
+                    if (data === value) {
+                        $option.attr("selected", "selected")
                     }
-                },
-                bSortable: false
-            }]
-    });
+                    $select.append($option);
+                });
+                return $select.prop("outerHTML");
+            },
+            bSortable: false
+        },
+        {data:'expiryDate',
+            render: function (date){
+            if (date) {
+
+                return "<input type='text' id='datecell' class=\"form-control form-control-sm\" value='" + convertDate(date) + "'/>"
+            } else {
+                return "<input type='text' id='datecell' class=\"form-control form-control-sm\" value=''/>"
+            }
+            },bSortable: false
+        },
+        {
+            render: function (data, type, row) {
+                // cannot delete the last admin
+                if (table.ajax.json().totalNbrOfAdmins == 1 && row.role == "admin") {
+                    return '';
+                } else {
+                    // return '<a class="btn btn-small tooltips href="" title="remove this user and role combination"><i class="icon-remove"></i></a>';
+                    return '<a class="fa fa-remove tooltips href="" title="remove this user and role combination"><i class="icon-remove"></i></a>';
+                }
+            },
+            bSortable: false
+        }
+    ];
+
+    var table  = $('#member-list').DataTable( {
+        "bFilter": false,
+        "lengthChange": false,
+        "processing": true,
+        "serverSide": true,
+        createdRow:function(row){
+            $("#datecell", row).datepicker({format: "yyyy-mm-dd",autoclose: true});
+        },
+        "ajax": fcConfig.getMembersForHubPaginatedUrl + "/" + hubId,
+        "columns":col
+
+    } );
+
 
     $('#member-list').on("change", "tbody td:nth-child(3) select", function (e) {
         e.preventDefault();
@@ -61,6 +82,7 @@ function initialise(roles, currentUserId, hubId) {
         var data = table.row(row).data();
         var currentRole = data.role;
         var userId = data.userId;
+        var currentExpiry = data.expiryDate;
 
         var message;
         if (userId == currentUserId) {
@@ -72,6 +94,7 @@ function initialise(roles, currentUserId, hubId) {
 
         bootbox.confirm(message, function (result) {
             if (result) {
+                console.log("confirm",userId, role, hubId);
                 addUserWithRole(userId, role, hubId);
 
             } else {
@@ -80,7 +103,24 @@ function initialise(roles, currentUserId, hubId) {
         });
     });
 
-    $('#member-list').on("click", "tbody td:nth-child(4) a", function (e) {
+    $('#member-list').on("change", "tbody td:nth-child(4) input", function (e) {
+        e.preventDefault();
+
+        var expiryDate = $(this).val();
+        var row = this.parentElement.parentElement;
+        var data = table.row(row).data();
+        var currentRole = data.role;
+        var userId = data.userId;
+        var currentExpiry = data.expiryDate;
+        var message;
+
+        setUserExpiryDate(userId, expiryDate, hubId, currentRole);
+
+    });
+
+
+
+    $('#member-list').on("click", "tbody td:nth-child(5) a", function (e) {
         e.preventDefault();
 
         var row = this.parentElement.parentElement;
@@ -97,7 +137,7 @@ function initialise(roles, currentUserId, hubId) {
         }
         bootbox.confirm(message, function (result) {
             if (result) {
-                if (userId && role) {
+                if (userId) {
                     removeUserRole(userId, role);
                 } else {
                     alert("Error: required params not provided: userId & role");
@@ -106,14 +146,9 @@ function initialise(roles, currentUserId, hubId) {
         });
     });
 
-    function updateStatusMessage2(msg) {
-        $('#formStatus span').text(''); // clear previous message
-        $('#formStatus span').text(msg).parent().fadeIn();
-    }
-
     function removeUserRole(userId, role) {
         $.ajax({
-            url: fcConfig.removeUserUrl,
+            url: fcConfig.removeHubUserUrl,
             data: {
                 userId: userId,
                 role: role,
@@ -137,3 +172,52 @@ function initialise(roles, currentUserId, hubId) {
 function reloadMembers() {
     $('#member-list').DataTable().ajax.reload();
 }
+
+// For some reason reinitialising the DataTables doesn't reinitialise the DatePicker hence
+// need to invoke the page refresh to reinitialise the Datepicker.
+// DataTables doesn't support Datepicker as they have a Datatable license version that handles inline editing
+// with their own implementation of Datetime (their version of Datepicker)
+// NOTE: NOT NEEDED 18/11/2021
+function reloadPage() {
+    window.location = document.URL
+}
+
+function convertDate(isoDate) {
+    if (!isoDate) { return ''}
+    if (typeof isoDate === 'object') {
+        // assume a date object
+        if (!isValidDate(isoDate)) {
+            return '';
+        }
+    }
+    // Format the stage labels using Melbourne/Sydney/Canberra time to avoid problems where the date starts
+    // at midnight and displays as the previous day in other timezones.
+    var date = moment.tz(isoDate, "Australia/Sydney");
+    var format = "YYYY-MM-DD";
+    return date.format(format);
+}
+
+function setUserExpiryDate(userId, expiryDate, id, role) {
+    if (userId && expiryDate) {
+        $.ajax({
+            url: fcConfig.userExpiryUrl,
+            data: { userId: userId, role: role, entityId: id, expiryDate: expiryDate}
+        })
+            .done(function(result) { updateStatusMessage2("user's expiry date updated "); })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+                bootbox.alert(jqXHR.responseText);
+            })
+            .always(function(result) { resetAddForm(); });
+    } else {
+        alert("Required fields are: userId and role.");
+        $('.spinner').hide();
+    }
+}
+
+
+function updateStatusMessage2(msg) {
+    $('#formStatus span').text(''); // clear previous message
+    $('#formStatus span').text(msg).parent().fadeIn();
+}
+
+
