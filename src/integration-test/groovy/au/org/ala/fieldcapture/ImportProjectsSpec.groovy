@@ -23,7 +23,7 @@ class ImportProjectsSpec extends StubbedCasSpec {
         attachFile(csv)
 
         then: "The projects are validated and the validation results are displayed"
-        waitFor{validateComplete()}
+        waitFor(10){validateComplete()}
 
         and: "The data is relevant to the projects loaded"
         List rows = projectResults()
@@ -64,7 +64,7 @@ class ImportProjectsSpec extends StubbedCasSpec {
         attachFile(csv)
 
         then: "The projects are validated and the validation results are displayed"
-        waitFor{validateComplete()}
+        waitFor(10){validateComplete()}
 
         and: "The data is relevant to the projects loaded"
         List rows = projectResults()
