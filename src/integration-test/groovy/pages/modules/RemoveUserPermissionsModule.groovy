@@ -2,7 +2,7 @@ package pages.modules
 
 import geb.Module
 
-class AdminModule extends Module{
+class RemoveUserPermissionsModule extends Module{
 
     static content = {
         email {$("#email")}

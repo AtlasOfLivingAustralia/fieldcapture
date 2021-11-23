@@ -1,7 +1,7 @@
 package pages
 
 import geb.Page
-import pages.modules.AdminModule
+import pages.modules.PermissionsAdminModule
 
 class CreateUserHubPermissionPage extends Page {
     static url = "admin/createUserHubPermission"
@@ -9,7 +9,7 @@ class CreateUserHubPermissionPage extends Page {
 
 
     static content = {
-        adminContent {module AdminModule}
+        adminContent {module PermissionsAdminModule}
 
     }
 }

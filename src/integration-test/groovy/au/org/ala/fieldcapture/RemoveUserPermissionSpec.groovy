@@ -54,21 +54,12 @@ class RemoveUserPermissionSpec extends StubbedCasSpec {
 
         when: "Check user if exist in project admin access tab after removing from admin section"
         to RlpProjectPage, "project_1"
-        adminTab.click()
+        openAdminTab()
+        adminContent.openProjectAccess()
 
         then:
-        waitFor {adminContent.projectAccessTab.displayed}
-
-        when:
-        adminContent.projectAccessTab.click()
-
-        then:
-        waitFor {adminContent.projectAccess.displayed}
-
-        and:
         waitFor {
-            adminContent.projectAccess.size() == 1
-            adminContent.projectAccess[0].messageRow.text() == "No project members set"
+            adminContent.projectAccess.messageRow.text() == "No project members set"
         }
     }
 

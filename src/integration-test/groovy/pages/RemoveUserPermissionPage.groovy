@@ -1,7 +1,7 @@
 package pages
 
 
-import pages.modules.AdminModule
+import pages.modules.RemoveUserPermissionsModule
 
 class RemoveUserPermissionPage extends ReloadablePage {
     static url = "admin/removeUserPermission"
@@ -9,7 +9,7 @@ class RemoveUserPermissionPage extends ReloadablePage {
 
 
     static content = {
-        adminContent {module AdminModule}
+        adminContent {module RemoveUserPermissionsModule}
 
     }
 }

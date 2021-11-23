@@ -52,7 +52,7 @@ class AdminSpec extends StubbedCasSpec {
         then:
         waitFor { administration.staticPageContent.displayed }
 
-        administration.staticPageContent.pageId.size() == 68
+        administration.staticPageContent.pageId.size() == 74
 
     }
 }
