@@ -141,3 +141,40 @@ var activity = {
 }
 db.activity.insert(activity);
 addStaticContentSettings();
+
+let now = new Date().getTime();
+// Create a user login > 2 years ago to test the access removal feature
+let lastLogin = new Date(now-(1000*60*60*24*900))
+db.user.insert({
+    userId:'2',
+    userHubs: [{
+        hubId:'merit',
+        lastLoginTime:lastLogin
+    }]
+});
+
+// Create another user login between 23 and 24 months ago to test the access warning email
+lastLogin = new Date(now - (1000*60*60*24*30*23.5));
+db.user.insert({
+    userId:'1',
+    userHubs: [{
+        hubId:'merit',
+        lastLoginTime:lastLogin
+    }]
+});
+db.setting.insert({
+    key:'merit.accessexpiry.expired.email.subject',
+    value:'Your access has been removed'
+});
+db.setting.insert({
+    key:'merit.accessexpiry.expired.email.body',
+    value:'Your access has been removed body'
+});
+db.setting.insert({
+    key:'merit.accessexpiry.warning.email.subject',
+    value:'Your access will be removed'
+});
+db.setting.insert({
+    key:'merit.accessexpiry.warning.email.body',
+    value:'Your access will be removed body'
+});
