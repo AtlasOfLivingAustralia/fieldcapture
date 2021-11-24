@@ -62,6 +62,15 @@ class AccessExpirySpec extends StubbedCasSpec {
         then: "The user with userId 2 has had their access expired and only one user now has access to the project"
         admin.projectAccess.permissions.size() == 1
         admin.projectAccess.permissions[0].userId == "1"
+
+        when: "We re-trigger the access expiry process in ecodata"
+        greenMail.purgeEmailFromAllMailboxes()
+        browser.go('http://devt.ala.org.au:8080/admin/triggerAccessExpiryJob')
+        Thread.sleep(2000) // Wait to ensure that if an email was sent it would have arrived.
+
+        then:
+        !greenMail.getReceivedMessages()
+
     }
 
 }
