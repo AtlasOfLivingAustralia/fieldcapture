@@ -36,7 +36,7 @@
             <g:set var="program" value="${programDetails.program}"/>
             <li class="nav-item">
                 <g:set var="active" value="${i==0?'active':''}"/>
-                <a class="nav-link ${active}"  data-toggle="tab" href="#${program.programId}_projects" role="tab">${program.name?.encodeAsHTML()}</a>
+                <a class="nav-link ${active}"  data-toggle="tab" href="#program_${program.programId}_projects" role="tab">${program.name?.encodeAsHTML()}</a>
 
             </li>
         </g:each>
@@ -47,7 +47,7 @@
         <g:each in="${displayedPrograms}" var="programDetails" status="i">
             <g:set var="program" value="${programDetails.program}"/>
             <g:set var="active" value="${i==0?'active':''}"/>
-            <div class="tab-pane ${active}" id="${program.programId}_projects" >
+            <div class="tab-pane ${active}" id="program_${program.programId}_projects" >
                 <g:if test="${programDetails.primaryOutcomes}">
                     <g:render template="outcomes" model="${[type:"primary", outcomes:programDetails.primaryOutcomes, title:"The Service Provider is addressing these primary outcomes"]}"/>
                     <hr/>
@@ -69,29 +69,29 @@
                     <th class="endDate">End Date</th>
                     </thead>
                     <tbody>
-                        <g:each in="${programDetails.projects}" var="project">
-                            <tr>
-                                <td class="grantId"><a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}" >${project.externalId ?: project.grantId}</a></td>
-                                <td class="projectName">${project.name?.encodeAsHTML()}</td>
-                                <td class="projectDescription">${project.description}</td>
-                                <g:if test="${project.custom?.details?.outcomes?.primaryOutcome}">
-                                    <g:set var="primaryOutcome" value="${project.custom.details.outcomes.primaryOutcome}" />
-                                    <td class="outcomes">${primaryOutcome.shortDescription}</td>
-                                    <g:set var="primaryOutcomePriorities" value="${primaryOutcome.assets}"></g:set>
-                                    <td class="priority">
-                                        <g:each var="priority" in="${primaryOutcomePriorities}">
-                                            ${priority}
-                                        </g:each>
-                                    </td>
-                                </g:if>
-                                <g:else>
-                                    <td></td>
-                                    <td></td>
-                                </g:else>
-                                <td class="startDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedStartDate)}</td>
-                                <td class="endDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedEndDate)}</td>
-                            </tr>
-                        </g:each>
+                    <g:each in="${programDetails.projects}" var="project">
+                        <tr>
+                            <td class="grantId"><a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}" >${project.externalId ?: project.grantId}</a></td>
+                            <td class="projectName">${project.name?.encodeAsHTML()}</td>
+                            <td class="projectDescription">${project.description}</td>
+                            <g:if test="${project.custom?.details?.outcomes?.primaryOutcome}">
+                                <g:set var="primaryOutcome" value="${project.custom.details.outcomes.primaryOutcome}" />
+                                <td class="outcomes">${primaryOutcome.shortDescription}</td>
+                                <g:set var="primaryOutcomePriorities" value="${primaryOutcome.assets}"></g:set>
+                                <td class="priority">
+                                    <g:each var="priority" in="${primaryOutcomePriorities}">
+                                        ${priority}
+                                    </g:each>
+                                </td>
+                            </g:if>
+                            <g:else>
+                                <td></td>
+                                <td></td>
+                            </g:else>
+                            <td class="startDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedStartDate)}</td>
+                            <td class="endDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedEndDate)}</td>
+                        </tr>
+                    </g:each>
                     </tbody>
                 </table>
 
