@@ -1,16 +1,17 @@
 package au.org.ala.merit
 
-import au.org.ala.merit.SettingPageType
 import au.org.ala.merit.hub.HubSettings
 import grails.converters.JSON
 import grails.util.Holders
 import groovy.text.GStringTemplateEngine
-import org.codehaus.groovy.grails.web.servlet.mvc.GrailsWebRequest
+import groovy.util.logging.Slf4j
+import org.grails.web.servlet.mvc.GrailsWebRequest
 import org.springframework.web.context.request.RequestAttributes
 
+@Slf4j
 class SettingService {
 
-    private static def ThreadLocal localHubConfig = new ThreadLocal()
+    private static ThreadLocal localHubConfig = new ThreadLocal()
     private static final String HUB_LIST_CACHE_KEY = 'hubList'
     private static final String HUB_CACHE_KEY_SUFFIX = '_hub'
     public static final String HUB_CONFIG_ATTRIBUTE_NAME = 'hubConfig'
@@ -50,7 +51,7 @@ class SettingService {
     }
 
     public void withDefaultHub(Closure closure) {
-        String hub = Holders.grailsApplication.config.app.default.hub?:'default'
+        String hub = Holders.grailsApplication.config.getProperty('app.default.hub', String, 'default')
 
         withHub(hub, closure)
     }
@@ -63,19 +64,20 @@ class SettingService {
         hubs.find{it.urlPath == hubUrlPath}
     }
 
-    def loadHubConfig(hub) {
-
+    def loadHubConfig(String hub) {
+        // Don't want the cookie secure in dev environments as HTTPS is generally not used.
+        boolean useSecureCookie = grailsApplication.config.getProperty('server.servlet.session.cookie.secure', Boolean, false)
         if (!hub) {
-            hub = grailsApplication.config.app.default.hub?:'default'
+            hub = grailsApplication.config.getProperty('app.default.hub', String, 'default')
             String previousHub = cookieService.getCookie(LAST_ACCESSED_HUB)
             if (!previousHub) {
-                cookieService.setCookie(LAST_ACCESSED_HUB, hub, -1 /* -1 means the cookie expires when the browser is closed */)
+                cookieService.setCookie(LAST_ACCESSED_HUB, hub, -1, '/', null, useSecureCookie, true)
             }
         }
         else {
             // Store the most recently accessed hub in a cookie so that 404 errors can be presented with the
             // correct skin.
-            cookieService.setCookie(LAST_ACCESSED_HUB, hub, -1 /* -1 means the cookie expires when the browser is closed */)
+            cookieService.setCookie(LAST_ACCESSED_HUB, hub, -1, '/', null, useSecureCookie, true)
         }
 
         def settings = getHubSettings(hub)
@@ -84,7 +86,7 @@ class SettingService {
             settings = new HubSettings(
                     title:'Default',
                     skin:'ala2',
-                    urlPath:grailsApplication.config.app.default.hub?:'default',
+                    urlPath:grailsApplication.config.getProperty('app.default.hub', String, 'default'),
                     availableFacets: ['status', 'organisationFacet','associatedProgramFacet','associatedSubProgramFacet','mainThemeFacet','stateFacet','nrmFacet','lgaFacet','mvgFacet','ibraFacet','imcra4_pbFacet','otherFacet', 'gerSubRegionFacet','electFacet'],
                     adminFacets: ['electFacet'],
                     availableMapFacets: ['status', 'organisationFacet','associatedProgramFacet','associatedSubProgramFacet','stateFacet','nrmFacet','lgaFacet','mvgFacet','ibraFacet','imcra4_pbFacet','electFacet']
@@ -108,7 +110,7 @@ class SettingService {
     }
 
     private def get(key) {
-        String url = grailsApplication.config.ecodata.baseUrl + "setting/ajaxGetSettingTextForKey?key=${key}"
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "setting/ajaxGetSettingTextForKey?key=${key}"
         def res = cacheService.get(key,{ webService.getJson(url) })
         return res?.settingText?:""
     }
@@ -122,7 +124,7 @@ class SettingService {
 
     private def set(key, settings) {
         cacheService.clear(key)
-        String url = grailsApplication.config.ecodata.baseUrl + "setting/ajaxSetSettingText/${key}"
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "setting/ajaxSetSettingText/${key}"
         webService.doPost(url, [settingText: settings, key: key])
     }
 
@@ -159,7 +161,7 @@ class SettingService {
     HubSettings getHubSettings(String urlPath) {
 
         cacheService.get(hubCacheKey(urlPath), {
-            String url = grailsApplication.config.ecodata.baseUrl+'hub/findByUrlPath/'+urlPath
+            String url = grailsApplication.config.getProperty('ecodata.baseUrl')+'hub/findByUrlPath/'+urlPath
             Map json = webService.getJson(url)
 
             json.hubId ? new HubSettings(new HashMap(json)) : null
@@ -170,17 +172,15 @@ class SettingService {
         cacheService.clear(HUB_LIST_CACHE_KEY)
         cacheService.clear(hubCacheKey(settings.urlPath))
 
-        String url = grailsApplication.config.ecodata.baseUrl+'hub/'+(settings.hubId?:'')
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl')+'hub/'+(settings.hubId?:'')
         webService.doPost(url, settings)
     }
 
     List listHubs() {
         cacheService.get(HUB_LIST_CACHE_KEY, {
-            String url = grailsApplication.config.ecodata.baseUrl + 'hub/'
+            String url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'hub/'
             Map resp = webService.getJson(url)
             resp.list ?: []
         })
     }
-
-
 }

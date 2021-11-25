@@ -205,7 +205,7 @@ class ProgramController {
 
             def params = [fq: 'programId:' + id, query: "docType:project"]
 
-            def url = grailsApplication.config.ecodata.service.url + '/search/downloadShapefile' + commonService.buildUrlParamsFromMap(params)
+            def url = grailsApplication.config.getProperty('ecodata.service.url') + '/search/downloadShapefile' + commonService.buildUrlParamsFromMap(params)
             def resp = webService.proxyGetRequest(response, url, true, true, 960000)
             if (resp.status != 200) {
                 render view: '/error', model: [error: resp.error]

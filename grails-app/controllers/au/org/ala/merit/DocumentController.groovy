@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import grails.converters.JSON
+import grails.core.GrailsApplication
 import groovy.json.JsonSlurper
 import org.apache.commons.io.FilenameUtils
 import org.apache.http.HttpStatus
@@ -10,9 +11,10 @@ import static org.apache.http.HttpStatus.SC_OK;
 
 class DocumentController {
 
-    static allowedMethods = [bulkUpdate: 'POST', documentUpdate: 'POST', deleteDocument: 'POST', downloadProjectDataFile: 'GET']
+    static allowedMethods = [bulkUpdate: 'POST', documentUpdate: 'POST', deleteDocument: 'POST']
 
-    def grailsApplication, documentService, webService, userService
+    def documentService, webService, userService
+    GrailsApplication grailsApplication
 
     def index() {}
 
@@ -93,16 +95,5 @@ class DocumentController {
     def deleteDocument(String id) {
         def responseCode = documentService.delete(id)
         render status: responseCode
-    }
-
-    @PreAuthorise(accessLevel = "siteReadOnly")
-    def downloadProjectDataFile() {
-        if (!params.id) {
-            response.setStatus(400)
-            render "A download ID is required"
-        } else {
-            String fileExtension = params.fileExtension ?: 'xlsx'
-            webService.proxyGetRequest(response, "${grailsApplication.config.ecodata.baseUrl}search/downloadProjectDataFile/${params.id}?fileExtension=${fileExtension}", true, true)
-        }
     }
 }

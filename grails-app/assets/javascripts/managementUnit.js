@@ -1,5 +1,5 @@
 //= require tab-init.js
-//= require slider-pro-master/js/jquery.sliderPro.min.js
+//= require slider-pro/js/jquery.sliderPro.js
 //= require mapWithFeatures.js
 //= require sites
 //= require attach-document-no-ui
@@ -384,10 +384,9 @@ var ManagementUnitPageViewModel = function(props, options) {
                         touchSwipe: false // at the moment we only support 1 image
                     });
                 }
-                $.fn.dataTable.moment( 'dd-MM-yyyy' );
+
                 //Regex to pick up project tables in programs
                 $("[id^=projectOverviewList-]").DataTable({displayLength:25, order:[[2, 'asc'], [3, 'asc']]});
-                $("[id^=projectList-]").DataTable({displayLength:25, order:[[2, 'asc'], [3, 'asc']]});
 
                 //create a empty map.
                 var map = createMap({
@@ -399,7 +398,8 @@ var ManagementUnitPageViewModel = function(props, options) {
                     showFitBoundsToggle:false,
                     useMyLocation:false,
                     mapContainerId:'managementUnitSiteMap',
-                    width: '100%'
+                    width: '100%',
+                    fullscreenControl:false
 
                 });
                 if (self.managementUnitSiteId){
@@ -418,8 +418,7 @@ var ManagementUnitPageViewModel = function(props, options) {
         },
         'projects': {
             initialiser: function() {
-                $.fn.dataTable.moment( 'dd-MM-yyyy' );
-                $('#projectList').DataTable({displayLength:25, order:[[2, 'asc'], [3, 'asc']]});
+                $("[id^=projectList-]").DataTable({displayLength:25, order:[[2, 'asc'], [3, 'asc']]});
             }
         },
         'sites': {
@@ -457,6 +456,7 @@ var ManagementUnitPageViewModel = function(props, options) {
     };
 
     self.initialise = function() {
+        $.fn.dataTable.moment( 'dd-MM-yyyy' );
         initialiseTabs(tabs, {tabSelector:'#managementUnit-tabs.nav a', tabStorageKey:'selected-managementUnit-tab'});
     };
 };

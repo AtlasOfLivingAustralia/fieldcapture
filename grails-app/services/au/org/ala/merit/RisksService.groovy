@@ -1,12 +1,14 @@
 package au.org.ala.merit
 
-import org.codehaus.groovy.grails.commons.GrailsApplication
+import grails.core.GrailsApplication
+import groovy.util.logging.Slf4j
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 
 /**
  * Manages the scheduling of a task to periodically check for changes to project risks and threats.
  */
+@Slf4j
 class RisksService {
 
     GrailsApplication grailsApplication
@@ -17,7 +19,7 @@ class RisksService {
     private static final String RISKS_REPORT_PATH = "/project/projectReport/"
 
     private int getScheduleCheckPeriod() {
-        grailsApplication.config.risks.scheduleCheckingPeriod
+        grailsApplication.config.getProperty('risks.scheduleCheckingPeriod', Integer, 7)
     }
 
     private DateTime getLastCheckTime() {
@@ -78,7 +80,7 @@ class RisksService {
      * @param projects the list of changed projects.
      */
     private void notifyGrantManagers(List projects, DateTime fromDate, DateTime toDate) {
-        String systemEmail = grailsApplication.config.merit.support.email
+        String systemEmail = grailsApplication.config.getProperty('merit.support.email')
         log.info("Found ${projects.size()} projects with modified risks and threats")
         projects.each { Map project ->
             // Using the PROJECT_ADMIN_ROLE as the initiator has the effect of sending the email to grant managers.
@@ -89,7 +91,7 @@ class RisksService {
     }
 
     private String buildReportUrl(String projectId, DateTime fromDate, DateTime toDate) {
-        grailsApplication.config.grails.serverURL+RISKS_REPORT_PATH+projectId +
+        grailsApplication.config.getProperty('grails.serverURL')+RISKS_REPORT_PATH+projectId +
                 "?fromDate="+DateUtils.format(fromDate)+
                 "&toDate="+DateUtils.format(toDate)+
                 "&sections=Project+risks+changes&orientation=portrait"

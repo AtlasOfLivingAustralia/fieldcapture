@@ -1,4 +1,4 @@
-<%@ page import="au.org.ala.merit.ActivityService; grails.converters.JSON; org.codehaus.groovy.grails.web.json.JSONArray" contentType="text/html;charset=UTF-8" %>
+<%@ page import="au.org.ala.merit.ActivityService; grails.converters.JSON; org.grails.web.json.JSONArray" contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/html">
 <head>
@@ -7,16 +7,16 @@
         <title>${report.name}</title>
     </g:if>
     <g:else>
-        <meta name="layout" content="${hubConfig.skin}"/>
+        <meta name="layout" content="nrm_bs4"/>
         <title>View | ${report.name} | MERIT</title>
     </g:else>
 
-    <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
+    <script type="text/javascript" src="${grailsApplication.config.getProperty('google.maps.url')}"></script>
     <script>
     var fcConfig = {
-        serverUrl: "${grailsApplication.config.grails.serverURL}",
+        serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
         ownerViewUrl: "${ownerViewURL}",
-        bieUrl: "${grailsApplication.config.bie.baseURL}",
+        bieUrl: "${grailsApplication.config.getProperty('bie.baseURL')}",
         imageLocation:"${assetPath(src:'/')}",
         imageUploadUrl: "${createLink(controller: 'image', action: 'upload')}",
         speciesProfileUrl: "${createLink(controller: 'species', action: 'speciesProfile')}",
@@ -25,40 +25,42 @@
         speciesListUrl: "${createLink(controller:'proxy', action:'speciesItemsForList')}",
         speciesSearchUrl: "${createLink(controller:'project', action:'searchSpecies', id:activity.projectId, params:[surveyName:metaModel.name])}",
         speciesImageUrl: "${createLink(controller:'species', action:'speciesImage')}",
-        context:${fc.modelAsJavascript(model:context)},
+        context:<fc:modelAsJavascript model="${context}"/>,
         imageLeafletViewer: '${createLink(controller: 'resource', action: 'imageviewer', absolute: true)}',
         readonly:true,
         useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.PRODUCTION},
-        prepopUrlPrefix:"${grailsApplication.config.grails.serverURL}",
+        prepopUrlPrefix:"${grailsApplication.config.getProperty('grails.serverURL')}",
         returnTo: "${returnTo}"
         },
         here = document.location.href;
     </script>
-    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="common-bs4.css"/>
     <asset:stylesheet src="activity.css"/>
 </head>
 <body>
 <div class="${containerType} validationEngineContainer" id="validation-container">
     <g:if test="${activity.lock && params.attemptedEdit}">
-        <div class="alert alert-error report-locked">
-            This form has been locked for editing by <fc:userDisplayName userId="${activity.lock.userId}" defaultValue="an unknown user"/> since ${au.org.ala.merit.DateUtils.displayFormatWithTime(activity.lock.dateCreated)}
-            <p>
-                To edit anyway, click the button below.  Note that if the user is currently making edits, those edits will be lost.
-            </p>
-            <p>
-                <a class="btn" href="${createLink(action:'overrideLockAndEdit', id:id, params:params)}">Edit Anyway</a>
-            </p>
+        <div class="row mb-2">
+            <div class="col-sm-12 pl-3 pr-3">
+                <div class="alert alert-danger report-locked">
+                    <p class="text-dark">This form has been locked for editing by <fc:userDisplayName userId="${activity.lock.userId}" defaultValue="an unknown user"/> since ${au.org.ala.merit.DateUtils.displayFormatWithTime(activity.lock.dateCreated)}</p>
+                    <p class="text-dark">To edit anyway, click the button below.  Note that if the user is currently making edits, those edits will be lost.</p>
+                    <a href="${createLink(action:'overrideLockAndEdit', id:id, params:params)}"><button type="button" class="btn btn-sm btn-danger"><i class="fa fa-edit"></i> Edit Anyway</button></a>
+
+                </div>
+            </div>
         </div>
+
     </g:if>
     <div id="koActivityMainBlock">
         <g:if test="${!printView}">
-            <ul class="breadcrumb">
-                <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
-                <li><a href="${contextViewUrl}">${context.name.encodeAsHTML()}</a> <span class="divider">/</span></li>
-                <li class="active">
-                    ${report.name}
-                </li>
-            </ul>
+            <section aria-labelledby="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><g:link controller="home">Home</g:link></li>
+                    <li class="breadcrumb-item"><a href="${contextViewUrl}">${context.name.encodeAsHTML()}</a></li>
+                    <li class="breadcrumb-item active">${report.name}</li>
+                </ol>
+            </section>
         </g:if>
         <g:render template="/output/mapInDialogViewTemplate" plugin="ecodata-client-plugin"/>
 
@@ -120,7 +122,7 @@
 <!-- templates -->
 <g:render template="/shared/documentTemplate"/>
 
-<asset:javascript src="common.js"/>
+<asset:javascript src="common-bs4.js"/>
 <asset:javascript src="forms-manifest.js"/>
 
 <script>
@@ -133,8 +135,8 @@
             document.location.href = fcConfig.returnTo;
         });
 
-        var metaModel = JSON.parse('${metaModel ? metaModel.toString().replace("'", "\\u0027") : '{}'}');
-        var activity = JSON.parse('${(activity as JSON).toString().encodeAsJavaScript()}');
+        var metaModel = <fc:modelAsJavascript model="${metaModel}" default="{}"/>
+        var activity = <fc:modelAsJavascript model="${activity}" default="{}"/>
         var site = ${site?.encodeAsJSON() ?: 'null' };
         var viewModel = new ActivityViewModel(
             activity,
@@ -145,7 +147,7 @@
 
         ko.applyBindings(viewModel);
         if (metaModel && metaModel.supportsSites) {
-            var reportSite =  ${reportSite?.encodeAsJSON() ?: '{}' };
+            var reportSite =  <fc:modelAsJavascript model="${reportSite}" default="{}"/>
             var formFeatures = new ecodata.forms.FeatureCollection(reportSite ? reportSite.features : []);
             fcConfig.featureCollection = formFeatures;
             <g:if test="${!printView}">

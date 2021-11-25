@@ -7,33 +7,33 @@ class AuditService {
     def commonService
 
     def getAuditMessagesForProject(String projectId) {
-        String url = grailsApplication.config.ecodata.baseUrl + 'audit/ajaxGetAuditMessagesForProject?projectId=' + projectId
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'audit/ajaxGetAuditMessagesForProject?projectId=' + projectId
         return webService.getJson(url, 60000)
     }
 
     def getAuditMessagesForProject(String projectId, int offset, int pageSize, String q) {
         String paramString = commonService.buildUrlParamsFromMap(id:projectId, start:offset, size:pageSize, q:q)
-        String url = grailsApplication.config.ecodata.baseUrl + 'audit/getAuditMessagesForProjectPerPage' + paramString
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'audit/getAuditMessagesForProjectPerPage' + paramString
         return webService.getJson(url, 60000)
     }
 
     def getAuditMessagesForOrganisation(String organisationId) {
-        String url = grailsApplication.config.ecodata.baseUrl + 'audit/getAuditMessagesForOrganisation?organisationId=' + organisationId
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'audit/getAuditMessagesForOrganisation?organisationId=' + organisationId
         return webService.getJson(url, 60000)
     }
 
     def getAuditMessagesForSettings() {
-        String url = grailsApplication.config.ecodata.baseUrl + 'audit/getAuditMessagesForSettings?keyPrefix=merit'
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'audit/getAuditMessagesForSettings?keyPrefix=merit'
         return webService.getJson(url, 60000)
     }
 
     def getAuditMessage(String messageId) {
-        String url = grailsApplication.config.ecodata.baseUrl + 'audit/ajaxGetAuditMessage/' + messageId
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'audit/ajaxGetAuditMessage/' + messageId
         return webService.getJson(url)
     }
 
     def getUserDetails(String userId) {
-        String url = grailsApplication.config.ecodata.baseUrl + 'audit/ajaxGetUserDetails/' + userId
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'audit/ajaxGetUserDetails/' + userId
         return webService.getJson(url)
     }
 

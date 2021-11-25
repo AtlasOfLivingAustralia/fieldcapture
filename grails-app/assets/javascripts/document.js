@@ -417,7 +417,7 @@ function showDocumentAttachInModal(uploadUrl, documentViewModel, modalSelector, 
 
     // Decorate the model so it can handle the button presses and close the modal window.
     documentViewModel.cancel = function() {
-        result.resolve();
+        result.resolve(ko.toJS(documentViewModel));
         closeModal();
     };
     documentViewModel.close = function() {
@@ -572,9 +572,9 @@ function initialiseDocumentTable(containerSelector) {
             ],
             "order":[[2, 'desc'], [3, 'desc']],
             "dom":
-            "<'row-fluid'<'span5'l><'span7'f>r>" +
-            "<'row-fluid'<'span12't>>" +
-            "<'row-fluid'<'span6'i><'span6'p>>"
+            "<'row'<'col-sm-5'l><'col-sm-7'f>r>" +
+            "<'row'<'col-sm-12't>>" +
+            "<'row'<'col-sm-6'i><'col-sm-6'p>>"
 
         });
 
@@ -605,23 +605,6 @@ function initialiseDocumentTable(containerSelector) {
         });
         searchStage(column, searchString);
 
-    });
-
-    var filterSelector = containerSelector + ' .document-filter-group';
-    $(filterSelector + ' a').on('click', function (event) {
-        if (event.target == this) {
-            event.preventDefault();
-            $(this).parent().toggleClass('open');
-        }
-
-    });
-    $('body').on('click', function(e) {
-        if (!$(filterSelector).is(e.target)
-            && $(filterSelector).has(e.target).length === 0
-            && $('.open').has(e.target).length === 0
-        ) {
-            $(filterSelector).removeClass('open');
-        }
     });
 }
 

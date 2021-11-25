@@ -1,6 +1,6 @@
 
 <g:set var="disableCondition" value="${disableConditionPrefix}\$parent.isProjectDetailsLocked()"/>
-<div class="well well-small">
+<div class="card well well-small">
     <label>
         <b>Projects Announcements
         <fc:iconHelp title="Projects Announcements">This section provides Grantee’s a place to provide key forward (planned) announcables and invite the Australian Government to participate in launches, communication and media opportunities related to this requirement. This includes opportunities to announce recipients of small projects and related activities.</fc:iconHelp>
@@ -36,21 +36,33 @@
         <tbody data-bind="foreach : details.events">
         <tr>
             <td class="index">  <span data-bind="text:$index()+1"></span></td>
-            <td class="event"> <select data-bind="value:type, disable: ${disableCondition}" style="text-align: center; width: 90%;" data-errormessage="*This field is required. If you do not have any announcement information available yet then please delete this row via the X icon" class="validate[required]" data-validation-engine="validate[required]"><option value="">Please select</option><option>1: funding announcements</option><option>2: non-funding opportunities</option></select></td>
-            <td class="event-type"> <textarea rows="2"  class="input-xlarge"  data-bind="value: name, disable: ${disableCondition}"></textarea></td>
-            <td class="event-date"> <div><input data-bind="datepicker:scheduledDate.date, disable: ${disableCondition}" type="text" /></div></td>
-            <td class="grant-date"> <div><input data-bind="value:grantAnnouncementDate, disable: ${disableCondition}" type="text" /></div></td>
-            <td class="amount"> <div class="input-append input-prepend"><span class="add-on">$</span><input type="text" class="form-control" style="width:3em;" data-bind="value:funding, disable: ${disableCondition}" data-validation-engine="validate[custom[number]]"><span class="add-on">.00</span></div></td>
-            <td class="information"> <textarea maxlength="1000" rows="3"  class="input-xlarge"  data-bind="value: description, disable: ${disableCondition}"></textarea></td>
-            <td class="remove"> <span><i class="icon-remove" data-bind="click: $parent.removeEvents"></i></span></td>
+            <td class="event"> <select class="form-control form-control-sm" data-bind="value:type, disable: ${disableCondition}" style="text-align: center; width: 90%;" data-errormessage="*This field is required. If you do not have any announcement information available yet then please delete this row via the X icon" class="validate[required]" data-validation-engine="validate[required]"><option value="">Please select</option><option>1: funding announcements</option><option>2: non-funding opportunities</option></select></td>
+            <td class="event-type"> <textarea rows="2"  class="form-control form-control-sm"  data-bind="value: name, disable: ${disableCondition}"></textarea></td>
+            <td class="event-date"> <div><input class="form-control form-control-sm" data-bind="datepicker:scheduledDate.date, disable: ${disableCondition}" type="text" /></div></td>
+            <td class="grant-date"> <div><input class="form-control form-control-sm" data-bind="value:grantAnnouncementDate, disable: ${disableCondition}" type="text" /></div></td>
+
+            <td class="amount">
+                <div class="input-group">
+                    <div class="input-group-prepend customAdOn">
+                        <span class="input-group-text">$</span>
+                    </div>
+                    <input type="text" class="form-control form-control-sm" style="width:3em;" data-bind="value:funding, disable: ${disableCondition}" data-validation-engine="validate[custom[number]]">
+                    <div class="input-group-append customAdOn">
+                        <span class="input-group-text customAdOn">.00</span>
+                    </div>
+                </div>
+            </td>
+
+            <td class="information"> <textarea maxlength="1000" rows="3"  class="form-control form-control-sm"  data-bind="value: description, disable: ${disableCondition}"></textarea></td>
+            <td class="remove"> <span><i class="fa fa-remove" data-bind="click: $parent.removeEvents"></i></span></td>
 
         </tr>
         </tbody>
         <tfoot>
         <tr>
             <td colspan="8">
-                <button type="button" class="btn btn-small" data-bind="click: addEvents, disable:${disableConditionPrefix}isProjectDetailsLocked()">
-                    <i class="icon-plus"></i> Add a row</button></td>
+                <button type="button" class="btn btn-sm" data-bind="click: addEvents, disable:${disableConditionPrefix}isProjectDetailsLocked()">
+                    <i class="fa fa-plus"></i> Add a row</button></td>
         </tr>
         </tfoot>
     </table>

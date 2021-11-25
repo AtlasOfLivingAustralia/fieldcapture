@@ -2,18 +2,18 @@
 <html>
 <head>
     <g:set var="containerType" scope="request" value="container"/>
-    <script type="text/javascript" src="${grailsApplication.config.google.maps.url}&libraries=visualization"></script>
+    <script type="text/javascript" src="${grailsApplication.config.getProperty('google.maps.url')}&libraries=visualization"></script>
     <meta name="layout" content="nrm_bs4"/>
     <title>Home | MERIT</title>
     <script>
         var fcConfig = {
             projectExplorerAjaxUrl:'${g.createLink(action:'ajaxProjectExplorer')}',
             spinnerIcon:'${asset.image(src:"spinner.gif")}',
-            spatialBaseUrl: "${grailsApplication.config.spatial.baseUrl}",
-            spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
-            spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
-            sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
-            sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
+            spatialBaseUrl: "${grailsApplication.config.getProperty('spatial.baseUrl')}",
+            spatialWmsCacheUrl: "${grailsApplication.config.getProperty('spatial.wms.cache.url')}",
+            spatialWmsUrl: "${grailsApplication.config.getProperty('spatial.wms.url')}",
+            sldPolgonDefaultUrl: "${grailsApplication.config.getProperty('sld.polgon.default.url')}",
+            sldPolgonHighlightUrl: "${grailsApplication.config.getProperty('sld.polgon.highlight.url')}",
             viewProjectUrl: "${g.createLink(controller: 'project', action:'index')}",
             dashboardUrl: "${g.createLink(controller: 'report', action: 'loadReport', params: params+[showOrganisations:true])}",%{--// Hack for the announcements report to distinguish it from the report on the org page.--}%
             dashboardCategoryUrl: "${g.createLink(controller: 'report', action: 'activityOutputs', params: params+[showOrganisations:true])}"
@@ -29,21 +29,26 @@
             <g:render template="/report/statistics"/>
         </div>
         <div class="row">
-            <div id="latest-news" class="col-sm-6">
-                <h4>Latest news</h4>
-                <g:render template="/shared/blog" />
+            <div class="col-sm-6">
+                <div id="latest-news">
+                    <h4>Latest news</h4>
+                    <g:render template="/shared/blog" />
+                </div>
             </div>
-            <div id="poi" class="col-sm-6">
-                <g:render template="/shared/poi"/>
+            <div class="col-sm-6">
+                <div id="poi">
+                    <g:render template="/shared/poi"/>
+                </div>
             </div>
+
         </div>
         <div id="help-links-container">
             <fc:getSettingContent settingType="${au.org.ala.merit.SettingPageType.HELP_LINKS_TITLE}"/>
             <g:render template="helpLinks"/>
         </div>
         <a id="project-explorer-holder" href="${g.createLink(controller: 'home', action:'projectExplorer')}">
-            <button>
-                <div id="project-explorer-icon"><i class="text-center fa fa-search"></i></div>
+            <button id="project-explorer-icon">
+                <i class="text-center fa fa-search"></i>
                 <h2 class="col-sm-12 text-center project-explorer-text">PROJECT EXPLORER</h2>
             </button>
         </a>

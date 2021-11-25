@@ -1,14 +1,18 @@
 ### MERIT   
-## Build status [![Build Status](https://travis-ci.org/AtlasOfLivingAustralia/fieldcapture.svg?branch=grails-2.4)](https://travis-ci.org/AtlasOfLivingAustralia/fieldcapture)
+## Build status 
+Master: [![Build Status](https://travis-ci.com/AtlasOfLivingAustralia/fieldcapture.svg?branch=master)](https://travis-ci.com/AtlasOfLivingAustralia/fieldcapture)
+Dev: [![Build Status](https://travis-ci.com/AtlasOfLivingAustralia/fieldcapture.svg?branch=dev)](https://travis-ci.com/AtlasOfLivingAustralia/fieldcapture)
+Grails 4: [![Build Status](https://travis-ci.com/AtlasOfLivingAustralia/fieldcapture.svg?branch=feature/grails4)](https://travis-ci.com/AtlasOfLivingAustralia/fieldcapture)
+
 ## About
 MERIT is a web application designed to collect and store planning, monitoring and reporting data associated with natural resource management projects.
 It is currently in use by the Australian Government Department of the environment and energy. 
 
 ## General Information
 ### Technologies
-* Grails framework 2.5.6
+* Grails framework 4.0.10
 * Knockout JS
-* Bootstap 2/4
+* Bootstap 4
 
 ## Setup
 * Clone the repository to your development machine.
@@ -33,9 +37,9 @@ npm install -g karma
 ```
 
 ## Testing
-* To run the grails unit tests, use:
+* To run the grails unit tests with clover test coverage, use:
 ```
-grails test-app
+./gradlew test -PenableClover=true
 ```
 
 * Javascript user tests are run using npm/karma.
@@ -57,8 +61,17 @@ node_modules/karma/bin/karma start karma.conf.js
 ## Running
 MERIT depends on a running instance of [ecodata](https://github.com/AtlasOfLivingAustralia/ecodata) and CAS so ensure these dependencies are running and configured correctly in fieldcapture-config.properties.
 ```
-grails run-app -Dgrails.server.port.http=8087
+./gradlew bootRun
 ```
+
+To run MERIT with support for hot-reloading of changes to the ecodata-client-plugin, clone the ecodata-client-plugin repository into the same parent folder as the fieldcapture project.
+Run MERIT with additonal parameters:
+```
+./gradlew :bootRun -Dgrails.run.active=true -Pinplace=true
+```
+
+Note the leading colon before the bootRun task - this is required as when inplace=true gradle is configured in a multi-project build configuration.
+
 # MacOS Catalina
 if you getting this error in MacOS
 ```

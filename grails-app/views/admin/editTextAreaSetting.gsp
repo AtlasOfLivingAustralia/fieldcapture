@@ -12,7 +12,7 @@
             <div class="row">
                 <div class="col-sm-12" id="">
                     <g:if test="${!ajax}">
-                        <a href="${returnUrl}" class="btn btn-sm"><i class="fa fa-hand-o-left"></i> back to ${returnLabel}</a>
+                        <a id="back" href="${returnUrl}" class="btn btn-sm"><i class="fa fa-hand-o-left"></i> back to ${returnLabel}</a>
                         <h3>Edit &quot;${settingTitle}&quot; content</h3>
                     </g:if>
                     <g:form id="saveSettingContent" controller="admin" action="saveTextAreaSetting">

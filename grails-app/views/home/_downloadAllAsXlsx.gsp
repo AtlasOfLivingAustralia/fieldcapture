@@ -30,8 +30,8 @@
 
     <strong>MERI Plan</strong>
     <ul class="unstyled">
-        <g:each in="${['Outcomes', 'Monitoring', 'Project Partnerships', 'Project Implementation', 'Key Evaluation Question', 'Priorities', 'Budget', 'Risks and Threats', 'WHS and Case Study', 'Attachments', 'Baseline', 'Event', "Approvals"]}" var="name">
-            <li><label class="checkbox"><input type="checkbox" name="tabs" value="MERI_${name}" data-validation-engine="validate[minCheckbox[1]]">${name}</label></li>
+        <g:each in="${[[label:'Outcomes', value:'MERI_Outcomes'], [label:'Monitoring', value:"MERI_Monitoring"], [label:'Project Partnerships', value:"MERI_Project Partnerships"], [label:'Project Implementation', value:"MERI_Project Implementation"], [label:'Key Evaluation Question', value:"MERI_Key Evaluation Question"], [label:'Priorities / National and Regional Plans', value:'MERI_Priorities'], [label:'Budget', value:"MERI_Budget"], [label:'Risks and Threats', value:"MERI_Risks and Threats"], [label:'WHS and Case Study', value:"MERI_WHS and Case Study"], [label:'Attachments', value:"MERI_Attachments"], [label:'Baseline', value:"MERI_Baseline"], [label:'Event', value:"MERI_Event"], [label:"Approvals", value:"MERI_Approvals"]]}" var="meriSection">
+            <li><label class="checkbox"><input type="checkbox" name="tabs" value="${meriSection.value}" data-validation-engine="validate[minCheckbox[1]]">${meriSection.label}</label></li>
         </g:each>
          <!-- RLP project -->
         <g:each in="${['RLP Outcomes', 'RLP Project Details', 'RLP Key Threats', 'RLP Services and Targets']}" var="name">

@@ -2,10 +2,12 @@ package au.org.ala.merit
 
 import au.org.ala.ecodata.forms.ActivityFormService
 import au.org.ala.merit.DateUtils
+import groovy.util.logging.Slf4j
 import org.joda.time.DateTime
 import org.joda.time.Period
 import org.joda.time.format.DateTimeFormat
 
+@Slf4j
 class ActivityService {
 
     def webService, grailsApplication, metadataService, reportService, projectService, emailService, userService
@@ -50,19 +52,19 @@ class ActivityService {
     }
 
     def list() {
-        def resp = webService.getJson(grailsApplication.config.ecodata.baseUrl + 'activity/')
+        def resp = webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') + 'activity/')
         // inject constructed name
         resp.list.collect(constructName)
     }
 
     def assessments() {
-        def resp = webService.getJson(grailsApplication.config.ecodata.baseUrl + 'assessment/')
+        def resp = webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') + 'assessment/')
         // inject constructed name
         resp.list.collect(constructName)
     }
 
     def get(id) {
-        def activity = webService.getJson(grailsApplication.config.ecodata.baseUrl + 'activity/' + id)
+        def activity = webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') + 'activity/' + id)
         activity
     }
 
@@ -91,11 +93,11 @@ class ActivityService {
             }
 
         }
-        webService.doPost(grailsApplication.config.ecodata.baseUrl + 'activity/' + id+'?lock=true', activity)
+        webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl') + 'activity/' + id+'?lock=true', activity)
     }
 
     def delete(id) {
-        webService.doDelete(grailsApplication.config.ecodata.baseUrl + 'activity/' + id)
+        webService.doDelete(grailsApplication.config.getProperty('ecodata.baseUrl') + 'activity/' + id)
     }
 
     /**
@@ -109,7 +111,7 @@ class ActivityService {
      * @param id of the project
      */
     def activitiesForProject(String id) {
-        def list = webService.getJson(grailsApplication.config.ecodata.baseUrl + 'activitiesForProject/' + id)?.list
+        def list = webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') + 'activitiesForProject/' + id)?.list
         // inject the metadata model for each activity
         list.each {
             it.model = metadataService.getActivityModel(it.type)
@@ -138,7 +140,7 @@ class ActivityService {
 
         def ids = activityIds.collect{"id=${it}"}.join('&')
         def body = ['publicationStatus':status]
-        webService.doPost(grailsApplication.config.ecodata.baseUrl + "activities/?$ids", body)
+        webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl') + "activities/?$ids", body)
 
     }
 
@@ -153,7 +155,7 @@ class ActivityService {
 
     def bulkUpdateActivities(activityIds, props) {
         def ids = activityIds.collect{"id=${it}"}.join('&')
-        webService.doPost(grailsApplication.config.ecodata.baseUrl + "activities/?$ids", props)
+        webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl') + "activities/?$ids", props)
     }
 
     /** @see au.org.ala.ecodata.ActivityController for a description of the criteria required. */
@@ -166,12 +168,12 @@ class ActivityService {
             }
 
         }
-        webService.doPost(grailsApplication.config.ecodata.baseUrl+'activity/search/', modifiedCriteria)
+        webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl')+'activity/search/', modifiedCriteria)
     }
 
     Map lock(String activityId) {
         String path = "lock/lock/"+activityId
-        webService.doPost(grailsApplication.config.ecodata.baseUrl+path,[:])
+        webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl')+path,[:])
     }
 
     Map lock(Map activity) {
@@ -180,7 +182,7 @@ class ActivityService {
 
     Map unlock(String activityId, Boolean force = false) {
         String path = "lock/unlock/"+activityId
-        webService.doPost(grailsApplication.config.ecodata.baseUrl+path,[force:force])
+        webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl')+path,[force:force])
     }
 
     void stealLock(String activityId, String activityUrl) {

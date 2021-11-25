@@ -12,7 +12,7 @@
     </thead>
     <tbody>
     <tr>
-        <td><textarea placeholder="${placeHolder}" rows="5" data-validation-engine="validate[required,maxSize[${maxSize?:5000}]]" data-bind="value:details.implementation.description, disable: isProjectDetailsLocked()"></textarea></td>
+        <td><textarea class="form-control form-control-sm" placeholder="${placeHolder}" rows="5" data-validation-engine="validate[required,maxSize[${maxSize?:5000}]]" data-bind="value:details.implementation.description, disable: isProjectDetailsLocked()"></textarea></td>
     </tr>
     </tbody>
 </table>

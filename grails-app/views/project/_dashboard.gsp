@@ -13,17 +13,17 @@
     <g:if test="${other}">
 
         <h3>Progress of Outputs without targets</h3>
-        <div class="row-fluid outputs-without-targets">
-        <g:each in="${other?.entrySet()}" var="metric" status="i">
+        <div class="row outputs-without-targets">
+                <g:each in="${other?.entrySet()}" var="metric" status="i">
+                        <div class="well well-small">
+                            <h3>${metric.key}</h3>
+                            <g:each in="${metric.value}" var="score">
+                                <fc:renderScore score="${score}"></fc:renderScore>
+                            </g:each>
+                        </div><!-- /.well -->
 
-            <div class="well well-small">
-                <h3>${metric.key}</h3>
-                <g:each in="${metric.value}" var="score">
-                    <fc:renderScore score="${score}"></fc:renderScore>
                 </g:each>
-            </div><!-- /.well -->
 
-        </g:each>
         </div>
     </g:if>
 </g:if>
@@ -32,18 +32,15 @@
 </g:else>
 
 <asset:script>
-
-    $(document).on('dashboardShown', function () {
-
+    $(document).on('dashboardShown', function (){
+        setTimeout(function() {
         var content = $('.outputs-without-targets');
         var columnized = content.find('.column').length > 0;
         if (!columnized){
-            content.columnize({ columns: 2, lastNeverTallest:true, accuracy: 10 });
+            content.columnize({ columns: 2, lastNeverTallest:true, buildOnce:false, accuracy: 10 });
         }
-
-        // We need to reinitialise the popovers as the content has been moved by the columnizer.
         $('.helphover').data('popover', null);
         $('.helphover').popover({container:'body', animation: true, trigger:'hover'});
-    });
+    }, 100)});
 </asset:script>
 

@@ -1,11 +1,13 @@
 package au.org.ala.merit
 
 import grails.converters.JSON
-import org.codehaus.groovy.grails.web.json.JSONArray
+import groovy.util.logging.Slf4j
+import org.grails.web.json.JSONArray
 
 /**
  * Extends the UserController to add report information.
  */
+@Slf4j
 class UserController {
 
     ReportService reportService
@@ -149,7 +151,7 @@ class UserController {
     def viewPermissionsForUserId() {
         String userId = params.userId
 
-        if (authService.userDetails() && (authService.userInRole(grailsApplication.config.security.cas.alaAdminRole) || authService.userInRole(grailsApplication.config.security.cas.officerRole)) && userId) {
+        if (authService.userDetails() && (authService.userInRole(grailsApplication.config.getProperty('security.cas.alaAdminRole')) || authService.userInRole(grailsApplication.config.getProperty('security.cas.officerRole'))) && userId) {
             render userService.getProjectsForUserId(userId) as JSON
         } else if (!userId) {
             render status:400, text: 'Required params not provided: userId, role, projectId'
@@ -168,7 +170,7 @@ class UserController {
         String email = params.email
 
         if (email) {
-            render userService.checkEmailExists(email)
+            render userService.checkEmailExists(email) ?: ""
         } else {
             render status:400, text: 'Required param not provided: email'
         }

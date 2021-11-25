@@ -1,12 +1,11 @@
 //= require thumbnail.scroller/2.0.3/jquery.mThumbnailScroller.js
 //= require jquery.columnizer/jquery.columnizer.js
-//= require jquery.fileDownload/jQuery.fileDownload
+//= require jquery-file-download/jquery.fileDownload.js
 //= require meriplan.js
 //= require risks.js
 //= require sites.js
 //= require activity.js
 //= require projectActivityPlan.js
-//= require projectActivity.js
 //= require enterActivityData.js
 //= require keydragzoom/keydragzoom.js
 //= require forms.js

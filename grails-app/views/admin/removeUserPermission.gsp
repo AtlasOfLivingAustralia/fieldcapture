@@ -6,7 +6,7 @@
     <title>Remove User Permission From Project | MERIT</title>
     <script disposition="head">
         var fcConfig = {
-            serverUrl: "${grailsApplication.config.grails.serverURL}",
+            serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
             returnToUrl: "${params.returnTo ?: createLink(controller: 'admin',action:'removeUserPermission')}",
             searchUserDetailsUrl: "${createLink(controller: "admin", action: "searchUserDetails")}",
             removeUserDetailsUrl:"${createLink(controller: "admin", action: "removeUserDetails")}"

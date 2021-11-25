@@ -98,12 +98,12 @@ var PhotoPointViewModel = function(site, activity, config) {
     self.addOrEditPhotoPoint = function(photoPointWithPhotos, photoPointData, successCallback) {
         var map = alaMap.map;
         var originalBounds = map.getBounds();
-        $(options.newPhotoPointModalSelector).modal('show').on('shown', function() {
+        $(options.newPhotoPointModalSelector).on('shown.bs.modal', function() {
             // "Borrow" the map display from the top of the page as it is already displaying the site / zoomed etc.
             $(options.newPhotoPointMapHolderSelector).append($(options.mapSelector));
             google.maps.event.trigger(map, "resize");
 
-        }).validationEngine('attach', {scroll:false});
+        }).validationEngine('attach', {scroll:false}).modal('show');
 
         var model = new EditPhotoPointViewModel(photoPointData, map, !photoPointWithPhotos);
 
@@ -114,8 +114,9 @@ var PhotoPointViewModel = function(site, activity, config) {
             $(options.activityMapHolderSelector).append($(options.mapSelector));
             google.maps.event.trigger(map, "resize");
             map.fitBounds(originalBounds);
-            $(options.newPhotoPointModalSelector).modal('hide');
-            ko.cleanNode($(options.newPhotoPointModalSelector)[0]);
+            $(options.newPhotoPointModalSelector).on('hidden.bs.modal', function() {
+                ko.cleanNode($(options.newPhotoPointModalSelector)[0]);
+            }).modal('hide');
 
         };
         model.save = function() {

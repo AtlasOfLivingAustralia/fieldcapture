@@ -6,9 +6,9 @@ import bootstrap.Attribute
 import grails.converters.JSON
 import groovy.xml.MarkupBuilder
 import org.apache.commons.lang.WordUtils
-import org.codehaus.groovy.grails.web.json.JSONArray
-import org.codehaus.groovy.grails.web.json.JSONObject
-import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
+import org.grails.web.json.JSONArray
+import org.grails.web.json.JSONObject
+import grails.web.servlet.mvc.GrailsParameterMap
 
 class FCTagLib {
 
@@ -458,7 +458,7 @@ class FCTagLib {
     }
 
     def loginInNewWindow = { attr, body ->
-        def casLoginUrl = grailsApplication.config.security.cas.loginUrl ?: "https://auth.ala.org.au/cas/login"
+        def casLoginUrl = grailsApplication.config.getProperty('security.cas.loginUrl', String, "https://auth.ala.org.au/cas/login")
         out << "<a href=\"${casLoginUrl}?service=${createLink(absolute: true, controller: 'home', action:'close')}\" target=\"fieldcapture-login\">${body}</a>"
     }
 
@@ -715,7 +715,10 @@ class FCTagLib {
                 def liClass = details.default ? 'active':''
                 def linkAttributes = [href:'#'+name, id:name+'-tab']
                 if (!details.disabled) {
-                    linkAttributes << ["data-toggle":"tab", class:'nav-link ']
+                    linkAttributes << ["data-toggle":"tab", class:'nav-link']
+                }
+                if(details.label =="Activities" && details.default == true){
+                    linkAttributes << ["data-toggle":"tab", class:'nav-link active show']
                 }
 
                 mb.li(class:'nav-item '+liClass) {

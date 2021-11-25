@@ -1,12 +1,8 @@
-//= require datatables/1.10.16/js/jquery.dataTables
-//= require datatables/1.10.16/js/dataTables.bootstrap4
-//= require datatables/1.10.16/js/dataTables.moment
-//= require datatables/buttons/1.5.1/dataTables.buttons
 //= require wms
 //= require mapWithFeatures.js
-//= require bootstrap-combobox/bootstrap-combobox.js
-//= require fancybox/jquery.fancybox
-//= require slider-pro-master/js/jquery.sliderPro.min.js
+//= require @danielfarrell/bootstrap-combobox/js/bootstrap-combobox.js
+//= require fancybox/js/jquery.fancybox
+//= require slider-pro/js/jquery.sliderPro.js
 //= require sites.js
 //= require reporting.js
 //= require document.js

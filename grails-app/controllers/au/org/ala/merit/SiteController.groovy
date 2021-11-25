@@ -23,15 +23,6 @@ class SiteController {
         render results as JSON
     }
 
-    def select(){
-        // permissions check
-        if (!projectService.canUserEditProject(userService.getCurrentUserId(), params.projectId)) {
-            flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${params.projectId}"
-            redirect(controller:'project', action:'index', id: params.projectId)
-        }
-        render view: 'select', model: [project:projectService.get(params.projectId)]
-    }
-
     def create(){
         render view: 'edit', model: [create:true, documents:[]]
     }
@@ -143,7 +134,7 @@ class SiteController {
                 redirect(controller: 'home', action: 'index')
             }
         }
-        def url = grailsApplication.config.ecodata.baseUrl + "site/${id}.shp"
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "site/${id}.shp"
         def resp = webService.proxyGetRequest(response, url, true, true,960000)
         if (resp.status != 200) {
             render view:'/error', model:[error:resp.error]

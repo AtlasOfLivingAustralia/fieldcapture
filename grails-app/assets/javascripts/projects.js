@@ -1,24 +1,22 @@
-//= require jquery.dataTables/jquery.dataTables.js
-//= require jquery.dataTables/jquery.dataTables.bootstrap.js
-//= require jquery.dataTables/dataTables.tableTools.js
+//= require tab-init.js
 //= require wms
 //= require mapWithFeatures.js
-//= require fancybox/jquery.fancybox
-//= require bootstrap-combobox/bootstrap-combobox.js
+//= require fancybox/js/jquery.fancybox
+//= require @danielfarrell/bootstrap-combobox/js/bootstrap-combobox.js
 //= require jquery.shorten/jquery.shorten.js
-//= require jquery.appear/jquery.appear.js
+//= require jquery-appear-original/index.js
 //= require thumbnail.scroller/2.0.3/jquery.mThumbnailScroller.js
 //= require jquery.columnizer/jquery.columnizer.js
-//= require jquery-gantt/js/jquery.fn.gantt.js
+//= require @taitems/jquery-gantt/js/jquery.fn.gantt.js
 //= require knockout-repeat/2.1/knockout-repeat.js
 //= require attach-document-no-ui.js
-//= require jquery.fileDownload/jQuery.fileDownload
+//= require jquery-file-download/jquery.fileDownload.js
+//= require document.js
 //= require meriplan.js
 //= require risks.js
 //= require sites.js
 //= require activity.js
 //= require projectActivityPlan.js
-//= require projectActivity.js
 //= require blog
 //= require dataSets
 //= require projectService
@@ -764,7 +762,7 @@ function toggleStarred(isProjectStarredByUser, userId, projectId) {
             if (data.error) {
                 alert(data.error);
             } else {
-                $("#starBtn i").removeClass("icon-star").addClass("icon-star-empty");
+                $("#starBtn i").removeClass("fa-star").addClass("fa-star-o");
                 $("#starBtn span").text("Add to favourites");
             }
         }).fail(function(j,t,e){ alert(t + ":" + e);}).done();
@@ -774,7 +772,7 @@ function toggleStarred(isProjectStarredByUser, userId, projectId) {
             if (data.error) {
                 alert(data.error);
             } else {
-                $("#starBtn i").removeClass("icon-star-empty").addClass("icon-star");
+                $("#starBtn i").removeClass("fa-star-o").addClass("fa-star");
                 $("#starBtn span").text("Remove from favourites");
             }
         }).fail(function(j,t,e){ alert(t + ":" + e);}).done();
@@ -802,12 +800,6 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
     var projectService = new ProjectService(project, config);
     _.extend(this, projectService);
     _.extend(this, new ProjectViewModel(project, userRoles.editor, organisations));
-
-    var meriPlanConfig = _.extend({}, config, {
-        declarationModalSelector: '#unlockPlan',
-        meriSubmissionDeclarationSelector: '#meriSubmissionDeclaration'
-    });
-    self.meriPlan = new MERIPlan(project, projectService, meriPlanConfig);
 
     self.internalOrderId = ko.observable(project.internalOrderId);
     self.userIsCaseManager = ko.observable(userRoles.grantManager);
@@ -858,6 +850,16 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
     self.years = [];
     self.years = self.allYears();
 
+    self.canEditStartDate = ko.computed(function() {
+        return !project.hasApprovedOrSubmittedReports || self.includeSubmittedReports();
+    });
+
+    var meriPlanConfig = _.extend({}, config, {
+        declarationModalSelector: '#unlockPlan',
+        meriSubmissionDeclarationSelector: '#meriSubmissionDeclaration',
+        editProjectStartDate: self.canEditStartDate()
+    });
+    self.meriPlan = new MERIPlan(project, projectService, meriPlanConfig);
 
     self.validateProjectEndDate = function() {
 
@@ -867,7 +869,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
         }
         if (!self.changeActivityDates()) {
 
-            if (config.minimumProjectEndDate && (endDate < config.minimumProjectEndDate)) {
+            if (config.minimumProjectEndDate && config.minimumProjectEndDate !== '' && (endDate < config.minimumProjectEndDate)) {
                 return "The project end date must be after "+convertToSimpleDate(config.minimumProjectEndDate);
             }
         }
@@ -934,7 +936,8 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             wmsServerUrl: config.wmsServerUrl,
             leafletIconPath:options.leafletIconPath,
             useAlaMap: config.useAlaMap,
-            useGoogleBaseMap: config.useGoogleBaseMap
+            useGoogleBaseMap: config.useGoogleBaseMap,
+            fullscreenControl:false
         };
 
         var map = createMap(mapOptions);
@@ -971,7 +974,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
                     },
                     {
                         "targets":4,
-                        "orderData":[4],
+                        "orderData":[5],
                         "width":"6em",
                         "searchable": false,
                         "orderable":true
@@ -985,7 +988,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
                 ],
                 "order":[4, "desc"],
                 "language": {
-                    "search":'<div class="input-prepend"><span class="add-on"><i class="fa fa-search"></i></span>_INPUT_</div>',
+                    "search":'<div class="input-group"><span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>_INPUT_</div>',
                     "searchPlaceholder":"Search sites..."
 
                 },
@@ -1119,10 +1122,6 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
         initialiseDocumentTable('#meriPlanDocumentList');
     };
 
-    self.canEditStartDate = ko.computed(function() {
-        return !project.hasApprovedOrSubmittedReports || self.includeSubmittedReports();
-    });
-
     self.validateProjectStartDate = function() {
 
         var startDateSelector = "#settings-validation input[data-bind*=plannedStartDate]";
@@ -1214,6 +1213,11 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
 
     self.initialiseReports = function() {
     };
+
+    $('#gotoEditBlog').click(function () {
+        amplify.store('project-admin-tab-state', '#editProjectBlog');
+        $('#admin-tab').tab('show');
+    });
 
 } // end of view model
 

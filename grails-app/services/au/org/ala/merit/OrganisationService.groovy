@@ -28,7 +28,7 @@ class OrganisationService {
     /** Overrides the parent to add Green Army reports to the results */
     def get(String id, view = '') {
 
-        String url = "${grailsApplication.config.ecodata.baseUrl}organisation/$id?view=$view"
+        String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}organisation/$id?view=$view"
         Map organisation = webService.getJson(url)
 
         def projects = []
@@ -97,7 +97,7 @@ class OrganisationService {
             result.error = error
             result.detail = error
         }else{
-            def url = "${grailsApplication.config.ecodata.baseUrl}organisation/$id"
+            def url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}organisation/$id"
             result = webService.doPost(url, organisation)
             metadataService.clearOrganisationList()
             result
@@ -143,7 +143,7 @@ class OrganisationService {
      * @param organisationId the organisationId of interest.
      */
     def getMembersOfOrganisation(organisationId) {
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/getMembersForOrganisation/${organisationId}"
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/getMembersForOrganisation/${organisationId}"
         webService.getJson(url)
     }
 

@@ -1,6 +1,6 @@
 <!-- ko stopBinding: true -->
 <div id="sitemap">
-    <script type="text/javascript" src="${grailsApplication.config.google.drawmaps.url}"></script>
+    <script type="text/javascript" src="${grailsApplication.config.getProperty('google.drawmaps.url')}"></script>
 
     <div class="row-fluid">
 
@@ -252,31 +252,31 @@ function initSiteViewModel() {
 
     // server side generated paths & properties
     var SERVER_CONF = {
-        siteData: ${site?:[] as grails.converters.JSON},
+        siteData: ${raw((site?:[] as grails.converters.JSON).toString())},
         spatialService: '${createLink(controller:'proxy',action:'feature')}',
         intersectService: "${createLink(controller: 'proxy', action: 'intersect')}",
         featuresService: "${createLink(controller: 'proxy', action: 'features')}",
         featureService: "${createLink(controller: 'proxy', action: 'feature')}",
-        spatialWms: '${grailsApplication.config.spatial.geoserverUrl}'
+        spatialWms: '${grailsApplication.config.getProperty("spatial.geoserverUrl")}'
     };
 
     var savedSiteData = {
-        siteId: "${site?.siteId}",
+        siteId: "${raw(site?.siteId)}",
         name : "${site?.name?.encodeAsJavaScript()}",
-        externalId : "${site?.externalId}",
-        context : "${site?.context}",
-        type : "${site?.type}",
-        extent: ${site?.extent?:'null'},
-        poi: ${site?.poi?:'[]'},
-        area : "${site?.area}",
-        description : "${site?.description?.encodeAsJavaScript()}",
-        notes : "${site?.notes?.encodeAsJavaScript()}",
-        documents : JSON.parse('${(siteDocuments?:documents).encodeAsJavaScript()}'),
+        externalId : "${site?.externalId?.encodeAsJavaScript()}",
+        context : "${site?.context?.encodeAsJavaScript()}",
+        type : "${site?.type?.encodeAsJavaScript()}",
+        extent: <fc:modelAsJavascript model="${site?.extent}"/>,
+        poi: <fc:modelAsJavascript model="${site?.poi}" default="[]"/>,
+        area : <fc:modelAsJavascript model="${site?.area}"/>,
+        description : <fc:modelAsJavascript model="${site?.description}"/>,
+        notes : <fc:modelAsJavascript model="${site?.notes?.encodeAsJavaScript()}"/>,
+        documents : <fc:modelAsJavascript model="${siteDocuments?:documents}"/>,
     <g:if test="${project}">
-        projects : ['${project.projectId}'],
+        projects : ['${raw(project.projectId)}'],
     </g:if>
     <g:else>
-        projects : ${site?.projects?:'[]'}
+        projects : <fc:modelAsJavascript model="${site?.projects}" default="[]"/>
     </g:else>
     };
 

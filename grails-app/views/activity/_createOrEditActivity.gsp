@@ -4,46 +4,54 @@
         opacity: 0.5;
     }
 </style>
-<div class="row-fluid title-block well well-small input-block-level">
-    <div class="span12 title-attribute">
+<div class="row title-block well well-small input-block-level">
+    <div class="col-sm-10 title-attribute">
         <h1><span data-bind="click:goToProject" class="clickable">${project?.name?.encodeAsHTML() ?: 'no project defined!!'}</span></h1>
         <g:if test="${hasPhotopointData}">
-            <div class="row-fluid"  style="margin-bottom: 10px;">
+            <div class="row"  style="margin-bottom: 10px;">
                 <span class="alert alert-warning">
                     This activity has photo point data recorded.  The site can only be changed on the full activity data entry page.
                 </span>
             </div>
-            <h2><span class="span12" data-bind="click:goToSite" class="clickable">Site: ${site.name?.encodeAsHTML()}</span></h2>
+            <h2><span class="col-sm-10" data-bind="click:goToSite" class="clickable">Site: ${site.name?.encodeAsHTML()}</span></h2>
 
         </g:if>
         <g:else>
-            <select data-bind="options:transients.project.sites,optionsText:'name',optionsValue:'siteId',value:siteId,optionsCaption:'Choose a site...'"></select>
-            Leave blank if this activity is not associated with a specific site.
+            <div class="row">
+                <div class="col-sm-4">
+                    <select data-bind="options:transients.project.sites,optionsText:'name',optionsValue:'siteId',value:siteId,optionsCaption:'Choose a site...'" class="form-control form-control-sm"></select>
+                </div>
+                <div class="col-sm-3">
+                    <p>Leave blank if this activity is not associated with a specific site.</p>
+                </div>
+            </div>
+
+
         </g:else>
-        <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">Activity: <span data-bind="text:type"></span><i class="icon-asterisk modified-icon" data-bind="visible:dirtyFlag.isDirty" title="Has been modified"></i></h3>
+        <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">Activity: <span data-bind="text:type"></span><span class="titleModified"><i class="fa fa-asterisk" data-bind="visible:dirtyFlag.isDirty" title="Has been modified"></i></h3></span>
         <h4><span>${project.associatedProgram?.encodeAsHTML()}</span> <span>${project.associatedSubProgram?.encodeAsHTML()}</span></h4>
     </div>
 </div>
 
-<div class="row-fluid">
-    <div class="span9">
+<div class="row">
+    <div class="col-sm-9">
         <!-- Common activity fields -->
-        <div class="row-fluid" data-bind="visible:transients.typeWarning()" style="display:none">
-            <div class="alert alert-error">
+        <div class="row" data-bind="visible:transients.typeWarning()" style="display:none">
+            <div class="alert alert-danger">
                 <strong>Warning!</strong> This activity has data recorded.  Changing the type of the activity will cause this data to be lost!
             </div>
         </div>
-        <div class="row-fluid" data-bind="visible:transients.targetsWarning()" style="display:none">
-        <div class="alert alert-error">
+        <div class="row" data-bind="visible:transients.targetsWarning()" style="display:none">
+        <div class="alert alert-danger">
             <strong>Warning!</strong> There are output targets defined that require activities of this type.  Changing the type of this activity will cause the targets to be deleted!
         </div>
     </div>
 
 
-        <div class="row-fluid">
-            <div class="span6">
+        <div class="row">
+            <div class="col-sm-6">
                 <label for="type">Type of activity</label>
-                <select data-bind="value: type, popover:{title:'', content:transients.activityDescription, trigger:'manual', autoShow:true}" id="type" data-validation-engine="validate[required]" class="input-xlarge">
+                <select data-bind="value: type, popover:{title:'', content:transients.activityDescription, trigger:'manual', autoShow:true}" id="type" data-validation-engine="validate[required]" class="form-control form-control-sm">
                     <g:each in="${activityTypes}" var="t" status="i">
                         <g:if test="${i == 0 && create}">
                             <option></option>
@@ -56,40 +64,39 @@
                     </g:each>
                 </select>
             </div>
-            <div class="span6">
+            <div class="col-sm-6">
                 <label for="theme">Major theme</label>
-                <select id="theme" data-bind="value:mainTheme, options:transients.themes, optionsCaption:'Choose..'" class="input-xlarge">
-                </select>
+                <select id="theme" data-bind="value:mainTheme, options:transients.themes, optionsCaption:'Choose..'" class="form-control form-control-sm"></select>
             </div>
         </div>
 
-        <div class="row-fluid">
-            <div class="span12">
-                <fc:textArea data-bind="value: description" id="description" label="Description" class="span12" rows="2" />
+        <div class="row">
+            <div class="col-sm-12 p-3">
+                <fc:textArea data-bind="value: description" id="description" label="Description" class="form-control form-control-sm" rows="2" />
             </div>
         </div>
 
-        <div class="row-fluid">
-            <div class="span4">
+        <div class="row">
+            <div class="col-sm-4">
                 <label for="stage">Stage
                 <fc:iconHelp title="Stage" printable="${printView}">The stage the activity falls into</fc:iconHelp>
                 </label>
-                <select id="stage" data-bind="options:transients.stages,value:projectStage"></select>
+                <select id="stage" data-bind="options:transients.stages,value:projectStage" class="form-control form-control-sm"></select>
             </div>
-            <div class="span4">
+            <div class="col-sm-4">
                 <label for="plannedStartDate">Planned start date
                 <fc:iconHelp title="Planned start date" printable="${printView}">Date the activity is intended to start.</fc:iconHelp>
                 </label>
-                <div class="input-append">
-                    <fc:datePicker targetField="plannedStartDate.date" class="input-medium" name="plannedStartDate" data-validation-engine="validate[required,future[${earliestStartDate}]]" printable="${printView}"/>
+                <div class="input-group">
+                    <fc:datePicker targetField="plannedStartDate.date" class="form-control form-control-sm" bs4="true" name="plannedStartDate" data-validation-engine="validate[required,future[${earliestStartDate}]]" printable="${printView}"/>
                 </div>
             </div>
-            <div class="span4">
+            <div class="col-sm-4">
                 <label for="plannedEndDate">Planned end date
                 <fc:iconHelp title="Planned end date" printable="${printView}">Date the activity is intended to finish.</fc:iconHelp>
                 </label>
-                <div class="input-append">
-                    <fc:datePicker targetField="plannedEndDate.date" class="input-medium" name="plannedEndDate" data-validation-engine="validate[required,future[plannedStartDate],funcCall[validateEndDate]]" printable="${printView}" />
+                <div class="input-group">
+                    <fc:datePicker targetField="plannedEndDate.date" class="form-control form-control-sm" bs4="true" name="plannedEndDate" data-validation-engine="validate[required,future[plannedStartDate],funcCall[validateEndDate]]" printable="${printView}" />
                 </div>
             </div>
         </div>
@@ -98,42 +105,44 @@
         <hr/>
 
         <h4>Create a duplicate of this activity in other stages</h4>
-        <div class="row-fluid">
+        <div class="row">
+            <div class="col-sm-10">
+                <label for="stage">Stage(s)
+                <fc:iconHelp title="Stage" printable="${printView}">For each stage selected, a new activity will be created.  All details (including the site) except the stage dates will be duplicated in each activity.</fc:iconHelp>
+                </label>
+                <ul class="list-unstyled" data-bind="foreach: transients.stages">
+                    <!-- ko if:$data -->
+                    <li>
+                        <label class="checkbox" style="display:inline-block;" data-bind="css:{'disabled':$parent.projectStage() == $data}">
+                            <input type="checkbox" class="checkbox" data-bind="attr: { value: $data }, checked: $parent.duplicateStages, enable: $data != $parent.projectStage()" data-validation-engine="min"/>
+                            <span data-bind="text: $data"></span>
+                        </label>
+                    </li>
+                    <!-- /ko -->
+                </ul>
 
-            <label for="stage">Stage(s)
-            <fc:iconHelp title="Stage" printable="${printView}">For each stage selected, a new activity will be created.  All details (including the site) except the stage dates will be duplicated in each activity.</fc:iconHelp>
-            </label>
-            <ul class="unstyled" data-bind="foreach: transients.stages">
-                <!-- ko if:$data -->
-                <li>
-                    <label class="checkbox" style="display:inline-block;" data-bind="css:{'disabled':$parent.projectStage() == $data}">
-                        <input type="checkbox" class="checkbox" data-bind="attr: { value: $data }, checked: $parent.duplicateStages, enable: $data != $parent.projectStage()" data-validation-engine="min"/>
-                        <span data-bind="text: $data"></span>
-                    </label>
-                </li>
-                <!-- /ko -->
-            </ul>
+            </div>
+
+
 
         </div>
         <!-- /ko -->
     </div>
-    <div class="span3">
-        <div id="smallMap" style="width:100%"></div>
+    <div class="col-sm-3">
+        <div id="smallMap" class="w-100"></div>
     </div>
 
 </div>
 
 <g:if test="${!printView}">
     <div class="form-actions">
-        <button type="button" id="save" class="btn btn-primary" data-bind="click:save">Save changes</button>
-        <button type="button" id="cancel" class="btn" data-bind="click:cancel">Cancel</button>
+        <button type="button" id="save" class="btn btn-sm btn-primary" data-bind="click:save">Save changes</button>
+        <button type="button" id="cancel" class="btn btn-sm btn-danger" data-bind="click:cancel">Cancel</button>
     </div>
 </g:if>
 
-</div>
-
 <!-- templates -->
-<g:render template="/shared/timeoutMessage" model="${[url:grailsApplication.config.security.cas.loginUrl+'?service='+createLink(action:'edit', id:activity.activityId, absolute: true)]}"/>
+<g:render template="/shared/timeoutMessage" model="${[url:grailsApplication.config.getProperty('security.cas.loginUrl')+'?service='+createLink(action:'edit', id:activity.activityId, absolute: true)]}"/>
 
 <asset:script>
 
@@ -440,16 +449,16 @@
             activity = JSON.parse(restored); // this parse will converted into JSON object
             bootbox.alert("Unsaved data has been found for this form.  Please press 'Save' to keep this data or 'Cancel' to discard it");
         }else {
-            activity = ${fc.modelAsJavascript([model:activity?:[:]])};
+            activity = <fc:modelAsJavascript model="${activity ?: [:]}"/>;
         };
 
         var viewModel = new ViewModel(
     activity,
-    ${site ?: 'null'},
-    ${project ?: 'null'},
-    ${(activityTypes as JSON).toString()},
-    ${themes},
-     ${fc.modelAsJavascript(model:outputTargetMetadata ?: [:])});
+    <fc:modelAsJavascript model="${site ?: null}"/>,
+    <fc:modelAsJavascript model="${project?: null}"/>,
+    <fc:modelAsJavascript model="${activityTypes}"/>,
+    <fc:modelAsJavascript model="${themes ?: null}"/>,
+    <fc:modelAsJavascript model="${outputTargetMetadata ?: [:]}"/>);
 
         var mapFeatures = $.parseJSON('${mapFeatures?mapFeatures.encodeAsJavaScript():"{}"}');
 
@@ -462,7 +471,7 @@
                 zoomToBounds:true,
                 zoomLimit:16,
                 featureService: "${createLink(controller: 'proxy', action:'feature')}",
-                wmsServer: "${grailsApplication.config.spatial.geoserverUrl}",
+                wmsServer: "${grailsApplication.config.getProperty('spatial.geoserverUrl')}",
                 polygonMarkerAreaKm2:-1
             },
             mapFeatures

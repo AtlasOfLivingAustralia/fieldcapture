@@ -31,25 +31,25 @@ module.exports = function (config) {
 
         // list of files / patterns to load in the browser
         files: [
-            'test/js/util/*.js',
-            'grails-app/assets/vendor/knockout/3.5.0/knockout.js',
-            'grails-app/assets/vendor/knockout/3.5.0/knockout.mapping-latest.js',
-            'grails-app/assets/vendor/jquery.validationEngine/jquery.validationEngine.js',
-            'grails-app/assets/vendor/underscorejs/1.8.3/underscore.js',
+            'src/test/js/util/*.js',
+            'grails-app/assets/vendor-ext/knockout/knockout-latest.js',
+            'grails-app/assets/vendor-ext/knockout-mapping/knockout.mapping.js',
+            'grails-app/assets/vendor/jquery.validationEngine/3.1.0/jquery.validationEngine.js',
+            'grails-app/assets/vendor-ext/underscore/underscore.js',
             'grails-app/assets/vendor/wmd/showdown.js',
             'grails-app/assets/vendor/wmd/wmd.js',
-            'grails-app/assets/vendor/datatables/1.10.16/js/jquery.dataTables.js',
-            'grails-app/assets/vendor/jquery-ui/jquery-ui-1.9.2.custom.js',
-            'grails-app/assets/vendor/jquery.appear/jquery.appear.js',
+            'grails-app/assets/vendor-ext/datatables.net/js/jquery.dataTables.js',
+            'grails-app/assets/vendor-ext/jquery-appear-original/index.js',
             'grails-app/assets/vendor/amplifyjs/amplify.min.js',
-            'grails-app/assets/vendor/vkbeautify/vkbeautify.0.99.00.beta.js',
+            'grails-app/assets/vendor-ext/frigus02-vkbeautify/vkbeautify.js',
+            'grails-app/assets/vendor-ext/bootstrap/js/bootstrap.bundle.js',
             "node_modules/moment/moment.js",
             "node_modules/moment-timezone/builds/moment-timezone-with-data.js",
             'grails-app/assets/javascripts/*.js',
             'grails-app/assets/components/components.js',
             'grails-app/assets/components/compile/*.js',
             'grails-app/assets/components/javascript/*.js',
-            'test/js/spec/**/*.js'
+            'src/test/js/spec/**/*.js'
         ],
 
 
@@ -74,7 +74,7 @@ module.exports = function (config) {
             'type':"text",
             check: {
                 global: {
-                    lines: 32.4
+                    lines: 33.2
                 }
             }
         },

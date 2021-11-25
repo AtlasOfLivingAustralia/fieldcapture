@@ -48,7 +48,7 @@
                       data-validation-engine="validate[required]" id="description"
                       placeholder="${g.message(code: 'program.description.placeholder')}"></textarea>
             <br/><button class="btn popup-edit" data-bind="click:editDescription"><i
-                class="icon-edit"></i> Edit with Markdown Editor</button>
+                class="fa fa-edit"></i> Edit with Markdown Editor</button>
         </div>
     </div>
 
@@ -88,11 +88,11 @@
                   data-role="logo"
                   data-owner-type="programId"
                   data-owner-id="${program?.programId}"
-                  data-bind="stagedImageUpload:documents, visible:!logoUrlProvided()"><i class="icon-plus"></i> <input
+                  data-bind="stagedImageUpload:documents, visible:!logoUrlProvided()"><i class="fa fa-plus"></i> <input
                     id="logo" type="file" name="files"><span>Attach</span></span>
 
             <button class="btn main-image-button" data-bind="click:removeLogoImage, visible:logoUrlProvided()"><i
-                    class="icon-minus"></i> Remove</button>
+                    class="fa fa-minus"></i> Remove</button>
         </span>
     </div>
 
@@ -111,11 +111,11 @@
                   data-role="mainImage"
                   data-owner-type="programId"
                   data-owner-id="${program?.programId}"
-                  data-bind="stagedImageUpload:documents, visible:!mainImageUrl()"><i class="icon-plus"></i> <input
+                  data-bind="stagedImageUpload:documents, visible:!mainImageUrl()"><i class="fa fa-plus"></i> <input
                     id="mainImage" type="file" name="files"><span>Attach</span></span>
 
             <button class="btn main-image-button" data-bind="click:removeMainImage,  visible:mainImageUrl()"><i
-                    class="icon-minus"></i> Remove</button>
+                    class="fa fa-minus"></i> Remove</button>
         </span>
     </div>
 

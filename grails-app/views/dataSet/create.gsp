@@ -4,21 +4,21 @@
 <head>
     <meta name="layout" content="nrm_bs4"/>
     <title>Create | Data Set Summary | MERIT</title>
-    <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
+    <script type="text/javascript" src="${grailsApplication.config.getProperty('google.maps.url')}"></script>
     <script disposition="head">
         var fcConfig = {
-            serverUrl: "${grailsApplication.config.grails.serverURL}",
+            serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
             dataSetUpdateUrl: "${createLink(action:'save', id:projectId)}",
             returnToUrl: "${g.createLink(controller:'project', action:'index', id:projectId)}"
         };
     </script>
     <asset:stylesheet src="common-bs4.css"/>
-    <asset:stylesheet src="project.css"/>
+    <asset:stylesheet src="dataSets.css"/>
 
 </head>
 <body>
 <div class="${containerType}">
-    <nav aria-label="breadcrumb">
+    <section aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <g:link controller="home">Home</g:link>
@@ -27,7 +27,7 @@
             <li class="breadcrumb-item active">New data set summary</li>
         </ol>
 
-    </nav>
+    </section>
     <h2>New data set summary</h2>
     <g:render template="editDataSet" />
 

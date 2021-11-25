@@ -108,29 +108,29 @@
 
     <tr>
         <td class="report-actions">
-            <a class="btn btn-container" data-bind="attr:{href:editUrl}, visible:editable"><i
+            <a class="btn btn-container btn-sm" data-bind="attr:{href:editUrl}, visible:editable"><i
                     class="fa fa-edit" title="Complete this report"></i></a>
 
-            <a class="btn btn-container disabled-icon" data-bind="visible:!editable">
+            <a class="btn btn-container btn-sm disabled-icon" data-bind="visible:!editable">
             <i class="fa fa-edit" title="Submitted or approved reports cannot be edited"></i>
             </a>
 
-            <a class="btn btn-container" data-bind="attr:{href:viewUrl}, visible:viewable"><i
+            <a class="btn btn-container btn-sm" data-bind="attr:{href:viewUrl}, visible:viewable"><i
                     class="fa fa-eye" title="View this report"></i></a>
 
-            <a class="btn btn-container disabled-icon" data-bind="visible:!viewable">
+            <a class="btn btn-container btn-sm disabled-icon" data-bind="visible:!viewable">
                 <i class="fa fa-eye" title="Please mark the report as complete before viewing it"></i>
             </a>
 
-            <a target="print-report" class="btn btn-container"
+            <a target="print-report" class="btn btn-container btn-sm"
                     data-bind="attr:{href:downloadUrl}, visible:viewable"><i
                     class="fa fa-download" title="Download a PDF of this report"></i></a>
-            <a class="btn btn-container disabled-icon" data-bind="visible:!viewable">
+            <a class="btn btn-container btn-sm disabled-icon" data-bind="visible:!viewable">
                 <i class="fa fa-download" title="Please mark the report as complete before generating a PDF"></i>
             </a>
 
             <g:if test="${fc.userIsAlaOrFcAdmin()}">
-                <a class="btn btn-container pull-right" href="javascript:void(0)" title="Delete all data entered for this report"
+                <a class="btn btn-container btn-sm pull-right" href="javascript:void(0)" title="Delete all data entered for this report"
                    data-bind="visible:canReset, click:resetReport"><i class="fa fa-remove" style="color:red;"></i>
                 </a>
 

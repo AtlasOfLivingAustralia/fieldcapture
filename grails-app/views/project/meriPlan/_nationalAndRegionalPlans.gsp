@@ -1,4 +1,5 @@
 <h4>${headingTitle ?: "Relevant national and regional plans"}</h4>
+
 <p>${explanation ?:"Explain how the project aligns with all applicable national and regional priorities, plans and strategies."}</p>
 <table class="table plans">
     <thead>
@@ -16,17 +17,17 @@
     <tbody data-bind="foreach : details.priorities.rows">
     <tr>
         <td class="index"><span data-bind="text:$index()+1"></span></td>
-        <td class="document-name"><textarea class="input-xlarge" data-validation-engine="validate[required]"
+        <td class="document-name"><textarea class="form-control form-control-sm" data-validation-engine="validate[required]"
                                             data-bind="value: data1, disable: $parent.isProjectDetailsLocked()"
                                             rows="3"></textarea></td>
-        <td class="section"><textarea class="input-xlarge" data-validation-engine="validate[required]"
+        <td class="section"><textarea class="form-control form-control-sm" data-validation-engine="validate[required]"
                                       data-bind="value: data2, disable: $parent.isProjectDetailsLocked()"
                                       rows="5"></textarea></td>
-        <td class="alignment"><textarea class="input-xlarge" data-validation-engine="validate[required]"
+        <td class="alignment"><textarea class="form-control form-control-sm" data-validation-engine="validate[required]"
                                         data-bind="value: data3, disable: $parent.isProjectDetailsLocked()"
                                         rows="5"></textarea></td>
         <td class="remove">
-            <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()"><i class="icon-remove"
+            <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()"><i class="fa fa-remove"
                                                                                    data-bind="click: $parent.removeNationalAndRegionalPriorities"></i>
             </span>
         </td>
@@ -36,7 +37,7 @@
     <tr>
 
         <td colspan="5">
-            <button type="button" class="btn btn-small"
+            <button type="button" class="btn btn-sm"
                     data-bind="disable: isProjectDetailsLocked(), click: addNationalAndRegionalPriorities">
                 <i class="fa fa-plus"></i> Add a row</button></td>
     </tr>

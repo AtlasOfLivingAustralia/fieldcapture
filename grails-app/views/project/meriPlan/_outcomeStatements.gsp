@@ -18,7 +18,7 @@
     <tr>
         <td class="index" data-bind="text:$index()+1"></td>
         <td class="outcome">
-            <textarea data-validation-engine="validate[required]" data-bind="value:description, disable: $parent.isProjectDetailsLocked()" placeholder="${placeholder}"></textarea>
+            <textarea class="form-control form-control-sm" data-validation-engine="validate[required]" data-bind="value:description, disable: $parent.isProjectDetailsLocked()" placeholder="${placeholder}"></textarea>
         </td>
         <td class="remove">
             <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()"><i class="fa fa-remove"
@@ -30,7 +30,7 @@
     <tfoot>
     <tr>
         <td colspan="3">
-            <button type="button" class="btn btn-small"
+            <button type="button" class="btn btn-sm"
                     data-bind="disable: isProjectDetailsLocked(), click: addShortTermOutcome">
                 <i class="fa fa-plus"></i> Add a row</button></td>
     </tr>

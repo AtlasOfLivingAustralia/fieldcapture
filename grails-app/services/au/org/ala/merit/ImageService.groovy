@@ -6,9 +6,11 @@ import com.drew.metadata.Directory
 import com.drew.metadata.Metadata
 import com.drew.metadata.exif.ExifSubIFDDirectory
 import com.drew.metadata.exif.GpsDirectory
+import groovy.util.logging.Slf4j
 import groovyx.net.http.HttpResponseDecorator
-import org.codehaus.groovy.grails.commons.GrailsApplication
+import grails.core.GrailsApplication
 
+@Slf4j
 class ImageService {
 
     GrailsApplication grailsApplication
@@ -27,7 +29,7 @@ class ImageService {
             }
         }
 
-        webService.postMultipart(grailsApplication.config.ecodata.baseUrl + "document/createThumbnail", [size: size], imageIn, contentType, thumbnailFile.name, 'image', saveThumbnail)
+        webService.postMultipart(grailsApplication.config.getProperty('ecodata.baseUrl') + "document/createThumbnail", [size: size], imageIn, contentType, thumbnailFile.name, 'image', saveThumbnail)
 
         return thumbnailFile.exists()
 
@@ -102,7 +104,7 @@ class ImageService {
 
     String fullPath(filename) {
 
-        return grailsApplication.config.upload.images.path + File.separator + filename
+        return grailsApplication.config.getProperty('upload.images.path') + File.separator + filename
     }
 
     URL encodeImageURL(prefix, filename) {

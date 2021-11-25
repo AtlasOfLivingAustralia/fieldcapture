@@ -23,6 +23,7 @@
         <g:set var="returnTo" value="${createLink(action:'auditOrganisation', id:organisation.organisationId, params:[searchTerm:params.searchTerm])}"/>
         <g:render template="auditMessageList"></g:render>
 
+        <asset:javascript src="base-bs4.js"/>
         <asset:javascript src="audit.js"/>
     </body>
 </html>

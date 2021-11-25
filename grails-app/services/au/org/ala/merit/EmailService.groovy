@@ -1,23 +1,26 @@
 package au.org.ala.merit
 
+import groovy.util.logging.Slf4j
+
 
 /**
  * Sends email messages on behalf of MERIT users to notify interested parties of project lifecycle changes.
  * These include changes to project plan status and when reports are submitted, approved or rejected.
  */
+@Slf4j
 class EmailService {
 
     def projectService, userService, mailService, settingService, grailsApplication, organisationService
 
     def createAndSend(mailSubjectTemplate, mailTemplate, model, recipient, sender, ccList) {
-        def systemEmailAddress = grailsApplication.config.fieldcapture.system.email.address
+        def systemEmailAddress = grailsApplication.config.getProperty('fieldcapture.system.email.address')
         try {
             def subjectLine = settingService.getSettingText(mailSubjectTemplate, model)
             def body = settingService.getSettingText(mailTemplate, model).markdownToHtml()
 
             log.info("Sending email: ${subjectLine} to: ${recipient}, from: ${sender}, cc:${ccList}, body: ${body}")
             // This is to prevent spamming real users while testing.
-            def emailFilter = grailsApplication.config.emailFilter
+            def emailFilter = grailsApplication.config.getProperty('emailFilter')
             if (emailFilter) {
                 if (!recipient instanceof Collection) {
                     recipient = [recipient]
@@ -30,7 +33,7 @@ class EmailService {
                 if (!recipient) {
                     // The email won't be sent unless we have a to address - use the submitting user since
                     // the purpose of this is testing.
-                    recipient = [getSenderEmail() ?: grailsApplication.config.merit.support.email]
+                    recipient = [getSenderEmail() ?: grailsApplication.config.getProperty('merit.support.email')]
                 }
                 ccList = ccList.findAll {it ==~ emailFilter}
 
@@ -117,11 +120,11 @@ class EmailService {
         def emailAddresses = sortEmailAddressesByRole(userEmailsAndRoles)
 
         if (!emailAddresses.grantManagerEmails) {
-            emailAddresses.grantManagerEmails = [grailsApplication.config.merit.support.email]
+            emailAddresses.grantManagerEmails = [grailsApplication.config.getProperty('merit.support.email')]
         }
 
         if (!emailAddresses.adminEmails) {
-            emailAddresses.adminEmails = [grailsApplication.config.merit.support.email]
+            emailAddresses.adminEmails = [grailsApplication.config.getProperty('merit.support.email')]
         }
 
         List recipientList
@@ -164,9 +167,9 @@ class EmailService {
         if (!ccEmails instanceof Collection) {
             ccEmails = [ccEmails]
         }
-        if (grailsApplication.config.email.copy.merit.support) {
-            if (!ccEmails.contains(grailsApplication.config.merit.support.email)) {
-                ccEmails << grailsApplication.config.merit.support.email
+        if (grailsApplication.config.getProperty('email.copy.merit.support', Boolean, false)) {
+            if (!ccEmails.contains(grailsApplication.config.getProperty('merit.support.email'))) {
+                ccEmails << grailsApplication.config.getProperty('merit.support.email')
             }
         }
 
@@ -178,7 +181,7 @@ class EmailService {
         def emailAddresses = sortEmailAddressesByRole(members)
 
         if (!emailAddresses.grantManagerEmails) {
-            emailAddresses.grantManagerEmails = [grailsApplication.config.merit.support.email]
+            emailAddresses.grantManagerEmails = [grailsApplication.config.getProperty('merit.support.email')]
         }
         emailAddresses
     }

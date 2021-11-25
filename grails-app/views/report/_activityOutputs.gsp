@@ -1,6 +1,6 @@
 <g:if test="${scores[category]}">
     <div class="row">
-        <div class="span6 col-sm-6" style="min-width: 460px;">
+        <div class="col-sm-6" style="min-width: 460px;">
 
             <g:each in="${scores[category][0]}" var="categoryScores">
 

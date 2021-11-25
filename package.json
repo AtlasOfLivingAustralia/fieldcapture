@@ -7,12 +7,11 @@
   "private": true,
   "dependencies": {
     "bootstrap": "4.6",
-    "bootstrap-icons": "^1.4.0",
     "slickgrid": "^2.4.34"
   },
   "devDependencies": {
     "@metahub/karma-jasmine-jquery": "^2.0.1",
-    "chromedriver": "93.0",
+    "chromedriver": "96.0.0",
     "jasmine-core": "^3.5.0",
     "jasmine-jquery": "^2.0.0",
     "jquery": "3.6",

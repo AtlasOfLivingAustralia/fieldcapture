@@ -1,10 +1,9 @@
 package au.org.ala.merit
 
 import grails.converters.JSON
-import grails.plugin.cache.GrailsCacheManager
-import org.codehaus.groovy.grails.web.json.JSONArray
-import org.codehaus.groovy.grails.web.json.JSONObject
-import org.springframework.cache.annotation.Cacheable
+import grails.plugin.cache.Cacheable
+import org.grails.plugin.cache.GrailsCacheManager
+import org.grails.web.json.JSONArray
 
 class BlogService {
 

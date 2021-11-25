@@ -20,7 +20,7 @@ class AdminService {
      * Triggers a full site re-index.
      */
     def reIndexAll() {
-        webService.getJson(grailsApplication.config.ecodata.baseUrl + 'admin/reIndexAll')
+        webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') + 'admin/reIndexAll')
     }
 
     static outputDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssZ")
@@ -29,9 +29,9 @@ class AdminService {
     }
 
     def syncCollectoryOrgs() {
-        def url = "${grailsApplication.config.ecodata.baseUrl}admin/syncCollectoryOrgs"
+        def url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}admin/syncCollectoryOrgs"
         webService.doPost(url, [
-                api_key: grailsApplication.config.api_key
+                api_key: grailsApplication.config.getProperty('api_key')
         ])
     }
 
@@ -41,6 +41,6 @@ class AdminService {
      * @return in Map
      */
     def deleteUserPermission(String userId){
-       return webService.doPost("${grailsApplication.config.ecodata.baseUrl}permissions/deleteUserPermission/$userId", null)
+       return webService.doPost("${grailsApplication.config.getProperty('ecodata.baseUrl')}permissions/deleteUserPermission/$userId", null)
     }
 }

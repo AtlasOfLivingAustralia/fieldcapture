@@ -6,7 +6,7 @@
 
         <g:render template="/activity/outputView" model="${[blockId:blockId, outputName:outputName, site:site, model:model]}"/>
         <g:render template="/output/outputJSModel" plugin="ecodata-client-plugin"
-                  model="${[viewModelInstance:blockId+'ViewModel', edit:true, activityId:activity.activityId, model:model, outputName:outputName]}"></g:render>
+                  model="${[viewModelInstance:blockId+'ViewModel', edit:true, activityId:activity.activityId, model:model, outputName:outputName]}"/>
     </g:if>
 </g:each>
 <!-- /ko -->
@@ -15,7 +15,7 @@
     <div class="output-block" data-bind="with:transients.photoPointModel">
         <h3>Photo Points</h3>
 
-        <g:render template="/site/photoPoints"></g:render>
+        <g:render template="/site/photoPoints"/>
 
     </div>
 </g:if>

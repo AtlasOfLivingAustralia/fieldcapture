@@ -5,7 +5,7 @@
     <title>Home Page Images | Admin | MERIT</title>
     <script>
         var fcConfig = {
-            serverUrl: "${grailsApplication.config.grails.serverURL}",
+            serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
             homePageImagesUrl: "${g.createLink(controller: 'search', action: 'findPotentialHomePageImages')}",
             documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
             returnTo: "${params.returnTo}"

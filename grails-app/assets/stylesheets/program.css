@@ -1,5 +1,5 @@
 /*
-*= require slider-pro-master/css/slider-pro.min.css
+*= require slider-pro/css/slider-pro.css
 *= require blog
 *= require_self
 */
@@ -41,24 +41,6 @@ table#projectList .statusCol {
 form #start-date, form #end-date {
     width: 12em;
     display:inline-block;
-}
-
-.progress {
-    background-color: #f7f7f7;
-    height:20px;
-    margin-bottom: 20px;
-    border: 1px solid #bfbfbf;
-    margin-top: 5px;
-}
-
-.progress .bar {
-    background-image: none;
-    background-color: #02baf2;
-}
-
-.progress-info .bar,.progress .bar-info {
-    background-image: none;
-    background-color: #02baf2;
 }
 
 .program-organisation {
@@ -135,25 +117,6 @@ input.dateControl {
     margin-top: 25px !important;
 }
 
-div.dataTables_wrapper div.dataTables_length label {
-    font-weight: normal;
-    white-space: nowrap;
-    text-align: left;
-    margin-left: 13px;
-}
-
-div.dataTables_wrapper div.dataTables_filter input {
-    display: inline-block;
-    width: 190px;
-}
-
-div.dataTables_wrapper div.dataTables_filter label {
-    padding-right: 10px !important;
-}
-#projectList_wrapper .row .col-sm-12, #projectOverviewList_wrapper .row .col-sm-12 {
-    padding-right: 4px !important;
-    padding-left: 4px !important;
-}
 .input-group-text {
     display: -ms-flexbox;
     display: flex;
@@ -179,4 +142,11 @@ select#addUserRole {
 }
 input#emailAddress {
     width: 250px;
+}
+
+span.select2-selection.select2-selection--single {
+    border: 1px solid #ced4da;
+    height: calc(1.5em + 0.75rem + 2px);
+    border-radius: 0.2rem;
+    padding: 0.375rem;
 }

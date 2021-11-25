@@ -4,7 +4,7 @@
 
     <g:if test="${fc.userIsAlaOrFcAdmin() && adHocReportTypes}">
     <div class="control-group" style="margin-bottom: 5px;">
-         <span class="controls"><button class="btn btn-success pull-right" style="margin-bottom: 5px;" data-bind="click:addReport"><i class="icon-white icon-plus"></i> New Report</button></span>
+         <span class="controls"><button class="btn btn-success pull-right" style="margin-bottom: 5px;" data-bind="click:addReport"><i class="fa fa-plus"></i> New Report</button></span>
     </div>
     </g:if>
 
@@ -34,9 +34,9 @@
 
         <tr>
             <td>
-                <button type="button" class="btn btn-container" data-bind="visible:editable, click:$root.editReport"><i class="fa fa-edit" title="Complete this report"></i></button>
-                <button type="button" class="btn btn-container" data-bind="visible:viewable, click:$root.viewReport"><i class="fa fa-eye" title="View this report"></i></button>
-                <button type="button" class="btn btn-container" data-bind="visible:viewable && report.downloadUrl, click:$root.downloadReport"><i class="fa fa-download" title="Download a PDF of this report"></i></button>
+                <button type="button" class="btn btn-sm btn-container" data-bind="visible:editable, click:$root.editReport"><i class="fa fa-edit" title="Complete this report"></i></button>
+                <button type="button" class="btn btn-sm btn-container" data-bind="visible:viewable, click:$root.viewReport"><i class="fa fa-eye" title="View this report"></i></button>
+                <button type="button" class="btn btn-sm btn-container" data-bind="visible:viewable && report.downloadUrl, click:$root.downloadReport"><i class="fa fa-download" title="Download a PDF of this report"></i></button>
 
             </td>
             <td><a data-bind="visible:editable, attr:{href:editUrl, title:title}" title="Complete this report"><span data-bind="text:description"></span></a>
@@ -164,7 +164,7 @@
 
 <g:if test="${fc.userIsAlaOrFcAdmin()}">
     <p>
-    <button type="button" data-bind="click:rejectReport" class="btn btn-danger"><i class="icon-remove icon-white"></i> Withdraw approval</button></g:if>
+    <button type="button" data-bind="click:rejectReport" class="btn btn-danger"><i class="fa fa-remove icon-white"></i> Withdraw approval</button></g:if>
     </p>
 </script>
 <script id="submitted" type="text/html">
@@ -173,7 +173,7 @@
 
     <span class="btn-group">
         <button type="button" data-bind="click:approveReport" class="btn btn-success"><i class="icon-ok icon-white"></i> Confirm</button>
-        <button type="button" data-bind="click:rejectReport" class="btn btn-danger"><i class="icon-remove icon-white"></i> More Information Required</button>
+        <button type="button" data-bind="click:rejectReport" class="btn btn-danger"><i class="fa fa-remove icon-white"></i> More Information Required</button>
     </span>
     </p>
 </g:if>

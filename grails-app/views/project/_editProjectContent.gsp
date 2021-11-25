@@ -1,30 +1,30 @@
 <!-- ko stopBinding: true -->
 <div id="edit${attributeName}Content">
 <h3>${header}</h3>
-<div class="row-fluid">
-    <div class="span5 alert" data-bind="visible:message(), css:{'alert-error':error(), 'alert-success':success()}">
+<div class="row">
+    <div class="col-sm-5 alert d-none" data-bind="visible:message(), css:{'alert-error':error(), 'alert-success':success()}">
         <button class="close" data-bind="click:clearMessage" href="#">×</button>
         <span data-bind="text:message"></span>
     </div>
 </div>
-<div class="row-fluid space-after well well-small">
+<div class="row space-after ml-1 well well-small">
 
         <h4>Update project "${header}"</h4>
-        <div id="${attributeName}-button-bar" style="width:100%;background-color: white;"></div>
-        <div style="padding-right:12px;">
-            <g:textArea name="${attributeName}Input" id="${attributeName}Input" value="${project[attributeName]}" rows="16"
-                        cols="120" style="width:100%;margin:0;"></g:textArea>
+        <div id="${attributeName}-button-bar" class="w-100 bg-white mb-2"></div>
+        <div style="padding-right:12px;" class="w-100">
+            <g:textArea name="${attributeName}Input" id="${attributeName}Input" class="border w-100 m-0" value="${project[attributeName]}" rows="16"
+                        cols="120" />
         </div>
-        <div class="hide"><input type="text" name="${attributeName}Output" id="${attributeName}Output" class="hide"></div>
+        <div class="d-none"><input type="text" name="${attributeName}Output" id="${attributeName}Output" class="d-none"></div>
 </div>
-<div class="row-fluid">
+<div>
         <h4>Preview</h4>
-        <div id="${attributeName}-preview" class="well well-small"></div>
+        <div id="${attributeName}-preview"></div>
 </div>
-<div class="row-fluid">
-    <span class="span3">
-        <button class="btn btn-primary" data-bind="click:save${attributeName}">Save changes</button>
-        <button class="btn" data-bind="click:cancelEdit${attributeName}">Cancel</button>
+<div class="row">
+    <span class="col-sm-3">
+        <button class="btn btn-sm btn-primary" data-bind="click:save${attributeName}">Save changes</button>
+        <button class="btn btn-sm btn-danger" data-bind="click:cancelEdit${attributeName}">Cancel</button>
 
     </span>
 </div>

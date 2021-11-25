@@ -161,9 +161,9 @@ function ProjectService(project, options) {
         self.saveStatus(config.modifyPlanUrl);
     };
     // approve plan and handle errors
-    self.approvePlan = function (approvalDetails, internalOrderId) {
-        if (!self.canApproveMeriPlan() && internalOrderId) {
-            var payload = JSON.stringify({internalOrderId: internalOrderId});
+    self.approvePlan = function (approvalDetails, data) {
+        if (!self.canApproveMeriPlan() && data.internalOrderNumber && data.plannedStartDate) {
+            var payload = JSON.stringify({internalOrderId: data.internalOrderNumber, plannedStartDate: data.plannedStartDate});
             var message = "Saving internal order number";
             self.save(config.projectUpdateUrl, payload, message).done(function() {
                 self.saveStatus(config.approvalPlanUrl, approvalDetails);

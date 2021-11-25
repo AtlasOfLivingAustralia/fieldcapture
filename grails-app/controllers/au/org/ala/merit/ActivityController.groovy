@@ -1,17 +1,19 @@
 package au.org.ala.merit
 
 import grails.converters.JSON
+import grails.core.GrailsApplication
 import org.apache.http.HttpStatus
 import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.apache.poi.ss.util.CellReference
-import org.codehaus.groovy.grails.web.json.JSONArray
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.grails.web.json.JSONArray
+import org.grails.web.json.JSONObject
 
 
 class ActivityController {
 
-    def activityService, siteService, projectService, metadataService, userService, excelImportService, webService, grailsApplication, speciesService, documentService, reportService
+    def activityService, siteService, projectService, metadataService, userService, excelImportService, webService, speciesService, documentService, reportService
+    GrailsApplication grailsApplication
 
     static ignore = ['action','controller','id']
     static allowedMethods = [ajaxUnlock:'POST', delete:'POST', ajaxUpdate:'POST', 'ajaxDelete':'POST']
@@ -305,9 +307,6 @@ class ActivityController {
             id = postBody.remove('activityId')
             if (!id) {id=''}
         }
-        //log.debug "Body: " + postBody
-        //log.debug "Params:"
-        //params.each { log.debug it }
 
         List duplicateStages = postBody.remove('duplicateStages')
 
@@ -318,7 +317,6 @@ class ActivityController {
                 values[k] = v
             }
         }
-        log.debug (values as JSON).toString()
 
         Map result = [:]
 
@@ -605,7 +603,7 @@ class ActivityController {
      */
     def excelOutputTemplate() {
 
-        String url =  "${grailsApplication.config.ecodata.baseUrl}metadata/excelOutputTemplate"
+        String url =  "${grailsApplication.config.getProperty('ecodata.baseUrl')}metadata/excelOutputTemplate"
 
         if (params.data) {
             webService.proxyPostRequest(response, url,

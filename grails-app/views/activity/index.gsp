@@ -1,26 +1,26 @@
-<%@ page import="au.org.ala.merit.ActivityService; grails.converters.JSON; org.codehaus.groovy.grails.web.json.JSONArray" contentType="text/html;charset=UTF-8" %>
+<%@ page import="au.org.ala.merit.ActivityService; grails.converters.JSON; org.grails.web.json.JSONArray" contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/html">
 <head>
     <g:if test="${printView}">
         <meta name="layout" content="nrmPrint"/>
-        <title>Print | ${activity.type} | Field Capture</title>
+        <title>Print | ${activity.type} | MERIT</title>
     </g:if>
     <g:else>
-        <meta name="layout" content="${hubConfig.skin}"/>
-        <title>View | ${activity.type} | Field Capture</title>
+        <meta name="layout" content="nrm_bs4"/>
+        <title>View | ${activity.type} | MERIT</title>
     </g:else>
 
-    <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.4/jstz.min.js"></script>
+    <script type="text/javascript" src="${grailsApplication.config.getProperty('google.maps.url')}"></script>
+    <asset:javascript src="jstimezonedetect/jstz.js"/>
     <script>
     var fcConfig = {
-        serverUrl: "${grailsApplication.config.grails.serverURL}",
+        serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
         activityUpdateUrl: "${createLink(controller: 'activity', action: 'ajaxUpdate')}",
         activityDeleteUrl: "${createLink(controller: 'activity', action: 'ajaxDelete')}",
         projectViewUrl: "${createLink(controller: 'project', action: 'index')}/",
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}/",
-        bieUrl: "${grailsApplication.config.bie.baseURL}",
+        bieUrl: "${grailsApplication.config.getProperty('bie.baseURL')}",
         searchBieUrl:"${createLink(controller:'species', action:'searchBie')}",
         speciesListUrl:"${createLink(controller:'proxy', action:'speciesItemsForList')}",
         speciesSearchUrl:"${createLink(controller:'project', action:'searchSpecies', id:activity.projectId, params:[surveyName:metaModel.name])}",
@@ -30,41 +30,44 @@
         speciesProfileUrl: "${createLink(controller: 'species', action: 'speciesProfile')}",
         excelOutputTemplateUrl:"${createLink(controller: 'activity', action:'excelOutputTemplate')}",
         imageLeafletViewer: '${createLink(controller: 'resource', action: 'imageviewer', absolute: true)}',
-        project:${fc.modelAsJavascript(model:project)},
-        returnTo: "${returnTo}"
+        project:<fc:modelAsJavascript model="${project}"/>,
+        returnTo: "${createLink(controller: "project", action: "index", id: activity.projectId)}"
         },
         here = document.location.href;
     </script>
-    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="common-bs4.css"/>
     <asset:stylesheet src="activity.css"/>
 </head>
 <body>
 <div class="${containerType} validationEngineContainer" id="validation-container">
     <g:if test="${activity.lock}">
-        <div class="alert alert-error report-locked">
-            This form has been locked for editing by <fc:userDisplayName userId="${activity.lock.userId}" defaultValue="an unknown user"/> since ${au.org.ala.merit.DateUtils.displayFormatWithTime(activity.lock.dateCreated)}
-            <p>
-                To edit anyway, click the button below.  Note that if the user is currently making edits, those edits will be lost.
-            </p>
-            <p>
-                <a class="btn" href="${createLink(controller:'activity', action:'overrideLockAndEdit', id:activity.activityId)}">Edit Anyway</a>
-            </p>
+        <div class="row mb-2">
+            <div class="col-sm-12 pl-3 pr-3">
+                <div class="alert alert-danger report-locked">
+                    <div class="text-dark">This form has been locked for editing by <fc:userDisplayName userId="${activity.lock.userId}" defaultValue="an unknown user"/> since ${au.org.ala.merit.DateUtils.displayFormatWithTime(activity.lock.dateCreated)}</div>
+                    <div class="text-dark">To edit anyway, click the button below.  Note that if the user is currently making edits, those edits will be lost.</div>
+                    <a href="${createLink(controller:'activity', action:'overrideLockAndEdit', id:activity.activityId)}"><button type="button" class="btn btn-sm btn-danger"><i class="fa fa-edit"></i> Edit Anyway</button></a>
+                </div>
+            </div>
         </div>
+
     </g:if>
     <div id="koActivityMainBlock">
         <g:if test="${!printView}">
-            <ul class="breadcrumb">
-                <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
-                <li><a data-bind="click:goToProject" class="clickable">Project</a> <span class="divider">/</span></li>
-                <li class="active">
-                    <span data-bind="text:type"></span>
-                    <span data-bind="text:startDate.formattedDate"></span><span data-bind="visible:endDate">/</span><span data-bind="text:endDate.formattedDate"></span>
-                </li>
-            </ul>
+            <section aria-labelledby="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><g:link controller="home">Home</g:link></li>
+                    <li class="breadcrumb-item"><g:link controller="project" action="index" id="${project?.projectId}">Project</g:link></li>
+                    <li class="breadcrumb-item active">
+                        <span data-bind="text:type"></span>
+                        <span data-bind="text:startDate.formattedDate"></span><span data-bind="visible:endDate">/</span><span data-bind="text:endDate.formattedDate"></span>
+                    </li>
+                </ol>
+            </section>
         </g:if>
 
-        <div class="row-fluid title-block well well-small input-block-level">
-            <div class="span12 title-attribute">
+        <div class="row title-block well well-small input-block-level">
+            <div class="col-sm-10 title-attribute">
                 <h1><span data-bind="click:goToProject" class="clickable">${project?.name?.encodeAsHTML() ?: 'no project defined!!'}</span></h1>
                 <g:if test="${site}">
                     <h2><span data-bind="click:goToSite" class="clickable">Site: ${site.name?.encodeAsHTML()}</span></h2>
@@ -73,28 +76,27 @@
                 <h4><span>${project.associatedProgram?.encodeAsHTML()}</span> <span>${project.associatedSubProgram?.encodeAsHTML()}</span></h4>
             </div>
         </div>
-
         <div class="row">
-            <div class="${mapFeatures.toString() != '{}' ? 'span9' : 'span12'}" style="font-size: 1.2em">
+            <div class="${mapFeatures.toString() != '{}' ? 'col-sm-9' : 'col-sm-12'}" style="font-size: 1.2em">
                 <!-- Common activity fields -->
-                <div class="row-fluid">
-                    <span class="span6"><span class="label">Description:</span> <span data-bind="text:description"></span></span>
-                    <span class="span6"><span class="label">Type:</span> <span data-bind="text:type"></span></span>
+                <div class="row">
+                    <span class="col-sm-6"><span class="label">Description:</span> <span data-bind="text:description"></span></span>
+                    <span class="col-sm-6"><span class="label">Type:</span> <span data-bind="text:type"></span></span>
                 </div>
-                <div class="row-fluid">
-                    <span class="span6"><span class="label">Starts:</span> <span data-bind="text:startDate.formattedDate"></span></span>
-                    <span class="span6"><span class="label">Ends:</span> <span data-bind="text:endDate.formattedDate"></span></span>
+                <div class="row">
+                    <span class="col-sm-6"><span class="label">Starts:</span> <span data-bind="text:startDate.formattedDate"></span></span>
+                    <span class="col-sm-6"><span class="label">Ends:</span> <span data-bind="text:endDate.formattedDate"></span></span>
                 </div>
-                <div class="row-fluid">
-                    <span class="span6"><span class="label">Project stage:</span> <span data-bind="text:projectStage"></span></span>
-                    <span class="span6"><span class="label">Major theme:</span> <span data-bind="text:mainTheme"></span></span>
+                <div class="row">
+                    <span class="col-sm-6"><span class="label">Project stage:</span> <span data-bind="text:projectStage"></span></span>
+                    <span class="col-sm-6"><span class="label">Major theme:</span> <span data-bind="text:mainTheme"></span></span>
                 </div>
-                <div class="row-fluid">
-                    <span class="span6"><span class="label">Activity status:</span> <span data-bind="text:progress"></span></span>
+                <div class="row">
+                    <span class="col-sm-6"><span class="label">Activity status:</span> <span data-bind="text:progress"></span></span>
                 </div>
             </div>
             <g:if test="${mapFeatures.toString() != '{}'}">
-                <div class="span3">
+                <div class="col-sm-3">
                     <div id="smallMap" style="width:100%"></div>
                 </div>
             </g:if>
@@ -155,7 +157,7 @@
 <!-- templates -->
 <g:render template="/shared/documentTemplate"/>
 
-<asset:javascript src="common.js"/>
+<asset:javascript src="common-bs4.js"/>
 <asset:javascript src="forms-manifest.js"/>
 <asset:deferredScripts/>
 
@@ -166,15 +168,15 @@
         $('.helphover').popover({animation: true, trigger:'hover'});
 
         $('#cancel').click(function () {
-            document.location.href = returnTo;
+            document.location.href = fcConfig.returnTo;
         });
 
         var viewModel = new ActivityViewModel(
-            ${(activity as JSON).toString()},
-            ${site ?: 'null'},
+            <fc:modelAsJavascript model="${activity}"/>,
+            <fc:modelAsJavascript model="${site?: null}"/>,
             fcConfig.project,
-            ${metaModel ?: 'null'},
-            ${themes ?: 'null'});
+            <fc:modelAsJavascript model="${metaModel?: null}"/>,
+            <fc:modelAsJavascript model="${themes?: null}"/>);
 
         ko.applyBindings(viewModel);
 

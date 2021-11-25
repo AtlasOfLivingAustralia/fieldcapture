@@ -1,5 +1,5 @@
 /*
-*= require slider-pro-master/css/slider-pro.min.css
+*= require slider-pro/css/slider-pro.css
 *= require document
 *= require_self
 */
@@ -41,24 +41,6 @@ table#projectList .statusCol {
 form #start-date, form #end-date {
     width: 12em;
     display:inline-block;
-}
-
-.progress {
-    background-color: #f7f7f7;
-    height:20px;
-    margin-bottom: 20px;
-    border: 1px solid #bfbfbf;
-    margin-top: 5px;
-}
-
-.progress .bar {
-    background-image: none;
-    background-color: #02baf2;
-}
-
-.progress-info .bar,.progress .bar-info {
-    background-image: none;
-    background-color: #02baf2;
 }
 
 .program-organisation {
@@ -105,14 +87,6 @@ form #start-date, form #end-date {
 #admin .tab-content {
     border-right: none;
     border-bottom: none;
-}
-.dashboard-section .progress span {
-    margin-top: 0.6rem;
-}
-
-div.dataTables_wrapper .row .col-sm-12 {
-    padding-left: 1rem;
-    padding-right: 1rem;
 }
 
 .tab-content #sites {

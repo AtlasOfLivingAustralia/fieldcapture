@@ -1,4 +1,4 @@
-<%@ page import="au.org.ala.merit.SettingPageType" %>
+<%@ page import="au.org.ala.merit.SettingPageType" expressionCodec="none"%>
 
 <div id="projectExplorer">
 <g:if test="${flash.error || results.error}">
@@ -114,7 +114,7 @@
                                 <div class="col-sm-8">
                                     <p><g:render template="searchResultsSummary"/></p>
                                     <div class="scroll-list clearfix" id="projectList">
-                                        <table class="table" id="projectTable" data-offset="0" data-max="25" style="table-layout: fixed">
+                                        <table class="table w-100" id="projectTable" data-offset="0" data-max="25">
                                             <thead>
                                                 <tr>
                                                     <th id="projectName" data-sort="nameSort" scope="col" data-order="ASC" class="header"> Project name</th>
@@ -256,7 +256,7 @@
                                             <tbody>
                                                 <tr>
                                                     <td width="50%"><g:render template="downloadAllAsXlsx"/></td>
-                                                    <td width="50%"><a target="_blank" href="${grailsApplication.config.grails.serverURL}/search/downloadAllData<fc:formatParams params="${params}"/>view=json">JSON</a></td>
+                                                    <td width="50%"><a target="_blank" href=""${grailsApplication.config.getProperty('grails.serverURL')}"/search/downloadAllData<fc:formatParams params="${params}"/>view=json">JSON</a></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -320,8 +320,8 @@
 
     var projectListIds = [], facetList = [], mapDataHasChanged = false, mapBounds, projectSites; // globals
     var facetModelViewArgs = {
-        facetsList : ${(facetsList as grails.converters.JSON).toString()},
-        results: ${(results as grails.converters.JSON).toString()},
+        facetsList : ${raw((facetsList as grails.converters.JSON).toString())},
+        results: ${raw((results as grails.converters.JSON).toString())},
         fqLink: "${fqLink}",
         baseUrl: "${baseUrl}",
         projectExplorerUrl: "${g.createLink(controller:'home', action:'projectExplorer')}"

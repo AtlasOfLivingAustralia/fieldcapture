@@ -1,5 +1,5 @@
 package au.org.ala.merit
-import grails.converters.JSON
+
 /**
  * Handles caching of service responses (after transforming).
  * Uses passed closures to handle service requests - so remains independent
@@ -8,7 +8,6 @@ import grails.converters.JSON
  */
 class CacheService {
 
-    def grailsApplication
     static cache = [:]
     private static final Object LOCK_1 = new Object() {};
 
@@ -51,22 +50,5 @@ class CacheService {
 
     def clear() {
         cache = [:]
-    }
-
-    /**
-     * Info provider based on an external metadata file.
-     * Loading any key will load results for all keys in the file.
-     * @param key the type of info requested
-     * @return
-     */
-    def loadStaticCacheFromFile(key) {
-        println 'loading static data from file'
-        def json = new File(grailsApplication.config.fieldcapture.data.file as String).text
-        if (json) {
-            JSON.parse(json).each { k,v ->
-                cache.put k, [resp: v, time: new Date()]
-            }
-        }
-        return cache[key]?.resp
     }
 }
