@@ -19,7 +19,7 @@ plugins {
     id 'war'
 }
 
-version "2.0"
+version "$meritVersion"
 group "au.org.ala"
 description "Fieldcapture"
 
