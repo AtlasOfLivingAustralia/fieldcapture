@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletResponse
 @PreAuthorise(accessLevel = 'siteReadOnly', redirectController = "home")
 class DownloadController {
 
-    private List DOWNLOAD_EXTENSIONS = ['xls', 'xlsx', 'zip', 'json', 'xml', 'pdf']
+    private List DOWNLOAD_EXTENSIONS = ['xls', 'xlsx', 'zip', 'json', 'xml', 'pdf', 'csv']
 
     GrailsApplication grailsApplication
     WebService webService

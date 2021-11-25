@@ -19,7 +19,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
         setup:
         String projectId = 'p3'
-        login([userId: '1', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'USER'], browser)
+        loginAsUser('1', browser)
 
         when:
         to RlpProjectPage, projectId
@@ -98,7 +98,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
     def "The MERI Plan will display only sections specified in state intervention config for state intervention projects"() {
         setup:
         String projectId = 'meri2'
-        login([userId: '1', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'USER'], browser)
+        loginAsUser('1', browser)
 
         when:
         to RlpProjectPage, projectId
@@ -193,7 +193,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
     def "A MERI plan PDF can be produced from a configurable MERI plan"() {
         setup:
         String projectId = 'meri2'
-        login([userId: '1', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'USER'], browser)
+        loginAsUser('1', browser)
 
         when:
         to RlpProjectPage, projectId
@@ -229,7 +229,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
     def "The MERI Plan will display only sections specified in competitive grants config for competitive grants projects"() {
         setup:
         String projectId = 'grants1'
-        login([userId: '1', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'USER'], browser)
+        loginAsUser('1', browser)
 
         when:
         to RlpProjectPage, projectId
@@ -313,7 +313,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
     def "The MERI Plan will display only sections specified in FHR config for FHR projects"() {
         setup:
         String projectId = 'fhr1'
-        login([userId: '1', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'USER'], browser)
+        loginAsUser('1', browser)
 
         when:
         to RlpProjectPage, projectId

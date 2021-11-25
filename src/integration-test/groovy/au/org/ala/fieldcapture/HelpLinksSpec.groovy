@@ -15,8 +15,8 @@ class HelpLinksSpec extends StubbedCasSpec {
     }
 
     def "The help links are displayed on the homepage"() {
-        setup: "Login as FC_ADMIN who is allowed to clear cache"
-        login([userId: '2', role: "ROLE_FC_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+        setup: "Login as a MERIT administrator who is allowed to clear cache"
+        loginAsAlaAdmin(browser)
 
         when: "Clear the help links cache as other specs will have run caching zero links"
         to AdminClearCachePage
@@ -35,9 +35,9 @@ class HelpLinksSpec extends StubbedCasSpec {
         }
     }
 
-    def "An FC_ADMIN can edit help links"() {
-        setup: "Login as FC_ADMIN who is allowed to clear cache"
-        login([userId: '2', role: "ROLE_FC_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+    def "A MERIT administrator can edit help links"() {
+        setup: "Login as MERIT administrator who is allowed to clear cache"
+        loginAsMeritAdmin(browser)
 
         when: "A help link is edited"
         to AdminHelpLinks

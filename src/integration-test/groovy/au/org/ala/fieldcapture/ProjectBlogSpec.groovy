@@ -14,7 +14,7 @@ class ProjectBlogSpec extends StubbedCasSpec {
 
     def "As a user, I can view blogs/create/delete in a given project "() {
         setup:
-        login([userId:'1', role:"ROLE_USER", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
+        loginAsUser('1', browser)
 
         when:
         to ProjectBlogPage
@@ -90,9 +90,9 @@ class ProjectBlogSpec extends StubbedCasSpec {
 
     }
 
-    def "As an admin, I can enter edit mode "(){
+    def "As a project admin, I can enter edit mode "(){
         setup:
-        login([userId:'1', role:"ROLE_ADMIN", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
+        loginAsUser("1", browser)
 
         when:
         to ProjectBlogPage

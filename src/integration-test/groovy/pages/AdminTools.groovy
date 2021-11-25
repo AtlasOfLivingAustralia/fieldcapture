@@ -32,9 +32,7 @@ class AdminTools extends ReloadablePage {
     }
 
     void clearCache() {
-        waitFor { $("#btnClearMetadataCache").displayed }
-        $("#btnClearMetadataCache").click()
-        waitFor { hasBeenReloaded() }
+        clearMetadata()
     }
 
 }

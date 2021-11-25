@@ -18,7 +18,7 @@ class ProjectIndexSpec extends StubbedCasSpec {
 
     def "document should be displayed / uploaded correctly"() {
         setup:
-        login([userId:'1', role:"ROLE_USER", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
+        loginAsUser('1', browser)
 
         when:
         to ProjectIndex, projectId
@@ -72,39 +72,9 @@ class ProjectIndexSpec extends StubbedCasSpec {
 
     }
 
-//    def "Adding Project Funding Type and Funding"(){
-//        setup:
-//        login([userId:'1', role:"ROLE_ADMIN", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
-//        when:
-//        to ProjectIndex, projectId
-//
-//        then:
-//        waitFor {at ProjectIndex}
-//        adminTab.click()
-//        waitFor {admin.displayed}
-//
-//        when:
-//        admin.projectSettingsTab.click()
-//        waitFor{ admin.projectSettings.displayed}
-//        waitFor{admin.projectSettings.addFunding.displayed}
-//        admin.projectSettings.addFunding.click()
-//        admin.projectSettings.fundingType[0].find("option").find {it.value() == "Public - commonwealth"}.click()
-//        admin.projectSettings.fundingSource[0].find("option").find {it.value() == "RLP"}.click()
-//        admin.projectSettings.fundingSourceAmount = "1000"
-//
-//        admin.projectSettings.save.click()
-//
-//        then:
-//
-//        waitFor{ admin.projectSettings.displayed}
-//        admin.projectSettings.fundingType[0].value() == "Public - commonwealth"
-//        admin.projectSettings.fundingSource[0].value() == "RLP"
-//        admin.projectSettings.fundingSourceAmount.value() == "1000"
-//    }
-
     def "Projects with application status can be saved without a internal order id"() {
         setup:
-        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to ProjectIndex, 'project_application'
@@ -132,7 +102,7 @@ class ProjectIndexSpec extends StubbedCasSpec {
 
     def "Projects with application status can be saved with a internal order id"() {
         setup:
-        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to ProjectIndex, 'project_application'
@@ -160,7 +130,7 @@ class ProjectIndexSpec extends StubbedCasSpec {
 
     def "Projects with active status can be saved without a internal order id"() {
         setup:
-        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to ProjectIndex, 'project_active'
@@ -184,7 +154,7 @@ class ProjectIndexSpec extends StubbedCasSpec {
 
     def "Projects with active status can be saved with a internal order id"() {
         setup:
-        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to ProjectIndex, 'project_active'
@@ -212,7 +182,7 @@ class ProjectIndexSpec extends StubbedCasSpec {
 
     def "Projects with completed status can be saved without a internal order id"() {
         setup:
-        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to ProjectIndex, 'project_completed'
@@ -236,7 +206,7 @@ class ProjectIndexSpec extends StubbedCasSpec {
 
     def "Projects with completed status can be saved with a internal order id"() {
         setup:
-        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to ProjectIndex, 'project_completed'
@@ -264,7 +234,7 @@ class ProjectIndexSpec extends StubbedCasSpec {
 
     def "Status of the projects with application status cannot be changed"() {
         setup:
-        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to ProjectIndex, 'project_application'
@@ -282,7 +252,7 @@ class ProjectIndexSpec extends StubbedCasSpec {
 
     def "Status of the projects with active status should be able to be changed"() {
         setup:
-        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to ProjectIndex, 'project_active'
@@ -300,7 +270,7 @@ class ProjectIndexSpec extends StubbedCasSpec {
 
     def "Status of the projects with completed status should be able to be changed"() {
         setup:
-        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to ProjectIndex, 'project_completed'
@@ -318,7 +288,7 @@ class ProjectIndexSpec extends StubbedCasSpec {
 
     def "Project Status is Terminated"() {
         setup:
-        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to ProjectIndex, 'project_terminated'
@@ -336,7 +306,7 @@ class ProjectIndexSpec extends StubbedCasSpec {
     }
     def "Project Termination"(){
         setup:
-        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to ProjectIndex, "project_active"

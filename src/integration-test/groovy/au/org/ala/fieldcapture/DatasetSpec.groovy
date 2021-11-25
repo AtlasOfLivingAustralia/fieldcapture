@@ -18,7 +18,7 @@ class DatasetSpec extends StubbedCasSpec{
     def "Add new data set in to project"() {
         setup:
         String projectId = 'fdFundProject'
-        login([userId: '1', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'USER'], browser)
+        loginAsUser('1', browser)
 
         when:
         to RlpProjectPage, projectId
@@ -118,7 +118,7 @@ class DatasetSpec extends StubbedCasSpec{
     def "Test partial and completed data summary"() {
         setup:
         String projectId = 'fdFundProject'
-        login([userId: '1', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'USER'], browser)
+        loginAsUser('1', browser)
 
         when:
         to RlpProjectPage, projectId
@@ -196,9 +196,9 @@ class DatasetSpec extends StubbedCasSpec{
 
     /** Note that this test relies on the data set summary inserted in the previous test, as per the @Stepwise annotation */
     def "This is a regression test for issue 2299 - MERI plan updates can clear data set summaries"() {
-        setup:
+        setup: "We need to be a merit administrator for this test as it involves updating the project settings"
         String projectId = 'fdFundProject'
-        login([userId: '1', role: "ROLE_FC_ADMIN", email: 'fcadmin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+        loginAsMeritAdmin(browser)
 
         when: "We open the project and navigate to the Data Set Summary tab"
         to RlpProjectPage, projectId

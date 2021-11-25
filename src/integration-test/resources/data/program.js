@@ -276,7 +276,8 @@ var programDefaults = {
           "programId": "test_program",
           "startDate": ISODate("2018-06-30T14:00:00Z"),
           "status": "active",
-          "url": ""
+          "url": "",
+          "hubId":"merit"
       }
   }
 }

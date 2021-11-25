@@ -509,7 +509,6 @@ class ManagementUnitController {
         }
     }
 
-    @Cacheable('managementUnitMap')
     def managementUnitFeatures() {
         Map featureCollection = managementUnitService.managementUnitFeatures()
         render featureCollection as JSON

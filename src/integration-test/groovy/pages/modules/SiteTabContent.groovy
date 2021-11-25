@@ -8,6 +8,21 @@ class SiteTabContent extends Module {
         uploadSites{$(".uploadSite")}
         markers{$('.leaflet-marker-pane img')}
 
+        firstSiteAdded{$('.addSite')} // this is for the sites page where there is not associate sites for that projects
+        newsiteupload{$(".uploadSite")}  // this is for the sites page where there is not associate sites for that projects
+        addSite { $( '#addSite' )}
+        siteUpload{ $('#siteUpload')}
+        siteDownload{ $('#siteDownload')}
+        siteDeleted{ $('#siteDeleted')}
+
+        lastupdated{$("#lastUpdated")}
+
+        sitesTableRows { $("#sites-table tbody tr").moduleList(SitesTableRow)}
+        map { $('#map') }
+    }
+
+    int markerCount() {
+        $('#map .leaflet-marker-pane').size()
     }
 }
 

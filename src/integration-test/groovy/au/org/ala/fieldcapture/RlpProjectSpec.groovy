@@ -19,7 +19,7 @@ class RlpProjectSpec extends StubbedCasSpec {
 
         setup:
         String projectId = '1'
-        login([userId: '2', role: "ROLE_FC_OFFICER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+        loginAsGrantManager(browser)
 
         when:
         to RlpProjectPage, projectId
@@ -27,7 +27,7 @@ class RlpProjectSpec extends StubbedCasSpec {
         then:
         waitFor { at RlpProjectPage }
 
-        and: "All of the project tabs are visible as I am a FC_OFFICER"
+        and: "All of the project tabs are visible as the user has the grant manager role"
         overviewTab.displayed == true
         dashboardTab.displayed == true
         documentsTab.displayed == true
@@ -59,11 +59,11 @@ class RlpProjectSpec extends StubbedCasSpec {
 
     }
 
-    def "All tabs are visible to FC_OFFICERS"() {
+    def "All tabs are visible to users with the siteOffice role"() {
 
         setup:
         String projectId = '1'
-        login([userId: '2', role: "ROLE_FC_OFFICER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_OFFICER'], browser)
+        loginAsGrantManager(browser)
         println "Logged in"
 
         when:
@@ -110,7 +110,7 @@ class RlpProjectSpec extends StubbedCasSpec {
 
         setup:
         String projectId = '1'
-        login([userId: '100', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'Admin'], browser)
+        loginAsUser('100', browser)
 
         when:
         to RlpProjectPage, projectId
@@ -132,7 +132,7 @@ class RlpProjectSpec extends StubbedCasSpec {
 
         setup: "user 1 is an admin for project 1"
         String projectId = '1'
-        login([userId: '1', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'Admin'], browser)
+        loginAsUser('1', browser)
 
         when:
         to RlpProjectPage, projectId
@@ -154,7 +154,7 @@ class RlpProjectSpec extends StubbedCasSpec {
 
         setup: "user 10 is an editor for project 1"
         String projectId = '1'
-        login([userId: '10', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'Admin'], browser)
+        loginAsUser('10', browser)
 
         when:
         to RlpProjectPage, projectId
@@ -175,7 +175,7 @@ class RlpProjectSpec extends StubbedCasSpec {
     def "The project sites are displayed on the sites tab and are visible to editors"() {
         setup: "user 10 is an editor for project 1"
         String projectId = '1'
-        login([userId: '10', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'Admin'], browser)
+        loginAsUser('10', browser)
 
         when:
         to RlpProjectPage, projectId
@@ -188,8 +188,8 @@ class RlpProjectSpec extends StubbedCasSpec {
         waitFor { sitesTabContent.map.displayed }
 
         then:
-        sitesTabContent.sites.size() == 1
-        sitesTabContent.sites[0].name == "Test site 1"
+        sitesTabContent.sitesTableRows.size() == 1
+        sitesTabContent.sitesTableRows[0].name == "Test site 1"
         waitFor { sitesTabContent.markerCount() == 1 } // The map is initialised asynchronously
 
     }

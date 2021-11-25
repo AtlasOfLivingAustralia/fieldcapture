@@ -1,18 +1,27 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.hub.HubSettings
 import au.org.ala.web.AuthService
 import grails.plugin.cache.GrailsCache
 import grails.testing.services.ServiceUnitTest
+import grails.testing.web.GrailsWebUnitTest
+import org.apache.http.HttpStatus
 import org.grails.plugin.cache.GrailsCacheManager
+import org.joda.time.DateTime
+import org.joda.time.DateTimeUtils
 import spock.lang.Specification
 
-class UserServiceSpec extends Specification implements ServiceUnitTest<UserService> {
+/**
+ * Tests the UserService.
+ * We are implementing GrailsWe
+ */
+class UserServiceSpec extends Specification implements ServiceUnitTest<UserService>, GrailsWebUnitTest {
 
     def webService = Mock(WebService)
     def authService = Mock(AuthService)
     def grailsCacheManager = Mock(GrailsCacheManager)
     def activityService = Mock(ActivityService)
-
+    def settingService = Mock(SettingService)
 
     def setup() {
         grailsApplication.config.ecodata.baseUrl = "/"
@@ -22,8 +31,13 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         service.authService = authService
         service.grailsCacheManager = grailsCacheManager
         service.activityService = activityService
-
+        service.cacheService = new CacheService()
+        service.settingService = settingService
         authService.userInRole(_) >> false
+    }
+
+    def cleanup() {
+        DateTimeUtils.setCurrentMillisSystem()
     }
 
     def "ACL project checks should be delegated to appropriate web service calls"(String role, String url) {
@@ -104,7 +118,7 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         grailsCacheManager.getCache(_) >> cache
 
         when:
-        Map result = service.checkEmailExists(email)
+        String result = service.checkEmailExists(email)
 
         then:
         1 * authService.getUserForEmailAddress(email) >> null
@@ -126,7 +140,7 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         grailsCacheManager.getCache(_) >> cache
 
         when:
-        Map result = service.checkEmailExists(email)
+        String result = service.checkEmailExists(email)
 
         then:
         1 * authService.getUserForEmailAddress(email) >> [userId:'test', locked:true]
@@ -144,7 +158,7 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         boolean canEdit = service.canUserEditActivity(userId, activityId)
 
         then:
-        canEdit == true
+        canEdit
 
         and:
         1 * activityService.get(activityId) >> [projectId:projectId, activityId:activityId]
@@ -163,7 +177,7 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         boolean canEdit = service.canUserEditActivity(userId, activityId)
 
         then:
-        canEdit == false
+        !canEdit
 
         and:
         1 * activityService.get(activityId) >> [activityId:activityId]
@@ -183,7 +197,7 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         then:
         3 * webService.getJson(_) >> [:]
 
-        result == false
+        !result
 
     }
 
@@ -196,6 +210,18 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         if (programEditorRole) {
             programRole = [entityId:programId, entityType:'au.org.ala.ecodata.Program', userId:userId, accessLevel:programEditorRole]
         }
+        HubSettings hubSettings = new HubSettings(userPermissions:[])
+
+        if (readOnlyRole) {
+            hubSettings.userPermissions << [userId:userId, role:RoleService.PROJECT_READ_ONLY_ROLE]
+        }
+        if (fcOfficerRole) {
+            hubSettings.userPermissions << [userId:userId, role:RoleService.GRANT_MANAGER_ROLE]
+        }
+        if (fcAdminRole) {
+            hubSettings.userPermissions << [userId:userId, role:RoleService.PROJECT_ADMIN_ROLE]
+        }
+        SettingService.setHubConfig(hubSettings)
 
         when:
         boolean canView = service.canUserViewNonPublicProgramInformation(userId, programId)
@@ -203,10 +229,6 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
 
         then:
         canView == expectedResult
-
-        _ * authService.userInRole('FC_READ_ONLY') >> readOnlyRole
-        _ * authService.userInRole('FC_OFFICER') >> fcOfficerRole
-        _ * authService.userInRole('FC_ADMIN') >> fcAdminRole
         _ * webService.getJson("/permissions/getUserRolesForUserId/${userId}") >> [roles:[programRole]]
 
 
@@ -242,4 +264,151 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
 
     }
 
+    def "This retrieves the lists of HUB users"() {
+        setup:
+        String hubId = '00cf9ffd-e30c-45f8-99db-abce8d05c0d8'
+
+        when:
+        service.getByHub(hubId)
+
+        then:
+        1 * webService.getJson({it.endsWith("permissions/getByHub/${hubId}")},300000) >> [data:[[role:'officer', displayName:null, userName:null, userId:130205], [role:'siteAdmin', displayName:null, userName:null, userId:129333]]]
+
+    }
+
+    def "This inserts a user into HUB"() {
+        setup:
+        String userId = '129333'
+        String role = 'siteAdmin'
+        Map params = [userId:'129333', role: 'siteAdmin']
+        HubSettings hubSettings = new HubSettings(userPermissions:[],hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
+        SettingService.setHubConfig(hubSettings)
+
+        when:
+        def result = service.addUserToHub(params)
+
+        then:
+        result == null
+
+    }
+
+    def "This converts a MERIT role to Ecodata AccessLevel"() {
+        setup:
+        String role = 'siteAdmin'
+
+        when:
+        def result = service.convertHubRoleToAccesLevel(role)
+
+        then:
+        result == 'admin'
+
+    }
+
+    def "This converts a Ecodata AccessLevel to a HUB role"() {
+        setup:
+        def results = [data:[[role:'admin', displayName:null, userName:null, userId:'129333'],[role:'caseManager', displayName:null, userName:null, userId:'130205']]]
+
+        when:
+        def results2 = service.convertAccessLevelToHubRole(results)
+
+        then:
+        results2.size() > 0
+
+    }
+
+    def "This removes a user from HUB"() {
+        setup:
+        String userId = '129333'
+        String role = 'siteAdmin'
+        Map param = [userId: 129333, entityId: '00cf9ffd-e30c-45f8-99db-abce8d05c0d8', role: 'siteAdmin', expiryDate: '2022-06-01T00:00:00Z']
+        HubSettings hubSettings = new HubSettings(userPermissions:[],hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
+        SettingService.setHubConfig(hubSettings)
+
+        when:
+        def result = service.removeHubUser(param)
+
+        then:
+        result == null
+
+    }
+
+    def "This validates if user who have a role on any existing MERIT project cannot be assigned the Read Only role in the HUB"() {
+        setup:
+        String userId = '129333'
+        String role = 'siteReadOnly'
+        Map params = [userId:'129333', role: 'siteReadOnly']
+        HubSettings hubSettings = new HubSettings(hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
+        SettingService.setHubConfig(hubSettings)
+
+        when:
+        def result = service.saveHubUser(params)
+
+        then:
+        1 * webService.getJson({it.endsWith("permissions/getMeritProjectsForUserId/${userId}")}) >> [[accessLevel:[code:'100', name:'admin'], project:[associatedProgram:'Green Army', projectId:'fd0289c5-ac99-44de-8538-6eb361c1a51a', status:'Active']]]
+        result == [error:'User have a role on an existing MERIT project, cannot be assigned the Site Read Only role.']
+
+    }
+
+    def "This validates if user who doesn't have a role on any existing MERIT project can be assigned the Read Only role in the HUB"() {
+        setup:
+        String userId = '129333'
+        String role = 'siteReadOnly'
+        Map params = [userId:'129333', role: 'siteReadOnly']
+        HubSettings hubSettings = new HubSettings(hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
+        SettingService.setHubConfig(hubSettings)
+
+        when:
+        def result = service.saveHubUser(params)
+
+        then:
+        1 * webService.getJson({it.endsWith("permissions/getMeritProjectsForUserId/${userId}")}) >> []
+        result == null
+
+    }
+
+    def "This validates if user can be assigned a role in the HUB"() {
+        setup:
+        String userId = '129333'
+        String role = 'siteAdmin'
+        Map params = [userId:'129333', role: 'siteAdmin']
+        HubSettings hubSettings = new HubSettings(hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
+        SettingService.setHubConfig(hubSettings)
+
+        when:
+        def result = service.saveHubUser(params)
+
+        then:
+        1 * webService.getJson({it.endsWith("permissions/getMeritProjectsForUserId/${userId}")}) >> []
+        result == null
+
+    }
+
+    def "record user login"() {
+
+        setup: "The code uses the current time, so we mock it so we can test.  This is undone in the cleanup"
+        String mockedNow = "2021-01-01T00:00:00Z"
+        DateTimeUtils.setCurrentMillisFixed(DateUtils.parse(mockedNow).toInstant().millis)
+
+        when:
+        boolean result = service.recordUserLogin("u1", "h1")
+
+        then:
+        1 * webService.doPost({it.endsWith("/user/recordUserLogin")}, [userId:"u1", hubId:"h1", loginTime:mockedNow]) >> [statusCode: HttpStatus.SC_OK]
+        result
+    }
+
+    def "This retrieves the lists of HUB users, support pagination"() {
+        setup:
+        String hubId = '00cf9ffd-e30c-45f8-99db-abce8d05c0d8'
+        int pageStart= 0
+        int pageSize = 10
+
+        when:
+        def resp = service.getMembersForHubPerPage(hubId, pageStart, pageSize)
+
+        then:
+        1 * webService.getJson({it.endsWith("permissions/getMembersForHubPerPage?hubId=${hubId}&offset=${pageStart}&max=${pageSize}")}) >> [totalNbrOfAdmins: 1, data:[[userId: '1', role: 'admin']], count:1]
+        resp.data.size() > 0
+
+    }
 }

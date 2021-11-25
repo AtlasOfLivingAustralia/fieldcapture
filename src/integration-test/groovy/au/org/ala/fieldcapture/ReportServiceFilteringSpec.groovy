@@ -22,7 +22,7 @@ class ReportServiceFilteringSpec extends StubbedCasSpec {
     // Clear the metadata cache to ensure the services and scores are loaded correctly.
     def clearCache() {
         setup:
-        login([userId: '2', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ALA_ADMIN'], browser)
+        loginAsAlaAdmin(browser)
 
         when:
         to AdminTools
@@ -41,7 +41,7 @@ class ReportServiceFilteringSpec extends StubbedCasSpec {
 
         setup:
         String projectId = '1'
-        login([userId: '1', role: "ROLE_FC_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+        loginAsMeritAdmin(browser)
 
         when: "Display the admin tab, navigate to the settings section then press the re-generate reports button"
         to RlpProjectPage, projectId
@@ -76,7 +76,7 @@ class ReportServiceFilteringSpec extends StubbedCasSpec {
     def "When no services are selected in the MERI plan all services will be shown on the outputs report"() {
         setup:
         String projectId = '1'
-        login([userId: '10', role: "USER", email: 'editor@nowhere.com', firstName: "MERIT", lastName: 'Editor'], browser)
+        loginAsUser('10', browser)
 
         when:
         to RlpProjectPage, projectId
@@ -109,7 +109,7 @@ class ReportServiceFilteringSpec extends StubbedCasSpec {
     def "When services are selected in the MERI plan only mandatory and selected services will be shown on the outputs report"() {
         setup:
         String projectId = '1'
-        login([userId: '1', role: "USER", email: 'editor@nowhere.com', firstName: "MERIT", lastName: 'Editor'], browser)
+        loginAsUser('1', browser)
 
         when: "select activity 2 on the MERI plan"
         to RlpProjectPage, projectId

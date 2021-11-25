@@ -81,9 +81,9 @@ db.userPermission.insert({entityType:'au.org.ala.ecodata.Program', entityId:'tes
 db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_1', userId:'1', accessLevel:'admin'});
 db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entityId:'test_mu_2', userId:'1', accessLevel:'admin'});
 db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entityId:'test_mu', userId:'1', accessLevel:'admin'});
-db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entityId:'test_mu', userId:'3', accessLevel:'caseManager'});
+db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entityId:'test_mu', userId:'1001', accessLevel:'caseManager'});
 db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entityId:'test_mu', userId:'4', accessLevel:'editor'});
-
+db.userPermission.insert({entityType:'au.org.ala.ecodata.Organisation', entityId:'test_organisation', userId:'1', accessLevel:'admin'});
 
 
 
@@ -211,5 +211,12 @@ var activity1 = {
 
 db.report.insert(report1);
 db.activity.insert(activity1);
+
+addSetting('meritfielddata.rlp.cs_report.submitted.emailSubject', 'Report submitted subject');
+addSetting('meritfielddata.rlp.cs_report.submitted.emailBody', 'Report submitted body');
+addSetting('meritfielddata.rlp.cs_report.approved.emailSubject', 'Report approved subject');
+addSetting('meritfielddata.rlp.cs_report.approved.emailBody', 'Report approved body');
+addSetting('meritfielddata.rlp.cs_report.returned.emailSubject', 'Report returned subject');
+addSetting('meritfielddata.rlp.cs_report.returned.emailBody', 'Report returned body');
 
 

@@ -17,9 +17,9 @@ class ProjectDashboardTabSpec extends StubbedCasSpec {
             logout(browser)
         }
     }
-    def"I can view Project Dashboard tab as FC_ADMIN "(){
+    def"I can view Project Dashboard tab as a MERIT administrator"(){
         setup: "log in as userId=1 who is a program admin for the program with programId=test_program"
-        login([userId: '2', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ALA_ADMIN'], browser)
+        loginAsAlaAdmin(browser)
 
 
         when: "clearing the homepage static cache"
@@ -39,9 +39,6 @@ class ProjectDashboardTabSpec extends StubbedCasSpec {
 
         when: "Reindex to ensure the project explorer will have predictable data"
         reindex()
-        logout(browser)
-
-        login([userId: '2', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ALA_ADMIN'], browser)
         to ProjectIndex, projectId
 
         then:

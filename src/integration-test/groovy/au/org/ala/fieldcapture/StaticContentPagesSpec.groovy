@@ -17,8 +17,7 @@ class StaticContentPagesSpec extends StubbedCasSpec {
 
         // Static content is cached so we need to clear the metadata cache to ensure
         // we don't get interference from other tests
-        login([userId: '1', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ADMIN'], browser)
-
+        loginAsAlaAdmin(browser)
         to AdminTools
         clearMetadata()
 
@@ -66,7 +65,7 @@ class StaticContentPagesSpec extends StubbedCasSpec {
 
     def "An fc admin can edit the content displayed in static content pages"() {
         setup:
-        login([userId: '1', role: "ROLE_FC_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to ContactsPage
@@ -99,9 +98,9 @@ class StaticContentPagesSpec extends StubbedCasSpec {
 
     }
 
-    def "An FC admin can edit static content via the administration pages"() {
+    def "A MERIT administrator can edit static content via the administration pages"() {
         setup:
-        login([userId: '1', role: "ROLE_FC_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to EditSettingText, 'about'

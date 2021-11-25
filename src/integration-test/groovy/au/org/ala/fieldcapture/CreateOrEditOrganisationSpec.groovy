@@ -8,7 +8,7 @@ import pages.OrganisationList
 class CreateOrEditOrganisationSpec extends StubbedCasSpec {
 
     def orgId = "test_organisation"
-    def setup(){
+    def setupSpec(){
         useDataSet("dataset_mu")
     }
 
@@ -17,8 +17,8 @@ class CreateOrEditOrganisationSpec extends StubbedCasSpec {
     }
 
     def "Create Organisation"(){
-        setup: "log in as userId=1 who is a  admin for the organisation with organisationId=test_program"
-        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+        setup: "Only MERIT administrators can create organisations in MERIT"
+        loginAsMeritAdmin(browser)
 
         when:
         to OrganisationList
@@ -51,8 +51,8 @@ class CreateOrEditOrganisationSpec extends StubbedCasSpec {
     }
 
     def "As a user with admin permissions, I can edit a organisation"() {
-        setup: "log in as userId=1 who is a  admin for the organisation with organisationId=test_program"
-        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+        setup: "log in as userId=1 who is a  admin for the organisation with organisationId=test_organisation"
+        loginAsUser('1', browser)
 
         when:
         to Organisation, orgId
@@ -62,31 +62,29 @@ class CreateOrEditOrganisationSpec extends StubbedCasSpec {
 
         then:
         waitFor  {at EditOrganisation}
+        and: "The organisation name is not editable by normal users"
+        details.isNameReadOnly() == true
 
         when:
 
-        details.abn = "11111111111"
+        details.abn = "66666666666"
         waitFor {details.prePopulateABN.displayed}
-        details.prePopulateABN.click()
-        waitFor { details.name.displayed}
-        details.name.value("Test Organisation Test 2")
         details.description = "Test Organisation Description test"
         details.save()
 
         then:
         waitFor (10){ at Organisation}
         aboutTab.click()
-        orgName.text() == "Test Organisation Test 2"
         waitFor {orgDescription.displayed }
         orgDescription.text() == "Test Organisation Description test"
         waitFor {orgAbn.displayed }
-        orgAbn.text() == "11111111111"
+        orgAbn.text() == "66666666666"
     }
 
 
     def "Checking Security Vulnerability after injecting Script tag in Edit organisation page"() {
-        setup: "log in as userId=1 who is a  admin for the organisation with organisationId=test_program"
-        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+        setup: "login as a merit admin so the organisation name is editable"
+        loginAsMeritAdmin(browser)
 
         when:
         to Organisation, orgId
@@ -98,7 +96,7 @@ class CreateOrEditOrganisationSpec extends StubbedCasSpec {
         waitFor 20, {at EditOrganisation}
 
         when:
-        details.abn = "11111111111"
+        details.abn = "33333333333"
         waitFor {details.prePopulateABN.displayed}
         details.prePopulateABN.click()
         waitFor { details.name.displayed}
@@ -113,6 +111,6 @@ class CreateOrEditOrganisationSpec extends StubbedCasSpec {
         waitFor {orgDescription.displayed }
         orgDescription.text() == "Test Organisation Description test"
         waitFor {orgAbn.displayed }
-        orgAbn.text() == "11111111111"
+        orgAbn.text() == "33333333333"
     }
 }

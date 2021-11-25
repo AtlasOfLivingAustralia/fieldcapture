@@ -78,7 +78,7 @@ for (var i = 1; i < 10; i++) {
         db.userPermission.insert({
             entityType: 'au.org.ala.ecodata.Project',
             entityId: id,
-            userId: '30',
+            userId: '1001',
             accessLevel: 'caseManager'
         });
     }
@@ -119,9 +119,9 @@ createProject({name:'project active', projectId:"project_active", status:"active
 createProject({name:'project application', projectId:"project_application", status:"application", planStatus:'submitted', internalOrderId:''})
 createProject({name:'project completed', projectId:"project_completed", status:"completed", planStatus:'submitted', internalOrderId:'12345'})
 
-db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_active', userId:'2', accessLevel:'caseManager'});
-db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_application', userId:'2', accessLevel:'caseManager'});
-db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_completed', userId:'2', accessLevel:'caseManager'});
+db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_active', userId:'1001', accessLevel:'caseManager'});
+db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_application', userId:'1001', accessLevel:'caseManager'});
+db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_completed', userId:'1001', accessLevel:'caseManager'});
 
 
 createProgram({programId:"grants", name:"Grant Program"});
@@ -136,8 +136,24 @@ db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'gra
 addSetting('meritfielddata.rlp.report.declaration', 'Report declaration text');
 addSetting('meritfielddata.rlp.report.submitted.emailSubject', 'Report submitted subject');
 addSetting('meritfielddata.rlp.report.submitted.emailBody', 'Report submitted body');
-addSetting('meritfielddata.rlp.report.submitted.emailSubject', 'Report approved subject');
-addSetting('meritfielddata.rlp.report.submitted.emailBody', 'Report approved body');
+addSetting('meritfielddata.rlp.report.approved.emailSubject', 'Report approved subject');
+addSetting('meritfielddata.rlp.report.approved.emailBody', 'Report approved body');
+addSetting('meritfielddata.rlp.report.returned.emailSubject', 'Report returned subject');
+addSetting('meritfielddata.rlp.report.returned.emailBody', 'Report returned body');
+
+addSetting('meritfielddata.rlp.meriPlanSubmitted.emailSubject', 'Plan submitted subject');
+addSetting('meritfielddata.rlp.meriPlanApproved.emailSubject', 'Plan submitted body');
+addSetting('meritfielddata.rlp.meriPlanRejected.emailSubject', 'Plan approved subject');
+addSetting('meritfielddata.rlp.meriPlanSubmitted.emailText', 'Plan submitted subject');
+addSetting('meritfielddata.rlp.meriPlanApproved.emailText', 'Plan submitted body');
+addSetting('meritfielddata.rlp.meriPlanRejected.emailText', 'Plan approved subject');
+addSetting('meritfielddata.rlp.planSubmitted.emailSubject', 'Plan submitted subject');
+addSetting('meritfielddata.rlp.planApproved.emailSubject', 'Plan submitted body');
+addSetting('meritfielddata.rlp.planRejected.emailSubject', 'Plan approved subject');
+addSetting('meritfielddata.rlp.planSubmitted.emailText', 'Plan submitted subject');
+addSetting('meritfielddata.rlp.planApproved.emailText', 'Plan submitted body');
+addSetting('meritfielddata.rlp.planRejected.emailText', 'Plan approved subject');
+
 
 // Load scores used by RLP services to enable their selection in the MERI plan.
 createProjectNumberBaselineDataSets({ "scoreId":"score_42"});

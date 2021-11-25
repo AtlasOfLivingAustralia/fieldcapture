@@ -658,6 +658,47 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         response.status == HttpStatus.SC_BAD_REQUEST
     }
 
+    def "The ajaxUpdate action requires a POST"() {
+        when:
+        controller.ajaxUpdate()
+
+        then:
+        response.status == HttpStatus.SC_METHOD_NOT_ALLOWED
+        0 * projectService._
+    }
+
+    def "The project controller doesn't allow project creation as this must be done via the admin import function"() {
+
+        setup:
+        userServiceStub.getUser() >> [userId:'u1']
+
+        when: "The ajaxUpdate action is invoked without an id"
+        request.method = 'POST'
+        request.json = [name:'test project']
+        controller.ajaxUpdate()
+
+        then: "an error is returned - unauthorized is used as the pattern is a missing id is treated as a create for similar actions"
+        response.status == HttpStatus.SC_UNAUTHORIZED
+        0 * projectService._
+    }
+
+    def "The planStatus and hubId cannot be updated via the ajaxUpdate action (there are specific workflow actions for the planStatus)"() {
+        setup: "The user is a project admin"
+        String projectId = 'p1'
+
+        when: "The ajaxUpdate action is invoked including the planStatus attribute"
+        request.method = 'POST'
+        request.json = [name:'test project', planStatus:'approved', hubId:'newHub']
+        controller.ajaxUpdate(projectId)
+
+        then:
+        1 * projectService.update(projectId, [name:'test project']) >> [statusCode:HttpStatus.SC_OK, resp:[message:'updated']]
+        response.status == HttpStatus.SC_OK
+        response.json == [message:'updated']
+    }
+
+
+
     private Map stubPublicUser() {
         userServiceStub.getUser() >> null
         null

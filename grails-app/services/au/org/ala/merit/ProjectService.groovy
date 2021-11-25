@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.hub.HubSettings
 import au.org.ala.merit.reports.ReportConfig
 import au.org.ala.merit.reports.ReportGenerationOptions
 import au.org.ala.merit.reports.ReportGenerator
@@ -81,27 +82,6 @@ class ProjectService  {
 
     def getRich(id) {
         get(id, 'rich')
-    }
-
-    /**
-     * Creates a new project and adds the user as a project admin.
-     */
-    def create(props) {
-
-        def activities = props.remove('selectedActivities')
-
-        // create a project in ecodata
-        def result = webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl') + 'project/', props)
-        if (result?.resp?.projectId) {
-            def projectId = result.resp.projectId
-            // Add the user who created the project as an admin of the project
-            userService.addUserAsRoleToProject(userService.getUser().userId, projectId, RoleService.PROJECT_ADMIN_ROLE)
-            if (activities) {
-                settingService.updateProjectSettings(projectId, [allowedActivities: activities])
-            }
-        }
-
-        result
     }
 
     /**

@@ -1,6 +1,7 @@
 var projectDefaults = {
     create : function() {
         return {
+            "hubId":"merit",
             "alaHarvest": false,
             "associatedProgram": "",
             "associatedSubProgram": "",
@@ -51,6 +52,7 @@ var test =
 
     {
         "_id" : ObjectId("546bdd0ae4b01c7b5f355519"),
+        "hubId":"merit",
         "alaHarvest" : false,
         "associatedProgram" : "National Landcare Programme",
         "associatedSubProgram" : "Regional Funding",

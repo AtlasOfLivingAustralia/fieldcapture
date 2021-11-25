@@ -17,7 +17,7 @@ class ProjectContentConfigurationSpec extends StubbedCasSpec {
     def "The program configuration can exclude content from the project template"() {
         setup:
         String projectId = 'excludedContent'
-        login([userId: '2', role: "ROLE_FC_OFFICER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+        loginAsGrantManager(browser)
 
         when:
         to RlpProjectPage, projectId

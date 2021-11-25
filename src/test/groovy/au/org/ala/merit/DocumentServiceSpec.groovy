@@ -141,7 +141,7 @@ class DocumentServiceSpec extends Specification implements AutowiredTest{
         2 * userService.isUserAdminForOrganisation(userId, 'o2') >> true
     }
 
-    def "only FC_ADMINS edit or delete a read only document, regardless of ownership"() {
+    def "only MERIT administrators edit or delete a read only document, regardless of ownership"() {
         setup:
         Map document = [documentId:'d1', projectId:'p1']
 

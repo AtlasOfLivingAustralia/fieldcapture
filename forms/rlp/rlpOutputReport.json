@@ -1699,7 +1699,7 @@
                             "type": "row",
                             "items": [
                               {
-                                "preLabel": "Actual length (km) created for pest animals",
+                                "preLabel": "Actual length (km) treated for pest animals",
                                 "helpText": "Manually enter correct figure for this reporting period if different to mapped value.",
                                 "source": "lengthControlledKm",
                                 "type": "number",

@@ -37,7 +37,7 @@ class AddActivityPage extends ActivityPage {
 
 class EditActivityPage extends ActivityPage {
     static url = "activity/edit"
-    static at = { title =~ /Edit | .* | Field Capture/}
+    static at = { title ==~ /Edit \| .* \| MERIT/}
 
     static content = {
         activityDetails { module ActivityDetails }

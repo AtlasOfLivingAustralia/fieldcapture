@@ -28,7 +28,7 @@ class RisksSpec extends StubbedCasSpec {
     def "The risks and threats appears on the activity tab on the original MERIT template"() {
         setup:
         String projectId = 'p1'
-        login([userId: '1', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'USER'], browser)
+        loginAsUser('1', browser)
 
         when: "Open the project page, navigate to the activities tab"
         to ProjectIndex, projectId
@@ -76,7 +76,7 @@ class RisksSpec extends StubbedCasSpec {
     def "The risks and threats tab appears on the admin tab for RLP projects"() {
         setup:
         String projectId = 'p2'
-        login([userId: '1', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'USER'], browser)
+        loginAsUser('1', browser)
 
         when: "Open the project page, navigate to the admin tab"
         to RlpProjectPage, projectId
@@ -118,7 +118,7 @@ class RisksSpec extends StubbedCasSpec {
 
     def "Risks and threats changes can be emailed to grant managers"() {
         setup:
-        login([userId: '1', role: "ROLE_FC_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+        loginAsMeritAdmin(browser)
 
         when:
         browser.go("admin/checkForRisksAndThreatsChanges")

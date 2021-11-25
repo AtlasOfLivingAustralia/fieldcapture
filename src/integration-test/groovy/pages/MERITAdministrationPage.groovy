@@ -26,6 +26,7 @@ class AdminTabContent extends Module {
         administratorReport { $(".adminReport") }
         loadProject { $(".loadProject") }
         removeUser { $(".removeUser") }
+        userPermission { $(".userPermission") }
         tools { $(".tools") }
         settings { $(".settings") }
         caches { $(".caches") }

@@ -15,46 +15,25 @@ class ProgressReportSpec extends StubbedCasSpec {
         logout(browser)
     }
 
+    private void regenerateReportsAsMeritAdmin(String projectId) {
+        loginAsMeritAdmin(browser)
+        to RlpProjectPage, projectId
+        regenerateReports()
+    }
 
     def "Test the field limits in the progress reports"() {
 
-        setup:
+        setup: "Generate the reports for the project, then login as a project admin user"
         String projectId = 'meri2'
-        login([userId: '1', role: "ROLE_FC_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+        regenerateReportsAsMeritAdmin(projectId)
+        logout(browser)
+
+        loginAsUser('1', browser)
 
         when:
         to RlpProjectPage, projectId
-
-        then:
-        waitFor { at RlpProjectPage }
-
-        when:
-        adminTab.click()
-
-        then:
-        waitFor { adminContent.displayed }
-
-        when: "Click on the project settings"
-        adminContent.projectSettingsTab.click()
-
-        then:
-        waitFor { adminContent.projectSettings.displayed }
-
-        when:
-        adminContent.projectSettings.regenerateReports()
-
-        then:
-        waitFor { at RlpProjectPage }
-
-        when:
-        reportingTab.click()
-
-
-        then:
-        waitFor { projectReports.displayed }
-
-        when:
-        waitFor { projectReports.reports[0].edit() }
+        displayReportingTab()
+        projectReports.reports[0].edit()
 
         then:
         waitFor { at ReportPage }

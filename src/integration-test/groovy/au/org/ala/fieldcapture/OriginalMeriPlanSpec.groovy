@@ -16,7 +16,7 @@ class OriginalMeriPlanSpec extends StubbedCasSpec {
 
         setup:
         String projectId = 'grants_project'
-        login([userId: '2', role: "ROLE_FC_OFFICER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+        loginAsUser('2', browser)
 
         when:
         to RlpProjectPage, projectId // Note we are using the RlpProjectPage here despite it being the original page template because it works and has the content we need
@@ -51,7 +51,7 @@ class OriginalMeriPlanSpec extends StubbedCasSpec {
 
         setup:
         String projectId = 'grants_project'
-        login([userId: '2', role: "ROLE_FC_OFFICER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+        loginAsUser('2', browser)
 
         when:
         to RlpProjectPage, projectId // Note we are using the RlpProjectPage here despite it being the original page template because it works and has the content we need

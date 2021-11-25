@@ -4,7 +4,7 @@
         <table class="table table-condensed" id="existingMembersTable" style="">
             <thead><tr><th width="10%">User&nbsp;Id</th><th>User&nbsp;Name</th><th width="15%">Role</th><th width="5%">&nbsp;</th><th width="5%">&nbsp;</th></tr></thead>
             <tbody class="membersTbody">
-            <tr class="hide d-none">
+            <tr class="hide d-none permission">
                 <td class="memUserId"></td>
                 <td class="memUserName"></td>
                 <td class="memUserRole"><span style="white-space: nowrap">&nbsp;</span><g:render template="/admin/userRolesSelect" model="[roles:roles, hide:true]"/></td>

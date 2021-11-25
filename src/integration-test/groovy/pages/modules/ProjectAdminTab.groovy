@@ -1,8 +1,6 @@
 package pages.modules
 
 import geb.Module
-import pages.modules.AdminDocumentsTab
-import pages.modules.AdminProjectSettingsTab
 
 class ProjectAdminTab extends Module {
     static content = {
@@ -20,7 +18,7 @@ class ProjectAdminTab extends Module {
         projectSettings { module AdminProjectSettingsTab }
         meriPlan { $('#edit-meri-plan').module EditableMeriPlan }
         risksAndThreats(required:false) { $('#risks').module RisksAndThreats }
-        projectAccess {moduleList(ProjectAccessSection)}
+        projectAccess { $('#permissions').module PermissionsAdminModule }
 
     }
 
@@ -48,5 +46,10 @@ class ProjectAdminTab extends Module {
         projectSettingsTab.click()
         waitFor { projectSettings.displayed }
         return projectSettings
+    }
+
+    def openProjectAccess() {
+        projectAccessTab.click()
+        waitFor { projectAccess.displayed }
     }
 }

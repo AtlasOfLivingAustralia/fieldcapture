@@ -253,7 +253,7 @@
 
 <span class="badge badge-success">Report Approved</span>
 
-<g:if test="${fc.userInRole(role: grailsApplication.config.getProperty('security.cas.adminRole')) || fc.userInRole(role: grailsApplication.config.getProperty('security.cas.alaAdminRole'))}">
+<g:if test="${fc.userIsAlaOrFcAdmin()}">
     <button type="button" data-bind="enable:canRejectStage, click:rejectStage" class="btn btn-sm btn-danger"><i class="fa fa-remove icon-white"></i> Withdraw approval</button>
 </g:if>
 

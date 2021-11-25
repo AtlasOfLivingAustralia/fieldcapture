@@ -16,29 +16,12 @@ class HomeIndexPageSpec extends StubbedCasSpec {
     def "Display total number of projects and scores Ha in the homepage"(){
 
         setup:
-        login([userId: '2', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ALA_ADMIN'], browser)
+        loginAsAlaAdmin(browser)
 
         when:
         to AdminTools
-
-        then:
-        waitFor 5,{at AdminTools}
-
-        when: "Reindex to ensure the project explorer will have predictable data"
+        clearMetadata()
         reindex()
-        waitFor {
-            logout(browser)
-        }
-        login([userId: '2', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ALA_ADMIN'], browser)
-        to AdminTools
-
-        then:
-        at AdminTools
-        waitFor {$("#btnClearMetadataCache").displayed}
-        $("#btnClearMetadataCache").click()
-        waitFor{hasBeenReloaded()}
-
-        when:
         to AdminClearCachePage
 
         then:

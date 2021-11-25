@@ -88,7 +88,13 @@ enum SettingPageType {
     RISKS_AND_THREATS_EMAIL_SUBJECT('risksAndThreatsSubject', 'Subject line of the email notifying changes to risks and threats', 'fielddata.risk_changes.emailSubject'),
     RISKS_AND_THREATS_EMAIL_BODY('risksAndThreatsBody', 'Body text of the email notifying changes to risks and threats', 'fielddata.risk_changes.emailBody'),
     RISKS_LAST_CHECK_TIME('risksLastCheckTime', 'The last time the project risks and threats were checked for changes', 'fielddata.risks.lastCheckTime'),
-    DATA_SET_DESCRIPTION("dataSetDescriptionDetails","Data Set","dataset.details")
+    DATA_SET_DESCRIPTION("dataSetDescriptionDetails","Data Set","dataset.details"),
+    ACCESS_REMOVAL_EMAIL_SUBJECT('accessRemovalEmailSubject', 'The subject of the email to send when access has been removed due to no login to MERIT for a specified time', 'accessexpiry.expired.email.subject'),
+    ACCESS_REMOVAL_EMAIL_BODY('accessRemovalEmailBody', 'The body of the email to send when access has been removed due to no login to MERIT for a specified time', 'accessexpiry.expired.email.body'),
+    ACCESS_WARNING_EMAIL_SUBJECT('accessWarningEmailSubject', 'The subject of the email to send warning a user their access will expire if they do not log into MERIT soon', 'accessexpiry.warning.email.subject'),
+    ACCESS_WARNING_EMAIL_BODY('accessWarningEmailBody', 'The body of the email to send warning a user their access will expire if they do not log into MERIT soon', 'accessexpiry.warning.email.body'),
+    ACCESS_ROLE_EXPIRED_EMAIL_SUBJECT('roleExpiredEmailSubject', 'The subject of the email sent to a user when their elevated access has expired', 'permissionexpiry.expired.email.subject'),
+    ACCESS_ROLE_EXPIRED_EMAIL_BODY('roleExpiredEmailBody', 'The body of the email sent to a user when their elevated access has expired','permissionexpiry.expired.email.body')
     String name
     String title
     String key

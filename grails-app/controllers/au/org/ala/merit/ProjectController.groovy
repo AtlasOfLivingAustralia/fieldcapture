@@ -17,9 +17,9 @@ import static ReportService.ReportMode
 
 class ProjectController {
 
-    static allowedMethods =  [listProjectInvestmentPriorities: 'GET']
+    static allowedMethods =  [listProjectInvestmentPriorities: 'GET', ajaxUpdate: 'POST']
     static defaultAction = "index"
-    static ignore = ['action', 'controller', 'id']
+    static ignore = ['action', 'controller', 'id', 'planStatus', 'hubId']
     static String ESP_TEMPLATE = "esp"
     static String RLP_TEMPLATE = "rlp"
     static String MERI_ONLY_TEMPLATE = "meri"
@@ -302,14 +302,18 @@ class ProjectController {
     }
 
     /**
-     * Updates existing or creates new output.
-     *
-     * If id is blank, a new project will be created
-     *
+     * Updates an existing project.
      * @param id projectId
-     * @return
      */
+    @PreAuthorise(accessLevel = 'editor')
     def ajaxUpdate(String id) {
+
+        // Project creation must be done via the admin import function
+        if (!id) {
+            render status: HttpStatus.SC_UNAUTHORIZED, text: 'You do not have permission to create a project'
+            return
+        }
+
         def postBody = request.JSON
         log.debug "Body: ${postBody}"
         log.debug "Params: ${params}"
@@ -321,35 +325,12 @@ class ProjectController {
             }
         }
 
-        // The rule currently is that anyone is allowed to create a project so we only do these checks for
-        // existing projects.
-        def userId = userService.getUser()?.userId
-        if (id) {
-            if (!projectService.canUserEditProject(userId, id)) {
-                render status: 401, text: "User ${userId} does not have edit permissions for project ${id}"
-                log.debug "user not caseManager"
-                return
-            }
-
-            if (values.containsKey("planStatus") && values.planStatus =~ /approved/) {
-                // check to see if user has caseManager permissions
-                if (!projectService.isUserCaseManagerForProject(userId, id)) {
-                    render status: 401, text: "User does not have caseManager permissions for project"
-                    log.warn "User ${userId} who is not a caseManager attempting to change planStatus for project ${id}"
-                    return
-                }
-            }
-        } else if (!userId) {
-            render status: 401, text: 'You do not have permission to create a project'
-        }
-
-
         log.debug "json=" + (values as JSON).toString()
         log.debug "id=${id} class=${id?.getClass()}"
         def projectSite = values.remove("projectSite")
         def documents = values.remove('documents')
         def links = values.remove('links')
-        def result = id ? projectService.update(id, values) : projectService.create(values)
+        def result = projectService.update(id, values)
         log.debug "result is " + result
         if (documents && !result.error) {
             if (!id) id = result.resp.projectId

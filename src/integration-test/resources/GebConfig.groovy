@@ -15,6 +15,8 @@ if (!System.getProperty("webdriver.chrome.driver")) {
 }
 driver = { new ChromeDriver() }
 baseUrl = 'http://devt.ala.org.au:8087/'
+atCheckWaiting = true
+
 environments {
 
     reportsDir = 'build/reports/geb-reports'

@@ -46,7 +46,7 @@
     <ul>
         <li>the email address is incorrect</li>
         <li>the user is not registered - see the <a href="${grailsApplication.config.getProperty('user.registration.url')}"
-                target='_blank' style='text-decoration: underline;'>sign-up page</a>.
+                                                    target='_blank' style='text-decoration: underline;'>sign-up page</a>.
         </li>
     </ul>
 </div>
@@ -90,11 +90,11 @@
      * @param projectId
      */
     function addUserWithRole(userId, role, id) {
-        //console.log("addUserWithRole",userId, role, projectId);
+        console.log("addUserWithRole",userId, role, id);
         if (userId && role) {
             $.ajax({
                 url: '${addUserUrl}',
-                data: { userId: userId, role: role, entityId: id }
+                data: { userId: userId, role: role, entityId: id}
             })
             .done(function(result) { updateStatusMessage("user was added with role " + decodeCamelCase(role)); })
             .fail(function(jqXHR, textStatus, errorThrown) {
@@ -121,6 +121,10 @@
         // project page - trigger user table refresh
         if (typeof(populatePermissionsTable) != "undefined") {
             populatePermissionsTable();
+        } else {
+        // Hub User's table refresh
+%{--            reloadPage();--}%
+            reloadMembers();
         }
 
     }
