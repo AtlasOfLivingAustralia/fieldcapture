@@ -629,7 +629,7 @@ class UserService {
     }
 
     def saveHubUser(Map params) {
-        if (getProjectsForUserId(params.userId) && params.role == RoleService.HUB_READ_ONLY_ROLE) {
+        if (getMeritProjectsForUserId(params.userId) && params.role == RoleService.HUB_READ_ONLY_ROLE) {
             return [error:'User have a role on an existing MERIT project, cannot be assigned the Site Read Only role.']
         } else {
             addUserToHub(params)
@@ -660,6 +660,14 @@ class UserService {
             log.error("Failed to record login for user "+userId+" "+response.error)
         }
         success
+    }
+
+    /**
+     * Retrieves the merit projects of the given userId
+     */
+    def getMeritProjectsForUserId(userId) {
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/getMeritProjectsForUserId/${userId}"
+        webService.getJson(url)
     }
 
 }

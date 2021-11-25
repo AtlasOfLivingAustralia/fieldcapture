@@ -56,3 +56,17 @@
 #tabs li>a.active {
     border-bottom-color: transparent;
 }
+
+.merit-header {
+    margin-left: 1% !important;
+}
+
+.table-width {
+    width: 670px !important;
+}
+
+/*Solution to remove sorting arrows icon using Datatables 1.10.x*/
+.dataTable > thead > tr > th[class*="sort"]:before,
+.dataTable > thead > tr > th[class*="sort"]:after {
+    content: "" !important;
+}

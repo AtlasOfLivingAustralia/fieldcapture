@@ -344,7 +344,7 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         def result = service.saveHubUser(params)
 
         then:
-        1 * webService.getJson({it.endsWith("permissions/getProjectsForUserId/${userId}")}) >> [[accessLevel:[code:'100', name:'admin'], project:[associatedProgram:'Green Army', projectId:'fd0289c5-ac99-44de-8538-6eb361c1a51a', status:'Active']]]
+        1 * webService.getJson({it.endsWith("permissions/getMeritProjectsForUserId/${userId}")}) >> [[accessLevel:[code:'100', name:'admin'], project:[associatedProgram:'Green Army', projectId:'fd0289c5-ac99-44de-8538-6eb361c1a51a', status:'Active']]]
         result == [error:'User have a role on an existing MERIT project, cannot be assigned the Site Read Only role.']
 
     }
@@ -361,7 +361,7 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         def result = service.saveHubUser(params)
 
         then:
-        1 * webService.getJson({it.endsWith("permissions/getProjectsForUserId/${userId}")}) >> []
+        1 * webService.getJson({it.endsWith("permissions/getMeritProjectsForUserId/${userId}")}) >> []
         result == null
 
     }
@@ -378,7 +378,7 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         def result = service.saveHubUser(params)
 
         then:
-        1 * webService.getJson({it.endsWith("permissions/getProjectsForUserId/${userId}")}) >> []
+        1 * webService.getJson({it.endsWith("permissions/getMeritProjectsForUserId/${userId}")}) >> []
         result == null
 
     }

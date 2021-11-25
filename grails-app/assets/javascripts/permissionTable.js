@@ -3,12 +3,13 @@
  */
 
 function initialise(roles, currentUserId, hubId) {
+    $('#alert').hide();
     var col = [
         {
             data: 'userId',
             name: 'userId',
             bSortable: false
-        },
+},
         {
             data: 'displayName',
             name: 'displayName',
@@ -40,7 +41,7 @@ function initialise(roles, currentUserId, hubId) {
             render: function (date){
             if (date) {
 
-                return "<input type='text' id='datecell' class=\"form-control form-control-sm\" value='" + convertDate(date) + "'/>"
+                return "<input type='text' id='datecell' class=\"form-control form-control-sm\" value='" + convertToSimpleDate(date) + "'/>"
             } else {
                 return "<input type='text' id='datecell' class=\"form-control form-control-sm\" value=''/>"
             }
@@ -52,7 +53,6 @@ function initialise(roles, currentUserId, hubId) {
                 if (table.ajax.json().totalNbrOfAdmins == 1 && row.role == "admin") {
                     return '';
                 } else {
-                    // return '<a class="btn btn-small tooltips href="" title="remove this user and role combination"><i class="icon-remove"></i></a>';
                     return '<a class="fa fa-remove tooltips href="" title="remove this user and role combination"><i class="icon-remove"></i></a>';
                 }
             },
@@ -62,11 +62,11 @@ function initialise(roles, currentUserId, hubId) {
 
     var table  = $('#member-list').DataTable( {
         "bFilter": false,
-        "lengthChange": false,
+        "lengthChange": true,
         "processing": true,
         "serverSide": true,
         createdRow:function(row){
-            $("#datecell", row).datepicker({format: "yyyy-mm-dd",autoclose: true});
+            $("#datecell", row).datepicker({format: "dd-mm-yyyy",autoclose: true});
         },
         "ajax": fcConfig.getMembersForHubPaginatedUrl + "/" + hubId,
         "columns":col
@@ -94,8 +94,7 @@ function initialise(roles, currentUserId, hubId) {
 
         bootbox.confirm(message, function (result) {
             if (result) {
-                console.log("confirm",userId, role, hubId);
-                addUserWithRole(userId, role, hubId);
+                saveHubUser(userId, role, hubId, convertToSimpleDate(currentExpiry));
 
             } else {
                 reloadMembers(); // reload table
@@ -103,19 +102,16 @@ function initialise(roles, currentUserId, hubId) {
         });
     });
 
-    $('#member-list').on("change", "tbody td:nth-child(4) input", function (e) {
+    $('#member-list').on("input changeDate", "tbody td:nth-child(4) input", function (e) {
         e.preventDefault();
-
         var expiryDate = $(this).val();
         var row = this.parentElement.parentElement;
         var data = table.row(row).data();
         var currentRole = data.role;
         var userId = data.userId;
-        var currentExpiry = data.expiryDate;
-        var message;
 
         setUserExpiryDate(userId, expiryDate, hubId, currentRole);
-
+        $('.datepicker').hide();
     });
 
 
@@ -156,7 +152,7 @@ function initialise(roles, currentUserId, hubId) {
             }
         })
             .done(function (result) {
-                    updateStatusMessage2("user was removed.");
+                displayAlertMessage("User was removed.");
                 }
             )
             .fail(function (jqXHR, textStatus, errorThrown) {
@@ -173,41 +169,34 @@ function reloadMembers() {
     $('#member-list').DataTable().ajax.reload();
 }
 
-// For some reason reinitialising the DataTables doesn't reinitialise the DatePicker hence
-// need to invoke the page refresh to reinitialise the Datepicker.
-// DataTables doesn't support Datepicker as they have a Datatable license version that handles inline editing
-// with their own implementation of Datetime (their version of Datepicker)
-// NOTE: NOT NEEDED 18/11/2021
-function reloadPage() {
-    window.location = document.URL
-}
-
-function convertDate(isoDate) {
-    if (!isoDate) { return ''}
-    if (typeof isoDate === 'object') {
-        // assume a date object
-        if (!isValidDate(isoDate)) {
-            return '';
-        }
-    }
-    // Format the stage labels using Melbourne/Sydney/Canberra time to avoid problems where the date starts
-    // at midnight and displays as the previous day in other timezones.
-    var date = moment.tz(isoDate, "Australia/Sydney");
-    var format = "YYYY-MM-DD";
-    return date.format(format);
-}
-
 function setUserExpiryDate(userId, expiryDate, id, role) {
-    if (userId && expiryDate) {
+    if (checkDateFormat(expiryDate) || expiryDate === "") {
         $.ajax({
             url: fcConfig.userExpiryUrl,
             data: { userId: userId, role: role, entityId: id, expiryDate: expiryDate}
         })
-            .done(function(result) { updateStatusMessage2("user's expiry date updated "); })
+            // .done(function(result) { updateStatusMessage2("user's expiry date updated "); })
+            .done(function(result) { displayAlertMessage("User's expiry date updated."); })
             .fail(function(jqXHR, textStatus, errorThrown) {
                 bootbox.alert(jqXHR.responseText);
             })
-            .always(function(result) { resetAddForm(); });
+            .always(function(result) { reloadMembers(); });
+    } else {
+        $('.spinner').hide();
+    }
+}
+
+function saveHubUser(userId, role, id, expiryDate) {
+    if (userId && role) {
+        $.ajax({
+            url: fcConfig.addUserUrl,
+            data: { userId: userId, role: role, entityId: id, expiryDate: expiryDate}
+        })
+            .done(function(result) { displayAlertMessage("User's role saved."); })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+                bootbox.alert(jqXHR.responseText);
+            })
+            .always(function(result) { reloadMembers(); });
     } else {
         alert("Required fields are: userId and role.");
         $('.spinner').hide();
@@ -220,4 +209,24 @@ function updateStatusMessage2(msg) {
     $('#formStatus span').text(msg).parent().fadeIn();
 }
 
+
+
+function checkDateFormat(dateField) {
+    var date = stringToDate(dateField);
+    if (isValidDate(date)) {
+        return true;
+    }
+}
+
+
+function displayAlertMessage(message) {
+    var timeOut = 4
+    $('#alert').show()
+    $('#alert').text(message).fadeIn()
+    $('#alert').css({"display": "block"})
+    setTimeout(function() {
+        $('#alert').fadeOut()
+        $('#alert').css("display", "none")
+    }, timeOut * 1000);
+}
 
