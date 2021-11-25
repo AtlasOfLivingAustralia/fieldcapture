@@ -44,3 +44,22 @@ function updateActivity(report, userId)  {
     db.activity.save(activity);
     audit(activity, activity.activityId, 'au.org.ala.ecodata.Activity', userId);
 }
+
+function addProjectPermission(userId, projectId, accessLevel, adminUserId) {
+    var userPermission = {
+        userId:userId,
+        entityType:'au.org.ala.ecodata.Project',
+        entityId:projectId,
+        accessLevel:accessLevel
+    };
+    if (db.userPermission.findOne({userId:userId, entityId:projectId})) {
+        print("Not adding permission for user: "+userId+" to entity: "+projectId+", permission already exists");
+    }
+    else {
+        db.userPermission.insert(userPermission);
+        var id = db.userPermission.findOne({userId:userId, entityId:projectId})._id;
+        audit(userPermission, id, 'au.org.ala.ecodata.UserPermission', adminUserId, projectId);
+    }
+
+
+}
