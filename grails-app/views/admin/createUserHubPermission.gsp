@@ -9,8 +9,7 @@
             loadPermissionsUrl: "${createLink(controller:'user', action:'getMembersOfHub')}",
             getMembersForHubPaginatedUrl: "${createLink(controller: 'user', action: 'getMembersForHubPaginated')}",
             removeHubUserUrl: "${createLink(controller: 'user', action: 'removeUserWithHubRole')}",
-            userExpiryUrl: "${createLink(controller: 'user', action: 'addUserToHub')}",
-            addUserUrl: "${createLink(controller: 'user', action: 'addUserToHub')}"
+            updateHubUser: "${createLink(controller: 'user', action: 'addUserToHub')}"
         };
     </script>
 <asset:stylesheet src="common-bs4.css"/>
@@ -22,7 +21,7 @@
 </div>
 <div><span id="alert" class="alert alert-success"></span></div>
 <div id="permissions">
-    <g:render template="/admin/addPermissions" model="[entityId:hubId]"/>
+    <g:render template="/admin/addPermissions" model="[addUserUrl:g.createLink(controller:'user', action:'addUserToHub'), entityId:hubId]"/>
     <g:render template="/admin/permissionTablePaginated"/>
 </div>
 

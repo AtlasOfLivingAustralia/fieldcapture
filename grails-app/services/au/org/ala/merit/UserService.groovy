@@ -597,7 +597,10 @@ class UserService {
 
     def addUserToHub(Map params) {
         String ecodataAclAccessLevel = convertHubRoleToAccesLevel(params.role)
-        Map param = [userId: params.userId, entityId: params.entityId, role: ecodataAclAccessLevel, expiryDate: params.expiryDate]
+        Map param = [userId: params.userId,
+                     entityId: params.entityId,
+                     role: ecodataAclAccessLevel,
+                     expiryDate: (params.expiryDate) ? DateUtils.displayToIsoFormat(params.expiryDate) : '']
         Map response = webService.doPost("${grailsApplication.config.getProperty('ecodata.baseUrl')}permissions/addUserWithRoleToHub", param)
         reloadHubSettings()
 

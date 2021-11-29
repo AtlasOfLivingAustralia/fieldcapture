@@ -49,12 +49,7 @@ function initialise(roles, currentUserId, hubId) {
         },
         {
             render: function (data, type, row) {
-                // cannot delete the last admin
-                if (table.ajax.json().totalNbrOfAdmins == 1 && row.role == "admin") {
-                    return '';
-                } else {
-                    return '<a class="fa fa-remove tooltips href="" title="remove this user and role combination"><i class="icon-remove"></i></a>';
-                }
+                return '<a class="fa fa-remove tooltips href="" title="remove this user and role combination"><i class="icon-remove"></i></a>';
             },
             bSortable: false
         }
@@ -152,7 +147,7 @@ function initialise(roles, currentUserId, hubId) {
             }
         })
             .done(function (result) {
-                displayAlertMessage("User was removed.");
+                displayAlertMessage("User with user id: " + userId + " was removed.");
                 }
             )
             .fail(function (jqXHR, textStatus, errorThrown) {
@@ -172,7 +167,7 @@ function reloadMembers() {
 function setUserExpiryDate(userId, expiryDate, id, role) {
     if (checkDateFormat(expiryDate) || expiryDate === "") {
         $.ajax({
-            url: fcConfig.userExpiryUrl,
+            url: fcConfig.updateHubUser,
             data: { userId: userId, role: role, entityId: id, expiryDate: expiryDate}
         })
             // .done(function(result) { updateStatusMessage2("user's expiry date updated "); })
@@ -189,7 +184,7 @@ function setUserExpiryDate(userId, expiryDate, id, role) {
 function saveHubUser(userId, role, id, expiryDate) {
     if (userId && role) {
         $.ajax({
-            url: fcConfig.addUserUrl,
+            url: fcConfig.updateHubUser,
             data: { userId: userId, role: role, entityId: id, expiryDate: expiryDate}
         })
             .done(function(result) { displayAlertMessage("User's role saved."); })
