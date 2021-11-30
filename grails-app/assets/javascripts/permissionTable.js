@@ -2,7 +2,8 @@
  * Render project members and their roles, support pagination.
  */
 
-function initialise(roles, currentUserId, hubId) {
+function initialise(roles, currentUserId, hubId, containerId) {
+    var tableSelector = "#"+containerId
     $('#alert').hide();
     var col = [
         {
@@ -18,10 +19,10 @@ function initialise(roles, currentUserId, hubId) {
         {
             data: 'role',
             render: function (data, type, row) {
-
-                var $select = $("<select class=\"form-control form-control-sm\"></select>", {
-                    "id": "role_" + row.userId,
-                    "value": data
+                var $select = $('<select/>', {
+                    'class': 'hub-form hub-form-control-sm ',
+                    'id': 'role_' + row.userId,
+                    'value': data
                 });
                 $.each(roles, function (i, value) {
                     var $option = $("<option></option>", {
@@ -49,13 +50,13 @@ function initialise(roles, currentUserId, hubId) {
         },
         {
             render: function (data, type, row) {
-                return '<a class="fa fa-remove tooltips href="" title="remove this user and role combination"><i class="icon-remove"></i></a>';
+                return '<a id="removeIcon" class="fa fa-remove tooltips href="" title="remove this user and role combination"><i class="icon-remove"></i></a>';
             },
             bSortable: false
         }
     ];
 
-    var table  = $('#member-list').DataTable( {
+    var table  = $(tableSelector).DataTable( {
         "bFilter": false,
         "lengthChange": true,
         "processing": true,
@@ -68,8 +69,7 @@ function initialise(roles, currentUserId, hubId) {
 
     } );
 
-
-    $('#member-list').on("change", "tbody td:nth-child(3) select", function (e) {
+    $(tableSelector).on('change', '.hub-form', function(e) {
         e.preventDefault();
 
         var role = $(this).val();
@@ -89,15 +89,15 @@ function initialise(roles, currentUserId, hubId) {
 
         bootbox.confirm(message, function (result) {
             if (result) {
-                saveHubUser(userId, role, hubId, convertToSimpleDate(currentExpiry));
+                saveHubUser(userId, role, hubId, convertToSimpleDate(currentExpiry), tableSelector);
 
             } else {
-                reloadMembers(); // reload table
+                reloadMembers(tableSelector); // reload table
             }
         });
     });
 
-    $('#member-list').on("input changeDate", "tbody td:nth-child(4) input", function (e) {
+    $(tableSelector).on('input changeDate', '#datecell', function(e) {
         e.preventDefault();
         var expiryDate = $(this).val();
         var row = this.parentElement.parentElement;
@@ -105,13 +105,13 @@ function initialise(roles, currentUserId, hubId) {
         var currentRole = data.role;
         var userId = data.userId;
 
-        setUserExpiryDate(userId, expiryDate, hubId, currentRole);
+        setUserExpiryDate(userId, expiryDate, hubId, currentRole, tableSelector);
         $('.datepicker').hide();
     });
 
 
 
-    $('#member-list').on("click", "tbody td:nth-child(5) a", function (e) {
+    $(tableSelector).on("click", "#removeIcon", function (e) {
         e.preventDefault();
 
         var row = this.parentElement.parentElement;
@@ -129,7 +129,7 @@ function initialise(roles, currentUserId, hubId) {
         bootbox.confirm(message, function (result) {
             if (result) {
                 if (userId) {
-                    removeUserRole(userId, role);
+                    removeUserRole(userId, role, tableSelector);
                 } else {
                     alert("Error: required params not provided: userId & role");
                 }
@@ -137,7 +137,7 @@ function initialise(roles, currentUserId, hubId) {
         });
     });
 
-    function removeUserRole(userId, role) {
+    function removeUserRole(userId, role, tableSelector) {
         $.ajax({
             url: fcConfig.removeHubUserUrl,
             data: {
@@ -155,16 +155,16 @@ function initialise(roles, currentUserId, hubId) {
                 }
             )
             .always(function (result) {
-                reloadMembers(); // reload table
+                reloadMembers(tableSelector); // reload table
             });
     }
 }
 
-function reloadMembers() {
-    $('#member-list').DataTable().ajax.reload();
+function reloadMembers(tableSelector) {
+    $(tableSelector).DataTable().ajax.reload();
 }
 
-function setUserExpiryDate(userId, expiryDate, id, role) {
+function setUserExpiryDate(userId, expiryDate, id, role, tableSelector) {
     if (checkDateFormat(expiryDate) || expiryDate === "") {
         $.ajax({
             url: fcConfig.updateHubUser,
@@ -174,13 +174,13 @@ function setUserExpiryDate(userId, expiryDate, id, role) {
             .fail(function(jqXHR, textStatus, errorThrown) {
                 bootbox.alert(jqXHR.responseText);
             })
-            .always(function(result) { reloadMembers(); });
+            .always(function(result) { reloadMembers(tableSelector); });
     } else {
         $('.spinner').hide();
     }
 }
 
-function saveHubUser(userId, role, id, expiryDate) {
+function saveHubUser(userId, role, id, expiryDate, tableSelector) {
     if (userId && role) {
         $.ajax({
             url: fcConfig.updateHubUser,
@@ -190,7 +190,7 @@ function saveHubUser(userId, role, id, expiryDate) {
             .fail(function(jqXHR, textStatus, errorThrown) {
                 bootbox.alert(jqXHR.responseText);
             })
-            .always(function(result) { reloadMembers(); });
+            .always(function(result) { reloadMembers(tableSelector); });
     } else {
         alert("Required fields are: userId and role.");
         $('.spinner').hide();

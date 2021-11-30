@@ -23,6 +23,7 @@
     </g:if>
     <g:if test="${entityId}">
         <input type='hidden' id='entityId' value='${entityId}'>
+        <input type='hidden' id='containerId' value='${containerId}'>
     </g:if>
     <g:elseif test="${projects}">
         <div class="control-group">
@@ -62,7 +63,6 @@
 </div>
 <asset:script>
     $(document).ready(function() {
-
         // combobox plugin enhanced select
         $(".combobox").combobox();
         $("#expiryDate").datepicker({format: "dd-mm-yyyy",autoclose: true});
@@ -150,8 +150,9 @@
         } else {
         // Hub User's table refresh
 %{--            reloadPage();--}%
-            reloadMembers();
-        }
-
+        var tableSelector = "#"+$('#containerId').val()
+        reloadMembers(tableSelector);
     }
+
+}
 </asset:script>
