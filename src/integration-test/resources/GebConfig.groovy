@@ -17,7 +17,7 @@ driver = { new ChromeDriver() }
 baseUrl = 'http://devt.ala.org.au:8087/'
 atCheckWaiting = true
 waiting {
-    timeout = 10
+    timeout = 20
     retryInterval = 0.5
 }
 
