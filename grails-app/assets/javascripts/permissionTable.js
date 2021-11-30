@@ -170,7 +170,6 @@ function setUserExpiryDate(userId, expiryDate, id, role) {
             url: fcConfig.updateHubUser,
             data: { userId: userId, role: role, entityId: id, expiryDate: expiryDate}
         })
-            // .done(function(result) { updateStatusMessage2("user's expiry date updated "); })
             .done(function(result) { displayAlertMessage("User's expiry date updated."); })
             .fail(function(jqXHR, textStatus, errorThrown) {
                 bootbox.alert(jqXHR.responseText);
