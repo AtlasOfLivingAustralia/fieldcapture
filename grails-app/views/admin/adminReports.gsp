@@ -27,17 +27,39 @@
 <a id="orgDataDownload" class="btn btn-sm" href="#">Download Organisation Report Data</a>
 
 <h4>Management unit report download:</h4>
-<div class="form-group">
-    <label class="control-label">Select reporting period: </label>
-    <div class="controls">
-        <select id="reportPeriodOfManagementUnit" class="form-control form-control-sm input-medium">
-            <g:each var="financialYear" in="${reportsPeriodsOfManagementUnit}">
-                <option value="startDate=${financialYear}-07-01&endDate=${financialYear+1}-06-30">01 July ${financialYear} - 30 June ${financialYear+1} </option>
-            </g:each>
-        </select>
+<form id="mu-report-selector">
+    <div class="form-group">
+        <label class="control-label">Select reporting period: </label>
+        <div class="controls">
+            <select id="reportPeriodOfManagementUnit" class="form-control form-control-sm input-medium">
+                <g:each var="financialYear" in="${reportsPeriodsOfManagementUnit}">
+                    <option value="startDate=${financialYear}-07-01&endDate=${financialYear+1}-06-30">01 July ${financialYear} - 30 June ${financialYear+1} </option>
+                </g:each>
+            </select>
+        </div>
     </div>
-</div>
-<a id="muReportDownload" class="btn btn-sm" href="#">Download Management Unit Report</a>
+
+%{--    <input data-bind="value:yourName"/>--}%
+
+%{--    <label class="control-label">Select reporting period: </label>--}%
+    <div class="row mb-2">
+        <div class="col-sm-2 pl-0 pr-1">
+            <label for="fromDate">Start date</label>
+            <div class="input-group input-append">
+                <fc:datePicker targetField="fromDate.date" bs4="bs4" class="form-control form-control-sm dateControl" name="fromDate" data-validation-engine="validate[date]"  size="form-control form-control-sm dateControl"/>
+            </div>
+        </div>
+        <div class="col-sm-2 pl-0 pr-1">
+            <label for="toDate">End date</label>
+            <div class="input-group input-append">
+                <fc:datePicker targetField="toDate.date" bs4="bs4" class="form-control form-control-sm dateControl" name="toDate" data-validation-engine="validate[date]"  size="form-control form-control-sm dateControl"/>
+            </div>
+        </div>
+    </div>
+    <a id="muReportDownload" class="btn btn-sm" href="#">Download Management Unit Report</a>
+    <a id="muReportDownloadSummary" class="btn btn-sm" href="#">Download Management Unit Report Summary</a>
+</form>
+
 
 <h4>User Report</h4>
 
@@ -77,7 +99,6 @@
             <button class="btn btn-sm btn-success" data-bind="click:go">View Report</button>
             </div>
         </div>
-
     </form>
 
 </div>
@@ -127,7 +148,11 @@
 
         $('#muReportDownload').click(function () {
             var selectPeriod = $('select#reportPeriodOfManagementUnit').val()
-            $.get(fcConfig.generateMUReportInPeriodUrl +"?" + selectPeriod)
+            var fromDate = $('#fromDate').val()
+            var toDate = $('#toDate').val()
+
+            $.get(fcConfig.generateMUReportInPeriodUrl, {selectPeriod:selectPeriod, fromDate:fromDate, toDate:toDate})
+            // $.get(fcConfig.generateMUReportInPeriodUrl +"?" + selectPeriod)
                 .done(function (data) {
                     if (data.error){
                         bootbox.alert(data.error)
@@ -150,6 +175,16 @@
         ko.applyBindings(new Reef2050ReportSelectorViewModel(reportConfig, options), document.getElementById('reef-report-selector'));
 
     });
+
+    // Activates knockout.js
+    ko.applyBindings(new AppViewModel(), document.getElementById('mu-report-selector'));
+    function AppViewModel() {
+        this.yourName = ko.observable("test");
+        var d = new Date();
+        d.setFullYear(2018, 6, 1);
+        self.fromDate = ko.observable(d).extend({simpleDate:false});
+        self.toDate = ko.observable(new Date().toISOStringNoMillis()).extend({simpleDate:false});
+    }
 
 </script>
 </body>
