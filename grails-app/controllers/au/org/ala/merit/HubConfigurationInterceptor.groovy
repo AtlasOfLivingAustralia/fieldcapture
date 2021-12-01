@@ -21,8 +21,7 @@ class HubConfigurationInterceptor {
         else {
             request.setAttribute("containerType", 'container') // Default to fixed width for most pages.
         }
-        log.info("Loading hub config: "+request.getRequestURI())
-        settingService.loadHubConfig(params.hub)
+        settingService.loadHubConfig(request.getParameter("hub"))
         true
     }
 
