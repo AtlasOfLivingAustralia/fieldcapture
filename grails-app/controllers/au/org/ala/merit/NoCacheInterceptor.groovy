@@ -15,6 +15,8 @@ class NoCacheInterceptor implements GrailsConfigurationAware {
     private static final String HEADER_CACHE_CONTROL = "Cache-Control";
     private String applyCachingHeaders
 
+    int order = HIGHEST_PRECEDENCE + 30
+
     NoCacheInterceptor() {
         matchAll().excludes(controller: "species")
     }

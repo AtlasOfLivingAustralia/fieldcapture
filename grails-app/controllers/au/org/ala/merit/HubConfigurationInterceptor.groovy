@@ -1,11 +1,14 @@
 package au.org.ala.merit
 
+import groovy.transform.CompileStatic
+
+@CompileStatic
 class HubConfigurationInterceptor {
 
     SettingService settingService
     UserService userService
 
-    int order = 1
+    int order = HIGHEST_PRECEDENCE
 
     public HubConfigurationInterceptor() {
         matchAll()
@@ -13,16 +16,19 @@ class HubConfigurationInterceptor {
 
     boolean before() {
         if (userService.getCurrentUserId()) {
-            request.containerType = 'container-fluid'
+            request.setAttribute("containerType",  'container-fluid')
         }
         else {
-            request.containerType = 'container' // Default to fixed width for most pages.
+            request.setAttribute("containerType", 'container') // Default to fixed width for most pages.
         }
+        log.info("Loading hub config: "+request.getRequestURI())
         settingService.loadHubConfig(params.hub)
         true
     }
 
     boolean after() { true }
 
-    void afterView() { }
+    void afterView() {
+        SettingService.clearHubConfig()
+    }
 }

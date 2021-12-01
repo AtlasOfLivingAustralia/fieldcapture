@@ -17,7 +17,7 @@ class LoginRecordingInterceptor {
 
     // Must be after the HubConfigurationInterceptor as we need to record
     // the hubId as well as the userId.
-    int order = 2
+    int order = HIGHEST_PRECEDENCE + 10
 
     /** Key to store that we already recorded the login for this session */
     private static final String LOGIN_RECORDED = 'loginRecord'

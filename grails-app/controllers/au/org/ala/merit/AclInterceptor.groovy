@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import grails.core.GrailsApplication
+import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
 /**
@@ -9,9 +10,14 @@ import groovy.util.logging.Slf4j
  * @see PreAuthorise
  */
 @Slf4j
+@CompileStatic
 class AclInterceptor {
-    def userService, projectService, roleService
+    UserService userService
+    ProjectService projectService
+    RoleService roleService
     GrailsApplication grailsApplication
+
+    int order = HIGHEST_PRECEDENCE + 20
 
     AclInterceptor() {
         matchAll()
@@ -24,10 +30,10 @@ class AclInterceptor {
         def method = controllerClass?.getMethod(actionName ?: "index", [] as Class[])
         def roles = roleService.getAugmentedRoles()
         if (controllerClass?.isAnnotationPresent(PreAuthorise) || method?.isAnnotationPresent(PreAuthorise)) {
-            PreAuthorise pa = method.getAnnotation(PreAuthorise) ?: controllerClass?.getAnnotation(PreAuthorise)
-            def userId = userService.getCurrentUserId()
-            def accessLevel = pa.accessLevel()
-            def entityId = params[pa.projectIdParam()]
+            PreAuthorise pa = (PreAuthorise)(method.getAnnotation(PreAuthorise) ?: controllerClass?.getAnnotation(PreAuthorise))
+            String userId = userService.getCurrentUserId()
+            String accessLevel = pa.accessLevel()
+            String entityId = params[pa.projectIdParam()]
 
             String entity = UserService.PROJECT
             switch (controllerClass) {
