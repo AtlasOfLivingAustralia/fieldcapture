@@ -333,7 +333,7 @@ class ManagementUnitService {
      */
     def generateReports(String startDate, String endDate, Map extras = null){
         // Convert to ISO 8601 date format
-        String format = 'yyyy-MM-dd'
+        String format = "dd-MM-yyyy"
 
         // The end date is the last day of the period (e.g. 2020-06-30) but reports will end at midnight of the next day (e.g. 2020-07-01T00:00:00)
         // so add a day or two to achieve this.
