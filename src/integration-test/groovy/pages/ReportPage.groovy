@@ -3,6 +3,7 @@ package pages
 import geb.Page
 import geb.module.Checkbox
 import geb.navigator.Navigator
+import geb.waiting.WaitTimeoutException
 import pages.modules.DocumentDialog
 import pages.modules.ReportContentModule
 import pages.modules.TimeoutModal
@@ -74,9 +75,15 @@ class ReportPage extends Page {
 
     def save() {
         saveButton.click()
-        waitFor {
-            $('.blockOverlay').displayed
+        try {
+            waitFor {
+                $('.blockOverlay').displayed
+            }
         }
+        catch (WaitTimeoutException e) {
+            // Just in case the save happens quickly, or appears and disappears in between a wait check.
+        }
+
         waitFor {
             !($('.blockOverlay').displayed)
         }
