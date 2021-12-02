@@ -13,10 +13,10 @@
     </div>
     <g:if test="${hubFlg}">
         <div class="control-group form-group row">
-            <label class="control-label col-form-label col-sm-2" for="expiryDate">User's expiry date</label>
+            <label class="control-label col-form-label col-sm-2" for="expiryDate">Permission expiry date</label>
             <div>
-                <div class="input-group" style="margin-left: 15px">
-                    <input class="form-control dateControl" type="text" id="expiryDate">
+                <div class="input-group input-small" style="margin-left: 15px;">
+                    <input class="form-control dateControl" style="height: 30px;" type="text" id="expiryDate">
                 </div>
             </div>
         </div>
@@ -121,7 +121,11 @@
             })
             .done(function(result) {
             updateStatusMessage("user was added with role " + decodeCamelCase(role));
-            displayAlertMessage("User was added with role " + decodeCamelCase(role));
+
+            if ($('#containerId').val()) {
+                displayAlertMessage("User was added with role " + decodeCamelCase(role));
+            }
+
             })
             .fail(function(jqXHR, textStatus, errorThrown) {
                 bootbox.alert(jqXHR.responseText);

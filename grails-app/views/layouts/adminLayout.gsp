@@ -67,7 +67,7 @@
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'adminReports')}" class="adminReport" title="Administrator Reports"/>
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'gmsProjectImport')}" class="loadProject" title="Load new projects into MERIT"/>
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'removeUserPermission')}" class="removeUser" title="Remove User from MERIT"/>
-                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'createUserHubPermission')}" class="userPermission" title="User Permission for MERIT"/>
+                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'createUserHubPermission')}" class="userPermission" title="User Permissions for MERIT"/>
                 </g:if>
                 <g:if test="${fc.userIsAlaAdmin()}">
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'tools')}" class="tools" title="Tools" />

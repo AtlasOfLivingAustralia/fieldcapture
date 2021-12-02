@@ -31,7 +31,7 @@ class AdminSpec extends StubbedCasSpec {
         administration.administratorReport.text() == " Administrator Reports"
         administration.loadProject.text() == " Load new projects into MERIT"
         administration.removeUser.text() == " Remove User from MERIT"
-        administration.userPermission.text() == " User Permission for MERIT"
+        administration.userPermission.text() == " User Permissions for MERIT"
         administration.tools.text() == " Tools"
         administration.settings.text() == " Settings"
         administration.caches.text() == " Caches"
