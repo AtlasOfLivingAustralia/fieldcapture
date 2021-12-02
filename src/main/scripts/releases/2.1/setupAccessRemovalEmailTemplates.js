@@ -78,3 +78,13 @@ setting.lastUpdated = now;
 setting.value = 'Dear MERIT User\n\nYour elevated access to MERIT (https://fieldcapture.ala.org.au/) has now been removed.\nIf you feel this has been done in error, or require access at a future stage, please contact the MERIT Team (merit@awe.gov.au) and we can assist you..\n\nRegards\nThe MERIT Team\nDepartment of Agriculture, Water and the Environment\nmerit@awe.gov.au\nhttps://fieldcapture.ala.org.au/';
 setting.description = 'The subject of the email to send when a role has been removed due to it expiring';
 db.setting.save(setting);
+
+// Configure the MERIT hub to use the access management features
+var merit = db.hub.findOne({urlPath:'merit'});
+merit.accessManagementOptions = {
+    "expireUsersAfterThisNumberOfMonthsInactive": NumberInt(24),
+    "warnUsersAfterThisNumberOfMonthsInactive": NumberInt(23)
+};
+merit.emailFromAddress = "merit@awe.gov.au";
+merit.emailReplyToAddress = "merit@awe.gov.au";
+db.hub.save(merit);
