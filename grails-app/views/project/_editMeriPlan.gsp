@@ -27,7 +27,7 @@
 		</div>
 		<span class="grantManagerActionSpan" data-bind="popover:{content:'*An internal order number must be supplied before the MERI Plan can be approved', placement:'top', trigger:'hover'}">
 			<button type="button" data-bind="enable: internalOrderId(), click:approvePlan" class="btn btn-sm btn-success"><i class="fa fa-check"></i> Approve MERI Plan</button>
-			<button type="button" data-bind="click:rejectPlan" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> Return MERI Plan</button>
+			<button type="button" data-bind="click:rejectPlan" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> Reject MERI Plan</button>
 		</span>
 	</div>
 </div>
