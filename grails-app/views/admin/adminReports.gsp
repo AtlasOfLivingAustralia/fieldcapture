@@ -46,7 +46,7 @@
         <div class="col-sm-2 pl-0 pr-1">
             <label for="fromDate">Start date</label>
             <div class="input-group input-append">
-                <fc:datePicker targetField="fromDate.date" bs4="bs4" class="form-control form-control-sm dateControl" name="fromDate" data-validation-engine="validate[date]"  size="form-control form-control-sm dateControl"/>
+                <fc:datePicker targetField="fromDate.date" bs4="bs4" class="form-control form-control-sm dateControl" name="fromDate"  data-validation-engine="validate[date]"  size="form-control form-control-sm dateControl"/>
             </div>
         </div>
         <div class="col-sm-2 pl-0 pr-1">
@@ -148,10 +148,8 @@
 
         $('#muReportDownload').click(function () {
             var selectPeriod = $('select#reportPeriodOfManagementUnit').val()
-            var fromDate = $('#fromDate').val()
-            var toDate = $('#toDate').val()
-
-            $.get(fcConfig.generateMUReportInPeriodUrl, {selectPeriod:selectPeriod, fromDate:fromDate, toDate:toDate})
+            // generateMuReport();
+            $.get(fcConfig.generateMUReportInPeriodUrl, {selectPeriod:selectPeriod})
             // $.get(fcConfig.generateMUReportInPeriodUrl +"?" + selectPeriod)
                 .done(function (data) {
                     if (data.error){
@@ -165,6 +163,15 @@
                     }
                 })
         });
+
+        $('#muReportDownloadSummary').click(function () {
+            var selectPeriod = $('select#reportPeriodOfManagementUnit').val()
+            var fromDate = $('#fromDate').val()
+            var toDate = $('#toDate').val()
+            var summaryFlag = true;
+            generateMuReport(summaryFlag);
+        });
+
 
         var reportConfig = ${raw((reef2050Reports as grails.converters.JSON).toString())};
         var reportUrl = '${g.createLink(controller:'report', action:'reef2050PlanActionReport')}';
@@ -180,10 +187,32 @@
     ko.applyBindings(new AppViewModel(), document.getElementById('mu-report-selector'));
     function AppViewModel() {
         this.yourName = ko.observable("test");
+        var now = convertToSimpleDate(new Date());
         var d = new Date();
         d.setFullYear(2018, 6, 1);
         self.fromDate = ko.observable(d).extend({simpleDate:false});
-        self.toDate = ko.observable(new Date().toISOStringNoMillis()).extend({simpleDate:false});
+        self.toDate = ko.observable(now).extend({simpleDate:false});
+
+    }
+
+    function generateMuReport(summaryFlag = false) {
+        alert("summaryFlag: " + summaryFlag);
+        var selectPeriod = $('select#reportPeriodOfManagementUnit').val()
+        var fromDate = $('#fromDate').val()
+        var toDate = $('#toDate').val()
+        $.get(fcConfig.generateMUReportInPeriodUrl, {selectPeriod:selectPeriod, fromDate:fromDate, toDate:toDate, summaryFlag: summaryFlag})
+        // $.get(fcConfig.generateMUReportInPeriodUrl +"?" + selectPeriod)
+            .done(function (data) {
+                if (data.error){
+                    bootbox.alert(data.error)
+                }else{
+                    var details = data['details']
+                    var message = data['message']
+                    var detailsIcon = ' <i class="fa fa-info-circle showDownloadDetailsIcon" data-toggle="collapse" href="#downloadDetails"></i>'
+                    var detailsPanel = '<div class="collapse" id="downloadDetails"><a id="muReportDownloadLink" href='+fcConfig.muReportDownloadUrl +'/' + details+'>Try this link, if you cannot get an email confirmation</a></div>'
+                    bootbox.alert(message + detailsIcon + detailsPanel)
+                }
+            })
     }
 
 </script>
