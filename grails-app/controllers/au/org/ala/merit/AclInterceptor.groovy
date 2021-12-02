@@ -1,8 +1,11 @@
 package au.org.ala.merit
 
 import grails.core.GrailsApplication
+import grails.core.GrailsClass
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
+
+import java.lang.reflect.Method
 
 /**
  * Grails Filter to check for controller methods annotated with <code>@{@link PreAuthorise}</code>
@@ -24,11 +27,12 @@ class AclInterceptor {
     }
 
     boolean before() {
-        def controller = grailsApplication.getArtefactByLogicalPropertyName("Controller", controllerName)
+        GrailsClass controller = grailsApplication.getArtefactByLogicalPropertyName("Controller", controllerName)
 
         Class controllerClass = controller?.clazz
-        def method = controllerClass?.getMethod(actionName ?: "index", [] as Class[])
-        def roles = roleService.getAugmentedRoles()
+        String action = actionName ?: "index"
+        Method method = controllerClass?.getMethod(action, [] as Class[])
+        List roles = roleService.getAugmentedRoles()
         if (controllerClass?.isAnnotationPresent(PreAuthorise) || method?.isAnnotationPresent(PreAuthorise)) {
             PreAuthorise pa = (PreAuthorise)(method.getAnnotation(PreAuthorise) ?: controllerClass?.getAnnotation(PreAuthorise))
             String userId = userService.getCurrentUserId()
