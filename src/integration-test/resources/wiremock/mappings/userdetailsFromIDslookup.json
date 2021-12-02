@@ -14,19 +14,23 @@
       "users": {
         "1": {
           "userName":"user1@user.com",
-          "displayName":"test user1"
+          "firstName":"test1",
+          "lastName": "user1"
         },
         "10": {
           "userName": "user10@user.com",
-          "displayName":"test user10"
+          "firstName":"test10",
+          "lastName": "user10"
         },
         "30": {
           "userName":"user30@user.com",
-          "displayName":"test user30"
+          "firstName":"test30",
+          "lastName": "user30"
         },
         "1001": {
           "userName":"user1001@user.com",
-          "displayName":"test user1001"
+          "firstName":"test1001",
+          "lastName": "user1001"
         }
       }
     }
