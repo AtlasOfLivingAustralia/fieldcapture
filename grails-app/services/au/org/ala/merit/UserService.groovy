@@ -193,7 +193,7 @@ class UserService {
         if (!userId || !settings) {
             return false
         }
-        if (userIsAlaAdmin()) {
+        if (userIsAlaAdmin(userId)) {
             return true
         }
 
@@ -218,9 +218,9 @@ class UserService {
             return [error:'No user exists with id: '+userId]
         }
 
-        if (!userDetails.hasRole(grailsApplication.config.getProperty('security.cas.adminRole')) && !userDetails.hasRole(CASRoles.ROLE_ADMIN)) {
+        if (!userIsFcAdmin(userId) && !userDetails.hasRole(grailsApplication.config.getProperty('security.cas.alaAdminRole'))) {
 
-            if (userDetails.hasRole(grailsApplication.config.getProperty('security.cas.officerRole'))) {
+            if (userIsSiteAdmin(userId)) {
                 if (!(role in roleService.allowedGrantManagerRoles)) {
                     return [error: 'User '+userDetails.displayName+' doesn\'t have the correct level of system access to be assigned an '+role+' role.  Please contact <a href="mailto:merit@environment.gov.au">merit@environment.gov.au</a> if this is an issue.']
                 }

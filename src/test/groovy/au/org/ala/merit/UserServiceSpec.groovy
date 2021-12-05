@@ -22,10 +22,11 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
     def grailsCacheManager = Mock(GrailsCacheManager)
     def activityService = Mock(ActivityService)
     def settingService = Mock(SettingService)
+    def projectService = Mock(ProjectService)
 
     def setup() {
         grailsApplication.config.ecodata.baseUrl = "/"
-        grailsApplication.config.security.cas = [officerRole:'FC_OFFICER', adminRole:'FC_ADMIN', alaAdminRole:'ADMIN', readOnlyOfficerRole:'FC_READ_ONLY']
+        grailsApplication.config.security.cas = [ alaAdminRole:'ADMIN' ]
         service.grailsApplication = grailsApplication
         service.webService = webService
         service.authService = authService
@@ -33,6 +34,8 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         service.activityService = activityService
         service.cacheService = new CacheService()
         service.settingService = settingService
+        service.roleService = new RoleService()
+        service.projectService = projectService
         authService.userInRole(_) >> false
     }
 
@@ -411,4 +414,78 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         resp.data.size() > 0
 
     }
+
+    def "A grant manager can't be assigned the admin or editor role on a project"(String role) {
+
+        setup: "Mock a user with the grant manager role"
+        String userId = 'gm1'
+        HubSettings hubSettings = new HubSettings(userPermissions:[])
+        hubSettings.userPermissions << [userId:userId, role:RoleService.GRANT_MANAGER_ROLE]
+        SettingService.setHubConfig(hubSettings)
+        authService.userDetails() >> [userId:"u1"]
+        authService.userInRole("ROLE_ADMIN") >> false
+        authService.getUserForUserId("gm1") >> new au.org.ala.web.UserDetails(userId:'gm1', firstName:"Merit", lastName:'User')
+
+        when: "We try and add the grant manager as a project admin"
+        Map result = service.addUserAsRoleToProject(userId, "p1", role)
+
+        then:
+        result.error?.startsWith("User Merit User doesn't have the correct level of system access to be assigned an $role role.")
+
+        where:
+        role | _
+        RoleService.PROJECT_EDITOR_ROLE | _
+        RoleService.PROJECT_ADMIN_ROLE | _
+
+    }
+
+    def "A project admin can't be assigned the grant manager role on a project"() {
+
+        setup: "Mock a user with the grant manager role"
+        String addingUserId = 'gm1'
+        HubSettings hubSettings = new HubSettings(userPermissions:[])
+        hubSettings.userPermissions << [userId:addingUserId, role:RoleService.GRANT_MANAGER_ROLE]
+        SettingService.setHubConfig(hubSettings)
+        String toAddUserId = 'u1'
+        authService.userDetails() >> [userId:addingUserId]
+        authService.userInRole("ROLE_ADMIN") >> false
+        authService.getUserForUserId("u1") >> new au.org.ala.web.UserDetails(userId:'u1', firstName:"Merit", lastName:'User')
+
+        when: "We try and add the grant manager as a project admin"
+        Map result = service.addUserAsRoleToProject(toAddUserId, "p1", RoleService.GRANT_MANAGER_ROLE)
+
+        then:
+        result.error?.startsWith("User Merit User doesn't have the correct level of system access to be assigned a grant manager role.")
+
+        where:
+        role | _
+        RoleService.PROJECT_EDITOR_ROLE | _
+        RoleService.PROJECT_ADMIN_ROLE | _
+
+    }
+
+    def "A grant manager can be assigned the grant manager role on a project"() {
+
+        setup: "Mock a user with the grant manager role"
+        String userIdToAdd = 'gm1'
+        String loggedInUserId = 'u1'
+        HubSettings hubSettings = new HubSettings(userPermissions:[])
+        hubSettings.userPermissions << [userId:loggedInUserId, role:RoleService.GRANT_MANAGER_ROLE]
+        hubSettings.userPermissions << [userId:userIdToAdd, role:RoleService.GRANT_MANAGER_ROLE]
+
+        SettingService.setHubConfig(hubSettings)
+        authService.userDetails() >> [userId:loggedInUserId]
+        authService.userInRole("ROLE_ADMIN") >> false
+        authService.getUserForUserId(userIdToAdd) >> new au.org.ala.web.UserDetails(userId:userIdToAdd, firstName:"Merit", lastName:'User')
+
+        when: "We add the grant manager as a project admin"
+        Map result = service.addUserAsRoleToProject(userIdToAdd, "p1", 'caseManager')
+
+        then:
+        1 * projectService.isUserAdminForProject(loggedInUserId, 'p1') >> true
+        1 * webService.getJson({it.endsWith("permissions/addUserAsRoleToProject?userId=${userIdToAdd}&projectId=p1&role=caseManager")}) >> [statusCode:200]
+
+        !result.error
+    }
+
 }
