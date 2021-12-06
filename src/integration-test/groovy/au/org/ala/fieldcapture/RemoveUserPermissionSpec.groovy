@@ -21,12 +21,12 @@ class RemoveUserPermissionSpec extends StubbedCasSpec {
 
         when:
         to RemoveUserPermissionPage
-        adminContent.email = "auser@nowhere.com.au"
+        adminContent.email = "user1@nowhere.com.au"
         adminContent.searchButton.click()
 
         then:
         waitFor { adminContent.userId.text() == "1" }
-        adminContent.emailAddress.text() == "auser@nowhere.com.au"
+        adminContent.emailAddress.text() == "user1@nowhere.com.au"
         adminContent.firstName.text() == "Test"
         adminContent.lastName.text() == "Test"
 
@@ -44,7 +44,7 @@ class RemoveUserPermissionSpec extends StubbedCasSpec {
         waitFor {at RemoveUserPermissionPage}
 
         when: "We search for a user and remove their permissions"
-        adminContent.email = "auser@nowhere.com.au"
+        adminContent.email = "user1@nowhere.com.au"
         adminContent.searchButton.click()
         waitFor { adminContent.userId.text() == "1" }
         adminContent.removeButton.click()
