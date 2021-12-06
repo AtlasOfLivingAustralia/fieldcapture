@@ -669,7 +669,7 @@ class UserService {
      * Retrieves the merit projects of the given userId
      */
     def getMeritProjectsForUserId(String userId, String entityId) {
-        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/getMeritProjectsForUserId?userId=${userId}&entityId=${entityId}"
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/getHubProjectsForUserId?userId=${userId}&entityId=${entityId}"
         webService.getJson(url)
     }
 
