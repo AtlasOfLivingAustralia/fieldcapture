@@ -9,7 +9,8 @@ function initialise(roles, currentUserId, hubId, containerId) {
         {
             data: 'userId',
             name: 'userId',
-            bSortable: false
+            bSortable: false,
+            className: 'hubUserId'
 },
         {
             data: 'displayName',
@@ -68,6 +69,9 @@ function initialise(roles, currentUserId, hubId, containerId) {
         "columns":col
 
     } );
+
+    $( table.table().body() )
+        .addClass( 'highlight' );
 
     $(tableSelector).on('change', '.hub-form', function(e) {
         e.preventDefault();

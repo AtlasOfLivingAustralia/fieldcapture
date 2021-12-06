@@ -43,4 +43,65 @@ class CreateUserHubPermissionSpec extends StubbedCasSpec {
 
 
     }
+
+    def "list of values are displayed in the table"() {
+
+        setup:
+        loginAsMeritAdmin(browser)
+
+        when:
+        to CreateUserHubPermissionPage
+
+        then:
+        permissions.size() == 3
+
+
+    }
+
+    def "I can add,update and remove the user permission in Merit Hub"() {
+
+        setup:
+        loginAsMeritAdmin(browser)
+
+        when:
+        to CreateUserHubPermissionPage
+
+        String emailAddress = "user1@user.com"
+        String permission = "officer"
+        String expiryDate = "06/12/2021"
+
+        addHubPermission(emailAddress,permission,expiryDate)
+
+        then: "User appears in the permissions table with the officer role"
+        waitFor {
+            permissions.size() == 4
+        }
+        findPermissionForUser('1').userId == "1"
+        findPermissionForUser('1').sortRoleSelection == "Officer"
+
+        when: "We update the user's permission to site admin"
+        findPermissionForUser('1').updateRole("siteAdmin")
+
+        and: "Confirm we want to change the permission"
+        okBootbox()
+
+        then:
+        waitFor {
+            findPermissionForUser('1').sortRoleSelection == "Site Admin"
+        }
+
+        when: "We remove the user permission in Merit Hub"
+        findPermissionForUser('1').remove()
+
+        and: "Confirm we want to remove the permission"
+        okBootbox()
+
+        then:
+        waitFor {
+            permissions.size() == 3
+        }
+
+    }
+
+
 }
