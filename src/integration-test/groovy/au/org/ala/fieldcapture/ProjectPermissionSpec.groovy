@@ -46,7 +46,5 @@ class ProjectPermissionSpec extends StubbedCasSpec {
             adminContent.projectAccess.findPermissionForUser('2').roleText == "Editor"
         }
 
-
-
     }
 }
