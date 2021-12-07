@@ -1,6 +1,6 @@
 package au.org.ala.merit
 
-import au.org.ala.merit.hub.HubSettings
+
 import au.org.ala.merit.reports.ReportConfig
 import au.org.ala.merit.reports.ReportGenerationOptions
 import au.org.ala.merit.reports.ReportGenerator
@@ -18,7 +18,6 @@ import org.joda.time.Days
 import org.joda.time.Interval
 import org.joda.time.Period
 
-import java.math.RoundingMode
 import java.text.SimpleDateFormat
 
 @Slf4j
@@ -1834,24 +1833,21 @@ class ProjectService  {
         outcomes.findAll{it}.unique()
     }
 
-    List<Map> getProgramList(){
-        List<Map> listOfProgram = programService.listOfAllPrograms()
-        List<Map> programList = []
-        List newProgramList = []
-        listOfProgram.each {program ->
-            Map programDetails = programService.get(program?.programId)
-            Map updatedProgramList = [:]
-            if (programDetails?.parent != null){
-                updatedProgramList["name"] = programDetails.parent?.name + " - " + programDetails.name
-                updatedProgramList["programId"] = programDetails.programId
-            }
-            if (programDetails?.parent == null){
-                updatedProgramList["name"] =  programDetails.name
-                updatedProgramList["programId"] = programDetails.programId
-            }
-            newProgramList.add(updatedProgramList)
+    @Cacheable("programList")
+    List<Map> getProgramList() {
+        List<Map> programs = programService.listOfAllPrograms()
+
+        List programList = []
+        List results = programs.findAll{!it.parentId}
+        while (results) {
+            programList.addAll(results)
+            results = results.collect {Map parent ->
+                programs.findAll{it.parentId == parent.programId}.collect{
+                    [programId: it.programId, name:parent.name+' - '+it.name]
+                }
+            }.flatten()
         }
-        programList.addAll(newProgramList)
+        programList.sort{it.name}
         return programList
     }
 

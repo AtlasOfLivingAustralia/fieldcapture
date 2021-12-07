@@ -998,22 +998,38 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         service.getSecondaryOutcomes(null) == []
     }
 
-    def "The Program will join the two program name when the parent is not null"(){
+    def "The getProgramList method will create a program hierarchy from the program list"(){
         setup:
         String programId = "12345"
-        Map programDetails = [programId: programId, name: "Test Sub Program", parent: [name: "Test Program", programId: "programId"]]
-        List<Map> list = [[name: "Test Sub Program", programId: programId]]
+        List<Map> list = [
+                [name: "Test Sub Program", programId: programId, parentId:"programId", parentName:"Test Program"],
+                [name: "Test Sub Program 2", programId: "subProgram2", parentId:"programId", parentName:"Test Program"],
+                [name: "Test Program", programId: "programId", parentId:"grandParentId1", parentName:"Grant Parent 1"],
+                [name:"Grand parent 1", programId:"grandParentId1"],
+                [name:"Grand parent 2", programId:"grandParentId2"],
+                [name: "Test Program 2", programId: "programId2", parentId:"grandParentId1", parentName:"Grant Parent 1"]
+        ]
 
         when:
         List<Map> programList = service.getProgramList()
 
         then:
         1 * programService.listOfAllPrograms() >> list
-        1 * programService.get(programId) >> programDetails
 
         and:
-        programList[0].name == "Test Program - Test Sub Program"
-        programList[0].programId == "12345"
+        programList[0].name == "Grand parent 1"
+        programList[0].programId == "grandParentId1"
+        programList[1].name == "Grand parent 1 - Test Program"
+        programList[1].programId == "programId"
+        programList[2].name == "Grand parent 1 - Test Program - Test Sub Program"
+        programList[2].programId == programId
+        programList[3].name == "Grand parent 1 - Test Program - Test Sub Program 2"
+        programList[3].programId == "subProgram2"
+        programList[4].name == "Grand parent 1 - Test Program 2"
+        programList[4].programId == "programId2"
+        programList[5].name == "Grand parent 2"
+        programList[5].programId == "grandParentId2"
+
     }
 
     def "The program will return program name when parent is null"(){
@@ -1027,7 +1043,6 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
 
         then:
         1 * programService.listOfAllPrograms() >> list
-        1 * programService.get(programId) >> programDetails
 
         and:
         programList[0].name == "Test Program"

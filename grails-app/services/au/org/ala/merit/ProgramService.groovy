@@ -4,6 +4,7 @@ import au.org.ala.merit.reports.ReportConfig
 import au.org.ala.merit.reports.ReportGenerationOptions
 import au.org.ala.merit.reports.ReportOwner;
 import grails.core.GrailsApplication
+import grails.plugin.cache.Cacheable
 import groovy.util.logging.Slf4j
 import org.grails.web.json.JSONArray
 import org.codehaus.groovy.util.ListHashMap
@@ -292,6 +293,7 @@ class ProgramService {
         program?.outcomes.findAll {it.type != OUTCOME_TYPE_PRIMARY_ONLY}
     }
 
+    @Cacheable("programList")
     List<Map> listOfAllPrograms(){
         return webService.getJson("${grailsApplication.config.getProperty('ecodata.baseUrl')}program/listOfAllPrograms")
     }
