@@ -66,7 +66,7 @@ class CreateUserHubPermissionSpec extends StubbedCasSpec {
         when:
         to CreateUserHubPermissionPage
 
-        String emailAddress = "user1@user.com"
+        String emailAddress = "user2@user.com"
         String permission = "officer"
         String expiryDate = "06/12/2021"
 
@@ -76,22 +76,22 @@ class CreateUserHubPermissionSpec extends StubbedCasSpec {
         waitFor {
             permissions.size() == 4
         }
-        findPermissionForUser('1').userId == "1"
-        findPermissionForUser('1').sortRoleSelection == "Officer"
+        findPermissionForUser('2').userId == "2"
+        findPermissionForUser('2').sortRoleSelection == "Officer"
 
         when: "We update the user's permission to site admin"
-        findPermissionForUser('1').updateRole("siteAdmin")
+        findPermissionForUser('2').updateRole("siteAdmin")
 
         and: "Confirm we want to change the permission"
         okBootbox()
 
         then:
         waitFor {
-            findPermissionForUser('1').sortRoleSelection == "Site Admin"
+            findPermissionForUser('2').sortRoleSelection == "Site Admin"
         }
 
         when: "We remove the user permission in Merit Hub"
-        findPermissionForUser('1').remove()
+        findPermissionForUser('2').remove()
 
         and: "Confirm we want to remove the permission"
         okBootbox()
