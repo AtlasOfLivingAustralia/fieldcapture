@@ -4,6 +4,7 @@ import com.icegreen.greenmail.junit.GreenMailRule
 import com.icegreen.greenmail.util.ServerSetup
 import com.icegreen.greenmail.util.ServerSetupTest
 import org.junit.Rule
+import pages.AdminClearCachePage
 import pages.MeriPlanPDFPage
 import pages.ProjectIndex
 import pages.RlpProjectPage
@@ -17,6 +18,9 @@ class MeriPlanSpec extends StubbedCasSpec {
 
     def setupSpec() {
         useDataSet('dataset2')
+        loginAsAlaAdmin(browser)
+        to AdminClearCachePage
+        clearProgramListCache()
     }
 
     def cleanup() {
