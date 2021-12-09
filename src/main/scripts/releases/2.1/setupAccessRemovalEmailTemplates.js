@@ -7,8 +7,8 @@ if (!setting) {
     }
 }
 setting.lastUpdated = now;
-setting.value = 'Access to MERIT has been removed';
-setting.description = 'The subject of the email to send when access has been removed due to no login to MERIT for a specified time'
+setting.value = 'Access to MERIT';
+setting.description = 'The subject of the email to send warn a user their access to MERIT will be removed if no action is taken';
 db.setting.save(setting);
 
 
@@ -21,7 +21,7 @@ if (!setting) {
 }
 setting.lastUpdated = now;
 setting.value = 'Dear MERIT User\n\nOur records indicate that you have not logged into MERIT (https://fieldcapture.ala.org.au/) for nearly two years.\n\nYour access will be removed 2 weeks from today, unless you take the following action:\n\nIf you wish to retain your access at your current level, all you need to do is log into MERIT within two weeks of the date of this email.\n\nIf you no longer require access, you do not need to do anything. Your access will be automatically removed two weeks from today.\n\nIf you require access at a future stage, or miss the two week deadline, please contact the MERIT Team (merit@awe.gov.au) and we can assist you.\n\nRegards\nThe MERIT Team\nDepartment of Agriculture, Water and the Environment\nmerit@awe.gov.au\nhttps://fieldcapture.ala.org.au/';
-setting.description = 'The body of the email to send when access has been removed due to no login to MERIT for a specified time';
+setting.description = 'The body of the email to send to warn a user their access to MERIT will be removed if no action is taken';
 db.setting.save(setting);
 
 
@@ -36,7 +36,7 @@ if (!setting) {
     }
 }
 setting.lastUpdated = now;
-setting.value = 'Access to MERIT';
+setting.value = 'Access to MERIT has been removed';
 setting.description = 'The subject of the email to send when access has been removed due to no login to MERIT for a specified time';
 db.setting.save(setting);
 
