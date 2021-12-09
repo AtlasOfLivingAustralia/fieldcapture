@@ -3,7 +3,6 @@ package au.org.ala.merit
 import grails.converters.JSON
 import grails.core.GrailsApplication
 import groovy.json.JsonSlurper
-import org.apache.commons.io.FilenameUtils
 import org.apache.http.HttpStatus
 
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST
@@ -13,7 +12,10 @@ class DocumentController {
 
     static allowedMethods = [bulkUpdate: 'POST', documentUpdate: 'POST', deleteDocument: 'POST']
 
-    def documentService, webService, userService
+    static final String DOCUMENT_DOWNLOAD_PATH = '/document/download/'
+
+    DocumentService documentService
+    WebService webService
     GrailsApplication grailsApplication
 
     def index() {}
@@ -95,5 +97,36 @@ class DocumentController {
     def deleteDocument(String id) {
         def responseCode = documentService.delete(id)
         render status: responseCode
+    }
+
+    def download(String path, String filename)  {
+        final String THUMBNAIL_PREFIX = "thumb_"
+        if (filename) {
+            String originalName = filename
+            if (filename.startsWith(THUMBNAIL_PREFIX)) {
+                originalName = filename.substring(THUMBNAIL_PREFIX.length())
+            }
+            Map results = documentService.search(filepath: path, filename: originalName)
+            if (results && results.documents) {
+                Map document = results.documents[0]
+
+                if (documentService.canView(document)) {
+                    String url = buildDownloadUrl(path, filename)
+                    webService.proxyGetRequest(response, url, false, false)
+                    return null
+                }
+            }
+        }
+        response.status = HttpStatus.SC_NOT_FOUND
+    }
+
+    private String buildDownloadUrl(String path, String filename) {
+        String url = grailsApplication.config.ecodata.baseUrl + DOCUMENT_DOWNLOAD_PATH
+        if (path) {
+            url += path + '/'
+        }
+        url += filename
+
+        url
     }
 }
