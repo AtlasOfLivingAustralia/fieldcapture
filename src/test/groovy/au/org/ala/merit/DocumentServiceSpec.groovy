@@ -238,4 +238,24 @@ class DocumentServiceSpec extends Specification implements AutowiredTest{
         "information"                   | false
         "contractAssurance"             | false
     }
+
+    def "A document marked publiclyViewable can be viewed by anyone"() {
+        setup:
+        Map document = [documentId:'d1', projectId:'o1', publiclyViewable:true]
+
+        expect:
+        service.canView(document)
+    }
+
+    def "A user with read only access to MERIT can view all documents"() {
+        setup:
+        Map document = [documentId:'d1', projectId:'o1']
+
+        when:
+        boolean canView = service.canView(document)
+
+        then:
+        1 * userService.userHasReadOnlyAccess() >> true
+        canView
+    }
 }

@@ -198,7 +198,7 @@ class DocumentService {
     }
 
     boolean canView(Map document) {
-        document.publicallyViewable || userService.userIsAlaOrFcAdmin() || hasEditorPermission(document)
+        document.publiclyViewable || userService.userHasReadOnlyAccess() || hasEditorPermission(document)
     }
 
     /**

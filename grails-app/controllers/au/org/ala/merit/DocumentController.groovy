@@ -10,7 +10,7 @@ import static org.apache.http.HttpStatus.SC_OK;
 
 class DocumentController {
 
-    static allowedMethods = [bulkUpdate: 'POST', documentUpdate: 'POST', deleteDocument: 'POST']
+    static allowedMethods = [bulkUpdate: 'POST', documentUpdate: 'POST', deleteDocument: 'POST', download: 'GET']
 
     static final String DOCUMENT_DOWNLOAD_PATH = '/document/download/'
 
@@ -99,6 +99,8 @@ class DocumentController {
         render status: responseCode
     }
 
+
+    /** Downloads a the file attached to a document stored in the ecodata database */
     def download(String path, String filename)  {
         final String THUMBNAIL_PREFIX = "thumb_"
         if (filename) {

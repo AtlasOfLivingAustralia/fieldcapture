@@ -8,8 +8,10 @@ import grails.testing.web.controllers.ControllerUnitTest
 class DocumentControllerSpec extends Specification implements ControllerUnitTest<DocumentController>{
 
     DocumentService documentService = Mock(DocumentService)
+    WebService webService = Mock(WebService)
     def setup() {
         controller.documentService = documentService
+        controller.webService = webService
     }
 
     def "updates will be delegated to the document service"() {
@@ -45,6 +47,60 @@ class DocumentControllerSpec extends Specification implements ControllerUnitTest
         'PUT' | _
         'DELETE' | _
         'PATCH' | _
+    }
+
+    def "The document controller will ensure a document exists and the user has permission to view it before facilitating the download"() {
+        setup:
+        Map document = [documentId:'d1']
+
+        when:
+        def resp = controller.download("path", "file.txt")
+
+        then:
+        1 * documentService.search("path", "file.txt") >> [count: 1, documents:[document]]
+        1 * documentService.canView(document) >> true
+        1 * webService.proxyGetRequest({it.endsWith('document/download/path/file.txt')}, false, false)
+        resp == null
+    }
+
+    def "The document controller understands the thumbnail prefix assigned to a document path"() {
+        setup:
+        Map document = [documentId:'d1']
+
+        when:
+        def resp = controller.download("path", "thumb_file.png")
+
+        then:
+        1 * documentService.search("path", "file.png") >> [count: 1, documents:[document]]
+        1 * documentService.canView(document) >> true
+        1 * webService.proxyGetRequest({it.endsWith('document/download/path/thumb_file.png')}, false, false)
+        resp == null
+    }
+
+    def "The document controller will return an error if no document matches the path requested for a download"() {
+
+        when:
+        controller.download("path", "file.txt")
+
+        then:
+        1 * documentService.search("path", "file.txt") >> [count: 0, documents:[]]
+        0 * documentService._
+        0 * webService._
+        response.status == HttpStatus.SC_NOT_FOUND
+    }
+
+    def "The document controller will return an error if the user cannot view the document associated with the path requested for a download"() {
+        setup:
+        Map document = [documentId:'d1']
+
+        when:
+        controller.download("path", "file.txt")
+
+        then:
+        1 * documentService.search("path", "file.txt") >> [count: 1, documents:[document]]
+        0 * documentService.canView(document) >> false
+        0 * webService._
+        response.status == HttpStatus.SC_NOT_FOUND
     }
 
 }
