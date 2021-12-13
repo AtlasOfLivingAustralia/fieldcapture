@@ -79,19 +79,6 @@ var programConfig = {
                 "category": "Outcomes Report 1",
                 "reportsAlignedToCalendar": false,
                 "activityType": "RLP Short term project outcomes"
-            },
-            {
-                "reportType": "Single",
-                "firstReportingPeriodEnd": "2026-06-30T14:00:00Z",
-                "reportDescriptionFormat": "Outcomes Report 2 for %4$s",
-                "reportNameFormat": "Outcomes Report 2",
-                "reportingPeriodInMonths": 0,
-                "multiple": false,
-                "description": "_Please note that the reporting fields for these reports are currently being developed_",
-                "minimumPeriodInMonths": 37,
-                "category": "Outcomes Report 2",
-                "reportsAlignedToCalendar": false,
-                "activityType": "RLP Medium term project outcomes"
             }
         ],
         "supportedServiceIds": [
