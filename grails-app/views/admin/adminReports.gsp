@@ -147,27 +147,10 @@
         });
 
         $('#muReportDownload').click(function () {
-            var selectPeriod = $('select#reportPeriodOfManagementUnit').val()
-            // generateMuReport();
-            $.get(fcConfig.generateMUReportInPeriodUrl, {selectPeriod:selectPeriod})
-            // $.get(fcConfig.generateMUReportInPeriodUrl +"?" + selectPeriod)
-                .done(function (data) {
-                    if (data.error){
-                        bootbox.alert(data.error)
-                    }else{
-                        var details = data['details']
-                        var message = data['message']
-                        var detailsIcon = ' <i class="fa fa-info-circle showDownloadDetailsIcon" data-toggle="collapse" href="#downloadDetails"></i>'
-                        var detailsPanel = '<div class="collapse" id="downloadDetails"><a id="muReportDownloadLink" href='+fcConfig.muReportDownloadUrl +'/' + details+'>Try this link, if you cannot get an email confirmation</a></div>'
-                        bootbox.alert(message + detailsIcon + detailsPanel)
-                    }
-                })
+            generateMuReport();
         });
 
         $('#muReportDownloadSummary').click(function () {
-            var selectPeriod = $('select#reportPeriodOfManagementUnit').val()
-            var fromDate = $('#fromDate').val()
-            var toDate = $('#toDate').val()
             var summaryFlag = true;
             generateMuReport(summaryFlag);
         });
@@ -196,12 +179,10 @@
     }
 
     function generateMuReport(summaryFlag = false) {
-        alert("summaryFlag: " + summaryFlag);
         var selectPeriod = $('select#reportPeriodOfManagementUnit').val()
         var fromDate = $('#fromDate').val()
         var toDate = $('#toDate').val()
         $.get(fcConfig.generateMUReportInPeriodUrl, {selectPeriod:selectPeriod, fromDate:fromDate, toDate:toDate, summaryFlag: summaryFlag})
-        // $.get(fcConfig.generateMUReportInPeriodUrl +"?" + selectPeriod)
             .done(function (data) {
                 if (data.error){
                     bootbox.alert(data.error)
