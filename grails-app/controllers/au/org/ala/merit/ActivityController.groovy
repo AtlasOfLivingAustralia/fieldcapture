@@ -518,7 +518,7 @@ class ActivityController {
                     [(colString):it.name]
                 }
                 def config = [
-                        sheet:sheetNameFromOutput(outputName),
+                        sheet:outputName,
                         startRow:1,
                         columnMap:columnMap
                 ]
