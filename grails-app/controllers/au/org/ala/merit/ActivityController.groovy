@@ -518,7 +518,7 @@ class ActivityController {
                     [(colString):it.name]
                 }
                 def config = [
-                        sheet:outputName,
+                        sheet:sheetNameFromOutput(outputName),
                         startRow:1,
                         columnMap:columnMap
                 ]
@@ -590,11 +590,13 @@ class ActivityController {
     }
 
     static final int MAX_SHEET_NAME_LENGTH = 31
-    private String sheetNameFromOutput(outputName) {
-        def end = Math.min(outputName.length(), MAX_SHEET_NAME_LENGTH)-1
-        def shortName = outputName[0..end]
-        shortName = shortName.replaceAll('[^a-zA-z0-9 ]', '')
-
+    public static String sheetNameFromOutput(String name) {
+        int prefixLength = 17
+        int suffixLength = 11
+        String shortName = name
+        if (name.size() > MAX_SHEET_NAME_LENGTH) {
+            shortName = name[0..prefixLength-1]+'...'+name[-suffixLength..name.size()-1]
+        }
         shortName
     }
 
