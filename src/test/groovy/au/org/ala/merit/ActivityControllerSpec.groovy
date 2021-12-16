@@ -2,6 +2,11 @@ package au.org.ala.merit
 
 import grails.converters.JSON
 import org.apache.http.HttpStatus
+import org.grails.plugins.excelimport.ExcelImportService
+import org.joda.time.LocalDate
+import org.joda.time.format.DateTimeFormat
+import org.joda.time.format.DateTimeFormatter
+import org.springframework.mock.web.MockMultipartFile
 import spock.lang.Specification
 import grails.testing.web.controllers.ControllerUnitTest
 
@@ -17,6 +22,8 @@ class ActivityControllerSpec extends Specification implements ControllerUnitTest
     def metadataService = Mock(MetadataService)
     def reportService = Mock(ReportService)
     def siteService = Mock(SiteService)
+    def excelImportService = Mock(ExcelImportService)
+    def speciesService = Mock(SpeciesService)
 
     def setup() {
         controller.activityService = activityService
@@ -26,6 +33,9 @@ class ActivityControllerSpec extends Specification implements ControllerUnitTest
         controller.metadataService = metadataService
         controller.reportService = reportService
         controller.siteService = siteService
+        controller.excelImportService = excelImportService
+        controller.speciesService = speciesService
+
     }
 
     def "Non-project members cannot edit activities"() {
@@ -517,5 +527,78 @@ class ActivityControllerSpec extends Specification implements ControllerUnitTest
 
         and:
         response.status == HttpStatus.SC_OK
+    }
+
+    def "Successfully able to import Flora species with a correct sheet name in the spreadsheet"() {
+        setup:
+        controller.setExcelImportService(new ExcelImportService())
+        request.addFile(new MockMultipartFile('data', getClass().getResourceAsStream('/floraSurveyTest.xlsx')))
+
+        params.type = 'RLP - Flora survey'
+        params.listName = 'floraSurveyDetails'
+
+        JSON.createNamedConfig("clientSideFormattedDates", { cfg ->
+            DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy")
+            cfg.registerObjectMarshaller(LocalDate.class, { formatter.print(it) })
+        })
+
+        when:
+        request.method = 'POST'
+        controller.ajaxUpload()
+
+        then:
+        1 * metadataService.annotatedOutputDataModel('RLP - Flora survey') >> getListModel()
+        1 * metadataService.findByName('floraSurveyDetails', getListModel()) >> getMapModel()
+        1 * speciesService.searchByScientificName(_) >> getScientificModel()
+
+        response.status == HttpStatus.SC_OK
+    }
+
+
+    def "Not able to import Flora species with incorrect sheet name in the spreadsheet"() {
+        setup:
+        controller.setExcelImportService(new ExcelImportService())
+        request.addFile(new MockMultipartFile('data', getClass().getResourceAsStream('/floraSurveyTest.xlsx')))
+
+        params.type = 'RLP  Flora survey'
+        params.listName = 'floraSurveyDetails'
+
+        JSON.createNamedConfig("clientSideFormattedDates", { cfg ->
+            DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy")
+            cfg.registerObjectMarshaller(LocalDate.class, { formatter.print(it) })
+        })
+
+        when:
+        request.method = 'POST'
+        controller.ajaxUpload()
+
+        then:
+        0 * metadataService.annotatedOutputDataModel('RLP - Flora survey') >> getListModel()
+        0 * metadataService.findByName('floraSurveyDetails', getListModel()) >> getMapModel()
+        0 * speciesService.searchByScientificName(_) >> getScientificModel()
+
+        response.status == HttpStatus.SC_BAD_REQUEST
+    }
+
+
+    private ArrayList<LinkedHashMap<String, Serializable>> getListModel() {
+        def model = [[columns:[[preLabel:'Baseline survey or indicator (follow-up) survey?', css:'span3', dataType:'text', name:'baselineOrIndicatorSurvey', description:'', label:'Baseline survey or indicator (follow-up) survey?', source:'baselineOrIndicatorSurvey', type:'selectOne', constraints:['Baseline', 'Indicator'], validate:'required'], [preLabel:'Number of flora surveys conducted', css:'span3', dataType:'number', name:'numberOfFloraSurveys', label:'Number of flora surveys conducted', source:'numberOfFloraSurveys', type:'number', validate:'required,min[0]'], [preLabel:'Date range', css:'span3', dataType:'text', name:'dateRange', description:'What time of year (eg. Dates by dd/mm/yyyyy, Months, Season/s)', label:'Date range', source:'dateRange', type:'text', validate:'required,maxSize[300]'], [preLabel:'Site/s covered by flora surveys', dataType:'feature', name:'sitesSurveyed', label:'Site/s covered by flora surveys', source:'sitesSurveyed', type:'feature'], [decimalPlaces:3, computed:['expression:$geom.areaHa(sitesSurveyed)'], readonly:true, dataType:'number', name:'siteCalculatedAreaHa', behaviour:[[condition:'areaInvoicedHa > 0', type:'conditional_validation', value:[message:'The surveyed area must be mapped', validate:'required,min[0.0001]']]], units:'ha', label:'siteCalculatedAreaHa', source:'siteCalculatedAreaHa', type:'number', displayOptions:[displayUnits:true]], [preLabel:'Actual area (ha) covered by flora surveys', decimalPlaces:3, helpText:'Manually enter correct figure for this reporting period if different to mapped value.', defaultValue:['expression:$geom.areaHa(sitesSurveyed), type:computed'], dataType:'number', name:'areaSurveyedHa', units:'ha', label:'Actual area (ha) covered by flora surveys', source:'areaSurveyedHa', type:'number', validate:'required,min[0]', displayOptions:[displayUnits:true]], [preLabel:'Invoiced area (ha) covered by flora surveys', decimalPlaces:3, helpText:'Enter the amount you will invoice for during this reporting period.', dataType:'number', name:'areaInvoicedHa', units:'ha', label:'Invoiced area (ha) covered by flora surveys', source:'areaInvoicedHa', type:'number', validate:'required', displayOptions:[displayUnits:true]], [preLabel:'Reason for actual being different to mapped amount', dataType:'text', name:'mappingNotAlignedReason', behaviour:['[condition:not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1), type:if]'], label:'Reason for actual being different to mapped amount', source:'mappingNotAlignedReason', type:'selectOne', constraints:['Mapped area simplifies more complex area/s where work was undertaken during this period, Other'], validate:'required'], [dataType:'text', name:'mappingNotAlignedComments', behaviour:[[condition:"Other" == 'mappingNotAlignedReason', type:'if']], label:'mappingNotAlignedComments', placeholder:'Please enter the reason/s the mapping didnt align with the invoiced amount', source:'mappingNotAlignedComments', type:'textarea', rows:5, validate:'required,maxSize[300]'], [preLabel:'Reason for invoiced amount being different to actual amount', dataType:'text', name:'invoicedNotActualReason', behaviour:[['condition:roundTo(areaSurveyedHa, 2) != roundTo(areaInvoicedHa, 2), type:visible']], label:'Reason for invoiced amount being different to actual amount', source:'invoicedNotActualReason', type:'selectOne', constraints:['Work was undertaken over a greater area than will be invoiced for', 'Other'], validate:'required'], [dataType:'text', name:'invoicedNotActualComments', behaviour:[[condition:"Other" == 'invoicedNotActualReason', type:'if']], label:'invoicedNotActualComments', placeholder:'Please enter the reason/s the mapping didnt align with the invoiced amount', source:'invoicedNotActualComments', type:'textarea', rows:5, validate:'required,maxSize[300]'], [preLabel:'Please attach mapping details', dataType:'document', name:'extraMappingDetails', description:'Please fill in the Mapped detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).', behaviour:['[condition:not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1) or roundTo(areaSurveyedHa, 2) != roundTo(areaInvoicedHa, 2), type:if]'], label:'Please attach mapping details', source:'extraMappingDetails', type:'document', validate:'required'], [columns:[[dataType:'species', name:'species', width:'30%', label:'Target species recorded', source:'species', title:'Target species recorded', type:'speciesSelect', validate:'required'], [dataType:'text', name:'threatenedEcologicalCommunity', width:'25%', label:'Threatened ecological communities (if applicable)', source:'threatenedEcologicalCommunity', title:'Threatened ecological communities (if applicable)', type:'text', validate:'maxSize[300]'], [dataType:'text', name:'surveyTechnique', width:'20%', description:'What/how will the survey capture the flora data', label:'Survey technique', source:'surveyTechnique', title:'Survey technique', type:'text', validate:'required,maxSize[300]'], [dataType:'text', name:'individualsOrGroups', width:'15%', label:'Individuals or groups?', source:'individualsOrGroups', title:'Individuals or groups?', type:'selectOne', constraints:['Individuals', 'Groups'], validate:'required'], [dataType:'number', name:'numberOfIndividualsOrGroups', width:'10%', label:'Number of groups / individuals in flora survey', source:'numberOfIndividualsOrGroups', title:'Number of groups / individuals in flora survey', type:'number', validate:'required,min[0]']], dataType:'list', name:'floraSurveyDetails']], dataType:'list', name:'floraSurveys', minSize:1], [preLabel:'Clarification, if needed', css:'span8', dataType:'text', name:'comments', label:'Clarification, if needed', source:'comments', placeholder:'Clarification comments include points for follow up with the project manager about this service like:', type:'textarea', rows:4, validate:'maxSize[1500]'], [preLabel:'Optionally attach photos', dataType:'image', name:'photographicEvidence', label:'Optionally attach photos', source:'photographicEvidence', type:'image'], [preLabel:'', dataType:'text', name:'projectAssuranceDetails', description:'', label:'projectAssuranceDetails', source:'projectAssuranceDetails', placeholder:'List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes.', type:'textarea', rows:4], [columns:[[dataType:'document', name:'attachments', description:'Please attach any Evidence of Service Delivery here', label:'Attached documents', source:'attachments', title:'Attached documents', type:'document']], dataType:'list', name:'assuranceDocuments']]
+        model
+    }
+
+    private LinkedHashMap<String, Serializable> getMapModel() {
+        def model = [columns:[
+                [dataType:'species', name:'species', width:'30%', label:'Target species recorded', source:'species', title:'Target species recorded', type:'speciesSelect', validate:'required'],
+                [dataType:'text', name:'threatenedEcologicalCommunity', width:'25%', label:'Threatened ecological communities (if applicable)', source:'threatenedEcologicalCommunity', title:'Threatened ecological communities (if applicable)', type:'text', validate:'maxSize[300]'],
+                [dataType:'text', name:'surveyTechnique', width:'20%', description:'What/how will the survey capture the flora data', label:'Survey technique', source:'surveyTechnique', title:'Survey technique', type:'text', validate:'required,maxSize[300]'],
+                [dataType:'text', name:'individualsOrGroups', width:'15%', label:'Individuals or groups?', source:'individualsOrGroups', title:'Individuals or groups?', type:'selectOne', constraints:['Individuals', 'Groups'], validate:'required'],
+                [dataType:'number', name:'numberOfIndividualsOrGroups', width:'10%', label:'Number of groups / individuals in flora survey', source:'numberOfIndividualsOrGroups', title:'Number of groups / individuals in flora survey', type:'number', validate:'required,min[0]']],
+                      dataType:'list', name:'floraSurveyDetails']
+        model
+    }
+
+    private LinkedHashMap<String, Serializable> getScientificModel() {
+        def scientificModel = [commonName:'Sheeps Burr', matchedNames:['Acaena echinata'], rankID:7000, rankString:'species', scientificName:'Acaena echinata', georeferencedCount:0, name:'Acaena echinata', guid:'https://id.biodiversity.org.au/node/apni/2917353', occurrenceCount:0, scientificNameMatches:['<b>Acaena echinata</b>'], commonNameMatches:[]]
+        scientificModel
     }
 }
