@@ -121,15 +121,19 @@ class UserService {
         webService.getJson(url)
     }
 
-    def getOrganisationIdsForUserId(userId) {
-        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/getOrganisationIdsForUserId/${userId}"
-        webService.getJson(url)
-    }
-
     @Cacheable(value=UserService.USER_PROFILE_CACHE_REGION, key={userId+"_organisations"})
-    def getOrganisationsForUserId(String userId) {
+    List getOrganisationsForUserId(String userId) {
         def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/getOrganisationsForUserId/${userId}"
-        webService.getJson(url)
+        Map organisationResponse = webService.getJson2(url)
+
+        List organisations
+        if (organisationResponse.error) {
+            organisations = []
+        }
+        else {
+            organisations = organisationResponse.resp
+        }
+        organisations
     }
 
     def getProgramsForUserId(userId) {

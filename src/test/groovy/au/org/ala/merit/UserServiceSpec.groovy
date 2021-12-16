@@ -2,12 +2,13 @@ package au.org.ala.merit
 
 import au.org.ala.merit.hub.HubSettings
 import au.org.ala.web.AuthService
+import grails.plugin.cache.CustomCacheKeyGenerator
 import grails.plugin.cache.GrailsCache
+import grails.plugin.cache.GrailsConcurrentMapCacheManager
 import grails.testing.services.ServiceUnitTest
 import grails.testing.web.GrailsWebUnitTest
 import org.apache.http.HttpStatus
 import org.grails.plugin.cache.GrailsCacheManager
-import org.joda.time.DateTime
 import org.joda.time.DateTimeUtils
 import spock.lang.Specification
 
@@ -19,10 +20,15 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
 
     def webService = Mock(WebService)
     def authService = Mock(AuthService)
-    def grailsCacheManager = Mock(GrailsCacheManager)
     def activityService = Mock(ActivityService)
     def settingService = Mock(SettingService)
     def projectService = Mock(ProjectService)
+
+    @Override
+    Closure doWithSpring() {{ ->
+        grailsCacheManager(GrailsConcurrentMapCacheManager)
+        customCacheKeyGenerator(CustomCacheKeyGenerator)
+    }}
 
     def setup() {
         grailsApplication.config.ecodata.baseUrl = "/"
@@ -30,7 +36,6 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         service.grailsApplication = grailsApplication
         service.webService = webService
         service.authService = authService
-        service.grailsCacheManager = grailsCacheManager
         service.activityService = activityService
         service.cacheService = new CacheService()
         service.settingService = settingService
@@ -116,9 +121,12 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         setup:
         String email = "test@test.com"
 
+        // Mock the cache manager for this test so we can ensure the call to clear the cache was made.
         GrailsCache cache = Mock(GrailsCache)
         cache.getAllKeys() >> [[simpleKey:email]]
-        grailsCacheManager.getCache(_) >> cache
+        GrailsCacheManager cacheManager = Mock(GrailsCacheManager)
+        cacheManager.getCache(_) >> cache
+        service.grailsCacheManager = cacheManager
 
         when:
         String result = service.checkEmailExists(email)
@@ -139,8 +147,6 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         // If this result is cached, even once they register they won't be able to be added until the cache expires.
         setup:
         String email = "test@test.com"
-        GrailsCache cache = Mock(GrailsCache)
-        grailsCacheManager.getCache(_) >> cache
 
         when:
         String result = service.checkEmailExists(email)
@@ -490,6 +496,35 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         1 * webService.getJson({it.endsWith("permissions/addUserAsRoleToProject?userId=${userIdToAdd}&projectId=p1&role=caseManager")}) >> [statusCode:200]
 
         !result.error
+    }
+
+    def "The userService can retrieve a user's organisation list from ecodata"() {
+        setup:
+        String userId = 'u1'
+        List orgData = [[organisationId:'o1']]
+
+        when:
+        List orgs = service.getOrganisationsForUserId(userId)
+
+        then:
+        1 * webService.getJson2({it.endsWith("permissions/getOrganisationsForUserId/$userId")}) >> [statusCode:HttpStatus.SC_OK, resp:orgData]
+
+        and:
+        orgs == orgData
+    }
+
+    def "If an error is encountered retrieving the organisation list, an empty list is returned"() {
+        setup:
+        String userId = 'u1'
+
+        when:
+        List orgs = service.getOrganisationsForUserId(userId)
+
+        then:
+        1 * webService.getJson2({it.endsWith("permissions/getOrganisationsForUserId/$userId")}) >> [statusCode:HttpStatus.SC_INTERNAL_SERVER_ERROR, error:"Error retrieving organisation data"]
+
+        and:
+        orgs == []
     }
 
 }
