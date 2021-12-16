@@ -2,7 +2,6 @@ package au.org.ala.merit
 
 import au.org.ala.merit.reports.ReportConfig
 import groovy.util.logging.Slf4j
-import org.apache.log4j.Logger
 
 /**
  * Manages the various configuration points that a project can use to specify behaviour.
