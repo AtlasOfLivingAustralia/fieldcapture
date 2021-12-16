@@ -51,7 +51,6 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         projectService.getProgramConfiguration(_) >> new ProgramConfig([requiresActivityLocking: true])
         projectService.getProjectServices(_) >> { project -> realProjectService.getProjectServices(project)}
         metadataServiceStub.organisationList() >> [list:[]]
-        userServiceStub.getOrganisationIdsForUserId(_) >> []
         userServiceStub.isProjectStarredByUser(_, _) >> [isProjectStarredByUser:true]
         roleServiceStub.getRoles() >> []
         reportServiceStub.getReportsForProject(_) >> []
