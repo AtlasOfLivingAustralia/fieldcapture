@@ -4,11 +4,11 @@
         <!-- ko if: fn.facet != 'class' && $component.getFacetTermsLength(fn.facet) > 0 -->
             <div class="accordion">
                 <div class="card customCard">
-                    <div class="card-header collapsed" data-toggle="collapse" data-bind="attr: {id:fn.facet, href:'#facet-'+fn.facet}">
+                    <div class="card-header collapsed" data-toggle="collapse" data-bind="attr: {id:fn.safeId, href:'#facet-'+fn.safeId}">
                         <a> <h4 data-bind="attr: {id: 'facet-list-' + fnIndex() + '-header'}, html: fn.displayname" style="display:inline-block;"></h4></a>
                     </div>
                 </div>
-                <div data-bind="attr: {id: 'facet-'+fn.facet, 'data-name':fn.facet }" class="collapse facetItems">
+                <div data-bind="attr: {id: 'facet-'+fn.safeId, 'data-name':fn.facet }" class="collapse facetItems">
                     <div class="card-body cardBody">
                         <ul role="group" data-bind="attr: {'aria-labelledby': 'facet-list-' + fnIndex() + '-header'}" class="facetValues facetGroupValues">
                             <!-- ko foreach: {data: f.terms, as: 't', noChildContext: true} -->
@@ -21,8 +21,8 @@
                             <!-- /ko -->
                         </ul>
                         <!-- ko if: f.terms.length > max -->
-                        <a data-bind="attr: { href: '#' + fn.facet + 'Modal'}" role="button" class="moreFacets tooltips" data-toggle="modal" title="View full list of values"><i class="fa fa-hand-o-right"></i> choose more...</a>
-                        <div data-bind="attr: { id: fn.facet + 'Modal'}" class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+                        <a data-bind="attr: { href: '#' + fn.safeId + 'Modal'}" role="button" class="moreFacets tooltips" data-toggle="modal" title="View full list of values"><i class="fa fa-hand-o-right"></i> choose more...</a>
+                        <div data-bind="attr: { id: fn.safeId + 'Modal'}" class="modal" tabindex="-1" role="dialog" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-scrollable" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
