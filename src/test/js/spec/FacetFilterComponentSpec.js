@@ -21,8 +21,8 @@ describe("Facet filter component unit tests", function () {
     var facetFilterVM = null;
     beforeAll(function() {
         vm = {
-            facetsList : ["status", "organisationFacet"],
-            results: {"facets":{"status":{"terms":[{"term":"Completed","count":2}]},"organisationFacet":{"terms":[{"term":"Rangelands","count":2},{"term":"Rangelands NRM Co-ordinating Group (Inc.) ","count":2}]}}},
+            facetsList : ["status", "organisationFacet", "facet.test"],
+            results: {"facets":{"status":{"terms":[{"term":"Completed","count":2}]},"organisationFacet":{"terms":[{"term":"Rangelands","count":2},{"term":"Rangelands NRM Co-ordinating Group (Inc.) ","count":2}]}, "facet.test":{"terms":[{"term":"Term 1","count":1}, {"term":"Term 2","count":4}]}}},
             fqLink: "/home/projectExplorer?fq=ibraFacet%3AAvon+Wheatbelt",
             baseUrl: "?fq=ibraFacet%3AAvon+Wheatbelt",
             projectExplorerUrl: "/home/projectExplorer",
@@ -46,11 +46,12 @@ describe("Facet filter component unit tests", function () {
         expect(facetFilterVM.getSelectedTerms().length).toEqual(0);
         facetFilterVM.getFacetTerms('organisationFacet')[0].selected(1);
         expect(facetFilterVM.getSelectedTerms().length).toEqual(1);
+        facetFilterVM.facetsList[2].safeId == "facet-test";
     });
 
     it("should render component template correctly", function () {
         expect($(mockElement).find('.fa.fa-plus').length).toEqual(0);
-        expect($(mockElement).find('.moreFacets').length).toEqual(1);
-        expect($(mockElement).find('input').length).toEqual(4);
+        expect($(mockElement).find('.moreFacets').length).toEqual(2);
+        expect($(mockElement).find('input').length).toEqual(7);
     })
 });
