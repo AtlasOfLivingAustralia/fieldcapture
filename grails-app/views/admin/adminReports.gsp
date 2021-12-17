@@ -28,20 +28,7 @@
 
 <h4>Management unit report download:</h4>
 <form id="mu-report-selector">
-    <div class="form-group">
-        <label class="control-label">Select reporting period: </label>
-        <div class="controls">
-            <select id="reportPeriodOfManagementUnit" class="form-control form-control-sm input-medium">
-                <g:each var="financialYear" in="${reportsPeriodsOfManagementUnit}">
-                    <option value="startDate=${financialYear}-07-01&endDate=${financialYear+1}-06-30">01 July ${financialYear} - 30 June ${financialYear+1} </option>
-                </g:each>
-            </select>
-        </div>
-    </div>
-
-%{--    <input data-bind="value:yourName"/>--}%
-
-%{--    <label class="control-label">Select reporting period: </label>--}%
+    <label class="control-label">Select reporting period: </label>
     <div class="row mb-2">
         <div class="col-sm-2 pl-0 pr-1">
             <label for="fromDate">Start date</label>
@@ -56,8 +43,8 @@
             </div>
         </div>
     </div>
-    <a id="muReportDownload" class="btn btn-sm" href="#">Download Management Unit Report</a>
-    <a id="muReportDownloadSummary" class="btn btn-sm" href="#">Download Management Unit Report Summary</a>
+    <a id="muReportDownload" data-bind="click:muReportDownload" class="btn btn-sm" href="#">Download Management Unit Report</a>
+    <a id="muReportDownloadSummary" data-bind="click:muReportDownloadSummary" class="btn btn-sm" href="#">Download Management Unit Report Summary</a>
 </form>
 
 
@@ -107,6 +94,7 @@
 
 <asset:javascript src="common-bs4.js"/>
 <asset:javascript src="reef2050Report.js"/>
+<asset:javascript src="managementUnitReport.js"/>
 <script>
     $(function () {
         var SELECTED_REPORT_KEY = 'selectedAdminReport';
@@ -146,15 +134,6 @@
             });
         });
 
-        $('#muReportDownload').click(function () {
-            generateMuReport();
-        });
-
-        $('#muReportDownloadSummary').click(function () {
-            var summaryFlag = true;
-            generateMuReport(summaryFlag);
-        });
-
 
         var reportConfig = ${raw((reef2050Reports as grails.converters.JSON).toString())};
         var reportUrl = '${g.createLink(controller:'report', action:'reef2050PlanActionReport')}';
@@ -166,35 +145,8 @@
 
     });
 
-    // Activates knockout.js
-    ko.applyBindings(new AppViewModel(), document.getElementById('mu-report-selector'));
-    function AppViewModel() {
-        this.yourName = ko.observable("test");
-        var now = convertToSimpleDate(new Date());
-        var d = new Date();
-        d.setFullYear(2018, 6, 1);
-        self.fromDate = ko.observable(d).extend({simpleDate:false});
-        self.toDate = ko.observable(now).extend({simpleDate:false});
+    ko.applyBindings(new ManagementUnitReportSelectorViewModel(), document.getElementById('mu-report-selector'));
 
-    }
-
-    function generateMuReport(summaryFlag = false) {
-        var selectPeriod = $('select#reportPeriodOfManagementUnit').val()
-        var fromDate = $('#fromDate').val()
-        var toDate = $('#toDate').val()
-        $.get(fcConfig.generateMUReportInPeriodUrl, {selectPeriod:selectPeriod, fromDate:fromDate, toDate:toDate, summaryFlag: summaryFlag})
-            .done(function (data) {
-                if (data.error){
-                    bootbox.alert(data.error)
-                }else{
-                    var details = data['details']
-                    var message = data['message']
-                    var detailsIcon = ' <i class="fa fa-info-circle showDownloadDetailsIcon" data-toggle="collapse" href="#downloadDetails"></i>'
-                    var detailsPanel = '<div class="collapse" id="downloadDetails"><a id="muReportDownloadLink" href='+fcConfig.muReportDownloadUrl +'/' + details+'>Try this link, if you cannot get an email confirmation</a></div>'
-                    bootbox.alert(message + detailsIcon + detailsPanel)
-                }
-            })
-    }
 
 </script>
 </body>
