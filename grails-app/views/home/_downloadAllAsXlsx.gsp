@@ -44,7 +44,7 @@
         <li><label class="checkbox"><input type="checkbox" name="tabs" value="Activity Summary">Activity Summary</label></li>
     </ul>
 
-    <g:each in="${activityTypes + [name:'Special', list:[[name:'Upload of stage 1 and 2 reporting data']]]}" var="category" status="i">
+    <g:each in="${activityTypes}" var="category" status="i">
         <div class="space-after">
         <a class="accordion-toggle"
            data-bind="toggleVisibility:'#download-category-${i}'">
