@@ -87,4 +87,12 @@ merit.accessManagementOptions = {
 };
 merit.emailFromAddress = "merit@awe.gov.au";
 merit.emailReplyToAddress = "merit@awe.gov.au";
+
+// Add the activity type facet
+const activityTypeField = 'activities.type.keyword';
+if (!merit.availableFacets.indexOf(activityTypeField)) {
+    merit.availableFacets.push(activityTypeField);
+    merit.adminFacets.push(activityTypeField);
+}
+
 db.hub.save(merit);
