@@ -90,7 +90,7 @@ merit.emailReplyToAddress = "merit@awe.gov.au";
 
 // Add the activity type facet
 const activityTypeField = 'activities.type.keyword';
-if (!merit.availableFacets.indexOf(activityTypeField)) {
+if (merit.availableFacets.indexOf(activityTypeField) < 0) {
     merit.availableFacets.push(activityTypeField);
     merit.adminFacets.push(activityTypeField);
 }
