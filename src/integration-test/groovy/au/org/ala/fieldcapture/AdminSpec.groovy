@@ -1,8 +1,19 @@
 package au.org.ala.fieldcapture
 
+import com.icegreen.greenmail.junit.GreenMailRule
+import com.icegreen.greenmail.util.ServerSetup
+import com.icegreen.greenmail.util.ServerSetupTest
+import org.junit.Rule
+import pages.AdminReportsPage
 import pages.MERITAdministrationPage
 
+import javax.mail.internet.MimeMessage
+
 class AdminSpec extends StubbedCasSpec {
+
+    @Rule
+    public final GreenMailRule greenMail = new GreenMailRule(ServerSetup.verbose(ServerSetupTest.SMTP))
+
     def setupSpec() {
         useDataSet("dataset3")
     }
@@ -53,6 +64,48 @@ class AdminSpec extends StubbedCasSpec {
         waitFor { administration.staticPageContent.displayed }
 
         administration.staticPageContent.pageId.size() == 74
+
+    }
+
+    def "Admin Reports"() {
+        setup:
+        login([userId:'1', role:"ROLE_ADMIN", email:'fc-admin@nowhere.com', firstName: "ALA", lastName:'Admin'], browser)
+        String fromDate = "10/10/2020"
+        String toDate = "10/10/2021"
+
+        when:
+        to MERITAdministrationPage
+
+        then:
+        at MERITAdministrationPage
+
+        when:
+        administration.administratorReport.click()
+
+        then:
+        waitFor {at AdminReportsPage}
+
+        when:"I clicked the Download Management Unit Report button"
+        downloadMuReport(fromDate, toDate)
+        okBootbox()
+
+        then:
+        waitFor 20, {
+            MimeMessage[] messages = greenMail.getReceivedMessages()
+            messages?.length == 1
+            messages[0].getSubject() == "Your download is ready"
+        }
+
+        when:"I clicked the Download Management Unit Report Summary button"
+        downloadMuReportSummary(fromDate, toDate)
+        okBootbox()
+
+        then:
+        waitFor 20, {
+            MimeMessage[] messages = greenMail.getReceivedMessages()
+            messages?.length == 2
+            messages[0].getSubject() == "Your download is ready"
+        }
 
     }
 }

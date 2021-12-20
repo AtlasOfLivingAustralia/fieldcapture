@@ -389,17 +389,17 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
 
     def "The controller delegates to the managementUnitService to produce reports"() {
         setup:
-        String startDate = '2020-07-01'
-        String endDate = '2020-12-31'
+        String fromDate = '01-07-2020'
+        String toDate = '31-12-2020'
 
         when:
-        params.startDate = startDate
-        params.endDate = endDate
+        params.fromDate = fromDate
+        params.toDate = toDate
         controller.generateReportsInPeriod()
 
         then:
         1 * userService.getUser() >> [userName:'test@test.com']
-        1 * managementUnitService.generateReports(startDate, endDate, _) >> [status:HttpStatus.SC_OK]
+        1 * managementUnitService.generateReports(fromDate, toDate, _) >> [status:HttpStatus.SC_OK]
         response.json == [status:HttpStatus.SC_OK]
     }
 

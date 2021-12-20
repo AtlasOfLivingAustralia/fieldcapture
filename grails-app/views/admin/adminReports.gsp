@@ -9,9 +9,7 @@
             dashboardUrl: "${g.createLink(controller: 'report', action: 'loadReport')}",
             organisationDataDownloadUrl: "${g.createLink(controller:'search', action:'downloadOrganisationData')}",
             userDownloadUrl: "${g.createLink(controller:'search', action:'downloadUserData')}",
-            generateMUReportInPeriodUrl: "${g.createLink(controller:'managementUnit', action:'generateReportsInPeriod')}",
             muReportDownloadUrl: "${g.createLink(controller:"download",action:"get")}"
-
         }
     </script>
     <asset:stylesheet src="common-bs4.css"/>
@@ -27,17 +25,26 @@
 <a id="orgDataDownload" class="btn btn-sm" href="#">Download Organisation Report Data</a>
 
 <h4>Management unit report download:</h4>
-<div class="form-group">
+<form id="mu-report-selector">
     <label class="control-label">Select reporting period: </label>
-    <div class="controls">
-        <select id="reportPeriodOfManagementUnit" class="form-control form-control-sm input-medium">
-            <g:each var="financialYear" in="${reportsPeriodsOfManagementUnit}">
-                <option value="startDate=${financialYear}-07-01&endDate=${financialYear+1}-06-30">01 July ${financialYear} - 30 June ${financialYear+1} </option>
-            </g:each>
-        </select>
+    <div class="row mb-2">
+        <div class="col-sm-2 pl-0 pr-1">
+            <label for="fromDate">Start date</label>
+            <div class="input-group input-append">
+                <fc:datePicker targetField="fromDate.date" bs4="bs4" class="form-control form-control-sm dateControl" name="fromDate"  data-validation-engine="validate[date]"  size="form-control form-control-sm dateControl"/>
+            </div>
+        </div>
+        <div class="col-sm-2 pl-0 pr-1">
+            <label for="toDate">End date</label>
+            <div class="input-group input-append">
+                <fc:datePicker targetField="toDate.date" bs4="bs4" class="form-control form-control-sm dateControl" name="toDate" data-validation-engine="validate[date]"  size="form-control form-control-sm dateControl"/>
+            </div>
+        </div>
     </div>
-</div>
-<a id="muReportDownload" class="btn btn-sm" href="#">Download Management Unit Report</a>
+    <a id="muReportDownload" data-bind="click:muReportDownload" class="btn btn-sm" href="#">Download Management Unit Report</a>
+    <a id="muReportDownloadSummary" data-bind="click:muReportDownloadSummary" class="btn btn-sm" href="#">Download Management Unit Report Summary</a>
+</form>
+
 
 <h4>User Report</h4>
 
@@ -77,7 +84,6 @@
             <button class="btn btn-sm btn-success" data-bind="click:go">View Report</button>
             </div>
         </div>
-
     </form>
 
 </div>
@@ -86,6 +92,7 @@
 
 <asset:javascript src="common-bs4.js"/>
 <asset:javascript src="reef2050Report.js"/>
+<asset:javascript src="managementUnitReport.js"/>
 <script>
     $(function () {
         var SELECTED_REPORT_KEY = 'selectedAdminReport';
@@ -125,21 +132,6 @@
             });
         });
 
-        $('#muReportDownload').click(function () {
-            var selectPeriod = $('select#reportPeriodOfManagementUnit').val()
-            $.get(fcConfig.generateMUReportInPeriodUrl +"?" + selectPeriod)
-                .done(function (data) {
-                    if (data.error){
-                        bootbox.alert(data.error)
-                    }else{
-                        var details = data['details']
-                        var message = data['message']
-                        var detailsIcon = ' <i class="fa fa-info-circle showDownloadDetailsIcon" data-toggle="collapse" href="#downloadDetails"></i>'
-                        var detailsPanel = '<div class="collapse" id="downloadDetails"><a id="muReportDownloadLink" href='+fcConfig.muReportDownloadUrl +'/' + details+'>Try this link, if you cannot get an email confirmation</a></div>'
-                        bootbox.alert(message + detailsIcon + detailsPanel)
-                    }
-                })
-        });
 
         var reportConfig = ${raw((reef2050Reports as grails.converters.JSON).toString())};
         var reportUrl = '${g.createLink(controller:'report', action:'reef2050PlanActionReport')}';
@@ -150,6 +142,13 @@
         ko.applyBindings(new Reef2050ReportSelectorViewModel(reportConfig, options), document.getElementById('reef-report-selector'));
 
     });
+
+    var generateMUReportInPeriodUrl = "${g.createLink(controller:'managementUnit', action:'generateReportsInPeriod')}";
+    var optionsReport = {
+        generateMUReportInPeriodUrl: generateMUReportInPeriodUrl
+    };
+    ko.applyBindings(new ManagementUnitReportSelectorViewModel(optionsReport), document.getElementById('mu-report-selector'));
+
 
 </script>
 </body>

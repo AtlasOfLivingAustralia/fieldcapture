@@ -7,7 +7,10 @@ import grails.plugin.cache.Cacheable
 import grails.web.mapping.LinkGenerator
 import org.apache.http.HttpStatus
 
+import java.text.DateFormat
 import java.text.ParseException
+import java.text.SimpleDateFormat
+
 import static ReportService.ReportMode
 
 /**
@@ -516,15 +519,15 @@ class ManagementUnitController {
 
     @PreAuthorise(accessLevel='siteReadOnly')
     def generateReportsInPeriod(){
-        String startDate = params.startDate
-        String endDate = params.endDate
-        String dateFormat = "yyyy-MM-dd"
+
+        String startDate = params.fromDate
+        String endDate = params.toDate
+
         try{
-            Date.parse(dateFormat,startDate)
-            Date.parse(dateFormat,endDate)
 
             def user = userService.getUser()
             def extras =[:]
+            extras.summaryFlag = params.summaryFlag
 
             String email = user.userName
             extras.put("systemEmail", grailsApplication.config.getProperty('fieldcapture.system.email.address'))
