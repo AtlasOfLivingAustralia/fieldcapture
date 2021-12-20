@@ -184,8 +184,7 @@ class ManagementUnitServiceSpec extends Specification implements ServiceUnitTest
         service.generateReports(startDate, endDate, extras)
 
         then:
-        1 * webService.getJson(
-                {it.endsWith('managementunit/generateReportsInPeriod?startDate=2020-07-02T14:00:00Z&endDate=2021-01-01T13:00:00Z&test=test')})
+        1 * webService.getJson({it.endsWith('/managementunit/generateReportsInPeriod?startDate=2020-07-02T00:00:00Z&endDate=2021-01-01T00:00:00Z&test=test')})
     }
 
     def "Users with the MERIT siteReadOnly role can retrieve management unit reports and documents"() {
