@@ -240,13 +240,13 @@ class WebService {
      */
     Map getJson2(String url, Integer timeout = null) {
         HttpURLConnection conn = null
-        Map result = [:]
+        Map result = null
         try {
             conn = configureConnection(url, true, timeout)
 
             String responseCharset = getCharset(conn)
             JsonSlurper parser = new JsonSlurper()
-            Map resp = parser.parse(conn.inputStream, responseCharset)
+            def resp = parser.parse(conn.inputStream, responseCharset)
             result = [statusCode:conn.responseCode, resp:resp]
 
         } catch (ConverterException e) {
