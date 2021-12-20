@@ -21,7 +21,7 @@ describe("ManagementUnitReportSelectorViewModel Spec", function () {
         var options = {generateMUReportInPeriodUrl:'/test/url'};
         var model = new ManagementUnitReportSelectorViewModel(options);
 
-        spyOn($, 'ajax').and.callFake(function () {
+        var ajaxCall = spyOn($, 'ajax').and.callFake(function () {
             var d = $.Deferred();
             // resolve using our mock data
             d.resolve({success:true});
@@ -30,18 +30,20 @@ describe("ManagementUnitReportSelectorViewModel Spec", function () {
 
         spyOn(bootbox, 'alert');
 
-        model.muReportDownload()
+        model.muReportDownloadSummary()
         var expected = {
-            // url: options.generateMUReportInPeriodUrl,
-            url: undefined,
-            type: 'get',
-            data: '{"summaryFlag":false}',
+            url: options.generateMUReportInPeriodUrl,
+            type: 'GET',
+            data: Object({ fromDate:'2018-07-01T02:04:45Z', toDate:'2018-07-01T02:04:45Z', summaryFlag: true }),
             dataType: 'json',
             contentType: 'application/json'
         };
-        expect($.ajax).toHaveBeenCalledWith(expected);
 
-        // expect($.ajax).toHaveBeenCalledWith({ url: undefined, type: 'get', dataType: undefined, data: Object({ fromDate: undefined, toDate: undefined, summaryFlag: false }), success: undefined })
+        expect(ajaxCall).toHaveBeenCalled();
+        expect(window.bootbox.alert).toHaveBeenCalled();
+
+
+
 
     });
 

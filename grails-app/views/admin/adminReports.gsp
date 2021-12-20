@@ -9,9 +9,7 @@
             dashboardUrl: "${g.createLink(controller: 'report', action: 'loadReport')}",
             organisationDataDownloadUrl: "${g.createLink(controller:'search', action:'downloadOrganisationData')}",
             userDownloadUrl: "${g.createLink(controller:'search', action:'downloadUserData')}",
-            generateMUReportInPeriodUrl: "${g.createLink(controller:'managementUnit', action:'generateReportsInPeriod')}",
             muReportDownloadUrl: "${g.createLink(controller:"download",action:"get")}"
-
         }
     </script>
     <asset:stylesheet src="common-bs4.css"/>
@@ -145,7 +143,11 @@
 
     });
 
-    ko.applyBindings(new ManagementUnitReportSelectorViewModel(), document.getElementById('mu-report-selector'));
+    var generateMUReportInPeriodUrl = "${g.createLink(controller:'managementUnit', action:'generateReportsInPeriod')}";
+    var optionsReport = {
+        generateMUReportInPeriodUrl: generateMUReportInPeriodUrl
+    };
+    ko.applyBindings(new ManagementUnitReportSelectorViewModel(optionsReport), document.getElementById('mu-report-selector'));
 
 
 </script>
