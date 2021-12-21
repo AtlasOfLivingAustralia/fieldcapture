@@ -85,7 +85,7 @@ class AdminSpec extends StubbedCasSpec {
         then:
         waitFor {at AdminReportsPage}
 
-        when:"I clicked the Download Management Unit Report button"
+        when:"I clicked the Management Unit Activities Report button"
         downloadMuReport(fromDate, toDate)
         okBootbox()
 
@@ -96,7 +96,7 @@ class AdminSpec extends StubbedCasSpec {
             messages[0].getSubject() == "Your download is ready"
         }
 
-        when:"I clicked the Download Management Unit Report Summary button"
+        when:"I clicked the Management Unit Report Status button"
         downloadMuReportSummary(fromDate, toDate)
         okBootbox()
 
