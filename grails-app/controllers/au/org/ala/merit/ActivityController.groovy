@@ -597,7 +597,7 @@ class ActivityController {
         if (name.size() > MAX_SHEET_NAME_LENGTH) {
             shortName = name[0..prefixLength-1]+'...'+name[-suffixLength..name.size()-1]
         }
-        shortName
+        shortName.replaceAll('/', '-')
     }
 
     /**
