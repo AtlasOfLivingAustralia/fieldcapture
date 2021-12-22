@@ -82,8 +82,8 @@ db.setting.save(setting);
 // Configure the MERIT hub to use the access management features
 var merit = db.hub.findOne({urlPath:'merit'});
 merit.accessManagementOptions = {
-    "expireUsersAfterThisNumberOfMonthsInactive": NumberInt(24),
-    "warnUsersAfterThisNumberOfMonthsInactive": NumberInt(23)
+    "expireUsersAfterPeriodInactive": "P24M",
+    "warnUsersAfterPeriodInactive": "P23M"
 };
 merit.emailFromAddress = "merit@awe.gov.au";
 merit.emailReplyToAddress = "merit@awe.gov.au";
