@@ -128,8 +128,8 @@ var meritHub = {
   "urlPath" : "merit",
   "hubId":"merit",
   "accessManagementOptions": {
-    "expireUsersAfterThisNumberOfMonthsInactive": NumberInt(24),
-    "warnUsersAfterThisNumberOfMonthsInactive": NumberInt(23)
+    "expireUsersAfterPeriodInactive": "P24M",
+    "warnUsersAfterPeriodInactive": "P23M"
   },
   "emailFromAddress":"merit@test.org",
   "emailReplyToAddress":"merit@test.org"
