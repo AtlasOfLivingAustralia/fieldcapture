@@ -41,7 +41,7 @@
             </div>
         </div>
     </div>
-    <a id="muReportDownload" data-bind="click:muReportDownload" class="btn btn-sm" href="#">Management Unit Activities Report</a>
+    <a id="muReportDownload" data-bind="click:muReportDownload" class="btn btn-sm" href="#">Management Unit Activities</a>
     <a id="muReportDownloadSummary" data-bind="click:muReportDownloadSummary" class="btn btn-sm" href="#">Management Unit Report Status</a>
 </form>
 
