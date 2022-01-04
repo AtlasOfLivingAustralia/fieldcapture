@@ -1,5 +1,5 @@
-load('../../utils/audit.js');
-load('../../utils/uuid.js');
+load('../../../utils/audit.js');
+load('../../../utils/uuid.js');
 
 var userId = '1493';
 var now = ISODate();
