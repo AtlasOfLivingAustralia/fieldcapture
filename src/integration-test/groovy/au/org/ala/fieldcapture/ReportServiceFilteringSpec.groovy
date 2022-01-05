@@ -4,6 +4,7 @@ import pages.AdminClearCachePage
 import pages.AdminTools
 import pages.ReportPage
 import pages.RlpProjectPage
+import pages.modules.ReportCategory
 import spock.lang.Stepwise
 
 @Stepwise
@@ -55,7 +56,12 @@ class ReportServiceFilteringSpec extends StubbedCasSpec {
         waitFor 20, { hasBeenReloaded() }
 
         when:
-        reportingTab.click()
+        displayReportingTab()
+        projectReports.reportsByCategory.each { ReportCategory reportCategory ->
+            if (reportCategory.showAllReportsCheckbox.displayed) {
+                reportCategory.showAllReports()
+            }
+        }
 
         then:
         waitFor { projectReports.displayed }
@@ -63,7 +69,7 @@ class ReportServiceFilteringSpec extends StubbedCasSpec {
         and: "The new reports are displayed"
 
         waitFor {
-            projectReports.reports.size() == 20
+            projectReports.reports.size() == 27
             projectReports.reports[1].name != ""
         }
         projectReports.reports[0].name == "Year 2018/2019 - Quarter 1 Outputs Report"
