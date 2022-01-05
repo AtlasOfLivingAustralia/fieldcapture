@@ -224,24 +224,52 @@ class UserController {
     }
 
     def getMembersForHubPaginated() {
+
+        String userId = null
         String hubId = params.id
+        String email = params.get('search[value]')
         def adminUserId = userService.getCurrentUserId()
 
+        def userDetails = authService.getUserForEmailAddress(email)
+        if (userDetails != null && userDetails.userName == params.get('search[value]')) {
+            userId = userDetails.userId
+        }
         if (hubId && adminUserId) {
             if (userService.userIsAlaOrFcAdmin()) {
-                def results = userService.getMembersForHubPerPage(hubId, params.int('start'), params.int('length'))
+                def results = userService.getMembersForHubPerPage(hubId, params.int('start'), params.int('length'), userId)
                 asJson results
 
             } else {
                 response.sendError(SC_FORBIDDEN, 'Permission denied')
             }
-        } else if (adminUserId) {
+        } else if (adminUserId && hubId) {
             response.sendError(SC_BAD_REQUEST, 'Required params not provided: id')
-        } else if (projectId) {
-            response.sendError(SC_FORBIDDEN, 'User not logged-in or does not have permission')
         } else {
             response.sendError(SC_INTERNAL_SERVER_ERROR, 'Unexpected error')
         }
+    }
+
+    def searchHubUser() {
+        println params: params
+        String hubId = params.hubId
+        def adminUserId = userService.getCurrentUserId()
+        String emailAddress = params.emailAddress
+        println params.int('start')
+        println params.int('length')
+
+
+        if (hubId && adminUserId) {
+            if (userService.userIsAlaOrFcAdmin()) {
+                def userDetails = authService.getUserForEmailAddress(emailAddress)
+                def results = userService.getMembersForHubPerPage(hubId, 0, 10, userDetails.userId)
+                render results as JSON
+
+            } else {
+                response.sendError(SC_FORBIDDEN, 'Permission denied')
+            }
+        }
+        def results = userService.getMembersForHubPerPage(hubId, 0,10)
+        render results as JSON
     }
 
     def asJson(json) {

@@ -10,12 +10,14 @@ function initialise(roles, currentUserId, hubId, containerId) {
             data: 'userId',
             name: 'userId',
             bSortable: false,
-            className: 'hubUserId'
+            className: 'hubUserId',
+            searchable: true
 },
         {
             data: 'displayName',
             name: 'displayName',
-            bSortable: false
+            bSortable: false,
+            searchable: true
         },
         {
             data: 'role',
@@ -58,17 +60,67 @@ function initialise(roles, currentUserId, hubId, containerId) {
     ];
 
     var table  = $(tableSelector).DataTable( {
-        "bFilter": false,
-        "lengthChange": true,
+
+        // "bFilter": true,
+        // "lengthChange": true,
         "processing": true,
         "serverSide": true,
         createdRow:function(row){
             $("#datecell", row).datepicker({format: "dd-mm-yyyy",autoclose: true});
         },
-        "ajax": fcConfig.getMembersForHubPaginatedUrl + "/" + hubId,
-        "columns":col
+        "ajax": {"url": fcConfig.getMembersForHubPaginatedUrl + "/" + hubId,
+        "type": "POST"},
+        "columns":col,
+        "language": {
+            "search": "",
+            "searchPlaceholder":"Search records..."
+
+        },
+        initComplete : function() {
+            var input = $('.dataTables_filter input').unbind(),
+                self = this.api(),
+                $searchButton = $('<button type="submit" \n' +
+                    '                              class="btn btn-inverse dtSearchButton" \n' +
+                    '                              id="button_search" \n' +
+                    '                              data-toggle="tooltip" \n' +
+                    '                              title="Apply Search"\n' +
+                    '                              style="padding:0,5px,0,5px"\n' +
+                    '                      >\n' +
+                    '                      <i class="fas fa-search"></i>\n' +
+                    '                      </button>')
+                    .text('search')
+                    .click(function() {
+                        self.search(input.val()).draw();
+                    }),
+                $clearButton = $('<button type="button" class="btn btn-inverse dtSearchButton" id="button_trash" data-toggle="tooltip" title="Clear Search" style="padding:0,5px,0,5px" > <i class="fas fa-trash"></i> </button>')
+                    .text('clear')
+                    .click(function() {
+                        input.val('');
+                        $searchButton.click();
+                    })
+            $('.dataTables_filter').append($searchButton, $clearButton);
+        }
+
 
     } );
+
+    // $('.dataTables_filter input')
+    //     .off()
+    //     .on('keyup', function() {
+    //         $('#example').DataTable().search(this.value.trim(), false, false).draw();
+    //     });
+
+    // $('#searchInput').on('keyup change', function () {
+    //     // table.search(this.value).draw();
+    //     table.column(2).search(this.value).draw();
+    // });
+
+    // $('#member-list').DataTable(
+    //     { language: {
+    //             searchPlaceholder: "Search records",
+    //             search: "",
+    //         }
+    //     })
 
     $( table.table().body() )
         .addClass( 'highlight' );

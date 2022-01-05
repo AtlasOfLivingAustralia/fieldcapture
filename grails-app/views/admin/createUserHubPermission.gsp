@@ -9,10 +9,11 @@
             loadPermissionsUrl: "${createLink(controller:'user', action:'getMembersOfHub')}",
             getMembersForHubPaginatedUrl: "${createLink(controller: 'user', action: 'getMembersForHubPaginated')}",
             removeHubUserUrl: "${createLink(controller: 'user', action: 'removeUserWithHubRole')}",
-            updateHubUser: "${createLink(controller: 'user', action: 'addUserToHub')}"
+            updateHubUser: "${createLink(controller: 'user', action: 'addUserToHub')}",
+            searchHubUser: "${createLink(controller: 'user', action: 'searchHubUser')}"
         };
     </script>
-<asset:stylesheet src="common-bs4.css"/>
+    <asset:stylesheet src="common-bs4.css"/>
 </head>
 <body>
 <content tag="pageTitle">User Permissions for MERIT</content>
@@ -22,15 +23,11 @@
 <div><span id="alert" class="alert alert-success"></span></div>
 <div id="permissions">
     <g:render template="/admin/addPermissions" model="[addUserUrl:g.createLink(controller:'user', action:'addUserToHub'), entityId:hubId, containerId:'member-list']"/>
+%{--    <g:render template="/admin/searchUserHubPermission" model="[hubId:hubId, containerId:'member-list']"/>--}%
     <g:render template="/admin/permissionTablePaginated" model="[containerId:'member-list']"/>
 </div>
 
-
-<asset:script>
-%{--    populatePermissionsTable();--}%
-</asset:script>
 <asset:javascript src="common-bs4.js"/>
 <asset:deferredScripts/>
-
 </body>
 </html>
