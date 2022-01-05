@@ -7,6 +7,7 @@ import com.icegreen.greenmail.util.ServerSetupTest
 import org.junit.Rule
 import pages.RlpProjectPage
 import pages.ReportPage
+import pages.modules.ReportCategory
 import spock.lang.Stepwise
 
 import javax.mail.internet.MimeMessage
@@ -44,8 +45,12 @@ class RlpReportingSpec extends StubbedCasSpec {
         waitFor 20, { hasBeenReloaded() }
 
         when:
-        reportingTab.click()
-
+        displayReportingTab()
+        projectReports.reportsByCategory.each { ReportCategory reportCategory ->
+            if (reportCategory.showAllReportsCheckbox.displayed) {
+                reportCategory.showAllReports()
+            }
+        }
 
         then:
         waitFor { projectReports.displayed }
@@ -53,7 +58,7 @@ class RlpReportingSpec extends StubbedCasSpec {
         and:
 
         waitFor {
-            projectReports.reports.size() == 20
+            projectReports.reports.size() == 27
             projectReports.reports[1].name != ""
         }
         projectReports.reports[0].name == "Year 2018/2019 - Quarter 1 Outputs Report"
@@ -61,9 +66,9 @@ class RlpReportingSpec extends StubbedCasSpec {
         projectReports.reports[0].toDate == "30-09-2018"
 
         and: "The end date of the report finishing on the same day of the project is not the day before like other reports"
-        projectReports.reports[19].name == "Outcomes Report 2 for Project 1"
-        projectReports.reports[19].fromDate == "01-07-2018"
-        projectReports.reports[19].toDate == "01-07-2023"
+        projectReports.reports[26].name == "Outcomes Report 2 for Project 1"
+        projectReports.reports[26].fromDate == "01-07-2018"
+        projectReports.reports[26].toDate == "01-07-2023"
 
     }
 
