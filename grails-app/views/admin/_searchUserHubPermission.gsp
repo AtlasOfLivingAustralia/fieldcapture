@@ -6,8 +6,8 @@
                    data-validation-engine="validate[required, custom[email]]" data-errormessage-value-missing="Email is required!">
         </div>
         <div class="col-sm-2">
-            <button class="btn btn-primary btn-sm searchUserDetails" data-bind="click:searchUserDetails">Search</button>
-%{--            <a id="muReportDownload" data-bind="click:muReportDownload" class="btn btn-sm" href="#">Management Unit Activities Report</a>--}%
+                        <button class="btn btn-primary btn-sm searchUserDetails">Search</button>
+%{--            <button class="btn btn-primary btn-sm searchUserDetails" data-bind="click:searchUserDetails">Search</button>--}%
         </div>
 
     </div>
@@ -24,3 +24,4 @@
 });
 </asset:script>
 <asset:javascript src="userHubPermission.js"/>
+<asset:javascript src="permissionTable.js"/>

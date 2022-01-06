@@ -3,6 +3,7 @@
  */
 
 function initialise(roles, currentUserId, hubId, containerId) {
+
     var tableSelector = "#"+containerId
     $('#alert').hide();
     var col = [
@@ -61,9 +62,9 @@ function initialise(roles, currentUserId, hubId, containerId) {
 
     var table  = $(tableSelector).DataTable( {
 
-        // "bFilter": true,
-        // "lengthChange": true,
-        "processing": true,
+        "bFilter": true,
+        "lengthChange": true,
+        "processing": false,
         "serverSide": true,
         createdRow:function(row){
             $("#datecell", row).datepicker({format: "dd-mm-yyyy",autoclose: true});
@@ -71,35 +72,39 @@ function initialise(roles, currentUserId, hubId, containerId) {
         "ajax": {"url": fcConfig.getMembersForHubPaginatedUrl + "/" + hubId,
         "type": "POST"},
         "columns":col,
-        "language": {
-            "search": "",
-            "searchPlaceholder":"Search records..."
+        dom: 'lrtip'
 
-        },
-        initComplete : function() {
-            var input = $('.dataTables_filter input').unbind(),
-                self = this.api(),
-                $searchButton = $('<button type="submit" \n' +
-                    '                              class="btn btn-inverse dtSearchButton" \n' +
-                    '                              id="button_search" \n' +
-                    '                              data-toggle="tooltip" \n' +
-                    '                              title="Apply Search"\n' +
-                    '                              style="padding:0,5px,0,5px"\n' +
-                    '                      >\n' +
-                    '                      <i class="fas fa-search"></i>\n' +
-                    '                      </button>')
-                    .text('search')
-                    .click(function() {
-                        self.search(input.val()).draw();
-                    }),
-                $clearButton = $('<button type="button" class="btn btn-inverse dtSearchButton" id="button_trash" data-toggle="tooltip" title="Clear Search" style="padding:0,5px,0,5px" > <i class="fas fa-trash"></i> </button>')
-                    .text('clear')
-                    .click(function() {
-                        input.val('');
-                        $searchButton.click();
-                    })
-            $('.dataTables_filter').append($searchButton, $clearButton);
-        }
+        // ,
+        // "language": {
+        //     "search": "",
+        //     "searchPlaceholder":"Search records..."
+        //
+        // }
+        // ,
+        // initComplete : function() {
+        //     var input = $('.dataTables_filter input').unbind(),
+        //         self = this.api(),
+        //         $searchButton = $('<button type="submit" \n' +
+        //             '                              class="btn btn-inverse dtSearchButton" \n' +
+        //             '                              id="button_search" \n' +
+        //             '                              data-toggle="tooltip" \n' +
+        //             '                              title="Apply Search"\n' +
+        //             '                              style="padding:0,5px,0,5px"\n' +
+        //             '                      >\n' +
+        //             '                      <i class="fas fa-search"></i>\n' +
+        //             '                      </button>')
+        //             .text('search')
+        //             .click(function() {
+        //                 self.search(input.val()).draw();
+        //             }),
+        //         $clearButton = $('<button type="button" class="btn btn-inverse dtSearchButton" id="button_trash" data-toggle="tooltip" title="Clear Search" style="padding:0,5px,0,5px" > <i class="fas fa-trash"></i> </button>')
+        //             .text('clear')
+        //             .click(function() {
+        //                 input.val('');
+        //                 $searchButton.click();
+        //             })
+        //     $('.dataTables_filter').append($searchButton, $clearButton);
+        // }
 
 
     } );
@@ -193,6 +198,24 @@ function initialise(roles, currentUserId, hubId, containerId) {
         });
     });
 
+    // $('input').on('change', function () {
+    //     var val = $(this).val();
+    //     alert("val: " + val);
+    //     table.search( val ).draw();
+    // })
+
+    $('#email').on('change', function () {
+        var val = $(this).val();
+        // alert("val: " + val);
+        table.search( val ).draw();
+    })
+
+    // $('#btnSearch').on('click', function () {
+    //     var val = $('#email').val();
+    //     alert("value: " + val);
+    //     table.search( val ).draw();
+    // })
+
     function removeUserRole(userId, role, tableSelector) {
         $.ajax({
             url: fcConfig.removeHubUserUrl,
@@ -214,6 +237,19 @@ function initialise(roles, currentUserId, hubId, containerId) {
                 reloadMembers(tableSelector); // reload table
             });
     }
+
+}
+
+function SearchUserHubPermissionViewModel1(options) {
+
+    var self = this;
+    var config = _.defaults(options);
+
+    self.emailAddress = ko.observable()
+    self.email = ko.observable();
+
+
+
 }
 
 function reloadMembers(tableSelector) {

@@ -11,6 +11,12 @@
             opacity: .25;
         }
 
+        .dataTables_wrapper .dataTables_info,
+        /*.dataTables_wrapper .dataTables_paginate {*/
+        /*    float: none;*/
+        /*    text-align: center;*/
+        /*}*/
+
         /* Pagination fix */
         .pagination .disabled, .pagination .currentStep, .pagination .step {
             float: left;
