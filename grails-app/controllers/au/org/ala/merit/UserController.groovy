@@ -249,29 +249,6 @@ class UserController {
         }
     }
 
-    def searchHubUser() {
-        println params: params
-        String hubId = params.hubId
-        def adminUserId = userService.getCurrentUserId()
-        String emailAddress = params.emailAddress
-        println params.int('start')
-        println params.int('length')
-
-
-        if (hubId && adminUserId) {
-            if (userService.userIsAlaOrFcAdmin()) {
-                def userDetails = authService.getUserForEmailAddress(emailAddress)
-                def results = userService.getMembersForHubPerPage(hubId, 0, 10, userDetails.userId)
-                render results as JSON
-
-            } else {
-                response.sendError(SC_FORBIDDEN, 'Permission denied')
-            }
-        }
-        def results = userService.getMembersForHubPerPage(hubId, 0,10)
-        render results as JSON
-    }
-
     def asJson(json) {
         render(contentType: 'application/json', text: json as JSON)
     }

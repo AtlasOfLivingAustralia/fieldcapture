@@ -74,58 +74,7 @@ function initialise(roles, currentUserId, hubId, containerId) {
         "columns":col,
         dom: 'lrtip'
 
-        // ,
-        // "language": {
-        //     "search": "",
-        //     "searchPlaceholder":"Search records..."
-        //
-        // }
-        // ,
-        // initComplete : function() {
-        //     var input = $('.dataTables_filter input').unbind(),
-        //         self = this.api(),
-        //         $searchButton = $('<button type="submit" \n' +
-        //             '                              class="btn btn-inverse dtSearchButton" \n' +
-        //             '                              id="button_search" \n' +
-        //             '                              data-toggle="tooltip" \n' +
-        //             '                              title="Apply Search"\n' +
-        //             '                              style="padding:0,5px,0,5px"\n' +
-        //             '                      >\n' +
-        //             '                      <i class="fas fa-search"></i>\n' +
-        //             '                      </button>')
-        //             .text('search')
-        //             .click(function() {
-        //                 self.search(input.val()).draw();
-        //             }),
-        //         $clearButton = $('<button type="button" class="btn btn-inverse dtSearchButton" id="button_trash" data-toggle="tooltip" title="Clear Search" style="padding:0,5px,0,5px" > <i class="fas fa-trash"></i> </button>')
-        //             .text('clear')
-        //             .click(function() {
-        //                 input.val('');
-        //                 $searchButton.click();
-        //             })
-        //     $('.dataTables_filter').append($searchButton, $clearButton);
-        // }
-
-
     } );
-
-    // $('.dataTables_filter input')
-    //     .off()
-    //     .on('keyup', function() {
-    //         $('#example').DataTable().search(this.value.trim(), false, false).draw();
-    //     });
-
-    // $('#searchInput').on('keyup change', function () {
-    //     // table.search(this.value).draw();
-    //     table.column(2).search(this.value).draw();
-    // });
-
-    // $('#member-list').DataTable(
-    //     { language: {
-    //             searchPlaceholder: "Search records",
-    //             search: "",
-    //         }
-    //     })
 
     $( table.table().body() )
         .addClass( 'highlight' );
@@ -198,23 +147,10 @@ function initialise(roles, currentUserId, hubId, containerId) {
         });
     });
 
-    // $('input').on('change', function () {
-    //     var val = $(this).val();
-    //     alert("val: " + val);
-    //     table.search( val ).draw();
-    // })
-
     $('#email').on('change', function () {
         var val = $(this).val();
-        // alert("val: " + val);
         table.search( val ).draw();
     })
-
-    // $('#btnSearch').on('click', function () {
-    //     var val = $('#email').val();
-    //     alert("value: " + val);
-    //     table.search( val ).draw();
-    // })
 
     function removeUserRole(userId, role, tableSelector) {
         $.ajax({

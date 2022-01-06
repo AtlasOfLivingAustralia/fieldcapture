@@ -6,9 +6,6 @@
     </div>
 <div class="row">
 <div class="col-sm-offset-10" id="hub-member-list">
-%{--    <label>Search by Email Address:</label>--}%
-%{--    <input style="width: 250px" id="email" name="email" type="text" value="" data-bind="value:emailAddress"--}%
-%{--                   data-validation-engine="validate[required, custom[email]]" data-errormessage-value-missing="Email is required!">--}%
         <table class="table-width" id="${containerId}">
             <thead>
                 <th>User Id</th>
