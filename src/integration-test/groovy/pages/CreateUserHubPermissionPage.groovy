@@ -1,6 +1,7 @@
 package pages
 
 import geb.Page
+import org.openqa.selenium.Keys
 import pages.modules.HubPermissionsTableRow
 
 class CreateUserHubPermissionPage extends Page {
@@ -13,7 +14,7 @@ class CreateUserHubPermissionPage extends Page {
         emailAddress {$("#emailAddress")}
         permission {$("#addUserRole")}
         expiryDate { $("#expiryDate")}
-
+        hubEmail { $("#email")}
         permissions { $("tr.odd, tr.even").moduleList(HubPermissionsTableRow) }
 
 
@@ -28,5 +29,10 @@ class CreateUserHubPermissionPage extends Page {
 
     HubPermissionsTableRow findPermissionForUser(String userId) {
         permissions.find{it.userId == userId}
+    }
+
+    def searchHubUser(String email) {
+        hubEmail.value(email)
+        hubEmail << Keys.chord(Keys.ENTER)
     }
 }
