@@ -57,9 +57,9 @@ class DocumentControllerSpec extends Specification implements ControllerUnitTest
         def resp = controller.download("path", "file.txt")
 
         then:
-        1 * documentService.search("path", "file.txt") >> [count: 1, documents:[document]]
+        1 * documentService.search(filepath:"path", filename:"file.txt") >> [count: 1, documents:[document]]
         1 * documentService.canView(document) >> true
-        1 * webService.proxyGetRequest({it.endsWith('document/download/path/file.txt')}, false, false)
+        1 * webService.proxyGetRequest(response, {it.endsWith('document/download/path/file.txt')}, false, false)
         resp == null
     }
 
@@ -71,9 +71,9 @@ class DocumentControllerSpec extends Specification implements ControllerUnitTest
         def resp = controller.download("path", "thumb_file.png")
 
         then:
-        1 * documentService.search("path", "file.png") >> [count: 1, documents:[document]]
+        1 * documentService.search(filepath:"path", filename:"file.png") >> [count: 1, documents:[document]]
         1 * documentService.canView(document) >> true
-        1 * webService.proxyGetRequest({it.endsWith('document/download/path/thumb_file.png')}, false, false)
+        1 * webService.proxyGetRequest(response, {it.endsWith('document/download/path/thumb_file.png')}, false, false)
         resp == null
     }
 
@@ -83,7 +83,7 @@ class DocumentControllerSpec extends Specification implements ControllerUnitTest
         controller.download("path", "file.txt")
 
         then:
-        1 * documentService.search("path", "file.txt") >> [count: 0, documents:[]]
+        1 * documentService.search(filepath:"path", filename:"file.txt") >> [count: 0, documents:[]]
         0 * documentService._
         0 * webService._
         response.status == HttpStatus.SC_NOT_FOUND
@@ -97,8 +97,8 @@ class DocumentControllerSpec extends Specification implements ControllerUnitTest
         controller.download("path", "file.txt")
 
         then:
-        1 * documentService.search("path", "file.txt") >> [count: 1, documents:[document]]
-        0 * documentService.canView(document) >> false
+        1 * documentService.search(filepath:"path", filename:"file.txt") >> [count: 1, documents:[document]]
+        1 * documentService.canView(document) >> false
         0 * webService._
         response.status == HttpStatus.SC_NOT_FOUND
     }
