@@ -116,7 +116,7 @@ class CreateUserHubPermissionSpec extends StubbedCasSpec {
         searchHubUser(emailAddress)
 
         then: "User appears in the permissions table"
-        waitFor {
+        waitFor 50, {
             permissions.size() == 1
         }
     }
