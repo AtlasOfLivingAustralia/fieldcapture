@@ -111,13 +111,14 @@ class CreateUserHubPermissionSpec extends StubbedCasSpec {
         when:
         to CreateUserHubPermissionPage
 
-        String emailAddress = "user2@user.com"
+        String emailAddress = "user1001@user.com"
 
         searchHubUser(emailAddress)
 
         then: "User appears in the permissions table"
-        waitFor 50, {
+        waitFor {
             permissions.size() == 1
         }
+        findPermissionForUser('1001').userId == "1001"
     }
 }
