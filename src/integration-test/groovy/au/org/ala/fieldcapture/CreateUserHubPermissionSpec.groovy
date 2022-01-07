@@ -117,7 +117,7 @@ class CreateUserHubPermissionSpec extends StubbedCasSpec {
 
         then: "User appears in the permissions table"
         waitFor {
-            permissions.size() == 1
+            permissions.size() == 3
         }
         findPermissionForUser('1001').userId == "1001"
     }
