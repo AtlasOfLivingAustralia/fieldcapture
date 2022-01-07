@@ -128,7 +128,7 @@ class WebService {
             conn.setRequestProperty("Authorization", grailsApplication.config.getProperty('api_key'))
         }
 
-        def headers = [HttpHeaders.CONTENT_DISPOSITION]
+        def headers = [HttpHeaders.CONTENT_DISPOSITION, HttpHeaders.CACHE_CONTROL, HttpHeaders.EXPIRES]
         def resp = [status:conn.responseCode]
 
         response.status = conn.responseCode
@@ -137,7 +137,11 @@ class WebService {
         if (conn.responseCode == 200) {
             response.setContentLength(conn.getContentLength())
             headers.each { header ->
-                response.setHeader(header, conn.getHeaderField(header))
+                String headerValue = conn.getHeaderField(header)
+                if (headerValue) {
+                    response.setHeader(header, headerValue)
+                }
+
             }
             response.status = conn.responseCode
 
