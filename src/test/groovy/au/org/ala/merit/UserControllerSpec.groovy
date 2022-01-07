@@ -16,6 +16,7 @@ class UserControllerSpec extends Specification implements ControllerUnitTest<Use
     def setup() {
         controller.userService = userService
         controller.reportService = reportService
+        controller.authService = authService
     }
 
     def "the user controller assembles information about the projects and other entities the user has access to"() {
@@ -197,6 +198,12 @@ class UserControllerSpec extends Specification implements ControllerUnitTest<Use
         SettingService.setHubConfig(hubSettings)
         String hubId = '00cf9ffd-e30c-45f8-99db-abce8d05c0d8'
         params.id = hubId
+        params.('search[value]') = "test@test.com"
+        params.('start') = 0
+        params.('length') = 10
+        String email = "test@test.com"
+        Map userDetails = [userId: "1", userName: email, firstName: "Test", lastName: "Testing"]
+        String userId = userDetails.userId
 
         when:
         controller.getMembersForHubPaginated()
@@ -204,8 +211,9 @@ class UserControllerSpec extends Specification implements ControllerUnitTest<Use
 
         then:
         1 * userService.getCurrentUserId() >> [userId:'129333', userName: 'jsalomon']
+        1 * authService.getUserForEmailAddress(email) >> userDetails
         1 * userService.userIsAlaOrFcAdmin() >> true
-        1 * userService.getMembersForHubPerPage(params.id, params.int('start'), params.int('length')) >> [totalNbrOfAdmins: 1, data:[[userId: '1', role: 'admin']], count:1]
+        1 * userService.getMembersForHubPerPage(params.id, params.int('start'), params.int('length'), userId) >> [totalNbrOfAdmins: 1, data:[[userId: '1', role: 'admin']], count:1]
 
         and:
         results.data.size() > 0
