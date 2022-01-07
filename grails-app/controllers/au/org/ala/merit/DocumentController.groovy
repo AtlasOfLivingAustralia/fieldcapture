@@ -12,7 +12,7 @@ class DocumentController {
 
     static allowedMethods = [bulkUpdate: 'POST', documentUpdate: 'POST', deleteDocument: 'POST', download: 'GET']
 
-    static final String DOCUMENT_DOWNLOAD_PATH = '/document/download/'
+    static final String DOCUMENT_DOWNLOAD_PATH = 'document/download/'
 
     DocumentService documentService
     WebService webService
@@ -122,12 +122,12 @@ class DocumentController {
         response.status = HttpStatus.SC_NOT_FOUND
     }
 
-    private String buildDownloadUrl(String path, String filename) {
-        String url = grailsApplication.config.ecodata.baseUrl + DOCUMENT_DOWNLOAD_PATH
+    protected String buildDownloadUrl(String path, String filename) {
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + DOCUMENT_DOWNLOAD_PATH
         if (path) {
             url += path + '/'
         }
-        url += filename
+        url += URLEncoder.encode(filename, "UTF-8")
 
         url
     }

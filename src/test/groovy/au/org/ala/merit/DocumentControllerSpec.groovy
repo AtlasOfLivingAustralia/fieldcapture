@@ -5,13 +5,15 @@ import org.springframework.mock.web.MockMultipartFile
 import spock.lang.Specification
 import grails.testing.web.controllers.ControllerUnitTest
 
-class DocumentControllerSpec extends Specification implements ControllerUnitTest<DocumentController>{
+class DocumentControllerSpec extends Specification implements ControllerUnitTest<DocumentController> {
 
     DocumentService documentService = Mock(DocumentService)
     WebService webService = Mock(WebService)
+
     def setup() {
         controller.documentService = documentService
         controller.webService = webService
+        controller.grailsApplication = grailsApplication
     }
 
     def "updates will be delegated to the document service"() {
@@ -101,6 +103,14 @@ class DocumentControllerSpec extends Specification implements ControllerUnitTest
         1 * documentService.canView(document) >> false
         0 * webService._
         response.status == HttpStatus.SC_NOT_FOUND
+    }
+
+    def "The DocumentController encodes filenames used in URLs as required"() {
+        expect:
+        controller.buildDownloadUrl("2018-01", "Test with spaces").endsWith("/document/download/2018-01/Test+with+spaces")
+        controller.buildDownloadUrl(null, "test").endsWith("/document/download/test")
+        controller.buildDownloadUrl(null, "a&test").endsWith("/document/download/a%26test")
+
     }
 
 }
