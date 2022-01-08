@@ -4,6 +4,7 @@ import grails.converters.JSON
 import grails.core.GrailsApplication
 import groovy.json.JsonSlurper
 import org.apache.http.HttpStatus
+import org.springframework.web.util.UriUtils
 
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST
 import static org.apache.http.HttpStatus.SC_OK;
@@ -127,7 +128,7 @@ class DocumentController {
         if (path) {
             url += path + '/'
         }
-        url += URLEncoder.encode(filename, "UTF-8")
+        url += UriUtils.encodePath(filename, "UTF-8")
 
         url
     }

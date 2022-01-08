@@ -107,9 +107,9 @@ class DocumentControllerSpec extends Specification implements ControllerUnitTest
 
     def "The DocumentController encodes filenames used in URLs as required"() {
         expect:
-        controller.buildDownloadUrl("2018-01", "Test with spaces").endsWith("/document/download/2018-01/Test+with+spaces")
+        controller.buildDownloadUrl("2018-01", "Test with spaces").endsWith("/document/download/2018-01/Test%20with%20spaces")
         controller.buildDownloadUrl(null, "test").endsWith("/document/download/test")
-        controller.buildDownloadUrl(null, "a&test").endsWith("/document/download/a%26test")
+        controller.buildDownloadUrl(null, "a&test").endsWith("/document/download/a&test")
 
     }
 
