@@ -1,9 +1,9 @@
 // Creating a subprogram for Program:  Environmental Restoration Fund
 // Right-Way Desert Fire
 
-load('../../utils/uuid.js');
-load('../../utils/audit.js');
-load('../../utils/program.js');
+load('../../../utils/uuid.js');
+load('../../../utils/audit.js');
+load('../../../utils/program.js');
 
 let parentProgram = "Environmental Restoration Fund";
 var subprograms = ["Right-Way Desert Fire"]
