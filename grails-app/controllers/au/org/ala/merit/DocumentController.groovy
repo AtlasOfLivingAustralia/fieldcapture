@@ -1,19 +1,25 @@
 package au.org.ala.merit
 
+import com.sun.jndi.toolkit.url.Uri
 import grails.converters.JSON
 import grails.core.GrailsApplication
 import groovy.json.JsonSlurper
-import org.apache.commons.io.FilenameUtils
 import org.apache.http.HttpStatus
+import org.springframework.web.util.UriComponents
+import org.springframework.web.util.UriComponentsBuilder
+import org.springframework.web.util.UriUtils
 
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST
 import static org.apache.http.HttpStatus.SC_OK;
 
 class DocumentController {
 
-    static allowedMethods = [bulkUpdate: 'POST', documentUpdate: 'POST', deleteDocument: 'POST']
+    static allowedMethods = [bulkUpdate: 'POST', documentUpdate: 'POST', deleteDocument: 'POST', download: 'GET']
 
-    def documentService, webService, userService
+    static final String DOCUMENT_DOWNLOAD_PATH = 'document/download/'
+
+    DocumentService documentService
+    WebService webService
     GrailsApplication grailsApplication
 
     def index() {}
@@ -95,5 +101,68 @@ class DocumentController {
     def deleteDocument(String id) {
         def responseCode = documentService.delete(id)
         render status: responseCode
+    }
+
+
+    /** Downloads a the file attached to a document stored in the ecodata database */
+    def download()  {
+        final String THUMBNAIL_PREFIX = "thumb_"
+        // The Grails population of "path" and "filename" perform URL decoding early and
+        // hence will incorrectly detect an encoded ? (%3F) as the query delimiter resulting
+        // in files containing a ? not being able to be displayed.
+        // Hence we deconstruct the path here to get the path and filename.
+        Tuple pathAndFilename = parsePathAndFilenameFromURL(
+                request.requestURI, request.getCharacterEncoding())
+        String path = pathAndFilename?.getFirst()
+        String filename = pathAndFilename?.getSecond()
+        if (filename) {
+            String originalName = filename
+            if (filename.startsWith(THUMBNAIL_PREFIX)) {
+                originalName = filename.substring(THUMBNAIL_PREFIX.length())
+            }
+            Map results = documentService.search(filepath: path, filename: originalName)
+            if (results && results.documents) {
+                Map document = results.documents[0]
+
+                if (documentService.canView(document)) {
+                    String url = buildDownloadUrl(path, filename)
+                    webService.proxyGetRequest(response, url, false, false)
+                    return null
+                }
+            }
+        }
+        response.status = HttpStatus.SC_NOT_FOUND
+    }
+
+    protected String buildDownloadUrl(String path, String filename) {
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + DOCUMENT_DOWNLOAD_PATH
+        if (path) {
+            url += path + '/'
+        }
+        url += UriUtils.encodePath(filename, "UTF-8")
+
+        url
+    }
+
+    protected Tuple2 parsePathAndFilenameFromURL(String uri, String encoding) {
+        UriComponents uriComponents = UriComponentsBuilder.fromUriString(uri).build()
+        List pathSegments = uriComponents.getPathSegments()
+
+        String path
+        String filename
+        // Path segment 0 & 1 will be "document" & "download"
+        if (pathSegments.size() == 3) {
+            path = null
+            filename = pathSegments[2]
+        }
+        else if (pathSegments.size() == 4) {
+            path = pathSegments[2]
+            filename = pathSegments[3]
+        }
+        else {
+            return null
+        }
+        filename = UriUtils.decode(filename, encoding?:"UTF-8")
+        new Tuple2(path, filename)
     }
 }
