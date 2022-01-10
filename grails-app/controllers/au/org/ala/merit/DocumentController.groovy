@@ -1,6 +1,5 @@
 package au.org.ala.merit
 
-import com.sun.jndi.toolkit.url.Uri
 import grails.converters.JSON
 import grails.core.GrailsApplication
 import groovy.json.JsonSlurper
