@@ -13,7 +13,7 @@ function initialise(roles, currentUserId, hubId, containerId) {
             bSortable: false,
             className: 'hubUserId',
             searchable: true
-},
+        },
         {
             data: 'displayName',
             name: 'displayName',
@@ -44,17 +44,17 @@ function initialise(roles, currentUserId, hubId, containerId) {
         },
         {data:'expiryDate',
             render: function (date){
-            if (date) {
+                if (date) {
 
-                return "<input type='text' id='datecell' class=\"form-control form-control-sm\" value='" + convertToSimpleDate(date) + "'/>"
-            } else {
-                return "<input type='text' id='datecell' class=\"form-control form-control-sm\" value=''/>"
-            }
+                    return "<input type='text' id='datecell' class=\"form-control form-control-sm\" value='" + convertToSimpleDate(date) + "'/>"
+                } else {
+                    return "<input type='text' id='datecell' class=\"form-control form-control-sm\" value=''/>"
+                }
             },bSortable: false
         },
         {
             render: function (data, type, row) {
-                return '<a id="removeIcon" class="fa fa-remove tooltips href="" title="remove this user and role combination"><i class="icon-remove"></i></a>';
+                return '<a id="removeIcon" class="fa fa-remove" tooltips href="" title="remove this user and role combination"><i class="icon-remove"></i></a>';
             },
             bSortable: false
         }
@@ -70,7 +70,7 @@ function initialise(roles, currentUserId, hubId, containerId) {
             $("#datecell", row).datepicker({format: "dd-mm-yyyy",autoclose: true});
         },
         "ajax": {"url": fcConfig.getMembersForHubPaginatedUrl + "/" + hubId,
-        "type": "POST"},
+            "type": "POST"},
         "columns":col,
         dom: 'lrtip'
 
@@ -147,10 +147,17 @@ function initialise(roles, currentUserId, hubId, containerId) {
         });
     });
 
-    $('#email').on('change', function () {
-        var val = $(this).val();
-        table.search( val ).draw();
-    })
+    $( "#emailBtn" ).click(function() {
+        var val = $('#email').val();
+        if (val) {
+            table.search(val).draw();
+        } else {
+            bootbox.alert('<span class="label label-important">Please Enter the Email Address</span>');
+            //refreshes the table list
+            table.search(val).draw();
+        }
+
+    });
 
     function removeUserRole(userId, role, tableSelector) {
         $.ajax({
@@ -162,7 +169,7 @@ function initialise(roles, currentUserId, hubId, containerId) {
             }
         })
             .done(function (result) {
-                displayAlertMessage("User with user id: " + userId + " was removed.");
+                    displayAlertMessage("User with user id: " + userId + " was removed.");
                 }
             )
             .fail(function (jqXHR, textStatus, errorThrown) {
@@ -251,4 +258,5 @@ function displayAlertMessage(message) {
         $('#alert').css("display", "none")
     }, timeOut * 1000);
 }
+
 
