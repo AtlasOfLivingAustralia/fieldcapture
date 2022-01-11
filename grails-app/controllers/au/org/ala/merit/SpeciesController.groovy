@@ -37,7 +37,7 @@ class SpeciesController {
             String noImageUrl = asset.assetPath(src:'nophoto.png', absolute:true)
             response.sendRedirect(noImageUrl)
         }
-
+        return null
     }
 
     def searchBie() {
