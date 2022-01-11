@@ -11,11 +11,15 @@
             opacity: .25;
         }
 
+        .dataTables_wrapper .dataTables_paginate {
+            position: relative;
+            right: 0px;
+            bottom: 30px;
+        }
+
         /* Pagination fix */
         .pagination .disabled, .pagination .currentStep, .pagination .step {
             float: left;
-            /*padding: 0 14px;*/
-            /*border-right: 1px solid;*/
             line-height: 34px;
             border-right-color: rgba(0, 0, 0, 0.15);
         }
@@ -99,3 +103,4 @@
     </div>
     </body>
 </g:applyLayout>
+

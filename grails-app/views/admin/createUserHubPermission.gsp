@@ -12,7 +12,7 @@
             updateHubUser: "${createLink(controller: 'user', action: 'addUserToHub')}"
         };
     </script>
-<asset:stylesheet src="common-bs4.css"/>
+    <asset:stylesheet src="common-bs4.css"/>
 </head>
 <body>
 <content tag="pageTitle">User Permissions for MERIT</content>
@@ -25,12 +25,7 @@
     <g:render template="/admin/permissionTablePaginated" model="[containerId:'member-list']"/>
 </div>
 
-
-<asset:script>
-%{--    populatePermissionsTable();--}%
-</asset:script>
 <asset:javascript src="common-bs4.js"/>
 <asset:deferredScripts/>
-
 </body>
 </html>

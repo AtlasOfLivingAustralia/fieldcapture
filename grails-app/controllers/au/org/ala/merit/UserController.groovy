@@ -224,21 +224,26 @@ class UserController {
     }
 
     def getMembersForHubPaginated() {
+
+        String userId = null
         String hubId = params.id
+        String email = params.get('search[value]')
         def adminUserId = userService.getCurrentUserId()
 
+        def userDetails = authService.getUserForEmailAddress(email)
+        if (userDetails != null && userDetails.userName == params.get('search[value]')) {
+            userId = userDetails.userId
+        }
         if (hubId && adminUserId) {
             if (userService.userIsAlaOrFcAdmin()) {
-                def results = userService.getMembersForHubPerPage(hubId, params.int('start'), params.int('length'))
+                def results = userService.getMembersForHubPerPage(hubId, params.int('start'), params.int('length'), userId)
                 asJson results
 
             } else {
                 response.sendError(SC_FORBIDDEN, 'Permission denied')
             }
-        } else if (adminUserId) {
+        } else if (adminUserId && hubId) {
             response.sendError(SC_BAD_REQUEST, 'Required params not provided: id')
-        } else if (projectId) {
-            response.sendError(SC_FORBIDDEN, 'User not logged-in or does not have permission')
         } else {
             response.sendError(SC_INTERNAL_SERVER_ERROR, 'Unexpected error')
         }

@@ -104,4 +104,21 @@ class CreateUserHubPermissionSpec extends StubbedCasSpec {
     }
 
 
+    def "I can search a user from the Merit User Table"() {
+        setup:
+        loginAsMeritAdmin(browser)
+
+        when:
+        to CreateUserHubPermissionPage
+
+        String emailAddress = "user1001@user.com"
+
+        searchHubUser(emailAddress)
+
+        then: "User appears in the permissions table"
+        waitFor {
+            permissions.size() == 3
+        }
+        findPermissionForUser('1001').userId == "1001"
+    }
 }

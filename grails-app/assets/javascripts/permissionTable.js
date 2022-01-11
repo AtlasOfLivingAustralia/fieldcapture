@@ -3,6 +3,7 @@
  */
 
 function initialise(roles, currentUserId, hubId, containerId) {
+
     var tableSelector = "#"+containerId
     $('#alert').hide();
     var col = [
@@ -10,12 +11,14 @@ function initialise(roles, currentUserId, hubId, containerId) {
             data: 'userId',
             name: 'userId',
             bSortable: false,
-            className: 'hubUserId'
-},
+            className: 'hubUserId',
+            searchable: true
+        },
         {
             data: 'displayName',
             name: 'displayName',
-            bSortable: false
+            bSortable: false,
+            searchable: true
         },
         {
             data: 'role',
@@ -41,32 +44,35 @@ function initialise(roles, currentUserId, hubId, containerId) {
         },
         {data:'expiryDate',
             render: function (date){
-            if (date) {
+                if (date) {
 
-                return "<input type='text' id='datecell' class=\"form-control form-control-sm\" value='" + convertToSimpleDate(date) + "'/>"
-            } else {
-                return "<input type='text' id='datecell' class=\"form-control form-control-sm\" value=''/>"
-            }
+                    return "<input type='text' id='datecell' class=\"form-control form-control-sm\" value='" + convertToSimpleDate(date) + "'/>"
+                } else {
+                    return "<input type='text' id='datecell' class=\"form-control form-control-sm\" value=''/>"
+                }
             },bSortable: false
         },
         {
             render: function (data, type, row) {
-                return '<a id="removeIcon" class="fa fa-remove tooltips href="" title="remove this user and role combination"><i class="icon-remove"></i></a>';
+                return '<a id="removeIcon" class="fa fa-remove" tooltips href="" title="remove this user and role combination"><i class="icon-remove"></i></a>';
             },
             bSortable: false
         }
     ];
 
     var table  = $(tableSelector).DataTable( {
-        "bFilter": false,
+
+        "bFilter": true,
         "lengthChange": true,
-        "processing": true,
+        "processing": false,
         "serverSide": true,
         createdRow:function(row){
             $("#datecell", row).datepicker({format: "dd-mm-yyyy",autoclose: true});
         },
-        "ajax": fcConfig.getMembersForHubPaginatedUrl + "/" + hubId,
-        "columns":col
+        "ajax": {"url": fcConfig.getMembersForHubPaginatedUrl + "/" + hubId,
+            "type": "POST"},
+        "columns":col,
+        dom: 'lrtip'
 
     } );
 
@@ -141,6 +147,14 @@ function initialise(roles, currentUserId, hubId, containerId) {
         });
     });
 
+    $( "#emailBtn" ).click(function() {
+        var val = $('#email').val();
+        if (!val) {
+            bootbox.alert('<span class="label label-important">Please Enter the Email Address</span>');
+        }
+        table.search(val).draw();
+    });
+
     function removeUserRole(userId, role, tableSelector) {
         $.ajax({
             url: fcConfig.removeHubUserUrl,
@@ -151,7 +165,7 @@ function initialise(roles, currentUserId, hubId, containerId) {
             }
         })
             .done(function (result) {
-                displayAlertMessage("User with user id: " + userId + " was removed.");
+                    displayAlertMessage("User with user id: " + userId + " was removed.");
                 }
             )
             .fail(function (jqXHR, textStatus, errorThrown) {
@@ -162,6 +176,19 @@ function initialise(roles, currentUserId, hubId, containerId) {
                 reloadMembers(tableSelector); // reload table
             });
     }
+
+}
+
+function SearchUserHubPermissionViewModel1(options) {
+
+    var self = this;
+    var config = _.defaults(options);
+
+    self.emailAddress = ko.observable()
+    self.email = ko.observable();
+
+
+
 }
 
 function reloadMembers(tableSelector) {
@@ -227,4 +254,5 @@ function displayAlertMessage(message) {
         $('#alert').css("display", "none")
     }, timeOut * 1000);
 }
+
 
