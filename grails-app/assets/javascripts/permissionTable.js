@@ -149,14 +149,10 @@ function initialise(roles, currentUserId, hubId, containerId) {
 
     $( "#emailBtn" ).click(function() {
         var val = $('#email').val();
-        if (val) {
-            table.search(val).draw();
-        } else {
+        if (!val) {
             bootbox.alert('<span class="label label-important">Please Enter the Email Address</span>');
-            //refreshes the table list
-            table.search(val).draw();
         }
-
+        table.search(val).draw();
     });
 
     function removeUserRole(userId, role, tableSelector) {
