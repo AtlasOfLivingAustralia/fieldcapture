@@ -69,6 +69,14 @@ var projectConfig = {
                 }
             },
             {
+                "template": "projectPartnerships",
+                "model": {
+                    "namePlaceHolder": "[Free text]",
+                    "helpTextPartnerNature": "If partnership with an organisation: provide the name of the organisation and the role they will play/how you will support them. If partnering with community groups or members of the public: indicate each group or individual you will engage with",
+                    "partnershipPlaceHolder": "[Free text]"
+                }
+            },
+            {
                 "template": "keyThreats",
                 "model": {
                     "threatHelpText": "The key threats (or key threatening processes) that your project will be addressing",
