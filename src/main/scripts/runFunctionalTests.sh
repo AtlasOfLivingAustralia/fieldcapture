@@ -34,7 +34,7 @@ mongo ecodata-functional-test --eval 'db.project.count();'
 echo "Starting ecodata from `pwd`"
 ls -la
 GRADLE_OPTS="-Xmx512m" ./gradlew bootRun --no-daemon "-Dorg.gradle.jvmargs=-Xmx512m" -Dgrails.env=meritfunctionaltest &
-sleep 60
+sleep 120
 
 cd $MERIT_DIR
 GRADLE_OPTS="-Xmx512m" ./gradlew bootRun --no-daemon "-Dorg.gradle.jvmargs=-Xmx512m" -Dgrails.env=test -Dgrails.server.port.http=8087 &
