@@ -105,6 +105,7 @@ class DocumentController {
 
     /** Downloads a the file attached to a document stored in the ecodata database */
     def download()  {
+        log.info(request.requestURI)
         final String THUMBNAIL_PREFIX = "thumb_"
         // The Grails population of "path" and "filename" perform URL decoding early and
         // hence will incorrectly detect an encoded ? (%3F) as the query delimiter resulting
@@ -147,6 +148,7 @@ class DocumentController {
         UriComponents uriComponents = UriComponentsBuilder.fromUriString(uri).build()
         List pathSegments = uriComponents.getPathSegments()
 
+        log.info("Parsing URI: "+pathSegments)
         String path
         String filename
         // Path segment 0 & 1 will be "document" & "download"
