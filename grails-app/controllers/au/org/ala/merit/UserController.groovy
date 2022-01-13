@@ -225,15 +225,12 @@ class UserController {
 
     def getMembersForHubPaginated() {
 
-        String userId = null
         String hubId = params.id
         String email = params.get('search[value]')
         def adminUserId = userService.getCurrentUserId()
 
         def userDetails = authService.getUserForEmailAddress(email)
-        if (userDetails != null && userDetails.userName == params.get('search[value]')) {
-            userId = userDetails.userId
-        }
+        String userId = userDetails?.userId ?: email
         if (hubId && adminUserId) {
             if (userService.userIsAlaOrFcAdmin()) {
                 def results = userService.getMembersForHubPerPage(hubId, params.int('start'), params.int('length'), userId)

@@ -21,7 +21,14 @@
 </div>
 <div><span id="alert" class="alert alert-success"></span></div>
 <div id="permissions">
+    <div class="merit-subheader">
+        <h4>Add permissions for a user</h4>
+    </div>
     <g:render template="/admin/addPermissions" model="[addUserUrl:g.createLink(controller:'user', action:'addUserToHub'), entityId:hubId, containerId:'member-list']"/>
+    <div class="merit-subheader">
+        <h4>Edit and remove permissions for a user</h4>
+    </div>
+
     <g:render template="/admin/permissionTablePaginated" model="[containerId:'member-list']"/>
 </div>
 

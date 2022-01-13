@@ -1,12 +1,13 @@
 <form id="searchUser" class="hub-form-search-box1">
     <div class="form-group row required">
-        <label for="email" class="control-label col-sm-2" style="left: -14px">Search for email address</label>
-        <div class="col-sm-3">
+        <label for="email" class="control-label col-sm-4" style="left: -14px">Search for email address</label>
+        <div class="col-sm-4">
         <input id="email" name="email" type="text" class="form-control form-control-sm" value="" data-bind="value:emailAddress"
                data-validation-engine="validate[required, custom[email]]" data-errormessage-value-missing="Email is required!">
         </div>
-        <div class="col-sm-2">
+        <div class="col-sm-4">
             <button type="button" id="emailBtn" class="btn btn-primary btn-sm searchUserDetails">Search</button>
+            <button type="button" id="clearBtn" class="btn btn-primary btn-sm">Clear</button>
         </div>
     </div>
     <div class="row">

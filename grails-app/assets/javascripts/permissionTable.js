@@ -72,7 +72,10 @@ function initialise(roles, currentUserId, hubId, containerId) {
         "ajax": {"url": fcConfig.getMembersForHubPaginatedUrl + "/" + hubId,
             "type": "POST"},
         "columns":col,
-        dom: 'lrtip'
+        dom: 'lrtip',
+        "language": {
+            "emptyTable": "The email you searched for is not registered in MERIT or does not have elevated permissions"
+        }
 
     } );
 
@@ -151,8 +154,19 @@ function initialise(roles, currentUserId, hubId, containerId) {
         var val = $('#email').val();
         if (!val) {
             bootbox.alert('<span class="label label-important">Please Enter the Email Address</span>');
+        } else {
+            if (validateEmail(val)) {
+                table.search(val).draw();
+            } else {
+                bootbox.alert('<span class="label label-important">Please Enter a Valid Email Address</span>');
+            }
         }
-        table.search(val).draw();
+
+    });
+
+    $( "#clearBtn" ).click(function() {
+        $('#email').val('');
+        table.search('').draw();
     });
 
     function removeUserRole(userId, role, tableSelector) {
@@ -253,6 +267,16 @@ function displayAlertMessage(message) {
         $('#alert').fadeOut()
         $('#alert').css("display", "none")
     }, timeOut * 1000);
+}
+
+function validateEmail(emailAdress)
+{
+    let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (emailAdress.match(regexEmail)) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 
