@@ -141,6 +141,10 @@ class HomeController {
     }
 
     def publicHome() {
+        Boolean expSoon = false
+        if (userService.getUser()) {
+            expSoon = userService.doesUserExpiresInAMonth(userService.getUser().userId, SettingService.hubConfig.hubId)
+        }
 
         def statistics = statisticsFactory.randomGroup(session.lastGroup ?: -1)
         session.lastGroup = statistics.group // So we can request more stats and not get 2 in a row the same
@@ -152,7 +156,7 @@ class HomeController {
         copyOfLinks << [name:'MORE RESOURCES', type:'', url:helpPage]
         def blog = blogService.getSiteBlog()
 
-        def model = [statistics:statistics.statistics, helpLinks:copyOfLinks, images:images, blog:blog]
+        def model = [statistics:statistics.statistics, helpLinks:copyOfLinks, images:images, blog:blog, expSoon:expSoon]
         if (params.fq) {
             model.putAll(projectExplorerModel())
             model.showProjectExplorer = true
