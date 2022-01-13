@@ -3,7 +3,7 @@ buildscript {
         mavenLocal()
         maven { url "https://repo.grails.org/grails/core" }
         maven { url "https://nexus.ala.org.au/content/groups/public/" }
-        jcenter()
+        gradlePluginPortal()
     }
     dependencies {
         classpath "org.grails:grails-gradle-plugin:$grailsVersion"
@@ -42,7 +42,7 @@ repositories {
     maven { url "https://repo.osgeo.org/repository/release/" }
     maven { url "https://repo.grails.org/grails/core" }
     maven { url "https://nexus.ala.org.au/content/groups/public/" }
-    jcenter()
+    gradlePluginPortal()
 }
 
 
