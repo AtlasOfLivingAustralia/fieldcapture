@@ -79,6 +79,33 @@ setting.value = 'Dear MERIT User\n\nYour elevated access to MERIT (https://field
 setting.description = 'The subject of the email to send when a role has been removed due to it expiring';
 db.setting.save(setting);
 
+
+setting = db.setting.findOne({key:'meritpermissionexpiry.warning.email.subject'});
+if (!setting) {
+    setting = {
+        dateCreated:now,
+        key:'meritpermissionexpiry.warning.email.subject'
+    }
+}
+setting.lastUpdated = now;
+setting.value = 'Access to MERIT Expiring in 1 Month';
+setting.description = 'The subject of the email sent to a user when their elevated access will expire 1 month from now';
+db.setting.save(setting);
+
+
+setting = db.setting.findOne({key:'meritpermissionexpiry.warning.email.body'});
+if (!setting) {
+    setting = {
+        dateCreated:now,
+        key:'meritpermissionexpiry.warning.email.body'
+    }
+}
+setting.lastUpdated = now;
+setting.value = 'Dear MERIT User\n\nYour elevated access to MERIT (https://fieldcapture.ala.org.au/) will be removed 1 month from now.\nIf you require access extension, please contact the MERIT Team (merit@awe.gov.au) and we can assist you..\n\nRegards\nThe MERIT Team\nDepartment of Agriculture, Water and the Environment\nmerit@awe.gov.au\nhttps://fieldcapture.ala.org.au/';
+setting.description = 'The body of the email sent to a user when their elevated access will expire 1 month from now';
+db.setting.save(setting);
+
+
 // Configure the MERIT hub to use the access management features
 var merit = db.hub.findOne({urlPath:'merit'});
 merit.accessManagementOptions = {

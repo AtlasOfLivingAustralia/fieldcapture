@@ -59,9 +59,6 @@
     <asset:deferredScripts/>
     <script>
                 $(function() {
-                    if (${expSoon}) {
-                        bootbox.alert("Your MERIT access will be automatically removed 1 month from today. Please contact the MERIT Team (merit@awe.gov.au) if you require access extension.");
-                    }
 
                     var url = '${g.createLink(controller:'report', action:'statisticsReport')}';
 

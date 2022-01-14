@@ -77,6 +77,12 @@
             <div class="ml-md-auto text-right">
                 <g:if test="${fc.currentUserDisplayName()}">
                     <div class="greeting text-right">G'day <fc:currentUserDisplayName/></div>
+                    <g:if test="${expSoon}">
+                        <div class="alert alert-warning">
+                            <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
+                            Your MERIT access will be automatically removed 1 month from today<br/>Please contact MERIT Team (merit@awe.gov.au) for access extension
+                        </div>
+                    </g:if>
                 </g:if>
 
                 <div class="btn-group login-logout">

@@ -94,7 +94,9 @@ enum SettingPageType {
     ACCESS_WARNING_EMAIL_SUBJECT('accessWarningEmailSubject', 'The subject of the email to send warning a user their access will expire if they do not log into MERIT soon', 'accessexpiry.warning.email.subject'),
     ACCESS_WARNING_EMAIL_BODY('accessWarningEmailBody', 'The body of the email to send warning a user their access will expire if they do not log into MERIT soon', 'accessexpiry.warning.email.body'),
     ACCESS_ROLE_EXPIRED_EMAIL_SUBJECT('roleExpiredEmailSubject', 'The subject of the email sent to a user when their elevated access has expired', 'permissionexpiry.expired.email.subject'),
-    ACCESS_ROLE_EXPIRED_EMAIL_BODY('roleExpiredEmailBody', 'The body of the email sent to a user when their elevated access has expired','permissionexpiry.expired.email.body')
+    ACCESS_ROLE_EXPIRED_EMAIL_BODY('roleExpiredEmailBody', 'The body of the email sent to a user when their elevated access has expired','permissionexpiry.expired.email.body'),
+    ACCESS_WARNING_EXPIRED_EMAIL_SUBJECT('roleWarningEmailSubject', 'The subject of the email sent to a user when their elevated access will expire 1 month from now','permissionexpiry.warning.email.subject'),
+    ACCESS_WARNING_EXPIRED_EMAIL_BODY('roleWarningEmailBody', 'The body of the email sent to a user when their elevated access will expire 1 month from now','permissionexpiry.warning.email.body')
     String name
     String title
     String key
