@@ -1,5 +1,6 @@
 package au.org.ala.fieldcapture
 
+import au.org.ala.merit.SettingPageType
 import com.icegreen.greenmail.junit.GreenMailRule
 import com.icegreen.greenmail.util.ServerSetup
 import com.icegreen.greenmail.util.ServerSetupTest
@@ -63,7 +64,7 @@ class AdminSpec extends StubbedCasSpec {
         then:
         waitFor { administration.staticPageContent.displayed }
 
-        administration.staticPageContent.pageId.size() == 76
+        administration.staticPageContent.pageId.size() == SettingPageType.values().length
 
     }
 
