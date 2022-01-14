@@ -85,7 +85,8 @@ class GmsMapper {
             PROJECT_STATUS:[name:'status', type:'lookup', values:['Active':'active', 'Terminated':'terminated', 'Completed':'completed'], default:'application', description:'The project status - Application (default), Active, Completed, Terminated'],
             MERI_PLAN_STATUS:['name':'planStatus', type:'lookup', values:['Approved':'approved'], default:'not approved', description:'The MERI plan status - not approved (default), Approved'],
             FUNDING_TYPE:[name:'fundingType', type:'string', description:'The funding model used for this project (Grant, Procurement, Special Purpose Payment)'],
-            ORIGIN_SYSTEM:[name:'originSystem', type:'string', description:'The owning system for this project (e.g. Business Grants Hub)'],
+            ORIGIN_SYSTEM:[name:'origin', type:'string', description:'The owning system for this project (e.g. Business Grants Hub)', default:'merit'],
+            ELECTION_COMMITMENT_YEAR:[name:'electionCommitmentYear', type:'string', description: 'If an election commitment, the year of the commitment']
     ]
 
     def siteMapping = [
@@ -208,8 +209,6 @@ class GmsMapper {
         def project = result.mappedData
         project.projectType = 'works'
         project.isMERIT = true
-        project.origin = 'merit'
-
 
         String programName = project.associatedSubProgram ?: project.associatedProgram
         String programId = programs[programName]
@@ -560,7 +559,7 @@ class GmsMapper {
             case 'decimal':
                 return convertDecimal(value)
             case 'string':
-                return value
+                return value ?: (mapping['default']?:value)
             case 'url':
                 URI.create(value) // validation purposes only
                 return value

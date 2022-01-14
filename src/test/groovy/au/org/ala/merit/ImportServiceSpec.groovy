@@ -107,7 +107,7 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
         projectDetails.status == "application"
         projectDetails.planStatus == "not approved"
         !projectDetails.fundingType
-        !projectDetails.originSystem
+        projectDetails.origin == 'merit'
         projectDetails.projectType == "works"
         projectDetails.isMERIT == true
         !projectDetails.managementUnitId

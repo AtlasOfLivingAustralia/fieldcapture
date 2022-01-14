@@ -362,7 +362,7 @@ class GmsMapperSpec extends Specification{
     def "The new fields for the grants hub import can be mapped"() {
         setup:
         Map projectData = [APP_ID:'p1', FUNDING_TYPE:'Grant', PROJECT_STATUS:'Completed', MERI_PLAN_STATUS:'Approved',
-            FUNDING_TYPE:'Grant', ORIGIN_SYSTEM:'Grants Hub', FINANCIAL_YEAR_FUNDING_DESCRIPTION:'Project funding', FUNDING_18_19:'100', FUNDING_19_20:'200.01', FUNDING_20_21:'300.50']
+            FUNDING_TYPE:'Grant', ORIGIN_SYSTEM:'Grants Hub', FINANCIAL_YEAR_FUNDING_DESCRIPTION:'Project funding', FUNDING_18_19:'100', FUNDING_19_20:'200.01', FUNDING_20_21:'300.50', ELECTION_COMMITMENT_YEAR:'2021']
 
         when:
         def result = gmsMapper.mapProject([projectData])
@@ -373,7 +373,8 @@ class GmsMapperSpec extends Specification{
         result.project.fundingType == projectData.FUNDING_TYPE
         result.project.status == 'completed'
         result.project.planStatus == 'approved'
-        result.project.originSystem == projectData.ORIGIN_SYSTEM
+        result.project.origin == projectData.ORIGIN_SYSTEM
+        result.project.electionCommitmentYear == projectData.ELECTION_COMMITMENT_YEAR
         meriPlan.budget.overallTotal == 600.51
         meriPlan.budget.headers == [[data:"2018/2019"], [data:"2019/2020"], [data:"2020/2021"]]
         meriPlan.budget.rows.size() == 1
