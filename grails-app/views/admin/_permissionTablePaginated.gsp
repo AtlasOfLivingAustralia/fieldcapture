@@ -1,7 +1,7 @@
 <form id="searchUser" class="hub-form-search-box1">
+    <label for="email" class="col-sm-offset-1">Search for email address</label>
     <div class="form-group row required">
-        <label for="email" class="control-label col-sm-4" style="left: -14px">Search for email address</label>
-        <div class="col-sm-4">
+        <div class="col-sm-4 search-box">
         <input id="email" name="email" type="text" class="form-control form-control-sm" value="" data-bind="value:emailAddress"
                data-validation-engine="validate[required, custom[email]]" data-errormessage-value-missing="Email is required!">
         </div>

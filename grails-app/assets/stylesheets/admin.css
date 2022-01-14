@@ -126,4 +126,8 @@
     box-sizing: border-box;
 }
 
+.search-box {
+    margin-left: -14px;
+}
+
 
