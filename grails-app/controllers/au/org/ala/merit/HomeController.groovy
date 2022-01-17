@@ -4,8 +4,10 @@ import au.org.ala.merit.hub.HubSettings
 import grails.converters.JSON
 import grails.core.GrailsApplication
 import org.apache.commons.lang.StringUtils
+import org.joda.time.DateTime
 
 import javax.servlet.http.Cookie
+import java.text.SimpleDateFormat
 
 class HomeController {
 
@@ -26,6 +28,8 @@ class HomeController {
 
     /** This facet is used by name to filter the list of activity types available for download selection */
     static final String ACTIVITY_TYPE_FACET_NAME = 'activities.type.keyword'
+
+    static final DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy")
 
     def index() {
         HubSettings hubSettings = SettingService.hubConfig
@@ -142,8 +146,13 @@ class HomeController {
 
     def publicHome() {
         Boolean expSoon = false
+        String expiryDateDisplay
         if (userService.getUser()) {
-            expSoon = userService.doesUserExpiresInAMonth(userService.getUser().userId, SettingService.hubConfig.hubId)
+            def response = userService.findUserPermission(userService.getUser().userId, SettingService.hubConfig.hubId)
+            if (response.expiryDate) {
+                expSoon = checkUserExpirationDetails(response.expiryDate)
+                expiryDateDisplay = DATE_FORMAT.format(DateUtils.parse(response.expiryDate).toDate());
+            }
         }
 
         def statistics = statisticsFactory.randomGroup(session.lastGroup ?: -1)
@@ -156,7 +165,7 @@ class HomeController {
         copyOfLinks << [name:'MORE RESOURCES', type:'', url:helpPage]
         def blog = blogService.getSiteBlog()
 
-        def model = [statistics:statistics.statistics, helpLinks:copyOfLinks, images:images, blog:blog, expSoon:expSoon]
+        def model = [statistics:statistics.statistics, helpLinks:copyOfLinks, images:images, blog:blog, expSoon:expSoon, expiryDate: expiryDateDisplay]
         if (params.fq) {
             model.putAll(projectExplorerModel())
             model.showProjectExplorer = true
@@ -267,5 +276,16 @@ class HomeController {
     private renderStaticPage(SettingPageType settingType, showNews = false) {
         def content = settingService.getSettingText(settingType)
         render view: 'about', model: [settingType: settingType, content: content, showNews: showNews]
+    }
+
+    /**
+     *
+     * Validates if the user's permission is expiring within a month from now
+     */
+    private Boolean checkUserExpirationDetails(String expDate) {
+        DateTime expiryDate = DateUtils.parse(expDate)
+        DateTime expiryMinus =  expiryDate.minusMonths(1)
+        DateTime today = DateUtils.now()
+        expiryDate > today && today >= expiryMinus
     }
 }

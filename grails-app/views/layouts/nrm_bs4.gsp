@@ -80,11 +80,10 @@
                     <g:if test="${expSoon}">
                         <div class="alert alert-warning">
                             <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
-                            Your MERIT access will be automatically removed 1 month from today<br/>Please contact MERIT Team (merit@awe.gov.au) for access extension
+                            Your access is due to expire on ${expiryDate}. Please contact the department if you require an extension.
                         </div>
                     </g:if>
                 </g:if>
-
                 <div class="btn-group login-logout">
                     <auth:loginLogout
                             ignoreCookie="true"
@@ -231,6 +230,5 @@
 
         </script>
     </g:if>
-
 </body>
 </html>

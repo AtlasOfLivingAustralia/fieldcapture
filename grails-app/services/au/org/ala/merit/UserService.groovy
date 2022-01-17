@@ -683,15 +683,12 @@ class UserService {
     }
 
     /**
-     * Checks if a user have a role on an existing MERIT project.
-     * @param userId
-     * @param entityId
-     * @return true if user have a role on an existing merit project
+     *
+     * Returns the UserPermission details
      */
-    Boolean doesUserExpiresInAMonth(String userId, String entityId) {
-        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/doesUserExpiresInAMonth?userId=${userId}&entityId=${entityId}"
-        def response = webService.getJson(url)
-        return response?.doesUserExpiresInAMonth
+    def findUserPermission(String userId, String entityId) {
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/findUserPermission?userId=${userId}&entityId=${entityId}"
+        webService.getJson(url)
     }
 
 }

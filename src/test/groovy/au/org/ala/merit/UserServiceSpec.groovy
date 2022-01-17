@@ -527,18 +527,18 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         orgs == []
     }
 
-    def "This checks if the user's permission expiry date is expiring 1 month from now"() {
+    def "This will return the UserPermission details"() {
         setup:
         String userId = '123'
         String entityId = '00cf9ffd-e30c-45f8-99db-abce8d05c0d8'
 
         when:
-        def resp = service.doesUserExpiresInAMonth(userId, entityId)
+        def resp = service.findUserPermission(userId, entityId)
 
         then:
-        1 * webService.getJson({it.endsWith("permissions/doesUserExpiresInAMonth?userId=${userId}&entityId=${entityId}")}) >> [doesUserExpiresInAMonth:true]
+        1 * webService.getJson({it.endsWith("permissions/findUserPermission?userId=${userId}&entityId=${entityId}")}) >> [expiryDate:'2022-02-16T13:00:00Z', entityType:'au.org.ala.ecodata.Hub', entityId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8', status:'active']
 
-        resp == true
+        resp != null
 
     }
 
