@@ -268,19 +268,4 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
         ['a5'] | [[name:'Category 2', list:[[name:'a5']]]]
     }
 
-    def "Check the user's permission is expiring more than 1 month from now based on the date parameter"(DateTime expiryDate, Boolean expected)  {
-
-        when:
-        def resp = controller.checkUserExpirationDetails(expiryDate.toString())
-
-        then:
-        resp == expected
-
-        where:
-        expiryDate | expected
-        DateUtils.now().plusDays(10) | true
-        DateUtils.now().plusMonths(3)  | false
-        DateUtils.now().minusDays(10) | false
-    }
-
 }

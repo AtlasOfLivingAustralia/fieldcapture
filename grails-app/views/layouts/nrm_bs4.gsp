@@ -77,7 +77,7 @@
             <div class="ml-md-auto text-right">
                 <g:if test="${fc.currentUserDisplayName()}">
                     <div class="greeting text-right">G'day <fc:currentUserDisplayName/></div>
-                    <g:if test="${expSoon}">
+                    <g:if test="${expiryDate}">
                         <div class="alert alert-warning">
                             <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
                             Your access is due to expire on ${expiryDate}. Please contact the department if you require an extension.

@@ -145,15 +145,7 @@ class HomeController {
     }
 
     def publicHome() {
-        Boolean expSoon = false
-        String expiryDateDisplay
-        if (userService.getUser()) {
-            def response = userService.findUserPermission(userService.getUser().userId, SettingService.hubConfig.hubId)
-            if (response.expiryDate) {
-                expSoon = checkUserExpirationDetails(response.expiryDate)
-                expiryDateDisplay = DATE_FORMAT.format(DateUtils.parse(response.expiryDate).toDate());
-            }
-        }
+        String expiryDateDisplay = session.getAttribute(LoginRecordingInterceptor.EXPIRY_DATE) ?: null
 
         def statistics = statisticsFactory.randomGroup(session.lastGroup ?: -1)
         session.lastGroup = statistics.group // So we can request more stats and not get 2 in a row the same
@@ -165,7 +157,7 @@ class HomeController {
         copyOfLinks << [name:'MORE RESOURCES', type:'', url:helpPage]
         def blog = blogService.getSiteBlog()
 
-        def model = [statistics:statistics.statistics, helpLinks:copyOfLinks, images:images, blog:blog, expSoon:expSoon, expiryDate: expiryDateDisplay]
+        def model = [statistics:statistics.statistics, helpLinks:copyOfLinks, images:images, blog:blog, expiryDate: expiryDateDisplay]
         if (params.fq) {
             model.putAll(projectExplorerModel())
             model.showProjectExplorer = true
@@ -278,14 +270,4 @@ class HomeController {
         render view: 'about', model: [settingType: settingType, content: content, showNews: showNews]
     }
 
-    /**
-     *
-     * Validates if the user's permission is expiring within a month from now
-     */
-    private Boolean checkUserExpirationDetails(String expDate) {
-        DateTime expiryDate = DateUtils.parse(expDate)
-        DateTime expiryMinus =  expiryDate.minusMonths(1)
-        DateTime today = DateUtils.now()
-        expiryDate > today && today >= expiryMinus
-    }
 }
