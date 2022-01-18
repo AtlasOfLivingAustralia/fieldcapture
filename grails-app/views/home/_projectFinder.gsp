@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-sm-12 p-3 alert alert-danger large-space-before searchError">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <span>Error: ${error}</span>
+            <span>Error: ${error?.encodeAsHTML()}</span>
         </div>
     </div>
 </g:if>
@@ -45,7 +45,7 @@
                         <g:each var="f" in="${fqList}">
                             <g:set var="fqBits" value="${f?.tokenize(':')}"/>
                             <g:set var="newUrl"><fc:formatParams params="${params}" requiredParams="${reqParams}" excludeParam="${f}"/></g:set>
-                            <li><g:message code="label.${fqBits[0]}" default="${fqBits[0]}"/>: <g:message code="label.${fqBits[1]}" default="${fqBits[1]?.capitalize()}"/>
+                            <li><g:message code="label.${fqBits[0]}" default="${fqBits[0]?.encodeAsHTML()}"/>: <g:message code="label.${fqBits[1]}" default="${fqBits[1]?.encodeAsHTML().capitalize()}"/>
                                 <a href="${newUrl?:"?"}" class="btn btn-inverse btn-mini tooltips" title="remove filter" aria-label="remove filter">
                                     <i class="text-white fa fa-remove"></i></a>
                             </li>
@@ -467,10 +467,10 @@
             params += "&fq=${fqList.collect{it.encodeAsURL()}.join('&fq=')}";
         </g:if>
         <g:if test="${params.fromDate}">
-            params += '&fromDate='+'${params.fromDate}';
+            params += '&fromDate='+'${params.fromDate.encodeAsURL()}';
         </g:if>
         <g:if test="${params.toDate}">
-            params += '&toDate='+'${params.toDate}';
+            params += '&toDate='+'${params.toDate.encodeAsURL()}';
         </g:if>
 
         $.post(url, params).done(function(data1) {
@@ -543,8 +543,8 @@
         };
 
 var urlWithoutDates = '<fc:formatParams params="${params}" requiredParams="sort,order,max,fq"/>';
-        var fromDate = '${params.fromDate?:''}';
-        var toDate = '${params.toDate?:''}';
+        var fromDate = '${params.fromDate?.encodeAsJavaScript()?:''}';
+        var toDate = '${params.toDate?.encodeAsJavaScript()?:''}';
         var DatePickerModel = function() {
             var formatString = 'YYYY-MM-DD';
             var self = this;
@@ -620,7 +620,7 @@ var urlWithoutDates = '<fc:formatParams params="${params}" requiredParams="sort,
 
             });
         };
-        var error = "${error}";
+        var error = "${error?.encodeAsJavaScript()}";
 
         if(!error){
             ko.applyBindings(new DatePickerModel(), document.getElementById('facet-dates'));
