@@ -562,4 +562,22 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         DateUtils.now().minusDays(10) | null
     }
 
+    def "Checks when the user has no expiry date set in userPermission"(DateTime expiryDate, String expected)  {
+        String userId = '123'
+        String entityId = '00cf9ffd-e30c-45f8-99db-abce8d05c0d8'
+
+        when:
+        String resp = service.checkUserExpirationDetails(userId, entityId)
+
+        then:
+        1 * webService.getJson({it.endsWith("permissions/findUserPermission?userId=${userId}&entityId=${entityId}")}) >> [expiryDate:null, entityType:'au.org.ala.ecodata.Hub', entityId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8', status:'active']
+
+        resp == expected
+
+        where:
+        expiryDate | expected
+        null | null
+    }
+
+
 }

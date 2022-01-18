@@ -688,7 +688,8 @@ class UserService {
      */
     LinkedHashMap findUserPermission(String userId, String entityId) {
         String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/findUserPermission?userId=${userId}&entityId=${entityId}"
-        webService.getJson(url)
+        def result = webService.getJson(url)
+        return result
     }
 
     /**
@@ -698,12 +699,15 @@ class UserService {
     String checkUserExpirationDetails(String userId, String hubId) {
         String resDate = null
         LinkedHashMap userPermission = findUserPermission(userId, hubId)
-        DateTime expiryDate = DateUtils.parse(userPermission.expiryDate)
-        DateTime expiryMinus =  expiryDate.minusMonths(1)
-        DateTime today = DateUtils.now()
-        if (expiryDate > today && today >= expiryMinus) {
-            resDate = DateUtils.isoToDisplayFormat(userPermission.expiryDate)
+        if (userPermission && userPermission.expiryDate != null) {
+            DateTime expiryDate = DateUtils.parse(userPermission.expiryDate)
+            DateTime expiryMinus =  expiryDate.minusMonths(1)
+            DateTime today = DateUtils.now()
+            if (expiryDate > today && today >= expiryMinus) {
+                resDate = DateUtils.isoToDisplayFormat(userPermission.expiryDate)
+            }
         }
+
         resDate
     }
 
