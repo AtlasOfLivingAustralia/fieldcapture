@@ -77,8 +77,12 @@
             <div class="ml-md-auto text-right">
                 <g:if test="${fc.currentUserDisplayName()}">
                     <div class="greeting text-right">G'day <fc:currentUserDisplayName/></div>
+                    <g:if test="${expiryDate}">
+                        <div class="alert alert-warning">
+                            Your access is due to expire on ${expiryDate}. Please contact the department if you require an extension.
+                        </div>
+                    </g:if>
                 </g:if>
-
                 <div class="btn-group login-logout">
                     <auth:loginLogout
                             ignoreCookie="true"
@@ -225,6 +229,5 @@
 
         </script>
     </g:if>
-
 </body>
 </html>

@@ -94,4 +94,23 @@ class LoginRecordingInterceptorSpec extends Specification implements GrailsWebUn
         and: "The flag is unchanged"
         session.getAttribute(LoginRecordingInterceptor.LOGIN_RECORDED)
     }
+
+    void "The interceptor will check the user permission's expiry dae after login"() {
+
+        setup:
+        HubSettings hubSettings = new HubSettings(hubId:"h1")
+        SettingService.setHubConfig(hubSettings)
+
+        when:"the interceptor is invoked"
+        interceptor.before()
+
+        then:"The interceptor retrieves the userId and delegates to the UserService to record the login then checks the expiry date"
+        1 * userService.getCurrentUserId() >> "u1"
+        1 * userService.recordUserLogin("u1", "h1") >> true
+        1 * userService.checkUserExpirationDetails("u1", "h1") >> "01-03-2022"
+
+        and: "A flag is added to the request to be passed/used in the HomeController"
+        session.getAttribute(LoginRecordingInterceptor.EXPIRY_DATE)
+
+    }
 }

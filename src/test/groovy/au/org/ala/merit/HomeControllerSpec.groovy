@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import au.org.ala.merit.hub.HubSettings
+import org.joda.time.DateTime
 import spock.lang.Specification
 import grails.testing.web.controllers.ControllerUnitTest
 
@@ -266,6 +267,5 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
         ['a2'] | [[name:'Category 1', list:[[name:'a2']]]]
         ['a5'] | [[name:'Category 2', list:[[name:'a5']]]]
     }
-
 
 }

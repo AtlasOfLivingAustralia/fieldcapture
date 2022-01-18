@@ -9,6 +9,7 @@ import grails.testing.services.ServiceUnitTest
 import grails.testing.web.GrailsWebUnitTest
 import org.apache.http.HttpStatus
 import org.grails.plugin.cache.GrailsCacheManager
+import org.joda.time.DateTime
 import org.joda.time.DateTimeUtils
 import spock.lang.Specification
 
@@ -527,5 +528,57 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         and:
         orgs == []
     }
+
+    def "This will return the UserPermission details"() {
+        setup:
+        String userId = '123'
+        String entityId = '00cf9ffd-e30c-45f8-99db-abce8d05c0d8'
+
+        when:
+        LinkedHashMap resp = service.findUserPermission(userId, entityId)
+
+        then:
+        1 * webService.getJson({it.endsWith("permissions/findUserPermission?userId=${userId}&entityId=${entityId}")}) >> [expiryDate:'2022-02-16T13:00:00Z', entityType:'au.org.ala.ecodata.Hub', entityId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8', status:'active']
+
+        resp != null
+
+    }
+
+    def "Check if the user's permission is expiring 1 month from now based on the date parameters"(DateTime expiryDate, String expected)  {
+        String userId = '123'
+        String entityId = '00cf9ffd-e30c-45f8-99db-abce8d05c0d8'
+
+        when:
+        String resp = service.checkUserExpirationDetails(userId, entityId)
+
+        then:
+        1 * webService.getJson({it.endsWith("permissions/findUserPermission?userId=${userId}&entityId=${entityId}")}) >> [expiryDate:expiryDate.toString(), entityType:'au.org.ala.ecodata.Hub', entityId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8', status:'active']
+
+        resp == expected
+
+        where:
+        expiryDate | expected
+        DateUtils.now().plusDays(10) | DateUtils.isoToDisplayFormat(DateUtils.now().plusDays(10).toString())
+        DateUtils.now().plusMonths(3)  | null
+        DateUtils.now().minusDays(10) | null
+    }
+
+    def "Checks when the user has no expiry date set in userPermission"(DateTime expiryDate, String expected)  {
+        String userId = '123'
+        String entityId = '00cf9ffd-e30c-45f8-99db-abce8d05c0d8'
+
+        when:
+        String resp = service.checkUserExpirationDetails(userId, entityId)
+
+        then:
+        1 * webService.getJson({it.endsWith("permissions/findUserPermission?userId=${userId}&entityId=${entityId}")}) >> [expiryDate:null, entityType:'au.org.ala.ecodata.Hub', entityId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8', status:'active']
+
+        resp == expected
+
+        where:
+        expiryDate | expected
+        null | null
+    }
+
 
 }

@@ -24,6 +24,7 @@
     <asset:stylesheet src="common-bs4.css"/>
 </head>
 <body>
+
     <div class="content container">
         <div id="stats-holder">
             <g:render template="/report/statistics"/>

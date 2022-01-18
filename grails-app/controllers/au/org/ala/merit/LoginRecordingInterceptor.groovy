@@ -22,6 +22,9 @@ class LoginRecordingInterceptor {
     /** Key to store that we already recorded the login for this session */
     private static final String LOGIN_RECORDED = 'loginRecord'
 
+    /** Key to store that will be passed/used in HomeController */
+    static final String EXPIRY_DATE = 'expiryDate'
+
     LoginRecordingInterceptor() {
         matchAll()
     }
@@ -34,6 +37,8 @@ class LoginRecordingInterceptor {
             if (userId && hub) {
                 boolean success = userService.recordUserLogin(userId, hub.hubId)
                 session.setAttribute(LOGIN_RECORDED, success)
+                String expiryDate = userService.checkUserExpirationDetails(userId, hub.hubId)
+                session.setAttribute(EXPIRY_DATE, expiryDate)
             }
         }
         true

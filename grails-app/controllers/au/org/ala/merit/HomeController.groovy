@@ -4,8 +4,10 @@ import au.org.ala.merit.hub.HubSettings
 import grails.converters.JSON
 import grails.core.GrailsApplication
 import org.apache.commons.lang.StringUtils
+import org.joda.time.DateTime
 
 import javax.servlet.http.Cookie
+import java.text.SimpleDateFormat
 
 class HomeController {
 
@@ -26,6 +28,8 @@ class HomeController {
 
     /** This facet is used by name to filter the list of activity types available for download selection */
     static final String ACTIVITY_TYPE_FACET_NAME = 'activities.type.keyword'
+
+    static final DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy")
 
     def index() {
         HubSettings hubSettings = SettingService.hubConfig
@@ -141,6 +145,7 @@ class HomeController {
     }
 
     def publicHome() {
+        String expiryDateDisplay = session.getAttribute(LoginRecordingInterceptor.EXPIRY_DATE) ?: null
 
         def statistics = statisticsFactory.randomGroup(session.lastGroup ?: -1)
         session.lastGroup = statistics.group // So we can request more stats and not get 2 in a row the same
@@ -152,7 +157,7 @@ class HomeController {
         copyOfLinks << [name:'MORE RESOURCES', type:'', url:helpPage]
         def blog = blogService.getSiteBlog()
 
-        def model = [statistics:statistics.statistics, helpLinks:copyOfLinks, images:images, blog:blog]
+        def model = [statistics:statistics.statistics, helpLinks:copyOfLinks, images:images, blog:blog, expiryDate: expiryDateDisplay]
         if (params.fq) {
             model.putAll(projectExplorerModel())
             model.showProjectExplorer = true
@@ -264,4 +269,5 @@ class HomeController {
         def content = settingService.getSettingText(settingType)
         render view: 'about', model: [settingType: settingType, content: content, showNews: showNews]
     }
+
 }
