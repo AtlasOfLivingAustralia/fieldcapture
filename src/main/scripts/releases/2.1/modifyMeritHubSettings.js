@@ -80,11 +80,11 @@ setting.description = 'The subject of the email to send when a role has been rem
 db.setting.save(setting);
 
 
-setting = db.setting.findOne({key:'meritpermissionexpiry.warning.email.subject'});
+setting = db.setting.findOne({key:'meritpermissionwarning.expiry.email.subject'});
 if (!setting) {
     setting = {
         dateCreated:now,
-        key:'meritpermissionexpiry.warning.email.subject'
+        key:'meritpermissionwarning.expiry.email.subject'
     }
 }
 setting.lastUpdated = now;
@@ -93,11 +93,11 @@ setting.description = 'The subject of the email sent to a user when their elevat
 db.setting.save(setting);
 
 
-setting = db.setting.findOne({key:'meritpermissionexpiry.warning.email.body'});
+setting = db.setting.findOne({key:'meritpermissionwarning.expiry.email.body'});
 if (!setting) {
     setting = {
         dateCreated:now,
-        key:'meritpermissionexpiry.warning.email.body'
+        key:'meritpermissionwarning.expiry.email.body'
     }
 }
 setting.lastUpdated = now;
