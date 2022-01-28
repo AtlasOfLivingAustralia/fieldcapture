@@ -1,7 +1,9 @@
 // Creating a new subprogram for Program:  Complementary Investment (RLP)
 // New Subprogram:  NHT Emerging Priorities
 
-load('../../utils/uuid.js');
+load('../../../utils/uuid.js');
+load('../../../utils/audit.js');
+load('../../../utils/program.js');
 var userId = '129333';
 let parentProgram = "Agriculture Stewardship";
 var subprograms = ["Carbon and Biodiversity Pilot Round 2"]
