@@ -1,9 +1,9 @@
 // Creating a subprogram for Program:  Environmental Restoration Fund
 // Threatened Species Strategy Action Plan Priority Species
 
-load('../../utils/uuid.js');
-load('../../utils/audit.js');
-load('../../utils/program.js');
+load('../../../utils/uuid.js');
+load('../../../utils/audit.js');
+load('../../../utils/program.js');
 
 let parentProgram = "Environmental Restoration Fund";
 var subprograms = ["Threatened Species Strategy Action Plan Priority Species"]
