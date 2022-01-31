@@ -542,88 +542,14 @@
             }
         };
 
-var urlWithoutDates = '<fc:formatParams params="${params}" requiredParams="sort,order,max,fq"/>';
+        var urlWithoutDates = '<fc:formatParams params="${params}" requiredParams="query,sort,order,max,fq"/>';
         var fromDate = '${params.fromDate?.encodeAsJavaScript()?:''}';
         var toDate = '${params.toDate?.encodeAsJavaScript()?:''}';
-        var DatePickerModel = function() {
-            var formatString = 'YYYY-MM-DD';
-            var self = this;
-            var date = moment('2011-07-01T00:00:00+10:00');
-            var end = moment('2021-01-01T00:00:00+11:00');
 
-            self.ranges = [{display:'select date range', from:undefined, to:undefined}];
-            while (date.isBefore(end)) {
-                var rangeEnd = moment(date).add(6, 'months');
-                self.ranges.push({from:date.format(formatString), to:rangeEnd.format(formatString), display:date.format("MMM YYYY")+' - '+rangeEnd.format("MMM YYYY")});
-
-                date = rangeEnd;
-            }
-            self.selectedRange = ko.observable();
-            self.fromDate = ko.observable().extend({simpleDate:false});
-            if (fromDate) {
-                self.fromDate(moment(fromDate).format());
-            }
-            self.toDate = ko.observable().extend({simpleDate:false});
-            if (toDate) {
-                self.toDate(moment(toDate).format());
-            }
-
-            self.clearDates = function() {
-                if (!urlWithoutDates) {
-                    urlWithoutDates = '?';
-                }
-                document.location.href = urlWithoutDates;
-            };
-
-            var validateAndReload = function(newFromDate, newToDate) {
-
-                var parsedNewFromDate = moment(newFromDate);
-                var parsedNewToDate = moment(newToDate);
-                var parsedFromDate = moment(fromDate);
-                var parsedToDate = moment(toDate);
-
-                if (parsedFromDate.isSame(parsedNewFromDate) && parsedToDate.isSame(parsedNewToDate)) {
-                   return;
-                }
-
-                if ($('#facet-dates').validationEngine('validate')) {
-                    reloadWithDates(newFromDate, newToDate);
-                }
-            }
-
-            var reloadWithDates = function(newFromDate, newToDate) {
-                var parsedNewFromDate = moment(newFromDate);
-                var parsedNewToDate = moment(newToDate);
-                if (newFromDate && parsedNewFromDate.isValid()) {
-                    urlWithoutDates += urlWithoutDates?'&':'?';
-                    urlWithoutDates += 'fromDate='+moment(newFromDate).format(formatString);
-                }
-                if (newToDate && parsedNewToDate.isValid()) {
-                    urlWithoutDates += urlWithoutDates?'&':'?';
-                    urlWithoutDates += 'toDate='+moment(newToDate).format(formatString);
-                }
-                document.location.href = urlWithoutDates;
-            }
-
-            self.fromDate.subscribe(function(a, b) {
-                validateAndReload(self.fromDate(), self.toDate());
-            });
-            self.toDate.subscribe(function(toDate) {
-                validateAndReload(self.fromDate(), self.toDate());
-            });
-
-            self.selectedRange.subscribe(function(value) {
-
-                if (value.from) {
-                    reloadWithDates(value.from, value.to);
-                }
-
-            });
-        };
         var error = "${error?.encodeAsJavaScript()}";
 
         if(!error){
-            ko.applyBindings(new DatePickerModel(), document.getElementById('facet-dates'));
+            ko.applyBindings(new DatePickerModel(fromDate, toDate, urlWithoutDates, window.location), document.getElementById('facet-dates'));
         }
 
         function FacetFilterViewModel (params) {
