@@ -9,14 +9,14 @@
 			<div class="alert alert-info">
 				Insert the allocated Internal Order number for this project.  The Internal Order number must be inserted as soon as it becomes available
 			</div>
-	%{--			<div class="form-group row">--}%
-	%{--				<label for="changeProjectStartDate" class="col-form-label col-sm-2">Change Project Start Date</label>--}%
-	%{--				<div class="col-sm-10">--}%
-	%{--					<div class="input-group">--}%
-	%{--						<fc:datePicker size="form-control form-control-sm" targetField="plannedStartDate.date" id="changeProjectStartDate" bs4="true" name="startDate" data-bind="disable:!canEditStartDate(), datepicker:plannedStartDate.date" data-validation-engine="validate[required, past[plannedEndDate]]" printable="${printView}"/>--}%
-	%{--					</div>--}%
-	%{--				</div>--}%
-	%{--			</div>--}%
+				<div class="form-group row">
+					<label for="changeProjectStartDate" class="col-form-label col-sm-2">Change Project Start Date</label>
+					<div class="col-sm-10">
+						<div class="input-group">
+							<fc:datePicker size="form-control form-control-sm" targetField="plannedStartDate.date" id="changeProjectStartDate" bs4="true" name="startDate" data-bind="disable:!canEditStartDate(), datepicker:plannedStartDate.date" data-validation-engine="validate[required, past[plannedEndDate]]" printable="${printView}"/>
+						</div>
+					</div>
+				</div>
 
 			<div class="form-group row">
 				<label for="internalOrderId" class="col-form-label col-sm-2">Internal order number:</label>
@@ -26,7 +26,7 @@
 			</div>
 		</div>
 		<span class="grantManagerActionSpan" data-bind="popover:{content:'*An internal order number must be supplied before the MERI Plan can be approved', placement:'top', trigger:'hover'}">
-			<button type="button" data-bind="enable: internalOrderId(), click:approvePlan" class="btn btn-sm btn-success"><i class="fa fa-check"></i> Approve MERI Plan</button>
+			<button type="button" data-bind="enable: internalOrderId() && plannedStartDate(), click:approvePlan" class="btn btn-sm btn-success"><i class="fa fa-check"></i> Approve MERI Plan</button>
 			<button type="button" data-bind="click:rejectPlan" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> Reject MERI Plan</button>
 		</span>
 	</div>
