@@ -21,7 +21,7 @@
 			<div class="form-group row">
 				<label for="internalOrderId" class="col-form-label col-sm-2">Internal order number:</label>
 				<div class="col-sm-10">
-					<input id="internalOrderId" class="form-control form-control-sm internalOrderNumber" type="text" placeholder="If unavailable, use 'TBA'" data-bind="value:internalOrderId, valueUpdate:'keyup'">
+					<input id="internalOrderId" class="form-control form-control-sm internalOrderNumber" type="text" data-bind="value:internalOrderId, valueUpdate:'keyup'" data-validation-engine="validate[custom[number]]">
 				</div>
 			</div>
 		</div>

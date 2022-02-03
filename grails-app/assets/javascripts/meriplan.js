@@ -130,36 +130,37 @@ function MERIPlan(project, projectService, config) {
     self.canEditStartDate = ko.observable(config.editProjectStartDate)
     // approve plan and handle errors
     self.approvePlan = function () {
-
-        if (config.requireMeriApprovalReason) {
-            var planApprovalModal = config.planApprovalModel || '#meri-plan-approval-modal';
-            var $planApprovalModal = $(planApprovalModal);
-            var planApprovalViewModel = {
-                referenceDocument: ko.observable(),
-                reason:ko.observable(),
-                title:'Approve MERI Plan',
-                dateApproved: ko.observable(new Date()).extend({simpleDate:true}),
-                buttonText: 'Approve',
-                submit:function(viewModel) {
-                    projectService.approvePlan({
-                        referenceDocument:viewModel.referenceDocument(),
-                        reason: viewModel.reason(),
-                        dateApproved: viewModel.dateApproved()
-                    }, { internalOrderNumber: self.internalOrderId(),
-                        plannedStartDate: self.plannedStartDate()});
-                }
-            };
-            ko.applyBindings(planApprovalViewModel, $planApprovalModal[0]);
-            $planApprovalModal.modal({backdrop: 'static', keyboard:true, show:true}).on('hidden.bs.modal', function() {ko.cleanNode($planApprovalModal[0])});
-        }
-        else {
-            var data = {
-                internalOrderNumber: self.internalOrderId(),
-                plannedStartDate: self.plannedStartDate()
+        var valid =  $('#project-details-validation').validationEngine('validate');
+        if (valid) {
+            if (config.requireMeriApprovalReason) {
+                var planApprovalModal = config.planApprovalModel || '#meri-plan-approval-modal';
+                var $planApprovalModal = $(planApprovalModal);
+                var planApprovalViewModel = {
+                    referenceDocument: ko.observable(),
+                    reason:ko.observable(),
+                    title:'Approve MERI Plan',
+                    dateApproved: ko.observable(new Date()).extend({simpleDate:true}),
+                    buttonText: 'Approve',
+                    submit:function(viewModel) {
+                        projectService.approvePlan({
+                            referenceDocument:viewModel.referenceDocument(),
+                            reason: viewModel.reason(),
+                            dateApproved: viewModel.dateApproved()
+                        }, { internalOrderNumber: self.internalOrderId(),
+                            plannedStartDate: self.plannedStartDate()});
+                    }
+                };
+                ko.applyBindings(planApprovalViewModel, $planApprovalModal[0]);
+                $planApprovalModal.modal({backdrop: 'static', keyboard:true, show:true}).on('hidden.bs.modal', function() {ko.cleanNode($planApprovalModal[0])});
             }
-            projectService.approvePlan({dateApproved:convertToIsoDate(new Date())}, data)
+            else {
+                var data = {
+                    internalOrderNumber: self.internalOrderId(),
+                    plannedStartDate: self.plannedStartDate()
+                }
+                projectService.approvePlan({dateApproved:convertToIsoDate(new Date())}, data)
+            }
         }
-
 
     };
     // reject plan and handle errors
