@@ -498,7 +498,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         overview.projectStatus[1].text() == 'ACTIVE'
     }
 
-    def "A grant manager must supply the internal order number to be able to approve the MERI plan of a project with the application status"() {
+    def "A grant manager must supply the internal order number and project start date to be able to approve the MERI plan of a project with the application status"() {
 
         setup:
         // Refresh the data set, the rest of the spec relies on progressively modifying the data so the dataset is only loaded once
@@ -517,9 +517,11 @@ class MeriPlanSpec extends StubbedCasSpec {
         then:
         meriplan.approveButton.@disabled
         meriplan.internalOrderNumber.displayed
+        meriplan.projectStartDate.displayed
 
         when:
-        meriplan.internalOrderNumber = "TBA"
+        meriplan.projectStartDate = "01/07/2018"
+        meriplan.internalOrderNumber = "12345"
 
         then:
         waitFor { !meriplan.approveButton.@disabled }
