@@ -362,7 +362,7 @@ class GmsMapperSpec extends Specification{
     def "The new fields for the grants hub import can be mapped"() {
         setup:
         Map projectData = [APP_ID:'p1', FUNDING_TYPE:'Grant', PROJECT_STATUS:'Completed', MERI_PLAN_STATUS:'Approved',
-            FUNDING_TYPE:'Grant', ORIGIN_SYSTEM:'Grants Hub', FINANCIAL_YEAR_FUNDING_DESCRIPTION:'Project funding', FUNDING_18_19:'100', FUNDING_19_20:'200.01', FUNDING_20_21:'300.50']
+            FUNDING_TYPE:'Grant', ORIGIN_SYSTEM:'Grants Hub', FINANCIAL_YEAR_FUNDING_DESCRIPTION:'Project funding', FUNDING_18_19:'100', FUNDING_19_20:'200.01', FUNDING_20_21:'300.50', ELECTION_COMMITMENT_YEAR:'2021']
 
         when:
         def result = gmsMapper.mapProject([projectData])
@@ -373,7 +373,8 @@ class GmsMapperSpec extends Specification{
         result.project.fundingType == projectData.FUNDING_TYPE
         result.project.status == 'completed'
         result.project.planStatus == 'approved'
-        result.project.originSystem == projectData.ORIGIN_SYSTEM
+        result.project.origin == projectData.ORIGIN_SYSTEM
+        result.project.electionCommitmentYear == projectData.ELECTION_COMMITMENT_YEAR
         meriPlan.budget.overallTotal == 600.51
         meriPlan.budget.headers == [[data:"2018/2019"], [data:"2019/2020"], [data:"2020/2021"]]
         meriPlan.budget.rows.size() == 1
@@ -417,5 +418,23 @@ class GmsMapperSpec extends Specification{
         lines[3].every {String value ->
             gmsMapper.projectMapping[value].description != null
         }
+    }
+
+    def "Tags will be converted to an empty array if not supplied"() {
+        when:
+        Map result = gmsMapper.mapProject([[APP_ID:'g1', TAGS:'', PROGRAM_NM:"Green Army", ORG_TRADING_NAME:'Test org 1', ABN:'12345678901', FUNDING_TYPE:"RLP", FUNDING:"1000", START_DT:'2019/07/01', FINISH_DT:'2020/07/01']])
+
+        then:
+        !result.project.tags
+        !result.errors
+    }
+
+    def "Tags will be converted from a comma separated list, and empty elements removed"() {
+        when:
+        Map result = gmsMapper.mapProject([[APP_ID:'g1', TAGS:"tag 1,,tag 3", PROGRAM_NM:"Green Army", ORG_TRADING_NAME:'Test org 1', ABN:'12345678901', FUNDING_TYPE:"RLP", FUNDING:"1000", START_DT:'2019/07/01', FINISH_DT:'2020/07/01']])
+
+        then:
+        result.project.tags == ["tag 1", "tag 3"]
+        !result.errors
     }
 }

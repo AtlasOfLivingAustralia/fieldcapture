@@ -1,7 +1,11 @@
 package au.org.ala.merit
 
 import grails.core.GrailsApplication
+import grails.core.GrailsClass
+import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
+
+import java.lang.reflect.Method
 
 /**
  * Grails Filter to check for controller methods annotated with <code>@{@link PreAuthorise}</code>
@@ -9,25 +13,31 @@ import groovy.util.logging.Slf4j
  * @see PreAuthorise
  */
 @Slf4j
+@CompileStatic
 class AclInterceptor {
-    def userService, projectService, roleService
+    UserService userService
+    ProjectService projectService
+    RoleService roleService
     GrailsApplication grailsApplication
 
-    public AclInterceptor() {
+    int order = HIGHEST_PRECEDENCE + 20
+
+    AclInterceptor() {
         matchAll()
     }
 
     boolean before() {
-        def controller = grailsApplication.getArtefactByLogicalPropertyName("Controller", controllerName)
+        GrailsClass controller = grailsApplication.getArtefactByLogicalPropertyName("Controller", controllerName)
 
         Class controllerClass = controller?.clazz
-        def method = controllerClass?.getMethod(actionName ?: "index", [] as Class[])
-        def roles = roleService.getAugmentedRoles()
+        String action = actionName ?: "index"
+        Method method = controllerClass?.getMethod(action, [] as Class[])
+        List roles = roleService.getAugmentedRoles()
         if (controllerClass?.isAnnotationPresent(PreAuthorise) || method?.isAnnotationPresent(PreAuthorise)) {
-            PreAuthorise pa = method.getAnnotation(PreAuthorise) ?: controllerClass?.getAnnotation(PreAuthorise)
-            def userId = userService.getCurrentUserId()
-            def accessLevel = pa.accessLevel()
-            def entityId = params[pa.projectIdParam()]
+            PreAuthorise pa = (PreAuthorise)(method.getAnnotation(PreAuthorise) ?: controllerClass?.getAnnotation(PreAuthorise))
+            String userId = userService.getCurrentUserId()
+            String accessLevel = pa.accessLevel()
+            String entityId = params[pa.projectIdParam()]
 
             String entity = UserService.PROJECT
             switch (controllerClass) {
@@ -50,38 +60,38 @@ class AclInterceptor {
             }
 
             switch (accessLevel) {
-                case 'alaAdmin':
-                    if (!userService.userInRole(grailsApplication.config.getProperty('security.cas.alaAdminRole'))) {
+                case RoleService.ALA_ADMIN_ROLE:
+                    if (!userService.userIsAlaAdmin()) {
                         errorMsg = "Access denied: User does not have <b>alaAdmin</b> permission"
                     }
                     break
-                case 'siteAdmin':
+                case RoleService.HUB_ADMIN_ROLE:
                     if (!userService.userIsAlaOrFcAdmin()) {
                         errorMsg = "Access denied: User does not have <b>admin</b> permission"
                     }
                     break
-                case 'siteReadOnly':
+                case RoleService.HUB_READ_ONLY_ROLE:
                     if (!(userService.userIsAlaOrFcAdmin() || userService.userHasReadOnlyAccess())) {
                         errorMsg = "Access denied: User does not have <b>admin</b> permission"
                     }
                     break
-                case 'officer':
+                case RoleService.HUB_OFFICER_ROLE:
                     if (!userService.userIsSiteAdmin()) {
                         errorMsg = "Access denied: User does not have <b>admin</b> permission"
                     }
                     break
 
-                case 'caseManager':
-                case 'admin':
-                case 'editor':
+                case RoleService.GRANT_MANAGER_ROLE:
+                case RoleService.PROJECT_ADMIN_ROLE:
+                case RoleService.PROJECT_EDITOR_ROLE:
                     if (!(userService.userIsAlaOrFcAdmin() || userService.checkRole(userId, accessLevel, entityId, entity))) {
                         errorMsg = "Access denied: User does not have <b>${accessLevel}</b> permission"
                     }
                     break
-                case 'readOnly':
-                    // There is no ecodata accessLevel (yet) so the read only role is implemented as
-                    // hasReadOnlyAccess or has the editor role or above on the project
-                    if (!(userService.userIsAlaOrFcAdmin() || userService.checkRole(userId, 'editor', entityId, entity) || userService.userHasReadOnlyAccess())) {
+                // There is no ecodata accessLevel (yet) so the read only role is implemented as
+                // hasReadOnlyAccess or has the editor role or above on the project
+                case RoleService.PROJECT_READ_ONLY_ROLE:
+                    if (!(userService.userIsAlaOrFcAdmin() || userService.checkRole(userId, RoleService.PROJECT_EDITOR_ROLE, entityId, entity) || userService.userHasReadOnlyAccess())) {
                         errorMsg = "Access denied: User does not have <b>${accessLevel}</b> permission"
                     }
                     break

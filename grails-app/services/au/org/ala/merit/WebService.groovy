@@ -128,7 +128,7 @@ class WebService {
             conn.setRequestProperty("Authorization", grailsApplication.config.getProperty('api_key'))
         }
 
-        def headers = [HttpHeaders.CONTENT_DISPOSITION]
+        def headers = [HttpHeaders.CONTENT_DISPOSITION, HttpHeaders.CACHE_CONTROL, HttpHeaders.EXPIRES, HttpHeaders.LAST_MODIFIED, HttpHeaders.ETAG]
         def resp = [status:conn.responseCode]
 
         response.status = conn.responseCode
@@ -137,7 +137,11 @@ class WebService {
         if (conn.responseCode == 200) {
             response.setContentLength(conn.getContentLength())
             headers.each { header ->
-                response.setHeader(header, conn.getHeaderField(header))
+                String headerValue = conn.getHeaderField(header)
+                if (headerValue) {
+                    response.setHeader(header, headerValue)
+                }
+
             }
             response.status = conn.responseCode
 
@@ -240,13 +244,13 @@ class WebService {
      */
     Map getJson2(String url, Integer timeout = null) {
         HttpURLConnection conn = null
-        Map result = [:]
+        Map result = null
         try {
             conn = configureConnection(url, true, timeout)
 
             String responseCharset = getCharset(conn)
             JsonSlurper parser = new JsonSlurper()
-            Map resp = parser.parse(conn.inputStream, responseCharset)
+            def resp = parser.parse(conn.inputStream, responseCharset)
             result = [statusCode:conn.responseCode, resp:resp]
 
         } catch (ConverterException e) {

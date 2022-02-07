@@ -168,32 +168,37 @@ class DocumentService {
                 canEdit = userService.userIsAlaOrFcAdmin()
             }
             else {
-                // Check the permissions that apply to the entity the document is
-                // associated with.
-                String userId = userService.getCurrentUserId()
-                if (document.projectId) {
-                    canEdit = userService.canUserEditProject(userId, document.projectId)
-                }
-                else if (document.programId) {
-                    canEdit = userService.canUserEditProgramReport(userId, document.programId)
-                }
-                else if (document.organisationId) {
-                    canEdit = userService.isUserAdminForOrganisation(userId, document.organisationId)
-                }
-                else if (document.activityId) {
-                    canEdit = userService.canUserEditActivity(userId, document.activityId)
-                }
-                else if (document.managementUnitId) {
-                    canEdit = userService.canUserEditManagementUnit(userId, document.managementUnitId)
-                }
-                else {
-                    canEdit = userService.userIsAlaOrFcAdmin()
-                }
+                canEdit = hasEditorPermission(document)
             }
 
         }
 
         canEdit
+    }
+
+    private boolean hasEditorPermission(Map document) {
+        boolean canEdit = false
+        // Check the permissions that apply to the entity the document is
+        // associated with.
+        String userId = userService.getCurrentUserId()
+        if (document.projectId) {
+            canEdit = userService.canUserEditProject(userId, document.projectId)
+        } else if (document.programId) {
+            canEdit = userService.canUserEditProgramReport(userId, document.programId)
+        } else if (document.organisationId) {
+            canEdit = userService.isUserAdminForOrganisation(userId, document.organisationId)
+        } else if (document.activityId) {
+            canEdit = userService.canUserEditActivity(userId, document.activityId)
+        } else if (document.managementUnitId) {
+            canEdit = userService.canUserEditManagementUnit(userId, document.managementUnitId)
+        } else {
+            canEdit = userService.userIsAlaOrFcAdmin()
+        }
+        canEdit
+    }
+
+    boolean canView(Map document) {
+        document.publiclyViewable || userService.userHasReadOnlyAccess() || hasEditorPermission(document)
     }
 
     /**

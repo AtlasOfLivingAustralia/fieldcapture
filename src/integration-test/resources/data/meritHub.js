@@ -126,5 +126,11 @@ var meritHub = {
   },
   "title" : "MERIT",
   "urlPath" : "merit",
-  "hubId":"merit"
+  "hubId":"merit",
+  "accessManagementOptions": {
+    "expireUsersAfterPeriodInactive": "P24M",
+    "warnUsersAfterPeriodInactive": "P23M"
+  },
+  "emailFromAddress":"merit@test.org",
+  "emailReplyToAddress":"merit@test.org"
 };

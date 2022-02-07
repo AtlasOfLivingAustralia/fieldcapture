@@ -104,6 +104,16 @@ class UrlMappings {
             action = 'get'
         }
 
+        "/document/download/$path/$filename" {
+            controller = 'document'
+            action = 'download'
+        }
+
+        "/document/download/$filename" {
+            controller = 'document'
+            action = 'download'
+        }
+
         "500"(view:'/error')
         "404"(view:'/404')
         "/$hub/$controller/ws/$action/$id" {

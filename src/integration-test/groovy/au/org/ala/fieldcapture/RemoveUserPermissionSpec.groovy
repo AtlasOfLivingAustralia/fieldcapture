@@ -14,36 +14,28 @@ class RemoveUserPermissionSpec extends StubbedCasSpec {
         logout(browser)
     }
 
-    def "I can search user details using email Address as an ROLE_ADMIN"() {
+    def "I can search user details using email Address as an ALA administrator"() {
 
         setup:
-        login([userId:'1', role:"ROLE_ADMIN", email:'role-admin@nowhere.com', firstName: "ROLE", lastName:'Admin'], browser)
+        loginAsAlaAdmin(browser)
 
         when:
         to RemoveUserPermissionPage
-
-        then:
-        waitFor {at RemoveUserPermissionPage}
-
-        when:
-        adminContent.email = "auser@nowhere.com.au"
+        adminContent.email = "user1@nowhere.com.au"
         adminContent.searchButton.click()
 
         then:
-        waitFor 20, {at RemoveUserPermissionPage}
-
-        and:
         waitFor { adminContent.userId.text() == "1" }
-        adminContent.emailAddress.text() == "auser@nowhere.com.au"
+        adminContent.emailAddress.text() == "user1@nowhere.com.au"
         adminContent.firstName.text() == "Test"
         adminContent.lastName.text() == "Test"
 
     }
 
-    def "I can search user details using email Address and remove user as an FC_ADMIN"() {
+    def "I can search user details using email Address and remove user as a MERIT administrator"() {
 
         setup:
-        login([userId:'1', role:"ROLE_FC_ADMIN", email:'role-admin@nowhere.com', firstName: "ROLE", lastName:'Admin'], browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to RemoveUserPermissionPage
@@ -51,54 +43,35 @@ class RemoveUserPermissionSpec extends StubbedCasSpec {
         then:
         waitFor {at RemoveUserPermissionPage}
 
-        when:
-        adminContent.email = "auser@nowhere.com.au"
+        when: "We search for a user and remove their permissions"
+        adminContent.email = "user1@nowhere.com.au"
         adminContent.searchButton.click()
-
-        then:
-        waitFor 10, {at RemoveUserPermissionPage}
-
-        and:
+        waitFor { adminContent.userId.text() == "1" }
         adminContent.removeButton.click()
 
+        then:
+        waitFor { hasBeenReloaded() }
+
         when: "Check user if exist in project admin access tab after removing from admin section"
-
-         waitFor 20, { to RlpProjectPage, "project_1"}
-
-        then:
-        waitFor 10, {at RlpProjectPage}
-
-        when:
-        adminTab.click()
-        then:
-        waitFor {adminContent.projectAccessTab.displayed}
-
-        when:
-        adminContent.projectAccessTab.click()
+        to RlpProjectPage, "project_1"
+        openAdminTab()
+        adminContent.openProjectAccess()
 
         then:
-        waitFor {adminContent.projectAccess.displayed}
-
-        and:
         waitFor {
-            adminContent.projectAccess.size() == 1
-            adminContent.projectAccess[0].messageRow.text() == "No project members set"
+            adminContent.projectAccess.messageRow.text() == "No project members set"
         }
     }
 
     def "Check ROLE_USER can access the page or not"() {
         setup:
-        login([userId:'1', role:"ROLE_USER", email:'role-user@nowhere.com', firstName: "ROLE", lastName:'User'], browser)
+        loginAsUser('1', browser)
 
         when:
         via RemoveUserPermissionPage
-        to HomePage
 
         then:"the user did not have permission to view the page"
-        waitFor 10, {at HomePage}
-
-        and:
-        title =="Home | MERIT"
+        at HomePage
 
     }
 }

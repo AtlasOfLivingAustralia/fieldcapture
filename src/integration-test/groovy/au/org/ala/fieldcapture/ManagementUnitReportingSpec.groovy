@@ -33,7 +33,7 @@ class ManagementUnitReportingSpec extends StubbedCasSpec {
 
         setup:
         String managementUnitId = 'test_mu'
-        login([userId: '1', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'Admin'], browser)
+        loginAsUser('1', browser)
 
         when: "Display the reporting tab"
         to ManagementUnitPage, managementUnitId
@@ -47,7 +47,7 @@ class ManagementUnitReportingSpec extends StubbedCasSpec {
     def "We can specify the core services reporting frequency"() {
         setup:
         String managementUnitId = 'test_mu'
-        login([userId: '3', role: "ROLE_FC_OFFICER", email: 'fc_officer@nowhere.com', firstName: "MERIT", lastName: 'FC_OFFICER'], browser)
+        loginAsGrantManager(browser)
 
         when: "Display the reporting tab"
         to ManagementUnitPage, managementUnitId
@@ -78,7 +78,7 @@ class ManagementUnitReportingSpec extends StubbedCasSpec {
     def "A user with the MU admin role can complete MU reports,and submit them"() {
         setup:
         String managementUnitId = 'test_mu'
-        login([userId: '1', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MU", lastName: 'Admin'], browser)
+        loginAsUser('1', browser)
 
         when: "Display the reporting tab and edit the first report"
         to ManagementUnitPage, managementUnitId
@@ -138,7 +138,7 @@ class ManagementUnitReportingSpec extends StubbedCasSpec {
     def "A user with the MU grant manager role can approve and return MU reports"() {
         setup:
         String managementUnitId = 'test_mu'
-        login([userId: '3', role: "ROLE_FC_OFFICER", email: 'fc_officer@nowhere.com', firstName: "MERIT", lastName: 'FC_OFFICER'], browser)
+        loginAsGrantManager(browser)
 
         when: "Display the reporting tab"
         to ManagementUnitPage, managementUnitId
@@ -162,9 +162,9 @@ class ManagementUnitReportingSpec extends StubbedCasSpec {
 
     }
 
-    def "A user with the FC_READ_ONLY role can view, but not edit management unit reports"() {
+    def "A user with the MERIT siteReadOnly role can view, but not edit management unit reports"() {
         String managementUnitId = 'test_mu'
-        login([userId: '3', role: "ROLE_FC_READ_ONLY", email: 'fc_read_only@nowhere.com', firstName: "MERIT", lastName: 'FC_READ_ONLY'], browser)
+        loginAsReadOnlyUser(browser)
 
         when: "Display the reporting tab, then view the approved report"
         to ManagementUnitPage, managementUnitId

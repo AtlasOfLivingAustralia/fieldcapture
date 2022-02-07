@@ -11,8 +11,19 @@
             <g:render id="addUserRole" template="/admin/userRolesSelect" model="[roles:roles, includeEmptyOption: true, selectClass:'input-medium']"/>
         </div>
     </div>
+    <g:if test="${hubFlg}">
+        <div class="control-group form-group row">
+            <label class="control-label col-form-label col-sm-2" for="expiryDate">Permission expiry date</label>
+            <div>
+                <div class="input-group input-small" style="margin-left: 15px;">
+                    <input class="form-control dateControl" style="height: 30px;" type="text" id="expiryDate">
+                </div>
+            </div>
+        </div>
+    </g:if>
     <g:if test="${entityId}">
         <input type='hidden' id='entityId' value='${entityId}'>
+        <input type='hidden' id='containerId' value='${containerId}'>
     </g:if>
     <g:elseif test="${projects}">
         <div class="control-group">
@@ -46,7 +57,7 @@
     <ul>
         <li>the email address is incorrect</li>
         <li>the user is not registered - see the <a href="${grailsApplication.config.getProperty('user.registration.url')}"
-                target='_blank' style='text-decoration: underline;'>sign-up page</a>.
+                                                    target='_blank' style='text-decoration: underline;'>sign-up page</a>.
         </li>
     </ul>
 </div>
@@ -54,14 +65,14 @@
     $(document).ready(function() {
         // combobox plugin enhanced select
         $(".combobox").combobox();
-
+        $("#expiryDate").datepicker({format: "dd-mm-yyyy",autoclose: true});
         // Click event on "add" button to add new user to project
         $('#addUserRoleBtn').click(function(e) {
             e.preventDefault();
             var email = $('#emailAddress').val();
             var role = $('#addUserRole').val();
             var entityId = $('#entityId').val();
-
+            var expiryDate = $('#expiryDate').val();
             if ($('#userAccessForm').validationEngine('validate')) {
                 $("#spinner1").show();
 
@@ -69,7 +80,7 @@
                     // first check email address is a valid user
                     $.get("${g.createLink(controller:'user',action:'checkEmailExists')}?email=" + email).done(function(data) {
                         if (data && /^\d+$/.test(data)) {
-                            addUserWithRole( data, role, entityId);
+                            addUserWithRole( data, role, entityId, expiryDate);
                         } else {
                             var $clone = $('.bbAlert1').clone();
                             bootbox.alert($clone.html());
@@ -80,6 +91,19 @@
                 }
             }
         });
+
+        $('#addUserRole').change(function (){
+            if ($('#addUserRole').val() == "siteReadOnly") {
+                var defaultExpiryDate = new Date();
+                defaultExpiryDate.setMonth(defaultExpiryDate.getMonth()+6);
+                $('#expiryDate').datepicker('setDate', defaultExpiryDate);
+                $("#expiryDate").prop('disabled', true);
+            } else {
+                $('#expiryDate').datepicker('setDate', '');
+                $("#expiryDate").prop('disabled', false);
+            }
+        });
+
     }); // end document ready
 
     /**
@@ -89,14 +113,20 @@
      * @param role
      * @param projectId
      */
-    function addUserWithRole(userId, role, id) {
-        //console.log("addUserWithRole",userId, role, projectId);
+    function addUserWithRole(userId, role, id, expiryDate) {
         if (userId && role) {
             $.ajax({
                 url: '${addUserUrl}',
-                data: { userId: userId, role: role, entityId: id }
+                data: { userId: userId, role: role, entityId: id, expiryDate: expiryDate}
             })
-            .done(function(result) { updateStatusMessage("user was added with role " + decodeCamelCase(role)); })
+            .done(function(result) {
+            updateStatusMessage("user was added with role " + decodeCamelCase(role));
+
+            if ($('#containerId').val()) {
+                displayAlertMessage("User was added with role " + decodeCamelCase(role));
+            }
+
+            })
             .fail(function(jqXHR, textStatus, errorThrown) {
                 bootbox.alert(jqXHR.responseText);
             })
@@ -121,7 +151,12 @@
         // project page - trigger user table refresh
         if (typeof(populatePermissionsTable) != "undefined") {
             populatePermissionsTable();
-        }
-
+        } else {
+        // Hub User's table refresh
+%{--            reloadPage();--}%
+        var tableSelector = "#"+$('#containerId').val()
+        reloadMembers(tableSelector);
     }
+
+}
 </asset:script>

@@ -15,11 +15,18 @@ class AdminClearCachePage extends ReloadablePage {
         homePageDocuments{ $("#homePageDocuments")}
         userProfileCache{ $("#userProfileCache")}
         homePageStatistics{ $("#homePageStatistics")}
+        programListCache{$('#programList')}
+
 
     }
 
     void clearHomePageStatistics(){
         waitFor {homePageStatistics.displayed}
         homePageStatistics.click()
+    }
+
+    void clearProgramListCache() {
+        waitFor {programListCache.displayed }
+        programListCache.click()
     }
 }

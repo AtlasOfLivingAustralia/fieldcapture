@@ -185,7 +185,7 @@ class ImportService {
         return null
     }
 
-    def importProject(project, reload = true) {
+    def importProject(Map project, reload = true) {
 
         def status = [:]
 
@@ -205,7 +205,7 @@ class ImportService {
         else {
             status.project = 'created'
         }
-
+        project.hubId = SettingService.hubConfig?.hubId
         def result = projectService.update(project.projectId?:'', project)
 
         // If a project was created the ID will be returned, otherwise use the value retrieved by the original query.

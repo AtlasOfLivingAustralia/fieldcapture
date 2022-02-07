@@ -15,7 +15,7 @@ class SearchSpec extends StubbedCasSpec {
 
     def "Search project using search bar in header"(){
         setup:
-        login([userId: '2', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ALA_ADMIN'], browser)
+        loginAsAlaAdmin(browser)
 
         when:
         to AdminTools
@@ -58,7 +58,7 @@ class SearchSpec extends StubbedCasSpec {
         when: "expand the projects section"
         def expectedProjects = new HashSet((5).collect{"project $it"})
         projectsToggle.click()
-        waitFor { projectPagination.displayed }
+        waitFor 30, { projectPagination.displayed }
 
         then:
         new HashSet(projects.collect{it.name}) == expectedProjects

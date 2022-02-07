@@ -15,7 +15,7 @@ class EditProgramSpec extends StubbedCasSpec {
 
     def "As a user with admin permissions, I can edit a program with parent id"() {
         setup: "log in as userId=1 who is a program admin for the program with programId=test_program"
-        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to ProgramPage, 'test_program'
@@ -47,7 +47,7 @@ class EditProgramSpec extends StubbedCasSpec {
 
     def "As a user with admin permissions, I can edit a program with No parent"() {
         setup: "log in as userId=1 who is a program admin for the program with programId=test_programId"
-        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to ProgramPage, 'test_program'
@@ -79,7 +79,7 @@ class EditProgramSpec extends StubbedCasSpec {
 
     def "As a user with admin permissions, can edit program and insert script injection"() {
         setup: "log in as userId=1 who is a program admin for the program with programId=test_programId"
-        login([userId:'1', role:"ROLE_FC_ADMIN", email:'fc-admin@nowhere.com', firstName: "FC", lastName:'Admin'], browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to ProgramPage, 'test_program'

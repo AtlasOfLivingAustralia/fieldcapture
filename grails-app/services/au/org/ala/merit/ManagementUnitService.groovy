@@ -4,6 +4,7 @@ import au.org.ala.merit.reports.ReportConfig
 import au.org.ala.merit.reports.ReportGenerationOptions
 import au.org.ala.merit.reports.ReportOwner
 import grails.core.GrailsApplication
+import grails.plugin.cache.Cacheable
 import groovy.util.logging.Slf4j
 import org.grails.web.json.JSONArray
 import org.joda.time.DateTime
@@ -123,6 +124,10 @@ class ManagementUnitService {
             result.error = error
             result.detail = ''
         } else {
+            if (!id) {
+                // Assign the MERIT hubId to the management unit when craeting a new management unit
+                mu.hubId = SettingService.hubConfig?.hubId
+            }
             String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}managementUnit/$id"
             result = webService.doPost(url, mu)
         }
@@ -308,11 +313,11 @@ class ManagementUnitService {
      * Retrieves all management units as a geojson FeatureCollection with each
      * feature containing a type property that can be used to colour the map.
      */
+    @Cacheable('managementUnitMap')
     Map managementUnitFeatures() {
         String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}${MU_MAP_PATH}"
         // This is a very slow call as all MU features are simplified and intersected with each other to
-        // build a collection ready for mapping.  Hence the 30 second timeout.  Caching has been applied to
-        // the controller.
+        // build a collection ready for mapping.  Hence the 30 second timeout.
         webService.getJson2(url, 30000)
     }
     /**
@@ -332,18 +337,14 @@ class ManagementUnitService {
      * @return
      */
     def generateReports(String startDate, String endDate, Map extras = null){
-        // Convert to ISO 8601 date format
-        String format = 'yyyy-MM-dd'
 
         // The end date is the last day of the period (e.g. 2020-06-30) but reports will end at midnight of the next day (e.g. 2020-07-01T00:00:00)
         // so add a day or two to achieve this.
-        DateTime start = DateUtils.parseDisplayDate(startDate, format).plusDays(2)
-        DateTime end =  DateUtils.parseDisplayDate(endDate, format).plusDays(2)
-        String isoStartDate = DateUtils.format(start.withZone(DateTimeZone.UTC))
-        String isoEndDate = DateUtils.format(end.withZone(DateTimeZone.UTC))
+
+        String isoStartDate = DateUtils.format(DateUtils.parse(startDate).plusDays(1).withZone(DateTimeZone.UTC))
+        String isoEndDate = DateUtils.format(DateUtils.parse(endDate).plusDays(1).withZone(DateTimeZone.UTC))
 
         String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}" + "managementunit/generateReportsInPeriod?startDate=${isoStartDate}&endDate=${isoEndDate}"
-
         url += '&' + extras.collect { k,v -> "$k=$v" }.join('&')
         def resp = webService.getJson(url)
         return resp

@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.hub.HubSettings
 import grails.testing.web.controllers.ControllerUnitTest
 import org.apache.http.HttpStatus
 import spock.lang.Specification
@@ -51,6 +52,7 @@ class SearchControllerSpec extends Specification implements ControllerUnitTest<S
 
     def "The search controller accepts a request to download a user data and delegates to ecodata"() {
         when:
+        SettingService.setHubConfig(new HubSettings(hubId:"merit"))
         controller.downloadUserData()
 
         then:
@@ -64,6 +66,7 @@ class SearchControllerSpec extends Specification implements ControllerUnitTest<S
         params.downloadUrl.endsWith('download/')
         params.systemEmail == 'merit@ala.org.au'
         params.senderEmail == 'merit@ala.org.au'
+        params.hubId == "merit"
 
     }
 

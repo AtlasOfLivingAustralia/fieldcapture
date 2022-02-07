@@ -65,6 +65,7 @@ class SettingService {
     }
 
     def loadHubConfig(String hub) {
+
         // Don't want the cookie secure in dev environments as HTTPS is generally not used.
         boolean useSecureCookie = grailsApplication.config.getProperty('server.servlet.session.cookie.secure', Boolean, false)
         if (!hub) {
@@ -91,6 +92,9 @@ class SettingService {
                     adminFacets: ['electFacet'],
                     availableMapFacets: ['status', 'organisationFacet','associatedProgramFacet','associatedSubProgramFacet','stateFacet','nrmFacet','lgaFacet','mvgFacet','ibraFacet','imcra4_pbFacet','electFacet']
             )
+        }
+        if (log.isDebugEnabled()) {
+            log.debug("Setting hub: ${settings?.hubId} on the thread: ${Thread.currentThread().name}")
         }
 
         SettingService.setHubConfig(settings)

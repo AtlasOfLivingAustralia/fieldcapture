@@ -15,7 +15,7 @@ class SiteBlogSpec extends StubbedCasSpec {
 
     def "As an admin, I can create/delete MERIT blog"() {
         setup:
-        login([userId:'1', role:"ROLE_ADMIN", email:'user@nowhere.com', firstName: "MERIT", lastName:'User'], browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to EditSiteBlogPage

@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.hub.HubSettings
 import au.org.ala.merit.reports.ReportGenerationOptions
 import grails.converters.JSON
 import grails.testing.services.ServiceUnitTest
@@ -78,14 +79,41 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
         ]]
         List status = []
         String projectId = 'p1'
+        SettingService.setHubConfig(new HubSettings(hubId:'merit'))
+        Map projectDetails
 
         when:
         service.importAll(projectRows, status, mapper)
 
         then:
-        1 * projectService.update('', _) >> [resp:[projectId:projectId]]
-
+        1 * projectService.update('', _) >> { id, details -> projectDetails = details; [resp:[projectId:projectId]]}
         1 * projectService.generateProjectStageReports(projectId, new ReportGenerationOptions())
+        projectDetails.grantId == "Grant 1"
+        projectDetails.name == "Test project"
+        projectDetails.description == "Test project description"
+        projectDetails.externalId == "123"
+        projectDetails.organisationName == "Test organisation"
+        !projectDetails.associatedProgram  // We didn't supply a program name in the test.
+        !projectDetails.associatedSubProgram
+        projectDetails.plannedStartDate == "2019-06-30T14:00:00+0000"
+        projectDetails.plannedEndDate == "2023-06-29T14:00:00+0000"
+        !projectDetails.contractStartDate
+        !projectDetails.contractEndDate
+        !projectDetails.internalOrderId
+        projectDetails.workOrderId == "WO1234"
+        projectDetails.funding == 0
+        !projectDetails.serviceProviderName
+        !projectDetails.tags
+        projectDetails.status == "application"
+        projectDetails.planStatus == "not approved"
+        !projectDetails.fundingType
+        projectDetails.origin == 'merit'
+        projectDetails.projectType == "works"
+        projectDetails.isMERIT == true
+        !projectDetails.managementUnitId
+        projectDetails.hubId == 'merit'
+        projectDetails.projectId == 'p1'
+
         status.size() == 1
         status[0].grantId == projectRows[0].APP_ID
     }

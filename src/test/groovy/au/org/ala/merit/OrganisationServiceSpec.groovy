@@ -1,26 +1,19 @@
 package au.org.ala.merit
 
-import grails.converters.JSON
-import grails.testing.spring.AutowiredTest
+import au.org.ala.merit.hub.HubSettings
+import grails.testing.services.ServiceUnitTest
 import groovy.time.TimeCategory
 import org.joda.time.Months
-import org.joda.time.Period
 import spock.lang.Specification
 
 /**
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
  */
-class OrganisationServiceSpec extends Specification implements AutowiredTest{
-
-	Closure doWithSpring() {{ ->
-		service OrganisationService
-	}}
-
-	OrganisationService service
+class OrganisationServiceSpec extends Specification implements ServiceUnitTest<OrganisationService> {
 
 	def activityService = Mock(ActivityService)
     def projectService = Mock(ProjectService)
-	def webService = Stub(WebService)
+	def webService = Mock(WebService)
 	def reportService = Stub(ReportService)
 	def userService = Mock(UserService)
 	def metadataService = Mock(MetadataService)
@@ -249,19 +242,20 @@ class OrganisationServiceSpec extends Specification implements AutowiredTest{
 		abnDetails.error == "invalid"
 	}
 
-	def organisationActivities(organisation) {
+	def "A hubId is added to the organisation when creating a new organisation"() {
+		setup:
+		SettingService.setHubConfig(new HubSettings(hubId:"merit"))
 
-		def activities = []
+		when:
+		service.update("", [name:"Organisation 1"])
 
-		organisation.projects.each {
-			def prjActivities = generateActivities(it)
-			activities += prjActivities
-		}
-
-		activities
+		then:
+		1 * metadataService.organisationList() >> [list:[]]
+		1 * webService.doPost({it.endsWith('organisation/')}, [name:"Organisation 1", hubId:"merit"])
 	}
+
 	static int activityId = 0
-	def generateActivities(project) {
+	private def generateActivities(project) {
 		def reports = []
 		use(TimeCategory) {
 			def reportConf = [

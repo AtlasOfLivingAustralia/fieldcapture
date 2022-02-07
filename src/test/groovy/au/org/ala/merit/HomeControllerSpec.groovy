@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import au.org.ala.merit.hub.HubSettings
+import org.joda.time.DateTime
 import spock.lang.Specification
 import grails.testing.web.controllers.ControllerUnitTest
 
@@ -11,12 +12,16 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
 
     SearchService searchService = Mock(SearchService)
     UserService userService = Mock(UserService)
-    HubSettings hubSettings = new HubSettings(availableFacets:['nameFacet', 'descriptionFacet'])
+    HubSettings hubSettings = new HubSettings(availableFacets:['nameFacet', 'descriptionFacet', 'admin'], availableMapFacets:['adminMap'], adminFacets:['admin', 'adminMap'])
+    SettingService settingService = Mock(SettingService)
+    MetadataService metadataService = Mock(MetadataService)
 
     def setup() {
         controller.searchService = searchService
         SettingService.setHubConfig(hubSettings)
         controller.userService = userService
+        controller.settingService = settingService
+        controller.metadataService = metadataService
     }
 
     def "The geoservice method delegates to SearchService.allProjects if the geo param is absent"() {
@@ -171,5 +176,96 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
         response.redirectUrl == grailsApplication.config.getProperty('grails.serverURL')
     }
 
+    def "MERIT admin and read only users can view admin facets and downloads on the homepage"(boolean admin, boolean readOnly) {
+        setup:
+        Map resp = [:]
+        List activityTypes = []
+
+        when:
+        params.fq="status:active"
+        controller.projectExplorer()
+
+        then:
+        if (admin) {
+            1 * userService.userIsAlaOrFcAdmin() >> true
+        }
+        else if (readOnly) {
+            1 * userService.userIsAlaOrFcAdmin() >> false
+            1 * userService.userHasReadOnlyAccess() >> true
+        }
+        1 * searchService.HomePageFacets(params) >> resp
+        1 * settingService.getSettingText(_) >> "Project explorer description"
+        1 * metadataService.activityTypesList() >> activityTypes
+
+        and:
+        model.facetsList == ['nameFacet', 'descriptionFacet', 'admin']
+        model.mapFacets == ['adminMap']
+        model.geographicFacets == []
+        model.description == "Project explorer description"
+        model.results == resp
+        model.projectCount == 0
+        model.includeDownloads == true
+        model.activityTypes == activityTypes
+
+        where:
+        admin | readOnly
+        true  | false
+        false | true
+    }
+
+    def "Users without MERIT admin or read only cannot view admin facets or downloads"() {
+        setup:
+        Map resp = [:]
+
+        when:
+        params.fq="status:active"
+        controller.projectExplorer()
+
+        then:
+        1 * userService.userIsAlaOrFcAdmin() >> false
+        1 * userService.userHasReadOnlyAccess() >> false
+
+        1 * searchService.HomePageFacets(params) >> resp
+        1 * settingService.getSettingText(_) >> "Project explorer description"
+        0 * metadataService.activityTypesList()
+
+        and:
+        model.facetsList == ['nameFacet', 'descriptionFacet']
+        model.mapFacets == []
+        model.geographicFacets == []
+        model.description == "Project explorer description"
+        model.results == resp
+        model.projectCount == 0
+        model.includeDownloads == false
+        model.activityTypes == null
+
+    }
+
+
+    def "MERIT admin users receive a filtered view of activities to download"(List terms, List expectedActivityTypes) {
+        setup:
+        Map resp = [facets:[(HomeController.ACTIVITY_TYPE_FACET_NAME):[terms:terms.collect{[term:it]}]]]
+        List activityTypes = [[name:'Category 1', list:[[name:'a1'], [name:'a2'], [name:'a3']]], [name:'Category 2', list:[[name:'a4'], [name:'a5'], [name:'a6'], [name:'a7']]]]
+
+        when:
+        params.fq="status:active"
+        controller.projectExplorer()
+
+        then:
+        1 * userService.userIsAlaOrFcAdmin() >> true
+        1 * searchService.HomePageFacets(params) >> resp
+        1 * settingService.getSettingText(_) >> "Project explorer description"
+        1 * metadataService.activityTypesList() >> activityTypes
+
+        and:
+        model.includeDownloads == true
+        model.activityTypes == expectedActivityTypes
+
+        where:
+        terms | expectedActivityTypes
+        ['a1', 'a3', 'a4']  | [[name:'Category 1', list:[[name:'a1'], [name:'a3']]], [name:'Category 2', list:[[name:'a4']]]]
+        ['a2'] | [[name:'Category 1', list:[[name:'a2']]]]
+        ['a5'] | [[name:'Category 2', list:[[name:'a5']]]]
+    }
 
 }

@@ -487,7 +487,6 @@ class SiteController {
                 values[k] = v //reMarshallRepeatingObjects(v);
             }
         }
-        log.debug (values as JSON).toString()
 
         def result = [:]
         // check user has persmissions to edit/update site - user must have 'editor' access to

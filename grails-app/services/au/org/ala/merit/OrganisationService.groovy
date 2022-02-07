@@ -70,7 +70,7 @@ class OrganisationService {
 
         Map orgList = getOrgByAbn(abnNumber)
 
-        if (orgList == null){
+        if (orgList == null) {
             error
         }else{
             if (!creating){
@@ -88,15 +88,20 @@ class OrganisationService {
         return error
     }
 
-    def update(id, organisation) {
-        def result = [:]
+    Map update(String id, Map organisation) {
+        Map result = [:]
         String abn = organisation.abn
         String orgId = organisation.organisationId
         def error = checkExistingAbnNumber(orgId,abn)
-        if (error){
+        if (error) {
             result.error = error
             result.detail = error
-        }else{
+        }
+        else {
+            if (!id) {
+                // Assign the MERIT hubId to the organisation when creating a new organisation
+                organisation.hubId = SettingService.hubConfig?.hubId
+            }
             def url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}organisation/$id"
             result = webService.doPost(url, organisation)
             metadataService.clearOrganisationList()

@@ -30,7 +30,7 @@
 
     <strong>MERI Plan</strong>
     <ul class="unstyled">
-        <g:each in="${[[label:'Outcomes', value:'MERI_Outcomes'], [label:'Monitoring', value:"MERI_Monitoring"], [label:'Project Partnerships', value:"MERI_Project Partnerships"], [label:'Project Implementation', value:"MERI_Project Implementation"], [label:'Key Evaluation Question', value:"MERI_Key Evaluation Question"], [label:'Priorities / National and Regional Plans', value:'MERI_Priorities'], [label:'Budget', value:"MERI_Budget"], [label:'Risks and Threats', value:"MERI_Risks and Threats"], [label:'WHS and Case Study', value:"MERI_WHS and Case Study"], [label:'Attachments', value:"MERI_Attachments"], [label:'Baseline', value:"MERI_Baseline"], [label:'Event', value:"MERI_Event"], [label:"Approvals", value:"MERI_Approvals"]]}" var="meriSection">
+        <g:each in="${[[label:'Outcomes', value:'MERI_Outcomes'], [label:'Monitoring', value:"MERI_Monitoring"], [label:'Project Partnerships', value:"MERI_Project Partnerships"], [label:'Project Implementation', value:"MERI_Project Implementation"], [label:'Key Evaluation Question', value:"MERI_Key Evaluation Question"], [label:'Priorities / National and Regional Plans', value:'MERI_Priorities'], [label:'Budget', value:"MERI_Budget"], [label:'Risks and Threats', value:"MERI_Risks and Threats"], [label:'WHS and Case Study', value:"MERI_WHS and Case Study"], [label:'Attachments', value:"MERI_Attachments"], [label:'Baseline', value:"MERI_Baseline"], [label:'Event', value:"MERI_Event"], [label:"Approvals", value:"MERI_Approvals"], [label:"Project Assets", value:"MERI_Project Assets"]]}" var="meriSection">
             <li><label class="checkbox"><input type="checkbox" name="tabs" value="${meriSection.value}" data-validation-engine="validate[minCheckbox[1]]">${meriSection.label}</label></li>
         </g:each>
          <!-- RLP project -->
@@ -44,7 +44,7 @@
         <li><label class="checkbox"><input type="checkbox" name="tabs" value="Activity Summary">Activity Summary</label></li>
     </ul>
 
-    <g:each in="${activityTypes + [name:'Special', list:[[name:'Upload of stage 1 and 2 reporting data']]]}" var="category" status="i">
+    <g:each in="${activityTypes}" var="category" status="i">
         <div class="space-after">
         <a class="accordion-toggle"
            data-bind="toggleVisibility:'#download-category-${i}'">

@@ -85,6 +85,11 @@ class ManagementUnitPage extends ReloadablePage {
         reportsTabPane
     }
 
+    def openAdminTab() {
+        adminTab.click()
+        waitFor { adminTabPane.displayed }
+    }
+
 }
 
 class CreateManagementUnit extends Page {

@@ -997,6 +997,7 @@ db.userPermission.insert({
 });
 
 var projectESP = {
+    "hubId":"merit",
     "alaHarvest": false,
     "associatedProgram": "Environmental Stewardship",
     "associatedSubProgram": "MEC1",

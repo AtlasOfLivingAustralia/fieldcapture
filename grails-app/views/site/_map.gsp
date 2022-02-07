@@ -385,9 +385,8 @@ function initSiteViewModel() {
         type : "${site?.type?.encodeAsJavaScript()}",
         extent: <fc:modelAsJavascript model="${site?.extent}"/>,
         poi: <fc:modelAsJavascript model="${site?.poi}" default="[]"/>,
-        area : <fc:modelAsJavascript model="${site?.area}"/>,
-        description : <fc:modelAsJavascript model="${site?.description}"/>,
-        notes : <fc:modelAsJavascript model="${site?.notes?.encodeAsJavaScript()}"/>,
+        description : '${site?.description?.encodeAsJavaScript() ?: ""}',
+        notes : '${site?.notes?.encodeAsJavaScript() ?: ""}',
         documents : <fc:modelAsJavascript model="${siteDocuments?:documents}"/>,
     <g:if test="${project}">
         projects : ['${raw(project.projectId)}'],

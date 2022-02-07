@@ -153,6 +153,7 @@ ko.components.register('facet-filter', {
 
         function FacetViewModel(facet) {
             this.facet = facet;
+            this.safeId = facet.replaceAll('.','-');
             this.displayname = ko.observable(facet);
             $i18nAsync('label.' + this.facet, self.capitalise(this.facet), this.displayname);
         }

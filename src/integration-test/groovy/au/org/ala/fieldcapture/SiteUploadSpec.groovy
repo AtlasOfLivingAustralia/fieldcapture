@@ -1,6 +1,6 @@
 package au.org.ala.fieldcapture
 
-import geb.module.FormElement
+
 import pages.RlpProjectPage
 import pages.SiteUpload
 
@@ -13,17 +13,17 @@ class SiteUploadSpec extends StubbedCasSpec {
     def "I can upload a file"() {
         setup:
         String projectId = '1'
-        login([userId: '1', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'Admin'], browser)
+        loginAsUser('1', browser)
 
         when:
         to RlpProjectPage, projectId
         sitesTab.click()
 
         then:
-        waitFor { sites.displayed }
+        waitFor { sitesTabContent.displayed }
 
         when:
-        sites.siteUpload.click()
+        sitesTabContent.siteUpload.click()
 
         then:
         waitFor { at SiteUpload }
@@ -45,7 +45,7 @@ class SiteUploadSpec extends StubbedCasSpec {
 
         then:
         waitFor { at RlpProjectPage }
-        waitFor { sites.siteName*.text() == ['Site 5', 'Site 4', 'Site 3', 'Site 2',  'Site 1', 'Test site 1'] }
+        waitFor { sitesTabContent.sitesTableRows.collect{it.name} == ['Site 5', 'Site 4', 'Site 3', 'Site 2',  'Site 1', 'Test site 1'] }
 
     }
 }

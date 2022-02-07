@@ -1,7 +1,7 @@
 <div class="row">
     <div class="nav flex-column nav-pills col-3">
         <a class="nav-link active" data-toggle="pill" href="#edit-managementUnit-details" role="tab">Edit</a>
-        <a class="nav-link" data-toggle="pill" href="#managementUnit-permissions" role="tab">Permissions</a>
+        <a id="mu-permissions-tab" class="nav-link" data-toggle="pill" href="#managementUnit-permissions" role="tab">Permissions</a>
         <a id="edit-documents-tab" class="nav-link" data-toggle="pill" href="#edit-documents" role="tab">Documents</a>
         <g:if test="${fc.userIsSiteAdmin()}">
                 <a class="nav-link" data-toggle="pill" href="#reporting" role="tab">Reporting</a>
@@ -37,7 +37,7 @@
                 </div>
             </div>
             <g:render template="/admin/addPermissions"
-                      model="[addUserUrl: g.createLink(controller: ' managementUnit', action: 'addUserAsRoleToManagementUnit'), entityType: 'au.org.ala.ecodata.ManagementUnit', entityId: mu.managementUnitId]"/>
+                      model="[addUserUrl: g.createLink(controller: 'managementUnit', action: 'addUserAsRoleToManagementUnit'), entityType: 'au.org.ala.ecodata.ManagementUnit', entityId: mu.managementUnitId]"/>
 
             <h4>Current Management Unit Permissions</h4>
             <g:render template="/admin/permissionTable" model="[

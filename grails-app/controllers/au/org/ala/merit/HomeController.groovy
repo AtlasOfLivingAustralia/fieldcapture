@@ -4,8 +4,10 @@ import au.org.ala.merit.hub.HubSettings
 import grails.converters.JSON
 import grails.core.GrailsApplication
 import org.apache.commons.lang.StringUtils
+import org.joda.time.DateTime
 
 import javax.servlet.http.Cookie
+import java.text.SimpleDateFormat
 
 class HomeController {
 
@@ -23,6 +25,11 @@ class HomeController {
 
     /** Cookie issued by the ALA authentication system that indicates an SSO session may be available*/
     static final String ALA_AUTH = "ALA-Auth"
+
+    /** This facet is used by name to filter the list of activity types available for download selection */
+    static final String ACTIVITY_TYPE_FACET_NAME = 'activities.type.keyword'
+
+    static final DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy")
 
     def index() {
         HubSettings hubSettings = SettingService.hubConfig
@@ -81,11 +88,12 @@ class HomeController {
     }
 
     private Map projectExplorerModel() {
-        def facetsList = new ArrayList(SettingService.getHubConfig().availableFacets)
-        def mapFacets = new ArrayList(SettingService.getHubConfig().availableMapFacets)
+        def facetsList = new ArrayList(SettingService.getHubConfig().availableFacets ?:[])
+        def mapFacets = new ArrayList(SettingService.getHubConfig().availableMapFacets ?: [])
 
-        if(!userService.userIsAlaOrFcAdmin() && !userService.userHasReadOnlyAccess()) {
-            def adminFacetList = SettingService.getHubConfig().adminFacets
+        boolean canViewAdminFacetsAndDownloads = userService.userIsAlaOrFcAdmin() || userService.userHasReadOnlyAccess()
+        if (!canViewAdminFacetsAndDownloads) {
+            def adminFacetList = SettingService.getHubConfig().adminFacets ?: []
             facetsList?.removeAll(adminFacetList)
             mapFacets?.removeAll(adminFacetList)
         }
@@ -96,23 +104,48 @@ class HomeController {
 
         def resp = searchService.HomePageFacets(params)
 
-        boolean includeDownloads = userService.userHasReadOnlyAccess() || userService.userIsAlaOrFcAdmin()
-        def model = [  facetsList: facetsList,
+        def model = [
+           facetsList: facetsList,
            mapFacets: mapFacets,
            geographicFacets:selectedGeographicFacets,
            description: settingService.getSettingText(SettingPageType.DESCRIPTION),
            results: resp,
            projectCount: resp?.hits?.total ?: 0,
-           includeDownloads: includeDownloads
+           includeDownloads: canViewAdminFacetsAndDownloads
         ]
 
-        if (includeDownloads) {
-            model.activityTypes = metadataService.activityTypesList()
+        if (canViewAdminFacetsAndDownloads) {
+            List activityTypes = metadataService.activityTypesList()
+            Map activityTypesFacet = resp?.facets?.get(ACTIVITY_TYPE_FACET_NAME)
+            model.activityTypes = filterActivityTypesToProjectSelection(activityTypes, activityTypesFacet)
         }
         model
     }
 
+    /**
+     * If the activity type facet is available, only make those activities available for
+     * download that match the selected projects.
+     * @param allActivityTypes all available activity types
+     * @param activityTypesFacet the results of the search query containing only those activity types
+     * that are associated with a selected project.
+     */
+    private List filterActivityTypesToProjectSelection(List allActivityTypes, Map activityTypesFacet) {
+        List filteredActivityTypes = allActivityTypes
+        if (activityTypesFacet) {
+            filteredActivityTypes = []
+            List selectableActivityTypes = activityTypesFacet?.terms?.collect{it.term}
+            allActivityTypes.each {
+                List matchingTypes = it.list?.findAll{it.name in selectableActivityTypes}
+                if (matchingTypes) {
+                    filteredActivityTypes << [name:it.name, list:matchingTypes]
+                }
+            }
+        }
+        filteredActivityTypes
+    }
+
     def publicHome() {
+        String expiryDateDisplay = session.getAttribute(LoginRecordingInterceptor.EXPIRY_DATE) ?: null
 
         def statistics = statisticsFactory.randomGroup(session.lastGroup ?: -1)
         session.lastGroup = statistics.group // So we can request more stats and not get 2 in a row the same
@@ -124,7 +157,7 @@ class HomeController {
         copyOfLinks << [name:'MORE RESOURCES', type:'', url:helpPage]
         def blog = blogService.getSiteBlog()
 
-        def model = [statistics:statistics.statistics, helpLinks:copyOfLinks, images:images, blog:blog]
+        def model = [statistics:statistics.statistics, helpLinks:copyOfLinks, images:images, blog:blog, expiryDate: expiryDateDisplay]
         if (params.fq) {
             model.putAll(projectExplorerModel())
             model.showProjectExplorer = true
@@ -236,4 +269,5 @@ class HomeController {
         def content = settingService.getSettingText(settingType)
         render view: 'about', model: [settingType: settingType, content: content, showNews: showNews]
     }
+
 }

@@ -91,6 +91,7 @@ class SearchController {
     private Map downloadParams() {
         String systemEmailAddress = grailsApplication.config.getProperty('fieldcapture.system.email.address')
         [
+            hubId: SettingService.hubConfig?.hubId,
             downloadUrl: g.createLink(controller:'download', absolute: true)+'/',
             systemEmail: systemEmailAddress,
             senderEmail: systemEmailAddress

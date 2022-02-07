@@ -64,5 +64,13 @@
         </resources>
     </cache>
 
+    <cache alias="programList">
+        <expiry>
+            <ttl unit="days">1</ttl>
+        </expiry>
+        <resources>
+            <heap unit="entries">1</heap>
+        </resources>
+    </cache>
 
 </config>

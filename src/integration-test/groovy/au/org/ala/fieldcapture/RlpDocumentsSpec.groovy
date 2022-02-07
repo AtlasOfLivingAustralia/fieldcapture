@@ -10,7 +10,7 @@ class RlpDocumentsSpec extends StubbedCasSpec {
 
         // Ensure reports exist for the project
         String projectId = '1'
-        login([userId: '1', role: "ROLE_FC_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'FC_ADMIN'], browser)
+        loginAsMeritAdmin(browser)
         to RlpProjectPage, projectId
         regenerateReports()
     }
@@ -23,7 +23,7 @@ class RlpDocumentsSpec extends StubbedCasSpec {
 
         setup:
         String projectId = '1'
-        login([userId: '1', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'Admin'], browser)
+        loginAsUser('1', browser)
 
         when: "Display the admin tab, navigate to the documents section then press the attach button"
         to RlpProjectPage, projectId
@@ -73,7 +73,7 @@ class RlpDocumentsSpec extends StubbedCasSpec {
     def "Project assurance documents are designed to be viewed and deleted"() {
         setup:
         String projectId = '1'
-        login([userId: '1', role: "ROLE_USER", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'Admin'], browser)
+        loginAsUser('1', browser)
 
         when: "Display the admin tab, navigate to the documents section then press the attach button"
         to RlpProjectPage, projectId

@@ -141,7 +141,7 @@ class DocumentServiceSpec extends Specification implements AutowiredTest{
         2 * userService.isUserAdminForOrganisation(userId, 'o2') >> true
     }
 
-    def "only FC_ADMINS edit or delete a read only document, regardless of ownership"() {
+    def "only MERIT administrators edit or delete a read only document, regardless of ownership"() {
         setup:
         Map document = [documentId:'d1', projectId:'p1']
 
@@ -237,5 +237,25 @@ class DocumentServiceSpec extends Specification implements AutowiredTest{
         DocumentService.ROLE_MAIN_IMAGE | true
         "information"                   | false
         "contractAssurance"             | false
+    }
+
+    def "A document marked publiclyViewable can be viewed by anyone"() {
+        setup:
+        Map document = [documentId:'d1', projectId:'o1', publiclyViewable:true]
+
+        expect:
+        service.canView(document)
+    }
+
+    def "A user with read only access to MERIT can view all documents"() {
+        setup:
+        Map document = [documentId:'d1', projectId:'o1']
+
+        when:
+        boolean canView = service.canView(document)
+
+        then:
+        1 * userService.userHasReadOnlyAccess() >> true
+        canView
     }
 }

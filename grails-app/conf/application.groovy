@@ -162,15 +162,6 @@ if(!security.cas.bypass){
 if(!security.cas.alaAdminRole){
     security.cas.alaAdminRole = "ROLE_ADMIN"
 }
-if(!security.cas.officerRole){
-    security.cas.officerRole = "ROLE_FC_OFFICER"
-}
-if(!security.cas.adminRole){
-    security.cas.adminRole = "ROLE_FC_ADMIN"
-}
-if (!serverName.case.readOnlyOfficerRole) {
-    security.cas.readOnlyOfficerRole = "ROLE_FC_READ_ONLY"
-}
 if(!upload.images.path){
     upload.images.path = "/data/${appName}/images/"
 }

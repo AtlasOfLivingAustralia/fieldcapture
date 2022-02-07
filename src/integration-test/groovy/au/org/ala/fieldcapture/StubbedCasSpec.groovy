@@ -19,6 +19,11 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
  */
 class StubbedCasSpec extends FieldcaptureFunctionalTest {
 
+    static String READ_ONLY_USER_ID = '1000'
+    static String GRANT_MANAGER_USER_ID = '1001'
+    static String MERIT_ADMIN_USER_ID = '1002'
+    static String ALA_ADMIN_USER_ID = '2000'
+
     @Shared WireMockServer wireMockServer
     def setupSpec() {
 
@@ -85,6 +90,31 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
         new File(getClass().getResource("/wiremock").toURI())
     }
 
+    /** Convenience method to stub the login of a user with the MERIT siteReadOnly role */
+    def loginAsReadOnlyUser(Browser browser) {
+        login([userId:READ_ONLY_USER_ID, email: 'read_only@nowhere.com', firstName:"Read", lastName:"Only"], browser)
+    }
+    /** Convenience method to stub the login of a user with the MERIT siteAdmin role */
+    def loginAsMeritAdmin(Browser browser) {
+        login([userId:MERIT_ADMIN_USER_ID, email: 'merit_admin@nowhere.com', firstName:"MERIT", lastName:"Administrator"], browser)
+    }
+    /** Convenience method to stub the login of a user with the MERIT siteOfficer role */
+    def loginAsGrantManager(Browser browser) {
+        login([userId:GRANT_MANAGER_USER_ID, email: 'grant_manager@nowhere.com', firstName:"Grant", lastName:"Manager"], browser)
+    }
+    /** Convenience method to stub the login of a user with the CAS ROLE_ALA_ADMIN role */
+    def loginAsAlaAdmin(Browser browser) {
+        login([userId:ALA_ADMIN_USER_ID, role:"ROLE_ADMIN", email: 'ala_admin@nowhere.com', firstName:"ALA", lastName:"Administrator"], browser)
+    }
+    /** Convenience method to stub the login of a user no special roles */
+    def loginAsUser(String userId, Browser browser) {
+        if (userId in [MERIT_ADMIN_USER_ID, READ_ONLY_USER_ID, GRANT_MANAGER_USER_ID, ALA_ADMIN_USER_ID]) {
+            throw new IllegalArgumentException("${userId} is reserved for users with higher level roles")
+        }
+        login([userId:userId, email: "user${userId}@nowhere.com", firstName:"MERIT", lastName:"User ${userId}"], browser)
+    }
+
+    /** Creates a wiremock configuration to stub a user login request and return the supplied user and role information */
     def login(Map userDetails, Browser browser) {
 
         String email = "fc-te@outlook.com"

@@ -12,7 +12,7 @@ class OrganisationProjectSpec extends StubbedCasSpec {
     void "Checking Cross Site Injecting check on project Name "() {
 
         setup:
-        login([userId: '2', role: "ROLE_ADMIN", email: 'admin@nowhere.com', firstName: "MERIT", lastName: 'ALA_ADMIN'], browser)
+        loginAsUser('1', browser)
 
         when:
         to Organisation, orgId

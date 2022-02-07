@@ -1,15 +1,7 @@
 package pages
 
 import geb.Module
-import geb.Page
-import pages.modules.DocumentDialog
-import pages.modules.EditSiteContent
-import pages.modules.ProjectAdminTab
-import pages.modules.ProjectDashboardSection
-import pages.modules.RisksAndThreats
-import pages.modules.SiteTabContent
-import pages.modules.SitesTableContents
-
+import pages.modules.*
 
 /**
  * Represents a project index page.
@@ -35,15 +27,12 @@ class ProjectIndex extends ReloadablePage {
         dashboard { $("#services-dashboard div.dashboard-section").moduleList ( ProjectDashboardSection) }
         admin { module ProjectAdminTab }
 
-        siteLists {module sitesTable }
-
         addSites{ module AddSites }
         editDocumentForm {module DocumentDialog}
 
         editMap {$('button[data-bind*="editSite"]')}
-        siteTabContents{module SiteTabContent}
+        siteTabContents { module SiteTabContent }
         editSite {module EditSiteContent}
-        tableContents { $("#sites-table tbody td").moduleList(SitesTableContents)}
         mapMarker{ $('#map img[src*="marker-icon.png"]')}
 
     }
@@ -122,37 +111,6 @@ class ActivityRow extends Module {
 
     def edit() {
         actionEdit.click()
-    }
-
-}
-
-class table extends Module{
-    static content={
-        siteName{ $("#siteName")}
-        lastupdated{$("#lastupdated")}
-    }
-}
-
-class SitesTab extends Module {
-
-    static content  ={
-        firstSiteAdded{$('.addSite')} // this is for the sites page where there is not associate sites for that projects
-        newsiteupload{$(".uploadSite")}  // this is for the sites page where there is not associate sites for that projects
-        addSite { $( '#addSite' )}
-        siteUpload{ $('#siteUpload')}
-        siteDownload{ $('#siteDownload')}
-        siteDeleted{ $('#siteDeleted')}
-
-        siteName{ $("#siteName")}
-        lastupdated{$("#lastUpdated")}
-    }
-}
-
-class sitesTable extends Module {
-
-    static content = {
-        siteName{ $("#siteName")}
-        lastupdated{$("#lastupdated")}
     }
 
 }

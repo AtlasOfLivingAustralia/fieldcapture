@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-sm-12 p-3 alert alert-danger large-space-before searchError">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <span>Error: ${error}</span>
+            <span>Error: ${error?.encodeAsHTML()}</span>
         </div>
     </div>
 </g:if>
@@ -45,7 +45,7 @@
                         <g:each var="f" in="${fqList}">
                             <g:set var="fqBits" value="${f?.tokenize(':')}"/>
                             <g:set var="newUrl"><fc:formatParams params="${params}" requiredParams="${reqParams}" excludeParam="${f}"/></g:set>
-                            <li><g:message code="label.${fqBits[0]}" default="${fqBits[0]}"/>: <g:message code="label.${fqBits[1]}" default="${fqBits[1]?.capitalize()}"/>
+                            <li><g:message code="label.${fqBits[0]}" default="${fqBits[0]?.encodeAsHTML()}"/>: <g:message code="label.${fqBits[1]}" default="${fqBits[1]?.encodeAsHTML().capitalize()}"/>
                                 <a href="${newUrl?:"?"}" class="btn btn-inverse btn-mini tooltips" title="remove filter" aria-label="remove filter">
                                     <i class="text-white fa fa-remove"></i></a>
                             </li>
@@ -467,10 +467,10 @@
             params += "&fq=${fqList.collect{it.encodeAsURL()}.join('&fq=')}";
         </g:if>
         <g:if test="${params.fromDate}">
-            params += '&fromDate='+'${params.fromDate}';
+            params += '&fromDate='+'${params.fromDate.encodeAsURL()}';
         </g:if>
         <g:if test="${params.toDate}">
-            params += '&toDate='+'${params.toDate}';
+            params += '&toDate='+'${params.toDate.encodeAsURL()}';
         </g:if>
 
         $.post(url, params).done(function(data1) {
@@ -542,88 +542,14 @@
             }
         };
 
-var urlWithoutDates = '<fc:formatParams params="${params}" requiredParams="sort,order,max,fq"/>';
-        var fromDate = '${params.fromDate?:''}';
-        var toDate = '${params.toDate?:''}';
-        var DatePickerModel = function() {
-            var formatString = 'YYYY-MM-DD';
-            var self = this;
-            var date = moment('2011-07-01T00:00:00+10:00');
-            var end = moment('2021-01-01T00:00:00+11:00');
+        var urlWithoutDates = '<fc:formatParams params="${params}" requiredParams="query,sort,order,max,fq"/>';
+        var fromDate = '${params.fromDate?.encodeAsJavaScript()?:''}';
+        var toDate = '${params.toDate?.encodeAsJavaScript()?:''}';
 
-            self.ranges = [{display:'select date range', from:undefined, to:undefined}];
-            while (date.isBefore(end)) {
-                var rangeEnd = moment(date).add(6, 'months');
-                self.ranges.push({from:date.format(formatString), to:rangeEnd.format(formatString), display:date.format("MMM YYYY")+' - '+rangeEnd.format("MMM YYYY")});
-
-                date = rangeEnd;
-            }
-            self.selectedRange = ko.observable();
-            self.fromDate = ko.observable().extend({simpleDate:false});
-            if (fromDate) {
-                self.fromDate(moment(fromDate).format());
-            }
-            self.toDate = ko.observable().extend({simpleDate:false});
-            if (toDate) {
-                self.toDate(moment(toDate).format());
-            }
-
-            self.clearDates = function() {
-                if (!urlWithoutDates) {
-                    urlWithoutDates = '?';
-                }
-                document.location.href = urlWithoutDates;
-            };
-
-            var validateAndReload = function(newFromDate, newToDate) {
-
-                var parsedNewFromDate = moment(newFromDate);
-                var parsedNewToDate = moment(newToDate);
-                var parsedFromDate = moment(fromDate);
-                var parsedToDate = moment(toDate);
-
-                if (parsedFromDate.isSame(parsedNewFromDate) && parsedToDate.isSame(parsedNewToDate)) {
-                   return;
-                }
-
-                if ($('#facet-dates').validationEngine('validate')) {
-                    reloadWithDates(newFromDate, newToDate);
-                }
-            }
-
-            var reloadWithDates = function(newFromDate, newToDate) {
-                var parsedNewFromDate = moment(newFromDate);
-                var parsedNewToDate = moment(newToDate);
-                if (newFromDate && parsedNewFromDate.isValid()) {
-                    urlWithoutDates += urlWithoutDates?'&':'?';
-                    urlWithoutDates += 'fromDate='+moment(newFromDate).format(formatString);
-                }
-                if (newToDate && parsedNewToDate.isValid()) {
-                    urlWithoutDates += urlWithoutDates?'&':'?';
-                    urlWithoutDates += 'toDate='+moment(newToDate).format(formatString);
-                }
-                document.location.href = urlWithoutDates;
-            }
-
-            self.fromDate.subscribe(function(a, b) {
-                validateAndReload(self.fromDate(), self.toDate());
-            });
-            self.toDate.subscribe(function(toDate) {
-                validateAndReload(self.fromDate(), self.toDate());
-            });
-
-            self.selectedRange.subscribe(function(value) {
-
-                if (value.from) {
-                    reloadWithDates(value.from, value.to);
-                }
-
-            });
-        };
-        var error = "${error}";
+        var error = "${error?.encodeAsJavaScript()}";
 
         if(!error){
-            ko.applyBindings(new DatePickerModel(), document.getElementById('facet-dates'));
+            ko.applyBindings(new DatePickerModel(fromDate, toDate, urlWithoutDates, window.location), document.getElementById('facet-dates'));
         }
 
         function FacetFilterViewModel (params) {

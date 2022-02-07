@@ -11,6 +11,9 @@ class ManagementUnitAdminTab extends Module {
         reportingSectionTab(required:false) { $('[href="#reporting"]') }
         reportingSection(required:false) { $('#reporting').module ManagementUnitAdminReportSection }
         adminColumn { $("#admin .flex-column a") }
+
+        permissionAccessTab {$('#mu-permissions-tab')}
+        permissionAccess { $('#managementUnit-permissions').module PermissionsAdminModule }
     }
 
     def attachDocument() {
@@ -26,5 +29,10 @@ class ManagementUnitAdminTab extends Module {
             reportingSection.displayed
         }
         reportingSection
+    }
+
+    def openPermissionAccess() {
+        permissionAccessTab.click()
+        waitFor { permissionAccessTab.displayed }
     }
 }

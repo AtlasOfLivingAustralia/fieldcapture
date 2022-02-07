@@ -3,7 +3,7 @@ buildscript {
         mavenLocal()
         maven { url "https://repo.grails.org/grails/core" }
         maven { url "https://nexus.ala.org.au/content/groups/public/" }
-        jcenter()
+        gradlePluginPortal()
     }
     dependencies {
         classpath "org.grails:grails-gradle-plugin:$grailsVersion"
@@ -19,7 +19,7 @@ plugins {
     id 'war'
 }
 
-version "2.0"
+version "$meritVersion"
 group "au.org.ala"
 description "Fieldcapture"
 
@@ -42,12 +42,12 @@ repositories {
     maven { url "https://repo.osgeo.org/repository/release/" }
     maven { url "https://repo.grails.org/grails/core" }
     maven { url "https://nexus.ala.org.au/content/groups/public/" }
-    jcenter()
+    gradlePluginPortal()
 }
 
 
 
-def openhtmltopdfversion = '0.0.1-RC4'
+def openhtmltopdfversion = '1.0.10'
 def geoToolsVersion = "11.1"
 def metadataExtractorVersion = "2.6.2"
 def imgscalrVersion = "4.2"
@@ -94,8 +94,7 @@ dependencies {
     compile 'org.quartz-scheduler:quartz:2.2.1'
     compile "com.openhtmltopdf:openhtmltopdf-core:${openhtmltopdfversion}"
     compile "com.openhtmltopdf:openhtmltopdf-pdfbox:${openhtmltopdfversion}"
-    compile "com.openhtmltopdf:openhtmltopdf-jsoup-dom-converter:${openhtmltopdfversion}"
-    compile "com.openhtmltopdf:openhtmltopdf-log4j:${openhtmltopdfversion}"
+    compile "org.jsoup:jsoup:1.14.3"
     compile "org.geotools:gt-geojson:${geoToolsVersion}"
     compile "com.drewnoakes:metadata-extractor:${metadataExtractorVersion}"
     compile "org.imgscalr:imgscalr-lib:${imgscalrVersion}"
@@ -171,7 +170,7 @@ dependencies {
     provided "io.methvin:directory-watcher:0.4.0"
 
     if (!Boolean.valueOf(inplace)) {
-        compile "org.grails.plugins:ecodata-client-plugin:4.0.1"
+        compile "org.grails.plugins:ecodata-client-plugin:4.0.2"
     }
 }
 
@@ -196,6 +195,11 @@ tasks.withType(Test) {
     systemProperty "geb.build.reportsDir", reporting.file("geb/integrationTest")
     systemProperty "webdriver.chrome.driver", System.getProperty('webdriver.chrome.driver')
     systemProperty "webdriver.gecko.driver", System.getProperty('webdriver.gecko.driver')
+
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat "full"
+    }
 }
 
 clientDependencies {

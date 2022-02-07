@@ -1,10 +1,8 @@
 package pages
 
 import geb.Module
-import geb.Page
 import geb.module.Checkbox
 import pages.modules.ViewReef2050PlanReport
-
 
 class FacetItem extends Module {
     static content = {
@@ -77,6 +75,16 @@ class ProjectExplorer extends ReloadablePage {
         return mapToggle.empty
     }
 
+    /** Reloads the page until indexing is complete */
+    void waitForIndexing() {
+        boolean empty = true
+        while (empty) {
+            driver.navigate().refresh()
+            empty = emptyIndex()
+        }
+        Thread.sleep(2000) // there are some animations that make this difficult to do waiting on conditions.
+    }
+
     Facet findFacetByName(String name) {
         facets.find{it.title.text() == name}
     }
@@ -87,6 +95,21 @@ class ProjectExplorer extends ReloadablePage {
         }
         waitFor 10,{ projectPagination.displayed }
     }
+
+    void displayMapSection() {
+        if (mapToggle.getAttribute('aria-expanded') != 'true') {
+            mapToggle.click()
+        }
+        waitFor { map.displayed }
+    }
+
+    void displayDashboardSection() {
+        if (dashboardToggle.getAttribute('aria-expanded') != 'true') {
+            dashboardToggle.click()
+        }
+        waitFor { dashboardContent.displayed }
+    }
+
 
 }
 

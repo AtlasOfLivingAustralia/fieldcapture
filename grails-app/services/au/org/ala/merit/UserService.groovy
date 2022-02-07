@@ -1,10 +1,14 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.hub.HubSettings
 import au.org.ala.web.CASRoles
 import grails.plugin.cache.CacheEvict
 import grails.plugin.cache.Cacheable
 import groovy.util.logging.Slf4j
+import org.apache.http.HttpStatus
 import org.grails.plugin.cache.GrailsCacheManager
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import org.springframework.web.context.request.RequestContextHolder
 
 import javax.annotation.PostConstruct
@@ -21,9 +25,11 @@ class UserService {
     static final String PROGRAM = 'au.org.ala.ecodata.Program'
     static final String MANAGEMENTUNIT = 'au.org.ala.ecodata.ManagementUnit'
 
+    private static final String HUB_CACHE_KEY = 'merit_hub'
+    private static final String HUB_URLPATH = 'merit'
 
 
-    def grailsApplication, authService, webService, roleService, projectService, organisationService, activityService
+    def grailsApplication, authService, webService, roleService, projectService, organisationService, activityService, settingService, cacheService
 
     GrailsCacheManager grailsCacheManager
 
@@ -34,15 +40,15 @@ class UserService {
         auditBaseUrl = grailsApplication.config.getProperty('ecodata.baseUrl') + 'audit'
     }
 
-    def getCurrentUserDisplayName() {
+    String getCurrentUserDisplayName() {
         getUser()?.displayName?:""
     }
 
-    def getCurrentUserId() {
+    String getCurrentUserId() {
         getUser()?.userId?:""
     }
 
-    public UserDetails getUser() {
+    UserDetails getUser() {
 
         def user = null
         // Attempting to call authService.userDetails outside of a HTTP request results in an exception
@@ -63,24 +69,46 @@ class UserService {
         authService.getUserForUserId(userId, false)
     }
 
-    def userInRole(role) {
-        authService.userInRole(role)
+    /**
+     * This is a method with a misleading name that checks if the user has the
+     * caseManager or admin role on the MERIT hub, or the ALA_ADMIN CAS role.
+     * @param userId The id of the user to check, if not supplied, the currently logged in
+     * user is used.
+     */
+    boolean userIsSiteAdmin(String userId = null) {
+        userIsFcOfficer(userId) || userIsFcAdmin(userId) || userIsAlaAdmin(userId)
     }
 
-    def userIsSiteAdmin() {
-        authService.userInRole(grailsApplication.config.getProperty('security.cas.officerRole')) || authService.userInRole(grailsApplication.config.getProperty('security.cas.adminRole')) || authService.userInRole(grailsApplication.config.getProperty('security.cas.alaAdminRole'))
+    boolean userIsFcAdmin(String userId = null) {
+        doesUserHaveHubRole(RoleService.HUB_ADMIN_ROLE, userId)
     }
 
-    def userIsAlaAdmin() {
-        authService.userInRole(grailsApplication.config.getProperty('security.cas.alaAdminRole'))
+    /** The ALA admin role is the only role that is checked against a CAS role */
+    boolean userIsAlaAdmin(String userId = null) {
+        String adminRole = grailsApplication.config.getProperty('security.cas.alaAdminRole')
+        boolean isAdmin = false
+        if (!userId || userId == getCurrentUserId()) {
+            // Use the currently logged in user
+            isAdmin = authService.userInRole(adminRole)
+        }
+        else {
+            // Lookup the user role in user details
+            au.org.ala.web.UserDetails userDetails = authService.getUserForUserId(userId)
+            isAdmin = userDetails?.hasRole(adminRole)
+        }
+        isAdmin
     }
 
-    def userIsAlaOrFcAdmin() {
-        authService.userInRole(grailsApplication.config.getProperty('security.cas.adminRole')) || authService.userInRole(grailsApplication.config.getProperty('security.cas.alaAdminRole'))
+    boolean userIsAlaOrFcAdmin(String userId = null) {
+        userIsFcAdmin(userId) || userIsAlaAdmin(userId)
     }
 
-    def userHasReadOnlyAccess() {
-        authService.userInRole(grailsApplication.config.getProperty('security.cas.readOnlyOfficerRole'))
+    boolean userHasReadOnlyAccess(String userId = null) {
+        doesUserHaveHubRole(RoleService.HUB_READ_ONLY_ROLE, userId)
+    }
+
+    boolean userIsFcOfficer(String userId) {
+        doesUserHaveHubRole(RoleService.HUB_OFFICER_ROLE, userId)
     }
 
     def getRecentEditsForUserId(userId) {
@@ -93,15 +121,19 @@ class UserService {
         webService.getJson(url)
     }
 
-    def getOrganisationIdsForUserId(userId) {
-        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/getOrganisationIdsForUserId/${userId}"
-        webService.getJson(url)
-    }
-
     @Cacheable(value=UserService.USER_PROFILE_CACHE_REGION, key={userId+"_organisations"})
-    def getOrganisationsForUserId(String userId) {
+    List getOrganisationsForUserId(String userId) {
         def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/getOrganisationsForUserId/${userId}"
-        webService.getJson(url)
+        Map organisationResponse = webService.getJson2(url)
+
+        List organisations
+        if (organisationResponse.error) {
+            organisations = []
+        }
+        else {
+            organisations = organisationResponse.resp
+        }
+        organisations
     }
 
     def getProgramsForUserId(userId) {
@@ -147,6 +179,31 @@ class UserService {
         webService.getJson(url)
     }
 
+    /**
+     * MERIT has three special roles granted to administrators, grant managers and researchers
+     * @param role the role to check.
+     * @param userId the id of the user to check.  If null, the currently logged in userid will be used.
+     * @return true if the user has the supplied role.
+     */
+    private boolean doesUserHaveHubRole(String role, String userId = null) {
+        if (!(role in RoleService.MERIT_HUB_ROLES)) {
+            throw new IllegalArgumentException("Role "+role+" not supported as a hub role")
+        }
+
+        String ecodataAclAccessLevel = convertHubRoleToAccesLevel(role)
+
+        HubSettings settings = SettingService.getHubConfig()
+        userId = userId ?: getUser()?.userId
+        if (!userId || !settings) {
+            return false
+        }
+        if (userIsAlaAdmin(userId)) {
+            return true
+        }
+
+        return ecodataAclAccessLevel == settings.userPermissions?.find({it.userId == userId})?.role
+    }
+
     private Map checkRoles(String userId, String role) {
 
         def submittingUser = authService.userDetails()
@@ -165,9 +222,9 @@ class UserService {
             return [error:'No user exists with id: '+userId]
         }
 
-        if (!userDetails.hasRole(grailsApplication.config.getProperty('security.cas.adminRole')) && !userDetails.hasRole(CASRoles.ROLE_ADMIN)) {
+        if (!userIsFcAdmin(userId) && !userDetails.hasRole(grailsApplication.config.getProperty('security.cas.alaAdminRole'))) {
 
-            if (userDetails.hasRole(grailsApplication.config.getProperty('security.cas.officerRole'))) {
+            if (userIsSiteAdmin(userId)) {
                 if (!(role in roleService.allowedGrantManagerRoles)) {
                     return [error: 'User '+userDetails.displayName+' doesn\'t have the correct level of system access to be assigned an '+role+' role.  Please contact <a href="mailto:merit@environment.gov.au">merit@environment.gov.au</a> if this is an issue.']
                 }
@@ -316,7 +373,7 @@ class UserService {
      */
     boolean canUserViewNonPublicProgramInformation(String userId, String programId) {
         boolean userCanView
-        if (userIsSiteAdmin() || userHasReadOnlyAccess()) {
+        if (userIsSiteAdmin(userId) || userHasReadOnlyAccess(userId)) {
             userCanView = true
         } else {
             userCanView = canUserEditProgramReport(userId, programId)
@@ -482,7 +539,7 @@ class UserService {
 
     }
 
-    def checkEmailExists(String email) {
+    String checkEmailExists(String email) {
         def user = authService.getUserForEmailAddress(email)
 
         if (!user?.userId || user.locked) {
@@ -518,20 +575,140 @@ class UserService {
 
     }
 
-    Set getAllowedUserRoles(String email) {
-        def user = authService.getUserForEmailAddress(email)
-
-        def roles
-        if (!user) {
-            roles = new HashSet()
-        }
-        else if (user.hasRole(grailsApplication.config.getProperty('security.cas.officerRole'))) {
-            // Don't allow grant managers to be assigned admin / editor roles
-            roles = roleService.allowedGrantManagerRoles
-        }
-        else {
-            roles = roleService.allowedUserRoles
-        }
-        roles
+    def getByHub(hubId) {
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/getByHub/${hubId}"
+        return convertAccessLevelToHubRole(webService.getJson(url, 300000))
     }
+
+    def getMembersForHubPerPage(String hubId, int pageStart, int pageSize, String userId = null) {
+        def url = grailsApplication.config.ecodata.service.url + "/permissions/getMembersForHubPerPage?hubId=${hubId}&offset=${pageStart}&max=${pageSize}&userId=${userId}"
+        def resp = webService.getJson(url)
+        convertAccessLevelToHubRole(resp)
+        return resp
+    }
+
+    /**
+     *
+     * @param results
+     * @return the Hub Role to be displayed in the UI (user permission table)
+     */
+    private List convertAccessLevelToHubRole(results) {
+        def map = [admin: "siteAdmin", caseManager: "officer", readOnly: "siteReadOnly"]
+        results.data.each { it ->
+            it.role = map[it.role]
+        }
+    }
+
+    def addUserToHub(Map params) {
+        String ecodataAclAccessLevel = convertHubRoleToAccesLevel(params.role)
+        Map param = [userId: params.userId,
+                     entityId: params.entityId,
+                     role: ecodataAclAccessLevel,
+                     expiryDate: (params.expiryDate) ? DateUtils.displayToIsoFormat(params.expiryDate) : '']
+        Map response = webService.doPost("${grailsApplication.config.getProperty('ecodata.baseUrl')}permissions/addUserWithRoleToHub", param)
+        reloadHubSettings()
+
+        return response
+    }
+
+    /**
+     * MERIT has higher level roles siteAdmin, officer, siteReadOnly that provide
+     * access to various MERIT features.  These roles are implemented in ecodata as
+     * permissions on the MERIT hub entity.  This method is responsible for converting
+     * a MERIT role into the ecodata AccessLevel that is stored in the database.
+     * @param role the role to convert.
+     * @return the accessLevel used to represent the supplied role
+     */
+    private String convertHubRoleToAccesLevel(String role) {
+        Map map = [siteAdmin: "admin", officer: "caseManager", siteReadOnly: "readOnly"]
+        return map[role]
+    }
+
+    def removeHubUser(Map params) {
+        String ecodataAclAccessLevel = convertHubRoleToAccesLevel(params.role)
+
+        Map param = [userId: params.userId, entityId: params.entityId, role: ecodataAclAccessLevel, expiryDate: params.expiryDate]
+        Map response = webService.doPost("${grailsApplication.config.getProperty('ecodata.baseUrl')}permissions/removeUserWithRoleFromHub", param)
+
+        reloadHubSettings()
+
+        return response
+    }
+
+    def saveHubUser(Map params) {
+        if (doesUserHaveHubProjects(params.userId, params.entityId)
+                && params.role == RoleService.HUB_READ_ONLY_ROLE) {
+            return [error:'User have a role on an existing MERIT project, cannot be assigned the Site Read Only role.']
+        } else {
+            addUserToHub(params)
+        }
+    }
+
+    void reloadHubSettings() {
+        cacheService.clear(HUB_CACHE_KEY)
+        HubSettings hubSettings = settingService.getHubSettings(HUB_URLPATH)
+    }
+
+    /**
+     * Records the time a user logged into MERIT with ecodata.
+     */
+    boolean recordUserLogin(String userId, String hubId) {
+        Map params = [
+                userId:userId,
+                hubId:hubId,
+                loginTime:DateUtils.format(DateUtils.now().withZone(DateTimeZone.UTC))
+        ]
+        if (log.isInfoEnabled()) {
+            log.info("User "+userId+" logged in at "+params.loginTime)
+        }
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'user/recordUserLogin'
+        Map response = webService.doPost(url, params)
+        boolean success = response.statusCode == HttpStatus.SC_OK
+        if (!success) {
+            log.error("Failed to record login for user "+userId+" "+response.error)
+        }
+        success
+    }
+
+    /**
+     * Checks if a user have a role on an existing MERIT project.
+     * @param userId
+     * @param entityId
+     * @return true if user have a role on an existing merit project
+     */
+    Boolean doesUserHaveHubProjects(String userId, String entityId) {
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/doesUserHaveHubProjects?userId=${userId}&entityId=${entityId}"
+        def response = webService.getJson(url)
+        return response?.doesUserHaveHubProjects
+    }
+
+    /**
+     *
+     * Returns the UserPermission details
+     */
+    LinkedHashMap findUserPermission(String userId, String entityId) {
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/findUserPermission?userId=${userId}&entityId=${entityId}"
+        def result = webService.getJson(url)
+        return result
+    }
+
+    /**
+     *
+     * Validates if the user's permission is expiring within a month from now
+     */
+    String checkUserExpirationDetails(String userId, String hubId) {
+        String resDate = null
+        LinkedHashMap userPermission = findUserPermission(userId, hubId)
+        if (userPermission && userPermission.expiryDate != null) {
+            DateTime expiryDate = DateUtils.parse(userPermission.expiryDate)
+            DateTime expiryMinus =  expiryDate.minusMonths(1)
+            DateTime today = DateUtils.now()
+            if (expiryDate > today && today >= expiryMinus) {
+                resDate = DateUtils.isoToDisplayFormat(userPermission.expiryDate)
+            }
+        }
+
+        resDate
+    }
+
 }

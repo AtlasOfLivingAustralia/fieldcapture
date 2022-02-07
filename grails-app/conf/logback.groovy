@@ -36,6 +36,7 @@ appender('STDOUT', ConsoleAppender) {
 //}
 
 logger("au.org.ala.fieldcapture",INFO, ['STDOUT'],false)
+logger("au.org.ala.merit",INFO, ['STDOUT'],false)
 logger("asset.pipeline.jsass", ERROR, ['STDOUT'], false)
 logger("asset.pipeline", ERROR, ['STDOUT'], false)
 root(ERROR, ['STDOUT'])

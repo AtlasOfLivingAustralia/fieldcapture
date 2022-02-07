@@ -5,6 +5,7 @@ load("../data_common/insertData.js");
 loadActivityForms();
 
 var  activityProject = {
+    "hubId":"merit",
     "alaHarvest":false,
     "associatedProgram":"Biodiversity Fund",
     "associatedSubProgram":"Round 1",
@@ -103,19 +104,9 @@ var  activityProject = {
             "threat":"Seasonal conditions (eg. drought, flood, etc.)","riskRating":"Significant"}],"status":"active"},
     "serviceProviderName":"",
     "status":"active",
-    "timeline":[{"fromDate":"2014-12-31T13:00:00.000Z","name":"Stage 1","toDate":"2015-06-30T14:00:00.000Z"},
-        {"fromDate":"2015-06-30T14:00:00.000Z","name":"Stage 2","toDate":"2015-12-31T13:00:00.000Z"},
-        {"fromDate":"2015-12-31T13:00:00.000Z","name":"Stage 3","toDate":"2016-06-30T14:00:00.000Z"},
-        {"fromDate":"2016-06-30T14:00:00.000Z","name":"Stage 4","toDate":"2016-12-31T13:00:00.000Z"},
-        {"fromDate":"2016-12-31T13:00:00.000Z","name":"Stage 5","toDate":"2017-06-30T14:00:00.000Z"},
-        {"fromDate":"2017-06-30T14:00:00.000Z","name":"Stage 6","toDate":"2017-12-31T13:00:00.000Z"},
-        {"fromDate":"2017-12-31T13:00:00.000Z","name":"Stage 7","toDate":"2018-06-30T14:00:00.000Z"},
-        {"fromDate":"2018-06-30T14:00:00.000Z","name":"Stage 8","toDate":"2018-12-31T13:00:00.000Z"},
-        {"fromDate":"2018-12-31T13:00:00.000Z","name":"Stage 9","toDate":"2019-06-30T14:00:00.000Z"},
-        {"fromDate":"2019-06-30T14:00:00.000Z","name":"Stage 10","toDate":"2019-12-31T13:00:00.000Z"},
-        {"fromDate":"2019-12-31T13:00:00.000Z","name":"Stage 11","toDate":"2020-06-30T14:00:00.000Z"},
-        {"fromDate":"2020-06-30T14:00:00.000Z","name":"Stage 12","toDate":"2020-12-31T13:00:00.000Z"}]
-    ,"workOrderId":""
+    "workOrderId":"",
+    "hubId":"merit"
+
 };
 db.project.insert(activityProject)
 db.userPermission.insert({
@@ -150,3 +141,40 @@ var activity = {
 }
 db.activity.insert(activity);
 addStaticContentSettings();
+
+let now = new Date().getTime();
+// Create a user login > 2 years ago to test the access removal feature
+let lastLogin = new Date(now-(1000*60*60*24*900))
+db.user.insert({
+    userId:'2',
+    userHubs: [{
+        hubId:'merit',
+        lastLoginTime:lastLogin
+    }]
+});
+
+// Create another user login between 23 and 24 months ago to test the access warning email
+lastLogin = new Date(now - (1000*60*60*24*30*23.5));
+db.user.insert({
+    userId:'1',
+    userHubs: [{
+        hubId:'merit',
+        lastLoginTime:lastLogin
+    }]
+});
+db.setting.insert({
+    key:'merit.accessexpiry.expired.email.subject',
+    value:'Your access has been removed'
+});
+db.setting.insert({
+    key:'merit.accessexpiry.expired.email.body',
+    value:'Your access has been removed body'
+});
+db.setting.insert({
+    key:'merit.accessexpiry.warning.email.subject',
+    value:'Your access will be removed'
+});
+db.setting.insert({
+    key:'merit.accessexpiry.warning.email.body',
+    value:'Your access will be removed body'
+});

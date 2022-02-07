@@ -1,8 +1,14 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.hub.HubSettings
 import grails.converters.JSON
 import groovy.util.logging.Slf4j
+import org.apache.http.HttpStatus
 import org.grails.web.json.JSONArray
+
+import static org.apache.http.HttpStatus.SC_BAD_REQUEST
+import static org.apache.http.HttpStatus.SC_FORBIDDEN
+import static org.apache.http.HttpStatus.SC_INTERNAL_SERVER_ERROR
 
 /**
  * Extends the UserController to add report information.
@@ -144,23 +150,6 @@ class UserController {
     }
 
     /**
-     * Get a list of projects and roles for a given userId
-     *
-     * @return
-     */
-    def viewPermissionsForUserId() {
-        String userId = params.userId
-
-        if (authService.userDetails() && (authService.userInRole(grailsApplication.config.getProperty('security.cas.alaAdminRole')) || authService.userInRole(grailsApplication.config.getProperty('security.cas.officerRole'))) && userId) {
-            render userService.getProjectsForUserId(userId) as JSON
-        } else if (!userId) {
-            render status:400, text: 'Required params not provided: userId, role, projectId'
-        } else {
-            render status:403, text: 'Permission denied'
-        }
-    }
-
-    /**
      * Check if an email address exists in AUTH and return the userId (number) if true,
      * otherwise return an empty String
      *
@@ -213,6 +202,92 @@ class UserController {
             render status: 403, text: 'User not logged-in or does not have permission'
         } else {
             render status: 500, text: 'Unexpected error'
+        }
+    }
+
+    def getMembersOfHub() {
+        def adminUserId = userService.getCurrentUserId()
+        HubSettings hubSettings = SettingService.getHubConfig()
+
+        if (adminUserId) {
+            if (userService.userIsAlaOrFcAdmin()) {
+                def results = userService.getByHub(params.id)
+                render results as JSON
+            } else {
+                render status: 403, text: 'Permission denied'
+            }
+        } else if (!adminUserId) {
+            render status: 400, text: 'Required params not provided: id'
+        }  else {
+            render status: 500, text: 'Unexpected error'
+        }
+    }
+
+    def getMembersForHubPaginated() {
+
+        String hubId = params.id
+        String email = params.get('search[value]')
+        def adminUserId = userService.getCurrentUserId()
+
+        def userDetails = authService.getUserForEmailAddress(email)
+        String userId = userDetails?.userId ?: email
+        if (hubId && adminUserId) {
+            if (userService.userIsAlaOrFcAdmin()) {
+                def results = userService.getMembersForHubPerPage(hubId, params.int('start'), params.int('length'), userId)
+                asJson results
+
+            } else {
+                response.sendError(SC_FORBIDDEN, 'Permission denied')
+            }
+        } else if (adminUserId && hubId) {
+            response.sendError(SC_BAD_REQUEST, 'Required params not provided: id')
+        } else {
+            response.sendError(SC_INTERNAL_SERVER_ERROR, 'Unexpected error')
+        }
+    }
+
+    def asJson(json) {
+        render(contentType: 'application/json', text: json as JSON)
+    }
+
+    def addUserToHub() {
+        String userId = params.userId
+        String role = params.role
+
+        if (userId && role) {
+            if (userService.userIsAlaOrFcAdmin()) {
+                Map response = userService.saveHubUser(params)
+                if (response.error) {
+                    render status: 400, text: response.error
+                } else {
+                    render response as JSON
+                }
+            } else {
+                render status:403, text: 'Permission denied'
+            }
+        } else {
+            render status:400, text: 'Required params not provided: userId, role'
+        }
+    }
+
+    def removeUserWithHubRole() {
+        String userId = params.userId
+        String hubId = params.entityId
+
+        if (hubId && userId) {
+            if (userService.userIsAlaOrFcAdmin()) {
+                Map response = userService.removeHubUser(params)
+                if (response.error) {
+                    render status: 400, text: response.error
+                } else {
+                    flash.message = "user was removed."
+                    render response as JSON
+                }
+            } else {
+                render status:403, text: 'Permission denied'
+            }
+        } else {
+            render status:400, text: 'Required params not provided: userId, projectId, role'
         }
     }
 
