@@ -610,7 +610,6 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         then:
         projectConfigurationService.getProjectConfiguration(_) >> meritProjectConfig()
         1 * webService.doPost({it.endsWith('project/'+projectId)}, _) >> [resp:[:]]
-        1 * reportService.regenerateReports([], _, {it.id.projectId == projectId})
 
     }
 

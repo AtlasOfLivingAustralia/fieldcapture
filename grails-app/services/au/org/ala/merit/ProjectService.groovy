@@ -656,8 +656,6 @@ class ProjectService  {
             // The update method in this class treats dates specially and delegates the updates to this method.
             response = updateUnchecked(projectId, [plannedStartDate:plannedStartDate, plannedEndDate:plannedEndDate])
 
-            generateProjectStageReports(projectId, dateChangeOptions)
-
             if (dateChangeOptions.updateActivities) {
                 updateActivityDates(projectId, previousStartDate)
             }
