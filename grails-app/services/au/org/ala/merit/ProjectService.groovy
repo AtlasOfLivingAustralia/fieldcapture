@@ -656,6 +656,11 @@ class ProjectService  {
             // The update method in this class treats dates specially and delegates the updates to this method.
             response = updateUnchecked(projectId, [plannedStartDate:plannedStartDate, plannedEndDate:plannedEndDate])
 
+            if (project.status == ACTIVE) {
+                //user explicitly generates the report from the reporting tab
+                generateProjectStageReports(projectId, dateChangeOptions)
+            }
+
             if (dateChangeOptions.updateActivities) {
                 updateActivityDates(projectId, previousStartDate)
             }

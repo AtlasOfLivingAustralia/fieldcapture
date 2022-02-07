@@ -416,9 +416,11 @@ var ReportsViewModel = function(reports, projects, availableReports, reportOwner
 
 };
 
-var CategorisedReportsViewModel = function(allReports, order, availableReports, reportOwner, config) {
+var CategorisedReportsViewModel = function(allReports, order, availableReports, reportOwner, config, project) {
 
     var self = this;
+    var projectService = new ProjectService(project, config);
+    _.extend(this, projectService);
     var categorizedReports = _.groupBy(allReports, function(report) {
          return report.category;
     });
@@ -453,5 +455,27 @@ var CategorisedReportsViewModel = function(allReports, order, availableReports, 
         }
 
     });
+
+    self.plannedStartDate = ko.observable(config.reportOwner.startDate).extend({simpleDate: false});
+
+    self.anyReportData = ko.pureComputed(function() {
+        var count = 0;
+        if (project.status == 'Active') {
+            _.each(allReports, function (report){
+                if (report.progress == 'finished' || report.progress == 'started') {
+                    count += 1;
+                }
+            });
+            return count <= 0;
+        }
+    });
+
+    self.generateProjectReports = function () {
+        var jsData = {
+            plannedStartDate: self.plannedStartDate(),
+        };
+        projectService.saveProjectData(jsData);
+    }
+
 };
 
