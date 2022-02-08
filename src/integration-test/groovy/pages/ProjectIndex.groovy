@@ -19,6 +19,7 @@ class ProjectIndex extends ReloadablePage {
         sitesTab {$('#site-tab')}
         dashboardTab {$('#serviceDelivery-tab')}
         adminTab {$('#admin-tab')}
+        reportingTab(required: false) { $('#reporting-tab') }
 
         projectName { $('h1') }
         overview { module OverviewTab }
@@ -26,6 +27,7 @@ class ProjectIndex extends ReloadablePage {
         sites { module SitesTab }
         dashboard { $("#services-dashboard div.dashboard-section").moduleList ( ProjectDashboardSection) }
         admin { module ProjectAdminTab }
+        projectReports(required: false) { module ProjectReports }
 
         addSites{ module AddSites }
         editDocumentForm {module DocumentDialog}

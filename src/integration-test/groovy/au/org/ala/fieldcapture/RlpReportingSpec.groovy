@@ -5,6 +5,7 @@ import com.icegreen.greenmail.util.GreenMailUtil
 import com.icegreen.greenmail.util.ServerSetup
 import com.icegreen.greenmail.util.ServerSetupTest
 import org.junit.Rule
+import pages.ProjectIndex
 import pages.RlpProjectPage
 import pages.ReportPage
 import pages.modules.ReportCategory
@@ -416,5 +417,105 @@ class RlpReportingSpec extends StubbedCasSpec {
             field('variationSubmitted').value('No')
             field('meriOrWorkOrderChangesRequired').value('No')
         }
+    }
+
+    def "A grant manager can update the project start date and can generate the project reports in the reporting tab"() {
+
+        setup:
+        useDataSet('dataset2')
+        loginAsGrantManager(browser)
+
+        when:
+        to ProjectIndex, 'project_application'
+        waitFor { at ProjectIndex }
+        adminTab.click()
+        def meriplan = waitFor { admin.openMeriPlan() }
+        waitFor {
+            meriplan.approveButton.displayed
+        }
+
+        then:
+        meriplan.approveButton.@disabled
+        meriplan.internalOrderNumber.displayed
+        meriplan.projectStartDate.displayed
+
+        when:
+        meriplan.projectStartDate = "02/08/2022"
+        meriplan.internalOrderNumber = "56789"
+
+        then:
+        waitFor { !meriplan.approveButton.@disabled }
+
+        when:
+        waitFor { meriplan.approveButton.click() }
+
+        then:
+        waitFor {
+            meriplan.approvePlanDialog.changeOrderNumbers.displayed
+        }
+
+        when:
+        meriplan.approvePlanDialog.changeOrderNumbers = 'CO56789'
+        meriplan.approvePlanDialog.comment = 'test approved'
+
+        meriplan.approvePlanDialog.approve()
+
+        then:
+        waitFor{hasBeenReloaded()}
+        at ProjectIndex
+
+        when:
+        adminTab.click()
+
+        then:
+        def updatedMeriPlan = waitFor { admin.openMeriPlan() }
+        updatedMeriPlan.modifyApprovedPlanButton.displayed
+
+        when:
+        overviewTab.click()
+
+        then:
+        overview.projectStatus[1].text() == 'ACTIVE'
+
+        when:"project is active the grant manager can generate the project report and update the project start date in the reporting tab"
+        reportingTab.click()
+
+        then:
+        projectReports.projectStartDate.displayed
+
+        when:
+        projectReports.projectStartDate = "02/08/2022"
+
+        then:
+        projectReports.projectStartDate == "02/08/2022"
+        projectReports.generateButton.click()
+
+        then: "List of reports will be displayed"
+        waitFor {
+            projectReports.displayed
+        }
+
+        and:
+
+        waitFor {
+            projectReports.reports.size() != null
+        }
+
+    }
+
+    def "a read only user cannot update the project start date and generate project reports" () {
+        when:"login as read only"
+        loginAsReadOnlyUser(browser)
+        to ProjectIndex, 'project_application'
+
+        then:
+        waitFor { at ProjectIndex }
+
+        when:
+        reportingTab.click()
+
+        then:
+        assert projectReports.projectStartDate.displayed == false
+        assert projectReports.generateButton.displayed == false
     }
 }

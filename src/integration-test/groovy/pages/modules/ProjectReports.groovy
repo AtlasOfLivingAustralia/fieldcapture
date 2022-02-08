@@ -19,6 +19,8 @@ class ProjectReports extends Module {
 
         reportDeclaration { $('#declaration') }
         acceptTermsCheckBox { $('#declaration [name="acceptTerms"]') }
+        projectStartDate(required:false) { $('#projectStartDate') }
+        generateButton(required:false){ $('[data-bind*="generateProjectReports"]') }
     }
 
     def acceptTerms() {
