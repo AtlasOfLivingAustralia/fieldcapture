@@ -1,24 +1,4 @@
 <div id="reporting-content">
-    <g:if test="${user?.isCaseManager}">
-        <div data-bind="if:anyReportData" class="required">
-            <div class="form-actions" >
-                <b>Grant manager actions:</b>
-                <div>
-                    <div class="form-group row">
-                        <label for="projectStartDate" class="col-form-label col-sm-2">Change Project Start Date</label>
-                        <div class="col-sm-10">
-                            <div class="input-group">
-                                <fc:datePicker size="form-control form-control-sm" targetField="plannedStartDate.date" id="projectStartDate" bs4="true" name="startDate" data-bind="datepicker:plannedStartDate.date" data-validation-engine="validate[required, past[plannedEndDate]]" printable="${printView}"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <span class="grantManagerActionSpan">
-                    <button type="button" data-bind="enable:plannedStartDate(), click:generateProjectReports" class="btn btn-sm btn-success"><i class="fa fa-check"></i> Generate Project Reports</button>
-                </span>
-            </div>
-        </div>
-    </g:if>
 
     <g:if test="${reportsHeader}"><h4 class="header-with-help">Project Reports</h4></g:if>
 

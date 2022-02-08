@@ -38,6 +38,7 @@ class ProjectService  {
     static final String PLAN_SUBMITTED = 'submitted'
     static final String PLAN_UNLOCKED = 'unlocked for correction'
     public static final String DOCUMENT_ROLE_APPROVAL = 'approval'
+    static final String ACTIVE_STATUS = 'Active'
 
     def webService, grailsApplication, siteService, activityService, emailService, documentService, userService, metadataService, settingService, reportService, auditService, speciesService, commonService
     ProjectConfigurationService projectConfigurationService
@@ -656,7 +657,7 @@ class ProjectService  {
             // The update method in this class treats dates specially and delegates the updates to this method.
             response = updateUnchecked(projectId, [plannedStartDate:plannedStartDate, plannedEndDate:plannedEndDate])
 
-            if (project.status == ACTIVE) {
+            if (project.status == ACTIVE_STATUS) {
                 //user explicitly generates the report from the reporting tab
                 generateProjectStageReports(projectId, dateChangeOptions)
             }
