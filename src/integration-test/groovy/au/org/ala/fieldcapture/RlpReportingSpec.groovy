@@ -419,14 +419,15 @@ class RlpReportingSpec extends StubbedCasSpec {
         }
     }
 
-    def "A grant manager can update the project start date and can generate the project reports in the reporting tab"() {
+    def "Grant manager can update the project start date and can generate the project reports when there's no data in any report"() {
 
         setup:
-        useDataSet('dataset2')
         loginAsGrantManager(browser)
 
         when:
         to ProjectIndex, 'project_application'
+
+        then:
         waitFor { at ProjectIndex }
         adminTab.click()
         def meriplan = waitFor { admin.openMeriPlan() }
@@ -440,7 +441,7 @@ class RlpReportingSpec extends StubbedCasSpec {
         meriplan.projectStartDate.displayed
 
         when:
-        meriplan.projectStartDate = "02/08/2022"
+        meriplan.projectStartDate = "01/06/2018"
         meriplan.internalOrderNumber = "56789"
 
         then:
@@ -481,31 +482,26 @@ class RlpReportingSpec extends StubbedCasSpec {
         reportingTab.click()
 
         then:
-        projectReports.projectStartDate.displayed
-
-        when:
-        projectReports.projectStartDate = "02/08/2022"
-
-        then:
-        projectReports.projectStartDate == "02/08/2022"
-        projectReports.generateButton.click()
-
-        then: "List of reports will be displayed"
-        waitFor {
+        waitFor 20, {
             projectReports.displayed
         }
 
-        and:
+        when:
+        projectReports.projectStartDate = "01/06/2018"
 
+        then:
+        waitFor { projectReports.generateButton.click() }
+
+        then:
+        waitFor 30, { hasBeenReloaded() }
+
+        and: "List of reports will be displayed"
         waitFor {
-            projectReports.reports.size() != null
+            projectReports.reports.size() > 0
         }
 
-    }
-
-    def "a read only user cannot update the project start date and generate project reports" () {
-        when:"login as read only"
-        loginAsReadOnlyUser(browser)
+        when:"login as grant manager"
+        loginAsGrantManager(browser)
         to ProjectIndex, 'project_application'
 
         then:
@@ -515,7 +511,120 @@ class RlpReportingSpec extends StubbedCasSpec {
         reportingTab.click()
 
         then:
-        assert projectReports.projectStartDate.displayed == false
-        assert projectReports.generateButton.displayed == false
+        waitFor 20, {
+            projectReports.displayed
+        }
+
+        when:
+        projectReports.projectStartDate = "01/06/2018"
+
+        then:
+        waitFor { projectReports.generateButton.click() }
+
+        then:
+        waitFor 30, { hasBeenReloaded() }
+
+        and: "List of reports will be displayed"
+        waitFor {
+            projectReports.reports.size() > 0
+        }
+
+        when: "update one of the report from the list"
+        projectReports.reports[0].edit()
+
+        then:
+        waitFor { at ReportPage }
+
+        when:
+        List formSections = getFormSections()
+
+        then:
+        formSections == [
+                'koRLP_-_Output_WHS',
+                'koRLP_-_Change_Management',
+                'koRLP_-_Baseline_data',
+                'koRLP_-_Communication_materials',
+                'koRLP_-_Community_engagement',
+                'koRLP_-_Controlling_access',
+                'koRLP_-_Pest_animal_management',
+                'koRLP_-_Management_plan_development',
+                'koRLP_-_Debris_removal',
+                'koRLP_-_Erosion_Management',
+                'koRLP_-_Maintaining_feral_free_enclosures',
+                'koRLP_-_Establishing_ex-situ_breeding_programs',
+                'koRLP_-_Establishing_Agreements',
+                'koRLP_-_Establishing_monitoring_regimes',
+                'koRLP_-_Farm_Management_Survey',
+                'koRLP_-_Fauna_survey',
+                'koRLP_-_Fire_management',
+                'koRLP_-_Flora_survey',
+                'koRLP_-_Habitat_augmentation',
+                'koRLP_-_Identifying_sites',
+                'koRLP_-_Improving_hydrological_regimes',
+                'koRLP_-_Improving_land_management_practices',
+                'koRLP_-_Disease_management',
+                'koRLP_-_Negotiations',
+                'koRLP_-_Obtaining_approvals',
+                'koRLP_-_Pest_animal_survey',
+                'koRLP_-_Plant_survival_survey',
+                'koRLP_-_Project_planning',
+                'koRLP_-_Remediating_riparian_and_aquatic_areas',
+                'koRLP_-_Weed_treatment',
+                'koRLP_-_Revegetating_habitat',
+                'koRLP_-_Site_preparation',
+                'koRLP_-_Skills_and_knowledge_survey',
+                'koRLP_-_Soil_testing',
+                'koRLP_-_Emergency_Interventions',
+                'koRLP_-_Water_quality_survey',
+                'koRLP_-_Weed_distribution_survey']
+
+        when: "We complete the form and save, marking optional sections as not applicable"
+        hideFloatingToolbar()
+        field('whsRequirementsMet').value('Met requirements')
+        field('variationSubmitted').value('No')
+        field('meriOrWorkOrderChangesRequired').value('No')
+        getFormSections().each {
+            if (isOptional(it)) {
+                markAsNotApplicable(it)
+            }
+        }
+        restoreFloatingToolbar()
+        markAsComplete()
+        save()
+        exitReport()
+
+        then: "then the project start date cannot be change as one of the reports has data"
+        waitFor { at RlpProjectPage }
+
+        and: ""
+        assert projectReports.projectStartDate.empty == true
+        assert projectReports.generateButton.empty == true
     }
+
+    def "A read only user will not be able to generate reports and change the project start date " () {
+
+        setup:
+        String projectId = '1'
+        loginAsReadOnlyUser(browser)
+
+        when: "login as read only"
+        to ProjectIndex, projectId
+
+        then:
+        waitFor { at ProjectIndex }
+
+        when:
+        reportingTab.click()
+
+        then:
+        waitFor 20, {
+            projectReports.displayed
+        }
+
+        and:
+        assert projectReports.projectStartDate.empty == true
+        assert projectReports.generateButton.empty == true
+    }
+
+
 }

@@ -1,20 +1,20 @@
-<div id="generate-report">
+<div id="generate-report" class="validationEngineContainer">
     <g:if test="${user?.isCaseManager}">
         <div data-bind="if:anyReportData" class="required">
             <div class="form-actions" >
                 <b>Grant manager actions:</b>
                 <div>
                     <div class="form-group row">
-                        <label for="projectStartDate" class="col-form-label col-sm-2">Change Project Start Date</label>
+                        <label for="startDate" class="col-form-label col-sm-2">Change Project Start Date</label>
                         <div>
                             <div class="input-group">
-                                <fc:datePicker size="form-control form-control-sm" targetField="plannedStartDate.date" id="projectStartDate" bs4="true" name="startDate" data-bind="datepicker:plannedStartDate.date" data-validation-engine="validate[required, past[plannedEndDate]]" printable="${printView}"/>
+                                <fc:datePicker size="form-control form-control-sm" targetField="plannedStartDate.date" id="startDate" bs4="true" name="startDate" data-bind="datepicker:plannedStartDate.date" data-validation-engine="validate[required, past[plannedEndDate]]" printable="${printView}"/>
                             </div>
                         </div>
                     </div>
                 </div>
                 <span class="grantManagerActionSpan">
-                    <button type="button" data-bind="enable:plannedStartDate(), click:generateProjectReports" class="btn btn-sm btn-success"><i class="fa fa-check"></i> Generate Project Reports</button>
+                    <button type="button" id="generateReports" data-bind="click:generateProjectReports" class="btn btn-sm btn-success"><i class="fa fa-check"></i> Generate Project Reports</button>
                 </span>
             </div>
         </div>
@@ -33,5 +33,6 @@
         var config = _.extend(fcConfig, {adjustmentInstructionsSelector:'#adjustment-instructions'});
         var project = <fc:modelAsJavascript model="${project?: null}"/>;
         ko.applyBindings(new GrantManagerReportsViewModel(reports, config, project), document.getElementById('generate-report'));
+        $('.validationEngineContainer').validationEngine();
     });
 </asset:script>

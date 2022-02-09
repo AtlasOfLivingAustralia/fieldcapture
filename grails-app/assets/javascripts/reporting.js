@@ -479,7 +479,14 @@ var GrantManagerReportsViewModel = function(allReports, config, project) {
         var jsData = {
             plannedStartDate: self.plannedStartDate(),
         };
-        projectService.saveProjectData(jsData);
+        if (!self.plannedStartDate()) {
+            bootbox.alert('<span class="label label-important">Please Enter the Project Start Date</span>');
+        } else {
+            projectService.saveProjectData(jsData);
+        }
+
+
+
     }
 };
 
