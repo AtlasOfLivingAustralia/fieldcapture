@@ -484,9 +484,10 @@ var GrantManagerReportsViewModel = function(allReports, config, project) {
         } else {
             projectService.saveProjectData(jsData);
         }
-
-
-
     }
+
+    self.isMeriPlanApproved = ko.pureComputed(function() {
+        return projectService.isApproved();
+    });
 };
 
