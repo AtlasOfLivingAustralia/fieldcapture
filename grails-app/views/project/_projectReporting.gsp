@@ -1,5 +1,5 @@
 <div id="generate-report" class="validationEngineContainer">
-    <g:if test="${user?.isCaseManager}">
+    <g:if test="${user?.isCaseManager || fc.userIsAlaOrFcAdmin()}">
         <div data-bind="if:anyReportData" class="required">
             <div class="form-actions" >
                 <b>Grant manager actions:</b>
