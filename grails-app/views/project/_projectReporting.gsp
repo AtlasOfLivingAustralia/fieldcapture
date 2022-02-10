@@ -41,6 +41,6 @@
         var config = _.extend(fcConfig, {adjustmentInstructionsSelector:'#adjustment-instructions'});
         var project = <fc:modelAsJavascript model="${project?: null}"/>;
         ko.applyBindings(new GrantManagerReportsViewModel(reports, config, project), document.getElementById('generate-report'));
-        $('.validationEngineContainer').validationEngine();
+        // $('.validationEngineContainer').validationEngine();
     });
 </asset:script>

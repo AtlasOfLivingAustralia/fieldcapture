@@ -479,8 +479,22 @@ var GrantManagerReportsViewModel = function(allReports, config, project) {
         var jsData = {
             plannedStartDate: self.plannedStartDate(),
         };
+
+        var startDateSelector = "#generate-report input[data-bind*=plannedStartDate]";
+
+        var message;
         if (!self.plannedStartDate()) {
-            bootbox.alert('<span class="label label-important">Please Enter the Project Start Date</span>');
+            message =  "The planned start date is a required field";
+        }
+        if (self.plannedStartDate() >= project.plannedEndDate) {
+            message =  "The project start date must be before the end date";
+        }
+
+        if (message) {
+            setTimeout(function() {
+                $(startDateSelector).validationEngine("showPrompt", message, "topRight", true);
+            }, 100);
+
         } else {
             projectService.saveProjectData(jsData);
         }

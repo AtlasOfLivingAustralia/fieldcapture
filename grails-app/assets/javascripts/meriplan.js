@@ -130,8 +130,18 @@ function MERIPlan(project, projectService, config) {
     self.canEditStartDate = ko.observable(config.editProjectStartDate)
     // approve plan and handle errors
     self.approvePlan = function () {
+        var message;
+        var startDateSelector = "#project-details-validation input[data-bind*=plannedStartDate]";
         var valid =  $('#project-details-validation').validationEngine('validate');
-        if (valid) {
+        if (self.plannedStartDate() >= project.plannedEndDate) {
+            message =  "The project start date must be before the end date";
+        }
+        if (message || !valid) {
+            setTimeout(function() {
+                $(startDateSelector).validationEngine("showPrompt", message, "topRight", true);
+            }, 100);
+
+        } else {
             if (config.requireMeriApprovalReason) {
                 var planApprovalModal = config.planApprovalModel || '#meri-plan-approval-modal';
                 var $planApprovalModal = $(planApprovalModal);
