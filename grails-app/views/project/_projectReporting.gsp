@@ -27,6 +27,11 @@
             </div>
         </div>
     </g:if>
+    <g:elseif test="${fc.userIsSiteAdmin()}">
+        <div class="alert alert-info">
+            You must be listed as a Grant Manager in the Project Access section of the Admin tab to create the reports for this project
+        </div>
+    </g:elseif>
 </div>
 <g:render template="/shared/categorizedReporting"></g:render>
 <g:render template="/shared/declaration" model="${[declarationType:au.org.ala.merit.SettingPageType.RLP_REPORT_DECLARATION]}"/>
