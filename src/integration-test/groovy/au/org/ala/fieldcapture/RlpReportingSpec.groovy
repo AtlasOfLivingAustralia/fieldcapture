@@ -597,8 +597,8 @@ class RlpReportingSpec extends StubbedCasSpec {
         waitFor { at RlpProjectPage }
 
         and: ""
-        assert projectReports.projectStartDate.empty == true
-        assert projectReports.generateButton.empty == true
+        projectReports.projectStartDate.empty == true
+        projectReports.generateButton.empty == true
     }
 
     def "A read only user will not be able to generate reports and change the project start date " () {
@@ -622,8 +622,8 @@ class RlpReportingSpec extends StubbedCasSpec {
         }
 
         and:
-        assert projectReports.projectStartDate.empty == true
-        assert projectReports.generateButton.empty == true
+        projectReports.projectStartDate.empty == true
+        projectReports.generateButton.empty == true
     }
 
 

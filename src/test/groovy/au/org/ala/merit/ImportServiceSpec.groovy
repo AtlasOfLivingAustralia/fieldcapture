@@ -87,6 +87,7 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
 
         then:
         1 * projectService.update('', _) >> { id, details -> projectDetails = details; [resp:[projectId:projectId]]}
+        0 * projectService.generateProjectStageReports(projectId, new ReportGenerationOptions())
         projectDetails.grantId == "Grant 1"
         projectDetails.name == "Test project"
         projectDetails.description == "Test project description"

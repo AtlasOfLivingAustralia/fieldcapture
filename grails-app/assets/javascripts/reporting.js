@@ -416,7 +416,7 @@ var ReportsViewModel = function(reports, projects, availableReports, reportOwner
 
 };
 
-var CategorisedReportsViewModel = function(allReports, order, availableReports, reportOwner, config, project) {
+var CategorisedReportsViewModel = function(allReports, order, availableReports, reportOwner, config) {
 
     var self = this;
 
