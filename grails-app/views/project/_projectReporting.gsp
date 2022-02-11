@@ -42,10 +42,7 @@
 
 <asset:script type="text/javascript">
     $(function() {
-        var reports = <fc:modelAsJavascript model="${reports ?: []}"/>;
         var config = _.extend(fcConfig, {adjustmentInstructionsSelector:'#adjustment-instructions'});
-        var project = <fc:modelAsJavascript model="${project?: null}"/>;
-        ko.applyBindings(new GrantManagerReportsViewModel(reports, config, project), document.getElementById('generate-report'));
-        // $('.validationEngineContainer').validationEngine();
+        ko.applyBindings(new GrantManagerReportsViewModel(config), document.getElementById('generate-report'));
     });
 </asset:script>

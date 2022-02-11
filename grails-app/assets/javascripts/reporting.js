@@ -457,16 +457,15 @@ var CategorisedReportsViewModel = function(allReports, order, availableReports, 
 
 };
 
-var GrantManagerReportsViewModel = function(allReports, config, project) {
+var GrantManagerReportsViewModel = function(config) {
     var self = this;
-    var projectService = new ProjectService(project, config);
-    _.extend(this, projectService);
+    var projectService = new ProjectService(fcConfig.project, config);
     self.plannedStartDate = ko.observable(config.reportOwner.startDate).extend({simpleDate: false});
 
     self.anyReportData = ko.pureComputed(function() {
         var count = 0;
-        if (project.status == 'Active') {
-            _.each(allReports, function (report){
+        if (fcConfig.project.status == 'Active') {
+            _.each(fcConfig.project.reports, function (report){
                 if (report.progress == 'finished' || report.progress == 'started') {
                     count += 1;
                 }
@@ -486,7 +485,7 @@ var GrantManagerReportsViewModel = function(allReports, config, project) {
         if (!self.plannedStartDate()) {
             message =  "The planned start date is a required field";
         }
-        if (self.plannedStartDate() >= project.plannedEndDate) {
+        if (self.plannedStartDate() >= fcConfig.project.plannedEndDate) {
             message =  "The project start date must be before the end date";
         }
 
