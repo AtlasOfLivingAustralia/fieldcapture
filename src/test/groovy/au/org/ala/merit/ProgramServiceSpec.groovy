@@ -124,10 +124,10 @@ class ProgramServiceSpec extends Specification implements AutowiredTest{
 
         1 * webService.getJson({it.endsWith("/program/$programId/projects?view=flat")}) >> [projects:[[projectId:'p1'], [projectId:'p2']]]
 
-        1 * projectService.generateProjectReports({it.category == 'c5'}, {it.projectId == 'p1'}, new ReportGenerationOptions())
-        1 * projectService.generateProjectReports({it.category == 'c6'}, {it.projectId == 'p1'}, new ReportGenerationOptions())
-        1 * projectService.generateProjectReports({it.category == 'c5'}, {it.projectId == 'p2'}, new ReportGenerationOptions())
-        1 * projectService.generateProjectReports({it.category == 'c6'}, {it.projectId == 'p2'}, new ReportGenerationOptions())
+        0 * projectService.generateProjectReports({it.category == 'c5'}, {it.projectId == 'p1'}, new ReportGenerationOptions())
+        0 * projectService.generateProjectReports({it.category == 'c6'}, {it.projectId == 'p1'}, new ReportGenerationOptions())
+        0 * projectService.generateProjectReports({it.category == 'c5'}, {it.projectId == 'p2'}, new ReportGenerationOptions())
+        0 * projectService.generateProjectReports({it.category == 'c6'}, {it.projectId == 'p2'}, new ReportGenerationOptions())
 
         0 * projectService.generateProjectReports(_, _, _)
     }

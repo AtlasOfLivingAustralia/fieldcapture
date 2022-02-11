@@ -657,10 +657,8 @@ class ProjectService  {
             // The update method in this class treats dates specially and delegates the updates to this method.
             response = updateUnchecked(projectId, [plannedStartDate:plannedStartDate, plannedEndDate:plannedEndDate])
 
-            if (project.status == ACTIVE_STATUS) {
-                //user explicitly generates the report from the reporting tab
-                generateProjectStageReports(projectId, dateChangeOptions)
-            }
+            //user explicitly generates the report from the reporting tab
+            generateProjectStageReports(projectId, dateChangeOptions)
 
             if (dateChangeOptions.updateActivities) {
                 updateActivityDates(projectId, previousStartDate)
@@ -819,36 +817,37 @@ class ProjectService  {
      * (e.g the 2nd report has data against correct dates, so we dont' want to move this, instead we delete the first report).
      */
     void generateProjectReports(Map reportConfig, Map project, ReportGenerationOptions options) {
+        if (project.status == ACTIVE_STATUS) {
+            ReportOwner reportOwner = projectReportOwner(project)
+            ReportConfig rc = new ReportConfig(reportConfig)
 
-        ReportOwner reportOwner = projectReportOwner(project)
-        ReportConfig rc = new ReportConfig(reportConfig)
+            List reportsOfType = project.reports?.findAll{it.category == reportConfig.category}?.sort{it.toDate}
 
-        List reportsOfType = project.reports?.findAll{it.category == reportConfig.category}?.sort{it.toDate}
+            if (options.includeSubmittedAndApprovedReports) {
+                int index = 0
 
-        if (options.includeSubmittedAndApprovedReports) {
-            int index = 0
+                // To keep existing reporting dates when we move the start date forward we may need to delete reports
+                // that have been excluded by the new start date. (rather than moving it forward)
+                if (options.keepExistingReportDates) {
+                    Map report = reportsOfType ? reportsOfType[index] : null
+                    // Handle reports that may have been cut off by the start date change.
+                    while (report && report.toDate < project.plannedStartDate) {
+                        if (!reportService.hasData(report)) {
+                            reportService.delete(report.reportId)
+                        }
+                        else {
+                            log.warn("Unable to delete report ${report.name} with toDate ${report.toDate} as it has data.")
+                        }
+                        report = reportsOfType ? reportsOfType[++index] : null
 
-            // To keep existing reporting dates when we move the start date forward we may need to delete reports
-            // that have been excluded by the new start date. (rather than moving it forward)
-            if (options.keepExistingReportDates) {
-                Map report = reportsOfType ? reportsOfType[index] : null
-                // Handle reports that may have been cut off by the start date change.
-                while (report && report.toDate < project.plannedStartDate) {
-                    if (!reportService.hasData(report)) {
-                        reportService.delete(report.reportId)
                     }
-                    else {
-                        log.warn("Unable to delete report ${report.name} with toDate ${report.toDate} as it has data.")
-                    }
-                    report = reportsOfType ? reportsOfType[++index] : null
-
                 }
+                reportService.regenerateReports(reportsOfType, rc, reportOwner, index-1)
             }
-            reportService.regenerateReports(reportsOfType, rc, reportOwner, index-1)
-        }
-        else {
-            // Regenerate reports starting from the first unsubmitted report
-            reportService.regenerateReports(reportsOfType, rc, reportOwner)
+            else {
+                // Regenerate reports starting from the first unsubmitted report
+                reportService.regenerateReports(reportsOfType, rc, reportOwner)
+            }
         }
     }
 
@@ -1900,5 +1899,13 @@ class ProjectService  {
             throw new IllegalArgumentException("Data set "+dataSetId+" does not exist")
         }
         updateUnchecked(projectId, [custom: project.custom])
+    }
+
+    /**
+     * when reports are generated using the program or management unit pages,
+     * reports should only be generated for projects with at least one existing report
+     */
+    boolean canRegenerateReports(Map project) {
+        return project.reports.size() > 0
     }
 }
