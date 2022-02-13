@@ -610,7 +610,6 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         then:
         projectConfigurationService.getProjectConfiguration(_) >> meritProjectConfig()
         1 * webService.doPost({it.endsWith('project/'+projectId)}, _) >> [resp:[:]]
-        1 * reportService.regenerateReports([], _, {it.id.projectId == projectId})
 
     }
 
@@ -827,8 +826,6 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         2 * projectConfigurationService.getProjectConfiguration(_) >> new ProgramConfig([projectTemplate:ProgramConfig.ProjectTemplate.RLP.name(), projectReports:[[reportType:'Activity', category:'test']]])
         1 * webService.doPost({it.endsWith("project/${projectId}")}, [name:'new name'])
 
-        and: "reports are regenerated in case they include the name"
-        1 * reportService.regenerateReports(_, _, _)
     }
 
 

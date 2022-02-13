@@ -182,7 +182,9 @@ class ProgramService {
         toRegenerate?.each {
             projects?.projects?.each{ project ->
                 project.reports = reportService.getReportsForProject(project.projectId)
-                projectService.generateProjectReports(it, project, new ReportGenerationOptions())
+                if (projectService.canRegenerateReports(project)) {
+                    projectService.generateProjectReports(it, project, new ReportGenerationOptions())
+                }
             }
         }
     }

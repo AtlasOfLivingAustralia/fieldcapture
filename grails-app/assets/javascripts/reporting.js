@@ -419,6 +419,7 @@ var ReportsViewModel = function(reports, projects, availableReports, reportOwner
 var CategorisedReportsViewModel = function(allReports, order, availableReports, reportOwner, config) {
 
     var self = this;
+
     var categorizedReports = _.groupBy(allReports, function(report) {
          return report.category;
     });
@@ -452,6 +453,54 @@ var CategorisedReportsViewModel = function(allReports, order, availableReports, 
             });
         }
 
+    });
+
+};
+
+var GrantManagerReportsViewModel = function(config) {
+    var self = this;
+    var projectService = new ProjectService(config.project, config);
+    self.plannedStartDate = ko.observable(config.reportOwner.startDate).extend({simpleDate: false});
+
+    self.anyReportData = ko.pureComputed(function() {
+        var count = 0;
+        if (config.project.status == 'Active') {
+            _.each(config.project.reports, function (report){
+                if (report.progress == 'finished' || report.progress == 'started') {
+                    count += 1;
+                }
+            });
+            return count <= 0;
+        }
+    });
+
+    self.generateProjectReports = function () {
+        var jsData = {
+            plannedStartDate: self.plannedStartDate(),
+        };
+
+        var startDateSelector = "#generate-report input[data-bind*=plannedStartDate]";
+
+        var message;
+        if (!self.plannedStartDate()) {
+            message =  "The planned start date is a required field";
+        }
+        if (self.plannedStartDate() >= config.project.plannedEndDate) {
+            message =  "The project start date must be before the end date";
+        }
+
+        if (message) {
+            setTimeout(function() {
+                $(startDateSelector).validationEngine("showPrompt", message, "topRight", true);
+            }, 100);
+
+        } else {
+            projectService.saveProjectData(jsData);
+        }
+    }
+
+    self.isMeriPlanApproved = ko.pureComputed(function() {
+        return projectService.isApproved();
     });
 };
 

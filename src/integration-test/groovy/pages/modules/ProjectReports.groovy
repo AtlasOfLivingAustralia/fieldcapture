@@ -16,9 +16,10 @@ class ProjectReports extends Module {
             }
         }
         reportsByCategory { $('#reporting-content .report-category').moduleList(ReportCategory)}
-
         reportDeclaration { $('#declaration') }
         acceptTermsCheckBox { $('#declaration [name="acceptTerms"]') }
+        projectStartDate(required:false) {$('#startDate')}
+        generateButton(required:false, wait: 4){ $('#generateReports') }
     }
 
     def acceptTerms() {

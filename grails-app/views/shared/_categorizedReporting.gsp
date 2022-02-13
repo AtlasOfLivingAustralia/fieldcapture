@@ -1,4 +1,5 @@
 <div id="reporting-content">
+
     <g:if test="${reportsHeader}"><h4 class="header-with-help">Project Reports</h4></g:if>
 
     <div data-bind="foreach:reportsByCategory">

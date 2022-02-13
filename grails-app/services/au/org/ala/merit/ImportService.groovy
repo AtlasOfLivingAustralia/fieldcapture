@@ -470,8 +470,6 @@ class ImportService {
                 activityService.update('', activity)
             }
 
-            projectService.generateProjectStageReports(projectId, new ReportGenerationOptions())
-
             status << [projectId:projectDetails.project.projectId, grantId:grantId, externalId:externalId, success:projectDetails.errors.size() == 0, errors:projectDetails.errors]
 
         }
