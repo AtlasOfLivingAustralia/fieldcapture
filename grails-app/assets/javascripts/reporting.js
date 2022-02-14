@@ -500,7 +500,11 @@ var GrantManagerReportsViewModel = function(config) {
     }
 
     self.isMeriPlanApproved = ko.pureComputed(function() {
-        return projectService.isApproved();
+        if (!projectService.isApproved() && config.project.reports == '') {
+            return true;
+        } else {
+            return false;
+        }
     });
 };
 
