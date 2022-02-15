@@ -104,15 +104,20 @@ class ReportGenerator {
         if (endDate < end) {
             end = endDate
         }
-        Interval reportInterval = new Interval(start, end)
 
-        // If the report minimumPeriodInMonths has been specified, only create the report if the owner duration
-        // is greater than the minimum period.
-        if (!reportConfig.minimumPeriodInMonths || reportInterval.toPeriod(PeriodType.months()).getMonths() >= reportConfig.minimumPeriodInMonths) {
-            log.info("Regenerating a single report from " + reportInterval.start + " to " + reportInterval.end)
-            reports << createReport(reportConfig, reportOwner, 1, reportInterval)
+        if (end >= start) {
+            Interval reportInterval = new Interval(start, end)
+
+            // If the report minimumPeriodInMonths has been specified, only create the report if the owner duration
+            // is greater than the minimum period.
+            if (!reportConfig.minimumPeriodInMonths || reportInterval.toPeriod(PeriodType.months()).getMonths() >= reportConfig.minimumPeriodInMonths) {
+                log.info("Regenerating a single report from " + reportInterval.start + " to " + reportInterval.end)
+                reports << createReport(reportConfig, reportOwner, 1, reportInterval)
+            } else {
+                log.info("Not regenerating report " + reportConfig.category + " because owner duration too short: " + reportInterval.toPeriod(PeriodType.months()).getMonths() + " < " + reportConfig.minimumPeriodInMonths)
+            }
         } else {
-            log.info("Not regenerating report " + reportConfig.category + " because owner duration too short: " + reportInterval.toPeriod(PeriodType.months()).getMonths() + " < " + reportConfig.minimumPeriodInMonths)
+            log.warn("Not regenerating report " + reportConfig.category + " because report end date " + end +  " must be greater than or equal to project start date " + start)
         }
         reports
     }
