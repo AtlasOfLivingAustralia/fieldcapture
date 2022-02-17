@@ -6,6 +6,254 @@ var managementUnits = ["Glenelg Hopkins"]
 var muConfig = {
     priorities: [
         {
+            "category": "Ramsar",
+            "priority": "Towra Point Nature Reserve"
+        },
+        {
+            "category": "Threatened Species",
+            "priority": "Anthochaera phrygia (Regent Honeyeater)"
+        },
+        {
+            "category": "Threatened Species",
+            "priority": "Botaurus poiciloptilus (Australasian Bittern)"
+        },
+        {
+            "category": "Threatened Species",
+            "priority": "Grevillea caleyi (Caley's Grevillea)"
+        },
+        {
+            "category": "Threatened Species",
+            "priority": "Homoranthus darwinioides"
+        },
+        {
+            "category": "Threatened Species",
+            "priority": "Lathamus discolor (Swift Parrot)"
+        },
+        {
+            "category": "Threatened Species",
+            "priority": "Numenius madagascariensis (Eastern Curlew, Far Eastern Curlew)"
+        },
+        {
+            "category": "Threatened Species",
+            "priority": "Syzygium paniculatum (Magenta Lilly Pilly, Magenta Cherry, Daguba, Scrub Cherry, Creek Lilly Pilly, Brush Cherry)"
+        },
+        {
+            "category": "Threatened Ecological Communities",
+            "priority": "Blue Gum High Forest of the Sydney Basin Bioregion"
+        },
+        {
+            "category": "Threatened Ecological Communities",
+            "priority": "Castlereagh Scribbly Gum and Agnes Banks Woodlands of the Sydney Basin Bioregion"
+        },
+        {
+            "category": "Threatened Ecological Communities",
+            "priority": "Coastal Upland Swamps in the Sydney Basin Bioregion"
+        },
+        {
+            "category": "Threatened Ecological Communities",
+            "priority": "Cooks River/Castlereagh Ironbark Forest of the Sydney Basin Bioregion"
+        },
+        {
+            "category": "Threatened Ecological Communities",
+            "priority": "Cumberland Plain Shale Woodlands and Shale-Gravel Transition Forest"
+        },
+        {
+            "category": "Threatened Ecological Communities",
+            "priority": "Eastern Suburbs Banksia Scrub of the Sydney Region"
+        },
+        {
+            "category": "Threatened Ecological Communities",
+            "priority": "Littoral Rainforest and Coastal Vine Thickets of Eastern Australia"
+        },
+        {
+            "category": "Threatened Ecological Communities",
+            "priority": "Posidonia australis seagrass meadows of the Manning-Hawkesbury ecoregion"
+        },
+        {
+            "category": "Threatened Ecological Communities",
+            "priority": "Shale Sandstone Transition Forest of the Sydney Basin Bioregion"
+        },
+        {
+            "category": "Threatened Ecological Communities",
+            "priority": "Subtropical and Temperate Coastal Saltmarsh"
+        },
+        {
+            "category": "Threatened Ecological Communities",
+            "priority": "Temperate Highland Peat Swamps on Sandstone"
+        },
+        {
+            "category": "Threatened Ecological Communities",
+            "priority": "Turpentine-Ironbark Forest of the Sydney Basin Bioregion"
+        },
+        {
+            "category": "Threatened Ecological Communities",
+            "priority": "Upland Basalt Eucalypt Forests of the Sydney Basin Bioregion"
+        },
+        {
+            "category": "Threatened Ecological Communities",
+            "priority": "Western Sydney Dry Rainforest and Moist Woodland on Shale"
+        },
+        {
+            "category": "Threatened Ecological Communities",
+            "priority": "White Box-Yellow Box-Blakely's Red Gum Grassy Woodland and Derived Native Grassland"
+        },
+        {
+            "category": "World Heritage Sites",
+            "priority": "The Greater Blue Mountains Area"
+        },
+        {
+            "category": "Soil Quality",
+            "priority": "Soil acidification"
+        },
+        {
+            "category": "Soil Quality",
+            "priority": "Soil Carbon priority"
+        },
+        {
+            "category": "Soil Quality",
+            "priority": "Hillslope erosion priority"
+        },
+        {
+            "category": "Soil Quality",
+            "priority": "Wind erosion priority"
+        },
+        {
+            "category": "Land Management",
+            "priority": "Soil acidification"
+        },
+        {
+            "category": "Land Management",
+            "priority": "Soil carbon"
+        },
+        {
+            "category": "Land Management",
+            "priority": "Hillslope erosion"
+        },
+        {
+            "category": "Land Management",
+            "priority": "Wind erosion"
+        },
+        {
+            "category": "Land Management",
+            "priority": "Native vegetation and biodiversity on-farm"
+        },
+        {
+            "category": "Sustainable Agriculture",
+            "priority": "Climate change adaptation"
+        },
+        {
+            "category": "Sustainable Agriculture",
+            "priority": "Market traceability"
+        },
+        {
+            "category": "Land Management",
+            "priority": "Shoreline and bank erosion"
+        },
+        {
+            "category": "Land Management",
+            "priority": "Riparian remediation"
+        },
+        {
+            "category": "Land Management",
+            "priority": "Habitat construction/restoration"
+        },
+        {
+            "category": "Land Management",
+            "priority": "Aquatic revegetation"
+        },
+        {
+            "category": "Land Management",
+            "priority": "Bank/shoreline revegetation"
+        },
+        {
+            "category": "Land Management",
+            "priority": "Reef building/rehabilitation"
+        },
+        {
+            "category": "Land Management",
+            "priority": "Saltmarsh remediation"
+        },
+        {
+            "category": "Land Management",
+            "priority": "Fish habitat awareness"
+        },
+        {
+            "category": "Bushfires",
+            "priority": "Herbivore and/or predator control"
+        },
+        {
+            "category": "Bushfires",
+            "priority": "Weed control and/or revegetation"
+        },
+        {
+            "category": "Bushfires",
+            "priority": "Fire management and planning"
+        },
+        {
+            "category": "Bushfires",
+            "priority": "Species and ecological community specific interventions"
+        },
+        {
+            "category": "Bushfires",
+            "priority": "Traditional Owner led healing of country"
+        },
+        {
+            "category": "Bushfires",
+            "priority": "Erosion control"
+        },
+        {
+            "category": "Bushfires",
+            "priority": "Refugia management"
+        },
+        {
+            "category": "Priority Natural Asset",
+            "priority": "Greater Blue Mountains World Heritage Area"
+        },
+        {
+            "category": "Priority Natural Asset",
+            "priority": "Gondwana Rainforests of Australia World Heritage Area"
+        },
+        {
+            "category": "Threatened Ecological Community",
+            "priority": "Upland Basalt Eucalypt Forests of the Sydney Basin Bioregion"
+        },
+        {
+            "category": "Threatened Ecological Community",
+            "priority": "Temperate Highland Peat Swamps on Sandstone"
+        },
+        {
+            "category": "Threatened Ecological Community",
+            "priority": "Lowland Rainforest of Subtropical Australia"
+        },
+        {
+            "category": "Threatened Ecological Community",
+            "priority": "Coastal Swamp Oak (Casuarina glauca) Forest of New South Wales and South East Queensland"
+        },
+        {
+            "category": "Threatened Ecological Community",
+            "priority": "Montane Peatlands and Swamps of the New England Tableland, NSW North Coast, Sydney Basin, South East Corner, South Eastern Highlands and Australian Alps bioregion"
+        },
+        {
+            "category": "Threatened Ecological Community",
+            "priority": "Kurri Sand Swamp Woodland in the Sydney Basin Bioregion"
+        },
+        {
+            "category": "Threatened Ecological Community",
+            "priority": "Lower Hunter Spotted Gum Ironbark Forest in the Sydney Basin and NSW North Coast Bioregions"
+        },
+        {
+            "category": "Threatened Ecological Community",
+            "priority": "Turpentine-Ironbark Forest of the Sydney Basin Bioregion"
+        },
+        {
+            "category": "Threatened Ecological Community",
+            "priority": "Littoral Rainforest and Coastal Vine Thickets of Eastern Australia"
+        },
+        {
+            "category": "Threatened Ecological Community",
+            "priority": "Castlereagh Scribbly Gum and Agnes Banks Woodlands of the Sydney Basin Bioregion"
+        },
+        {
             "category": "Priority Vertebrate Animals",
             "priority": "Eulamprus leuraensis (Blue Mountains Water Skink)"
         },
