@@ -137,6 +137,11 @@
 		<div data-bind="template:meriGrantManagerActionsTemplate" class="col-sm-12"></div>
 	</div>
 </g:if>
+<g:elseif test="${!user?.isCaseManager}">
+	<div class="alert alert-info">
+		To approve the MERI plan add yourself as a grant manager to this project using the Project Access section
+	</div>
+</g:elseif>
 
 <g:if test="${projectContent.details.visible}">
 	<div class="save-details-result-placeholder"></div>
