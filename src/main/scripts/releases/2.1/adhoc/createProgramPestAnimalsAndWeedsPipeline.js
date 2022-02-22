@@ -1,3 +1,5 @@
+// New Program:  Advancing Pest Animal and Weed Control Solutions - Pipeline
+// New Subprogram:  Competitive Grants 2022 - Round 1
 
 load('../../../utils/uuid.js');
 load('../../../utils/audit.js');
@@ -5,12 +7,10 @@ load('../../../utils/program.js');
 
 //create the parent program
 var programName = 'Advancing Pest Animal and Weed Control Solutions - Pipeline';
-var parent = createOrFindProgram(programName);
+var parentProgram = createOrFindProgram(programName);
 
-//create the sub-program
-let parentProgram = programName;
 var subprograms = ["Competitive Grants 2022 - Round 1"]
-createNewProgram(parentProgram, subprograms);
+createNewProgram(programName, subprograms);
 
 var projectConfig = {
     config: {
@@ -125,86 +125,91 @@ var projectConfig = {
             35
         ]
     },
-    outcomes: [
-        {
-            "priorities": [
-                {
-                    "category": "Ramsar"
-                }
-            ],
-            "targeted": true,
-            "shortDescription": "Ramsar Sites",
-            "category": "environment",
-            "outcome": "1. By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
-        },
-        {
-            "priorities": [
-                {
-                    "category": "Threatened Species"
-                }
-            ],
-            "targeted": true,
-            "shortDescription": "Threatened Species Strategy",
-            "category": "environment",
-            "outcome": "2. By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved."
-        },
-        {
-            "priorities": [
-                {
-                    "category": "World Heritage Sites"
-                }
-            ],
-            "targeted": true,
-            "shortDescription": "World Heritage Areas",
-            "category": "environment",
-            "outcome": "3. By 2023, invasive species management has reduced threats to the natural heritage Outstanding Universal Value of World Heritage properties through the implementation of priority actions."
-        },
-        {
-            "priorities": [
-                {
-                    "category": "Threatened Ecological Communities"
-                }
-            ],
-            "targeted": true,
-            "shortDescription": "Threatened Ecological Communities",
-            "category": "environment",
-            "outcome": "4. By 2023, the implementation of priority actions is leading to an improvement in the condition of EPBC Act listed Threatened Ecological Communities."
-        },
-        {
-            "priorities": [
-                {
-                    "category": "Land Management"
-                }
-            ],
-            "targeted": true,
-            "shortDescription": "Soil Condition",
-            "category": "agriculture",
-            "outcome": "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
-        },
-        {
-            "priorities": [
-                {
-                    "category": "Sustainable Agriculture"
-                }
-            ],
-            "targeted": true,
-            "shortDescription": "Climate / Weather Adaption",
-            "category": "agriculture",
-            "outcome": "6. By 2023, there is an increase in the capacity of agriculture systems to adapt to significant changes in climate and market demands for information on provenance and sustainable production."
-        }
+    priorities: [
     ]
 };
+var outcomes = [
+    {
+        "priorities": [
+            {
+                "category": "Ramsar"
+            }
+        ],
+        "targeted": true,
+        "shortDescription": "Ramsar Sites",
+        "category": "environment",
+        "outcome": "1. By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
+    },
+    {
+        "priorities": [
+            {
+                "category": "Threatened Species"
+            }
+        ],
+        "targeted": true,
+        "shortDescription": "Threatened Species Strategy",
+        "category": "environment",
+        "outcome": "2. By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved."
+    },
+    {
+        "priorities": [
+            {
+                "category": "World Heritage Sites"
+            }
+        ],
+        "targeted": true,
+        "shortDescription": "World Heritage Areas",
+        "category": "environment",
+        "outcome": "3. By 2023, invasive species management has reduced threats to the natural heritage Outstanding Universal Value of World Heritage properties through the implementation of priority actions."
+    },
+    {
+        "priorities": [
+            {
+                "category": "Threatened Ecological Communities"
+            }
+        ],
+        "targeted": true,
+        "shortDescription": "Threatened Ecological Communities",
+        "category": "environment",
+        "outcome": "4. By 2023, the implementation of priority actions is leading to an improvement in the condition of EPBC Act listed Threatened Ecological Communities."
+    },
+    {
+        "priorities": [
+            {
+                "category": "Land Management"
+            }
+        ],
+        "targeted": true,
+        "shortDescription": "Soil Condition",
+        "category": "agriculture",
+        "outcome": "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
+    },
+    {
+        "priorities": [
+            {
+                "category": "Sustainable Agriculture"
+            }
+        ],
+        "targeted": true,
+        "shortDescription": "Climate / Weather Adaption",
+        "category": "agriculture",
+        "outcome": "6. By 2023, there is an increase in the capacity of agriculture systems to adapt to significant changes in climate and market demands for information on provenance and sustainable production."
+    }
+]
 
-function setupProgramConfig(subprograms) {
-    subprograms.forEach(function (subprogram){
-        var program = db.program.find({name: subprogram});
-        while(program.hasNext()){
-            var p = program.next();
+
+subprograms.forEach(function (subprogram){
+    var program = db.program.find({name: subprogram});
+    while(program.hasNext()){
+        var p = program.next();
+        if (p.name === subprogram){
             p.config = projectConfig.config
-            p.outcomes = projectConfig.outcomes;
-            db.program.save(p);
+            p.priorities = projectConfig.priorities
+            p.outcomes = outcomes;
         }
-    });
-}
+        db.program.save(p);
+    }
+});
+
 
 
