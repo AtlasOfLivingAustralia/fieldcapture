@@ -99,8 +99,7 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
         projectDetails.plannedEndDate == "2023-06-29T14:00:00+0000"
         !projectDetails.contractStartDate
         !projectDetails.contractEndDate
-        !projectDetails.internalOrderId
-        projectDetails.workOrderId == "WO1234"
+        projectDetails.externalIds[0] == [externalId:"WO1234", idType:'WORK_ORDER']
         projectDetails.funding == 0
         !projectDetails.serviceProviderName
         !projectDetails.tags

@@ -70,8 +70,8 @@ class GmsMapper {
             FINISH_DT:[name:'plannedEndDate', type:'date', mandatory:true, description:'The planned end date of the project'],
             CONTRACT_START_DT:[name:'contractStartDate', type:'date'],
             CONTRACT_END_DT:[name:'contractEndDate', type:'date'],
-            ORDER_NO: [name: 'internalOrderId', type:'string',description:'The SAP Internal Order Number for this project'],
-            WORK_ORDER_ID:[name:'workOrderId', type:'string'],
+            ORDER_NO: [name: 'externalIds', type:'externalId',description:'The SAP Internal Order Number for this project', multipleColumnsSupported: true, idType:'INTERNAL_ORDER_NUMBER'],
+            WORK_ORDER_ID:[name:'externalIds', type:'externalId', multipleColumnsSupported: true, idType:'WORK_ORDER'],
             FUNDING:[name:'funding', type:'decimal',description:'Total funding for this project (displayed on project overview)'],
             AUTHORISEDP_EMAIL:[name:'adminEmail', type:'email', description:'This user will be added as an admin to the project'],
             GRANT_MGR_EMAIL:[name:'grantManagerEmail', type:'email', description:'This user will be added as a project grant manager to the project'],
@@ -86,8 +86,19 @@ class GmsMapper {
             MERI_PLAN_STATUS:['name':'planStatus', type:'lookup', values:['Approved':'approved'], default:'not approved', description:'The MERI plan status - not approved (default), Approved'],
             FUNDING_TYPE:[name:'fundingType', type:'string', description:'The funding model used for this project (Grant, Procurement, Special Purpose Payment)'],
             ORIGIN_SYSTEM:[name:'origin', type:'string', description:'The owning system for this project (e.g. Business Grants Hub)', default:'merit'],
-            ELECTION_COMMITMENT_YEAR:[name:'electionCommitmentYear', type:'string', description: 'If an election commitment, the year of the commitment']
+            ELECTION_COMMITMENT_YEAR:[name:'electionCommitmentYear', type:'string', description: 'If an election commitment, the year of the commitment'],
+            PORTFOLIO:[name:'portfolio', type:'string', description: 'Agriculture / Environment / Both'],
+            GRANT_OPPORTUNITY_ID:[name:'externalIds', type:'externalId', multipleColumnsSupported: true, idType:'GRANT_OPPORTUNITY', description:'If different to the grant opportunity id specified in the program']
     ]
+
+    def geographicInfoMapping = [
+            NATIONWIDE:[name:'nationwide', type:'boolean', description:'If true, this project does not have a primary state'],
+            PRIMARY_STATE:[name:'primaryState', type:'string', description:''],
+            PRIMARY_ELECTORATE:[name:'primaryElectorate', type:'string', description:''],
+            OTHER_ELECTORATES:[name:'otherElectorates', type:'list', description:''],
+            OTHER_STATES:[name:'otherStates', type:'list', description:'']
+    ]
+
 
     def siteMapping = [
             LOC_DESC:[name:'description', type:'string'],
@@ -133,7 +144,7 @@ class GmsMapper {
         includeProgress = false
     }
 
-    public GmsMapper(activitiesModel, programModel, organisations, abnLookup, List<Map> scores, Map programs = [:], Map managementUnits = [:], includeProgress = false) {
+    GmsMapper(activitiesModel, programModel, organisations, abnLookup, List<Map> scores, Map programs = [:], Map managementUnits = [:], includeProgress = false) {
         this.activitiesModel = activitiesModel
         this.programModel = programModel
         this.includeProgress = includeProgress
@@ -203,12 +214,14 @@ class GmsMapper {
 
     def mapProject(projectRows) {
 
-        def errors = []
-        def result = gmsToMerit(projectRows[0], projectMapping) // All project rows have the project details.
-
+        List errors = []
+        Map result = gmsToMerit(projectRows[0], projectMapping) // All project rows have the project details.
         def project = result.mappedData
         project.projectType = 'works'
         project.isMERIT = true
+
+        mapGeographicInfo(projectRows[0], project, errors)
+
 
         String programName = project.associatedSubProgram ?: project.associatedProgram
         String programId = programs[programName]
@@ -232,6 +245,7 @@ class GmsMapper {
         }
 
         lookupOrganisation(project, errors)
+
 
         if (project.serviceProviderName) {
             def serviceProviderOrganisation = organisations.find{it.name == project.serviceProviderName}
@@ -494,6 +508,15 @@ class GmsMapper {
         }
     }
 
+    private void mapGeographicInfo(Map rowData, Map project, List errors) {
+
+        Map result = gmsToMerit(rowData, geographicInfoMapping)
+        if (result.mappedData) {
+            project.geographicInfo = result.mappedData
+        }
+        errors.addAll(errors)
+    }
+
     private def mapTarget(rowMap) {
 
         def errors = []
@@ -533,53 +556,84 @@ class GmsMapper {
         [mappedData:result, errors: errors]
     }
 
-    private def gmsToMerit(rowMap, mapping) {
+    private def gmsToMerit(Map rowMap, Map mapping) {
         def result = [:]
         def errors = []
-        mapping.each { entry ->
+        mapping.each { Map.Entry e ->
+            String mappingColumnName = e.key
+            Map columnMapping = e.value
 
             try {
-                def value = convertByType(rowMap[entry.key], entry.value)
-                result[entry.value.name] = value
+                String propertyName = columnMapping.name
+                if (columnMapping.multipleColumnsSupported) {
+                    List values = findMultiValue(mappingColumnName, rowMap)
+                    if (!result[propertyName]) {
+                        result[propertyName] = []
+                    }
+                    result[propertyName].addAll(values.collect{convertByType(it, columnMapping)})
+                }
+                else {
+                    result[propertyName] = convertByType(rowMap[mappingColumnName], columnMapping)
+                }
+
             }
-            catch (Exception e) {
-                errors << "Error converting value: ${rowMap[entry.key]} from row ${rowMap.index} column: ${entry.key}, ${e.getMessage()}"
+            catch (Exception ex) {
+                errors << "Error converting value: ${rowMap[mappingColumnName]} from row ${rowMap.index} column: ${mappingColumnName}, ${ex.getMessage()}"
             }
         }
 
         [mappedData:result, errors:errors]
     }
 
-    private def convertByType(String value, mapping) {
-        def type = mapping.type
+    private List findMultiValue(String mappingColumnName, Map rowMap) {
+        rowMap.findAll { String key, def value ->
+            key.startsWith(mappingColumnName)
+        }.collect{it.value}
+    }
+
+    private def convertByType(String value, Map mapping) {
+        String type = mapping.type
         value = value?value.trim():''
+        def result = null
         switch (type) {
             case 'date':
-                return convertDate(value, mapping.mandatory)
+                result = convertDate(value, mapping.mandatory)
+                break
             case 'decimal':
-                return convertDecimal(value)
+                result = convertDecimal(value)
+                break
             case 'string':
-                return value ?: (mapping['default']?:value)
+                result = value ?: (mapping['default']?:value)
+                break
             case 'url':
                 URI.create(value) // validation purposes only
-                return value
+                result = value
+                break
             case 'email':
                 if (value && !EmailValidator.instance.isValid(value)) {
                     throw new IllegalArgumentException("Invalid email: ${value}")
                 }
-                return value
+                result = value
+                break
             case 'lookup':
                 def lookupValue = value ? mapping.values[value] : mapping.default
                 if (lookupValue == null) {
                     throw new IllegalArgumentException("${value} is not in ${mapping.values}")
                 }
-                return lookupValue
-
-
+                result = lookupValue
+                break
+            case 'externalId':
+                if (value) {
+                    result = [idType:mapping.idType, externalId:value]
+                }
+                break
             case 'list':
-                return value?.split(',').collect{it.trim()}.findAll{it}
+                result = value?.split(',').collect{it.trim()}.findAll{it}
+                break
+            default:
+                throw new IllegalArgumentException("Unsupported type: ${type}")
         }
-        throw new IllegalArgumentException("Unsupported type: ${type}")
+        result
     }
 
     private def convertDate(date, mandatory) {
@@ -620,146 +674,5 @@ class GmsMapper {
         result.doubleValue()
     }
 
-    /**
-     * Maps a project into a List of Maps representing rows in the GMS spreadsheet format.
-     * @param project the project to export.
-     */
-    def exportToGMS(project) {
-
-        def resultRows = []
-
-        // These are the scores that have meaning to the GMS
-        def scores = project.outputSummary?.grep { score -> (score.results || score.target) && score.score.gmsId }.flatten()
-
-        // These need to be included in every row mapped.
-        def projectDetails = meritToGMS(project, projectMapping)
-
-        scores.each { score ->
-
-            def mappedOutputTarget = mapScore(score)
-
-            def row = [:]
-            row.putAll(projectDetails)
-            row.putAll([(DATA_TYPE_COLUMN): ACTIVITY_DATA_TYPE, (DATA_SUB_TYPE_COLUMN): ACTIVITY_DATA_SUB_TYPE])
-            row.putAll(mappedOutputTarget)
-
-            resultRows << row
-
-        }
-
-        resultRows << projectDetails
-
-        return resultRows
-    }
-
-    public void toCsv(projects, writer) {
-
-        writer.println(GMS_COLUMNS.join(','))
-        projects.each { project ->
-
-            def projectRows = exportToGMS(project)
-            projectRows.each { mapRow ->
-
-                StringBuilder row = new StringBuilder()
-                GMS_COLUMNS.each {
-
-                    if (row) { row.append(',')}
-                    row.append(writeCsvValue(mapRow[it]))
-                }
-                writer.println(row)
-            }
-
-        }
-        writer.flush()
-    }
-
-    private def writeCsvValue(val) {
-        if (!val) return ''
-
-        return "\"${val.replaceAll("\"", "\"\"")}\""
-    }
-
-
-    private def meritToGMS(project, mapping) {
-
-        def results = [:]
-
-        mapping.each { gmsKey, fieldMapping ->
-
-            def meritKey = fieldMapping.name
-            def meritValue = formatByType(project[meritKey], fieldMapping.type)
-
-
-            results << [(gmsKey) : meritValue]
-
-        }
-        results
-    }
-
-
-    private def mapScore(score) {
-
-        def target = ''
-        if (score.score.isOutputTarget) {
-            target = score.target ? formatDecimal(score.target) : '0'
-        }
-
-        // Two codes can be mapped to a single score, in this case we return the first one.
-        def code = score.score.gmsId.split('\\s')[0]
-        def value = score.results? score.results[0].result : 0
-        def result = [PGAT_ACTIVITY_DELIVERABLE_GMS_CODE: code, PGAT_ACTIVITY_UNIT:target, UNITS_COMPLETED: formatDecimal(value, '0')]
-
-        result
-
-    }
-
-
-    private def formatByType(value, type) {
-
-
-        switch (type) {
-            case 'date':
-                return formatDate(value)
-            case 'decimal':
-                return formatDecimal(value)
-            case 'string':
-                return value
-            case 'email':
-                return value
-            case 'list':
-                return value?.join(',')
-            case 'lookup':
-                return value
-        }
-        throw new IllegalArgumentException("Unsupported type: ${type}")
-    }
-
-    private def formatDate(value) {
-
-        if (!value) {
-            return ''
-        }
-        // No support for 'Z' as the timezone designator.
-        if (value.endsWith('Z')) {
-            value = value.replace('Z', '+0000')
-        }
-
-        def date = MERIT_DATE_FORMAT.parse(value)
-        return GMS_DATE_FORMAT.format(date)
-    }
-
-    private def formatDecimal(value, defaultValue = '') {
-        if (!value) {
-            return defaultValue
-        }
-        def numericValue
-        if (value instanceof String) {
-            numericValue = GMS_DECIMAL_FORMAT.parse(value)
-        }
-        else {
-            numericValue = value
-        }
-        return GMS_DECIMAL_FORMAT.format(numericValue)
-    }
 
 }
