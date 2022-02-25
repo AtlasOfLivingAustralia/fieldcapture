@@ -69,6 +69,23 @@ var projectConfig = {
                 }
             },
             {
+                "template": "projectPartnerships",
+                "model": {
+                    "namePlaceHolder": "[Free text]",
+                    "helpTextPartnerNature": "If partnership with an organisation: provide the name of the organisation and the role they will play/how you will support them. If partnering with community groups or members of the public: indicate each group or individual you will engage with",
+                    "partnershipPlaceHolder": "[Free text]"
+                }
+            },
+            {
+                "template": "consultation",
+                "model": {
+                    "helpTextHeading": "Indicate the groups or individuals you will consult with",
+                    "title": "Consultation",
+                    "explanation": "Please provide details on all groups or individuals that you will consult with as part of undertaking the project",
+                    "placeHolder": "[Free text] Indicate the groups or individuals you will consult with"
+                }
+            },
+            {
                 "template": "keyThreats",
                 "model": {
                     "threatHelpText": "The key threats (or key threatening processes) that your project will be addressing",
@@ -97,6 +114,13 @@ var projectConfig = {
                     "indicatorPlaceHolder": "[Free text]",
                     "approachPlaceHolder": "[Free text]",
                     "title": "Project Monitoring Indicators"
+                }
+            },
+            {
+                "template": "adaptiveManagement",
+                "model": {
+                    "title": "Project Review, Evaluation and Improvement Methodology and Approach",
+                    "explanation": "Outline the methods and processes that will enable adaptive management during the lifetime of this project"
                 }
             },
             {
