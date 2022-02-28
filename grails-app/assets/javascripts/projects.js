@@ -20,6 +20,7 @@
 //= require blog
 //= require dataSets
 //= require projectService
+//= require components.js
 //= require_self
 
 /*
@@ -96,7 +97,15 @@ function ProjectViewModel(project, isUserEditor, organisations) {
         )
 
     _.extend(self, new EditableDocumentsViewModel(documentSettings));
-
+    self.externalIds = ko.observableArray(_.map(project.externalIds, function (externalId) {
+        return {
+            idType: ko.observable(externalId.idType),
+            externalId: ko.observable(externalId.externalId)
+        };
+    }));
+    self.externalIdTypes = [
+        'INTERNAL_ORDER_NUMBER', 'SERVICE_ONE', 'WORK_ORDER', 'GRANT_OPPORTUNITY'
+    ];
     if (isUserEditor === undefined) {
         isUserEditor = false;
     }
@@ -882,7 +891,6 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             description: self.description(),
             externalId: self.externalId(),
             grantId: self.grantId(),
-            internalOrderId: self.internalOrderId(),
             manager: self.manager(),
             plannedStartDate: self.plannedStartDate(),
             plannedEndDate: self.plannedEndDate(),
@@ -900,6 +908,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             terminationReason: self.terminationReason(),
             tags: self.tags(),
             promoteOnHomepage: self.promoteOnHomepage(),
+            externalIds: ko.mapping.toJS(self.externalIds),
             options: {
                 changeActivityDates: self.changeActivityDates(),
                 includeSubmittedReports: self.includeSubmittedReports(),

@@ -6,7 +6,7 @@
 //= require reporting
 //= require leaflet-manifest
 //= require blog
-
+//= require components
 
 /**
  * Knockout view model for program pages.
@@ -32,6 +32,15 @@ ProgramViewModel = function (props, options) {
     self.programSiteId = ko.observable(props.programSiteId);
     self.mapFeatures =  ko.observable(props.mapFeatures);
     self.projects = props.projects;
+    self.externalIds = ko.observableArray(_.map(props.externalIds, function (externalId) {
+        return {
+            idType: ko.observable(externalId.idType),
+            externalId: ko.observable(externalId.externalId)
+        };
+    }));
+    self.externalIdTypes = [
+        'WORK_ORDER', 'GRANT_OPPORTUNITY'
+    ];
 
     self.deleteProgram = function () {
         if (window.confirm("Delete this program?  Are you sure?")) {

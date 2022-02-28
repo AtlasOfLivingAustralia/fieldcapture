@@ -9,8 +9,7 @@
                     <div class="row mb-2">
                         <div class="col-sm-4 header-label">Program</div>
 
-%{--                        This is temporarily not public until #1829 is released.--}%
-                        <g:if test="${fc.userIsAlaAdmin()}">
+                        <g:if test="${fc.userIsAlaOrFcAdmin()}">
                             <div class="col-sm-8 programName"><g:link controller="program" action="index"
                                          id="${config.program.programId}"><fc:programFullName program="${config.program}"/></g:link></div>
                         </g:if>
@@ -93,11 +92,11 @@
                         <div class="col-sm-8 value projectFunding"><span data-bind="text:funding.formattedCurrency"></span></div>
                     </div>
 
-                    <g:if test="${showOrderNumber}">
-                    <div class="row mb-2" data-bind="visible:internalOrderId">
-                        <div class="col-sm-4 header-label">Internal order number</div>
+                    <g:if test="${showOrderNumber && project.externalIds.find{it.idType=='INTERNAL_ORDER_NUMBER'}}">
+                    <div class="row mb-2">
+                        <div class="col-sm-4 header-label">Internal order number/s</div>
 
-                        <div class="col-sm-8 internalOrderNumber">${project.internalOrderId}</div>
+                        <div class="col-sm-8 internalOrderNumber"><fc:externalIds externalIds="${project.externalIds}" idType="INTERNAL_ORDER_NUMBER"/></div>
                     </div>
                     </g:if>
                 </div>
