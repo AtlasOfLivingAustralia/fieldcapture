@@ -102,6 +102,10 @@ var muConfig = {
             "priority": "The Greater Blue Mountains Area"
         },
         {
+            "category": "World Heritage Sites",
+            "priority": "Budj Bim Cultural Landscape"
+        },
+        {
             "category": "Soil Quality",
             "priority": "Soil acidification"
         },
@@ -212,6 +216,10 @@ var muConfig = {
         {
             "category": "Priority Natural Asset",
             "priority": "Gondwana Rainforests of Australia World Heritage Area"
+        },
+        {
+            "category": "Priority Natural Asset",
+            "priority": "Budj Bim Cultural Landscape"
         },
         {
             "category": "Threatened Ecological Community",
