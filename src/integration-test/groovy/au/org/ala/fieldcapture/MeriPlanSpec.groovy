@@ -320,15 +320,16 @@ class MeriPlanSpec extends StubbedCasSpec {
         when:
         openAdminTab()
         admin.openProjectSettings()
-        admin.projectSettings.internalOrderId = '12345'
+        admin.projectSettings.externalIds[0].externalId = '12345'
         admin.projectSettings.saveChangesButton.click()
 
         then:
         waitFor{hasBeenReloaded()}
         at ProjectIndex
 
+        Thread.sleep(10000)
         !admin.projectSettings.internalOrderIdErrorDisplayed()
-        admin.projectSettings.internalOrderId == '12345'
+        admin.projectSettings.internalOrderIds() == ['12345']
 
         when:
         logout(browser)

@@ -570,7 +570,8 @@ class GmsMapper {
                     if (!result[propertyName]) {
                         result[propertyName] = []
                     }
-                    result[propertyName].addAll(values.collect{convertByType(it, columnMapping)})
+                    values = values.findAll{it}
+                    result[propertyName].addAll(values.collect{convertByType(it, columnMapping)}.findAll{it})
                 }
                 else {
                     result[propertyName] = convertByType(rowMap[mappingColumnName], columnMapping)

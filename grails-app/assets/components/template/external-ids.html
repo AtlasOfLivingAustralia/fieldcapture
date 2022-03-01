@@ -1,5 +1,5 @@
 
-<div class="row mb-2">
+<div class="row mb-2 externalIds">
     <div class="col-sm-12">
         <div class="row">
             <div class="col-sm-4">
@@ -9,7 +9,8 @@
                 External id
             </div>
         </div>
-        <div class="row" data-bind="foreach:externalIds">
+        <ul class="idList unstyled list-group" data-bind="foreach:externalIds">
+           <li class="row">
             <div class="col-sm-4 input-group">
                 <select name="idType" class="form-control form-control-sm" data-bind="options:$parent.externalIdTypes, value:idType"></select>
             </div>
@@ -19,7 +20,8 @@
             <div class="col-sm-1">
                 <button class="btn btn-sm" data-bind="click:$parent.removeExternalId"><i class="fa fa-remove"></i></button>
             </div>
-        </div>
+           </li>
+        </ul>
         <button class="btn" data-bind="click:addExternalId">Add external id</button>
     </div>
 </div>
