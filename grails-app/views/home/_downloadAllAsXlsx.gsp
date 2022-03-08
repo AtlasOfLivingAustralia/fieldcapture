@@ -37,9 +37,11 @@
         <g:each in="${['RLP Outcomes', 'RLP Project Details', 'RLP Key Threats', 'RLP Services and Targets']}" var="name">
             <li><label class="checkbox"><input type="checkbox" name="tabs" value="${name.replaceAll(' ','_')}" data-validation-engine="validate[minCheckbox[1]]">${name}</label></li>
         </g:each>
-        <g:each in="${['Electorate Coord']}" var="name">
-            <li><label class="checkbox"><input type="checkbox" name="tabs" value="${name}" data-validation-engine="validate[minCheckbox[1]]">${name}</label></li>
-        </g:each>
+    </ul>
+
+    <strong>Electorate Coord</strong><br/>
+    <ul class="unstyled">
+        <li><label class="checkbox"><input type="checkbox" name="tabs" value="Electorate Coord" data-validation-engine="validate[minCheckbox[1]]">Electorate Coord</label></li>
     </ul>
 
     <strong>Activity Data</strong><br/>
