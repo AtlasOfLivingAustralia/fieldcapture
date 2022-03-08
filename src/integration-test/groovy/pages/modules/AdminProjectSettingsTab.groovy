@@ -26,6 +26,6 @@ class AdminProjectSettingsTab extends Module {
 
     def internalOrderIdErrorDisplayed() {
         Thread.sleep(500)
-        $('.internalOrderIdformError.parentFormsettings-validation.formError').displayed
+        $('.addExternalIdButtonformError.parentFormsettings-validation.formError').displayed
     }
 }

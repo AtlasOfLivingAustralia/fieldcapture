@@ -98,10 +98,10 @@
 %{--    </div>--}%
 </div>
 
-<external-ids params="externalIds:externalIds, externalIdTypes:externalIdTypes"></external-ids>
+<external-ids params="externalIds:externalIds, externalIdTypes:externalIdTypes, validationNamespace:'projectSettingsExternalId', validate:validateExternalIds"></external-ids>
 
 <div class="row mb-2">
-    <div class="col-sm-4">
+    <div class="col-sm-4">R
         <label class="control-label" for="manager">Project manager</label>
         <div class="controls">
             <g:textField class="form-control form-control-sm input-small" name="manager" data-bind="value:manager"/>

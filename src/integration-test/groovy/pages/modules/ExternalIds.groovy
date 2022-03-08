@@ -13,12 +13,16 @@ class ExternalId extends Module {
         externalIdInput.value()
     }
 
-    String setExternalId(String newExternalId) {
+    void setExternalId(String newExternalId) {
         externalIdInput.value(newExternalId)
     }
 
     String getIdType() {
         idTypeSelect.value()
+    }
+
+    void setIdType(String idType) {
+        idTypeSelect.value(idType)
     }
 
     void remove() {
@@ -29,10 +33,19 @@ class ExternalId extends Module {
 class ExternalIds extends Module {
     static content = {
         externalIds {$('.idList li').moduleList(ExternalId)}
-        addExternalIdButton {$('[data-bind*=addExernalId]')}
+        addExternalIdButton {$('[data-bind*=addExternalId]')}
     }
 
     List idsByType(String type) {
         externalIds.findAll{it.idType() == type}.collect{it.externalId()}
+    }
+
+    ExternalId addExternalId() {
+        int count = externalIds.size()
+        addExternalIdButton.click()
+        waitFor {
+            externalIds.size() == count+1
+        }
+        return externalIds[externalIds.size()-1]
     }
 }

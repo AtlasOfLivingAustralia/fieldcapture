@@ -127,7 +127,22 @@ function MERIPlan(project, projectService, config) {
     self.modifyPlan = function () {
         projectService.modifyPlan();
     };
-    self.canEditStartDate = ko.observable(config.editProjectStartDate)
+    self.canEditStartDate = config.editProjectStartDate;
+    self.externalIds = config.externalIds || [];
+    self.externalIdTypes = PROJECT_EXTERNAL_ID_TYPES;
+    self.validateExternalIds = function() {
+        if (!projectService.areExternalIdsValid(ko.mapping.toJS(self.externalIds))) {
+            return 'At least one internal order number is required';
+        }
+    };
+    self.externalIdTypes = config.externalIdTypes;
+
+    self.canApproveMeriPlan = ko.computed(function() {
+        // validateExternalIds returns a non-null value if the validation fails (it contains
+        // the error message to display), this is a jquery-validation-engine thing.
+        return self.plannedStartDate() && !self.validateExternalIds();
+    })
+
     // approve plan and handle errors
     self.approvePlan = function () {
         var message;
@@ -156,8 +171,10 @@ function MERIPlan(project, projectService, config) {
                             referenceDocument:viewModel.referenceDocument(),
                             reason: viewModel.reason(),
                             dateApproved: viewModel.dateApproved()
-                        }, { internalOrderNumber: self.internalOrderId(),
-                            plannedStartDate: self.plannedStartDate()});
+                        }, {
+                            externalIds: ko.mapping.toJS(self.externalIds),
+                            plannedStartDate: self.plannedStartDate()
+                        });
                     }
                 };
                 ko.applyBindings(planApprovalViewModel, $planApprovalModal[0]);
@@ -165,7 +182,7 @@ function MERIPlan(project, projectService, config) {
             }
             else {
                 var data = {
-                    internalOrderNumber: self.internalOrderId(),
+                    externalIds: ko.mapping.toJS(self.externalIds),
                     plannedStartDate: self.plannedStartDate()
                 }
                 projectService.approvePlan({dateApproved:convertToIsoDate(new Date())}, data)

@@ -329,7 +329,7 @@ class MeriPlanSpec extends StubbedCasSpec {
 
         Thread.sleep(10000)
         !admin.projectSettings.internalOrderIdErrorDisplayed()
-        admin.projectSettings.internalOrderIds() == ['12345']
+        admin.projectSettings.externalIds.externalIds[0].externalId == '12345'
 
         when:
         logout(browser)
@@ -389,7 +389,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         waitFor { admin.projectSettingsTab.click() }
 
         when:
-        admin.projectSettings.internalOrderId = '12345'
+        admin.projectSettings.externalIds.externalIds[0].externalId = '12345'
         admin.projectSettings.saveChangesButton.click()
 
         then:
@@ -397,7 +397,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         at ProjectIndex
 
         !admin.projectSettings.internalOrderIdErrorDisplayed()
-        admin.projectSettings.internalOrderId == '12345'
+        admin.projectSettings.externalIds.externalIds[0].externalId == '12345'
 
         when:
         loginAsGrantManager(browser)

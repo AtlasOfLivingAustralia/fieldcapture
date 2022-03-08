@@ -221,15 +221,8 @@
 
             master.register('activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset, viewModel.updateIdsAfterSave);
 
-            var url = '${g.createLink(controller: 'activity', action:'activitiesWithStage', id:activity.projectId)}';
-            var activityUrl = '${g.createLink(controller:'activity', action:'enterData')}';
             var activityId = '${activity.activityId}';
             var projectId = '${activity.projectId}';
-            var siteId = '${activity.siteId?:""}';
-            var options = {navigationUrl: url, activityUrl: activityUrl, returnTo: returnTo};
-            options.navContext = '${navContext}';
-            options.activityNavSelector = '#activity-nav';
-            options.savedNavMessageSelector = '#saved-nav-message-holder';
 
             var outputModelConfig = {
                 activityId: activityId,

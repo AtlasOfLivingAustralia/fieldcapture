@@ -1,7 +1,7 @@
 
 <div class="row mb-2 externalIds">
     <div class="col-sm-12">
-        <div class="row">
+        <div class="row form-group">
             <div class="col-sm-4">
                 Type of external id
             </div>
@@ -9,19 +9,19 @@
                 External id
             </div>
         </div>
-        <ul class="idList unstyled list-group" data-bind="foreach:externalIds">
-           <li class="row">
-            <div class="col-sm-4 input-group">
+       <ul class="idList unstyled list-group" data-bind="foreach:externalIds">
+           <li class="row form-group">
+            <div class="col-sm-4">
                 <select name="idType" class="form-control form-control-sm" data-bind="options:$parent.externalIdTypes, value:idType"></select>
             </div>
             <div class="col-sm-7">
-                <input type="text" class="form-control form-control-sm" name="externalId" data-bind="value:externalId">
+                <input type="text" class="form-control form-control-sm" name="externalId" data-bind="value:externalId" data-validation-engine="validate[required]">
             </div>
             <div class="col-sm-1">
                 <button class="btn btn-sm" data-bind="click:$parent.removeExternalId"><i class="fa fa-remove"></i></button>
             </div>
            </li>
         </ul>
-        <button class="btn" data-bind="click:addExternalId">Add external id</button>
+        <button id="addExternalIdButton" class="btn" data-bind="click:addExternalId, jqueryValidationEngine:{namespace:validationNamespace, validationFunction:externalIdValidation}">Add external id</button>
     </div>
 </div>

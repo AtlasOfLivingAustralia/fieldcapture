@@ -13,7 +13,7 @@ class RlpOverviewTab extends Module {
         projectStartDate {$(".projectStartDate")}
         projectEndDate {$(".projectEndDate")}
         projectFundingAmount {$(".projectFunding")}
-        internalOrderNumber {$(".internalOrderNumber")}
+        internalOrderIds {$(".internalOrderNumber")}
         description {$(".projectDescription")}
 
         newsAndEvents { $('div', text:'').siblings()[0] }

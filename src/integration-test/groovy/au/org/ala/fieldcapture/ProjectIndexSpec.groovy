@@ -1,6 +1,7 @@
 package au.org.ala.fieldcapture
 
 import pages.ProjectIndex
+import pages.modules.ExternalId
 import spock.lang.Stepwise
 
 @Stepwise
@@ -89,7 +90,6 @@ class ProjectIndexSpec extends StubbedCasSpec {
         waitFor { admin.projectSettingsTab.click() }
 
         when:
-        admin.projectSettings.internalOrderId = ''
         admin.projectSettings.saveChangesButton.click()
 
         then:
@@ -97,7 +97,7 @@ class ProjectIndexSpec extends StubbedCasSpec {
         at ProjectIndex
 
         !admin.projectSettings.internalOrderIdErrorDisplayed()
-        admin.projectSettings.internalOrderId == ''
+        admin.projectSettings.internalOrderIds().size() == 0
     }
 
     def "Projects with application status can be saved with a internal order id"() {
@@ -117,7 +117,8 @@ class ProjectIndexSpec extends StubbedCasSpec {
         waitFor { admin.projectSettingsTab.click() }
 
         when:
-        admin.projectSettings.internalOrderId = '12345'
+        admin.projectSettings.externalIds.externalIds[0].idType = "INTERNAL_ORDER_NUMBER"
+        admin.projectSettings.externalIds.externalIds[0].externalId = "12345"
         admin.projectSettings.saveChangesButton.click()
 
         then:
@@ -125,10 +126,10 @@ class ProjectIndexSpec extends StubbedCasSpec {
         at ProjectIndex
 
         !admin.projectSettings.internalOrderIdErrorDisplayed()
-        admin.projectSettings.internalOrderId == '12345'
+        admin.projectSettings.externalIds.externalIds[0].externalId == "12345"
     }
 
-    def "Projects with active status can be saved without a internal order id"() {
+    def "Projects with active status cannot be saved without a internal order id"() {
         setup:
         loginAsMeritAdmin(browser)
 
@@ -145,10 +146,10 @@ class ProjectIndexSpec extends StubbedCasSpec {
         waitFor { admin.projectSettingsTab.click() }
 
         when:
-        admin.projectSettings.internalOrderId = ''
+        admin.projectSettings.externalIds.externalIds[0].remove()
         admin.projectSettings.saveChangesButton.click()
 
-        then:
+        then: "A validation error is displayed"
         admin.projectSettings.internalOrderIdErrorDisplayed()
     }
 
@@ -169,7 +170,9 @@ class ProjectIndexSpec extends StubbedCasSpec {
         waitFor { admin.projectSettingsTab.click() }
 
         when:
-        admin.projectSettings.internalOrderId = '12345'
+        ExternalId externalId = admin.projectSettings.externalIds.addExternalId()
+        externalId.idType = 'INTERNAL_ORDER_NUMBER'
+        externalId.externalId = '12345'
         admin.projectSettings.saveChangesButton.click()
 
         then:
@@ -177,10 +180,10 @@ class ProjectIndexSpec extends StubbedCasSpec {
         at ProjectIndex
 
         !admin.projectSettings.internalOrderIdErrorDisplayed()
-        admin.projectSettings.internalOrderId == '12345'
+        admin.projectSettings.externalIds.externalIds[2].externalId == "12345"
     }
 
-    def "Projects with completed status can be saved without a internal order id"() {
+    def "Projects with completed status cannot be saved without a internal order id"() {
         setup:
         loginAsMeritAdmin(browser)
 
@@ -197,7 +200,7 @@ class ProjectIndexSpec extends StubbedCasSpec {
         waitFor { admin.projectSettingsTab.click() }
 
         when:
-        admin.projectSettings.internalOrderId = ''
+        admin.projectSettings.externalIds.externalIds[0].remove()
         admin.projectSettings.saveChangesButton.click()
 
         then:
@@ -221,7 +224,7 @@ class ProjectIndexSpec extends StubbedCasSpec {
         waitFor { admin.projectSettingsTab.click() }
 
         when:
-        admin.projectSettings.internalOrderId = '12345'
+        admin.projectSettings.externalIds.externalIds[0].externalId = '12345'
         admin.projectSettings.saveChangesButton.click()
 
         then:
@@ -229,7 +232,7 @@ class ProjectIndexSpec extends StubbedCasSpec {
         at ProjectIndex
 
         !admin.projectSettings.internalOrderIdErrorDisplayed()
-        admin.projectSettings.internalOrderId == '12345'
+        admin.projectSettings.externalIds.externalIds[0].externalId == '12345'
     }
 
     def "Status of the projects with application status cannot be changed"() {

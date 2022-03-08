@@ -7,7 +7,7 @@
 		<b>Grant manager actions:</b>
 		<div data-bind="if:!canApprove()">
 			<div class="alert alert-info">
-				Insert the allocated Internal Order number for this project.  The Internal Order number must be inserted as soon as it becomes available
+				Insert the allocated Internal Order number/s for this project.  The Internal Order number must be inserted as soon as it becomes available
 			</div>
 				<div class="form-group row">
 					<label for="changeProjectStartDate" class="col-form-label col-sm-2">Change Project Start Date</label>
@@ -19,14 +19,14 @@
 				</div>
 
 			<div class="form-group row">
-				<label for="internalOrderId" class="col-form-label col-sm-2">Internal order number:</label>
+				<label class="col-form-label col-sm-2">Internal order number/s:</label>
 				<div class="col-sm-10">
-					<input id="internalOrderId" class="form-control form-control-sm internalOrderNumber" type="text" data-bind="value:internalOrderId, valueUpdate:'keyup'" data-validation-engine="validate[custom[number]]">
+					<external-ids params="externalIds:externalIds, externalIdTypes:externalIdTypes, validationNamespace:'meriPlanExternalId', validate:validateExternalIds"></external-ids>
 				</div>
 			</div>
 		</div>
 		<span class="grantManagerActionSpan">
-			<button type="button" data-bind="enable: internalOrderId() && plannedStartDate(), click:approvePlan" class="btn btn-sm btn-success"><i class="fa fa-check"></i> Approve MERI Plan</button>
+			<button type="button" data-bind="enable: canApproveMeriPlan, click:approvePlan" class="btn btn-sm btn-success"><i class="fa fa-check"></i> Approve MERI Plan</button>
 			<button type="button" data-bind="click:rejectPlan" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> Reject MERI Plan</button>
 		</span>
 	</div>

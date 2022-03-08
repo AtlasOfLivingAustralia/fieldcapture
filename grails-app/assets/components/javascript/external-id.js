@@ -11,6 +11,7 @@ ko.components.register('external-ids', {
 
         self.externalIds = params.externalIds;
         self.externalIdTypes = params.externalIdTypes;
+        self.validationNamespace = params.validationNamespace;
 
         self.idsForType = function (idType) {
             return _.find(externalIds, function (externalId) {
@@ -42,6 +43,9 @@ ko.components.register('external-ids', {
             });
         }
 
+        self.externalIdValidation = function() {
+            return params.validate();
+        }
     },
     template: componentService.getTemplate('external-ids')
 });
