@@ -5,6 +5,7 @@ describe("Tests for the ReportViewModel", function () {
             reportId:"123",
             fromDate:'2019-12-31T13:00:00Z', // 12am Jan 1 2020
             toDate:'2020-06-29T14:00:00Z', // 12am June 30 2020
+            statusChangeHistory:{comment:"test"}
         };
         var viewModel = new ReportViewModel(report, config);
 
