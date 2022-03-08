@@ -135,7 +135,6 @@ function MERIPlan(project, projectService, config) {
             return 'At least one internal order number is required';
         }
     };
-    self.externalIdTypes = config.externalIdTypes;
 
     self.canApproveMeriPlan = ko.computed(function() {
         // validateExternalIds returns a non-null value if the validation fails (it contains
