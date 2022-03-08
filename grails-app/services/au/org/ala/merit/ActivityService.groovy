@@ -131,6 +131,10 @@ class ActivityService {
         updatePublicationStatus(activityIds, 'unpublished')
     }
 
+    def cancelActivitiesForPublication(activityIds) {
+        updatePublicationStatus(activityIds, 'cancelled')
+    }
+
     /**
      * Updates the publicationStatus field of a set of Activities.
      * @param activityIds a List of the activity ids.  Identifies which activities to update.

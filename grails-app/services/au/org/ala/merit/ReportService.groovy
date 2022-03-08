@@ -311,6 +311,20 @@ class ReportService {
         return [success:true]
     }
 
+    Map cancelReport(String reportId, List reportActivityIds, String reason, Map reportOwner, List ownerUsersAndRoles) {
+
+        Map resp = cancel(reportId, "", reason)
+        Map report = get(reportId)
+
+        if (!resp.error) {
+            activityService.cancelActivitiesForPublication(reportActivityIds)
+        }
+        else {
+            return [success:false, error:resp.error]
+        }
+        return [success:true]
+    }
+
     /**
      * Creates a report to offset the scores produced by the supplied report without having to unapprove the original report and edit the data.
      * @param reportId the report that needs adjustment
@@ -393,6 +407,10 @@ class ReportService {
 
     def reject(String reportId, String category, String reason) {
         webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl')+"report/returnForRework/${reportId}", [comment:reason, category:category])
+    }
+
+    def cancel(String reportId, String category, String reason) {
+        webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl')+"report/cancel/${reportId}", [comment:reason, category:category])
     }
 
     def create(report) {

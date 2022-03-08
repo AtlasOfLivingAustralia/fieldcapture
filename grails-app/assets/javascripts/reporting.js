@@ -20,7 +20,22 @@ var ReportViewModel = function(report, config) {
     $.extend(this, report);
     var self = this;
 
-    self.description = report.description || report.name;
+    var cancelledComment = "";
+    $.each(report.statusChangeHistory, function(i, history) {
+        console.log(history.status + " - " + history.comment)
+        cancelledComment = history.comment
+    });
+    // self.description = report.description || report.name;
+    console.log(report.publicationStatus + " - " + report.description);
+    if (report.publicationStatus == "cancelled") {
+
+    }
+    if (report.statusChangeHistory.length > 0) {
+        self.description = report.description + " - " + cancelledComment || report.name + " - " + cancelledComment;
+    } else {
+        self.description = report.description || report.name;
+    }
+
     self.fromDate = ko.observable(report.fromDate).extend({simpleDate:false});
     self.toDate =  ko.observable(report.toDate).extend({simpleDate:false});
     self.submissionDate = ko.observable(report.submissionDate || report.toDate).extend({simpleDate:false});
@@ -176,6 +191,25 @@ var ReportViewModel = function(report, config) {
             buttonText: 'Return',
             submit:function() {
                 self.changeReportStatus(config.rejectReportUrl, 'return', 'Returning report...', 'Report returned.');
+            }
+        };
+        ko.applyBindings(reasonViewModel, $reasonModal[0]);
+        $reasonModal.modal({backdrop: 'static', keyboard:true, show:true}).on('hidden', function() {ko.cleanNode($reasonModal[0])});
+    };
+
+    self.cancelReport = function() {
+        alert("self cancel report");
+        var reasonModalSelector = config.reasonModalSelector || '#reason-modal';
+        var $reasonModal = $(reasonModalSelector);
+        var reasonViewModel = {
+            reason: self.reason,
+            rejectionCategories: ['Minor', 'Moderate', 'Major'],
+            rejectionCategory: self.category,
+            explanationText:'',
+            title:'Return report',
+            buttonText: 'Return',
+            submit:function() {
+                self.changeReportStatus(config.cancelReportUrl, 'return', 'Returning report...', 'Report returned.');
             }
         };
         ko.applyBindings(reasonViewModel, $reasonModal[0]);
@@ -507,4 +541,5 @@ var GrantManagerReportsViewModel = function(config) {
         }
     });
 };
+
 
