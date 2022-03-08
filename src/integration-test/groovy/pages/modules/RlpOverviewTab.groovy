@@ -5,13 +5,13 @@ import geb.Module
 class RlpOverviewTab extends Module {
     static content = {
 
-        programName {$(".programName")}
+        program {$(".programName")}
         managementUnitName {$(".managementUnitName")}
         serviceProviderName {$(".organisationName")}
-        projectIds {$(".projectId")}
-        projectStatus {$(".projectStatus")}
-        projectStartDate {$(".projectStartDate")}
-        projectEndDate {$(".projectEndDate")}
+        projectId {$(".projectId")}
+        status {$(".projectStatus")}
+        startDate {$(".projectStartDate")}
+        endDate {$(".projectEndDate")}
         projectFundingAmount {$(".projectFunding")}
         internalOrderIds {$(".internalOrderNumber")}
         description {$(".projectDescription")}

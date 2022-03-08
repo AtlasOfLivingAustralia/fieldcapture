@@ -43,8 +43,15 @@ ko.components.register('external-ids', {
             });
         }
 
+        /**
+         * This method is designed to be used by the jquery validation engine so a passed validation will
+         * return undefined / null, and a failed validation will return an error message.
+         * @returns {*} A message to display if validation failed.
+         */
         self.externalIdValidation = function() {
-            return params.validate();
+            if (params.validate) {
+                return params.validate();
+            }
         }
     },
     template: componentService.getTemplate('external-ids')

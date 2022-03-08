@@ -47,13 +47,13 @@ class RlpProjectSpec extends StubbedCasSpec {
         waitFor {
             overview.description.text() == 'Project 1 description'
         }
-        overview.programName.text() == 'Test program'
+        overview.program.text() == 'Test program'
         overview.managementUnitName.text() == 'Test management unit'
         overview.serviceProviderName.text() == 'Test Org'
-        overview.projectIds.text() == 'RLP-Test-Program-Project-1'
-        overview.projectStatus.text() == 'ACTIVE'
-        overview.projectStartDate.text() == '01-07-2018'
-        overview.projectEndDate.text() == '01-07-2023'
+        overview.projectId.text() == 'RLP-Test-Program-Project-1'
+        overview.status.text() == 'ACTIVE'
+        overview.startDate.text() == '01-07-2018'
+        overview.endDate.text() == '01-07-2023'
         overview.projectFundingAmount.text() == '$100,000.00'
         Thread.sleep(10000)
         overview.internalOrderIds.text() == '1234565'

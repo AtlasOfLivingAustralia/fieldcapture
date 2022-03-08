@@ -97,9 +97,7 @@ var test =
         },
         "serviceProviderName" : "",
         "status" : "active",
-        "timeline" : [],
-        "workOrderId" : "",
-        "internalOrderId": ""
+        "timeline" : []
     }
 
 
