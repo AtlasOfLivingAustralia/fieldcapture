@@ -6,13 +6,13 @@
                 Type of external id
             </div>
             <div class="col-sm-7">
-                External id
+                External #
             </div>
         </div>
        <ul class="idList unstyled list-group" data-bind="foreach:externalIds">
            <li class="row form-group">
             <div class="col-sm-4">
-                <select name="idType" class="form-control form-control-sm" data-bind="options:$parent.externalIdTypes, value:idType"></select>
+                <select name="idType" class="form-control form-control-sm" data-bind="options:$parent.externalIdTypes, optionsText:'label', optionsValue:'value', value:idType"></select>
             </div>
             <div class="col-sm-7">
                 <input type="text" class="form-control form-control-sm" name="externalId" data-bind="value:externalId" data-validation-engine="validate[required]">

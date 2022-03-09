@@ -1,35 +1,44 @@
-
-var ExternalIdTypes = [
-    'INTERNAL_ORDER_NUMBER', 'SERVICE_ONE', 'WORK_ORDER', 'GRANT_OPPORTUNITY'
-];
-
+/*
+ * Copyright (C) 2022 Atlas of Living Australia
+ * All Rights Reserved.
+ *
+ * The contents of this file are subject to the Mozilla Public
+ * License Version 1.1 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of
+ * the License at http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS
+ * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * rights and limitations under the License.
+ */
+/**
+ * This component renders a list of id type / id value / remove options and stores them in an observable array.
+ */
 ko.components.register('external-ids', {
 
+    /**
+     * @param params an object with the following keys:
+     * externalIds: an observable array of objects, each object will have two observables, idType and externalId.
+     * externalIdTypes: an array of label/value pairs that define the selectable options for the idType
+     * validationNamespace: a string to store the validation function in the global namespace for use by jquery validation engine
+     * validate: a jquery-validation-engine style function that will validate the external ids.  (Note this function
+     * should return a string containing the error if the validation fails).
+     */
     viewModel: function (params) {
         var self = this;
-        _.extend(this, ko.observableArray);
 
         self.externalIds = params.externalIds;
-        self.externalIdTypes = params.externalIdTypes;
+        self.externalIdTypes = _.map(params.externalIdTypes, function(idType) {
+            var label = _.isFunction($i18n) ? $i18n('label.externalId.'+idType, idType) : idType;
+            return {label:label, value:idType};
+        });
         self.validationNamespace = params.validationNamespace;
 
         self.idsForType = function (idType) {
-            return _.find(externalIds, function (externalId) {
-                return externalId.idType == idType;
+            return _.find(self.externalIds(), function (externalId) {
+                return externalId.idType() == idType;
             });
-        }
-
-        self.internalOrderNumbers = function () {
-            return self.idsForType('INTERNAL_ORDER_NUMBER');
-        }
-        self.serviceOneIds = function () {
-            return self.idsForType('SERVICE_ONE');
-        }
-        self.workOrderIds = function () {
-            return self.idsForType('WORK_ORDER');
-        }
-        self.grantOpportunityIds = function () {
-            return self.idsForType('GRANT_OPPORTUNITY');
         }
 
         self.removeExternalId = function (externalId) {
