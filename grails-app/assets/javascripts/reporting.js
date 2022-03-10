@@ -20,22 +20,7 @@ var ReportViewModel = function(report, config) {
     $.extend(this, report);
     var self = this;
 
-    var cancelledComment = "";
-    $.each(report.statusChangeHistory, function(i, history) {
-        console.log(history.status + " - " + history.comment)
-        cancelledComment = history.comment
-    });
-    // self.description = report.description || report.name;
-    console.log(report.publicationStatus + " - " + report.description);
-    if (report.publicationStatus == "cancelled") {
-
-    }
-    if (report.statusChangeHistory.length > 0) {
-        self.description = report.description + " - " + cancelledComment || report.name + " - " + cancelledComment;
-    } else {
-        self.description = report.description || report.name;
-    }
-
+    self.description = report.description || report.name;
     self.fromDate = ko.observable(report.fromDate).extend({simpleDate:false});
     self.toDate =  ko.observable(report.toDate).extend({simpleDate:false});
     self.submissionDate = ko.observable(report.submissionDate || report.toDate).extend({simpleDate:false});
@@ -84,7 +69,8 @@ var ReportViewModel = function(report, config) {
     $.each(report.activities || [], function(i, activity) {
         self.activities.push(new GreenArmyActivityViewModel(activity));
     });
-    self.editable = (report.bulkEditable || self.activities.length == 0 || self.activities.length == 1) && (report.publicationStatus != 'published' && report.publicationStatus != 'pendingApproval');
+
+    self.editable = (report.bulkEditable || self.activities.length == 0 || self.activities.length == 1) && (report.publicationStatus != 'published' && report.publicationStatus != 'pendingApproval' && report.publicationStatus != 'cancelled');
 
     self.title = 'Expand the activity list to complete the reports';
     if (self.editable) {
@@ -118,9 +104,13 @@ var ReportViewModel = function(report, config) {
     });
 
     self.approvalTemplate = function() {
+        if (report.publicationStatus == 'cancelled') {
+            return 'cancelled';
+        }
         if (!self.isReportable()) {
             return 'notReportable';
         }
+
         switch (report.publicationStatus) {
             case 'unpublished':
                 return 'notSubmitted';
@@ -198,7 +188,6 @@ var ReportViewModel = function(report, config) {
     };
 
     self.cancelReport = function() {
-        alert("self cancel report");
         var reasonModalSelector = config.reasonModalSelector || '#reason-modal';
         var $reasonModal = $(reasonModalSelector);
         var reasonViewModel = {
@@ -206,7 +195,7 @@ var ReportViewModel = function(report, config) {
             rejectionCategories: ['Minor', 'Moderate', 'Major'],
             rejectionCategory: self.category,
             explanationText:'',
-            title:'Return report',
+            title:'Cancel report',
             buttonText: 'Return',
             submit:function() {
                 self.changeReportStatus(config.cancelReportUrl, 'return', 'Returning report...', 'Report returned.');
@@ -273,6 +262,13 @@ var ReportViewModel = function(report, config) {
         ko.applyBindings(reasonViewModel, $reasonModal[0]);
         $reasonModal.modal({backdrop: 'static', keyboard:true, show:true}).on('hidden', function() {ko.cleanNode($reasonModal[0])});
     };
+
+    self.outcomeCategory = ko.pureComputed(function() {
+        return report.category == "Outcomes Report 1";
+    });
+    $.each(report.statusChangeHistory, function(i, history) {
+        self.cancelledComment = history.comment
+    });
 };
 
 var ReportsViewModel = function(reports, projects, availableReports, reportOwner, config) {
@@ -541,5 +537,6 @@ var GrantManagerReportsViewModel = function(config) {
         }
     });
 };
+
 
 

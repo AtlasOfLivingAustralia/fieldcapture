@@ -29,6 +29,13 @@
 <span class="badge p-1 text-white badge-info" data-bind="if:progress() == 'started'">Reporting form incomplete</span>
 <span class="badge p-1 text-white badge-success" data-bind="if:progress() == 'finished'">Reporting form complete</span>
 
+<g:if test="${fc.userIsAlaOrFcAdmin()}">
+    <div class="mt-2" data-bind="visible:!hasData()">
+        <p>
+            <button type="button" data-bind="visible:outcomeCategory, click:cancelReport" class="btn btn-sm btn-danger"><i class="fa fa-remove icon-white"></i> Cancel report</button>
+        </p>
+    </div>
+</g:if>
 </script>
 
 <script id="notSubmitted" type="text/html">
@@ -44,13 +51,6 @@
     <span class="badge p-1 text-white badge-info" data-bind="if:progress() == 'started'">Reporting form incomplete</span>
     <span class="badge p-1 text-white badge-success" data-bind="if:progress() == 'finished'">Reporting form complete</span>
 
-</g:if>
-<g:if test="fc.userIsAlaOrFcAdmin()}">
-    <div class="mt-2" data-bind="visible:hasData">
-        <p>
-            <button type="button" data-bind="click:cancelReport" class="btn btn-sm btn-danger"><i class="fa fa-remove icon-white"></i> Cancel report</button>
-        </p>
-    </div>
 </g:if>
 </script>
 
@@ -86,7 +86,10 @@
     </p>
 </g:if>
 </script>
-
+<script id="cancelled" type="text/html">
+    <p><span class="badge p-1 text-white badge-danger">Report cancelled</span></p>
+    <span data-bind="text:cancelledComment"></span>
+</script>
 
 <script id="reportTable" type="text/html">
 

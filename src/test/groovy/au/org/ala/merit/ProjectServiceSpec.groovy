@@ -402,6 +402,29 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         1 * reportService.rejectReport(reportId, reportDetails.activityIds, reportDetails.reason, project, projectRoles, EmailTemplate.DEFAULT_REPORT_RETURNED_EMAIL_TEMPLATE) >> [success:true]
     }
 
+    def "the project service should delegate to the report service to cancel a report"() {
+        given:
+        def projectId = 'project1'
+        List projectRoles = []
+        Map project = [projectId: projectId, planStatus: ProjectService.PLAN_APPROVED]
+        webService.getJson(_) >> project
+        String reportId = 'r1'
+        Map report = [reportId: reportId]
+        Map reportDetails = [reportId: reportId, activityIds: ['a1', 'a2'], reason:'paper based report']
+        reportService.getReportsForProject(_) >> [report]
+
+
+        when:
+        def result = service.cancelReport(projectId, reportDetails)
+
+        then:
+        result.success == true
+
+        1 * projectConfigurationService.getProjectConfiguration(project) >> new ProgramConfig([:])
+        1 * webService.getJson({ it.endsWith("permissions/getMembersForProject/" + projectId) }) >> projectRoles
+        1 * reportService.cancelReport(reportId, reportDetails.activityIds, reportDetails.reason, project, projectRoles) >> [success:true]
+    }
+
 
     def "a project's start date cannot be changed if the project has a submitted MERI plan"() {
         given:
