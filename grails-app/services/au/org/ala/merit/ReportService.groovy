@@ -15,6 +15,7 @@ class ReportService {
     public static final String REPORT_APPROVED = 'published'
     public static final String REPORT_SUBMITTED = 'pendingApproval'
     public static final String REPORT_NOT_APPROVED = 'unpublished'
+    public static final String REPORT_CANCELLED = 'cancelled'
 
     public static final int HOME_PAGE_IMAGE_SIZE = 500
 
@@ -140,7 +141,7 @@ class ReportService {
     }
 
     boolean isSubmittedOrApproved(Map report) {
-        return report.publicationStatus == REPORT_SUBMITTED || report.publicationStatus == REPORT_APPROVED
+        return report.publicationStatus == REPORT_SUBMITTED || report.publicationStatus == REPORT_APPROVED || report.publicationStatus == REPORT_CANCELLED
     }
 
     boolean isApproved(Map report) {
