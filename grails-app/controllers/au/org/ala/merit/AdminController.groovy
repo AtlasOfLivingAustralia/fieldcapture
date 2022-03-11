@@ -372,8 +372,10 @@ class AdminController {
 
     def gmsImport() {
 
+        Boolean preview = params.getBoolean('preview')
+        Boolean update = params.getBoolean('update')
         def file
-        if (params.preview) {
+        if (preview) {
             if (request instanceof MultipartHttpServletRequest) {
                 def tmp = request.getFile('projectData')
                 file = File.createTempFile(tmp.originalFilename, '.csv')
@@ -393,7 +395,7 @@ class AdminController {
             session.status = status
             def fileIn = new FileInputStream(file)
             try {
-                def result = importService.gmsImport(fileIn, status.projects, params.preview)
+                def result = importService.gmsImport(fileIn, status.projects, preview, update)
                 status.finished = true
                 status.error = result.error
             }

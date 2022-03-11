@@ -10,8 +10,6 @@ import java.text.SimpleDateFormat
  */
 class GmsMapper {
 
-    public static final List GMS_COLUMNS = ['PROGRAM_NM',	'ROUND_NM',	'APP_ID', 'EXTERNAL_ID', 'APP_NM', 'APP_DESC',	'START_DT',	'FINISH_DT', 'FUNDING',	'APPLICANT_NAME', 'ORG_TRADING_NAME','ABN','MANAGEMENT_UNIT', 'APPLICANT_EMAIL', 'AUTHORISEDP_CONTACT_TYPE', 'AUTHORISEDP_EMAIL', 'GRANT_MGR_EMAIL', 'GRANT_MGR_EMAIL_2','DATA_TYPE', 'ENV_DATA_TYPE',	'PGAT_PRIORITY', 'PGAT_GOAL_CATEGORY',	'PGAT_GOALS', 'PGAT_OTHER_DETAILS','PGAT_PRIMARY_ACTIVITY','PGAT_ACTIVITY_DELIVERABLE_GMS_CODE','PGAT_ACTIVITY_DELIVERABLE','PGAT_ACTIVITY_TYPE','PGAT_ACTIVITY_UNIT','PGAT_ACTIVITY_DESCRIPTION','PGAT_UOM', 'UNITS_COMPLETED', 'EDITOR_EMAIL', 'EDITOR_EMAIL_2', 'TAGS', 'FINANCIAL_YEAR_FUNDING_DESCRIPTION']
-
     // These identify the data contained in the row.
     static final LOCATION_DATA_TYPE = 'Location Data'
     static final REPORTING_THEME_DATA_SUB_TYPE = 'Priorities'
@@ -164,10 +162,14 @@ class GmsMapper {
         List headers = []
         projectMapping.each { String key, Map value ->
            // Deliberately omit fields without a description as they are largely deprecated.
-            if (value.description) {
+            String description = value.description
+            if (description) {
                 headers << key
                 mandatoryFlags << (value.mandatory ? 'Mandatory' : 'Optional')
-                descriptions << value.description
+                if (value.multipleColumnsSupported) {
+                    description += ". Additional values can be supplied by adding columns named ${key}_2, ${key}_3 etc"
+                }
+                descriptions << description
            }
         }
         csvWriter.writeNext(descriptions as String[])
@@ -185,7 +187,7 @@ class GmsMapper {
         mappingKeys.add(REPORTING_THEME_COLUMN)
 
         projectRows[0].keySet().each { key ->
-            if (key == 'index') {
+            if (!key?.trim() || key == 'index') {
                 return
             }
             if (!(key in mappingKeys)) {
@@ -193,9 +195,11 @@ class GmsMapper {
             }
         }
         mappingKeys.each { key ->
-
-            if (!(key in projectRows[0].keySet())) {
-                errors << "Missing column in spreadsheet ${key} - load may be incomplete without this"
+            Map mapping = mappings[key]
+            if (mappings && !(key in projectRows[0].keySet())) {
+                if (key && mapping.mandatory) {
+                    errors << "Missing column in spreadsheet ${key} - load may be incomplete without this"
+                }
             }
         }
         return errors
