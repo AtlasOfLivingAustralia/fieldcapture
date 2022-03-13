@@ -196,7 +196,7 @@ class GmsMapper {
         }
         mappingKeys.each { key ->
             Map mapping = mappings[key]
-            if (mappings && !(key in projectRows[0].keySet())) {
+            if (mapping && !(key in projectRows[0].keySet())) {
                 if (key && mapping.mandatory) {
                     errors << "Missing column in spreadsheet ${key} - load may be incomplete without this"
                 }
