@@ -221,8 +221,9 @@ class WebService {
             return error
         } catch (Exception e) {
             log.info "Exception class = ${e.getClass().name} - ${e.getMessage()}"
-            def error = [error: "Failed to get json from web service. ${e.getClass()} ${e.getMessage()} URL= ${url}.",
-                         statusCode: conn?.responseCode?:"",
+            def responseCode = conn?.responseCode?:""
+            def error = [error: "Status $responseCode returned from ${url}. Error: ${e.getMessage()}",
+                         statusCode: responseCode,
                          detail: conn?.errorStream?.text]
             log.error error.error
             return error
@@ -268,6 +269,7 @@ class WebService {
             result = [statusCode:conn?.responseCode, error:error]
         } catch (Exception e) {
             log.info "Exception class = ${e.getClass().name} - ${e.getMessage()}"
+            def responseCode = conn?.responseCode?:""
             def error = [error: "Failed to get json from web service. ${e.getClass()} ${e.getMessage()} URL= ${url}.",
                          statusCode: conn?.responseCode?:"",
                          detail: conn?.errorStream?.text]
@@ -329,8 +331,9 @@ class WebService {
             log.error(error as String, e)
             return error
         } catch (Exception e) {
-            def error = [error: "Failed calling web service. ${e.getMessage()} URL= ${url}.",
-                         statusCode: conn?.responseCode?:"",
+            def responseCode = conn?.responseCode?:""
+            def error = [error: "Status $responseCode returned from ${url}. Error: ${e.getMessage()}",
+                         statusCode: responseCode,
                          detail: conn?.errorStream?.text]
             log.error(error as String, e)
             return error
