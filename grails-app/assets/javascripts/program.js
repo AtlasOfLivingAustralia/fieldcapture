@@ -38,9 +38,8 @@ ProgramViewModel = function (props, options) {
             externalId: ko.observable(externalId.externalId)
         };
     }));
-    self.externalIdTypes = [
-        'WORK_ORDER', 'GRANT_OPPORTUNITY'
-    ];
+    self.externalIdTypes = ['GRANT_OPPORTUNITY'];
+    self.fundingType = ko.observable(props.fundingType);
 
     self.deleteProgram = function () {
         if (window.confirm("Delete this program?  Are you sure?")) {
@@ -62,7 +61,7 @@ ProgramViewModel = function (props, options) {
     self.transients = self.transients || {};
 
     self.toJS = function (includeDocuments) {
-        var ignore = self.ignore.concat(['projects', 'reports']);
+        var ignore = self.ignore.concat(['projects', 'reports', 'externalIdTypes']);
         var js = ko.mapping.toJS(self, {include: ['documents'], ignore: ignore});
         if (includeDocuments) {
             js.documents = ko.toJS(self.documents);
