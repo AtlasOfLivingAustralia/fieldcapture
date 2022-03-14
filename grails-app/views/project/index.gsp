@@ -185,7 +185,7 @@
     <g:render template="/shared/unsavedChanges" model="${[id: 'risksUnsavedChanges', unsavedData: 'Risks & Threats']}"/>
 
 </div>
-<g:if test="${user?.isEditor && projectContent.admin?.visible}">
+<g:if test="${projectContent.admin?.visible}">
     <asset:script>
         // Admin JS code only exposed to admin users
         $(function () {
@@ -204,7 +204,7 @@
                 }
             });
 
-        <g:if test="${user.isAdmin || user.isCaseManager}">
+        <g:if test="${user.isAdmin || user.isCaseManager || user.hasViewAccess}">
             populatePermissionsTable();
         </g:if>
         });

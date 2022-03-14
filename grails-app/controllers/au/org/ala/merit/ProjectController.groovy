@@ -163,7 +163,7 @@ class ProjectController {
         // For validation of project date changes.
         String minimumProjectEndDate = projectService.minimumProjectEndDate(project, config)
 
-        boolean adminTabVisible = user?.isEditor || user?.isAdmin || user?.isCaseManager
+        boolean adminTabVisible = user?.isEditor || user?.isAdmin || user?.isCaseManager || user?.hasViewAccess
         boolean showMeriPlanHistory = config.supportsMeriPlanHistory && userService.userIsSiteAdmin()
         boolean datasetsVisible = config.includesContent(ProgramConfig.ProjectContent.DATA_SETS) && userHasViewAccess
         def model = [overview       : [label: 'Overview', visible: true, default: true, type: 'tab', publicImages: imagesModel, displayOutcomes: false, blog: blog, hasNewsAndEvents: hasNewsAndEvents, hasProjectStories: hasProjectStories, canChangeProjectDates: canChangeProjectDates, outcomes:project.outcomes, objectives:config.program?.config?.objectives],
@@ -422,9 +422,9 @@ class ProjectController {
     def getMembersForProjectId() {
         String projectId = params.id
         def adminUserId = userService.getCurrentUserId()
-
-        if (projectId && adminUserId) {
-            if (projectService.isUserAdminForProject(adminUserId, projectId) || projectService.isUserCaseManagerForProject(adminUserId, projectId)) {
+        if (projectId) {
+            if (projectService.isUserAdminForProject(adminUserId, projectId) || projectService.isUserCaseManagerForProject(adminUserId, projectId)
+            || projectService.canUserViewProject(userService.getCurrentUserId(), projectId)) {
                 render projectService.getMembersForProjectId(projectId) as JSON
             } else {
                 render status: 403, text: 'Permission denied'

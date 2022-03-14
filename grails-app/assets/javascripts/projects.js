@@ -1094,9 +1094,12 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
 
     self.initialiseAdminTab = function() {
         $("#settings-validation").validationEngine();
-        ko.applyBindings(self.meriPlan, document.getElementById("edit-meri-plan"));
-        self.meriPlan.meriPlan().dirtyFlag.reset();
-        self.meriPlan.attachFloatingSave();
+        var meriPlanSection = document.getElementById("edit-meri-plan");
+        if (meriPlanSection) {
+            ko.applyBindings(self.meriPlan, meriPlanSection);
+            self.meriPlan.meriPlan().dirtyFlag.reset();
+            self.meriPlan.attachFloatingSave();
+        }
 
         // When the MERI plan is approved, the announcements move to their own section, otherwise they
         // are embedded in the MERI plan itself.
