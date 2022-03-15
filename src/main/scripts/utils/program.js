@@ -27,3 +27,26 @@ function setupProgramConfig(subprograms) {
         }
     });
 }
+
+function createOrFindProgram(name, parentId) {
+    var program = db.program.findOne({name:name});
+    if (!program) {
+        program = createProgram(name, parentId)
+    }
+    return program;
+}
+
+function createProgram(name, parentId) {
+    var now = ISODate();
+    var program = {
+        name:name,
+        programId: UUID.generate(),
+        dateCreated: now,
+        lastUpdated: now,
+        status:'active',
+        parent: parentId || null,
+    }
+    db.program.insert(program);
+
+    return db.program.findOne({programId:program.programId});
+}

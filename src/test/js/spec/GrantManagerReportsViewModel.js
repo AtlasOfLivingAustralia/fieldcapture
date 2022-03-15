@@ -50,13 +50,13 @@ describe("Tests for the GrantManagerReportsViewModel", function () {
     });
 
     it("checks if the meri plan is approved", function () {
-        var config = {project: {status:'Active', planStatus: 'approved' }, reportOwner: {startDate:'2021-06-29T14:00:00Z'}};
+        var config = {project: {status:'Active', planStatus: 'approved', reports:[]}, reportOwner: {startDate:'2021-06-29T14:00:00Z'}};
         var viewModel = new GrantManagerReportsViewModel(config);
-        expect(viewModel.isMeriPlanApproved()).toBe(true)
+        expect(viewModel.isMeriPlanApproved()).toBe(false)
     });
 
     it("checks if the meri plan is not approved", function () {
-        var config = {project: {status:'Active', planStatus: 'submitted' }, reportOwner: {startDate:'2021-06-29T14:00:00Z'}};
+        var config = {project: {status:'Active', planStatus: 'submitted', report:[]}, reportOwner: {startDate:'2021-06-29T14:00:00Z'}};
         var viewModel = new GrantManagerReportsViewModel(config);
         expect(viewModel.isMeriPlanApproved()).toBe(false)
     });

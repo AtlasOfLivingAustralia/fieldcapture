@@ -7,6 +7,8 @@ import org.grails.plugins.google.visualization.GoogleVisualization
  */
 class DashboardTagLib {
     static namespace = "fc"
+
+    private static final int PERCENT_OVER_LIMIT = 200
     /**
      * Expects a single attribute with name "score" containing the result from an aggregation.
      */
@@ -117,13 +119,21 @@ class DashboardTagLib {
     private void renderTarget(score, double target, attrs) {
         def result = score.result?.result ?: 0
         def percentComplete = result / target * 100
+
+        String progressBarClass = (percentComplete > PERCENT_OVER_LIMIT) ? "bar progress-bar bg-danger" : "bar progress-bar"
+        String badgeClass = (percentComplete > PERCENT_OVER_LIMIT) ? "badge badge-danger" : ""
+
+        out << "<strong class='helpText'>${score.label}${helpText(score, attrs)}</strong>"
+        if (percentComplete > PERCENT_OVER_LIMIT) {
+            out << " <span class='${badgeClass}'> Target overdelivered</span>"
+        }
+
         percentComplete = Math.min(100, percentComplete)
         percentComplete = Math.max(0, percentComplete)
 
         out << """
-            <strong class="helpText">${score.label}${helpText(score, attrs)}</strong>
             <div class="progress progress-info active " style="position:relative">
-                <div class="bar progress-bar" style="width: ${percentComplete}%;"></div>
+                <div class="${progressBarClass}" style="width: ${percentComplete}%;"></div>
                 <span class="pull-right progress-label ${percentComplete >= 99 ? 'progress-100':''}" style="position:absolute; top:0; right:0;"> ${g.formatNumber(type:'number',number:result, maxFractionDigits: 2, groupingUsed:true)}/${score.target}</span>
             </div>"""
     }
