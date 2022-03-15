@@ -60,13 +60,12 @@
         </div>
     </div>
 
-    <div class="form-group row required">
+    <div class="form-group row">
         <label class="col-form-label col-sm-3" for="fundingType">Funding type: <fc:iconHelp><g:message
                 code="program.fundingType.help"/></fc:iconHelp></label>
 
         <div class="col-sm-9">
             <input type="text" id="fundingType" class="form-control" data-bind="value:fundingType"
-                   data-validation-engine="validate[required]"
                    placeholder="${g.message(code: 'program.fundingType.placeholder')}">
         </div>
     </div>
