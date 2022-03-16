@@ -86,7 +86,8 @@ class GmsMapper {
             ORIGIN_SYSTEM:[name:'origin', type:'string', description:'The owning system for this project (e.g. Business Grants Hub)', default:'merit'],
             ELECTION_COMMITMENT_YEAR:[name:'electionCommitmentYear', type:'string', description: 'If an election commitment, the year of the commitment'],
             PORTFOLIO:[name:'portfolio', type:'string', description: 'Agriculture / Environment / Both'],
-            GRANT_OPPORTUNITY_ID:[name:'externalIds', type:'externalId', multipleColumnsSupported: true, idType:'GRANT_OPPORTUNITY', description:'If different to the grant opportunity id specified in the program']
+            GRANT_OPPORTUNITY_ID:[name:'externalIds', type:'externalId', multipleColumnsSupported: true, idType:'GRANT_OPPORTUNITY', description:'If different to the grant opportunity id specified in the program'],
+            MANAGING_AGENCY:[name:'manager', type:'string', description:'The agency managing the delivery of this project']
     ]
 
     def geographicInfoMapping = [
@@ -179,18 +180,20 @@ class GmsMapper {
 
     def validateHeaders(projectRows) {
         def errors = []
-        def mappings = projectMapping + siteMapping + activityMapping + outputTargetColumnMapping + riskMapping
+        def mappings = projectMapping + siteMapping + activityMapping + outputTargetColumnMapping + riskMapping + geographicInfoMapping
         def mappingKeys = new HashSet(mappings.keySet())
         mappingKeys.add(GRANT_ID_COLUMN)
         mappingKeys.add(DATA_TYPE_COLUMN)
         mappingKeys.add(DATA_SUB_TYPE_COLUMN)
         mappingKeys.add(REPORTING_THEME_COLUMN)
+        mappingKeys.add(FINANCIAL_YEAR_FUNDING_PREFIX)
+        mappingKeys.add("FINANCIAL_YEAR_FUNDING_DESCRIPTION")
 
         projectRows[0].keySet().each { key ->
             if (!key?.trim() || key == 'index') {
                 return
             }
-            if (!(key in mappingKeys)) {
+            if (!(key in mappingKeys) && !(mappingKeys.find{key.startsWith(it)})) {
                 errors << "Unused column header ${key}, please check it is not named incorrectly"
             }
         }
@@ -231,6 +234,7 @@ class GmsMapper {
         String programId = programs[programName]
         if (programId) {
             project.remove('associatedProgram')
+            project.remove('associatedSubProgram')
             project.programId = programId
         }
         else {

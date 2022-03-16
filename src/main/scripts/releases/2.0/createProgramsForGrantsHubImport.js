@@ -1,4 +1,4 @@
-load("uuid.js");
+load("../../utils/uuid.js");
 var config = {
     "meriPlanContents": [
         {
@@ -49,38 +49,87 @@ function createProgram(name, parentId) {
     return db.program.findOne({programId:program.programId});
 }
 
-function updateProgram(program) {
+function updateProgram(program, grantOpportunityId, fundingType) {
     var now = ISODate();
     program.lastUpdated = now;
     program.config = config;
+    if (grantOpportunityId) {
+        program.externalIds = [{idType:"GRANT_OPPORTUNITY", externalId:grantOpportunityId}];
+    }
+    program.fundingType = fundingType;
+
     db.program.save(program);
 }
 
+function updateSubPrograms(parentProgram, subprograms) {
+
+    var subprogram;
+    for (var i=0; i<subprograms.length; i++) {
+        subprogram = createOrFindProgram(subprograms[i].name, parentProgram._id);
+        updateProgram(subprogram, subprograms[i].grantOpportunityId, subprograms[i].fundingType);
+    }
+}
+
+// Communities Environment Program & sub-programs
 var programName = 'Communities Environment Program';
 var parent = createOrFindProgram(programName);
-updateProgram(parent);
+var subprograms = [
+    {name: "CEP - Round 1 - 2019-20 - Initial Projects", fundingType:"Grant", grantOpportunityId:"GO2828"},
+    {name: "CEP - Round 1 - 2019-20 - Replacement Projects", fundingType:"Grant", grantOpportunityId:"GO2828"}];
+updateSubPrograms(parent, subprograms);
 
+// Improving your local parks and environment and sub-programs
 programName = 'Improving Your Local Parks and Environment';
 parent = createOrFindProgram(programName);
+subprograms = [
+    {name:'IYLPE - Grants - Round 1 - 2016 Election Commitments', fundingType:'Grant'},
+    {name:'IYLPE - Grants - Round 1 - Ad Hoc', fundingType:'Grant'}
+];
+updateSubPrograms(parent, subprograms);
 
-programName = 'Improving Your Local Parks and Environment - Grants';
-var program = createOrFindProgram(programName, parent._id);
-updateProgram(program);
-
+// ERF sub programs
 programName = 'Environmental Restoration Fund';
 parent = createOrFindProgram(programName);
+subprograms = [
+    {name:'ERF - Grants - Round 1 - Feral Cat Eradication', fundingType:"Grant", grantOpportunityId:"GO4305"},
+    {name:'ERF - Grants - Round 1 - 2019 Election Commitments', fundingType:"Grant", grantOpportunityId:"GO3097"},
+    {name:'ERF - Grants - Round 1 - 2019 Election Commitments - Koalas', fundingType:"Grant", grantOpportunityId:"GO3097"},
+    {name:'ERF - Grants - Round 1 - Ad Hoc', fundingType:"Grant", grantOpportunityId:"GO3097"},
+    {name:'ERF - Specific Purpose Payments - 2019-20 - 2019 Election Commitments', fundingType:"SPP", grantOpportunityId:null},
+    {name:'ERF - Grants - Safe Havens - 2019 Election Commitments', fundingType:"Grant", grantOpportunityId:"GO4305"}
+];
+updateSubPrograms(parent, subprograms);
 
-programName = 'Environmental Restoration Fund - Grants';
-program = createOrFindProgram(programName);
-updateProgram(program, parent.programId);
-
-programName = 'Environmental Restoration Fund - Specific Purpose Payments';
-program = createOrFindProgram(programName);
-updateProgram(program, parent.programId);
-
+// NLP subprograms
 programName = 'National Landcare Programme';
 parent = createOrFindProgram(programName);
+subprograms = [
+    {name:'NLP - Environment Small Grants - Round 1 - 2018-19', fundingType:"Grant", grantOpportunityId:"GO1008"},
+    {name:'Emerging Priorities', fundingType:null, grantOpportunityId:null},
+    {name:'Regional Land Partnerships - Business Grants Hub', fundingType:null, grantOpportunityId: null },
+    {name:'Indigenous Protected Areas', fundingType:"Grant"},
+    {name:'NLP2 Bush Blitz 3', fundingType:"Grant"}
+];
+updateSubPrograms(parent, subprograms);
 
-programName = 'Environment Small Grants';
+// Bushfires
+programName = 'Bushfire Recovery for Species and Landscapes Program';
+parent = createOrFindProgram(programName);
+subprograms = [
+    {name:'Landcare grants', fundingType:"Procurement", grantOpportunityId: null},
+    {name:'Trust for Nature', fundingType:"Procurement", grantOpportunityId: null},
+    {name:'Indigenous Fire and Land Management', fundingType:'Grant', grantOpportunityId: null},
+    {name:'Australian seedbank partnership', fundingType:'Grant', grantOpportunityId: null},
+    {name:'CSIRO - Gippsland Lakes', fundingType:'Procurement', grantOpportunityId: null},
+    {name:'Pest Species Coordination', fundingType:'Grant', grantOpportunityId: null},
+    {name:'Community Grants', fundingType:'Grant', grantOpportunityId: null},
+];
+updateSubPrograms(parent, subprograms);
+
+
+programName = 'Bushfire Wildlife and Habitat Recovery';
 program = createOrFindProgram(programName);
-updateProgram(program, parent.programId);
+subprograms = [
+    {name:'Pest Mitigation and Habitat Protection - Business Grants Hub', fundingType:"Grant", grantOpportunityId: null},
+];
+updateSubPrograms(parent, subprograms);
