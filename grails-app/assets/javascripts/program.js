@@ -38,7 +38,7 @@ ProgramViewModel = function (props, options) {
             externalId: ko.observable(externalId.externalId)
         };
     }));
-    self.externalIdTypes = ['GRANT_OPPORTUNITY'];
+    self.externalIdTypes = ['GRANT_AWARD'];
     self.fundingType = ko.observable(props.fundingType);
 
     self.deleteProgram = function () {

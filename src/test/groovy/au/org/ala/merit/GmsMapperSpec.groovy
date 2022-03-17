@@ -390,14 +390,14 @@ class GmsMapperSpec extends Specification{
     def "The externalId type can be mapped"() {
         when:
         Map project = [APP_ID:'g1', PROGRAM_NM:"Green Army", ORG_TRADING_NAME:'Test org 1', ABN:'12345678901', FUNDING_TYPE:"RLP", START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
-        Map idData = [ORDER_NO:'o1', ORDER_NO_2:'o2', WORK_ORDER_ID:'w1', GRANT_OPPORTUNITY_ID:'g1', GRANT_OPPORTUNITY_ID_2:'g2']
+        Map idData = [ORDER_NO:'o1', ORDER_NO_2:'o2', WORK_ORDER_ID:'w1', GRANT_AWARD_ID:'g1', GRANT_AWARD_ID_2:'g2']
         project += idData
         Map result = gmsMapper.mapProject([project])
 
         then:
         result.project.externalIds == [[idType:'INTERNAL_ORDER_NUMBER', externalId: 'o1'], [idType:'INTERNAL_ORDER_NUMBER', externalId: 'o2'],
                                        [idType:'WORK_ORDER', externalId: 'w1'],
-                                       [idType:'GRANT_OPPORTUNITY', externalId: 'g1'], [idType:'GRANT_OPPORTUNITY', externalId: 'g2']]
+                                       [idType:'GRANT_AWARD', externalId: 'g1'], [idType:'GRANT_AWARD', externalId: 'g2']]
         !result.errors
     }
 }

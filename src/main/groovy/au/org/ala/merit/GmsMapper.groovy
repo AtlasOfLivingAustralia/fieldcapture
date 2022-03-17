@@ -86,7 +86,7 @@ class GmsMapper {
             ORIGIN_SYSTEM:[name:'origin', type:'string', description:'The owning system for this project (e.g. Business Grants Hub)', default:'merit'],
             ELECTION_COMMITMENT_YEAR:[name:'electionCommitmentYear', type:'string', description: 'If an election commitment, the year of the commitment'],
             PORTFOLIO:[name:'portfolio', type:'string', description: 'Agriculture / Environment / Both'],
-            GRANT_OPPORTUNITY_ID:[name:'externalIds', type:'externalId', multipleColumnsSupported: true, idType:'GRANT_OPPORTUNITY', description:'If different to the grant opportunity id specified in the program'],
+            GRANT_AWARD_ID:[name:'externalIds', type:'externalId', multipleColumnsSupported: true, idType:'GRANT_AWARD', description:'If different to the grant opportunity id specified in the program'],
             MANAGING_AGENCY:[name:'manager', type:'string', description:'The agency managing the delivery of this project']
     ]
 
