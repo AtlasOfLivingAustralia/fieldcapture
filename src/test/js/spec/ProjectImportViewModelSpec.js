@@ -35,12 +35,13 @@ describe("ProjectImportViewModel Spec", function (){
         expect(viewModel.progressDetail()).toEqual([]);
     });
 
-    it('dfljkaf;ladjs', function() {
+    it('It should adjust the progress indicators as the import progresses and completes', function() {
         spyOn($, 'ajax').and.callFake(function(url, config) {
             config.success({projects:[]});
             expect(viewModel.finished()).toBeTrue();
             expect(viewModel.progressDetail()).toEqual([]);
         });
+        spyOn($, 'get').and.returnValue($.Deferred());
         viewModel.doImport();
         expect(viewModel.importing()).toBeTrue();
         expect(viewModel.progressSummary()).toBeTruthy();

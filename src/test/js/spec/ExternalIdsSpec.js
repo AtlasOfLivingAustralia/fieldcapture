@@ -16,6 +16,8 @@ describe("External-ids component unit tests", function () {
 
     var mockElement = null;
     var viewModel = null;
+
+
     beforeAll(function() {
         jasmine.clock().install();
 
@@ -24,8 +26,7 @@ describe("External-ids component unit tests", function () {
             validationFunction: function() {
                 return null;
             },
-            externalIdTypes:[{label:'Type 1', value:'TYPE_1'},
-                {label:'Type 2', value:'TYPE_2'}, {label:'Type 3', value:"TYPE_3"}],
+            externalIdTypes:['TYPE_1', 'TYPE_2', 'TYPE_3'],
         };
 
         mockElement = document.createElement('div');
@@ -37,6 +38,7 @@ describe("External-ids component unit tests", function () {
         mockElement.appendChild(externalIds);
         ko.applyBindings(viewModel);
     });
+
 
     afterAll(function() {
         jasmine.clock().uninstall();
@@ -69,5 +71,19 @@ describe("External-ids component unit tests", function () {
         expect(externalIds.length).toEqual(0);
         expect(viewModel.externalIds().length).toEqual(0);
 
-    })
+    });
+
+    it("Should allow any existing id types to be usable, even if they aren't in the supplied list of types", function (done) {
+        var vmParams = {
+            externalIds:ko.observableArray([{idType:"TYPE_1", externalId:"External id 1"}, {idType:"TYPE_2", externalId: "External id 2"}]),
+            externalIdTypes:['TYPE_2', "TYPE_3"]
+        };
+        ko.components.get('external-ids', function(component, config) {
+
+            var viewModel = component.createViewModel(vmParams);
+            expect(viewModel.externalIdTypes).toEqual([{ label: 'TYPE_1', value: 'TYPE_1' }, { label: 'TYPE_2', value: 'TYPE_2' }, { label: 'TYPE_3', value: 'TYPE_3' }]);
+
+            done();
+        })
+    });
 });

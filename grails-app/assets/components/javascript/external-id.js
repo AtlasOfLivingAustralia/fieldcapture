@@ -29,10 +29,20 @@ ko.components.register('external-ids', {
         var self = this;
 
         self.externalIds = params.externalIds;
-        self.externalIdTypes = _.map(params.externalIdTypes, function(idType) {
+
+        // Combine the list of supplied external id types and any existing id types to make the selection list.
+        // This is to support Green Army projects which have a work order id, but we don't want to allow
+        // users to be able to supply work order ids for new projects.
+        var existingExternalIdTypes = _.map(params.externalIds(), function(externalId) {
+            return externalId.idType;
+        });
+        var allExternalIdTypes = _.union(existingExternalIdTypes, params.externalIdTypes);
+
+        self.externalIdTypes = _.map(allExternalIdTypes, function(idType) {
             var label = _.isFunction($i18n) ? $i18n('label.externalId.'+idType, idType) : idType;
             return {label:label, value:idType};
         });
+
         self.validationNamespace = params.validationNamespace;
 
         self.idsForType = function (idType) {
