@@ -75,7 +75,9 @@ describe("External-ids component unit tests", function () {
 
     it("Should allow any existing id types to be usable, even if they aren't in the supplied list of types", function (done) {
         var vmParams = {
-            externalIds:ko.observableArray([{idType:"TYPE_1", externalId:"External id 1"}, {idType:"TYPE_2", externalId: "External id 2"}]),
+            externalIds:ko.observableArray([
+                {idType:ko.observable("TYPE_1"), externalId:ko.observable("External id 1")},
+                {idType:ko.observable("TYPE_2"), externalId: ko.observable("External id 2")}]),
             externalIdTypes:['TYPE_2', "TYPE_3"]
         };
         ko.components.get('external-ids', function(component, config) {

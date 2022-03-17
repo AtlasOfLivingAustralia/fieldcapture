@@ -34,7 +34,7 @@ ko.components.register('external-ids', {
         // This is to support Green Army projects which have a work order id, but we don't want to allow
         // users to be able to supply work order ids for new projects.
         var existingExternalIdTypes = _.map(params.externalIds(), function(externalId) {
-            return externalId.idType;
+            return externalId.idType();
         });
         var allExternalIdTypes = _.union(existingExternalIdTypes, params.externalIdTypes);
 
