@@ -12,8 +12,9 @@
                 <textarea rows="5" class="w-100 form-control form-control-sm" data-bind="textInput:reason"></textarea>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-primary" data-bind="click:submit, text:buttonText, enable:reason" data-dismiss="modal" aria-hidden="true"></button>
-                <button class="btn btn-sm btn-danger" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                <button class="btn btn-sm btn-primary" data-bind="click:submit, text:buttonTextYes, enable:reason" data-dismiss="modal" aria-hidden="true"></button>
+                <button class="btn btn-sm btn-danger" data-bind="visible:!buttonTextNo" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                <button class="btn btn-sm btn-danger" data-bind="visible:buttonTextNo, text:buttonTextNo" data-dismiss="modal" aria-hidden="true"></button>
             </div>
         </div>
     </div>

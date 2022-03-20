@@ -32,7 +32,7 @@
 <g:if test="${fc.userIsAlaOrFcAdmin()}">
     <div class="mt-2" data-bind="visible:!hasData()">
         <p>
-            <button type="button" data-bind="visible:outcomeCategory, click:cancelReport" class="btn btn-sm btn-danger"><i class="fa fa-remove icon-white"></i> Cancel report</button>
+            <button type="button" data-bind="visible:outcomeCategory, click:cancelReport" class="btn btn-sm btn-danger"><i class="fa fa-remove icon-white"></i> Not required</button>
         </p>
     </div>
 </g:if>
@@ -87,8 +87,8 @@
 </g:if>
 </script>
 <script id="cancelled" type="text/html">
-    <p><span class="badge p-1 text-white badge-danger">Report cancelled</span></p>
-    <span data-bind="text:cancelledComment"></span>
+    <p><span class="badge p-1 text-white badge-danger">Report not required</span></p>
+    <span class="text-break" data-bind="text:cancelledComment"></span>
 </script>
 
 <script id="reportTable" type="text/html">

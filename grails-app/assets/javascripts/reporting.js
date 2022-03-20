@@ -194,11 +194,12 @@ var ReportViewModel = function(report, config) {
             reason: self.reason,
             rejectionCategories: ['Minor', 'Moderate', 'Major'],
             rejectionCategory: self.category,
-            explanationText:'',
-            title:'Cancel report',
-            buttonText: 'Return',
+            explanationText:'Do you wish to set this report as “not required”? Please enter the reason the report is not required.',
+            title:'Report not required',
+            buttonTextYes: 'Yes',
+            buttonTextNo: 'No',
             submit:function() {
-                self.changeReportStatus(config.cancelReportUrl, 'return', 'Returning report...', 'Report returned.');
+                self.changeReportStatus(config.cancelReportUrl, 'return', 'Not requiring report...', 'Report not required.');
             }
         };
         ko.applyBindings(reasonViewModel, $reasonModal[0]);
