@@ -180,7 +180,7 @@ class EditableMeriPlan extends Module {
 
         approvePlanDialog(required:false) { $('#meri-plan-approval-modal').module(MeriPlanApproveDialog) }
 
-        internalOrderNumber(required:false) { $('#internalOrderId') }
+        externalIds {$('.externalIds').module(ExternalIds)}
         projectStartDate(required:false) { $('#changeProjectStartDate') }
         submissionModal(required:false) { $("#meriSubmissionDeclaration").module(SubmissionModal) }
     }

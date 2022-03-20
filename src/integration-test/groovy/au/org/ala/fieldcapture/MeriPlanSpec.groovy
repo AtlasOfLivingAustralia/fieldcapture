@@ -320,15 +320,19 @@ class MeriPlanSpec extends StubbedCasSpec {
         when:
         openAdminTab()
         admin.openProjectSettings()
-        admin.projectSettings.internalOrderId = '12345'
+        admin.projectSettings.externalIds.addExternalId()
+        admin.projectSettings.externalIds[0].externalId = '12345'
+        admin.projectSettings.externalIds[0].idType = 'INTERNAL_ORDER_NUMBER'
+
         admin.projectSettings.saveChangesButton.click()
 
         then:
         waitFor{hasBeenReloaded()}
         at ProjectIndex
 
+        Thread.sleep(10000)
         !admin.projectSettings.internalOrderIdErrorDisplayed()
-        admin.projectSettings.internalOrderId == '12345'
+        admin.projectSettings.externalIds.externalIds[0].externalId == '12345'
 
         when:
         logout(browser)
@@ -388,7 +392,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         waitFor { admin.projectSettingsTab.click() }
 
         when:
-        admin.projectSettings.internalOrderId = '12345'
+        admin.projectSettings.externalIds.externalIds[0].externalId = '12345'
         admin.projectSettings.saveChangesButton.click()
 
         then:
@@ -396,7 +400,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         at ProjectIndex
 
         !admin.projectSettings.internalOrderIdErrorDisplayed()
-        admin.projectSettings.internalOrderId == '12345'
+        admin.projectSettings.externalIds.externalIds[0].externalId == '12345'
 
         when:
         loginAsGrantManager(browser)
@@ -516,12 +520,15 @@ class MeriPlanSpec extends StubbedCasSpec {
 
         then:
         meriplan.approveButton.@disabled
-        meriplan.internalOrderNumber.displayed
+        meriplan.externalIds.displayed
         meriplan.projectStartDate.displayed
 
         when:
         meriplan.projectStartDate = "01/07/2018"
-        meriplan.internalOrderNumber = "12345"
+        meriplan.externalIds.addExternalId()
+        meriplan.externalIds.externalIds[0].idType = "INTERNAL_ORDER_NUMBER"
+        meriplan.externalIds.externalIds[0].externalId = "12345"
+        admin.meriPlanTab.click() // Ensure focus moves so the button binding triggers
 
         then:
         waitFor { !meriplan.approveButton.@disabled }

@@ -12,6 +12,7 @@
             programViewUrl: "${createLink(action:'index')}",
             documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
             noImageUrl: "${assetPath(src:'nophoto.png')}",
+            i18nURL: "${g.createLink(controller: 'home', action: 'i18n')}",
             returnToUrl: "${params.returnTo ?: createLink(controller: 'program',action:'index', id:program.programId)}"
         };
     </script>

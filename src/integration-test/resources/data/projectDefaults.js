@@ -38,8 +38,9 @@ var projectDefaults = {
             "status": "active",
             "tags": [],
             "uNRegions": [],
-            "workOrderId": "1234565",
-            "internalOrderId": "1234565"
+            "externalIds": [
+                {"idType":"INTERNAL_ORDER_NUMBER", "externalId":"1234565"},
+                {"idType":"WORK_ORDER", "externalId":"1234565"}]
 
         }
     }
@@ -96,9 +97,7 @@ var test =
         },
         "serviceProviderName" : "",
         "status" : "active",
-        "timeline" : [],
-        "workOrderId" : "",
-        "internalOrderId": ""
+        "timeline" : []
     }
 
 

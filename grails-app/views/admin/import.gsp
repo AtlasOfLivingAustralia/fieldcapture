@@ -27,17 +27,28 @@
     Click <strong><a href="${createLink(action:'meritImportCSVTemplate')}">HERE</a></strong> to download a template to use for MERIT project imports
     </p>
 
-    <div class="row">
-        <div class="col-sm-4">
+
+    <form>
+        <p>
             Select the (cp1252 encoded) CSV file containing the project data.  The file will be uploaded automatically.
+        </p>
+        <div data-bind="if:update">
+        <p class="alert alert-warning" >
+            Please note this function will replace all project information for each project. <br/>
+            It is designed for use with grants hub data and to fix newly loaded projects.  Please test changes
+            to existing MERIT projects in the staging system before running the update in production.
+        </p>
         </div>
-        <div class="col-sm-3">
-            <button class="btn btn-sm fileinput-button" style="margin-left:5px">
-                <input id="fileUpload" class="form-control form-control-sm" type="file" accept="text/csv" data-bind="fileUploadNoImage:uploadOptions, enable:!finished() && !finishedPreview()">
+        <div class="form-check">
+            <input id="update" class="form-check-input" type="checkbox" name="update" data-bind="enable:!finished() && !finishedPreview(), checked:update"><label class="form-check-label" for="update">Check here if this upload will replace existing projects</label>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-sm btn-primary fileinput-button" data-bind="enable:!finished() && !finishedPreview()">
+                <input id="fileUpload" class="form-control form-control-sm" type="file" accept="text/csv" data-bind="fileUploadNoImage:uploadOptions">
                 Select file
             </button>
         </div>
-    </div>
+    </form>
 
 
 <div class="results" data-bind="visible:progressSummary()">
@@ -84,121 +95,10 @@
 
 <asset:javascript src="common-bs4.js"/>
 <asset:javascript src="attach-document-no-ui.js"/>
+<asset:javascript src="admin.js"/>
 
 <script>
-
-    var SiteUploadViewModel = function () {
-        var self = this;
-
-        self.filename = ko.observable();
-        self.progressSummary = ko.observable();
-        self.progressDetail = ko.observableArray([]);
-        self.finishedPreview = ko.observable(false);
-        self.finished = ko.observable(false);
-        self.preview = ko.observable(true);
-        self.importing = ko.observable(false);
-
-
-        self.uploadOptions = {
-            url: fcConfig.importUrl,
-            done: function (e, data) {
-
-                if (data.result) {
-                    var result;
-                    // Because of the iframe upload, the result will be returned as a query object wrapping a document containing
-                    // the text in a <pre></pre> block.  If the fileupload-ui script is included, the data will be extracted
-                    // before this callback is invoked, thus the check.*
-                    if (data.result instanceof jQuery) {
-                        var resultText = $('pre', data.result).text();
-                        result = JSON.parse(resultText);
-                    }
-                    else {
-                        result = data.result;
-                    }
-                    self.progressDetail(result.projects);
-                    self.progressSummary('Processed ' + result.projects.length + ' projects');
-                    if (self.preview()) {
-                        self.preview(false);
-                        self.finishedPreview(true);
-                        self.finished(false);
-
-                    }
-                    else {
-                        self.finished(true);
-                    }
-
-                }
-                else {
-                    var message = 'Please contact MERIT support and attach your spreadsheet to help us resolve the problem';
-                    alert(message);
-                }
-
-            },
-            fail: function (e, data) {
-                var message = 'Please contact MERIT support and attach your spreadsheet to help us resolve the problem';
-                alert(message);
-
-            },
-
-            uploadTemplateId: "template-upload",
-            downloadTemplateId: "template-download",
-            formData: {preview: 'true', newFormat: 'true'},
-            paramName: 'projectData'
-
-        }
-
-        self.showProgress = function () {
-            var stop = false;
-            $.get(fcConfig.importProgressUrl, function (progress) {
-
-                if (self.finished()) {
-                    stop = true;
-                }
-                else {
-                    self.progressDetail(progress.projects);
-                    if (!progress.finished) {
-                        self.progressSummary(progress.projects.length + ' projects processed...');
-                    }
-                }
-            }).always(function() {
-                if (!stop) {
-                    setTimeout(self.showProgress, 2000);
-                }
-            });
-
-        };
-
-        self.doImport = function () {
-            self.importing(true);
-            self.progressSummary('Importing....');
-            self.progressDetail([]);
-
-            $.ajax(fcConfig.importUrl + '?newFormat=true', {
-
-                dataType: 'json',
-                success: function (result) {
-
-                    self.finished(true);
-                    self.finishedPreview(false);
-                    if (result.error) {
-                        alert(result.error);
-                        self.progressSummary(result.error);
-                        self.progressDetail(result.projects?result.projects:[])
-                    }
-                    else {
-                        self.progressDetail(result.projects);
-                        self.progressSummary('Import complete. ('+result.projects.length+' projects)');
-                    }
-                },
-                error: function () {
-                    var message = 'Please contact MERIT support and attach your spreadsheet to help us resolve the problem';
-                    alert(message);
-                }
-            });
-            setTimeout(self.showProgress, 2000);
-        }
-    };
-    ko.applyBindings(new SiteUploadViewModel());
+    ko.applyBindings(new ProjectImportViewModel(fcConfig));
 </script>
 </body>
 </html>

@@ -437,12 +437,15 @@ class RlpReportingSpec extends StubbedCasSpec {
 
         then:
         meriplan.approveButton.@disabled
-        meriplan.internalOrderNumber.displayed
+        meriplan.externalIds.displayed
         meriplan.projectStartDate.displayed
 
         when:
         meriplan.projectStartDate = "01/06/2018"
-        meriplan.internalOrderNumber = "56789"
+        meriplan.externalIds.addExternalId()
+        meriplan.externalIds.externalIds[0].idType = "INTERNAL_ORDER_NUMBER"
+        meriplan.externalIds.externalIds[0].externalId = "56789"
+        admin.meriPlanTab.click() // Ensure focus moves so the button binding triggers
 
         then:
         waitFor { !meriplan.approveButton.@disabled }

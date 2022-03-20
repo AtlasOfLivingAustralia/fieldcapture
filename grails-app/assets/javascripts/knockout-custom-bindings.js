@@ -376,3 +376,19 @@ ko.bindingHandlers['addValueToOptionsIfMissing'] = {
   }
 
 }
+
+ko.bindingHandlers['jqueryValidationEngine'] = {
+  init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
+
+    var config = valueAccessor();
+    var namespace = config.namespace;
+    var validationFunction = config.validationFunction;
+
+    if (!window.globalValidations) {
+      window.globalValidations = {};
+    }
+    window.globalValidations[namespace] = validationFunction;
+
+    element.setAttribute('data-validation-engine', 'validate[funcCallRequired[globalValidations.'+namespace+']]')
+  }
+}

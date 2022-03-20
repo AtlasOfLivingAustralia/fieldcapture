@@ -1,10 +1,3 @@
-<g:if test="${!disableProjectCreation}">
-    <div class="row ">
-        <a href="${createLink(controller: 'project', action: 'create', params: [organisationId: organisation.organisationId])}"
-           class="btn btn-small pull-right">
-            <i class="fa fa-file"></i>&nbsp;<g:message code="project.create.crumb"/></a>
-    </div>
-</g:if>
 <g:if test="${organisation.projects}">
     <div class="row">
         <div class="col-sm-12">
@@ -81,9 +74,7 @@ $(function() {
 
     var projectListHeader =  [
         {title:'Grant ID', width:'10%', render:projectUrlRenderer, data:'grantId'},
-        <g:if test="${content.reporting?.visible}">{title:'Work Order', width:'10%', data:'workOrderId', defaultContent:''},</g:if>
         {title:'Name', width:'25%', render: nameRender, data:'name'},
-        <g:if test="${content.reporting?.visible}">{title:'Agreement Date', width:'10%', render:agreementDateRenderer, data:'serviceProviderAgreementDate'},</g:if>
         {title:'Contracted Start Date', width:'8%', render:dateRenderer, data:'startDate'},
         {title:'Contracted Project Length (weeks)', width:'4%', data:'duration', defaultContent:''},
         {title:'From Date', width:'8%', render:dateRenderer, data:'plannedStartDate'},

@@ -39,6 +39,11 @@
         </g:each>
     </ul>
 
+    <strong>Electorate Coord</strong><br/>
+    <ul class="unstyled">
+        <li><label class="checkbox"><input type="checkbox" name="tabs" value="Electorate Coord" data-validation-engine="validate[minCheckbox[1]]">Electorate Coord</label></li>
+    </ul>
+
     <strong>Activity Data</strong><br/>
     <ul class="unstyled">
         <li><label class="checkbox"><input type="checkbox" name="tabs" value="Activity Summary">Activity Summary</label></li>
