@@ -527,4 +527,31 @@ class ReportGeneratorSpec extends Specification {
         '2020-02-10T13:00:00Z' |'2022-02-24T13:00:00Z' | '2021-09-30T14:00:00Z' | 7
     }
 
+    def "Will not generate a single report when there's an existing report with status pending approval/submitted"() {
+        setup:
+        def existingReport = new ArrayList()
+        ReportConfig config = new ReportConfig(
+                reportType: "Single",
+                firstReportingPeriodEnd: "2023-06-30T14:00:00Z",
+                reportNameFormat: "Outcomes Report 1",
+                reportDescriptionFormat: "Outcomes report 1 for %4\$s",
+                multiple: false,
+                "description": "Before beginning Outcomes Report 1, please go to the Data set summary tab and complete a form for each data set collected for this project. Help with completing this form can be found in Section 10 of the [RLP MERIT User Guide](http://www.nrm.gov.au/my-project/monitoring-and-reporting-plan/merit)",
+                "reportingPeriodInMonths": 36,
+                category: "Outcomes Report 1",
+                reportsAlignedToCalendar: false,
+                activityType:"RLP Short term project outcomes")
+        String periodStart = '2020-01-16T13:00:00Z'
+        String periodEnd = '2022-06-29T14:00:00Z'
+        ReportOwner owner = new ReportOwner(id:[managementUnitId:'mu1'], name:"MU 1", periodStart:periodStart, periodEnd:periodEnd)
+        existingReport << [publicationStatus:'pendingApproval']
+
+        ReportGenerator reportGenerator = new ReportGenerator()
+
+        when:
+        List reports = reportGenerator.generateReports(config, owner, 0, null, existingReport)
+
+        then:
+        reports == []
+    }
 }

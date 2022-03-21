@@ -52,7 +52,7 @@ class ReportService {
         index++ // Start at the report after the submitted/approved one (or index 0 if none was found)
 
         int sequenceNo = index + 1
-        List reports = new ReportGenerator().generateReports(reportConfig, reportOwner, sequenceNo, latestApprovedReportPeriodEnd)
+        List reports = new ReportGenerator().generateReports(reportConfig, reportOwner, sequenceNo, latestApprovedReportPeriodEnd, existingReports)
 
         for (Map report: reports) {
             // Update or create new reports
