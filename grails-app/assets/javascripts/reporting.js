@@ -196,7 +196,7 @@ var ReportViewModel = function(report, config) {
             rejectionCategory: self.category,
             explanationText:'Do you wish to set this report as “not required”? Please enter the reason the report is not required.',
             title:'Report not required',
-            buttonTextYes: 'Yes',
+            buttonTextYes: 'Yes (exempt by PPO)',
             buttonTextNo: 'No',
             submit:function() {
                 self.changeReportStatus(config.cancelReportUrl, 'return', 'Not requiring report...', 'Report not required.');

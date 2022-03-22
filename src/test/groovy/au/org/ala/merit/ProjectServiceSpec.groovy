@@ -474,7 +474,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         result.resp.error != null
     }
 
-    def "a project should only be marked as completed when the final stage report is approved"(String reportId, boolean shouldComplete) {
+    def "a project should only be marked as completed when the final stage report is approved/cancelled"(String reportId, boolean shouldComplete) {
         setup:
         def projectId = 'project1'
         def reason = null
@@ -482,7 +482,8 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         def stageReportDetails = [activityIds:activityIds, reportId:reportId, stage:'Stage 2', reason:reason]
         reportService.getReportsForProject(projectId) >>[
                 [reportId:'r1', publicationStatus:ReportService.REPORT_APPROVED, name:'Stage 1', fromDate: '2015-07-01T00:00Z', toDate: '2016-01-01T00:00Z'],
-                [reportId:'r2', publicationStatus:ReportService.REPORT_NOT_APPROVED, name:'Stage 2', fromDate: '2016-01-01T00:00Z', toDate: '2017-01-01T00:00Z']]
+                [reportId:'r2', publicationStatus:ReportService.REPORT_NOT_APPROVED, name:'Stage 2', fromDate: '2016-01-01T00:00Z', toDate: '2017-01-01T00:00Z'],
+                [reportId:'r3', publicationStatus:ReportService.REPORT_CANCELLED, name:'Stage 3', fromDate: '2016-01-01T00:00Z', toDate: '2017-01-01T00:00Z']]
         webService.getJson(_) >> [projectId:projectId, planStatus:ProjectService.PLAN_NOT_APPROVED, plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z']
 
         when:
@@ -501,6 +502,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         reportId | shouldComplete
         'r1'     | false
         'r2'     | true
+        'r3'     | false
     }
 
     def "only completed projects with approved plans can be unlocked for correction"(String projectStatus, String planStatus) {
@@ -607,14 +609,14 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         boolean canEdit = service.canEditActivity(activity)
 
         then:
-        1 * reportService.isSubmittedOrApproved(_) >> true
+        1 * reportService.excludesNotApproved(_) >> true
         canEdit == false
 
         when:
         canEdit = service.canEditActivity(activity)
 
         then:
-        1 * reportService.isSubmittedOrApproved(_) >> false
+        1 * reportService.excludesNotApproved(_) >> false
         canEdit == true
     }
 
@@ -752,7 +754,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         boolean submittedOrApproved = (reportStatus == ReportService.REPORT_SUBMITTED || reportStatus == ReportService.REPORT_APPROVED)
         webService.getJson(_) >> project
         reportService.getReportsForProject(project.projectId) >> [r1]
-        reportService.isSubmittedOrApproved(_) >> submittedOrApproved
+        reportService.excludesNotApproved(_) >> submittedOrApproved
 
         when:
         String result = service.validateProjectStartDate(project, new ProgramConfig([activityBasedReporting: false, projectReports:[reportConfig]]), date, new ReportGenerationOptions())

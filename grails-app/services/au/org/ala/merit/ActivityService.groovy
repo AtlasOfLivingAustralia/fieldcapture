@@ -132,7 +132,7 @@ class ActivityService {
     }
 
     def cancelActivitiesForPublication(activityIds) {
-        updatePublicationStatus(activityIds, 'cancelled')
+        updatePublicationStatus(activityIds, PROGRESS_CANCELLED)
     }
 
     /**
@@ -265,7 +265,7 @@ class ActivityService {
         List reports = reportService.getReportsForProject(projectId)
         stageNames.each { String stage ->
             Map report = reports.find { it.name == stage }
-            if (report && !reportService.isSubmittedOrApproved(report)) {
+            if (report && !reportService.excludesNotApproved(report)) {
                 activityData.plannedStartDate = report.fromDate
                 activityData.plannedEndDate = DateUtils.dayBefore(report.toDate)
                 log.info("Creating duplicate activity for stage " + stage + " for project " + projectId)
