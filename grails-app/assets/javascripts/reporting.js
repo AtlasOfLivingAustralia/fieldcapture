@@ -267,6 +267,8 @@ var ReportViewModel = function(report, config) {
     self.outcomeCategory = ko.pureComputed(function() {
         return report.category == "Outcomes Report 1";
     });
+
+    self.cancelledComment = ko.observable();
     $.each(report.statusChangeHistory, function(i, history) {
         self.cancelledComment = history.comment
     });
