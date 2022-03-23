@@ -545,7 +545,7 @@ class ProjectService  {
         // Some projects have extra stage reports after the end date due to legacy data so this checks we've got the last stage within the project dates
         List validReports = project.reports?.findAll{it.fromDate < project.plannedEndDate ? it.fromDate : project.plannedStartDate}
 
-        List incompleteReports = (validReports?.findAll{it.publicationStatus != ReportService.REPORT_APPROVED})?:[]
+        List incompleteReports = (validReports?.findAll{it.publicationStatus != ReportService.REPORT_APPROVED && it.publicationStatus != ReportService.REPORT_CANCELLED})?:[]
 
         return incompleteReports.size() ==1 && incompleteReports[0].reportId == approvedReportId
     }
@@ -600,6 +600,17 @@ class ProjectService  {
         result
     }
 
+    def cancelReport(String projectId, Map reportDetails) {
+        Map reportInformation = prepareReport(projectId, reportDetails)
+        if (reportInformation.error) {
+            return [success:false, error:reportInformation.error]
+        }
+
+        Map result = reportService.cancelReport(reportDetails.reportId, reportDetails.activityIds, reportDetails.reason, reportInformation.project, reportInformation.roles)
+
+        result
+    }
+
     /**
      * Creates a report to offset the scores produced by the supplied report without having to unapprove the original report and edit the data.
      * @param projectId the project the report belongs to.
@@ -626,7 +637,7 @@ class ProjectService  {
         Map report = reportService.get(reportId)
 
         Map result
-        if (!reportService.isSubmittedOrApproved(report)) {
+        if (!reportService.excludesNotApproved(report)) {
             result = activityService.bulkDeleteActivities(activityIds)
         }
         else {
@@ -1004,7 +1015,7 @@ class ProjectService  {
         // Activities in a submitted or approved report cannot be edited
         Map report = reportService.findReportForDate(activity.plannedEndDate, project.reports)
 
-        return !reportService.isSubmittedOrApproved(report)
+        return !reportService.excludesNotApproved(report)
     }
 
     private Map getOutcomes(String activityId, String outputType) {

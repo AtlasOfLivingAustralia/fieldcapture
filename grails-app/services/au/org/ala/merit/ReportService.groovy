@@ -15,6 +15,7 @@ class ReportService {
     public static final String REPORT_APPROVED = 'published'
     public static final String REPORT_SUBMITTED = 'pendingApproval'
     public static final String REPORT_NOT_APPROVED = 'unpublished'
+    public static final String REPORT_CANCELLED = 'cancelled'
 
     public static final int HOME_PAGE_IMAGE_SIZE = 500
 
@@ -82,7 +83,7 @@ class ReportService {
         log.info("name: " + existingReport.name + " - " + report.name)
         log.info("fromDate: " + existingReport.fromDate + " - " + report.fromDate)
         log.info("toDate: " + existingReport.toDate + " - " + report.toDate)
-        if (isSubmittedOrApproved(existingReport)) {
+        if (excludesNotApproved(existingReport)) {
 
             boolean approved = isApproved(existingReport)
             String reason = "Changing project start date"
@@ -112,7 +113,7 @@ class ReportService {
         // Ensure the reports are sorted in Date order
         existingReports = (existingReports?:[]).sort{it.toDate}
 
-        int index = existingReports.findLastIndexOf {isSubmittedOrApproved(it)}
+        int index = existingReports.findLastIndexOf {excludesNotApproved(it)}
 
         regenerateReports(existingReports, reportConfig, reportOwner, index)
 
@@ -136,11 +137,11 @@ class ReportService {
      * @return true if any report in the supplied list has been submitted or approval or approved.
      */
     boolean includesSubmittedOrApprovedReports(List reports) {
-        return (reports?.find {isSubmittedOrApproved(it)} != null)
+        return (reports?.find {excludesNotApproved(it)} != null)
     }
 
-    boolean isSubmittedOrApproved(Map report) {
-        return report.publicationStatus == REPORT_SUBMITTED || report.publicationStatus == REPORT_APPROVED
+    boolean excludesNotApproved(Map report) {
+        return report.publicationStatus == REPORT_SUBMITTED || report.publicationStatus == REPORT_APPROVED || report.publicationStatus == REPORT_CANCELLED
     }
 
     boolean isApproved(Map report) {
@@ -311,6 +312,20 @@ class ReportService {
         return [success:true]
     }
 
+    Map cancelReport(String reportId, List reportActivityIds, String reason, Map reportOwner, List ownerUsersAndRoles) {
+
+        Map resp = cancel(reportId, "", reason)
+        Map report = get(reportId)
+
+        if (!resp.error) {
+            activityService.cancelActivitiesForPublication(reportActivityIds)
+        }
+        else {
+            return [success:false, error:resp.error]
+        }
+        return [success:true]
+    }
+
     /**
      * Creates a report to offset the scores produced by the supplied report without having to unapprove the original report and edit the data.
      * @param reportId the report that needs adjustment
@@ -395,6 +410,10 @@ class ReportService {
         webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl')+"report/returnForRework/${reportId}", [comment:reason, category:category])
     }
 
+    def cancel(String reportId, String category, String reason) {
+        webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl')+"report/cancel/${reportId}", [comment:reason, category:category])
+    }
+
     def create(report) {
         webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl')+"report/", report)
     }
@@ -405,7 +424,7 @@ class ReportService {
 
     Map reset(String reportId) {
         Map report = get(reportId)
-        if (isSubmittedOrApproved(report)) {
+        if (excludesNotApproved(report)) {
             return [success:false, error:"Cannot delete data for an approved or submitted report"]
         }
 
@@ -474,7 +493,7 @@ class ReportService {
 
     Map firstReportWithDataByCriteria(List allReports, Closure criteria) {
         Map firstReportWithData = allReports?.findAll{hasData(it)}.min(criteria)
-        Map firstSubmittedOrApprovedReport = allReports?.findAll{isSubmittedOrApproved(it)}.min(criteria)
+        Map firstSubmittedOrApprovedReport = allReports?.findAll{excludesNotApproved(it)}.min(criteria)
 
 
         [firstReportWithData, firstSubmittedOrApprovedReport].findAll()?.min(criteria)
@@ -482,7 +501,7 @@ class ReportService {
 
     Map lastReportWithDataByCriteria(List allReports, Closure criteria) {
         Map lastReportWithData = allReports?.findAll{hasData(it)}.max(criteria)
-        Map lastSubmittedOrApprovedReport = allReports?.findAll{isSubmittedOrApproved(it)}.max(criteria)
+        Map lastSubmittedOrApprovedReport = allReports?.findAll{excludesNotApproved(it)}.max(criteria)
 
 
         [lastReportWithData, lastSubmittedOrApprovedReport].findAll()?.min(criteria)
@@ -888,7 +907,7 @@ class ReportService {
 
     private boolean canEdit(String userId, Map report, Map activity) {
         // Submitted or approved reports are not editable.
-        if (isSubmittedOrApproved(report)) {
+        if (excludesNotApproved(report)) {
             return false
         }
 

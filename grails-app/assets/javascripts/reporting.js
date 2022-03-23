@@ -69,7 +69,8 @@ var ReportViewModel = function(report, config) {
     $.each(report.activities || [], function(i, activity) {
         self.activities.push(new GreenArmyActivityViewModel(activity));
     });
-    self.editable = (report.bulkEditable || self.activities.length == 0 || self.activities.length == 1) && (report.publicationStatus != 'published' && report.publicationStatus != 'pendingApproval');
+
+    self.editable = (report.bulkEditable || self.activities.length == 0 || self.activities.length == 1) && (report.publicationStatus != 'published' && report.publicationStatus != 'pendingApproval' && report.publicationStatus != 'cancelled');
 
     self.title = 'Expand the activity list to complete the reports';
     if (self.editable) {
@@ -103,9 +104,13 @@ var ReportViewModel = function(report, config) {
     });
 
     self.approvalTemplate = function() {
+        if (report.publicationStatus == 'cancelled') {
+            return 'cancelled';
+        }
         if (!self.isReportable()) {
             return 'notReportable';
         }
+
         switch (report.publicationStatus) {
             case 'unpublished':
                 return 'notSubmitted';
@@ -174,8 +179,28 @@ var ReportViewModel = function(report, config) {
             explanationText:'',
             title:'Return report',
             buttonText: 'Return',
+            buttonTextNo: 'Cancel',
             submit:function() {
                 self.changeReportStatus(config.rejectReportUrl, 'return', 'Returning report...', 'Report returned.');
+            }
+        };
+        ko.applyBindings(reasonViewModel, $reasonModal[0]);
+        $reasonModal.modal({backdrop: 'static', keyboard:true, show:true}).on('hidden', function() {ko.cleanNode($reasonModal[0])});
+    };
+
+    self.cancelReport = function() {
+        var reasonModalSelector = config.reasonModalSelector || '#reason-modal';
+        var $reasonModal = $(reasonModalSelector);
+        var reasonViewModel = {
+            reason: self.reason,
+            rejectionCategories: ['Minor', 'Moderate', 'Major'],
+            rejectionCategory: self.category,
+            explanationText:'Do you wish to set this report as “not required”? Please enter the reason the report is not required.',
+            title:'Report not required',
+            buttonText: 'Yes (exempt by PPO)',
+            buttonTextNo: 'No',
+            submit:function() {
+                self.changeReportStatus(config.cancelReportUrl, 'return', 'Marking this report as not required...', 'Report not required.');
             }
         };
         ko.applyBindings(reasonViewModel, $reasonModal[0]);
@@ -226,6 +251,7 @@ var ReportViewModel = function(report, config) {
             reason: self.reason,
             title:'Adjust report',
             buttonText: 'Create adjustment',
+            buttonTextNo: 'Cancel',
             explanationText: 'Please enter the reason the adjustment is required',
             submit:function() {
                 self.changeReportStatus(
@@ -239,6 +265,15 @@ var ReportViewModel = function(report, config) {
         ko.applyBindings(reasonViewModel, $reasonModal[0]);
         $reasonModal.modal({backdrop: 'static', keyboard:true, show:true}).on('hidden', function() {ko.cleanNode($reasonModal[0])});
     };
+
+    self.outcomeCategory = ko.pureComputed(function() {
+        return report.category == "Outcomes Report 1";
+    });
+
+    self.cancelledComment = ko.observable();
+    $.each(report.statusChangeHistory, function(i, history) {
+        self.cancelledComment = history.comment
+    });
 };
 
 var ReportsViewModel = function(reports, projects, availableReports, reportOwner, config) {
@@ -507,4 +542,6 @@ var GrantManagerReportsViewModel = function(config) {
         }
     });
 };
+
+
 

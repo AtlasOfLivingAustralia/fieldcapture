@@ -461,7 +461,7 @@ class OrganisationController {
             model.state = organisation.state ?: 'Unknown'
             model.organisation = organisation
 
-            if (reportService.isSubmittedOrApproved(model.report)) {
+            if (reportService.excludesNotApproved(model.report)) {
                 model.submittingUserName = authService.getUserForUserId(model.report.submittedBy)?.displayName ?: 'Unknown user'
                 model.submissionDate = DateUtils.displayFormatWithTime(model.report.dateSubmitted)
                 edit = false
