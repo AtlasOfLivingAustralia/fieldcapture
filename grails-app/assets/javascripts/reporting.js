@@ -200,7 +200,7 @@ var ReportViewModel = function(report, config) {
             buttonText: 'Yes (exempt by PPO)',
             buttonTextNo: 'No',
             submit:function() {
-                self.changeReportStatus(config.cancelReportUrl, 'return', 'Not requiring report...', 'Report not required.');
+                self.changeReportStatus(config.cancelReportUrl, 'return', 'Marking this report as not required...', 'Report not required.');
             }
         };
         ko.applyBindings(reasonViewModel, $reasonModal[0]);
