@@ -287,7 +287,7 @@ class GmsMapper {
         def organisation
         Map abnLookup
         if (project.organisationName || project.abn) {
-            organisation = organisations.find{ it.abn == project.abn || it.name == project.organisationName }
+            organisation = organisations.find{ (project.abn && (it.abn == project.abn)) || (project.organisationName && (it.name == project.organisationName)) }
             if (organisation) {
                 project.organisationId = organisation.organisationId
             } else {
@@ -302,6 +302,7 @@ class GmsMapper {
                         organisation = organisations.find{ it.name == abnLookup.entityName }
                         if (organisation) {
                             project.organisationId = organisation.organisationId
+                            project.organisationName = organisation.name
                         } else {
                             if (abnLookup.entityName == "") {
                                 errors << "${project.abn} is invalid abn number. Please Enter the correct one"

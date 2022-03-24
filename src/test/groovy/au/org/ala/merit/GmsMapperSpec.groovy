@@ -24,7 +24,7 @@ class GmsMapperSpec extends Specification{
     def setup() {
         activitiesModel = JSON.parse(new InputStreamReader(getClass().getResourceAsStream('/activities-model.json')))
         Map programModel = [programs:[[name:'Green Army']]]
-        List organisations = [[ organisationId: "123", name:'Test org 1', abn:'12345678901']]
+        List organisations = [[ organisationId: "123", name:'Test org 1', abn:'12345678901'], [organisationId:'2', name:"Org 2", abn:""]]
         gmsMapper = new GmsMapper(activitiesModel, programModel, organisations, abnLookupService,scores)
     }
 
@@ -243,9 +243,9 @@ class GmsMapperSpec extends Specification{
     }
 
 
-    def "organisation to map using abn lookup"(){
+    def "If an ABN is supplied in the project load, the looked up entity name will be used instead of any organisation name supplied in the load"(){
         setup:
-        Map projectData = [APP_ID:'g1', ABN: '12345678900', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
+        Map projectData = [APP_ID:'g1', ABN: '12345678900', START_DT:'2019/07/01', FINISH_DT:'2020/07/01', ORG_TRADING_NAME:'Org 1']
         String abn = "12345678900"
         Map abnValue = [abn:"12345678900", entityName:"Test org 1"]
 
@@ -256,10 +256,25 @@ class GmsMapperSpec extends Specification{
         1 * abnLookupService.lookupOrganisationNameByABN(abn) >> abnValue
 
         and:
-        result.errors[1].toString() != "12345678900 is invalid. Please Enter the correct one"
+        result.project.organisationName == abnValue.entityName
     }
 
-    def "An error is raise when abn number is not provided"(){
+    def "A blank ABN won't be matched to an organisation with a blank ABN"() {
+        setup:
+        Map projectData = [APP_ID:'g1', ABN: '', START_DT:'2019/07/01', FINISH_DT:'2020/07/01', ORG_TRADING_NAME:'Org 1']
+
+        when:
+        def result = gmsMapper.mapProject([projectData])
+
+        then:
+        !result.project.organisationId
+        result.project.organisationName == 'Org 1'
+
+        and:
+        result.errors.find{it == "No organisation exists with organisation name Org 1"}
+    }
+
+    def "An error is raised when an invalid abn number is provided"(){
         setup:
         Map projectData = [APP_ID:'g1', ABN: '12345678900', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
         String abn = "12345678900"
@@ -289,23 +304,6 @@ class GmsMapperSpec extends Specification{
 
         and:
         result.errors[1].toString() == "12345678900 is invalid abn number. Please Enter the correct one"
-    }
-
-
-    def "Assign entity name to the organisation "(){
-        setup:
-        Map projectData = [APP_ID:'g1', ABN: '12345678900', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
-        String abn = "12345678900"
-        Map abnValue = [abn: "12345678900", entityName: "Org name"]
-
-        when:
-        def result = gmsMapper.mapProject([projectData])
-
-        then:
-        1 * abnLookupService.lookupOrganisationNameByABN(abn) >> abnValue
-
-        and:
-        result.errors[1].toString() != "12345678900 is invalid abn number. Please Enter the correct one"
     }
 
     def "The new fields for the grants hub import can be mapped"() {
