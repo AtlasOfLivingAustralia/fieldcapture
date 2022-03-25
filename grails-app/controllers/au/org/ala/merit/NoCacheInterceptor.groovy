@@ -18,7 +18,7 @@ class NoCacheInterceptor implements GrailsConfigurationAware {
     int order = HIGHEST_PRECEDENCE + 30
 
     NoCacheInterceptor() {
-        matchAll().excludes(controller: "species").excludes(controller:'document', action:'download')
+        matchAll().excludes(controller: "species").excludes(controller:'document', action:'download').excludes(controller:'home', action:'i18n')
     }
 
     @Override

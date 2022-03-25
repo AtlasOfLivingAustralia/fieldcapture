@@ -330,6 +330,26 @@ class ReportServiceSpec extends Specification implements AutowiredTest{
 
     }
 
+    def "when a report is returned, all associated activities should be marked as cancelled"() {
+
+        setup:
+        String reportId = 'r1'
+        List activityIds = ['a1', 'a2']
+        List roles = []
+        String reason = ''
+        String category = ''
+
+        when:
+        Map result = service.cancelReport(reportId, activityIds, reason, [:], roles)
+
+        then:
+        result.success == true
+        1 * webService.getJson({it.endsWith('report/'+reportId)}) >> [reportId:reportId]
+        1 * webService.doPost({it.endsWith('report/cancel/'+reportId)}, [comment:reason, category:category]) >> [:]
+        1 * activityService.cancelActivitiesForPublication(activityIds)
+
+    }
+
     def "A report cannot be submitted if the activities are not all finished, deferred or cancelled"(String progress) {
         setup:
         String reportId = 'r1'

@@ -1,27 +1,22 @@
 package au.org.ala.merit
-import au.com.bytecode.opencsv.CSVReader
-import au.org.ala.merit.reports.ReportGenerationOptions
+
+
 import com.vividsolutions.jts.geom.Geometry
 import com.vividsolutions.jts.geom.GeometryCollection
 import com.vividsolutions.jts.geom.GeometryFactory
 import com.vividsolutions.jts.geom.Point
 import grails.converters.JSON
-import groovy.util.logging.Slf4j
-import org.apache.commons.lang.StringUtils
-import org.geotools.geojson.geom.GeometryJSON
 import grails.plugins.csv.CSVMapReader
+import groovy.util.logging.Slf4j
+import org.geotools.geojson.geom.GeometryJSON
 import org.joda.time.DateTime
 import org.springframework.web.multipart.MultipartFile
 
-import java.text.DecimalFormat
-import java.text.SimpleDateFormat
 /**
  * Handles data import into ecodata.
  */
 @Slf4j
 class ImportService {
-
-    public static final List CSV_HEADERS = ['Program', 'Round Name', 'GMS Round Name', 'Grant ID', 'Grant External ID', 'Sub-project ID', 'Grant Name', 'Grant Description', 'Grantee Organisation Legal Name','ABN', 'Grant Original Approved Amount', 'Grant Current Grant Funding (Ex. GST)', 'Start', 'Finish', 'Location Description']
 
     private static final String PROJECTS_CACHE_KEY = 'ImportService-AllProjects'
 
@@ -185,22 +180,27 @@ class ImportService {
         return null
     }
 
-    def importProject(Map project, reload = true) {
+    Map importProject(Map project, Boolean update = false) {
 
-        def status = [:]
+        Map status = [:]
 
         // Remove the site from the project as it will be saved separately.
         def site = project.remove('site')
 
         // The GrantID and External ID are not necessarily unique individually.
-        def p = findProjectByGrantAndExternalId(project.grantId, project.externalId)
-        if (p) {
-            if (!reload) {
+        Map existingProject = findProjectByGrantAndExternalId(project.grantId, project.externalId)
+
+        if (existingProject) {
+            if (!update) {
                 status.project = 'existing'
                 return status
             }
-            project.projectId = p.projectId
+            project.projectId = existingProject.projectId
             status.project = 'updated'
+        }
+        else if (update) {
+            status.project = 'not found'
+            return status
         }
         else {
             status.project = 'created'
@@ -216,9 +216,9 @@ class ImportService {
         if (false && site && site.description) {
 
             // Get the project details, including any related sites.
-            p = projectService.get(projectId)
+            existingProject = projectService.get(projectId)
 
-            def s = findProjectSiteByDescription(p, site.description)
+            def s = findProjectSiteByDescription(existingProject, site.description)
 
 
             def siteDetails = [:]
@@ -241,7 +241,7 @@ class ImportService {
         status
     }
 
-    def findProjectByGrantAndExternalId(grantId, externalId) {
+    Map findProjectByGrantAndExternalId(grantId, externalId) {
         Map searchParams = [grantId:grantId]
         if (externalId) {
             searchParams.externalId = externalId
@@ -273,11 +273,6 @@ class ImportService {
         return null
     }
 
-    def allProjectsWithGrantId(grantId) {
-        def allProjects = cacheService.get(PROJECTS_CACHE_KEY) { [projects:projectService.list(true)] }
-        return allProjects.projects.findAll{it.grantId?.equalsIgnoreCase(grantId)}
-    }
-
     def findProjectSiteByDescription(project, description) {
         return project.sites?.find{it.description?.equalsIgnoreCase(description)}
     }
@@ -286,50 +281,7 @@ class ImportService {
         return project.sites?.find{it.name?.equalsIgnoreCase(name)}
     }
 
-    private def writeErrors(results, errors, warnings, String[] line) {
-        def errorLine = []
-        errorLine << errors.join('\n')
-        errorLine << warnings.join('\n')
-
-        line.each{
-            // The truncation is because the CSV file is slow because of the large amount of repetition in the
-            // location cells in particular
-            errorLine << it.substring(0, Math.min(it.length(), 100)).replaceAll('\n', ' ').replaceAll('"', "'")
-        }
-
-        results << errorLine
-    }
-
-    private def validateHeader(String[] headerTokens) {
-
-        def suppliedHeaders = headerTokens as List
-        def missingHeaders = []
-        def headerIndicies = [:]
-        CSV_HEADERS.each{
-            int index = suppliedHeaders.indexOf(it)
-            if (index < 0) {
-                missingHeaders << it
-            }
-            headerIndicies << [(it):index]
-        }
-        if (missingHeaders.size() > 0) {
-            headerIndicies.missing = missingHeaders
-        }
-        headerIndicies
-
-    }
-
-    private def findHeaderColumns(headerDetails, String[] csvLine) {
-
-        def projectDetails = [:]
-        headerDetails.each {key, value ->
-            projectDetails << [(key):csvLine[value]]
-
-        }
-        projectDetails
-    }
-
-    def gmsImport(InputStream csv, List status, preview, charEncoding = 'Cp1252') {
+    Map gmsImport(InputStream csv, List status, Boolean preview, Boolean update, String charEncoding = 'Cp1252') {
 
         Map programs = [:].withDefault{name ->
             Map program = programService.getByName(name)
@@ -341,9 +293,9 @@ class ImportService {
         }
         def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel(), metadataService.organisationList()?.list, abnLookupService, metadataService.getOutputTargetScores(), programs, managementUnits)
 
-        def action = preview?{rows -> mapProjectRows(rows, status, mapper)}:{rows -> importAll(rows, status, mapper)}
+        def action = preview?{rows -> mapProjectRows(rows, status, mapper, update)}:{rows -> importAll(rows, status, mapper, update)}
 
-        def result = [:]
+        Map result = [:]
         cacheService.clear(PROJECTS_CACHE_KEY)
         def reader = new InputStreamReader(csv, charEncoding)
         try {
@@ -352,10 +304,12 @@ class ImportService {
             def prevGrantId = null
             def prevExternalId = null
             def projectRows = []
+            String currentGrantId
+            String currentExternalId
             new CSVMapReader(reader).eachWithIndex { rowMap, i ->
 
-                def currentGrantId = rowMap[GmsMapper.GRANT_ID_COLUMN]
-                def currentExternalId = rowMap[GmsMapper.EXTERNAL_ID_COLUMN]
+                currentGrantId = rowMap[GmsMapper.GRANT_ID_COLUMN]
+                currentExternalId = rowMap[GmsMapper.EXTERNAL_ID_COLUMN]
                 // We have read all the details for a project.
                 if (((currentGrantId != prevGrantId) || (currentExternalId != prevExternalId)) && prevGrantId) {
 
@@ -374,10 +328,10 @@ class ImportService {
                 }
 
             }
-            // import the last project
-            action(projectRows)
-
-
+            // import the last project, ignoring trailing blanks (which often result from an excel -> CSV export)
+            if (currentGrantId) {
+                action(projectRows)
+            }
         }
         catch (Exception e) {
             def message = 'Error processing projects: '+e.getMessage()
@@ -388,16 +342,27 @@ class ImportService {
         result
     }
 
-    def mapProjectRows(projectRows, List status, GmsMapper mapper) {
+    def mapProjectRows(projectRows, List status, GmsMapper mapper, Boolean update) {
 
-        def projectDetails = mapper.mapProject(projectRows)
-        def grantId = projectDetails.project.grantId?:'<not mapped>'
-        def externalId = projectDetails.project.externalId?:'<not mapped>'
+        Map mappingResults = mapper.mapProject(projectRows)
 
-        status << [grantId:grantId, externalId:externalId, success:projectDetails.errors.size() == 0, errors:projectDetails.errors]
+        String grantId = mappingResults.project.grantId
+        String externalId = mappingResults.project.externalId
+        Map existingProject = findProjectByGrantAndExternalId(grantId, externalId)
+        if (existingProject && !update) {
+            mappingResults.errors << "Project with grantId:${grantId}, externalId:${externalId} already exists"
+        }
+        else if (!existingProject && update) {
+            mappingResults.errors << "Project with grantId:${grantId}, externalId:${externalId} not found"
+        }
+
+        grantId = grantId ?:'<not mapped>'
+        externalId = externalId  ?:'<not mapped>'
+
+        status << [grantId:grantId, externalId:externalId, success:mappingResults.errors.size() == 0, errors:mappingResults.errors]
     }
 
-    def importAll(projectRows, List status, GmsMapper mapper) {
+    void importAll(projectRows, List status, GmsMapper mapper, Boolean update) {
 
         def projectDetails = mapper.mapProject(projectRows)
 
@@ -416,10 +381,14 @@ class ImportService {
             //When projects are loaded into MERIT via CSV upload, they are given a status of "Application".
             projectDetails.project.status ?: 'application'
 
-            def result = importProject(projectDetails.project, false) // Do not overwrite existing projects because of the impacts to sites / activities etc.
+            def result = importProject(projectDetails.project, update) // Do not overwrite existing projects because of the impacts to sites / activities etc.
 
-            if (result.project == 'existing') {
+            if (result.project == 'existing' && !update) {
                 status << [grantId:grantId, externalId:externalId, success:false, errors:['Project already exists in MERIT, skipping']]
+                return
+            }
+            else if (result.project == 'not found' && update) {
+                status << [grantId:grantId, externalId:externalId, success:false, errors:['No project found in MERIT to update']]
                 return
             }
 

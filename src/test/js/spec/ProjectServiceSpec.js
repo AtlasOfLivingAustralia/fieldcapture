@@ -43,7 +43,7 @@ describe("ProjectService Spec", function () {
 
         // Projects without an internal order number can't be approved.
         expect(projectService.canApproveMeriPlan()).toBeFalsy();
-        project.internalOrderId = "IO1";
+        project.externalIds = [{idType:"INTERNAL_ORDER_NUMBER", externalId:"IO1"}];
         expect(projectService.canApproveMeriPlan()).toBeTruthy();
     });
 
@@ -70,7 +70,7 @@ describe("ProjectService Spec", function () {
 
         spyOn($, 'blockUI');
 
-        var data = {internalOrderNumber:"IO1", plannedStartDate:'2020-01-01T00:00:00Z'};
+        var data = {externalIds:[{externalId:"IO1", idType:"INTERNAL_ORDER_NUMBER"}], plannedStartDate:'2020-01-01T00:00:00Z'};
 
         projectService.approvePlan({reason: 'test'}, data);
 
@@ -78,7 +78,7 @@ describe("ProjectService Spec", function () {
         expect($.blockUI).toHaveBeenCalled();
 
         expect(savedOptions1.url).toEqual('/update/p1');
-        expect(savedOptions1.data).toEqual('{"internalOrderId":"IO1","plannedStartDate":"2020-01-01T00:00:00Z"}');
+        expect(savedOptions1.data).toEqual('{"externalIds":[{"externalId":"IO1","idType":"INTERNAL_ORDER_NUMBER"}],"plannedStartDate":"2020-01-01T00:00:00Z"}');
 
         result.resolve({});
 

@@ -207,7 +207,7 @@ class ProjectSummaryReportCommand implements Validateable{
         List reportsNewestFirst = reports?.reverse() ?:[]
         reportsNewestFirst.findResult { report ->
             Map activity = null
-            if (reportService.isSubmittedOrApproved(report)) {
+            if (reportService.excludesNotApproved(report)) {
                 activity = reportTypes.findResult { type ->
                     activities?.findAll{it.type == type && it.progress == ActivityService.PROGRESS_FINISHED && it.plannedEndDate > report.fromDate && it.plannedEndDate <= report.toDate}?.max{it.plannedEndDate}
                 }

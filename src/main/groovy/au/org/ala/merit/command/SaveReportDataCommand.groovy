@@ -51,7 +51,7 @@ class SaveReportDataCommand implements Validateable{
         String errorCode = null
         Map report = getReport()
 
-        if (reportService.isSubmittedOrApproved(report)) {
+        if (reportService.excludesNotApproved(report)) {
             errorCode = 'submittedOrApprovedReport'
         }
         // This would have to be via a handcrafted request as the MERIT UI won't allow this

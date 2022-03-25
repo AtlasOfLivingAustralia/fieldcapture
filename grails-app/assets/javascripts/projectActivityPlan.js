@@ -191,7 +191,8 @@ var PlanStage = function (stage, activities, planViewModel, isCurrentStage, proj
         submitReportUrl:fcConfig.submitReportUrl,
         approveReportUrl:fcConfig.approveReportUrl,
         rejectReportUrl:fcConfig.rejectReportUrl,
-        deleteActivitiesUrl:fcConfig.deleteActivitiesUrl
+        deleteActivitiesUrl:fcConfig.deleteActivitiesUrl,
+        cancelReportUrl:fcConfig.cancelReportUrl
     };
     var config = _.defaults(options || {}, defaults);
 

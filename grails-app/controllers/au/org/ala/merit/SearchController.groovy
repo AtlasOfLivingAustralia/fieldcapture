@@ -36,6 +36,7 @@ class SearchController {
     @PreAuthorise(accessLevel = 'siteReadOnly', redirectController ='home', redirectAction = 'index')
     def downloadAllData() {
         params.putAll(downloadParams())
+        params.max = 10000 // The default is 5000, and some downloads require more than that.
         def response = searchService.downloadAllData(params)
 
         render response as JSON

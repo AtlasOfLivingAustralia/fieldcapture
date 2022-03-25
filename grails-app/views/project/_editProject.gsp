@@ -9,12 +9,12 @@
     </div>
 </div>
 <div class="row mb-2">
-    <div class="control-group col-sm-6">
+    <div class="col-sm-6">
         <label class="control-label" for="organisation">Search for an organisation</label>
         <input type="text" class="form-control form-control-sm input-medium" id="organisation" placeholder="Search organisations..."
                 data-bind="elasticSearchAutocomplete:{url:fcConfig.organisationSearchUrl, value:'name', label:'name', result:transients.selectOrganisation}"/>
     </div>
-    <div class="control-group col-sm-6">
+    <div class="col-sm-6">
         <label class="control-label" for="organisationName">Organisation name</label>
         <div class="control-label">
             <input type="text"  disabled="disabled" class="form-control form-control-sm input-medium disabled" aria-readonly="true" readonly="readonly" data-bind="value:organisationName" id="organisationName"/>
@@ -23,7 +23,7 @@
     </div>
 </div>
 <div class="row mb-2">
-    <div class="control-group col-sm-6">
+    <div class="col-sm-6">
         <label class="control-label" for="serviceProviderOrganisation">Search for a service provider organisation</label>
         <div class="control">
             <input type="text" class="form-control form-control-sm input-medium" id="serviceProviderOrganisation" placeholder="Search organisations..."
@@ -31,7 +31,7 @@
         </div>
 
     </div>
-    <div class="control-group col-sm-6">
+    <div class="col-sm-6">
         <label class="control-label">Service provider organisation name</label>
         <div class="control">
             <input type="text" class="form-control form-control-sm input-medium disabled" disabled="disabled" readonly="readonly" data-bind="value:serviceProviderName" id="serviceProviderName"/>
@@ -41,7 +41,7 @@
 </div>
 <g:if test="${meriPlanStatus == true && hidePrograms}">
     <div class="row mb-2">
-        <div class="control-group col-sm-6">
+        <div class="col-sm-6">
             <label for="programId" class="control-label">Program </label>
             <div class="controls">
                 <g:select class="programId form-control form-control-sm input-medium" from="${programList}" data-bind="value:programId" optionKey="programId" name="name" id="programId" optionValue="name" disabled="disabled"/>
@@ -52,7 +52,7 @@
 </g:if>
 <g:elseif test="${meriPlanStatus == false  && hidePrograms}">
     <div class="row mb-2">
-        <div class="control-group col-sm-6">
+        <div class="col-sm-6">
             <label for="programId" class="control-label">Program </label>
             <div class="controls">
                 <g:select class="programId form-control form-control-sm input-medium" from="${programList}" data-bind="value:programId" optionKey="programId" name="name" id="programId" optionValue="name"/>
@@ -72,49 +72,50 @@
     </div>
 </div>
 <div class="row mb-2">
-    <div class="control-group col-sm-4">
+    <div class="col-sm-4">
         <label class="control-label" for="externalId">External id</label>
         <div class="controls">
             <g:textField class="form-control form-control-sm input-small" name="externalId" data-bind="value:externalId"/>
         </div>
     </div>
-    <div class="control-group col-sm-4">
+    <div class="col-sm-4">
         <label class="control-label" for="grantId">Grant id</label>
         <div class="controls">
             <g:textField class="form-control form-control-sm input-small" name="grantId" data-bind="value:grantId"/>
         </div>
     </div>
-    <div class="control-group col-sm-4">
-        <label class="control-label" for="internalOrderId">Internal order number</label>
-        <div class="controls">
-            <!-- Once the MERI plan is approved, the internal order number becomes a mandatory field. -->
-            <g:if test="${ProjectService.APPLICATION_STATUS != project.status}">
-                <input class="form-control form-control-sm input-small" placeholder="If unavailable, use 'TBA'" name="internalOrderId" id="internalOrderId" data-bind="value:internalOrderId" data-validation-engine="validate[required]"/>
-            </g:if>
-            <g:else>
-                <input class="form-control form-control-sm input-small" placeholder="If not available, use TBA" name="internalOrderId" data-bind="value:internalOrderId"/>
-            </g:else>
-        </div>
-    </div>
-
+%{--    <div class="col-sm-4">--}%
+%{--        <label class="control-label" for="internalOrderId">Internal order number</label>--}%
+%{--        <div class="controls">--}%
+%{--            <!-- Once the MERI plan is approved, the internal order number becomes a mandatory field. -->--}%
+%{--            <g:if test="${ProjectService.APPLICATION_STATUS != project.status}">--}%
+%{--                <input class="form-control form-control-sm input-small" placeholder="If unavailable, use 'TBA'" name="internalOrderId" id="internalOrderId" data-bind="value:internalOrderId" data-validation-engine="validate[required]"/>--}%
+%{--            </g:if>--}%
+%{--            <g:else>--}%
+%{--                <input class="form-control form-control-sm input-small" placeholder="If not available, use TBA" name="internalOrderId" data-bind="value:internalOrderId"/>--}%
+%{--            </g:else>--}%
+%{--        </div>--}%
+%{--    </div>--}%
 </div>
 
+<external-ids params="externalIds:externalIds, externalIdTypes:externalIdTypes, validationNamespace:'projectSettingsExternalId', validate:validateExternalIds"></external-ids>
+
 <div class="row mb-2">
-    <div class="control-group col-sm-4">
+    <div class="col-sm-4">
         <label class="control-label" for="manager">Project manager</label>
         <div class="controls">
             <g:textField class="form-control form-control-sm input-small" name="manager" data-bind="value:manager"/>
         </div>
     </div>
 
-    <div class="control-group col-sm-4">
+    <div class="col-sm-4">
         <label class="control-label" for="manager">Project funding</label>
         <div class="controls">
             <g:textField class="form-control form-control-sm input-small" id="funding" name="funding" data-bind="value:funding" data-validation-engine="validate[custom[number]]"/>
         </div>
     </div>
 
-    <div class="control-group col-sm-4">
+    <div class="col-sm-4">
         <label class="control-label" for="tags">Disaster relief categories</label>
         <div class="controls">
             <select multiple="multiple" id="tags" data-bind="options:transients.defaultTags, multiSelect2:{value:tags, placeholder:''}" class="select form-control form-control-sm input-small"></select>
@@ -130,7 +131,7 @@
 
 <div class="row mb-2">
     <div class="col-sm-4">
-        <label class="control-label" for="programme">Programme name</label>
+        <label class="control-label" for="programme">Program name</label>
 
         <div class="control">
             <select id="programme"
@@ -142,7 +143,7 @@
     </div>
 
     <div class="col-sm-4">
-        <label class="control-label" for="subProgramme">Sub-programme name</label>
+        <label class="control-label" for="subProgramme">Sub-program name</label>
 
         <div class="control">
             <select id="subProgramme" class="form-control form-control-sm input-small"

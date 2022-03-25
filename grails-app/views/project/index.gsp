@@ -60,6 +60,7 @@
                 submitReportUrl: "${createLink(controller: 'project', action: 'ajaxSubmitReport', id:project.projectId)}/",
                 approveReportUrl: "${createLink(controller: 'project', action: 'ajaxApproveReport', id:project.projectId)}/",
                 rejectReportUrl: "${createLink(controller: 'project', action: 'ajaxRejectReport', id:project.projectId)}/",
+                cancelReportUrl: "${createLink(controller: 'project', action: 'ajaxCancelReport', id:project.projectId)}/",
                 resetReportUrl: "${createLink(controller:'project', action:'resetReport', id:project.projectId)}",
                 adjustReportUrl: "${createLink(controller:'project', action:'adjustReport', id:project.projectId)}",
                 reportOwner: {projectId: '${project.projectId}', endDate: '${project.plannedEndDate}', startDate: '${project.plannedStartDate}'},
@@ -90,7 +91,7 @@
                 editDataSetUrl: "${createLink(controller:'dataSet', action:'edit', id:project.projectId)}",
                 deleteDataSetUrl: "${createLink(controller:'dataSet', action:'delete', id:project.projectId)}",
                 unlockActivityUrl:"${createLink(controller:'activity', action:'ajaxUnlock')}",
-
+                i18nURL: "${g.createLink(controller: 'home', action: 'i18n')}",
                 returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 
             },

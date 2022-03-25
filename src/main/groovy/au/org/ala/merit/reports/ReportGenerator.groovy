@@ -26,6 +26,8 @@ class ReportGenerator {
      */
     private int DATE_FUDGE_FACTOR = 1
 
+    private static final String REPORT_NOT_APPROVED = 'unpublished'
+
     /**
      * Generates a list of reports according to the supplied configuration.
      * @param reportConfig Describes the frequency and properties of generated reports.
@@ -33,7 +35,7 @@ class ReportGenerator {
      * @param startingSequenceNo the sequence number for the first report.  Required for name generation in the case that not
      * all reports are being regenerated.
      */
-    List<Map> generateReports(ReportConfig reportConfig, ReportOwner reportOwner, int startingSequenceNo, DateTime latestApprovedReportPeriodEnd) {
+    List<Map> generateReports(ReportConfig reportConfig, ReportOwner reportOwner, int startingSequenceNo, DateTime latestApprovedReportPeriodEnd, List existingReports = null) {
 
         Period period = Period.months(reportConfig.reportingPeriodInMonths)
 
@@ -47,16 +49,14 @@ class ReportGenerator {
             } else if (reportConfig.endDates) {
                 reports = generateNonPeriodicReportsByDate(latestApprovedReportPeriodEnd, reportOwner, reportConfig, endDate, startingSequenceNo)
             } else {
-                reports = generateSingleReport(reportOwner, endDate, reportConfig, period)
-
+                reports = generateSingleReport(reportOwner, endDate, reportConfig, period, existingReports)
             }
             alignEndDates(reports, reportOwner.periodEnd, reportConfig)
         }
         reports
     }
 
-    private List<Map> generateSingleReport(ReportOwner reportOwner, DateTime endDate, ReportConfig reportConfig, Period period) {
-
+    private List<Map> generateSingleReport(ReportOwner reportOwner, DateTime endDate, ReportConfig reportConfig, Period period, List existingReports) {
         List<Map> reports = []
         // Single reports are aligned with the owner dates.
         DateTime ownerStart = reportOwner.periodStart.withZone(DateTimeZone.default)
@@ -106,15 +106,19 @@ class ReportGenerator {
         }
 
         if (end >= start) {
-            Interval reportInterval = new Interval(start, end)
-
-            // If the report minimumPeriodInMonths has been specified, only create the report if the owner duration
-            // is greater than the minimum period.
-            if (!reportConfig.minimumPeriodInMonths || reportInterval.toPeriod(PeriodType.months()).getMonths() >= reportConfig.minimumPeriodInMonths) {
-                log.info("Regenerating a single report from " + reportInterval.start + " to " + reportInterval.end)
-                reports << createReport(reportConfig, reportOwner, 1, reportInterval)
+            //validates the latest approved report to avoid creation of duplicate report
+            if (existingReports && existingReports[0].publicationStatus != REPORT_NOT_APPROVED) {
+                log.info("Not regenerating report " + reportConfig.category + " to avoid creating duplicate reports")
             } else {
-                log.info("Not regenerating report " + reportConfig.category + " because owner duration too short: " + reportInterval.toPeriod(PeriodType.months()).getMonths() + " < " + reportConfig.minimumPeriodInMonths)
+                Interval reportInterval = new Interval(start, end)
+                // If the report minimumPeriodInMonths has been specified, only create the report if the owner duration
+                // is greater than the minimum period.
+                if (!reportConfig.minimumPeriodInMonths || reportInterval.toPeriod(PeriodType.months()).getMonths() >= reportConfig.minimumPeriodInMonths) {
+                    log.info("Regenerating a single report from " + reportInterval.start + " to " + reportInterval.end)
+                    reports << createReport(reportConfig, reportOwner, 1, reportInterval)
+                } else {
+                    log.info("Not regenerating report " + reportConfig.category + " because owner duration too short: " + reportInterval.toPeriod(PeriodType.months()).getMonths() + " < " + reportConfig.minimumPeriodInMonths)
+                }
             }
         } else {
             log.warn("Not regenerating report " + reportConfig.category + " because report end date " + end +  " must be greater than or equal to project start date " + start)

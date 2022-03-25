@@ -115,9 +115,9 @@ createOrganisation({
     acronym:'TSTORG', description:'THE TRUSTEE FOR PSS FUND Test'
 })
 
-createProject({name:'project active', projectId:"project_active", status:"active", planStatus:'submitted', internalOrderId:'12345', programId:'default_outcome' })
-createProject({name:'project application', projectId:"project_application", status:"application", planStatus:'submitted', internalOrderId:'', programId:'default_outcome'})
-createProject({name:'project completed', projectId:"project_completed", status:"completed", planStatus:'submitted', internalOrderId:'12345', programId:'default_outcome'})
+createProject({name:'project active', projectId:"project_active", status:"active", planStatus:'submitted', externalIds:[{idType:'INTERNAL_ORDER_NUMBER', externalId:'12345'}], programId:'default_outcome' })
+createProject({name:'project application', projectId:"project_application", status:"application", planStatus:'submitted', programId:'default_outcome', externalIds:[]})
+createProject({name:'project completed', projectId:"project_completed", status:"completed", planStatus:'submitted', externalIds:[{idType:'INTERNAL_ORDER_NUMBER', externalId:'12345'}], programId:'default_outcome'})
 
 db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_active', userId:'1001', accessLevel:'caseManager'});
 db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'project_application', userId:'1001', accessLevel:'caseManager'});
