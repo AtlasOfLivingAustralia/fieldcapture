@@ -1,18 +1,22 @@
 <div class="row">
     <div class="nav flex-column nav-pills col-3">
-        <a class="nav-link active" data-toggle="pill" href="#edit-managementUnit-details" role="tab">Edit</a>
-        <a id="mu-permissions-tab" class="nav-link" data-toggle="pill" href="#managementUnit-permissions" role="tab">Permissions</a>
-        <a id="edit-documents-tab" class="nav-link" data-toggle="pill" href="#edit-documents" role="tab">Documents</a>
         <g:if test="${fc.userIsSiteAdmin()}">
-                <a class="nav-link" data-toggle="pill" href="#reporting" role="tab">Reporting</a>
+            <a class="nav-link active" data-toggle="pill" href="#edit-managementUnit-details" role="tab">Edit</a>
+        <a id="mu-permissions-tab" class="nav-link" data-toggle="pill" href="#managementUnit-permissions" role="tab">Permissions</a>
+            <a id="edit-documents-tab" class="nav-link" data-toggle="pill" href="#edit-documents" role="tab">Documents</a>
+            <a class="nav-link" data-toggle="pill" href="#reporting" role="tab">Reporting</a>
         </g:if>
         <g:if test="${fc.userIsAlaOrFcAdmin()}">
             <a class="nav-link" data-toggle="pill" href="#priorities" role="tab">Priorities</a>
             <a class="nav-link" data-toggle="pill" href="#config" role="tab">Configuration</a>
         </g:if>
+        <g:elseif test="${fc.userHasReadOnlyAccess()}">
+            <a id="mu-permissions-tab" class="nav-link active" data-toggle="pill" href="#managementUnit-permissions" role="tab">Permissions</a>
+        </g:elseif>
     </div>
 
     <div class="tab-content col-9">
+        <g:if test="${fc.userIsSiteAdmin()}">
         <div class="tab-pane active" id="edit-managementUnit-details">
             <h4>Administrator actions</h4>
 
@@ -26,8 +30,6 @@
             </div>
 
         </div>
-
-
         <div class="tab-pane" id="managementUnit-permissions">
             <h4>Add Permissions</h4>
 
@@ -81,7 +83,7 @@
     <!-- /ko -->
 
 
-        <g:if test="${fc.userIsSiteAdmin()}">
+%{--        <g:if test="${fc.userIsSiteAdmin()}">--}%
         <div class="tab-pane" id="reporting">
             <form>
                 <h3>Core services and output reporting frequency</h3>
@@ -150,5 +152,15 @@
             </textarea>
         </div>
         </g:if>
+        <g:elseif test="${fc.userHasReadOnlyAccess()}">
+            <div class="tab-pane active" id="managementUnit-permissions">
+                <h4>Current Management Unit Permissions</h4>
+                <g:render template="/admin/permissionTable" model="[
+                        loadPermissionsUrl: g.createLink(controller: 'user', action: 'getMembersOfManagementUnit', id: mu.managementUnitId),
+                        removeUserUrl     : g.createLink(controller: ' managementUnit', action: 'removeUserWithRoleFromManagementUnit', id:mu.managementUnitId),
+                        entityId          : mu.managementUnitId, user: user]"/>
+
+            </div>
+        </g:elseif>
     </div>
 </div>

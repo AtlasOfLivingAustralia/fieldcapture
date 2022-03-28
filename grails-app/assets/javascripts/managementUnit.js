@@ -450,7 +450,10 @@ var ManagementUnitPageViewModel = function(props, options) {
                 };
                 var viewModel = new EditableDocumentsViewModel(documentViewModelOptions);
                 viewModel.loadDocuments(props.documents);
-                ko.applyBindings(viewModel, document.getElementById('edit-documents'))
+                if (document.getElementById('edit-documents')) {
+                    ko.applyBindings(viewModel, document.getElementById('edit-documents'))
+                }
+
             }
         }
     };

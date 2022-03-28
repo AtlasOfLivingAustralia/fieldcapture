@@ -60,7 +60,7 @@ class ManagementUnitController {
 
     protected Map content(Map mu, Map userRole) {
 
-        def hasAdminAccess = userService.userIsSiteAdmin() || userRole?.role == RoleService.PROJECT_ADMIN_ROLE
+        def hasAdminAccess = userService.userIsSiteAdmin() || userRole?.role == RoleService.PROJECT_ADMIN_ROLE || userService.userHasReadOnlyAccess()
 
         boolean canViewNonPublicTabs = userService.canUserEditManagementUnit(userService.getUser()?.userId, mu.managementUnitId) || userService.userHasReadOnlyAccess()
 
