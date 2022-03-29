@@ -63,7 +63,7 @@ class ManagementUnitSpec extends StubbedCasSpec {
 
     }
 
-    def "Admin tab is not visible to users with Read Only Access role for the management unit"() {
+    def "Permissions page in the admin tab is visible to users with Read Only Access role for the management unit"() {
 
         setup:
         loginAsReadOnlyUser(browser)
@@ -76,7 +76,7 @@ class ManagementUnitSpec extends StubbedCasSpec {
         overviewBtn.displayed == true
         reportsTab.displayed == true
         sitesTab.displayed == true
-        adminTab.displayed == false
+        adminTab.displayed == true
 
     }
 
