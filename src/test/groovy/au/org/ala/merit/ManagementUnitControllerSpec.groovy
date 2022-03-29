@@ -91,7 +91,7 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
         model.content.admin.visible == true
     }
 
-    def "read only users should be able to see the admin permissions content"() {
+    def "read only users should be able to see the permission access in the admin content"() {
         String managementUnitId = 'p1'
         userService.getUser() >> [userId: 'u1']
         managementUnitService.get(managementUnitId) >> [managementUnitId: managementUnitId, name: "test"]

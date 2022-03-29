@@ -29,9 +29,9 @@
             </g:if>
             <a class="nav-link" href="#edit-documents" id="edit-documents-tab" data-toggle="pill" role="tab" >Documents</a>
         </g:if>
-        <g:if test="${user.hasViewAccess}">
+        <g:elseif test="${fc.userHasReadOnlyAccess()}">
             <a class="nav-link" href="#permissions" id="permissions-tab" data-toggle="pill" role="tab" >Project access</a>
-        </g:if>
+        </g:elseif>
         <g:if test="${fc.userIsSiteAdmin()}">
             <a class="nav-link" href="#project-audit" id="project-audit-tab" data-toggle="pill" role="tab" >Audit</a>
         </g:if>
@@ -96,15 +96,13 @@
                     <g:render template="editProjectContent" model="${[attributeName:'projectStories', header:'Project stories']}"/>
                 </div>
             </g:if>
-            <div id="permissions" class="pill-pane tab-pane">
-                <h3>Project Access</h3>
-                <g:if test="${user.isAdmin || user.isCaseManager}">
-                    <h4>Add Permissions</h4>
-                    <g:render template="/admin/addPermissions" model="[addUserUrl:g.createLink(controller:'user', action:'addUserAsRoleToProject'), entityId:project.projectId]"/>
-                </g:if>
-                <g:render template="/admin/permissionTable" model="[loadPermissionsUrl:g.createLink(controller:'project', action:'getMembersForProjectId', id:project.projectId), entityId:project.projectId, user:user]"/>
-            </div>
             <g:if test="${user.isAdmin || user.isCaseManager}">
+                <div id="permissions" class="pill-pane tab-pane">
+                    <h3>Project Access</h3>
+                        <h4>Add Permissions</h4>
+                        <g:render template="/admin/addPermissions" model="[addUserUrl:g.createLink(controller:'user', action:'addUserAsRoleToProject'), entityId:project.projectId]"/>
+                    <g:render template="/admin/permissionTable" model="[loadPermissionsUrl:g.createLink(controller:'project', action:'getMembersForProjectId', id:project.projectId), removeUserUrl:g.createLink(controller:'user', action:'removeUserWithRoleFromProject'), entityId:project.projectId, user:user]"/>
+                </div>
                 <!-- SPECIES -->
                 <g:if test="${showSpecies}">
             %{--<div class="border-divider large-space-before">&nbsp;</div>--}%
@@ -133,6 +131,12 @@
 
                 </div>
             </g:if>
+            <g:elseif test="${fc.userHasReadOnlyAccess()}">
+                <div id="permissions" class="pill-pane tab-pane">
+                    <h3>Project Access</h3>
+                    <g:render template="/admin/permissionTable" model="[loadPermissionsUrl:g.createLink(controller:'project', action:'getMembersForProjectId', id:project.projectId), removeUserUrl:g.createLink(controller:'user', action:'removeUserWithRoleFromProject'), entityId:project.projectId, user:user]"/>
+                </div>
+            </g:elseif>
             <g:if test="${fc.userIsSiteAdmin()}">
                 <!-- Audit -->
                 <div id="project-audit" class="pill-pane tab-pane">

@@ -40,6 +40,13 @@ class ManagementUnitController {
 
             List members = userService.getMembersOfManagementUnit(id).members ?: []
             def user = userService.getUser()
+            if (user) {
+                user = user.properties
+                user.isAdmin = projectService.isUserAdminForProject(user.userId, id) ?: false
+                user.isCaseManager = projectService.isUserCaseManagerForProject(user.userId, id) ?: false
+                user.isEditor = projectService.canUserEditProject(user.userId, id) ?: false
+                user.hasViewAccess = projectService.canUserViewProject(user.userId, id) ?: false
+            }
             def userId = user?.userId
 
             Map muRole = members.find { it.userId == userId }
