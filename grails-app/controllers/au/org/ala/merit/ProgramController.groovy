@@ -30,16 +30,15 @@ class ProgramController {
 
             List members = userService.getMembersOfProgram(id).members ?: []
             def user = userService.getUser()
-            if (user) {
-                user = user.properties
-                user.isAdmin = projectService.isUserAdminForProject(user.userId, id) ?: false
-                user.isCaseManager = projectService.isUserCaseManagerForProject(user.userId, id) ?: false
-                user.isEditor = projectService.canUserEditProject(user.userId, id) ?: false
-                user.hasViewAccess = projectService.canUserViewProject(user.userId, id) ?: false
-            }
             def userId = user?.userId
 
             Map programRole = members.find { it.userId == userId }
+
+            if (user) {
+                user = user.properties
+                user.isAdmin = programRole?.role == RoleService.PROJECT_ADMIN_ROLE ?: false
+                user.isCaseManager = programRole?.role == RoleService.GRANT_MANAGER_ROLE ?: false
+            }
 
             def mapFeatures = program.programSiteId?siteService.getSiteGeoJson(program.programSiteId) : null
             if (mapFeatures)

@@ -28,16 +28,15 @@ class OrganisationController {
             def dashboard = searchService.dashboardReport([fq: 'organisationFacet:' + organisation.name])
             def members = organisationService.getMembersOfOrganisation(id)
             def user = userService.getUser()
-            if (user) {
-                user = user.properties
-                user.isAdmin = projectService.isUserAdminForProject(user.userId, id) ?: false
-                user.isCaseManager = projectService.isUserCaseManagerForProject(user.userId, id) ?: false
-                user.isEditor = projectService.canUserEditProject(user.userId, id) ?: false
-                user.hasViewAccess = projectService.canUserViewProject(user.userId, id) ?: false
-            }
             def userId = user?.userId
 
             def orgRole = members.find{it.userId == userId}
+
+            if (user) {
+                user = user.properties
+                user.isAdmin = orgRole?.role == RoleService.PROJECT_ADMIN_ROLE ?: false
+                user.isCaseManager = orgRole?.role == RoleService.GRANT_MANAGER_ROLE ?: false
+            }
 
             [organisation: organisation,
              dashboard: dashboard,
