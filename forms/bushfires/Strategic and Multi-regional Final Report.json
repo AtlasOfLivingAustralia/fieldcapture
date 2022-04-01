@@ -276,7 +276,7 @@
             ],
             "userAddedRows": false,
             "source": "projectTargets",
-            "title": "<b>1.3 Please detail outputs against each activity minimum target.</b><p>Where an activity minimum target has not been fully delivered, please provide a short explanation detailing why.",
+            "title": "<b>If relevant to your project, please detail outputs against each activity minimum target in your MERI Plan.</b><br/>Please ensure the total amount delivered is consistent with progress reporting. Where an activity minimum target has not been fully delivered, please provide a short explanation detailing why. This section is not required to be completed for State Government Emergency projects.",
             "type": "table"
           },
           {
@@ -435,6 +435,106 @@
               }
             ],
             "type": "row"
+          }
+        ],
+        "pre-populate": [
+          {
+            "source": {
+              "context-path": "owner"
+            },
+            "merge": {
+              "projectOutcomes": {
+                "deleteUnmatchedExistingRows": true,
+                "addUnmatchedNewRows": true,
+                "keys": [
+                  "outcomeStatement"
+                ]
+              }
+            },
+            "mapping": [
+              {
+                "target": "projectOutcomes",
+                "mapping": [
+                  {
+                    "target": "outcomeStatement",
+                    "source-path": "description"
+                  }
+                ],
+                "source-path": "custom.details.outcomes.shortTermOutcomes"
+              }
+            ]
+          },
+          {
+            "mapping": [
+              {
+                "mapping": [
+                  {
+                    "source-path": "service",
+                    "target": "serviceName"
+                  },
+                  {
+                    "source-path": "targetMeasure",
+                    "target": "targetMeasure"
+                  },
+                  {
+                    "source-path": "scoreId",
+                    "target": "scoreId"
+                  },
+                  {
+                    "source-path": "projectTarget",
+                    "target": "projectTarget"
+                  },
+                  {
+                    "source-path": "result",
+                    "target": "delivered"
+                  }
+                ],
+                "source-path": "targets",
+                "target": "projectTargets"
+              }
+            ],
+            "merge": {
+              "projectTargets": {
+                "keys": [
+                  "serviceName",
+                  "targetMeasure"
+                ],
+                "projectTarget": {
+                  "replaceExisting": true
+                },
+                "delivered": {
+                  "replaceExisting": true
+                },
+                "sort": [
+                  "service",
+                  "outputTargetMeasure"
+                ],
+                "addUnmatchedNewRows": true,
+                "deleteUnmatchedExistingRows": true
+              }
+            },
+            "source": {
+              "params": [
+                {
+                  "expression": "owner.projectId",
+                  "name": "id",
+                  "type": "computed"
+                },
+                {
+                  "name": "missedTargetsOnly",
+                  "value": false
+                },
+                {
+                  "name": "onlyNonZeroTargets",
+                  "value": true
+                },
+                {
+                  "name": "approvedDataOnly",
+                  "value": false
+                }
+              ],
+              "url": "/project/projectTargetsAndScores/"
+            }
           }
         ],
         "title": "Project Final Report"
