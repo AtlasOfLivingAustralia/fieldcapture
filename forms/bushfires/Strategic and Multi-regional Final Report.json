@@ -260,23 +260,16 @@
                 "title": "Total delivered"
               },
               {
-                "width": "12%",
-                "source": "actualTotalDeliveredIfDifferent",
-                "type": "textarea",
-                "title": "Actual Total Delivered (if different)",
-                "rows": 3
-              },
-              {
                 "width": "30%",
                 "source": "reasonTargetNotMet",
                 "type": "textarea",
                 "rows": 3,
-                "title": "Reasons why the target has not been met (500 character, [approx. 100 word] limit)"
+                "title": "Explanation if target not fully delivered"
               }
             ],
             "userAddedRows": false,
             "source": "projectTargets",
-            "title": "<b>If relevant to your project, please detail outputs against each activity minimum target in your MERI Plan.</b><br/>Please ensure the total amount delivered is consistent with progress reporting. Where an activity minimum target has not been fully delivered, please provide a short explanation detailing why. This section is not required to be completed for State Government Emergency projects.",
+            "title": "<b>1.3 Please detail outputs against each activity minimum target.</b><br/>Where an activity minimum target has not been fully delivered, please provide a short explanation detailing why.",
             "type": "table"
           },
           {
