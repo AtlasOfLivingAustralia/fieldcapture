@@ -300,6 +300,7 @@ class AdminController {
         render(view: 'audit', model:[results: results, searchTerm: params.searchTerm, searchType:'Project', action:'auditProject', id:'projectId'])
     }
 
+    @PreAuthorise(accessLevel = 'siteReadOnly', redirectController = "home")
     def auditProject() {
         def id = params.id
         if (id) {

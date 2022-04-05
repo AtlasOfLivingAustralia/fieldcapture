@@ -32,7 +32,7 @@
         <g:elseif test="${fc.userHasReadOnlyAccess()}">
             <a class="nav-link" href="#permissions" id="permissions-tab" data-toggle="pill" role="tab" >Project access</a>
         </g:elseif>
-        <g:if test="${fc.userIsSiteAdmin()}">
+        <g:if test="${fc.userIsSiteAdmin() || fc.userHasReadOnlyAccess()}">
             <a class="nav-link" href="#project-audit" id="project-audit-tab" data-toggle="pill" role="tab" >Audit</a>
         </g:if>
     </div> <!-- end of side nav -->
@@ -137,7 +137,7 @@
                     <g:render template="/admin/permissionTable" model="[loadPermissionsUrl:g.createLink(controller:'project', action:'getMembersForProjectId', id:project.projectId), removeUserUrl:g.createLink(controller:'user', action:'removeUserWithRoleFromProject'), entityId:project.projectId, user:user]"/>
                 </div>
             </g:elseif>
-            <g:if test="${fc.userIsSiteAdmin()}">
+            <g:if test="${fc.userIsSiteAdmin() || fc.userHasReadOnlyAccess()}">
                 <!-- Audit -->
                 <div id="project-audit" class="pill-pane tab-pane">
                     <g:render template="/project/audit"/>
