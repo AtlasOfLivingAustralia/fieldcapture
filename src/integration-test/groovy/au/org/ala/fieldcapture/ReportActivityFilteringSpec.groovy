@@ -2,6 +2,7 @@ package au.org.ala.fieldcapture
 
 import pages.ReportPage
 import pages.RlpProjectPage
+import pages.modules.ReportCategory
 import spock.lang.Stepwise
 
 @Stepwise
@@ -49,16 +50,20 @@ class ReportActivityFilteringSpec extends StubbedCasSpec {
         waitFor { at RlpProjectPage }
 
         when:
-        reportingTab.click()
+        displayReportingTab()
+        waitFor {
+            projectReports.reportsByCategory.size() > 0
+        }
+        projectReports.reportsByCategory.each { ReportCategory reportCategory ->
+            if (reportCategory.showAllReportsCheckbox.displayed) {
+                reportCategory.showAllReports()
+            }
+        }
 
-
-        then:
-        waitFor { projectReports.displayed }
-
-        and: "The new reports are displayed"
+        then: "The new reports are displayed"
 
         waitFor {
-            projectReports.reports.size() == 8
+            projectReports.reports.size() == 11
             projectReports.reports[1].name != ""
         }
         projectReports.reports[0].name == "Year 2018/2019 - Semester 1 Progress Report"

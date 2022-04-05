@@ -6718,28 +6718,13 @@
                 "name": "sitesBenefittedByHabitatAugmentation"
               },
               {
-                "defaultValue": {
-                  "type": "computed",
+                "computed": {
                   "expression": "$geom.areaHa(sitesBenefittedByHabitatAugmentation)"
                 },
                 "dataType": "number",
                 "name": "areaBenefittedByHabitatAugmentationHa",
-                "validate": [
-                  {
-                    "rule": "min",
-                    "param": {
-                      "type": "computed",
-                      "expression": "$geom.areaHa(sitesBenefittedByHabitatAugmentation)*0.9"
-                    }
-                  },
-                  {
-                    "rule": "max",
-                    "param": {
-                      "type": "computed",
-                      "expression": "$geom.areaHa(sitesBenefittedByHabitatAugmentation)*1.1"
-                    }
-                  }
-                ]
+                "units": "ha",
+                "decimalPlaces": 3
               },
               {
                 "dataType": "text",

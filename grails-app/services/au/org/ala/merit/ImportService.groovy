@@ -487,6 +487,10 @@ class ImportService {
 
             shapes.each { shape ->
 
+                // Allow external ids to not match if the grant ids match
+                // and there is only a single project in MERIT that does match.  This is mostly to remove
+                // the need to manually modify the shapefile data as it's not uncommon for the external id to not
+                // match.
                 def grantId = shape.attributes[grantIdAttribute]
                 // Often we receive shapefiles with an APP_ID but no GRANT_ID.
                 if (!grantId) {
@@ -503,38 +507,42 @@ class ImportService {
                 }
 
                 def project = findProjectByGrantAndExternalId(grantId, externalId)
-
+                if (!project) {
+                    // Try again, but this time we'll just check the grant id as sometimes the spatial data
+                    // external ids don't match.
+                    log.warn("Unable to find project with grant id=${grantId} and external id=${externalId}, trying to match on just grantId")
+                    project = findProjectByGrantAndExternalId(grantId, null)
+                }
                 if (!project) {
                     String error = "No project found with grant id=${grantId} and external id=${externalId}"
                     errors << error
                     log.warn(error)
+                    return
+                }
+
+                def projectDetails = projectsWithSites[project.projectId]
+                if (!projectDetails) {
+                    projectDetails = projectService.get(project.projectId, 'all')
+                    projectsWithSites[project.projectId] = projectDetails
+                    if (!projectDetails.sites) {
+                        projectDetails.sites = []
+                    }
+                }
+                int siteNumber = projectDetails.sites ? projectDetails.sites.size() +1 : 1
+                def name = shape.attributes[siteNameAttribute]?:"${project.grantId} - Site ${siteNumber}"
+                def description = shape.attributes[siteDescriptionAttribute] ?: "Imported on ${now}"
+                def siteExternalId = shapeFileId+'-'+shape.id
+
+                def resp = siteService.createSiteFromUploadedShapefile(shapeFileId, shape.id, siteExternalId, name, description, project.projectId, false)
+                if (resp?.siteId) {
+                    projectDetails.sites << [siteId:resp.siteId, name:name, description:description]
+                    sites << name
+                    log.info("Imported site: "+name)
                 }
                 else {
-                    def projectDetails = projectsWithSites[project.projectId]
-                    if (!projectDetails) {
-                        projectDetails = projectService.get(project.projectId, 'all')
-                        projectsWithSites[project.projectId] = projectDetails
-                        if (!projectDetails.sites) {
-                            projectDetails.sites = []
-                        }
-                    }
-                    int siteNumber = projectDetails.sites ? projectDetails.sites.size() +1 : 1
-                    def name = shape.attributes[siteNameAttribute]?:"${project.grantId} - Site ${siteNumber}"
-                    def description = shape.attributes[siteDescriptionAttribute] ?: "Imported on ${now}"
-                    def siteExternalId = shapeFileId+'-'+shape.id
-
-                    def resp = siteService.createSiteFromUploadedShapefile(shapeFileId, shape.id, siteExternalId, name, description, project.projectId, false)
-                    if (resp?.siteId) {
-                        projectDetails.sites << [siteId:resp.siteId, name:name, description:description]
-                        sites << name
-                        log.info("Imported site: "+name)
-                    }
-                    else {
-                        errors << resp
-                        log.warn("Error importing site: "+resp?.error?:"")
-                    }
+                    errors << resp
+                    log.warn("Error importing site: "+resp?.error?:"")
                 }
-
             }
             return [success:true, message:[errors:errors, sites:sites]]
 
