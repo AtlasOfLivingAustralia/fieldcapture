@@ -1097,6 +1097,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             newDataSetUrl:  config.newDataSetUrl,
             editDataSetUrl: config.editDataSetUrl,
             deleteDataSetUrl: config.deleteDataSetUrl,
+            viewDataSetUrl: config.viewDataSetUrl,
             returnToUrl: config.returnToUrl
         };
         var projectService = new ProjectService({}, config);

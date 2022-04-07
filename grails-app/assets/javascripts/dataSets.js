@@ -24,6 +24,7 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
     function DataSetSummary(dataSet) {
 
         this.editUrl = config.editDataSetUrl + '?dataSetId='+dataSet.dataSetId;
+        this.viewUrl = config.viewDataSetUrl + '?dataSetId='+dataSet.dataSetId;
         this.name = dataSet.name;
         this.progress = dataSet.progress;
         this.deleteDataSet = function() {

@@ -70,6 +70,21 @@ class DataSetController {
 
     }
 
+    @PreAuthorise(accessLevel = 'readOnly')
+    def view(String id, String dataSetId) {
+
+        Map projectData = projectData(id)
+        Map dataSet = projectData.project?.custom?.dataSets?.find{it.dataSetId == dataSetId}
+        if (!dataSet) {
+            render status: HttpStatus.NOT_FOUND
+        }
+        else {
+            projectData.dataSet = dataSet
+            projectData
+        }
+
+    }
+
     @PreAuthorise(accessLevel = 'editor')
     def save(String id) {
 
