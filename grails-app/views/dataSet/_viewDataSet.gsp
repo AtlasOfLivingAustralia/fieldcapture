@@ -3,7 +3,7 @@
     <div class="form-group row">
         <label class="col-sm-5 col-form-label required">1. Dataset title</label>
         <div class="col-sm-7">
-            <span data-bind="text:name"></span>
+            <span id="titleText" data-bind="text:name"></span>
         </div>
     </div>
     <div class="row form-subheading">
@@ -38,7 +38,7 @@
     <div class="form-group row">
         <label class="col-sm-5 col-form-label required">5. What program outcome does this dataset relate to?</label>
         <div class="col-sm-7">
-            <span data-bind="text:programOutcome"></span>
+            <span id="programOutcomeText" data-bind="text:programOutcome"></span>
         </div>
     </div>
     <div class="form-group row">

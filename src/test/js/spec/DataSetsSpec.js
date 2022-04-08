@@ -25,6 +25,7 @@ describe("The data set summaries view models behave correctly", function () {
     it("The DataSetsViewModel can manipulate data set summaries for the purposes of the Data set summaries tab", function () {
 
         var config = {
+            viewDataSetUrl: '/view',
             editDataSetUrl: '/edit',
             deleteDataSetUrl: '/delete'
         };
@@ -43,6 +44,10 @@ describe("The data set summaries view models behave correctly", function () {
                 name: 'Data set 2'
             }];
         dataSetsSummaryVM = new DataSetsViewModel(dataSets, projectService, config);
+        expect(dataSetsSummaryVM.dataSets.length).toEqual(2);
+        expect(dataSetsSummaryVM.dataSets[0].name).toEqual('Data set 1');
+        expect(dataSetsSummaryVM.dataSets[0].viewUrl).toEqual('/view?dataSetId=ds1');
+
         expect(dataSetsSummaryVM.dataSets.length).toEqual(2);
         expect(dataSetsSummaryVM.dataSets[0].name).toEqual('Data set 1');
         expect(dataSetsSummaryVM.dataSets[0].editUrl).toEqual('/edit?dataSetId=ds1');

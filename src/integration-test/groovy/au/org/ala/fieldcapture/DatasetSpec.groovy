@@ -15,6 +15,7 @@ class DatasetSpec extends StubbedCasSpec{
         logout(browser)
     }
 
+
     def "Add new data set in to project"() {
         setup:
         String projectId = 'fdFundProject'
@@ -55,6 +56,30 @@ class DatasetSpec extends StubbedCasSpec{
         dataSet.custodian = "custodian"
 
         dataSet.createButton.click()
+
+        then:
+        waitFor  { at RlpProjectPage }
+        waitFor {$("#project-data-sets .fa-eye").displayed}
+        $('[data-bind*="text: progress"]').displayed
+        $('[data-bind*="text: progress"]').text() == "started"
+
+        when:
+        $("#project-data-sets .fa-eye").click()
+
+        then: "user can view the data set details"
+        at DatasetPage
+        assert title == "View | Data Set Summary | MERIT"
+
+        and:
+        def dset = datasetContent
+        dset.titleText.text() == "Title"
+        dset.programOutcomeText.text() == "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
+
+        when:
+        cancel()
+
+        then: "The data set summary is displayed"
+        waitFor { at RlpProjectPage }
 
         then:
         waitFor { at RlpProjectPage }
@@ -233,4 +258,5 @@ class DatasetSpec extends StubbedCasSpec{
 
 
     }
+
 }
