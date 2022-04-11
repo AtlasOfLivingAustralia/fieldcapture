@@ -403,6 +403,50 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
         response.json == [status:HttpStatus.SC_OK]
     }
 
+    def "User adds star to the management unit "() {
+        setup:
+        String managementUnitId = 'p1'
+        String userId = 'u1'
+        String act = 'add'
+        Map result = [status:200]
+
+        when:
+        request.method = "POST"
+        params.id = act
+        params.userId = userId
+        params.managementUnitId = managementUnitId
+        controller.starManagementUnit()
+
+        then:
+        1 * userService.addStarManagementUnitForUser(userId, managementUnitId) >> result
+        0 * userService.removeStarManagementUnitForUser(userId, managementUnitId) >> result
+
+        and:
+        response.json == [status:HttpStatus.SC_OK]
+    }
+
+    def "User removes star from the management unit "() {
+        setup:
+        String managementUnitId = 'p1'
+        String userId = 'u1'
+        String act = 'remove'
+        Map result = [status:200]
+
+        when:
+        request.method = "POST"
+        params.id = act
+        params.userId = userId
+        params.managementUnitId = managementUnitId
+        controller.starManagementUnit()
+
+        then:
+        0 * userService.addStarManagementUnitForUser(userId, managementUnitId) >> result
+        1 * userService.removeStarManagementUnitForUser(userId, managementUnitId) >> result
+
+        and:
+        response.json == [status:HttpStatus.SC_OK]
+    }
+
     private void setupAnonymousUser() {
         userService.getUser() >> null
         userService.userHasReadOnlyAccess() >> false
