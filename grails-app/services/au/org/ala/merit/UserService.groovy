@@ -166,6 +166,21 @@ class UserService {
         webService.getJson(url)
     }
 
+    def isManagementUnitStarredByUser(String userId, String managementUnitId) {
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/isManagementUnitStarredByUser?userId=${userId}&managementUnitId=${managementUnitId}"
+        webService.getJson(url)
+    }
+
+    def addStarManagementUnitForUser(String userId, String managementUnitId) {
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/addStarManagementUnitForUser?userId=${userId}&managementUnitId=${managementUnitId}"
+        webService.getJson(url)
+    }
+
+    def removeStarManagementUnitForUser(String userId, String managementUnitId) {
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/removeStarManagementUnitForUser?userId=${userId}&managementUnitId=${managementUnitId}"
+        webService.getJson(url)
+    }
+
     def addUserAsRoleToProject(String userId, String projectId, String role) {
         Map result = checkRoles(userId, role)
         if (result.error) {

@@ -27,7 +27,8 @@
             deleteBlogEntryUrl: "${createLink(controller: 'blog', action:'delete', params:[managementUnitId:managementUnit.managementUnitId])}",
             documentUpdateUrl: "${createLink(controller: 'document', action:'documentUpdate')}",
             documentDeleteUrl: "${createLink(controller: 'document', action:'deleteDocument')}",
-            imageLocation:"${assetPath(src:'/')}"
+            imageLocation:"${assetPath(src:'/')}",
+            starManagementUnitUrl: "${createLink(controller: 'managementUnit', action: 'starManagementUnit')}"
         };
     </script>
     <asset:stylesheet src="common-bs4.css"/>
@@ -43,7 +44,7 @@
             <li class="breadcrumb-item">
                 <g:link controller="home">Home</g:link>
             </li>
-            <li class="breadcrumb-item">Management Units</li>
+            <li class="breadcrumb-item">Management Unitshxhxhx</li>
             <li class="breadcrumb-item active">${managementUnit.name?.encodeAsHTML()}</li>
         </ol>
 
@@ -59,9 +60,34 @@
             </span>
         </div>
 
-        <div class="header-text" id="managementUnitName">
-           <h2>${managementUnit.name?.encodeAsHTML()}</h2>
-        </div>
+        <section class="row">
+            <div class="col-sm-10">
+                <h1 class="pull-left" data-bind="text:name"></h1>
+                <g:if test="${flash.errorMessage || flash.message}">
+                    <div class="col-sm-5">
+                        <div class="alert alert-danger">
+                            <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
+                            ${flash.errorMessage ?: flash.message}
+                        </div>
+                    </div>
+                </g:if>
+            </div>
+
+            <div class="col-sm-2">
+                <div class="float-right pull-right">
+                    <g:set var="disabled">${(!user) ? "disabled='disabled' title='login required'" : ''}</g:set>
+                    <g:if test="${isManagementUnitStarredByUser}">
+                        <button class="btn btn-sm" id="starBtn"><i
+                                class="fa fa-star"></i> <span>Remove from favourites</span></button>
+                    </g:if>
+                    <g:else>
+                        <button class="btn btn-sm" id="starBtn" ${disabled}><i
+                                class="fa fa-star-o"></i> <span>Add to favourites</span></button>
+                    </g:else>
+                </div>
+
+            </div>
+        </section>
     </div>
 
 
@@ -116,11 +142,15 @@
             $('#admin-tab').tab('show');
     });
 
+    // Star button click event
+    $("#starBtn").on("click", function(e) {
+        var isStarred = ($("#starBtn i").attr("class") === "fa fa-star");
+        toggleStarred(isStarred, '${user?.userId ?: ''}', '${managementUnit.managementUnitId}');
+    });
+
 </asset:script>
 <asset:javascript src="common-bs4.js"/>
 <asset:javascript src="managementUnit.js"/>
 <asset:deferredScripts/>
-
 </body>
-
 </html>

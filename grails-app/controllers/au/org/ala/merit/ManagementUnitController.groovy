@@ -60,7 +60,8 @@ class ManagementUnitController {
              user               : user,
              isAdmin            : muRole?.role == RoleService.PROJECT_ADMIN_ROLE,
              isGrantManager     : muRole?.role == RoleService.GRANT_MANAGER_ROLE,
-             content            : content(mu, muRole)
+             content            : content(mu, muRole),
+             isManagementUnitStarredByUser: userService.isManagementUnitStarredByUser(user?.userId ?: "0", mu.managementUnitId)?.isManagementUnitStarredByUser
              ]
         }
     }
@@ -554,6 +555,30 @@ class ManagementUnitController {
         }catch(Exception e){
             def message = [message: 'Fatal: '+ e.message]
             render message as JSON
+        }
+    }
+
+    /**
+     * Star or unstar a management unit for a user
+     * Action is determined by the URI endpoint, either: /add | /remove
+     *
+     * @return
+     */
+    def starManagementUnit() {
+        String act = params.id?.toLowerCase()
+        String userId = params.userId
+        String managementUnitId = params.managementUnitId
+
+        if (act && userId && managementUnitId) {
+            if (act == "add") {
+                render userService.addStarManagementUnitForUser(userId, managementUnitId) as JSON
+            } else if (act == "remove") {
+                render userService.removeStarManagementUnitForUser(userId, managementUnitId) as JSON
+            } else {
+                render status: 400, text: 'Required endpoint (path) must be one of: add | remove'
+            }
+        } else {
+            render status: 400, text: 'Required params not provided: userId, managementUnitId'
         }
     }
 }
