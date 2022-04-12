@@ -29,6 +29,20 @@
                 "dataType": "text",
                 "name": "achievement",
                 "validate": "required,maxSize[5000]"
+              },
+              {
+                "dataType": "text",
+                "name": "basedRating",
+                "constraints": [
+                  "Achieved (100%)",
+                  "Significantly achieved (76-99%)",
+                  "Satisfactorily achieved (51-75%)",
+                  "Partially achieved (26-50%)",
+                  "Inadequately achieved (1-25%)",
+                  "Not achieved (0%)",
+                  "Unable to rate"
+                ],
+                "validate": "required"
               }
             ]
           },
@@ -206,14 +220,20 @@
                 "source": "outcomeStatement",
                 "title": "Outcome",
                 "rows": 5,
-                "width": "45%"
+                "width": "40%"
               },
               {
                 "type": "textarea",
                 "source": "achievement",
                 "title": "Achievement against the outcome",
                 "rows": 5,
-                "width": "50%"
+                "width": "40%"
+              },
+              {
+                "width": "15%",
+                "source": "basedRating",
+                "title": "Rating based on the effectiveness evaluation criteria",
+                "type": "select2"
               }
             ]
           },
