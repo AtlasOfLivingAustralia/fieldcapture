@@ -44,7 +44,7 @@
             <li class="breadcrumb-item">
                 <g:link controller="home">Home</g:link>
             </li>
-            <li class="breadcrumb-item">Management Unitshxhxhx</li>
+            <li class="breadcrumb-item">Management Units</li>
             <li class="breadcrumb-item active">${managementUnit.name?.encodeAsHTML()}</li>
         </ol>
 
@@ -59,20 +59,10 @@
                 </a>
             </span>
         </div>
-
         <section class="row">
-            <div class="col-sm-10">
-                <h1 class="pull-left" data-bind="text:name"></h1>
-                <g:if test="${flash.errorMessage || flash.message}">
-                    <div class="col-sm-5">
-                        <div class="alert alert-danger">
-                            <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
-                            ${flash.errorMessage ?: flash.message}
-                        </div>
-                    </div>
-                </g:if>
+            <div class="col-sm-10" id="managementUnitName">
+                <h2>${managementUnit.name?.encodeAsHTML()}</h2>
             </div>
-
             <div class="col-sm-2">
                 <div class="float-right pull-right">
                     <g:set var="disabled">${(!user) ? "disabled='disabled' title='login required'" : ''}</g:set>
