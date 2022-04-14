@@ -4,6 +4,7 @@ import pages.AdminTools
 import pages.CreateManagementUnit
 import pages.EditManagementUnitPage
 import pages.ManagementUnitPage
+import pages.MyProjects
 import spock.lang.Stepwise
 
 @Stepwise
@@ -109,6 +110,47 @@ class ManagementUnitSpec extends StubbedCasSpec {
         targetedPrimaryOutcomes() == ['o1']
         secondaryOutcomes() == ['o2', 'o3']
         targetedSecondaryOutcomes() == ['o2', 'o3']
+    }
+
+    def "Add/Remove MU to Favourites"() {
+        setup:
+        loginAsReadOnlyUser(browser)
+
+        when:
+        to ManagementUnitPage, "test_mu"
+
+        then:
+        at ManagementUnitPage
+
+        when: "User clicks Add to favourites"
+        favouriteBtn.click()
+
+        then:
+        favouriteBtn.displayed == true
+        favouriteBtn.text() == "Remove from favourites"
+
+        when:
+        to MyProjects
+
+        then:
+        waitFor {at MyProjects}
+
+        and: "Favourite Management Unit will be in the list"
+        managementUnitNames() == ['test mu']
+
+        when:
+        to ManagementUnitPage, "test_mu"
+
+        then:
+        at ManagementUnitPage
+
+        when: "User clicks Remove from favourites"
+        favouriteBtn.click()
+
+        then:
+        favouriteBtn.displayed == true
+        favouriteBtn.text() == "Add to favourites"
+
     }
 
     def "Checking Security Vulnerability after injecting Script tag"() {
