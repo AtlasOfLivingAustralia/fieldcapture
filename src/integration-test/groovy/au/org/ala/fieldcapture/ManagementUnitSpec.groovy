@@ -123,10 +123,10 @@ class ManagementUnitSpec extends StubbedCasSpec {
         at ManagementUnitPage
 
         when: "User clicks Add to favourites"
-        favouriteBtn.click()
+        starBtn.click()
 
         then:
-        favouriteBtn.text() == "Remove from favourites"
+        starBtn.text() == "Remove from favourites"
 
         when:
         to MyProjects
@@ -144,10 +144,10 @@ class ManagementUnitSpec extends StubbedCasSpec {
         at ManagementUnitPage
 
         when: "User clicks Remove from favourites"
-        favouriteBtn.click()
+        starBtn.click()
 
         then:
-        favouriteBtn.text() == "Add to favourites"
+        starBtn.text() == "Add to favourites"
 
     }
 

@@ -13,6 +13,7 @@ class ManagementUnitPage extends ReloadablePage {
     static at = { waitFor {name.text() != null } }
 
     static content = {
+        starBtn {$('#starBtn')}
         name {$('div#managementUnitName h2')}
         overviewBtn{$('a#about-tab', 0)}
         grantIdsTable{$('td.grantId')}
@@ -30,7 +31,6 @@ class ManagementUnitPage extends ReloadablePage {
         headerTitle {$("#managementUnitName")}
         visitUs {$("data-bind:'text-url'")}
         description {$('.row .col-md-8 span[data-bind*="html:description"] p')}
-        favouriteBtn {$('#starBtn')}
     }
 
     List grantIds() {
