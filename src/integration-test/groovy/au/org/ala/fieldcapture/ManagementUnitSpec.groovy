@@ -112,45 +112,6 @@ class ManagementUnitSpec extends StubbedCasSpec {
         targetedSecondaryOutcomes() == ['o2', 'o3']
     }
 
-    def "Add/Remove MU to Favourites"() {
-        setup:
-        loginAsReadOnlyUser(browser)
-
-        when:
-        to ManagementUnitPage, "test_mu"
-
-        then:
-        at ManagementUnitPage
-
-        when: "User clicks Add to favourites"
-        starBtn.click()
-
-        then:
-        starBtn.text() == "Remove from favourites"
-
-        when:
-        to MyProjects
-
-        then:
-        waitFor {at MyProjects}
-
-        and: "Favourite Management Unit will be in the list"
-        managementUnitNames() == ['test mu']
-
-        when:
-        to ManagementUnitPage, "test_mu"
-
-        then:
-        at ManagementUnitPage
-
-        when: "User clicks Remove from favourites"
-        starBtn.click()
-
-        then:
-        starBtn.text() == "Add to favourites"
-
-    }
-
     def "Checking Security Vulnerability after injecting Script tag"() {
         setup:
         loginAsMeritAdmin(browser)
@@ -294,5 +255,44 @@ class ManagementUnitSpec extends StubbedCasSpec {
        adminTabPane.adminColumn[3].text() == "Reporting"
        adminTabPane.adminColumn[4].text() == "Priorities"
        adminTabPane.adminColumn[5].text() == "Configuration"
+    }
+
+    def "Add/Remove MU to Favourites"() {
+        setup:
+        loginAsReadOnlyUser(browser)
+
+        when:
+        to ManagementUnitPage, "test_mu"
+
+        then:
+        at ManagementUnitPage
+
+        when: "User clicks Add to favourites"
+        starBtn.click()
+
+        then:
+        starBtn.text() == "Remove from favourites"
+
+        when:
+        to MyProjects
+
+        then:
+        waitFor {at MyProjects}
+
+        and: "Favourite Management Unit will be in the list"
+        managementUnitNames() == ['Testing <script>alert(\'Test\')</script>']
+
+        when:
+        to ManagementUnitPage, "test_mu"
+
+        then:
+        at ManagementUnitPage
+
+        when: "User clicks Remove from favourites"
+        starBtn.click()
+
+        then:
+        starBtn.text() == "Add to favourites"
+
     }
 }
