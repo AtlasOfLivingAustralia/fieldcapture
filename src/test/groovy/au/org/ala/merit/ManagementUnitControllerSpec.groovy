@@ -83,6 +83,7 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
 
         then:
         1 * userService.canUserEditManagementUnit("u1", managementUnitId) >> true
+        1 * userService.isManagementUnitStarredByUser(_, _) >> [isManagementUnitStarredByUser:true]
 
         model.content.size() == 4
         model.content.about.visible == true

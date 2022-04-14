@@ -48,7 +48,12 @@ class ManagementUnitController {
             def userId = user?.userId
 
             Map muRole = members.find { it.userId == userId }
-            Boolean isManagementUnitStarredByUser = userService.isManagementUnitStarredByUser(user?.userId, mu?.managementUnitId).isManagementUnitStarredByUser ?: false
+
+            Boolean isManagementUnitStarredByUser = false
+            if (user && mu) {
+                isManagementUnitStarredByUser = userService.isManagementUnitStarredByUser(user?.userId, mu?.managementUnitId)?.isManagementUnitStarredByUser
+            }
+
 
             def mapFeatures = mu.managementUnitSiteId?siteService.getSiteGeoJson(mu.managementUnitSiteId) : null
             if (mapFeatures)
