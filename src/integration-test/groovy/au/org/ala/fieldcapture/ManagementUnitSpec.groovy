@@ -126,7 +126,6 @@ class ManagementUnitSpec extends StubbedCasSpec {
         favouriteBtn.click()
 
         then:
-        favouriteBtn.displayed == true
         favouriteBtn.text() == "Remove from favourites"
 
         when:
@@ -148,7 +147,6 @@ class ManagementUnitSpec extends StubbedCasSpec {
         favouriteBtn.click()
 
         then:
-        favouriteBtn.displayed == true
         favouriteBtn.text() == "Add to favourites"
 
     }
