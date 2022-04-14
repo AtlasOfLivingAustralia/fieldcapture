@@ -78,7 +78,7 @@ class SearchController {
        searchService.downloadSummaryData(params, response)
     }
 
-    @PreAuthorise(accessLevel = 'siteAdmin', redirectController ='home', redirectAction = 'index')
+    @PreAuthorise(accessLevel = 'siteReadOnly', redirectController ='home', redirectAction = 'index')
     def downloadShapefile() {
         params.putAll(downloadParams())
         boolean success = searchService.downloadShapefile(params)
