@@ -43,13 +43,12 @@ class ManagementUnitController {
             if (user) {
                 user = user.properties
                 user.isAdmin = projectService.isUserAdminForProject(user.userId, id) ?: false
-                user.isCaseManager = projectService.isUserCaseManagerForProject(user.userId, id) ?: false
-                user.isEditor = projectService.canUserEditProject(user.userId, id) ?: false
                 user.hasViewAccess = projectService.canUserViewProject(user.userId, id) ?: false
             }
             def userId = user?.userId
 
             Map muRole = members.find { it.userId == userId }
+            Boolean isManagementUnitStarredByUser = userService.isManagementUnitStarredByUser(user?.userId, mu?.managementUnitId).isManagementUnitStarredByUser ?: false
 
             def mapFeatures = mu.managementUnitSiteId?siteService.getSiteGeoJson(mu.managementUnitSiteId) : null
             if (mapFeatures)
@@ -61,7 +60,7 @@ class ManagementUnitController {
              isAdmin            : muRole?.role == RoleService.PROJECT_ADMIN_ROLE,
              isGrantManager     : muRole?.role == RoleService.GRANT_MANAGER_ROLE,
              content            : content(mu, muRole),
-             isManagementUnitStarredByUser: userService.isManagementUnitStarredByUser(user?.userId ?: "0", mu.managementUnitId)?.isManagementUnitStarredByUser
+             isManagementUnitStarredByUser: isManagementUnitStarredByUser
              ]
         }
     }
