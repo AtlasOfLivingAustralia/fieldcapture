@@ -271,7 +271,7 @@ class ManagementUnitSpec extends StubbedCasSpec {
         starBtn.click()
 
         then:
-        starBtn.text() == "Remove from favourites"
+        starBtn.text() == "Add to favourites"
 
         when:
         to MyProjects
