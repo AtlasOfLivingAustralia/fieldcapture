@@ -305,7 +305,7 @@
                 "source": "achievedOutcomesMaintained",
                 "type": "textarea",
                 "rows": 5,
-                "preLabel": "<b>2.3 In your view, how will the outcomes achieved by this project will be maintained, and if relevant, by whom?</b>"
+                "preLabel": "<b>2.3 In your view, how will the outcomes achieved by this project will be maintained, and if relevant, who will do this?</b>"
               }
             ]
           },
