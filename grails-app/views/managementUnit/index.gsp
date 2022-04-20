@@ -67,11 +67,11 @@
                 <div class="float-right pull-right">
                     <g:set var="disabled">${(!user) ? "disabled='disabled' title='login required'" : ''}</g:set>
                     <g:if test="${isManagementUnitStarredByUser}">
-                        <button class="btn btn-sm" id="starBtn"><i
+                        <button class="btn btn-sm" id="starBtn" data-bind="click:toggleStarred"><i
                                 class="fa fa-star"></i> <span>Remove from favourites</span></button>
                     </g:if>
                     <g:else>
-                        <button class="btn btn-sm" id="starBtn" ${disabled}><i
+                        <button class="btn btn-sm" id="starBtn" data-bind="click:toggleStarred" ${disabled}><i
                                 class="fa fa-star-o"></i> <span>Add to favourites</span></button>
                     </g:else>
                 </div>
@@ -132,11 +132,6 @@
             $('#admin-tab').tab('show');
     });
 
-    // Star button click event
-    $("#starBtn").on("click", function(e) {
-        var isStarred = ($("#starBtn i").attr("class") === "fa fa-star");
-        toggleStarred(isStarred, '${user?.userId ?: ''}', '${managementUnit.managementUnitId}');
-    });
 
 </asset:script>
 <asset:javascript src="common-bs4.js"/>

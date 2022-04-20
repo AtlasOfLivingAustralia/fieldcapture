@@ -414,11 +414,11 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
         when:
         request.method = "POST"
         params.id = act
-        params.userId = userId
         params.managementUnitId = managementUnitId
         controller.starManagementUnit()
 
         then:
+        1 * userService.getCurrentUserId() >> "u1"
         1 * userService.addStarManagementUnitForUser(userId, managementUnitId) >> result
         0 * userService.removeStarManagementUnitForUser(userId, managementUnitId) >> result
 
@@ -436,11 +436,11 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
         when:
         request.method = "POST"
         params.id = act
-        params.userId = userId
         params.managementUnitId = managementUnitId
         controller.starManagementUnit()
 
         then:
+        1 * userService.getCurrentUserId() >> "u1"
         0 * userService.addStarManagementUnitForUser(userId, managementUnitId) >> result
         1 * userService.removeStarManagementUnitForUser(userId, managementUnitId) >> result
 

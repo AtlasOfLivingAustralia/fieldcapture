@@ -570,7 +570,7 @@ class ManagementUnitController {
      */
     def starManagementUnit() {
         String act = params.id?.toLowerCase()
-        String userId = params.userId
+        String userId = userService.getCurrentUserId()
         String managementUnitId = params.managementUnitId
 
         if (act && userId && managementUnitId) {
