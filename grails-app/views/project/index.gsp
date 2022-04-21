@@ -90,6 +90,7 @@
                 newDataSetUrl: "${createLink(controller:'dataSet', action:'create', id:project.projectId)}",
                 editDataSetUrl: "${createLink(controller:'dataSet', action:'edit', id:project.projectId)}",
                 deleteDataSetUrl: "${createLink(controller:'dataSet', action:'delete', id:project.projectId)}",
+                viewDataSetUrl: "${createLink(controller:'dataSet', action:'view', id:project.projectId)}",
                 unlockActivityUrl:"${createLink(controller:'activity', action:'ajaxUnlock')}",
                 i18nURL: "${g.createLink(controller: 'home', action: 'i18n')}",
                 returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
@@ -186,7 +187,7 @@
     <g:render template="/shared/unsavedChanges" model="${[id: 'risksUnsavedChanges', unsavedData: 'Risks & Threats']}"/>
 
 </div>
-<g:if test="${user?.isEditor && projectContent.admin?.visible}">
+<g:if test="${projectContent.admin?.visible}">
     <asset:script>
         // Admin JS code only exposed to admin users
         $(function () {
@@ -205,7 +206,7 @@
                 }
             });
 
-        <g:if test="${user.isAdmin || user.isCaseManager}">
+        <g:if test="${user.isAdmin || user.isCaseManager || user.hasViewAccess}">
             populatePermissionsTable();
         </g:if>
         });
@@ -276,6 +277,7 @@ var config = {
             newDataSetUrl: fcConfig.newDataSetUrl,
             editDataSetUrl: fcConfig.editDataSetUrl,
             deleteDataSetUrl: fcConfig.deleteDataSetUrl,
+            viewDataSetUrl: fcConfig.viewDataSetUrl,
             returnToUrl: fcConfig.returnTo
         };
 

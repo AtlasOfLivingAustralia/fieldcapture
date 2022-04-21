@@ -4,6 +4,7 @@ import pages.AdminTools
 import pages.CreateManagementUnit
 import pages.EditManagementUnitPage
 import pages.ManagementUnitPage
+import pages.MyProjects
 import spock.lang.Stepwise
 
 @Stepwise
@@ -63,7 +64,7 @@ class ManagementUnitSpec extends StubbedCasSpec {
 
     }
 
-    def "Admin tab is not visible to users with Read Only Access role for the management unit"() {
+    def "Permissions page in the admin tab is visible to users with Read Only Access role for the management unit"() {
 
         setup:
         loginAsReadOnlyUser(browser)
@@ -76,7 +77,7 @@ class ManagementUnitSpec extends StubbedCasSpec {
         overviewBtn.displayed == true
         reportsTab.displayed == true
         sitesTab.displayed == true
-        adminTab.displayed == false
+        adminTab.displayed == true
 
     }
 
@@ -254,5 +255,46 @@ class ManagementUnitSpec extends StubbedCasSpec {
        adminTabPane.adminColumn[3].text() == "Reporting"
        adminTabPane.adminColumn[4].text() == "Priorities"
        adminTabPane.adminColumn[5].text() == "Configuration"
+    }
+
+    def "Add/Remove MU to Favourites"() {
+        setup:
+        loginAsReadOnlyUser(browser)
+
+        when:
+        to ManagementUnitPage, "test_mu"
+
+        then:
+        at ManagementUnitPage
+
+        when: "User clicks Add to favourites"
+        starBtn.click()
+
+        then:
+        starBtn.displayed == true
+        starBtn.text() == "Remove from favourites"
+
+        when:
+        to MyProjects
+
+        then:
+        waitFor {at MyProjects}
+
+        and: "Favourite Management Unit will be in the list"
+        managementUnitNames() == ['Testing <script>alert(\'Test\')</script>']
+
+        when:
+        to ManagementUnitPage, "test_mu"
+
+        then:
+        at ManagementUnitPage
+
+        when: "User clicks Remove from favourites"
+        starBtn.click()
+
+        then:
+        starBtn.displayed == true
+        starBtn.text() == "Add to favourites"
+
     }
 }

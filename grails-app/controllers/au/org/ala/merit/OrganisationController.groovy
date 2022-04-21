@@ -32,6 +32,12 @@ class OrganisationController {
 
             def orgRole = members.find{it.userId == userId}
 
+            if (user) {
+                user = user.properties
+                user.isAdmin = orgRole?.role == RoleService.PROJECT_ADMIN_ROLE ?: false
+                user.isCaseManager = orgRole?.role == RoleService.GRANT_MANAGER_ROLE ?: false
+            }
+
             [organisation: organisation,
              dashboard: dashboard,
              roles:roles,
