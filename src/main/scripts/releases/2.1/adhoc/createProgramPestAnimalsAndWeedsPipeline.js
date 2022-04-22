@@ -129,14 +129,38 @@ var projectConfig = {
                 "template": "programOutcome",
                 "model": {
                     "maximumPriorities": "1000",
-                    "helpTextHeading": "Bushfire program outcomes are listed in the secondary outcomes"
+                    "helpTextHeading": "Bushfire program outcomes are listed in the secondary outcomes",
+                    "pestsAndWeedsHeading": "Primary Pest Investment Priority",
                 }
             },
             {
                 "template": "additionalOutcomes",
                 "model": {
                     "maximumPriorities": 1000,
-                    "maxAdditionalOutcomes": 15
+                    "maxAdditionalOutcomes": 15,
+                    "priority": "Secondary Pest Investment Priority"
+                }
+            },
+            {
+                "template": "outcomeStatements",
+                "model": {
+                    "subtitle": "Short-terms outcome statement/s",
+                    "title": "Project Outcomes"
+                }
+            },
+            {
+                "template": "mediumTermOutcomes",
+                "model": {
+                    "subtitle": "Mid-terms outcome statement/s",
+                    "title": "Project Outcomes"
+                }
+            },
+            {
+                "template": "projectPartnerships",
+                "model": {
+                    "namePlaceHolder": "[Free text]",
+                    "helpTextPartnerNature": "If partnership with an organisation: provide the name of the organisation and the role they will play/how you will support them. If partnering with community groups or members of the public: indicate each group or individual you will engage with",
+                    "partnershipPlaceHolder": "[Free text]"
                 }
             },
             {
@@ -191,13 +215,23 @@ var projectConfig = {
                 "template": "projectReview"
             },
             {
-                "template": "nationalAndRegionalPlans"
+                "template": "nationalAndRegionalPlans",
+                "model": {
+                    "explanation": "Does the new approach meet the requirements of any recovery plans / Conservation activities?"
+                }
             },
             {
                 "template": "serviceTargets",
                 "model": {
-                    "title": "Services and Targets Table",
+                    "title": "Activities and minimum targets",
                     "serviceName": "Service"
+                }
+            },
+            {
+                "template": "attachmentFooter",
+                "model": {
+                    "heading": "MERI Attachments",
+                    "attachmentText": "Please attach Project logic to your MERI plan using the documents function on the Admin tab.  A \"Document type\" of \"Project Logic\" should be selected when uploading the document."
                 }
             }
         ]
