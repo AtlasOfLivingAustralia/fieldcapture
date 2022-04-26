@@ -156,11 +156,14 @@ var projectConfig = {
                 }
             },
             {
-                "template": "projectPartnerships",
+                "template": "controlMethod",
                 "model": {
-                    "namePlaceHolder": "[Free text]",
-                    "helpTextPartnerNature": "If partnership with an organisation: provide the name of the organisation and the role they will play/how you will support them. If partnering with community groups or members of the public: indicate each group or individual you will engage with",
-                    "partnershipPlaceHolder": "[Free text]"
+                    "title": "Current control methods(if known)",
+                    "methodHeading": "Are there any current control methods for this pest?",
+                    "successHeading": "Has it been successful?",
+                    "typeHeading": "Type of method",
+                    "detailsHeading": "Details",
+                    "approachPlaceHolder": "[Free text]"
                 }
             },
             {
@@ -183,6 +186,14 @@ var projectConfig = {
                     "helpTextHeading": "A succinct overview of the project: (i) what will be done and (ii) why it will be done",
                     "maxSize": "1000",
                     "placeholder": "Please provide a short description of this project. This project description will be visible on the project overview page in MERIT [Free text; limit response to 1000 characters (approx. 150 words)]"
+                }
+            },
+            {
+                "template": "controlApproach",
+                "model": {
+                    "approachHeading": "Could this control approach pose a threat to Native Animals/Plants or Biodiversity?",
+                    "detailHeading": "Details",
+                    "approachPlaceHolder": "[Free text]"
                 }
             },
             {

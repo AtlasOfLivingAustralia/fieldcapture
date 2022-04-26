@@ -329,6 +329,8 @@ function MERIPlan(project, projectService, config) {
     self.protectedNaturalAssests = ['Natural/Cultural assets managed', 'Threatened Species', 'Threatened Ecological Communities',
         'Migratory Species', 'Ramsar Wetland', 'World Heritage area', 'Community awareness/participation in NRM', 'Indigenous Cultural Values',
         'Indigenous Ecological Knowledge', 'Remnant Vegetation', 'Aquatic and Coastal systems including wetlands', 'Not Applicable'];
+    self.controls = ['Yes', 'No'];
+    self.methodType = ['Natural', 'Chemical', 'Disease Virus', 'Mechanical', 'Genetics', 'Other with comment field'];
 
     self.addBudget = function () {
         self.meriPlan().budget.rows.push(new BudgetRowViewModel({}, periods));
@@ -378,7 +380,6 @@ function MERIPlan(project, projectService, config) {
     self.removePartnership = function (partnership) {
         self.meriPlan().partnership.removeRow(partnership);
     };
-
     self.addSecondaryOutcome = function () {
         self.meriPlan().outcomes.secondaryOutcomes.push(new SingleAssetOutcomeViewModel());
     };
@@ -404,7 +405,18 @@ function MERIPlan(project, projectService, config) {
     self.removeAsset = function(asset) {
         self.meriPlan().assets.remove(asset);
     };
-
+    self.addControl = function () {
+        self.meriPlan().controlApproach.addRow();
+    };
+    self.removeControl = function (controlApproach) {
+        self.meriPlan().controlApproach.removeRow(controlApproach);
+    };
+    self.addControlMethod = function () {
+        self.meriPlan().controlMethod.addRow();
+    };
+    self.removeControlMethod = function (controlMethod) {
+        self.meriPlan().controlMethod.removeRow(controlMethod);
+    };
     self.saveAndSubmitChanges = function(){
         self.saveMeriPlan(true);
     };
@@ -638,6 +650,8 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
     self.threats = new GenericViewModel(o.threats, ['threat', 'intervention']);
     self.consultation = ko.observable(o.consultation);
     self.communityEngagement = ko.observable(o.communityEngagement);
+    self.controlApproach = new GenericViewModel(o.controlApproach, ['data1', 'data2']);
+    self.controlMethod = new GenericViewModel(o.controlMethod, ['data1', 'data2', 'data3', 'data4']);
 
     var row = [];
     o.events ? row = o.events : row.push(ko.mapping.toJS(new EventsRowViewModel()));
