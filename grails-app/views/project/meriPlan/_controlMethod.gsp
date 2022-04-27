@@ -1,9 +1,9 @@
-<div class="meri-monitoring-indicators">
+<div class="meri-control-method">
     <g:if test="${title}">
         <h4>${title}</h4>
     </g:if>
 
-        <table class="table">
+        <table class="table control-method">
             <thead>
             <tr>
                 <th class="index"></th>

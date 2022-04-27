@@ -398,3 +398,12 @@ input#changeProjectStartDate {
 .meri-plan .method-details {
     width: 30%;
 }
+
+.meri-plan .approach-current {
+    width: 33%;
+}
+
+.meri-plan .approach-details {
+    width: 67%;
+    word-break: break-word;
+}

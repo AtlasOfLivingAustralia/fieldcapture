@@ -1,7 +1,7 @@
 <g:if test="${title}">
     <h4>${title}</h4>
 </g:if>
-<table class="table meri-monitoring-indicators">
+<table class="table">
     <thead>
     <tr>
         <th class="index"></th>
