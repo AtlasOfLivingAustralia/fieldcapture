@@ -27,6 +27,17 @@
     </div>
 
     <div class="form-group row">
+        <label class="col-form-label col-sm-3" for="url">Short Name:<fc:iconHelp><g:message
+                code="managementUnit.shortName.help"/></fc:iconHelp> </label>
+
+        <div class="controls col-sm-9">
+            <input type="text" class="form-control" id="shortName" data-bind="value:shortName"
+                   data-validation-engine="validate[required]"
+                   placeholder="${g.message(code: 'managementUnit.shortName.placeholder')}">
+        </div>
+    </div>
+
+    <div class="form-group row">
         <label class="col-form-label col-sm-3" for="url">Web Site URL: <fc:iconHelp><g:message
                 code="managementUnit.webUrl.help"/></fc:iconHelp></label>
 
