@@ -163,7 +163,15 @@ var projectConfig = {
                     "successHeading": "Has it been successful?",
                     "typeHeading": "Type of method",
                     "detailsHeading": "Details",
-                    "approachPlaceHolder": "[Free text]"
+                    "approachPlaceHolder": "[Free text]",
+                    "methodTypes": [
+                        "Natural",
+                        "Chemical",
+                        "Disease Virus",
+                        "Mechanical",
+                        "Genetics",
+                        "Other with comment field"
+                    ]
                 }
             },
             {

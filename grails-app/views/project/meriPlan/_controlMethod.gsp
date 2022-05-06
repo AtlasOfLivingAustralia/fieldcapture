@@ -24,7 +24,7 @@
                     <select class="form-control form-control-sm" style="width: 60%;" data-bind="addValueToOptionsIfMissing:true, options: $parent.controls, value:hasBeenSuccessful,optionsCaption: 'Please select', disable: $parent.isProjectDetailsLocked()"></select>
                 </td>
                 <td class="method-type">
-                    <select class="form-control form-control-sm" style="width: 60%;" data-bind="addValueToOptionsIfMissing:true, options: $parent.methodType, value:methodType,optionsCaption: 'Please select', disable: $parent.isProjectDetailsLocked()"></select>
+                    <select class="form-control form-control-sm" style="width: 60%;" data-bind="addValueToOptionsIfMissing:true, options: ${methodTypes}, value:methodType,optionsCaption: 'Please select', disable: $parent.isProjectDetailsLocked()"></select>
                 </td>
                 <td class="method-details">
                     <textarea class="form-control form-control-sm" data-bind="value: details, disable: $parent.isProjectDetailsLocked()" rows="5" placeholder="${approachPlaceHolder}"></textarea>

@@ -330,7 +330,6 @@ function MERIPlan(project, projectService, config) {
         'Migratory Species', 'Ramsar Wetland', 'World Heritage area', 'Community awareness/participation in NRM', 'Indigenous Cultural Values',
         'Indigenous Ecological Knowledge', 'Remnant Vegetation', 'Aquatic and Coastal systems including wetlands', 'Not Applicable'];
     self.controls = ['Yes', 'No'];
-    self.methodType = ['Natural', 'Chemical', 'Disease Virus', 'Mechanical', 'Genetics', 'Other with comment field'];
 
     self.addBudget = function () {
         self.meriPlan().budget.rows.push(new BudgetRowViewModel({}, periods));
