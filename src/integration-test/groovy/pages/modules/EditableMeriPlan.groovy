@@ -129,18 +129,17 @@ class SubmissionModal extends Module {
 
 class ControlApproachRow extends Module {
     static content = {
-        approach { $('.approach-current select[data-bind*=data1]') }
-        details { $('.approach-details textarea[data-bind*=data2]') }
-        remove { $('i.icon-remove') }
+        approach { $('.approach-current select[data-bind*=couldBethreatToSpecies]') }
+        details { $('.approach-details textarea[data-bind*=details]') }
     }
 }
 
 class ControlMethodRow extends Module {
     static content = {
-        current { $('.method-current textarea[data-bind*=data1]') }
-        success { $('.method-success select[data-bind*=data2]') }
-        type { $('.method-type select[data-bind*=data3]') }
-        details { $('.method-details textarea[data-bind*=data4]') }
+        current { $('.method-current textarea[data-bind*=currentControlMethod]') }
+        success { $('.method-success select[data-bind*=hasBeenSuccessful]') }
+        type { $('.method-type select[data-bind*=methodType]') }
+        details { $('.method-details textarea[data-bind*=details]') }
         remove { $('i.icon-remove') }
     }
 }

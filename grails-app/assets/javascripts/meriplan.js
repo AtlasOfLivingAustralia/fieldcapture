@@ -643,7 +643,7 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
     self.threats = new GenericViewModel(o.threats, ['threat', 'intervention']);
     self.consultation = ko.observable(o.consultation);
     self.communityEngagement = ko.observable(o.communityEngagement);
-    self.threatToNativeSpecies = new GenericViewModel(o.controlApproach, ['couldBethreatToSpecies', 'details']);
+    self.threatToNativeSpecies = new GenericViewModel(o.threatToNativeSpecies, ['couldBethreatToSpecies', 'details']);
     self.threatControlMethod = new GenericViewModel(o.threatControlMethod, ['currentControlMethod', 'hasBeenSuccessful', 'methodType', 'details']);
 
     var row = [];
