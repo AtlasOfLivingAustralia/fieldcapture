@@ -405,17 +405,11 @@ function MERIPlan(project, projectService, config) {
     self.removeAsset = function(asset) {
         self.meriPlan().assets.remove(asset);
     };
-    self.addControl = function () {
-        self.meriPlan().controlApproach.addRow();
-    };
-    self.removeControl = function (controlApproach) {
-        self.meriPlan().controlApproach.removeRow(controlApproach);
-    };
     self.addControlMethod = function () {
-        self.meriPlan().controlMethod.addRow();
+        self.meriPlan().threatControlMethod.addRow();
     };
-    self.removeControlMethod = function (controlMethod) {
-        self.meriPlan().controlMethod.removeRow(controlMethod);
+    self.removeControlMethod = function (threatControlMethod) {
+        self.meriPlan().threatControlMethod.removeRow(threatControlMethod);
     };
     self.saveAndSubmitChanges = function(){
         self.saveMeriPlan(true);
@@ -650,8 +644,8 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
     self.threats = new GenericViewModel(o.threats, ['threat', 'intervention']);
     self.consultation = ko.observable(o.consultation);
     self.communityEngagement = ko.observable(o.communityEngagement);
-    self.controlApproach = new GenericViewModel(o.controlApproach, ['data1', 'data2']);
-    self.controlMethod = new GenericViewModel(o.controlMethod, ['data1', 'data2', 'data3', 'data4']);
+    self.threatToNativeSpecies = new GenericViewModel(o.controlApproach, ['couldBethreatToSpecies', 'details']);
+    self.threatControlMethod = new GenericViewModel(o.threatControlMethod, ['currentControlMethod', 'hasBeenSuccessful', 'methodType', 'details']);
 
     var row = [];
     o.events ? row = o.events : row.push(ko.mapping.toJS(new EventsRowViewModel()));

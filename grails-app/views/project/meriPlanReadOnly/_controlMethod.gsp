@@ -11,13 +11,13 @@
         <th class="method-details">Details</th>
     </tr>
     </thead>
-    <tbody data-bind="foreach : details.controlMethod.rows">
+    <tbody data-bind="foreach : details.threatControlMethod.rows">
     <tr>
         <td class="index"><span data-bind="text: $index()+1"></span></td>
-        <td class="method-current"><span data-bind="text:data1"></span></td>
-        <td class="method-success"><span data-bind="text:data2"></span></td>
-        <td class="method-type"><span data-bind="text:data3"></span></td>
-        <td class="method-details"><span data-bind="text:data4"></span></td>
+        <td class="method-current"><span data-bind="text:currentControlMethod"></span></td>
+        <td class="method-success"><span data-bind="text:hasBeenSuccessful"></span></td>
+        <td class="method-type"><span data-bind="text:methodType"></span></td>
+        <td class="method-details"><span data-bind="text:details"></span></td>
     </tr>
     </tbody>
 </table>
