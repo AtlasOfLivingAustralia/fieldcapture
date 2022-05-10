@@ -128,6 +128,7 @@ class ManagementUnitSpec extends StubbedCasSpec {
         when:
         details.name = "Testing <script>alert('Test')</script>"
         details.description = "Testing"
+        details.shortName = "Sample short name"
         details.save()
 
         then:
@@ -195,6 +196,7 @@ class ManagementUnitSpec extends StubbedCasSpec {
         when:
         create.name = "Creating a management unit"
         create.description = "Management Unit Description"
+        create.shortName = "Sample short name"
         create.save()
 
         then:

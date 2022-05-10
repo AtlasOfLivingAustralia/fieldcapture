@@ -34,6 +34,7 @@ ManagementUnitViewModel = function (props, options) {
     self.managementUnitSiteId = ko.observable(props.managementUnitSiteId);
     self.mapFeatures =  ko.observable(props.mapFeatures);
     self.projects = props.projects;
+    self.shortName = ko.observable(props.shortName);
 
     self.deleteManagementUnit = function () {
         if (window.confirm("Delete this managementUnit?  Are you sure?")) {

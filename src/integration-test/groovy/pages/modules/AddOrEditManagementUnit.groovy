@@ -7,6 +7,7 @@ class AddOrEditManagementUnit extends Module{
     static content = {
         name { $('#name') }
         description { $('#description') }
+        shortName { $('#shortName') }
         url { $('#url') }
         socialMediaDropdown { $('#addSocialMedia') }
         attachProgramLogoButton { $('[data-role=logo]') }
