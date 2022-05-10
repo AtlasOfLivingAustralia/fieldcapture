@@ -22,6 +22,7 @@ class ReportService {
     public static final String REPORT_TYPE_SINGLE_ACTIVITY = 'Single'
     public static final String REPORT_TYPE_STAGE_REPORT = 'Activity'
     public static final String REPORT_TYPE_ADJUSTMENT = 'Adjustment'
+    public static final String CORE_SERVICES_ANNUAL_REPORTING = 'Core Services Annual Reporting'
 
     static enum ReportMode {
         VIEW,
@@ -915,4 +916,17 @@ class ReportService {
         return !activity.lock || (activity.lock.userId == userId)
 
     }
+
+    /**
+     * Returns a map of the previous report model based on the date passed from the json object and the report category
+     */
+    Map getPreviousReportModel(Map params) {
+        Map model = [:]
+        List<Map> reports = findReportsForManagementUnit(params.managementUnitId)
+        Map resultMap = reports.find{it.fromDate < params.reportDate && it.toDate >= params.reportDate && it.category.equals(CORE_SERVICES_ANNUAL_REPORTING)}
+        Map activity = activityService.get(resultMap.activityId)
+        model.activity = activity
+        model
+    }
+
 }

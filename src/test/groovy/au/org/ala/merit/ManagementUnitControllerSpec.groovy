@@ -448,6 +448,26 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
         response.json == [status:HttpStatus.SC_OK]
     }
 
+    def "the controller can pre-pop the value for some fields in RLP core services annual reporting"() {
+        setup:
+        Map stubModel = [activity:[outputs:[
+                        [activityId:'b0390056-e6a1-4b8e-b1ac-f2b9fe33ca24',
+                            data:[investment2020_21:'111',
+                                  serviceSubcontracted2020_21:'222']
+                        ]
+                        ]]]
+        when:
+        params.managementUnitId = 'mu01'
+        params.reportDate = '2021-06-30T13:00:00Z'
+        controller.previousReportContents('mu01')
+
+        then:
+        1 * reportService.getPreviousReportModel(params) >> stubModel
+        response.json.managementUnitId == 'mu01'
+        response.json.investment2020_21 == ['111']
+        response.json.serviceSubcontracted2020_21 == ['222']
+    }
+
     private void setupAnonymousUser() {
         userService.getUser() >> null
         userService.userHasReadOnlyAccess() >> false

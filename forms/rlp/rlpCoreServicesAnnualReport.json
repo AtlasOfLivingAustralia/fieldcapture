@@ -989,6 +989,42 @@
               }
             }
 
+          },
+          {
+            "source": {
+              "params": [
+                {
+                  "expression": "owner.managementUnitId",
+                  "name": "managementUnitId",
+                  "type": "computed"
+                },
+                {
+                  "name": "reportDate",
+                  "value": "2021-06-30T13:00:00Z"
+                }
+              ],
+              "url": "/managementUnit/previousReportContents/"
+            },
+            "mapping": [
+              {
+                "source-path": "investment2020_21",
+                "target": "investment2020_21"
+              },
+              {
+                "source-path": "serviceSubcontracted2020_21",
+                "target": "serviceSubcontracted2020_21"
+              }
+            ],
+            "merge": {
+              "subcontractedWorkForceByFinancialYear": {
+                "keys": [
+                  "contractWorkforceType"
+                ],
+                "addUnmatchedNewRows": true,
+                "deleteUnmatchedExistingRows": true
+              }
+            }
+
           }
         ]
       },
