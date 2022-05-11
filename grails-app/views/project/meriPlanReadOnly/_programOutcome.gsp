@@ -3,7 +3,7 @@
     <thead>
     <tr>
         <th class="outcome-priority">Primary outcome</th>
-        <th class="primary-outcome priority">Primary Investment <span data-bind="if:!isAgricultureProject() && !details.outcomes.primaryOutcomeSupportsMultiplePriorities()">Priority</span><span data-bind="if:isAgricultureProject() || details.outcomes.primaryOutcomeSupportsMultiplePriorities()">Priorities</span></th>
+        <th class="primary-outcome priority required">${pestsAndWeedsHeading?: 'Primary Investment'} <span data-bind="if:!isAgricultureProject() && !details.outcomes.primaryOutcomeSupportsMultiplePriorities()">Priority</span><span data-bind="if:isAgricultureProject() || details.outcomes.primaryOutcomeSupportsMultiplePriorities()">Priorities</span>
     </tr>
     </thead>
     <tbody>

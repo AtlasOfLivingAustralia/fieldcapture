@@ -130,7 +130,7 @@ var projectConfig = {
                 "model": {
                     "maximumPriorities": "1000",
                     "helpTextHeading": "Bushfire program outcomes are listed in the secondary outcomes",
-                    "pestsAndWeedsHeading": "Primary Pest Investment Priority",
+                    "pestsAndWeedsHeading": "Primary Pest Investment",
                 }
             },
             {
