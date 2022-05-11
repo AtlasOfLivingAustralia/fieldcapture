@@ -29,7 +29,7 @@ var projectConfig = {
             "reportApprovedEmailTemplate": "RLP_REPORT_APPROVED_EMAIL_TEMPLATE",
             "planSubmittedEmailTemplate": "RLP_PLAN_SUBMITTED_EMAIL_TEMPLATE"
         },
-        "meriPlanTemplate": "rlpMeriPlan",
+        "meriPlanTemplate": "configurableMeriPlan",
         "riskAndThreatTypes": [
             "Performance",
             "Work Health and Safety",
@@ -123,6 +123,136 @@ var projectConfig = {
             33,
             34,
             35
+        ],
+        "meriPlanContents": [
+            {
+                "template": "programOutcome",
+                "model": {
+                    "maximumPriorities": "1000",
+                    "helpTextHeading": "Bushfire program outcomes are listed in the secondary outcomes",
+                    "pestsAndWeedsHeading": "Primary Pest Investment",
+                }
+            },
+            {
+                "template": "additionalOutcomes",
+                "model": {
+                    "maximumPriorities": 1000,
+                    "maxAdditionalOutcomes": 15,
+                    "priority": "Secondary Pest Investment Priority"
+                }
+            },
+            {
+                "template": "outcomeStatements",
+                "model": {
+                    "subtitle": "Short-terms outcome statement/s",
+                    "title": "Project Outcomes"
+                }
+            },
+            {
+                "template": "mediumTermOutcomes",
+                "model": {
+                    "subtitle": "Mid-terms outcome statement/s",
+                    "title": "Project Outcomes"
+                }
+            },
+            {
+                "template": "controlMethod",
+                "model": {
+                    "title": "Current control methods(if known)",
+                    "methodHeading": "Are there any current control methods for this pest?",
+                    "successHeading": "Has it been successful?",
+                    "typeHeading": "Type of method",
+                    "detailsHeading": "Details",
+                    "approachPlaceHolder": "[Free text]",
+                    "methodTypes": [
+                        "Natural",
+                        "Chemical",
+                        "Disease Virus",
+                        "Mechanical",
+                        "Genetics",
+                        "Other with comment field"
+                    ]
+                }
+            },
+            {
+                "template": "sectionHeading",
+                "model": {
+                    "heading": "Project Details"
+                }
+            },
+            {
+                "template": "name",
+                "model": {
+                    "tableFormatting": true,
+                    "placeHolder": "[150 characters]"
+                }
+            },
+            {
+                "template": "description",
+                "model": {
+                    "tableFormatting": true,
+                    "helpTextHeading": "A succinct overview of the project: (i) what will be done and (ii) why it will be done",
+                    "maxSize": "1000",
+                    "placeholder": "Please provide a short description of this project. This project description will be visible on the project overview page in MERIT [Free text; limit response to 1000 characters (approx. 150 words)]"
+                }
+            },
+            {
+                "template": "controlApproach",
+                "model": {
+                    "approachHeading": "Could this control approach pose a threat to Native Animals/Plants or Biodiversity?",
+                    "detailHeading": "Details",
+                    "approachPlaceHolder": "[Free text]"
+                }
+            },
+            {
+                "template": "keyThreats",
+                "model": {
+                    "interventionHelpText": "Describe the proposed interventions to address the threat and how this will deliver on the project outcome"
+                }
+            },
+            {
+                "template": "projectMethodology",
+                "model": {
+                    "maxSize": "4000",
+                    "title": "Project methodology",
+                    "tableHeading": "Please describe the methodology that will be used to achieve the project's outcome statements. To help demonstrate best practice delivery approaches and cost effectiveness of methodologies used, include details of the specific delivery mechanisms to leverage change (e.g. delivery method, approach and justification)",
+                    "placeHolder": "[Free text; limit response to 4000 characters (approx. 650 words)]"
+                }
+            },
+            {
+                "template": "monitoringIndicators",
+                "model": {
+                    "approachHeading": "Describe the project monitoring indicator(s) approach",
+                    "indicatorHeading": "Project monitoring indicators",
+                    "indicatorHelpText": "List the measurable indicators of project success that will be monitored. Indicators should link back to the outcome statements and have units of measure. Indicators should measure both project outputs (e.g. area (ha) of rabbit control, length (km) of predator proof fencing) and change the project is aiming to achieve (e.g. Change in abundance of X threatened species at Y location, Change in vegetation cover (%), etc).",
+                    "approachHelpText": "How will the indicator be monitored? Briefly describe the method to be used to monitor the indicator (including timing of monitoring, who will collect/collate / analyse data, etc)",
+                    "indicatorPlaceHolder": "[Free text]",
+                    "approachPlaceHolder": "[Free text]"
+                }
+            },
+            {
+                "template": "projectReview"
+            },
+            {
+                "template": "nationalAndRegionalPlans",
+                "model": {
+                    "explanation": "Does the new approach meet the requirements of any recovery plans / Conservation activities?"
+                }
+            },
+            {
+                "template": "serviceTargets",
+                "model": {
+                    "title": "Activities and minimum targets",
+                    "serviceName": "Service"
+                }
+            },
+            {
+                "template": "attachmentFooter",
+                "model": {
+                    "heading": "MERI Attachments",
+                    "attachmentText": "Please attach Project logic to your MERI plan using the documents function on the Admin tab.  A \"Document type\" of \"Project Logic\" should be selected when uploading the document."
+                }
+            }
         ]
     },
     priorities: [
