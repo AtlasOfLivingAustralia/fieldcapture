@@ -176,7 +176,9 @@
             <fc:modelAsJavascript model="${site?: null}"/>,
             fcConfig.project,
             <fc:modelAsJavascript model="${metaModel?: null}"/>,
-            <fc:modelAsJavascript model="${themes?: null}"/>);
+            <fc:modelAsJavascript model="${themes?: null}"/>,
+            fcConfig
+        );
 
         ko.applyBindings(viewModel);
 

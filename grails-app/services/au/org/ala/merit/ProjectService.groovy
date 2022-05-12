@@ -114,26 +114,73 @@ class ProjectService  {
      */
     def summary(String id, boolean approvedDataOnly = false, List scoreIds = null) {
 
-        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'project/projectMetrics/' + id+"?approvedDataOnly="+approvedDataOnly
-        if (scoreIds) {
-            scoreIds.each{scoreId ->
-                url+="&scoreIds="+scoreId
-            }
-        }
-        Map result = webService.doPostWithParams(url, [:])
+        Map result = projectSummary(id, approvedDataOnly, scoreIds)
         def scores = result?.resp
         def scoresWithTargetsByOutput = [:]
         def scoresWithoutTargetsByOutputs = [:]
-        if (scores && scores instanceof List) {  // If there was an error, it would be returning a map containing the error.
+        if (scores) {  // If there was an error, it would be returning a map containing the error.
             // There are some targets that have been saved as Strings instead of numbers.
-            scoresWithTargetsByOutput = scores.grep{ it.target && it.target != "0" }.groupBy { it.outputType }
-            scoresWithoutTargetsByOutputs = scores.grep{ it.result && it.result.count && (it.result.result || it.result.groups) && (!it.target || it.target == "0") }.groupBy { it.outputType }
+            scoresWithTargetsByOutput = scores.grep{ it.hasTarget() }.groupBy { it.outputType }
+            scoresWithoutTargetsByOutputs = scores.grep{ it.result && it.result.count && (it.result.result || it.result.groups) && !it.hasTarget() }.groupBy { it.outputType }
         }
         [targets:scoresWithTargetsByOutput, other:scoresWithoutTargetsByOutputs]
     }
 
     def search(params) {
         webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl') + 'project/search', params)
+    }
+
+    /**
+     * Returns summary data derived from project activities.
+     * @param id  The project id.
+     * @param approvedDataOnly If true, only data from approved activities will be used.
+     * @param scoreIds If supplied, only data for the supplied score ids will be returned.
+     * @return If the call to ecodata is successful a Map of the form: [resp: [<list of Score>]].
+     * If the call to ecodata fails, a Map of the form: [error: <message>, (optional)statusCode: <HTTP status of the call>]
+     *
+     */
+    private Map projectSummary(String id, boolean approvedDataOnly = false, List scoreIds = null) {
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'project/projectMetrics/' + id
+        Map params = [approvedOnly:approvedDataOnly]
+        if (scoreIds) {
+            params.scoreIds = scoreIds
+        }
+        Map result = webService.doPost(url, params)
+        if (result.resp) {
+            result.resp = result.resp.collect{new Score(it)}
+        }
+        result
+    }
+
+
+    Map targetsAndScoresForActivity(String activityId) {
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'project/scoreDataForActivityAndProject/' + activityId
+        Map result = webService.getJson2(url)
+
+        if (result.statusCode == HttpStatus.SC_OK) {
+            List projectScores = result.resp?.projectScores?.collect{new Score(it)}.findAll({it.hasTarget()})
+            List scoreIdsWithTargets = projectScores.collect{it.scoreId}
+            result.resp.projectScores = projectScores
+            result.resp.activityScores = result.resp?.activityScores.collect{new Score(it)}.findAll{it.scoreId in scoreIdsWithTargets}
+        }
+
+        result
+    }
+
+    /**
+     * Returns true if the report identified by reportId belongs to the project identified by projectId.
+     */
+    boolean doesReportBelongToProject(String projectId, String reportId) {
+        Map report = reportService.get(reportId)
+        report?.projectId == projectId
+    }
+
+    /**
+     * Returns true if the report identified by reportId belongs to the project identified by projectId.
+     */
+    boolean doesActivityBelongToProject(String projectId, String activityId) {
+        Map activity = activityService.get(activityId)
+        activity?.projectId == projectId
     }
 
     /**
@@ -1128,7 +1175,7 @@ class ProjectService  {
 		def metrics = summary(project.projectId);
 		metrics?.targets?.each{ k, v->
 			v?.each{ data ->
-				String units = data.score?.units ? data.score.units : '';
+				String units = data?.units ?: '';
 				double total = data.result?.result ?: 0.0
 				append(html,"<tr><td>${data.outputType}</td><td>${data.label}</td><td>${total}</td><td>${data.target} ${units}</td></tr>")
 			}
@@ -1444,7 +1491,7 @@ class ProjectService  {
                     name:service.name,
                     id: service.id,
                     scores: service.scores?.collect { score ->
-                        [scoreId: score.scoreId, label: score.label, isOutputTarget:score.isOutputTarget]
+                        new Score([scoreId: score.scoreId, label: score.label, isOutputTarget:score.isOutputTarget])
                     }
             ]
         }
@@ -1585,7 +1632,7 @@ class ProjectService  {
 
 
         services.each { Map service ->
-            service.scores?.each { Map score ->
+            service.scores?.each { Score score ->
                 score.periodTargets?.each{ Map period ->
 
 
@@ -1633,19 +1680,19 @@ class ProjectService  {
      */
     Map getServiceDashboardData(String projectId, boolean approvedDataOnly) {
 
-        List<Map> projectServices = getProjectServicesWithTargets(projectId)
+        List<Score> projectServices = getProjectServicesWithTargets(projectId)
         List scoreIds = projectServices.collect{it.scores?.collect{score -> score.scoreId}}.flatten()
 
-        Map scoreSummary = summary(projectId, approvedDataOnly, scoreIds)
+        Map scoreSummary = projectSummary(projectId, approvedDataOnly, scoreIds)
 
         Map dashboard = [services:[], planning:false]
         int deliveredAgainstTargets = 0
         projectServices.each { Map service ->
             List scores = []
-            service.scores.each { Map score ->
+            service.scores.each { Score score ->
 
-                if (score.target) {
-                    Map scoreData = findScore(score.scoreId, scoreSummary?.targets)
+                if (score.hasTarget()) {
+                    Score scoreData = scoreSummary.resp?.find{it.scoreId == score.scoreId}
                     if (scoreData?.result) {
                         score.result = scoreData.result ?: [result:0]
                         deliveredAgainstTargets += score.result?.result ?: 0
@@ -1753,13 +1800,13 @@ class ProjectService  {
         content?.project
     }
 
-    private Map findScore(String scoreId, Map scoresWithTargets) {
-        Map scoreData = null
+    private Score findScore(String scoreId, Map scoresWithTargets) {
+        Score score = null
         scoresWithTargets?.find { String key, List outputScores ->
-            scoreData = outputScores?.find{it.scoreId == scoreId}
+            score = outputScores?.find{it.scoreId == scoreId}
         }
 
-        scoreData
+        score
     }
 
     /**

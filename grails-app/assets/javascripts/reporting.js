@@ -1,4 +1,4 @@
-
+//= require reportService.js
 
 var GreenArmyActivityViewModel = function(activity) {
     var self = this;
@@ -266,6 +266,21 @@ var ReportViewModel = function(report, config) {
         $reasonModal.modal({backdrop: 'static', keyboard:true, show:true}).on('hidden', function() {ko.cleanNode($reasonModal[0])});
     };
 
+    self.overDeliveryMessage = ko.observable();
+    self.overDelivered = ko.observable(false);
+    self.checkForOverDelivery = function() {
+        var reportService = new ReportService(config);
+        reportService.findOverDeliveredTargets(report.activityId).done(function(result) {
+            if (!result || !result.length) {
+                return;
+            }
+            self.overDelivered(true);
+            var message = reportService.formatOverDeliveryMessage(result);
+            self.overDeliveryMessage(message);
+        });
+
+    };
+
     self.outcomeCategory = ko.pureComputed(function() {
         return report.category == "Outcomes Report 1";
     });
@@ -274,6 +289,9 @@ var ReportViewModel = function(report, config) {
     $.each(report.statusChangeHistory, function(i, history) {
         self.cancelledComment = history.comment
     });
+    if (report.publicationStatus == 'pendingApproval') {
+        self.checkForOverDelivery();
+    }
 };
 
 var ReportsViewModel = function(reports, projects, availableReports, reportOwner, config) {

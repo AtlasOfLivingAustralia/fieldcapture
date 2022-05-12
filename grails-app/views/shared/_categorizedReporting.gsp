@@ -79,7 +79,10 @@
 <script id="submitted" type="text/html">
     <p><span class="badge p-1 text-white badge-info">Report submitted</span></p>
     <p data-bind="visible:report.dateAdjusted"><span class="badge p-1 text-white badge-important">Report adjusted</span></p>
-<g:if test="${isGrantManager || fc.userIsAlaOrFcAdmin()}">
+    <div data-bind="if:overDelivered">
+        <p><span data-bind="popover:{content:overDeliveryMessage(), html:true}" class="badge badge-danger">Project targets over-delivered</span></p>
+    </div>
+    <g:if test="${isGrantManager || fc.userIsAlaOrFcAdmin()}">
 
     <span class="btn-group">
         <button type="button" data-bind="click:approveReport" class="btn btn-sm mr-1 btn-success"><i
