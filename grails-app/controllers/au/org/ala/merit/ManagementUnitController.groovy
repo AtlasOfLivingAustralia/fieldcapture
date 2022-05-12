@@ -593,11 +593,9 @@ class ManagementUnitController {
      */
     def previousReportContents(String managementUnitId) {
         Map model = reportService.getPreviousReportModel(params)
-        println model: model
         Map response = [
                 managementUnitId: managementUnitId,
-                investment2020_21: model.activity.outputs.data.investment2020_21,
-                serviceSubcontracted2020_21: model.activity.outputs.data.serviceSubcontracted2020_21
+                model: model
         ]
         render response as JSON
     }
