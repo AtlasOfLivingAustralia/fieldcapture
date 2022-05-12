@@ -5,7 +5,7 @@
 
     <tr>
         <th class="outcome-priority">Secondary outcome(s)</th>
-        <th class="priority">Secondary Investment Priorities</th>
+        <th class="priority">${ priority ?:"Secondary Investment Priorities"}</th>
     </tr>
     </thead>
     <tbody data-bind="foreach:details.outcomes.secondaryOutcomes">

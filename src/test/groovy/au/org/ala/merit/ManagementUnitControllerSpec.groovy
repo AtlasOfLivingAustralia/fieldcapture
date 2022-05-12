@@ -83,6 +83,7 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
 
         then:
         1 * userService.canUserEditManagementUnit("u1", managementUnitId) >> true
+        1 * userService.isManagementUnitStarredByUser(_, _) >> [isManagementUnitStarredByUser:true]
 
         model.content.size() == 4
         model.content.about.visible == true
@@ -91,7 +92,7 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
         model.content.admin.visible == true
     }
 
-    def "read only users should not be able to see the admin content"() {
+    def "read only users should be able to see the permission access in the admin content"() {
         String managementUnitId = 'p1'
         userService.getUser() >> [userId: 'u1']
         managementUnitService.get(managementUnitId) >> [managementUnitId: managementUnitId, name: "test"]
@@ -103,13 +104,13 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
 
         then:
         1 * userService.canUserEditManagementUnit("u1", managementUnitId) >> false
-        1 * userService.userHasReadOnlyAccess() >> true
+        2 * userService.userHasReadOnlyAccess() >> true
 
         model.content.size() == 4
         model.content.about.visible == true
         model.content.projects.visible == true
         model.content.sites.visible == true
-        model.content.admin.visible == false
+        model.content.admin.visible == true
     }
 
     def "programs should be sorted in reverse alphabetical order so the RLP appears first"() {
@@ -400,6 +401,50 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
         then:
         1 * userService.getUser() >> [userName:'test@test.com']
         1 * managementUnitService.generateReports(fromDate, toDate, _) >> [status:HttpStatus.SC_OK]
+        response.json == [status:HttpStatus.SC_OK]
+    }
+
+    def "User adds star to the management unit "() {
+        setup:
+        String managementUnitId = 'p1'
+        String userId = 'u1'
+        String act = 'add'
+        Map result = [status:200]
+
+        when:
+        request.method = "POST"
+        params.id = act
+        params.managementUnitId = managementUnitId
+        controller.starManagementUnit()
+
+        then:
+        1 * userService.getCurrentUserId() >> "u1"
+        1 * userService.addStarManagementUnitForUser(userId, managementUnitId) >> result
+        0 * userService.removeStarManagementUnitForUser(userId, managementUnitId) >> result
+
+        and:
+        response.json == [status:HttpStatus.SC_OK]
+    }
+
+    def "User removes star from the management unit "() {
+        setup:
+        String managementUnitId = 'p1'
+        String userId = 'u1'
+        String act = 'remove'
+        Map result = [status:200]
+
+        when:
+        request.method = "POST"
+        params.id = act
+        params.managementUnitId = managementUnitId
+        controller.starManagementUnit()
+
+        then:
+        1 * userService.getCurrentUserId() >> "u1"
+        0 * userService.addStarManagementUnitForUser(userId, managementUnitId) >> result
+        1 * userService.removeStarManagementUnitForUser(userId, managementUnitId) >> result
+
+        and:
         response.json == [status:HttpStatus.SC_OK]
     }
 

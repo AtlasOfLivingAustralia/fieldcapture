@@ -152,92 +152,7 @@
           {
             "items": [
               {
-                "source": "<h4>1. Project Outcomes</h4>",
-                "type": "literal"
-              }
-            ],
-            "type": "row"
-          },
-          {
-            "items": [
-              {
-                "source": "<b>1.1 Briefly describe the achievements that have been made against each outcome statement in the MERI Plan. Please indicate your views on the impact and legacy of the project on the assets targeted, where appropriate.</b><p>Where possible, please reference the project monitoring indicators that are listed in the MERI Plan to support your response. You may wish to provide other supporting information (e.g. report, photos), where this has not been previously supplied, as attachments to this report via the Admin tab > Documents sub-tab of MERIT.  Where supporting evidence contains sensitive or confidential information, please send to the department Project Manager (DAWE) by email",
-                "type": "literal"
-              }
-            ],
-            "type": "row"
-          },
-          {
-            "source": "projectOutcomes",
-            "type": "table",
-            "userAddedRows": true,
-            "columns": [
-              {
-                "source": "",
-                "type": "literal",
-                "width": "5%",
-                "preLabel": {
-                  "computed": "\\'No. \\' || (index + 1)"
-                },
-                "title": "Outcome No."
-              },
-              {
-                "type": "textarea",
-                "source": "outcomeStatement",
-                "title": "Outcome",
-                "rows": 5,
-                "width": "40%"
-              },
-              {
-                "type": "textarea",
-                "source": "achievement",
-                "title": "Achievement against the outcome",
-                "rows": 5,
-                "width": "40%"
-              },
-              {
-                "width": "15%",
-                "source": "basedRating",
-                "title": "Rating based on the effectiveness evaluation criteria",
-                "type": "select2"
-              }
-            ]
-          },
-          {
-            "items": [
-              {
-                "source": "<b>1.2 Provide a brief summary of other outcomes achieved for this project that you wish to highlight, such as other environmental or social outcomes (e.g. engagement with Traditional Owners, landholders and local community, or the contribution of partners).</b>",
-                "type": "literal"
-              }
-            ],
-            "type": "row"
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "source": "achievedOutcomesSummary",
-                "type": "textarea",
-                "rows": 5,
-                "preLabel": "As part of your response you may wish to describe any unexpected or unintended outcomes."
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "source": "achievedOutcomesMaintained",
-                "type": "textarea",
-                "rows": 5,
-                "preLabel": "<b>1.3 In your view, how will the outcomes achieved by this project will be maintained, and if relevant, by whom?</b>"
-              }
-            ]
-          },
-          {
-            "items": [
-              {
-                "source": "<h4>2. Project Outputs</h4>",
+                "source": "<h4>1. Project Outputs</h4>",
                 "type": "literal"
               }
             ],
@@ -247,7 +162,7 @@
             "items": [
               {
                 "source": "isTargetAchieved",
-                "preLabel": "2.1 Did you achieve the target for each activity listed in the MERI Plan?",
+                "preLabel": "1.1 Did you achieve the target for each activity listed in the MERI Plan?",
                 "type": "selectOne"
               }
             ],
@@ -312,6 +227,91 @@
           {
             "items": [
               {
+                "source": "<h4>2. Project Outcomes</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<b>2.1 Briefly describe the achievements that have been made against each outcome statement in the MERI Plan. Please indicate your views on the impact and legacy of the project on the assets targeted, where appropriate.</b><p>Where possible, please reference the project monitoring indicators that are listed in the MERI Plan to support your response. Please provide other supporting information (e.g. report, photos), where this has not been previously supplied, as attachments to this report via the Admin tab > Documents sub-tab of MERIT. Where supporting evidence contains sensitive or confidential information, please send to the department Project Manager (DAWE) by email",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "source": "projectOutcomes",
+            "type": "table",
+            "userAddedRows": true,
+            "columns": [
+              {
+                "source": "",
+                "type": "literal",
+                "width": "5%",
+                "preLabel": {
+                  "computed": "\\'No. \\' || (index + 1)"
+                },
+                "title": "Outcome No."
+              },
+              {
+                "type": "textarea",
+                "source": "outcomeStatement",
+                "title": "Outcome",
+                "rows": 5,
+                "width": "40%"
+              },
+              {
+                "type": "textarea",
+                "source": "achievement",
+                "title": "Achievement against the outcome",
+                "rows": 5,
+                "width": "40%"
+              },
+              {
+                "width": "15%",
+                "source": "basedRating",
+                "title": "Rating based on the effectiveness evaluation criteria",
+                "type": "select2"
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "source": "<b>2.2 Provide a brief summary of other outcomes achieved for this project that you wish to highlight, such as other environmental or social outcomes (e.g. engagement with Traditional Owners, landholders and local community, the contribution of partners, the generation/use of new technology).</b>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "achievedOutcomesSummary",
+                "type": "textarea",
+                "rows": 5,
+                "preLabel": "As part of your response you may wish to describe any unexpected or unintended outcomes."
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "achievedOutcomesMaintained",
+                "type": "textarea",
+                "rows": 5,
+                "preLabel": "<b>2.3 In your view, how will the outcomes achieved by this project will be maintained, and if relevant, who will do this?</b>"
+              }
+            ]
+          },
+          {
+            "items": [
+              {
                 "source": "<h4>3. Project Income and Expenditure</h4>",
                 "type": "literal"
               }
@@ -352,7 +352,7 @@
           {
             "items": [
               {
-                "source": "<b>4.1 Briefly describe how you applied adaptive management for this project. This might include:</b>",
+                "source": "<b>4.1 Briefly describe how you applied adaptive management for this project. This should consider:</b>",
                 "type": "literal"
               }
             ],
@@ -362,7 +362,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "a) any key project-level monitoring and/or evaluation activities <br>b) any key findings or learnings that you gained during project implementation<br>c) any changes that you made in response to these during the project",
+                "preLabel": "a) any key project-level monitoring and/or evaluation activities <br>b) any key findings or learnings that you gained during project implementation<br>c) any changes that you made in response to these during the project, including changes in methodology",
                 "source": "projectLearningsSummary",
                 "type": "textarea",
                 "rows": 3

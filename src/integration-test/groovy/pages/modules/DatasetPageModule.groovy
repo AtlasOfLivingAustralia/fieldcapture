@@ -35,6 +35,9 @@ class DatasetPageModule extends Module{
 
         createButton{$("#save")}
 
+        titleText(required: false) {$('#titleText')}
+        programOutcomeText(required: false) {$('#programOutcomeText')}
+
     }
 
 }

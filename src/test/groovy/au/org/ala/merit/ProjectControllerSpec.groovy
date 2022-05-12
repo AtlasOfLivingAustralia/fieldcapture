@@ -139,6 +139,23 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         !model.projectContent.admin.disabled
     }
 
+    def "meri plan should be visible to read only users"() {
+        setup:
+        def projectId = '1234'
+        projectService.get(projectId, null, _) >> project(projectId)
+        projectService.programsModel() >> new ProgramConfig([programs:[[name:'Test']]])
+        Map userDetails = stubReadOnly('1234', projectId)
+
+        when: "retrieving the project index page"
+        controller.index(projectId)
+
+        then:
+        1 * projectService.get(projectId, userDetails, _) >> project(projectId)
+
+        and: "meri plan is visible"
+        model.projectContent.details.meriPlanVisibleToUser == true
+    }
+
     def "the admin content should be present for project editors (to edit blog)"() {
         def projectId = '1234'
         projectService.programsModel() >> [programs:[[name:'Test', optionalProjectContent:['Risks and Threats', 'MERI Plan']]]]
@@ -842,6 +859,11 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
     private Map stubProjectEditor(userId, projectId) {
         stubUserPermissions(userId, projectId, true, false, false, true)
         ['userName':null, 'userId':userId, 'class':UserDetails, 'displayName':null, 'isAdmin':false, 'isCaseManager':false, 'isEditor':true, 'hasViewAccess':true]
+    }
+
+    private Map stubReadOnly(userId, projectId) {
+        stubUserPermissions(userId, projectId, false, false, false, true)
+        ['userName':null, 'userId':userId, 'class':UserDetails, 'displayName':null, 'isAdmin':false, 'isCaseManager':false, 'isEditor':false, 'hasViewAccess':true]
     }
 
     private def stubUserPermissions(userId, projectId, editor, admin, grantManager, canView) {

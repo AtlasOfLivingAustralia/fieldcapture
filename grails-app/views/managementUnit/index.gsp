@@ -27,7 +27,8 @@
             deleteBlogEntryUrl: "${createLink(controller: 'blog', action:'delete', params:[managementUnitId:managementUnit.managementUnitId])}",
             documentUpdateUrl: "${createLink(controller: 'document', action:'documentUpdate')}",
             documentDeleteUrl: "${createLink(controller: 'document', action:'deleteDocument')}",
-            imageLocation:"${assetPath(src:'/')}"
+            imageLocation:"${assetPath(src:'/')}",
+            starManagementUnitUrl: "${createLink(controller: 'managementUnit', action: 'starManagementUnit')}"
         };
     </script>
     <asset:stylesheet src="common-bs4.css"/>
@@ -58,10 +59,25 @@
                 </a>
             </span>
         </div>
+        <section class="row">
+            <div class="col-sm-10" id="managementUnitName">
+                <h2>${managementUnit.name?.encodeAsHTML()}</h2>
+            </div>
+            <div class="col-sm-2">
+                <div class="float-right pull-right">
+                    <g:set var="disabled">${(!user) ? "disabled='disabled' title='login required'" : ''}</g:set>
+                    <g:if test="${isManagementUnitStarredByUser}">
+                        <button class="btn btn-sm" id="starBtn" data-bind="click:toggleStarred"><i
+                                class="fa fa-star"></i> <span>Remove from favourites</span></button>
+                    </g:if>
+                    <g:else>
+                        <button class="btn btn-sm" id="starBtn" data-bind="click:toggleStarred" ${disabled}><i
+                                class="fa fa-star-o"></i> <span>Add to favourites</span></button>
+                    </g:else>
+                </div>
 
-        <div class="header-text" id="managementUnitName">
-           <h2>${managementUnit.name?.encodeAsHTML()}</h2>
-        </div>
+            </div>
+        </section>
     </div>
 
 
@@ -116,11 +132,10 @@
             $('#admin-tab').tab('show');
     });
 
+
 </asset:script>
 <asset:javascript src="common-bs4.js"/>
 <asset:javascript src="managementUnit.js"/>
 <asset:deferredScripts/>
-
 </body>
-
 </html>

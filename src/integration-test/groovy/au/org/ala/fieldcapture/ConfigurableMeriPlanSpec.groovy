@@ -385,4 +385,90 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
 
     }
+
+    def "The MERI Plan will only show sections specified in Advancing Pest Animal and Weed Control Solutions - Pipeline config"() {
+        setup:
+        String projectId = 'cg2022proj'
+        loginAsUser('1', browser)
+
+        when:
+        to RlpProjectPage, projectId
+
+        then:
+        waitFor { at RlpProjectPage }
+
+        when:
+        def meriPlan = openMeriPlanEditTab()
+
+        meriPlan.primaryOutcome = "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
+        waitFor {
+            meriPlan.primaryPriority.find('[value="Ginini Flats Wetland Complex"')
+        }
+        meriPlan.primaryPriority = "Ginini Flats Wetland Complex"
+        meriPlan.secondaryOutcomes[0].outcome = "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
+        meriPlan.secondaryOutcomes[0].priority = "Ginini Flats Wetland Complex"
+        meriPlan.shortTermOutcomes[0].value("Short term outcome 1")
+        meriPlan.addMediumTermOutcome("Medium term outcome 1")
+        meriPlan.controlMethods[0].current = 'Pest control method 1'
+        meriPlan.controlMethods[0].success = 'Yes'
+        meriPlan.controlMethods[0].type = 'Chemical'
+        meriPlan.controlMethods[0].details = 'Pest control method 1 details'
+        meriPlan.projectName = "MERI plan edited name"
+        meriPlan.projectDescription = "MERI plan edited description"
+        meriPlan.controlApproaches[0].approach = 'Yes'
+        meriPlan.controlApproaches[0].details = 'Approach details test'
+        meriPlan.keyThreats[0].threat = "Threat 1"
+        meriPlan.keyThreats[0].intervention = "Intervention 1"
+        meriPlan.projectMethodology = "Project methodology"
+        meriPlan.monitoringIndicators[0].indicator = "Indicator 1"
+        meriPlan.monitoringIndicators[0].approach = 'Approach 1'
+        meriPlan.reviewMethodology = "Review methodology"
+        meriPlan.nationalAndRegionalPlans[0].name = "Plan 1"
+        meriPlan.nationalAndRegionalPlans[0].section = "Section 1"
+        meriPlan.nationalAndRegionalPlans[0].alignment = "Alignment 1"
+        meriPlan.projectServices[0].selectService("Communication materials")
+        meriPlan.projectServices[0].selectScore("Number of communication materials published")
+        meriPlan.projectServices[0].targets = "5"
+
+        meriPlan.save()
+
+        def previousLoad = getAtCheckTime()
+        to RlpProjectPage, projectId
+
+        then:
+        waitFor { getAtCheckTime() > previousLoad }
+
+        when:
+        meriPlan = openMeriPlanEditTab()
+
+        then:
+        meriPlan.primaryOutcome.value().contains("Ramsar")
+        meriPlan.primaryPriority == "Ginini Flats Wetland Complex"
+        meriPlan.secondaryOutcomes[0].outcome.value().contains("Ramsar")
+        meriPlan.secondaryOutcomes[0].priority.value() == "Ginini Flats Wetland Complex"
+        meriPlan.shortTermOutcomes[0].value() == "Short term outcome 1"
+        meriPlan.mediumTermOutcomes[0].value() == "Medium term outcome 1"
+        meriPlan.controlMethods[0].current.value() == 'Pest control method 1'
+        meriPlan.controlMethods[0].success.value() == 'Yes'
+        meriPlan.controlMethods[0].type.value() == 'Chemical'
+        meriPlan.controlMethods[0].details.value() == 'Pest control method 1 details'
+        meriPlan.projectName == "MERI plan edited name"
+        meriPlan.projectDescription == "MERI plan edited description"
+        meriPlan.controlApproaches[0].approach.value() == 'Yes'
+        meriPlan.controlApproaches[0].details.value() == 'Approach details test'
+        meriPlan.keyThreats[0].threat.value() == "Threat 1"
+        meriPlan.keyThreats[0].intervention.value() == "Intervention 1"
+        meriPlan.projectMethodology == "Project methodology"
+        meriPlan.monitoringIndicators[0].indicator.value() == "Indicator 1"
+        meriPlan.monitoringIndicators[0].approach.value() == 'Approach 1'
+        meriPlan.reviewMethodology == "Review methodology"
+        meriPlan.nationalAndRegionalPlans[0].name.value() == "Plan 1"
+        meriPlan.nationalAndRegionalPlans[0].section.value() == "Section 1"
+        meriPlan.nationalAndRegionalPlans[0].alignment.value() == "Alignment 1"
+        meriPlan.projectServices[0].targets.size() == 1
+        meriPlan.projectServices[0].service.value() == "2"
+        meriPlan.projectServices[0].score.value() == "score_43"
+        meriPlan.projectServices[0].targets.value() == "5"
+
+    }
 }

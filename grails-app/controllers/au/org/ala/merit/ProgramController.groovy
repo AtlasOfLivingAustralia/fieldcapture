@@ -34,6 +34,12 @@ class ProgramController {
 
             Map programRole = members.find { it.userId == userId }
 
+            if (user) {
+                user = user.properties
+                user.isAdmin = programRole?.role == RoleService.PROJECT_ADMIN_ROLE ?: false
+                user.isCaseManager = programRole?.role == RoleService.GRANT_MANAGER_ROLE ?: false
+            }
+
             def mapFeatures = program.programSiteId?siteService.getSiteGeoJson(program.programSiteId) : null
             if (mapFeatures)
                 program.mapFeatures = mapFeatures

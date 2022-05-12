@@ -34,6 +34,7 @@ ManagementUnitViewModel = function (props, options) {
     self.managementUnitSiteId = ko.observable(props.managementUnitSiteId);
     self.mapFeatures =  ko.observable(props.mapFeatures);
     self.projects = props.projects;
+    self.shortName = ko.observable(props.shortName);
 
     self.deleteManagementUnit = function () {
         if (window.confirm("Delete this managementUnit?  Are you sure?")) {
@@ -99,6 +100,37 @@ ManagementUnitViewModel = function (props, options) {
         }
 
     };
+
+    self.toggleStarred = function() {
+        var isStarred = ($("#starBtn i").attr("class") === "fa fa-star");
+        var managementUnitId = self.managementUnitId;
+
+        var basUrl = config.starManagementUnitUrl;
+        var query = "?managementUnitId="+managementUnitId;
+
+        if (isStarred) {
+            // remove star
+            $.getJSON(basUrl + "/remove" + query, function(data) {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    $("#starBtn i").removeClass("fa-star").addClass("fa-star-o");
+                    $("#starBtn span").text("Add to favourites");
+                }
+            }).fail(function(j,t,e){ alert(t + ":" + e);}).done();
+        } else {
+            // add star
+            $.getJSON(basUrl + "/add" + query, function(data) {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    $("#starBtn i").removeClass("fa-star-o").addClass("fa-star");
+                    $("#starBtn span").text("Remove from favourites");
+                }
+            }).fail(function(j,t,e){ alert(t + ":" + e);}).done();
+        }
+
+    }
 
 
     if (props.documents !== undefined && props.documents.length > 0) {
@@ -450,7 +482,10 @@ var ManagementUnitPageViewModel = function(props, options) {
                 };
                 var viewModel = new EditableDocumentsViewModel(documentViewModelOptions);
                 viewModel.loadDocuments(props.documents);
-                ko.applyBindings(viewModel, document.getElementById('edit-documents'))
+                if (document.getElementById('edit-documents')) {
+                    ko.applyBindings(viewModel, document.getElementById('edit-documents'))
+                }
+
             }
         }
     };
@@ -460,3 +495,31 @@ var ManagementUnitPageViewModel = function(props, options) {
         initialiseTabs(tabs, {tabSelector:'#managementUnit-tabs.nav a', tabStorageKey:'selected-managementUnit-tab'});
     };
 };
+
+function toggleStarred(isManagementUnitStarredByUser, userId, managementUnitId) {
+    var basUrl = fcConfig.starManagementUnitUrl;
+    var query = "?userId="+userId+"&managementUnitId="+managementUnitId;
+
+    if (isManagementUnitStarredByUser) {
+        // remove star
+        $.getJSON(basUrl + "/remove" + query, function(data) {
+            if (data.error) {
+                alert(data.error);
+            } else {
+                $("#starBtn i").removeClass("fa-star").addClass("fa-star-o");
+                $("#starBtn span").text("Add to favourites");
+            }
+        }).fail(function(j,t,e){ alert(t + ":" + e);}).done();
+    } else {
+        // add star
+        $.getJSON(basUrl + "/add" + query, function(data) {
+            if (data.error) {
+                alert(data.error);
+            } else {
+                $("#starBtn i").removeClass("fa-star-o").addClass("fa-star");
+                $("#starBtn span").text("Remove from favourites");
+            }
+        }).fail(function(j,t,e){ alert(t + ":" + e);}).done();
+    }
+}
+
