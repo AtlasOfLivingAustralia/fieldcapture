@@ -929,69 +929,6 @@
         "pre-populate": [
           {
             "source": {
-              "type": "literal",
-              "literal": {
-                "subcontractedWorkForceByFinancialYear": [
-                  {
-                    "contractWorkforceType": "Indigenous FTE deployed on subcontracts to deliver the Services"
-                  },
-                  {
-                    "contractWorkforceType": "TOTAL FTE deployed on subcontracts to deliver the Services"
-                  }
-                ],
-                "organisationWorkForceByFinancialYear": [
-                  {
-                    "organisationWorkforceType": "Indigenous FTE deployed within the Service Provider's organisation engaged in delivering the Services"
-                  },
-                  {
-                    "organisationWorkforceType": "TOTAL FTE Australian-based-workforce within the Service Provider's organisation engaged in delivering the Services"
-                  }
-                ]
-              }
-
-            },
-            "mapping": [
-              {
-                "source-path": "subcontractedWorkForceByFinancialYear",
-                "target": "subcontractedWorkForceByFinancialYear",
-                "mapping": [
-                  {
-                    "source-path": "contractWorkforceType",
-                    "target": "contractWorkforceType"
-                  }
-                ]
-              },
-              {
-                "source-path": "organisationWorkForceByFinancialYear",
-                "target": "organisationWorkForceByFinancialYear",
-                "mapping": [
-                  {
-                    "source-path": "organisationWorkforceType",
-                    "target": "organisationWorkforceType"
-                  }
-                ]
-              }
-            ],
-            "merge": {
-              "subcontractedWorkForceByFinancialYear": {
-                "keys": [
-                  "contractWorkforceType"
-                ],
-                "addUnmatchedNewRows": true,
-                "deleteUnmatchedExistingRows": true
-              },
-              "organisationWorkForceByFinancialYear": {
-                "keys": [
-                  "organisationWorkforceType"
-                ],
-                "addUnmatchedNewRows": true,
-                "deleteUnmatchedExistingRows": true
-              }
-            }
-
-          },
-          {
-            "source": {
               "params": [
                 {
                   "expression": "owner.managementUnitId",
@@ -1013,18 +950,36 @@
               {
                 "source-path": "model.data.serviceSubcontracted2020_21",
                 "target": "serviceSubcontracted2020_21"
-              }
-            ],
-            "merge": {
-              "subcontractedWorkForceByFinancialYear": {
-                "keys": [
-                  "contractWorkforceType"
+              },
+              {
+                "mapping": [
+                  {
+                    "source-path": "contractWorkforceType",
+                    "target": "contractWorkforceType"
+                  },
+                  {
+                    "source-path": "contractWorkforce2020_21",
+                    "target": "contractWorkforce2020_21"
+                  }
                 ],
-                "addUnmatchedNewRows": true,
-                "deleteUnmatchedExistingRows": true
+                "source-path": "model.data.subcontractedWorkForceByFinancialYear",
+                "target": "subcontractedWorkForceByFinancialYear"
+              },
+              {
+                "mapping": [
+                  {
+                    "source-path": "organisationWorkforceType",
+                    "target": "organisationWorkforceType"
+                  },
+                  {
+                    "source-path": "organisationWorkforce2020_21",
+                    "target": "organisationWorkforce2020_21"
+                  }
+                ],
+                "source-path": "model.data.organisationWorkForceByFinancialYear",
+                "target": "organisationWorkForceByFinancialYear"
               }
-            }
-
+            ]
           }
         ]
       },
