@@ -56,6 +56,75 @@
                 "type": "enable"
               }
             ]
+          },
+          {
+            "name": "coreServiceActivitiesUndertaken",
+            "dataType": "text",
+            "validate": "required"
+          },
+          {
+            "name": "communityEngagementPlanOnTrack",
+            "dataType": "text",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "name": "communityEngagementActions",
+            "dataType": "text",
+            "validate": "required",
+            "behaviour": [
+              {
+                "condition": "communityEngagementPlanOnTrack == \"No\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "name": "indigenousParticipationOnTrack",
+            "dataType": "text",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "name": "indigenousParticipationActions",
+            "dataType": "text",
+            "validate": "required",
+            "behaviour": [
+              {
+                "condition": "indigenousParticipationOnTrack == \"No\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "name": "communicationsPlanOnTrack",
+            "dataType": "text",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "name": "communicationsPlanActions",
+            "dataType": "text",
+            "validate": "required",
+            "behaviour": [
+              {
+                "condition": "communicationsPlanOnTrack == \"No\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "name": "meriProfessionalDevelopment",
+            "dataType": "text"
           }
         ],
         "viewModel": [
@@ -66,7 +135,7 @@
                 "css": "span6",
                 "type": "selectOne",
                 "source": "coreServicesRequirementsMet",
-                "preLabel": "Has the Service Provider delivered the Core Services in accordance with Schedule 2 – Statement of Work for this reporting period?"
+                "preLabel": "1. Has the Service Provider delivered the Core Services in accordance with Schedule 2 – Statement of Work for this reporting period?"
               }
             ]
           },
@@ -76,7 +145,7 @@
               {
                 "type": "textarea",
                 "source": "notMetCoreServicesRequirementsReason",
-                "preLabel": "Please enter the reason(s) the Core Services requirements were not met"
+                "preLabel": "a) Please enter the reason(s) the Core Services requirements were not met"
               }
             ]
           },
@@ -87,7 +156,7 @@
                 "css": "span6",
                 "type": "selectOne",
                 "source": "whsRequirementsMet",
-                "preLabel": "Has the Service Provider provided a safe work environment consistent with WHS Laws and in accordance with Clause 44 of the Services Agreement within this reporting period?"
+                "preLabel": "2. Has the Service Provider provided a safe work environment consistent with WHS Laws and in accordance with Clause 44 of the Services Agreement within this reporting period?"
               }
             ]
           },
@@ -97,7 +166,129 @@
               {
                 "type": "textarea",
                 "source": "notMetWHSRequirementsReason",
-                "preLabel": "Please enter the reason(s) the WHS requirements were not met"
+                "preLabel": "a) Please enter the reason(s) the WHS requirements were not met"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "rows": 4,
+                "type": "textarea",
+                "helpText": "Include any activity delivered through the utilisation of core service funds",
+                "source": "coreServiceActivitiesUndertaken",
+                "preLabel": "3. Briefly describe any core service activities undertaken in this reporting period"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h4>Community engagement</h4>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span6",
+                "type": "selectOne",
+                "source": "communityEngagementPlanOnTrack",
+                "preLabel": "4. Are you on track to deliver the target measures identified in your community engagement plan?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "source": "communityEngagementActions",
+                "preLabel": "a) If not, explain what actions are planned to get back on track"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h4>Indigenous participation</h4>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span6",
+                "type": "selectOne",
+                "source": "indigenousParticipationOnTrack",
+                "preLabel": "5. Are you on track to deliver the target measures identified in your indigenous participation plan?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "source": "indigenousParticipationActions",
+                "preLabel": "a) If not, explain what actions are planned to get back on track"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h4>Communications</h4>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span6",
+                "type": "selectOne",
+                "source": "communicationsPlanOnTrack",
+                "preLabel": "6. Are you on track to deliver the target measures identified in your communications plan? "
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "source": "communicationsPlanActions",
+                "preLabel": "a) If not, explain what actions are planned to get back on track"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h4>Monitoring, Evaluation, Reporting and Improvement (MERI)</h4>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "source": "meriProfessionalDevelopment",
+                "helpText": "This includes on-the-job, informal and formal training",
+                "preLabel": "7. What MERI professional development opportunities (if any) have your staff participated in?"
               }
             ]
           }
@@ -115,5 +306,5 @@
   "category": "RLP Reports",
   "status": "active",
   "lastUpdatedUserId": "<anon>",
-  "formVersion": 1
+  "formVersion": 2
 }
