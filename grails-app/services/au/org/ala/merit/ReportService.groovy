@@ -924,10 +924,12 @@ class ReportService {
      */
     Map getPreviousReportModel(Map params) {
         Map model = [:]
-        List<Map> reports = search(managementUnitId:params.managementUnitId,activityType:REPORT_ACTIVITY_TYPE)
+        List<Map> reports = search(managementUnitId:params.managementUnitId,activityType:REPORT_ACTIVITY_TYPE,dateProperty:'toDate',startDate:params.reportDate)
         Map resultMap = reports.find{it.fromDate < params.reportDate && it.toDate >= params.reportDate}
-        Map activity = activityService.get(resultMap.activityId)
-        model.data = activity.outputs.find{it.name == OUTPUT_TYPE}.data
+        if (resultMap) {
+            Map activity = activityService.get(resultMap.activityId)
+            model.data = activity.outputs.find{it.name == OUTPUT_TYPE}.data
+        }
         model
     }
 
