@@ -1,0 +1,119 @@
+{
+  "id": "5d133339e4b00a475b28e298",
+  "dateCreated": "2019-06-26T08:56:25Z",
+  "minOptionalSectionsCompleted": 1,
+  "supportsSites": false,
+  "lastUpdated": "2019-06-26T08:56:25Z",
+  "createdUserId": "<anon>",
+  "activationDate": null,
+  "supportsPhotoPoints": false,
+  "publicationStatus": "published",
+  "gmsId": null,
+  "name": "RLP Core Services report",
+  "sections": [
+    {
+      "collapsedByDefault": false,
+      "template": {
+        "name": "RLP - Core services report",
+        "title": "Core services - reporting",
+        "dataModel": [
+          {
+            "name": "coreServicesRequirementsMet",
+            "dataType": "text",
+            "validate": "required",
+            "constraints": [
+              "Met Core Services requirements",
+              "Not met Core Services requirements"
+            ]
+          },
+          {
+            "name": "notMetCoreServicesRequirementsReason",
+            "dataType": "text",
+            "validate": "required",
+            "behaviour": [
+              {
+                "condition": "coreServicesRequirementsMet == \"Not met Core Services requirements\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "name": "whsRequirementsMet",
+            "dataType": "text",
+            "validate": "required",
+            "constraints": [
+              "Met requirements",
+              "Not met requirements"
+            ]
+          },
+          {
+            "name": "notMetWHSRequirementsReason",
+            "dataType": "text",
+            "validate": "required",
+            "behaviour": [
+              {
+                "condition": "whsRequirementsMet == \"Not met requirements\"",
+                "type": "enable"
+              }
+            ]
+          }
+        ],
+        "viewModel": [
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span6",
+                "type": "selectOne",
+                "source": "coreServicesRequirementsMet",
+                "preLabel": "Has the Service Provider delivered the Core Services in accordance with Schedule 2 – Statement of Work for this reporting period?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "source": "notMetCoreServicesRequirementsReason",
+                "preLabel": "Please enter the reason(s) the Core Services requirements were not met"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span6",
+                "type": "selectOne",
+                "source": "whsRequirementsMet",
+                "preLabel": "Has the Service Provider provided a safe work environment consistent with WHS Laws and in accordance with Clause 44 of the Services Agreement within this reporting period?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "source": "notMetWHSRequirementsReason",
+                "preLabel": "Please enter the reason(s) the WHS requirements were not met"
+              }
+            ]
+          }
+        ]
+      },
+      "modelName": null,
+      "templateName": "rlpCoreServicesReport",
+      "optional": false,
+      "optionalQuestionText": null,
+      "title": "Core Services report",
+      "name": "RLP Core Services report"
+    }
+  ],
+  "type": "Report",
+  "category": "RLP Reports",
+  "status": "active",
+  "lastUpdatedUserId": "<anon>",
+  "formVersion": 1
+}
