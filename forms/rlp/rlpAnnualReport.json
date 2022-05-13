@@ -64,7 +64,7 @@
                 "name": "reasonTargetNotMet",
                 "behaviour": [
                   {
-                    "condition": "result < annualTarget",
+                    "condition": "result < annualTarget or result > annualTarget",
                     "type": "enable_and_clear"
                   }
                 ],
@@ -298,7 +298,7 @@
                 "source": "targetMeasure",
                 "type": "textarea",
                 "rows": 3,
-                "title": "Target not met"
+                "title": "Target measure"
               },
               {
                 "readonly": true,
@@ -319,12 +319,12 @@
                 "source": "reasonTargetNotMet",
                 "type": "textarea",
                 "rows": 3,
-                "title": "Reasons why the target has not been met (500 character, [approx. 100 word] limit)"
+                "title": "Explanation of over delivery/why target not met (500 character, [approx. 100 word] limit)"
               }
             ],
             "userAddedRows": false,
             "source": "minimumAnnualTargetsNotMet",
-            "title": "<b>3. Please outline which minimum annual target services have not been met and why.</b><br/>",
+            "title": "<b>3. Please outline progress against minimum annual target.</b><br/>",
             "type": "table"
           },
           {
