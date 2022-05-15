@@ -936,8 +936,12 @@
                   "type": "computed"
                 },
                 {
-                  "name": "reportDate",
-                  "value": "2021-06-30T13:00:00Z"
+                  "name": "startDate",
+                  "value": "2020-07-01T13:00:00Z"
+                },
+                {
+                  "name": "endDate",
+                  "value": "2021-07-01T13:00:00Z"
                 }
               ],
               "url": "/managementUnit/previousReportContents/"

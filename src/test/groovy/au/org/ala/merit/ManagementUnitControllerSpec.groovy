@@ -468,7 +468,8 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
 
         when:
         params.managementUnitId = 'mu01'
-        params.reportDate = '2021-06-30T13:00:00Z'
+        params.startDate = "2020-07-01T13:00:00Z"
+        params.endDate = '2021-07-01T13:00:00Z'
         controller.previousReportContents('mu01')
 
         then:
