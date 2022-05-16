@@ -37,22 +37,7 @@
           {
             "dataType": "text",
             "name": "governanceFrameworksMaintained",
-            "constraints": [
-              "Yes",
-              "No"
-            ],
             "validate": "required"
-          },
-          {
-            "dataType": "text",
-            "name": "managementActionsForGovernanceFrameworks",
-            "behaviour": [
-              {
-                "condition": "governanceFrameworksMaintained == \"No\"",
-                "type": "enable"
-              }
-            ],
-            "validate": "required,maxSize[1250]"
           },
           {
             "dataType": "text",
@@ -116,38 +101,25 @@
             "validate": "required,maxSize[1250]"
           },
           {
-            "dataType": "text",
-            "name": "plansSubmitted",
-            "constraints": [
-              "Yes",
-              "No"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "text",
-            "name": "planDetails",
-            "validate": "required,maxSize[1250]"
-          },
-          {
-            "dataType": "text",
-            "name": "plansReviewed",
-            "constraints": [
-              "Yes",
-              "No"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "text",
-            "name": "plansReviewedDetails",
-            "behaviour": [
+            "dataType": "list",
+            "name": "coreServicesPlansTable",
+            "allowRowDelete": "false",
+            "columns": [
               {
-                "condition": "plansReviewed == \"Yes\"",
-                "type": "enable"
+                "name": "coreServicesPlans",
+                "dataType": "text"
+              },
+              {
+                "name": "coreServicesPlanLastReviewed",
+                "dataType": "number",
+                "validate": "required"
+              },
+              {
+                "name": "coreServicesPlanActionsRequired",
+                "dataType": "number",
+                "validate": "required"
               }
-            ],
-            "validate": "required,maxSize[1250]"
+            ]
           },
           {
             "dataType": "text",
@@ -157,6 +129,12 @@
           {
             "dataType": "text",
             "name": "communityParticipationFor20PercentRequirement",
+            "description": "",
+            "validate": "required,maxSize[1250]"
+          },
+          {
+            "dataType": "text",
+            "name": "requirementAgreedServicesAgreement",
             "description": "",
             "validate": "required,maxSize[1250]"
           },
@@ -206,6 +184,12 @@
           },
           {
             "dataType": "text",
+            "name": "variationPreviousReportingYear",
+            "description": "",
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
             "name": "indigenousParticipationTarget",
             "validate": "required",
             "constraints": [
@@ -227,6 +211,12 @@
               }
             ]
 
+          },
+          {
+            "dataType": "text",
+            "name": "agreedServicesForClause40Point2",
+            "description": "",
+            "validate": "required,maxSize[1250]"
           },
           {
             "dataType": "list",
@@ -388,6 +378,12 @@
           },
           {
             "dataType": "text",
+            "name": "variationPreviousReportingYearInvestment",
+            "description": "",
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
             "name": "keyCommunicationActivities",
             "description": "Include communications activities specifically related to Projects",
             "validate": "required,maxSize[1250]"
@@ -429,7 +425,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "1. Please outline the key achievements in the delivery of Core Services in the past 12 months. (1250 character, [approx. 250 word] limit)",
+                "preLabel": "1. Please outline key achievements in the delivery of Core Services. (1250 character, [approx. 250 word] limit)",
                 "source": "coreServicesProgress",
                 "type": "textarea"
               }
@@ -439,7 +435,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "2. Please outline any key issues in the delivery of Core Services in the past 12 months and how they were managed/rectified. (1250 character, [approx. 250 word] limit)",
+                "preLabel": "2. Please outline key issues in the delivery of Core Services and how they were managed/rectified. (1250 character, [approx. 250 word] limit)",
                 "source": "coreServicesIssues",
                 "type": "textarea"
               }
@@ -449,19 +445,8 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "3. In the past 12 months, have appropriate governance frameworks been maintained, as required in the Statement of Work?",
-                "css": "span6",
+                "preLabel": "3. Please describe how appropriate governance frameworks have been maintained, as required in the Statement of Work. Include any management actions that have been taken to ensure governance frameworks are appropriate.",
                 "source": "governanceFrameworksMaintained",
-                "type": "selectOne"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "preLabel": "3. a) Please describe what management actions have been taken. (1250 character [approx. 250 word] limit).",
-                "source": "managementActionsForGovernanceFrameworks",
                 "type": "textarea"
               }
             ]
@@ -470,7 +455,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "4. In the past 12 months, have any governance risks or issues occurred?",
+                "preLabel": "4. Have any governance risks or issues occurred?",
                 "css": "span6",
                 "source": "governanceIssuesOccurred",
                 "type": "selectOne"
@@ -491,7 +476,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "5. In the past 12 months, have any adaptive management actions been implemented, or are planned to be implemented, to improve the delivery of Core Services?",
+                "preLabel": "5. Have adaptive management actions been implemented, or planned to be implemented, to improve the delivery of Core Services?",
                 "css": "span6",
                 "source": "adaptiveManagementImplemented",
                 "type": "selectOne"
@@ -512,7 +497,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "6. In the past 12 months, have any notifiable Workplace Health and Safety incidents occurred?",
+                "preLabel": "6. Have any notifiable Workplace Health and Safety incidents occurred, while undertaking Core Services?",
                 "css": "span6",
                 "source": "whsIncidentsOccurred",
                 "type": "selectOne"
@@ -523,7 +508,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "6. a) Please describe the Workplace Health and Safety incidents, were they reported and what was the outcome of any investigation. (1250 character [approx. 250 word] limit).",
+                "preLabel": "6. a) Please describe the Workplace Health and Safety incidents, were they reported and the outcome of any investigation. (1250 character [approx. 250 word] limit).",
                 "source": "whsIncidents",
                 "type": "textarea"
               }
@@ -533,42 +518,30 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "7. In the past 12 months, have all plans been submitted as required under the executed Services Agreement?",
-                "css": "span6",
-                "source": "plansSubmitted",
-                "type": "selectOne"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "preLabel": "7. a) Please provide the name of the plans and the date submitted. If you haven't submitted a plan as required, please provide a reason and proposed timeline for submission. (1250 character [approx. 250 word] limit).",
-                "source": "planDetails",
-                "type": "textarea"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "preLabel": "7. b) i) Where required plans have previously been submitted, have they recently been reviewed?",
-                "css": "span6",
-                "source": "plansReviewed",
-                "type": "selectOne"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "preLabel": "7. b) ii)  If yes, which plans have been reviewed? (1250 character [approx. 250 word] limit)",
-                "source": "plansReviewedDetails",
-                "type": "textarea",
-                "rows": 4
+                "title": "7. Please complete the below table on Core Services plans.",
+                "source": "coreServicesPlansTable",
+                "type": "table",
+                "disableTableUpload": true,
+                "columns": [
+                  {
+                    "title": "Plan:",
+                    "source": "coreServicesPlans",
+                    "type": "readonlyText",
+                    "width": "50%"
+                  },
+                  {
+                    "title": "Date last reviewed",
+                    "source": "coreServicesPlanLastReviewed",
+                    "type": "number",
+                    "width": "20%"
+                  },
+                  {
+                    "title": "Are there any outstanding actions required to get you on track to meet target measures in your plan?",
+                    "source": "coreServicesPlanActionsRequired",
+                    "type": "number",
+                    "width": "30%"
+                  }
+                ]
               }
             ]
           },
@@ -585,7 +558,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "8. a) Please describe how the community has participated in the delivery of any of the Core Services and projects over the past 12 months. (1250 character [approx. 250 word] limit).",
+                "preLabel": "8. a) Please describe how the community has participated in the delivery of Core Services and projects. (1250 character [approx. 250 word] limit).",
                 "source": "communityParticipation",
                 "type": "textarea"
               }
@@ -595,7 +568,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "8. b) Please provide the level of community investment that has occurred over the past 12 months that contributes to the requirement of clause 3.7(m)(ii) in Schedule 2 Statement of Works that at least 20% of the combined value of RLP Projects delivered by a Service Provider must directly support the delivery of small on-ground projects and related activities that are delivered by, or directly engage with, the local landcare community (the Requirement). Also include whether you are on track to meet the Requirement over the life of the agreed Services Agreement. Note that quantitative figures will be collected in Question 8c), and the investment percentage will be calculated. (1250 character [approx. 250 word] limit).",
+                "preLabel": "8. b) Please provide the level of community investment that contributes to the requirement of clause 3.7(m)(ii) in Schedule 2 Statement of Works, or equivalent clause that at least 20% of the combined value of RLP Projects delivered in a management unit by a Service Provider must directly support the delivery of small on-ground projects and related activities that are delivered by, or directly engage with, the local landcare community (the Requirement).(1250 character [approx. 250 word] limit).",
                 "source": "communityParticipationFor20PercentRequirement",
                 "type": "textarea"
               }
@@ -605,7 +578,17 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "8. c) i) Enter the total value of investments in your Management Unit where clause 3.7(m)(ii) of the Statement of Work applies",
+                "preLabel": "8. c) Are you on track to meet the Requirement over the life of the agreed Services Agreement? Note that quantitative figures will be collected in Question 8d), and the investment percentage will be calculated. (1250 character [approx. 250 word] limit).",
+                "source": "requirementAgreedServicesAgreement",
+                "type": "textarea"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "8. d) i) Enter the total contracted value of investments in your Management Unit to 2023 where clause 3.7(m)(ii) of the Statement of Work applies",
                 "source": "totalInvestmentUnderClause3Point7",
                 "type": "number",
                 "helpText": "The total value of project services minus projects with an exemption from SOW3.7m(ii)"
@@ -616,7 +599,7 @@
             "type": "row",
             "items": [
               {
-                "title": "<b>8. c) ii) What has been the value of investments made that contribute to this requirement in the last 12 months?</b>",
+                "title": "<b>8. c) ii) in the last 12 months what has been the value of investments made that contribute to this requirement?</b>",
                 "type": "table",
                 "disableTableUpload": true,
                 "columns": [
@@ -665,6 +648,16 @@
             "type": "row",
             "items": [
               {
+                "preLabel": "8. e) Please explain any variation from previous year's reporting, including any investment that has been finalised since the previous report.",
+                "source": "variationPreviousReportingYear",
+                "type": "textarea"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
                 "source": "<b>9. Indigenous employment and procurement investment</b>",
                 "type": "literal"
               }
@@ -674,7 +667,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "9. a) Please describe how Indigenous people have participated in the delivery of any of the Core Services and projects over the past 12 months. (1250 character [approx. 250 word] limit)",
+                "preLabel": "9. a) Please describe how Indigenous people have participated in the delivery of the Core Services and projects. (1250 character [approx. 250 word] limit)",
                 "source": "indigenousParticipation",
                 "type": "textarea"
               }
@@ -684,7 +677,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "9. b) Please describe the level of Indigenous employment and procurement investment that has occurred over the past 12 months that contributes to the requirement of clause 40.2 of the agreed Services Agreement. Also include whether you are on track to meet the requirement of clause 40.2 of the agreed Services Agreement over the life of the agreed Services Agreement. Note that quantitative figures will be collected in question 9d), and the investment percentage will be calculated. (1250 character [approx. 250 word] limit).",
+                "preLabel": "9. b) Please describe the level of Indigenous employment and procurement investment that contributes to the requirement of clause 40.2 of the agreed Services Agreement.",
                 "source": "indigenousParticipationForClause40Point2",
                 "type": "textarea"
               }
@@ -694,7 +687,17 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "9. c) Please identify level of Indigenous employment and procurement investment you have agreed to provide under your Services Agreement",
+                "preLabel": "9. c) Are you on track to meet the requirement of clause 40.2 of the agreed Services Agreement over the life of the agreed Services Agreement? Note that quantitative figures will be collected in question 9e), and the investment percentage will be calculated. (1250 character [approx. 250 word] limit)",
+                "source": "agreedServicesForClause40Point2",
+                "type": "textarea"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "9. d) Please identify level of Indigenous employment and procurement investment you have agreed to provide under your Services Agreement",
                 "source": "indigenousParticipationTarget",
                 "type": "selectOne"
               }
@@ -704,7 +707,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "9. d) i) Enter the total value of investments in your Management Unit where clause 40.2 of the agreed Services Agreement applies.",
+                "preLabel": "9. e) i) Enter the total contracted value of investments in your Management Unit to 2023 where clause 40.2 of the agreed Services Agreement applies.",
                 "source": "indigenousInvestmentAmount",
                 "type": "currency",
                 "helpText": "The total value of services minus projects with an exemption from clause 40.2(a)(ii)"
@@ -715,7 +718,7 @@
             "type": "row",
             "items": [
               {
-                "title": "<b>9. d) ii) What has been the value of services subcontracted to Indigenous Enterprises where clause 40.2(a)(ii) of the agreed Services Agreement applies in the last 12 months?</b>",
+                "title": "<b>9. e) ii) In the last 12 months what has been the value of services subcontracted to Indigenous Enterprises where clause 40.2(a)(ii) of the agreed Services Agreement applies?</b>",
                 "type": "table",
                 "disableTableUpload": true,
                 "columns": [
@@ -764,7 +767,7 @@
             "type": "row",
             "items": [
               {
-                "title": "<b>9. d) iii) What has been the level of full-time equivalent (FTE) Australian-based workforce deployed on subcontracts to deliver services where clause 40.2(a)(1)(A) of the agreed Services Agreement applies, in the past 12 month?</b>",
+                "title": "<b>9. e) iii) In the past 12 months what has been the level of full-time equivalent (FTE) Australian-based workforce deployed on subcontracts to deliver services where clause 40.2(a)(1)(A) of the agreed Services Agreement applies?</b>",
                 "source": "subcontractedWorkForceByFinancialYear",
                 "type": "table",
                 "disableTableUpload": true,
@@ -831,7 +834,7 @@
             "type": "row",
             "items": [
               {
-                "title": "<b>9. d) iv) What has been the level of full-time equivalent (FTE) Australian-based workforce within the Service Provider's Organisation engaged to deliver the services where clause 40.2(a)(1)(B) of the agreed Services Agreement applies, in the past 12 months?</b>",
+                "title": "<b>9. e) iv) In the past 12 months what has been the level of full-time equivalent (FTE) Australian-based workforce within the Service Provider's Organisation engaged to deliver the services where clause 40.2(a)(1)(B) of the agreed Services Agreement applies?</b>",
                 "source": "organisationWorkForceByFinancialYear",
                 "type": "table",
                 "disableTableUpload": true,
@@ -898,7 +901,17 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "10. In the past 12 months, what have been the key communications activities undertaken? (1250 character [approx. 250 word] limit).",
+                "preLabel": "9. f) Please explain any variation from previous year's reporting, including any investment that has been finalised since the previous report.",
+                "source": "variationPreviousReportingYearInvestment",
+                "type": "textarea"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "What have been the key communications activities undertaken as part of core services? (1250 character [approx. 250 word] limit).",
                 "source": "keyCommunicationActivities",
                 "type": "textarea"
               }
@@ -908,7 +921,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "11. In the past 12 months, have you submitted all of the required reports in relation to the Regional Agriculture Landcare Facilitator position?",
+                "preLabel": "11. Have all required reports in relation to the Regional Agriculture Landcare Facilitator position been submitted?",
                 "css": "span6",
                 "source": "waterPlansSubmitted",
                 "type": "selectOne"
@@ -984,6 +997,51 @@
                 "target": "organisationWorkForceByFinancialYear"
               }
             ]
+          },
+
+          {
+            "source": {
+              "type": "literal",
+              "literal": {
+                "coreServicesPlansTable": [
+                  {
+                    "coreServicesPlans": "Community participation plan"
+                  },
+                  {
+                    "coreServicesPlans": "Indigenous participation plan"
+                  },
+                  {
+                    "coreServicesPlans": "Communications plan"
+                  },
+                  {
+                    "coreServicesPlans": "WHS plan"
+                  }
+                ]
+              }
+
+            },
+            "mapping": [
+              {
+                "source-path": "coreServicesPlansTable",
+                "target": "coreServicesPlansTable",
+                "mapping": [
+                  {
+                    "source-path": "coreServicesPlans",
+                    "target": "coreServicesPlans"
+                  }
+                ]
+              }
+            ],
+            "merge": {
+              "coreServicesPlansTable": {
+                "keys": [
+                  "coreServicesPlans"
+                ],
+                "addUnmatchedNewRows": true,
+                "deleteUnmatchedExistingRows": true
+              }
+            }
+
           }
         ]
       },
@@ -996,3 +1054,4 @@
   "supportsSites": false,
   "type": "Report"
 }
+
