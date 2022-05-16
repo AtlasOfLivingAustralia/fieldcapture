@@ -37,7 +37,7 @@
           {
             "dataType": "text",
             "name": "governanceFrameworksMaintained",
-            "validate": "required"
+            "validate": "required,maxSize[1250]"
           },
           {
             "dataType": "text",
@@ -111,12 +111,12 @@
               },
               {
                 "name": "coreServicesPlanLastReviewed",
-                "dataType": "number",
+                "dataType": "date",
                 "validate": "required"
               },
               {
                 "name": "coreServicesPlanActionsRequired",
-                "dataType": "number",
+                "dataType": "text",
                 "validate": "required"
               }
             ]
@@ -124,6 +124,7 @@
           {
             "dataType": "text",
             "name": "communityParticipation",
+            "description": "Provide information on all community participation in any Core Services and relevant Projects over the past 12 months",
             "validate": "required,maxSize[1250]"
           },
           {
@@ -200,6 +201,7 @@
           {
             "dataType": "text",
             "name": "indigenousParticipationForClause40Point2",
+            "description": "Provide information on all community participation in any Core Services and relevant Projects over the past 12 months",
             "validate": "maxSize[1250]",
             "behaviour": [
               {
@@ -365,6 +367,7 @@
           {
             "dataType": "text",
             "name": "indigenousParticipation",
+            "description": "Provide information on all Indigenous employment and procurement in Core Services or projects over the past 12 months",
             "validate": "maxSize[1250]",
             "behaviour": [
               {
@@ -385,7 +388,7 @@
           {
             "dataType": "text",
             "name": "keyCommunicationActivities",
-            "description": "Include communications activities specifically related to Projects",
+            "description": "Include communications activities specifically related to Core Services",
             "validate": "required,maxSize[1250]"
           },
           {
@@ -518,7 +521,7 @@
             "type": "row",
             "items": [
               {
-                "title": "7. Please complete the below table on Core Services plans.",
+                "title": "<b>7. Please complete the below table on Core Services plans</b>",
                 "source": "coreServicesPlansTable",
                 "type": "table",
                 "disableTableUpload": true,
@@ -527,21 +530,22 @@
                     "title": "Plan:",
                     "source": "coreServicesPlans",
                     "type": "readonlyText",
-                    "width": "50%"
+                    "width": "30%"
                   },
                   {
                     "title": "Date last reviewed",
                     "source": "coreServicesPlanLastReviewed",
-                    "type": "number",
-                    "width": "20%"
+                    "type": "date",
+                    "width": "10%"
                   },
                   {
                     "title": "Are there any outstanding actions required to get you on track to meet target measures in your plan?",
                     "source": "coreServicesPlanActionsRequired",
-                    "type": "number",
-                    "width": "30%"
+                    "type": "textarea",
+                    "width": "50%"
                   }
-                ]
+                ],
+                "helpText": "Provide the department with a copy of your updated plan"
               }
             ]
           },
@@ -568,7 +572,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "8. b) Please provide the level of community investment that contributes to the requirement of clause 3.7(m)(ii) in Schedule 2 Statement of Works, or equivalent clause that at least 20% of the combined value of RLP Projects delivered in a management unit by a Service Provider must directly support the delivery of small on-ground projects and related activities that are delivered by, or directly engage with, the local landcare community (the Requirement).(1250 character [approx. 250 word] limit).",
+                "preLabel": "8. b) Please provide the level of community investment that contributes to the requirement of clause 3.7(m)(ii) in Schedule 2 Statement of Works, or equivalent clause that at least 20% of the combined value of RLP Projects delivered in a management unit by a Service Provider must directly support the delivery of small on-ground projects and related activities that are delivered by, or directly engage with, the local landcare community (the Requirement). (1250 character [approx. 250 word] limit).",
                 "source": "communityParticipationFor20PercentRequirement",
                 "type": "textarea"
               }
@@ -599,30 +603,32 @@
             "type": "row",
             "items": [
               {
-                "title": "<b>8. c) ii) in the last 12 months what has been the value of investments made that contribute to this requirement?</b>",
+                "title": "<b>8. d) ii) In the last 12 months what has been the value of investments made that contribute to this requirement?</b>",
                 "type": "table",
                 "disableTableUpload": true,
                 "columns": [
                   {
                     "title": "2018/19 ($)",
                     "source": "investment2018_19",
-                    "type": "number"
+                    "type": "number",
+                    "readonly": true
                   },
                   {
                     "title": "2019/20 ($)",
                     "source": "investment2019_20",
-                    "type": "number"
+                    "type": "number",
+                    "readonly": true
                   },
                   {
                     "title": "2020/21 ($)",
                     "source": "investment2020_21",
-                    "type": "number"
+                    "type": "number",
+                    "readonly": true
                   },
                   {
                     "title": "2021/22 ($)",
                     "source": "investment2021_22",
-                    "type": "number",
-                    "readonly": true
+                    "type": "number"
                   },
                   {
                     "title": "2022/23 ($)",
@@ -725,23 +731,25 @@
                   {
                     "title": "2018/19 ($)",
                     "source": "serviceSubcontracted2018_19",
-                    "type": "number"
+                    "type": "number",
+                    "readonly": true
                   },
                   {
                     "title": "2019/20 ($)",
                     "source": "serviceSubcontracted2019_20",
-                    "type": "number"
+                    "type": "number",
+                    "readonly": true
                   },
                   {
                     "title": "2020/21 ($)",
                     "source": "serviceSubcontracted2020_21",
-                    "type": "number"
+                    "type": "number",
+                    "readonly": true
                   },
                   {
                     "title": "2021/22 ($)",
                     "source": "serviceSubcontracted2021_22",
-                    "type": "number",
-                    "readonly": true
+                    "type": "number"
                   },
                   {
                     "title": "2022/23 ($)",
@@ -759,7 +767,8 @@
                     "source": "percentageSubcontractedOfTotal",
                     "type": "number"
                   }
-                ]
+                ],
+                "helpText": "Please enter any information known for program reporting purposes. Note that there are a number of options presented to meet the investment requirement in clause 40.2. You do not need to meet the requirement for all options"
               }
             ]
           },
@@ -782,26 +791,28 @@
                     "title": "2018/19",
                     "source": "contractWorkforce2018_19",
                     "type": "number",
-                    "width": "10%"
+                    "width": "10%",
+                    "readonly": true
                   },
                   {
                     "title": "2019/20",
                     "source": "contractWorkforce2019_20",
                     "type": "number",
-                    "width": "10%"
+                    "width": "10%",
+                    "readonly": true
                   },
                   {
                     "title": "2020/21",
                     "source": "contractWorkforce2020_21",
                     "type": "number",
-                    "width": "10%"
+                    "width": "10%",
+                    "readonly": true
                   },
                   {
                     "title": "2021/22",
                     "source": "contractWorkforce2021_22",
                     "type": "number",
-                    "width": "10%",
-                    "readonly": true
+                    "width": "10%"
                   },
                   {
                     "title": "2022/23",
@@ -849,26 +860,28 @@
                     "title": "2018/19",
                     "source": "organisationWorkforce2018_19",
                     "type": "number",
-                    "width": "10%"
+                    "width": "10%",
+                    "readonly": true
                   },
                   {
                     "title": "2019/20",
                     "source": "organisationWorkforce2019_20",
                     "type": "number",
-                    "width": "10%"
+                    "width": "10%",
+                    "readonly": true
                   },
                   {
                     "title": "2020/21",
                     "source": "organisationWorkforce2020_21",
                     "type": "number",
-                    "width": "10%"
+                    "width": "10%",
+                    "readonly": true
                   },
                   {
                     "title": "2021/22",
                     "source": "organisationWorkforce2021_22",
                     "type": "number",
-                    "width": "10%",
-                    "readonly": true
+                    "width": "10%"
                   },
                   {
                     "title": "2022/23",
@@ -911,7 +924,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "What have been the key communications activities undertaken as part of core services? (1250 character [approx. 250 word] limit).",
+                "preLabel": "10. What have been the key communications activities undertaken as part of core services? (1250 character [approx. 250 word] limit).",
                 "source": "keyCommunicationActivities",
                 "type": "textarea"
               }
