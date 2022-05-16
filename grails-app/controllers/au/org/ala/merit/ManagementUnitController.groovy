@@ -585,4 +585,18 @@ class ManagementUnitController {
             render status: 400, text: 'Required params not provided: userId, managementUnitId'
         }
     }
+
+    /**
+     * Pre-pops some report field values based from the previous report contents
+     * @param managementUnitId
+     * @return
+     */
+    def previousReportContents(String managementUnitId) {
+        Map model = reportService.getPreviousReportModel(params)
+        Map response = [
+                managementUnitId: managementUnitId,
+                model: model
+        ]
+        render response as JSON
+    }
 }
