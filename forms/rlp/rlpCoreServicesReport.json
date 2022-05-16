@@ -114,12 +114,11 @@
           {
             "name": "communicationsPlanActions",
             "dataType": "text",
-            "validate": "required",
+            "validate": "required,maxSize[4000]",
             "behaviour": [
               {
                 "condition": "communicationsPlanOnTrack == \"No\"",
-                "type": "enable",
-                "validate": "required,maxSize[4000]"
+                "type": "enable"
               }
             ]
           },
