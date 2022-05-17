@@ -82,7 +82,7 @@
           {
             "dataType": "text",
             "name": "whsIncidentsOccurred",
-            "description": "Include only incidents that have not been reported in project annual reports",
+            "description": "A notifiable incident is prescribed within the Work Health and Safety Act 2011 as: <br> <li>the death of a person, or </li> <li>the serious injury or illness of a person, or </li> <li> a dangerous incident</li>",
             "constraints": [
               "Yes",
               "No"
@@ -124,7 +124,6 @@
           {
             "dataType": "text",
             "name": "communityParticipation",
-            "description": "Provide information on all community participation in any Core Services and relevant Projects over the past 12 months",
             "validate": "required,maxSize[1250]"
           },
           {
@@ -521,7 +520,15 @@
             "type": "row",
             "items": [
               {
-                "title": "<b>7. Please complete the below table on Core Services plans</b>",
+                "preLabel": "7. Please complete the below table on Core Services plans",
+                "helpText": "Provide the department with a copy of your updated plan"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
                 "source": "coreServicesPlansTable",
                 "type": "table",
                 "disableTableUpload": true,
@@ -544,8 +551,7 @@
                     "type": "textarea",
                     "width": "50%"
                   }
-                ],
-                "helpText": "Provide the department with a copy of your updated plan"
+                ]
               }
             ]
           },
@@ -564,7 +570,8 @@
               {
                 "preLabel": "8. a) Please describe how the community has participated in the delivery of Core Services and projects. (1250 character [approx. 250 word] limit).",
                 "source": "communityParticipation",
-                "type": "textarea"
+                "type": "textarea",
+                "helpText": "Provide information on all community participation in any Core Services and relevant Projects over the past 12 months"
               }
             ]
           },
@@ -572,7 +579,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "8. b) Please provide the level of community investment that contributes to the requirement of clause 3.7(m)(ii) in Schedule 2 Statement of Works, or equivalent clause that at least 20% of the combined value of RLP Projects delivered in a management unit by a Service Provider must directly support the delivery of small on-ground projects and related activities that are delivered by, or directly engage with, the local landcare community (the Requirement). (1250 character [approx. 250 word] limit).",
+                "preLabel": "8. b) Please provide the level of community investment that contributes to the requirement of clause 3.7(m)(ii) in Schedule 2 Statement of Works, or equivalent clause. [that at least 20% of the combined value of RLP Projects delivered in a management unit by a Service Provider must directly support the delivery of small on-ground projects and related activities that are delivered by, or directly engage with, the local landcare community (the Requirement)]. (1250 character [approx. 250 word] limit).",
                 "source": "communityParticipationFor20PercentRequirement",
                 "type": "textarea"
               }
@@ -724,7 +731,15 @@
             "type": "row",
             "items": [
               {
-                "title": "<b>9. e) ii) In the last 12 months what has been the value of services subcontracted to Indigenous Enterprises where clause 40.2(a)(ii) of the agreed Services Agreement applies?</b>",
+                "preLabel": "9. e) ii) In the last 12 months what has been the value of services subcontracted to Indigenous Enterprises where clause 40.2(a)(ii) of the agreed Services Agreement applies?",
+                "helpText": "Please enter any information known for program reporting purposes. Note that there are a number of options presented to meet the investment requirement in clause 40.2. You do not need to meet the requirement for all options"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
                 "type": "table",
                 "disableTableUpload": true,
                 "columns": [
@@ -767,8 +782,7 @@
                     "source": "percentageSubcontractedOfTotal",
                     "type": "number"
                   }
-                ],
-                "helpText": "Please enter any information known for program reporting purposes. Note that there are a number of options presented to meet the investment requirement in clause 40.2. You do not need to meet the requirement for all options"
+                ]
               }
             ]
           },
