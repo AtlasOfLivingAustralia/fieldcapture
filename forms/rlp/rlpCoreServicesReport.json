@@ -135,7 +135,7 @@
                 "css": "span6",
                 "type": "selectOne",
                 "source": "coreServicesRequirementsMet",
-                "preLabel": "1. Has the Service Provider delivered the Core Services in accordance with Schedule 2 – Statement of Work for this reporting period?"
+                "preLabel": "1. As a Service Provider, have you delivered the Core Services in accordance with Schedule 2 – Statement of Work for this reporting period?"
               }
             ]
           },
@@ -145,7 +145,7 @@
               {
                 "type": "textarea",
                 "source": "notMetCoreServicesRequirementsReason",
-                "preLabel": "a) Please enter the reason(s) the Core Services requirements were not met"
+                "preLabel": "a) Please enter the reason(s) the Core Services requirements were not met."
               }
             ]
           },
@@ -156,7 +156,7 @@
                 "css": "span6",
                 "type": "selectOne",
                 "source": "whsRequirementsMet",
-                "preLabel": "2. Has the Service Provider provided a safe work environment consistent with WHS Laws and in accordance with Clause 44 of the Services Agreement within this reporting period?"
+                "preLabel": "2. As a Service Provider, have you provided a safe work environment consistent with the Work Health and Safety (WHS) Act 2011, and in accordance with Clause 44 of the Services Agreement within this reporting period?"
               }
             ]
           },
@@ -166,7 +166,7 @@
               {
                 "type": "textarea",
                 "source": "notMetWHSRequirementsReason",
-                "preLabel": "a) Please enter the reason(s) the WHS requirements were not met"
+                "preLabel": "a) Please enter the reason(s) the WHS requirements were not met."
               }
             ]
           },
@@ -178,7 +178,7 @@
                 "type": "textarea",
                 "helpText": "Include any activity delivered through the utilisation of core service funds",
                 "source": "coreServiceActivitiesUndertaken",
-                "preLabel": "3. Briefly describe any core service activities undertaken in this reporting period"
+                "preLabel": "3. Briefly describe Core Service activities undertaken in this reporting period."
               }
             ]
           },
@@ -198,7 +198,7 @@
                 "css": "span6",
                 "type": "selectOne",
                 "source": "communityEngagementPlanOnTrack",
-                "preLabel": "4. Are you on track to deliver the target measures identified in your community engagement plan?"
+                "preLabel": "4. As a Service Provider, are you on track to deliver the target measures identified in your community engagement plan?"
               }
             ]
           },
@@ -208,7 +208,7 @@
               {
                 "type": "textarea",
                 "source": "communityEngagementActions",
-                "preLabel": "a) If not, explain what actions are planned to get back on track"
+                "preLabel": "a) If not, explain what actions are planned to get back on track."
               }
             ]
           },
@@ -228,7 +228,7 @@
                 "css": "span6",
                 "type": "selectOne",
                 "source": "indigenousParticipationOnTrack",
-                "preLabel": "5. Are you on track to deliver the target measures identified in your indigenous participation plan?"
+                "preLabel": "5. As a Service Provider, are you on track to deliver the target measures identified in your indigenous participation plan?"
               }
             ]
           },
@@ -238,7 +238,7 @@
               {
                 "type": "textarea",
                 "source": "indigenousParticipationActions",
-                "preLabel": "a) If not, explain what actions are planned to get back on track"
+                "preLabel": "a) If not, explain what actions are planned to get back on track."
               }
             ]
           },
@@ -258,7 +258,7 @@
                 "css": "span6",
                 "type": "selectOne",
                 "source": "communicationsPlanOnTrack",
-                "preLabel": "6. Are you on track to deliver the target measures identified in your communications plan? "
+                "preLabel": "6. As a Service Provider, are you on track to deliver the target measures identified in your communications plan?"
               }
             ]
           },
@@ -268,7 +268,7 @@
               {
                 "type": "textarea",
                 "source": "communicationsPlanActions",
-                "preLabel": "a) If not, explain what actions are planned to get back on track"
+                "preLabel": "a) If not, explain what actions are planned to get back on track."
               }
             ]
           },
@@ -288,7 +288,7 @@
                 "type": "textarea",
                 "source": "meriProfessionalDevelopment",
                 "helpText": "This includes on-the-job, informal and formal training",
-                "preLabel": "7. What MERI professional development opportunities (if any) have your staff participated in?"
+                "preLabel": "7. What MERI professional development opportunities (if any) have staff participated in?"
               }
             ]
           }
