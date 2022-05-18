@@ -82,7 +82,7 @@
           {
             "dataType": "text",
             "name": "whsIncidentsOccurred",
-            "description": "A notifiable incident is prescribed within the Work Health and Safety Act 2011 as: <br> <li>the death of a person, or </li> <li>the serious injury or illness of a person, or </li> <li> a dangerous incident</li>",
+            "description": "A notifiable incident is prescribed within the Work Health and Safety Act as: <br> <li>the death of a person, or </li> <li>the serious injury or illness of a person, or </li> <li> a dangerous incident</li>",
             "constraints": [
               "Yes",
               "No"
