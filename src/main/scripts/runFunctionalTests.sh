@@ -43,7 +43,7 @@ sleep 180
 chmod u+x src/main/scripts/loadFunctionalTestData.sh
 
 echo "Running functional tests"
-./gradlew integrationTest --stacktrace -Dgeb.env=$GEB_ENV
+GRADLE_OPTS="-Xmx256m" ./gradlew integrationTest --no-daemon "-Dorg.gradle.jvmargs=-Xmx256m" --stacktrace -Dgeb.env=$GEB_ENV
 
 RETURN_VALUE=$?
 
