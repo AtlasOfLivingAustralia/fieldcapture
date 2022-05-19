@@ -403,7 +403,7 @@ class ProgramController {
 
         def reportDetails = request.JSON
 
-        def result = programService.rejectReport(id, reportDetails.reportId, reportDetails.reason, reportDetails.category)
+        def result = programService.rejectReport(id, reportDetails.reportId, reportDetails.reason, reportDetails.categories)
 
         render result as JSON
     }

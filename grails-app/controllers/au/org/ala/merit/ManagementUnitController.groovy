@@ -468,7 +468,7 @@ class ManagementUnitController {
 
         def reportDetails = request.JSON
 
-        def result = managementUnitService.rejectReport(id, reportDetails.reportId, reportDetails.reason, reportDetails.category)
+        def result = managementUnitService.rejectReport(id, reportDetails.reportId, reportDetails.reason, reportDetails.categories)
 
         render result as JSON
     }

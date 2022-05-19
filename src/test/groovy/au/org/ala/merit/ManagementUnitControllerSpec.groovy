@@ -294,11 +294,11 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
         when:
         request.method = "POST"
         params.id = muId
-        request.json = [reportId:reportId, reason:"test", category:"c1"]
+        request.json = [reportId:reportId, reason:"test", categories:["c1"]]
         controller.ajaxRejectReport()
 
         then:
-        1 * managementUnitService.rejectReport(muId, reportId, "test", "c1") >> result
+        1 * managementUnitService.rejectReport(muId, reportId, "test", ["c1"]) >> result
 
         and:
         result.status == 200

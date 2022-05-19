@@ -387,7 +387,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         webService.getJson(_) >> project
         String reportId = 'r1'
         Map report = [reportId: reportId]
-        Map reportDetails = [reportId: reportId, activityIds: ['a1', 'a2'], reason:'unused']
+        Map reportDetails = [reportId: reportId, activityIds: ['a1', 'a2'], reason:'Testing', categories:['Other']]
         reportService.getReportsForProject(_) >> [report]
 
 
@@ -399,7 +399,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
 
         1 * projectConfigurationService.getProjectConfiguration(project) >> new ProgramConfig([:])
         1 * webService.getJson({ it.endsWith("permissions/getMembersForProject/" + projectId) }) >> projectRoles
-        1 * reportService.rejectReport(reportId, reportDetails.activityIds, reportDetails.reason, project, projectRoles, EmailTemplate.DEFAULT_REPORT_RETURNED_EMAIL_TEMPLATE) >> [success:true]
+        1 * reportService.rejectReport(reportId, reportDetails.activityIds, reportDetails.reason, reportDetails.categories, project, projectRoles, EmailTemplate.DEFAULT_REPORT_RETURNED_EMAIL_TEMPLATE) >> [success:true]
     }
 
     def "the project service should delegate to the report service to cancel a report"() {
