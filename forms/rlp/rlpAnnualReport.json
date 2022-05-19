@@ -42,7 +42,7 @@
               {
                 "dataType": "text",
                 "name": "targetMeasure",
-                "description": "The output target measure to be adjusted."
+                "description": "The target measure identified in the MERI plan"
               },
               {
                 "dataType": "text",
