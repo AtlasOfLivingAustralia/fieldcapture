@@ -148,7 +148,12 @@ function ProjectService(project, options) {
                 }
             }).fail(function(data) {
                 $.unblockUI();
-                alert('An unhandled error occurred: ' + data.status + " Please refresh the page and try again");
+                if (data.status == 500) {
+                    alert('An unhandled error occurred: ' + data.status + " Please refresh the page and try again");
+                }
+                else {
+                    alert('You do not have permission to delete this record.');
+                }
             });
 
     };

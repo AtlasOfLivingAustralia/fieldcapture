@@ -458,7 +458,7 @@ class ProjectController {
         }
     }
 
-    @PreAuthorise(accessLevel = 'admin', redirectController = 'home', redirectAction = 'index')
+    @PreAuthorise(accessLevel = 'siteReadOnly', redirectController = 'home', redirectAction = 'index')
     def downloadShapefile(String id) {
 
         def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "project/${id}.shp"

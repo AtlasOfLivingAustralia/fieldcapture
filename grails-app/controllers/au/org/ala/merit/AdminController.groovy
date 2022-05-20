@@ -354,6 +354,7 @@ class AdminController {
         [messages: messages?.messages, userMap: messages?.userMap, nameKey:'key']
     }
 
+    @PreAuthorise(accessLevel = 'siteReadOnly', redirectController = "home")
     def auditMessageDetails() {
         def results = auditService.getAuditMessage(params.id as String)
         def userDetails = [:]

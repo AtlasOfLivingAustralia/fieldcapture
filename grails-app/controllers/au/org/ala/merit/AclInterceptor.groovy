@@ -85,14 +85,14 @@ class AclInterceptor {
                 case RoleService.PROJECT_ADMIN_ROLE:
                 case RoleService.PROJECT_EDITOR_ROLE:
                     if (!(userService.userIsAlaOrFcAdmin() || userService.checkRole(userId, accessLevel, entityId, entity))) {
-                        errorMsg = "Access denied: User does not have <b>${accessLevel}</b> permission"
+                        errorMsg = "Access denied: User does not have permission"
                     }
                     break
                 // There is no ecodata accessLevel (yet) so the read only role is implemented as
                 // hasReadOnlyAccess or has the editor role or above on the project
                 case RoleService.PROJECT_READ_ONLY_ROLE:
                     if (!(userService.userIsAlaOrFcAdmin() || userService.checkRole(userId, RoleService.PROJECT_EDITOR_ROLE, entityId, entity) || userService.userHasReadOnlyAccess())) {
-                        errorMsg = "Access denied: User does not have <b>${accessLevel}</b> permission"
+                        errorMsg = "Access denied: User does not have permission"
                     }
                     break
                 default:
