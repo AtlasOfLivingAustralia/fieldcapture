@@ -595,7 +595,7 @@ class ProjectService  {
         }
 
         EmailTemplate emailTemplate = ((ProgramConfig)reportInformation.config).getReportReturnedTemplate()
-        Map result = reportService.rejectReport(reportDetails.reportId, reportDetails.activityIds, reportDetails.reason, reportInformation.project, reportInformation.roles, emailTemplate)
+        Map result = reportService.rejectReport(reportDetails.reportId, reportDetails.activityIds, reportDetails.reason, reportDetails.categories, reportInformation.project, reportInformation.roles, emailTemplate)
 
         result
     }

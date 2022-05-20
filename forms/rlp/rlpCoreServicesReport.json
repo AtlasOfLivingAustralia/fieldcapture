@@ -29,7 +29,7 @@
           {
             "name": "notMetCoreServicesRequirementsReason",
             "dataType": "text",
-            "validate": "required",
+            "validate": "required,maxSize[4000]",
             "behaviour": [
               {
                 "condition": "coreServicesRequirementsMet == \"Not met Core Services requirements\"",
@@ -49,7 +49,7 @@
           {
             "name": "notMetWHSRequirementsReason",
             "dataType": "text",
-            "validate": "required",
+            "validate": "required,maxSize[4000]",
             "behaviour": [
               {
                 "condition": "whsRequirementsMet == \"Not met requirements\"",
@@ -60,7 +60,7 @@
           {
             "name": "coreServiceActivitiesUndertaken",
             "dataType": "text",
-            "validate": "required"
+            "validate": "required,maxSize[4000]"
           },
           {
             "name": "communityEngagementPlanOnTrack",
@@ -74,7 +74,7 @@
           {
             "name": "communityEngagementActions",
             "dataType": "text",
-            "validate": "required",
+            "validate": "required,maxSize[4000]",
             "behaviour": [
               {
                 "condition": "communityEngagementPlanOnTrack == \"No\"",
@@ -94,7 +94,7 @@
           {
             "name": "indigenousParticipationActions",
             "dataType": "text",
-            "validate": "required",
+            "validate": "required,maxSize[4000]",
             "behaviour": [
               {
                 "condition": "indigenousParticipationOnTrack == \"No\"",
@@ -114,7 +114,7 @@
           {
             "name": "communicationsPlanActions",
             "dataType": "text",
-            "validate": "required",
+            "validate": "required,maxSize[4000]",
             "behaviour": [
               {
                 "condition": "communicationsPlanOnTrack == \"No\"",
@@ -124,7 +124,8 @@
           },
           {
             "name": "meriProfessionalDevelopment",
-            "dataType": "text"
+            "dataType": "text",
+            "validate": "required,maxSize[4000]"
           }
         ],
         "viewModel": [
@@ -144,6 +145,7 @@
             "items": [
               {
                 "type": "textarea",
+                "rows": 4,
                 "source": "notMetCoreServicesRequirementsReason",
                 "preLabel": "a) Please enter the reason(s) the Core Services requirements were not met."
               }
@@ -165,6 +167,7 @@
             "items": [
               {
                 "type": "textarea",
+                "rows": 4,
                 "source": "notMetWHSRequirementsReason",
                 "preLabel": "a) Please enter the reason(s) the WHS requirements were not met."
               }
@@ -207,6 +210,7 @@
             "items": [
               {
                 "type": "textarea",
+                "rows": 4,
                 "source": "communityEngagementActions",
                 "preLabel": "a) If not, explain what actions are planned to get back on track."
               }
@@ -237,6 +241,7 @@
             "items": [
               {
                 "type": "textarea",
+                "rows": 4,
                 "source": "indigenousParticipationActions",
                 "preLabel": "a) If not, explain what actions are planned to get back on track."
               }
@@ -267,6 +272,7 @@
             "items": [
               {
                 "type": "textarea",
+                "rows": 4,
                 "source": "communicationsPlanActions",
                 "preLabel": "a) If not, explain what actions are planned to get back on track."
               }
@@ -286,6 +292,7 @@
             "items": [
               {
                 "type": "textarea",
+                "rows": 4,
                 "source": "meriProfessionalDevelopment",
                 "helpText": "This includes on-the-job, informal and formal training",
                 "preLabel": "7. What MERI professional development opportunities (if any) have staff participated in?"

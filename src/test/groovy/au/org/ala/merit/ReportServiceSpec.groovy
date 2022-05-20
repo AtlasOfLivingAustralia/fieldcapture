@@ -316,17 +316,17 @@ class ReportServiceSpec extends Specification implements AutowiredTest{
         EmailTemplate template = EmailTemplate.DEFAULT_REPORT_RETURNED_EMAIL_TEMPLATE
         List roles = []
         String reason = ''
-        String category = ''
+        List categories = ['Other']
 
         when:
-        Map result = service.rejectReport(reportId, activityIds, reason, [:], roles, template)
+        Map result = service.rejectReport(reportId, activityIds, reason, categories, [:], roles, template)
 
         then:
         result.success == true
         1 * webService.getJson({it.endsWith('report/'+reportId)}) >> [reportId:reportId]
-        1 * webService.doPost({it.endsWith('report/returnForRework/'+reportId)}, [comment:reason, category:category]) >> [:]
+        1 * webService.doPost({it.endsWith('report/returnForRework/'+reportId)}, [comment:reason, categories:categories]) >> [:]
         1 * activityService.rejectActivitiesForPublication(activityIds)
-        1 * emailService.sendEmail(template, [reportOwner:[:], reason:reason, report:[reportId:reportId]], roles, RoleService.GRANT_MANAGER_ROLE)
+        1 * emailService.sendEmail(template, [reportOwner:[:], reason:reason, categories: categories, report:[reportId:reportId]], roles, RoleService.GRANT_MANAGER_ROLE)
 
     }
 
