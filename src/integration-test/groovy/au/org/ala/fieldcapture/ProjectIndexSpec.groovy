@@ -19,7 +19,7 @@ class ProjectIndexSpec extends StubbedCasSpec {
 
     def "document should be displayed / uploaded correctly"() {
         setup:
-        loginAsUser('1', browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to ProjectIndex, projectId
