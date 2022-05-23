@@ -2,6 +2,9 @@ name: MERIT build
 
 on: [push]
 
+env:
+  TZ: Australia/Canberra
+
 jobs:
   build:
     runs-on: ubuntu-latest
