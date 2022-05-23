@@ -253,9 +253,10 @@ var ReportViewModel = function(report, config) {
     }
 
     self.rejectReport = function() {
+        var rejectionReasonCategoryOptions = config.rejectionReasonCategoryOptions;
         var options = {
             explanationText: 'Please enter a reason. This reason will be included in the email sent to the project administrator(s).',
-            reasonCategoryOptions: ['Services delivered don’t match invoice submitted', 'Services delivered don’t align with activities described in the MERI plan', 'Quality Assurance Check found insufficient evidence of service delivery', 'Other (PM to describe)'],
+            reasonCategoryOptions: rejectionReasonCategoryOptions,
             otherCategoryValue: 'Other (PM to describe)',
             title:'Return report',
             reasonTitle:'Explanation / Comments',
@@ -548,10 +549,12 @@ var CategorisedReportsViewModel = function(allReports, order, availableReports, 
     _.each(order, function(category) {
         var reports = categorizedReports[category.category];
         if (reports && reports.length > 0) {
+            var reportsOptions = _.extend({}, config, {rejectionReasonCategoryOptions:category.rejectionReasonCategoryOptions})
             self.reportsByCategory.push({
                 title:category.category,
                 description:ko.observable(category.description).extend({markdown:true}),
-                model:new ReportsViewModel(reports, undefined, availableReports, reportOwner, config)
+
+                model:new ReportsViewModel(reports, undefined, availableReports, reportOwner, reportsOptions)
             });
         }
 

@@ -16,8 +16,11 @@
                 <!-- This is used to enable/disable the conditional validation on the reason field -->
                 <input type="hidden" name="reasonRequired" id="reasonRequired" data-bind="value:reasonRequired"/>
 
+                <!-- The text box only needs a sub-title if the reason category list is displayed -->
+                <!-- ko if:reasonTitle && reasonCategoryOptions() && reasonCategoryOptions().length > 0 -->
                 <br/>
-                <label for="reason" data-bind="visible:reasonTitle, text:reasonTitle"></label>
+                <label for="reason" data-bind="text:reasonTitle"></label>
+                <!-- /ko -->
                 <textarea id="reason" rows="5" class="w-100 form-control form-control-sm" data-bind="value:reason" data-validation-engine="validate[condRequired[reasonRequired]]"></textarea>
             </div>
             <div class="modal-footer">
