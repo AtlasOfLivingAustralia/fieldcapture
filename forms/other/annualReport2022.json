@@ -367,7 +367,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "5. In the past 12 months, have any notifiable project Workplace Health and Safety incidents occurred during the delivery of the project?",
+                "preLabel": "5. In the past 12 months, have any notifiable project Work Health and Safety incidents occurred during the delivery of the project?",
                 "css": "span6",
                 "source": "whsIncidentsOccurred",
                 "type": "selectOne"
@@ -378,7 +378,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "5. a) Please describe the Workplace Health and Safety incidents, were they reported and what was the outcome of any investigation.",
+                "preLabel": "5. a) Please describe the Work Health and Safety incidents, were they reported and what was the outcome of any investigation.",
                 "source": "whsIncidentsDescription",
                 "type": "textarea",
                 "rows": 4
@@ -389,7 +389,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "5. b) i) Are changes to the Workplace Health and Safety plan required?",
+                "preLabel": "5. b) i) Are changes to the Work Health and Safety plan required?",
                 "css": "span6",
                 "source": "whsPlanChangesRequired",
                 "type": "selectOne"
@@ -400,7 +400,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "5. b) ii) Please outline changes required to the Workplace Health and Safety plan and why they are required. (1250 character [approx. 250 word] limit)",
+                "preLabel": "5. b) ii) Please outline changes required to the Work Health and Safety plan and why they are required. (1250 character [approx. 250 word] limit)",
                 "source": "whsPlanChangesDescription",
                 "type": "textarea",
                 "rows": 4
