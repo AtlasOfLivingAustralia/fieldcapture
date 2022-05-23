@@ -28,15 +28,16 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
         this.name = dataSet.name;
         this.progress = dataSet.progress;
         this.deleteDataSet = function() {
-            bootbox.confirm("Are you sure?", function() {
-                projectService.deleteDataSet(dataSet.dataSetId).done(function() {
-                    blockUIWithMessage("Refreshing page...");
-                    window.location.href = config.returnToUrl;
-                });
+            bootbox.confirm("Are you sure?", function(yes) {
+                if (yes) {
+                    projectService.deleteDataSet(dataSet.dataSetId).done(function() {
+                        blockUIWithMessage("Refreshing page...");
+                        window.location.href = config.returnToUrl;
+                    });
+                }
             });
         };
     }
-
 };
 
 
