@@ -418,7 +418,7 @@
             "type": "row",
             "items": [
               {
-                "source": "<h4>Note that this report applies to all Services delivered under the Services Agreement</h4>",
+                "source": "<h4>Note: this report applies to all Core Services Activities and Projects  delivered under the Services Agreement in the last 12 months</h4>",
                 "type": "literal"
               }
             ]
@@ -499,7 +499,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "6. Have any notifiable Workplace Health and Safety incidents occurred, while undertaking Core Services?",
+                "preLabel": "6. Have any notifiable Work Health and Safety incidents occurred, while undertaking Core Services?",
                 "css": "span6",
                 "source": "whsIncidentsOccurred",
                 "type": "selectOne"
@@ -510,7 +510,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "6. a) Please describe the Workplace Health and Safety incidents, were they reported and the outcome of any investigation. (1250 character [approx. 250 word] limit).",
+                "preLabel": "6. a) Please describe the Work Health and Safety incidents, were they reported and the outcome of any investigation. (1250 character [approx. 250 word] limit).",
                 "source": "whsIncidents",
                 "type": "textarea"
               }
@@ -721,9 +721,17 @@
             "items": [
               {
                 "preLabel": "9. e) i) Enter the total contracted value of investments in your Management Unit to 2023 where clause 40.2 of the agreed Services Agreement applies.",
-                "source": "indigenousInvestmentAmount",
-                "type": "currency",
                 "helpText": "The total value of services minus projects with an exemption from clause 40.2(a)(ii)"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "indigenousInvestmentAmount",
+                "css": "span2",
+                "type": "currency"
               }
             ]
           },
