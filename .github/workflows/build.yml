@@ -21,18 +21,20 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 14
-      - run: npm install
 
+      - run: npm install
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
+
       - name: Build and run clover coverage report with Gradle
         uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
         with:
           arguments: -PenableClover=true cloverGenerateReport
+
       - name: Install javascript packages using the gradle clientInstall plugin
         uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
         with:
           arguments: clientInstall
 
       - name: Run javascript unit tests
-      - run: node_modules/karma/bin/karma start karma.conf.js --single-run --browsers ChromeHeadless
+        run: node_modules/karma/bin/karma start karma.conf.js --single-run --browsers ChromeHeadless
