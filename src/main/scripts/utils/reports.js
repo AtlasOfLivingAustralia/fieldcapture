@@ -30,6 +30,27 @@ function addDescriptionToMUReports(category, description) {
     }
 }
 
+function addDescriptionToProgramReports(category, description, programs) {
+    var criteria = {status:{$ne:'deleted'}};
+    if (programs) {
+        criteria.name = {$in:programs};
+    }
+    var programs = db.program.find(criteria);
+
+    while (programs.hasNext()) {
+        var program = programs.next();
+        if (program.config.projectReports) {
+            for (var i=0; i<program.config.projectReports.length; i++) {
+                if (program.config.projectReports[i].category == category) {
+                    program.config.projectReports[i].description = description;
+                    print("Updating report description for program: "+program.name);
+                    db.program.save(program);
+                }
+            }
+        }
+    }
+}
+
 /**
  * Iterates backwards through project reports, undoing the effects of a bug that can result
  * in reports being pushed to the next reporting period when a start date change is made on
