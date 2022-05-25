@@ -15,14 +15,15 @@ function audit(entity, entityId, type, userId, projectId) {
 }
 
 /** Updates the name and dates for a supplied report */
-function updateReportDetails(reportId, name, fromDate, toDate, userId) {
+function updateReportDetails(reportId, name, fromDate, toDate, userId, submissionDate, description) {
     var now = ISODate();
     var report = db.report.findOne({reportId:reportId});
     report.fromDate = fromDate;
     report.toDate = toDate;
     report.lastUpdated = now;
     report.name = name;
-    report.description = name;
+    report.description = description || name;
+    report.submissionDate = submissionDate || toDate;
 
     db.report.save(report);
     audit(report, report.reportId, 'au.org.ala.ecodata.Report', userId);

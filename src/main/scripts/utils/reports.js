@@ -29,3 +29,63 @@ function addDescriptionToMUReports(category, description) {
 
     }
 }
+
+/**
+ * Iterates backwards through project reports, undoing the effects of a bug that can result
+ * in reports being pushed to the next reporting period when a start date change is made on
+ * projects with existing reports.
+ * @param projectId the project id affected by the bug
+ * @param reportTypes an array containing the activityType of the reports to change
+ * @param adminUserId the userId to include in the audit trail
+ */
+function repairProjectAffectedByDateChangeBug(projectId, reportTypes, adminUserId) {
+
+    for (var i=0; i<reportTypes.length; i++) {
+
+        var reports = db.report.find({projectId:projectId, activityType:reportTypes[i], status:{$ne:'deleted'}}).sort({toDate:1});
+
+        var currentReport = null;
+        var currentActivity = null;
+
+        while (reports.hasNext()) {
+
+            var previousReport = reports.next();
+            var copyOfPreviousReport = db.report.find({reportId:previousReport.reportId}).next();
+
+            var previousActivity = db.activity.find({activityId:previousReport.activityId}).next();
+            var copyOfPreviousActivity = db.activity.find({activityId:previousReport.activityId}).next();
+
+            print("current: "+(currentReport && currentReport.name));
+            print("previous: "+previousReport.name);
+            print("********");
+            if (currentReport && previousReport) {
+
+                print("Moving "+currentReport.name+" to "+previousReport.name);
+
+                previousReport.name = currentReport.name;
+                previousReport.description = currentReport.description;
+                previousReport.toDate = currentReport.toDate;
+                previousReport.fromDate = currentReport.fromDate;
+                previousReport.lastUpdated = ISODate();
+                previousReport.submissionDate = currentReport.submissionDate;
+
+                db.report.save(previousReport);
+                audit(previousReport, previousReport.reportId, 'au.org.ala.ecodata.Report', adminUserId);
+
+                previousActivity.plannedStartDate = previousReport.fromDate;
+                previousActivity.startDate = previousReport.fromDate;
+                previousActivity.plannedEndDate = previousReport.toDate;
+                previousActivity.endDate = previousReport.toDate;
+                previousActivity.lastUpdated = ISODate();
+                previousActivity.description = currentActivity.description;
+                db.activity.save(previousActivity);
+                audit(previousActivity, previousActivity.activityId, 'au.org.ala.ecodata.Activity', adminUserId);
+
+            }
+
+            currentReport = copyOfPreviousReport;
+            currentActivity = copyOfPreviousActivity;
+        }
+    }
+
+}
