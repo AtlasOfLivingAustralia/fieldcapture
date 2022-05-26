@@ -855,7 +855,7 @@ class ProjectController {
         }
     }
 
-    @PreAuthorise(accessLevel = 'readOnly')
+    @PreAuthorise(accessLevel = 'siteReadOnly', redirectController = "home")
     def ajaxProjectSites(String id) {
         Map result = projectService.projectSites(id)
 

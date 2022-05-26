@@ -398,6 +398,7 @@ var config = {
                     sitesList.children().hide();
                     sitesList.append('<image class="sites-spinner" width="50" height="50" src="'+sitesTabOptions.spinnerUrl+'" alt="Loading"/>');
                     $.get(config.projectSitesUrl).done(function(data) {
+                    console.log("check if changes were deployed");
                         sitesList.children().show();
                         var sitesViewModel = viewModel.initialiseSitesTab(sitesTabOptions);
 
