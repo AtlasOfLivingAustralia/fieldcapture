@@ -133,8 +133,8 @@ class ProjectController {
         project.priorities = new JSONArray(config.priorities ?: [])
         project.outcomes = new JSONArray(config.outcomes ?: [])
         project.hasApprovedOrSubmittedReports = reportService.includesSubmittedOrApprovedReports(project.reports)
-        project.isProjectNotActiveAndHasAnyReport = ((project.status != projectService.ACTIVE_STATUS) && (project?.reports?.size() > 0))
-
+//        project.isProjectNotActiveAndHasAnyReport = ((project.status != projectService.ACTIVE_STATUS) && (project?.reports?.size() > 0))
+        project.isProjectNotActiveAndHasAnyReport = false
         def meriPlanVisible = config.includesContent(ProgramConfig.ProjectContent.MERI_PLAN)
         def risksAndThreatsVisible = config.includesContent(ProgramConfig.ProjectContent.RISKS_AND_THREATS) && user?.hasViewAccess
         def canViewRisks = risksAndThreatsVisible && (user?.hasViewAccess || user?.isEditor)
@@ -600,7 +600,7 @@ class ProjectController {
         render status: 200, text: 'ok'
     }
 
-    @PreAuthorise(accessLevel = 'admin')
+    @PreAuthorise(accessLevel = 'siteReadOnly')
     def projectReport(String id, ProjectSummaryReportCommand projectSummaryReportCommand) {
         projectSummaryReportCommand()
     }
