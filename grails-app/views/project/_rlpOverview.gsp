@@ -92,12 +92,14 @@
                         <div class="col-sm-8 value projectFunding"><span data-bind="text:funding.formattedCurrency"></span></div>
                     </div>
 
-                    <g:if test="${showOrderNumber && project.externalIds.find{it.idType=='INTERNAL_ORDER_NUMBER'}}">
-                    <div class="row mb-2">
-                        <div class="col-sm-4 header-label">Internal order number/s</div>
+                    <g:if test="${showExternalIds}">
+                        <g:each in="${project.externalIds?.collect{it.idType}.unique()}" var="externalIdType">
+                        <div class="row mb-2">
+                            <div class="col-sm-4 header-label"><g:message code="${'label.externalId.'+externalIdType}"/>/s</div>
+                            <div class="col-sm-8 internalOrderNumber"><fc:externalIds externalIds="${project.externalIds}" idType="${externalIdType}"/></div>
 
-                        <div class="col-sm-8 internalOrderNumber"><fc:externalIds externalIds="${project.externalIds}" idType="INTERNAL_ORDER_NUMBER"/></div>
-                    </div>
+                        </div>
+                        </g:each>
                     </g:if>
                 </div>
             </div>
