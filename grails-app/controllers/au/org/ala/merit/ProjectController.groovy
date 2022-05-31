@@ -600,7 +600,7 @@ class ProjectController {
         render status: 200, text: 'ok'
     }
 
-    @PreAuthorise(accessLevel = 'admin')
+    @PreAuthorise(accessLevel = 'siteReadOnly')
     def projectReport(String id, ProjectSummaryReportCommand projectSummaryReportCommand) {
         projectSummaryReportCommand()
     }

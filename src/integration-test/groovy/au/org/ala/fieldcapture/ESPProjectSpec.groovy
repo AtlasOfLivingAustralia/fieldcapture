@@ -32,7 +32,7 @@ class ESPProjectSpec extends StubbedCasSpec {
 
     def "generate Document PDF from document report tab"() {
         setup:
-        loginAsUser('1', browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to ESPProjectIndex, "123456789"

@@ -7,8 +7,10 @@
             <a class="nav-link" data-toggle="pill" href="#projectDetails" id="projectDetails-tab" role="tab" >MERI Plan</a>
             <g:if test="${risksAndThreatsVisible}">
                 <a class="nav-link" href="#risks" id="risks-tab" data-toggle="pill" role="tab" >Risks and threats</a>
-                <a class="nav-link" href="#risks-reporting-section" id="risks-reporting-tab" data-toggle="pill" role="tab" > Risks and threats changes</a>
             </g:if>
+        </g:if>
+        <g:if test="${risksAndThreatsVisible}">
+            <a class="nav-link" href="#risks-reporting-section" id="risks-reporting-tab" data-toggle="pill" role="tab" > Risks and threats changes</a>
         </g:if>
         <g:if test="${showAnnouncementsTab}">
             <a class="nav-link" href="#alternateAnnouncements" id="alternateAnnouncements-tab" data-toggle="pill" role="tab" >Project Announcements</a>
@@ -70,12 +72,14 @@
                           <g:render template="riskTable" model="[project:project]"/>
                       </div>
                   </div>
-                  <div id="risks-reporting-section" class="pill-pane tab-pane">
-                      <g:render template="riskReporting" model="[project:project]"/>
-                  </div>
                 </g:if>
 
             </g:if>
+                <g:if test="${risksAndThreatsVisible}">
+                    <div id="risks-reporting-section" class="pill-pane tab-pane">
+                        <g:render template="riskReporting" model="[project:project]"/>
+                    </div>
+                </g:if>
             <g:if test="${showAnnouncementsTab}">
                 <div id="alternateAnnouncements" class="pill-pane tab-pane">
                     <div id="announcement-result-placeholder"></div>
