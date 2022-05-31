@@ -18,17 +18,18 @@ describe("Tests for the GrantManagerReportsViewModel", function () {
         delete window.fcConfig;
     });
 
-    it("populates the project start date", function () {
-        var config = {project: {status:'Active'}, reportOwner: {startDate:'2021-06-29T14:00:00Z'}};
+    it("does not populate the project start and end dates", function () {
+        var config = {project: {status:'Active'}, reportOwner: {startDate:'2021-06-29T14:00:00Z', endDate:'2022-06-29T14:00:00Z'}};
         var viewModel = new GrantManagerReportsViewModel(config);
 
         var project = {
-            plannedStartDate:'2018-07-01T00:00:00Z',
-            plannedEndDate:'2021-06-30T00:00:00Z',
+            plannedStartDate:'2021-07-01T00:00:00Z',
+            plannedEndDate:'2022-06-30T00:00:00Z',
             status:'Active'
         };
         var projectService = new ProjectService(project, {});
-        expect(viewModel.plannedStartDate()).toBe('2021-06-29T14:00:00Z');
+        expect(viewModel.plannedStartDate()).toBe('');
+        expect(viewModel.plannedEndDate()).toBe('');
     });
 
     it("it will display the grant manager actions", function () {
@@ -61,8 +62,14 @@ describe("Tests for the GrantManagerReportsViewModel", function () {
         expect(viewModel.isMeriPlanApproved()).toBe(false)
     });
 
-    it("doesnt generate the project reports", function () {
+    it("doesnt generate the project reports as there's no start date", function () {
         var config = {project: {status:'Active', planStatus: 'approved' }, reportOwner: {startDate:''}};
+        var viewModel = new GrantManagerReportsViewModel(config);
+        expect(viewModel.generateProjectReports()).toBeUndefined()
+    });
+
+    it("doesnt generate the project reports as there's no end date", function () {
+        var config = {project: {status:'Active', planStatus: 'approved' }, reportOwner: {endDate:''}};
         var viewModel = new GrantManagerReportsViewModel(config);
         expect(viewModel.generateProjectReports()).toBeUndefined()
     });

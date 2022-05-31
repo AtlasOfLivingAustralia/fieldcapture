@@ -565,7 +565,8 @@ var CategorisedReportsViewModel = function(allReports, order, availableReports, 
 var GrantManagerReportsViewModel = function(config) {
     var self = this;
     var projectService = new ProjectService(config.project, config);
-    self.plannedStartDate = ko.observable(config.reportOwner.startDate).extend({simpleDate: false});
+    self.plannedStartDate = ko.observable().extend({simpleDate: false});
+    self.plannedEndDate = ko.observable().extend({simpleDate: false});
 
     self.anyReportData = ko.pureComputed(function() {
         var count = 0;
@@ -582,21 +583,31 @@ var GrantManagerReportsViewModel = function(config) {
     self.generateProjectReports = function () {
         var jsData = {
             plannedStartDate: self.plannedStartDate(),
+            plannedEndDate: self.plannedEndDate(),
         };
 
         var startDateSelector = "#generate-report input[data-bind*=plannedStartDate]";
+        var endDateSelector = "#generate-report input[data-bind*=plannedEndDate]";
 
-        var message;
+        var startMessage;
+        var endMessage;
         if (!self.plannedStartDate()) {
-            message =  "The planned start date is a required field";
+            startMessage =  "The project start date is a required field";
         }
-        if (self.plannedStartDate() >= config.project.plannedEndDate) {
-            message =  "The project start date must be before the end date";
+        if (!self.plannedEndDate()) {
+            endMessage =  "The project end date is a required field";
+        }
+        if (self.plannedStartDate() >= self.plannedEndDate()) {
+            startMessage =  "The project start date must be before the end date";
+        }
+        if (!self.plannedEndDate() <= self.plannedStartDate()) {
+            endMessage =  "The project end date must be after the start date";
         }
 
-        if (message) {
+        if (startMessage || endMessage) {
             setTimeout(function() {
-                $(startDateSelector).validationEngine("showPrompt", message, "topRight", true);
+                $(startDateSelector).validationEngine("showPrompt", startMessage, "topRight", true);
+                $(endDateSelector).validationEngine("showPrompt", endMessage, "topRight", true);
             }, 100);
 
         } else {

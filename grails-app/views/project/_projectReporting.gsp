@@ -11,13 +11,21 @@
                 <div class="alert alert-info">
                     Please ensure the project start date matches the project start date in the work order before pressing the "Generate Project Reports" button
                 </div>
-                <div>
-                    <div class="form-group row">
-                        <label for="startDate" class="col-form-label col-sm-2">Project Start Date</label>
-                        <div>
-                            <div class="input-group">
-                                <fc:datePicker size="form-control form-control-sm" targetField="plannedStartDate.date" id="startDate" bs4="true" name="startDate" data-bind="datepicker:plannedStartDate.date" data-validation-engine="validate[required, past[plannedEndDate]]" printable="${printView}"/>
-                            </div>
+                <div class="row mb-2">
+                    <div class="col-sm-2">
+                        <label for="startDate">Project start date
+                        <fc:iconHelp title="Start date">Date the project is intended to commence.</fc:iconHelp>
+                        </label>
+                        <div class="input-group input-append">
+                            <fc:datePicker size="form-control form-control-sm" targetField="plannedStartDate.date" id="startDate" bs4="true" name="startDate" data-bind="datepicker:plannedStartDate.date" data-validation-engine="validate[required, past[plannedEndDate]]" printable="${printView}"/>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <label for="endDate">Project end date
+                        <fc:iconHelp title="End date">Date the project is intended to finish.</fc:iconHelp>
+                        </label>
+                        <div class="input-group input-append">
+                            <fc:datePicker size="form-control form-control-sm" targetField="plannedEndDate.date" id="endDate" bs4="true" name="endDate" data-bind="datepicker:plannedEndDate.date" data-validation-engine="validate[required]" printable="${printView}"/>
                         </div>
                     </div>
                 </div>
