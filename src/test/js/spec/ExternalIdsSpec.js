@@ -83,7 +83,7 @@ describe("External-ids component unit tests", function () {
         ko.components.get('external-ids', function(component, config) {
 
             var viewModel = component.createViewModel(vmParams);
-            expect(viewModel.externalIdTypes).toEqual([{ label: 'TYPE_1', value: 'TYPE_1' }, { label: 'TYPE_2', value: 'TYPE_2' }, { label: 'TYPE_3', value: 'TYPE_3' }]);
+            expect(ko.mapping.toJS(viewModel.externalIdTypes)).toEqual([{ label: 'TYPE_1', value: 'TYPE_1' }, { label: 'TYPE_2', value: 'TYPE_2' }, { label: 'TYPE_3', value: 'TYPE_3' }]);
 
             done();
         })
