@@ -138,7 +138,7 @@ class ImportProjectsSpec extends StubbedCasSpec {
         overview.program.text() == "Configurable MERI Plan Program"
         overview.projectId.text() == "cep-1"
         overview.status.text().equalsIgnoreCase("Completed")
-        overview.internalOrderIds.text() == "1234"
+        overview.externalIds*.text() == ["1234"]
         overview.description.text() == "Grants project description"
 
         when:

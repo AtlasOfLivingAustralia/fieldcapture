@@ -96,7 +96,7 @@ class ProjectIndexSpec extends StubbedCasSpec {
         waitFor 20, {hasBeenReloaded()}
         at ProjectIndex
 
-        !admin.projectSettings.internalOrderIdErrorDisplayed()
+        !admin.projectSettings.externalIdsErrorDisplayed()
         admin.projectSettings.internalOrderIds().size() == 0
     }
 
@@ -125,7 +125,7 @@ class ProjectIndexSpec extends StubbedCasSpec {
         waitFor{hasBeenReloaded()}
         at ProjectIndex
 
-        !admin.projectSettings.internalOrderIdErrorDisplayed()
+        !admin.projectSettings.externalIdsErrorDisplayed()
         admin.projectSettings.externalIds.externalIds[0].externalId == "12345"
     }
 
@@ -150,7 +150,7 @@ class ProjectIndexSpec extends StubbedCasSpec {
         admin.projectSettings.saveChangesButton.click()
 
         then: "A validation error is displayed"
-        admin.projectSettings.internalOrderIdErrorDisplayed()
+        admin.projectSettings.externalIdsErrorDisplayed()
     }
 
     def "Projects with active status can be saved with a internal order id"() {
@@ -179,7 +179,7 @@ class ProjectIndexSpec extends StubbedCasSpec {
         waitFor{hasBeenReloaded()}
         at ProjectIndex
 
-        !admin.projectSettings.internalOrderIdErrorDisplayed()
+        !admin.projectSettings.externalIdsErrorDisplayed()
         admin.projectSettings.externalIds.externalIds[2].externalId == "12345"
     }
 
@@ -204,7 +204,7 @@ class ProjectIndexSpec extends StubbedCasSpec {
         admin.projectSettings.saveChangesButton.click()
 
         then:
-        admin.projectSettings.internalOrderIdErrorDisplayed()
+        admin.projectSettings.externalIdsErrorDisplayed()
     }
 
     def "Projects with completed status can be saved with a internal order id"() {
@@ -231,7 +231,7 @@ class ProjectIndexSpec extends StubbedCasSpec {
         waitFor{hasBeenReloaded()}
         at ProjectIndex
 
-        !admin.projectSettings.internalOrderIdErrorDisplayed()
+        !admin.projectSettings.externalIdsErrorDisplayed()
         admin.projectSettings.externalIds.externalIds[0].externalId == '12345'
     }
 
