@@ -245,6 +245,10 @@ function ProjectService(project, options) {
         return project.status && (project.status.toLowerCase() === ProjectStatus.COMPLETED|| self.isTerminated());
     };
 
+    self.isActive = function(){
+        return project.status.toLowerCase() === 'active';
+    };
+
     self.isProjectDetailsLocked = ko.computed(function () {
             return self.isCompletedOrTerminated() || self.isSubmittedOrApproved();
     });

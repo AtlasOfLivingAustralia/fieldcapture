@@ -1,6 +1,6 @@
 <div id="generate-report" class="validationEngineContainer">
     <g:if test="${user?.isCaseManager || fc.userIsAlaOrFcAdmin()}">
-        <div data-bind="if:isMeriPlanApproved()" class="required">
+        <div data-bind="if:isMeriPlanNotApproved()" class="required">
         <div class="alert alert-info">
             Project reports cannot be created until the MERI plan is approved and the project start date is confirmed
         </div>
@@ -50,9 +50,11 @@
 <fc:getSettingContent settingType="${au.org.ala.merit.SettingPageType.REPORT_ADJUSTMENT_INSTRUCTIONS}"/>
 </script>
 
+<g:if test="${user?.isCaseManager || fc.userIsAlaOrFcAdmin()}">
 <asset:script type="text/javascript">
     $(function() {
-        var config = _.extend(fcConfig, {adjustmentInstructionsSelector:'#adjustment-instructions'});
+        var config = _.extend(fcConfig, {adjustmentInstructionsSelector:'#adjustment-instructions', datesFormSelector:"#reportingTabDatesForm"});
         ko.applyBindings(new GrantManagerReportsViewModel(config), document.getElementById('generate-report'));
     });
 </asset:script>
+</g:if>

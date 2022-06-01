@@ -568,7 +568,7 @@ var GrantManagerReportsViewModel = function(config) {
 
     var startDate;
     var endDate;
-    if (config.project.status == 'Active') {
+    if (projectService.isActive()) {
             if (config.project.reports.length > 0) {
                 startDate = config.reportOwner.startDate;
                 endDate = config.reportOwner.endDate;
@@ -579,7 +579,7 @@ var GrantManagerReportsViewModel = function(config) {
 
     self.anyReportData = ko.pureComputed(function() {
         var count = 0;
-        if (config.project.status == 'Active') {
+        if (projectService.isActive()) {
             _.each(config.project.reports, function (report){
                 if (report.progress == 'finished' || report.progress == 'started') {
                     count += 1;
@@ -590,8 +590,8 @@ var GrantManagerReportsViewModel = function(config) {
     });
 
     self.generateProjectReports = function () {
-        $('#reportingTabDatesForm').validationEngine();
-        var result = $('#reportingTabDatesForm').validationEngine('validate');
+        $(config.datesFormSelector).validationEngine();
+        var result = $(config.datesFormSelector).validationEngine('validate');
         if (result) {
             var jsData = {
                 plannedStartDate: self.plannedStartDate(),
@@ -601,12 +601,12 @@ var GrantManagerReportsViewModel = function(config) {
         }
     }
 
-    self.isMeriPlanApproved = ko.pureComputed(function() {
-        if (!projectService.isApproved() && config.project.reports.length < 0) {
-            return true;
-        } else {
-            return false;
+    self.isMeriPlanNotApproved = ko.pureComputed(function() {
+        var result = false;
+        if (!projectService.isApproved()) {
+            result = true;
         }
+         return result;
     });
 };
 
