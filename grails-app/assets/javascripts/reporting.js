@@ -565,8 +565,17 @@ var CategorisedReportsViewModel = function(allReports, order, availableReports, 
 var GrantManagerReportsViewModel = function(config) {
     var self = this;
     var projectService = new ProjectService(config.project, config);
-    self.plannedStartDate = ko.observable().extend({simpleDate: false});
-    self.plannedEndDate = ko.observable().extend({simpleDate: false});
+
+    var startDate;
+    var endDate;
+    if (config.project.status == 'Active') {
+            if (config.project.reports.length > 0) {
+                startDate = config.reportOwner.startDate;
+                endDate = config.reportOwner.endDate;
+            }
+    }
+    self.plannedStartDate = ko.observable(startDate).extend({simpleDate: false});
+    self.plannedEndDate = ko.observable(endDate).extend({simpleDate: false});
 
     self.anyReportData = ko.pureComputed(function() {
         var count = 0;
@@ -593,7 +602,7 @@ var GrantManagerReportsViewModel = function(config) {
     }
 
     self.isMeriPlanApproved = ko.pureComputed(function() {
-        if (!projectService.isApproved() && config.project.reports == '') {
+        if (!projectService.isApproved() && config.project.reports.length < 0) {
             return true;
         } else {
             return false;

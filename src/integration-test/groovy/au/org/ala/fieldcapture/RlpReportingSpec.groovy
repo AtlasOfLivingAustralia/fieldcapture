@@ -438,7 +438,7 @@ class RlpReportingSpec extends StubbedCasSpec {
         then:
         meriplan.approveButton.@disabled
         meriplan.externalIds.displayed
-        meriplan.projectStartDate.displayed
+        !meriplan.projectStartDate.displayed
 
         when:
         meriplan.projectStartDate = "01/06/2018"
