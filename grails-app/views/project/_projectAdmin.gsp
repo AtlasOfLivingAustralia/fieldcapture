@@ -9,13 +9,15 @@
                 <a class="nav-link" href="#risks" id="risks-tab" data-toggle="pill" role="tab" >Risks and threats</a>
             </g:if>
         </g:if>
-        <g:if test="${risksAndThreatsVisible}">
-            <a class="nav-link" href="#risks-reporting-section" id="risks-reporting-tab" data-toggle="pill" role="tab" > Risks and threats changes</a>
+        <g:if test="${user.isAdmin || user.isCaseManager || fc.userHasReadOnlyAccess()}">
+            <g:if test="${risksAndThreatsVisible}">
+                <a class="nav-link" href="#risks-reporting-section" id="risks-reporting-tab" data-toggle="pill" role="tab" > Risks and threats changes</a>
+            </g:if>
         </g:if>
         <g:if test="${showAnnouncementsTab}">
             <a class="nav-link" href="#alternateAnnouncements" id="alternateAnnouncements-tab" data-toggle="pill" role="tab" >Project Announcements</a>
         </g:if>
-        <g:if test="${user.isAdmin || user.isCaseManager}">
+        <g:if test="${user.isEditor}">
             <a class="nav-link" href="#editProjectBlog" id="editProjectBlog-tab" data-toggle="pill" role="tab" >Edit Project Blog</a>
         </g:if>
         <g:if test="${project.newsAndEvents}">
@@ -76,21 +78,25 @@
                 </g:if>
 
             </g:if>
+            <g:if test="${user.isAdmin || user.isCaseManager || fc.userHasReadOnlyAccess()}">
                 <g:if test="${risksAndThreatsVisible}">
-                    <div id="risks-reporting-section" class="pill-pane tab-pane">
-                        <g:render template="riskReporting" model="[project:project]"/>
-                    </div>
+                <div id="risks-reporting-section" class="pill-pane tab-pane">
+                    <g:render template="riskReporting" model="[project:project]"/>
+                </div>
                 </g:if>
+            </g:if>
             <g:if test="${showAnnouncementsTab}">
                 <div id="alternateAnnouncements" class="pill-pane tab-pane">
                     <div id="announcement-result-placeholder"></div>
                     <g:render template="announcements" model="[project: project]"/>
                 </div>
             </g:if>
-            <div id="editProjectBlog" class="pill-pane tab-pane">
-                <h3>Edit Project Blog</h3>
-                <g:render template="/blog/blogSummary" model="${[blog:project.blog?:[]]}"/>
-            </div>
+            <g:if test="${user.isEditor}">
+                <div id="editProjectBlog" class="pill-pane tab-pane">
+                    <h3>Edit Project Blog</h3>
+                    <g:render template="/blog/blogSummary" model="${[blog:project.blog?:[]]}"/>
+                </div>
+            </g:if>
             <g:if test="${project.newsAndEvents}">
                 <div id="editNewsAndEvents" class="pill-pane tab-pane">
                     <g:render template="editProjectContent" model="${[attributeName:'newsAndEvents', header:'News and events']}"/>
