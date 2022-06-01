@@ -62,16 +62,4 @@ describe("Tests for the GrantManagerReportsViewModel", function () {
         expect(viewModel.isMeriPlanApproved()).toBe(false)
     });
 
-    it("doesnt generate the project reports as there's no start date", function () {
-        var config = {project: {status:'Active', planStatus: 'approved' }, reportOwner: {startDate:''}};
-        var viewModel = new GrantManagerReportsViewModel(config);
-        expect(viewModel.generateProjectReports()).toBeUndefined()
-    });
-
-    it("doesnt generate the project reports as there's no end date", function () {
-        var config = {project: {status:'Active', planStatus: 'approved' }, reportOwner: {endDate:''}};
-        var viewModel = new GrantManagerReportsViewModel(config);
-        expect(viewModel.generateProjectReports()).toBeUndefined()
-    });
-
 });
