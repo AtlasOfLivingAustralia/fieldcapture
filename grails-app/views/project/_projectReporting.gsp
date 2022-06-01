@@ -1,6 +1,6 @@
 <div id="generate-report" class="validationEngineContainer">
     <g:if test="${user?.isCaseManager || fc.userIsAlaOrFcAdmin()}">
-        <div data-bind="if:isMeriPlanApproved()" class="required">
+        <div data-bind="if:isMeriPlanNotApproved()" class="required">
         <div class="alert alert-info">
             Project reports cannot be created until the MERI plan is approved and the project start date is confirmed
         </div>
@@ -11,16 +11,26 @@
                 <div class="alert alert-info">
                     Please ensure the project start date matches the project start date in the work order before pressing the "Generate Project Reports" button
                 </div>
-                <div>
-                    <div class="form-group row">
-                        <label for="startDate" class="col-form-label col-sm-2">Project Start Date</label>
-                        <div>
-                            <div class="input-group">
-                                <fc:datePicker size="form-control form-control-sm" targetField="plannedStartDate.date" id="startDate" bs4="true" name="startDate" data-bind="datepicker:plannedStartDate.date" data-validation-engine="validate[required, past[plannedEndDate]]" printable="${printView}"/>
+                <form id="reportingTabDatesForm">
+                    <div class="row mb-2">
+                        <div class="col-sm-2">
+                            <label for="startDate">Project start date
+                            <fc:iconHelp title="Start date">Date the project is intended to commence.</fc:iconHelp>
+                            </label>
+                            <div class="input-group input-append">
+                                <fc:datePicker class="form-control form-control-sm" bs4="true" targetField="plannedStartDate.date" id= "startDate" name="startDate" data-validation-engine="validate[required, past[endDate]]"/>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <label for="endDate">Project end date
+                            <fc:iconHelp title="End date">Date the project is intended to finish.</fc:iconHelp>
+                            </label>
+                            <div class="input-group input-append">
+                                <fc:datePicker class="form-control form-control-sm" bs4="true" targetField="plannedEndDate.date" id="endDate" name="endDate" data-validation-engine="validate[required, future[startDate]"/>
                             </div>
                         </div>
                     </div>
-                </div>
+                </form>
                 <span class="grantManagerActionSpan">
                     <button type="button" id="generateReports" data-bind="click:generateProjectReports" class="btn btn-sm btn-success"><i class="fa fa-check"></i> Generate Project Reports</button>
                 </span>
@@ -40,9 +50,11 @@
 <fc:getSettingContent settingType="${au.org.ala.merit.SettingPageType.REPORT_ADJUSTMENT_INSTRUCTIONS}"/>
 </script>
 
+<g:if test="${user?.isCaseManager || fc.userIsAlaOrFcAdmin()}">
 <asset:script type="text/javascript">
     $(function() {
-        var config = _.extend(fcConfig, {adjustmentInstructionsSelector:'#adjustment-instructions'});
+        var config = _.extend(fcConfig, {adjustmentInstructionsSelector:'#adjustment-instructions', datesFormSelector:"#reportingTabDatesForm"});
         ko.applyBindings(new GrantManagerReportsViewModel(config), document.getElementById('generate-report'));
     });
 </asset:script>
+</g:if>

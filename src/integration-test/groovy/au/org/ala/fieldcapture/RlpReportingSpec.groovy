@@ -419,7 +419,7 @@ class RlpReportingSpec extends StubbedCasSpec {
         }
     }
 
-    def "Grant manager can update the project start date and can generate the project reports when there's no data in any report"() {
+    def "Grant manager can update the project start/end dates and can generate the project reports when there's no data in any report"() {
 
         setup:
         loginAsGrantManager(browser)
@@ -438,7 +438,7 @@ class RlpReportingSpec extends StubbedCasSpec {
         then:
         meriplan.approveButton.@disabled
         meriplan.externalIds.displayed
-        meriplan.projectStartDate.displayed
+        !meriplan.projectStartDate.displayed
 
         when:
         meriplan.projectStartDate = "01/06/2018"
@@ -491,35 +491,7 @@ class RlpReportingSpec extends StubbedCasSpec {
 
         when:
         projectReports.projectStartDate = "01/06/2018"
-
-        then:
-        waitFor { projectReports.generateButton.click() }
-
-        then:
-        waitFor 30, { hasBeenReloaded() }
-
-        and: "List of reports will be displayed"
-        waitFor {
-            projectReports.reports.size() > 0
-        }
-
-        when:"login as grant manager"
-        loginAsGrantManager(browser)
-        to ProjectIndex, 'project_application'
-
-        then:
-        waitFor { at ProjectIndex }
-
-        when:
-        reportingTab.click()
-
-        then:
-        waitFor 20, {
-            projectReports.displayed
-        }
-
-        when:
-        projectReports.projectStartDate = "01/06/2018"
+        projectReports.projectEndDate = "01/06/2019"
 
         then:
         waitFor { projectReports.generateButton.click() }
@@ -601,10 +573,11 @@ class RlpReportingSpec extends StubbedCasSpec {
 
         and: ""
         projectReports.projectStartDate.empty == true
+        projectReports.projectEndDate.empty == true
         projectReports.generateButton.empty == true
     }
 
-    def "A read only user will not be able to generate reports and change the project start date " () {
+    def "A read only user will not be able to generate reports and change the project start/end dates " () {
 
         setup:
         String projectId = '1'
@@ -626,6 +599,7 @@ class RlpReportingSpec extends StubbedCasSpec {
 
         and:
         projectReports.projectStartDate.empty == true
+        projectReports.projectEndDate.empty == true
         projectReports.generateButton.empty == true
     }
 
