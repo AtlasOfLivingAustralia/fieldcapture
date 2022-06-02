@@ -13,7 +13,7 @@ class RlpOverviewTab extends Module {
         startDate {$(".projectStartDate")}
         endDate {$(".projectEndDate")}
         projectFundingAmount {$(".projectFunding")}
-        externalIds {$(".external-ids")}
+        externalIds {$(".external-id")}
         description {$(".projectDescription")}
 
         newsAndEvents { $('div', text:'').siblings()[0] }

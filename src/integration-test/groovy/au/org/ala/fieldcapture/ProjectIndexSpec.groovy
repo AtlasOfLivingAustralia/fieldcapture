@@ -37,8 +37,11 @@ class ProjectIndexSpec extends StubbedCasSpec {
         admin.documentsTab.click()
 
         then:
-        admin.documents.documentSummaryList().size() == 1
-        admin.documents.documentSummaryList()[0].name == 'test 1'
+        waitFor {
+            admin.documents.documentSummaryList().size() == 1
+            admin.documents.documentSummaryList()[0].name == 'test 1'
+
+        }
 
         when:
         admin.documents.attachDocumentButton.click()

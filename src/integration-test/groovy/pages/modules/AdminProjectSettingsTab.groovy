@@ -26,6 +26,6 @@ class AdminProjectSettingsTab extends Module {
 
     def externalIdsErrorDisplayed() {
         Thread.sleep(500)
-        $('.addExternalIdButtonformError.parentFormsettings-validation.formError').displayed
+        $('.parentFormsettings-validation.formError').displayed
     }
 }
