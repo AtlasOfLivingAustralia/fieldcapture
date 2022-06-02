@@ -7,7 +7,8 @@
             <table id="projectList-${i}" class="table table-striped table-bordered">
                 <thead class="thead-light">
                 <th class="projectId">Project ID</th>
-                <th class="internalOrderId">Internal order number</th>
+                <th class="internalOrderId"><g:message code="label.externalId.INTERNAL_ORDER_NUMBER"/></th>
+                <th class="techOneCode"><g:message code="label.externalId.TECH_ONE_CODE"/></th>
                 <th class="name">Name</th>
                 <th class="startDate">Start Date</th>
                 <th class="endDate">End Date</th>
@@ -18,6 +19,7 @@
                     <tr>
                         <td class="projectId"><a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}" >${project.externalId ?: project.grantId}</a></td>
                         <td class="internalOrderId"><fc:externalIds externalIds="${project.externalIds}" idType="INTERNAL_ORDER_NUMBER"/></td>
+                        <td class="internalOrderId"><fc:externalIds externalIds="${project.externalIds}" idType="TECH_ONE_CODE"/></td>
                         <td class="name">${project.name?.encodeAsHTML()}</td>
                         <td class="startDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedStartDate)}</td>
                         <td class="endDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedEndDate)}</td>

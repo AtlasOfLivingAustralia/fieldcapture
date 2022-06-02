@@ -22,6 +22,8 @@
             </div>
            </li>
         </ul>
-        <button id="addExternalIdButton" class="btn" data-bind="click:addExternalId, jqueryValidationEngine:{namespace:validationNamespace, validationFunction:externalIdValidation}">Add external id</button>
+        <button id="addExternalIdButton" class="btn" data-bind="click:addExternalId">Add external id</button>
+        <input type="text" class="invisibleValidationHolder" name="invisibleValidationHolder" data-bind="jqueryValidationEngine:{namespace:validationNamespace, validationFunction:externalIdValidation}">
+
     </div>
 </div>
