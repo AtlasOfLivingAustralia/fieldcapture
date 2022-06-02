@@ -7,13 +7,19 @@
             <a class="nav-link" data-toggle="pill" href="#projectDetails" id="projectDetails-tab" role="tab" >MERI Plan</a>
             <g:if test="${risksAndThreatsVisible}">
                 <a class="nav-link" href="#risks" id="risks-tab" data-toggle="pill" role="tab" >Risks and threats</a>
+            </g:if>
+        </g:if>
+        <g:if test="${user.isAdmin || user.isCaseManager || fc.userHasReadOnlyAccess()}">
+            <g:if test="${risksAndThreatsVisible}">
                 <a class="nav-link" href="#risks-reporting-section" id="risks-reporting-tab" data-toggle="pill" role="tab" > Risks and threats changes</a>
             </g:if>
         </g:if>
         <g:if test="${showAnnouncementsTab}">
             <a class="nav-link" href="#alternateAnnouncements" id="alternateAnnouncements-tab" data-toggle="pill" role="tab" >Project Announcements</a>
         </g:if>
-        <a class="nav-link" href="#editProjectBlog" id="editProjectBlog-tab" data-toggle="pill" role="tab" >Edit Project Blog</a>
+        <g:if test="${user.isEditor}">
+            <a class="nav-link" href="#editProjectBlog" id="editProjectBlog-tab" data-toggle="pill" role="tab" >Edit Project Blog</a>
+        </g:if>
         <g:if test="${project.newsAndEvents}">
             <a class="nav-link" href="#editNewsAndEvents" id="editNewsAndEvents-tab" data-toggle="pill" role="tab" > News and events</a>
         </g:if>
@@ -27,7 +33,11 @@
             </g:if>
             <a class="nav-link" href="#edit-documents" id="edit-documents-tab" data-toggle="pill" role="tab" >Documents</a>
         </g:if>
-        <g:if test="${fc.userIsSiteAdmin()}">
+        <g:elseif test="${fc.userHasReadOnlyAccess()}">
+            <a class="nav-link" href="#permissions" id="permissions-tab" data-toggle="pill" role="tab" >Project access</a>
+            <a class="nav-link" href="#edit-documents" id="edit-documents-tab" data-toggle="pill" role="tab" >Documents</a>
+        </g:elseif>
+        <g:if test="${fc.userIsSiteAdmin() || fc.userHasReadOnlyAccess()}">
             <a class="nav-link" href="#project-audit" id="project-audit-tab" data-toggle="pill" role="tab" >Audit</a>
         </g:if>
     </div> <!-- end of side nav -->
@@ -65,11 +75,15 @@
                           <g:render template="riskTable" model="[project:project]"/>
                       </div>
                   </div>
-                  <div id="risks-reporting-section" class="pill-pane tab-pane">
-                      <g:render template="riskReporting" model="[project:project]"/>
-                  </div>
                 </g:if>
 
+            </g:if>
+            <g:if test="${user.isAdmin || user.isCaseManager || fc.userHasReadOnlyAccess()}">
+                <g:if test="${risksAndThreatsVisible}">
+                <div id="risks-reporting-section" class="pill-pane tab-pane">
+                    <g:render template="riskReporting" model="[project:project]"/>
+                </div>
+                </g:if>
             </g:if>
             <g:if test="${showAnnouncementsTab}">
                 <div id="alternateAnnouncements" class="pill-pane tab-pane">
@@ -77,10 +91,12 @@
                     <g:render template="announcements" model="[project: project]"/>
                 </div>
             </g:if>
-            <div id="editProjectBlog" class="pill-pane tab-pane">
-                <h3>Edit Project Blog</h3>
-                <g:render template="/blog/blogSummary" model="${[blog:project.blog?:[]]}"/>
-            </div>
+            <g:if test="${user.isEditor}">
+                <div id="editProjectBlog" class="pill-pane tab-pane">
+                    <h3>Edit Project Blog</h3>
+                    <g:render template="/blog/blogSummary" model="${[blog:project.blog?:[]]}"/>
+                </div>
+            </g:if>
             <g:if test="${project.newsAndEvents}">
                 <div id="editNewsAndEvents" class="pill-pane tab-pane">
                     <g:render template="editProjectContent" model="${[attributeName:'newsAndEvents', header:'News and events']}"/>
@@ -94,8 +110,8 @@
             <g:if test="${user.isAdmin || user.isCaseManager}">
                 <div id="permissions" class="pill-pane tab-pane">
                     <h3>Project Access</h3>
-                    <h4>Add Permissions</h4>
-                    <g:render template="/admin/addPermissions" model="[addUserUrl:g.createLink(controller:'user', action:'addUserAsRoleToProject'), entityId:project.projectId]"/>
+                        <h4>Add Permissions</h4>
+                        <g:render template="/admin/addPermissions" model="[addUserUrl:g.createLink(controller:'user', action:'addUserAsRoleToProject'), entityId:project.projectId]"/>
                     <g:render template="/admin/permissionTable" model="[loadPermissionsUrl:g.createLink(controller:'project', action:'getMembersForProjectId', id:project.projectId), removeUserUrl:g.createLink(controller:'user', action:'removeUserWithRoleFromProject'), entityId:project.projectId, user:user]"/>
                 </div>
                 <!-- SPECIES -->
@@ -107,26 +123,16 @@
                 </div>
                 </g:if>
                 <!-- DOCUMENTS -->
-                <div id="edit-documents" class="pill-pane tab-pane">
-                    <div class="span10 attachDocumentModal">
-                        <h3 style="display:inline-block">Project Documents</h3>
-                        <button class="btn btn-info pull-right project-document-action" id="doAttach" data-bind="click:attachDocument">Attach Document</button>
-                        <form class="form-inline pull-right project-document-action"><label>Filter documents:</label> <select data-bind="optionsCaption:'No filter', options:documentRoles, optionsText:'name', optionsValue:'id', value:documentFilter"></select></form>
-                    </div>
-                    <div class="clearfix"></div>
-                    <hr/>
-                    <div class="row">
-                        <div class="col-sm-12 ml-3 ">
-                            <g:render template="/shared/editDocuments"
-                                      model="[useExistingModel: true,editable:true, filterBy: 'all', ignore: '', imageUrl:assetPath(src:'filetypes'),containerId:'adminDocumentList']"/>
-                        </div>
-                    </div>
-                    %{--The modal view containing the contents for a modal dialog used to attach a document--}%
-                    <g:render template="/shared/attachDocument"/>
-
-                </div>
+                <g:render template="/admin/editDocuments"/>
             </g:if>
-            <g:if test="${fc.userIsSiteAdmin()}">
+            <g:elseif test="${fc.userHasReadOnlyAccess()}">
+                <div id="permissions" class="pill-pane tab-pane">
+                    <h3>Project Access</h3>
+                    <g:render template="/admin/permissionTable" model="[loadPermissionsUrl:g.createLink(controller:'project', action:'getMembersForProjectId', id:project.projectId), removeUserUrl:g.createLink(controller:'user', action:'removeUserWithRoleFromProject'), entityId:project.projectId, user:user]"/>
+                </div>
+                <g:render template="/admin/editDocuments"/>
+            </g:elseif>
+            <g:if test="${fc.userIsSiteAdmin() || fc.userHasReadOnlyAccess()}">
                 <!-- Audit -->
                 <div id="project-audit" class="pill-pane tab-pane">
                     <g:render template="/project/audit"/>

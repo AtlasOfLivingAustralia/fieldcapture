@@ -60,9 +60,10 @@
                 submitReportUrl: "${createLink(controller: 'project', action: 'ajaxSubmitReport', id:project.projectId)}/",
                 approveReportUrl: "${createLink(controller: 'project', action: 'ajaxApproveReport', id:project.projectId)}/",
                 rejectReportUrl: "${createLink(controller: 'project', action: 'ajaxRejectReport', id:project.projectId)}/",
+                cancelReportUrl: "${createLink(controller: 'project', action: 'ajaxCancelReport', id:project.projectId)}/",
                 resetReportUrl: "${createLink(controller:'project', action:'resetReport', id:project.projectId)}",
                 adjustReportUrl: "${createLink(controller:'project', action:'adjustReport', id:project.projectId)}",
-                reportOwner: {projectId: '${project.projectId}', endDate: '${project.plannedEndDate}'},
+                reportOwner: {projectId: '${project.projectId}', endDate: '${project.plannedEndDate}', startDate: '${project.plannedStartDate}'},
                 reportCreateUrl: '${g.createLink( action:'createReport', id:project.projectId)}',
                 viewReportUrl: '${createLink(action:"viewReport", id:project.projectId)}',
                 editReportUrl: "${createLink(action:"editReport", id:project.projectId)}",
@@ -89,8 +90,9 @@
                 newDataSetUrl: "${createLink(controller:'dataSet', action:'create', id:project.projectId)}",
                 editDataSetUrl: "${createLink(controller:'dataSet', action:'edit', id:project.projectId)}",
                 deleteDataSetUrl: "${createLink(controller:'dataSet', action:'delete', id:project.projectId)}",
+                viewDataSetUrl: "${createLink(controller:'dataSet', action:'view', id:project.projectId)}",
                 unlockActivityUrl:"${createLink(controller:'activity', action:'ajaxUnlock')}",
-
+                i18nURL: "${g.createLink(controller: 'home', action: 'i18n')}",
                 returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 
             },
@@ -185,7 +187,7 @@
     <g:render template="/shared/unsavedChanges" model="${[id: 'risksUnsavedChanges', unsavedData: 'Risks & Threats']}"/>
 
 </div>
-<g:if test="${user?.isEditor && projectContent.admin?.visible}">
+<g:if test="${projectContent.admin?.visible}">
     <asset:script>
         // Admin JS code only exposed to admin users
         $(function () {
@@ -204,7 +206,7 @@
                 }
             });
 
-        <g:if test="${user.isAdmin || user.isCaseManager}">
+        <g:if test="${user.isAdmin || user.isCaseManager || user.hasViewAccess}">
             populatePermissionsTable();
         </g:if>
         });
@@ -275,6 +277,7 @@ var config = {
             newDataSetUrl: fcConfig.newDataSetUrl,
             editDataSetUrl: fcConfig.editDataSetUrl,
             deleteDataSetUrl: fcConfig.deleteDataSetUrl,
+            viewDataSetUrl: fcConfig.viewDataSetUrl,
             returnToUrl: fcConfig.returnTo
         };
 

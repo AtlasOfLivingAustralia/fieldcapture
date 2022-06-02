@@ -42,7 +42,7 @@
               {
                 "dataType": "text",
                 "name": "targetMeasure",
-                "description": "The output target measure to be adjusted."
+                "description": "The target measure identified in the MERI plan"
               },
               {
                 "dataType": "text",
@@ -64,7 +64,7 @@
                 "name": "reasonTargetNotMet",
                 "behaviour": [
                   {
-                    "condition": "result < annualTarget",
+                    "condition": "result < annualTarget or result > annualTarget",
                     "type": "enable_and_clear"
                   }
                 ],
@@ -298,7 +298,7 @@
                 "source": "targetMeasure",
                 "type": "textarea",
                 "rows": 3,
-                "title": "Target not met"
+                "title": "Target measure"
               },
               {
                 "readonly": true,
@@ -319,12 +319,12 @@
                 "source": "reasonTargetNotMet",
                 "type": "textarea",
                 "rows": 3,
-                "title": "Reasons why the target has not been met (500 character, [approx. 100 word] limit)"
+                "title": "Explanation of over delivery/why target not met (500 character, [approx. 100 word] limit)"
               }
             ],
             "userAddedRows": false,
             "source": "minimumAnnualTargetsNotMet",
-            "title": "<b>3. Please outline which minimum annual target services have not been met and why.</b><br/>",
+            "title": "<b>3. Please outline progress against minimum annual target.</b><br/>",
             "type": "table"
           },
           {
@@ -375,7 +375,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "5. In the past 12 months, have any notifiable project Workplace Health and Safety incidents occurred during the delivery of the project?",
+                "preLabel": "5. In the past 12 months, have any notifiable project Work Health and Safety incidents occurred during the delivery of the project?",
                 "css": "span6",
                 "source": "whsIncidentsOccurred",
                 "type": "selectOne"
@@ -386,7 +386,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "5. a) Please describe the Workplace Health and Safety incidents, were they reported and what was the outcome of any investigation.",
+                "preLabel": "5. a) Please describe the Work Health and Safety incidents, were they reported and what was the outcome of any investigation.",
                 "source": "whsIncidentsDescription",
                 "type": "textarea",
                 "rows": 4
@@ -397,7 +397,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "5. b) i) Are changes to the Workplace Health and Safety plan required?",
+                "preLabel": "5. b) i) Are changes to the Work Health and Safety plan required?",
                 "css": "span6",
                 "source": "whsPlanChangesRequired",
                 "type": "selectOne"
@@ -408,7 +408,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "5. b) ii) Please outline changes required to the Workplace Health and Safety plan and why they are required. (1250 character [approx. 250 word] limit)",
+                "preLabel": "5. b) ii) Please outline changes required to the Work Health and Safety plan and why they are required. (1250 character [approx. 250 word] limit)",
                 "source": "whsPlanChangesDescription",
                 "type": "textarea",
                 "rows": 4

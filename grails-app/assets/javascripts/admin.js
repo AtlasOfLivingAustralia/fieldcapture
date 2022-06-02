@@ -140,3 +140,120 @@ var RemoveUserPermissionViewModel = function (options){
     };
 
 };
+
+var ProjectImportViewModel = function (config) {
+    var self = this;
+
+    self.filename = ko.observable();
+    self.progressSummary = ko.observable();
+    self.progressDetail = ko.observableArray([]);
+    self.finishedPreview = ko.observable(false);
+    self.finished = ko.observable(false);
+    self.preview = ko.observable(true);
+    self.importing = ko.observable(false);
+    self.update = ko.observable(false);
+
+    self.uploadOptions = {
+        url: config.importUrl,
+        done: function (e, data) {
+
+            if (data.result) {
+                var result = data.result;
+                self.progressDetail(result.projects);
+                self.progressSummary('Processed ' + result.projects.length + ' projects');
+                if (self.preview()) {
+                    self.preview(false);
+                    self.finishedPreview(true);
+                    self.finished(false);
+
+                }
+                else {
+                    self.finished(true);
+                }
+
+            }
+            else {
+                var message = 'Please contact MERIT support and attach your spreadsheet to help us resolve the problem';
+                alert(message);
+            }
+
+        },
+        fail: function (e, data) {
+            var message = 'Please contact MERIT support and attach your spreadsheet to help us resolve the problem';
+            alert(message);
+
+        },
+
+        uploadTemplateId: "template-upload",
+        downloadTemplateId: "template-download",
+        formData: function() {
+            return [
+                {
+                    name: 'preview',
+                    value: true
+                },
+                {
+                    name: 'update',
+                    value: self.update()
+                }
+            ];
+        },
+        paramName: 'projectData'
+
+    }
+
+    self.showProgress = function () {
+        var stop = false;
+        $.get(config.importProgressUrl).done(function (progress) {
+
+            if (self.finished()) {
+                stop = true;
+            }
+            else {
+                self.progressDetail(progress.projects);
+                if (!progress.finished) {
+                    self.progressSummary(progress.projects.length + ' projects processed...');
+                }
+            }
+        }).always(function() {
+            if (!stop) {
+                setTimeout(self.showProgress, 2000);
+            }
+        });
+
+    };
+
+    self.doImport = function () {
+        self.importing(true);
+        self.progressSummary('Importing....');
+        self.progressDetail([]);
+
+        $.ajax(config.importUrl, {
+
+            dataType: 'json',
+            success: function (result) {
+
+                self.finished(true);
+                self.finishedPreview(false);
+                if (result.error) {
+                    alert(result.error);
+                    self.progressSummary(result.error);
+                    self.progressDetail(result.projects?result.projects:[])
+                }
+                else {
+                    self.progressDetail(result.projects);
+                    self.progressSummary('Import complete. ('+result.projects.length+' projects)');
+                }
+            },
+            data: {
+                preview: false,
+                update: self.update()
+            },
+            error: function () {
+                var message = 'Please contact MERIT support and attach your spreadsheet to help us resolve the problem';
+                alert(message);
+            }
+        });
+        setTimeout(self.showProgress, 2000);
+    }
+};

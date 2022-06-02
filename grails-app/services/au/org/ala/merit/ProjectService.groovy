@@ -38,6 +38,7 @@ class ProjectService  {
     static final String PLAN_SUBMITTED = 'submitted'
     static final String PLAN_UNLOCKED = 'unlocked for correction'
     public static final String DOCUMENT_ROLE_APPROVAL = 'approval'
+    static final String ACTIVE_STATUS = 'Active'
 
     def webService, grailsApplication, siteService, activityService, emailService, documentService, userService, metadataService, settingService, reportService, auditService, speciesService, commonService
     ProjectConfigurationService projectConfigurationService
@@ -387,7 +388,7 @@ class ProjectService  {
         if (project.planStatus == PLAN_SUBMITTED) {
 
             //The MERI plan cannot be approved until an internal order number has been supplied for the project.
-            if(!project.internalOrderId) {
+            if(!project.externalIds?.find{it.idType == "INTERNAL_ORDER_NUMBER"}) {
                 return [error: 'An internal order number must be supplied before the MERI Plan can be approved']
             }
 
@@ -544,7 +545,7 @@ class ProjectService  {
         // Some projects have extra stage reports after the end date due to legacy data so this checks we've got the last stage within the project dates
         List validReports = project.reports?.findAll{it.fromDate < project.plannedEndDate ? it.fromDate : project.plannedStartDate}
 
-        List incompleteReports = (validReports?.findAll{it.publicationStatus != ReportService.REPORT_APPROVED})?:[]
+        List incompleteReports = (validReports?.findAll{it.publicationStatus != ReportService.REPORT_APPROVED && it.publicationStatus != ReportService.REPORT_CANCELLED})?:[]
 
         return incompleteReports.size() ==1 && incompleteReports[0].reportId == approvedReportId
     }
@@ -594,7 +595,18 @@ class ProjectService  {
         }
 
         EmailTemplate emailTemplate = ((ProgramConfig)reportInformation.config).getReportReturnedTemplate()
-        Map result = reportService.rejectReport(reportDetails.reportId, reportDetails.activityIds, reportDetails.reason, reportInformation.project, reportInformation.roles, emailTemplate)
+        Map result = reportService.rejectReport(reportDetails.reportId, reportDetails.activityIds, reportDetails.reason, reportDetails.categories, reportInformation.project, reportInformation.roles, emailTemplate)
+
+        result
+    }
+
+    def cancelReport(String projectId, Map reportDetails) {
+        Map reportInformation = prepareReport(projectId, reportDetails)
+        if (reportInformation.error) {
+            return [success:false, error:reportInformation.error]
+        }
+
+        Map result = reportService.cancelReport(reportDetails.reportId, reportDetails.activityIds, reportDetails.reason, reportInformation.project, reportInformation.roles)
 
         result
     }
@@ -625,7 +637,7 @@ class ProjectService  {
         Map report = reportService.get(reportId)
 
         Map result
-        if (!reportService.isSubmittedOrApproved(report)) {
+        if (!reportService.excludesNotApproved(report)) {
             result = activityService.bulkDeleteActivities(activityIds)
         }
         else {
@@ -656,6 +668,7 @@ class ProjectService  {
             // The update method in this class treats dates specially and delegates the updates to this method.
             response = updateUnchecked(projectId, [plannedStartDate:plannedStartDate, plannedEndDate:plannedEndDate])
 
+            //user explicitly generates the report from the reporting tab
             generateProjectStageReports(projectId, dateChangeOptions)
 
             if (dateChangeOptions.updateActivities) {
@@ -815,36 +828,37 @@ class ProjectService  {
      * (e.g the 2nd report has data against correct dates, so we dont' want to move this, instead we delete the first report).
      */
     void generateProjectReports(Map reportConfig, Map project, ReportGenerationOptions options) {
+        if (project.status == ACTIVE_STATUS) {
+            ReportOwner reportOwner = projectReportOwner(project)
+            ReportConfig rc = new ReportConfig(reportConfig)
 
-        ReportOwner reportOwner = projectReportOwner(project)
-        ReportConfig rc = new ReportConfig(reportConfig)
+            List reportsOfType = project.reports?.findAll{it.category == reportConfig.category}?.sort{it.toDate}
 
-        List reportsOfType = project.reports?.findAll{it.category == reportConfig.category}?.sort{it.toDate}
+            if (options.includeSubmittedAndApprovedReports) {
+                int index = 0
 
-        if (options.includeSubmittedAndApprovedReports) {
-            int index = 0
+                // To keep existing reporting dates when we move the start date forward we may need to delete reports
+                // that have been excluded by the new start date. (rather than moving it forward)
+                if (options.keepExistingReportDates) {
+                    Map report = reportsOfType ? reportsOfType[index] : null
+                    // Handle reports that may have been cut off by the start date change.
+                    while (report && report.toDate < project.plannedStartDate) {
+                        if (!reportService.hasData(report)) {
+                            reportService.delete(report.reportId)
+                        }
+                        else {
+                            log.warn("Unable to delete report ${report.name} with toDate ${report.toDate} as it has data.")
+                        }
+                        report = reportsOfType ? reportsOfType[++index] : null
 
-            // To keep existing reporting dates when we move the start date forward we may need to delete reports
-            // that have been excluded by the new start date. (rather than moving it forward)
-            if (options.keepExistingReportDates) {
-                Map report = reportsOfType ? reportsOfType[index] : null
-                // Handle reports that may have been cut off by the start date change.
-                while (report && report.toDate < project.plannedStartDate) {
-                    if (!reportService.hasData(report)) {
-                        reportService.delete(report.reportId)
                     }
-                    else {
-                        log.warn("Unable to delete report ${report.name} with toDate ${report.toDate} as it has data.")
-                    }
-                    report = reportsOfType ? reportsOfType[++index] : null
-
                 }
+                reportService.regenerateReports(reportsOfType, rc, reportOwner, index-1)
             }
-            reportService.regenerateReports(reportsOfType, rc, reportOwner, index-1)
-        }
-        else {
-            // Regenerate reports starting from the first unsubmitted report
-            reportService.regenerateReports(reportsOfType, rc, reportOwner)
+            else {
+                // Regenerate reports starting from the first unsubmitted report
+                reportService.regenerateReports(reportsOfType, rc, reportOwner)
+            }
         }
     }
 
@@ -1001,7 +1015,7 @@ class ProjectService  {
         // Activities in a submitted or approved report cannot be edited
         Map report = reportService.findReportForDate(activity.plannedEndDate, project.reports)
 
-        return !reportService.isSubmittedOrApproved(report)
+        return !reportService.excludesNotApproved(report)
     }
 
     private Map getOutcomes(String activityId, String outputType) {
@@ -1896,5 +1910,13 @@ class ProjectService  {
             throw new IllegalArgumentException("Data set "+dataSetId+" does not exist")
         }
         updateUnchecked(projectId, [custom: project.custom])
+    }
+
+    /**
+     * when reports are generated using the program or management unit pages,
+     * reports should only be generated for projects with at least one existing report
+     */
+    boolean canRegenerateReports(Map project) {
+        return project.reports.size() > 0
     }
 }

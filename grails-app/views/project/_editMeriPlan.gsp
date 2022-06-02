@@ -7,26 +7,17 @@
 		<b>Grant manager actions:</b>
 		<div data-bind="if:!canApprove()">
 			<div class="alert alert-info">
-				Insert the allocated Internal Order number for this project.  The Internal Order number must be inserted as soon as it becomes available
+				Insert the allocated Internal Order number/s for this project.  The Internal Order number must be inserted as soon as it becomes available
 			</div>
-	%{--			<div class="form-group row">--}%
-	%{--				<label for="changeProjectStartDate" class="col-form-label col-sm-2">Change Project Start Date</label>--}%
-	%{--				<div class="col-sm-10">--}%
-	%{--					<div class="input-group">--}%
-	%{--						<fc:datePicker size="form-control form-control-sm" targetField="plannedStartDate.date" id="changeProjectStartDate" bs4="true" name="startDate" data-bind="disable:!canEditStartDate(), datepicker:plannedStartDate.date" data-validation-engine="validate[required, past[plannedEndDate]]" printable="${printView}"/>--}%
-	%{--					</div>--}%
-	%{--				</div>--}%
-	%{--			</div>--}%
-
 			<div class="form-group row">
-				<label for="internalOrderId" class="col-form-label col-sm-2">Internal order number:</label>
+				<label class="col-form-label col-sm-2">Internal order number/s:</label>
 				<div class="col-sm-10">
-					<input id="internalOrderId" class="form-control form-control-sm internalOrderNumber" type="text" placeholder="If unavailable, use 'TBA'" data-bind="value:internalOrderId, valueUpdate:'keyup'">
+					<external-ids params="externalIds:externalIds, externalIdTypes:externalIdTypes, validationNamespace:'meriPlanExternalId', validate:validateExternalIds"></external-ids>
 				</div>
 			</div>
 		</div>
-		<span class="grantManagerActionSpan" data-bind="popover:{content:'*An internal order number must be supplied before the MERI Plan can be approved', placement:'top', trigger:'hover'}">
-			<button type="button" data-bind="enable: internalOrderId(), click:approvePlan" class="btn btn-sm btn-success"><i class="fa fa-check"></i> Approve MERI Plan</button>
+		<span class="grantManagerActionSpan">
+			<button type="button" data-bind="enable: canApproveMeriPlan, click:approvePlan" class="btn btn-sm btn-success"><i class="fa fa-check"></i> Approve MERI Plan</button>
 			<button type="button" data-bind="click:rejectPlan" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> Reject MERI Plan</button>
 		</span>
 	</div>
@@ -137,6 +128,11 @@
 		<div data-bind="template:meriGrantManagerActionsTemplate" class="col-sm-12"></div>
 	</div>
 </g:if>
+<g:elseif test="${fc.userIsSiteAdmin() && !user?.isCaseManager}">
+	<div class="alert alert-info">
+		To approve the MERI plan add yourself as a grant manager to this project using the Project Access section
+	</div>
+</g:elseif>
 
 <g:if test="${projectContent.details.visible}">
 	<div class="save-details-result-placeholder"></div>

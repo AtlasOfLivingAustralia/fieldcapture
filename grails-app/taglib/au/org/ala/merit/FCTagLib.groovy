@@ -967,5 +967,15 @@ class FCTagLib {
         out << "${results.encodeAsHTML()}"
     }
 
-    def displayDate = {}
+    def externalIds = { Map attrs ->
+        String type = attrs.idType
+        List ids = attrs.externalIds?.findAll{it.idType == type}
+
+        out << ids.collect{it.externalId}.join(',')
+    }
+
+    def hasExternalId = { Map attrs ->
+        String type = attrs.idType
+        
+    }
 }

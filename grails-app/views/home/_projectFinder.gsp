@@ -45,7 +45,7 @@
                         <g:each var="f" in="${fqList}">
                             <g:set var="fqBits" value="${f?.tokenize(':')}"/>
                             <g:set var="newUrl"><fc:formatParams params="${params}" requiredParams="${reqParams}" excludeParam="${f}"/></g:set>
-                            <li><g:message code="label.${fqBits[0]}" default="${fqBits[0]?.encodeAsHTML()}"/>: <g:message code="label.${fqBits[1]}" default="${fqBits[1]?.encodeAsHTML().capitalize()}"/>
+                            <li><g:message code="label.${fqBits[0]}" default="${fqBits[0]?.encodeAsHTML()}"/>: <g:message code="label.${fqBits[1]}" default="${fqBits[1]?.encodeAsHTML()?.capitalize()}"/>
                                 <a href="${newUrl?:"?"}" class="btn btn-inverse btn-mini tooltips" title="remove filter" aria-label="remove filter">
                                     <i class="text-white fa fa-remove"></i></a>
                             </li>

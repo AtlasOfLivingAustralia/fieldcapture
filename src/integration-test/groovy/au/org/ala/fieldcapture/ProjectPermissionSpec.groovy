@@ -64,7 +64,7 @@ class ProjectPermissionSpec extends StubbedCasSpec {
 
         setup:
         String projectId = '1'
-        loginAsUser('1', browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to RlpProjectPage, projectId
@@ -88,6 +88,22 @@ class ProjectPermissionSpec extends StubbedCasSpec {
         waitFor {
             adminContent.projectAccess.findPermissionForUser('10').roleText == "Admin"
         }
+
+    }
+
+    def "a read only users can view the user roles for a project"() {
+
+        setup:
+        String projectId = '1'
+        loginAsReadOnlyUser(browser)
+
+        when:
+        to RlpProjectPage, projectId
+        openAdminTab()
+        adminContent.openProjectAccess()
+
+        then:
+        adminContent.projectAccess.permissions.size() == 3
 
     }
 }

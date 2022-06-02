@@ -16,6 +16,53 @@ var GreenArmyActivityViewModel = function(activity) {
     self.activityUrlTitle = self.editable ? 'Enter data for this report' : 'View this report';
 };
 
+/**
+ * View model for the modal dialog shown when a report status change
+ * (e.g. approving/rejecting/cancelling a report) needs a reason to
+ * be supplied by the user.
+ */
+var ReportStatusChangeReasonViewModel = function(config) {
+    var self = this;
+    var defaults = {
+        buttonText: 'Yes',
+        buttonTextNo: 'No',
+        blockingMessage: 'Changing report status',
+        successMessage: 'Report status successfully changed'
+    };
+    var options = _.defaults(config, defaults);
+
+    self.reason = ko.observable();
+    self.reasonCategoryOptions = ko.observableArray(config.reasonCategoryOptions);
+    self.reasonCategories = ko.observableArray();
+
+    self.title = config.title;
+    self.explanationText = config.explanationText;
+    self.reasonTitle = config.reasonTitle;
+    self.buttonText = config.buttonText;
+    self.buttonTextNo = config.buttonTextNo;
+
+    /**
+     * Evaluates to a non-empty string if a reason needs to be supplied for validation to pass.
+     * The return value is then bound to a hidden input which is used by the jQueryValidationEngine
+     * condRequired validation.
+     */
+    self.reasonRequired = ko.pureComputed(function() {
+        var reasonRequired = '';
+        if (!self.reasonCategoryOptions().length || _.contains(self.reasonCategories(), config.otherCategoryValue)) {
+            reasonRequired = 'yes';
+        }
+        return reasonRequired;
+    });
+
+    self.submit = function(data, e) {
+        var form = $(e.target).parents('.validationEngineContainer');
+        var valid = form.validationEngine('validate');
+        if (valid) {
+            options.okCallback(self.reasonCategories(), self.reason());
+        }
+    }
+};
+
 var ReportViewModel = function(report, config) {
     $.extend(this, report);
     var self = this;
@@ -52,11 +99,6 @@ var ReportViewModel = function(report, config) {
         return report.finishedCount / report.count * 100;
     }();
 
-
-
-    self.reason = ko.observable();
-    self.category = ko.observable();
-
     self.period = ko.computed(function() {
         return self.fromDate.formattedDate() + ' - ' + self.toDate.formattedDate();
     });
@@ -69,7 +111,8 @@ var ReportViewModel = function(report, config) {
     $.each(report.activities || [], function(i, activity) {
         self.activities.push(new GreenArmyActivityViewModel(activity));
     });
-    self.editable = (report.bulkEditable || self.activities.length == 0 || self.activities.length == 1) && (report.publicationStatus != 'published' && report.publicationStatus != 'pendingApproval');
+
+    self.editable = (report.bulkEditable || self.activities.length == 0 || self.activities.length == 1) && (report.publicationStatus != 'published' && report.publicationStatus != 'pendingApproval' && report.publicationStatus != 'cancelled');
 
     self.title = 'Expand the activity list to complete the reports';
     if (self.editable) {
@@ -103,9 +146,13 @@ var ReportViewModel = function(report, config) {
     });
 
     self.approvalTemplate = function() {
+        if (report.publicationStatus == 'cancelled') {
+            return 'cancelled';
+        }
         if (!self.isReportable()) {
             return 'notReportable';
         }
+
         switch (report.publicationStatus) {
             case 'unpublished':
                 return 'notSubmitted';
@@ -118,9 +165,15 @@ var ReportViewModel = function(report, config) {
         }
     };
 
-    self.changeReportStatus = function(url, action, blockingMessage, successMessage, doneCallback) {
+    self.changeReportStatus = function(url, categories, reason, action, blockingMessage, successMessage, doneCallback) {
         blockUIWithMessage(blockingMessage);
-        var payload = {reportId:report.reportId, stage: report.name, category:self.category(), reason:self.reason(), activityIds:[report.activityId]}
+        var payload = {
+            reportId:report.reportId,
+            stage: report.name,
+            categories:categories,
+            reason:reason,
+            activityIds:[report.activityId]
+        };
         var json = JSON.stringify(payload);
         $.ajax({
             url: url,
@@ -164,22 +217,70 @@ var ReportViewModel = function(report, config) {
 
     };
 
+
+    self.showReportStatusChangeModal = function(options) {
+
+        options = _.extend({}, options);
+        var modalTemplate = $(options.reasonModalSelector || '#reason-modal-template');
+        var $modal = $(modalTemplate.text());
+        $(document.body).append($modal);
+
+        options.okCallback = function(categories, reason) {
+            self.changeReportStatus(
+                options.actionUrl,
+                categories,
+                reason,
+                options.action,
+                options.blockingMessage,
+                options.successMessage,
+                options.successCallback);
+            $modal.modal('hide').modal('dispose');
+        }
+        var reasonViewModel = new ReportStatusChangeReasonViewModel(options);
+
+        ko.applyBindings(reasonViewModel, $modal[0]);
+
+        var modalOptions = {backdrop: 'static', keyboard:true, show:true};
+        $modal.validationEngine({promptPosition:'topLeft'});
+
+        $modal.modal(modalOptions).on('hidden.bs.modal', function() {
+            // clean up event handlers and dispose of the modal
+            $modal.validationEngine('detach');
+            ko.cleanNode($modal[0]);
+            $modal.remove();
+        });
+
+    }
+
     self.rejectReport = function() {
-        var reasonModalSelector = config.reasonModalSelector || '#reason-modal';
-        var $reasonModal = $(reasonModalSelector);
-        var reasonViewModel = {
-            reason: self.reason,
-            rejectionCategories: ['Minor', 'Moderate', 'Major'],
-            rejectionCategory: self.category,
-            explanationText:'',
+        var rejectionReasonCategoryOptions = config.rejectionReasonCategoryOptions;
+        var options = {
+            explanationText: 'Please enter a reason. This reason will be included in the email sent to the project administrator(s).',
+            reasonCategoryOptions: rejectionReasonCategoryOptions,
+            otherCategoryValue: 'Other (PM to describe)',
             title:'Return report',
+            reasonTitle:'Explanation / Comments',
             buttonText: 'Return',
-            submit:function() {
-                self.changeReportStatus(config.rejectReportUrl, 'return', 'Returning report...', 'Report returned.');
-            }
+            buttonTextNo: 'Cancel',
+            blockingMessage: 'Returning report...',
+            successMessage: 'Report returned.',
+            action: 'return',
+            actionUrl: config.rejectReportUrl
         };
-        ko.applyBindings(reasonViewModel, $reasonModal[0]);
-        $reasonModal.modal({backdrop: 'static', keyboard:true, show:true}).on('hidden', function() {ko.cleanNode($reasonModal[0])});
+        self.showReportStatusChangeModal(options);
+    };
+
+    self.cancelReport = function() {
+        var options = {
+            explanationText:'Do you wish to set this report as “not required”? Please enter the reason the report is not required.',
+            title:'Report not required',
+            buttonText: 'Yes (exempt by PPO)',
+            action: 'cancel',
+            blockingMessage: 'Marking this report as not required...',
+            successMessage: 'Report not required.',
+            actionUrl: config.cancelReportUrl
+        };
+        self.showReportStatusChangeModal(options);
     };
 
     self.resetReport = function() {
@@ -205,9 +306,6 @@ var ReportViewModel = function(report, config) {
     };
 
     self.adjustReport = function() {
-
-        var reasonModalSelector = config.reasonModalSelector || '#reason-modal';
-        var $reasonModal = $(reasonModalSelector);
         function afterReportCreated(result) {
             if (result.resp && result.resp.reportId) {
                 var instructions = $(config.adjustmentInstructionsSelector);
@@ -222,23 +320,28 @@ var ReportViewModel = function(report, config) {
                 });
             }
         };
-        var reasonViewModel = {
-            reason: self.reason,
+        var options = {
             title:'Adjust report',
             buttonText: 'Create adjustment',
+            buttonTextNo: 'Cancel',
+            blockingMessage: 'Creating an adjustment for the report...',
+            successMessage: 'Created adjustment report',
+            action: 'adjust',
+            actionUrl: config.adjustReportUrl,
             explanationText: 'Please enter the reason the adjustment is required',
-            submit:function() {
-                self.changeReportStatus(
-                    config.adjustReportUrl,
-                    'return',
-                    'Creating an adjustment for the report...',
-                    'Created adjustment report.',
-                    afterReportCreated);
-            }
+            successCallback: afterReportCreated
         };
-        ko.applyBindings(reasonViewModel, $reasonModal[0]);
-        $reasonModal.modal({backdrop: 'static', keyboard:true, show:true}).on('hidden', function() {ko.cleanNode($reasonModal[0])});
+        self.showReportStatusChangeModal(options)
     };
+
+    self.outcomeCategory = ko.pureComputed(function() {
+        return report.category == "Outcomes Report 1";
+    });
+
+    self.cancelledComment = ko.observable();
+    $.each(report.statusChangeHistory, function(i, history) {
+        self.cancelledComment = history.comment
+    });
 };
 
 var ReportsViewModel = function(reports, projects, availableReports, reportOwner, config) {
@@ -419,6 +522,7 @@ var ReportsViewModel = function(reports, projects, availableReports, reportOwner
 var CategorisedReportsViewModel = function(allReports, order, availableReports, reportOwner, config) {
 
     var self = this;
+
     var categorizedReports = _.groupBy(allReports, function(report) {
          return report.category;
     });
@@ -445,13 +549,66 @@ var CategorisedReportsViewModel = function(allReports, order, availableReports, 
     _.each(order, function(category) {
         var reports = categorizedReports[category.category];
         if (reports && reports.length > 0) {
+            var reportsOptions = _.extend({}, config, {rejectionReasonCategoryOptions:category.rejectionReasonCategoryOptions})
             self.reportsByCategory.push({
                 title:category.category,
                 description:ko.observable(category.description).extend({markdown:true}),
-                model:new ReportsViewModel(reports, undefined, availableReports, reportOwner, config)
+
+                model:new ReportsViewModel(reports, undefined, availableReports, reportOwner, reportsOptions)
             });
         }
 
     });
+
 };
+
+var GrantManagerReportsViewModel = function(config) {
+    var self = this;
+    var projectService = new ProjectService(config.project, config);
+
+    var startDate;
+    var endDate;
+    if (projectService.isActive()) {
+            if (config.project.reports.length > 0) {
+                startDate = config.reportOwner.startDate;
+                endDate = config.reportOwner.endDate;
+            }
+    }
+    self.plannedStartDate = ko.observable(startDate).extend({simpleDate: false});
+    self.plannedEndDate = ko.observable(endDate).extend({simpleDate: false});
+
+    self.anyReportData = ko.pureComputed(function() {
+        var count = 0;
+        if (projectService.isActive()) {
+            _.each(config.project.reports, function (report){
+                if (report.progress == 'finished' || report.progress == 'started') {
+                    count += 1;
+                }
+            });
+            return count <= 0;
+        }
+    });
+
+    self.generateProjectReports = function () {
+        $(config.datesFormSelector).validationEngine();
+        var result = $(config.datesFormSelector).validationEngine('validate');
+        if (result) {
+            var jsData = {
+                plannedStartDate: self.plannedStartDate(),
+                plannedEndDate: self.plannedEndDate(),
+            };
+            projectService.saveProjectData(jsData);
+        }
+    }
+
+    self.isMeriPlanNotApproved = ko.pureComputed(function() {
+        var result = false;
+        if (!projectService.isApproved()) {
+            result = true;
+        }
+         return result;
+    });
+};
+
+
 

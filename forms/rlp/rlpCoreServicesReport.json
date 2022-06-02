@@ -1,0 +1,317 @@
+{
+  "id": "5d133339e4b00a475b28e298",
+  "dateCreated": "2019-06-26T08:56:25Z",
+  "minOptionalSectionsCompleted": 1,
+  "supportsSites": false,
+  "lastUpdated": "2019-06-26T08:56:25Z",
+  "createdUserId": "<anon>",
+  "activationDate": null,
+  "supportsPhotoPoints": false,
+  "publicationStatus": "published",
+  "gmsId": null,
+  "name": "RLP Core Services report",
+  "sections": [
+    {
+      "collapsedByDefault": false,
+      "template": {
+        "name": "RLP - Core services report",
+        "title": "Core services - reporting",
+        "dataModel": [
+          {
+            "name": "coreServicesRequirementsMet",
+            "dataType": "text",
+            "validate": "required",
+            "constraints": [
+              "Met Core Services requirements",
+              "Not met Core Services requirements"
+            ]
+          },
+          {
+            "name": "notMetCoreServicesRequirementsReason",
+            "dataType": "text",
+            "validate": "required,maxSize[4000]",
+            "behaviour": [
+              {
+                "condition": "coreServicesRequirementsMet == \"Not met Core Services requirements\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "name": "whsRequirementsMet",
+            "dataType": "text",
+            "validate": "required",
+            "constraints": [
+              "Met requirements",
+              "Not met requirements"
+            ]
+          },
+          {
+            "name": "notMetWHSRequirementsReason",
+            "dataType": "text",
+            "validate": "required,maxSize[4000]",
+            "behaviour": [
+              {
+                "condition": "whsRequirementsMet == \"Not met requirements\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "name": "coreServiceActivitiesUndertaken",
+            "dataType": "text",
+            "validate": "required,maxSize[4000]"
+          },
+          {
+            "name": "communityEngagementPlanOnTrack",
+            "dataType": "text",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "name": "communityEngagementActions",
+            "dataType": "text",
+            "validate": "required,maxSize[4000]",
+            "behaviour": [
+              {
+                "condition": "communityEngagementPlanOnTrack == \"No\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "name": "indigenousParticipationOnTrack",
+            "dataType": "text",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "name": "indigenousParticipationActions",
+            "dataType": "text",
+            "validate": "required,maxSize[4000]",
+            "behaviour": [
+              {
+                "condition": "indigenousParticipationOnTrack == \"No\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "name": "communicationsPlanOnTrack",
+            "dataType": "text",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "name": "communicationsPlanActions",
+            "dataType": "text",
+            "validate": "required,maxSize[4000]",
+            "behaviour": [
+              {
+                "condition": "communicationsPlanOnTrack == \"No\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "name": "meriProfessionalDevelopment",
+            "dataType": "text",
+            "validate": "required,maxSize[4000]"
+          }
+        ],
+        "viewModel": [
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span6",
+                "type": "selectOne",
+                "source": "coreServicesRequirementsMet",
+                "preLabel": "1. As a Service Provider, have you delivered the Core Services in accordance with Schedule 2 – Statement of Work for this reporting period?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "rows": 4,
+                "source": "notMetCoreServicesRequirementsReason",
+                "preLabel": "a) Please enter the reason(s) the Core Services requirements were not met."
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span6",
+                "type": "selectOne",
+                "source": "whsRequirementsMet",
+                "preLabel": "2. As a Service Provider, have you provided a safe work environment consistent with the Work Health and Safety (WHS) Act 2011, and in accordance with Clause 44 of the Services Agreement within this reporting period?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "rows": 4,
+                "source": "notMetWHSRequirementsReason",
+                "preLabel": "a) Please enter the reason(s) the WHS requirements were not met."
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "rows": 4,
+                "type": "textarea",
+                "helpText": "Include any activity delivered through the utilisation of core service funds",
+                "source": "coreServiceActivitiesUndertaken",
+                "preLabel": "3. Briefly describe Core Service activities undertaken in this reporting period."
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h4>Community engagement</h4>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span6",
+                "type": "selectOne",
+                "source": "communityEngagementPlanOnTrack",
+                "preLabel": "4. As a Service Provider, are you on track to deliver the target measures identified in your community engagement plan?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "rows": 4,
+                "source": "communityEngagementActions",
+                "preLabel": "a) If not, explain what actions are planned to get back on track."
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h4>Indigenous participation</h4>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span6",
+                "type": "selectOne",
+                "source": "indigenousParticipationOnTrack",
+                "preLabel": "5. As a Service Provider, are you on track to deliver the target measures identified in your indigenous participation plan?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "rows": 4,
+                "source": "indigenousParticipationActions",
+                "preLabel": "a) If not, explain what actions are planned to get back on track."
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h4>Communications</h4>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span6",
+                "type": "selectOne",
+                "source": "communicationsPlanOnTrack",
+                "preLabel": "6. As a Service Provider, are you on track to deliver the target measures identified in your communications plan?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "rows": 4,
+                "source": "communicationsPlanActions",
+                "preLabel": "a) If not, explain what actions are planned to get back on track."
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h4>Monitoring, Evaluation, Reporting and Improvement (MERI)</h4>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "rows": 4,
+                "source": "meriProfessionalDevelopment",
+                "helpText": "This includes on-the-job, informal and formal training",
+                "preLabel": "7. What MERI professional development opportunities (if any) have staff participated in?"
+              }
+            ]
+          }
+        ]
+      },
+      "modelName": null,
+      "templateName": "rlpCoreServicesReport",
+      "optional": false,
+      "optionalQuestionText": null,
+      "title": "Core Services report",
+      "name": "RLP Core Services report"
+    }
+  ],
+  "type": "Report",
+  "category": "RLP Reports",
+  "status": "active",
+  "lastUpdatedUserId": "<anon>",
+  "formVersion": 2
+}

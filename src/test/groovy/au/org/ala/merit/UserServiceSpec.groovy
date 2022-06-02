@@ -580,5 +580,33 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         null | null
     }
 
+    def "User adds star to a management unit"() {
+        setup:
+        String  userId = '129333'
+        String managementUnitId = '11111'
+
+        when:
+        def result = service.addStarManagementUnitForUser(userId, managementUnitId)
+
+        then:
+        1 * webService.getJson({it.endsWith("permissions/addStarManagementUnitForUser?userId=${userId}&managementUnitId=${managementUnitId}")}) >> [:]
+        result == [:]
+
+    }
+
+    def "User removes star from a management unit"() {
+        setup:
+        String  userId = '129333'
+        String managementUnitId = '11111'
+
+        when:
+        def result = service.removeStarManagementUnitForUser(userId, managementUnitId)
+
+        then:
+        1 * webService.getJson({it.endsWith("permissions/removeStarManagementUnitForUser?userId=${userId}&managementUnitId=${managementUnitId}")}) >> [:]
+        result == [:]
+
+    }
+
 
 }

@@ -24,7 +24,7 @@ class GmsMapperSpec extends Specification{
     def setup() {
         activitiesModel = JSON.parse(new InputStreamReader(getClass().getResourceAsStream('/activities-model.json')))
         Map programModel = [programs:[[name:'Green Army']]]
-        List organisations = [[ organisationId: "123", name:'Test org 1', abn:'12345678901']]
+        List organisations = [[ organisationId: "123", name:'Test org 1', abn:'12345678901'], [organisationId:'2', name:"Org 2", abn:""]]
         gmsMapper = new GmsMapper(activitiesModel, programModel, organisations, abnLookupService,scores)
     }
 
@@ -51,7 +51,7 @@ class GmsMapperSpec extends Specification{
         'Test Project Description' == project.description
         'Test Organisation 2' == project.organisationName
         'Green Army' == project.associatedProgram
-        '111111' == project.internalOrderId
+        [[idType:'INTERNAL_ORDER_NUMBER', externalId:'111111']] == project.externalIds
 
         'Green Army Round 1' == project.associatedSubProgram
         expectedStartDate == project.plannedStartDate
@@ -129,57 +129,6 @@ class GmsMapperSpec extends Specification{
             assert expectedTargets[i] == outputTarget.target
 
         }
-    }
-
-    /**
-     * Tests a project maps correctly.  No errors are present in the test data for this test.
-     */
-    def "MERIT data can be mapped to a format understood by GMS"() {
-
-        setup:
-        def projectJson = getClass().getResource('/meritMappingTestData1.json').text
-        def project = JSON.parse(projectJson)
-
-        when:
-        def gmsRows = gmsMapper.exportToGMS(project)
-
-        then:
-        def expectedTargets = [
-                ['Weed Treatment Details', 'Total area treated (Ha)', 'Ha', '30', '57'],
-                ['Fence Details', 'Total length of fence', 'Km', '3', '0'],
-                ['Revegetation Details', 'Area of revegetation works (Ha)', 'Ha', '30', '32']
-        ]
-
-        3 == gmsRows.size()
-
-        // These should be duplicated on every row.
-        gmsRows.eachWithIndex { row, i ->
-
-             // Project details should be in every row.
-            'B001234567G' == row.APP_ID
-            'LSP-12345-678' == row.EXTERNAL_ID
-            'Biodiversity Fund' == row.PROGRAM_NM
-            'Round 1' == row.ROUND_NM
-            'Project name test' == row.APP_NM
-            'Project test description' == row.APP_DESC
-            'Test organisation' == row.ORG_TRADING_NAME
-            '01/07/2011' == row.START_DT
-            '11/09/2017' == row.FINISH_DT
-            '1' == row.FUNDING
-            'Environmental Data' == row.DATA_TYPE
-            'Activities' == row.ENV_DATA_TYPE
-
-
-            def expectedTarget = expectedTargets[i]
-
-            expectedTarget[0] == row.PGAT_ACTIVITY_DELIVERABLE
-            expectedTarget[1] == row.PGAT_ACTIVITY_TYPE
-            expectedTarget[2] == row.PGAT_UOM
-            expectedTarget[3] == row.PGAT_ACTIVITY_UNIT
-            expectedTarget[4] == row.PGAT_REPORTED_PROGRESS
-
-        }
-
     }
 
     def "Management units will be mapped from the supplied name"() {
@@ -294,9 +243,9 @@ class GmsMapperSpec extends Specification{
     }
 
 
-    def "organisation to map using abn lookup"(){
+    def "If an ABN is supplied in the project load, the looked up entity name will be used instead of any organisation name supplied in the load"(){
         setup:
-        Map projectData = [APP_ID:'g1', ABN: '12345678900', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
+        Map projectData = [APP_ID:'g1', ABN: '12345678900', START_DT:'2019/07/01', FINISH_DT:'2020/07/01', ORG_TRADING_NAME:'Org 1']
         String abn = "12345678900"
         Map abnValue = [abn:"12345678900", entityName:"Test org 1"]
 
@@ -307,10 +256,25 @@ class GmsMapperSpec extends Specification{
         1 * abnLookupService.lookupOrganisationNameByABN(abn) >> abnValue
 
         and:
-        result.errors[1].toString() != "12345678900 is invalid. Please Enter the correct one"
+        result.project.organisationName == abnValue.entityName
     }
 
-    def "An error is raise when abn number is not provided"(){
+    def "A blank ABN won't be matched to an organisation with a blank ABN"() {
+        setup:
+        Map projectData = [APP_ID:'g1', ABN: '', START_DT:'2019/07/01', FINISH_DT:'2020/07/01', ORG_TRADING_NAME:'Org 1']
+
+        when:
+        def result = gmsMapper.mapProject([projectData])
+
+        then:
+        !result.project.organisationId
+        result.project.organisationName == 'Org 1'
+
+        and:
+        result.errors.find{it == "No organisation exists with organisation name Org 1"}
+    }
+
+    def "An error is raised when an invalid abn number is provided"(){
         setup:
         Map projectData = [APP_ID:'g1', ABN: '12345678900', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
         String abn = "12345678900"
@@ -340,23 +304,6 @@ class GmsMapperSpec extends Specification{
 
         and:
         result.errors[1].toString() == "12345678900 is invalid abn number. Please Enter the correct one"
-    }
-
-
-    def "Assign entity name to the organisation "(){
-        setup:
-        Map projectData = [APP_ID:'g1', ABN: '12345678900', START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
-        String abn = "12345678900"
-        Map abnValue = [abn: "12345678900", entityName: "Org name"]
-
-        when:
-        def result = gmsMapper.mapProject([projectData])
-
-        then:
-        1 * abnLookupService.lookupOrganisationNameByABN(abn) >> abnValue
-
-        and:
-        result.errors[1].toString() != "12345678900 is invalid abn number. Please Enter the correct one"
     }
 
     def "The new fields for the grants hub import can be mapped"() {
@@ -435,6 +382,20 @@ class GmsMapperSpec extends Specification{
 
         then:
         result.project.tags == ["tag 1", "tag 3"]
+        !result.errors
+    }
+
+    def "The externalId type can be mapped"() {
+        when:
+        Map project = [APP_ID:'g1', PROGRAM_NM:"Green Army", ORG_TRADING_NAME:'Test org 1', ABN:'12345678901', FUNDING_TYPE:"RLP", START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
+        Map idData = [ORDER_NO:'o1', ORDER_NO_2:'o2', WORK_ORDER_ID:'w1', GRANT_AWARD_ID:'g1', GRANT_AWARD_ID_2:'g2']
+        project += idData
+        Map result = gmsMapper.mapProject([project])
+
+        then:
+        result.project.externalIds == [[idType:'INTERNAL_ORDER_NUMBER', externalId: 'o1'], [idType:'INTERNAL_ORDER_NUMBER', externalId: 'o2'],
+                                       [idType:'WORK_ORDER', externalId: 'w1'],
+                                       [idType:'GRANT_AWARD', externalId: 'g1'], [idType:'GRANT_AWARD', externalId: 'g2']]
         !result.errors
     }
 }

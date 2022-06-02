@@ -78,13 +78,13 @@ class ProgramServiceSpec extends Specification implements AutowiredTest{
         String reason = 'r1'
 
         when:
-        service.rejectReport(programId, reportId, reason, 'unused')
+        service.rejectReport(programId, reportId, reason, ['unused'])
 
         then:
         1 * webService.getJson({it.endsWith("/program/$programId")}) >> program
         1 * userService.getMembersOfProgram(programId) >> [members:roles]
         1 * reportService.get(reportId) >> report
-        1 * reportService.rejectReport(reportId, [report.activityId], reason, program, [],  EmailTemplate.RLP_CORE_SERVICES_REPORT_RETURNED_EMAIL_TEMPLATE)
+        1 * reportService.rejectReport(reportId, [report.activityId], reason, ['unused'], program, roles, EmailTemplate.RLP_CORE_SERVICES_REPORT_RETURNED_EMAIL_TEMPLATE)
     }
 
     def "No reports will be regenerated if no categories are supplied"() {
@@ -124,10 +124,10 @@ class ProgramServiceSpec extends Specification implements AutowiredTest{
 
         1 * webService.getJson({it.endsWith("/program/$programId/projects?view=flat")}) >> [projects:[[projectId:'p1'], [projectId:'p2']]]
 
-        1 * projectService.generateProjectReports({it.category == 'c5'}, {it.projectId == 'p1'}, new ReportGenerationOptions())
-        1 * projectService.generateProjectReports({it.category == 'c6'}, {it.projectId == 'p1'}, new ReportGenerationOptions())
-        1 * projectService.generateProjectReports({it.category == 'c5'}, {it.projectId == 'p2'}, new ReportGenerationOptions())
-        1 * projectService.generateProjectReports({it.category == 'c6'}, {it.projectId == 'p2'}, new ReportGenerationOptions())
+        0 * projectService.generateProjectReports({it.category == 'c5'}, {it.projectId == 'p1'}, new ReportGenerationOptions())
+        0 * projectService.generateProjectReports({it.category == 'c6'}, {it.projectId == 'p1'}, new ReportGenerationOptions())
+        0 * projectService.generateProjectReports({it.category == 'c5'}, {it.projectId == 'p2'}, new ReportGenerationOptions())
+        0 * projectService.generateProjectReports({it.category == 'c6'}, {it.projectId == 'p2'}, new ReportGenerationOptions())
 
         0 * projectService.generateProjectReports(_, _, _)
     }

@@ -61,7 +61,7 @@ class ManagementUnitPermissionSpec extends StubbedCasSpec {
 
         setup:
         String projectId = '1'
-        loginAsUser('1', browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to ManagementUnitPage, "test_mu"
@@ -85,6 +85,20 @@ class ManagementUnitPermissionSpec extends StubbedCasSpec {
         waitFor {
             adminTabPane.permissionAccess.findPermissionForUser('4').roleText == "Admin"
         }
+
+    }
+
+    def "Read only users can view the MU user permissions in the admin tab"() {
+        setup:
+        loginAsReadOnlyUser(browser)
+
+        when:
+        to ManagementUnitPage, "test_mu"
+        openAdminTab()
+        adminTabPane.openPermissionAccess()
+
+        then:
+        adminTabPane.permissionAccess.permissions.size() == 3
 
     }
 }

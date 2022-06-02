@@ -133,13 +133,13 @@ class ProjectController {
         project.priorities = new JSONArray(config.priorities ?: [])
         project.outcomes = new JSONArray(config.outcomes ?: [])
         project.hasApprovedOrSubmittedReports = reportService.includesSubmittedOrApprovedReports(project.reports)
-
+        project.isProjectNotActiveAndHasAnyReport = ((project.status != projectService.ACTIVE_STATUS) && (project?.reports?.size() > 0))
 
         def meriPlanVisible = config.includesContent(ProgramConfig.ProjectContent.MERI_PLAN)
         def risksAndThreatsVisible = config.includesContent(ProgramConfig.ProjectContent.RISKS_AND_THREATS) && user?.hasViewAccess
         def canViewRisks = risksAndThreatsVisible && (user?.hasViewAccess || user?.isEditor)
         def meriPlanEnabled = user?.hasViewAccess || ((project.associatedProgram == 'National Landcare Programme' && project.associatedSubProgram == 'Regional Funding'))
-        def meriPlanVisibleToUser = project.planStatus == 'approved' || user?.isAdmin || user?.isCaseManager
+        def meriPlanVisibleToUser = project.planStatus == 'approved' || user?.isAdmin || user?.isCaseManager || user?.hasViewAccess
         boolean userHasViewAccess = user?.hasViewAccess ?: false
 
         def publicImages = project.documents.findAll {
@@ -163,7 +163,7 @@ class ProjectController {
         // For validation of project date changes.
         String minimumProjectEndDate = projectService.minimumProjectEndDate(project, config)
 
-        boolean adminTabVisible = user?.isEditor || user?.isAdmin || user?.isCaseManager
+        boolean adminTabVisible = user?.isEditor || user?.isAdmin || user?.isCaseManager || user?.hasViewAccess
         boolean showMeriPlanHistory = config.supportsMeriPlanHistory && userService.userIsSiteAdmin()
         boolean datasetsVisible = config.includesContent(ProgramConfig.ProjectContent.DATA_SETS) && userHasViewAccess
         def model = [overview       : [label: 'Overview', visible: true, default: true, type: 'tab', publicImages: imagesModel, displayOutcomes: false, blog: blog, hasNewsAndEvents: hasNewsAndEvents, hasProjectStories: hasProjectStories, canChangeProjectDates: canChangeProjectDates, outcomes:project.outcomes, objectives:config.program?.config?.objectives],
@@ -205,7 +205,7 @@ class ProjectController {
             boolean reportsVisible = config.includesContent(ProgramConfig.ProjectContent.REPORTING) && userHasViewAccess
             Map reportingTab = [label: 'Reporting', visible:reportsVisible, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true, services: config.services, scores:scores, hideDueDate:true, isAdmin:user?.isAdmin, isGrantManager:user?.isCaseManager]
             if (reportingTab.visible) {
-                reportingTab.reportOrder = config?.projectReports?.collect{[category:it.category, description:it.description]} ?: []
+                reportingTab.reportOrder = config?.projectReports?.collect{[category:it.category, description:it.description, rejectionReasonCategoryOptions:it.rejectionReasonCategoryOptions?:[]]} ?: []
                 project.reports?.each { Map report ->
                     ReportConfig reportConfig = ((ProgramConfig)config).findProjectReportConfigForReport(report)
                     report.isAdjustable = reportConfig?.isAdjustable()
@@ -422,9 +422,9 @@ class ProjectController {
     def getMembersForProjectId() {
         String projectId = params.id
         def adminUserId = userService.getCurrentUserId()
-
-        if (projectId && adminUserId) {
-            if (projectService.isUserAdminForProject(adminUserId, projectId) || projectService.isUserCaseManagerForProject(adminUserId, projectId)) {
+        if (projectId) {
+            if (projectService.isUserAdminForProject(adminUserId, projectId) || projectService.isUserCaseManagerForProject(adminUserId, projectId)
+            || projectService.canUserViewProject(userService.getCurrentUserId(), projectId)) {
                 render projectService.getMembersForProjectId(projectId) as JSON
             } else {
                 render status: 403, text: 'Permission denied'
@@ -458,7 +458,7 @@ class ProjectController {
         }
     }
 
-    @PreAuthorise(accessLevel = 'admin', redirectController = 'home', redirectAction = 'index')
+    @PreAuthorise(accessLevel = 'readOnly', redirectController = 'home', redirectAction = 'index')
     def downloadShapefile(String id) {
 
         def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "project/${id}.shp"
@@ -519,6 +519,17 @@ class ProjectController {
         def reportDetails = request.JSON
 
         def result = projectService.rejectReport(id, reportDetails)
+
+        render result as JSON
+
+    }
+
+    @PreAuthorise(accessLevel = 'siteAdmin')
+    def ajaxCancelReport(String id) {
+
+        def reportDetails = request.JSON
+
+        def result = projectService.cancelReport(id, reportDetails)
 
         render result as JSON
 
@@ -589,7 +600,7 @@ class ProjectController {
         render status: 200, text: 'ok'
     }
 
-    @PreAuthorise(accessLevel = 'admin')
+    @PreAuthorise(accessLevel = 'readOnly')
     def projectReport(String id, ProjectSummaryReportCommand projectSummaryReportCommand) {
         projectSummaryReportCommand()
     }
@@ -844,7 +855,7 @@ class ProjectController {
         }
     }
 
-    @PreAuthorise(accessLevel = 'editor')
+    @PreAuthorise(accessLevel = 'readOnly', redirectController = "home")
     def ajaxProjectSites(String id) {
         Map result = projectService.projectSites(id)
 

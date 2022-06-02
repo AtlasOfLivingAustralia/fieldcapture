@@ -1,4 +1,5 @@
 <div id="reporting-content">
+
     <g:if test="${reportsHeader}"><h4 class="header-with-help">Project Reports</h4></g:if>
 
     <div data-bind="foreach:reportsByCategory">
@@ -28,6 +29,13 @@
 <span class="badge p-1 text-white badge-info" data-bind="if:progress() == 'started'">Reporting form incomplete</span>
 <span class="badge p-1 text-white badge-success" data-bind="if:progress() == 'finished'">Reporting form complete</span>
 
+<g:if test="${fc.userIsAlaOrFcAdmin()}">
+    <div class="mt-2" data-bind="visible:!hasData()">
+        <p>
+            <button type="button" data-bind="click:cancelReport" class="btn btn-sm btn-danger"><i class="fa fa-remove icon-white"></i> Not required</button>
+        </p>
+    </div>
+</g:if>
 </script>
 
 <script id="notSubmitted" type="text/html">
@@ -42,9 +50,12 @@
     </p>
     <span class="badge p-1 text-white badge-info" data-bind="if:progress() == 'started'">Reporting form incomplete</span>
     <span class="badge p-1 text-white badge-success" data-bind="if:progress() == 'finished'">Reporting form complete</span>
-
+    <div class="mt-2" data-bind="visible:!hasData()">
+        <p>
+            <button type="button" data-bind="click:cancelReport" class="btn btn-sm btn-danger"><i class="fa fa-remove icon-white"></i> Not required</button>
+        </p>
+    </div>
 </g:if>
-
 </script>
 
 <script id="approved" type="text/html">
@@ -79,7 +90,10 @@
     </p>
 </g:if>
 </script>
-
+<script id="cancelled" type="text/html">
+    <p><span class="badge p-1 text-white badge-danger">Report not required</span></p>
+    <span class="text-break" data-bind="text:cancelledComment"></span>
+</script>
 
 <script id="reportTable" type="text/html">
 

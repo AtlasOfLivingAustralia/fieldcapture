@@ -206,11 +206,11 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         result.error == "Invalid plan status"
     }
 
-    def "plan should not be approved if work order number is not supplied"(){
+    def "plan should not be approved if an internal order number is not supplied"(){
         given:
         def projectId = 'project1'
         def planStatus = ProjectService.PLAN_SUBMITTED
-        webService.getJson(_) >> [projectId:projectId, planStatus:planStatus, wrokOrderId:""]
+        webService.getJson(_) >> [projectId:projectId, planStatus:planStatus, externalIds:null]
 
         when:
         def result = service.approvePlan(projectId, [:])
@@ -254,7 +254,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         def projectId = 'project1'
         def planStatus = ProjectService.PLAN_SUBMITTED
         List projectRoles = []
-        Map project = [projectId:projectId, planStatus:planStatus, grantId:'g1', reports:null, internalOrderId: "12345"]
+        Map project = [projectId:projectId, planStatus:planStatus, grantId:'g1', reports:null, externalIds: [[idType:"INTERNAL_ORDER_NUMBER", externalId:'12345']]]
         webService.getJson(_) >> project
         String expectedName = 'g1 MERI plan approved 2019-07-01T00:00:00Z'
         String expectedFilename = 'meri-approval-project1-1561939200000.txt'
@@ -301,7 +301,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         def projectId = 'project1'
         def planStatus = initialState
         List projectRoles = []
-        Map project =  [projectId:projectId, planStatus:planStatus, internalOrderId: "12345"]
+        Map project =  [projectId:projectId, planStatus:planStatus, externalIds:[[idType:'INTERNAL_ORDER_NUMBER', externalId:'12345']]]
         ProgramConfig programConfig = new ProgramConfig([
                 emailTemplates:[
                         (ProgramConfig.PLAN_SUBMITTED_EMAIL_TEMPLATE_CONFIG_ITEM): EmailTemplate.RLP_PLAN_SUBMITTED_EMAIL_TEMPLATE.name(),
@@ -387,7 +387,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         webService.getJson(_) >> project
         String reportId = 'r1'
         Map report = [reportId: reportId]
-        Map reportDetails = [reportId: reportId, activityIds: ['a1', 'a2'], reason:'unused']
+        Map reportDetails = [reportId: reportId, activityIds: ['a1', 'a2'], reason:'Testing', categories:['Other']]
         reportService.getReportsForProject(_) >> [report]
 
 
@@ -399,7 +399,30 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
 
         1 * projectConfigurationService.getProjectConfiguration(project) >> new ProgramConfig([:])
         1 * webService.getJson({ it.endsWith("permissions/getMembersForProject/" + projectId) }) >> projectRoles
-        1 * reportService.rejectReport(reportId, reportDetails.activityIds, reportDetails.reason, project, projectRoles, EmailTemplate.DEFAULT_REPORT_RETURNED_EMAIL_TEMPLATE) >> [success:true]
+        1 * reportService.rejectReport(reportId, reportDetails.activityIds, reportDetails.reason, reportDetails.categories, project, projectRoles, EmailTemplate.DEFAULT_REPORT_RETURNED_EMAIL_TEMPLATE) >> [success:true]
+    }
+
+    def "the project service should delegate to the report service to cancel a report"() {
+        given:
+        def projectId = 'project1'
+        List projectRoles = []
+        Map project = [projectId: projectId, planStatus: ProjectService.PLAN_APPROVED]
+        webService.getJson(_) >> project
+        String reportId = 'r1'
+        Map report = [reportId: reportId]
+        Map reportDetails = [reportId: reportId, activityIds: ['a1', 'a2'], reason:'paper based report']
+        reportService.getReportsForProject(_) >> [report]
+
+
+        when:
+        def result = service.cancelReport(projectId, reportDetails)
+
+        then:
+        result.success == true
+
+        1 * projectConfigurationService.getProjectConfiguration(project) >> new ProgramConfig([:])
+        1 * webService.getJson({ it.endsWith("permissions/getMembersForProject/" + projectId) }) >> projectRoles
+        1 * reportService.cancelReport(reportId, reportDetails.activityIds, reportDetails.reason, project, projectRoles) >> [success:true]
     }
 
 
@@ -451,7 +474,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         result.resp.error != null
     }
 
-    def "a project should only be marked as completed when the final stage report is approved"(String reportId, boolean shouldComplete) {
+    def "a project should only be marked as completed when the final stage report is approved/cancelled"(String reportId, boolean shouldComplete) {
         setup:
         def projectId = 'project1'
         def reason = null
@@ -459,7 +482,8 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         def stageReportDetails = [activityIds:activityIds, reportId:reportId, stage:'Stage 2', reason:reason]
         reportService.getReportsForProject(projectId) >>[
                 [reportId:'r1', publicationStatus:ReportService.REPORT_APPROVED, name:'Stage 1', fromDate: '2015-07-01T00:00Z', toDate: '2016-01-01T00:00Z'],
-                [reportId:'r2', publicationStatus:ReportService.REPORT_NOT_APPROVED, name:'Stage 2', fromDate: '2016-01-01T00:00Z', toDate: '2017-01-01T00:00Z']]
+                [reportId:'r2', publicationStatus:ReportService.REPORT_NOT_APPROVED, name:'Stage 2', fromDate: '2016-01-01T00:00Z', toDate: '2017-01-01T00:00Z'],
+                [reportId:'r3', publicationStatus:ReportService.REPORT_CANCELLED, name:'Stage 3', fromDate: '2016-01-01T00:00Z', toDate: '2017-01-01T00:00Z']]
         webService.getJson(_) >> [projectId:projectId, planStatus:ProjectService.PLAN_NOT_APPROVED, plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z']
 
         when:
@@ -478,6 +502,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         reportId | shouldComplete
         'r1'     | false
         'r2'     | true
+        'r3'     | false
     }
 
     def "only completed projects with approved plans can be unlocked for correction"(String projectStatus, String planStatus) {
@@ -584,14 +609,14 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         boolean canEdit = service.canEditActivity(activity)
 
         then:
-        1 * reportService.isSubmittedOrApproved(_) >> true
+        1 * reportService.excludesNotApproved(_) >> true
         canEdit == false
 
         when:
         canEdit = service.canEditActivity(activity)
 
         then:
-        1 * reportService.isSubmittedOrApproved(_) >> false
+        1 * reportService.excludesNotApproved(_) >> false
         canEdit == true
     }
 
@@ -610,7 +635,6 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         then:
         projectConfigurationService.getProjectConfiguration(_) >> meritProjectConfig()
         1 * webService.doPost({it.endsWith('project/'+projectId)}, _) >> [resp:[:]]
-        1 * reportService.regenerateReports([], _, {it.id.projectId == projectId})
 
     }
 
@@ -730,7 +754,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         boolean submittedOrApproved = (reportStatus == ReportService.REPORT_SUBMITTED || reportStatus == ReportService.REPORT_APPROVED)
         webService.getJson(_) >> project
         reportService.getReportsForProject(project.projectId) >> [r1]
-        reportService.isSubmittedOrApproved(_) >> submittedOrApproved
+        reportService.excludesNotApproved(_) >> submittedOrApproved
 
         when:
         String result = service.validateProjectStartDate(project, new ProgramConfig([activityBasedReporting: false, projectReports:[reportConfig]]), date, new ReportGenerationOptions())
@@ -827,8 +851,6 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         2 * projectConfigurationService.getProjectConfiguration(_) >> new ProgramConfig([projectTemplate:ProgramConfig.ProjectTemplate.RLP.name(), projectReports:[[reportType:'Activity', category:'test']]])
         1 * webService.doPost({it.endsWith("project/${projectId}")}, [name:'new name'])
 
-        and: "reports are regenerated in case they include the name"
-        1 * reportService.regenerateReports(_, _, _)
     }
 
 

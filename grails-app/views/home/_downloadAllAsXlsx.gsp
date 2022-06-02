@@ -30,13 +30,18 @@
 
     <strong>MERI Plan</strong>
     <ul class="unstyled">
-        <g:each in="${[[label:'Outcomes', value:'MERI_Outcomes'], [label:'Monitoring', value:"MERI_Monitoring"], [label:'Project Partnerships', value:"MERI_Project Partnerships"], [label:'Project Implementation', value:"MERI_Project Implementation"], [label:'Key Evaluation Question', value:"MERI_Key Evaluation Question"], [label:'Priorities / National and Regional Plans', value:'MERI_Priorities'], [label:'Budget', value:"MERI_Budget"], [label:'Risks and Threats', value:"MERI_Risks and Threats"], [label:'WHS and Case Study', value:"MERI_WHS and Case Study"], [label:'Attachments', value:"MERI_Attachments"], [label:'Baseline', value:"MERI_Baseline"], [label:'Event', value:"MERI_Event"], [label:"Approvals", value:"MERI_Approvals"], [label:"Project Assets", value:"MERI_Project Assets"]]}" var="meriSection">
+        <g:each in="${[[label:'Outcomes', value:'MERI_Outcomes'], [label:'Monitoring', value:"MERI_Monitoring"], [label:'Project Partnerships', value:"MERI_Project Partnerships"], [label:'Project Implementation', value:"MERI_Project Implementation"], [label:'Key Evaluation Question', value:"MERI_Key Evaluation Question"], [label:'Priorities / National and Regional Plans', value:'MERI_Priorities'], [label:'Budget', value:"MERI_Budget"], [label:'Risks and Threats', value:"MERI_Risks and Threats"], [label:'WHS and Case Study', value:"MERI_WHS and Case Study"], [label:'Attachments', value:"MERI_Attachments"], [label:'Baseline', value:"MERI_Baseline"], [label:'Event', value:"MERI_Event"], [label:"Approvals", value:"MERI_Approvals"], [label:"Project Assets", value:"MERI_Project Assets"], [label:"Pest Control Methods", value:"MERI_Pest Control Methods"], [label:"Native Species Threat", value:"MERI_Native Species Threat"]]}" var="meriSection">
             <li><label class="checkbox"><input type="checkbox" name="tabs" value="${meriSection.value}" data-validation-engine="validate[minCheckbox[1]]">${meriSection.label}</label></li>
         </g:each>
          <!-- RLP project -->
         <g:each in="${['RLP Outcomes', 'RLP Project Details', 'RLP Key Threats', 'RLP Services and Targets']}" var="name">
             <li><label class="checkbox"><input type="checkbox" name="tabs" value="${name.replaceAll(' ','_')}" data-validation-engine="validate[minCheckbox[1]]">${name}</label></li>
         </g:each>
+    </ul>
+
+    <strong>Electorate Coord</strong><br/>
+    <ul class="unstyled">
+        <li><label class="checkbox"><input type="checkbox" name="tabs" value="Electorate Coord" data-validation-engine="validate[minCheckbox[1]]">Electorate Coord</label></li>
     </ul>
 
     <strong>Activity Data</strong><br/>

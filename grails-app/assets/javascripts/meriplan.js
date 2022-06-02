@@ -127,39 +127,66 @@ function MERIPlan(project, projectService, config) {
     self.modifyPlan = function () {
         projectService.modifyPlan();
     };
-    self.canEditStartDate = ko.observable(config.editProjectStartDate)
+    self.canEditStartDate = config.editProjectStartDate;
+    self.externalIds = config.externalIds || [];
+    self.externalIdTypes = PROJECT_EXTERNAL_ID_TYPES;
+    self.validateExternalIds = function() {
+        if (!projectService.areExternalIdsValid(ko.mapping.toJS(self.externalIds))) {
+            return 'At least one internal order number is required';
+        }
+    };
+
+    self.canApproveMeriPlan = ko.computed(function() {
+        // validateExternalIds returns a non-null value if the validation fails (it contains
+        // the error message to display), this is a jquery-validation-engine thing.
+        return self.plannedStartDate() && !self.validateExternalIds();
+    })
+
     // approve plan and handle errors
     self.approvePlan = function () {
-
-        if (config.requireMeriApprovalReason) {
-            var planApprovalModal = config.planApprovalModel || '#meri-plan-approval-modal';
-            var $planApprovalModal = $(planApprovalModal);
-            var planApprovalViewModel = {
-                referenceDocument: ko.observable(),
-                reason:ko.observable(),
-                title:'Approve MERI Plan',
-                dateApproved: ko.observable(new Date()).extend({simpleDate:true}),
-                buttonText: 'Approve',
-                submit:function(viewModel) {
-                    projectService.approvePlan({
-                        referenceDocument:viewModel.referenceDocument(),
-                        reason: viewModel.reason(),
-                        dateApproved: viewModel.dateApproved()
-                    }, { internalOrderNumber: self.internalOrderId(),
-                        plannedStartDate: self.plannedStartDate()});
-                }
-            };
-            ko.applyBindings(planApprovalViewModel, $planApprovalModal[0]);
-            $planApprovalModal.modal({backdrop: 'static', keyboard:true, show:true}).on('hidden.bs.modal', function() {ko.cleanNode($planApprovalModal[0])});
+        var message;
+        var startDateSelector = "#project-details-validation input[data-bind*=plannedStartDate]";
+        var valid =  $('#project-details-validation').validationEngine('validate');
+        if (self.plannedStartDate() >= project.plannedEndDate) {
+            message =  "The project start date must be before the end date";
         }
-        else {
-            var data = {
-                internalOrderNumber: self.internalOrderId(),
-                plannedStartDate: self.plannedStartDate()
+        if (message || !valid) {
+            setTimeout(function() {
+                $(startDateSelector).validationEngine("showPrompt", message, "topRight", true);
+            }, 100);
+
+        } else {
+            if (config.requireMeriApprovalReason) {
+                var planApprovalModal = config.planApprovalModel || '#meri-plan-approval-modal';
+                var $planApprovalModal = $(planApprovalModal);
+                var planApprovalViewModel = {
+                    referenceDocument: ko.observable(),
+                    reason:ko.observable(),
+                    title:'Approve MERI Plan',
+                    dateApproved: ko.observable(new Date()).extend({simpleDate:true}),
+                    buttonText: 'Approve',
+                    submit:function(viewModel) {
+                        projectService.approvePlan({
+                            referenceDocument:viewModel.referenceDocument(),
+                            reason: viewModel.reason(),
+                            dateApproved: viewModel.dateApproved()
+                        }, {
+                            externalIds: ko.mapping.toJS(self.externalIds),
+                            plannedStartDate: self.plannedStartDate()
+                        });
+                    }
+                };
+                ko.applyBindings(planApprovalViewModel, $planApprovalModal[0]);
+                $planApprovalModal.modal({backdrop: 'static', keyboard:true, show:true}).on('hidden.bs.modal', function() {ko.cleanNode($planApprovalModal[0])});
             }
-            projectService.approvePlan({dateApproved:convertToIsoDate(new Date())}, data)
+            else {
+                var data = {
+                    externalIds: ko.mapping.toJS(self.externalIds),
+                    plannedStartDate: self.plannedStartDate()
+                }
+                projectService.approvePlan({dateApproved:convertToIsoDate(new Date())}, data)
+            }
         }
-
 
     };
     // reject plan and handle errors
@@ -302,6 +329,7 @@ function MERIPlan(project, projectService, config) {
     self.protectedNaturalAssests = ['Natural/Cultural assets managed', 'Threatened Species', 'Threatened Ecological Communities',
         'Migratory Species', 'Ramsar Wetland', 'World Heritage area', 'Community awareness/participation in NRM', 'Indigenous Cultural Values',
         'Indigenous Ecological Knowledge', 'Remnant Vegetation', 'Aquatic and Coastal systems including wetlands', 'Not Applicable'];
+    self.controls = ['Yes', 'No'];
 
     self.addBudget = function () {
         self.meriPlan().budget.rows.push(new BudgetRowViewModel({}, periods));
@@ -351,7 +379,6 @@ function MERIPlan(project, projectService, config) {
     self.removePartnership = function (partnership) {
         self.meriPlan().partnership.removeRow(partnership);
     };
-
     self.addSecondaryOutcome = function () {
         self.meriPlan().outcomes.secondaryOutcomes.push(new SingleAssetOutcomeViewModel());
     };
@@ -377,7 +404,12 @@ function MERIPlan(project, projectService, config) {
     self.removeAsset = function(asset) {
         self.meriPlan().assets.remove(asset);
     };
-
+    self.addControlMethod = function () {
+        self.meriPlan().threatControlMethod.addRow();
+    };
+    self.removeControlMethod = function (threatControlMethod) {
+        self.meriPlan().threatControlMethod.removeRow(threatControlMethod);
+    };
     self.saveAndSubmitChanges = function(){
         self.saveMeriPlan(true);
     };
@@ -611,6 +643,8 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
     self.threats = new GenericViewModel(o.threats, ['threat', 'intervention']);
     self.consultation = ko.observable(o.consultation);
     self.communityEngagement = ko.observable(o.communityEngagement);
+    self.threatToNativeSpecies = new GenericViewModel(o.threatToNativeSpecies, ['couldBethreatToSpecies', 'details']);
+    self.threatControlMethod = new GenericViewModel(o.threatControlMethod, ['currentControlMethod', 'hasBeenSuccessful', 'methodType', 'details']);
 
     var row = [];
     o.events ? row = o.events : row.push(ko.mapping.toJS(new EventsRowViewModel()));

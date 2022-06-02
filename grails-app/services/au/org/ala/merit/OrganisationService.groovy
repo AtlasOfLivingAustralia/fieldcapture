@@ -304,14 +304,14 @@ class OrganisationService {
         return [success:true]
     }
 
-    def rejectReport(String organisationId, String reportId, String reason, String category) {
+    def rejectReport(String organisationId, String reportId, String reason, List categories) {
         Map organisation = get(organisationId)
-        Map resp = reportService.reject(reportId, category, reason)
+        Map resp = reportService.reject(reportId, categories, reason)
 
         Map report = reportService.get(reportId)
 
         if (!resp.error) {
-            emailService.sendOrganisationReportRejectedEmail(organisationId, [organisation:organisation, report:report, reason:reason])
+            emailService.sendOrganisationReportRejectedEmail(organisationId, [organisation:organisation, report:report, reason:reason, reasonCategories:categories])
         }
         else {
             return [success:false, error:resp.error]

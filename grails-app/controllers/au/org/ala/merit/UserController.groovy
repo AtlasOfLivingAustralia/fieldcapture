@@ -189,7 +189,8 @@ class UserController {
         String userId = userService.getCurrentUserId()
 
         if (id && userId) {
-            if (userService.userIsSiteAdmin() || userService.isUserAdminForManagementUnit(userId, id) || userService.isUserGrantManagerForManagementUnit(userId, id)) {
+            if (userService.userIsSiteAdmin() || userService.isUserAdminForManagementUnit(userId, id) || userService.isUserGrantManagerForManagementUnit(userId, id) ||
+                    userService.userHasReadOnlyAccess()) {
                 Map result = userService.getMembersOfManagementUnit(id)
                 List members = result?.members ?: []
                 render members as JSON

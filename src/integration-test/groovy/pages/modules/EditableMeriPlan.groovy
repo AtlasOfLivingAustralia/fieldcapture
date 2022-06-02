@@ -24,7 +24,7 @@ class ThreatRow extends Module {
 class BaselineRow extends Module {
     static content = {
         baseline { $('.baseline textarea[data-bind*=baseline]') }
-        method { $('.baseline-method textarea[data-bind*=method') }
+        method { $('.baseline-method textarea[data-bind*=method]') }
         remove { $('i.icon-remove') }
     }
 
@@ -127,6 +127,23 @@ class SubmissionModal extends Module {
     }
 }
 
+class ControlApproachRow extends Module {
+    static content = {
+        approach { $('.approach-current select[data-bind*=couldBethreatToSpecies]') }
+        details { $('.approach-details textarea[data-bind*=details]') }
+    }
+}
+
+class ControlMethodRow extends Module {
+    static content = {
+        current { $('.method-current textarea[data-bind*=currentControlMethod]') }
+        success { $('.method-success select[data-bind*=hasBeenSuccessful]') }
+        type { $('.method-type select[data-bind*=methodType]') }
+        details { $('.method-details textarea[data-bind*=details]') }
+        remove { $('i.icon-remove') }
+    }
+}
+
 class EditableMeriPlan extends Module {
 
 
@@ -142,7 +159,7 @@ class EditableMeriPlan extends Module {
         secondaryOutcomes(required: false) { $('table.secondary-outcome tbody tr').moduleList(OutcomeRow) }
         shortTermOutcomes(required: false) { $('tbody[data-bind*="shortTermOutcomes"] textarea') }
         mediumTermOutcomes(required: false) {  $('tbody[data-bind*="midTermOutcomes"] textarea') }
-        addMediumTermOutcomeButton(required:false) { $('button[data-bind*="addMidTermOutcome"') }
+        addMediumTermOutcomeButton(required:false) { $('button[data-bind*="addMidTermOutcome"]') }
         projectName(required: false) { $('input[data-bind*="details.name"]') }
         projectDescription(required: false) { $('textarea[data-bind*="details.description"]') }
         rationale(required: false) { $('textarea[data-bind*="details.rationale"]') }
@@ -152,7 +169,6 @@ class EditableMeriPlan extends Module {
         projectBaseline(required: false) { $('table.monitoring-baseline tbody tr').moduleList(BaselineRow) }
         monitoringIndicators(required: false) { $('.meri-monitoring-indicators  table tbody tr').moduleList(MonitoringIndictorRow) }
         rlpMonitoringIndicators(required: false) { $('table.monitoring tbody tr').moduleList(MonitoringIndictorRow) }
-
         reviewMethodology(required: false) { $('textarea[data-bind*="projectEvaluationApproach"]') }
         nationalAndRegionalPlans(required: false) { $('table.plans tbody tr').moduleList(PlanRow) }
         projectServices(required: false) { $('table.service-targets tbody tr').moduleList(ServiceTargetRow) }
@@ -169,6 +185,8 @@ class EditableMeriPlan extends Module {
         communityEngagement(required:false) { $('.community-engagement textarea') }
         relatedProjects(required:false) { $('.related-projects textarea') }
         objectivesAndAssets(required:false) { $('table tbody[data-bind*="objectives.rows1"] tr').moduleList(ObjectivesAndAssets) }
+        controlMethods(required: false) { $('table.control-method tbody tr').moduleList(ControlMethodRow) }
+        controlApproaches(required: false) { $('table.control-approach-threat tbody tr').moduleList(ControlApproachRow) }
 
         floatingSaveButton { $('#floating-save [data-bind*="saveProjectDetails"]') }
         saveButton { $('.form-actions [data-bind*="saveProjectDetails"]').first() }
@@ -180,7 +198,8 @@ class EditableMeriPlan extends Module {
 
         approvePlanDialog(required:false) { $('#meri-plan-approval-modal').module(MeriPlanApproveDialog) }
 
-        internalOrderNumber(required:false) { $('#internalOrderId') }
+        externalIds {$('.externalIds').module(ExternalIds)}
+        projectStartDate(required:false) { $('#changeProjectStartDate') }
         submissionModal(required:false) { $("#meriSubmissionDeclaration").module(SubmissionModal) }
     }
 

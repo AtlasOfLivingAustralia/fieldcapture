@@ -88,6 +88,11 @@ class ReportConfig {
      */
     Integer minimumPeriodInMonths = null
 
+    /**
+     * List of reasons to display when a report generated from this config is returned for rework.
+     * If null, no reasons will be displayed, only a free text field.
+     */
+    List rejectionReasonCategoryOptions
 
 
     DateTime getFirstReportingPeriodEnd() {

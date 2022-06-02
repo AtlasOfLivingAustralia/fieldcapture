@@ -32,6 +32,12 @@ class OrganisationController {
 
             def orgRole = members.find{it.userId == userId}
 
+            if (user) {
+                user = user.properties
+                user.isAdmin = orgRole?.role == RoleService.PROJECT_ADMIN_ROLE ?: false
+                user.isCaseManager = orgRole?.role == RoleService.GRANT_MANAGER_ROLE ?: false
+            }
+
             [organisation: organisation,
              dashboard: dashboard,
              roles:roles,
@@ -70,7 +76,7 @@ class OrganisationController {
 
         [about     : [label: 'About', visible: true, stopBinding: false, type:'tab'],
          reporting : [label: 'Reporting', visible: reportingVisible, stopBinding:true, template:'/shared/reporting', default:reportingVisible, type: 'tab', reports:organisation.reports, adHocReportTypes:adHocReportTypes],
-         projects  : [label: 'Projects', visible: true, default:!reportingVisible, stopBinding:true, type: 'tab', disableProjectCreation:true],
+         projects  : [label: 'Projects', visible: true, default:!reportingVisible, stopBinding:true, type: 'tab'],
          sites     : [label: 'Sites', visible: true, type: 'tab', stopBinding:true, projectCount:organisation.projects?.size()?:0, showShapefileDownload:hasAdminAccess],
          dashboard : [label: 'Dashboard', visible: true, stopBinding:true, type: 'tab', template:'/shared/dashboard', reports:dashboardReports],
          admin     : [label: 'Admin', visible: hasAdminAccess, type: 'tab', showEditAnnoucements:organisation.projects?.size()]]
@@ -461,7 +467,7 @@ class OrganisationController {
             model.state = organisation.state ?: 'Unknown'
             model.organisation = organisation
 
-            if (reportService.isSubmittedOrApproved(model.report)) {
+            if (reportService.excludesNotApproved(model.report)) {
                 model.submittingUserName = authService.getUserForUserId(model.report.submittedBy)?.displayName ?: 'Unknown user'
                 model.submissionDate = DateUtils.displayFormatWithTime(model.report.dateSubmitted)
                 edit = false
@@ -548,7 +554,7 @@ class OrganisationController {
         }
         def reportDetails = request.JSON
 
-        def result = organisationService.rejectReport(id, reportDetails.reportId, reportDetails.reason, reportDetails.category)
+        def result = organisationService.rejectReport(id, reportDetails.reportId, reportDetails.reason, reportDetails.categories)
 
         render result as JSON
     }

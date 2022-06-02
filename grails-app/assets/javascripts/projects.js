@@ -20,6 +20,7 @@
 //= require blog
 //= require dataSets
 //= require projectService
+//= require components.js
 //= require_self
 
 /*
@@ -69,7 +70,6 @@ function isValid(p, a) {
 	 return p;
 }
 
-
 function ProjectViewModel(project, isUserEditor, organisations) {
     var self = this;
     // documents
@@ -96,6 +96,13 @@ function ProjectViewModel(project, isUserEditor, organisations) {
         )
 
     _.extend(self, new EditableDocumentsViewModel(documentSettings));
+    self.externalIds = ko.observableArray(_.map(project.externalIds, function (externalId) {
+        return {
+            idType: ko.observable(externalId.idType),
+            externalId: ko.observable(externalId.externalId)
+        };
+    }));
+    self.externalIdTypes = PROJECT_EXTERNAL_ID_TYPES;
 
     if (isUserEditor === undefined) {
         isUserEditor = false;
@@ -125,17 +132,14 @@ function ProjectViewModel(project, isUserEditor, organisations) {
         return project.plannedStartDate != self.plannedStartDate() ||
             project.plannedEndDate != self.plannedEndDate();
     });
-    var projectDefault = "active";
-    if(project.status){
-        projectDefault = project.status;
-    }
-    self.status = ko.observable(projectDefault.toLowerCase());
-    self.projectStatus = [{id: 'application', name:'Application'}, {id: 'active', name:'Active'},{id:'completed',name:'Completed'},{id:'deleted', name:'Deleted'}, {id:"terminated", name: "Terminated"}];
+    var currentStatus = project.status || ProjectStatus.ACTIVE;
+    self.status = ko.observable(currentStatus.toLowerCase());
+    self.projectStatus = [{id: ProjectStatus.APPLICATION, name:'Application'}, {id: ProjectStatus.ACTIVE, name:'Active'},{id: ProjectStatus.COMPLETED, name:'Completed'},{id:ProjectStatus.DELETED, name:'Deleted'}, {id:ProjectStatus.TERMINATED, name: "Terminated"}];
 
     self.terminationReason = ko.observable(project.terminationReason);
 
-    self.status.subscribe(function (terminated) {
-        if (terminated !== "terminated"){
+    self.status.subscribe(function (newStatus) {
+        if (newStatus !== ProjectStatus.TERMINATED){
             self.terminationReason(undefined)
         }
     });
@@ -854,10 +858,23 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
         return !project.hasApprovedOrSubmittedReports || self.includeSubmittedReports();
     });
 
+    self.validateExternalIds = function() {
+        if (self.status() != ProjectStatus.APPLICATION) {
+            if (!projectService.areExternalIdsValid(ko.mapping.toJS(self.externalIds))) {
+                return 'At least one internal order number is required';
+            }
+        }
+    }
+
+    self.canRegenerateReports = ko.computed(function() {
+        return self.status() == ProjectStatus.ACTIVE;
+    });
+
     var meriPlanConfig = _.extend({}, config, {
         declarationModalSelector: '#unlockPlan',
         meriSubmissionDeclarationSelector: '#meriSubmissionDeclaration',
-        editProjectStartDate: self.canEditStartDate()
+        editProjectStartDate: self.canEditStartDate,
+        externalIds: self.externalIds
     });
     self.meriPlan = new MERIPlan(project, projectService, meriPlanConfig);
 
@@ -882,7 +899,6 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             description: self.description(),
             externalId: self.externalId(),
             grantId: self.grantId(),
-            internalOrderId: self.internalOrderId(),
             manager: self.manager(),
             plannedStartDate: self.plannedStartDate(),
             plannedEndDate: self.plannedEndDate(),
@@ -900,6 +916,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             terminationReason: self.terminationReason(),
             tags: self.tags(),
             promoteOnHomepage: self.promoteOnHomepage(),
+            externalIds: ko.mapping.toJS(self.externalIds),
             options: {
                 changeActivityDates: self.changeActivityDates(),
                 includeSubmittedReports: self.includeSubmittedReports(),
@@ -1085,6 +1102,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             newDataSetUrl:  config.newDataSetUrl,
             editDataSetUrl: config.editDataSetUrl,
             deleteDataSetUrl: config.deleteDataSetUrl,
+            viewDataSetUrl: config.viewDataSetUrl,
             returnToUrl: config.returnToUrl
         };
         var projectService = new ProjectService({}, config);
@@ -1094,9 +1112,12 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
 
     self.initialiseAdminTab = function() {
         $("#settings-validation").validationEngine();
-        ko.applyBindings(self.meriPlan, document.getElementById("edit-meri-plan"));
-        self.meriPlan.meriPlan().dirtyFlag.reset();
-        self.meriPlan.attachFloatingSave();
+        var meriPlanSection = document.getElementById("edit-meri-plan");
+        if (meriPlanSection) {
+            ko.applyBindings(self.meriPlan, meriPlanSection);
+            self.meriPlan.meriPlan().dirtyFlag.reset();
+            self.meriPlan.attachFloatingSave();
+        }
 
         // When the MERI plan is approved, the announcements move to their own section, otherwise they
         // are embedded in the MERI plan itself.

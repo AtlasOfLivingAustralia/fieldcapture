@@ -6,6 +6,18 @@ PlanStatus = {
     UNLOCKED: 'unlocked for correction'
 };
 
+ProjectStatus = {
+    ACTIVE: 'active',
+    APPLICATION: 'application',
+    COMPLETED: 'completed',
+    TERMINATED: 'terminated',
+    DELETED: 'deleted'
+};
+
+PROJECT_EXTERNAL_ID_TYPES =  [
+    'INTERNAL_ORDER_NUMBER', 'GRANT_AWARD'
+];
+
 /**
  * Handles common project and meri plan status functions as well as communication with the server for
  * saving / submitting / approvals etc.
@@ -136,7 +148,12 @@ function ProjectService(project, options) {
                 }
             }).fail(function(data) {
                 $.unblockUI();
-                alert('An unhandled error occurred: ' + data.status + " Please refresh the page and try again");
+                if (data.status == 401) {
+                    alert('You do not have permission to delete this record.');
+                }
+                else {
+                    alert('An unhandled error occurred: ' + data.status + " Please refresh the page and try again");
+                }
             });
 
     };
@@ -162,9 +179,9 @@ function ProjectService(project, options) {
     };
     // approve plan and handle errors
     self.approvePlan = function (approvalDetails, data) {
-        if (!self.canApproveMeriPlan() && data.internalOrderNumber && data.plannedStartDate) {
-            var payload = JSON.stringify({internalOrderId: data.internalOrderNumber, plannedStartDate: data.plannedStartDate});
-            var message = "Saving internal order number";
+        if (data) {
+            var payload = JSON.stringify({externalIds: data.externalIds, plannedStartDate: data.plannedStartDate});
+            var message = "Saving project data";
             self.save(config.projectUpdateUrl, payload, message).done(function() {
                 self.saveStatus(config.approvalPlanUrl, approvalDetails);
             }).fail(function() {
@@ -225,7 +242,11 @@ function ProjectService(project, options) {
     };
 
     self.isCompletedOrTerminated = function() {
-        return project.status && (project.status.toLowerCase() === 'completed' || self.isTerminated());
+        return project.status && (project.status.toLowerCase() === ProjectStatus.COMPLETED|| self.isTerminated());
+    };
+
+    self.isActive = function(){
+        return project.status.toLowerCase() === 'active';
     };
 
     self.isProjectDetailsLocked = ko.computed(function () {
@@ -246,8 +267,15 @@ function ProjectService(project, options) {
     };
 
     self.canApproveMeriPlan = function() {
-        return project.internalOrderId ? true: false
+        return self.areExternalIdsValid(project.externalIds);
     };
+
+
+    self.areExternalIdsValid = function(externalIds) {
+        return _.find(externalIds, function (externalId) {
+            return externalId.idType == 'INTERNAL_ORDER_NUMBER' && externalId.externalId;
+        });
+    }
 
     self.getBudgetHeaders = function() {
         if (config.excludeFinancialYearData) {

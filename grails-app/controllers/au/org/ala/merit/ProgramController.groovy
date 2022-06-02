@@ -34,6 +34,12 @@ class ProgramController {
 
             Map programRole = members.find { it.userId == userId }
 
+            if (user) {
+                user = user.properties
+                user.isAdmin = programRole?.role == RoleService.PROJECT_ADMIN_ROLE ?: false
+                user.isCaseManager = programRole?.role == RoleService.GRANT_MANAGER_ROLE ?: false
+            }
+
             def mapFeatures = program.programSiteId?siteService.getSiteGeoJson(program.programSiteId) : null
             if (mapFeatures)
                 program.mapFeatures = mapFeatures
@@ -60,7 +66,7 @@ class ProgramController {
         def hasProgramStories = blogs.find { it.type == 'Program Stories' }
         def hasPhotos = blogs.find { it.type == 'Photo' }
 
-        List reportOrder = program.config?.programReports?.collect{[category:it.category, description:it.description]} ?: []
+        List reportOrder = program.config?.programReports?.collect{[category:it.category, description:it.description, rejectionReasonCategoryOptions:it.rejectionReasonCategoryOptions?:[]]} ?: []
 
         // If the program is not visible, there is no point showing the dashboard or sites as both of these rely on
         // data in the search index to produce.
@@ -397,7 +403,7 @@ class ProgramController {
 
         def reportDetails = request.JSON
 
-        def result = programService.rejectReport(id, reportDetails.reportId, reportDetails.reason, reportDetails.category)
+        def result = programService.rejectReport(id, reportDetails.reportId, reportDetails.reason, reportDetails.categories)
 
         render result as JSON
     }

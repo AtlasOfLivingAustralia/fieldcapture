@@ -382,3 +382,28 @@ input#changeProjectStartDate {
     max-width: 9.5rem;
     min-width: 9.5rem;
 }
+
+.meri-plan .method-current {
+    width: 30%;
+}
+
+.meri-plan .method-success {
+    width: 20%;
+}
+
+.meri-plan .method-type {
+    width: 20%;
+}
+
+.meri-plan .method-details {
+    width: 30%;
+}
+
+.meri-plan .approach-current {
+    width: 33%;
+}
+
+.meri-plan .approach-details {
+    width: 67%;
+    word-break: break-word;
+}

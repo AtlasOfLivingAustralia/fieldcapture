@@ -40,9 +40,20 @@ class ManagementUnitController {
 
             List members = userService.getMembersOfManagementUnit(id).members ?: []
             def user = userService.getUser()
+            if (user) {
+                user = user.properties
+                user.isAdmin = projectService.isUserAdminForProject(user.userId, id) ?: false
+                user.hasViewAccess = projectService.canUserViewProject(user.userId, id) ?: false
+            }
             def userId = user?.userId
 
             Map muRole = members.find { it.userId == userId }
+
+            Boolean isManagementUnitStarredByUser = false
+            if (user && mu) {
+                isManagementUnitStarredByUser = userService.isManagementUnitStarredByUser(user?.userId, mu?.managementUnitId)?.isManagementUnitStarredByUser
+            }
+
 
             def mapFeatures = mu.managementUnitSiteId?siteService.getSiteGeoJson(mu.managementUnitSiteId) : null
             if (mapFeatures)
@@ -53,14 +64,15 @@ class ManagementUnitController {
              user               : user,
              isAdmin            : muRole?.role == RoleService.PROJECT_ADMIN_ROLE,
              isGrantManager     : muRole?.role == RoleService.GRANT_MANAGER_ROLE,
-             content            : content(mu, muRole)
+             content            : content(mu, muRole),
+             isManagementUnitStarredByUser: isManagementUnitStarredByUser
              ]
         }
     }
 
     protected Map content(Map mu, Map userRole) {
 
-        def hasAdminAccess = userService.userIsSiteAdmin() || userRole?.role == RoleService.PROJECT_ADMIN_ROLE
+        def hasAdminAccess = userService.userIsSiteAdmin() || userRole?.role == RoleService.PROJECT_ADMIN_ROLE || userService.userHasReadOnlyAccess()
 
         boolean canViewNonPublicTabs = userService.canUserEditManagementUnit(userService.getUser()?.userId, mu.managementUnitId) || userService.userHasReadOnlyAccess()
 
@@ -107,7 +119,7 @@ class ManagementUnitController {
             displayedPrograms << [program:program, projects: projectsInProgramGroup, servicesWithScores:servicesWithScores[programId], primaryOutcomes:primaryOutcomes, secondaryOutcomes:secondaryOutcomes]
         }
 
-        List reportOrder = mu.config?.managementUnitReports?.collect{[category:it.category, description:it.description]} ?: []
+        List reportOrder = mu.config?.managementUnitReports?.collect{[category:it.category, description:it.description, rejectionReasonCategoryOptions:it.rejectionReasonCategoryOptions?:[]]} ?: []
 
         [about   : [label: 'Management Unit Overview',visible: true, stopBinding: false, type: 'tab',
                     mu: mu,
@@ -456,7 +468,7 @@ class ManagementUnitController {
 
         def reportDetails = request.JSON
 
-        def result = managementUnitService.rejectReport(id, reportDetails.reportId, reportDetails.reason, reportDetails.category)
+        def result = managementUnitService.rejectReport(id, reportDetails.reportId, reportDetails.reason, reportDetails.categories)
 
         render result as JSON
     }
@@ -548,5 +560,43 @@ class ManagementUnitController {
             def message = [message: 'Fatal: '+ e.message]
             render message as JSON
         }
+    }
+
+    /**
+     * Star or unstar a management unit for a user
+     * Action is determined by the URI endpoint, either: /add | /remove
+     *
+     * @return
+     */
+    def starManagementUnit() {
+        String act = params.id?.toLowerCase()
+        String userId = userService.getCurrentUserId()
+        String managementUnitId = params.managementUnitId
+
+        if (act && userId && managementUnitId) {
+            if (act == "add") {
+                render userService.addStarManagementUnitForUser(userId, managementUnitId) as JSON
+            } else if (act == "remove") {
+                render userService.removeStarManagementUnitForUser(userId, managementUnitId) as JSON
+            } else {
+                render status: 400, text: 'Required endpoint (path) must be one of: add | remove'
+            }
+        } else {
+            render status: 400, text: 'Required params not provided: userId, managementUnitId'
+        }
+    }
+
+    /**
+     * Pre-pops some report field values based from the previous report contents
+     * @param managementUnitId
+     * @return
+     */
+    def previousReportContents(String managementUnitId) {
+        Map model = reportService.getPreviousReportModel(params)
+        Map response = [
+                managementUnitId: managementUnitId,
+                model: model
+        ]
+        render response as JSON
     }
 }

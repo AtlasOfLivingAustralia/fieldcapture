@@ -18,8 +18,7 @@ class ManagementUnitDocumentsSpec extends StubbedCasSpec {
 
         setup:
         String managementUnitId = 'test_mu'
-        loginAsUser('1', browser)
-
+        loginAsMeritAdmin(browser)
         when: "Display the admin tab, navigate to the documents section then press the attach button"
         to ManagementUnitPage, managementUnitId
         openDocumentDialog()

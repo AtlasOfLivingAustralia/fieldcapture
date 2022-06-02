@@ -141,6 +141,7 @@ class SiteController {
         }
     }
 
+    @PreAuthorise(accessLevel = 'editor')
     def ajaxDeleteSitesFromProject(String id){
 
         def payload = request.JSON
@@ -241,7 +242,7 @@ class SiteController {
         String projectId = params.projectId
         if (!projectService.canUserEditProject(userService.getCurrentUserId(), projectId)) {
             flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${params.projectId}"
-            redirect(url: params.returnTo)
+            redirect(controller:'project', action:'index', id: params.projectId)
         }
         else if (request.respondsTo('getFile')) {
 
@@ -389,42 +390,6 @@ class SiteController {
         Map progress = session.uploadProgress?:[:]
         progress.cancelling = true
         render progress as JSON
-    }
-
-    def createGeometryForGrantId(String grantId, String geometryPid, Double centroidLat, Double centroidLong) {
-        def projects = importService.allProjectsWithGrantId(grantId)
-        if (projects) {
-            def sites = []
-            projects.each {project ->
-                def metadata = metadataService.getLocationMetadataForPoint(centroidLat, centroidLong)
-                def strLat =  "" + centroidLat + ""
-                def strLon = "" + centroidLong + ""
-                def values = [extent: [source: 'pid', geometry: [pid: geometryPid, type: 'pid', state: metadata.state, nrm: metadata.nrm, lga: metadata.lga, locality: metadata.locality, centre: [strLon, strLat]]], projects: [project.projectId], name: "Project area for " + grantId]
-                sites << siteService.create(values)
-            }
-            def result = [result:sites]
-            render result as JSON
-        } else {
-            render "EMPTY"
-        }
-    }
-
-    def createPointForGrantId(String grantId, String geometryPid, Double lat, Double lon) {
-        def projects = importService.allProjectsWithGrantId(grantId)
-        if (projects) {
-            def sites = []
-            projects.each {project ->
-                def metadata = metadataService.getLocationMetadataForPoint(lat, lon)
-                def strLat =  "" + lat + ""
-                def strLon = "" + lon + ""
-                def values = [extent: [source: 'point', geometry: [pid: geometryPid, type: 'point', decimalLatitude: strLat, decimalLongitude: strLon, centre: [strLon, strLat], coordinates: [strLon, strLat], datum: "WGS84", state: metadata.state, nrm: metadata.nrm, lga: metadata.lga, locality: metadata.locality, mvg: metadata.mvg, mvs: metadata.mvs]], projects: [project.projectId], name: "Project area for " + grantId]
-                sites << siteService.create(values)
-            }
-            def result = [result:sites]
-            render result as JSON
-        } else {
-            render "EMPTY"
-        }
     }
 
     def updateSiteCentrePoint(String grantId, Double lat, Double lon) {

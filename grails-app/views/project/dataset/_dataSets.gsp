@@ -20,6 +20,9 @@
         <tbody data-bind="foreach:dataSets">
         <tr>
             <td class="actions">
+                <a class="btn btn-container btn-sm" data-bind="attr:{href:viewUrl}">
+                    <i class="fa fa-eye" title="View this dataset"></i>
+                </a>
                 <a class="btn btn-container btn-sm" data-bind="attr:{href:editUrl}">
                     <i class="fa fa-edit" title="Edit this dataset"></i>
                 </a>

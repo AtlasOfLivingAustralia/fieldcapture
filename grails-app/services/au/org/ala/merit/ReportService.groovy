@@ -15,12 +15,15 @@ class ReportService {
     public static final String REPORT_APPROVED = 'published'
     public static final String REPORT_SUBMITTED = 'pendingApproval'
     public static final String REPORT_NOT_APPROVED = 'unpublished'
+    public static final String REPORT_CANCELLED = 'cancelled'
 
     public static final int HOME_PAGE_IMAGE_SIZE = 500
 
     public static final String REPORT_TYPE_SINGLE_ACTIVITY = 'Single'
     public static final String REPORT_TYPE_STAGE_REPORT = 'Activity'
     public static final String REPORT_TYPE_ADJUSTMENT = 'Adjustment'
+    public static final String REPORT_ACTIVITY_TYPE = 'RLP Core Services annual report'
+    public static final String OUTPUT_TYPE = 'RLP - Core services annual report'
 
     static enum ReportMode {
         VIEW,
@@ -52,7 +55,7 @@ class ReportService {
         index++ // Start at the report after the submitted/approved one (or index 0 if none was found)
 
         int sequenceNo = index + 1
-        List reports = new ReportGenerator().generateReports(reportConfig, reportOwner, sequenceNo, latestApprovedReportPeriodEnd)
+        List reports = new ReportGenerator().generateReports(reportConfig, reportOwner, sequenceNo, latestApprovedReportPeriodEnd, existingReports)
 
         for (Map report: reports) {
             // Update or create new reports
@@ -82,11 +85,11 @@ class ReportService {
         log.info("name: " + existingReport.name + " - " + report.name)
         log.info("fromDate: " + existingReport.fromDate + " - " + report.fromDate)
         log.info("toDate: " + existingReport.toDate + " - " + report.toDate)
-        if (isSubmittedOrApproved(existingReport)) {
+        if (excludesNotApproved(existingReport)) {
 
             boolean approved = isApproved(existingReport)
             String reason = "Changing project start date"
-            reject(existingReport.reportId, "Dates change", reason)
+            reject(existingReport.reportId, ["Dates change"], reason)
 
             update(report)
 
@@ -112,7 +115,7 @@ class ReportService {
         // Ensure the reports are sorted in Date order
         existingReports = (existingReports?:[]).sort{it.toDate}
 
-        int index = existingReports.findLastIndexOf {isSubmittedOrApproved(it)}
+        int index = existingReports.findLastIndexOf {excludesNotApproved(it)}
 
         regenerateReports(existingReports, reportConfig, reportOwner, index)
 
@@ -136,11 +139,11 @@ class ReportService {
      * @return true if any report in the supplied list has been submitted or approval or approved.
      */
     boolean includesSubmittedOrApprovedReports(List reports) {
-        return (reports?.find {isSubmittedOrApproved(it)} != null)
+        return (reports?.find {excludesNotApproved(it)} != null)
     }
 
-    boolean isSubmittedOrApproved(Map report) {
-        return report.publicationStatus == REPORT_SUBMITTED || report.publicationStatus == REPORT_APPROVED
+    boolean excludesNotApproved(Map report) {
+        return report.publicationStatus == REPORT_SUBMITTED || report.publicationStatus == REPORT_APPROVED || report.publicationStatus == REPORT_CANCELLED
     }
 
     boolean isApproved(Map report) {
@@ -292,18 +295,34 @@ class ReportService {
      * Rejects/returns a report and sends an email notifying relevant users this action has occurred.
      * @param reportId The id of the report to reject.
      * @param reportActivityIds The ids of the activities associated with the report.
+     * @param reason Free text reason why the report was rejected
+     * @param reasonCategories One or more (categorised) reasons why the report was rejected
      * @param reportOwner Properties of the entity that "owns" the report (e.g. the Project, Organisation, Program).
      * @param ownerUsersAndRoles Users to be notified of the action.
      * @param emailTemplate The template to use when sending the email
      */
-    Map rejectReport(String reportId, List reportActivityIds, String reason, Map reportOwner, List ownerUsersAndRoles, EmailTemplate emailTemplate) {
+    Map rejectReport(String reportId, List reportActivityIds, String reason, List reasonCategories, Map reportOwner, List ownerUsersAndRoles, EmailTemplate emailTemplate) {
 
-        Map resp = reject(reportId, "", reason)
+        Map resp = reject(reportId, reasonCategories, reason)
         Map report = get(reportId)
 
         if (!resp.error) {
             activityService.rejectActivitiesForPublication(reportActivityIds)
-            emailService.sendEmail(emailTemplate, [reportOwner:reportOwner, report:report, reason:reason], ownerUsersAndRoles, RoleService.GRANT_MANAGER_ROLE)
+            emailService.sendEmail(emailTemplate, [reportOwner:reportOwner, report:report, categories: reasonCategories, reason:reason], ownerUsersAndRoles, RoleService.GRANT_MANAGER_ROLE)
+        }
+        else {
+            return [success:false, error:resp.error]
+        }
+        return [success:true]
+    }
+
+    Map cancelReport(String reportId, List reportActivityIds, String reason, Map reportOwner, List ownerUsersAndRoles) {
+
+        Map resp = cancel(reportId, "", reason)
+        Map report = get(reportId)
+
+        if (!resp.error) {
+            activityService.cancelActivitiesForPublication(reportActivityIds)
         }
         else {
             return [success:false, error:resp.error]
@@ -391,8 +410,12 @@ class ReportService {
 
     }
 
-    def reject(String reportId, String category, String reason) {
-        webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl')+"report/returnForRework/${reportId}", [comment:reason, category:category])
+    def reject(String reportId, List categories, String reason) {
+        webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl')+"report/returnForRework/${reportId}", [comment:reason, categories:categories])
+    }
+
+    def cancel(String reportId, String category, String reason) {
+        webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl')+"report/cancel/${reportId}", [comment:reason, category:category])
     }
 
     def create(report) {
@@ -405,7 +428,7 @@ class ReportService {
 
     Map reset(String reportId) {
         Map report = get(reportId)
-        if (isSubmittedOrApproved(report)) {
+        if (excludesNotApproved(report)) {
             return [success:false, error:"Cannot delete data for an approved or submitted report"]
         }
 
@@ -474,7 +497,7 @@ class ReportService {
 
     Map firstReportWithDataByCriteria(List allReports, Closure criteria) {
         Map firstReportWithData = allReports?.findAll{hasData(it)}.min(criteria)
-        Map firstSubmittedOrApprovedReport = allReports?.findAll{isSubmittedOrApproved(it)}.min(criteria)
+        Map firstSubmittedOrApprovedReport = allReports?.findAll{excludesNotApproved(it)}.min(criteria)
 
 
         [firstReportWithData, firstSubmittedOrApprovedReport].findAll()?.min(criteria)
@@ -482,7 +505,7 @@ class ReportService {
 
     Map lastReportWithDataByCriteria(List allReports, Closure criteria) {
         Map lastReportWithData = allReports?.findAll{hasData(it)}.max(criteria)
-        Map lastSubmittedOrApprovedReport = allReports?.findAll{isSubmittedOrApproved(it)}.max(criteria)
+        Map lastSubmittedOrApprovedReport = allReports?.findAll{excludesNotApproved(it)}.max(criteria)
 
 
         [lastReportWithData, lastSubmittedOrApprovedReport].findAll()?.min(criteria)
@@ -888,7 +911,7 @@ class ReportService {
 
     private boolean canEdit(String userId, Map report, Map activity) {
         // Submitted or approved reports are not editable.
-        if (isSubmittedOrApproved(report)) {
+        if (excludesNotApproved(report)) {
             return false
         }
 
@@ -896,4 +919,19 @@ class ReportService {
         return !activity.lock || (activity.lock.userId == userId)
 
     }
+
+    /**
+     * Returns a map of the previous report model based on the parameters
+     * (date passed from the json object and the report activity type)
+     */
+    Map getPreviousReportModel(Map params) {
+        Map model = [:]
+        List<Map> reports = search(managementUnitId:params.managementUnitId,activityType:REPORT_ACTIVITY_TYPE,dateProperty:'toDate',startDate:params.startDate, endDate:params.endDate)
+        if (reports) {
+            Map activity = activityService.get(reports[0].activityId)
+            model.data = activity.outputs.find{it.name == OUTPUT_TYPE}.data
+        }
+        model
+    }
+
 }

@@ -24,18 +24,20 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
     function DataSetSummary(dataSet) {
 
         this.editUrl = config.editDataSetUrl + '?dataSetId='+dataSet.dataSetId;
+        this.viewUrl = config.viewDataSetUrl + '?dataSetId='+dataSet.dataSetId;
         this.name = dataSet.name;
         this.progress = dataSet.progress;
         this.deleteDataSet = function() {
-            bootbox.confirm("Are you sure?", function() {
-                projectService.deleteDataSet(dataSet.dataSetId).done(function() {
-                    blockUIWithMessage("Refreshing page...");
-                    window.location.href = config.returnToUrl;
-                });
+            bootbox.confirm("Are you sure?", function(yes) {
+                if (yes) {
+                    projectService.deleteDataSet(dataSet.dataSetId).done(function() {
+                        blockUIWithMessage("Refreshing page...");
+                        window.location.href = config.returnToUrl;
+                    });
+                }
             });
         };
     }
-
 };
 
 
