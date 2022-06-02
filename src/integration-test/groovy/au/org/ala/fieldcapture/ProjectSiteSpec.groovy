@@ -16,7 +16,7 @@ class ProjectSiteSpec extends StubbedCasSpec {
 
     def"I can view sites for a project as a project admin"() {
         setup: "User 2 is an editor for project_10"
-        loginAsReadOnlyUser(browser)
+        loginAsUser('2', browser)
 
         when:
         to ProjectIndex, 'project_10'
@@ -39,7 +39,7 @@ class ProjectSiteSpec extends StubbedCasSpec {
     def "Edit and Update site name and save successfully" (){
 
         setup:
-        loginAsMeritAdmin(browser)
+        loginAsUser('2', browser)
 
         when:
         to ProjectIndex, 'project_10'

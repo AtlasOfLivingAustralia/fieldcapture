@@ -13,7 +13,7 @@ class SiteUploadSpec extends StubbedCasSpec {
     def "I can upload a file"() {
         setup:
         String projectId = '1'
-        loginAsMeritAdmin(browser)
+        loginAsUser('1', browser)
 
         when:
         to RlpProjectPage, projectId
