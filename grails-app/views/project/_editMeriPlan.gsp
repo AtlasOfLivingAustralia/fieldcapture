@@ -9,15 +9,6 @@
 			<div class="alert alert-info">
 				Insert the allocated Internal Order number/s for this project.  The Internal Order number must be inserted as soon as it becomes available
 			</div>
-				<div class="form-group row">
-					<label for="changeProjectStartDate" class="col-form-label col-sm-2">Change Project Start Date</label>
-					<div class="col-sm-10">
-						<div class="input-group">
-							<fc:datePicker size="form-control form-control-sm" targetField="plannedStartDate.date" id="changeProjectStartDate" bs4="true" name="startDate" data-bind="disable:!canEditStartDate(), datepicker:plannedStartDate.date" data-validation-engine="validate[required, past[plannedEndDate]]" printable="${printView}"/>
-						</div>
-					</div>
-				</div>
-
 			<div class="form-group row">
 				<label class="col-form-label col-sm-2">Internal order number/s:</label>
 				<div class="col-sm-10">

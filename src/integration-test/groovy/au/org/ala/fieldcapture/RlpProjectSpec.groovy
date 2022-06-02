@@ -176,7 +176,7 @@ class RlpProjectSpec extends StubbedCasSpec {
     def "The project sites are displayed on the sites tab and are visible to editors"() {
         setup: "user 10 is an editor for project 1"
         String projectId = '1'
-        loginAsUser('10', browser)
+        loginAsReadOnlyUser(browser)
 
         when:
         to RlpProjectPage, projectId

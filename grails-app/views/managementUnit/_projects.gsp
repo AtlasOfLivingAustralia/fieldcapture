@@ -17,7 +17,7 @@
                 <g:each var="project" in="${programDetails.projects}">
                     <tr>
                         <td class="projectId"><a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}" >${project.externalId ?: project.grantId}</a></td>
-                        <td class="externalIds">${project.internalOrderId}</td>
+                        <td class="internalOrderId"><fc:externalIds externalIds="${project.externalIds}" idType="INTERNAL_ORDER_NUMBER"/></td>
                         <td class="name">${project.name?.encodeAsHTML()}</td>
                         <td class="startDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedStartDate)}</td>
                         <td class="endDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedEndDate)}</td>

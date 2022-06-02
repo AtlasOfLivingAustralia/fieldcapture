@@ -458,7 +458,7 @@ class ProjectController {
         }
     }
 
-    @PreAuthorise(accessLevel = 'siteReadOnly', redirectController = 'home', redirectAction = 'index')
+    @PreAuthorise(accessLevel = 'readOnly', redirectController = 'home', redirectAction = 'index')
     def downloadShapefile(String id) {
 
         def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "project/${id}.shp"
@@ -600,7 +600,7 @@ class ProjectController {
         render status: 200, text: 'ok'
     }
 
-    @PreAuthorise(accessLevel = 'admin')
+    @PreAuthorise(accessLevel = 'readOnly')
     def projectReport(String id, ProjectSummaryReportCommand projectSummaryReportCommand) {
         projectSummaryReportCommand()
     }
@@ -855,7 +855,7 @@ class ProjectController {
         }
     }
 
-    @PreAuthorise(accessLevel = 'readOnly')
+    @PreAuthorise(accessLevel = 'readOnly', redirectController = "home")
     def ajaxProjectSites(String id) {
         Map result = projectService.projectSites(id)
 

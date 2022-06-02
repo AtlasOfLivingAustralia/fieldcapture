@@ -565,11 +565,21 @@ var CategorisedReportsViewModel = function(allReports, order, availableReports, 
 var GrantManagerReportsViewModel = function(config) {
     var self = this;
     var projectService = new ProjectService(config.project, config);
-    self.plannedStartDate = ko.observable(config.reportOwner.startDate).extend({simpleDate: false});
+
+    var startDate;
+    var endDate;
+    if (projectService.isActive()) {
+            if (config.project.reports.length > 0) {
+                startDate = config.reportOwner.startDate;
+                endDate = config.reportOwner.endDate;
+            }
+    }
+    self.plannedStartDate = ko.observable(startDate).extend({simpleDate: false});
+    self.plannedEndDate = ko.observable(endDate).extend({simpleDate: false});
 
     self.anyReportData = ko.pureComputed(function() {
         var count = 0;
-        if (config.project.status == 'Active') {
+        if (projectService.isActive()) {
             _.each(config.project.reports, function (report){
                 if (report.progress == 'finished' || report.progress == 'started') {
                     count += 1;
@@ -580,36 +590,23 @@ var GrantManagerReportsViewModel = function(config) {
     });
 
     self.generateProjectReports = function () {
-        var jsData = {
-            plannedStartDate: self.plannedStartDate(),
-        };
-
-        var startDateSelector = "#generate-report input[data-bind*=plannedStartDate]";
-
-        var message;
-        if (!self.plannedStartDate()) {
-            message =  "The planned start date is a required field";
-        }
-        if (self.plannedStartDate() >= config.project.plannedEndDate) {
-            message =  "The project start date must be before the end date";
-        }
-
-        if (message) {
-            setTimeout(function() {
-                $(startDateSelector).validationEngine("showPrompt", message, "topRight", true);
-            }, 100);
-
-        } else {
+        $(config.datesFormSelector).validationEngine();
+        var result = $(config.datesFormSelector).validationEngine('validate');
+        if (result) {
+            var jsData = {
+                plannedStartDate: self.plannedStartDate(),
+                plannedEndDate: self.plannedEndDate(),
+            };
             projectService.saveProjectData(jsData);
         }
     }
 
-    self.isMeriPlanApproved = ko.pureComputed(function() {
-        if (!projectService.isApproved() && config.project.reports == '') {
-            return true;
-        } else {
-            return false;
+    self.isMeriPlanNotApproved = ko.pureComputed(function() {
+        var result = false;
+        if (!projectService.isApproved()) {
+            result = true;
         }
+         return result;
     });
 };
 
