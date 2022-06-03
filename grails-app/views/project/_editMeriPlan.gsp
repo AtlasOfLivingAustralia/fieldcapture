@@ -7,17 +7,17 @@
 		<b>Grant manager actions:</b>
 		<div data-bind="if:!canApprove()">
 			<div class="alert alert-info">
-				Insert the allocated Internal Order number/s for this project.  The Internal Order number must be inserted as soon as it becomes available
+				At least one Tech One Project Code or SAP Internal Order must be provided before the MERI plan can be approved
 			</div>
 			<div class="form-group row">
-				<label class="col-form-label col-sm-2">Internal order number/s:</label>
+				<label class="col-form-label col-sm-2">Financial system identifier/s:</label>
 				<div class="col-sm-10">
 					<external-ids params="externalIds:externalIds, externalIdTypes:externalIdTypes, validationNamespace:'meriPlanExternalId', validate:validateExternalIds"></external-ids>
 				</div>
 			</div>
 		</div>
 		<span class="grantManagerActionSpan">
-			<button type="button" data-bind="enable: canApproveMeriPlan, click:approvePlan" class="btn btn-sm btn-success"><i class="fa fa-check"></i> Approve MERI Plan</button>
+			<button type="button" data-bind="enable: canApproveMeriPlan, click:approvePlan, style:{'pointer-events': canApproveMeriPlan() ? 'all': 'none'}" class="btn btn-sm btn-success"><i class="fa fa-check"></i> Approve MERI Plan</button>
 			<button type="button" data-bind="click:rejectPlan" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> Reject MERI Plan</button>
 		</span>
 	</div>
@@ -30,7 +30,7 @@
 		<button type="button" data-bind="click: modifyPlan"  id="modify-plan" class="btn btn-sm btn-info">Modify MERI Plan</button>
 		<br/><br/>
 		<ul>
-			<li>"Modify MERI Plan" will allow project admin's to edit MERI plan information. </li>
+			<li>"Modify MERI Plan" will allow project administrators to edit MERI plan information. </li>
 			<li>Modifying the MERI plan will change the state of the project to "Not approved".</li>
 		</ul>
 	</div>

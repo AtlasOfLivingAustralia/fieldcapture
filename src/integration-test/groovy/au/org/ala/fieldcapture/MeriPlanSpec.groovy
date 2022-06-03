@@ -331,7 +331,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         at ProjectIndex
 
         Thread.sleep(10000)
-        !admin.projectSettings.internalOrderIdErrorDisplayed()
+        !admin.projectSettings.externalIdsErrorDisplayed()
         admin.projectSettings.externalIds.externalIds[0].externalId == '12345'
 
         when:
@@ -399,7 +399,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         waitFor{hasBeenReloaded()}
         at ProjectIndex
 
-        !admin.projectSettings.internalOrderIdErrorDisplayed()
+        !admin.projectSettings.externalIdsErrorDisplayed()
         admin.projectSettings.externalIds.externalIds[0].externalId == '12345'
 
         when:

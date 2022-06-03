@@ -216,7 +216,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         def result = service.approvePlan(projectId, [:])
 
         then:
-        result.error == "An internal order number must be supplied before the MERI Plan can be approved"
+        result.error == "A SAP internal order or TechOne code must be supplied before the MERI Plan can be approved"
     }
 
     def "plan should not be rejected if it's not been approved."(){

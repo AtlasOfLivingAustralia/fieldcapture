@@ -185,8 +185,8 @@ class ProjectController {
             project.remove('activities')
             model.overview.template = 'rlpOverview'
 
-            boolean showOrderNumber = userService.userHasReadOnlyAccess() || userService.userIsSiteAdmin()
-            model.overview.showOrderNumber = showOrderNumber
+            boolean showExternalIds = userService.userHasReadOnlyAccess() || userService.userIsSiteAdmin()
+            model.overview.showExternalIds = showExternalIds
 
             model.details.meriPlanTemplate = config.meriPlanTemplate ? config.meriPlanTemplate+"View" : RLP_MERI_PLAN_TEMPLATE+'View'
 
