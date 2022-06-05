@@ -12,7 +12,7 @@
                     <div class="card-body cardBody">
                         <ul role="group" data-bind="attr: {'aria-labelledby': 'facet-list-' + fnIndex() + '-header'}" class="facetValues facetGroupValues">
                             <!-- ko foreach: {data: f.terms, as: 't', noChildContext: true} -->
-                            <!-- ko if: tIndex() < max && t.term -->
+                            <!-- ko if: tIndex() < max && t.displayname -->
                             <li>
                                 <input type="checkbox" class="facetSelection" name="facetSelection" data-bind="value: getFQForTerm(fn.facet, t.term), checked: t.selected, attr: {'aria-label': t.term}">
                                 <a data-bind="text: t.displayname, attr: {href: generateFQLink(fn.facet, t.term)}"></a> (<!-- ko text: t.count --><!-- /ko -->)

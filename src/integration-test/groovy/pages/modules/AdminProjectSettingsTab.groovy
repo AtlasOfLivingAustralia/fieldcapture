@@ -24,8 +24,8 @@ class AdminProjectSettingsTab extends Module {
         saveChangesButton.click()
     }
 
-    def internalOrderIdErrorDisplayed() {
+    def externalIdsErrorDisplayed() {
         Thread.sleep(500)
-        $('.addExternalIdButtonformError.parentFormsettings-validation.formError').displayed
+        $('.parentFormsettings-validation.formError').displayed
     }
 }

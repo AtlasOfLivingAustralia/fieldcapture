@@ -64,7 +64,7 @@ describe("The data set summaries view models behave correctly", function () {
         dataSetsSummaryVM.dataSets[1].deleteDataSet();
 
         expect(bootbox.confirm).toHaveBeenCalled();
-        expect(projectService.deleteDataSet).toHaveBeenCalledWith('ds2')
+
     });
 
     function dataSet() {

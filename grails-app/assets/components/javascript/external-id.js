@@ -39,8 +39,15 @@ ko.components.register('external-ids', {
         var allExternalIdTypes = _.union(existingExternalIdTypes, params.externalIdTypes);
 
         self.externalIdTypes = _.map(allExternalIdTypes, function(idType) {
-            var label = _.isFunction($i18n) ? $i18n('label.externalId.'+idType, idType) : idType;
-            return {label:label, value:idType};
+            var labelValuePair = {
+                label:ko.observable(idType), value:idType
+            };
+            if (_.isFunction($i18n)) {
+                $i18nAsync('label.externalId.'+idType, idType, function(value) {
+                    labelValuePair.label(value);
+                });
+            };
+            return labelValuePair;
         });
 
         self.validationNamespace = params.validationNamespace;

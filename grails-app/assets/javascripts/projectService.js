@@ -15,7 +15,7 @@ ProjectStatus = {
 };
 
 PROJECT_EXTERNAL_ID_TYPES =  [
-    'INTERNAL_ORDER_NUMBER', 'GRANT_AWARD'
+    'TECH_ONE_CODE', 'INTERNAL_ORDER_NUMBER', 'GRANT_AWARD'
 ];
 
 /**
@@ -148,11 +148,11 @@ function ProjectService(project, options) {
                 }
             }).fail(function(data) {
                 $.unblockUI();
-                if (data.status == 500) {
-                    alert('An unhandled error occurred: ' + data.status + " Please refresh the page and try again");
+                if (data.status == 401) {
+                    alert('You do not have permission to delete this record.');
                 }
                 else {
-                    alert('You do not have permission to delete this record.');
+                    alert('An unhandled error occurred: ' + data.status + " Please refresh the page and try again");
                 }
             });
 
@@ -185,7 +185,7 @@ function ProjectService(project, options) {
             self.save(config.projectUpdateUrl, payload, message).done(function() {
                 self.saveStatus(config.approvalPlanUrl, approvalDetails);
             }).fail(function() {
-                bootbox.alert("There was an error saving the internal order number.  Please contact support");
+                bootbox.alert("There was an error saving the external ids.  Please contact support");
             });
         }
         else {
@@ -245,6 +245,10 @@ function ProjectService(project, options) {
         return project.status && (project.status.toLowerCase() === ProjectStatus.COMPLETED|| self.isTerminated());
     };
 
+    self.isActive = function(){
+        return project.status.toLowerCase() === 'active';
+    };
+
     self.isProjectDetailsLocked = ko.computed(function () {
             return self.isCompletedOrTerminated() || self.isSubmittedOrApproved();
     });
@@ -266,10 +270,12 @@ function ProjectService(project, options) {
         return self.areExternalIdsValid(project.externalIds);
     };
 
-
+    /** The list of external ids needs to include at least one SAP Internal Order or one Tech One Project Code */
     self.areExternalIdsValid = function(externalIds) {
+        var requiredIdTypes = ['INTERNAL_ORDER_NUMBER', 'TECH_ONE_CODE'];
         return _.find(externalIds, function (externalId) {
-            return externalId.idType == 'INTERNAL_ORDER_NUMBER' && externalId.externalId;
+            var typeMatches = _.contains(requiredIdTypes, externalId.idType);
+            return typeMatches && externalId.externalId && externalId.externalId.length > 0;
         });
     }
 

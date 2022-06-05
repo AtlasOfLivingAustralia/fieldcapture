@@ -1150,9 +1150,14 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
                         document.location.href = here;
                     }
                 }).fail(function(data) {
-                    bootbox.alert("An error occurred while deleting the sites.  Please contact support if the problem persists.", function() {
-                        document.location.href = here;
-                    })
+                    if (data.status == 401) {
+                        alert('You do not have permission to delete this record.');
+                    }
+                    else {
+                        bootbox.alert("An error occurred while deleting the sites.  Please contact support if the problem persists.", function() {
+                            document.location.href = here;
+                        })
+                    }
                 });
             }
         });

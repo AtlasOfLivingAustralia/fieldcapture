@@ -388,8 +388,8 @@ class ProjectService  {
         if (project.planStatus == PLAN_SUBMITTED) {
 
             //The MERI plan cannot be approved until an internal order number has been supplied for the project.
-            if(!project.externalIds?.find{it.idType == "INTERNAL_ORDER_NUMBER"}) {
-                return [error: 'An internal order number must be supplied before the MERI Plan can be approved']
+            if (!validateExternalIds(project.externalIds)) {
+                return [error: 'A SAP internal order or TechOne code must be supplied before the MERI Plan can be approved']
             }
 
             //When the MERI plan is first approved, the status is changed to "active"
@@ -406,6 +406,12 @@ class ProjectService  {
         }
         return [error:'Invalid plan status']
 
+    }
+
+    /** The list of external ids needs to include at least one SAP Internal Order or one Tech One Project Code */
+    private boolean validateExternalIds(List externalIds) {
+        List requiredIdTypes = ["INTERNAL_ORDER_NUMBER", "TECH_ONE_CODE"]
+        externalIds?.find{it.idType in requiredIdTypes && it.externalId}
     }
 
     def rejectPlan(String projectId) {

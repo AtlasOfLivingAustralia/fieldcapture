@@ -4,6 +4,7 @@ import grails.core.GrailsApplication
 import grails.core.GrailsClass
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
+import org.apache.http.HttpStatus
 
 import java.lang.reflect.Method
 
@@ -100,9 +101,15 @@ class AclInterceptor {
             }
 
             if (errorMsg) {
-                flash.message = errorMsg
-                redirect(controller: pa.redirectController(), action: pa.redirectAction(), id: entityId)
-                return false
+                if (!request.xhr) {
+                    flash.message = errorMsg
+                    redirect(controller: pa.redirectController(), action: pa.redirectAction(), id: entityId)
+                    return false
+                } else {
+                    response.status = HttpStatus.SC_UNAUTHORIZED
+                    return false
+                }
+
             }
         }
         true
