@@ -38,3 +38,15 @@ jobs:
           arguments: clientInstall
 
       - run: node_modules/karma/bin/karma start karma.conf.js --single-run --browsers ChromeHeadless
+
+      - name: Install elasticsearch
+        run: |
+          curl https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.16.3-amd64.deb -o elasticsearch.deb
+          sudo dpkg -i --force-confnew elasticsearch.deb
+          sudo chown -R elasticsearch:elasticsearch /etc/default/elasticsearch
+          sudo sh -c 'echo ES_JAVA_OPTS=\"-Xmx256m -Xms256m\" >> /etc/default/elasticsearch'
+          sudo service elasticsearch restart
+          sudo mkdir -p /data/fieldcapture/cache
+          sudo chmod o+xw /data
+          sudo chmod o+xw /data/fieldcapture
+          sudo chmod o+xw /data/fieldcapture/cache
