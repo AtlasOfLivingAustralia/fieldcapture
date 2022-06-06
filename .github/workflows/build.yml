@@ -76,9 +76,9 @@ jobs:
           arguments: clean
 
       - name: Publish the JAR to the repository
-          env:
-            TRAVIS_DEPLOY_USERNAME=${secrets.DeployUsername}
-            TRAVIS_DEPLOY_PASSWORD=${secrets.DeployPassword}
-          uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
+        uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
           with:
             arguments: publish
+        env:
+          TRAVIS_DEPLOY_USERNAME=${secrets.DeployUsername}
+          TRAVIS_DEPLOY_PASSWORD=${secrets.DeployPassword}
