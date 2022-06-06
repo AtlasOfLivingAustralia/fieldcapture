@@ -80,5 +80,5 @@ jobs:
         with:
           arguments: publish
         env:
-          TRAVIS_DEPLOY_USERNAME=${secrets.DeployUsername}
-          TRAVIS_DEPLOY_PASSWORD=${secrets.DeployPassword}
+          TRAVIS_DEPLOY_USERNAME: ${secrets.DeployUsername}
+          TRAVIS_DEPLOY_PASSWORD: ${secrets.DeployPassword}
