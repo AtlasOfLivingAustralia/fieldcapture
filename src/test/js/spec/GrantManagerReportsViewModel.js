@@ -50,17 +50,34 @@ describe("Tests for the GrantManagerReportsViewModel", function () {
         expect(viewModel.anyReportData()).toBe(false);
     });
 
-    it("checks if the meri plan is approved", function () {
-
-        var config = {project: {status:ProjectStatus.ACTIVE, planStatus: PlanStatus.APPROVED, reports:[]}, reportOwner: {startDate:'2021-06-29T14:00:00Z'}};
+    it("banner should not be displayed as the project is active and reports are generated", function () {
+        var report = {
+            reportId:"123",
+            fromDate:'2019-12-31T13:00:00Z',
+            toDate:'2020-06-29T14:00:00Z',
+            progress:'finished'
+        };
+        var config = {project: {status:ProjectStatus.ACTIVE, planStatus: PlanStatus.APPROVED, reports:[report]}, reportOwner: {startDate:'2021-06-29T14:00:00Z'}};
         var viewModel = new GrantManagerReportsViewModel(config);
-        expect(viewModel.isMeriPlanNotApproved()).toBe(false)
+        expect(viewModel.reportsAreGenerated()).toBeTruthy()
     });
 
-    it("checks if the meri plan is not approved", function () {
-        var config = {project: {status:ProjectStatus.ACTIVE, planStatus: PlanStatus.NOT_APPROVED, reports:[]}, reportOwner: {startDate:'2021-06-29T14:00:00Z', endDate:'2021-09-29T14:00:00Z'}};
+    it("banner should be displayed as the project is not active and the reports are not generated", function () {
+        var config = {project: {status:ProjectStatus.APPLICATION, planStatus: PlanStatus.NOT_APPROVED, reports:[]}, reportOwner: {startDate:'2021-06-29T14:00:00Z', endDate:'2021-09-29T14:00:00Z'}};
         var viewModel = new GrantManagerReportsViewModel(config);
-        expect(viewModel.isMeriPlanNotApproved()).toBeTruthy()
+        expect(viewModel.reportsAreGenerated()).toBe(false)
+    });
+
+    it("banner should be displayed as the legacy project is active, meri plan is not approved and the reports are generated", function () {
+        var report = {
+            reportId:"123",
+            fromDate:'2019-12-31T13:00:00Z',
+            toDate:'2020-06-29T14:00:00Z',
+            progress:'finished'
+        };
+        var config = {project: {status:ProjectStatus.ACTIVE, planStatus: PlanStatus.NOT_APPROVED, reports:[report]}, reportOwner: {startDate:'2021-06-29T14:00:00Z', endDate:'2021-09-29T14:00:00Z'}};
+        var viewModel = new GrantManagerReportsViewModel(config);
+        expect(viewModel.reportsAreGenerated()).toBeTruthy()
     });
 
     it("does populate the project start and end dates as report(s) been generated", function () {
