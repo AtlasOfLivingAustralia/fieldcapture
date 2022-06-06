@@ -27,6 +27,26 @@ jobs:
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
 
+      - name: Install and start elasticsearch
+        run: |
+        curl https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.16.3-amd64.deb -o elasticsearch.deb
+        sudo dpkg -i --force-confnew elasticsearch.deb
+        sudo chown -R elasticsearch:elasticsearch /etc/default/elasticsearch
+        sudo sh -c 'echo ES_JAVA_OPTS=\"-Xmx256m -Xms256m\" >> /etc/default/elasticsearch'
+        sudo service elasticsearch restart
+
+      - name: Setup required MERIT folders
+        run: |
+          sudo mkdir -p /data/fieldcapture/cache
+          sudo chmod o+xw /data
+          sudo chmod o+xw /data/fieldcapture
+          sudo chmod o+xw /data/fieldcapture/cache
+
+      - name: Install and start mongodb
+        uses: supercharge/mongodb-github-action@1.7.0
+        with:
+          mongodb-version: '4.0'
+
       - name: Build and run clover coverage report with Gradle
         uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
         with:
@@ -37,16 +57,8 @@ jobs:
         with:
           arguments: clientInstall
 
-      - run: node_modules/karma/bin/karma start karma.conf.js --single-run --browsers ChromeHeadless
+      - name: Run javascript unit tests
+        run: node_modules/karma/bin/karma start karma.conf.js --single-run --browsers ChromeHeadless
 
-      - name: Install elasticsearch
-        run: |
-          curl https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.16.3-amd64.deb -o elasticsearch.deb
-          sudo dpkg -i --force-confnew elasticsearch.deb
-          sudo chown -R elasticsearch:elasticsearch /etc/default/elasticsearch
-          sudo sh -c 'echo ES_JAVA_OPTS=\"-Xmx256m -Xms256m\" >> /etc/default/elasticsearch'
-          sudo service elasticsearch restart
-          sudo mkdir -p /data/fieldcapture/cache
-          sudo chmod o+xw /data
-          sudo chmod o+xw /data/fieldcapture
-          sudo chmod o+xw /data/fieldcapture/cache
+      - name: Run MERIT functional tests
+        run: ./src/main/scripts/runFunctionalTests.sh
