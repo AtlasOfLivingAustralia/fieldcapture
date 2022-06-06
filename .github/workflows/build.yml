@@ -1,6 +1,13 @@
 name: MERIT build
 
-on: [push]
+on:
+  push:
+    branches:
+      - githubactions
+      - dev
+      - master
+      - feature/**
+      - hotfix/**
 
 env:
   TZ: Australia/Canberra
@@ -62,3 +69,16 @@ jobs:
 
       - name: Run MERIT functional tests
         run: ./src/main/scripts/runFunctionalTests.sh
+
+      - name: Clean to remove clover instrumentation
+        uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
+        with:
+          arguments: clean
+
+      - name: Publish the JAR to the repository
+          env:
+            TRAVIS_DEPLOY_USERNAME=${secrets.DeployUsername}
+            TRAVIS_DEPLOY_PASSWORD=${secrets.DeployPassword}
+          uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
+          with:
+            arguments: publish
