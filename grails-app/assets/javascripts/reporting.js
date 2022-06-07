@@ -602,9 +602,9 @@ var GrantManagerReportsViewModel = function(config) {
     }
 
     self.reportsAreGenerated = ko.pureComputed(function() {
-        var result = false;
-        if (projectService.isActive() && config.project.reports.length > 0) {
-                result = true;
+        var result = true;
+        if (!projectService.isActive() && config.project.reports.length == 0) {
+                result = false;
         }
         return result;
     });

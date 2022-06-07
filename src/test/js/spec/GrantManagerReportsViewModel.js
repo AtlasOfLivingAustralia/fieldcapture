@@ -68,14 +68,14 @@ describe("Tests for the GrantManagerReportsViewModel", function () {
         expect(viewModel.reportsAreGenerated()).toBe(false)
     });
 
-    it("banner should be displayed as the legacy project is active, meri plan is not approved and the reports are generated", function () {
+    it("banner should not be displayed as the legacy project's status is application, meri plan is not approved but the reports are generated", function () {
         var report = {
             reportId:"123",
             fromDate:'2019-12-31T13:00:00Z',
             toDate:'2020-06-29T14:00:00Z',
             progress:'finished'
         };
-        var config = {project: {status:ProjectStatus.ACTIVE, planStatus: PlanStatus.NOT_APPROVED, reports:[report]}, reportOwner: {startDate:'2021-06-29T14:00:00Z', endDate:'2021-09-29T14:00:00Z'}};
+        var config = {project: {status:ProjectStatus.APPLICATION, planStatus: PlanStatus.NOT_APPROVED, reports:[report]}, reportOwner: {startDate:'2021-06-29T14:00:00Z', endDate:'2021-09-29T14:00:00Z'}};
         var viewModel = new GrantManagerReportsViewModel(config);
         expect(viewModel.reportsAreGenerated()).toBeTruthy()
     });
