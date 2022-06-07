@@ -443,7 +443,7 @@
         var max = $('#projectTable').data("max");
         var params = "max="+max+"&offset="+offset;
 
-        var query = '${params.query ? params.query.replace("'", "\\'") : ""}';
+        var query = '${params.query?.encodeAsJavaScript() ?: ""}';
         if (sort) {
             params += "&sort="+sort+"&order="+order;
         }
