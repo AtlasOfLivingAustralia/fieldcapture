@@ -601,12 +601,12 @@ var GrantManagerReportsViewModel = function(config) {
         }
     }
 
-    self.isMeriPlanNotApproved = ko.pureComputed(function() {
+    self.reportsAreGenerated = ko.pureComputed(function() {
         var result = false;
-        if (!projectService.isApproved()) {
-            result = true;
+        if (projectService.isActive() && config.project.reports.length > 0) {
+                result = true;
         }
-         return result;
+        return result;
     });
 };
 
