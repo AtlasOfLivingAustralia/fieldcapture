@@ -1,9 +1,12 @@
 package au.org.ala.merit
 
+import groovy.util.logging.Slf4j
+
 /** Represents a combination of an ecodata Score definition, and the results of evaluating that Score
  * in a particular context (usually a project or single report) as well as the project specific target for that score
  * if one has been defined
  */
+@Slf4j
 class Score {
 
     /** Project services/outputs that been delivered to 200% of the target are considered over delivered and produce a warning */
@@ -40,7 +43,12 @@ class Score {
      */
     void setTarget(target) {
         if (target) {
-            this.target = new BigDecimal(target)
+            try {
+                this.target = new BigDecimal(target)
+            }
+            catch (NumberFormatException e) {
+                log.warn("Invalid target set: "+target)
+            }
         }
         else {
             this.target = null
