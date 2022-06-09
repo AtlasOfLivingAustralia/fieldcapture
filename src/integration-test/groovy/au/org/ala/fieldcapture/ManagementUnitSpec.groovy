@@ -273,8 +273,10 @@ class ManagementUnitSpec extends StubbedCasSpec {
         starBtn.click()
 
         then:
-        starBtn.displayed == true
-        starBtn.text() == "Remove from favourites"
+        waitFor {
+            starBtn.text() == "Remove from favourites"
+        }
+
 
         when:
         to MyProjects
@@ -295,8 +297,8 @@ class ManagementUnitSpec extends StubbedCasSpec {
         starBtn.click()
 
         then:
-        starBtn.displayed == true
-        starBtn.text() == "Add to favourites"
-
+        waitFor {
+            starBtn.text() == "Add to favourites"
+        }
     }
 }

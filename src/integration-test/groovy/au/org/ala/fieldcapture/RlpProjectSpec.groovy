@@ -55,8 +55,8 @@ class RlpProjectSpec extends StubbedCasSpec {
         overview.startDate.text() == '01-07-2018'
         overview.endDate.text() == '01-07-2023'
         overview.projectFundingAmount.text() == '$100,000.00'
-        Thread.sleep(10000)
-        overview.internalOrderIds.text() == '1234565'
+        // The first of these is an SAP internal order number, the second a work order id
+        overview.externalIds*.text() == ['1234565', '1234565']
 
     }
 
@@ -176,7 +176,7 @@ class RlpProjectSpec extends StubbedCasSpec {
     def "The project sites are displayed on the sites tab and are visible to editors"() {
         setup: "user 10 is an editor for project 1"
         String projectId = '1'
-        loginAsReadOnlyUser(browser)
+        loginAsUser('10', browser)
 
         when:
         to RlpProjectPage, projectId

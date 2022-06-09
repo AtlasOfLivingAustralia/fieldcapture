@@ -1,5 +1,6 @@
 package au.org.ala.fieldcapture
 
+import pages.AdminTools
 import pages.MeriPlanPDFPage
 import pages.RlpProjectPage
 import spock.lang.Stepwise
@@ -18,6 +19,12 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
     def "The MERI Plan will display only sections specified in the program configuration"() {
 
         setup:
+        // Clear cache to ensure services are loaded correctly
+        loginAsAlaAdmin(browser)
+        to AdminTools
+        clearCache()
+        logout(browser)
+
         String projectId = 'p3'
         loginAsUser('1', browser)
 

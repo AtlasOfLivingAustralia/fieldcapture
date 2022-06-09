@@ -336,3 +336,12 @@ li.select2-search input {
 .outputs-without-targets .well, .outputTargets .well {
 	margin-bottom: 1rem;
 }
+
+input.invisibleValidationHolder {
+	height: 1px;
+	width: 1px;
+	padding: 0;
+	border: none;
+	color: transparent;
+	background-color: transparent;
+}

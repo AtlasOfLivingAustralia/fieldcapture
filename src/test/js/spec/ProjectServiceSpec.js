@@ -36,7 +36,7 @@ describe("ProjectService Spec", function () {
     });
 
 
-    it("MERI plans cannot be approved for projets with no internal order number", function () {
+    it("MERI plans cannot be approved for projects with no internal order number", function () {
         var project = {plannedStartDate: '2019-12-31T13:00:00Z', plannedEndDate: '2023-12-31T13:00:00Z'};
         var options = {excludeFinancialYearData: false};
         var projectService = new ProjectService(project, options);
@@ -125,4 +125,32 @@ describe("ProjectService Spec", function () {
         expect(projectService.isProjectDetailsLocked()).toEqual(true)
 
     });
+
+    it('Can check if project external ids contains at least one SAP order number or TechOne code', function() {
+        let project = {status: 'terminated'}
+        let options = {};
+        let projectService = new ProjectService(project, options)
+
+        let externalIds = [{idType:'INTERNAL_ORDER_NUMBER', externalId:'1234'}];
+        expect(projectService.areExternalIdsValid(externalIds)).toBeTruthy();
+
+        externalIds[0].idType = 'TECH_ONE_CODE';
+        expect(projectService.areExternalIdsValid(externalIds)).toBeTruthy();
+
+        externalIds[0].idType = 'WORK_ORDER_ID';
+        expect(projectService.areExternalIdsValid(externalIds)).toBeFalsy();
+
+        externalIds = [{idType:'INTERNAL_ORDER_NUMBER', externalId:null}];
+        expect(projectService.areExternalIdsValid(externalIds)).toBeFalsy();
+
+        externalIds = [{idType:'INTERNAL_ORDER_NUMBER', externalId:''}];
+        expect(projectService.areExternalIdsValid(externalIds)).toBeFalsy();
+
+        externalIds = [];
+        expect(projectService.areExternalIdsValid(externalIds)).toBeFalsy();
+
+        externalIds = null;
+        expect(projectService.areExternalIdsValid(externalIds)).toBeFalsy();
+
+    })
 });

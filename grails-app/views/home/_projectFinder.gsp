@@ -140,9 +140,9 @@
                                                 <div class="accordion mb-0">
                                                     <div class="card mb-0 border-0 p-0">
                                                         <div>
-                                                                <a class="projectTitle collapsed" id="proj_" href="#a_" data-toggle="collapse" data-id="" title="click to show/hide details">
-                                                                    <span class="showHideCaret">&#9658; </span><span class="projectTitleName">$name</span>
-                                                                </a>
+                                                            <a class="projectTitle collapsed" id="proj_" href="#a_" data-toggle="collapse" title="click to show/hide details">
+                                                                <span class="showHideCaret">&#9658; </span><span class="projectTitleName">$name</span>
+                                                            </a>
                                                             <a href="#" class="managementUnitLine pull-right">
                                                                 <small><i class="managementUnitName"></i></small>
                                                             </a>
@@ -443,7 +443,7 @@
         var max = $('#projectTable').data("max");
         var params = "max="+max+"&offset="+offset;
 
-        var query = '${params.query ? params.query.replace("'", "\\'") : ""}';
+        var query = '${params.query?.encodeAsJavaScript() ?: ""}';
         if (sort) {
             params += "&sort="+sort+"&order="+order;
         }
