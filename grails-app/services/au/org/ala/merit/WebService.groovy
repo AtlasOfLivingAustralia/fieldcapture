@@ -207,24 +207,24 @@ class WebService {
             def json = responseText(conn)
             return JSON.parse(json)
         } catch (ConverterException e) {
-            def error = ['error': "Failed to parse json. ${e.getClass()} ${e.getMessage()} URL= ${url}."]
+            def error = ['error': "Failed to parse json. ${e.getClass()} ${e.getMessage()} URL= ${url.encodeAsURL()}."]
             log.error error.error
             return error
         } catch (SocketTimeoutException e) {
-            def error = [error: "Timed out getting json. URL= ${url}."]
+            def error = [error: "Timed out getting json. URL= ${url.encodeAsURL()}."]
             println error
             return error
         } catch (ConnectException ce) {
             log.info "Exception class = ${ce.getClass().name} - ${ce.getMessage()}"
-            def error = [error: "ecodata service not available. URL= ${url}."]
+            def error = [error: "ecodata service not available. URL= ${url.encodeAsURL()}."]
             println error
             return error
         } catch (Exception e) {
             log.info "Exception class = ${e.getClass().name} - ${e.getMessage()}"
             def responseCode = conn?.responseCode?:""
-            def error = [error: "Status $responseCode returned from ${url}. Error: ${e.getMessage()}",
+            def error = [error: "Status $responseCode returned from ${url.encodeAsURL()}. Error: ${e.getMessage()}",
                          statusCode: responseCode,
-                         detail: conn?.errorStream?.text]
+                         detail: conn?.errorStream?.text.encodeAsHTML()]
             log.error error.error
             return error
         }
