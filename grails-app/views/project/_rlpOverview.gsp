@@ -93,7 +93,7 @@
                     </div>
 
                     <g:if test="${showExternalIds}">
-                        <g:each in="${project.externalIds?.collect{it.idType}.unique()}" var="externalIdType">
+                        <g:each in="${project.externalIds?.collect{it.idType}?.unique()}" var="externalIdType">
                         <div class="row mb-2">
                             <div class="col-sm-4 header-label"><g:message code="${'label.externalId.'+externalIdType}"/>/s</div>
                             <div class="col-sm-8 external-id"><fc:externalIds externalIds="${project.externalIds}" idType="${externalIdType}"/></div>

@@ -31,7 +31,10 @@ class ManagementUnitController {
     LinkGenerator grailsLinkGenerator
 
     def index(String id) {
-        def mu = managementUnitService.get(id)
+        Map mu = [:]
+        if (id) {
+            mu = managementUnitService.get(id)
+        }
 
         if (!mu || mu.error) {
             managementUnitNotFound(id, mu)

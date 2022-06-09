@@ -21,7 +21,10 @@ class ProgramController {
     ManagementUnitService managementUnitService
 
     def index(String id) {
-        def program = programService.get(id)
+        Map program = [:]
+        if (id) {
+            program = programService.get(id)
+        }
 
         if (!program || program.error) {
             programNotFound(id, program)

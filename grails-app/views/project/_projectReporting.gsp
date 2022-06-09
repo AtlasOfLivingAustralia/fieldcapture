@@ -1,15 +1,15 @@
 <div id="generate-report" class="validationEngineContainer">
     <g:if test="${user?.isCaseManager || fc.userIsAlaOrFcAdmin()}">
-        <div data-bind="if:isMeriPlanNotApproved()" class="required">
-        <div class="alert alert-info">
-            Project reports cannot be created until the MERI plan is approved and the project start date is confirmed
-        </div>
+        <div data-bind="if:!reportsAreGenerated()" class="required">
+            <div class="alert alert-info">
+                Project reports cannot be created until the MERI plan has been approved
+            </div>
         </div>
         <div data-bind="if:anyReportData" class="required">
             <div class="form-actions" >
                 <b>Grant manager actions:</b>
                 <div class="alert alert-info">
-                    Please ensure the project start date matches the project start date in the work order before pressing the "Generate Project Reports" button
+                    Please ensure the project start and end dates match the dates in the work order before pressing the "Generate Project Reports" button
                 </div>
                 <form id="reportingTabDatesForm">
                     <div class="row mb-2">
