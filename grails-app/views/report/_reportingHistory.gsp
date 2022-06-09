@@ -11,6 +11,7 @@
         <tr>
             <th>Name</th>
             <th>Status</th>
+            <th>Comment</th>
             <th>Date</th>
             <th>User</th>
         </tr>
@@ -20,6 +21,7 @@
             <tr>
                 <td>${change.name}</td>
                 <td>${change.status}</td>
+                <td>${change.comment}</td>
                 <td>${au.org.ala.merit.DateUtils.isoToDisplayFormat(change.date)}</td>
                 <td>${change.who}</td>
             </tr>
