@@ -188,7 +188,7 @@ class ReportService {
             report.statusChangeHistory.each { change ->
                 def changingUser = authService.getUserForUserId(change.changedBy)
                 def displayName = changingUser?changingUser.displayName:'unknown'
-                history << [name:report.name, date:change.dateChanged, who:displayName, status:change.status]
+                history << [name:report.name, date:change.dateChanged, who:displayName, status:change.status, comment: change.comment, categories: change.categories?.join(', ')]
             }
         }
         history.sort {it.dateChanged}
