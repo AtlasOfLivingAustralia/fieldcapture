@@ -138,7 +138,8 @@ var projectConfig = {
                 "model": {
                     "maximumPriorities": 1000,
                     "maxAdditionalOutcomes": 15,
-                    "priority": "Secondary Pest Investment Priority"
+                    "priority": "Secondary Pest Investment Priority",
+                    "title": "Benefits"
                 }
             },
             {
