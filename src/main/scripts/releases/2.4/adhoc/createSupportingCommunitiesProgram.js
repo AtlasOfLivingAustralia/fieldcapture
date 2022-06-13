@@ -6,7 +6,7 @@ var userId = '129333';
 let programName = "Supporting Communities Manage Pest Animals and Weeds";
 var parentProgram = createOrFindProgram(programName);
 
-var subprograms = ["On-ground management – focused on Threatened Species Strategy )2021-2031) Action Plan priority species and places"]
+var subprograms = ["On-ground management - focused on Threatened Species Strategy (2021-2031) Action Plan priority species and places"]
 createNewProgram(programName, subprograms);
 
 
