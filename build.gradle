@@ -170,7 +170,7 @@ dependencies {
     provided "io.methvin:directory-watcher:0.4.0"
 
     if (!Boolean.valueOf(inplace)) {
-        compile "org.grails.plugins:ecodata-client-plugin:4.0.2"
+        compile "org.grails.plugins:ecodata-client-plugin:4.1-SNAPSHOT"
     }
 }
 
