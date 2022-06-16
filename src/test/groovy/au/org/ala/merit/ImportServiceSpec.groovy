@@ -52,7 +52,7 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
         String shapefileId = 's1'
 
         when:
-        Map result = service.bulkImportSites(shapefile)
+        Map result = service.bulkImportSites(shapefile, false)
 
         then:
         1 * siteService.uploadShapefile(shapefile) >> [statusCode: HttpStatus.SC_OK, resp:[shp_id:shapefileId, "0":["GRANT_ID":"g1", "EXTERNAL_I":"e1"]]]
@@ -70,7 +70,7 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
         String shapefileId = 's1'
 
         when: "The shapefile matches a single project grant id, but not external id"
-        Map result = service.bulkImportSites(shapefile)
+        Map result = service.bulkImportSites(shapefile, false)
 
         then: "The shapefile can be loaded"
         1 * siteService.uploadShapefile(shapefile) >> [statusCode: HttpStatus.SC_OK, resp:[shp_id:shapefileId, "0":["GRANT_ID":"g1", "EXTERNAL_I":"e1"]]]
@@ -82,7 +82,7 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
         result.message.sites.size() == 1
 
         when: "The shapefile matches two projects with the same grant id"
-        result = service.bulkImportSites(shapefile)
+        result = service.bulkImportSites(shapefile, false)
 
         then: "The shapefile cannot be loaded"
         1 * siteService.uploadShapefile(shapefile) >> [statusCode: HttpStatus.SC_OK, resp:[shp_id:shapefileId, "0":["GRANT_ID":"g1", "EXTERNAL_I":"e1"]]]
@@ -95,6 +95,22 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
         result.message.errors.size() == 1
     }
 
+    def "The import service can test the site upload by performing a project match only"() {
+        setup:
+        MockMultipartFile shapefile = new MockMultipartFile("shapefile", "test.zip", "application/zip", new byte[0])
+        String shapefileId = 's1'
+
+        when:
+        Map result = service.bulkImportSites(shapefile, true)
+
+        then:
+        1 * siteService.uploadShapefile(shapefile) >> [statusCode: HttpStatus.SC_OK, resp:[shp_id:shapefileId, "0":["GRANT_ID":"g1", "EXTERNAL_I":"e1"]]]
+        1 * projectService.search([grantId:"g1", externalId:"e1"]) >> [resp:[projects:[[projectId:"p1", grantId: "g1"]]]]
+        1 * projectService.get('p1', _) >> [name:'p1 name', description:'p1 description']
+        0 * siteService.createSiteFromUploadedShapefile(shapefileId, "0", shapefileId+'-0', "g1 - Site 1", _, "p1", false) >> [success:true, siteId:'s1']
+        result.success == true
+        result.message.sites.size() == 1
+    }
 
     def "The import service can create projects that have been loaded and mapped via CSV"() {
         setup:

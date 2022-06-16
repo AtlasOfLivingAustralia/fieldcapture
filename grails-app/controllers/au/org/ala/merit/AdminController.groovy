@@ -449,7 +449,9 @@ class AdminController {
         if (request.respondsTo('getFile')) {
             def f = request.getFile('shapefile')
 
-            def result =  importService.bulkImportSites(f)
+            boolean matchProjectsOnly = params.getBoolean('matchProjectsOnly', false)
+
+            def result =  importService.bulkImportSites(f, matchProjectsOnly)
 
             flash.message = result.message
             render view:'tools'
