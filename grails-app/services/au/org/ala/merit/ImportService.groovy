@@ -462,7 +462,7 @@ class ImportService {
     /**
      * Bulk imports sites for many projects.  The supplied shapefile must have attributes GRANT_ID and EXTERNAL_I
      */
-    def bulkImportSites(MultipartFile shapefile) {
+    def bulkImportSites(MultipartFile shapefile, boolean matchProjectsOnly) {
         Map result = siteService.uploadShapefile(shapefile)
 
         cacheService.clear(PROJECTS_CACHE_KEY)
@@ -533,15 +533,22 @@ class ImportService {
                 def description = shape.attributes[siteDescriptionAttribute] ?: "Imported on ${now}"
                 def siteExternalId = shapeFileId+'-'+shape.id
 
-                def resp = siteService.createSiteFromUploadedShapefile(shapeFileId, shape.id, siteExternalId, name, description, project.projectId, false)
-                if (resp?.siteId) {
-                    projectDetails.sites << [siteId:resp.siteId, name:name, description:description]
+                if (matchProjectsOnly) {
                     sites << name
-                    log.info("Imported site: "+name)
+                    println("Site $name matches a project")
                 }
                 else {
-                    errors << resp
-                    log.warn("Error importing site: "+resp?.error?:"")
+                    println ("UHOH!!!!!!!!!!!!!!!!!")
+                    def resp = siteService.createSiteFromUploadedShapefile(shapeFileId, shape.id, siteExternalId, name, description, project.projectId, false)
+                    if (resp?.siteId) {
+                        projectDetails.sites << [siteId:resp.siteId, name:name, description:description]
+                        sites << name
+                        log.info("Imported site: "+name)
+                    }
+                    else {
+                        errors << resp
+                        log.warn("Error importing site: "+resp?.error?:"")
+                    }
                 }
             }
             return [success:true, message:[errors:errors, sites:sites]]
