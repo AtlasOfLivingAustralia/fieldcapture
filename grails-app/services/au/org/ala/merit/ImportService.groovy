@@ -535,10 +535,8 @@ class ImportService {
 
                 if (matchProjectsOnly) {
                     sites << name
-                    println("Site $name matches a project")
                 }
                 else {
-                    println ("UHOH!!!!!!!!!!!!!!!!!")
                     def resp = siteService.createSiteFromUploadedShapefile(shapeFileId, shape.id, siteExternalId, name, description, project.projectId, false)
                     if (resp?.siteId) {
                         projectDetails.sites << [siteId:resp.siteId, name:name, description:description]
