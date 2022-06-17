@@ -13,7 +13,7 @@ class ManagementUnitSpec extends StubbedCasSpec {
     static final String NO_PERMISSIONS_USER = "10"
     static final String EDITOR_USER = "4"
     static final String ADMIN_USER = "1"
-    static final String CASE_MANAGER_USER = "5"
+    static final String CASE_MANAGER_USER = "1001"
 
     def setupSpec() {
         useDataSet('dataset_mu')
@@ -60,7 +60,7 @@ class ManagementUnitSpec extends StubbedCasSpec {
         userId                 | aboutVisible | reportsVisible | sitesVisible | adminVisible
         NO_PERMISSIONS_USER    | true         | false          | false        | false
         EDITOR_USER            | true         | true           | true         | false
-        CASE_MANAGER_USER      | true         | true           | true         | false
+        CASE_MANAGER_USER      | true         | true           | true         | true
         ADMIN_USER             | true         | true           | true         | true
         GRANT_MANAGER_USER_ID  | true         | true           | true         | true
 

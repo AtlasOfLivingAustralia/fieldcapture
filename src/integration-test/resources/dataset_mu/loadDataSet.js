@@ -85,7 +85,7 @@ db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entity
 db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entityId:'test_mu', userId:'1001', accessLevel:'caseManager'});
 db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entityId:'test_mu_2', userId:'1', accessLevel:'admin'});
 db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entityId:'test_mu_2', userId:'4', accessLevel:'editor'});
-db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entityId:'test_mu_2', userId:'5', accessLevel:'caseManager'});
+db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entityId:'test_mu_2', userId:'1001', accessLevel:'caseManager'});
 db.userPermission.insert({entityType:'au.org.ala.ecodata.Organisation', entityId:'test_organisation', userId:'1', accessLevel:'admin'});
 
 
