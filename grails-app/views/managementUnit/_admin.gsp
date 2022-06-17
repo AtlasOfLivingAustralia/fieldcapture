@@ -1,9 +1,11 @@
 <div class="row">
     <div class="nav flex-column nav-pills col-3">
-        <g:if test="${fc.userIsSiteAdmin()}">
+        <g:if test="${fc.userIsSiteAdmin() || isAdmin}">
             <a class="nav-link active" data-toggle="pill" href="#edit-managementUnit-details" role="tab">Edit</a>
             <a id="mu-permissions-tab" class="nav-link" data-toggle="pill" href="#managementUnit-permissions" role="tab">Permissions</a>
             <a id="edit-documents-tab" class="nav-link" data-toggle="pill" href="#edit-documents" role="tab">Documents</a>
+        </g:if>
+        <g:if test="${fc.userIsSiteAdmin()}">
             <a class="nav-link" data-toggle="pill" href="#reporting" role="tab">Reporting</a>
         </g:if>
         <g:if test="${fc.userIsAlaOrFcAdmin()}">
@@ -17,7 +19,7 @@
     </div>
 
     <div class="tab-content col-9">
-        <g:if test="${fc.userIsSiteAdmin()}">
+        <g:if test="${fc.userIsSiteAdmin() || isAdmin}">
             <div class="tab-pane active" id="edit-managementUnit-details">
                 <h4>Administrator actions</h4>
 

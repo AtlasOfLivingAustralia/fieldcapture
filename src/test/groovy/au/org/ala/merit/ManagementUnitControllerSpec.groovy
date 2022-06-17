@@ -92,6 +92,48 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
         model.content.admin.visible == true
     }
 
+    def "the admin tab is not visible for management unit grant managers"() {
+        String managementUnitId = 'p1'
+        userService.getUser() >> [userId:'u1']
+        managementUnitService.get(managementUnitId) >> [managementUnitId:managementUnitId, name:"test"]
+        userService.getMembersOfManagementUnit(managementUnitId) >> [members:[[userId:'u1', role:'caseManager']]]
+        managementUnitService.getProjects(managementUnitId) >>[projects:[]]
+
+        when:
+        Map model = controller.index(managementUnitId)
+
+        then:
+        1 * userService.canUserEditManagementUnit("u1", managementUnitId) >> true
+        1 * userService.isManagementUnitStarredByUser(_, _) >> [isManagementUnitStarredByUser:true]
+
+        model.content.size() == 4
+        model.content.about.visible == true
+        model.content.projects.visible == true
+        model.content.sites.visible == true
+        model.content.admin.visible == false
+    }
+
+    def "the admin tab is not visible for management unit editors"() {
+        String managementUnitId = 'p1'
+        userService.getUser() >> [userId:'u1']
+        managementUnitService.get(managementUnitId) >> [managementUnitId:managementUnitId, name:"test"]
+        userService.getMembersOfManagementUnit(managementUnitId) >> [members:[[userId:'u1', role:'editor']]]
+        managementUnitService.getProjects(managementUnitId) >>[projects:[]]
+
+        when:
+        Map model = controller.index(managementUnitId)
+
+        then:
+        1 * userService.canUserEditManagementUnit("u1", managementUnitId) >> true
+        1 * userService.isManagementUnitStarredByUser(_, _) >> [isManagementUnitStarredByUser:true]
+
+        model.content.size() == 4
+        model.content.about.visible == true
+        model.content.projects.visible == true
+        model.content.sites.visible == true
+        model.content.admin.visible == false
+    }
+
     def "read only users should be able to see the permission access in the admin content"() {
         String managementUnitId = 'p1'
         userService.getUser() >> [userId: 'u1']
