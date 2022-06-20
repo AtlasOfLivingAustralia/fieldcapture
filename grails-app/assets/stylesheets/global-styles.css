@@ -926,3 +926,9 @@ span.status {
 .outputTargets > .col-sm-4 > .well > .progress > span.progress-label, .progress > .progress-label {
 	margin-top: 0.6rem;
 }
+
+.progress-bar.bg-overdelivered, .badge-overdelivered {
+	background-color: #ec971f;
+	border-color: #d58512;
+	color: #fff;
+}

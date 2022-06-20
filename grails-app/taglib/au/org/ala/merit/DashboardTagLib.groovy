@@ -120,8 +120,8 @@ class DashboardTagLib {
         def result = score.result?.result ?: 0
         def percentComplete = result / target * 100
 
-        String progressBarClass = (percentComplete >= PERCENT_OVER_LIMIT) ? "bar progress-bar bg-danger" : "bar progress-bar"
-        String badgeClass = (percentComplete >= PERCENT_OVER_LIMIT) ? "badge badge-danger" : ""
+        String progressBarClass = (percentComplete >= PERCENT_OVER_LIMIT) ? "bar progress-bar bg-overdelivered" : "bar progress-bar"
+        String badgeClass = (percentComplete >= PERCENT_OVER_LIMIT) ? "badge badge-overdelivered" : ""
 
         out << "<strong class='helpText'>${score.label}${helpText(score, attrs)}</strong>"
         if (percentComplete >= PERCENT_OVER_LIMIT) {
