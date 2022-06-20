@@ -932,3 +932,13 @@ span.status {
 	border-color: #d58512;
 	color: #fff;
 }
+
+
+input.invisibleValidationHolder {
+	height: 1px;
+	width: 1px;
+	padding: 0;
+	border: none;
+	color: transparent;
+	background-color: transparent;
+}
