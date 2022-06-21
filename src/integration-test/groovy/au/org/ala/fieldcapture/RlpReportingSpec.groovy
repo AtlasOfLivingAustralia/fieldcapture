@@ -305,7 +305,7 @@ class RlpReportingSpec extends StubbedCasSpec {
 
     }
 
-    def "The not required button is visible to a Site Admin user"() {
+    def "The Site Admin user can mark the report as not required"() {
         setup:
         String projectId = '1'
         loginAsMeritAdmin(browser)
@@ -326,7 +326,28 @@ class RlpReportingSpec extends StubbedCasSpec {
         projectReports.reports[0].isSubmitted()
 
         and:"The not required button is visible to the unsubmitted report and to the site admin"
-        projectReports.reports[1].notRequired()
+        projectReports.reports[2].notRequired()
+
+
+        when:"the site admin clicks the not required button"
+        projectReports.reports[2].cancelReport()
+
+        then:
+        waitFor {
+            projectReports.reasonModal.displayed
+        }
+
+        when: "the site admin enters the reason and confirm the cancellation"
+        waitFor 20, {
+            projectReports.cancellationReason()
+            projectReports.confirmCancellation()
+        }
+
+        then:
+        waitFor { hasBeenReloaded() }
+
+        and:
+        projectReports.reports[2].isSubmitted()
 
     }
 

@@ -57,4 +57,8 @@ class ReportSummaryLine extends Module {
     def returnReport() {
         returnButton.click()
     }
+
+    def cancelReport() {
+        cancelReport.click()
+    }
 }
