@@ -133,7 +133,7 @@ class ProjectController {
         project.priorities = new JSONArray(config.priorities ?: [])
         project.outcomes = new JSONArray(config.outcomes ?: [])
         project.hasApprovedOrSubmittedReports = reportService.includesSubmittedOrApprovedReports(project.reports)
-
+        project.isProjectNotActiveAndHasAnyReport = ((project.status != projectService.ACTIVE_STATUS) && (project?.reports?.size() > 0))
 
         def meriPlanVisible = config.includesContent(ProgramConfig.ProjectContent.MERI_PLAN)
         def risksAndThreatsVisible = config.includesContent(ProgramConfig.ProjectContent.RISKS_AND_THREATS) && user?.hasViewAccess
@@ -185,8 +185,8 @@ class ProjectController {
             project.remove('activities')
             model.overview.template = 'rlpOverview'
 
-            boolean showOrderNumber = userService.userHasReadOnlyAccess() || userService.userIsSiteAdmin()
-            model.overview.showOrderNumber = showOrderNumber
+            boolean showExternalIds = userService.userHasReadOnlyAccess() || userService.userIsSiteAdmin()
+            model.overview.showExternalIds = showExternalIds
 
             model.details.meriPlanTemplate = config.meriPlanTemplate ? config.meriPlanTemplate+"View" : RLP_MERI_PLAN_TEMPLATE+'View'
 
@@ -205,7 +205,7 @@ class ProjectController {
             boolean reportsVisible = config.includesContent(ProgramConfig.ProjectContent.REPORTING) && userHasViewAccess
             Map reportingTab = [label: 'Reporting', visible:reportsVisible, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true, services: config.services, scores:scores, hideDueDate:true, isAdmin:user?.isAdmin, isGrantManager:user?.isCaseManager]
             if (reportingTab.visible) {
-                reportingTab.reportOrder = config?.projectReports?.collect{[category:it.category, description:it.description]} ?: []
+                reportingTab.reportOrder = config?.projectReports?.collect{[category:it.category, description:it.description, rejectionReasonCategoryOptions:it.rejectionReasonCategoryOptions?:[]]} ?: []
                 project.reports?.each { Map report ->
                     ReportConfig reportConfig = ((ProgramConfig)config).findProjectReportConfigForReport(report)
                     report.isAdjustable = reportConfig?.isAdjustable()
@@ -458,7 +458,7 @@ class ProjectController {
         }
     }
 
-    @PreAuthorise(accessLevel = 'admin', redirectController = 'home', redirectAction = 'index')
+    @PreAuthorise(accessLevel = 'readOnly', redirectController = 'home', redirectAction = 'index')
     def downloadShapefile(String id) {
 
         def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "project/${id}.shp"
@@ -600,7 +600,7 @@ class ProjectController {
         render status: 200, text: 'ok'
     }
 
-    @PreAuthorise(accessLevel = 'admin')
+    @PreAuthorise(accessLevel = 'readOnly')
     def projectReport(String id, ProjectSummaryReportCommand projectSummaryReportCommand) {
         projectSummaryReportCommand()
     }
@@ -855,7 +855,7 @@ class ProjectController {
         }
     }
 
-    @PreAuthorise(accessLevel = 'editor')
+    @PreAuthorise(accessLevel = 'readOnly', redirectController = "home")
     def ajaxProjectSites(String id) {
         Map result = projectService.projectSites(id)
 

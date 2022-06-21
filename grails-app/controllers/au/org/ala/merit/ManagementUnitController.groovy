@@ -31,7 +31,10 @@ class ManagementUnitController {
     LinkGenerator grailsLinkGenerator
 
     def index(String id) {
-        def mu = managementUnitService.get(id)
+        Map mu = [:]
+        if (id) {
+            mu = managementUnitService.get(id)
+        }
 
         if (!mu || mu.error) {
             managementUnitNotFound(id, mu)
@@ -119,7 +122,7 @@ class ManagementUnitController {
             displayedPrograms << [program:program, projects: projectsInProgramGroup, servicesWithScores:servicesWithScores[programId], primaryOutcomes:primaryOutcomes, secondaryOutcomes:secondaryOutcomes]
         }
 
-        List reportOrder = mu.config?.managementUnitReports?.collect{[category:it.category, description:it.description]} ?: []
+        List reportOrder = mu.config?.managementUnitReports?.collect{[category:it.category, description:it.description, rejectionReasonCategoryOptions:it.rejectionReasonCategoryOptions?:[]]} ?: []
 
         [about   : [label: 'Management Unit Overview',visible: true, stopBinding: false, type: 'tab',
                     mu: mu,
@@ -468,7 +471,7 @@ class ManagementUnitController {
 
         def reportDetails = request.JSON
 
-        def result = managementUnitService.rejectReport(id, reportDetails.reportId, reportDetails.reason, reportDetails.category)
+        def result = managementUnitService.rejectReport(id, reportDetails.reportId, reportDetails.reason, reportDetails.categories)
 
         render result as JSON
     }
@@ -584,5 +587,19 @@ class ManagementUnitController {
         } else {
             render status: 400, text: 'Required params not provided: userId, managementUnitId'
         }
+    }
+
+    /**
+     * Pre-pops some report field values based from the previous report contents
+     * @param managementUnitId
+     * @return
+     */
+    def previousReportContents(String managementUnitId) {
+        Map model = reportService.getPreviousReportModel(params)
+        Map response = [
+                managementUnitId: managementUnitId,
+                model: model
+        ]
+        render response as JSON
     }
 }

@@ -245,10 +245,10 @@ class ManagementUnitService {
         return reportService.approveReport(reportId, reportData.reportActivities, reason, reportData.managementUnit, reportData.members, EmailTemplate.RLP_CORE_SERVICES_REPORT_APPROVED_EMAIL_TEMPLATE)
     }
 
-    def rejectReport(String programId, String reportId, String reason, String category) {
+    def rejectReport(String programId, String reportId, String reason, List categories) {
         Map reportData = setupReportLifeCycleChange(programId, reportId)
 
-        return reportService.rejectReport(reportId, reportData.reportActivities, reason, reportData.managementUnit, reportData.members, EmailTemplate.RLP_CORE_SERVICES_REPORT_RETURNED_EMAIL_TEMPLATE)
+        return reportService.rejectReport(reportId, reportData.reportActivities, reason, categories, reportData.managementUnit, reportData.members, EmailTemplate.RLP_CORE_SERVICES_REPORT_RETURNED_EMAIL_TEMPLATE)
     }
 
     /**

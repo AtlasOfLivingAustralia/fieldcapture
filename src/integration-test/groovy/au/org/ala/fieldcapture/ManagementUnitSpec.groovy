@@ -13,6 +13,7 @@ class ManagementUnitSpec extends StubbedCasSpec {
     static final String NO_PERMISSIONS_USER = "10"
     static final String EDITOR_USER = "4"
     static final String ADMIN_USER = "1"
+    static final String CASE_MANAGER_USER = "1001"
 
     def setupSpec() {
         useDataSet('dataset_mu')
@@ -46,7 +47,7 @@ class ManagementUnitSpec extends StubbedCasSpec {
         }
 
         when:
-        to ManagementUnitPage, "test_mu"
+        to ManagementUnitPage, "test_mu_2"
 
         then:
         waitFor { at ManagementUnitPage }
@@ -59,25 +60,9 @@ class ManagementUnitSpec extends StubbedCasSpec {
         userId                 | aboutVisible | reportsVisible | sitesVisible | adminVisible
         NO_PERMISSIONS_USER    | true         | false          | false        | false
         EDITOR_USER            | true         | true           | true         | false
+        CASE_MANAGER_USER      | true         | true           | true         | true
         ADMIN_USER             | true         | true           | true         | true
         GRANT_MANAGER_USER_ID  | true         | true           | true         | true
-
-    }
-
-    def "Permissions page in the admin tab is visible to users with Read Only Access role for the management unit"() {
-
-        setup:
-        loginAsReadOnlyUser(browser)
-
-        when:
-        to ManagementUnitPage, "test_mu"
-
-        then:
-        waitFor { at ManagementUnitPage }
-        overviewBtn.displayed == true
-        reportsTab.displayed == true
-        sitesTab.displayed == true
-        adminTab.displayed == true
 
     }
 
@@ -233,7 +218,7 @@ class ManagementUnitSpec extends StubbedCasSpec {
 
     }
 
-    def "Management Unit Admin Page"() {
+    def "As a Merit Admin all the menus in the Management Unit Admin Page will be accessible"() {
         setup:
         loginAsMeritAdmin(browser)
 
@@ -259,6 +244,87 @@ class ManagementUnitSpec extends StubbedCasSpec {
        adminTabPane.adminColumn[5].text() == "Configuration"
     }
 
+    def "Permissions and Documents pages in the admin tab is visible to users with Site Read Only Access role"() {
+
+        setup:
+        loginAsReadOnlyUser(browser)
+
+        when:
+        to ManagementUnitPage, "test_mu"
+
+        then:
+        waitFor { at ManagementUnitPage }
+        overviewBtn.displayed == true
+        reportsTab.displayed == true
+        sitesTab.displayed == true
+        adminTab.displayed == true
+
+        when:
+        adminTab.click()
+
+        then:
+        waitFor 10, {
+            adminTabPane.displayed
+        }
+        adminTabPane.adminColumn.size() == 2
+        adminTabPane.adminColumn[0].text() == "Permissions"
+        adminTabPane.adminColumn[1].text() == "Documents"
+
+    }
+
+    def "Edit, Permissions and Documents pages in the admin tab is visible to users with Admin roles under that management unit"() {
+        loginAsUser(ADMIN_USER, browser)
+
+        when:
+        to ManagementUnitPage, "test_mu"
+
+        then:
+        waitFor { at ManagementUnitPage }
+        overviewBtn.displayed == true
+        reportsTab.displayed == true
+        sitesTab.displayed == true
+        adminTab.displayed == true
+
+        when:
+        adminTab.click()
+
+        then:
+        waitFor 10, {
+            adminTabPane.displayed
+        }
+        adminTabPane.adminColumn.size() == 3
+        adminTabPane.adminColumn[0].text() == "Edit"
+        adminTabPane.adminColumn[1].text() == "Permissions"
+        adminTabPane.adminColumn[2].text() == "Documents"
+    }
+
+    def "Edit, Permissions, Documents and Reporting pages in the admin tab is visible to users with Site Officer role"() {
+        loginAsGrantManager(browser)
+
+        when:
+        to ManagementUnitPage, "test_mu_2"
+
+        then:
+        waitFor { at ManagementUnitPage }
+        overviewBtn.displayed == true
+        reportsTab.displayed == true
+        sitesTab.displayed == true
+        adminTab.displayed == true
+
+        when:
+        adminTab.click()
+
+        then:
+        waitFor 10, {
+            adminTabPane.displayed
+        }
+        adminTabPane.adminColumn.size() == 4
+        adminTabPane.adminColumn[0].text() == "Edit"
+        adminTabPane.adminColumn[1].text() == "Permissions"
+        adminTabPane.adminColumn[2].text() == "Documents"
+        adminTabPane.adminColumn[3].text() == "Reporting"
+    }
+
     def "Add/Remove MU to Favourites"() {
         setup:
         loginAsReadOnlyUser(browser)
@@ -273,8 +339,10 @@ class ManagementUnitSpec extends StubbedCasSpec {
         starBtn.click()
 
         then:
-        starBtn.displayed == true
-        starBtn.text() == "Remove from favourites"
+        waitFor {
+            starBtn.text() == "Remove from favourites"
+        }
+
 
         when:
         to MyProjects
@@ -295,8 +363,8 @@ class ManagementUnitSpec extends StubbedCasSpec {
         starBtn.click()
 
         then:
-        starBtn.displayed == true
-        starBtn.text() == "Add to favourites"
-
+        waitFor {
+            starBtn.text() == "Add to favourites"
+        }
     }
 }

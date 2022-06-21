@@ -554,7 +554,7 @@ class OrganisationController {
         }
         def reportDetails = request.JSON
 
-        def result = organisationService.rejectReport(id, reportDetails.reportId, reportDetails.reason, reportDetails.category)
+        def result = organisationService.rejectReport(id, reportDetails.reportId, reportDetails.reason, reportDetails.categories)
 
         render result as JSON
     }

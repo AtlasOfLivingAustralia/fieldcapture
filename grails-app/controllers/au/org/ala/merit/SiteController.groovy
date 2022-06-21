@@ -141,6 +141,7 @@ class SiteController {
         }
     }
 
+    @PreAuthorise(accessLevel = 'editor')
     def ajaxDeleteSitesFromProject(String id){
 
         def payload = request.JSON
@@ -241,7 +242,7 @@ class SiteController {
         String projectId = params.projectId
         if (!projectService.canUserEditProject(userService.getCurrentUserId(), projectId)) {
             flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${params.projectId}"
-            redirect(url: params.returnTo)
+            redirect(controller:'project', action:'index', id: params.projectId)
         }
         else if (request.respondsTo('getFile')) {
 

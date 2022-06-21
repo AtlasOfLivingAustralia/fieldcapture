@@ -22,6 +22,8 @@ class ReportService {
     public static final String REPORT_TYPE_SINGLE_ACTIVITY = 'Single'
     public static final String REPORT_TYPE_STAGE_REPORT = 'Activity'
     public static final String REPORT_TYPE_ADJUSTMENT = 'Adjustment'
+    public static final String REPORT_ACTIVITY_TYPE = 'RLP Core Services annual report'
+    public static final String OUTPUT_TYPE = 'RLP - Core services annual report'
 
     static enum ReportMode {
         VIEW,
@@ -87,7 +89,7 @@ class ReportService {
 
             boolean approved = isApproved(existingReport)
             String reason = "Changing project start date"
-            reject(existingReport.reportId, "Dates change", reason)
+            reject(existingReport.reportId, ["Dates change"], reason)
 
             update(report)
 
@@ -186,7 +188,7 @@ class ReportService {
             report.statusChangeHistory.each { change ->
                 def changingUser = authService.getUserForUserId(change.changedBy)
                 def displayName = changingUser?changingUser.displayName:'unknown'
-                history << [name:report.name, date:change.dateChanged, who:displayName, status:change.status]
+                history << [name:report.name, date:change.dateChanged, who:displayName, status:change.status, comment: change.comment, categories: change.categories?.join(', ')]
             }
         }
         history.sort {it.dateChanged}
@@ -293,18 +295,20 @@ class ReportService {
      * Rejects/returns a report and sends an email notifying relevant users this action has occurred.
      * @param reportId The id of the report to reject.
      * @param reportActivityIds The ids of the activities associated with the report.
+     * @param reason Free text reason why the report was rejected
+     * @param reasonCategories One or more (categorised) reasons why the report was rejected
      * @param reportOwner Properties of the entity that "owns" the report (e.g. the Project, Organisation, Program).
      * @param ownerUsersAndRoles Users to be notified of the action.
      * @param emailTemplate The template to use when sending the email
      */
-    Map rejectReport(String reportId, List reportActivityIds, String reason, Map reportOwner, List ownerUsersAndRoles, EmailTemplate emailTemplate) {
+    Map rejectReport(String reportId, List reportActivityIds, String reason, List reasonCategories, Map reportOwner, List ownerUsersAndRoles, EmailTemplate emailTemplate) {
 
-        Map resp = reject(reportId, "", reason)
+        Map resp = reject(reportId, reasonCategories, reason)
         Map report = get(reportId)
 
         if (!resp.error) {
             activityService.rejectActivitiesForPublication(reportActivityIds)
-            emailService.sendEmail(emailTemplate, [reportOwner:reportOwner, report:report, reason:reason], ownerUsersAndRoles, RoleService.GRANT_MANAGER_ROLE)
+            emailService.sendEmail(emailTemplate, [reportOwner:reportOwner, report:report, categories: reasonCategories, reason:reason], ownerUsersAndRoles, RoleService.GRANT_MANAGER_ROLE)
         }
         else {
             return [success:false, error:resp.error]
@@ -406,8 +410,8 @@ class ReportService {
 
     }
 
-    def reject(String reportId, String category, String reason) {
-        webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl')+"report/returnForRework/${reportId}", [comment:reason, category:category])
+    def reject(String reportId, List categories, String reason) {
+        webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl')+"report/returnForRework/${reportId}", [comment:reason, categories:categories])
     }
 
     def cancel(String reportId, String category, String reason) {
@@ -915,4 +919,19 @@ class ReportService {
         return !activity.lock || (activity.lock.userId == userId)
 
     }
+
+    /**
+     * Returns a map of the previous report model based on the parameters
+     * (date passed from the json object and the report activity type)
+     */
+    Map getPreviousReportModel(Map params) {
+        Map model = [:]
+        List<Map> reports = search(managementUnitId:params.managementUnitId,activityType:REPORT_ACTIVITY_TYPE,dateProperty:'toDate',startDate:params.startDate, endDate:params.endDate)
+        if (reports) {
+            Map activity = activityService.get(reports[0].activityId)
+            model.data = activity.outputs.find{it.name == OUTPUT_TYPE}.data
+        }
+        model
+    }
+
 }

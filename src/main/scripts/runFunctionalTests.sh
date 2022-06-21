@@ -33,17 +33,17 @@ mongo ecodata-functional-test --eval 'db.project.count();'
 
 echo "Starting ecodata from `pwd`"
 ls -la
-GRADLE_OPTS="-Xmx512m" ./gradlew bootRun --no-daemon "-Dorg.gradle.jvmargs=-Xmx512m" -Dgrails.env=meritfunctionaltest &
+GRADLE_OPTS="-Xmx1g" ./gradlew bootRun "-Dorg.gradle.jvmargs=-Xmx1g" -Dgrails.env=meritfunctionaltest &
 sleep 120
 
 cd $MERIT_DIR
-GRADLE_OPTS="-Xmx512m" ./gradlew bootRun --no-daemon "-Dorg.gradle.jvmargs=-Xmx512m" -Dgrails.env=test -Dgrails.server.port.http=8087 &
+GRADLE_OPTS="-Xmx1g" ./gradlew bootRun "-Dorg.gradle.jvmargs=-Xmx1g" -Dgrails.env=test -Dgrails.server.port.http=8087 &
 sleep 180
 
 chmod u+x src/main/scripts/loadFunctionalTestData.sh
 
 echo "Running functional tests"
-./gradlew integrationTest --stacktrace -Dgeb.env=$GEB_ENV
+GRADLE_OPTS="-Xmx1g" ./gradlew integrationTest "-Dorg.gradle.jvmargs=-Xmx1g" --stacktrace -Dgeb.env=$GEB_ENV
 
 RETURN_VALUE=$?
 

@@ -92,6 +92,48 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
         model.content.admin.visible == true
     }
 
+    def "the admin tab is not visible for management unit grant managers"() {
+        String managementUnitId = 'p1'
+        userService.getUser() >> [userId:'u1']
+        managementUnitService.get(managementUnitId) >> [managementUnitId:managementUnitId, name:"test"]
+        userService.getMembersOfManagementUnit(managementUnitId) >> [members:[[userId:'u1', role:'caseManager']]]
+        managementUnitService.getProjects(managementUnitId) >>[projects:[]]
+
+        when:
+        Map model = controller.index(managementUnitId)
+
+        then:
+        1 * userService.canUserEditManagementUnit("u1", managementUnitId) >> true
+        1 * userService.isManagementUnitStarredByUser(_, _) >> [isManagementUnitStarredByUser:true]
+
+        model.content.size() == 4
+        model.content.about.visible == true
+        model.content.projects.visible == true
+        model.content.sites.visible == true
+        model.content.admin.visible == false
+    }
+
+    def "the admin tab is not visible for management unit editors"() {
+        String managementUnitId = 'p1'
+        userService.getUser() >> [userId:'u1']
+        managementUnitService.get(managementUnitId) >> [managementUnitId:managementUnitId, name:"test"]
+        userService.getMembersOfManagementUnit(managementUnitId) >> [members:[[userId:'u1', role:'editor']]]
+        managementUnitService.getProjects(managementUnitId) >>[projects:[]]
+
+        when:
+        Map model = controller.index(managementUnitId)
+
+        then:
+        1 * userService.canUserEditManagementUnit("u1", managementUnitId) >> true
+        1 * userService.isManagementUnitStarredByUser(_, _) >> [isManagementUnitStarredByUser:true]
+
+        model.content.size() == 4
+        model.content.about.visible == true
+        model.content.projects.visible == true
+        model.content.sites.visible == true
+        model.content.admin.visible == false
+    }
+
     def "read only users should be able to see the permission access in the admin content"() {
         String managementUnitId = 'p1'
         userService.getUser() >> [userId: 'u1']
@@ -294,11 +336,11 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
         when:
         request.method = "POST"
         params.id = muId
-        request.json = [reportId:reportId, reason:"test", category:"c1"]
+        request.json = [reportId:reportId, reason:"test", categories:["c1"]]
         controller.ajaxRejectReport()
 
         then:
-        1 * managementUnitService.rejectReport(muId, reportId, "test", "c1") >> result
+        1 * managementUnitService.rejectReport(muId, reportId, "test", ["c1"]) >> result
 
         and:
         result.status == 200
@@ -446,6 +488,45 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
 
         and:
         response.json == [status:HttpStatus.SC_OK]
+    }
+
+    def "the controller can pre-pop the value for some fields in RLP core services annual reporting"() {
+        setup:
+        Map stubModel = [data:[serviceSubcontracted2020_21:250000,
+                               investment2020_21:570855,
+                               organisationWorkForceByFinancialYear:
+                                       [
+                                               [organisationWorkforce2020_21:1, organisationWorkforceType:"Indigenous FTE deployed within the Service Provider's organisation engaged in delivering the Services"],
+                                               [organisationWorkforce2020_21:5, organisationWorkforceType:"TOTAL FTE Australian-based-workforce within the Service Provider's organisation engaged in delivering the Services"]
+                                       ],
+                               subcontractedWorkForceByFinancialYear:
+                                       [
+                                               [contractWorkforce2020_21:2, contractWorkforceType:"Indigenous FTE deployed on subcontracts to deliver the Services"],
+                                               [contractWorkforce2020_21:6, contractWorkforceType:"TOTAL FTE deployed on subcontracts to deliver the Services"]
+                                       ]
+                              ]
+
+                        ]
+
+        when:
+        params.managementUnitId = 'mu01'
+        params.startDate = "2020-07-01T13:00:00Z"
+        params.endDate = '2021-07-01T13:00:00Z'
+        controller.previousReportContents('mu01')
+
+        then:
+        1 * reportService.getPreviousReportModel(params) >> stubModel
+        println response.json
+        response.json.managementUnitId == 'mu01'
+        response.json.model.data.serviceSubcontracted2020_21 == 250000
+        response.json.model.data.investment2020_21 == 570855
+        response.json.model.data.organisationWorkForceByFinancialYear.size() == 2
+        response.json.model.data.organisationWorkForceByFinancialYear[0].organisationWorkforce2020_21 == 1
+        response.json.model.data.organisationWorkForceByFinancialYear[1].organisationWorkforce2020_21 == 5
+        response.json.model.data.subcontractedWorkForceByFinancialYear.size() == 2
+        response.json.model.data.subcontractedWorkForceByFinancialYear[0].contractWorkforce2020_21 == 2
+        response.json.model.data.subcontractedWorkForceByFinancialYear[1].contractWorkforce2020_21 == 6
+
     }
 
     private void setupAnonymousUser() {

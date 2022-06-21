@@ -21,7 +21,10 @@ class ProgramController {
     ManagementUnitService managementUnitService
 
     def index(String id) {
-        def program = programService.get(id)
+        Map program = [:]
+        if (id) {
+            program = programService.get(id)
+        }
 
         if (!program || program.error) {
             programNotFound(id, program)
@@ -66,7 +69,7 @@ class ProgramController {
         def hasProgramStories = blogs.find { it.type == 'Program Stories' }
         def hasPhotos = blogs.find { it.type == 'Photo' }
 
-        List reportOrder = program.config?.programReports?.collect{[category:it.category, description:it.description]} ?: []
+        List reportOrder = program.config?.programReports?.collect{[category:it.category, description:it.description, rejectionReasonCategoryOptions:it.rejectionReasonCategoryOptions?:[]]} ?: []
 
         // If the program is not visible, there is no point showing the dashboard or sites as both of these rely on
         // data in the search index to produce.
@@ -403,7 +406,7 @@ class ProgramController {
 
         def reportDetails = request.JSON
 
-        def result = programService.rejectReport(id, reportDetails.reportId, reportDetails.reason, reportDetails.category)
+        def result = programService.rejectReport(id, reportDetails.reportId, reportDetails.reason, reportDetails.categories)
 
         render result as JSON
     }

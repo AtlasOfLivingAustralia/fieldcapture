@@ -534,7 +534,7 @@ function MERIPlan(project, projectService, config) {
     self.canApprove = function() {
         var canApprove = projectService.canApproveMeriPlan();
         if(!canApprove) {
-            $('.grantManagerActionSpan').popover({content:'*An internal order number must be supplied before the MERI Plan can be approved', placement:'top', trigger:'hover'})
+            $('.grantManagerActionSpan').popover({content:'*At least one Tech One Project Code or SAP Internal Order must be provided before the MERI plan can be approved', placement:'top', trigger:'hover'})
         }
         return canApprove
     };

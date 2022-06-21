@@ -91,6 +91,10 @@ class UrlMappings {
             controller = 'program'
         }
 
+        "/rlp/" {
+            controller = 'program'
+        }
+
         "/$hub/rlp/$action/$id?" {
             controller = 'program'
         }

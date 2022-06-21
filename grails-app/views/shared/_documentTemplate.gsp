@@ -34,12 +34,14 @@
 
 <script id="imageDocEditTmpl" type="text/html">
     <div class="row">
+        <g:if test="${fc.userIsSiteAdmin() || isAdmin}">
         <div class="col-sm-1">
             <div class="btn-group document-edit-buttons">
                 <button class="btn btn-sm deleteDocument" type="button" data-bind="enable:!readOnly,click:$root.deleteDocument"><i class="fa fa-remove"></i></button>
                 <button class="btn btn-sm editDocument" type="button" data-bind="enable:!readOnly,click:$root.editDocumentMetadata"><i class="fa fa-edit"></i></button>
             </div>
         </div>
+        </g:if>
         <div class="col-sm-1">
             <a data-bind="attr:{href:url}" target="_blank">
                 <img class="media-object img-rounded" data-bind="attr:{src:thumbnailUrl, alt:name}" alt="document icon}">
@@ -63,12 +65,14 @@
 
 <script id="objDocEditTmpl" type="text/html">
     <div class="row">
+        <g:if test="${fc.userIsSiteAdmin() || isAdmin}">
         <div class="col-sm-1">
             <div class="btn-group  test1 document-edit-buttons">
                 <button class="btn btn-mini deleteDocument" type="button" data-bind="enable:!readOnly,click:$root.deleteDocument"><i class="fa fa-remove"></i></button>
                 <button class="btn btn-mini editDocument" type="button" data-bind="enable:!readOnly,click:$root.editDocumentMetadata"><i class="fa fa-edit"></i></button>
             </div>
         </div>
+        </g:if>
         <div class="col-sm-1">
             <a data-bind="attr:{href:url}">
                 <img class="media-object img-fluid" data-bind="attr:{src:filetypeImg(), alt:name}" alt="document icon}">

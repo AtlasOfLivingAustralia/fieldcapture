@@ -216,7 +216,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         def result = service.approvePlan(projectId, [:])
 
         then:
-        result.error == "An internal order number must be supplied before the MERI Plan can be approved"
+        result.error == "A SAP internal order or TechOne code must be supplied before the MERI Plan can be approved"
     }
 
     def "plan should not be rejected if it's not been approved."(){
@@ -387,7 +387,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         webService.getJson(_) >> project
         String reportId = 'r1'
         Map report = [reportId: reportId]
-        Map reportDetails = [reportId: reportId, activityIds: ['a1', 'a2'], reason:'unused']
+        Map reportDetails = [reportId: reportId, activityIds: ['a1', 'a2'], reason:'Testing', categories:['Other']]
         reportService.getReportsForProject(_) >> [report]
 
 
@@ -399,7 +399,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
 
         1 * projectConfigurationService.getProjectConfiguration(project) >> new ProgramConfig([:])
         1 * webService.getJson({ it.endsWith("permissions/getMembersForProject/" + projectId) }) >> projectRoles
-        1 * reportService.rejectReport(reportId, reportDetails.activityIds, reportDetails.reason, project, projectRoles, EmailTemplate.DEFAULT_REPORT_RETURNED_EMAIL_TEMPLATE) >> [success:true]
+        1 * reportService.rejectReport(reportId, reportDetails.activityIds, reportDetails.reason, reportDetails.categories, project, projectRoles, EmailTemplate.DEFAULT_REPORT_RETURNED_EMAIL_TEMPLATE) >> [success:true]
     }
 
     def "the project service should delegate to the report service to cancel a report"() {

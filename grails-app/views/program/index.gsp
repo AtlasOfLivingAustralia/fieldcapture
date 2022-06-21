@@ -98,7 +98,7 @@
     </div>
 
 </div>
-<g:render template="/shared/reportRejectionModalBs4"/>
+<g:render template="/shared/reportRejectionModal"/>
 <script type="text/html" id="loading">
 <asset:image id="img-spinner" width="50" height="50" src="loading.gif" alt="Loading"/>
 </script>

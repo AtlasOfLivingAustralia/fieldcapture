@@ -73,13 +73,13 @@ class ManagementUnitServiceSpec extends Specification implements ServiceUnitTest
         String reason = 'r1'
 
         when:
-        service.rejectReport(managementUnitId, reportId, reason, 'unused')
+        service.rejectReport(managementUnitId, reportId, reason, ['unused'])
 
         then:
         1 * webService.getJson({it.endsWith("/managementUnit/$managementUnitId")}) >> managementUnit
         1 * userService.getMembersOfManagementUnit(managementUnitId) >> [members:roles]
         1 * reportService.get(reportId) >> report
-        1 * reportService.rejectReport(reportId, [report.activityId], reason, managementUnit, [],  EmailTemplate.RLP_CORE_SERVICES_REPORT_RETURNED_EMAIL_TEMPLATE)
+        1 * reportService.rejectReport(reportId, [report.activityId], reason, ['unused'], managementUnit, [],  EmailTemplate.RLP_CORE_SERVICES_REPORT_RETURNED_EMAIL_TEMPLATE)
     }
 
     def "No reports will be regenerated if no categories are supplied"() {

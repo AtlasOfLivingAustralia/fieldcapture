@@ -45,7 +45,7 @@
                         <g:each var="f" in="${fqList}">
                             <g:set var="fqBits" value="${f?.tokenize(':')}"/>
                             <g:set var="newUrl"><fc:formatParams params="${params}" requiredParams="${reqParams}" excludeParam="${f}"/></g:set>
-                            <li><g:message code="label.${fqBits[0]}" default="${fqBits[0]?.encodeAsHTML()}"/>: <g:message code="label.${fqBits[1]}" default="${fqBits[1]?.encodeAsHTML().capitalize()}"/>
+                            <li><g:message code="label.${fqBits[0]}" default="${fqBits[0]?.encodeAsHTML()}"/>: <g:message code="label.${fqBits[1]}" default="${fqBits[1]?.encodeAsHTML()?.capitalize()}"/>
                                 <a href="${newUrl?:"?"}" class="btn btn-inverse btn-mini tooltips" title="remove filter" aria-label="remove filter">
                                     <i class="text-white fa fa-remove"></i></a>
                             </li>
@@ -140,9 +140,9 @@
                                                 <div class="accordion mb-0">
                                                     <div class="card mb-0 border-0 p-0">
                                                         <div>
-                                                                <a class="projectTitle collapsed" id="proj_" href="#a_" data-toggle="collapse" data-id="" title="click to show/hide details">
-                                                                    <span class="showHideCaret">&#9658; </span><span class="projectTitleName">$name</span>
-                                                                </a>
+                                                            <a class="projectTitle collapsed" id="proj_" href="#a_" data-toggle="collapse" title="click to show/hide details">
+                                                                <span class="showHideCaret">&#9658; </span><span class="projectTitleName">$name</span>
+                                                            </a>
                                                             <a href="#" class="managementUnitLine pull-right">
                                                                 <small><i class="managementUnitName"></i></small>
                                                             </a>

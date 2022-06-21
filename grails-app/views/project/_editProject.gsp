@@ -165,12 +165,17 @@
         <fc:iconHelp title="Start date">Date the project is intended to commence.</fc:iconHelp>
         </label>
         <div class="input-group input-append">
-            <g:if test="${canChangeProjectDates}">
-                    <fc:datePicker targetField="plannedStartDate.date" id="startDate" bs4="true" name="startDate" data-bind="disable:!canEditStartDate(), datepicker:plannedStartDate.date" data-validation-engine="validate[required, past[plannedEndDate]]" printable="${printView}" size="form-control form-control-sm dateControl"/>
-
+            <g:if test="${project.isProjectNotActiveAndHasAnyReport}">
+                <fc:datePicker targetField="plannedStartDate.date" id="startDate" bs4="true" name="startDate" data-bind="disable:true, datepicker:plannedStartDate.date" data-validation-engine="validate[required, past[plannedEndDate]]" printable="${printView}" size="form-control form-control-sm dateControl"/>
             </g:if>
             <g:else>
-                <input type="text" id="startDate" data-bind="value:plannedStartDate.formattedDate" disabled="disabled" size="form-control form-control-sm input-small"/>
+                <g:if test="${canChangeProjectDates}">
+                    <fc:datePicker targetField="plannedStartDate.date" id="startDate" bs4="true" name="startDate" data-bind="disable:!canEditStartDate(), datepicker:plannedStartDate.date" data-validation-engine="validate[required, past[plannedEndDate]]" printable="${printView}" size="form-control form-control-sm dateControl"/>
+
+                </g:if>
+                <g:else>
+                    <input type="text" id="startDate" data-bind="value:plannedStartDate.formattedDate" disabled="disabled" size="form-control form-control-sm input-small"/>
+                </g:else>
             </g:else>
         </div>
     </div>
@@ -179,7 +184,13 @@
         <fc:iconHelp title="End date">Date the project is intended to finish.</fc:iconHelp>
         </label>
         <div class="input-group input-append">
-            <fc:datePicker targetField="plannedEndDate.date" bs4="true" data-bind="disable:transients.fixedProjectDuration(), datepicker:plannedEndDate.date" name="endDate" data-validation-engine="validate[required, funcCall[validateProjectEndDate]]" printable="${printView}" size="form-control form-control-sm dateControl"/>
+            <g:if test="${project.isProjectNotActiveAndHasAnyReport}">
+                <fc:datePicker targetField="plannedEndDate.date" bs4="true" data-bind="disable:true, datepicker:plannedEndDate.date" name="endDate" data-validation-engine="validate[required, funcCall[validateProjectEndDate]]" printable="${printView}" size="form-control form-control-sm dateControl"/>
+            </g:if>
+            <g:else>
+                <fc:datePicker targetField="plannedEndDate.date" bs4="true" data-bind="disable:transients.fixedProjectDuration(), datepicker:plannedEndDate.date" name="endDate" data-validation-engine="validate[required, funcCall[validateProjectEndDate]]" printable="${printView}" size="form-control form-control-sm dateControl"/>
+            </g:else>
+
         </div>
 
     </div>
@@ -289,7 +300,8 @@
 
 <div class="row mb-2">
     <div class="col-sm-12">
-        <button data-bind="click:regenerateStageReports" class="btn btn-sm btn-warning">Re-create project stage reports</button>
+        <button data-bind="disable:!canRegenerateReports(), click:regenerateStageReports" class="btn btn-sm btn-warning">Re-create project reports</button>
+        <fc:iconHelp title="Re-create project">Re-create project reports will be disabled when the Project status is not Active.</fc:iconHelp>
     </div>
 </div>
 

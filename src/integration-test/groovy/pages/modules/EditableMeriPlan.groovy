@@ -92,7 +92,11 @@ class ServiceTargetRow extends Module {
     void selectService(String value) {
         waitFor {
             def options = $('.service option').collect{it.text() }
-            options.contains(value)
+            boolean found = options.contains(value)
+            if (!found) {
+                println "Option '$value' not found.  Options: are $options"
+            }
+            found
         }
         service = value
     }
