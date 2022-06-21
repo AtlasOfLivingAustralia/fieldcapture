@@ -43,19 +43,21 @@
     <p data-bind="visible:report.dateAdjusted"><span class="badge p-1 text-white badge-important">Report adjusted</span></p>
     <p><span class="badge p-1 text-white badge-warning">Report not submitted</span></p>
 
-<g:if test="${isAdmin || fc.userIsAlaOrFcAdmin()}">
-    <p>
-        <button class="btn btn-success btn-sm" data-bind="enable:complete,click:submitReport"
-                title="The reporting form must be marked as complete before this report can be submitted.">Submit report</button>
-    </p>
-    <span class="badge p-1 text-white badge-info" data-bind="if:progress() == 'started'">Reporting form incomplete</span>
-    <span class="badge p-1 text-white badge-success" data-bind="if:progress() == 'finished'">Reporting form complete</span>
-    <div class="mt-2" data-bind="visible:!hasData()">
+    <g:if test="${isAdmin || fc.userIsAlaOrFcAdmin()}">
         <p>
-            <button type="button" data-bind="click:cancelReport" class="btn btn-sm btn-danger"><i class="fa fa-remove icon-white"></i> Not required</button>
+            <button class="btn btn-success btn-sm" data-bind="enable:complete,click:submitReport"
+                    title="The reporting form must be marked as complete before this report can be submitted.">Submit report</button>
         </p>
-    </div>
-</g:if>
+        <span class="badge p-1 text-white badge-info" data-bind="if:progress() == 'started'">Reporting form incomplete</span>
+        <span class="badge p-1 text-white badge-success" data-bind="if:progress() == 'finished'">Reporting form complete</span>
+    </g:if>
+    <g:if test="${fc.userIsAlaOrFcAdmin()}">
+        <div class="mt-2" data-bind="visible:!hasData()">
+            <p>
+                <button type="button" data-bind="click:cancelReport" class="btn btn-sm btn-danger"><i class="fa fa-remove icon-white"></i> Not required</button>
+            </p>
+        </div>
+    </g:if>
 </script>
 
 <script id="approved" type="text/html">

@@ -230,6 +230,9 @@ class RlpReportingSpec extends StubbedCasSpec {
         then: "The editor is not able to submit the report"
         //projectReports.reports[0].markedAsComplete()
         !projectReports.reports[0].canBeSubmitted()
+
+        and:"The not required button is not visible to the editor"
+        !projectReports.reports[0].notRequired()
     }
 
     def "A project admin can submit the report"() {
@@ -246,7 +249,7 @@ class RlpReportingSpec extends StubbedCasSpec {
         when:
         reportingTab.click()
 
-        then:
+        then: "The submit button is visible to the project admin and able to verify that the report is mark as completed"
         waitFor { projectReports.displayed }
         projectReports.reports[0].markedAsComplete()
         projectReports.reports[0].canBeSubmitted()
@@ -279,6 +282,54 @@ class RlpReportingSpec extends StubbedCasSpec {
         }
     }
 
+    def "A project admin cannot mark the report as not required as the button is only visible to a Site Admin"() {
+        setup:
+        String projectId = '1'
+        loginAsUser('1', browser)
+
+        when:
+        to RlpProjectPage, projectId
+
+        then:
+        waitFor { at RlpProjectPage }
+
+        when:
+        reportingTab.click()
+
+        then: "The first report is marked as submitted"
+        waitFor { projectReports.displayed }
+        projectReports.reports[0].isSubmitted()
+
+        and:"The not required button is not visible to the project admin"
+        !projectReports.reports[0].notRequired()
+
+    }
+
+    def "The not required button is visible to a Site Admin user"() {
+        setup:
+        String projectId = '1'
+        loginAsMeritAdmin(browser)
+
+        when:
+        to RlpProjectPage, projectId
+
+        then:
+        waitFor { at RlpProjectPage }
+
+        when:
+        reportingTab.click()
+
+        then:
+        waitFor { projectReports.displayed }
+
+        then: "The first report is marked as submitted"
+        projectReports.reports[0].isSubmitted()
+
+        and:"The not required button is visible to the unsubmitted report and to the site admin"
+        projectReports.reports[1].notRequired()
+
+    }
+
     def "A user with the grant manager role can approve reports"() {
         setup:
         String projectId = '1'
@@ -294,6 +345,9 @@ class RlpReportingSpec extends StubbedCasSpec {
 
         then: "The first report is marked as submitted"
         projectReports.reports[0].isSubmitted()
+
+        and:"The not required button is not visible to the grant manager"
+        !projectReports.reports[0].notRequired()
 
         when:
         projectReports.reports[0].approve()

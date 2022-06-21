@@ -13,6 +13,7 @@ class ReportSummaryLine extends Module {
         submitButton(required:false) { $('button[data-bind*="submitReport"]') }
         approveButton(required:false) { $('button[data-bind*=approveReport]') }
         returnButton(required:false) { $('button[data-bind*=rejectReport]') }
+        cancelReport(required:false) { $('button[data-bind*=cancelReport]') }
     }
 
     def edit() {
@@ -29,6 +30,10 @@ class ReportSummaryLine extends Module {
 
     def canBeSubmitted() {
         submitButton.displayed
+    }
+
+    def notRequired() {
+        cancelReport.displayed
     }
 
     def isSubmitted() {
