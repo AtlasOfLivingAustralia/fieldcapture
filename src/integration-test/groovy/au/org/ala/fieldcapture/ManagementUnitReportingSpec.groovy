@@ -188,4 +188,38 @@ class ManagementUnitReportingSpec extends StubbedCasSpec {
         waitFor {hasBeenReloaded()}
 
     }
+
+    def "The not required button is not visible to a MU Admin user"() {
+        setup:
+        String managementUnitId = 'test_mu'
+        loginAsUser('1', browser)
+
+        when: "Display the reporting tab"
+        to ManagementUnitPage, managementUnitId
+        displayReportsTab()
+
+        then: "The first report is marked as submitted"
+        reportsTabPane.reports[0].isSubmitted()
+
+        and:"The not required button is not visible"
+        !reportsTabPane.reports[1].notRequired()
+
+    }
+
+    def "The not required button is visible to a Site Admin user"() {
+        setup:
+        String managementUnitId = 'test_mu'
+        loginAsMeritAdmin(browser)
+
+        when: "Display the reporting tab"
+        to ManagementUnitPage, managementUnitId
+        displayReportsTab()
+
+        then: "The first report is marked as submitted"
+        reportsTabPane.reports[0].isSubmitted()
+
+        and:"The not required button is not visible"
+        reportsTabPane.reports[1].notRequired()
+
+    }
 }
