@@ -21,6 +21,19 @@ class ProjectReports extends Module {
         projectStartDate(required:false) {$('#startDate')}
         projectEndDate(required:false) {$('#endDate')}
         generateButton(required:false, wait: 4){ $('#generateReports') }
+
+        reasonModal { $('#reason-modal') }
+        notRequiredReason { $('#reason-modal [id="reason"]') }
+    }
+
+    def cancellationReason() {
+        waitFor { notRequiredReason.displayed }
+        notRequiredReason.value('test reason')
+    }
+
+    def confirmCancellation() {
+        waitFor 10, { canSubmitDeclaration() }
+        $('#reason-modal [data-bind*="submit"]').click()
     }
 
     def acceptTerms() {
