@@ -839,6 +839,19 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         response.json == [message:'updated']
     }
 
+    def "The ajaxUpdate action is invoked from the Project's report tab with unmodified project start and end dates"() {
+        setup:
+        String projectId = 'p1'
+
+        when:
+        request.method = 'POST'
+        request.json = [plannedStartDate:'2022-06-09T14:00:00Z', plannedEndDate:'2024-06-29T14:00:00Z']
+        controller.ajaxUpdate(projectId)
+
+        then:
+        1 * projectService.update(projectId, [plannedStartDate:'2022-06-09T14:00:00Z', plannedEndDate:'2024-06-29T14:00:00Z']) >> [:]
+
+    }
 
 
     private Map stubPublicUser() {
