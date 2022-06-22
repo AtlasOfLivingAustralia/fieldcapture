@@ -44,6 +44,7 @@ var programConfig = {
                 "reportNameFormat": "Year %5$s - %6$s %7$d Outputs Report",
                 "reportingPeriodInMonths": 3,
                 "description": "",
+                "label": "Quarter",
                 "category": "Outputs Reporting",
                 "activityType": "RLP Output Report",
                 "canSubmitDuringReportingPeriod": true
@@ -55,6 +56,7 @@ var programConfig = {
                 "reportNameFormat": "Annual Progress Report %2$tY - %3$tY",
                 "reportingPeriodInMonths": 12,
                 "description": "",
+                "label": "Annual",
                 "category": "Annual Progress Reporting",
                 "activityType": "RLP Annual Report"
             },
@@ -66,6 +68,7 @@ var programConfig = {
                 "reportingPeriodInMonths": 36,
                 "multiple": false,
                 "description": "Before beginning Outcomes Report 1, please go to the Data set summary tab and complete a form for each data set collected for this project. Help with completing this form can be found in Section 10 of the [RLP MERIT User Guide](http://www.nrm.gov.au/my-project/monitoring-and-reporting-plan/merit)",
+                "label": "Outcomes Report 1",
                 "category": "Outcomes Report 1",
                 "reportsAlignedToCalendar": false,
                 "activityType": "RLP Short term project outcomes"
