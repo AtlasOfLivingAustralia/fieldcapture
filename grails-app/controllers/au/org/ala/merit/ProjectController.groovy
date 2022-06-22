@@ -365,8 +365,11 @@ class ProjectController {
         if (result.error) {
             render result as JSON
         } else {
-            //println "json result is " + (result as JSON)
-            render result.resp as JSON
+            if (result.resp) {
+                render result.resp as JSON
+            } else {
+                render statusCode:HttpStatus.SC_NOT_MODIFIED, resp:[message:'No modication made']
+            }
         }
     }
 

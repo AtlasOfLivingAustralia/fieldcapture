@@ -238,7 +238,10 @@
         <td>
 
         <p><g:uploadForm class="bulkUploadSites" action="bulkUploadSites">
-            <div><input id="bulkUploadSites"  type="file" name="shapefile"/></div>
+            <div>
+                <input id="bulkUploadSites"  type="file" name="shapefile"/>
+                <input type="checkbox" name="matchProjectsOnly"> Check project ids only
+            </div>
             Bulk loads sites from a shapefile.
         </g:uploadForm>
 
