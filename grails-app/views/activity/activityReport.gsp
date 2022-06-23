@@ -35,7 +35,8 @@
                 context:<fc:modelAsJavascript model="${context}"/>,
                 prepopUrlPrefix:"${grailsApplication.config.getProperty('grails.serverURL')}",
                 useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.PRODUCTION},
-                unlockActivityUrl: "${createLink(controller:'activity', action:'ajaxUnlock')}/<fc:currentUserId/>"
+                unlockActivityUrl: "${createLink(controller:'activity', action:'ajaxUnlock')}/<fc:currentUserId/>",
+                projectTargetsAndScoresUrl: "${createLink(controller:'project', action:'targetsAndScoresForActivity', id:activity.projectId, params:[activityId:activity.activityId])}"
             },
             here = document.location.href;
     </script>
@@ -124,7 +125,7 @@
                 reportSite = restoredSite.site
             } else {
 
-                reportSite = <fc:modelAsJavascript model="${reportSite}" default="{}"/>
+                reportSite = <fc:modelAsJavascript model="${reportSite}" default="{}"/>;
             }
 
             var projectArea = <fc:modelAsJavascript model="${projectArea}" default="{}"/>
@@ -146,12 +147,13 @@
             var reportMasterOptions = {
                 locked: locked,
                 activityUpdateUrl: fcConfig.activityUpdateUrl,
-                healthCheckUrl: fcConfig.healthCheckUrl
+                healthCheckUrl: fcConfig.healthCheckUrl,
+                projectTargetsAndScoresUrl: fcConfig.projectTargetsAndScoresUrl,
+                performOverDeliveryCheck: true
             };
             if (metaModel.supportsSites) {
                 // Workaround for problems with IE11 and leaflet draw
                 L.Browser.touch = false;
-
 
                 var mapOptions = {};
                 if (fcConfig.useGoogleBaseMap) {

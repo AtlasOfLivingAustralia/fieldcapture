@@ -92,6 +92,7 @@
                 deleteDataSetUrl: "${createLink(controller:'dataSet', action:'delete', id:project.projectId)}",
                 viewDataSetUrl: "${createLink(controller:'dataSet', action:'view', id:project.projectId)}",
                 unlockActivityUrl:"${createLink(controller:'activity', action:'ajaxUnlock')}",
+                projectTargetsAndScoresUrl: "${createLink(controller:'project', action:'targetsAndScoresForActivity', id:project.projectId)}",
                 i18nURL: "${g.createLink(controller: 'home', action: 'i18n')}",
                 returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 

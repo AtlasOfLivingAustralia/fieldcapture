@@ -1,6 +1,7 @@
-
-function ActivityViewModel (act, site, project, metaModel, themes) {
+//= require reportService.js
+function ActivityViewModel (act, site, project, metaModel, themes, config) {
     var self = this;
+    var options = config || {};
     self.activityId = act.activityId;
     self.description = ko.observable(act.description);
     self.notes = ko.observable(act.notes);
@@ -24,20 +25,39 @@ function ActivityViewModel (act, site, project, metaModel, themes) {
     self.transients.themes = $.map(themes || [], function (obj, i) { return obj.name });
     self.goToProject = function () {
         if (self.projectId) {
-            document.location.href = fcConfig.projectViewUrl + self.projectId;
+            document.location.href = options.projectViewUrl + self.projectId;
         }
     };
     self.goToSite = function () {
         if (self.siteId()) {
-            var url = fcConfig.siteViewUrl + self.siteId();
+            var url = options.siteViewUrl + self.siteId();
             if (self.projectId) {
                 url += '?projectId='+self.projectId;
             }
             document.location.href = url;
         }
     };
+
+    /**
+     * Displays a popup to the user if this report/activity
+     * contributes to over-delivery of project targets
+     */
+    self.checkForOverDelivery = function() {
+        var reportService = new ReportService(options);
+        reportService.findOverDeliveredTargets().done(function(result) {
+            if (!result || !result.length) {
+                return;
+            }
+            var message = reportService.formatOverDeliveryMessage(result);
+            bootbox.alert(message);
+        });
+    };
     if (metaModel.supportsPhotoPoints) {
         self.transients.photoPointModel = ko.observable(new PhotoPointViewModel(site, act));
+    }
+
+    if (options.performOverDeliveryCheck) {
+        self.checkForOverDelivery();
     }
 }
 

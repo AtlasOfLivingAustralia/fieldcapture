@@ -40,8 +40,8 @@ install:
   - true
 
 before_script:
-- nvm install 12.14.1
-- nvm use 12.14.1
+- nvm install 16.15.0
+- nvm use 16.15.0
 - node -v
 - npm install
 

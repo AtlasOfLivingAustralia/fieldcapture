@@ -1,7 +1,6 @@
 package au.org.ala.merit
 
 import au.org.ala.cas.util.AuthenticationCookieUtils
-import au.org.ala.merit.SettingPageType
 import bootstrap.Attribute
 import grails.converters.JSON
 import groovy.xml.MarkupBuilder
@@ -972,10 +971,5 @@ class FCTagLib {
         List ids = attrs.externalIds?.findAll{it.idType == type}
 
         out << ids.collect{it.externalId}.join(',')
-    }
-
-    def hasExternalId = { Map attrs ->
-        String type = attrs.idType
-        
     }
 }

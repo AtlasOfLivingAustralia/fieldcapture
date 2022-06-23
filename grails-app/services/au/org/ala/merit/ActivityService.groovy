@@ -237,7 +237,7 @@ class ActivityService {
     }
 
     Map getActivityMetadata(String activityType, Integer version = null) {
-        activityFormService.getActivityAndOutputMetadata(activityType, version)
+        activityFormService.getActivityAndOutputMetadata(activityType, version, true)
     }
 
     /**

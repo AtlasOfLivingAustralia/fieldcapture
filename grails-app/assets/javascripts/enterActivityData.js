@@ -1,4 +1,5 @@
 //= require forms-manifest.js
+//= require reportService.js
 //= require jquery-appear-original/index.js
 //= require_self
 function validateDateField(dateField) {
@@ -315,12 +316,17 @@ var Master = function (activityId, config) {
                     amplify.store(activityStorageKey, null);
                     self.dirtyFlag.isDirty(false);
 
-                    if (validate && !valid) {
-                        $.unblockUI();
-                        var message = 'Your changes have been saved. Please note, this report has required fields that are incomplete. You will not be able to submit this report (on the Reporting Tab) until all required fields have been completed.';
-                        bootbox.alert(message, function () {
-                            self.validate();
-                        });
+                    if (validate) {
+                        if (!valid) {
+                            $.unblockUI();
+                            var message = 'Your changes have been saved. Please note, this report has required fields that are incomplete. You will not be able to submit this report (on the Reporting Tab) until all required fields have been completed.';
+                            bootbox.alert(message, function () {
+                                self.validate();
+                            });
+                        }
+                        else if (config.performOverDeliveryCheck) {
+                            self.checkForOverDelivery();
+                        }
                     }
                     self.performSaveCallbacks(data, valid, saveCallback);
                 }
@@ -341,6 +347,18 @@ var Master = function (activityId, config) {
         }).fail(function() {
             $.unblockUI();
             handleSessionTimeout(localStorageFailed);
+        });
+    };
+
+    self.checkForOverDelivery = function() {
+        var reportService = new ReportService(config);
+        reportService.findOverDeliveredTargets().done(function(result) {
+            if (!result || !result.length) {
+                return;
+            }
+            var message = reportService.formatOverDeliveryMessage(result);
+            message += 'If the reported data is correct, no action is required for this report.';
+            bootbox.alert(message);
         });
     };
 

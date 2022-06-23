@@ -55,7 +55,8 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         roleServiceStub.getRoles() >> []
         reportServiceStub.getReportsForProject(_) >> []
         activityServiceStub.activitiesForProject(_) >> []
-
+        projectService.grailsApplication = grailsApplication
+        realProjectService.grailsApplication = grailsApplication
     }
 
 
@@ -262,6 +263,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         controller.viewReport(projectId, reportId)
 
         then:
+        1 * projectService.doesReportBelongToProject(projectId, reportId) >> true
         1 * reportService.activityReportModel(reportId, ReportService.ReportMode.VIEW, null) >> activityReportModel
         1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity) >> activityReportModel.metaModel
         1 * projectService.getProgramConfiguration(project) >> new ProgramConfig([requiresActivityLocking: true])
@@ -285,9 +287,11 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         when:
         controller.editReport(projectId, reportId)
         then:
+        1 * projectService.doesReportBelongToProject(projectId, reportId) >> true
         1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> activityReportModel
         1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity) >> activityReportModel.metaModel
         1 * projectService.getProgramConfiguration(project) >> new ProgramConfig([requiresActivityLocking: true])
+
         view == '/activity/activityReport'
         model.context == project
         model.contextViewUrl == '/project/index/'+projectId
@@ -310,6 +314,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         controller.editReport(projectId, reportId)
 
         then: "the report activity should not be locked"
+        1 * projectService.doesReportBelongToProject(projectId, reportId) >> true
         // Override the default behaviour from setup
         1 * projectService.getProgramConfiguration(project) >> new ProgramConfig([requiresActivityLocking: true])
         0 * reportService.lockForEditing(_)
@@ -335,6 +340,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         controller.editReport(projectId, reportId)
 
         then:
+        1 * projectService.doesReportBelongToProject(projectId, reportId) >> true
         1 * reportService.lockForEditing(project.reports[0])
         1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity) >> activityReportModel.metaModel
 
@@ -357,6 +363,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         controller.editReport(projectId, reportId)
 
         then:
+        1 * projectService.doesReportBelongToProject(projectId, reportId) >> true
         0 * reportService.lockForEditing(project.reports[0])
         1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity) >> activityReportModel.metaModel
 
@@ -385,6 +392,123 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         then:
         response.json.error != null
         response.json.status == HttpStatus.SC_UNAUTHORIZED
+    }
+
+    def "Users cannot request to view a report not owned by the project they have access to"() {
+        setup:
+        String projectId = 'p1'
+        String reportId = 'r1'
+
+        when:
+        controller.viewReport(projectId, reportId)
+
+        then:
+        1 * projectService.doesReportBelongToProject(projectId, reportId) >> false
+        0 * _._
+
+        and:
+        response.redirectUrl == '/project/index/'+projectId
+    }
+
+    def "Users cannot request to edit a report not owned by the project they have access to"() {
+        setup:
+        String projectId = 'p1'
+        String reportId = 'r1'
+
+        when:
+        controller.editReport(projectId, reportId)
+
+        then:
+        1 * projectService.doesReportBelongToProject(projectId, reportId) >> false
+        0 * _._
+
+        and:
+        response.redirectUrl == '/project/index/'+projectId
+    }
+
+
+    def "Users cannot request to print a report not owned by the project they have access to"() {
+        setup:
+        String projectId = 'p1'
+        String reportId = 'r1'
+
+        when:
+        controller.printableReport(projectId, reportId)
+
+        then:
+        1 * projectService.doesReportBelongToProject(projectId, reportId) >> false
+        0 * _._
+
+        and:
+        response.redirectUrl == '/project/index/'+projectId
+
+    }
+
+    def "Users cannot request a PDF of a report not owned by the project they have access to"() {
+        setup:
+        String projectId = 'p1'
+        String reportId = 'r1'
+
+        when:
+        controller.reportPDF(projectId, reportId)
+
+        then:
+        1 * projectService.doesReportBelongToProject(projectId, reportId) >> false
+        0 * _._
+
+        and:
+        response.redirectUrl == '/project/index/'+projectId
+
+    }
+
+    def "Users cannot request to reset a report not owned by the project they have access to"() {
+        setup:
+        String projectId = 'p1'
+        String reportId = 'r1'
+
+        when:
+        controller.resetReport(projectId, reportId)
+
+        then:
+        1 * projectService.doesReportBelongToProject(projectId, reportId) >> false
+        0 * _._
+
+        and:
+        response.redirectUrl == '/project/index/'+projectId
+
+    }
+
+    def "Users cannot request targets and score data for an activity not owned by the project they have access to"() {
+        setup:
+        String projectId = 'p1'
+        String activityId = 'a1'
+
+        when:
+        controller.targetsAndScoresForActivity(projectId, activityId)
+
+        then:
+        1 * projectService.doesActivityBelongToProject(projectId, activityId) >> false
+        0 * _._
+
+        and:
+        response.redirectUrl == '/project/index/'+projectId
+    }
+
+    def "Users can request targets and score data for a project / activity combination"() {
+        setup:
+        String projectId = 'p1'
+        String activityId = 'a1'
+        Map targetsAndScoresData = [:]
+
+        when:
+        controller.targetsAndScoresForActivity(projectId, activityId)
+
+        then:
+        1 * projectService.doesActivityBelongToProject(projectId, activityId) >> true
+        1 * projectService.targetsAndScoresForActivity(activityId) >> targetsAndScoresData
+
+        and:
+        response.json == targetsAndScoresData
     }
 
     def "Tick targeted project outcomes"() {
@@ -595,26 +719,26 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         Map stubResults = [services: [[
               id: 1,
               name: "Service 1",
-              scores: [[
+              scores: [new Score([
                        scoreId: "score-1",
                        label: "score 1",
                        isOutputTarget: true,
                        target: "2",
-                       periodTarget:[],
+                       periodTargets:[],
                        result:[result:1]
-               ]]
+               ])]
           ],
           [
               id: 2,
               name: "Service 2",
-              scores: [[
+              scores: [new Score([
                        scoreId: "score-2",
                        label: "score 2",
                        isOutputTarget: true,
                        target: "3",
-                       periodTarget:[],
+                       periodTargets:[],
                        result:[result:3]
-               ]]
+               ])]
           ]]]
         when:
         params.approvedDataOnly = approvedDataOnly
@@ -628,14 +752,16 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
                 scoreId:'score-1',
                 service: "Service 1",
                 targetMeasure:"score 1",
-                projectTarget: "2",
-                result:1
+                projectTarget: 2,
+                result:1,
+                isOverDelivered: false
             ], [
                 scoreId:'score-2',
                  service: "Service 2",
                  targetMeasure:"score 2",
-                 projectTarget: "3",
-                 result:3
+                 projectTarget: 3,
+                 result:3,
+                 isOverDelivered: false
           ]
         ]
 

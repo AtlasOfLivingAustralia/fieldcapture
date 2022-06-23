@@ -732,7 +732,7 @@ class ProjectController {
 
     @PreAuthorise(accessLevel = 'editor')
     def editReport(String id, String reportId) {
-        if (!id || !reportId) {
+        if (!id || !reportId || !projectService.doesReportBelongToProject(id, reportId)) {
             error('An invalid report was selected for data entry', id)
             return
         }
@@ -772,7 +772,7 @@ class ProjectController {
 
     @PreAuthorise(accessLevel = 'readOnly')
     def viewReport(String id, String reportId) {
-        if (!id || !reportId) {
+        if (!id || !reportId || !projectService.doesReportBelongToProject(id, reportId)) {
             error('An invalid report was selected for data entry', id)
             return
         }
@@ -783,7 +783,7 @@ class ProjectController {
 
     @PreAuthorise(accessLevel = 'readOnly')
     def printableReport(String id, String reportId) {
-        if (!id || !reportId) {
+        if (!id || !reportId || !projectService.doesReportBelongToProject(id, reportId)) {
             error('An invalid report was selected for printing', id)
             return
         }
@@ -814,7 +814,7 @@ class ProjectController {
 
     @PreAuthorise(accessLevel = 'readOnly')
     def reportPDF(String id, String reportId) {
-        if (!id || !reportId) {
+        if (!id || !reportId || !projectService.doesReportBelongToProject(id, reportId)) {
             error('An invalid report was selected for download', id)
             return
         }
@@ -833,7 +833,7 @@ class ProjectController {
 
     @PreAuthorise(accessLevel = 'admin')
     def resetReport(String id, String reportId) {
-        if (!id || !reportId) {
+        if (!id || !reportId || !projectService.doesReportBelongToProject(id, reportId)) {
             error('An invalid report was selected', id)
             return
         }
@@ -947,13 +947,14 @@ class ProjectController {
         List targets = []
         result?.services?.each { Map service ->
 
-            service.scores.each { Map score ->
+            service.scores.each { Score score ->
                 targets << [
                         scoreId:score.scoreId,
                         service:service.name,
                         targetMeasure: score.label,
                         projectTarget: score.target,
-                        result: score.result?.result ?: 0
+                        result: score.result?.result ?: 0,
+                        isOverDelivered: score.overDelivered
                 ]
             }
         }
@@ -966,6 +967,16 @@ class ProjectController {
                 targets: targets
         ]
         render response as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'editor')
+    def targetsAndScoresForActivity(String id, String activityId) {
+        if (!id || !activityId || !projectService.doesActivityBelongToProject(id, activityId)) {
+            error('An invalid activity was selected', id)
+            return
+        }
+        Map resp = projectService.targetsAndScoresForActivity(activityId)
+        render resp as JSON
     }
 
     private boolean hasTarget(value) {

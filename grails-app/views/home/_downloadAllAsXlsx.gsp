@@ -2,7 +2,7 @@
 <form id="downloadTabSelection" target="_blank" method="POST" action="${g.createLink(controller: 'search', action: 'downloadAllData')}">
     <a class="btn button btn-primary" data-bind="click:downloadXlsx" id="downloadXlsxButton">Download as XLSX</a><br/>
     <label><input type="checkbox" name="formSectionPerTab" value="true" checked="checked"> When downloading reports or activities, export each form section to a separate tab</label>
-
+    <label><input type="checkbox" name="includeDataDescriptionSheet" value="false"> Include a data description sheet in the download</label>
     <input type="hidden" name="view" value="xlsx">
     <g:each in="${params.getList("fq")}" var="selectedFacet">
         <input type="hidden" name="fq" value="${selectedFacet}">
