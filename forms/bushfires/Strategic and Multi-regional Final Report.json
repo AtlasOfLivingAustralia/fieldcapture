@@ -53,8 +53,38 @@
                 "name": "serviceName"
               },
               {
+                "dataType": "text",
+                "name": "sitesAvailable",
+                "constraints": [ "Yes", "No" ],
+                "validate": "required"
+              },
+              {
                 "dataType": "feature",
-                "name": "serviceMappedArea"
+                "name": "serviceMappedArea",
+                "behaviour": [
+                  {
+                    "condition": "sitesAvailable == \"Yes\"",
+                    "type": "enable"
+                  }
+                ]
+              },
+              {
+                "computed": {
+                  "expression": "$geom.areaHa(serviceMappedArea)"
+                },
+                "dataType": "number",
+                "decimalPlaces": 3,
+                "name": "serviceCalculatedAreaHa",
+                "units": "ha"
+              },
+              {
+                "computed": {
+                  "expression": "$geom.lengthKm(serviceMappedArea)"
+                },
+                "dataType": "number",
+                "decimalPlaces": 3,
+                "name": "serviceCalculatedLengthKm",
+                "units": "km"
               },
               {
                 "dataType": "text",
@@ -262,10 +292,49 @@
                 "title": "Activity"
               },
               {
-                "source": "serviceMappedArea",
-                "type": "feature",
                 "width": "5%",
-                "title": "Mapped service delivery area/boundary"
+                "source": "sitesAvailable",
+                "type": "selectOne",
+                "title": "Is site data available for / applicable to this service?"
+              },
+              {
+                "width": "10%",
+                "type": "col",
+                "title": "Site/s where the service has been delivered",
+                "items": [
+                  {
+                    "source": "serviceMappedArea",
+                    "type": "feature",
+                    "width": "5%",
+                    "title": ""
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "readonly": true,
+                        "source": "serviceCalculatedAreaHa",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "readonly": true,
+                        "source": "serviceCalculatedLengthKm",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      }
+                    ]
+                  }
+                ]
               },
               {
                 "readonly": true,
@@ -560,7 +629,7 @@
   "category": null,
   "status": "active",
   "gmsId": null,
-  "supportsSites": false,
+  "supportsSites": true,
   "supportsPhotoPoints": false,
   "minOptionalSectionsCompleted": 1
 }
