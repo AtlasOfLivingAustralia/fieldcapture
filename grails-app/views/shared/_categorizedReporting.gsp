@@ -82,7 +82,7 @@
     <p><span class="badge p-1 text-white badge-info">Report submitted</span></p>
     <p data-bind="visible:report.dateAdjusted"><span class="badge p-1 text-white badge-important">Report adjusted</span></p>
     <div data-bind="if:overDelivered">
-        <p><span data-bind="popover:{content:overDeliveryMessage(), html:true}" class="badge badge-danger">Project targets over-delivered</span></p>
+        <p><span data-bind="popover:{content:overDeliveryMessage(), html:true}" class="badge badge-overdelivered">Project targets over-delivered</span></p>
     </div>
     <g:if test="${isGrantManager || fc.userIsAlaOrFcAdmin()}">
 

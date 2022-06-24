@@ -119,11 +119,11 @@ class DashboardTagLib {
         def result = score.result?.result ?: 0
         def percentComplete = result / target * 100
 
-        String progressBarClass = (score.overDelivered) ? "bar progress-bar bg-danger" : "bar progress-bar"
+        String progressBarClass = (score.overDelivered) ? "bar progress-bar bg-overdelivered" : "bar progress-bar"
 
         out << "<strong class='helpText'>${score.label}${helpText(score, attrs)}</strong>"
         if (score.overDelivered) {
-            out << " <span class='badge badge-danger'> Target overdelivered</span>"
+            out << " <span class='badge badge-overdelivered'> Target overdelivered</span>"
         }
 
         percentComplete = Math.min(100, percentComplete)
