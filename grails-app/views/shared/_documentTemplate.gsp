@@ -34,7 +34,7 @@
 
 <script id="imageDocEditTmpl" type="text/html">
     <div class="row">
-        <g:if test="${fc.userIsSiteAdmin() || isAdmin}">
+        <g:if test="${fc.userIsAlaAdmin() || !fc.userHasReadOnlyAccess()}">
         <div class="col-sm-1">
             <div class="btn-group document-edit-buttons">
                 <button class="btn btn-sm deleteDocument" type="button" data-bind="enable:!readOnly,click:$root.deleteDocument"><i class="fa fa-remove"></i></button>
@@ -65,7 +65,7 @@
 
 <script id="objDocEditTmpl" type="text/html">
     <div class="row">
-        <g:if test="${fc.userIsSiteAdmin() || isAdmin}">
+        <g:if test="${fc.userIsAlaAdmin() || !fc.userHasReadOnlyAccess()}">
         <div class="col-sm-1">
             <div class="btn-group  test1 document-edit-buttons">
                 <button class="btn btn-mini deleteDocument" type="button" data-bind="enable:!readOnly,click:$root.deleteDocument"><i class="fa fa-remove"></i></button>
