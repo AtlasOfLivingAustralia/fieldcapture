@@ -7,7 +7,7 @@
                 <th width="10%">User&nbsp;Id</th>
                 <th>User&nbsp;Name</th>
                 <th width="15%">Role</th>
-                <g:if test="${fc.userIsSiteAdmin() || isAdmin}">
+                <g:if test="${fc.userIsSiteAdmin() || isAdmin || user.isAdmin}">
                     <th width="5%">&nbsp;</th>
                     <th width="5%">&nbsp;</th>
                 </g:if>
@@ -18,7 +18,7 @@
                 <td class="memUserId"></td>
                 <td class="memUserName"></td>
                 <td class="memUserRole"><span style="white-space: nowrap">&nbsp;</span><g:render template="/admin/userRolesSelect" model="[roles:roles, hide:true]"/></td>
-                <g:if test="${fc.userIsSiteAdmin() || isAdmin}">
+                <g:if test="${fc.userIsSiteAdmin() || isAdmin || user.isAdmin}">
                     <td class="clickable memEditRole"><i class="fa fa-edit tooltips" title="edit this user and role combination"></i></td>
                     <td class="clickable memRemoveRole"><i class="fa fa-remove tooltips" title="remove this user and role combination"></i></td>
                 </g:if>
