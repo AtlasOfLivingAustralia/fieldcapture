@@ -191,24 +191,60 @@
           {
             "columns": [
               {
-                "dataType": "text",
-                "name": "projectBaselineReporting",
-                "description": "Select the relevant Project Baseline as listed in the MERI Plan.",
-                "constraints": [
-                  "Yes",
-                  "No"
-                ],
-                "validate": "required"
+                "dataType": "list",
+                "description": "",
+                "name": "baselineData",
+                "columns": [
+                  {
+                    "name": "baselineName",
+                    "dataType": "text",
+                    "description": "Select the relevant Project Baseline as listed in the MERI Plan.",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "baseline",
+                      "valueProperty": "method",
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "context-path": "owner.custom.details.baseline.rows"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "name": "focus",
+                    "dataType": "text",
+                    "validate": "required"
+                  }
+                ]
               },
               {
-                "dataType": "text",
-                "name": "datasetProjectBaseline",
-                "description": "This section will require the Data Set Name so the Metadata fields in the Data Set Summary tab should be filled out sooner than the Outcome Reporting requirement.",
-                "constraints": [
-                  "Yes",
-                  "No"
-                ],
-                "validate": "required"
+                "dataType": "list",
+                "description": "",
+                "name": "dataSets",
+                "columns": [
+                  {
+                    "name": "dataSetName",
+                    "dataType": "text",
+                    "description": "This section will require the Data Set Name so the Metadata fields in the Data Set Summary tab should be filled out sooner than the Outcome Reporting requirement.",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "name",
+                      "valueProperty": "dataSetId",
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "context-path": "owner.custom.dataSets"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "name": "focus",
+                    "dataType": "text",
+                    "validate": "required"
+                  }
+                ]
               },
               {
                 "dataType": "text",
@@ -254,20 +290,39 @@
                 "type": "repeat",
                 "items": [
                   {
-                    "css": "border-bottom",
+                    "type": "table",
+                    "source": "baselineData",
+                    "userAddedRows": false,
+                    "disableTableDownload": true,
+                    "disableTableUpload": true,
+                    "columns": [
+                      {
+                        "source": "baselineName",
+                        "type": "selectOne",
+                        "title": "Which Project Baseline are you reporting on?"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table",
+                    "source": "dataSets",
+                    "userAddedRows": true,
+                    "disableTableDownload": true,
+                    "disableTableUpload": true,
+                    "columns": [
+                      {
+                        "source": "dataSetName",
+                        "type": "selectOne",
+                        "title": "What Dataset supports this Project Baseline?"
+                      }
+                    ]
+                  },
+                  {
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "Which Project Baseline are you reporting on?",
-                        "css": "span6",
-                        "source": "projectBaselineReporting",
-                        "type": "selectOne"
-                      },
-                      {
-                        "preLabel": "Which Dataset supports this Project Baseline?",
-                        "css": "span6",
-                        "source": "datasetProjectBaseline",
-                        "type": "selectOne"
+                        "type": "literal",
+                        "source": "<p><b>Briefly describe the baseline you have established under this service.</b></p>"
                       }
                     ]
                   },
