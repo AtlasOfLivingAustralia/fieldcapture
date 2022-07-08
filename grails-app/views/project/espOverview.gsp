@@ -95,7 +95,7 @@
     <p>${project.description}</p>
     <div class="row">
         <span class="col-sm-6">
-            <span class="label label-info label-small">Project ID:</span> ${project.externalId}<br/>
+            <span class="label label-info label-small">${g.message(code:'label.merit.projectID')}:</span> ${project.externalId}<br/>
             <span class="label label-info label-small">Reporting Period:</span> <span data-bind="text:reportingFinancialYear"></span><br/>
         </span>
         <span class="col-sm-6">

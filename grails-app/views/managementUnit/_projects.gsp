@@ -6,7 +6,7 @@
             <div class="well-title">Project reporting in program: ${program.name?.encodeAsHTML()} %{--  <a href="${g.createLink(controller: 'program', action: 'index',id:program.programId)}">${program.name?.encodeAsHTML()}</a> --}% </div>
             <table id="projectList-${i}" class="table table-striped table-bordered">
                 <thead class="thead-light">
-                <th class="projectId">Project ID</th>
+                <th class="projectId">${g.message(code:'label.merit.projectID')}</th>
                 <th class="internalOrderId"><g:message code="label.externalId.INTERNAL_ORDER_NUMBER"/></th>
                 <th class="techOneCode"><g:message code="label.externalId.TECH_ONE_CODE"/></th>
                 <th class="name">Name</th>

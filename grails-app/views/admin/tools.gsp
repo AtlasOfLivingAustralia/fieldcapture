@@ -208,7 +208,7 @@
             Create project reporting activities for a project based on one activity per period.
             <g:form id="projectActivitiesForm" url="[action:'generateProjectReports']">
                 <div class="row mb-2">
-                    <label for="projectId" class="col-sm-2">Project ID</label>
+                    <label for="projectId" class="col-sm-2">${g.message(code:'label.merit.projectID')}</label>
                     <div class="col-sm-3">
                         <input id="projectId" class="form-control form-control-sm input-small" type="text" name="projectId">
                     </div>
