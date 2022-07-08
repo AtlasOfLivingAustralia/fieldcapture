@@ -85,7 +85,7 @@
                 </g:if>
             </div>
             <p>
-                <span class="label label-info">External Id:</span> ${site.externalId?:'Not specified'}
+                <span class="label label-info"><g:message code="label.merit.externalID"/>:</span> ${site.externalId?:'Not specified'}
                 <span class="label label-info">Type:</span> ${site.type?:'Not specified'}
                 <span class="label label-info">Area:</span>
                 <g:set var="areaHa" value="${site?.extent?.geometry?.aream2 ? site?.extent?.geometry?.aream2 / 10000 : (site?.extent?.geometry?.area) ? site?.extent?.geometry?.area * 100 : null}"/>

@@ -86,7 +86,7 @@
         </div>
         <g:if test="${project.externalId}">
             <div class="row mb-2">
-                <div class="col-sm-3 title">External ID</div>
+                <div class="col-sm-3 title"><g:message code="label.merit.externalID"/></div>
                 <div class="col-sm-9">${project.externalId}</div>
             </div>
         </g:if>

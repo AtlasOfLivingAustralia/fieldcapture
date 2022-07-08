@@ -16,7 +16,7 @@
 
         <div class="col-sm-12"><h4><g:message code="label.merit.projectID"/> : ${project.grantId}</h4></div>
 
-        <div class="col-sm-12"><h4>External Id : ${project.externalId}</h4></div>
+        <div class="col-sm-12"><h4><g:message code="label.merit.externalID"/> : ${project.externalId}</h4></div>
 
 
 

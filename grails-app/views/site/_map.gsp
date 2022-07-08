@@ -21,7 +21,7 @@
             </g:if>
             <div class="row">
                 <div class="col-sm-3">
-                    <label for="externalId">External Id
+                    <label for="externalId"><g:message code="label.merit.externalID"/>
                         <fc:iconHelp title="External id">Identifier code for the site - used in external documents.</fc:iconHelp>
                     </label>
                     <div>
