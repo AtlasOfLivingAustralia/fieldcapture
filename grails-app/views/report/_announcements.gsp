@@ -57,7 +57,7 @@
             </g:if>
             {title:'Scheduled date for announcement of grant round outcome (2 week window)', data:'grantAnnouncementDate', width:'5%'},
             {title:'Type of event', data:'type'},
-            {title:'Grant ID', width:'10%', render:projectUrlRenderer, data:'grantId'},
+            {title:'${g.message(code:'label.merit.projectID')}', width:'10%', render:projectUrlRenderer, data:'grantId'},
             {title:'Name', width:'25%', data:'name'},
             {title:'MERI plan approval status', data:'planStatus'}
         ];

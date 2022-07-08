@@ -62,7 +62,7 @@
     <table class="table">
         <thead>
         <tr>
-            <th>Grant ID</th><th>External ID</th><th>Success?</th><th>Messages</th>
+            <th><g:message code="label.merit.projectID"/></th><th>External ID</th><th>Success?</th><th>Messages</th>
         </tr>
         </thead>
         <tbody>

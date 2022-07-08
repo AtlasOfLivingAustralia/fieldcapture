@@ -262,7 +262,7 @@
             var rows = [];
 
             var header = [
-                {title:'Grant ID', width:"15%"},
+                {title:'${g.message(code:'label.merit.projectID')}', width:"15%"},
                 {title:'Project status', width:"15%", source:{output:'Monthly Status Report Data', dataItem:'projectStatus'}, render:outputValueRenderer},
                 {title:'Total No. commencing projects', width:"10%", source:{output:'Monthly Status Report Data', dataItem:'totalParticipantsCommenced'}, render:outputValueRenderer},
                 {title:'Total No. completing projects', width:"10%", source:{output:'Monthly Status Report Data', dataItem:'totalParticipantsCompleted'}, render:outputValueRenderer},
@@ -566,7 +566,7 @@
             });
 
             var columns = [
-                {"title":"Grant ID", "data":"grantId"}
+                {"title":"${g.message(code:'label.merit.projectID')}", "data":"grantId"}
             ];
             $.each(reportCategories, function(i, category) {
                 columns.push({"title":category.title, "data":category.title});

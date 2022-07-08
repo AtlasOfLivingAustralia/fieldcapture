@@ -59,7 +59,7 @@
             </span>
         </div>
         <div class="col-sm-3" data-bind="visible:grantId">
-            Grant Id:
+            <g:message code="label.merit.projectID"/>:
             <span data-bind="text:grantId"></span>
         </div>
         <div class="col-sm-3" data-bind="visible:externalId">

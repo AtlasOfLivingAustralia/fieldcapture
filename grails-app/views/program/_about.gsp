@@ -107,7 +107,7 @@
     <div class="well-title">Projects</div>
     <table id="projectOverviewList" class="table table-striped table-bordered">
         <thead class="thead-light">
-        <th class="grantId">Grant ID</th>
+        <th class="grantId"><g:message code="label.merit.projectID"/></th>
         <th class="name">Name</th>
         <th class="description">Description</th>
         <th class="outcomes">Outcome</th>

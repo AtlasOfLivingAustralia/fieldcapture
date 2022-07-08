@@ -73,7 +73,7 @@ $(function() {
     }
 
     var projectListHeader =  [
-        {title:'Grant ID', width:'10%', render:projectUrlRenderer, data:'grantId'},
+        {title:'${g.message(code:'label.merit.projectID')}', width:'10%', render:projectUrlRenderer, data:'grantId'},
         {title:'Name', width:'25%', render: nameRender, data:'name'},
         {title:'Contracted Start Date', width:'8%', render:dateRenderer, data:'startDate'},
         {title:'Contracted Project Length (weeks)', width:'4%', data:'duration', defaultContent:''},

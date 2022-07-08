@@ -81,7 +81,7 @@
             <div class="col-sm-9"><g:formatDate format="dd MMM yyyy" date="${au.org.ala.merit.DateUtils.parse(project.plannedEndDate).toDate()}"/></div>
         </div>
         <div class="row mb-2">
-            <div class="col-sm-3 title">Grant ID</div>
+            <div class="col-sm-3 title"><g:message code="label.merit.projectID"/></div>
             <div class="col-sm-9">${project.grantId}</div>
         </div>
         <g:if test="${project.externalId}">

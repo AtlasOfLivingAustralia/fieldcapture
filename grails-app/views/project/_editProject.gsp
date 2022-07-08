@@ -79,7 +79,7 @@
         </div>
     </div>
     <div class="col-sm-4">
-        <label class="control-label" for="grantId">Grant id</label>
+        <label class="control-label" for="grantId"><g:message code="label.merit.projectID"/></label>
         <div class="controls">
             <g:textField class="form-control form-control-sm input-small" name="grantId" data-bind="value:grantId"/>
         </div>
