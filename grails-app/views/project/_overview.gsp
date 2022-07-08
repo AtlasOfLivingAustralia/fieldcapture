@@ -63,7 +63,7 @@
             <span data-bind="text:grantId"></span>
         </div>
         <div class="col-sm-3" data-bind="visible:externalId">
-            External Id:
+            <g:message code="label.merit.externalID"/>:
             <span data-bind="text:externalId"></span>
         </div>
         <div class="col-sm-3" data-bind="visible:manager">

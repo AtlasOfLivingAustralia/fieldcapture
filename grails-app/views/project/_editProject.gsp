@@ -73,7 +73,7 @@
 </div>
 <div class="row mb-2">
     <div class="col-sm-4">
-        <label class="control-label" for="externalId">External id</label>
+        <label class="control-label" for="externalId"><g:message code="label.merit.externalID"/></label>
         <div class="controls">
             <g:textField class="form-control form-control-sm input-small" name="externalId" data-bind="value:externalId"/>
         </div>

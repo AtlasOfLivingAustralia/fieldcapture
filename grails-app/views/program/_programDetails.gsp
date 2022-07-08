@@ -53,7 +53,7 @@
     </div>
 
     <div class="form-group row">
-        <label class="col-form-label col-sm-3" for="url">External ids: <fc:iconHelp><g:message
+        <label class="col-form-label col-sm-3" for="url">External IDs: <fc:iconHelp><g:message
                 code="program.externalIds.help"/></fc:iconHelp></label>
         <div class="controls col-sm-9">
             <external-ids params="externalIds:externalIds, externalIdTypes:externalIdTypes"></external-ids>
