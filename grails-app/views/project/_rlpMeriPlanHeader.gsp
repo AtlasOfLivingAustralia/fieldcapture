@@ -22,7 +22,7 @@
     </g:if>
 
     <div class="row">
-        <div class="col-sm-3 title">Project ID</div>
+        <div class="col-sm-3 title">${g.message(code:'label.merit.projectID')}</div>
 
         <div class="col-sm-9">${project.grantId}</div>
     </div>

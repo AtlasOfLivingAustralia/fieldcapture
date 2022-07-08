@@ -38,7 +38,7 @@
                     </div>
 
                     <div class="row mb-2">
-                        <div class="col-sm-4 header-label">Project ID</div>
+                        <div class="col-sm-4 header-label">${g.message(code:'label.merit.projectID')}</div>
 
                         <div class="col-sm-8 projectId">${project.grantId}</div>
                     </div>

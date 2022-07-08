@@ -22,7 +22,7 @@
     </div>
 
     <div class="row mb-2">
-        <div class="col-sm-2 header-label">Project ID</div>
+        <div class="col-sm-2 header-label">${g.message(code:'label.merit.projectID')}</div>
 
         <div class="col-sm-9">${context.grantId}</div>
     </div>
