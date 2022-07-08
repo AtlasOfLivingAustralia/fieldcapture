@@ -101,6 +101,13 @@
                         </div>
                         </g:each>
                     </g:if>
+
+                    <g:if test="${project.externalId}">
+                        <div class="row mb-2">
+                            <div class="col-sm-4 header-label">${g.message(code:'label.merit.externalID')}</div>
+                            <div class="col-sm-8 projectId">${project.externalId}</div>
+                        </div>
+                    </g:if>
                 </div>
             </div>
         </div>
