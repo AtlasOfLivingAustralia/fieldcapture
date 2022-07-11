@@ -23,7 +23,7 @@ class AbnLookupService {
         Map abnDetails
 
         if (!validateABN(organisationABN)) {
-            abnDetails = [error:"The supplied ABN is invalid"]
+            abnDetails = [error:"The supplied ABN is invalid", abn:'']
         } else {
             String abnLookupToken = grailsApplication.config.getProperty('abn.abnLookupToken')
             String url = grailsApplication.config.getProperty('abn.abnUrl')
