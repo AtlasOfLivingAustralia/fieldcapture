@@ -32,7 +32,7 @@ class CreateOrEditOrganisationSpec extends StubbedCasSpec {
             at CreateOrganisation
         }
         when:
-        details.abn = "11111111111"
+        details.abn = "51824753556"
         waitFor {details.prePopulateABN.displayed}
         details.prePopulateABN.click()
         waitFor { details.name.displayed}
@@ -46,7 +46,7 @@ class CreateOrEditOrganisationSpec extends StubbedCasSpec {
         waitFor {orgDescription.displayed }
         orgDescription.text() == "Test Organisation Description test"
         waitFor {orgAbn.displayed }
-        orgAbn.text() == "11111111111"
+        orgAbn.text() == "51824753556"
 
     }
 
@@ -96,7 +96,7 @@ class CreateOrEditOrganisationSpec extends StubbedCasSpec {
         waitFor 20, {at EditOrganisation}
 
         when:
-        details.abn = "33333333333"
+        details.abn = "98434926368"
         waitFor {details.prePopulateABN.displayed}
         details.prePopulateABN.click()
         waitFor { details.name.displayed}
@@ -111,6 +111,6 @@ class CreateOrEditOrganisationSpec extends StubbedCasSpec {
         waitFor {orgDescription.displayed }
         orgDescription.text() == "Test Organisation Description test"
         waitFor {orgAbn.displayed }
-        orgAbn.text() == "33333333333"
+        orgAbn.text() == "98434926368"
     }
 }

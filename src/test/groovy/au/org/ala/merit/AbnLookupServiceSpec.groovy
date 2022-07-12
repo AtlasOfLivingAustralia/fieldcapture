@@ -123,7 +123,7 @@ class AbnLookupServiceSpec extends Specification implements AutowiredTest{
         0 * webService.getString(abnLookupUrlString, false) >> wsResponse
 
         expect:
-        actual.abn == null
+        actual.abn == ''
         actual.entityName == null
     }
 
