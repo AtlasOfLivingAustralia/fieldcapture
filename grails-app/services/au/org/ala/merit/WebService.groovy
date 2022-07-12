@@ -76,11 +76,13 @@ class WebService {
             resp.error = "Timed out calling web service. URL= ${url}."
             resp.statusCode = HttpStatus.CONNECTION_TIMED_OUT
             log.warn resp.error
+        } catch (SocketException se) {
+            resp.error = "Socket connection closed. ${se.getMessage()} URL= ${url}."
+            log.warn resp.error
         } catch (Exception e) {
             resp = [error: "Failed calling web service. ${e.getClass()} ${e.getMessage()} URL= ${url}.",
                          statusCode: conn?.responseCode?:"",
                          detail: conn?.errorStream?.text]
-            log.warn error.error
         }
         resp
     }
