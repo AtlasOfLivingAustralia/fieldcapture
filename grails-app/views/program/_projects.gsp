@@ -3,7 +3,7 @@
     <table id="projectList" class="table table-striped table-bordered">
         <thead class="thead-light">
             <th class="projectId">${g.message(code:'label.merit.projectID')}</th>
-            <th class="internalOrderId">Internal order number</th>
+            <th class="internalOrderId">Internal Order Number</th>
             <th class="name">Name</th>
             <th class="startDate">Start Date</th>
             <th class="endDate">End Date</th>
