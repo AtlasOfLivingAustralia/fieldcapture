@@ -56,6 +56,9 @@ class WebService {
             def error = [error: "Timed out calling web service. URL= ${url}."]
             log.error error.error
             return error
+        } catch (SocketException se) {
+            def resp = [error: "Socket connection closed. ${se.getMessage()} URL= ${url}."]
+            log.warn resp.error
         } catch (Exception e) {
             def error = [error: "Failed calling web service. ${e.getClass()} ${e.getMessage()} URL= ${url}.",
                     statusCode: conn?.responseCode?:"",
@@ -83,6 +86,7 @@ class WebService {
             resp = [error: "Failed calling web service. ${e.getClass()} ${e.getMessage()} URL= ${url}.",
                          statusCode: conn?.responseCode?:"",
                          detail: conn?.errorStream?.text]
+            log.warn resp.error
         }
         resp
     }
@@ -221,6 +225,9 @@ class WebService {
             def error = [error: "ecodata service not available. URL= ${url.encodeAsURL()}."]
             println error
             return error
+        } catch (SocketException se) {
+            def resp = [error: "Socket connection closed. ${se.getMessage()} URL= ${url}."]
+            log.warn resp.error
         } catch (Exception e) {
             log.info "Exception class = ${e.getClass().name} - ${e.getMessage()}"
             def responseCode = conn?.responseCode?:""
@@ -262,6 +269,10 @@ class WebService {
             result = [statusCode:conn?.responseCode, error:error]
         } catch (SocketTimeoutException e) {
             String error = "Timed out getting json. URL= ${url}."
+            println error
+            result = [statusCode:conn?.responseCode, error:error]
+        } catch (SocketException se) {
+            String error = "Socket connection closed. ${se.getMessage()} URL= ${url}."
             println error
             result = [statusCode:conn?.responseCode, error:error]
         } catch (ConnectException ce) {
@@ -332,6 +343,10 @@ class WebService {
             def error = [error: "Timed out calling web service. URL= ${url}."]
             log.error(error as String, e)
             return error
+        } catch (SocketException se) {
+            def error = [error: "Socket connection closed. ${se.getMessage()} URL= ${url}."]
+            log.error(error as String, se)
+            return error
         } catch (Exception e) {
             def responseCode = conn?.responseCode?:""
             def error = [error: "Status $responseCode returned from ${url}. Error: ${e.getMessage()}",
@@ -365,6 +380,10 @@ class WebService {
         } catch (SocketTimeoutException e) {
             def error = [error: "Timed out calling web service. URL= ${url}."]
             log.error(error as String, e)
+            return error
+        } catch (SocketException se) {
+            def error = [error: "Socket connection closed. ${se.getMessage()} URL= ${url}."]
+            log.error(error as String, se)
             return error
         } catch (Exception e) {
             def error = [error: "Failed calling web service. ${e.getMessage()} URL= ${url}.",
