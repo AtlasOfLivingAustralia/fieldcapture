@@ -151,7 +151,7 @@ class ReportGenerator {
         // of the 30/06/2023) which essentially makes it almost a full day earlier than the normal end
         // period of a report, which is aligned to the start date of the next report, which in this case
         // would be midnight on the 1st of July 2023.
-        while (reportInterval.start <= endDate.minusDays(reportConfig.minimumReportDurationInDays-1)) {
+        while (reportInterval.start < endDate.minusDays(reportConfig.minimumReportDurationInDays - 2)) {
 
             reports << createReport(reportConfig, reportOwner, sequenceNo, reportInterval)
             sequenceNo++

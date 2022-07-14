@@ -559,7 +559,7 @@ class ReportGeneratorSpec extends Specification {
         setup:
         ReportGenerator generator = new ReportGenerator()
         ReportConfig config = new ReportConfig(
-                minimumReportDurationInDays: 7,
+                minimumReportDurationInDays: 1,
                 reportingPeriodInMonths: 3,
                 reportsAlignedToCalendar: true,
                 activityType: 'RLP Outputs Report',
@@ -568,7 +568,7 @@ class ReportGeneratorSpec extends Specification {
                 reportNameFormat: "%5\$s - Outputs Report %7\$02d",
                 reportDescriptionFormat: "%5\$s - Outputs Report %7\$02d")
 
-        projectOwner = new ReportOwner(id:[projectId:'p1'], name:'Project 1', periodStart: '2021-06-29T14:00:00Z', periodEnd: '2023-07-01T14:00:00Z')
+        projectOwner = new ReportOwner(id:[projectId:'p1'], name:'Project 1', periodStart: '2021-06-29T14:00:00Z', periodEnd: '2023-06-30T14:00:00Z')
 
         when:
         List reports = generator.generateReports(config, projectOwner, 0, null)
@@ -594,14 +594,14 @@ class ReportGeneratorSpec extends Specification {
 
         reports[9].name == '2023/2024 - Outputs Report 01'
         reports[9].fromDate == '2023-06-30T14:00:00Z'
-        reports[9].toDate == '2023-07-01T14:00:00Z'
+        reports[9].toDate == '2023-06-30T14:00:00Z'
 
         when:
         config.minimumReportDurationInDays = 2
         reports = generator.generateReports(config, projectOwner, 0, null)
 
         then:
-        //reports.size() == 2 * 4
+        reports.size() == 2 * 4
 
         //and:
         reports[0].fromDate == '2021-06-29T14:00:00Z'
@@ -615,7 +615,7 @@ class ReportGeneratorSpec extends Specification {
         reports[5].name == '2022/2023 - Outputs Report 02'
         reports[6].name == '2022/2023 - Outputs Report 03'
         reports[7].name == '2022/2023 - Outputs Report 04'
-        reports[7].fromDate == '2023-03-30T13:00:00Z'
-        reports[7].toDate == '2023-07-01T14:00:00Z'
+        reports[7].fromDate == '2023-03-31T13:00:00Z'
+        reports[7].toDate == '2023-06-30T14:00:00Z'
     }
 }
