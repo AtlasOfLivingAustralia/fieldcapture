@@ -215,16 +215,11 @@ class ManagementUnitService {
 
     private void regenerateProjectReports(Map managementUnit, List<String> reportCategories = null) {
 
-        List projectReportConfig = managementUnit.config?.projectReports
-        List toRegenerate = projectReportConfig.findAll{it.category in reportCategories}
-
         Map projects = getProjects(managementUnit.managementUnitId)
-        toRegenerate?.each {
-            projects?.projects?.each{ project ->
-                project.reports = reportService.getReportsForProject(project.projectId)
-                if (projectService.canRegenerateReports(project)) {
-                    projectService.generateProjectReports(it, project, new ReportGenerationOptions())
-                }
+        projects?.projects?.each{ project ->
+            project.reports = reportService.getReportsForProject(project.projectId)
+            if (projectService.canRegenerateReports(project)) {
+                projectService.generateProjectStageReports(project.projectId, new ReportGenerationOptions(), reportCategories)
             }
         }
     }

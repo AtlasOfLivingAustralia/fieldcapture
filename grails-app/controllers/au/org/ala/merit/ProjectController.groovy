@@ -134,7 +134,7 @@ class ProjectController {
         project.priorities = new JSONArray(config.priorities ?: [])
         project.outcomes = new JSONArray(config.outcomes ?: [])
         project.hasApprovedOrSubmittedReports = reportService.includesSubmittedOrApprovedReports(project.reports)
-        project.isProjectNotActiveAndHasAnyReport = ((project.status != projectService.ACTIVE_STATUS) && (project?.reports?.size() > 0))
+        project.isProjectNotActiveAndHasAnyReport = (!Status.isActive(project.status) && (project?.reports?.size() > 0))
 
         def meriPlanVisible = config.includesContent(ProgramConfig.ProjectContent.MERI_PLAN)
         def risksAndThreatsVisible = config.includesContent(ProgramConfig.ProjectContent.RISKS_AND_THREATS) && user?.hasViewAccess
