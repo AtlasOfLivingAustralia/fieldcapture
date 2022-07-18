@@ -125,7 +125,10 @@ class ImportProjectsSpec extends StubbedCasSpec {
         rows2.size() == 2
 
         when: "We navigate to the program page to find the new imported project, then open it"
-        to ProgramPage, 'configurable_meri_plan'
+
+        waitFor 30,{to ProgramPage, 'configurable_meri_plan'}
+        and:
+
         openProjectByGrantId('cep-1')
 
         then:
