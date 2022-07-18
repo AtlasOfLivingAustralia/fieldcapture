@@ -1020,8 +1020,7 @@ class ProjectService  {
 
         // Activities in a submitted or approved report cannot be edited
         Map report = reportService.findReportForDate(activity.plannedEndDate, project.reports)
-
-        return !reportService.excludesNotApproved(report)
+        return !reportService.excludesNotApproved(report) && Status.isActive(report?.status)
     }
 
     private Map getOutcomes(String activityId, String outputType) {

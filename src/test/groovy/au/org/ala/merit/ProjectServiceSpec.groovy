@@ -603,7 +603,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         Map activity = [projectId:projectId, plannedEndDate: endDate]
         webService.getJson(_) >> [projectId:projectId, planStatus:ProjectService.PLAN_APPROVED, status:'active', plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z']
         reportService.getReportsForProject(projectId) >> []
-        reportService.findReportForDate(endDate, []) >> [:]
+        reportService.findReportForDate(endDate, []) >> [status:Status.ACTIVE]
 
         when:
         boolean canEdit = service.canEditActivity(activity)
@@ -618,6 +618,23 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         then:
         1 * reportService.excludesNotApproved(_) >> false
         canEdit == true
+    }
+
+    def "An activity cannot be edited if it's associated report is marked as read only"() {
+        setup:
+        String projectId = 'project1'
+        String endDate = '2016-12-31T13:00:00Z'
+        Map activity = [projectId:projectId, plannedEndDate: endDate]
+        webService.getJson(_) >> [projectId:projectId, planStatus:ProjectService.PLAN_APPROVED, status:'active', plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z']
+        reportService.getReportsForProject(projectId) >> []
+        reportService.findReportForDate(endDate, []) >> [status:Status.READ_ONLY]
+
+        when:
+        boolean canEdit = service.canEditActivity(activity)
+
+        then:
+        1 * reportService.excludesNotApproved(_) >> false
+        canEdit == false
     }
 
     def "Changing the project dates will result in the project reports being re-generated"() {

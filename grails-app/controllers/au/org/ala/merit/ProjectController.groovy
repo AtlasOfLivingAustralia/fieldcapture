@@ -30,7 +30,7 @@ class ProjectController {
     def siteService, documentService, reportService, blogService, pdfGenerationService
     GrailsApplication grailsApplication
 
-    private def espOverview(Map project, Map user) {
+    private def espOverview(Map project, Map user, ProgramConfig config) {
 
         Map projectArea = null
         if (project.sites) {
@@ -48,7 +48,8 @@ class ProjectController {
                 user:user,
                 mapFeatures: commonService.getMapFeatures(project),
                 projectArea: projectArea,
-                isProjectStarredByUser: isProjectStarredByUser], view: 'espOverview'
+                isProjectStarredByUser: isProjectStarredByUser,
+                config:config], view: 'espOverview'
     }
 
     def index(String id) {
@@ -62,7 +63,7 @@ class ProjectController {
             user.hasViewAccess = projectService.canUserViewProject(user.userId, id) ?: false
         }
         def project = projectService.get(id, user,'all')
-        ProgramConfig config
+        Map config
         if (project && !project.error) {
             config = projectService.getProgramConfiguration(project)
         }
@@ -78,7 +79,7 @@ class ProjectController {
 
             String template = projectTemplate(config, params.template)
             if (template == ESP_TEMPLATE && user?.isEditor) {
-                espOverview(project, user)
+                espOverview(project, user, config)
             } else {
                 project.sites?.sort { it.name }
                 project.projectSite = project.sites?.find { it.siteId == project.projectSiteId }
