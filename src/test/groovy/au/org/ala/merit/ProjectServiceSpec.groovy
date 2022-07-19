@@ -1346,6 +1346,39 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         postData == [custom:(dataSets+meriPlan)]
     }
 
+    def "The project reports can be regenerated, including optionally specifying which categories to regenerate"() {
+        when:
+        service.generateProjectStageReports('p1', new ReportGenerationOptions())
+
+        then:
+        1 * webService.getJson({it.contains("project/p1")}) >> [projectId:'p1', status:'active']
+        1 * reportService.getReportsForProject('p1') >> [[reportId:'r1']]
+        1 * projectConfigurationService.getProjectConfiguration(_) >> new ProgramConfig([projectReports:[[reportType:'Activity', category:'test']]])
+
+        1 * reportService.regenerateReports([], _, _)
+
+        when:
+        service.generateProjectStageReports('p1', new ReportGenerationOptions(), ['test'])
+
+        then:
+        1 * webService.getJson({it.contains("project/p1")}) >> [projectId:'p1', status:'active']
+        1 * reportService.getReportsForProject('p1') >> [[reportId:'r1']]
+        1 * projectConfigurationService.getProjectConfiguration(_) >> new ProgramConfig([projectReports:[[reportType:'Activity', category:'test']]])
+
+        1 * reportService.regenerateReports([], _, _)
+
+
+        when:
+        service.generateProjectStageReports('p1', new ReportGenerationOptions(), ['test 2'])
+
+        then:
+        1 * webService.getJson({it.contains("project/p1")}) >> [projectId:'p1', status:'active']
+        1 * reportService.getReportsForProject('p1') >> [[reportId:'r1']]
+        1 * projectConfigurationService.getProjectConfiguration(_) >> new ProgramConfig([projectReports:[[reportType:'Activity', category:'test']]])
+
+        0 * reportService.regenerateReports([], _, _)
+    }
+
     private Map setupActivityModelForFiltering(List services) {
         Map activityModel = [name:'output', outputs:[]]
         services.each {

@@ -38,7 +38,6 @@ class ProjectService  {
     static final String PLAN_SUBMITTED = 'submitted'
     static final String PLAN_UNLOCKED = 'unlocked for correction'
     public static final String DOCUMENT_ROLE_APPROVAL = 'approval'
-    static final String ACTIVE_STATUS = 'Active'
 
     def webService, grailsApplication, siteService, activityService, emailService, documentService, userService, metadataService, settingService, reportService, auditService, speciesService, commonService
     ProjectConfigurationService projectConfigurationService
@@ -833,8 +832,8 @@ class ProjectService  {
      * (due to those dates not being known) and the dates being updated after more than one reporting period has passed.
      * (e.g the 2nd report has data against correct dates, so we dont' want to move this, instead we delete the first report).
      */
-    void generateProjectReports(Map reportConfig, Map project, ReportGenerationOptions options) {
-        if (project.status == ACTIVE_STATUS) {
+    private void generateProjectReports(Map reportConfig, Map project, ReportGenerationOptions options) {
+        if (Status.isActive(project.status)) {
             ReportOwner reportOwner = projectReportOwner(project)
             ReportConfig rc = new ReportConfig(reportConfig)
 
@@ -899,14 +898,17 @@ class ProjectService  {
         }
     }
 
-    def generateProjectStageReports(String projectId, ReportGenerationOptions options) {
+    def generateProjectStageReports(String projectId, ReportGenerationOptions options, List categoriesToRegenerate = null) {
         def project = get(projectId)
         def programConfig = getProgramConfiguration(project)
 
         if (programConfig.projectReports) {
 
             programConfig.projectReports.each {reportConfig ->
-                generateProjectReports(reportConfig, project, options)
+                if (!categoriesToRegenerate || reportConfig.category in categoriesToRegenerate) {
+                    generateProjectReports(reportConfig, project, options)
+                }
+
             }
         }
         else {
