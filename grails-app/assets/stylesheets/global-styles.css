@@ -942,3 +942,9 @@ input.invisibleValidationHolder {
 	color: transparent;
 	background-color: transparent;
 }
+
+.alert.alert-banner {
+	color: black;
+	border-color: black;
+	background-color: #FAA329;
+}

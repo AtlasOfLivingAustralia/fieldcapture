@@ -87,7 +87,8 @@ var config = {
     "activityNavigationMode": "returnToProject",
     "banner": {
         "public":false,
-        "message":"ESP reporting templates are currently under review and redevelopment. These reports will reopen for data entry at the end of September 2022. Please send any enquiries to  EnviroStewardship@environment.gov.au."
+        "fontSize":"1.4em",
+        "message":"**ESP reports are currently being updated and are in READ ONLY mode. The new templates will be released for completion at the end of September 2022. Please send enquiries to EnviroStewarship@environment.gov.au**"
     }
 };
 
