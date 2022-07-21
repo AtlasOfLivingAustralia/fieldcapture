@@ -218,7 +218,7 @@ class ManagementUnitService {
         Map projects = getProjects(managementUnit.managementUnitId)
         projects?.projects?.each{ project ->
             project.reports = reportService.getReportsForProject(project.projectId)
-            if (projectService.canRegenerateReports(project)) {
+            if (projectService.canBulkRegenerateReports(project)) {
                 projectService.generateProjectStageReports(project.projectId, new ReportGenerationOptions(), reportCategories)
             }
         }

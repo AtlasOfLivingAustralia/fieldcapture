@@ -128,14 +128,16 @@ class ProjectController {
         organisations
     }
 
+    private boolean anyNonEditableReportSharesProjectEndDate(Map project) {
+        project.reports?.find{it.toDate == project.plannedEndDate && !reportService.excludesNotApproved(it)}
+    }
+
     protected Map projectContent(Map project, user, String template, ProgramConfig config) {
         project.themes = new JSONArray(config.themes ?: [])
         project.assets = config.assets ?: []
         project.priorities = new JSONArray(config.priorities ?: [])
         project.outcomes = new JSONArray(config.outcomes ?: [])
-        project.hasApprovedOrSubmittedReports = reportService.includesSubmittedOrApprovedReports(project.reports)
-        project.isProjectNotActiveAndHasAnyReport = (!Status.isActive(project.status) && (project?.reports?.size() > 0))
-
+        boolean canRegenerateReports = projectService.canRegenerateReports(project)
         def meriPlanVisible = config.includesContent(ProgramConfig.ProjectContent.MERI_PLAN)
         def risksAndThreatsVisible = config.includesContent(ProgramConfig.ProjectContent.RISKS_AND_THREATS) && user?.hasViewAccess
         def canViewRisks = risksAndThreatsVisible && (user?.hasViewAccess || user?.isEditor)
@@ -174,7 +176,7 @@ class ProjectController {
                      site           : [label: 'Sites', visible: config.includesContent(ProgramConfig.ProjectContent.SITES), disabled: !user?.hasViewAccess, editable:user?.isEditor, type: 'tab', template:'projectSites'],
                      dashboard      : [label: 'Dashboard', visible: config.includesContent(ProgramConfig.ProjectContent.DASHBOARD), disabled: !user?.hasViewAccess, type: 'tab'],
                      datasets       : [label: 'Data set summary', visible: datasetsVisible, template: '/project/dataset/dataSets', type:'tab'],
-                     admin          : [label: 'Admin', visible: adminTabVisible, user:user, type: 'tab', template:'projectAdmin', project:project, canChangeProjectDates: canChangeProjectDates, minimumProjectEndDate:minimumProjectEndDate, showMERIActivityWarning:true, showAnnouncementsTab: showAnnouncementsTab, showSpecies:true, meriPlanTemplate:MERI_PLAN_TEMPLATE, showMeriPlanHistory:showMeriPlanHistory, requireMeriPlanApprovalReason:Boolean.valueOf(config.supportsMeriPlanHistory),  config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage']]
+                     admin          : [label: 'Admin', visible: adminTabVisible, user:user, type: 'tab', template:'projectAdmin', project:project, canChangeProjectDates: canChangeProjectDates, minimumProjectEndDate:minimumProjectEndDate, showMERIActivityWarning:true, showAnnouncementsTab: showAnnouncementsTab, showSpecies:true, meriPlanTemplate:MERI_PLAN_TEMPLATE, showMeriPlanHistory:showMeriPlanHistory, requireMeriPlanApprovalReason:Boolean.valueOf(config.supportsMeriPlanHistory),  config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage', canRegenerateReports: canRegenerateReports]]
 
         if (template == MERI_ONLY_TEMPLATE) {
             model = [details:model.details]

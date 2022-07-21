@@ -833,7 +833,7 @@ class ProjectService  {
      * (e.g the 2nd report has data against correct dates, so we dont' want to move this, instead we delete the first report).
      */
     private void generateProjectReports(Map reportConfig, Map project, ReportGenerationOptions options) {
-        if (Status.isActive(project.status)) {
+        if (canRegenerateReports(project)) {
             ReportOwner reportOwner = projectReportOwner(project)
             ReportConfig rc = new ReportConfig(reportConfig)
 
@@ -1012,6 +1012,38 @@ class ProjectService  {
 
     }
 
+    /**
+     * Returns true if project reports are allowed to be regenerated.
+     *  @param project the project to check, expects the reports property to have
+     * been populated with project reports.
+     */
+    boolean canRegenerateReports(Map project) {
+        Status.isActive(project.status) && !hasSubmittedOrApprovedFinalReportInCategory(project)
+    }
+
+    /**
+     * Checks if the supplied project has any reports that can't be modified
+     * with an end date that overlaps the project end date.  this check is required
+     * to prevent issues that can occur when extending a project end date where a report
+     * that would otherwise be extended cannot be extended, resulting in a extra report
+     * being inserted to fill the gap.
+     * @param project the project to check, expects the reports property to have
+     * been populated with project reports.
+     */
+    boolean hasSubmittedOrApprovedFinalReportInCategory(Map project) {
+        if (!project.reports) {
+            return false
+        }
+        List reports = new ArrayList(project.reports)
+        reports?.groupBy{it.category}.find { String category, List reportsInCategory ->
+            // Sort by toDate first, then fromDate as there is a special case
+            // (a single day final report) where the to date matches the previous
+            // report to date due to how project end dates are represented.
+            reportsInCategory.sort{it.toDate+'-'+it.fromDate}
+            Map finalReportInCategory = reportsInCategory[-1]
+            finalReportInCategory.toDate >= project.plannedEndDate && reportService.excludesNotApproved(finalReportInCategory)
+        }
+    }
 
     boolean canEditActivity(Map activity) {
         Map project = get(activity.projectId)
@@ -1923,7 +1955,7 @@ class ProjectService  {
      * when reports are generated using the program or management unit pages,
      * reports should only be generated for projects with at least one existing report
      */
-    boolean canRegenerateReports(Map project) {
+    boolean canBulkRegenerateReports(Map project) {
         return project.reports.size() > 0
     }
 }
