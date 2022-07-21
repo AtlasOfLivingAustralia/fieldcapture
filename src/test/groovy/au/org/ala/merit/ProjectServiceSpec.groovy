@@ -1379,6 +1379,40 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         0 * reportService.regenerateReports([], _, _)
     }
 
+    def "The project service can determine if a project has unchangable reports that align with the project end date"(String publicationStatus, String lastReportToDate, boolean expectedResult){
+        setup:
+        def project = [projectId:'p1', plannedStartDate:'2021-06-30T14:00:00Z', plannedEndDate:'2023-06-29T14:00:00Z']
+        project.reports = [[
+                reportId:"r1",
+                category:"c1",
+                fromDate:'2021-06-30T14:00:00Z',
+                toDate:'2022-06-30T14:00:00Z',
+                publicationStatus:'published'
+            ],[
+               reportId:"r2",
+               category:"c1",
+               fromDate:'2022-06-30T14:00:00Z',
+               toDate:lastReportToDate,
+               publicationStatus:publicationStatus]]
+        reportService.excludesNotApproved(project.reports[1]) >> new ReportService().excludesNotApproved(project.reports[1])
+
+        when:
+        boolean result = service.hasSubmittedOrApprovedFinalReportInCategory(project)
+
+        then:
+        result == expectedResult
+
+        where:
+        publicationStatus | lastReportToDate | expectedResult
+        'unpublished' | '2023-06-29T14:00:00Z' | false
+        'pendingApproval' | '2023-06-29T14:00:00Z' | true
+        'published' | '2023-06-29T14:00:00Z' | true
+        'cancelled' | '2023-06-29T14:00:00Z' | true
+        'published' | '2023-06-28T14:00:00Z' | false
+        'published' | '2023-06-30T14:00:00Z' | true
+
+    }
+
     private Map setupActivityModelForFiltering(List services) {
         Map activityModel = [name:'output', outputs:[]]
         services.each {
