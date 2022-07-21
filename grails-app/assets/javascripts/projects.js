@@ -866,10 +866,6 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
         }
     }
 
-    self.canRegenerateReports = ko.computed(function() {
-        return self.status() == ProjectStatus.ACTIVE;
-    });
-
     var meriPlanConfig = _.extend({}, config, {
         declarationModalSelector: '#unlockPlan',
         meriSubmissionDeclarationSelector: '#meriSubmissionDeclaration',
