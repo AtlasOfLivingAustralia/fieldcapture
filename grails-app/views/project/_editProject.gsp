@@ -165,7 +165,7 @@
         <fc:iconHelp title="Start date">Date the project is intended to commence.</fc:iconHelp>
         </label>
         <div class="input-group input-append">
-            <g:if test="${project.isProjectNotActiveAndHasAnyReport}">
+            <g:if test="${canRegenerateReports}">
                 <fc:datePicker targetField="plannedStartDate.date" id="startDate" bs4="true" name="startDate" data-bind="disable:true, datepicker:plannedStartDate.date" data-validation-engine="validate[required, past[plannedEndDate]]" printable="${printView}" size="form-control form-control-sm dateControl"/>
             </g:if>
             <g:else>
@@ -181,10 +181,14 @@
     </div>
     <div class="col-sm-4">
         <label for="endDate">Planned end date
-        <fc:iconHelp title="End date">Date the project is intended to finish.</fc:iconHelp>
+        <fc:iconHelp title="End date">Date the project is intended to finish.
+            <g:if test="${!canRegenerateReports}">
+                The end date for a project cannot be changed Project status is not Active, or if the last report in any category has been submitted, cancelled or approved
+            </g:if>
+        </fc:iconHelp>
         </label>
         <div class="input-group input-append">
-            <g:if test="${project.isProjectNotActiveAndHasAnyReport}">
+            <g:if test="${!canRegenerateReports}">
                 <fc:datePicker targetField="plannedEndDate.date" bs4="true" data-bind="disable:true, datepicker:plannedEndDate.date" name="endDate" data-validation-engine="validate[required, funcCall[validateProjectEndDate]]" printable="${printView}" size="form-control form-control-sm dateControl"/>
             </g:if>
             <g:else>
@@ -300,8 +304,8 @@
 
 <div class="row mb-2">
     <div class="col-sm-12">
-        <button data-bind="disable:!canRegenerateReports(), click:regenerateStageReports" class="btn btn-sm btn-warning">Re-create project reports</button>
-        <fc:iconHelp title="Re-create project">Re-create project reports will be disabled when the Project status is not Active.</fc:iconHelp>
+        <button data-bind="click:regenerateStageReports" class="btn btn-sm btn-warning" <g:if test="${!canRegenerateReports}">disabled="disabled"</g:if>>Re-create project reports</button>
+        <fc:iconHelp title="Re-create project">Re-create project reports will be disabled when the Project status is not Active, or if the last report in any category has been submitted, cancelled or approved</fc:iconHelp>
     </div>
 </div>
 

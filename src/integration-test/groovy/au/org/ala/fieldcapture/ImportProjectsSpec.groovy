@@ -97,7 +97,6 @@ class ImportProjectsSpec extends StubbedCasSpec {
         }
     }
 
-    /* temporarily disabling this test as it's failing in CI for non-obvious reasons.
     def "Grants hub projects can be imported into MERIT"() {
         // This is an extended test to capture the additional functionality required when importing projects
         // from the grants hub.
@@ -126,10 +125,7 @@ class ImportProjectsSpec extends StubbedCasSpec {
         rows2.size() == 2
 
         when: "We navigate to the program page to find the new imported project, then open it"
-
-        waitFor 30,{to ProgramPage, 'configurable_meri_plan'}
-        and:
-
+        to ProgramPage, 'configurable_meri_plan'
         openProjectByGrantId('cep-1')
 
         then:
@@ -153,5 +149,5 @@ class ImportProjectsSpec extends StubbedCasSpec {
         adminContent.meriPlan.budget[0].description.value() == "Project funding"
         adminContent.meriPlan.budget[0].budgetAmounts()*.value() == ["20000", "10000"]
 
-    }*/
+    }
 }

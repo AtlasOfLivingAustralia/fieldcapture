@@ -350,7 +350,7 @@ var PlanStage = function (stage, activities, planViewModel, isCurrentStage, proj
     };
 
     this.isReadOnly = ko.computed(function() {
-        if (!userIsEditor) {
+        if (!userIsEditor || ReportStatus.isReadOnly(stage.status)) {
             return true;
         }
         return (planViewModel.planStatus() != PlanStatus.UNLOCKED && (self.isSubmitted() || self.isApproved()));
