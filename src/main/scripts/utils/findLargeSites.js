@@ -24,6 +24,14 @@ function findLargeSitesForProject(projectId) {
 
         if (coordCount > 3000) {
              print("Site "+site.siteId+", "+site.name+" has "+coordCount);
+             if (site.features) {
+
+                 for (var i=0; i<site.features.length; i++) {
+                     coordCount = 0;
+                     turf.meta.coordEach(site.features[i], function() { coordCount++ });
+                     print(" - feature "+site.features[i].properties['name']+" has "+coordCount);
+                 }
+             }
         }
         count++;
     }
