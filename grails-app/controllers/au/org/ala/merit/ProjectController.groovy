@@ -128,10 +128,6 @@ class ProjectController {
         organisations
     }
 
-    private boolean anyNonEditableReportSharesProjectEndDate(Map project) {
-        project.reports?.find{it.toDate == project.plannedEndDate && !reportService.excludesNotApproved(it)}
-    }
-
     protected Map projectContent(Map project, user, String template, ProgramConfig config) {
         project.themes = new JSONArray(config.themes ?: [])
         project.assets = config.assets ?: []

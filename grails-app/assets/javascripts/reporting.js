@@ -112,7 +112,7 @@ var ReportViewModel = function(report, config) {
         self.activities.push(new GreenArmyActivityViewModel(activity));
     });
 
-    self.editable = (report.bulkEditable || self.activities.length == 0 || self.activities.length == 1) && (report.publicationStatus != 'published' && report.publicationStatus != 'pendingApproval' && report.publicationStatus != 'cancelled');
+    self.editable = (report.bulkEditable || self.activities.length == 0 || self.activities.length == 1) && (!ReportStatus.isReadOnly(report.status) && report.publicationStatus != 'published' && report.publicationStatus != 'pendingApproval' && report.publicationStatus != 'cancelled');
 
     self.title = 'Expand the activity list to complete the reports';
     if (self.editable) {
