@@ -58,7 +58,9 @@ var projectConfig = {
                         "Additional Priority Plants",
                         "Threatened Ecological Community",
                         "Additional Priority Natural Asset",
-                        "Additional Threatened Ecological Community"
+                        "Additional Threatened Ecological Community",
+                        "Threatened Species",
+                        "Asset Types as listed for Habitat Restoration Projects – NRM Procurements"
                     ],
                     "assetHeading": "Asset",
                     "viewExplanation": "Species, ecological community or environmental asset(s) the project is targeting",
@@ -247,97 +249,82 @@ var projectConfig = {
         ]
     },
     priorities: [
+        {
+            "category": "Habitat Restoration Grants",
+            "priority": "Phascolarctos cinereus (Koala)"
+        },
+        {
+            "category": "Habitat Restoration Grants Secondary",
+            "priority": "Additional Koala habitat planted"
+        },
+        {
+            "category": "Habitat Restoration Grants Secondary",
+            "priority": "Connection of existing Koala habitat established or strengthen"
+        },
+        {
+            "category": "Habitat Restoration Grants Secondary",
+            "priority": "Quality of existing Koala habitat improved by controlling pests and weeds"
+        },
+        {
+            "category": "Asset Types as listed for Habitat Restoration Projects – NRM Procurements",
+            "priority": "Asset Types as listed for Habitat Restoration Projects – NRM Procurements"
+        }
+
     ]
 };
 var outcomes = [
     {
         "priorities": [
             {
-                "category": "Ramsar"
+                "category": "Habitat Restoration Grants"
             }
         ],
         "targeted": true,
-        "shortDescription": "Ramsar Sites",
+        "supportsMultiplePrioritiesAsPrimary": false,
+        "shortDescription": "Asset Types as listed for Habitat Restoration Projects - NRM Procurements",
+        "type": "primary",
+        "category": "environment",
+        "supportsMultiplePrioritiesAsSecondary": true,
+        "outcome":"Support efforts to improve the trajectory of the listed Koala (combined populations of Queensland, NSW and the ACT) through habitat restoration and protection, threat mitigation and improving health outcomes."
+    },
+    {
+        "priorities": [
+            {
+                "category": "Habitat Restoration Grants Secondary"
+            }
+        ],
+        "targeted": true,
+        "shortDescription": "Asset Types as listed for Habitat Restoration Projects - NRM Procurements",
         "type": "secondary",
         "category": "environment",
         "supportsMultiplePrioritiesAsSecondary": true,
-        "outcome": "1. By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
+        "outcome":"Improve the extent, quality and connectivity of the nationally listed Koala’s habitat and reduced local threats."
     },
     {
         "priorities": [
             {
-                "category": "Threatened Species"
+                "category": "Habitat Restoration Grants Secondary"
             }
         ],
         "targeted": true,
-        "supportsMultiplePrioritiesAsPrimary": true,
-        "shortDescription": "Threatened Species Strategy",
+        "shortDescription": "Asset Types as listed for Habitat Restoration Projects - NRM Procurements",
+        "type": "secondary",
         "category": "environment",
         "supportsMultiplePrioritiesAsSecondary": true,
-        "outcome": "2. By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved."
+        "outcome":"Improve data and knowledge of Koala populations and health across their range to support effective decision making and conservation action."
     },
     {
         "priorities": [
             {
-                "category": "World Heritage Sites"
+                "category": "Habitat Restoration Grants Secondary"
             }
         ],
         "targeted": true,
-        "shortDescription": "World Heritage Areas",
-        "supportsMultiplePrioritiesAsPrimary": true,
+        "shortDescription": "Asset Types as listed for Habitat Restoration Projects - NRM Procurements",
+        "type": "secondary",
         "category": "environment",
         "supportsMultiplePrioritiesAsSecondary": true,
-        "outcome": "3. By 2023, invasive species management has reduced threats to the natural heritage Outstanding Universal Value of World Heritage properties through the implementation of priority actions."
-    },
-    {
-        "priorities": [
-            {
-                "category": "Threatened Ecological Communities"
-            }
-        ],
-        "targeted": true,
-        "supportsMultiplePrioritiesAsPrimary": true,
-        "shortDescription": "Threatened Ecological Communities",
-        "category": "environment",
-        "supportsMultiplePrioritiesAsSecondary": true,
-        "outcome": "4. By 2023, the implementation of priority actions is leading to an improvement in the condition of EPBC Act listed Threatened Ecological Communities."
-    },
-    {
-        "priorities": [
-            {
-                "category": "Land Management"
-            }
-        ],
-        "targeted": true,
-        "shortDescription": "Soil Condition",
-        "type": "secondary",
-        "category": "agriculture",
-        "supportsMultiplePrioritiesAsSecondary": true,
-        "outcome": "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
-    },
-    {
-        "priorities": [
-            {
-                "category": "Sustainable Agriculture"
-            }
-        ],
-        "shortDescription": "Climate / Weather Adaption",
-        "type": "secondary",
-        "category": "agriculture",
-        "supportsMultiplePrioritiesAsSecondary": true,
-        "outcome": "6. By 2023, there is an increase in the capacity of agriculture systems to adapt to significant changes in climate and market demands for information on provenance and sustainable production."
-    },
-    {
-        "priorities": [
-            {
-                "category": "Bushfires"
-            }
-        ],
-        "shortDescription": "Bushfire Recovery",
-        "type": "secondary",
-        "category": "bushfires",
-        "outcome": "Enhance the recovery and maximise the resilience of fire affected priority species, ecological communities and other natural assets within the seven regions impacted by the 2019-20 bushfires",
-        "supportsMultiplePrioritiesAsSecondary": true
+        "outcome":"Strengthen coordination of recovery efforts for the Koala and cross-sector engagement, collaboration and capability."
     }
 ]
 
