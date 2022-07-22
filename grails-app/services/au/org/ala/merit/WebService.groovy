@@ -218,12 +218,10 @@ class WebService {
             return error
         } catch (SocketTimeoutException e) {
             def error = [error: "Timed out getting json. URL= ${url.encodeAsURL()}."]
-            println error
             return error
         } catch (ConnectException ce) {
             log.info "Exception class = ${ce.getClass().name} - ${ce.getMessage()}"
             def error = [error: "ecodata service not available. URL= ${url.encodeAsURL()}."]
-            println error
             return error
         } catch (SocketException se) {
             def resp = [error: "Socket connection closed. ${se.getMessage()} URL= ${url}."]
@@ -269,16 +267,13 @@ class WebService {
             result = [statusCode:conn?.responseCode, error:error]
         } catch (SocketTimeoutException e) {
             String error = "Timed out getting json. URL= ${url}."
-            println error
             result = [statusCode:conn?.responseCode, error:error]
         } catch (SocketException se) {
             String error = "Socket connection closed. ${se.getMessage()} URL= ${url}."
-            println error
             result = [statusCode:conn?.responseCode, error:error]
         } catch (ConnectException ce) {
             log.info "Exception class = ${ce.getClass().name} - ${ce.getMessage()}"
             String error = "ecodata service not available. URL= ${url}."
-            println error
             result = [statusCode:conn?.responseCode, error:error]
         } catch (Exception e) {
             log.info "Exception class = ${e.getClass().name} - ${e.getMessage()}"
