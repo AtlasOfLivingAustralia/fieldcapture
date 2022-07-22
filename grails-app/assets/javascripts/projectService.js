@@ -14,15 +14,6 @@ ProjectStatus = {
     DELETED: 'deleted'
 };
 
-ReportStatus = {
-    ACTIVE: 'active',
-    READ_ONLY: 'readonly',
-
-    isReadOnly: function(status) {
-        return status && status.toLowerCase() == this.READ_ONLY;
-    }
-}
-
 PROJECT_EXTERNAL_ID_TYPES =  [
     'TECH_ONE_CODE', 'INTERNAL_ORDER_NUMBER', 'GRANT_AWARD'
 ];
