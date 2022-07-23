@@ -90,6 +90,8 @@ dependencies {
     compile "org.grails.plugins:ala-ws-plugin:2.0"
     compile 'org.grails.plugins:excel-export:2.1'
     compile 'org.grails.plugins:mail:2.0.0'
+    compile 'javax.mail:javax.mail-api:1.6.2'
+    compile 'com.sun.mail:javax.mail:1.6.2'
     compile 'org.grails.plugins:quartz:2.0.13'
     compile 'org.quartz-scheduler:quartz:2.2.1'
     compile "com.openhtmltopdf:openhtmltopdf-core:${openhtmltopdfversion}"
