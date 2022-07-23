@@ -37,7 +37,18 @@ class AbnLookupServiceSpec extends Specification implements AutowiredTest{
         def result = service.validateABN(abn)
 
         then:
-        result == abn
+        result == true
+    }
+
+    void "blank ABN"() {
+        setup:
+        String abn = ""
+
+        when:
+        def result = service.validateABN(abn)
+
+        then:
+        result == false
     }
 
     void "ABN Number length is less than 11 digits"() {
@@ -48,7 +59,7 @@ class AbnLookupServiceSpec extends Specification implements AutowiredTest{
         def result = service.validateABN(abn)
 
         then:
-        result == "false"
+        result == false
     }
 
     void "invalid ABN Number"() {
@@ -59,7 +70,7 @@ class AbnLookupServiceSpec extends Specification implements AutowiredTest{
         def result = service.validateABN(abn)
 
         then:
-        result == "false"
+        result == false
     }
 
     void "ABN Number validates blank value"() {
@@ -70,7 +81,7 @@ class AbnLookupServiceSpec extends Specification implements AutowiredTest{
         def result = service.validateABN(abn)
 
         then:
-        result == "false"
+        result == false
     }
 
     void "get ABN Details from correct ABN Number"() {

@@ -22,8 +22,7 @@ class AbnLookupService {
     Map lookupOrganisationNameByABN(String organisationABN){
         Map abnDetails
 
-        organisationABN = validateABN(organisationABN)
-        if (organisationABN == "false") {
+        if (!validateABN(getNonBlankNumericStringWithoutWhitespace(organisationABN))) {
             abnDetails = [error:"The supplied ABN is invalid", abn:'']
         } else {
             String abnLookupToken = grailsApplication.config.getProperty('abn.abnLookupToken')
@@ -67,18 +66,17 @@ class AbnLookupService {
      * @param abnString
      * @return
      */
-    private static String validateABN(String abnString) {
-        abnString = getNonBlankNumericStringWithoutWhitespace(abnString);
+    private static Boolean validateABN(String abnString) {
         if(abnString == null) {
-            return "false";
+            return false;
         }
 
         if(abnString.length() != 11) {
-            return "false";
+            return false;
         }
 
         if(abnString.substring(0,1) == '0') {
-            return "false";
+            return false;
         }
 
         String subtract1 = String.valueOf(Long.valueOf(abnString.substring(0,1))-1);
@@ -87,11 +85,10 @@ class AbnLookupService {
         Long modEightyNineRemainder = Math.floorMod(abnWeightingSum, 89);
 
         if(modEightyNineRemainder != 0) {
-            return "false";
+            return false;
         }
 
-//        return true;
-        return abnString;
+        return true;
     }
 
     /**
