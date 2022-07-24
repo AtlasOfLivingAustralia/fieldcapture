@@ -78,7 +78,7 @@ var ReportViewModel = function(report, config) {
         // day but we want to show the previous day on the label.
         var label;
         if (config.reportOwner && config.reportOwner.endDate) {
-            if (config.isLast && report.toDate == config.reportOwner.endDate) {
+            if (report.toDate == config.reportOwner.endDate) {
                 label = convertToSimpleDate(report.toDate);
             }
         }
@@ -388,7 +388,7 @@ var ReportsViewModel = function(reports, projects, availableReports, reportOwner
             if (!self.showAllReports() && report.fromDate > now) {
                 return;
             }
-            filteredReports.push(new ReportViewModel(report, _.extend({isLast:i == self.allReports().length-1}, config, {reportOwner:reportOwner})));
+            filteredReports.push(new ReportViewModel(report, _.extend({}, config, {reportOwner:reportOwner})));
         });
         filteredReports.sort(function(r1, r2) {
 

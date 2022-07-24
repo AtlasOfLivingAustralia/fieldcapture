@@ -603,7 +603,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         Map activity = [projectId:projectId, plannedEndDate: endDate]
         webService.getJson(_) >> [projectId:projectId, planStatus:ProjectService.PLAN_APPROVED, status:'active', plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z']
         reportService.getReportsForProject(projectId) >> []
-        reportService.findReportForDate(endDate, []) >> [status:Status.ACTIVE]
+        reportService.findReportForDate(endDate, []) >> [:]
 
         when:
         boolean canEdit = service.canEditActivity(activity)
@@ -618,23 +618,6 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         then:
         1 * reportService.excludesNotApproved(_) >> false
         canEdit == true
-    }
-
-    def "An activity cannot be edited if it's associated report is marked as read only"() {
-        setup:
-        String projectId = 'project1'
-        String endDate = '2016-12-31T13:00:00Z'
-        Map activity = [projectId:projectId, plannedEndDate: endDate]
-        webService.getJson(_) >> [projectId:projectId, planStatus:ProjectService.PLAN_APPROVED, status:'active', plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z']
-        reportService.getReportsForProject(projectId) >> []
-        reportService.findReportForDate(endDate, []) >> [status:Status.READ_ONLY]
-
-        when:
-        boolean canEdit = service.canEditActivity(activity)
-
-        then:
-        1 * reportService.excludesNotApproved(_) >> false
-        canEdit == false
     }
 
     def "Changing the project dates will result in the project reports being re-generated"() {
@@ -1344,73 +1327,6 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
             [status: HttpStatus.SC_OK]
         }
         postData == [custom:(dataSets+meriPlan)]
-    }
-
-    def "The project reports can be regenerated, including optionally specifying which categories to regenerate"() {
-        when:
-        service.generateProjectStageReports('p1', new ReportGenerationOptions())
-
-        then:
-        1 * webService.getJson({it.contains("project/p1")}) >> [projectId:'p1', status:'active']
-        1 * reportService.getReportsForProject('p1') >> [[reportId:'r1']]
-        1 * projectConfigurationService.getProjectConfiguration(_) >> new ProgramConfig([projectReports:[[reportType:'Activity', category:'test']]])
-
-        1 * reportService.regenerateReports([], _, _)
-
-        when:
-        service.generateProjectStageReports('p1', new ReportGenerationOptions(), ['test'])
-
-        then:
-        1 * webService.getJson({it.contains("project/p1")}) >> [projectId:'p1', status:'active']
-        1 * reportService.getReportsForProject('p1') >> [[reportId:'r1']]
-        1 * projectConfigurationService.getProjectConfiguration(_) >> new ProgramConfig([projectReports:[[reportType:'Activity', category:'test']]])
-
-        1 * reportService.regenerateReports([], _, _)
-
-
-        when:
-        service.generateProjectStageReports('p1', new ReportGenerationOptions(), ['test 2'])
-
-        then:
-        1 * webService.getJson({it.contains("project/p1")}) >> [projectId:'p1', status:'active']
-        1 * reportService.getReportsForProject('p1') >> [[reportId:'r1']]
-        1 * projectConfigurationService.getProjectConfiguration(_) >> new ProgramConfig([projectReports:[[reportType:'Activity', category:'test']]])
-
-        0 * reportService.regenerateReports([], _, _)
-    }
-
-    def "The project service can determine if a project has unchangable reports that align with the project end date"(String publicationStatus, String lastReportToDate, boolean expectedResult){
-        setup:
-        def project = [projectId:'p1', plannedStartDate:'2021-06-30T14:00:00Z', plannedEndDate:'2023-06-29T14:00:00Z']
-        project.reports = [[
-                reportId:"r1",
-                category:"c1",
-                fromDate:'2021-06-30T14:00:00Z',
-                toDate:'2022-06-30T14:00:00Z',
-                publicationStatus:'published'
-            ],[
-               reportId:"r2",
-               category:"c1",
-               fromDate:'2022-06-30T14:00:00Z',
-               toDate:lastReportToDate,
-               publicationStatus:publicationStatus]]
-        reportService.excludesNotApproved(project.reports[1]) >> new ReportService().excludesNotApproved(project.reports[1])
-
-        when:
-        boolean result = service.hasSubmittedOrApprovedFinalReportInCategory(project)
-
-        then:
-        result == expectedResult
-
-        where:
-        publicationStatus | lastReportToDate | expectedResult
-        'unpublished' | '2023-06-29T14:00:00Z' | false
-        'pendingApproval' | '2023-06-29T14:00:00Z' | true
-        'published' | '2023-06-29T14:00:00Z' | true
-        'cancelled' | '2023-06-29T14:00:00Z' | true
-        'published' | '2023-06-28T14:00:00Z' | false
-        'published' | '2023-06-30T14:00:00Z' | true
-
     }
 
     def "The projectMetrics method delegates to ecodata"() {

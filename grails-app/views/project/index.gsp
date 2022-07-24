@@ -140,7 +140,7 @@
             <li class="breadcrumb-item active" data-bind="text:name"></li>
         </ol>
     </section> <!-- end of breadcrumb -->
-    <g:render template="banner"/>
+
     <section class="row">
         <div class="col-sm-10">
             <h1 class="pull-left" data-bind="text:name"></h1>

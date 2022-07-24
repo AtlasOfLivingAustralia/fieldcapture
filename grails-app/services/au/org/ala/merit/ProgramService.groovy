@@ -175,14 +175,18 @@ class ProgramService {
 
     private void regenerateProjectReports(Map program, List<String> reportCategories = null) {
 
+        List projectReportConfig = program.config?.projectReports
+        List toRegenerate = projectReportConfig.findAll{it.category in reportCategories}
+
         Map projects = getProgramProjects(program.programId)
-        projects?.projects?.each{ project ->
-            project.reports = reportService.getReportsForProject(project.projectId)
-            if (projectService.canBulkRegenerateReports(project)) {
-                projectService.generateProjectStageReports(project.projectId, new ReportGenerationOptions(), reportCategories)
+        toRegenerate?.each {
+            projects?.projects?.each{ project ->
+                project.reports = reportService.getReportsForProject(project.projectId)
+                if (projectService.canRegenerateReports(project)) {
+                    projectService.generateProjectReports(it, project, new ReportGenerationOptions())
+                }
             }
         }
-
     }
 
     Map getProgramProjects(String id) {
