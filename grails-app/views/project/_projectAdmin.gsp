@@ -52,7 +52,7 @@
                         <div id="save-result-placeholder"></div>
                         <div class="col-sm-12 validationEngineContainer" id="settings-validation">
                             <g:render template="editProject"
-                                      model="[project: project, canChangeProjectDates:projectContent.admin.canChangeProjectDates, canRegenerateReports:projectContent.admin.canRegenerateReports]"/>
+                                      model="[project: project, canChangeProjectDates:projectContent.admin.canChangeProjectDates]"/>
                         </div>
                     </div>
                 </div>

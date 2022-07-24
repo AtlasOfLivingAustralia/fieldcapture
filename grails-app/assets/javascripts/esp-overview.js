@@ -14,7 +14,6 @@
 var SiteStatusModel = function(site, currentStage, map, sitesViewModel) {
     var self = this;
     self.name = site.name;
-    self.isReadOnly = currentStage.isReadOnly();
 
     var incompleteActivities = _.filter(currentStage.activities, function(activity) {
         return activity.siteId == site.siteId && !activity.isComplete();
@@ -61,15 +60,10 @@ var SiteStatusModel = function(site, currentStage, map, sitesViewModel) {
         ko.cleanNode(siteInfoTemplate);
         return siteInfoHtml;
     }
-    var colour = '#BB4411'
-    if (currentStage.isReadOnly()) {
-        colour = 'grey';
+    var featureDisplayOptions = {strokeColor:'#BB4411',fillColor:'#BB4411',fillOpacity:0.3,strokeWeight:1,zIndex:1,editable:false};
+    if (self.reportingComplete) {
+        featureDisplayOptions = {strokeColor:'green',fillColor:'green',fillOpacity:0.3,strokeWeight:1,zIndex:1,editable:false};
     }
-    else if (self.reportingComplete) {
-        colour = 'green';
-    }
-    var featureDisplayOptions = {strokeColor:colour,fillColor:colour,fillOpacity:0.3,strokeWeight:1,zIndex:1,editable:false};
-
     var activity = incompleteActivities.length >= 0 ? incompleteActivities[0] : null;
     if (!activity) {
         activity = _.find(currentStage.activities, function(activity) {

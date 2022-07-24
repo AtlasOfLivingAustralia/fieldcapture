@@ -1,7 +1,7 @@
 load('../../../utils/uuid.js');
 
 let refProgram = "Reef Trust 7 - Islands Restoration";
-var subprograms = ["Reef Builder - the coastal communities recovery project"]
+var subprograms = ["Reef Builder – the coastal communities recovery project"]
 
 subprograms.forEach(function (subProgram) {
     var now = ISODate();

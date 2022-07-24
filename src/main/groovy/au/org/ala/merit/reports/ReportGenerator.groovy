@@ -39,10 +39,7 @@ class ReportGenerator {
 
         Period period = Period.months(reportConfig.reportingPeriodInMonths)
 
-        // We truncate the time to midnight to account for the fact that some older projects were
-        // loaded at UTC midnight (newer ones use AEST/ADST) which causes issues with the new requirement the reports must be
-        // able to be generated to a single day precision.
-        DateTime endDate = reportOwner.periodEnd.withZone(DateTimeZone.default).withTimeAtStartOfDay()
+        DateTime endDate = reportOwner.periodEnd.withZone(DateTimeZone.default)
         DateTime onlyGenerateReportsForDatesBefore = reportConfig.onlyGenerateReportsForDatesBefore
 
         List<Map> reports
@@ -146,16 +143,9 @@ class ReportGenerator {
             }
             endDate = finalPeriod.start.minusMonths(reportConfig.reportingPeriodInMonths)
         }
-        log.info "Regenerating reports for ${reportOwner.id} at sequence: " + sequenceNo + " from: " + reportInterval.start + " ending at: " + reportInterval.end
+        log.info "Regenerating reports starting at sequence: " + sequenceNo + " from: " + reportInterval.start + " ending at: " + reportInterval.end
 
-        // We aren't using the DATE_FUDGE_FACTOR for the project end date because the way they are normally
-        // recorded is by entering the last day of a month (e.g 30/06/2023) in the UI which, after
-        // truncating time, translates to midnight on the morning of the 30th of June (rather than 11:59pm
-        // of the 30/06/2023) which essentially makes it almost a full day earlier than the normal end
-        // period of a report, which is aligned to the start date of the next report, which in this case
-        // would be midnight on the 1st of July 2023.
-        DateTime end = endDate.plusDays(1).minusDays(reportConfig.minimumReportDurationInDays - 1)
-        while (reportInterval.start < end) {
+        while (reportInterval.start < endDate.minusDays(DATE_FUDGE_FACTOR)) {
 
             reports << createReport(reportConfig, reportOwner, sequenceNo, reportInterval)
             sequenceNo++
@@ -201,15 +191,8 @@ class ReportGenerator {
             if ((reports.size() > 1 && !reportConfig.endDates && !reportConfig.skipFinalPeriod) || reports[-1].toDate > finalToDate) {
                 reports[-1].toDate = finalToDate
 
-                // This compensates for the situation where an extra report is added after the end date
-                // because of the "minimumReportDurationInDays" algorithm
-                if (reports[-1].toDate < reports[-1].fromDate) {
-                    reports.remove(reports.size()-1)
-                }
-                else {
-                    if (!reportConfig.canSubmitDuringReportingPeriod) {
-                        reports[-1].submissionDate = finalToDate
-                    }
+                if (!reportConfig.canSubmitDuringReportingPeriod) {
+                    reports[-1].submissionDate = finalToDate
                 }
             }
         }
@@ -276,12 +259,6 @@ class ReportGenerator {
             if (reportConfig.reportsAlignedToCalendar) {
                 DateTime alignedStartDate = DateUtils.alignToPeriod(startConstraint, period)
                 firstReportPeriodEnd = alignedStartDate.plus(period)
-                // It is possible that the first report period end is before the constrained reporting start.  This could happen with
-                // approved reports or in the case of program aligned reporting.  (e.g the first report date is specified at a program level
-                // and projects that start after the beginning of the program need to align to the dates)
-                while (firstReportPeriodEnd < startConstraint.plusDays(reportConfig.minimumReportDurationInDays)) {
-                    firstReportPeriodEnd = firstReportPeriodEnd.plus(period)
-                }
             }
             else {
                 firstReportPeriodEnd = startConstraint.plus(period)

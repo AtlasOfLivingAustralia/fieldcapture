@@ -121,13 +121,12 @@ class ManagementUnitServiceSpec extends Specification implements ServiceUnitTest
 
         1 * webService.getJson({it.endsWith("/managementUnit/$managementUnitId/projects?view=flat")}) >> [projects:[[projectId:'p1'], [projectId:'p2']]]
 
-        1 * projectService.canBulkRegenerateReports([projectId:'p1', reports:[[reportId:'r1']]]) >> true
-        1 * reportService.getReportsForProject('p1') >> [[reportId:'r1']]
-        1 * projectService.generateProjectStageReports('p1', new ReportGenerationOptions(), ['c5', 'c6'])
+        0 * projectService.generateProjectReports({it.category == 'c5'}, {it.projectId == 'p1'}, new ReportGenerationOptions())
+        0 * projectService.generateProjectReports({it.category == 'c6'}, {it.projectId == 'p1'}, new ReportGenerationOptions())
+        0 * projectService.generateProjectReports({it.category == 'c5'}, {it.projectId == 'p2'}, new ReportGenerationOptions())
+        0 * projectService.generateProjectReports({it.category == 'c6'}, {it.projectId == 'p2'}, new ReportGenerationOptions())
 
-        1 * projectService.canBulkRegenerateReports([projectId:'p2', reports:[[reportId:'r2']]]) >> true
-        1 * reportService.getReportsForProject('p2') >> [[reportId:'r2']]
-        1 * projectService.generateProjectStageReports('p2', new ReportGenerationOptions(), ['c5', 'c6'])
+        0 * projectService.generateProjectReports(_, _, _)
     }
 
     def "categories that have no reports configuration are ignored by the report generation"() {

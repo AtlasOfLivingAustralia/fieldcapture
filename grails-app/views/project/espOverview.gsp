@@ -92,8 +92,6 @@
         </div>
 
     </g:if>
-    <g:render template="banner"/>
-
     <p>${project.description}</p>
     <div class="row">
         <span class="col-sm-6">
@@ -303,7 +301,6 @@
 
 <div>
     <strong data-bind="text:name"></strong>
-    <span class="badge badge-danger" data-bind="if:isReadOnly">Reporting is disabled for this site</span>
     <div data-bind="visible:reportingComplete">
         <p>You have finished reporting for this site.</p>
     </div>
@@ -444,7 +441,7 @@
         if (simplifiedReportingViewModel.canViewSubmissionReport() && adminActivity) {
 
             var $mySites = $('#sites-tab');
-            $mySites.on('shown.bs.tab', function() {
+            $mySites.on('shown', function() {
                 map.map.fitBounds(map.featureBounds);
             });
 
