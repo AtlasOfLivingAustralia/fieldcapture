@@ -7,7 +7,7 @@ createProject({name:'project 1', projectId:"project_1", programId:'program_1',ma
     outputTargets:[
         {"outputLabel":"Weed Treatment Details",
             "scoreName":"areaTreatedHa",
-            "target":"10",
+            "target":NumberDecimal("10"),
             "unit":"Ha",
             "scoreLabel":"Total new area treated for weeds (Ha)",
             "scoreId":"score_1"
@@ -19,7 +19,7 @@ createProject({name:'project 2', projectId:"project_2", programId:'program_2',ma
     outputTargets:[
         {"outputLabel":"Weed Treatment Details",
             "scoreName":"areaTreatedHa",
-            "target":"10",
+            "target":NumberDecimal("10"),
             "unit":"Ha",
             "scoreLabel":"Total new area treated for weeds (Ha)",
             "scoreId":"score_1"
@@ -30,7 +30,7 @@ createProject({name:'project 3', projectId:"project_3", programId:'program_3',ma
     outputTargets:[
         {"outputLabel":"Weed Treatment Details",
             "scoreName":"areaTreatedHa",
-            "target":"10","unit":"Ha",
+            "target":NumberDecimal("10"),"unit":"Ha",
             "scoreLabel":"Total new area treated for weeds (Ha)",
             "scoreId":"score_1"
         }
@@ -42,7 +42,7 @@ createProject({name:'project 4', projectId:"project_4", programId:'program_1',ma
     planStatus: "approved",
     outputTargets:[
         {"outputLabel":"Pest Management Details",
-            "target":"600",
+            "target":NumberDecimal("600"),
             "scoreLabel":"Area covered (Ha) by pest treatment actions",
             "scoreId":"score_4",
             "scoreName":"totalAreaTreatedHa",
@@ -176,7 +176,7 @@ createProject({name:'project 5', projectId:"project_5", programId:'program_1',ma
     planStatus: "approved",
     outputTargets:[
         {"outputLabel":"Pest Management Details",
-            "target":"600",
+            "target":NumberDecimal("600"),
             "scoreLabel":"Area covered (Ha) by pest treatment actions",
             "scoreId":"score_4",
             "scoreName":"totalAreaTreatedHa",
@@ -310,7 +310,7 @@ createProject({name:'project 6', projectId:"project_6", programId:'program_1',ma
     planStatus: "approved",
     outputTargets:[
         {"outputLabel":"Pest Management Details",
-            "target":"600",
+            "target":NumberDecimal("600"),
             "scoreLabel":"Area covered (Ha) by pest treatment actions",
             "scoreName":"totalAreaTreatedHa",
             "unit":"Ha",
@@ -616,7 +616,7 @@ createProject({name:'General Projects', planStatus:"approved", projectId:"projec
     outputTargets:[
         {"outputLabel":"Weed Treatment Details",
             "scoreName":"areaTreatedHa",
-            "target":"10",
+            "target":NumberDecimal("10"),
             "unit":"Ha",
             "scoreLabel":"Total new area treated for weeds (Ha)",
             "scoreId":"score_1"
@@ -626,35 +626,35 @@ createProject({name:'General Projects', planStatus:"approved", projectId:"projec
             "periodTargets" : [
                 {
                     "period" : "2018/2019",
-                    "target" : 0
+                    "target" : NumberDecimal("0")
                 },
                 {
                     "period" : "2019/2020",
-                    "target" : 0
+                    "target" : NumberDecimal("0")
                 },
                 {
                     "period" : "2020/2021",
-                    "target" : 0
+                    "target" : NumberDecimal("0")
                 },
                 {
                     "period" : "2021/2022",
-                    "target" : 0
+                    "target" : NumberDecimal("0")
                 },
                 {
                     "period" : "2022/2023",
-                    "target" : 0
+                    "target" : NumberDecimal("0")
                 },
                 {
                     "period" : "2023/2024",
-                    "target" : 0
+                    "target" : NumberDecimal("0")
                 },
                 {
                     "period" : "2024/2025",
-                    "target" : 0
+                    "target" : NumberDecimal("0")
                 },
                 {
                     "period" : "2025/2026",
-                    "target" : 0
+                    "target" : NumberDecimal("0")
                 }
             ],
             "target" : "400"
@@ -680,11 +680,11 @@ createProject({name:'General Projects', planStatus:"approved", projectId:"projec
                 },
                 {
                     "period" : "2021/2022",
-                    "target" : 0
+                    "target" : NumberDecimal("0")
                 },
                 {
                     "period" : "2022/2023",
-                    "target" : 0
+                    "target" : NumberDecimal("0")
                 }
             ],
             "target" : "8"
@@ -694,27 +694,27 @@ createProject({name:'General Projects', planStatus:"approved", projectId:"projec
             "periodTargets" : [
                 {
                     "period" : "2017/2018",
-                    "target" : 0
+                    "target" : NumberDecimal("0")
                 },
                 {
                     "period" : "2018/2019",
-                    "target" : "0"
+                    "target" : NumberDecimal("0")
                 },
                 {
                     "period" : "2019/2020",
-                    "target" : "03"
+                    "target" : NumberDecimal("03")
                 },
                 {
                     "period" : "2020/2021",
-                    "target" : 0
+                    "target" : NumberDecimal("0")
                 },
                 {
                     "period" : "2021/2022",
-                    "target" : 0
+                    "target" : NumberDecimal("0")
                 },
                 {
                     "period" : "2022/2023",
-                    "target" : 0
+                    "target" : NumberDecimal("0")
                 }
             ],
             "target" : "8"
