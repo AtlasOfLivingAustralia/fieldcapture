@@ -60,7 +60,7 @@
                 <div class="well-title">Projects in this program  <a class="gotoProgram" href="${g.createLink(controller: 'program', action: 'index',id:program.programId)}"><i class="fa fa-link"></i></a></div>
                 <table id="projectOverviewList-${i}" class="table table-striped table-bordered">
                     <thead class="thead-light">
-                    <th class="projectId">Project ID</th>
+                    <th class="projectId">${g.message(code:'label.merit.projectID')}</th>
                     <th class="name">Name</th>
                     <th class="description">Description</th>
                     <th class="outcomes">Outcome</th>
@@ -71,7 +71,7 @@
                     <tbody>
                     <g:each in="${programDetails.projects}" var="project">
                         <tr>
-                            <td class="grantId"><a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}" >${project.externalId ?: project.grantId}</a></td>
+                            <td class="grantId"><a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}" >${project.grantId}</a></td>
                             <td class="projectName">${project.name?.encodeAsHTML()}</td>
                             <td class="projectDescription">${project.description}</td>
                             <g:if test="${project.custom?.details?.outcomes?.primaryOutcome}">
