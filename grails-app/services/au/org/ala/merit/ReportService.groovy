@@ -911,7 +911,7 @@ class ReportService {
 
     private boolean canEdit(String userId, Map report, Map activity) {
         // Submitted or approved reports are not editable.
-        if (excludesNotApproved(report)) {
+        if (excludesNotApproved(report) || Status.isReadOnly(report.status)) {
             return false
         }
 

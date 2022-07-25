@@ -2,25 +2,21 @@ package au.org.ala.merit
 
 import au.org.ala.merit.reports.ReportConfig
 import au.org.ala.merit.reports.ReportOwner
+import grails.testing.services.ServiceUnitTest
 import grails.testing.spring.AutowiredTest
 import spock.lang.Specification
 
 /**
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
  */
-class ReportServiceSpec extends Specification implements AutowiredTest{
-
-    Closure doWithSpring() {{ ->
-        service ReportService
-    }}
-
-    ReportService service
+class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportService> {
 
     def webService = Mock(WebService)
     def projectService = Stub(ProjectService)
     def metadataService = Stub(MetadataService)
     def activityService = Mock(ActivityService)
     def emailService = Mock(EmailService)
+    def userService = Mock(UserService)
 
     def setup() {
 
@@ -30,6 +26,7 @@ class ReportServiceSpec extends Specification implements AutowiredTest{
         service.activityService = activityService
         service.emailService = emailService
         service.grailsApplication = grailsApplication
+        service.userService = userService
     }
 
     /**
@@ -448,6 +445,24 @@ class ReportServiceSpec extends Specification implements AutowiredTest{
         then:
         1 * webService.getJson({it.endsWith('report/r1')}) >> [reportId:'r1', activityId:'a1']
         1 * activityService.unlock('a1')
+
+    }
+
+    def "Read only reports will be marked as editable:false"() {
+        setup:
+        String reportId = 'r1'
+        ReportService.ReportMode mode = ReportService.ReportMode.EDIT
+
+        when:
+        Map model = service.activityReportModel(reportId, mode)
+
+        then:
+        1 * webService.getJson({it.endsWith('report/'+reportId)}) >> [status:'readonly', reportId: reportId, publicationStatus:'not approved', activityId:'a1']
+        1 * activityService.get('a1') >> [activityId:'a1', type:'ReportForm', formVersion:2]
+        1 * activityService.getActivityMetadata('ReportForm', 2) >> [:]
+
+        and:
+        model.editable == false
 
     }
 }

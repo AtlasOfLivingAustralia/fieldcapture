@@ -41,3 +41,12 @@ ActivityProgress = {
     deferred: 'deferred',
     cancelled:'cancelled',
 };
+
+ReportStatus = {
+    ACTIVE: 'active',
+    READ_ONLY: 'readonly',
+
+    isReadOnly: function(status) {
+        return status && status.toLowerCase() == this.READ_ONLY;
+    }
+}
