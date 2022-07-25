@@ -29,6 +29,61 @@ class AbnLookupServiceSpec extends Specification implements AutowiredTest{
     def cleanup() {
     }
 
+    void "valid ABN Number"() {
+        setup:
+        String abn = "51824753556"
+
+        when:
+        def result = service.validateABN(abn)
+
+        then:
+        result == true
+    }
+
+    void "blank ABN"() {
+        setup:
+        String abn = ""
+
+        when:
+        def result = service.validateABN(abn)
+
+        then:
+        result == false
+    }
+
+    void "ABN Number length is less than 11 digits"() {
+        setup:
+        String abn = "1824753556"
+
+        when:
+        def result = service.validateABN(abn)
+
+        then:
+        result == false
+    }
+
+    void "invalid ABN Number"() {
+        setup:
+        String abn = "01824753556"
+
+        when:
+        def result = service.validateABN(abn)
+
+        then:
+        result == false
+    }
+
+    void "ABN Number validates blank value"() {
+        setup:
+        String abn = ""
+
+        when:
+        def result = service.validateABN(abn)
+
+        then:
+        result == false
+    }
+
     void "get ABN Details from correct ABN Number"() {
         setup:
         String abn = "41687119230"
@@ -63,7 +118,7 @@ class AbnLookupServiceSpec extends Specification implements AutowiredTest{
     }
 
 
-    void "Providing a Wrong ABN Number"() {
+    void "Providing a Wrong ABN Number will ot invoke the webservice"() {
         setup:
         String abn = "41687119231"
 
@@ -76,11 +131,12 @@ class AbnLookupServiceSpec extends Specification implements AutowiredTest{
         Map actual = service.lookupOrganisationNameByABN(abn)
 
         then:
-        1 * webService.getString(abnLookupUrlString, false) >> wsResponse
+        0 * webService.getString(abnLookupUrlString, false) >> wsResponse
 
         expect:
-        actual.abn == null
+        actual.abn == ''
         actual.entityName == null
     }
 
 }
+
