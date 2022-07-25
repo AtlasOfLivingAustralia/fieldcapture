@@ -11,7 +11,7 @@
 
                         <g:if test="${fc.userIsAlaOrFcAdmin()}">
                             <div class="col-sm-8 programName"><g:link controller="program" action="index"
-                                         id="${config.program.programId}"><fc:programFullName program="${config.program}"/></g:link></div>
+                                                                      id="${config.program.programId}"><fc:programFullName program="${config.program}"/></g:link></div>
                         </g:if>
                         <g:else>
                             <div class="col-sm-8 programName"><fc:programFullName program="${config.program}"/></div>
@@ -19,11 +19,11 @@
 
                     </div>
                     <g:if test="${project.managementUnitId}">
-                    <div class="row mb-2">
-                        <div class="col-sm-4 header-label">Management Unit</div>
-                        <div class="col-sm-8 managementUnitName"><g:link controller="managementUnit" action="index"
-                                                   id="${project.managementUnitId}">${project.managementUnitName?.encodeAsHTML()}</g:link></div>
-                    </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-4 header-label">Management Unit</div>
+                            <div class="col-sm-8 managementUnitName"><g:link controller="managementUnit" action="index"
+                                                                             id="${project.managementUnitId}">${project.managementUnitName?.encodeAsHTML()}</g:link></div>
+                        </div>
                     </g:if>
 
                     <div class="row mb-2">
@@ -38,7 +38,7 @@
                     </div>
 
                     <div class="row mb-2">
-                        <div class="col-sm-4 header-label">Project ID</div>
+                        <div class="col-sm-4 header-label">${g.message(code:'label.merit.projectID')}</div>
 
                         <div class="col-sm-8 projectId">${project.grantId}</div>
                     </div>
@@ -94,12 +94,19 @@
 
                     <g:if test="${showExternalIds}">
                         <g:each in="${project.externalIds?.collect{it.idType}?.unique()}" var="externalIdType">
-                        <div class="row mb-2">
-                            <div class="col-sm-4 header-label"><g:message code="${'label.externalId.'+externalIdType}"/>/s</div>
-                            <div class="col-sm-8 external-id"><fc:externalIds externalIds="${project.externalIds}" idType="${externalIdType}"/></div>
+                            <div class="row mb-2">
+                                <div class="col-sm-4 header-label"><g:message code="${'label.externalId.'+externalIdType}"/>/s</div>
+                                <div class="col-sm-8 external-id"><fc:externalIds externalIds="${project.externalIds}" idType="${externalIdType}"/></div>
 
-                        </div>
+                            </div>
                         </g:each>
+                    </g:if>
+
+                    <g:if test="${project.externalId}">
+                        <div class="row mb-2">
+                            <div class="col-sm-4 header-label">${g.message(code:'label.merit.externalID')}</div>
+                            <div class="col-sm-8 projectId">${project.externalId}</div>
+                        </div>
                     </g:if>
                 </div>
             </div>
@@ -107,73 +114,73 @@
     </div>
 
     <g:if test="${outcomes}">
-    <h4>Program outcomes addressed</h4>
+        <h4>Program outcomes addressed</h4>
 
-    <div class="row mb-2">
-        <div class="col-sm-10 value">
-            <g:if test="${project.custom?.details?.outcomes?.primaryOutcome?.description}">
-                <table class="table project-outcomes">
-                    <g:set var="p_outcome" value="${project.custom?.details?.outcomes?.primaryOutcome}"></g:set>
-                    <thead>
-                    <tr>
-                        <th></th>
-                        <th class="outcome">Outcomes</th>
-                        <th class="priority">Primary Investment Priority</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td class="header-column">Primary Outcome</td>
-                        <td class="outcome">${p_outcome.description}</td>
-                        <td class="priority">
-                            <g:if test="${p_outcome.assets?.size() > 1}">
-                                <ul>
-                                    <g:each in="${p_outcome.assets}" var="p_asset">
-                                        <li>${p_asset}</li>
-                                    </g:each>
-                                </ul>
-                            </g:if>
-                            <g:else>
-                                <g:each in="${p_outcome.assets}" var="p_asset">
-                                    ${p_asset}
-                                </g:each>
-                            </g:else>
-                        </td>
-                    </tr>
-
-                    <g:if test="${project.custom?.details?.outcomes?.secondaryOutcomes?.find{it.description}}">
-                        <g:set var="s_outcomes" value="${project.custom?.details?.outcomes?.secondaryOutcomes}"></g:set>
-                        <g:each status="i" in="${s_outcomes}" var="s_outcome">
-                            <tr>
-                                <g:if test="${i == 0}">
-                                    <td rowspan="${s_outcomes.size()}" class="header-column">Secondary Outcomes</td>
+        <div class="row mb-2">
+            <div class="col-sm-10 value">
+                <g:if test="${project.custom?.details?.outcomes?.primaryOutcome?.description}">
+                    <table class="table project-outcomes">
+                        <g:set var="p_outcome" value="${project.custom?.details?.outcomes?.primaryOutcome}"></g:set>
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th class="outcome">Outcomes</th>
+                            <th class="priority">Primary Investment Priority</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="header-column">Primary Outcome</td>
+                            <td class="outcome">${p_outcome.description}</td>
+                            <td class="priority">
+                                <g:if test="${p_outcome.assets?.size() > 1}">
+                                    <ul>
+                                        <g:each in="${p_outcome.assets}" var="p_asset">
+                                            <li>${p_asset}</li>
+                                        </g:each>
+                                    </ul>
                                 </g:if>
-                                <td class="outcome">${s_outcome.description}</td>
-                                <td class="priority">
-                                    <g:each in="${s_outcome.assets}" var="s_asset">
-                                        ${s_asset}<br/>
+                                <g:else>
+                                    <g:each in="${p_outcome.assets}" var="p_asset">
+                                        ${p_asset}
                                     </g:each>
-                                </td>
-                            </tr>
-                        </g:each>
-                    </g:if>
-                    </tbody>
-                </table>
-            </g:if>
-            <g:else>
-                The MERI Plan is currently being developed. These details will be made available as soon as possible.
-            </g:else>
+                                </g:else>
+                            </td>
+                        </tr>
+
+                        <g:if test="${project.custom?.details?.outcomes?.secondaryOutcomes?.find{it.description}}">
+                            <g:set var="s_outcomes" value="${project.custom?.details?.outcomes?.secondaryOutcomes}"></g:set>
+                            <g:each status="i" in="${s_outcomes}" var="s_outcome">
+                                <tr>
+                                    <g:if test="${i == 0}">
+                                        <td rowspan="${s_outcomes.size()}" class="header-column">Secondary Outcomes</td>
+                                    </g:if>
+                                    <td class="outcome">${s_outcome.description}</td>
+                                    <td class="priority">
+                                        <g:each in="${s_outcome.assets}" var="s_asset">
+                                            ${s_asset}<br/>
+                                        </g:each>
+                                    </td>
+                                </tr>
+                            </g:each>
+                        </g:if>
+                        </tbody>
+                    </table>
+                </g:if>
+                <g:else>
+                    The MERI Plan is currently being developed. These details will be made available as soon as possible.
+                </g:else>
+            </div>
         </div>
-    </div>
     </g:if>
 
     <g:if test="${objectives}">
         <h4>Objectives addressed</h4>
         <g:if test="${project.custom?.details?.objectives?.rows1 && project.custom?.details?.objectives?.rows1[0]?.description}">
             <ul>
-            <g:each in="${project.custom.details.objectives.rows1}" var="objective">
-                <li>${objective.description}</li>
-            </g:each>
+                <g:each in="${project.custom.details.objectives.rows1}" var="objective">
+                    <li>${objective.description}</li>
+                </g:each>
             </ul>
         </g:if>
         <g:else>
@@ -240,15 +247,15 @@
     </g:if>
 
     <g:if test="${hasProjectStories}">
-            <h3>Project stories</h3>
-            <div class="blog-section">
-                <g:render template="/shared/blog" model="${[blog: blog, type: 'Project Stories']}"/>
+        <h3>Project stories</h3>
+        <div class="blog-section">
+            <g:render template="/shared/blog" model="${[blog: blog, type: 'Project Stories']}"/>
 
-                %{-- Legacy news & events section--}%
-                <div class="row mb-2" data-bind="visible:projectStories()">
-                    <div class="col-sm-10" id="projectStoriesDiv" data-bind="html:projectStories.markdownToHtml()"></div>
-                </div>
+            %{-- Legacy news & events section--}%
+            <div class="row mb-2" data-bind="visible:projectStories()">
+                <div class="col-sm-10" id="projectStoriesDiv" data-bind="html:projectStories.markdownToHtml()"></div>
             </div>
+        </div>
     </g:if>
 </g:if>
 
