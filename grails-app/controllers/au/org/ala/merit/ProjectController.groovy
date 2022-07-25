@@ -280,7 +280,7 @@ class ProjectController {
         render template: 'dashboard', model: [metrics: projectService.summary(id)]
     }
 
-    @PreAuthorise(accessLevel='siteAdmin')
+    @PreAuthorise(accessLevel='caseManager')
     def ajaxValidateProjectDates(String id) {
         if (!params.plannedStartDate) {
             render status:400, message:"Invalid date supplied"
