@@ -22,12 +22,13 @@ class AbnLookupService {
     Map lookupOrganisationNameByABN(String organisationABN){
         Map abnDetails
 
-        if (!validateABN(getNonBlankNumericStringWithoutWhitespace(organisationABN))) {
+        String abn = getNonBlankNumericStringWithoutWhitespace(organisationABN);
+        if (!validateABN(abn)) {
             abnDetails = [error:"The supplied ABN is invalid", abn:'']
         } else {
             String abnLookupToken = grailsApplication.config.getProperty('abn.abnLookupToken')
             String url = grailsApplication.config.getProperty('abn.abnUrl')
-            String abnLookupUrlString =  url + organisationABN + "&guid=" + abnLookupToken
+            String abnLookupUrlString =  url + abn + "&guid=" + abnLookupToken
 
             Map resp  = webService.getString(abnLookupUrlString, false)
 
