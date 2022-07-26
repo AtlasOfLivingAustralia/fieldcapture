@@ -92,10 +92,12 @@
         </div>
 
     </g:if>
+    <g:render template="banner"/>
+
     <p>${project.description}</p>
     <div class="row">
         <span class="col-sm-6">
-            <span class="label label-info label-small">${g.message(code:'label.merit.projectID')}:</span> ${project.externalId}<br/>
+            <span class="label label-info label-small">Project ID:</span> ${project.externalId}<br/>
             <span class="label label-info label-small">Reporting Period:</span> <span data-bind="text:reportingFinancialYear"></span><br/>
         </span>
         <span class="col-sm-6">
@@ -301,6 +303,7 @@
 
 <div>
     <strong data-bind="text:name"></strong>
+    <span class="badge badge-danger" data-bind="if:isReadOnly">Reporting is disabled for this site</span>
     <div data-bind="visible:reportingComplete">
         <p>You have finished reporting for this site.</p>
     </div>
@@ -441,7 +444,7 @@
         if (simplifiedReportingViewModel.canViewSubmissionReport() && adminActivity) {
 
             var $mySites = $('#sites-tab');
-            $mySites.on('shown', function() {
+            $mySites.on('shown.bs.tab', function() {
                 map.map.fitBounds(map.featureBounds);
             });
 
