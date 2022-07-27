@@ -66,8 +66,8 @@
       "template": {
         "dataModel": [
           {
+            "name": "wasActivityUndertaken",
             "dataType": "text",
-            "name": "multiplePaddocks",
             "constraints": [
               "Yes",
               "No"
@@ -75,11 +75,33 @@
           },
           {
             "dataType": "text",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
+            "name": "multiplePaddocks",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "name": "grazingagreement",
             "constraints": [
               "Yes",
               "No"
-            ]
+            ],
+            "validate": "required"
           },
           {
             "columns": [
@@ -88,30 +110,54 @@
                 "name": "paddockNum",
                 "behaviour": [
                   {
-                    "condition": "multiplePaddocks == \"Yes\"",
-                    "type": "enable"
+                    "condition": "wasActivityUndertaken == \"Yes\"",
+                    "type": "enable_and_clear"
                   }
                 ]
               },
               {
                 "dataType": "number",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
                 "name": "paddockArea",
                 "validate": "min[0]"
               },
               {
                 "dataType": "date",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
                 "name": "startDate",
                 "description": "",
                 "validate": "required"
               },
               {
                 "dataType": "date",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
                 "name": "endDate",
                 "description": "",
                 "validate": "required"
               },
               {
                 "dataType": "text",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
                 "name": "typeOfStock",
                 "description": "",
                 "constraints": [
@@ -124,6 +170,12 @@
               },
               {
                 "dataType": "text",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
                 "name": "productionType",
                 "description": "",
                 "constraints": {
@@ -168,6 +220,12 @@
               },
               {
                 "dataType": "text",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
                 "name": "growthStage",
                 "description": "",
                 "constraints": {
@@ -225,12 +283,24 @@
               },
               {
                 "dataType": "number",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
                 "name": "individualCount",
                 "description": "",
                 "validate": "required,min[0]"
               },
               {
                 "dataType": "text",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
                 "name": "breed",
                 "description": "",
                 "constraints": {
@@ -356,11 +426,23 @@
               },
               {
                 "dataType": "number",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
                 "name": "swardHeightCm",
                 "validate": "min[0]"
               },
               {
                 "dataType": "number",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
                 "name": "groundCoverPercent",
                 "validate": "min[0],max[100]"
               }
@@ -370,14 +452,37 @@
           },
           {
             "dataType": "number",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "name": "cost",
             "validate": "integer,min[0]"
           },
           {
             "dataType": "text",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "name": "notes",
             "description": "",
             "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"No\""
+              }
+            ],
+            "name": "activityNotUndertaken",
+            "description": ""
           }
         ],
         "modelName": "ESP Livestock Grazing Management",
@@ -387,13 +492,20 @@
             "type": "row",
             "items": [
               {
-                "source": "If grazing is a management action for the site but you did not graze during this reporting period please complete the report and state why you did not graze in the text box.",
-                "type": "literal"
+                "preLabel": "Was this activity undertaken during this reporting period?",
+                "type": "selectOne",
+                "source": "wasActivityUndertaken"
               }
             ]
           },
           {
             "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "items": [
               {
                 "source": "<b>Please note</b> Grazing activities are included under any or all of the following; “Conservation grazing”, “Strategic grazing”, “Monitoring and manage grazing pressure from domestic livestock” and “Monitor and manage total grazing pressure”. <br/><i>Please endeavour to record sward height and ground cover percentage after each grazing period.</i>",
@@ -403,6 +515,12 @@
           },
           {
             "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "items": [
               {
                 "type": "col",
@@ -418,6 +536,12 @@
           },
           {
             "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "items": [
               {
                 "type": "col",
@@ -433,6 +557,12 @@
           },
           {
             "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "items": [
               {
                 "allowHeaderWrap": true,
@@ -502,6 +632,12 @@
           },
           {
             "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "items": [
               {
                 "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year, or if the management was not undertaken, please state the reason why</label></span><div>If the management action was not undertaken and you are explaining why, delete all rows in the above table by hitting the bold 'x' in the last column.  If you don't delete the empty rows you will be unable to submit your report.</div>",
@@ -511,6 +647,12 @@
           },
           {
             "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "items": [
               {
                 "preLabel": "",
@@ -522,11 +664,34 @@
           },
           {
             "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "items": [
               {
                 "preLabel": "Total cost of management actions",
                 "source": "cost",
                 "type": "currency"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"No\""
+              }
+            ],
+            "items": [
+              {
+                "preLabel": "If Livestock Grazing Management is a management action under your funding agreement but you were not able to undertake this activity, during the reporting period, please state the reason.",
+                "source": "activityNotUndertaken",
+                "type": "textarea",
+                "rows": 4
               }
             ]
           }
