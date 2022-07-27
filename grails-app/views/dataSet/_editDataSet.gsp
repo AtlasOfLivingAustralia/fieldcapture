@@ -12,7 +12,7 @@
         </div>
     </div>
     <div class="form-group row">
-        <label for="projectId" class="col-sm-5 col-form-label">2. Project ID</label>
+        <label for="projectId" class="col-sm-5 col-form-label">2. ${g.message(code:'label.merit.projectID')}</label>
         <div class="col-sm-7">
             <input type="text" readonly="readonly" class="form-control" id="projectId" placeholder="" value="${project.grantId}">
         </div>

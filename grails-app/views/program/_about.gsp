@@ -102,93 +102,93 @@
 
 
 <div class="projects-wrapper d-none d-md-block">
-<g:set var="projects" value="${content.projects.projects}" />
-<g:if test="${projects}">
-    <div class="well-title">Projects</div>
-    <table id="projectOverviewList" class="table table-striped table-bordered">
-        <thead class="thead-light">
-        <th class="grantId">Grant ID</th>
-        <th class="name">Name</th>
-        <th class="description">Description</th>
-        <th class="outcomes">Outcome</th>
-        <th class="priority">Investment Priority</th>
-        <th class="startDate">Start Date</th>
-        <th class="endDate">End Date</th>
-        </thead>
-        <tbody>
-        <g:each var="project" in="${projects}">
-            <tr>
-                <td class="grantId"><a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}" >${project.externalId ?: project.grantId}</a></td>
-                <td class="projectName">${project.name}</td>
-                <td class="description">${project.description}</td>
-                <g:if test="${project.custom?.details?.outcomes?.primaryOutcome}">
-                      <g:set var="primaryOutcome" value="${project.custom.details.outcomes.primaryOutcome}" />
-                      <td class="outcomes">${primaryOutcome.shortDescription}</td>
-                      <g:set var="primaryOutcomePriorities" value="${primaryOutcome.assets}"></g:set>
-                       <td class="priority">
-                             <g:each var="priority" in="${primaryOutcomePriorities}">
-                                 ${priority}
-                             </g:each>
-                       </td>
-                 </g:if>
-                <g:else>
-                     <td></td>
-                     <td></td>
-                </g:else>
+    <g:set var="projects" value="${content.projects.projects}" />
+    <g:if test="${projects}">
+        <div class="well-title">Projects</div>
+        <table id="projectOverviewList" class="table table-striped table-bordered">
+            <thead class="thead-light">
+            <th class="grantId"><g:message code="label.merit.projectID"/></th>
+            <th class="name">Name</th>
+            <th class="description">Description</th>
+            <th class="outcomes">Outcome</th>
+            <th class="priority">Investment Priority</th>
+            <th class="startDate">Start Date</th>
+            <th class="endDate">End Date</th>
+            </thead>
+            <tbody>
+            <g:each var="project" in="${projects}">
+                <tr>
+                    <td class="grantId"><a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}" >${project.grantId}</a></td>
+                    <td class="projectName">${project.name}</td>
+                    <td class="description">${project.description}</td>
+                    <g:if test="${project.custom?.details?.outcomes?.primaryOutcome}">
+                        <g:set var="primaryOutcome" value="${project.custom.details.outcomes.primaryOutcome}" />
+                        <td class="outcomes">${primaryOutcome.shortDescription}</td>
+                        <g:set var="primaryOutcomePriorities" value="${primaryOutcome.assets}"></g:set>
+                        <td class="priority">
+                            <g:each var="priority" in="${primaryOutcomePriorities}">
+                                ${priority}
+                            </g:each>
+                        </td>
+                    </g:if>
+                    <g:else>
+                        <td></td>
+                        <td></td>
+                    </g:else>
 
-                <td class="startDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedStartDate)}</td>
-                <td class="endDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedEndDate)}</td>
+                    <td class="startDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedStartDate)}</td>
+                    <td class="endDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedEndDate)}</td>
 
-            </tr>
-        </g:each>
-        </tbody>
-    </table>
-</g:if>
-<g:else>
-    <div class="row">
-        <span class="col-sm"><h4>${program.name?.encodeAsHTML()} is not currently running any projects.</h4></span>
-    </div>
-</g:else>
+                </tr>
+            </g:each>
+            </tbody>
+        </table>
+    </g:if>
+    <g:else>
+        <div class="row">
+            <span class="col-sm"><h4>${program.name?.encodeAsHTML()} is not currently running any projects.</h4></span>
+        </div>
+    </g:else>
 
 </div>
 <hr/>
 <g:if test="${blog.editable || blog.hasNewsAndEvents || blog.hasProgramStories || blog.hasPhotos}">
-<div class="row">
-    <div class="well-title ml-2 col-sm-11">Program blog</div>
-    <g:if test="${blog.editable}">
-        <div class="col-sm-11 ml-2">
-            <p>
-                <a class="newBlog" href="${g.createLink(controller: 'blog', action: 'create', params:[programId: program.programId, returnTo:g.createLink(controller: 'program', action:'index', id:program.programId)])}">
-                <button class="btn"><i class="fa fa-newspaper-o"></i> New Entry</button></a>
-                <button id="gotoEditBlog" class="btn"><i class="fa fa-edit"></i> Edit</button>
+    <div class="row">
+        <div class="well-title ml-2 col-sm-11">Program blog</div>
+        <g:if test="${blog.editable}">
+            <div class="col-sm-11 ml-2">
+                <p>
+                    <a class="newBlog" href="${g.createLink(controller: 'blog', action: 'create', params:[programId: program.programId, returnTo:g.createLink(controller: 'program', action:'index', id:program.programId)])}">
+                        <button class="btn"><i class="fa fa-newspaper-o"></i> New Entry</button></a>
+                    <button id="gotoEditBlog" class="btn"><i class="fa fa-edit"></i> Edit</button>
                 </a>
-            </p>
-        </div>
-    </g:if>
+                </p>
+            </div>
+        </g:if>
 
 
-    <g:if test="${blog.hasNewsAndEvents}">
-        <div class="well-title ml-2 col-sm-11">News and Events</div>
-        <div class="blog-section  ml-2 col-sm-11">
-            <g:render template="/shared/blog" model="${[blog:blog.blogs, type:'News and Events']}"/>
-        </div>
-    </g:if>
+        <g:if test="${blog.hasNewsAndEvents}">
+            <div class="well-title ml-2 col-sm-11">News and Events</div>
+            <div class="blog-section  ml-2 col-sm-11">
+                <g:render template="/shared/blog" model="${[blog:blog.blogs, type:'News and Events']}"/>
+            </div>
+        </g:if>
 
-    <g:if test="${blog.hasProgramStories}">
+        <g:if test="${blog.hasProgramStories}">
             <div class="well-title ml-2 col-sm-11">Program stories</div>
             <div class="blog-section ml-2 col-sm-11">
                 <g:render template="/shared/blog" model="${[blog:blog.blogs, type:'Program Stories']}"/>
             </div>
-    </g:if>
+        </g:if>
 
-    <g:if test="${blog.hasPhotos}">
+        <g:if test="${blog.hasPhotos}">
             <div class="well-title ml-2 col-sm-11">Photos</div>
             <div class="blog-section ml-2 col-sm-11">
                 <g:render template="/shared/blog" model="${[blog:blog.blogs, type:'Photo']}"/>
             </div>
-    </g:if>
+        </g:if>
 
- </div>
+    </div>
 </g:if>
 
 <g:if test="${servicesDashboard.visible && servicesDashboard.services}">

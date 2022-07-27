@@ -6,47 +6,47 @@
     <title>${project?.name.encodeAsHTML()} | Project | MERIT</title>
     <script type="text/javascript" src="${grailsApplication.config.getProperty('google.maps.url')}"></script>
     <script>
-    var fcConfig = {
-        serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
-        espSupportEmail: "${grailsApplication.config.getProperty('espSupportEmail')}",
-        activityEditUrl: "${createLink(controller: 'activity', action: 'edit')}",
-        activityEnterDataUrl: "${createLink(controller: 'activity', action: 'enterData')}",
-        activityUpdateUrl: "${createLink(controller: 'activity', action: 'ajaxUpdate')}",
-        activityViewUrl: "${createLink(controller: 'activity', action: 'index')}",
-        starProjectUrl: "${createLink(controller: 'project', action: 'starProject')}",
-        spatialBaseUrl: "${grailsApplication.config.getProperty('spatial.baseUrl')}",
-        spatialWmsCacheUrl: "${grailsApplication.config.getProperty('spatial.wms.cache.url')}",
-        spatialWmsUrl: "${grailsApplication.config.getProperty('spatial.wms.url')}",
-        sldPolgonDefaultUrl: "${grailsApplication.config.getProperty('sld.polgon.default.url')}",
-        sldPolgonHighlightUrl: "${grailsApplication.config.getProperty('sld.polgon.highlight.url')}",
-        organisationLinkBaseUrl: "${createLink(controller:'organisation', action:'index')}",
-        imageLocation:"${assetPath(src:'/')}",
-        documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
-        documentDeleteUrl: "${createLink(controller:"document", action:"deleteDocument")}",
-        espPhotosUrl:"${createLink(controller:'project', action:'espPhotos', id:project.projectId)}",
-        submitReportUrl: "${createLink(controller: 'project', action: 'ajaxSubmitReport', id:project.projectId)}/",
-        approveReportUrl: "${createLink(controller: 'project', action: 'ajaxApproveReport', id:project.projectId)}/",
-        featuresService: "${createLink(controller: 'proxy', action: 'features')}",
-        featureService: "${createLink(controller: 'proxy', action: 'feature')}",
-        spatialWms: "${grailsApplication.config.getProperty('spatial.geoserverUrl')}",
-        tabbedActivityUrl: "${createLink(controller: 'activity', action:'ajaxLoadActivityForm')}",
-        dashboardUrl:"${createLink(action:'projectDashboard', id:project.projectId)}",
-        searchBieUrl:"${createLink(controller:'species', action:'searchBie')}",
-        speciesListUrl:"${createLink(controller:'proxy', action:'speciesItemsForList')}",
-        speciesSearchUrl:"${createLink(controller:'project', action:'searchSpecies', id:project.projectId)}",
-        speciesImageUrl:"${createLink(controller:'species', action:'speciesImage')}",
-        speciesProfileUrl: "${createLink(controller: 'species', action: 'speciesProfile')}", imageUploadUrl: "${createLink(controller: 'image', action: 'upload')}",
-        sightingsActivityType: "${grailsApplication.config.getProperty('esp.activities.sightings', String, "")}",
-        adminActivityType: "${grailsApplication.config.getProperty('esp.activities.admin', String, "")}",
-        excelOutputTemplateUrl: "${createLink(controller: 'activity', action:'excelOutputTemplate')}",
-        excelDataUploadUrl: "${createLink(controller:'activity', action:'ajaxUpload')}",
-        saveReportingDatesUrl:"${createLink(controller:'project', action:'ajaxUpdate', id:project.projectId)}",
-        returnTo: "${createLink(controller: 'project', action: 'espOverview', id: project.projectId)}",
-        projectReportUrl:"${createLink(controller:'project', action:'projectReport', id:project.projectId)}",
-        projectReportPDFUrl:"${createLink(controller:'project', action:'projectReportPDF', id:project.projectId)}"
+        var fcConfig = {
+                serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
+                espSupportEmail: "${grailsApplication.config.getProperty('espSupportEmail')}",
+                activityEditUrl: "${createLink(controller: 'activity', action: 'edit')}",
+                activityEnterDataUrl: "${createLink(controller: 'activity', action: 'enterData')}",
+                activityUpdateUrl: "${createLink(controller: 'activity', action: 'ajaxUpdate')}",
+                activityViewUrl: "${createLink(controller: 'activity', action: 'index')}",
+                starProjectUrl: "${createLink(controller: 'project', action: 'starProject')}",
+                spatialBaseUrl: "${grailsApplication.config.getProperty('spatial.baseUrl')}",
+                spatialWmsCacheUrl: "${grailsApplication.config.getProperty('spatial.wms.cache.url')}",
+                spatialWmsUrl: "${grailsApplication.config.getProperty('spatial.wms.url')}",
+                sldPolgonDefaultUrl: "${grailsApplication.config.getProperty('sld.polgon.default.url')}",
+                sldPolgonHighlightUrl: "${grailsApplication.config.getProperty('sld.polgon.highlight.url')}",
+                organisationLinkBaseUrl: "${createLink(controller:'organisation', action:'index')}",
+                imageLocation:"${assetPath(src:'/')}",
+                documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
+                documentDeleteUrl: "${createLink(controller:"document", action:"deleteDocument")}",
+                espPhotosUrl:"${createLink(controller:'project', action:'espPhotos', id:project.projectId)}",
+                submitReportUrl: "${createLink(controller: 'project', action: 'ajaxSubmitReport', id:project.projectId)}/",
+                approveReportUrl: "${createLink(controller: 'project', action: 'ajaxApproveReport', id:project.projectId)}/",
+                featuresService: "${createLink(controller: 'proxy', action: 'features')}",
+                featureService: "${createLink(controller: 'proxy', action: 'feature')}",
+                spatialWms: "${grailsApplication.config.getProperty('spatial.geoserverUrl')}",
+                tabbedActivityUrl: "${createLink(controller: 'activity', action:'ajaxLoadActivityForm')}",
+                dashboardUrl:"${createLink(action:'projectDashboard', id:project.projectId)}",
+                searchBieUrl:"${createLink(controller:'species', action:'searchBie')}",
+                speciesListUrl:"${createLink(controller:'proxy', action:'speciesItemsForList')}",
+                speciesSearchUrl:"${createLink(controller:'project', action:'searchSpecies', id:project.projectId)}",
+                speciesImageUrl:"${createLink(controller:'species', action:'speciesImage')}",
+                speciesProfileUrl: "${createLink(controller: 'species', action: 'speciesProfile')}", imageUploadUrl: "${createLink(controller: 'image', action: 'upload')}",
+                sightingsActivityType: "${grailsApplication.config.getProperty('esp.activities.sightings', String, "")}",
+                adminActivityType: "${grailsApplication.config.getProperty('esp.activities.admin', String, "")}",
+                excelOutputTemplateUrl: "${createLink(controller: 'activity', action:'excelOutputTemplate')}",
+                excelDataUploadUrl: "${createLink(controller:'activity', action:'ajaxUpload')}",
+                saveReportingDatesUrl:"${createLink(controller:'project', action:'ajaxUpdate', id:project.projectId)}",
+                returnTo: "${createLink(controller: 'project', action: 'espOverview', id: project.projectId)}",
+                projectReportUrl:"${createLink(controller:'project', action:'projectReport', id:project.projectId)}",
+                projectReportPDFUrl:"${createLink(controller:'project', action:'projectReportPDF', id:project.projectId)}"
 
-    },
-        here = window.location.href;
+            },
+            here = window.location.href;
 
 
     </script>
@@ -134,8 +134,8 @@
             <div class="row">
                 <!-- ko stopBinding:true -->
                 <div class="col-sm-12">
-                <div id="map" class="w-100" style="height:500px;"></div>
-            </div>
+                    <div id="map" class="w-100" style="height:500px;"></div>
+                </div>
 
                 <!-- /ko -->
             </div>
@@ -174,20 +174,20 @@
                 <h4>Report status</h4>
                 <table class="table table-striped">
                     <thead>
-                        <tr>
-                            <th>Site </th>
-                            <th>Status <fc:iconHelp>Status for all sites must be “finished” before annual report can be submitted.</fc:iconHelp></th>
-                        </tr>
+                    <tr>
+                        <th>Site </th>
+                        <th>Status <fc:iconHelp>Status for all sites must be “finished” before annual report can be submitted.</fc:iconHelp></th>
+                    </tr>
                     </thead>
                     <tbody>
                     <!-- ko foreach:siteReports() -->
-                        <tr>
-                            <td><a data-bind="attr:{href:editActivityUrl()}"><span data-bind="text:description"></span></a></td>
-                            <td><button type="button" class="btn btn-sm"   data-bind="activityProgress:progress">
-                                <span data-bind="text: progress"></span>
-                            </button>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td><a data-bind="attr:{href:editActivityUrl()}"><span data-bind="text:description"></span></a></td>
+                        <td><button type="button" class="btn btn-sm"   data-bind="activityProgress:progress">
+                            <span data-bind="text: progress"></span>
+                        </button>
+                        </td>
+                    </tr>
                     <!-- /ko -->
                     </tbody>
                 </table>
@@ -222,34 +222,34 @@
 
         <div class="tab-pane " id="stage-report-pdf">
 
-                <h4 class="modal-title">Download Report</h4>
-                <p>Select the financial year of the report you want to download then press the "Generate Report (PDF)" button</p>
-                <hr/>
+            <h4 class="modal-title">Download Report</h4>
+            <p>Select the financial year of the report you want to download then press the "Generate Report (PDF)" button</p>
+            <hr/>
 
-                <form class="form-horizontal" id = "stageReportPDF">
+            <form class="form-horizontal" id = "stageReportPDF">
 
-                    <div class="form-group row">
-                        <label class="col-sm-1 col-form-label" for="stageToReport">Report of financial year: </label>
-                        <div class="col-sm-1">
-                            <select id="stageToReport" class="form-control form-control-sm" data-bind="value:stageToReport, options:reportableStages, optionsText: 'financialYear', optionsValue: 'stage' " ></select>
-                        </div>
+                <div class="form-group row">
+                    <label class="col-sm-1 col-form-label" for="stageToReport">Report of financial year: </label>
+                    <div class="col-sm-1">
+                        <select id="stageToReport" class="form-control form-control-sm" data-bind="value:stageToReport, options:reportableStages, optionsText: 'financialYear', optionsValue: 'stage' " ></select>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-sm-1 col-form-label" for="orientation">PDF Orientation: <fc:iconHelp>If your PDF includes activities with wide tables, the Landscape setting may improve the result.  This setting has no effect on the HTML view. </fc:iconHelp></label>
-                        <div class="col-sm-1">
-                            <select class="form-control form-control-sm" id="orientation" data-bind="value:orientation">
-                                <option value="portrait">Portrait</option>
-                                <option value="landscape">Landscape</option>
-                            </select>
-                        </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-1 col-form-label" for="orientation">PDF Orientation: <fc:iconHelp>If your PDF includes activities with wide tables, the Landscape setting may improve the result.  This setting has no effect on the HTML view. </fc:iconHelp></label>
+                    <div class="col-sm-1">
+                        <select class="form-control form-control-sm" id="orientation" data-bind="value:orientation">
+                            <option value="portrait">Portrait</option>
+                            <option value="landscape">Landscape</option>
+                        </select>
                     </div>
-                    <div class="form-group">
-                        <button type="button" class="btn btn-sm btn-success"
-                                data-bind="click:generateProjectReportHTML">Generate Report (HTML)</button>
-                        <button type="button" class="btn btn-sm btn-success"
-                                data-bind="click:generateProjectReportPDF">Generate Report (PDF)</button>
-                    </div>
-                </form>
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-sm btn-success"
+                            data-bind="click:generateProjectReportHTML">Generate Report (HTML)</button>
+                    <button type="button" class="btn btn-sm btn-success"
+                            data-bind="click:generateProjectReportPDF">Generate Report (PDF)</button>
+                </div>
+            </form>
         </div>
     </div>
 
