@@ -110,7 +110,7 @@
                 "name": "paddockNum",
                 "behaviour": [
                   {
-                    "condition": "wasActivityUndertaken == \"Yes\"",
+                    "condition": "wasActivityUndertaken == \"Yes\" and multiplePaddocks == \"Yes\"",
                     "type": "enable_and_clear"
                   }
                 ]
