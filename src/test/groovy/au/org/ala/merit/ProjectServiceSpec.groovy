@@ -706,7 +706,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         String endDate = service.minimumProjectEndDate(project, config)
 
         then:
-        endDate == '2018-06-30T14:00:00Z'
+        endDate == '2018-06-29T14:00:00Z'
     }
 
     def "A traditional MERIT project with no activities will not have end date changes restricted"() {
