@@ -1007,7 +1007,9 @@ class ProjectService  {
             minimumDate = project.reports?.findAll{it.progress != ActivityService.PROGRESS_PLANNED}?.max{it.toDate}?.toDate
             // We allow reports to be generated up to 24 hours after the end of a project due to
             // project end dates being 00:00 of the last day of the project instead of 23:59:..
-            minimumDate = DateUtils.format(DateUtils.parse(minimumDate).minusDays(1))
+            if (minimumDate) {
+                minimumDate = DateUtils.format(DateUtils.parse(minimumDate).minusDays(1))
+            }
         }
         // Otherwise we don't want to delete any activities
         else {
