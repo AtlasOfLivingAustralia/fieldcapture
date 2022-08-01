@@ -11,8 +11,9 @@ class AuditService {
         return webService.getJson(url, 60000)
     }
 
-    def getAuditMessagesForProject(String projectId, int offset, int pageSize, String q) {
-        String paramString = commonService.buildUrlParamsFromMap(id:projectId, start:offset, size:pageSize, q:q)
+    def getAuditMessagesForProject(String projectId, int offset, int pageSize, String sort, String orderBy, String q) {
+
+        String paramString = commonService.buildUrlParamsFromMap(id:projectId, start:offset, size:pageSize, q:q, sort:sort, orderBy:orderBy)
         String url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'audit/getAuditMessagesForProjectPerPage' + paramString
         return webService.getJson(url, 60000)
     }
@@ -30,6 +31,11 @@ class AuditService {
     def getAuditMessage(String messageId) {
         String url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'audit/ajaxGetAuditMessage/' + messageId
         return webService.getJson(url)
+    }
+
+    def getAutoCompareAuditMessage(String id){
+        String url = grailsApplication.config.ecodata.service.url + "/audit/getAutoCompareAuditMessage?auditId=${id}";
+        return webService.getJson(url);
     }
 
     def getUserDetails(String userId) {
