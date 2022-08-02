@@ -43,3 +43,4 @@ grails-app/assets/vendor-ext
 /out/
 /build/
 /.gradle/
+/grails-app/assets/components/compile/templates.js
