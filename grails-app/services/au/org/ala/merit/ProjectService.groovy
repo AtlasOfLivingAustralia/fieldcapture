@@ -894,7 +894,7 @@ class ProjectService  {
                 if (options.keepExistingReportDates) {
                     Map report = reportsOfType ? reportsOfType[index] : null
                     // Handle reports that may have been cut off by the start date change.
-                    while (report && report.toDate < project.plannedStartDate) {
+                    while (report && report.toDate <= project.plannedStartDate) {
                         if (!reportService.hasData(report)) {
                             reportService.delete(report.reportId)
                         }
