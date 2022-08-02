@@ -79,6 +79,7 @@ class ProjectController {
 
             String template = projectTemplate(config, params.template)
             if (template == ESP_TEMPLATE && user?.isEditor) {
+                project.financialYearSelected = params?.financialYearSelected
                 espOverview(project, user, config)
             } else {
                 project.sites?.sort { it.name }

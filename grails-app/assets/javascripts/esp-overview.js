@@ -124,9 +124,20 @@ var SimplifiedReportingViewModel = function(project, config) {
     var currentReport = _.find(project.reports || [], function(report) {
         return report.publicationStatus != 'published';
     });
+
+    // will fetch the current financial year report
+    // var currentReport = findReportFromDate(project.reports);
+
+    // will fetch the latest report
     if (!currentReport) {
         currentReport = project.reports[project.reports.length-1];
     }
+
+    // will fetch report based from the selected financial year
+    if (project.financialYearSelected) {
+        currentReport = findReportFromFinancialYear(project.reports,project.financialYearSelected);
+    }
+
     currentReport = new Report(currentReport);
 
     var planViewModel = new PlanViewModel(project.activities, project.reports, [], {}, project, null, config, true, false);
@@ -214,6 +225,22 @@ var SimplifiedReportingViewModel = function(project, config) {
 
     self.currentStage = currentStage;
     self.currentReport = currentReport;
+
+
+    self.financialYears = [];
+    _.each(project.reports, function (report){
+        self.financialYears.push(isoDateToFinancialYear(report.toDate))
+    });
+
+    // will set the value of the dropdown Reporting Period
+    self.selectedChoice = ko.observable(isoDateToFinancialYear(currentReport.toDate))
+    // refreshes the page with the financial year selected
+    self.selectionChanged = function(event) {
+        blockUIWithMessage('Reloading project...');
+        var url = config.projectUrl;
+        document.location.href = url + "/" + "?financialYearSelected=" + event.selectedChoice();
+    }
+
     self.adminReportingHelp = ko.pureComputed(function() {
         if (self.finishedAdminReporting) {
             return "You have completed your administrative reporting requirements for this year"
@@ -423,4 +450,28 @@ initialisePhotos = function(photoPointSelector, photosSelector) {
     loadAndConfigureSitePhotoPoints(photoPointSelector);
     $(photosSelector).mThumbnailScroller({});
     $(photosSelector + ' .fancybox').fancybox();
+}
+
+
+function findReportFromDate (reports) {
+    var currentDate = new Date().toISOStringNoMillis();
+    var report;
+    $.each(reports, function (i, period) {
+        if (currentDate > period.fromDate && currentDate <= period.toDate) {
+            report = period;
+        }
+    });
+
+    return report;
+}
+
+function findReportFromFinancialYear (reports,financialYearSelected) {
+    var report;
+    $.each(reports, function (i, period) {
+        if (financialYearSelected == isoDateToFinancialYear(period.toDate)) {
+            report = period;
+        }
+    });
+
+    return report;
 }

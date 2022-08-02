@@ -43,7 +43,8 @@
                 saveReportingDatesUrl:"${createLink(controller:'project', action:'ajaxUpdate', id:project.projectId)}",
                 returnTo: "${createLink(controller: 'project', action: 'espOverview', id: project.projectId)}",
                 projectReportUrl:"${createLink(controller:'project', action:'projectReport', id:project.projectId)}",
-                projectReportPDFUrl:"${createLink(controller:'project', action:'projectReportPDF', id:project.projectId)}"
+                projectReportPDFUrl:"${createLink(controller:'project', action:'projectReportPDF', id:project.projectId)}",
+                projectUrl:"${createLink(controller:'project', action:'index', id:project.projectId)}"
 
             },
             here = window.location.href;
@@ -98,7 +99,7 @@
     <div class="row">
         <span class="col-sm-6">
             <span class="label label-info label-small">Project ID:</span> ${project.externalId}<br/>
-            <span class="label label-info label-small">Reporting Period:</span> <span data-bind="text:reportingFinancialYear"></span><br/>
+            <span class="label label-info label-small">Reporting Period:</span><select id="type" data-bind="options:financialYears, value:selectedChoice, event: {change: selectionChanged }"></select>
         </span>
         <span class="col-sm-6">
             <g:if test="${projectArea}">
