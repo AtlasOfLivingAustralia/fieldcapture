@@ -94,7 +94,10 @@ function initialiseAuditTableServerSide(config) {
         },
         "columns": [{
             data: 'date',
-            name: 'date'
+            name: 'date',
+            render: function(data, type, row) {
+                return moment(data).local().format("D/MM/YYYY HH:mm:ss")
+            }
         },{
             data: 'eventType',
             name: 'eventType'

@@ -38,7 +38,7 @@
 
     <g:render template="auditMessageListWithServerSidePagination"></g:render>
 
-    <asset:javascript src="base-bs4.js"/>
+    <asset:javascript src="common-bs4.js"/>
     <asset:javascript src="audit.js"/>
 
     <asset:script>
