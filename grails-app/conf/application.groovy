@@ -26,13 +26,6 @@ if(System.getenv(ENV_NAME) && new File(System.getenv(ENV_NAME)).exists()) {
     println "[${appName}] No external configuration file defined."
 }
 
-// The grails mail plugin needs configuration in groovy slurper format to specify java mail properties
-def mail_config = "/data/${appName}/config/mail-config.groovy"
-if (new File(mail_config).exists()) {
-    grails.config.locations.add "file:" + mail_config
-}
-
-
 println "[${appName}] (*) grails.config.locations = ${grails.config.locations}"
 
 /******************************************************************************\
@@ -147,15 +140,7 @@ if(!webservice.connectTimeout){
 if(!webservice.readTimeout){
     webservice.readTimeout = 20000
 }
-if(!security.cas.logoutUrl){
-    security.cas.logoutUrl = 'https://auth.ala.org.au/cas/logout'
-}
-if(!security.cas.casServerUrlPrefix){
-    security.cas.casServerUrlPrefix = 'https://auth.ala.org.au/cas'
-}
-if(!security.cas.bypass){
-    security.cas.bypass = false
-}
+
 if(!security.cas.alaAdminRole){
     security.cas.alaAdminRole = "ROLE_ADMIN"
 }
@@ -188,9 +173,7 @@ if(!google.geocode.url){
 if(!google.drawmaps.url){
     google.drawmaps.url = "https://maps.googleapis.com/maps/api/js?libraries=drawing,geometry"
 }
-if (!user.registration.url) {
-    user.registration.url = 'https://auth.ala.org.au/userdetails/registration/createAccount'
-}
+
 // If true, no-cache headers will be added to all responses.
 if(!app.view.nocache){
     app.view.nocache = false
@@ -217,6 +200,7 @@ esp.activities.admin = 'ESP Annual Report Submission'
 reports.filterableActivityTypes = ['RLP Output Report', 'Wildlife Recovery Progress Report - WRR']
 
 risks.scheduleCheckingPeriod = 7
+grails.mail.poolSize = 1
 
 grails {
     cache {
@@ -227,17 +211,33 @@ grails {
     }
 }
 
+auth.baseUrl = 'https://auth-test.ala.org.au'
+
+user.registration.url = "${auth.baseUrl}/userdetails/registration/createAccount"
 security {
     cas {
+        enabled = false
         appServerName = 'http://devt.ala.org.au:8087' // or similar, up to the request path part
         // service = 'http://devt.ala.org.au:8080' // optional, if set it will always be used as the return path from CAS
-        casServerUrlPrefix = 'https://auth.ala.org.au/cas'
-        loginUrl = 'https://auth.ala.org.au/cas/login'
-        logoutUrl = 'https://auth.ala.org.au/cas/logout'
-        casServerName = 'https://auth.ala.org.au'
+        casServerUrlPrefix = "${auth.baseUrl}/cas"
+        loginUrl = "${auth.baseUrl}/cas/login"
+        logoutUrl = "${auth.baseUrl}/cas/logout"
+        casServerName = "${auth.baseUrl}"
         uriFilterPattern = ['/home/login', '/ajax/keepSessionAlive']
         authenticateOnlyIfCookieFilterPattern = ['/', '/*']
         uriExclusionFilterPattern = ['/assets/.*','/images/.*','/css/.*','/js/.*','/less/.*', '/project/viewReportCallback.*', '/program/viewReportCallback.*', '/rlp/viewReportCallback.*', '/managementUnit/viewReportCallback.*']
+    }
+    oidc {
+        enabled = true
+        discoveryUri = "${auth.baseUrl}/cas/oidc/.well-known"
+        clientId = "changeMe"
+        secret = "changeMe"
+        scope = "openid,profile,email,roles,user_defined"
+    }
+    jwt {
+        enabled = false
+        discoveryUrl = "${auth.baseUrl}/cas/oidc/.well-known"
+        requiredClaims = ["sub", "iat", "exp", "jti", "client_id"]
     }
 }
 pdfbox.fontcache="/data/${appName}/cache/"
