@@ -260,7 +260,7 @@ assets {
     maxThreads = 4 //useful for concurrent asset processing during build
     configOptions = [:] //useful for custom config on extension libraries
     includes = []
-    excludes = ['**/*.less','**/build/hintrc.js', 'hintrc.unminified.js', '**/spec/spec.hintrc.js', 'spec.hintrc.unminified.js'] //Example Exclude GLOB pattern
+    excludes = ['**/*.less','**/build/hintrc.js', 'hintrc.unminified.js', '**/spec/spec.hintrc.js', '**/spec.hintrc.unminified.js', '**/*hintrc*'] //Example Exclude GLOB pattern
 }
 
 bootJar {
