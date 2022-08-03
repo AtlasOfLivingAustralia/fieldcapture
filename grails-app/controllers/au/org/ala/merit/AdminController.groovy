@@ -300,7 +300,7 @@ class AdminController {
         render(view: 'audit', model:[results: results, searchTerm: params.searchTerm, searchType:'Project', action:'auditProject', id:'projectId'])
     }
 
-    @PreAuthorise(accessLevel = 'siteReadOnly', redirectController = "home")
+    @PreAuthorise(accessLevel = 'readOnly', redirectController = "home")
     def auditProject() {
         def id = params.id
         if (id) {
@@ -354,7 +354,7 @@ class AdminController {
         [messages: messages?.messages, userMap: messages?.userMap, nameKey:'key']
     }
 
-    @PreAuthorise(accessLevel = 'siteReadOnly', redirectController = "home")
+    @PreAuthorise(accessLevel = 'readOnly', redirectController = "home")
     def auditMessageDetails() {
         def results = auditService.getAuditMessage(params.id as String)
         def userDetails = [:]
