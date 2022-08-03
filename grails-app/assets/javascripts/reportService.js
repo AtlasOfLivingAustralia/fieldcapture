@@ -35,15 +35,17 @@ var ReportService = function(config) {
             if (projectScores && projectScores.length > 0) {
                 for (var i = 0; i < projectScores.length; i++) {
                     var target = projectScores[i];
-                    var reportScore = reportScores[i].result && reportScores[i].result.result;
-                    if (target.overDelivered && reportScore) {
-                        overDeliveredTargets.push({overall:target, report:reportScores[i]});
+                    if (reportScores && reportScores[i]) {
+                        var reportScore = reportScores[i].result && reportScores[i].result.result;
+                        if (target.overDelivered && reportScore) {
+                            overDeliveredTargets.push({overall:target, report:reportScores[i]});
+                        }
                     }
                 }
             }
             deferred.resolve(overDeliveredTargets);
         }).fail(function(e) {
-            deferred.failed(e);
+            deferred.fail(e);
         });
         return deferred;
     };
