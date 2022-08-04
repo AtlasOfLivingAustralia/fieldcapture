@@ -11,7 +11,12 @@ import org.apache.http.HttpStatus
 import org.grails.plugin.cache.GrailsCacheManager
 import org.joda.time.DateTime
 import org.joda.time.DateTimeUtils
+import org.springframework.web.context.request.RequestContextHolder
 import spock.lang.Specification
+
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 /**
  * Tests the UserService.
@@ -608,5 +613,36 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
 
     }
 
+    def "The userservice delegates to the authService to get the currently logged in user"() {
+        setup:
+        au.org.ala.web.UserDetails user = new au.org.ala.web.UserDetails(1, "First", "Last", "test", "1", false, null)
+        when:
+        UserDetails user2 = service.getUser()
+        then:
+        1 * authService.userDetails() >> user
+        user2.getUserId() == user.getUserId()
+        user2.displayName == user.displayName
+        user2.userName == user.userName
+    }
+
+    def "The userservice accepts a context to use on background threads"() {
+        setup:
+        ExecutorService es = Executors.newSingleThreadExecutor()
+        UserDetails user = new UserDetails("First Last", "test", "1")
+
+        when:
+        UserDetails user2 = null
+        es.submit(new Runnable() { public void run() {
+            service.withUser(user) {
+                user2 = service.getUser()
+            }
+        }}).get()
+        es.shutdown()
+
+        then:
+        user2.getUserId() == user.getUserId()
+        user2.displayName == user.displayName
+        user2.userName == user.userName
+    }
 
 }
