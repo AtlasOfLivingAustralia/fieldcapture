@@ -133,45 +133,13 @@ var outcomes = [
     {
         "priorities": [
             {
-                "category": "Ramsar"
-            }
-        ],
-        "targeted": true,
-        "shortDescription": "Ramsar Sites",
-        "category": "environment",
-        "outcome": "1. By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
-    },
-    {
-        "priorities": [
-            {
-                "category": "Threatened Species"
-            }
-        ],
-        "targeted": true,
-        "shortDescription": "Threatened Species Strategy",
-        "category": "environment",
-        "outcome": "2. By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved."
-    },
-    {
-        "priorities": [
-            {
-                "category": "World Heritage Sites"
-            }
-        ],
-        "targeted": true,
-        "shortDescription": "World Heritage Areas",
-        "category": "environment",
-        "outcome": "3. By 2023, invasive species management has reduced threats to the natural heritage Outstanding Universal Value of World Heritage properties through the implementation of priority actions."
-    },
-    {
-        "priorities": [
-            {
                 "category": "Threatened Ecological Communities"
             }
         ],
         "targeted": true,
         "shortDescription": "Threatened Ecological Communities",
         "category": "environment",
+        "type": "primary",
         "outcome": "4. By 2023, the implementation of priority actions is leading to an improvement in the condition of EPBC Act listed Threatened Ecological Communities."
     },
     {
@@ -183,18 +151,8 @@ var outcomes = [
         "targeted": true,
         "shortDescription": "Soil Condition",
         "category": "agriculture",
+        "type": "secondary",
         "outcome": "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
-    },
-    {
-        "priorities": [
-            {
-                "category": "Sustainable Agriculture"
-            }
-        ],
-        "targeted": true,
-        "shortDescription": "Climate / Weather Adaption",
-        "category": "agriculture",
-        "outcome": "6. By 2023, there is an increase in the capacity of agriculture systems to adapt to significant changes in climate and market demands for information on provenance and sustainable production."
     }
 ]
 
