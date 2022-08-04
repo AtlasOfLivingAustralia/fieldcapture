@@ -86,22 +86,22 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         activities[0].plannedEndDate == '2014-03-31T00:00:00Z'
         activities[0].type == 't1'
         activities[0].projectId == projectId
-        activities[0].description == 't1 (Jan. - Mar. 2014)'
+        activities[0].description == 't1 (January - March 2014)'
         activities[1].plannedStartDate == '2014-04-01T00:00:00Z'
         activities[1].plannedEndDate == '2014-06-30T00:00:00Z'
         activities[1].type == 't1'
         activities[1].projectId == projectId
-        activities[1].description == 't1 (Apr. - Jun. 2014)'
+        activities[1].description == 't1 (April - June 2014)'
         activities[2].plannedStartDate == '2014-07-01T00:00:00Z'
         activities[2].plannedEndDate == '2014-09-30T00:00:00Z'
         activities[2].type == 't1'
         activities[2].projectId == projectId
-        activities[2].description == 't1 (Jul. - Sep. 2014)'
+        activities[2].description == 't1 (July - September 2014)'
         activities[3].plannedStartDate == '2014-10-01T00:00:00Z'
         activities[3].plannedEndDate == '2014-12-29T00:00:00Z'  // Last activity end date should not be after the project end date.
         activities[3].type == 't1'
         activities[3].projectId == projectId
-        activities[3].description == 't1 (Oct. - Dec. 2014)'
+        activities[3].description == 't1 (October - December 2014)'
 
     }
 
@@ -126,12 +126,12 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         activities[0].plannedEndDate == '2014-01-31T00:00:00Z'
         activities[0].type == 't1'
         activities[0].projectId == projectId
-        activities[0].description == 't1 (Jan. 2014)'
+        activities[0].description == 't1 (January 2014)'
         activities[5].plannedStartDate == '2014-06-01T00:00:00Z'
         activities[5].plannedEndDate == '2014-06-30T00:00:00Z'
         activities[5].type == 't1'
         activities[5].projectId == projectId
-        activities[5].description == 't1 (Jun. 2014)'
+        activities[5].description == 't1 (June 2014)'
 
     }
 
@@ -159,22 +159,22 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         activities[0].plannedEndDate == '2014-02-28T00:00:00Z'
         activities[0].type == 't1'
         activities[0].projectId == projectId
-        activities[0].description == 't1 (Feb. 2014)'
+        activities[0].description == 't1 (February 2014)'
         activities[1].plannedStartDate == '2014-03-01T00:00:00Z'
         activities[1].plannedEndDate == '2014-03-31T00:00:00Z'
         activities[1].type == 't1'
         activities[1].projectId == projectId
-        activities[1].description == 't1 (Mar. 2014)'
+        activities[1].description == 't1 (March 2014)'
         activities[2].plannedStartDate == '2014-04-01T00:00:00Z'
         activities[2].plannedEndDate == '2014-04-30T00:00:00Z'
         activities[2].type == 't1'
         activities[2].projectId == projectId
-        activities[2].description == 't1 (Apr. 2014)'
+        activities[2].description == 't1 (April 2014)'
         activities[3].plannedStartDate == '2014-06-01T00:00:00Z'
         activities[3].plannedEndDate == '2014-06-30T00:00:00Z'
         activities[3].type == 't1'
         activities[3].projectId == projectId
-        activities[3].description == 't1 (Jun. 2014)'
+        activities[3].description == 't1 (June 2014)'
 
 
     }
