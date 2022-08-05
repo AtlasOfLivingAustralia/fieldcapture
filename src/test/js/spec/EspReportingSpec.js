@@ -248,6 +248,30 @@ describe("The ESP reporting process works slightly differently to the normal MER
 
     });
 
+    it("will stage a report based from the selected reporting period", function() {
+
+        var project = buildEspProject();
+        project.financialYearSelected = "2019/2020"
+        var config = {showEmptyStages:true };
+        var viewModel = new SimplifiedReportingViewModel(project, config);
+
+        expect(viewModel.stageToReport()).toEqual("Stage 2")
+        expect(viewModel.reportableStages().length).toEqual(2)
+
+    });
+
+    it("will default and stage the oldest report that has not yet been approved", function() {
+
+        var project = buildEspProject();
+        project.financialYearSelected = ""
+        var config = {showEmptyStages:true };
+        var viewModel = new SimplifiedReportingViewModel(project, config);
+
+        expect(viewModel.stageToReport()).toEqual("Stage 1")
+        expect(viewModel.reportableStages().length).toEqual(1)
+
+    });
+
 
 
 
