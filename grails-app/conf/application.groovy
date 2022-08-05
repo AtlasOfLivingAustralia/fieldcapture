@@ -271,6 +271,8 @@ environments {
         app.default.hub='merit'
         runWithNoExternalConfig = true
         wiremock.port = 8018
+        security.oidc.discoveryUri = "http://localhost:${wiremock.port}/cas/oidc/.well-known"
+        security.oidc.allowUnsignedIdTokens = true
         def casBaseUrl = "http://devt.ala.org.au:${wiremock.port}"
 
         security.cas.appServerName=serverName

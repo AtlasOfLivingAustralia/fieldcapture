@@ -1,0 +1,43 @@
+{
+  "requestUri": "https://auth-test.ala.org.au/cas/oidc/oidcAccessToken2",
+  "bodyJson": {
+    "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsIm9yZy5hcGVyZW8uY2FzLnNlcnZpY2VzLlJlZ2lzdGVyZWRTZXJ2aWNlIjoiLTE2MzIyMTk0NyIsImtpZCI6ImF1dGgtdGVzdC5hbGEub3JnLmF1In0.eyJzdWIiOiIxMDkxNDYwNjc2NzgyNDkyNzg1ODQiLCJyb2xlIjpbIlJPTEVfQURNSU4iLCJST0xFX0FQSV9FRElUT1IiLCJST0xFX0NPTExFQ1RJT05fQURNSU4iLCJST0xFX0VESVRPUiIsIlJPTEVfVVNFUiIsIlJPTEVfVlBfVEVTVF9BRE1JTiJdLCJvYXV0aENsaWVudElkIjoiYXV0aC10ZXN0LW9pZGMtY2xpZW50LWlkLWVjb2RhdGEtbG9jYWxob3N0IiwiY2xpZW50TmFtZSI6Ikdvb2dsZSIsImlzcyI6Imh0dHBzOlwvXC9hdXRoLXRlc3QuYWxhLm9yZy5hdVwvY2FzXC9vaWRjIiwicHJlZmVycmVkX3VzZXJuYW1lIjoiY2hyaXMuZ29kd2luLmFsYUBnbWFpbC5jb20iLCJjbGllbnRfaWQiOiJhdXRoLXRlc3Qtb2lkYy1jbGllbnQtaWQtZWNvZGF0YS1sb2NhbGhvc3QiLCJ1cGRhdGVkX2F0IjoiMjAyMi0wNy0xMyAxMToyMzoyNiIsImdyYW50X3R5cGUiOiJBVVRIT1JJWkFUSU9OX0NPREUiLCJzY29wZSI6WyJlbWFpbCIsIm9wZW5pZCIsInByb2ZpbGUiLCJyb2xlcyIsInVzZXJfZGVmaW5lZCJdLCJzZXJ2ZXJJcEFkZHJlc3MiOiIxMjcuMC4wLjEiLCJsb25nVGVybUF1dGhlbnRpY2F0aW9uUmVxdWVzdFRva2VuVXNlZCI6ZmFsc2UsInN0YXRlIjoiZDUyMzY2NzJmYyIsImV4cCI6MTY1OTczNjU3MSwiaWF0IjoxNjU5NjUwMTcxLCJqdGkiOiJBVC02OTQtQ25XaVhzbExzWnJBTlkxSW02WTJHLWtmb0pzMk56c2QiLCJlbWFpbCI6ImNocmlzLmdvZHdpbi5hbGFAZ21haWwuY29tIiwiY2xpZW50SXBBZGRyZXNzIjoiMTQwLjc5LjY0LjE5NyIsImlzRnJvbU5ld0xvZ2luIjp0cnVlLCJlbWFpbF92ZXJpZmllZCI6IjEiLCJhdXRoZW50aWNhdGlvbkRhdGUiOiIyMDIyLTA4LTA0VDIxOjU2OjA1LjMxMjc2M1oiLCJzdWNjZXNzZnVsQXV0aGVudGljYXRpb25IYW5kbGVycyI6IkRlbGVnYXRlZENsaWVudEF1dGhlbnRpY2F0aW9uSGFuZGxlciIsInVzZXJBZ2VudCI6Ik1vemlsbGFcLzUuMCAoTWFjaW50b3NoOyBJbnRlbCBNYWMgT1MgWCAxMF8xNV83KSBBcHBsZVdlYktpdFwvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lXC8xMDQuMC4wLjAgU2FmYXJpXC81MzcuMzYiLCJnaXZlbl9uYW1lIjoiQ2hyaXMiLCJub25jZSI6IiIsImNyZWRlbnRpYWxUeXBlIjoiQ2xpZW50Q3JlZGVudGlhbCIsInNhbWxBdXRoZW50aWNhdGlvblN0YXRlbWVudEF1dGhNZXRob2QiOiJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoxLjA6YW06dW5zcGVjaWZpZWQiLCJhdWQiOiJodHRwOlwvXC9kZXZ0LmFsYS5vcmcuYXU6ODA4N1wvY2FsbGJhY2s_Y2xpZW50X25hbWU9T2lkY0NsaWVudCIsImF1dGhlbnRpY2F0aW9uTWV0aG9kIjoiRGVsZWdhdGVkQ2xpZW50QXV0aGVudGljYXRpb25IYW5kbGVyIiwiZ2VvTG9jYXRpb24iOiJ1bmtub3duIiwibmFtZSI6IkNocmlzIEdvZHdpbiIsInNjb3BlcyI6WyJ1c2VyX2RlZmluZWQiLCJvcGVuaWQiLCJwcm9maWxlIiwicm9sZXMiLCJlbWFpbCJdLCJmYW1pbHlfbmFtZSI6IkdvZHdpbiJ9.BSmPKrn9F8ynjfDzyMKZZkAxe4OA4jkin06DCrdtABcLJqwM0qfFaTHrlKOknkxZqkkLcNt8YO_5FlimV5poo2zhq-aKq6S6ACWwqRw5ocejLOj_R9wZATtbzCxYJzykKt9FfpgvbCcX1hoCzdHRnTq_7uUh1ApwXhV52_YzHYGhPHEUbAnYy6_Cr7JU81Ufyic4fJ7yhU3fO5So_1Ev7g7b0NOsFkWoNYGagoqCyTugkWH8j7GrcI3M4UZnv332CRd4ilaSGesHrV-z_xdbl4v2gwr2gT8pmXpuSyCcNbBAPluECXH4iGbu3UgWCB5ykH46tkAESyS3KCQ_Gxgggg",
+    "id_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImF1dGgtdGVzdC5hbGEub3JnLmF1In0.eyJqdGkiOiJUR1QtNjU0LWdRalpKRmx0WHd1U2JYMzQ0SURnM3dzRUFyN3E5OGh1V3JuQ0w1WW15cy14TFBZcWNUYUp1bTV0Nkpzc3pMcHhWeTQtYXV0aC10ZXN0LmFsYS5vcmcuYXUiLCJzaWQiOiIyNGI3ZmIxM2QxYTllODQyZDRhZjg0ZTcyZjM5NjFjNTA5MDMxNzk0IiwiaXNzIjoiaHR0cHM6Ly9hdXRoLXRlc3QuYWxhLm9yZy5hdS9jYXMvb2lkYyIsImF1ZCI6ImF1dGgtdGVzdC1vaWRjLWNsaWVudC1pZC1lY29kYXRhLWxvY2FsaG9zdCIsImV4cCI6MTY1OTczNjU3MSwiaWF0IjoxNjU5NjUwMTcxLCJuYmYiOjE2NTk2NDk4NzEsInN1YiI6IjEwOTE0NjA2NzY3ODI0OTI3ODU4NCIsImFtciI6WyJEZWxlZ2F0ZWRDbGllbnRBdXRoZW50aWNhdGlvbkhhbmRsZXIiXSwiY2xpZW50X2lkIjoiYXV0aC10ZXN0LW9pZGMtY2xpZW50LWlkLWVjb2RhdGEtbG9jYWxob3N0IiwiYXV0aF90aW1lIjoxNjU5NjUwMTY1LCJzdGF0ZSI6ImQ1MjM2NjcyZmMiLCJhdF9oYXNoIjoiNWRLWEVTQ0p5U292YTFEZHp2NDFkdyIsImVtYWlsIjoiY2hyaXMuZ29kd2luLmFsYUBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmFtaWx5X25hbWUiOiJHb2R3aW4iLCJnaXZlbl9uYW1lIjoiQ2hyaXMiLCJuYW1lIjoiQ2hyaXMgR29kd2luIiwicHJlZmVycmVkX3VzZXJuYW1lIjoiY2hyaXMuZ29kd2luLmFsYUBnbWFpbC5jb20iLCJyb2xlIjpbIlJPTEVfQURNSU4iLCJST0xFX0FQSV9FRElUT1IiLCJST0xFX0NPTExFQ1RJT05fQURNSU4iLCJST0xFX0VESVRPUiIsIlJPTEVfVVNFUiIsIlJPTEVfVlBfVEVTVF9BRE1JTiJdLCJ1cGRhdGVkX2F0IjoiMjAyMi0wNy0xMyAxMToyMzoyNiJ9.kSo8Q1QiBBMEYLU-Dxi2mI-EN2g8xRHgeTdmbqrV9-SUckiphZqs8x5fk4hH_KPUKzR31BkwrXGDBpgO-KMKnu8NyqaNEq4cCqedSY6JfmlZ6BVkkM0SgaS8A5t8_PsIouhCivgtlLBqZzmJqxSIyDvT34odAI_eV8yV9he6-NryIId_5Yw1TK088RBqGpxOc2EAF5_9R0fRxjk7f1nRygE1EMaA2j1IpJ78mTaCJbD9rOpPfZSf9arfzXwxGcco-ORf5aCyn8bDDT0GP5w0e_MoU-7nnG1AMAM8VcsGmjSZ2LP7x2xU7e89sgeelqmtAUGSqQ2nT_jmRNbU3InKUA",
+    "refresh_token": "RT-694-t9-d2WnC7X-xfKHP8xQT4rcacS8PvWjK",
+    "token_type": "bearer",
+    "expires_in": 86400,
+    "scope": "user_defined email openid profile roles"
+  },
+  "token": {
+    "at_hash": "KX-L2Fj6Z9ow-gOpYfehRA",
+    "sub": "109146067678249278584",
+    "email_verified": true,
+    "role": [
+      "ROLE_ADMIN",
+      "ROLE_API_EDITOR",
+      "ROLE_COLLECTION_ADMIN",
+      "ROLE_EDITOR",
+      "ROLE_USER",
+      "ROLE_VP_TEST_ADMIN"
+    ],
+    "amr": [
+      "DelegatedClientAuthenticationHandler"
+    ],
+    "iss": "https:\/\/auth-test.ala.org.au\/cas\/oidc",
+    "preferred_username": "chris.godwin.ala@gmail.com",
+    "given_name": "Chris",
+    "client_id": "auth-test-oidc-client-id-ecodata-localhost",
+    "sid": "27a1e24165d742cfe05c07c434242628dbc40fba",
+    "aud": "auth-test-oidc-client-id-ecodata-localhost",
+    "nbf": 1659650790,
+    "updated_at": "2022-07-13 11:23:26",
+    "auth_time": 1659651090,
+    "name": "Chris Godwin",
+    "state": "12d85f55b6",
+    "exp": 1659737490,
+    "iat": 1659651090,
+    "family_name": "Godwin",
+    "jti": "TGT-26-TVyYe6dxP7ZSp7T-3mVAWgPi6skhrH4wl9bnYZzc7O7T0pYhxxUheQsyqyfQaDQrrbg-auth-test.ala.org.au",
+    "email": "chris.godwin.ala@gmail.com"
+  }
+}

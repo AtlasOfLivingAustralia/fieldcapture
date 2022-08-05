@@ -161,6 +161,7 @@ dependencies {
     testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
     testRuntime "org.gebish:geb-spock"
     testRuntime "net.sourceforge.nekohtml:nekohtml:1.9.22"
+    testCompile "org.pac4j:pac4j-jwt:5.4.3"
     testCompile "org.grails:grails-test-mixins:3.3.0"
     testCompile "org.grails:grails-gorm-testing-support"
     testCompile "org.grails:grails-web-testing-support"

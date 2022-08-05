@@ -3,6 +3,10 @@ package au.org.ala.fieldcapture
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer
 import geb.Browser
+import grails.converters.JSON
+import org.grails.web.converters.marshaller.json.MapMarshaller
+import org.pac4j.jwt.config.signature.SignatureConfiguration
+import org.pac4j.jwt.profile.JwtGenerator
 import spock.lang.Shared
 import wiremock.com.github.jknack.handlebars.EscapingStrategy
 import wiremock.com.github.jknack.handlebars.Handlebars
@@ -26,7 +30,7 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
 
     @Shared WireMockServer wireMockServer
     def setupSpec() {
-
+        JSON.registerObjectMarshaller(new MapMarshaller())
         Handlebars handlebars = new Handlebars()
         handlebars.escapingStrategy = EscapingStrategy.NOOP
 
@@ -114,8 +118,54 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
         login([userId:userId, email: "user${userId}@nowhere.com", firstName:"MERIT", lastName:"User ${userId}"], browser)
     }
 
-    /** Creates a wiremock configuration to stub a user login request and return the supplied user and role information */
     def login(Map userDetails, Browser browser) {
+        oidcLogin(userDetails, browser)
+    }
+
+    def oidcLogin(Map userDetails, Browser browser) {
+
+        Map idTokenClaims = [
+                at_hash:"KX-L2Fj6Z9ow-gOpYfehRA",
+                sub:"109146067678249278584",
+                email_verified:true,
+                role:["ROLE_USER"] + userDetails.roles,
+                amr:"DelegatedClientAuthenticationHandler",
+                iss:"http://localhost:8018/cas/oidc",
+                preferred_username:userDetails.email,
+                given_name:userDetails.firstName,
+                family_name:userDetails.lastName,
+                client_id:"test_client_id",
+                sid:"test_sid",
+                aud:"test_client_id",
+                name:userDetails.firstName+" "+userDetails.lastName,
+                state:"maybe_this_matters",
+                auth_time:-1,
+                nbf:-1,
+                exp:-1,
+                iat:-1,
+                jti:"",
+                email:userDetails.email
+        ]
+        String idToken = new JwtGenerator(null).generate(idTokenClaims)
+        Map token = [:]
+        token.access_token = idToken
+        token.id_token = idToken
+        token.refresh_token = null
+        token.token_type = "bearer"
+        token.expires_in = 86400
+        token.scope = "user_defined email openid profile roles"
+
+        stubFor(post(urlPathEqualTo("/cas/oidc/oidcAccessToken"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody((token as JSON).toString())
+                        .withTransformers("response-template")))
+        browser.go "${getConfig().baseUrl}/login"
+    }
+
+    /** Creates a wiremock configuration to stub a user login request and return the supplied user and role information */
+    def casLogin(Map userDetails, Browser browser) {
 
         String email = "fc-te@outlook.com"
 
