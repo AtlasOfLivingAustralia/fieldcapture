@@ -17,6 +17,7 @@ program.forEach(function (prog) {
     newProgram.dateCreated = now
     newProgram.lastUpdated = now
     newProgram.status = "active"
+    newProgram.parent = null
     var program = db.program.find({name: prog})
     if (!program.hasNext()) {
         db.program.insert(newProgram);
