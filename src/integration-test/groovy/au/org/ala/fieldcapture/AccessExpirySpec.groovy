@@ -10,7 +10,7 @@ import javax.mail.Message
 
 class AccessExpirySpec extends StubbedCasSpec {
     @Rule
-    public final GreenMailRule greenMail = new GreenMailRule(ServerSetup.verbose(ServerSetupTest.SMTP))
+    public GreenMailRule greenMail = new GreenMailRule(ServerSetup.verbose(ServerSetupTest.SMTP))
 
     def setupSpec() {
         useDataSet('dataset1')
