@@ -9,7 +9,7 @@ fi
 
 BRANCH=$3
 if [ -z $BRANCH ]; then
-    BRANCH=feature/issue727
+    BRANCH=grails5Java11
 fi
 
 ECODATA_LOCAL_DIR=$2
