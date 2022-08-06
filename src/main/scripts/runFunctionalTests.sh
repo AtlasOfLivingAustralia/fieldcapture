@@ -1,4 +1,4 @@
-#!/bin/bash -v -x
+#!/bin/bash -v
 
 MERIT_DIR=$PWD
 
