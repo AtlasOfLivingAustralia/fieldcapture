@@ -1,4 +1,4 @@
-#!/bin/bash -v
+#!/bin/bash -v -x
 
 MERIT_DIR=$PWD
 
@@ -22,9 +22,12 @@ if [ ! -d $ECODATA_LOCAL_DIR ]; then
     git clone https://github.com/AtlasOfLivingAustralia/ecodata.git
     cd ecodata
     git checkout $BRANCH
+    echo "Cloned ecodata $BRANCH into /tmp/ecodata"
 else
     cd $ECODATA_LOCAL_DIR
+    git checkout $BRANCH
     git pull
+    echo "Updated ecodata $BRANCH in /tmp/ecodata"
 fi
 
 echo "Dropping database"
