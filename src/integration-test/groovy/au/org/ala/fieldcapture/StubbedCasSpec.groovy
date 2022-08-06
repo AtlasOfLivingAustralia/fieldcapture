@@ -124,26 +124,33 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
 
     def oidcLogin(Map userDetails, Browser browser) {
 
+        // The test config isn't a normal grails config object (probably need to to into why) so getProperty doesn't work.
+        String clientId = getTestConfig().security.oidc.clientId
+        List roles = ["ROLE_USER"]
+        if (userDetails.role) {
+            roles << userDetails.role
+        }
+
         Map idTokenClaims = [
                 at_hash:"KX-L2Fj6Z9ow-gOpYfehRA",
-                sub:"109146067678249278584",
+                sub:userDetails.userId,
                 email_verified:true,
-                role:["ROLE_USER"] + userDetails.roles,
+                role:roles,
                 amr:"DelegatedClientAuthenticationHandler",
                 iss:"http://localhost:8018/cas/oidc",
                 preferred_username:userDetails.email,
                 given_name:userDetails.firstName,
                 family_name:userDetails.lastName,
-                client_id:"test_client_id",
+                client_id:clientId,
                 sid:"test_sid",
-                aud:"test_client_id",
+                aud:clientId,
                 name:userDetails.firstName+" "+userDetails.lastName,
                 state:"maybe_this_matters",
                 auth_time:-1,
-                nbf:-1,
-                exp:-1,
-                iat:-1,
-                jti:"",
+                nbf:com.nimbusds.jwt.util.DateUtils.toSecondsSinceEpoch(new Date().minus(365)),
+                exp:com.nimbusds.jwt.util.DateUtils.toSecondsSinceEpoch(new Date().plus(365)),
+                iat:com.nimbusds.jwt.util.DateUtils.toSecondsSinceEpoch(new Date()),
+                jti:"id",
                 email:userDetails.email
         ]
         String idToken = new JwtGenerator(null).generate(idTokenClaims)
@@ -161,7 +168,22 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
                         .withHeader("Content-Type", "application/json")
                         .withBody((token as JSON).toString())
                         .withTransformers("response-template")))
-        browser.go "${getConfig().baseUrl}/login"
+
+        Map profile = [
+                sub:userDetails.userId,
+                name:userDetails.firstName+" "+userDetails.lastName,
+                given_name:userDetails.firstName,
+                family_name:userDetails.lastName,
+                email:userDetails.email
+        ]
+        stubFor(get(urlPathEqualTo("/cas/oidc/oidcProfile"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody((profile as JSON).toString())
+                ))
+
+        browser.go "${getConfig().baseUrl}login"
     }
 
     /** Creates a wiremock configuration to stub a user login request and return the supplied user and role information */
