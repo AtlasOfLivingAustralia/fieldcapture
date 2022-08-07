@@ -55,6 +55,7 @@ class AccessExpirySpec extends StubbedCasSpec {
         }
 
         when: "We re-display the project permissions table for our project"
+        loginAsAlaAdmin(browser)
         to ProjectIndex, 'activityProject'
         openAdminTab()
         admin.openProjectAccess()

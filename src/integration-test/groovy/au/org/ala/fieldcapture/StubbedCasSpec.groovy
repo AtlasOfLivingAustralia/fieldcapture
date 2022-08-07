@@ -118,8 +118,14 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
         login([userId:userId, email: "user${userId}@nowhere.com", firstName:"MERIT", lastName:"User ${userId}"], browser)
     }
 
+    private String loggedInUser = null
+
     def login(Map userDetails, Browser browser) {
+        if (loggedInUser != userDetails.userId) {
+            logout(browser)
+        }
         oidcLogin(userDetails, browser)
+        loggedInUser = userDetails.userId
     }
 
     def oidcLogin(Map userDetails, Browser browser) {
