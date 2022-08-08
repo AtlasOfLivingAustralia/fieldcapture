@@ -105,7 +105,7 @@ function RisksRowViewModel (risksRow, riskModel) {
 function getClassName(val){
     var className = '';
     if(val == 'High')
-        className = 'badge badge-important';
+        className = 'badge badge-danger';
     else if (val == 'Significant')
         className = 'badge badge-warning';
     else if (val == 'Medium')

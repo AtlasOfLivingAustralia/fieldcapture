@@ -165,7 +165,7 @@
         <fc:iconHelp title="Start date">Date the project is intended to commence.</fc:iconHelp>
         </label>
         <div class="input-group input-append">
-            <g:if test="${canRegenerateReports}">
+            <g:if test="${!canRegenerateReports}">
                 <fc:datePicker targetField="plannedStartDate.date" id="startDate" bs4="true" name="startDate" data-bind="disable:true, datepicker:plannedStartDate.date" data-validation-engine="validate[required, past[plannedEndDate]]" printable="${printView}" size="form-control form-control-sm dateControl"/>
             </g:if>
             <g:else>

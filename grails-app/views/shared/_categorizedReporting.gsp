@@ -21,7 +21,7 @@
 
 <script id="notReportable" type="text/html">
     <span class="badge badge-danger" data-bind="if:!report.editable">Report read only</span>
-<p data-bind="visible:report.dateAdjusted"><span class="badge p-1 text-white badge-important">Report adjusted</span></p>
+<p data-bind="visible:report.dateAdjusted"><span class="badge p-1 text-white badge-danger">Report adjusted</span></p>
     <div data-bind="if:isCurrent()">
         <span><span class="badge p-1 text-white badge-info" data-bind="if:isCurrent()">Current reporting period</span>
             <fc:iconHelp dynamic-help="currentPeriodHelpText"></fc:iconHelp> </span>
@@ -41,7 +41,7 @@
 
 <script id="notSubmitted" type="text/html">
  <p data-bind="if:!report.editable"><span class="badge badge-danger p-1">Report read only</span></p>
-    <p data-bind="visible:report.dateAdjusted"><span class="badge p-1 text-white badge-important">Report adjusted</span></p>
+    <p data-bind="visible:report.dateAdjusted"><span class="badge p-1 text-white badge-danger">Report adjusted</span></p>
     <p><span class="badge p-1 text-white badge-warning">Report not submitted</span></p>
 
     <g:if test="${isAdmin || fc.userIsAlaOrFcAdmin()}">
@@ -64,7 +64,7 @@
 <script id="approved" type="text/html">
 
     <p><span class="badge p-1 text-white badge-success">Report approved</span></p>
-    <p data-bind="visible:report.dateAdjusted"><span class="badge p-1 text-white badge-important">Report adjusted</span></p>
+    <p data-bind="visible:report.dateAdjusted"><span class="badge p-1 text-white badge-danger">Report adjusted</span></p>
     <g:if test="${fc.userIsAlaOrFcAdmin()}">
         <p>
             <button type="button" data-bind="click:rejectReport" class="btn btn-sm btn-danger"><i class="fa fa-remove icon-white"></i> Withdraw approval</button>
@@ -81,7 +81,7 @@
 
 <script id="submitted" type="text/html">
     <p><span class="badge p-1 text-white badge-info">Report submitted</span></p>
-    <p data-bind="visible:report.dateAdjusted"><span class="badge p-1 text-white badge-important">Report adjusted</span></p>
+    <p data-bind="visible:report.dateAdjusted"><span class="badge p-1 text-white badge-danger">Report adjusted</span></p>
     <div data-bind="if:overDelivered">
         <p><span data-bind="popover:{content:overDeliveryMessage(), html:true}" class="badge badge-overdelivered">Project targets over-delivered</span></p>
     </div>
