@@ -12,7 +12,7 @@
 //= require_self
 
 /** Initialises the /admin/audit.gsp */
-$(document).ready(function() {
+function initialiseAuditSearch() {
 
     function doAuditSearch() {
         var searchTerm = $("#searchTerm").val();
@@ -54,10 +54,10 @@ $(document).ready(function() {
         $('#searchTerm').prop('disabled', searchType == 'Setting / Site Blog');
     })
 
-});
+};
 
 /** Initialises the /admin/auditProject.gsp */
-$(document).ready(function() {
+function initialiseAuditTable() {
     $('#audit-message-list').DataTable({
         "order": [[ 0, "desc" ]],
         "aoColumnDefs": [{ "sType": "date-uk", "aTargets": [0] }],
@@ -66,6 +66,66 @@ $(document).ready(function() {
         }
     });
     $('.dataTables_filter input').attr("placeholder", "Date, Action, Type, Name, User");
-});
+};
 
+function initialiseAuditTableServerSide(config) {
+    var url = config.auditSearchUrl;
+    $('#audit-message-list').DataTable({
+        "order": [[ 0, "desc" ]],
+        "aoColumnDefs": [{ "sType": "date-uk", "aTargets": [0] }],
+        "oLanguage": {
+            "sSearch": "Search: "
+        },
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: url,
+            data: function(options){
+                var col, order
+                for(var i in options.order){
+                    order = options.order[i];
+                    col = options.columns[order.column];
+                    break;
+                }
+                options.sort = col.data;
+                options.orderBy = order.dir
+                options.q = (options.search && options.search.value) || ''
+            }
+        },
+        "columns": [{
+            data: 'date',
+            name: 'date',
+            render: function(data, type, row) {
+                return moment(data).local().format("D/MM/YYYY HH:mm:ss")
+            }
+        },{
+            data: 'eventType',
+            name: 'eventType'
+        },{
+            data: 'entityType',
+            render: function(data, type, row){
+                return data && data.substr(data.lastIndexOf('.') + 1)
+            }
+        },{
+            data:'entity.name',
+            render: function(data, type, row){
+                var name = (row.entity && row.entity.name) || '',
+                    type = (row.entity && row.entity.type) || '',
+                    id = row.entityId;
+                return name + ' ' + type + ' <small>(' + id + ')</small>'
+            },
+            bSortable : false
+        },{
+            data: 'userName',
+            bSortable : false
+        },{
+            render: function(data, type , row){
+                return '<a target="_blank" rel="noopener" class="btn btn-small" href="'+ config.auditMessageUrl +'?id=' + row.id+ '"><i class="fa fa-search"></i></a>';
+
+            },
+            bSortable : false
+        }]
+    });
+    $('.dataTables_filter input').attr("placeholder", "Date, Action, Type, Name, User");
+};
 
