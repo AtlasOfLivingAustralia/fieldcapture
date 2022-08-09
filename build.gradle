@@ -259,7 +259,7 @@ assets {
     minifyCss = true
     maxThreads = 4 //useful for concurrent asset processing during build
     configOptions = [:] //useful for custom config on extension libraries
-    includes = ['webjars/**/images/*.png']
+    includes = ['webjars/**/images/*']
     excludes = ['**/*.less','**/build/hintrc.js', 'hintrc.unminified.js', '**/spec.hintrc.js', 'spec.hintrc.unminified.js', '**/*hintrc*', '**/webjars/**'] //Example Exclude GLOB pattern
 }
 
