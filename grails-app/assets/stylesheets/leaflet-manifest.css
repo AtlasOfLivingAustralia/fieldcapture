@@ -1,11 +1,6 @@
 /* leaflet
 *= encoding UTF-8
 
-* from image-client-plugin
-*= require leaflet/leaflet.measure
-*= require leaflet/Control.FullScreen
-
 * from ala-map-plugin
-*= require Map.css
 *= require ala-map.css
 */
