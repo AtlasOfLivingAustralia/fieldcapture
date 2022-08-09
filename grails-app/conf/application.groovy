@@ -232,7 +232,7 @@ security {
         discoveryUri = "${auth.baseUrl}/cas/oidc/.well-known"
         clientId = "changeMe"
         secret = "changeMe"
-        scope = "openid,profile,email,roles,user_defined"
+        scope = "openid,profile,email,roles,user_defined,ala"
     }
     jwt {
         enabled = false
