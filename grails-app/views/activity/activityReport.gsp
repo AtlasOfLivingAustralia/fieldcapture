@@ -34,7 +34,7 @@
                 noImageUrl: "${assetPath(src:'nophoto.png')}",
                 context:<fc:modelAsJavascript model="${context}"/>,
                 prepopUrlPrefix:"${grailsApplication.config.getProperty('grails.serverURL')}",
-                useGoogleBaseMap: false,// Turning this off until issue is resolved ${grails.util.Environment.current == grails.util.Environment.PRODUCTION},
+                useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.PRODUCTION},
                 unlockActivityUrl: "${createLink(controller:'activity', action:'ajaxUnlock')}/<fc:currentUserId/>",
                 projectTargetsAndScoresUrl: "${createLink(controller:'project', action:'targetsAndScoresForActivity', id:activity.projectId, params:[activityId:activity.activityId])}"
             },
