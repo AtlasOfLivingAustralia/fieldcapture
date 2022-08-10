@@ -941,11 +941,11 @@ var createMap = function(options) {
             L.Icon.Default.imagePath = options.leafletIconPath;
         }
         if (options.useGoogleBaseMap) {
-            var googleLayer = new L.Google('ROADMAP', {maxZoom: 21, nativeMaxZoom: 21});
+            var googleLayer = L.gridLayer.googleMutant({maxZoom: 21, nativeMaxZoom: 21, type:'roadmap'});
             var otherLayers = {
                 Roadmap: googleLayer,
-                Hybrid: new L.Google('HYBRID', {maxZoom: 21, nativeMaxZoom: 21}),
-                Terrain: new L.Google('TERRAIN', {maxZoom: 21, nativeMaxZoom: 21})
+                Hybrid: L.gridLayer.googleMutant({maxZoom: 21, nativeMaxZoom: 21, type:'hybrid'}),
+                Terrain: L.gridLayer.googleMutant({maxZoom: 21, nativeMaxZoom: 21, type:'terrain'})
             };
 
             options.baseLayer = googleLayer;
