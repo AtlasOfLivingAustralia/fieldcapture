@@ -40,6 +40,31 @@ class UserService {
         auditBaseUrl = grailsApplication.config.getProperty('ecodata.baseUrl') + 'audit'
     }
 
+    ThreadLocal<UserDetails> backgroundUser = new ThreadLocal<UserDetails>()
+
+    /**
+     * This method is intended for use by scheduled jobs (statistics recalculation, risks and threats checks etc
+     * that need to call ecodata with a user in context.  It assigns the user to a ThreadLocal which the
+     * getUser() method checks before delegating to the auth service.
+     *
+     * @param user the user to put into context
+     * @param closure the context in which the supplied user will be avaliable via the getUser() method.
+     */
+    void withUser(UserDetails user, Closure closure) {
+        if (RequestContextHolder.getRequestAttributes() != null) {
+            throw new IllegalStateException("Cannot use this method within the context of a http request")
+        }
+
+        try {
+            backgroundUser.set(user)
+            closure()
+        }
+        finally {
+            backgroundUser.remove()
+        }
+
+    }
+
     String getCurrentUserDisplayName() {
         getUser()?.displayName?:""
     }
@@ -50,15 +75,17 @@ class UserService {
 
     UserDetails getUser() {
 
-        def user = null
+        def user = backgroundUser.get()
         // Attempting to call authService.userDetails outside of a HTTP request results in an exception
         // being thrown.  So if there is no HTTP request (as when running the scheduled job that regenerates the homepage statistics)
         // we just return null.
-        if (RequestContextHolder.currentRequestAttributes().request) {
-            def u = authService.userDetails()
+        if (!user) {
+            if (RequestContextHolder.currentRequestAttributes().request) {
+                def u = authService.userDetails()
 
-            if (u?.userId) {
-                user = new UserDetails(u.displayName, u.email, u.userId)
+                if (u?.userId) {
+                    user = new UserDetails(u.displayName, u.email, u.userId)
+                }
             }
         }
 
