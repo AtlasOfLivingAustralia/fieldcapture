@@ -1,0 +1,910 @@
+{
+  "name": "Right-Way Desert Fire Final Report",
+  "type": "Report",
+  "sections": [
+    {
+      "name": "Project Final Report",
+      "optionalQuestionText": null,
+      "optional": false,
+      "collapsedByDefault": false,
+      "templateName": "project_final_report",
+      "template": {
+        "modelName": "Project Final Report",
+        "dataModel": [
+          {
+            "dataType": "text",
+            "name": "projectOutcomesSummary",
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "list",
+            "name": "projectOutcomes",
+            "allowRowDelete": "false",
+            "columns": [
+              {
+                "dataType": "text",
+                "name": "outcomeStatement"
+              },
+              {
+                "dataType": "text",
+                "name": "achievement",
+                "validate": "required,maxSize[5000]"
+              },
+              {
+                "dataType": "text",
+                "name": "basedRating",
+                "constraints": [
+                  "Achieved (100%)",
+                  "Significantly achieved (76-99%)",
+                  "Satisfactorily achieved (51-75%)",
+                  "Partially achieved (26-50%)",
+                  "Inadequately achieved (1-25%)",
+                  "Not achieved (0%)",
+                  "Unable to rate"
+                ],
+                "validate": "required"
+              }
+            ]
+          },
+          {
+            "dataType": "list",
+            "name": "projOutcomes",
+            "allowRowDelete": "false",
+            "columns": [
+              {
+                "dataType": "text",
+                "name": "outcomeStatement"
+              },
+              {
+                "dataType": "text",
+                "name": "achievementMaintenance",
+                "validate": "required,maxSize[5000]"
+              },
+              {
+                "dataType": "text",
+                "name": "basedRating",
+                "constraints": [
+                  "Achieved (100%)",
+                  "Significantly achieved (76-99%)",
+                  "Satisfactorily achieved (51-75%)",
+                  "Partially achieved (26-50%)",
+                  "Inadequately achieved (1-25%)",
+                  "Not achieved (0%)",
+                  "Unable to rate"
+                ],
+                "validate": "required"
+              }
+            ]
+          },
+          {
+            "columns": [
+              {
+                "dataType": "text",
+                "name": "serviceName"
+              },
+              {
+                "dataType": "text",
+                "name": "sitesAvailable",
+                "constraints": [ "Yes", "No" ],
+                "validate": "required"
+              },
+              {
+                "dataType": "feature",
+                "name": "serviceMappedArea",
+                "behaviour": [
+                  {
+                    "condition": "sitesAvailable == \"Yes\"",
+                    "type": "enable"
+                  }
+                ]
+              },
+              {
+                "computed": {
+                  "expression": "$geom.areaHa(serviceMappedArea)"
+                },
+                "dataType": "number",
+                "decimalPlaces": 3,
+                "name": "serviceCalculatedAreaHa",
+                "units": "ha"
+              },
+              {
+                "computed": {
+                  "expression": "$geom.lengthKm(serviceMappedArea)"
+                },
+                "dataType": "number",
+                "decimalPlaces": 3,
+                "name": "serviceCalculatedLengthKm",
+                "units": "km"
+              },
+              {
+                "dataType": "text",
+                "name": "targetMeasure",
+                "description": "The output target measure to be adjusted."
+              },
+              {
+                "dataType": "text",
+                "name": "scoreId",
+                "description": "Identifier for the target measure"
+              },
+              {
+                "dataType": "stringList",
+                "name": "assets",
+                "constraints": [
+                  "Australasian Bittern Botaurus poiciloptilus",
+                  "Black-eared Miner Manorina melanotis",
+                  "Carnaby's Cockatoo Calyptorhynchus latirostris",
+                  "Christmas Island Goshawk Accipiter hiogaster natalis",
+                  "Eastern Curlew Numenius madagascariensis",
+                  "Golden-shouldered Parrot, Alwal Psephotus chrysopterygius",
+                  "Hooded Plover (eastern) Thinornis cucullatus cucullatus",
+                  "King Island Brown Thornbill Acanthiza pusilla archibaldi"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "date",
+                "name": "activityStartDate",
+                "description": "",
+                "validate": "required"
+              },
+              {
+                "dataType": "date",
+                "name": "activityEndDate",
+                "description": "",
+                "validate": "required"
+              }
+            ],
+            "dataType": "list",
+            "allowRowDelete": "false",
+            "name": "projectTargets"
+          },
+          {
+            "dataType": "list",
+            "name": "projectMonitorings",
+            "allowRowDelete": "false",
+            "columns": [
+              {
+                "dataType": "text",
+                "name": "monitoringIndicator"
+              },
+              {
+                "dataType": "text",
+                "name": "monitoringApproach"
+              },
+              {
+                "dataType": "text",
+                "name": "monitoringOutcome",
+                "validate": "required,maxSize[5000]"
+              }
+            ]
+          },
+          {
+            "dataType": "list",
+            "name": "projectSpatialStrategy",
+            "allowRowDelete": "false",
+            "columns": [
+              {
+                "dataType": "stringList",
+                "name": "assets",
+                "constraints": [
+                  "Australasian Bittern Botaurus poiciloptilus",
+                  "Black-eared Miner Manorina melanotis",
+                  "Carnaby's Cockatoo Calyptorhynchus latirostris",
+                  "Christmas Island Goshawk Accipiter hiogaster natalis",
+                  "Eastern Curlew Numenius madagascariensis",
+                  "Golden-shouldered Parrot, Alwal Psephotus chrysopterygius",
+                  "Hooded Plover (eastern) Thinornis cucullatus cucullatus",
+                  "King Island Brown Thornbill Acanthiza pusilla archibaldi"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "strategyUsed",
+                "validate": "required,maxSize[5000]"
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "effectivenessOfProjectMethodology",
+            "validate": "required,maxSize[5000]",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "projectOverallLessons",
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "text",
+            "name": "projectLessons",
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "stringList",
+            "name": "isExpenditureWithinBudget",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "isExpenditureWithinBudgetReason",
+            "behaviour": [
+              {
+                "type": "enable",
+                "condition": "isExpenditureWithinBudget == \"No\""
+              }
+            ],
+            "validate": "required,maxSize[5000]",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "dataType": "list",
+            "description": "",
+            "name": "goodNewsStories",
+            "columns": [
+              {
+                "dataType": "text",
+                "description": "",
+                "name": "storyDetails",
+                "validate": "required,maxSize[5000]"
+              },
+              {
+                "dataType": "image",
+                "name": "photo"
+              }
+            ]
+          },
+          {
+            "dataType": "list",
+            "name": "riskManagement",
+            "allowRowDelete": "false",
+            "columns": [
+              {
+                "dataType": "text",
+                "name": "riskType",
+                "constraints": [
+                  "Performance",
+                  "Work Health and Safety",
+                  "People resources",
+                  "Financial",
+                  "External stakeholders",
+                  "Natural environment"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "effectivenessRating",
+                "constraints": [
+                  "Severe",
+                  "High",
+                  "Medium",
+                  "Low"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "effectivenessOfRiskManagement",
+                "validate": "required,maxSize[5000]"
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "projectContactDetailsChanged",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          }
+        ],
+        "viewModel": [
+          {
+            "items": [
+              {
+                "source": "<h4>1. Project Outcomes</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<b>1.1 Provide a summary of what was achieved during the project, including but not limited to:</b>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "a) environmental outcomes and project actions, such as the impact and legacy of the project on each of the assets targeted Cultural outcomes such as improved health and abundance of culturally significant species, prevention of hot wildfire damage to cultural sites and sharing of cultural knowledge with the community<br>c) Social outcomes, such as engagement with Indigenous Owners, landholders and local community",
+                "source": "projectOutcomesSummary",
+                "type": "textarea",
+                "rows": 3
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "<b>1.2 Describe achievements made against each outcome statement in the MERI plan, including measurable information where applicable.</b>",
+                "type": "literal"
+              }
+            ]
+          },
+          {
+            "source": "projectOutcomes",
+            "type": "table",
+            "userAddedRows": true,
+            "columns": [
+              {
+                "source": "",
+                "type": "literal",
+                "width": "5%",
+                "preLabel": {
+                  "computed": "\\'No. \\' || (index + 1)"
+                },
+                "title": "Outcome No."
+              },
+              {
+                "type": "textarea",
+                "source": "outcomeStatement",
+                "title": "Outcome",
+                "rows": 5,
+                "width": "40%"
+              },
+              {
+                "type": "textarea",
+                "source": "achievement",
+                "title": "Achievement against the outcome",
+                "rows": 5,
+                "width": "40%"
+              },
+              {
+                "width": "15%",
+                "source": "basedRating",
+                "title": "Rating based on the effectiveness evaluation criteria",
+                "type": "select2"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "<b>1.3 How will each of the outcomes achieved by this project be maintained?</b>",
+                "type": "literal"
+              }
+            ]
+          },
+          {
+            "source": "projOutcomes",
+            "type": "table",
+            "userAddedRows": true,
+            "columns": [
+              {
+                "source": "",
+                "type": "literal",
+                "width": "5%",
+                "preLabel": {
+                  "computed": "\\'No. \\' || (index + 1)"
+                },
+                "title": "Outcome No."
+              },
+              {
+                "type": "textarea",
+                "source": "outcomeStatement",
+                "title": "Outcome",
+                "rows": 5,
+                "width": "40%"
+              },
+              {
+                "type": "textarea",
+                "source": "achievementMaintenance",
+                "title": "How will the outcome achieved be maintained?",
+                "rows": 5,
+                "width": "40%"
+              }
+            ]
+          },
+          {
+            "disableTableUpload": true,
+            "columns": [
+              {
+                "source": "",
+                "type": "literal",
+                "width": "5%",
+                "preLabel": {
+                  "computed": "\\'No. \\' || (index + 1)"
+                },
+                "title": "Activity No."
+              },
+              {
+                "readonly": true,
+                "width": "13%",
+                "source": "serviceName",
+                "type": "textarea",
+                "rows": 3,
+                "title": "Activity"
+              },
+              {
+                "width": "5%",
+                "source": "sitesAvailable",
+                "type": "selectOne",
+                "title": "Is site data available for / applicable to this service?"
+              },
+              {
+                "width": "10%",
+                "type": "col",
+                "title": "Site/s where the service has been delivered",
+                "items": [
+                  {
+                    "source": "serviceMappedArea",
+                    "type": "feature",
+                    "width": "5%",
+                    "title": ""
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "readonly": true,
+                        "source": "serviceCalculatedAreaHa",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "readonly": true,
+                        "source": "serviceCalculatedLengthKm",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "width": "25%",
+                "source": "assets",
+                "title": "Assets",
+                "type": "select2Many"
+              },
+              {
+                "width": "5%",
+                "source": "activityStartDate",
+                "title": "Date activity started",
+                "type": "simpleDate"
+              },
+              {
+                "width": "5%",
+                "source": "activityEndDate",
+                "title": "Date activity ended",
+                "type": "simpleDate"
+              }
+            ],
+            "userAddedRows": true,
+            "source": "projectTargets",
+            "title": "<b>1.4 Please detail outputs against each activity minimum target.</b>",
+            "type": "table"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "<b>1.5 Please detail outputs against each project monitoring indicator.</b>",
+                "type": "literal"
+              }
+            ]
+          },
+          {
+            "source": "projectMonitorings",
+            "type": "table",
+            "userAddedRows": true,
+            "columns": [
+              {
+                "source": "",
+                "type": "literal",
+                "width": "5%",
+                "preLabel": {
+                  "computed": "\\'No. \\' || (index + 1)"
+                },
+                "title": "Activity No."
+              },
+              {
+                "type": "textarea",
+                "source": "monitoringIndicator",
+                "title": "Monitoring indicator",
+                "rows": 5,
+                "width": "30%"
+              },
+              {
+                "type": "textarea",
+                "source": "monitoringApproach",
+                "title": "Monitoring approach",
+                "rows": 5,
+                "width": "30%"
+              },
+              {
+                "type": "textarea",
+                "source": "monitoringOutcome",
+                "title": "Monitoring outcome",
+                "rows": 5,
+                "width": "40%"
+              }
+            ]
+          },
+          {
+            "columns": [
+              {
+                "width": "25%",
+                "source": "assets",
+                "title": "Assets",
+                "type": "selectOne"
+              },
+              {
+                "type": "textarea",
+                "source": "strategyUsed",
+                "title": "Strategy used to best protect the species",
+                "rows": 5,
+                "width": "40%"
+              }
+            ],
+            "userAddedRows": true,
+            "source": "projectSpatialStrategy",
+            "title": "<b>1.6 Spatial Strategy/Targeting of Burns to Protect Species.</b>",
+            "type": "table"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "<h4>2. Effectiveness and Project Lessons</h4>",
+                "type": "literal"
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "source": "effectivenessOfProjectMethodology",
+                "preLabel": "2.1 Did project implementation occur as planned?",
+                "type": "selectOne"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "projectOverallLessons",
+                "type": "textarea",
+                "rows": 5,
+                "preLabel": "2.2 What are the overall lessons learned during the delivery and monitoring of the project?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "projectLessons",
+                "type": "textarea",
+                "rows": 5,
+                "preLabel": "2.3 Based on your experience through this project, are there lessons that future efforts to address fire management and resilience of species and habitats should consider?"
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>3. Project income and expenditure</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "isExpenditureWithinBudget",
+                "preLabel": "3.1 Has the project funding been expended in accordance with the budget, and have funds been fully expensed?",
+                "type": "selectOne"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "isExpenditureWithinBudgetReason",
+                "preLabel": "3.2 If you have answered No, please provide details.",
+                "type": "textarea",
+                "rows": 5
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>4. Good News Stories</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<b>4.1 Please provide good news stories that highlight what the project achieved in the final period.</b><p>This information is intended for potential use by the Department in publicly promoting the program. Photos may be attached to this report via attachment to email however please ensure permissions of persons in the photos are obtained prior to the photos being attached and used for promotional purposes.</p>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "columns": [
+              {
+                "source": "",
+                "type": "literal",
+                "width": "5%",
+                "preLabel": {
+                  "computed": "\\'No. \\' || (index + 1)"
+                },
+                "title": "Story No."
+              },
+              {
+                "source": "storyDetails",
+                "type": "textarea",
+                "rows": 4,
+                "title": "Good News Story Details",
+                "width": "50%"
+              },
+              {
+                "type": "image",
+                "source": "photo",
+                "title": "",
+                "width": "45%"
+              }
+            ],
+            "userAddedRows": true,
+            "source": "goodNewsStories",
+            "type": "table"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "<h4>5. Risk Management</h4>",
+                "type": "literal"
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "source": "<b>5.1 Provide details on the risk assessment and risk management?</b>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "columns": [
+              {
+                "width": "20%",
+                "source": "riskType",
+                "type": "selectOne",
+                "title": "Type of threat/risk"
+              },
+              {
+                "width": "30%",
+                "source": "effectivenessRating",
+                "type": "selectOne",
+                "title": "Rating for effectiveness"
+              },
+              {
+                "source": "effectivenessOfRiskManagement",
+                "type": "textarea",
+                "title": "To what extent has the project risk assessment and risk management been appropriate and effective",
+                "width": "50%"
+              }
+            ],
+            "disableTableUpload": true,
+            "userAddedRows": false,
+            "source": "riskManagement",
+            "type": "table"
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>6. Organisation and Contact Details</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "projectContactDetailsChanged",
+                "preLabel": "6.1 Has there been a change to key project contacts or their details?",
+                "type": "selectOne",
+                "helpText": "(e.g. Name, position, role, email, telephone or address of key contacts)"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "If yes, please provide updated details to the department",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          }
+        ],
+        "pre-populate": [
+          {
+            "source": {
+              "context-path": "owner"
+            },
+            "merge": {
+              "projectOutcomes": {
+                "deleteUnmatchedExistingRows": true,
+                "addUnmatchedNewRows": true,
+                "keys": [
+                  "outcomeStatement"
+                ]
+              }
+            },
+            "mapping": [
+              {
+                "target": "projectOutcomes",
+                "mapping": [
+                  {
+                    "target": "outcomeStatement",
+                    "source-path": "description"
+                  }
+                ],
+                "source-path": "custom.details.outcomes.shortTermOutcomes"
+              },
+              {
+                "target": "projOutcomes",
+                "mapping": [
+                  {
+                    "target": "outcomeStatement",
+                    "source-path": "description"
+                  }
+                ],
+                "source-path": "custom.details.outcomes.shortTermOutcomes"
+              },
+              {
+                "target": "projectMonitorings",
+                "mapping": [
+                  {
+                    "target": "monitoringIndicator",
+                    "source-path": "data1"
+                  },
+                  {
+                    "target": "monitoringApproach",
+                    "source-path": "data2"
+                  }
+                ],
+                "source-path": "custom.details.objectives.rows"
+              }
+            ]
+          },
+          {
+            "mapping": [
+              {
+                "mapping": [
+                  {
+                    "source-path": "service",
+                    "target": "serviceName"
+                  },
+                  {
+                    "source-path": "targetMeasure",
+                    "target": "targetMeasure"
+                  },
+                  {
+                    "source-path": "scoreId",
+                    "target": "scoreId"
+                  },
+                  {
+                    "source-path": "projectTarget",
+                    "target": "projectTarget"
+                  },
+                  {
+                    "source-path": "result",
+                    "target": "delivered"
+                  }
+                ],
+                "source-path": "targets",
+                "target": "projectTargets"
+              }
+            ],
+            "merge": {
+              "projectTargets": {
+                "keys": [
+                  "serviceName",
+                  "targetMeasure"
+                ],
+                "projectTarget": {
+                  "replaceExisting": true
+                },
+                "delivered": {
+                  "replaceExisting": true
+                },
+                "sort": [
+                  "service",
+                  "outputTargetMeasure"
+                ],
+                "addUnmatchedNewRows": true,
+                "deleteUnmatchedExistingRows": true
+              }
+            },
+            "source": {
+              "params": [
+                {
+                  "expression": "owner.projectId",
+                  "name": "id",
+                  "type": "computed"
+                },
+                {
+                  "name": "missedTargetsOnly",
+                  "value": false
+                },
+                {
+                  "name": "onlyNonZeroTargets",
+                  "value": true
+                },
+                {
+                  "name": "approvedDataOnly",
+                  "value": false
+                }
+              ],
+              "url": "/project/projectTargetsAndScores/"
+            }
+          }
+        ],
+        "title": "Project Final Report"
+      }
+    }
+  ],
+  "formVersion": 1,
+  "category": null,
+  "status": "active",
+  "gmsId": null,
+  "supportsSites": false,
+  "supportsPhotoPoints": false,
+  "minOptionalSectionsCompleted": 1
+}
