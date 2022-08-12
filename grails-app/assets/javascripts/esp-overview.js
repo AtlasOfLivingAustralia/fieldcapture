@@ -121,12 +121,14 @@ var SimplifiedReportingViewModel = function(project, config) {
     });
 
     // Find the oldest report that has not yet been approved to work with.
-    var currentReport = _.find(project.reports || [], function(report) {
-        return report.publicationStatus != 'published';
-    });
+    // var currentReport = _.find(project.reports || [], function(report) {
+    //     return report.publicationStatus != 'published';
+    // });
 
-    // will fetch the current financial year report
-    // var currentReport = findReportFromDate(project.reports);
+    // will fetch the current report
+    // wherein current report is defined by the report with the greatest toDate
+    // that is still less than the current date.
+    var currentReport = findReportFromDate(project.reports);
 
     // will fetch the latest report
     if (!currentReport) {
@@ -228,8 +230,11 @@ var SimplifiedReportingViewModel = function(project, config) {
 
 
     self.financialYears = [];
+    var currentDate = new Date().toISOStringNoMillis();
     _.each(project.reports, function (report){
-        self.financialYears.push(isoDateToFinancialYear(report.toDate))
+        if (report.toDate <= currentDate) {
+            self.financialYears.push(isoDateToFinancialYear(report.toDate))
+        }
     });
 
     // will set the value of the dropdown Reporting Period
@@ -457,7 +462,7 @@ function findReportFromDate (reports) {
     var currentDate = new Date().toISOStringNoMillis();
     var report;
     $.each(reports, function (i, period) {
-        if (currentDate > period.fromDate && currentDate <= period.toDate) {
+        if (period.toDate <= currentDate) {
             report = period;
         }
     });
