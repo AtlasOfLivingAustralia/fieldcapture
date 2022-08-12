@@ -127,6 +127,28 @@
                 "validate": "min[0]"
               },
               {
+                "dataType": "number",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
+                "name": "swardHeight",
+                "validate": "min[0]"
+              },
+              {
+                "dataType": "number",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
+                "name": "groundCover",
+                "validate": "min[0]"
+              },
+              {
                 "dataType": "date",
                 "behaviour": [
                   {
@@ -459,7 +481,7 @@
               }
             ],
             "name": "cost",
-            "validate": "integer,min[0]"
+            "validate": "required,min[0]"
           },
           {
             "dataType": "text",
@@ -489,27 +511,30 @@
         "title": "Livestock Grazing Management",
         "viewModel": [
           {
+            "items": [
+              {
+                "source": "<b> What are the conservation outcomes sought?</b> <br> The primary outcomes sought from strategic grazing are: <br> a) to reduce the ability of exotic annual plant species within the box gum grassy woodland to set seed, while at the same time facilitating seed set by native perennials; <br> b) to reduce soil disturbance and compaction caused by hard-hooved domestic livestock; <br> c) to reduce selective grazing of palatable native perennial plants; <br> d) to reduce nutrient input through animal excrement; <br> e) to reduce biomass; <br> f) to promote regeneration of native plants.",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "<b>Please note</b> Grazing activities may also be included under “Conservation grazing”, “Strategic grazing”, “Monitoring and manage grazing pressure from domestic livestock” and “Monitor and manage total grazing pressure”. <br> Endeavour to record sward height and ground cover percentage after each grazing period.",
+                "type": "literal"
+              }
+            ]
+          },
+          {
             "type": "row",
             "items": [
               {
                 "preLabel": "Was this activity undertaken during this reporting period?",
                 "type": "selectOne",
                 "source": "wasActivityUndertaken"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "behaviour": [
-              {
-                "type": "if_expression",
-                "condition": "wasActivityUndertaken == \"Yes\""
-              }
-            ],
-            "items": [
-              {
-                "source": "<b>Please note</b> Grazing activities are included under any or all of the following; “Conservation grazing”, “Strategic grazing”, “Monitoring and manage grazing pressure from domestic livestock” and “Monitor and manage total grazing pressure”. <br/><i>Please endeavour to record sward height and ground cover percentage after each grazing period.</i>",
-                "type": "literal"
               }
             ]
           },
@@ -578,6 +603,16 @@
                     "type": "number"
                   },
                   {
+                    "source": "swardHeight",
+                    "title": "sward height PRIOR to grazing",
+                    "type": "number"
+                  },
+                  {
+                    "source": "groundCover",
+                    "title": "ground cover PRIOR to grazing",
+                    "type": "number"
+                  },
+                  {
                     "source": "startDate",
                     "title": "Start Date",
                     "type": "simpleDate"
@@ -625,7 +660,7 @@
                 ],
                 "userAddedRows": true,
                 "source": "grazingPeriods",
-                "title": "<b>Please record all grazing periods for this site:</b> <br/>If your situation makes it impractical to record your grazing information in the table below, please delete any row(s) from the table below and instead provide a summary of your grazing activities in the textbox below.<p/>",
+                "title": "<b>Please record all grazing periods for this site:</b> ",
                 "type": "table"
               }
             ]
@@ -640,7 +675,7 @@
             ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year, or if the management was not undertaken, please state the reason why</label></span><div>If the management action was not undertaken and you are explaining why, delete all rows in the above table by hitting the bold 'x' in the last column.  If you don't delete the empty rows you will be unable to submit your report.</div>",
+                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year. This can include the following:</label></span><ul><li>The impact of grazing on the site. Such as the impact on weeds; impact on native grasses; if changes to the permitted grazing dates would have more positive impact on the site’s environment; impact on native trees and new saplings/seedlings present.</li><li>Any unusual circumstances that occurred whilst grazing. For example: Fencing damaged so sheep/cattle spread to different section; saw an increase in feral animals near the site whilst stock present; issues with stock removal due to conditions etc.</li><li>If you grazed on dates outside the set grazing limitations in the management actions. Please provide an explanation and indicate if you have informed the ESP team via email/phone, as required.</li><li>Any additional comments or observations impacting native herbivore management.</li></ul>",
                 "type": "literal"
               }
             ]
