@@ -252,9 +252,9 @@ class ActivityService {
 
         Period period = new Period(startDate.toLocalDate(), endDate.toLocalDate())
 
-        def description = DateTimeFormat.forPattern("MMM yyyy").print(endDate)
+        def description = DateTimeFormat.forPattern("MMMM yyyy").print(endDate)
         if (period.months > 1) {
-            description = DateTimeFormat.forPattern("MMM").print(startDate) + ' - ' + description
+            description = DateTimeFormat.forPattern("MMMM").print(startDate) + ' - ' + description
         }
         "${activity.type} (${description})"
 

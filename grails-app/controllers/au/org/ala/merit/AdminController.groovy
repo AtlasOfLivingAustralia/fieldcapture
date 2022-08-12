@@ -306,8 +306,7 @@ class AdminController {
         if (id) {
             def project = projectService.get(id)
             if (project) {
-                def messages = auditService.getAuditMessagesForProject(id)
-                [project: project, messages: messages?.messages, userMap: messages?.userMap]
+                [project: project]
             } else {
                 flash.message = "Specified project id does not exist!"
                 redirect(action:'audit')
@@ -316,6 +315,19 @@ class AdminController {
             flash.message = "No project specified!"
             redirect(action:'audit')
         }
+    }
+
+    @PreAuthorise(accessLevel = 'siteReadOnly')
+    def searchProjectAuditMessages() {
+        String id = params.id
+        String sort = params.sort?:'date'
+        String orderBy = params.orderBy?:'desc'
+        Integer start = params.int('start') ?: 0
+        Integer size = params.int('length') ?: 10
+        String q = params.q
+
+        def results = auditService.getAuditMessagesForProject(id,start,size,sort,orderBy,q)
+        render results as JSON
     }
 
     def auditOrganisationSearch() {
@@ -363,6 +375,8 @@ class AdminController {
             userDetails = auditService.getUserDetails(results?.message?.userId)
             if (params.compareId) {
                 compare = auditService.getAuditMessage(params.compareId as String)
+            } else {
+                compare = auditService.getAutoCompareAuditMessage(params.id)
             }
         }
         [message: results?.message, compare: compare?.message, userDetails: userDetails.user]

@@ -17,7 +17,7 @@ import javax.mail.internet.MimeMessage
 class RlpReportingSpec extends StubbedCasSpec {
 
     @Rule
-    public final GreenMailRule greenMail = new GreenMailRule(ServerSetup.verbose(ServerSetupTest.SMTP))
+    public GreenMailRule greenMail = new GreenMailRule(ServerSetup.verbose(ServerSetupTest.SMTP))
 
     def setupSpec() {
         useDataSet('dataset2')

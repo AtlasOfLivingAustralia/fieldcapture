@@ -28,7 +28,7 @@
     $(function () {
         $('.hub-form-search-box1').validationEngine();
     });
-    initialise(${raw((roles as grails.converters.JSON).toString())}, ${user?.userId}, "${hubId}", "${containerId}");
+    initialise(${raw((roles as grails.converters.JSON).toString())}, "${user?.userId}", "${hubId}", "${containerId}");
 
 </asset:script>
 <asset:javascript src="permissionTable.js"/>
