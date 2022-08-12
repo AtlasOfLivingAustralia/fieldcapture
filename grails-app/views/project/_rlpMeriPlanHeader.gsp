@@ -14,15 +14,15 @@
     </div>
 
     <g:if test="${project.organisationName}">
-    <div class="row">
-        <div class="col-sm-3 title">Service provider</div>
+        <div class="row">
+            <div class="col-sm-3 title">Service provider</div>
 
-        <div class="col-sm-9">${project.organisationName}</div>
-    </div>
+            <div class="col-sm-9">${project.organisationName}</div>
+        </div>
     </g:if>
 
     <div class="row">
-        <div class="col-sm-3 title">Project ID</div>
+        <div class="col-sm-3 title">${g.message(code:'label.merit.projectID')}</div>
 
         <div class="col-sm-9">${project.grantId}</div>
     </div>
@@ -31,14 +31,14 @@
         <div class="col-sm-3 title">Project start</div>
 
         <div class="col-sm-9"><g:formatDate format="dd MMM yyyy"
-                                         date="${au.org.ala.merit.DateUtils.parse(project.plannedStartDate).toDate()}"/></div>
+                                            date="${au.org.ala.merit.DateUtils.parse(project.plannedStartDate).toDate()}"/></div>
     </div>
 
     <div class="row">
         <div class="col-sm-3 title">Project finish</div>
 
         <div class="col-sm-9"><g:formatDate format="dd MMM yyyy"
-                                         date="${au.org.ala.merit.DateUtils.parse(project.plannedEndDate).toDate()}"/></div>
+                                            date="${au.org.ala.merit.DateUtils.parse(project.plannedEndDate).toDate()}"/></div>
     </div>
     <div class="row">
         <div class="col-sm-3 title">MERI Plan generated</div>

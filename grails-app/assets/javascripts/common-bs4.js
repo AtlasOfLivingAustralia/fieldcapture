@@ -10,7 +10,7 @@
 //= require jquery.validationEngine/3.1.0/jquery.validationEngine-en
 //= require blockui/jquery.blockUI.js
 //= require momentjs/2.29.4/moment.min.js
-//= require momentjs/2.29.4/locales/en-au.js
+//= require momentjs/2.29.4/locale/en-au.js
 //= require momentjs/moment-timezone-with-data.min.js
 //= require frigus02-vkbeautify/vkbeautify.js
 //= require @danielfarrell/bootstrap-combobox/js/bootstrap-combobox.js

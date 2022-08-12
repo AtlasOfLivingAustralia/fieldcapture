@@ -57,8 +57,7 @@ class SearchSpec extends StubbedCasSpec {
 
         when: "expand the projects section"
         def expectedProjects = new HashSet((5).collect{"project $it"})
-        projectsToggle.click()
-        waitFor 30, { projectPagination.displayed }
+        displayProjectList()
 
         then:
         new HashSet(projects.collect{it.name}) == expectedProjects

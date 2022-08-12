@@ -44,8 +44,7 @@
                             <tr>
                                 <td class="status-count" style="background-color: ${s.countColour}">${s.count}</td>
                                 <td class="status-description"
-                                    style="background-color: ${s.descriptionColour}">${s.description}</td>
-
+                                    style="background-color: ${s.descriptionColour}">${s.description.encodeAsRaw()}</td>
                             </tr>
                         </g:each>
 

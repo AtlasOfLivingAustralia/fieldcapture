@@ -1,0 +1,649 @@
+{
+  "name": "CVA Final Reporting",
+  "type": "Report",
+  "sections": [
+    {
+      "name": "Final Period Progress Reporting",
+      "optionalQuestionText": null,
+      "optional": false,
+      "collapsedByDefault": false,
+      "templateName": "final_period_progress_reporting",
+      "template": {
+        "pre-populate": [
+          {
+            "mapping": [
+              {
+                "mapping": [
+                  {
+                    "source-path": "storyDetails",
+                    "target": "storyDetails"
+                  }
+                ],
+                "source-path": "goodNewsStories",
+                "target": "goodNewsStories"
+              }
+            ],
+            "merge": false,
+            "source": {
+              "literal": {
+                "goodNewsStories": [
+                  {
+                    "storyDetails": ""
+                  },
+                  {
+                    "storyDetails": ""
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "mapping": [
+              {
+                "mapping": [],
+                "source-path": "issue",
+                "target": "issue"
+              }
+            ],
+            "merge": false,
+            "source": {
+              "literal": {
+                "issue": []
+              }
+            }
+          }
+        ],
+        "dataModel": [
+          {
+            "dataType": "text",
+            "name": "projectContactDetailsChanged",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "description": "Summary of Project Progress for the Period",
+            "name": "progressSummary",
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "list",
+            "description": "",
+            "name": "issue",
+            "columns": [
+              {
+                "dataType": "text",
+                "name": "nature",
+                "validate": "required,maxSize[5000]"
+              },
+              {
+                "dataType": "text",
+                "description": "How you are managing, or proposing to manage, the issue?",
+                "name": "how",
+                "validate": "required,maxSize[5000]"
+              },
+              {
+                "dataType": "text",
+                "description": "Implications for the project",
+                "name": "implication",
+                "validate": "required,maxSize[5000]"
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "hasReportableIncidents",
+            "description": "Has reportable WHS incidents",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "whsIncidentDetails",
+            "description": "Please provide a description of the incident/s",
+            "behaviour": [
+              {
+                "type": "enable",
+                "condition": "hasReportableIncidents == \"Yes\""
+              }
+            ],
+            "validate": "required,maxSize[1000]"
+          },
+          {
+            "dataType": "list",
+            "description": "",
+            "name": "goodNewsStories",
+            "columns": [
+              {
+                "dataType": "text",
+                "description": "",
+                "name": "storyDetails",
+                "validate": "required,maxSize[5000]"
+              },
+              {
+                "dataType": "image",
+                "name": "photo"
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "projectMonitoringSummary",
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "projectKeyFindingsSummary",
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "projectChangesSummary",
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "stringList",
+            "name": "isExpenditureWithinBudget",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "reasonOfOverBudget",
+            "behaviour": [
+              {
+                "condition": "isExpenditureWithinBudget == \"No\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "stringList",
+            "name": "hasDatabase",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          }
+        ],
+        "modelName": "Final Period Progress Reporting",
+        "title": "Final Period Progress Reporting",
+        "viewModel": [
+          {
+            "items": [
+              {
+                "source": "<h4>1. Organisation and Contact Details</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "projectContactDetailsChanged",
+                "preLabel": "1.1 Has there been a change to key project contacts or their details?",
+                "type": "selectOne"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<i><b style=\"background-color:yellow\">If 'Yes', please provide updated details to the Department.</b></i>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>2. Project Progress for the Final Period</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<b>2.1 Provide a short summary of what was achieved in the final period against the Activity identified in your Funding Agreement and the actions outlined in your MERI plan.</b><br/>Where possible, please quantify key outputs or achievements. Supporting evidence of your activities and achievements (e.g. media releases, articles, photos, etc.), should be provided as attachments to this report via the Admin tab > Documents sub-tab of MERIT.",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "progressSummary",
+                "type": "textarea",
+                "rows": 5
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<b>2.2 Did the project encounter any issues or delays in delivering activities and/or outcomes in the final period? If yes, please outline in the table below.</b>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "columns": [
+              {
+                "source": "",
+                "type": "literal",
+                "preLabel": {
+                  "computed": "\\'No. \\' || (index + 1)"
+                },
+                "title": "Issue No."
+              },
+              {
+                "source": "nature",
+                "type": "textarea",
+                "title": "Nature of the issue"
+              },
+              {
+                "source": "how",
+                "type": "textarea",
+                "title": "How did you manage the issue?"
+              },
+              {
+                "source": "implication",
+                "type": "textarea",
+                "title": "Implications for project outputs/outcomes",
+                "helpText": "(e.g. Impacts on timeframes, feasibility, costs, ability to meet contracted deliverables)"
+              }
+            ],
+            "userAddedRows": true,
+            "source": "issue",
+            "type": "table"
+          },
+          {
+            "items": [
+              {
+                "source": "hasReportableIncidents",
+                "preLabel": "2.3 Have you had any reportable Workplace Health and Safety incidents this reporting period?",
+                "type": "selectOne"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<i><b style=\"background-color:yellow\">If 'Yes', please provide details to the Department.</b></i>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>3. Good News Stories</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<b>Please provide good news stories that highlight what the project achieved in the final period.</b><br/>This information is intended for potential use by the Department in publicly promoting the program. Photos may be attached to this report or provided via attachment to email. However, please ensure permissions of persons in the photos are obtained prior to the photos being attached and used for promotional purposes.",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "columns": [
+              {
+                "source": "",
+                "type": "literal",
+                "width": "5%",
+                "preLabel": {
+                  "computed": "\\'No. \\' || (index + 1)"
+                },
+                "title": "Story No."
+              },
+              {
+                "source": "storyDetails",
+                "type": "textarea",
+                "rows": 4,
+                "title": "Good News Story Details",
+                "width": "50%"
+              },
+              {
+                "type": "image",
+                "source": "photo",
+                "title": "",
+                "width": "45%"
+              }
+            ],
+            "userAddedRows": true,
+            "source": "goodNewsStories",
+            "type": "table"
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>4. Monitoring, Evaluation and Project Learnings</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "4.1 Provide a summary of what project monitoring and/or evaluation activities have been undertaken this period.",
+                "type": "textarea",
+                "rows": 5,
+                "source": "projectMonitoringSummary"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "4.2 Provide a summary of any key findings and/or learnings gained this period from the project.",
+                "type": "textarea",
+                "rows": 5,
+                "source": "projectKeyFindingsSummary"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "4.3 Provide a summary of any changes you have made in response to these during the reporting period.",
+                "type": "textarea",
+                "rows": 5,
+                "source": "projectChangesSummary"
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>5. Project Income and Expenditure</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "isExpenditureWithinBudget",
+                "preLabel": "5.1 Has the project funding been expended in accordance with the budget, and have funds been fully expensed?",
+                "type": "selectOne"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "preLabel": "5.2 If you have answered no, please provide details:",
+                "source": "reasonOfOverBudget",
+                "type": "textarea",
+                "rows": 3
+              }
+            ],
+            "type": "row"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Final Project Reporting Fields",
+      "optionalQuestionText": null,
+      "optional": false,
+      "collapsedByDefault": false,
+      "templateName": "final_project_reporting_fields",
+      "template": {
+        "modelName": "Final Project Reporting Fields",
+        "dataModel": [
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "projectOutcomesSummary",
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "list",
+            "name": "projectOutcomes",
+            "columns": [
+              {
+                "dataType": "text",
+                "name": "outcomeStatement",
+                "validate": "required,maxSize[5000]"
+              },
+              {
+                "dataType": "text",
+                "name": "achievement",
+                "validate": "required,maxSize[5000]"
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "projectEffectivenessLearnings",
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "projectOverallLessons",
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "riskManagement",
+            "validate": "required,maxSize[5000]"
+          }
+        ],
+        "viewModel": [
+          {
+            "items": [
+              {
+                "source": "<h4>6. Reporting output data for on-ground activities supported by the project</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<b>6.1 Please provide data for supported on-ground activities by uploading your document via Documents section in the Admin tab. The data should be provided in a format agreed by your Project Manager.</b>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>7. Project Outcomes</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<b>7.1 Provide a summary of what was achieved during the project, including but not limited to:</b>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "a) environmental outcomes<br>b) impact and legacy of the project, including emergency response capacity and any assets (e.g. species) targeted<br>c) any social outcomes, such as engagement with Indigenous Owners, landholders and local community",
+                "source": "projectOutcomesSummary",
+                "type": "textarea",
+                "rows": 3
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "<b>7.2 Describe achievements made against each outcome statement in the MERI plan, including measurable information where applicable.</b><p>Supporting evidence to demonstrate achievement against outcome/s (e.g. report, monitoring data sets, photos, media articles, etc) should be provided as attachments to this report via the Admin tab > Documents sub-tab of MERIT. Supporting evidence should be labelled to reference the applicable outcome statement/s or deliverable. Where supporting evidence contains sensitive or confidential information, please send to your Grant Manager by email.</p>",
+                "type": "literal"
+              }
+            ]
+          },
+          {
+            "source": "projectOutcomes",
+            "type": "table",
+            "userAddedRows": true,
+            "columns": [
+              {
+                "source": "",
+                "type": "literal",
+                "width": "5%",
+                "preLabel": {
+                  "computed": "\\'No. \\' || (index + 1)"
+                },
+                "title": "Outcome No."
+              },
+              {
+                "type": "textarea",
+                "source": "outcomeStatement",
+                "title": "Outcome",
+                "rows": 5,
+                "width": "45%"
+              },
+              {
+                "type": "textarea",
+                "source": "achievement",
+                "title": "Achievement against the outcome",
+                "rows": 5,
+                "width": "50%"
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>8. Effectiveness and Project Learnings</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "8.1 Did project implementation occur as planned? Describe the effectiveness of the project delivery and monitoring methodology and whether alternative methods might be more effective / efficient.",
+                "type": "textarea",
+                "rows": 5,
+                "source": "projectEffectivenessLearnings"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "8.2 Summarise the overall lessons learned during the project.",
+                "type": "textarea",
+                "rows": 5,
+                "source": "projectOverallLessons"
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>9. Risk Management</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "9.1 To what extent has the project risk assessment and risk management been appropriate and effective?",
+                "type": "textarea",
+                "rows": 5,
+                "source": "riskManagement"
+              }
+            ]
+          }
+        ],
+        "pre-populate": [
+          {
+            "source": {
+              "context-path": "owner"
+            },
+            "merge": {
+              "projectOutcomes": {
+                "deleteUnmatchedExistingRows": true,
+                "addUnmatchedNewRows": true,
+                "keys": [
+                  "outcomeStatement"
+                ]
+              }
+            },
+            "mapping": [
+              {
+                "target": "projectOutcomes",
+                "mapping": [
+                  {
+                    "target": "outcomeStatement",
+                    "source-path": "description"
+                  }
+                ],
+                "source-path": "custom.details.outcomes.shortTermOutcomes"
+              }
+            ]
+          }
+        ],
+        "title": "Final Project Reporting Fields"
+      }
+    }
+  ],
+  "formVersion": 1,
+  "category": null,
+  "status": "active",
+  "gmsId": null,
+  "supportsSites": false,
+  "supportsPhotoPoints": false,
+  "minOptionalSectionsCompleted": 1
+}

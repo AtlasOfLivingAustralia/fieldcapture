@@ -9,7 +9,7 @@ fi
 
 BRANCH=$3
 if [ -z $BRANCH ]; then
-    BRANCH=feature/issue727
+    BRANCH=feature/newAuthAndJava11
 fi
 
 ECODATA_LOCAL_DIR=$2
@@ -22,9 +22,12 @@ if [ ! -d $ECODATA_LOCAL_DIR ]; then
     git clone https://github.com/AtlasOfLivingAustralia/ecodata.git
     cd ecodata
     git checkout $BRANCH
+    echo "Cloned ecodata $BRANCH into /tmp/ecodata"
 else
     cd $ECODATA_LOCAL_DIR
+    git checkout $BRANCH
     git pull
+    echo "Updated ecodata $BRANCH in /tmp/ecodata"
 fi
 
 echo "Dropping database"
@@ -34,7 +37,7 @@ mongo ecodata-functional-test --eval 'db.project.count();'
 echo "Starting ecodata from `pwd`"
 ls -la
 GRADLE_OPTS="-Xmx1g" ./gradlew bootRun "-Dorg.gradle.jvmargs=-Xmx1g" -Dgrails.env=meritfunctionaltest &
-sleep 120
+sleep 240
 
 cd $MERIT_DIR
 GRADLE_OPTS="-Xmx1g" ./gradlew bootRun "-Dorg.gradle.jvmargs=-Xmx1g" -Dgrails.env=test -Dgrails.server.port.http=8087 &

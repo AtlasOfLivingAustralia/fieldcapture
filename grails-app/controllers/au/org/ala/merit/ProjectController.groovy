@@ -79,6 +79,7 @@ class ProjectController {
 
             String template = projectTemplate(config, params.template)
             if (template == ESP_TEMPLATE && user?.isEditor) {
+                project.financialYearSelected = params?.financialYearSelected
                 espOverview(project, user, config)
             } else {
                 project.sites?.sort { it.name }
@@ -133,6 +134,7 @@ class ProjectController {
         project.assets = config.assets ?: []
         project.priorities = new JSONArray(config.priorities ?: [])
         project.outcomes = new JSONArray(config.outcomes ?: [])
+        project.hasApprovedOrSubmittedReports = reportService.includesSubmittedOrApprovedReports(project.reports)
         boolean canRegenerateReports = projectService.canRegenerateReports(project)
         def meriPlanVisible = config.includesContent(ProgramConfig.ProjectContent.MERI_PLAN)
         def risksAndThreatsVisible = config.includesContent(ProgramConfig.ProjectContent.RISKS_AND_THREATS) && user?.hasViewAccess
@@ -276,7 +278,7 @@ class ProjectController {
         render template: 'dashboard', model: [metrics: projectService.summary(id)]
     }
 
-    @PreAuthorise(accessLevel='siteAdmin')
+    @PreAuthorise(accessLevel='caseManager')
     def ajaxValidateProjectDates(String id) {
         if (!params.plannedStartDate) {
             render status:400, message:"Invalid date supplied"
