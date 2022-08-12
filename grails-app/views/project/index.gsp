@@ -80,7 +80,7 @@
                 projectDatesValidationUrl: "${createLink(controller:'project', action:'ajaxValidateProjectDates', id:project.projectId)}",
                 spinnerUrl: "${asset.assetPath(src:'loading.gif')}",
                 projectSitesUrl: "${createLink(action:'ajaxProjectSites', id:project.projectId)}",
-                useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.PRODUCTION},
+                useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.DEVELOPMENT},
                 meriPlanUploadUrl: "${createLink(controller:'project', action:'uploadMeriPlan', id:project.projectId)}",
                 leafletIconPath: "${assetPath(src:'leaflet-0.7.7/images')}",
                 approvedMeriPlanHistoryUrl: "${createLink(action:"approvedMeriPlanHistory", id:project.projectId)}",
@@ -183,7 +183,7 @@
         <fc:tabContent tabs="${projectContent}"/>
     </div>
     <g:render template="/shared/timeoutMessage"
-              model="${[url: grailsApplication.config.getProperty('security.cas.loginUrl') + '?service=' + createLink(action: 'index', id: project.projectId, absolute: true)]}"/>
+              model="${[url:fc.loginUrl(loginReturnToUrl:createLink(action: 'index', id: project.projectId, absolute: true))]}"/>
     <g:render template="/shared/unsavedChanges" model="${[id: 'meriPlanUnsavedChanges', unsavedData: 'MERI Plan']}"/>
     <g:render template="/shared/unsavedChanges" model="${[id: 'risksUnsavedChanges', unsavedData: 'Risks & Threats']}"/>
 
@@ -268,7 +268,7 @@ var config = {
     wmsServerUrl: fcConfig.geoserverUrl,
     spinnerUrl: fcConfig.spinnerUrl,
     sitesPhotoPointsUrl:fcConfig.sitesPhotoPointsUrl,
-    googleBaseMapUrl: fcConfig.useGoogleBaseMap,
+    useGoogleBaseMap: fcConfig.useGoogleBaseMap && supportsGoogleMutant(),
     meriStorageKey:PROJECT_DETAILS_KEY,
     activityBasedReporting: ${Boolean.valueOf(projectContent.admin.config.activityBasedReporting)},
             minimumProjectEndDate: '${projectContent.admin.minimumProjectEndDate?:null}',
@@ -394,7 +394,7 @@ var config = {
                 };
                 if (config.useAlaMap) {
                     sitesTabOptions.mapFeatures = {};
-                    sitesTabOptions.useGoogleBaseMap = config.googleBaseMapUrl;
+                    sitesTabOptions.useGoogleBaseMap = config.useGoogleBaseMap;
                     var sitesList = $('#'+sitesTabOptions.bindingElementId);
                     sitesList.children().hide();
                     sitesList.append('<image class="sites-spinner" width="50" height="50" src="'+sitesTabOptions.spinnerUrl+'" alt="Loading"/>');

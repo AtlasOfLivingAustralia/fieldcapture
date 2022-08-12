@@ -2,43 +2,8 @@
     <head>
         <title><g:layoutTitle /></title>
         <g:layoutHead/>
-        <style type="text/css">
+        <style>
 
-        .icon-chevron-right {
-            float: right;
-            margin-top: 2px;
-            margin-right: -6px;
-            opacity: .25;
-        }
-
-        .dataTables_wrapper .dataTables_paginate {
-            position: relative;
-            right: 0px;
-            bottom: 30px;
-        }
-
-        /* Pagination fix */
-        .pagination .disabled, .pagination .currentStep, .pagination .step {
-            float: left;
-            line-height: 34px;
-            border-right-color: rgba(0, 0, 0, 0.15);
-        }
-        .pagination .prevLink {
-            border-right: 1px solid #DDD !important;
-            line-height: 34px;
-            vertical-align: middle;
-            padding: 0 14px;
-            float: left;
-        }
-
-        .pagination .nextLink {
-            vertical-align: middle;
-            line-height: 34px;
-            padding: 0 14px;
-        }
-        #dashboardType {
-            width: 18rem;
-        }
         @media (min-width: 1200px){
             .row {
                 margin-left: 0px !important;

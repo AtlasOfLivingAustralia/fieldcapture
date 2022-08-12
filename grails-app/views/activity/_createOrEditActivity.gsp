@@ -142,7 +142,7 @@
 </g:if>
 
 <!-- templates -->
-<g:render template="/shared/timeoutMessage" model="${[url:grailsApplication.config.getProperty('security.cas.loginUrl')+'?service='+createLink(action:'edit', id:activity.activityId, absolute: true)]}"/>
+<g:render template="/shared/timeoutMessage" model="${[url:fc.loginUrl(loginReturnToUrl:createLink(action:'edit', id:activity.activityId, absolute: true))]}"/>
 
 <asset:script>
 
