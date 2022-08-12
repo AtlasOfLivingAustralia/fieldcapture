@@ -9,7 +9,7 @@ fi
 
 BRANCH=$3
 if [ -z $BRANCH ]; then
-    BRANCH=grails5java11
+    BRANCH=feature/newAuthAndJava11
 fi
 
 ECODATA_LOCAL_DIR=$2
