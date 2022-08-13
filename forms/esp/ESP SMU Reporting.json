@@ -758,6 +758,10 @@
                 "dataType": "date",
                 "name": "dateMeasured",
                 "validate": "required"
+              },
+              {
+                "dataType": "image",
+                "name": "photo"
               }
             ]
           }
@@ -789,6 +793,11 @@
                     "title": "Date measured",
                     "source": "dateMeasured",
                     "type": "date"
+                  },
+                  {
+                    "type": "image",
+                    "source": "photo",
+                    "title": ""
                   }
                 ],
                 "userAddedRows": true,
