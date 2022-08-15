@@ -110,13 +110,29 @@ class UserService {
         doesUserHaveHubRole(RoleService.HUB_ADMIN_ROLE, userId)
     }
 
+    /**
+     * This method exists because an attempt to call authService.userInRole()
+     * without a GrailsWebRequest available throws an Exception.
+     * When we run scheduled tasks (e.g. to check for new risks and threats
+     * or the nightly home page statistics recalculation) we don't have a
+     * GrailsWebRequest.
+     */
+    private boolean userInRole(String role) {
+        boolean inRole = false
+        def user = backgroundUser.get()
+        if (!user) {
+            inRole = authService.userInRole(role)
+        }
+        inRole
+    }
+
     /** The ALA admin role is the only role that is checked against a CAS role */
     boolean userIsAlaAdmin(String userId = null) {
         String adminRole = grailsApplication.config.getProperty('security.cas.alaAdminRole')
         boolean isAdmin = false
         if (!userId || userId == getCurrentUserId()) {
             // Use the currently logged in user
-            isAdmin = authService.userInRole(adminRole)
+            isAdmin = userInRole(adminRole)
         }
         else {
             // Lookup the user role in user details
