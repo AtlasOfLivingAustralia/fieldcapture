@@ -2670,11 +2670,25 @@
       "template": {
         "dataModel": [
           {
+            "name": "wasActivityUndertaken",
+            "dataType": "text",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
             "dataType": "list",
             "name": "habitatRestoration",
             "columns": [
               {
                 "dataType": "text",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
                 "description": "",
                 "name": "habitatFeature",
                 "constraints": [
@@ -2686,26 +2700,72 @@
               },
               {
                 "dataType": "number",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
                 "description": "",
                 "name": "numberAdded"
               },
               {
                 "dataType": "number",
-                "name": "cost",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
+                "name": "activityCost",
                 "validate": "integer,min[0]"
               }
             ]
           },
           {
             "dataType": "text",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "description": "Please describe the habitat feature if other was selected",
             "name": "otherHabitatFeature"
           },
           {
+            "dataType": "number",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
+            "name": "cost",
+            "validate": "required,min[0]"
+          },
+          {
             "dataType": "text",
-            "description": "",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "name": "notes",
+            "description": "",
             "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"No\""
+              }
+            ],
+            "name": "activityNotUndertaken",
+            "description": ""
           }
         ],
         "description": "When you enter the details for this activity please make sure that you only enter the number and cost details once. Either as a single total record, encompassing the details and costs of this activity across all of your sites or as separate entries for each site.",
@@ -2713,18 +2773,9 @@
         "title": "Restoration of Habitat Features",
         "viewModel": [
           {
-            "type": "row",
             "items": [
               {
-                "type": "literal",
-                "source": "If Restoration of Habitat Features is a management action for the site but you didn’t undertake any actions around this for the reporting period, please complete the report and state why you didn’t, in the text box."
-              }
-            ]
-          },
-          {
-            "items": [
-              {
-                "source": "<b>Please note</b> Activities to restore habitat features are included under any or all of the following; “Add coarse woody debris” and “Retain fallen timber”.",
+                "source": "Land managers are encouraged to leave fallen trees or branches where they fall within their woodland patch. Often if a tree or substantial branch falls to the ground it provides a sheltered habitat enabling seeds to germinate and the process of natural regeneration to occur. <br> The use of rocks and other habitat objects like nest boxes, old untreated fence posts can improve the habitat features of the ESP zone.",
                 "type": "literal"
               }
             ],
@@ -2733,7 +2784,26 @@
           {
             "items": [
               {
-                "title": "Please complete the following: If your situation makes it impractical to record your information in the table/rows below, please delete any row(s) from the table by clicking the X at the far right hand side",
+                "source": "<b>Please note</b> Activities to restore habitat features may also be included under “Add coarse woody debris” and “Retain fallen timber”.",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Was this activity undertaken during this reporting period?",
+                "type": "selectOne",
+                "source": "wasActivityUndertaken"
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "title": "Please complete the following:",
                 "source": "habitatRestoration",
                 "columns": [
                   {
@@ -2748,13 +2818,19 @@
                   },
                   {
                     "title": "Cost of Management Action?",
-                    "source": "cost",
+                    "source": "activityCost",
                     "type": "currency"
                   }
                 ],
                 "userAddedRows": true,
                 "disableTableUpload": true,
                 "type": "table"
+              }
+            ],
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
               }
             ],
             "type": "row"
@@ -2767,13 +2843,25 @@
                 "type": "textarea"
               }
             ],
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "type": "row"
           },
           {
             "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year, or if the management was not undertaken, please state the reason why</label></span><div>If the management action was not undertaken and you are explaining why, delete all rows in the above table by hitting the bold 'x' in the last column.  If you don't delete the empty rows you will be unable to submit your report.</div>",
+                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year.</label></span><div><ul><li>Have you observed any species utilising the habitat features?</li><li>Was there a specific animal you were targeting in creating these habitat features?</li></ul></div>",
                 "type": "literal"
               }
             ]
@@ -2786,7 +2874,46 @@
                 "type": "textarea"
               }
             ],
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "cost",
+                "preLabel": "Total cost of this management actions",
+                "type": "currency"
+              }
+            ],
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"No\""
+              }
+            ],
+            "items": [
+              {
+                "preLabel": "If this activity is a management action under your funding agreement but you were not able to undertake this activity, during the reporting period, please state the reason.",
+                "source": "activityNotUndertaken",
+                "type": "textarea",
+                "rows": 4
+              }
+            ]
           }
         ]
       },
