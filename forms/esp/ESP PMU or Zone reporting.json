@@ -513,7 +513,7 @@
           {
             "items": [
               {
-                "source": "<b> What are the conservation outcomes sought?</b> <br> The primary outcomes sought from strategic grazing are: <br> a) to reduce the ability of exotic annual plant species within the box gum grassy woodland to set seed, while at the same time facilitating seed set by native perennials; <br> b) to reduce soil disturbance and compaction caused by hard-hooved domestic livestock; <br> c) to reduce selective grazing of palatable native perennial plants; <br> d) to reduce nutrient input through animal excrement; <br> e) to reduce biomass; <br> f) to promote regeneration of native plants.",
+                "source": "<b> What are the conservation outcomes sought?</b> <br> The primary outcomes sought from strategic grazing are: <br> 1) to reduce the ability of exotic annual plant species within the box gum grassy woodland to set seed, while at the same time facilitating seed set by native perennials; <br> 2) to reduce soil disturbance and compaction caused by hard-hooved domestic livestock; <br> 3) to reduce selective grazing of palatable native perennial plants; <br> 4) to reduce nutrient input through animal excrement; <br> 5) to reduce biomass; <br> 6) to promote regeneration of native plants.",
                 "type": "literal"
               }
             ],
@@ -900,9 +900,23 @@
       "template": {
         "dataModel": [
           {
+            "name": "wasActivityUndertaken",
+            "dataType": "text",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
             "columns": [
               {
                 "dataType": "text",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
                 "name": "species",
                 "description": "",
                 "constraints": [
@@ -916,6 +930,12 @@
               },
               {
                 "dataType": "text",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
                 "name": "season",
                 "constraints": [
                   "Spring",
@@ -928,6 +948,12 @@
               },
               {
                 "dataType": "stringList",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
                 "name": "managementActions",
                 "constraints": [
                   "Exclusion fencing",
@@ -938,6 +964,12 @@
               },
               {
                 "dataType": "text",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
                 "name": "managementReason",
                 "constraints": [
                   "Excessive grazing",
@@ -948,6 +980,12 @@
               },
               {
                 "dataType": "number",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
                 "name": "noCulled",
                 "validate": "min[0]"
               }
@@ -957,14 +995,37 @@
           },
           {
             "dataType": "number",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "name": "cost",
-            "validate": "integer,min[0]"
+            "validate": "required,min[0]"
           },
           {
             "dataType": "text",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "name": "notes",
             "description": "",
             "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"No\""
+              }
+            ],
+            "name": "activityNotUndertaken",
+            "description": ""
           }
         ],
         "description": "When you enter the details for this activity please make sure that you only enter the number and cost details once. Either as a single total record, encompassing the details and costs of this activity across all of your sites or as separate entries for each site.",
@@ -972,25 +1033,50 @@
         "title": "Native Herbivore Management",
         "viewModel": [
           {
-            "type": "row",
             "items": [
               {
-                "type": "literal",
-                "source": "If Native Herbivore Management is a management action for the site but you didn’t undertake any actions around this for the reporting period, please complete the report and state why you didn’t, in the text box."
+                "source": "<b> What are the conservation outcomes sought?</b> <br> 1) to reduce browsing impact on palatable native plants <br> 2) to maintain native species diversity <br> 3) to reduce overgrazing thus weed infestation  <br> 4) to improve litter and soil condition  <br> 5) to facilitate natural regeneration",
+                "type": "literal"
               }
-            ]
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<b> Implementation: </b> <br> Actions that involve reduction in the native herbivore numbers to reduce total grazing pressure include exclusion or culling. Exclusion of macropods (i.e. kangaroos) is best carried out with a 3-strand plain wire fence affixed to the top of a stock-proof fence. <br> Culling of native herbivores can only be conducted with the authorisation of and a license issued by the appropriate government authority. <br> Ideally, culling should be coordinated with other similar actions in the region in order to maximise impact, and would be undertaken in a humane manner consistent with conservation and land stewardship values. <br> Trapping and relocation is an option for native herbivores, but only under licence. Enticement away from the site (e.g. through strategic placement of watering points) is also an option, but success would need to be monitored.",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
           },
           {
             "type": "row",
             "items": [
               {
-                "source": "<b>Please note</b> Activities to monitor and/or manage native herbivores are included under any or all of the following; “Monitor and manage total grazing pressure”, “Monitor and manage grazing pressure from native species” and “Monitor and manage native herbivores”.",
+                "source": "<b>Please note</b> Activities to monitor and/or manage native herbivores may also be included under “Monitor and manage total grazing pressure”, “Monitor and manage grazing pressure from native species” or “Monitor and manage native herbivores.”",
                 "type": "literal"
               }
             ]
           },
           {
             "type": "row",
+            "items": [
+              {
+                "preLabel": "Was this activity undertaken during this reporting period?",
+                "type": "selectOne",
+                "source": "wasActivityUndertaken"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "items": [
               {
                 "disableTableUpload": true,
@@ -1030,15 +1116,27 @@
           },
           {
             "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year, or if the management was not undertaken, please state the reason why</label></span><div>If the management action was not undertaken and you are explaining why, delete all rows in the above table by hitting the bold 'x' in the last column.  If you don't delete the empty rows you will be unable to submit your report.</div>",
+                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year. This can include the following:</label></span><ul><li>The impact of native herbivores on the site. Such as the impact of the grazing pressure on ground cover and sward height, impact to native trees seedlings and saplings present; impact on native grasses and flowers; soil disturbance due to dens being constructed or damage to fences.  State if this impact is significant or minimal.</li><li>the effectiveness of the management action and how it was conducted – is the culling effective or is the population too large? If no direct action required against a species why? Do you see the need for further action?</li><li>Was a permit obtained from NSW National Parks and Wildlife Service to authorise this culling or was it a licences shooter?</li><li>•Any additional comments or observations impacting native herbivore management.</li></ul>",
                 "type": "literal"
               }
             ]
           },
           {
             "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "items": [
               {
                 "preLabel": "",
@@ -1049,11 +1147,34 @@
           },
           {
             "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "items": [
               {
                 "preLabel": "Total cost of management actions",
                 "source": "cost",
                 "type": "currency"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"No\""
+              }
+            ],
+            "items": [
+              {
+                "preLabel": "If Livestock Grazing Management is a management action under your funding agreement but you were not able to undertake this activity, during the reporting period, please state the reason.",
+                "source": "activityNotUndertaken",
+                "type": "textarea",
+                "rows": 4
               }
             ]
           }
@@ -1073,15 +1194,35 @@
       "template": {
         "dataModel": [
           {
+            "name": "wasActivityUndertaken",
+            "dataType": "text",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
             "columns": [
               {
                 "dataType": "species",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
                 "name": "species",
                 "description": "",
                 "validate": "required"
               },
               {
                 "dataType": "text",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
                 "name": "season",
                 "constraints": [
                   "Spring",
@@ -1094,6 +1235,12 @@
               },
               {
                 "dataType": "stringList",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
                 "name": "managementActions",
                 "constraints": [
                   "Bait & trap",
@@ -1111,6 +1258,12 @@
               },
               {
                 "dataType": "text",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
                 "name": "managementReason",
                 "constraints": [
                   "Excessive grazing",
@@ -1123,6 +1276,12 @@
               },
               {
                 "dataType": "number",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
                 "name": "noCulled",
                 "validate": "min[0]"
               }
@@ -1132,14 +1291,37 @@
           },
           {
             "dataType": "number",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "name": "cost",
-            "validate": "integer,min[0]"
+            "validate": "required,min[0]"
           },
           {
             "dataType": "text",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "name": "notes",
             "description": "",
             "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"No\""
+              }
+            ],
+            "name": "activityNotUndertaken",
+            "description": ""
           }
         ],
         "description": "When you enter the details for this activity please make sure that you only enter the number and cost details once. Either as a single total record, encompassing the details and costs of this activity across all of your sites or as separate entries for each site.",
@@ -1147,25 +1329,50 @@
         "title": "Feral Animal Management",
         "viewModel": [
           {
-            "type": "row",
             "items": [
               {
-                "type": "literal",
-                "source": "If Feral Animal Management is a management action for the site but you didn’t undertake any actions around this for the reporting period, please complete the report and state why you didn’t, in the text box."
+                "source": "<b> What are the conservation outcomes sought?</b> <br> 1) to reduce browsing impact on palatable native plants <br> 2) to maintain native species diversity <br> 3) to reduce overgrazing leading to weed infestation <br> 4) to improve litter and soil condition  <br> 5) to facilitate natural regeneration <br> 6) to reduce predation on local native fauna",
+                "type": "literal"
               }
-            ]
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<b> Implementation: </b> <br> Land managers are encouraged to control feral herbivores and carnivores (e.g. rabbits, hares, goats, deer, pigs, foxes, feral cats) where these are having a detrimental impact on the target ecological community. Control measures will differ between species and may include both preventative (e.g. fencing) and destructive measures as appropriate. <br> Destructive control measures should minimise unintended adverse impacts on non-target species and be undertaken humanely and in accordance with NSW legislation. Warren ripping to control rabbits within a target ecological community should be undertaken as a last resort and every effort should be taken to minimise soil disturbance away from the immediate warren site.",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
           },
           {
             "type": "row",
             "items": [
               {
-                "source": "<b>Please note</b> Activities to monitor and/or manage feral animals are included under any or all of the following; “Monitor and manage total grazing pressure” and “Monitor and manage feral animals”. To enter details of activities undertaken to monitor and/or manage Feral animals please take care to add in a new row for each different species and each different season you have monitored or managed Feral animals.",
+                "source": "<b>Please note</b> Activities to monitor and/or manage feral animals may also be included under; “Monitor and manage total grazing pressure” and “Monitor and manage feral animals”.",
                 "type": "literal"
               }
             ]
           },
           {
             "type": "row",
+            "items": [
+              {
+                "preLabel": "Was this activity undertaken during this reporting period?",
+                "type": "selectOne",
+                "source": "wasActivityUndertaken"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "items": [
               {
                 "disableTableUpload": true,
@@ -1204,13 +1411,19 @@
                 ],
                 "userAddedRows": true,
                 "source": "feralAnimalManagement",
-                "title": "Please complete the following: If your situation makes it impractical to record your information in the table/rows below, please delete any row(s) from the table by clicking the X at the far right hand side",
+                "title": "",
                 "type": "table"
               }
             ]
           },
           {
             "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "items": [
               {
                 "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year, or if the management was not undertaken, please state the reason why</label></span><div>If the management action was not undertaken and you are explaining why, delete all rows in the above table by hitting the bold 'x' in the last column.  If you don't delete the empty rows you will be unable to submit your report.</div>",
@@ -1220,6 +1433,12 @@
           },
           {
             "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "items": [
               {
                 "preLabel": "",
@@ -1230,11 +1449,34 @@
           },
           {
             "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "items": [
               {
                 "preLabel": "Total cost of management actions",
                 "source": "cost",
                 "type": "currency"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"No\""
+              }
+            ],
+            "items": [
+              {
+                "preLabel": "If this activity is a management action under your funding agreement but you were not able to undertake this activity, during the reporting period, please state the reason.",
+                "source": "activityNotUndertaken",
+                "type": "textarea",
+                "rows": 4
               }
             ]
           }
