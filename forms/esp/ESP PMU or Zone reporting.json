@@ -1124,7 +1124,7 @@
             ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year. This can include the following:</label></span><ul><li>The impact of native herbivores on the site. Such as the impact of the grazing pressure on ground cover and sward height, impact to native trees seedlings and saplings present; impact on native grasses and flowers; soil disturbance due to dens being constructed or damage to fences.  State if this impact is significant or minimal.</li><li>the effectiveness of the management action and how it was conducted – is the culling effective or is the population too large? If no direct action required against a species why? Do you see the need for further action?</li><li>Was a permit obtained from NSW National Parks and Wildlife Service to authorise this culling or was it a licences shooter?</li><li>•Any additional comments or observations impacting native herbivore management.</li></ul>",
+                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year. This can include the following:</label></span><ul><li>The impact of native herbivores on the site. Such as the impact of the grazing pressure on ground cover and sward height, impact to native trees seedlings and saplings present; impact on native grasses and flowers; soil disturbance due to dens being constructed or damage to fences.  State if this impact is significant or minimal.</li><li>the effectiveness of the management action and how it was conducted – is the culling effective or is the population too large? If no direct action required against a species why? Do you see the need for further action?</li><li>Was a permit obtained from NSW National Parks and Wildlife Service to authorise this culling or was it a licences shooter?</li><li>Any additional comments or observations impacting native herbivore management.</li></ul>",
                 "type": "literal"
               }
             ]
@@ -1496,17 +1496,37 @@
       "template": {
         "dataModel": [
           {
+            "name": "wasActivityUndertaken",
+            "dataType": "text",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
             "dataType": "list",
             "name": "weedManagement",
             "columns": [
               {
                 "dataType": "species",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
                 "description": "",
                 "name": "species",
                 "validate": "required"
               },
               {
                 "dataType": "stringList",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
                 "description": "The primary method used to treat the patch of the target species",
                 "name": "treatmentMethod",
                 "constraints": [
@@ -1527,11 +1547,23 @@
               },
               {
                 "dataType": "number",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
                 "name": "weedAreaTreatedHa",
                 "validate": "min[0]"
               },
               {
                 "dataType": "text",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
                 "name": "plantDensity",
                 "constraints": [
                   "Dense infestation",
@@ -1541,6 +1573,12 @@
               },
               {
                 "dataType": "text",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
                 "description": "The control status of the patch of the target species being treated",
                 "name": "controlStatus",
                 "constraints": [
@@ -1556,83 +1594,37 @@
           },
           {
             "dataType": "number",
-            "name": "cost",
-            "validate": "integer,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "undertakenNoxiousWeedControl",
-            "constraints": [
-              "Yes",
-              "No"
-            ],
-            "validate": "required"
-          },
-          {
-            "defaultRows": [],
-            "dataType": "list",
-            "name": "noxiousWeedManagement",
-            "columns": [
+            "behaviour": [
               {
-                "dataType": "species",
-                "description": "",
-                "name": "species",
-                "validate": "required"
-              },
-              {
-                "dataType": "stringList",
-                "description": "The primary method used to treat the patch of the target species",
-                "name": "treatmentMethod",
-                "constraints": [
-                  "Chemical control - Foliar spraying",
-                  "Chemical control - Basal bark spraying",
-                  "Chemical control - Cut stump",
-                  "Chemical control - Cut and swab",
-                  "Mechanical control - Slashing",
-                  "Mechanical control - Mowing",
-                  "Mechanical control - Felling",
-                  "Manual control - Hand pulling",
-                  "Biological control - Biological agents (specify in notes)",
-                  "Biological control – Grazing",
-                  "Environmental management - Fire",
-                  "Other (specify in notes)"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "number",
-                "name": "weedAreaTreatedHa",
-                "validate": "min[0]"
-              },
-              {
-                "dataType": "text",
-                "name": "plantDensity",
-                "constraints": [
-                  "Dense infestation",
-                  "Isolated plant",
-                  "Scattered plants"
-                ]
-              },
-              {
-                "dataType": "text",
-                "description": "The control status of the patch of the target species being treated",
-                "name": "controlStatus",
-                "constraints": [
-                  "New Infestation",
-                  "Active Infestation",
-                  "Under control",
-                  "Under monitoring",
-                  "Cleared",
-                  "Unknown"
-                ]
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"Yes\""
               }
-            ]
+            ],
+            "name": "cost",
+            "validate": "required,min[0]"
           },
           {
             "dataType": "text",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "description": "",
             "name": "notes",
             "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"No\""
+              }
+            ],
+            "name": "activityNotUndertaken",
+            "description": ""
           }
         ],
         "description": "When you enter the details for this activity please make sure that you only enter the number and cost details once. Either as a single total record, encompassing the details and costs of this activity across all of your sites or as separate entries for each site.",
@@ -1640,18 +1632,9 @@
         "title": "Weed Management",
         "viewModel": [
           {
-            "type": "row",
             "items": [
               {
-                "type": "literal",
-                "source": "If Weed Management is a management action for the site but you didn’t undertake any actions around this for the reporting period, please complete the report and state why you didn’t, in the text box."
-              }
-            ]
-          },
-          {
-            "items": [
-              {
-                "source": "<b>Please note</b> Activities to monitor and/or manage weeds are included under any or all of the following; “Monitor and manage herbaceous exotic plants (aggressive)”, “Monitor and manage herbaceous exotic plants (non-aggressive)”, “Monitor and manage exotic shrubs (aggressive)”, “Monitor and manage exotic plants”, “Monitor and manage aggressive exotic plants” and “Monitor and manage non-aggressive exotic plants”.",
+                "source": "<b> What are the conservation outcomes sought?</b> <br> 1) to reduce exotic plant cover, thereby reducing competition with native plants <br> 2) to reduce exotic plant biomass <br> 3) to create more gaps in the groundlayer to facilitate regeneration of native groundcover species",
                 "type": "literal"
               }
             ],
@@ -1660,7 +1643,35 @@
           {
             "items": [
               {
-                "title": "Please complete the following: If your situation makes it impractical to record your information in the table/rows below, please delete any row(s) from the table by clicking the X at the far right hand side",
+                "source": "<b> Controlled through: </b> <br> Strategic grazing and targeted controls including localised application of herbicides (spot spraying, weed wiping), hand pulling or chipping of target weed species, mowing and slashing or possibly localised conservation burning (under an appropriate management plan and permission from relevant agencies as required).",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<b>Please note</b> Activities to monitor and/or manage weeds may also be included under any or all of the following; “Monitor and manage herbaceous exotic plants (aggressive)”, “Monitor and manage herbaceous exotic plants (non-aggressive)”, “Monitor and manage exotic shrubs (aggressive)”, “Monitor and manage exotic plants”, “Monitor and manage aggressive exotic plants” and “Monitor and manage non-aggressive exotic plants”.",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Was this activity undertaken during this reporting period?",
+                "type": "selectOne",
+                "source": "wasActivityUndertaken"
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "title": "Please complete the following: To enter details of activities undertaken to monitor and/or manage weeds, take care to add in a new row for each different species and each different season you have managed weeds.",
                 "source": "weedManagement",
                 "columns": [
                   {
@@ -1700,87 +1711,25 @@
                 "type": "table"
               }
             ],
-            "type": "row"
-          },
-          {
-            "items": [
+            "behaviour": [
               {
-                "source": "cost",
-                "preLabel": "Total cost of management actions.  ESP funds must not be attributed to management of noxious (NSW) or declared (SA) plants unless they are also Weeds of National Significance (WONS)",
-                "type": "currency"
-              }
-            ],
-            "type": "row"
-          },
-          {
-            "items": [
-              {
-                "source": "To search a list of noxious (NSW) weed species click <a href=\"https://weeds.dpi.nsw.gov.au/\" target=\"_blank\">here</a>. To search a list of declared (SA) weeds click <a href=\"https://pir.sa.gov.au/biosecurity/weeds_and_pest_animals/weeds_in_sa\" target=\"_blank\">here</a>.  To find a list of Weeds of National Significance (WONS) click <a href=\"https://www.environment.gov.au/biodiversity/invasive/weeds/weeds/lists/wons.html\">here</a>",
-                "type": "literal"
-              }
-            ],
-            "type": "row"
-          },
-          {
-            "items": [
-              {
-                "source": "undertakenNoxiousWeedControl",
-                "preLabel": "Have you undertaken any activities to manage weeds that are; noxious (NSW) or declared (SA)?",
-                "type": "selectOne"
-              }
-            ],
-            "type": "row"
-          },
-          {
-            "items": [
-              {
-                "title": "If \"Yes\", please complete the following:",
-                "source": "noxiousWeedManagement",
-                "columns": [
-                  {
-                    "title": "Species",
-                    "source": "species",
-                    "width": "25%",
-                    "type": "speciesSelect"
-                  },
-                  {
-                    "title": "Treatment Method",
-                    "source": "treatmentMethod",
-                    "width": "20%",
-                    "type": "select2Many"
-                  },
-                  {
-                    "title": "Approximate area treated (Ha)",
-                    "source": "weedAreaTreatedHa",
-                    "width": "10%",
-                    "type": "number"
-                  },
-                  {
-                    "title": "Density",
-                    "source": "plantDensity",
-                    "width": "15%",
-                    "type": "selectOne"
-                  },
-                  {
-                    "title": "Control Status",
-                    "source": "controlStatus",
-                    "width": "15%",
-                    "type": "selectOne"
-                  }
-                ],
-                "userAddedRows": true,
-                "fixedWidth": true,
-                "disableTableUpload": true,
-                "type": "table"
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
               }
             ],
             "type": "row"
           },
           {
             "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year, or if the management was not undertaken, please state the reason why</label></span><div>If the management action was not undertaken and you are explaining why, delete all rows in the above table by hitting the bold 'x' in the last column.  If you don't delete the empty rows you will be unable to submit your report.</div>",
+                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management, the chosen weed management strategy and if ongoing management will be required. Please consider:</label></span><ul><li>Are the native plants moving into areas where weed management has occurred or are the weeds coming back</li><li>Have you noticed any trend in the weeds observed, are there more of less this reporting period?</li><li>Are the weeds occurring from established seed banks, existing weed infestations or spreading from the surrounding areas?</li><li>Have you noticed any new weeds occurring on the property that you have not previously seen?</li><li>Any additional comments or observations please detail here</li></ul>",
                 "type": "literal"
               }
             ]
@@ -1793,7 +1742,46 @@
                 "type": "textarea"
               }
             ],
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "cost",
+                "preLabel": "Total cost of management actions",
+                "type": "currency"
+              }
+            ],
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"No\""
+              }
+            ],
+            "items": [
+              {
+                "preLabel": "If this activity is a management action under your funding agreement but you were not able to undertake this activity, during the reporting period, please state the reason.",
+                "source": "activityNotUndertaken",
+                "type": "textarea",
+                "rows": 4
+              }
+            ]
           }
         ]
       },
@@ -1811,11 +1799,25 @@
       "template": {
         "dataModel": [
           {
+            "name": "wasActivityUndertaken",
+            "dataType": "text",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
             "dataType": "list",
             "name": "biomassControl",
             "columns": [
               {
                 "dataType": "text",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
                 "description": "The type of biomass control",
                 "name": "controlType",
                 "constraints": [
@@ -1827,6 +1829,12 @@
               },
               {
                 "dataType": "stringList",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
                 "description": "",
                 "name": "controlPurpose",
                 "constraints": [
@@ -1839,21 +1847,61 @@
               },
               {
                 "dataType": "number",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
                 "name": "areaTreatedHa",
                 "validate": "min[0]"
               },
               {
                 "dataType": "number",
-                "name": "cost",
-                "validate": "integer,min[0]"
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
+                "name": "activityCost",
+                "validate": "required,min[0]"
               }
             ]
           },
           {
             "dataType": "text",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "description": "",
             "name": "notes",
             "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
+            "name": "cost",
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"No\""
+              }
+            ],
+            "name": "activityNotUndertaken",
+            "description": ""
           }
         ],
         "description": "When you enter the details for this activity please make sure that you only enter the number and cost details once. Either as a single total record, encompassing the details and costs of this activity across all of your sites or as separate entries for each site.",
@@ -1861,18 +1909,9 @@
         "title": "Biomass Control Measures",
         "viewModel": [
           {
-            "type": "row",
             "items": [
               {
-                "type": "literal",
-                "source": "If Biomass Control Measures is a management action for the site but you didn’t undertake any actions around this for the reporting period, please complete the report and state why you didn’t, in the text box."
-              }
-            ]
-          },
-          {
-            "items": [
-              {
-                "source": "<b>Please note</b> Activities to control Biomass are included under any or all of the following; “Monitor and manage dominant native species”, “Biomass control to reduce dominance of a single native plant species”, “Biomass Control” and “Thinning”.",
+                "source": "<b> What are the conservation outcomes sought?</b> <br>Reducing the density of the dominant perennial species (the biomass) often enhances the diversity of the native ground flora by promoting the growth and spread of other grasses and herbs. Box gum grassy woodland in good condition has a predominance of native tussock species in the understorey sufficiently spaced to enable native forbs and herbs to generate and prosper.\nBiomass may be controlled through small scale ecological burns, by strategic grazing or by slashing over relatively small areas at an agreed timing and frequency.",
                 "type": "literal"
               }
             ],
@@ -1881,7 +1920,27 @@
           {
             "items": [
               {
-                "title": "If your situation makes it impractical to record your information in the table/rows below, please delete any row(s) from the table by clicking the X at the far right hand side",
+                "source": "<b>Please note</b> Activities to control Biomass may also be included under “Monitor and manage dominant native species”, “Biomass control to reduce dominance of a single native plant species”, “Biomass Control” and “Thinning”.",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Was this activity undertaken during this reporting period?",
+                "type": "selectOne",
+                "source": "wasActivityUndertaken"
+              }
+            ]
+          },
+
+          {
+            "items": [
+              {
+                "title": "Please completed the following:",
                 "source": "biomassControl",
                 "columns": [
                   {
@@ -1901,7 +1960,7 @@
                   },
                   {
                     "title": "Cost",
-                    "source": "cost",
+                    "source": "activityCost",
                     "type": "currency"
                   }
                 ],
@@ -1910,13 +1969,25 @@
                 "type": "table"
               }
             ],
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "type": "row"
           },
           {
             "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year, or if the management was not undertaken, please state the reason why</label></span><div>If the management action was not undertaken and you are explaining why, delete all rows in the above table by hitting the bold 'x' in the last column.  If you don't delete the empty rows you will be unable to submit your report.</div>",
+                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year: Please provide information about the effectiveness of the biomass control measure.</label></span><ul><li>Do you have any feedback about this management action and its impact on the state of the environment in the zone</li><li>As a result of undertaking biomass control have you seen an increase in the diversity of the species in the zone</li><li>Any additional comments or observations about Biomass please detail here</li></ul>",
                 "type": "literal"
               }
             ]
@@ -1929,7 +2000,46 @@
                 "type": "textarea"
               }
             ],
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "cost",
+                "preLabel": "Total cost of this management actions",
+                "type": "currency"
+              }
+            ],
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"No\""
+              }
+            ],
+            "items": [
+              {
+                "preLabel": "If this activity is a management action under your funding agreement but you were not able to undertake this activity, during the reporting period, please state the reason.",
+                "source": "activityNotUndertaken",
+                "type": "textarea",
+                "rows": 4
+              }
+            ]
           }
         ]
       },
