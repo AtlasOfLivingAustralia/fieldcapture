@@ -19,9 +19,6 @@ var ReportService = function(config) {
      */
     self.findOverDeliveredTargets = function(activityId) {
         var url = config.projectTargetsAndScoresUrl;
-        if (!url) {
-            return;
-        }
         if (activityId) {
             url += "?activityId="+activityId;
         }

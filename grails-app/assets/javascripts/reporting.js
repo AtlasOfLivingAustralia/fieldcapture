@@ -357,7 +357,7 @@ var ReportViewModel = function(report, config) {
     $.each(report.statusChangeHistory, function(i, history) {
         self.cancelledComment = history.comment
     });
-    if (report.publicationStatus == 'pendingApproval') {
+    if (config.projectTargetsAndScoresUrl && report.publicationStatus == 'pendingApproval') {
         self.checkForOverDelivery();
     }
 };
