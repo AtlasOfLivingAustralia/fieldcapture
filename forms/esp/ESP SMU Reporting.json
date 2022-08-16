@@ -3155,7 +3155,21 @@
       "template": {
         "dataModel": [
           {
+            "name": "wasActivityUndertaken",
             "dataType": "text",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "dataType": "text",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "name": "undertakeTreeRootDisturbanceControl",
             "constraints": [
               "Yes",
@@ -3165,20 +3179,37 @@
           },
           {
             "dataType": "text",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "name": "treeRootDisturbanceControlActions"
+          },
+          {
+            "dataType": "text",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"No\""
+              }
+            ],
+            "name": "activityNotUndertaken",
+            "description": ""
           }
         ],
         "modelName": "ESP Tree Root Disturbances",
         "title": "Tree Root Disturbance Control",
         "viewModel": [
           {
-            "type": "row",
             "items": [
               {
-                "type": "literal",
-                "source": "If Tree Root Disturbance Control is a management action for the site but you didn’t undertake any actions around this for the reporting period, please complete the report and state why you didn’t, in the text box."
+                "source": "<b>Information TBA</b>",
+                "type": "literal"
               }
-            ]
+            ],
+            "type": "row"
           },
           {
             "items": [
@@ -3190,11 +3221,27 @@
             "type": "row"
           },
           {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Was this activity undertaken during this reporting period?",
+                "type": "selectOne",
+                "source": "wasActivityUndertaken"
+              }
+            ]
+          },
+          {
             "items": [
               {
                 "source": "undertakeTreeRootDisturbanceControl",
                 "preLabel": "Did you undertake actions to reduce disturbance to tree roots on your sites this year? (Yes / No)",
                 "type": "selectOne"
+              }
+            ],
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
               }
             ],
             "type": "row"
@@ -3207,7 +3254,30 @@
                 "type": "textarea"
               }
             ],
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "type": "row"
+          },
+          {
+            "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"No\""
+              }
+            ],
+            "items": [
+              {
+                "preLabel": "If this activity is a management action under your funding agreement but you were not able to undertake this activity, during the reporting period, please state the reason.",
+                "source": "activityNotUndertaken",
+                "type": "textarea",
+                "rows": 4
+              }
+            ]
           }
         ]
       },
