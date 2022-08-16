@@ -723,7 +723,7 @@
             ],
             "items": [
               {
-                "preLabel": "If Livestock Grazing Management is a management action under your funding agreement but you were not able to undertake this activity, during the reporting period, please state the reason.",
+                "preLabel": "If this activity is a management action under your funding agreement but you were not able to undertake this activity, during the reporting period, please state the reason.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -773,7 +773,7 @@
           {
             "items": [
               {
-                "source": "If you undertake grazing, please record sward height at the end of your grazing periods (in the table under “Livestock Grazing Management“). If you do not undertake grazing, then record sward height at the same time that you take the photo-point photograph for this site. Please ensure that this is done at the same time each year.",
+                "source": "If you undertook grazing, please record sward height prior to and following your grazing periods (in the table under “Livestock Grazing Management). If you did not undertake grazing, then record sward height (below) at the same time that you take the photo-point photograph for this site. Please ensure that this is done at the same time each year.",
                 "type": "literal"
               }
             ],
@@ -797,7 +797,7 @@
                   {
                     "type": "image",
                     "source": "photo",
-                    "title": ""
+                    "title": "Insert Image"
                   }
                 ],
                 "userAddedRows": true,
@@ -850,7 +850,7 @@
           {
             "items": [
               {
-                "source": "If you undertook grazing, please record ground cover % prior to and following your grazing periods (in the table under “Ground cover estimate“). If you did not undertake grazing, then record ground cover percentage (below) at the same time that you take the photo-point photograph for this site. Please ensure that this is done at the same time each year.",
+                "source": "If you undertook grazing, please record ground cover % prior to and following your grazing periods (in the table under “Ground cover estimate”). If you did not undertake grazing, then record ground cover percentage (below) at the same time that you take the photo-point photograph for this site. Please ensure that this is done at the same time each year.",
                 "type": "literal"
               }
             ],
@@ -874,7 +874,7 @@
                   {
                     "type": "image",
                     "source": "photo",
-                    "title": ""
+                    "title": "Insert Image"
                   }
                 ],
                 "userAddedRows": true,
@@ -1035,7 +1035,7 @@
           {
             "items": [
               {
-                "source": "<b> What are the conservation outcomes sought?</b> <br> 1) to reduce browsing impact on palatable native plants <br> 2) to maintain native species diversity <br> 3) to reduce overgrazing thus weed infestation  <br> 4) to improve litter and soil condition  <br> 5) to facilitate natural regeneration",
+                "source": "<b> What are the conservation outcomes sought?</b> <br> 1) to reduce browsing impact on palatable native plants; <br> 2) to maintain native species diversity; <br> 3) to reduce overgrazing thus weed infestation; <br> 4) to improve litter and soil condition; <br> 5) to facilitate natural regeneration.",
                 "type": "literal"
               }
             ],
@@ -1109,7 +1109,7 @@
                 ],
                 "userAddedRows": true,
                 "source": "nativeSpeciesMonitoring",
-                "title": "Please complete the following:  If your situation makes it impractical to record your information in the table/rows below, please delete any row(s) from the table by clicking the X at the far right hand side.",
+                "title": "Please complete the following: To enter details take care to add in a new row for each different species and each different season you have monitored or managed Herbivores.",
                 "type": "table"
               }
             ]
@@ -1124,7 +1124,7 @@
             ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year. This can include the following:</label></span><ul><li>The impact of native herbivores on the site. Such as the impact of the grazing pressure on ground cover and sward height, impact to native trees seedlings and saplings present; impact on native grasses and flowers; soil disturbance due to dens being constructed or damage to fences.  State if this impact is significant or minimal.</li><li>the effectiveness of the management action and how it was conducted – is the culling effective or is the population too large? If no direct action required against a species why? Do you see the need for further action?</li><li>Was a permit obtained from NSW National Parks and Wildlife Service to authorise this culling or was it a licences shooter?</li><li>Any additional comments or observations impacting native herbivore management.</li></ul>",
+                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year. This can include the following:</label></span><ul><li>The impact of native herbivores on the site. Such as the impact of the grazing pressure on ground cover and sward height, impact to native trees seedlings and saplings present; impact on native grasses and flowers; soil disturbance due to dens being constructed or damage to fences.  State if this impact is significant or minimal.</li><li>The effectiveness of the management action and how it was conducted – is the culling effective or is the population too large? If no direct action required against a species why? Do you see the need for further action?</li><li>Was a permit obtained from NSW National Parks and Wildlife Service to authorise this culling or was it a licences shooter?</li><li>Any additional comments or observations impacting native herbivore management.</li></ul>",
                 "type": "literal"
               }
             ]
@@ -1171,7 +1171,7 @@
             ],
             "items": [
               {
-                "preLabel": "If Livestock Grazing Management is a management action under your funding agreement but you were not able to undertake this activity, during the reporting period, please state the reason.",
+                "preLabel": "If this activity is a management action under your funding agreement but you were not able to undertake this activity, during the reporting period, please state the reason.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -1331,7 +1331,7 @@
           {
             "items": [
               {
-                "source": "<b> What are the conservation outcomes sought?</b> <br> 1) to reduce browsing impact on palatable native plants <br> 2) to maintain native species diversity <br> 3) to reduce overgrazing leading to weed infestation <br> 4) to improve litter and soil condition  <br> 5) to facilitate natural regeneration <br> 6) to reduce predation on local native fauna",
+                "source": "<b> What are the conservation outcomes sought?</b> <br> 1) to reduce browsing impact on palatable native plants; <br> 2) to maintain native species diversity; <br> 3) to reduce overgrazing leading to weed infestation; <br> 4) to improve litter and soil condition; <br> 5) to facilitate natural regeneration; <br> 6) to reduce predation on local native fauna.",
                 "type": "literal"
               }
             ],
@@ -1411,7 +1411,7 @@
                 ],
                 "userAddedRows": true,
                 "source": "feralAnimalManagement",
-                "title": "",
+                "title": "Please complete the following: To enter details of activities undertaken to monitor and/or manage Feral animals please take care to add in a new row for each different species and each different season you have monitored or managed Feral animals.",
                 "type": "table"
               }
             ]
@@ -1426,7 +1426,7 @@
             ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year, or if the management was not undertaken, please state the reason why</label></span><div>If the management action was not undertaken and you are explaining why, delete all rows in the above table by hitting the bold 'x' in the last column.  If you don't delete the empty rows you will be unable to submit your report.</div>",
+                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year. This could include: </label></span><ul><li>The impact of the grazing pressure, soil disturbance and damage to native trees and grasses.</li><li>Have the feral animals caused any damage to infrastructure on the property? State if this impact is significant or minimal.</li><li>Are there significant feral animals in the surrounding property moving on the ESP Site? Has any action been taken to reduce this movement?</li></ul>",
                 "type": "literal"
               }
             ]
@@ -1634,7 +1634,7 @@
           {
             "items": [
               {
-                "source": "<b> What are the conservation outcomes sought?</b> <br> 1) to reduce exotic plant cover, thereby reducing competition with native plants <br> 2) to reduce exotic plant biomass <br> 3) to create more gaps in the groundlayer to facilitate regeneration of native groundcover species",
+                "source": "<b> What are the conservation outcomes sought?</b> <br> 1) to reduce exotic plant cover, thereby reducing competition with native plants; <br> 2) to reduce exotic plant biomass; <br> 3) to create more gaps in the groundlayer to facilitate regeneration of native groundcover species.",
                 "type": "literal"
               }
             ],
@@ -1729,7 +1729,7 @@
             ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management, the chosen weed management strategy and if ongoing management will be required. Please consider:</label></span><ul><li>Are the native plants moving into areas where weed management has occurred or are the weeds coming back</li><li>Have you noticed any trend in the weeds observed, are there more of less this reporting period?</li><li>Are the weeds occurring from established seed banks, existing weed infestations or spreading from the surrounding areas?</li><li>Have you noticed any new weeds occurring on the property that you have not previously seen?</li><li>Any additional comments or observations please detail here</li></ul>",
+                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management, the chosen weed management strategy and if ongoing management will be required. Please consider:</label></span><ul><li>Are the native plants moving into areas where weed management has occurred or are the weeds coming back.</li><li>Have you noticed any trend in the weeds observed, are there more of less this reporting period?</li><li>Are the weeds occurring from established seed banks, existing weed infestations or spreading from the surrounding areas?</li><li>Have you noticed any new weeds occurring on the property that you have not previously seen?</li><li>Any additional comments or observations please detail here.</li></ul>",
                 "type": "literal"
               }
             ]
@@ -1911,7 +1911,7 @@
           {
             "items": [
               {
-                "source": "<b> What are the conservation outcomes sought?</b> <br>Reducing the density of the dominant perennial species (the biomass) often enhances the diversity of the native ground flora by promoting the growth and spread of other grasses and herbs. Box gum grassy woodland in good condition has a predominance of native tussock species in the understorey sufficiently spaced to enable native forbs and herbs to generate and prosper.\nBiomass may be controlled through small scale ecological burns, by strategic grazing or by slashing over relatively small areas at an agreed timing and frequency.",
+                "source": "<b> What are the conservation outcomes sought?</b> <br>Reducing the density of the dominant perennial species (the biomass) often enhances the diversity of the native ground flora by promoting the growth and spread of other grasses and herbs.<br> Box gum grassy woodland in good condition has a predominance of native tussock species in the understorey sufficiently spaced to enable native forbs and herbs to generate and prosper.<br> Biomass may be controlled through small scale ecological burns, by strategic grazing or by slashing over relatively small areas at an agreed timing and frequency.",
                 "type": "literal"
               }
             ],
@@ -1987,7 +1987,7 @@
             ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year: Please provide information about the effectiveness of the biomass control measure.</label></span><ul><li>Do you have any feedback about this management action and its impact on the state of the environment in the zone</li><li>As a result of undertaking biomass control have you seen an increase in the diversity of the species in the zone</li><li>Any additional comments or observations about Biomass please detail here</li></ul>",
+                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year: Please provide information about the effectiveness of the biomass control measure.</label></span><ul><li>Do you have any feedback about this management action and its impact on the state of the environment in the zone?</li><li>As a result of undertaking biomass control have you seen an increase in the diversity of the species in the zone.</li><li>Any additional comments or observations about Biomass please detail here.</li></ul>",
                 "type": "literal"
               }
             ]
@@ -2228,7 +2228,7 @@
           {
             "items": [
               {
-                "source": "<b> What are the conservation outcomes sought?</b> <br>Environmental re-vegetation refers to planting of native vegetation into a patch to assist with the restoration of its ecological values and condition. Planting or direct seeding is encouraged where it is likely to speed up the recovery of the woodland, namely to assist in rehabilitating stock camps, re-introducing locally rare endemic plants, re-introducing trees into large areas of derived grassland or degraded woodland, or to provide competition to established or vigorous weed species.",
+                "source": "<b> What is the conservation outcome sought?</b> <br>Environmental re-vegetation refers to planting of native vegetation into a patch to assist with the restoration of its ecological values and condition.<br> Planting or direct seeding is encouraged where it is likely to speed up the recovery of the woodland, namely to assist in rehabilitating stock camps, re-introducing locally rare endemic plants, re-introducing trees into large areas of derived grassland or degraded woodland, or to provide competition to established or vigorous weed species.",
                 "type": "literal"
               }
             ],
@@ -2297,7 +2297,7 @@
             "type": "table"
           },
           {
-            "title": "Survival rates of previous revegetation activities <br/>Please note that this is voluntary and can be recorded as often as you like.",
+            "title": "Survival rates of previous revegetation activities. <br/>Please note that this is voluntary and can be recorded as often as you like.",
             "source": "survival",
             "columns": [
               {
@@ -2398,7 +2398,7 @@
             ],
             "items": [
               {
-                "preLabel": "If Livestock Grazing Management is a management action under your funding agreement but you were not able to undertake this activity, during the reporting period, please state the reason.",
+                "preLabel": "If this activity is a management action under your funding agreement but you were not able to undertake this activity, during the reporting period, please state the reason.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
