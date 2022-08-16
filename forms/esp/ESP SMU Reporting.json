@@ -3295,7 +3295,21 @@
       "template": {
         "dataModel": [
           {
+            "name": "wasActivityUndertaken",
             "dataType": "text",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "dataType": "text",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "name": "undertakeFencingPaddockTrees",
             "constraints": [
               "Yes",
@@ -3313,6 +3327,12 @@
             "columns": [
               {
                 "dataType": "text",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
                 "description": "The type of fencing activity",
                 "name": "fenceActivityType",
                 "constraints": [
@@ -3323,22 +3343,62 @@
               },
               {
                 "dataType": "number",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
                 "description": "Approximate area fenced in m2",
                 "name": "areaFenced",
                 "validate": "min[0]"
               },
               {
                 "dataType": "number",
-                "name": "cost",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "wasActivityUndertaken == \"Yes\""
+                  }
+                ],
+                "name": "activityCost",
                 "validate": "integer,min[0]"
               }
             ]
           },
           {
+            "dataType": "number",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
+            "name": "cost",
+            "validate": "required,min[0]"
+          },
+          {
             "dataType": "text",
-            "description": "",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "name": "notes",
+            "description": "",
             "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"No\""
+              }
+            ],
+            "name": "activityNotUndertaken",
+            "description": ""
           }
         ],
         "description": "When you enter the details for this activity please make sure that you only enter the number and cost details once. Either as a single total record, encompassing the details and costs of this activity across all of your sites or as separate entries for each site.",
@@ -3346,18 +3406,9 @@
         "title": "Fencing Paddock Trees",
         "viewModel": [
           {
-            "type": "row",
             "items": [
               {
-                "type": "literal",
-                "source": "If Fencing Paddock Trees is a management action for the site but you didn’t undertake any actions around this for the reporting period, please complete the report and state why you didn’t, in the text box."
-              }
-            ]
-          },
-          {
-            "items": [
-              {
-                "source": "<b>Please note</b> Activities to Fence paddock trees are included under any or all of the following; “Activities to reduce isolation” and “Activities to improve connectivity”.",
+                "source": "<b>Information TBA</b>",
                 "type": "literal"
               }
             ],
@@ -3366,9 +3417,34 @@
           {
             "items": [
               {
+                "source": "<b>Please note</b> Activities to Fence paddock trees may also be included under; “Activities to reduce isolation” and/or “Activities to improve connectivity”.",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Was this activity undertaken during this reporting period?",
+                "type": "selectOne",
+                "source": "wasActivityUndertaken"
+              }
+            ]
+          },
+          {
+            "items": [
+              {
                 "source": "undertakeFencingPaddockTrees",
                 "preLabel": "Did you undertake any activities relating to the fencing of Paddock trees on this site this year? (Yes / No)",
                 "type": "selectOne"
+              }
+            ],
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
               }
             ],
             "type": "row"
@@ -3392,7 +3468,7 @@
                   },
                   {
                     "title": "Cost",
-                    "source": "cost",
+                    "source": "activityCost",
                     "type": "currency"
                   }
                 ],
@@ -3401,13 +3477,25 @@
                 "type": "table"
               }
             ],
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "type": "row"
           },
           {
             "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year, or if the management was not undertaken, please state the reason why</label></span><div>If the management action was not undertaken and you are explaining why, delete all rows in the above table by hitting the bold 'x' in the last column.  If you don't delete the empty rows you will be unable to submit your report.</div>",
+                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year.</label></span>",
                 "type": "literal"
               }
             ]
@@ -3420,7 +3508,46 @@
                 "type": "textarea"
               }
             ],
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "cost",
+                "preLabel": "Total cost of this management actions",
+                "type": "currency"
+              }
+            ],
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"No\""
+              }
+            ],
+            "items": [
+              {
+                "preLabel": "If this activity is a management action under your funding agreement but you were not able to undertake this activity, during the reporting period, please state the reason.",
+                "source": "activityNotUndertaken",
+                "type": "textarea",
+                "rows": 4
+              }
+            ]
           }
         ]
       },
