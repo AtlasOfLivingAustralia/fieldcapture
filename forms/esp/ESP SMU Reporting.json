@@ -3553,6 +3553,162 @@
       },
       "templateName": "espFencingPaddockTrees",
       "title": "ESP Fencing Paddock Trees"
+    },
+    {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "ESP Thinning",
+      "optional": true,
+      "optionalQuestionText": "Not an agreed management action under my funding agreement",
+      "template": {
+        "dataModel": [
+          {
+            "name": "wasActivityUndertaken",
+            "dataType": "text",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "dataType": "number",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
+            "name": "cost",
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
+            "name": "notes",
+            "description": "",
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"No\""
+              }
+            ],
+            "name": "activityNotUndertaken",
+            "description": ""
+          }
+        ],
+        "description": "When you enter the details for this activity please make sure that you only enter the number and cost details once. Either as a single total record, encompassing the details and costs of this activity across all of your sites or as separate entries for each site.",
+        "modelName": "ESP Thinning",
+        "title": "Thinning",
+        "viewModel": [
+          {
+            "items": [
+              {
+                "source": "<b> What are the conservation outcomes sought?</b> <br> Ecological thinning is encouraged in patches of dense young regeneration, in order to increase structural diversity or to allow for the regeneration of understorey species by reducing competition and increasing light penetration to ground level.<br> Natural thinning will most likely occur, but can take decades to reach desired final densities. During this time there can be an increased risk of degradation. <br> Ecological thinning refers to the strategic, manual removal of a number of tree stems within a patch of vegetation where the tree density may be such that there are few mature trees, numerous young stems and a sparse ground layer.",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<b>Please note</b> TBA",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Was this activity undertaken during this reporting period?",
+                "type": "selectOne",
+                "source": "wasActivityUndertaken"
+              }
+            ]
+          },
+
+
+          {
+            "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
+            "items": [
+              {
+                "source": "<span class=\"preLabel required\"><label>Please provide detail the effectiveness of the action undertaken.</label></span><ul><li>How often has thinning occurred and do you think it will be required going forward?</li></ul>",
+                "type": "literal"
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "source": "notes",
+                "preLabel": "",
+                "type": "textarea"
+              }
+            ],
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "cost",
+                "preLabel": "Total cost of this management actions",
+                "type": "currency"
+              }
+            ],
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"No\""
+              }
+            ],
+            "items": [
+              {
+                "preLabel": "If this activity is a management action under your funding agreement but you were not able to undertake this activity, during the reporting period, please state the reason.",
+                "source": "activityNotUndertaken",
+                "type": "textarea",
+                "rows": 4
+              }
+            ]
+          }
+        ]
+      },
+      "templateName": "espThinning",
+      "title": "ESP Thinning"
     }
   ],
   "status": "active",
