@@ -2931,7 +2931,21 @@
       "template": {
         "dataModel": [
           {
+            "name": "wasActivityUndertaken",
             "dataType": "text",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "dataType": "text",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "name": "undertakeWaterborneChemicalControl",
             "constraints": [
               "Yes",
@@ -2941,10 +2955,22 @@
           },
           {
             "dataType": "text",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "name": "waterborneChemicalControlActions"
           },
           {
             "dataType": "text",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "name": "undertakeWindborneChemicalControl",
             "constraints": [
               "Yes",
@@ -2954,25 +2980,44 @@
           },
           {
             "dataType": "text",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "name": "windborneChemicalControlActions"
+          },
+          {
+            "dataType": "number",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
+            "name": "cost",
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"No\""
+              }
+            ],
+            "name": "activityNotUndertaken",
+            "description": ""
           }
         ],
         "modelName": "ESP Control of Agrochemicals",
         "title": "Control of Agrochemicals",
         "viewModel": [
           {
-            "type": "row",
             "items": [
               {
-                "type": "literal",
-                "source": "If Control of Agrochemicals is a management action for the site but you didn’t undertake any actions around this for the reporting period, please complete the report and state why you didn’t, in the text box."
-              }
-            ]
-          },
-          {
-            "items": [
-              {
-                "source": "<b>Please note</b> Activities to reduce the impacts of nutrients and agrochemicals are included under any or all of the following; “Nutrient management”, “Reduce wind-borne agrochemicals” and “Reduce water-borne movement of agrochemicals”. ",
+                "source": "<b>Information TBA</b>",
                 "type": "literal"
               }
             ],
@@ -2981,9 +3026,34 @@
           {
             "items": [
               {
+                "source": "<b>Please note</b> Activities to reduce the impacts of nutrients and agrochemicals may also be included under; “Nutrient management”, “Reduce wind-borne agrochemicals” and “Reduce water-borne movement of agrochemicals”.",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Was this activity undertaken during this reporting period?",
+                "type": "selectOne",
+                "source": "wasActivityUndertaken"
+              }
+            ]
+          },
+          {
+            "items": [
+              {
                 "source": "undertakeWaterborneChemicalControl",
                 "preLabel": "Did you undertake actions to reduce the movement of water-borne agrochemicals across your sites this year? (Yes / No)",
                 "type": "selectOne"
+              }
+            ],
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
               }
             ],
             "type": "row"
@@ -2996,6 +3066,12 @@
                 "type": "textarea"
               }
             ],
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "type": "row"
           },
           {
@@ -3004,6 +3080,12 @@
                 "source": "undertakeWindborneChemicalControl",
                 "preLabel": "Did you undertake actions to reduce the movement of wind-borne agrochemicals across your sites this year? (Yes / No)",
                 "type": "selectOne"
+              }
+            ],
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
               }
             ],
             "type": "row"
@@ -3016,7 +3098,46 @@
                 "type": "textarea"
               }
             ],
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
             "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "cost",
+                "preLabel": "Total cost of this management actions",
+                "type": "currency"
+              }
+            ],
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"No\""
+              }
+            ],
+            "items": [
+              {
+                "preLabel": "If this activity is a management action under your funding agreement but you were not able to undertake this activity, during the reporting period, please state the reason.",
+                "source": "activityNotUndertaken",
+                "type": "textarea",
+                "rows": 4
+              }
+            ]
           }
         ]
       },
