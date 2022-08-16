@@ -232,7 +232,7 @@ class UserService {
             throw new IllegalArgumentException("Role "+role+" not supported as a hub role")
         }
 
-        String ecodataAclAccessLevel = convertHubRoleToAccesLevel(role)
+        String ecodataAclAccessLevel = convertHubRoleToAccessLevel(role)
 
         HubSettings settings = SettingService.getHubConfig()
         userId = userId ?: getUser()?.userId
@@ -455,7 +455,7 @@ class UserService {
         return managementUnitRole && managementUnitRole.role == RoleService.GRANT_MANAGER_ROLE
     }
 
-    private Map getEntityRole(String userId, String entityId) {
+    Map getEntityRole(String userId, String entityId) {
         List userRoles = getUserRoles(userId)
         Map role =  userRoles.find{it.entityId == entityId}
         role
@@ -512,7 +512,7 @@ class UserService {
      * @return true if the activity can be edited.
      */
     boolean canUserEditActivity(String userId, String activityId) {
-        def userCanEdit
+        boolean userCanEdit = false
         if (userIsSiteAdmin()) {
             userCanEdit = true
         } else {
@@ -642,7 +642,7 @@ class UserService {
     }
 
     def addUserToHub(Map params) {
-        String ecodataAclAccessLevel = convertHubRoleToAccesLevel(params.role)
+        String ecodataAclAccessLevel = convertHubRoleToAccessLevel(params.role)
         Map param = [userId: params.userId,
                      entityId: params.entityId,
                      role: ecodataAclAccessLevel,
@@ -661,13 +661,13 @@ class UserService {
      * @param role the role to convert.
      * @return the accessLevel used to represent the supplied role
      */
-    private String convertHubRoleToAccesLevel(String role) {
+    private String convertHubRoleToAccessLevel(String role) {
         Map map = [siteAdmin: "admin", officer: "caseManager", siteReadOnly: "readOnly"]
         return map[role]
     }
 
     def removeHubUser(Map params) {
-        String ecodataAclAccessLevel = convertHubRoleToAccesLevel(params.role)
+        String ecodataAclAccessLevel = convertHubRoleToAccessLevel(params.role)
 
         Map param = [userId: params.userId, entityId: params.entityId, role: ecodataAclAccessLevel, expiryDate: params.expiryDate]
         Map response = webService.doPost("${grailsApplication.config.getProperty('ecodata.baseUrl')}permissions/removeUserWithRoleFromHub", param)
