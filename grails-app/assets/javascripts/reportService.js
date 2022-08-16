@@ -19,6 +19,9 @@ var ReportService = function(config) {
      */
     self.findOverDeliveredTargets = function(activityId) {
         var url = config.projectTargetsAndScoresUrl;
+        if (!url) {
+            return;
+        }
         if (activityId) {
             url += "?activityId="+activityId;
         }
@@ -35,9 +38,12 @@ var ReportService = function(config) {
             if (projectScores && projectScores.length > 0) {
                 for (var i = 0; i < projectScores.length; i++) {
                     var target = projectScores[i];
-                    if (reportScores && reportScores[i]) {
-                        var reportScore = reportScores[i].result && reportScores[i].result.result;
-                        if (target.overDelivered && reportScore) {
+
+                    if (target.overDelivered && reportScores) {
+                        var reportScore = _.find(reportScores, function(score) {
+                            return score.scoreId == target.scoreId;
+                        });
+                        if (reportScore && reportScore.result && reportScore.result.result) {
                             overDeliveredTargets.push({overall:target, report:reportScores[i]});
                         }
                     }
