@@ -317,7 +317,7 @@ class AdminController {
         }
     }
 
-    @PreAuthorise(accessLevel = 'siteReadOnly')
+    @PreAuthorise(accessLevel = 'readOnly')
     def searchProjectAuditMessages() {
         String id = params.id
         String sort = params.sort?:'date'
