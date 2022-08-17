@@ -2,6 +2,7 @@ package pages
 
 import geb.Module
 import geb.Page
+import groovy.util.logging.Slf4j
 import pages.modules.ProgramAdminTab
 import pages.modules.subProgramContent
 
@@ -19,15 +20,16 @@ class ProjectRow extends Module {
     }
 }
 
+@Slf4j
 class ProgramPage extends Page {
 
     static url = 'program/index'
 
     static at = {
         $('.program-view').displayed
-        println name().text()
-        println projectRows().size()
-        println projectRows().collect{it.grantId().text()}
+        log.info("Program name: " name().text())
+        log.info("Rows containing projects in the program page: ")
+        log.info(projectRows().collect{it.grantId().text()})
     }
 
     static content= {
@@ -76,9 +78,9 @@ class ProgramPage extends Page {
     /** Clicks the grant id link in the project table */
     void openProjectByGrantId(String grantId) {
         def project = waitFor 60, {
-            println name().text()
-            println projectRows().size()
-            println projectRows().collect{it.grantId().text()}
+            log.info("Program name: "+name().text())
+            log.info("Number of project rows: "+projectRows().size())
+            log.info("Data in project rows: "+projectRows().collect{it.grantId().text()})
             projectRows.find{ it.grantId.text() == grantId}
         }
         project.openProject()
