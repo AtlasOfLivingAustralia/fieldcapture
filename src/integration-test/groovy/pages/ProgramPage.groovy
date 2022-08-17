@@ -27,7 +27,7 @@ class ProgramPage extends Page {
 
     static at = {
         $('.program-view').displayed
-        log.info("Program name: " name().text())
+        log.info("Program name: " + name().text())
         log.info("Rows containing projects in the program page: ")
         log.info(projectRows().collect{it.grantId().text()})
     }
