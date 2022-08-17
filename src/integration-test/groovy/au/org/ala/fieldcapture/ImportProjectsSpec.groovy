@@ -134,7 +134,9 @@ class ImportProjectsSpec extends StubbedCasSpec {
             log.warn("Data in project rows: "+projectRows().collect{it.grantId().text()})
             println("Program name: "+name().text())
             println("Number of project rows: "+projectRows().size())
-            println("Data in project rows: "+projectRows().collect{it.grantId().text()})
+            println("Grant IDs in project rows: "+projectRows().collect{it.grantId.text()})
+            println("Data in project rows: "+projectRows().collect{it.name.text()})
+
             def project = projectRows.find{
                 println it.grantId().text()
                 it.grantId.text() == 'cep-1'
