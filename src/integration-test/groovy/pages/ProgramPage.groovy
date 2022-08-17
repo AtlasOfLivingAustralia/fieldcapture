@@ -41,6 +41,7 @@ class ProgramPage extends Page {
         description {$('.row .col-md-4 span[data-bind*="html:description"] p')}
         subProgramTabContent(required:false) {$("div#subProgramWrapper").moduleList(subProgramContent)}
         projectRows(required:false) { $('#projectOverviewList tbody tr').moduleList(ProjectRow) }
+        projectTable { $('#projectOverviewList')}
     }
 
     List grantIds() {
@@ -73,6 +74,11 @@ class ProgramPage extends Page {
 
     /** Clicks the grant id link in the project table */
     void openProjectByGrantId(String grantId) {
+        // .text() has started returning an empty string, trying to make sure it's in the viewport before
+        // calling .text()
+        interact {
+            moveToElement(projectTable())
+        }
         def project = waitFor 60, {
 
             projectRows.find{ println it.grantId.text(); it.grantId.text() == grantId}
