@@ -23,7 +23,12 @@ class ProgramPage extends Page {
 
     static url = 'program/index'
 
-    static at = { $('.program-view').displayed }
+    static at = {
+        $('.program-view').displayed
+        println name().text()
+        println projectRows().size()
+        println projectRows().collect{it.grantId().text()}
+    }
 
     static content= {
         name {$('h2')}
@@ -71,6 +76,9 @@ class ProgramPage extends Page {
     /** Clicks the grant id link in the project table */
     void openProjectByGrantId(String grantId) {
         def project = waitFor 60, {
+            println name().text()
+            println projectRows().size()
+            println projectRows().collect{it.grantId().text()}
             projectRows.find{ it.grantId.text() == grantId}
         }
         project.openProject()
