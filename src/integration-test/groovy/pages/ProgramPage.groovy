@@ -20,16 +20,12 @@ class ProjectRow extends Module {
     }
 }
 
-@Slf4j
 class ProgramPage extends Page {
 
     static url = 'program/index'
 
     static at = {
         $('.program-view').displayed
-        log.info("Program name: " + name().text())
-        log.info("Rows containing projects in the program page: ")
-        log.info(projectRows().collect{it.grantId().text()})
     }
 
     static content= {
@@ -78,10 +74,8 @@ class ProgramPage extends Page {
     /** Clicks the grant id link in the project table */
     void openProjectByGrantId(String grantId) {
         def project = waitFor 60, {
-            log.info("Program name: "+name().text())
-            log.info("Number of project rows: "+projectRows().size())
-            log.info("Data in project rows: "+projectRows().collect{it.grantId().text()})
-            projectRows.find{ it.grantId.text() == grantId}
+
+            projectRows.find{ println it.grantId.text(); it.grantId.text() == grantId}
         }
         project.openProject()
     }

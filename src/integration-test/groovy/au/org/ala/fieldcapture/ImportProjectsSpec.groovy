@@ -1,10 +1,12 @@
 package au.org.ala.fieldcapture
 
+import groovy.util.logging.Slf4j
 import pages.Organisation
 import pages.ProgramPage
 import pages.ProjectImport
 import pages.RlpProjectPage
 
+@Slf4j
 class ImportProjectsSpec extends StubbedCasSpec {
 
     def setup() {
@@ -126,6 +128,21 @@ class ImportProjectsSpec extends StubbedCasSpec {
 
         when: "We navigate to the program page to find the new imported project, then open it"
         to ProgramPage, 'configurable_meri_plan'
+        def project2 = waitFor 60, {
+            log.warn("Program name: "+name().text())
+            log.warn("Number of project rows: "+projectRows().size())
+            log.warn("Data in project rows: "+projectRows().collect{it.grantId().text()})
+            println("Program name: "+name().text())
+            println("Number of project rows: "+projectRows().size())
+            println("Data in project rows: "+projectRows().collect{it.grantId().text()})
+            def project = projectRows.find{
+                println it.grantId().text()
+                it.grantId.text() == 'cep-1'
+            }
+            println project
+            project
+        }
+
         openProjectByGrantId('cep-1')
 
         then:
