@@ -70,7 +70,7 @@ class ProgramPage extends Page {
 
     /** Clicks the grant id link in the project table */
     void openProjectByGrantId(String grantId) {
-        def project = waitFor {
+        def project = waitFor 60, {
             projectRows.find{ it.grantId.text() == grantId}
         }
         project.openProject()
