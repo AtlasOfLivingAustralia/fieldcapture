@@ -128,28 +128,6 @@ class ImportProjectsSpec extends StubbedCasSpec {
 
         when: "We navigate to the program page to find the new imported project, then open it"
         to ProgramPage, 'configurable_meri_plan'
-        def project2 = waitFor 60, {
-            log.warn("Program name: "+name().text())
-            log.warn("Number of project rows: "+projectRows().size())
-            log.warn("Data in project rows: "+projectRows().collect{it.grantId().text()})
-            println("Program name: "+name().text())
-            println("Number of project rows: "+projectRows().size())
-            println("Grant IDs in project rows: "+projectRows().collect{it.grantId.text()})
-            println("Data in project rows: "+projectRows().collect{it.name.text()})
-
-            def project = projectRows.find{
-                println it.grantId().text()
-                println it.grantIdLink().text()
-                println "Displayed: "+it.grantIdLink().displayed
-                println "Inner text:"+it.grantIdLink().attr('innerText')
-                println "Text content:"+it.grantIdLink().attr('textContent')
-
-                it.grantId.text() == 'cep-1'
-            }
-            println project
-            project
-        }
-
         openProjectByGrantId('cep-1')
 
         then:

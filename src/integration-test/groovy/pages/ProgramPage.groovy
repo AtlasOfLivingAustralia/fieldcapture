@@ -76,12 +76,8 @@ class ProgramPage extends Page {
 
     /** Clicks the grant id link in the project table */
     void openProjectByGrantId(String grantId) {
-        // .text() has started returning an empty string, trying to make sure it's in the viewport before
-        // calling .text()
-        interact {
-            moveToElement(programBlogSection())
-        }
         def project = waitFor 60, {
+            // .text() is returning an empty string so we've switched to 'textContent"
             projectRows.find{it.grantIdLink.attr('textContent') == grantId}
         }
         project.openProject()
