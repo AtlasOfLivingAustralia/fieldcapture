@@ -82,7 +82,7 @@ class ProgramPage extends Page {
             moveToElement(programBlogSection())
         }
         def project = waitFor 60, {
-            projectRows.find{it.grantIdLink.text() == grantId}
+            projectRows.find{it.grantIdLink.attr('textContent') == grantId}
         }
         project.openProject()
     }
