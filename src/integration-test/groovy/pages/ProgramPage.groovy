@@ -17,9 +17,7 @@ class ProjectRow extends Module {
     }
 
     def openProject() {
-        interact {
-            moveToElement(grantIdLink())
-        }
+
         // Chrome in the CI environment suddenly decided the data in the table was not displayed, even
         // after scrolling, so this is a workaround.
         if (grantIdLink.displayed) {
