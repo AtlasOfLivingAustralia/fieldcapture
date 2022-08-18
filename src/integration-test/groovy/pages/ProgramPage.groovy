@@ -9,6 +9,7 @@ import pages.modules.subProgramContent
 class ProjectRow extends Module {
     static content = {
         grantId { $('td.grantId') }
+        grantIdLink { $('td.grantId a') }
         name { $('td.projectName') }
         description { $('td.description') }
         startDate { $('td.startDate') }
@@ -42,6 +43,7 @@ class ProgramPage extends Page {
         subProgramTabContent(required:false) {$("div#subProgramWrapper").moduleList(subProgramContent)}
         projectRows(required:false) { $('#projectOverviewList tbody tr').moduleList(ProjectRow) }
         projectTable { $('#projectOverviewList')}
+        programBlogSection(required: false) { $('div.program-blog') }
     }
 
     List grantIds() {
@@ -77,11 +79,10 @@ class ProgramPage extends Page {
         // .text() has started returning an empty string, trying to make sure it's in the viewport before
         // calling .text()
         interact {
-            moveToElement(projectTable())
+            moveToElement(programBlogSection())
         }
         def project = waitFor 60, {
-
-            projectRows.find{ println it.grantId.text(); it.grantId.text() == grantId}
+            projectRows.find{it.grantIdLink.text() == grantId}
         }
         project.openProject()
     }

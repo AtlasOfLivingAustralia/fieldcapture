@@ -139,6 +139,7 @@ class ImportProjectsSpec extends StubbedCasSpec {
 
             def project = projectRows.find{
                 println it.grantId().text()
+                println it.grantIdLink().text()
                 it.grantId.text() == 'cep-1'
             }
             println project
