@@ -80,7 +80,7 @@
                 projectDatesValidationUrl: "${createLink(controller:'project', action:'ajaxValidateProjectDates', id:project.projectId)}",
                 spinnerUrl: "${asset.assetPath(src:'loading.gif')}",
                 projectSitesUrl: "${createLink(action:'ajaxProjectSites', id:project.projectId)}",
-                useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.DEVELOPMENT},
+                useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.PRODUCTION},
                 meriPlanUploadUrl: "${createLink(controller:'project', action:'uploadMeriPlan', id:project.projectId)}",
                 leafletIconPath: "${assetPath(src:'leaflet-0.7.7/images')}",
                 approvedMeriPlanHistoryUrl: "${createLink(action:"approvedMeriPlanHistory", id:project.projectId)}",
