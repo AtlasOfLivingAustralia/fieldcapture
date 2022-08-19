@@ -228,6 +228,17 @@
             })();
 
         </script>
+
+        <!-- Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-STM6SLZYD7"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-STM6SLZYD7');
+        </script>
+
     </g:if>
 </body>
 </html>
