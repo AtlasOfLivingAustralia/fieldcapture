@@ -353,10 +353,10 @@ var ReportViewModel = function(report, config) {
         return report.category == "Outcomes Report 1";
     });
 
-    self.cancelledComment = ko.observable();
     $.each(report.statusChangeHistory, function(i, history) {
-        self.cancelledComment = history.comment
+        self.cancelledCommentText = history.comment
     });
+
     if (config.projectTargetsAndScoresUrl && report.publicationStatus == 'pendingApproval') {
         self.checkForOverDelivery();
     }
