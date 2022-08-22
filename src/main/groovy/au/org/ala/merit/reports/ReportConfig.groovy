@@ -61,6 +61,12 @@ class ReportConfig {
     /** Short description of this type of report */
     String description = null
 
+    /**
+     * A banner to display important information about a report. e.g. to inform users that reports are
+     * not currently available due to a planned redesign / modification to the report
+     */
+    String banner = null
+
     /** Multiple reports should be generated from this configuration if they fit into the owner's time constraints.
      * If this value is false, the single report will be aligned with the owners time constraints */
     boolean multiple = true

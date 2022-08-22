@@ -9,6 +9,11 @@
             <div class="report-category-description" data-bind="if:description">
                 <div data-bind="html:description.markdownToHtml()"></div>
             </div>
+            <div class="report-category-banner" data-bind="if:banner">
+                <div class="alert alert-banner">
+                    <div data-bind="html:banner.markdownToHtml()"></div>
+                </div>
+            </div>
 
             <div data-bind="template:{name:'reportTable', data:model}"></div>
         </div>
