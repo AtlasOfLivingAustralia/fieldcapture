@@ -43,6 +43,6 @@ describe("Tests for the ReportViewModel", function () {
             statusChangeHistory:[{comment:"test comment"}]
         };
         var viewModel = new ReportViewModel(report, config);
-        expect(viewModel.cancelledComment).toBe("test comment");
+        expect(viewModel.cancelledCommentText).toBe("test comment");
     });
 });

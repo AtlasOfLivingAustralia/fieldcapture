@@ -97,8 +97,8 @@
 </g:if>
 </script>
 <script id="cancelled" type="text/html">
-    <p><span class="badge p-1 text-white badge-danger">Report not required</span></p>
-    <span class="text-break" data-bind="text:cancelledComment"></span>
+    <p><span class="badge p-1 text-white badge-danger">Report not required
+    </span><fc:iconHelp dynamic-help="cancelledCommentText"></fc:iconHelp></p>
 </script>
 
 <script id="reportTable" type="text/html">
