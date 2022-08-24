@@ -9,6 +9,11 @@
             <div class="report-category-description" data-bind="if:description">
                 <div data-bind="html:description.markdownToHtml()"></div>
             </div>
+            <div class="report-category-banner" data-bind="if:banner">
+                <div class="alert alert-banner">
+                    <div data-bind="html:banner.markdownToHtml()"></div>
+                </div>
+            </div>
 
             <div data-bind="template:{name:'reportTable', data:model}"></div>
         </div>
@@ -20,7 +25,7 @@
 </div>
 
 <script id="notReportable" type="text/html">
-    <span class="badge badge-danger" data-bind="if:!report.editable">Report read only</span>
+    <span class="badge badge-danger" data-bind="if:!report.editable">Template being updated</span>
 <p data-bind="visible:report.dateAdjusted"><span class="badge p-1 text-white badge-danger">Report adjusted</span></p>
     <div data-bind="if:isCurrent()">
         <span><span class="badge p-1 text-white badge-info" data-bind="if:isCurrent()">Current reporting period</span>
@@ -40,7 +45,7 @@
 </script>
 
 <script id="notSubmitted" type="text/html">
- <p data-bind="if:!report.editable"><span class="badge badge-danger p-1">Report read only</span></p>
+ <p data-bind="if:!report.editable"><span class="badge badge-danger p-1">Template being updated</span></p>
     <p data-bind="visible:report.dateAdjusted"><span class="badge p-1 text-white badge-danger">Report adjusted</span></p>
     <p><span class="badge p-1 text-white badge-warning">Report not submitted</span></p>
 

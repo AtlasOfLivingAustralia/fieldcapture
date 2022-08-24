@@ -571,7 +571,7 @@ var CategorisedReportsViewModel = function(allReports, order, availableReports, 
             self.reportsByCategory.push({
                 title:category.category,
                 description:ko.observable(category.description).extend({markdown:true}),
-
+                banner:ko.observable(category.banner).extend({markdown:true}),
                 model:new ReportsViewModel(reports, undefined, availableReports, reportOwner, reportsOptions)
             });
         }
