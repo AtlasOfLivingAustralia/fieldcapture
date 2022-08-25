@@ -78,4 +78,19 @@ var ReportService = function(config) {
         message += '</ul>';
         return message;
     }
+
+    /** Builds the key used in local storage that indicates a report has been viewed */
+    function reportViewKey(reportId) {
+        var reportViewKeyPrefix = "report.viewed.";
+        return reportViewKeyPrefix+reportId;
+    }
+    /** Saves that a report has been viewed to local storage */
+    self.recordReportView = function(reportId) {
+        amplify.store.sessionStorage(reportViewKey(reportId), true);
+    }
+
+    /** Checks local storage to see if a report has been viewed in this session */
+    self.hasReportBeenViewed = function(reportId) {
+        return amplify.store.sessionStorage(reportViewKey(reportId));
+    }
 }

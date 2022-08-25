@@ -66,6 +66,7 @@ var ReportStatusChangeReasonViewModel = function(config) {
 var ReportViewModel = function(report, config) {
     $.extend(this, report);
     var self = this;
+    var reportService = new ReportService(config);
 
     self.description = report.description || report.name;
     self.fromDate = ko.observable(report.fromDate).extend({simpleDate:false});
@@ -203,7 +204,7 @@ var ReportViewModel = function(report, config) {
         var doApproval = function() {
             self.changeReportStatus(config.approveReportUrl, 'approve', 'Approving report...', 'Report approved.');
         }
-        if (self.overDelivered()) {
+        if (self.overDelivered() && !reportService.hasReportBeenViewed(report.reportId)) {
             bootbox.dialog({
                 title: 'Please confirm the report approval',
                 message: '<p>'+self.overDeliveryMessage()+'</p>',
@@ -378,7 +379,6 @@ var ReportViewModel = function(report, config) {
     self.overDelivered = ko.observable(false);
     self.checkForOverDelivery = function() {
         self.overDeliveryCheckInProgress(true);
-        var reportService = new ReportService(config);
         reportService.findOverDeliveredTargets(report.activityId).done(function(result) {
             if (result && result.length) {
                 self.overDelivered(true);
