@@ -126,7 +126,7 @@ if (!lists.baseURL) {
     lists.baseURL = "https://lists.ala.org.au"
 }
 if (!bie.baseURL) {
-    bie.baseURL = "https://bie.ala.org.au"
+    bie.baseURL = "https://bie-ws.ala.org.au"
 }
 if (!regions.baseURL) {
     regions.baseURL = 'http://regions.ala.org.au/regions/'
