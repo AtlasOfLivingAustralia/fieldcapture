@@ -57,7 +57,7 @@
         <div class="row mb-2">
             <div class="col-sm-12 pl-3 pr-3">
                 <div class="alert alert-danger report-readonly">
-                    <p class="text-dark">Reporting has been temporarily disabled for this form.</p>
+                    <p class="text-dark"><g:message code="report.status.readonly"/></p>
                 </div>
             </div>
         </div>
