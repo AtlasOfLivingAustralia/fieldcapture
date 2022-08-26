@@ -151,7 +151,8 @@
             performOverDeliveryCheck: ${printView ? 'false' : 'true'},
             projectTargetsAndScoresUrl: fcConfig.projectTargetsAndScoresUrl,
             projectViewUrl: fcConfig.projectViewUrl,
-            siteViewUrl: fcConfig.siteViewUrl
+            siteViewUrl: fcConfig.siteViewUrl,
+            reportId: '${report.reportId}'
         };
         var viewModel = new ActivityViewModel(
             activity,

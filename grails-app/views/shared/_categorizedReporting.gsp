@@ -93,7 +93,7 @@
     <g:if test="${isGrantManager || fc.userIsAlaOrFcAdmin()}">
 
     <span class="btn-group">
-        <button type="button" data-bind="click:approveReport" class="btn btn-sm mr-1 btn-success"><i
+        <button type="button" data-bind="disable:overDeliveryCheckInProgress,click:approveReport" class="btn btn-sm mr-1 btn-success"><i
                 class="fa fa-check icon-white"></i> Confirm</button>
         <button type="button" data-bind="click:rejectReport" class="btn btn-sm btn-danger"><i
                 class="fa fa-remove icon-white"></i> More Information Required</button>
