@@ -8,6 +8,7 @@ import org.junit.Rule
 import pages.ProjectIndex
 import pages.RlpProjectPage
 import pages.ReportPage
+import pages.ViewReportPage
 import pages.modules.ReportCategory
 import spock.lang.Stepwise
 
@@ -270,8 +271,6 @@ class RlpReportingSpec extends StubbedCasSpec {
 
         then:
         waitFor { hasBeenReloaded() }
-
-        then:
         projectReports.reports[0].isSubmitted()
 
         waitFor 20, {
@@ -650,6 +649,113 @@ class RlpReportingSpec extends StubbedCasSpec {
         projectReports.projectStartDate.empty == true
         projectReports.projectEndDate.empty == true
         projectReports.generateButton.empty == true
+    }
+
+    def "When a project target is overdelivered, MERIT will display warnings throughout the workflow"() {
+        setup:
+        String projectId = '1'
+        loginAsUser('1', browser)
+
+        when:
+        to RlpProjectPage, projectId
+        displayReportingTab()
+        projectReports.reports[3].edit()
+
+        then:
+        waitFor { at ReportPage }
+
+        when: "We complete the form, over-delivering on the target (Weed Distribution Survey)"
+        hideFloatingToolbar()
+        field('whsRequirementsMet').value('Met requirements')
+        field('variationSubmitted').value('No')
+        field('meriOrWorkOrderChangesRequired').value('No')
+        getFormSections().each {
+            // Mark all sections except the Weed Distribution Survey as not applicable
+            if (isOptional(it) && it != 'koRLP_-_Weed_distribution_survey') {
+                markAsNotApplicable(it)
+            }
+        }
+        def section = $('#koRLP_-_Weed_distribution_survey')
+        field("baselineOrIndicator", section).value("Baseline")
+        field("numberOfSurveysConducted", section).value(1)
+        field("dateRange", section).value("2018")
+        field("areaSurveyedHa", section).value("2000")
+        field("projectAssuranceDetails", section).value("Testing")
+        // This field is dynamically added after the area survey is entered (and focus lost) so we need to wait.
+        waitFor {
+            field("mappingNotAlignedReason", section).value("Mapped area simplifies more complex area/s where work was undertaken during this period")
+            println(field("mappingNotAlignedReason", section).value())
+            field("mappingNotAlignedReason", section).value() == "Mapped area simplifies more complex area/s where work was undertaken during this period"
+        }
+        field("invoicedNotActualReason", section).value("Work was undertaken over a greater area than will be invoiced for")
+        section.find("i.fa-remove").click()
+
+        restoreFloatingToolbar()
+        markAsComplete()
+        save()
+
+        then: "The over delivery warning should be displayed"
+        waitFor {
+            overDeliveryModal.displayed
+        }
+
+        when: "We close the warning and exit the report"
+        okBootbox()
+        exitReport()
+
+        and: "We submit the report"
+        waitFor { at RlpProjectPage }
+        displayReportingTab()
+        projectReports.reports[3].submit()
+        waitFor { projectReports.reportDeclaration.displayed }
+        waitFor 20, {
+            projectReports.acceptTerms()
+            projectReports.submitDeclaration()
+        }
+
+        then: "The report is submitted"
+        waitFor { hasBeenReloaded() }
+        projectReports.reports[0].isSubmitted()
+
+        when: "We login as a grant manager and try and approve the report"
+        logout(browser)
+        loginAsGrantManager(browser)
+        to RlpProjectPage, projectId
+        displayReportingTab()
+        projectReports.reports[3].approve()
+
+        then: "An over delivery warning will be displayed"
+        waitFor {
+            projectReports.overDeliveryModal.displayed
+        }
+
+        when: "We press view report"
+        okBootbox('.btn-info')
+
+        then:
+        waitFor {
+            at ViewReportPage
+        }
+
+        and:
+        waitFor {
+            overDeliveryModal.displayed
+        }
+
+        when:
+        okBootbox()
+        exitReport()
+
+        then:
+        waitFor { at RlpProjectPage }
+
+        when:
+        displayReportingTab()
+        projectReports.reports[3].approve()
+        waitFor {hasBeenReloaded()}
+
+        then:
+        projectReports.reports[3].isApproved()
     }
 
     def "A read only user will not be able to generate reports and change the project start/end dates " () {
