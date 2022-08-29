@@ -209,8 +209,8 @@
         }); // end document ready
 
     </script>
-<!-- current env = ${grails.util.Environment.getCurrent().name} -->
-    <g:if test="${grails.util.Environment.getCurrent().name =~ /test|prod/}">
+    <!-- current env = ${grails.util.Environment.getCurrent().name} -->
+    <g:if test="${grails.util.Environment.current == grails.util.Environment.PRODUCTION}">
         <script type="text/javascript">
 
             var _gaq = _gaq || [];
@@ -236,7 +236,7 @@
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
 
-            gtag('config', 'G-STM6SLZYD7');
+            gtag('config', 'G-R2MPF6GZK3');
         </script>
 
     </g:if>
