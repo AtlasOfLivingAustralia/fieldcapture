@@ -71,22 +71,23 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
         Thread.sleep(1000) // wait for the animation to finish
         $('.bootbox '+buttonSelector).each { ok ->
 
+            try {
+                if (ok.displayed) {
+                    ok.click()
+                }
 
-            waitFor 20, {
-                try {
-                    if (ok.displayed) {
-                        ok.click()
-                    }
-
-                }
-                catch (Exception e) {
-                    e.printStackTrace()
-                }
-                waitFor {
-                    $('.modal-backdrop').size() == 0
-                }
             }
-
+            catch (Exception e) {
+                e.printStackTrace()
+            }
+        }
+        Thread.sleep(1000)
+        // Dismissing bootbox modals is intermittently unreliable, so trying a javascript fallback.
+        if ($('.modal-backdrop')) {
+            js.exec('$(".bootbox '+buttonSelector+'").click();')
+            waitFor {
+                $('.modal-backdrop').size() == 0
+            }
         }
     }
 
