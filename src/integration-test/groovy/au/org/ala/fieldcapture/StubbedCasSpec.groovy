@@ -83,10 +83,10 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
         }
         Thread.sleep(1000)
         // Dismissing bootbox modals is intermittently unreliable, so trying a javascript fallback.
-        if ($('.modal-backdrop')) {
+        if ($('.modal-backdrop').displayed) {
             js.exec('$(".bootbox '+buttonSelector+'").click();')
             waitFor {
-                $('.modal-backdrop').size() == 0
+                !($('.modal-backdrop').displayed)
             }
         }
     }
