@@ -935,28 +935,17 @@ class ReportService {
     }
 
     /**
-     * Return the reports for the Management Unit
-     * @param managementUnitId
-     */
-    def getReportsForManagementUnit(String managementUnitId) {
-        webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl')+"managementUnit/${managementUnitId}/reports")
-    }
-
-    /**
      * Return the history of the report
-     * @param managementUnitId
+     * @param reportId
      */
-    def getReportingHistoryForManagementUnit(String managementUnitId) {
-        def reports = getReportsForManagementUnit(managementUnitId)
+    def getReportHistory(String reportId) {
+        def report = get(reportId)
 
         def history = []
-        reports.each { report ->
-
-            report.statusChangeHistory.each { change ->
-                def changingUser = authService.getUserForUserId(change.changedBy)
-                def displayName = changingUser?changingUser.displayName:'unknown'
-                history << [name:report.name, date:change.dateChanged, who:displayName, status:change.status, comment: change.comment, categories: change.categories?.join(', ')]
-            }
+        report.statusChangeHistory.each { change ->
+            def changingUser = authService.getUserForUserId(change.changedBy)
+            def displayName = changingUser?changingUser.displayName:'unknown'
+            history << [name:report.name, date:change.dateChanged, who:displayName, status:change.status, comment: change.comment, categories: change.categories?.join(', ')]
         }
         history.sort {it.dateChanged}
         history

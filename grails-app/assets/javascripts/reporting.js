@@ -428,9 +428,9 @@ var ReportViewModel = function(report, config) {
     };
 
     self.getHistory = function () {
-        var id = 'reportingHistory-' + config.muId;
+        var id = 'reportingHistory-' + report.reportId;
         var history = '<div style="float:right" id="' + id + '"><img src="' + fcConfig.imageLocation + '/ajax-saver.gif"></div>';
-        var url = fcConfig.managementReportsUrl + '/' + config.muId;
+        var url = fcConfig.reportsHistoryUrl + '/' + report.reportId;
         $.ajax({
             url: url,
             type: 'GET',
