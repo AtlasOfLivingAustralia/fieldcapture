@@ -127,6 +127,7 @@
             </th>
         </g:if>
         <th class="report-status">Status <fc:iconHelp html="html">Reports cannot be submitted until after the end of the reporting period. <br/> Reports must be marked as complete before they can be submitted. </fc:iconHelp><br/></th>
+        <th class="">Reporting History</th>
     </tr>
     </thead>
     <tbody data-bind="foreach:{ data:filteredReports, as:'report', afterAdd: attachHelp}">
@@ -177,7 +178,12 @@
                   data-bind="text:approvalStatus, css:{'label-success':approvalStatus=='Report approved', 'label-info':approvalStatus=='Report submitted', 'label-warning':approvalStatus == 'Report not submitted'}"></span>
 
         </td>
-
+        <td data-bind="click:toggleHistory">
+            <div class="layout-container">
+                <em data-bind="visible:!historyVisible()">Show history </em><i data-bind="visible:!historyVisible()" class="see-more fa fa-plus pointer"></i>
+                <em data-bind="visible:historyVisible()">Hide history </em><i data-bind="visible:historyVisible()" class="fa fa-minus see-more pointer"></i>
+            </div>
+        </td>
     </tr>
     </tbody>
     <tfoot>
@@ -197,7 +203,7 @@
     var addHocReportTypes = <fc:modelAsJavascript model="${adHocReportTypes}"/>;
     var reportOwner = fcConfig.reportOwner;
     var order = <fc:modelAsJavascript model="${reportOrder}"/>;
-    var config = _.extend(fcConfig, {adjustmentInstructionsSelector:'#adjustment-instructions'});
+    var config = _.extend(fcConfig, {adjustmentInstructionsSelector:'#adjustment-instructions',muId:"${mu?.managementUnitId}"});
     ko.applyBindings(new CategorisedReportsViewModel(reports, order, addHocReportTypes, reportOwner, config), document.getElementById('reporting-content'));
 });
 </asset:script>

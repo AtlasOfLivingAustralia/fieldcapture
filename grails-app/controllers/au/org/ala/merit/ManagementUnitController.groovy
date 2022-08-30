@@ -600,4 +600,9 @@ class ManagementUnitController {
         ]
         render response as JSON
     }
+
+    def reportingHistory(String id) {
+        def reportingHistory = reportService.getReportingHistoryForManagementUnit(id)
+        render view: '/report/_reportingHistory', model: [reportingHistory: reportingHistory]
+    }
 }

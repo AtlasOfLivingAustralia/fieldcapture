@@ -28,7 +28,8 @@
             documentUpdateUrl: "${createLink(controller: 'document', action:'documentUpdate')}",
             documentDeleteUrl: "${createLink(controller: 'document', action:'deleteDocument')}",
             imageLocation:"${assetPath(src:'/')}",
-            starManagementUnitUrl: "${createLink(controller: 'managementUnit', action: 'starManagementUnit')}"
+            starManagementUnitUrl: "${createLink(controller: 'managementUnit', action: 'starManagementUnit')}",
+            managementReportsUrl:"${createLink(controller: 'managementUnit', action:'reportingHistory')}"
         };
     </script>
     <asset:stylesheet src="common-bs4.css"/>

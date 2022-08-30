@@ -401,6 +401,51 @@ var ReportViewModel = function(report, config) {
     if (config.projectTargetsAndScoresUrl && report.publicationStatus == 'pendingApproval') {
         self.checkForOverDelivery();
     }
+
+    self.historyVisible = ko.observable(false);
+    var toggling = false;
+    self.toggleHistory = function (data, e) {
+        if (toggling) {
+            return;
+        }
+        toggling = true;
+
+        var tr = $(e.currentTarget).closest('tr');
+        var row = tr.closest('table').DataTable().row(tr);
+        if (row.child.isShown()) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+            self.historyVisible(false);
+        } else {
+            // Open this row
+            var data = self.getHistory() || '';
+
+            row.child(data).show();
+            tr.addClass('shown');
+        }
+        toggling = false;
+    };
+
+    self.getHistory = function () {
+        var id = 'reportingHistory-' + config.muId;
+        var history = '<div style="float:right" id="' + id + '"><img src="' + fcConfig.imageLocation + '/ajax-saver.gif"></div>';
+        var url = fcConfig.managementReportsUrl + '/' + config.muId;
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'html'
+        }).done(function (data) {
+            $('#' + id).html(data).slideDown();
+        }).fail(function (data) {
+            $('#' + id).html('<div float:right">There was an error retrieving the reporting history for this project.</div>');
+        }).always(function (data) {
+            self.historyVisible(true);
+        });
+
+
+        return history;
+    };
 };
 
 var ReportsViewModel = function(reports, projects, availableReports, reportOwner, config) {
@@ -575,7 +620,6 @@ var ReportsViewModel = function(reports, projects, availableReports, reportOwner
         };
     };
     self.newReport = new AdHocReportViewModel();
-
 };
 
 var CategorisedReportsViewModel = function(allReports, order, availableReports, reportOwner, config) {
