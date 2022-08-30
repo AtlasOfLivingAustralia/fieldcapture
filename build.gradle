@@ -83,9 +83,9 @@ dependencies {
     compile "org.grails.plugins:events"
     compile "org.grails.plugins:gsp"
     compile "org.grails.plugins:external-config:2.0.0"
-    compile "org.grails.plugins:ala-auth:3.2.3"
+    compile "org.grails.plugins:ala-auth:5.1.1"
     compile "org.grails.plugins:ala-admin-plugin:2.1"
-    runtime "org.grails.plugins:ala-bootstrap3:3.2.3"
+    runtime "org.grails.plugins:ala-bootstrap3:4.0.0"
     compile "au.org.ala:userdetails-service-client:1.5.0"
     compile "org.grails.plugins:ala-ws-plugin:2.0"
     compile 'org.grails.plugins:excel-export:2.1'
@@ -161,6 +161,7 @@ dependencies {
     testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
     testRuntime "org.gebish:geb-spock"
     testRuntime "net.sourceforge.nekohtml:nekohtml:1.9.22"
+    testCompile "org.pac4j:pac4j-jwt:5.4.3"
     testCompile "org.grails:grails-test-mixins:3.3.0"
     testCompile "org.grails:grails-gorm-testing-support"
     testCompile "org.grails:grails-web-testing-support"
@@ -172,7 +173,7 @@ dependencies {
     provided "io.methvin:directory-watcher:0.4.0"
 
     if (!Boolean.valueOf(inplace)) {
-        compile "org.grails.plugins:ecodata-client-plugin:4.0.5-SNAPSHOT"
+        compile "org.grails.plugins:ecodata-client-plugin:5.0.2"
     }
 }
 
@@ -201,6 +202,7 @@ tasks.withType(Test) {
     testLogging {
         events "passed", "skipped", "failed"
         exceptionFormat "full"
+        showStandardStreams true
     }
 }
 
@@ -259,8 +261,8 @@ assets {
     minifyCss = true
     maxThreads = 4 //useful for concurrent asset processing during build
     configOptions = [:] //useful for custom config on extension libraries
-    includes = []
-    excludes = ['**/*.less','**/build/hintrc.js', 'hintrc.unminified.js', '**/spec.hintrc.js', 'spec.hintrc.unminified.js'] //Example Exclude GLOB pattern
+    includes = ['webjars/**/images/*']
+    excludes = ['**/*.less','**/build/hintrc.js', 'hintrc.unminified.js', '**/spec.hintrc.js', 'spec.hintrc.unminified.js', '**/*hintrc*', '**/webjars/**'] //Example Exclude GLOB pattern
 }
 
 bootJar {

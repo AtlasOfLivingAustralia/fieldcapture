@@ -1,14 +1,14 @@
 package au.org.ala.merit
 
 import au.org.ala.cas.util.AuthenticationCookieUtils
-import au.org.ala.merit.SettingPageType
+import au.org.ala.web.AuthService
 import bootstrap.Attribute
 import grails.converters.JSON
+import grails.web.servlet.mvc.GrailsParameterMap
 import groovy.xml.MarkupBuilder
 import org.apache.commons.lang.WordUtils
 import org.grails.web.json.JSONArray
 import org.grails.web.json.JSONObject
-import grails.web.servlet.mvc.GrailsParameterMap
 
 class FCTagLib {
 
@@ -17,6 +17,7 @@ class FCTagLib {
     def commonService
     def userService
     def settingService
+    AuthService authService
 
     def textField = { attrs ->
         def outerClass = attrs.remove 'outerClass'
@@ -458,8 +459,13 @@ class FCTagLib {
     }
 
     def loginInNewWindow = { attr, body ->
-        def casLoginUrl = grailsApplication.config.getProperty('security.cas.loginUrl', String, "https://auth.ala.org.au/cas/login")
-        out << "<a href=\"${casLoginUrl}?service=${createLink(absolute: true, controller: 'home', action:'close')}\" target=\"fieldcapture-login\">${body}</a>"
+        String loginReturnToUrl = createLink(absolute: true, controller: 'home', action:'close')
+        String loginUrl = authService.loginUrl(loginReturnToUrl)
+        out << "<a href=\"${loginUrl}\" target=\"fieldcapture-login\">${body}</a>"
+    }
+
+    def loginUrl = {attrs, body ->
+        out << authService.loginUrl(attrs.loginReturnToUrl)
     }
 
     def userIsLoggedIn = { attr ->
@@ -972,10 +978,5 @@ class FCTagLib {
         List ids = attrs.externalIds?.findAll{it.idType == type}
 
         out << ids.collect{it.externalId}.join(',')
-    }
-
-    def hasExternalId = { Map attrs ->
-        String type = attrs.idType
-        
     }
 }

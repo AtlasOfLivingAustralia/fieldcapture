@@ -92,6 +92,7 @@
                 deleteDataSetUrl: "${createLink(controller:'dataSet', action:'delete', id:project.projectId)}",
                 viewDataSetUrl: "${createLink(controller:'dataSet', action:'view', id:project.projectId)}",
                 unlockActivityUrl:"${createLink(controller:'activity', action:'ajaxUnlock')}",
+                projectTargetsAndScoresUrl: "${createLink(controller:'project', action:'targetsAndScoresForActivity', id:project.projectId)}",
                 i18nURL: "${g.createLink(controller: 'home', action: 'i18n')}",
                 returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 
@@ -182,7 +183,7 @@
         <fc:tabContent tabs="${projectContent}"/>
     </div>
     <g:render template="/shared/timeoutMessage"
-              model="${[url: grailsApplication.config.getProperty('security.cas.loginUrl') + '?service=' + createLink(action: 'index', id: project.projectId, absolute: true)]}"/>
+              model="${[url:fc.loginUrl(loginReturnToUrl:createLink(action: 'index', id: project.projectId, absolute: true))]}"/>
     <g:render template="/shared/unsavedChanges" model="${[id: 'meriPlanUnsavedChanges', unsavedData: 'MERI Plan']}"/>
     <g:render template="/shared/unsavedChanges" model="${[id: 'risksUnsavedChanges', unsavedData: 'Risks & Threats']}"/>
 
@@ -267,7 +268,7 @@ var config = {
     wmsServerUrl: fcConfig.geoserverUrl,
     spinnerUrl: fcConfig.spinnerUrl,
     sitesPhotoPointsUrl:fcConfig.sitesPhotoPointsUrl,
-    googleBaseMapUrl: fcConfig.useGoogleBaseMap,
+    useGoogleBaseMap: fcConfig.useGoogleBaseMap && supportsGoogleMutant(),
     meriStorageKey:PROJECT_DETAILS_KEY,
     activityBasedReporting: ${Boolean.valueOf(projectContent.admin.config.activityBasedReporting)},
             minimumProjectEndDate: '${projectContent.admin.minimumProjectEndDate?:null}',
@@ -393,7 +394,7 @@ var config = {
                 };
                 if (config.useAlaMap) {
                     sitesTabOptions.mapFeatures = {};
-                    sitesTabOptions.useGoogleBaseMap = config.googleBaseMapUrl;
+                    sitesTabOptions.useGoogleBaseMap = config.useGoogleBaseMap;
                     var sitesList = $('#'+sitesTabOptions.bindingElementId);
                     sitesList.children().hide();
                     sitesList.append('<image class="sites-spinner" width="50" height="50" src="'+sitesTabOptions.spinnerUrl+'" alt="Loading"/>');

@@ -54,6 +54,40 @@
               },
               {
                 "dataType": "text",
+                "name": "sitesAvailable",
+                "constraints": [ "Yes", "No" ],
+                "validate": "required"
+              },
+              {
+                "dataType": "feature",
+                "name": "serviceMappedArea",
+                "behaviour": [
+                  {
+                    "condition": "sitesAvailable == \"Yes\"",
+                    "type": "enable"
+                  }
+                ]
+              },
+              {
+                "computed": {
+                  "expression": "$geom.areaHa(serviceMappedArea)"
+                },
+                "dataType": "number",
+                "decimalPlaces": 3,
+                "name": "serviceCalculatedAreaHa",
+                "units": "ha"
+              },
+              {
+                "computed": {
+                  "expression": "$geom.lengthKm(serviceMappedArea)"
+                },
+                "dataType": "number",
+                "decimalPlaces": 3,
+                "name": "serviceCalculatedLengthKm",
+                "units": "km"
+              },
+              {
+                "dataType": "text",
                 "name": "targetMeasure",
                 "description": "The output target measure to be adjusted."
               },
@@ -258,6 +292,51 @@
                 "title": "Activity"
               },
               {
+                "width": "5%",
+                "source": "sitesAvailable",
+                "type": "selectOne",
+                "title": "Is site data available for / applicable to this service?"
+              },
+              {
+                "width": "10%",
+                "type": "col",
+                "title": "Site/s where the service has been delivered",
+                "items": [
+                  {
+                    "source": "serviceMappedArea",
+                    "type": "feature",
+                    "width": "5%",
+                    "title": ""
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "readonly": true,
+                        "source": "serviceCalculatedAreaHa",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "readonly": true,
+                        "source": "serviceCalculatedLengthKm",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
                 "readonly": true,
                 "width": "15%",
                 "source": "targetMeasure",
@@ -273,7 +352,6 @@
                 "title": "Total to be delivered"
               },
               {
-                "readonly": true,
                 "width": "12%",
                 "source": "delivered",
                 "type": "text",
@@ -496,10 +574,6 @@
                   {
                     "source-path": "projectTarget",
                     "target": "projectTarget"
-                  },
-                  {
-                    "source-path": "result",
-                    "target": "delivered"
                   }
                 ],
                 "source-path": "targets",
@@ -513,9 +587,6 @@
                   "targetMeasure"
                 ],
                 "projectTarget": {
-                  "replaceExisting": true
-                },
-                "delivered": {
                   "replaceExisting": true
                 },
                 "sort": [
@@ -558,7 +629,7 @@
   "category": null,
   "status": "active",
   "gmsId": null,
-  "supportsSites": false,
+  "supportsSites": true,
   "supportsPhotoPoints": false,
   "minOptionalSectionsCompleted": 1
 }

@@ -110,3 +110,24 @@ function repairProjectAffectedByDateChangeBug(projectId, reportTypes, adminUserI
     }
 
 }
+
+/** Undoes an accidental status of "Not required" for a report. */
+function removeNotRequiredStatus(reportId, reason, adminUserId) {
+    var report = db.report.findOne({reportId:reportId});
+    report.publicationStatus = 'unpublished';
+    report.statusChangeHistory.push({
+            "changedBy" : adminUserId,
+            "comment" : reason,
+            "dateChanged" : ISODate(),
+            "status" : report.publicationStatus
+        });
+    db.report.save(report);
+    audit(report, report.reportId, 'au.org.ala.ecodata.Report', adminUserId);
+
+    if (report.activityId) {
+        var activity = db.activity.findOne({activityId:report.activityId});
+        activity.publicationStatus = 'unpublished';
+        db.activity.save(activity);
+        audit(activity, activity.activityId, 'au.org.ala.ecodata.Activity', adminUserId);
+    }
+}

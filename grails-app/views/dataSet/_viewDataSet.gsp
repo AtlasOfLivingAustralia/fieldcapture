@@ -12,7 +12,7 @@
         </div>
     </div>
     <div class="form-group row">
-        <label class="col-sm-5 col-form-label">2. Project ID</label>
+        <label class="col-sm-5 col-form-label">2. ${g.message(code:'label.merit.projectID')}</label>
         <div class="col-sm-7">
             <span>${project.grantId}</span>
         </div>

@@ -40,6 +40,31 @@ class UserService {
         auditBaseUrl = grailsApplication.config.getProperty('ecodata.baseUrl') + 'audit'
     }
 
+    ThreadLocal<UserDetails> backgroundUser = new ThreadLocal<UserDetails>()
+
+    /**
+     * This method is intended for use by scheduled jobs (statistics recalculation, risks and threats checks etc
+     * that need to call ecodata with a user in context.  It assigns the user to a ThreadLocal which the
+     * getUser() method checks before delegating to the auth service.
+     *
+     * @param user the user to put into context
+     * @param closure the context in which the supplied user will be avaliable via the getUser() method.
+     */
+    void withUser(UserDetails user, Closure closure) {
+        if (RequestContextHolder.getRequestAttributes() != null) {
+            throw new IllegalStateException("Cannot use this method within the context of a http request")
+        }
+
+        try {
+            backgroundUser.set(user)
+            closure()
+        }
+        finally {
+            backgroundUser.remove()
+        }
+
+    }
+
     String getCurrentUserDisplayName() {
         getUser()?.displayName?:""
     }
@@ -50,15 +75,17 @@ class UserService {
 
     UserDetails getUser() {
 
-        def user = null
+        def user = backgroundUser.get()
         // Attempting to call authService.userDetails outside of a HTTP request results in an exception
         // being thrown.  So if there is no HTTP request (as when running the scheduled job that regenerates the homepage statistics)
         // we just return null.
-        if (RequestContextHolder.currentRequestAttributes().request) {
-            def u = authService.userDetails()
+        if (!user) {
+            if (RequestContextHolder.currentRequestAttributes().request) {
+                def u = authService.userDetails()
 
-            if (u?.userId) {
-                user = new UserDetails(u.displayName, u.email, u.userId)
+                if (u?.userId) {
+                    user = new UserDetails(u.displayName, u.email, u.userId)
+                }
             }
         }
 
@@ -83,13 +110,29 @@ class UserService {
         doesUserHaveHubRole(RoleService.HUB_ADMIN_ROLE, userId)
     }
 
+    /**
+     * This method exists because an attempt to call authService.userInRole()
+     * without a GrailsWebRequest available throws an Exception.
+     * When we run scheduled tasks (e.g. to check for new risks and threats
+     * or the nightly home page statistics recalculation) we don't have a
+     * GrailsWebRequest.
+     */
+    private boolean userInRole(String role) {
+        boolean inRole = false
+        def user = backgroundUser.get()
+        if (!user) {
+            inRole = authService.userInRole(role)
+        }
+        inRole
+    }
+
     /** The ALA admin role is the only role that is checked against a CAS role */
     boolean userIsAlaAdmin(String userId = null) {
         String adminRole = grailsApplication.config.getProperty('security.cas.alaAdminRole')
         boolean isAdmin = false
         if (!userId || userId == getCurrentUserId()) {
             // Use the currently logged in user
-            isAdmin = authService.userInRole(adminRole)
+            isAdmin = userInRole(adminRole)
         }
         else {
             // Lookup the user role in user details
@@ -205,7 +248,7 @@ class UserService {
             throw new IllegalArgumentException("Role "+role+" not supported as a hub role")
         }
 
-        String ecodataAclAccessLevel = convertHubRoleToAccesLevel(role)
+        String ecodataAclAccessLevel = convertHubRoleToAccessLevel(role)
 
         HubSettings settings = SettingService.getHubConfig()
         userId = userId ?: getUser()?.userId
@@ -428,7 +471,7 @@ class UserService {
         return managementUnitRole && managementUnitRole.role == RoleService.GRANT_MANAGER_ROLE
     }
 
-    private Map getEntityRole(String userId, String entityId) {
+    Map getEntityRole(String userId, String entityId) {
         List userRoles = getUserRoles(userId)
         Map role =  userRoles.find{it.entityId == entityId}
         role
@@ -485,7 +528,7 @@ class UserService {
      * @return true if the activity can be edited.
      */
     boolean canUserEditActivity(String userId, String activityId) {
-        def userCanEdit
+        boolean userCanEdit = false
         if (userIsSiteAdmin()) {
             userCanEdit = true
         } else {
@@ -615,7 +658,7 @@ class UserService {
     }
 
     def addUserToHub(Map params) {
-        String ecodataAclAccessLevel = convertHubRoleToAccesLevel(params.role)
+        String ecodataAclAccessLevel = convertHubRoleToAccessLevel(params.role)
         Map param = [userId: params.userId,
                      entityId: params.entityId,
                      role: ecodataAclAccessLevel,
@@ -634,13 +677,13 @@ class UserService {
      * @param role the role to convert.
      * @return the accessLevel used to represent the supplied role
      */
-    private String convertHubRoleToAccesLevel(String role) {
+    private String convertHubRoleToAccessLevel(String role) {
         Map map = [siteAdmin: "admin", officer: "caseManager", siteReadOnly: "readOnly"]
         return map[role]
     }
 
     def removeHubUser(Map params) {
-        String ecodataAclAccessLevel = convertHubRoleToAccesLevel(params.role)
+        String ecodataAclAccessLevel = convertHubRoleToAccessLevel(params.role)
 
         Map param = [userId: params.userId, entityId: params.entityId, role: ecodataAclAccessLevel, expiryDate: params.expiryDate]
         Map response = webService.doPost("${grailsApplication.config.getProperty('ecodata.baseUrl')}permissions/removeUserWithRoleFromHub", param)

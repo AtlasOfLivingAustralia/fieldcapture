@@ -1,11 +1,12 @@
 package au.org.ala.fieldcapture
 
+import groovy.util.logging.Slf4j
 import pages.Organisation
 import pages.ProgramPage
-import pages.ProjectExplorer
 import pages.ProjectImport
 import pages.RlpProjectPage
 
+@Slf4j
 class ImportProjectsSpec extends StubbedCasSpec {
 
     def setup() {
@@ -98,7 +99,6 @@ class ImportProjectsSpec extends StubbedCasSpec {
         }
     }
 
-    /**  CG- temporarily disabling this test as it's failing in CI for non-obvious reasons.
     def "Grants hub projects can be imported into MERIT"() {
         // This is an extended test to capture the additional functionality required when importing projects
         // from the grants hub.
@@ -152,6 +152,4 @@ class ImportProjectsSpec extends StubbedCasSpec {
         adminContent.meriPlan.budget[0].budgetAmounts()*.value() == ["20000", "10000"]
 
     }
-
- */
 }

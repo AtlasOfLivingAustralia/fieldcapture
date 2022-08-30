@@ -40,23 +40,20 @@ class ManagementUnitController {
             managementUnitNotFound(id, mu)
         } else {
             def roles = roleService.getRoles()
-
-            List members = userService.getMembersOfManagementUnit(id).members ?: []
             def user = userService.getUser()
+            def userId = user?.userId
             if (user) {
                 user = user.properties
-                user.isAdmin = projectService.isUserAdminForProject(user.userId, id) ?: false
-                user.hasViewAccess = projectService.canUserViewProject(user.userId, id) ?: false
+                user.isAdmin = userService.isUserAdminForManagementUnit(userId, id)
+                user.isGrantManager = userService.isUserGrantManagerForManagementUnit(userId, id)
+                user.isEditor = userService.isUserEditorForManagementUnit(userId, id)
+                user.hasViewAccess = userService.userHasReadOnlyAccess(userId)
             }
-            def userId = user?.userId
-
-            Map muRole = members.find { it.userId == userId }
 
             Boolean isManagementUnitStarredByUser = false
             if (user && mu) {
                 isManagementUnitStarredByUser = userService.isManagementUnitStarredByUser(user?.userId, mu?.managementUnitId)?.isManagementUnitStarredByUser
             }
-
 
             def mapFeatures = mu.managementUnitSiteId?siteService.getSiteGeoJson(mu.managementUnitSiteId) : null
             if (mapFeatures)
@@ -65,19 +62,20 @@ class ManagementUnitController {
             [managementUnit     : mu,
              roles              : roles,
              user               : user,
-             isAdmin            : muRole?.role == RoleService.PROJECT_ADMIN_ROLE,
-             isGrantManager     : muRole?.role == RoleService.GRANT_MANAGER_ROLE,
-             content            : content(mu, muRole),
+             isAdmin            : user?.isAdmin,
+             isGrantManager     : user?.isGrantManager,
+             content            : content(mu, user),
              isManagementUnitStarredByUser: isManagementUnitStarredByUser
              ]
         }
     }
 
-    protected Map content(Map mu, Map userRole) {
+    protected Map content(Map mu, Map user) {
 
-        def hasAdminAccess = userService.userIsSiteAdmin() || userRole?.role == RoleService.PROJECT_ADMIN_ROLE || userService.userHasReadOnlyAccess()
+        def hasAdminOrSiteReadOnlyAccess = user?.isAdmin || userService.userIsSiteAdmin() || user?.hasViewAccess
 
-        boolean canViewNonPublicTabs = userService.canUserEditManagementUnit(userService.getUser()?.userId, mu.managementUnitId) || userService.userHasReadOnlyAccess()
+        // Same as above except also includes the editor role for the management unit
+        boolean canViewNonPublicTabs = hasAdminOrSiteReadOnlyAccess || user?.isEditor
 
         Map result = managementUnitService.getProjects(mu.managementUnitId)
         List projects = result?.projects ?: []
@@ -109,7 +107,7 @@ class ManagementUnitController {
         Map servicesWithScores = [:]
         if (managementUnitVisible) {
             // Produce aggregate dashboards for each of the configured program groups
-            servicesWithScores = managementUnitService.serviceScores(mu.managementUnitId, programsByCategory, !hasAdminAccess)
+            servicesWithScores = managementUnitService.serviceScores(mu.managementUnitId, programsByCategory, !hasAdminOrSiteReadOnlyAccess)
         }
 
         List displayedPrograms = []
@@ -131,7 +129,7 @@ class ManagementUnitController {
                     ],
          projects: [label: 'MU Reporting', visible: canViewNonPublicTabs, stopBinding: false, type:'tab', mu:mu, reports: mu.reports, reportOrder:reportOrder, hideDueDate:true, displayedPrograms:displayedPrograms],
          sites   : [label: 'MU Sites', visible: canViewNonPublicTabs, stopBinding: true, type:'tab'],
-         admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab', mu:mu]
+         admin   : [label: 'MU Admin', visible: hasAdminOrSiteReadOnlyAccess, type: 'tab', mu:mu]
         ]
 
     }

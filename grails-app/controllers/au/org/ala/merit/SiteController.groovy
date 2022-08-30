@@ -7,7 +7,6 @@ import org.apache.commons.io.IOUtils
 import org.apache.http.HttpStatus
 import org.springframework.web.multipart.MultipartFile
 import static grails.async.Promises.task
-import static au.org.ala.merit.ScheduledJobContext.withUser
 
 class SiteController {
 
@@ -340,7 +339,7 @@ class SiteController {
             session.uploadProgress = progress
             UserDetails user = userService.getUser()
             task {
-                withUser([userid: user.userId, name:user.userName, email:user.userName]) {
+                userService.withUser(user) {
                     try {
                         while (!progress.cancelling && progress.uploaded < progress.total) {
                             Map site = siteData.sites[progress.uploaded]

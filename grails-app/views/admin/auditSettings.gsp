@@ -19,7 +19,12 @@
         <g:render template="auditMessageList"></g:render>
         <asset:javascript src="base-bs4.js"/>
         <asset:javascript src="audit.js"/>
-
+        <asset:script>
+            $(document).ready(function() {
+                initialiseAuditTable();
+            });
+        </asset:script>
+        <asset:deferredScripts/>
     </body>
 </html>
 

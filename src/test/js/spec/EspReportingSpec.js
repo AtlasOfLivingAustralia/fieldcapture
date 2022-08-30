@@ -18,7 +18,7 @@ describe("The ESP reporting process works slightly differently to the normal MER
             name:"ESP test project",
             status:'active',
             plannedStartDate:'2017-01-31T13:00:00Z',
-            plannedEndDate:'2020-01-31T13:00:00Z',
+            plannedEndDate:'2023-01-31T13:00:00Z',
             custom: {
                 reportingPeriodStart:'2018-01-31T13:00:00Z',
                 reportindPeriodEnd:'2019-01-31T13:00:00Z'
@@ -39,27 +39,39 @@ describe("The ESP reporting process works slightly differently to the normal MER
                     publicationStatus:'published',
                     fromDate:'2019-01-31T13:00:00Z',
                     toDate:'2020-01-31T13:00:00Z'
-            }],
+            },
+                {
+                    name: 'Stage 3',
+                    publicationStatus:'not published',
+                    fromDate:'2020-01-31T13:00:00Z',
+                    toDate:'2021-01-31T13:00:00Z'
+                },
+                {
+                    name: 'Stage 4',
+                    publicationStatus:'not published',
+                    fromDate:'2021-01-31T13:00:00Z',
+                    toDate:'2022-01-31T13:00:00Z'
+                }],
             activities:[{
                 activityId:'a1',
                 type:"ESP PMU or Zone Report",
-                plannedStartDate:'2018-01-31T13:00:00Z',
-                plannedEndDate:'2019-01-31T13:00:00Z',
+                plannedStartDate:'2021-01-31T13:00:00Z',
+                plannedEndDate:'2022-01-31T13:00:00Z',
                 progress:'planned',
                 siteId:'site1',
                 documents:[]
             }, {
                 activityId:'a2',
                 type:"ESP Species",
-                plannedStartDate:'2018-01-31T13:00:00Z',
-                plannedEndDate:'2019-01-31T13:00:00Z',
+                plannedStartDate:'2021-01-31T13:00:00Z',
+                plannedEndDate:'2022-01-31T13:00:00Z',
                 progress:'planned',
                 documents:[]
             }, {
                 activityId:'a3',
                 type:"ESP Overview",
-                plannedStartDate:'2018-01-31T13:00:00Z',
-                plannedEndDate:'2019-01-31T13:00:00Z',
+                plannedStartDate:'2021-01-31T13:00:00Z',
+                plannedEndDate:'2022-01-31T13:00:00Z',
                 progress:'planned',
                 documents:[]
             }
@@ -74,8 +86,10 @@ describe("The ESP reporting process works slightly differently to the normal MER
         var viewModel = new SimplifiedReportingViewModel(project, config);
         expect(viewModel.canViewSubmissionReport()).toBeFalsy();
 
-        project.activities[0].progress = 'finished';
-        //project.reports[0].publicationStatus = 'published'
+        $.each(project.activities, function (i, activity) {
+                activity.progress = 'finished';
+        });
+        // project.reports[0].publicationStatus = 'published'
         viewModel = new SimplifiedReportingViewModel(project, config);
         expect(viewModel.canViewSubmissionReport()).toBeTruthy();
 
@@ -243,8 +257,32 @@ describe("The ESP reporting process works slightly differently to the normal MER
         var viewModel = new SimplifiedReportingViewModel(project, config);
 
         console.log(JSON.stringify(viewModel.stageToReport()));
-        expect(viewModel.stageToReport()).toEqual("Stage 1")
-        expect(viewModel.reportableStages().length).toEqual(1)
+        expect(viewModel.stageToReport()).toEqual("Stage 4")
+        expect(viewModel.reportableStages().length).toEqual(4)
+
+    });
+
+    it("will stage a report based from the selected reporting period", function() {
+
+        var project = buildEspProject();
+        project.financialYearSelected = "2019/2020"
+        var config = {showEmptyStages:true };
+        var viewModel = new SimplifiedReportingViewModel(project, config);
+
+        expect(viewModel.stageToReport()).toEqual("Stage 2")
+        expect(viewModel.reportableStages().length).toEqual(2)
+
+    });
+
+    it("will default and stage the oldest report that has not yet been approved", function() {
+
+        var project = buildEspProject();
+        project.financialYearSelected = ""
+        var config = {showEmptyStages:true };
+        var viewModel = new SimplifiedReportingViewModel(project, config);
+
+        expect(viewModel.stageToReport()).toEqual("Stage 4")
+        expect(viewModel.reportableStages().length).toEqual(4)
 
     });
 

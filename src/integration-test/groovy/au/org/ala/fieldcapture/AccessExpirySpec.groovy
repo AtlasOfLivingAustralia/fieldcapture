@@ -10,7 +10,7 @@ import javax.mail.Message
 
 class AccessExpirySpec extends StubbedCasSpec {
     @Rule
-    public final GreenMailRule greenMail = new GreenMailRule(ServerSetup.verbose(ServerSetupTest.SMTP))
+    public GreenMailRule greenMail = new GreenMailRule(ServerSetup.verbose(ServerSetupTest.SMTP))
 
     def setupSpec() {
         useDataSet('dataset1')
@@ -55,6 +55,7 @@ class AccessExpirySpec extends StubbedCasSpec {
         }
 
         when: "We re-display the project permissions table for our project"
+        loginAsAlaAdmin(browser)
         to ProjectIndex, 'activityProject'
         openAdminTab()
         admin.openProjectAccess()

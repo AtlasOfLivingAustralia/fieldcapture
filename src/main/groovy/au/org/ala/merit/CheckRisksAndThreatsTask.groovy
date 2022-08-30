@@ -1,10 +1,9 @@
 package au.org.ala.merit
 
+import grails.core.GrailsApplication
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled
-
-import static au.org.ala.merit.ScheduledJobContext.withUser
 
 /**
  * Task to be scheduled by the spring scheduler.
@@ -18,10 +17,18 @@ class CheckRisksAndThreatsTask {
     @Autowired
     SettingService settingService
 
+    @Autowired
+    UserService userService
+
+    @Autowired
+    GrailsApplication grailsApplication
+
     @Scheduled(cron="0 0 2 * * ?")
     void checkForRisksAndThreatsChanges() {
 
-        withUser([name:"risksAndThreatsTask"]) {
+        String systemEmail = grailsApplication.config.getProperty("fieldcapture.system.email.address")
+        UserDetails user = new UserDetails("risksAndThreatsChangesTask", systemEmail, "merit")
+        userService.withUser(user) {
             settingService.withDefaultHub {
                 log.info("Running scheduled risks and threats task")
                 risksService.checkAndSendEmail()

@@ -845,6 +845,7 @@ var AlaMapAdapter = function(map, options) {
         })
     };
 
+
     function highlightLayer(layer) {
         if (_.isFunction(layer.eachLayer)) { // Layers created from MultiPolygons & MultiPolyLines have nested layers
             layer.eachLayer(highlightLayer);
@@ -867,10 +868,7 @@ var AlaMapAdapter = function(map, options) {
                 }
             }
             else if (options.icon) {
-                var icon = options.icon;
-                icon.options.iconSize = [icon.options.iconSize[0] * 1.5, icon.options.iconSize[1] * 1.5];
-                icon.options.iconAnchor = [icon.options.iconAnchor[0] * 1.5, icon.options.iconAnchor[1] * 1.5];
-                layer.setIcon(icon);
+                layer.setIcon(createHighlightIcon(layer));
             }
         }
     }
@@ -894,10 +892,7 @@ var AlaMapAdapter = function(map, options) {
                 }
             }
             else if (layer.options && layer.options.icon) {
-                var icon = layer.options.icon;
-                icon.options.iconSize = [icon.options.iconSize[0] / 1.5, icon.options.iconSize[1] / 1.5];
-                icon.options.iconAnchor = [icon.options.iconAnchor[0] / 1.5, icon.options.iconAnchor[1] / 1.5];
-                layer.setIcon(icon);
+                layer.setIcon(createNormalIcon(layer));
             }
         }
     }
@@ -941,11 +936,11 @@ var createMap = function(options) {
             L.Icon.Default.imagePath = options.leafletIconPath;
         }
         if (options.useGoogleBaseMap) {
-            var googleLayer = new L.Google('ROADMAP', {maxZoom: 21, nativeMaxZoom: 21});
+            var googleLayer = L.gridLayer.googleMutant({maxZoom: 21, nativeMaxZoom: 21, type:'roadmap'});
             var otherLayers = {
                 Roadmap: googleLayer,
-                Hybrid: new L.Google('HYBRID', {maxZoom: 21, nativeMaxZoom: 21}),
-                Terrain: new L.Google('TERRAIN', {maxZoom: 21, nativeMaxZoom: 21})
+                Hybrid: L.gridLayer.googleMutant({maxZoom: 21, nativeMaxZoom: 21, type:'hybrid'}),
+                Terrain: L.gridLayer.googleMutant({maxZoom: 21, nativeMaxZoom: 21, type:'terrain'})
             };
 
             options.baseLayer = googleLayer;
@@ -1314,4 +1309,19 @@ function loadAndConfigureSitePhotoPoints(targetElementSelector) {
         nextEffect: 'fade',
         previousEffect: 'fade'
     });
+}
+
+function createHighlightIcon(layer) {
+    var options = layer.options;
+    var icon = options.icon;
+    icon.options.iconSize = [38, 95];
+    icon.options.iconAnchor = [22, 94];
+    return options.icon
+}
+function createNormalIcon(layer) {
+    var options = layer.options;
+    var icon = options.icon;
+    icon.options.iconSize = [19, 46];
+    icon.options.iconAnchor = [11, 47];
+    return options.icon
 }

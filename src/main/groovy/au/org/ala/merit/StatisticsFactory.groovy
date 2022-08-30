@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.Cache
 import org.springframework.scheduling.annotation.Scheduled
 
-import static au.org.ala.merit.ScheduledJobContext.withUser
-
 @Slf4j
 class StatisticsFactory {
 
@@ -23,6 +21,9 @@ class StatisticsFactory {
     ReportService reportService
     @Autowired
     SettingService settingService
+    @Autowired
+    UserService userService
+
     @Autowired
     GrailsCacheManager grailsCacheManager
     @Autowired
@@ -125,7 +126,9 @@ class StatisticsFactory {
     // Refresh the statistics every day after midnight
     @Scheduled(cron="0 3 0 * * *")
     public void reloadStatistics() {
-        withUser([name:"statisticsTask"]) {
+        String systemEmail = grailsApplication.config.getProperty("fieldcapture.system.email.address")
+        UserDetails user = new UserDetails("statisticsTask", systemEmail, "merit")
+        userService.withUser(user) {
             settingService.withDefaultHub {
 
                 log.info("Reloading homepage statistics...")

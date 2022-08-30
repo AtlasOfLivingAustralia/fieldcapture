@@ -3,6 +3,11 @@ package au.org.ala.fieldcapture
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer
 import geb.Browser
+import grails.converters.JSON
+import org.grails.web.converters.marshaller.json.MapMarshaller
+import org.openqa.selenium.StaleElementReferenceException
+import org.pac4j.jwt.config.signature.SignatureConfiguration
+import org.pac4j.jwt.profile.JwtGenerator
 import spock.lang.Shared
 import wiremock.com.github.jknack.handlebars.EscapingStrategy
 import wiremock.com.github.jknack.handlebars.Handlebars
@@ -26,7 +31,7 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
 
     @Shared WireMockServer wireMockServer
     def setupSpec() {
-
+        JSON.registerObjectMarshaller(new MapMarshaller())
         Handlebars handlebars = new Handlebars()
         handlebars.escapingStrategy = EscapingStrategy.NOOP
 
@@ -63,26 +68,45 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
     }
 
     /** Presses the OK button on a displayed bootbox modal */
-    def okBootbox() {
+    def okBootbox(buttonSelector = '.btn-primary') {
         Thread.sleep(1000) // wait for the animation to finish
-        $('.bootbox .btn-primary').each { ok ->
+        // The reason we are doing an "each" and catching exception is sometimes previous dialogs remain
+        // in scope despite being detached from the DOM and StaleElementException is thrown.
+        def backdrop = $('.modal-backdrop')
+        $('.bootbox '+buttonSelector).each { ok ->
 
-
-            waitFor 20, {
-                try {
-                    if (ok.displayed) {
-                        ok.click()
-                    }
-
-                }
-                catch (Exception e) {
-                    e.printStackTrace()
-                }
-                waitFor {
-                    $('.modal-backdrop').size() == 0
+            try {
+                if (ok.displayed) {
+                    ok.click()
                 }
             }
-
+            catch (Exception e) {
+                e.printStackTrace()
+            }
+        }
+        Thread.sleep(1000)
+        // Dismissing bootbox modals is intermittently unreliable, so trying a javascript fallback.
+        // The other issue here is one of the tests transitions from a page with bootbox up to a page which
+        // immediately displays a modal, so the Thread.sleep means we can actually be catching the dialog on the
+        // second page.  Hence why we get the element reference at the start.
+        try {
+            if (backdrop.displayed) {
+                js.exec('$(".bootbox ' + buttonSelector + '").click();')
+                Thread.sleep(1000)
+                waitFor {
+                    boolean backdropDisplayed
+                    try {
+                        backdropDisplayed = backdrop.displayed
+                    }
+                    catch (StaleElementReferenceException e) {
+                        backdropDisplayed = false
+                        // The backdrop was already detached from the DOM due to page transition
+                    }
+                    backdropDisplayed
+                }
+            }
+        }
+        catch (StaleElementReferenceException e) { // Do nothing, backdrop was already detached
         }
     }
 
@@ -114,8 +138,82 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
         login([userId:userId, email: "user${userId}@nowhere.com", firstName:"MERIT", lastName:"User ${userId}"], browser)
     }
 
-    /** Creates a wiremock configuration to stub a user login request and return the supplied user and role information */
+    private String loggedInUser = null
+
     def login(Map userDetails, Browser browser) {
+        if (loggedInUser != userDetails.userId) {
+            logout(browser)
+        }
+        oidcLogin(userDetails, browser)
+        loggedInUser = userDetails.userId
+    }
+
+    def oidcLogin(Map userDetails, Browser browser) {
+
+        // The test config isn't a normal grails config object (probably need to to into why) so getProperty doesn't work.
+        String clientId = getTestConfig().security.oidc.clientId
+        List roles = ["ROLE_USER"]
+        if (userDetails.role) {
+            roles << userDetails.role
+        }
+
+        Map idTokenClaims = [
+                at_hash:"KX-L2Fj6Z9ow-gOpYfehRA",
+                sub:userDetails.userId,
+                email_verified:true,
+                role:roles,
+                amr:"DelegatedClientAuthenticationHandler",
+                iss:"http://localhost:8018/cas/oidc",
+                preferred_username:userDetails.email,
+                given_name:userDetails.firstName,
+                family_name:userDetails.lastName,
+                client_id:clientId,
+                sid:"test_sid",
+                aud:clientId,
+                name:userDetails.firstName+" "+userDetails.lastName,
+                state:"maybe_this_matters",
+                auth_time:-1,
+                nbf:com.nimbusds.jwt.util.DateUtils.toSecondsSinceEpoch(new Date().minus(365)),
+                exp:com.nimbusds.jwt.util.DateUtils.toSecondsSinceEpoch(new Date().plus(365)),
+                iat:com.nimbusds.jwt.util.DateUtils.toSecondsSinceEpoch(new Date()),
+                jti:"id",
+                email:userDetails.email
+        ]
+        String idToken = new JwtGenerator(null).generate(idTokenClaims)
+        Map token = [:]
+        token.access_token = idToken
+        token.id_token = idToken
+        token.refresh_token = null
+        token.token_type = "bearer"
+        token.expires_in = 86400
+        token.scope = "user_defined email openid profile roles"
+
+        stubFor(post(urlPathEqualTo("/cas/oidc/oidcAccessToken"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody((token as JSON).toString())
+                        .withTransformers("response-template")))
+
+        Map profile = [
+                sub:userDetails.userId,
+                name:userDetails.firstName+" "+userDetails.lastName,
+                given_name:userDetails.firstName,
+                family_name:userDetails.lastName,
+                email:userDetails.email
+        ]
+        stubFor(get(urlPathEqualTo("/cas/oidc/oidcProfile"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody((profile as JSON).toString())
+                ))
+
+        browser.go "${getConfig().baseUrl}login"
+    }
+
+    /** Creates a wiremock configuration to stub a user login request and return the supplied user and role information */
+    def casLogin(Map userDetails, Browser browser) {
 
         String email = "fc-te@outlook.com"
 

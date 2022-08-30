@@ -8,7 +8,7 @@ createProject({name:'project 1', projectId:"project_1", programId:'program_1',ma
     outputTargets:[
         {"outputLabel":"Weed Treatment Details",
             "scoreName":"areaTreatedHa",
-            "target":"10",
+            "target":NumberDecimal("10"),
             "unit":"Ha",
             "scoreLabel":"Total new area treated for weeds (Ha)",
             "scoreId":"score_1"
@@ -20,7 +20,7 @@ createProject({name:'project 2', projectId:"project_2", programId:'program_2',ma
     outputTargets:[
         {"outputLabel":"Weed Treatment Details",
             "scoreName":"areaTreatedHa",
-            "target":"10",
+            "target":NumberDecimal("10"),
             "unit":"Ha",
             "scoreLabel":"Total new area treated for weeds (Ha)",
             "scoreId":"score_1"
@@ -31,7 +31,7 @@ createProject({name:'project 3', projectId:"project_3", programId:'program_3',ma
     outputTargets:[
         {"outputLabel":"Weed Treatment Details",
             "scoreName":"areaTreatedHa",
-            "target":"10","unit":"Ha",
+            "target":NumberDecimal("10"),"unit":"Ha",
             "scoreLabel":"Total new area treated for weeds (Ha)",
             "scoreId":"score_1"
         }
@@ -43,7 +43,7 @@ createProject({name:'project 4', projectId:"project_4", programId:'program_1',ma
     planStatus: "approved",
     outputTargets:[
         {"outputLabel":"Pest Management Details",
-            "target":"600",
+            "target":NumberDecimal("600"),
             "scoreLabel":"Area covered (Ha) by pest treatment actions",
             "scoreId":"score_4",
             "scoreName":"totalAreaTreatedHa",
@@ -177,7 +177,7 @@ createProject({name:'project 5', projectId:"project_5", programId:'program_1',ma
     planStatus: "approved",
     outputTargets:[
         {"outputLabel":"Pest Management Details",
-            "target":"600",
+            "target":NumberDecimal("600"),
             "scoreLabel":"Area covered (Ha) by pest treatment actions",
             "scoreId":"score_4",
             "scoreName":"totalAreaTreatedHa",
@@ -311,7 +311,7 @@ createProject({name:'project 6', projectId:"project_6", programId:'program_1',ma
     planStatus: "approved",
     outputTargets:[
         {"outputLabel":"Pest Management Details",
-            "target":"600",
+            "target":NumberDecimal("600"),
             "scoreLabel":"Area covered (Ha) by pest treatment actions",
             "scoreName":"totalAreaTreatedHa",
             "unit":"Ha",
@@ -536,7 +536,7 @@ createProject({name:'General Projects', projectId:"project_10", programId:'progr
     outputTargets:[
         {"outputLabel":"Weed Treatment Details",
             "scoreName":"areaTreatedHa",
-            "target":"10",
+            "target":NumberDecimal("10"),
             "unit":"Ha",
             "scoreLabel":"Total new area treated for weeds (Ha)",
             "scoreId":"score_1"
@@ -546,98 +546,98 @@ createProject({name:'General Projects', projectId:"project_10", programId:'progr
             "periodTargets" : [
                 {
                     "period" : "2018/2019",
-                    "target" : 0
+                    "target" : NumberDecimal("0")
                 },
                 {
                     "period" : "2019/2020",
-                    "target" : 10
+                    "target" : NumberDecimal("10")
                 },
                 {
                     "period" : "2020/2021",
-                    "target" : 0
+                    "target" : NumberDecimal("0")
                 },
                 {
                     "period" : "2021/2022",
-                    "target" : 0
+                    "target" : NumberDecimal("0")
                 },
                 {
                     "period" : "2022/2023",
-                    "target" : 0
+                    "target" : NumberDecimal("0")
                 },
                 {
                     "period" : "2023/2024",
-                    "target" : 0
+                    "target" : NumberDecimal("0")
                 },
                 {
                     "period" : "2024/2025",
-                    "target" : 0
+                    "target" : NumberDecimal("0")
                 },
                 {
                     "period" : "2025/2026",
-                    "target" : 0
+                    "target" : NumberDecimal("0")
                 }
             ],
-            "target" : 10
+            "target" : NumberDecimal("10")
         },
         {
             "scoreId" : "score_43",
             "periodTargets" : [
                 {
                     "period" : "2017/2018",
-                    "target" : 2
+                    "target" : NumberDecimal("2")
                 },
                 {
                     "period" : "2018/2019",
-                    "target" : 3
+                    "target" : NumberDecimal("3")
                 },
                 {
                     "period" : "2019/2020",
-                    "target" : 2
+                    "target" : NumberDecimal("2")
                 },
                 {
                     "period" : "2020/2021",
-                    "target" : 1
+                    "target" : NumberDecimal("1")
                 },
                 {
                     "period" : "2021/2022",
-                    "target" : 0
+                    "target" : NumberDecimal("0")
                 },
                 {
                     "period" : "2022/2023",
-                    "target" : 0
+                    "target" : NumberDecimal("0")
                 }
             ],
-            "target" : 8
+            "target" :  NumberDecimal(8)
         },
         {
             "scoreId" : "score_42",
             "periodTargets" : [
                 {
                     "period" : "2017/2018",
-                    "target" : 0
+                    "target" : NumberDecimal("0")
                 },
                 {
                     "period" : "2018/2019",
-                    "target" : 2
+                    "target" : NumberDecimal("2")
                 },
                 {
                     "period" : "2019/2020",
-                    "target" : 6
+                    "target" : NumberDecimal("6")
                 },
                 {
                     "period" : "2020/2021",
-                    "target" : 0
+                    "target" : NumberDecimal("0")
                 },
                 {
                     "period" : "2021/2022",
-                    "target" : 0
+                    "target" : NumberDecimal("0")
                 },
                 {
                     "period" : "2022/2023",
-                    "target" : 0
+                    "target" : NumberDecimal("0")
                 }
             ],
-            "target" : 8
+            "target" : NumberDecimal("8")
         }
     ]
 });

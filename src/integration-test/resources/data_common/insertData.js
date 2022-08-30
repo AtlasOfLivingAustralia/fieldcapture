@@ -202,7 +202,7 @@ function loadActivityForms() {
 function assign(src, des){
     for(var prop in src){
         if(src.hasOwnProperty(prop)){
-            if(src[prop] && isObject(src[prop]) && !(src[prop] instanceof Date)) {
+            if(src[prop] && isObject(src[prop]) && !(src[prop] instanceof Date) && !(src[prop] instanceof NumberDecimal)) {
                 if ( Array.isArray(src[prop]))
                     des[prop] = []
                 else

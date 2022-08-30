@@ -47,7 +47,7 @@ class ReportActivityFilteringSpec extends StubbedCasSpec {
         adminContent.projectSettings.regenerateReports()
 
         then:
-        waitFor { at RlpProjectPage }
+        waitFor { hasBeenReloaded() }
 
         when:
         displayReportingTab()

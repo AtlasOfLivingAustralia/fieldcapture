@@ -30,6 +30,7 @@
         readonly:true,
         useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.PRODUCTION},
         prepopUrlPrefix:"${grailsApplication.config.getProperty('grails.serverURL')}",
+        projectTargetsAndScoresUrl: "${createLink(controller:'project', action:'targetsAndScoresForActivity', id:activity.projectId, params:[activityId:activity.activityId])}",
         returnTo: "${returnTo}"
         },
         here = document.location.href;
@@ -52,6 +53,15 @@
         </div>
 
     </g:if>
+    <g:if test="${au.org.ala.merit.Status.isReadOnly(report.status)}">
+        <div class="row mb-2">
+            <div class="col-sm-12 pl-3 pr-3">
+                <div class="alert alert-danger report-readonly">
+                    <p class="text-dark"><g:message code="report.status.readonly"/></p>
+                </div>
+            </div>
+        </div>
+    </g:if>
     <div id="koActivityMainBlock">
         <g:if test="${!printView}">
             <section aria-labelledby="breadcrumb">
@@ -65,7 +75,6 @@
         <g:render template="/output/mapInDialogViewTemplate" plugin="ecodata-client-plugin"/>
 
         <g:render template="${reportHeaderTemplate}"/>
-
     </div>
 <!-- ko stopBinding: true -->
     <g:each in="${metaModel?.outputs}" var="outputName">
@@ -138,12 +147,21 @@
         var metaModel = <fc:modelAsJavascript model="${metaModel}" default="{}"/>
         var activity = <fc:modelAsJavascript model="${activity}" default="{}"/>
         var site = ${site?.encodeAsJSON() ?: 'null' };
+        var options = {
+            performOverDeliveryCheck: ${printView ? 'false' : 'true'},
+            projectTargetsAndScoresUrl: fcConfig.projectTargetsAndScoresUrl,
+            projectViewUrl: fcConfig.projectViewUrl,
+            siteViewUrl: fcConfig.siteViewUrl,
+            reportId: '${report.reportId}'
+        };
         var viewModel = new ActivityViewModel(
             activity,
             site,
             fcConfig.project,
             metaModel,
-            ${themes ?: 'null'});
+            ${themes ?: 'null'},
+            options
+        );
 
         ko.applyBindings(viewModel);
         if (metaModel && metaModel.supportsSites) {

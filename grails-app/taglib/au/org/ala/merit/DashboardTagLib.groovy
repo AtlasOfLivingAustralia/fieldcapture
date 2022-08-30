@@ -8,7 +8,6 @@ import org.grails.plugins.google.visualization.GoogleVisualization
 class DashboardTagLib {
     static namespace = "fc"
 
-    private static final int PERCENT_OVER_LIMIT = 200
     /**
      * Expects a single attribute with name "score" containing the result from an aggregation.
      */
@@ -120,12 +119,11 @@ class DashboardTagLib {
         def result = score.result?.result ?: 0
         def percentComplete = result / target * 100
 
-        String progressBarClass = (percentComplete >= PERCENT_OVER_LIMIT) ? "bar progress-bar bg-overdelivered" : "bar progress-bar"
-        String badgeClass = (percentComplete >= PERCENT_OVER_LIMIT) ? "badge badge-overdelivered" : ""
+        String progressBarClass = (score.overDelivered) ? "bar progress-bar bg-overdelivered" : "bar progress-bar"
 
         out << "<strong class='helpText'>${score.label}${helpText(score, attrs)}</strong>"
-        if (percentComplete >= PERCENT_OVER_LIMIT) {
-            out << " <span class='${badgeClass}'> Target overdelivered</span>"
+        if (score.overDelivered) {
+            out << " <span class='badge badge-overdelivered'> Target overdelivered</span>"
         }
 
         percentComplete = Math.min(100, percentComplete)

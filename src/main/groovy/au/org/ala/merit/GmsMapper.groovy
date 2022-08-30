@@ -69,6 +69,7 @@ class GmsMapper {
             CONTRACT_START_DT:[name:'contractStartDate', type:'date'],
             CONTRACT_END_DT:[name:'contractEndDate', type:'date'],
             ORDER_NO: [name: 'externalIds', type:'externalId',description:'The SAP Internal Order Number for this project', multipleColumnsSupported: true, idType:'INTERNAL_ORDER_NUMBER'],
+            TECH_ONE_ID: [name: 'externalIds', type:'externalId', 'description':'The Tech One system ID for this project', multipleColumnsSupported: true, idType:'TECH_ONE_CODE'],
             WORK_ORDER_ID:[name:'externalIds', type:'externalId', multipleColumnsSupported: true, idType:'WORK_ORDER'],
             FUNDING:[name:'funding', type:'decimal',description:'Total funding for this project (displayed on project overview)'],
             AUTHORISEDP_EMAIL:[name:'adminEmail', type:'email', description:'This user will be added as an admin to the project'],

@@ -185,34 +185,90 @@
       "optional": true,
       "optionalQuestionText": null,
       "template": {
-        "title": "Collecting or synthesising baseline data",
+        "title": "Synthesising and finalising baseline data",
         "modelName": "RLP - Baseline data",
         "dataModel": [
           {
-            "dataType": "number",
-            "name": "numberBaselineDataSets",
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "comments",
-            "validate": "required,maxSize[500]",
-            "description": "Please list the multiple data sets collected and/or synthesised."
-          },
-          {
-            "dataType": "text",
-            "name": "projectAssuranceDetails"
-          },
-          {
-            "dataType": "list",
-            "name": "assuranceDocuments",
             "columns": [
               {
-                "dataType": "document",
-                "name": "attachments",
-                "description": "Please attach any Evidence of Service Delivery here"
+                "dataType": "list",
+                "description": "",
+                "name": "baselineData",
+                "columns": [
+                  {
+                    "name": "baselineName",
+                    "dataType": "text",
+                    "description": "Select the relevant Project Baseline as listed in the MERI Plan.",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "baseline",
+                      "valueProperty": "method",
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "context-path": "owner.custom.details.baseline.rows"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "name": "focus",
+                    "dataType": "text",
+                    "validate": "required"
+                  }
+                ]
+              },
+              {
+                "dataType": "list",
+                "description": "",
+                "name": "dataSets",
+                "columns": [
+                  {
+                    "name": "dataSetName",
+                    "dataType": "text",
+                    "description": "This section will require the Data Set Name so the Metadata fields in the Data Set Summary tab should be filled out sooner than the Outcome Reporting requirement.",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "name",
+                      "valueProperty": "dataSetId",
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "context-path": "owner.custom.dataSets"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "name": "focus",
+                    "dataType": "text",
+                    "validate": "required"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "baselineDescription",
+                "validate": "required,maxSize[500]"
+              },
+              {
+                "dataType": "text",
+                "name": "projectAssuranceDetails"
+              },
+              {
+                "dataType": "list",
+                "name": "assuranceDocuments",
+                "columns": [
+                  {
+                    "dataType": "document",
+                    "name": "attachments",
+                    "description": "Please attach any Evidence of Service Delivery here"
+                  }
+                ]
               }
-            ]
+            ],
+            "dataType": "list",
+            "name": "weedDistributionSurveySites"
           }
         ],
         "viewModel": [
@@ -222,60 +278,99 @@
                 "type": "row",
                 "items": [
                   {
-                    "source": "numberBaselineDataSets",
-                    "preLabel": "Number of baseline data sets collected and/or synthesised",
-                    "type": "number",
-                    "css": "span4"
+                    "type": "literal",
+                    "source": "<p><b>Tell us how many types of data sets you synthesised and finalised.</b></p>"
+                  }
+                ]
+              },
+              {
+                "addRowText": "Add Section",
+                "userAddedRows": true,
+                "source": "weedDistributionSurveySites",
+                "type": "repeat",
+                "items": [
+                  {
+                    "type": "table",
+                    "source": "baselineData",
+                    "userAddedRows": false,
+                    "disableTableDownload": true,
+                    "disableTableUpload": true,
+                    "columns": [
+                      {
+                        "source": "baselineName",
+                        "type": "selectOne",
+                        "title": "Which Project Baseline are you reporting on?"
+                      }
+                    ]
                   },
                   {
-                    "source": "comments",
-                    "preLabel": "Comments",
-                    "type": "textarea",
-                    "rows": 4,
-                    "css": "span8"
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
+                    "type": "table",
+                    "source": "dataSets",
+                    "userAddedRows": true,
+                    "disableTableDownload": true,
+                    "disableTableUpload": true,
+                    "columns": [
+                      {
+                        "source": "dataSetName",
+                        "type": "selectOne",
+                        "title": "What Dataset supports this Project Baseline?"
+                      }
+                    ]
+                  },
                   {
-                    "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all <u>Environment</u> projects but optional for Agriculture projects. This field identifies what evidence you have available for this service and where the evidence is stored. This helps the Department and Service Providers during future assurance activities. Refer to the <a href=\"http://nrm.gov.au/publications/rlp-merit-user-guide\" target=\"_evidence\">Evidence Guide</a> for details of the types of acceptable evidence."
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
+                    "type": "row",
+                    "items": [
+                      {
+                        "type": "literal",
+                        "source": "<p><b>Briefly describe the baseline you have established under this service.</b></p>"
+                      }
+                    ]
+                  },
                   {
-                    "preLabel": "",
-                    "source": "projectAssuranceDetails",
-                    "type": "textarea",
-                    "rows": 4,
-                    "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "",
+                        "source": "baselineDescription",
+                        "type": "textarea",
+                        "rows": 4,
+                        "placeholder": ""
+                      }
+                    ]
+                  },
                   {
-                    "type": "literal",
-                    "source": "<p><b>Evidence of Service Delivery</b></p>This field is mandatory for all <u>Agriculture</u> projects as part of the invoicing process, as well as any environment projects where you have been notified as undergoing an <u>audit or quarterly assurance check</u>. The field allows you to attach evidence against a specific service."
-                  }
-                ]
-              },
-              {
-                "type": "table",
-                "source": "assuranceDocuments",
-                "userAddedRows": true,
-                "disableTableUpload": true,
-                "columns": [
+                    "type": "row",
+                    "items": [
+                      {
+                        "type": "literal",
+                        "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects but optional for Agriculture projects. This field identifies what evidence you have available for this service and where the evidence is stored. This helps the Department and Service Providers during future assurance activities. Refer to the <a href=\"http://nrm.gov.au/publications/rlp-merit-user-guide\" target=\"_evidence\">Evidence Guide</a> for details of the types of acceptable evidence."
+                      }
+                    ]
+                  },
                   {
-                    "title": "Attached documents",
-                    "source": "attachments",
-                    "type": "document"
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "",
+                        "source": "projectAssuranceDetails",
+                        "type": "textarea",
+                        "rows": 4,
+                        "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table",
+                    "source": "assuranceDocuments",
+                    "userAddedRows": true,
+                    "disableTableUpload": true,
+                    "columns": [
+                      {
+                        "title": "Attached documents",
+                        "source": "attachments",
+                        "type": "document"
+                      }
+                    ]
                   }
                 ]
               }
