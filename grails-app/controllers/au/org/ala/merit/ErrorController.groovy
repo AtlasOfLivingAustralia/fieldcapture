@@ -1,6 +1,8 @@
 package au.org.ala.merit
 
+import groovy.util.logging.Slf4j
 
+@Slf4j
 class ErrorController {
 
     def settingService, cookieService
@@ -19,7 +21,13 @@ class ErrorController {
      * case of a 404 error, the hub may not be available for the current request).
      */
     private void loadRecentHub() {
-        def hub = cookieService.getCookie(SettingService.LAST_ACCESSED_HUB)
-        settingService.loadHubConfig(hub)
+        try {
+
+            def hub = cookieService.getCookie(SettingService.LAST_ACCESSED_HUB)
+            settingService.loadHubConfig(hub)
+        }
+        catch(Throwable t) {
+            log.error("An error occured during error processing", t)
+        }
     }
 }
