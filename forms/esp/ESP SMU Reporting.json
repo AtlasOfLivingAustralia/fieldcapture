@@ -61,7 +61,7 @@
       "collapsedByDefault": false,
       "modelName": null,
       "name": "ESP Livestock Grazing Management",
-      "optional": true,
+      "optional": false,
       "optionalQuestionText": "Not an agreed management action under my funding agreement",
       "template": {
         "dataModel": [
@@ -895,7 +895,7 @@
       "collapsedByDefault": false,
       "modelName": null,
       "name": "ESP Native herbivore management",
-      "optional": true,
+      "optional": false,
       "optionalQuestionText": "Not an agreed management action under my funding agreement",
       "template": {
         "dataModel": [
@@ -1189,7 +1189,7 @@
       "collapsedByDefault": false,
       "modelName": null,
       "name": "ESP Feral animal management",
-      "optional": true,
+      "optional": false,
       "optionalQuestionText": "Not an agreed management action under my funding agreement",
       "template": {
         "dataModel": [
@@ -1491,7 +1491,7 @@
       "collapsedByDefault": false,
       "modelName": null,
       "name": "ESP Weed management",
-      "optional": true,
+      "optional": false,
       "optionalQuestionText": "Not an agreed management action under my funding agreement",
       "template": {
         "dataModel": [
@@ -2416,7 +2416,7 @@
       "collapsedByDefault": false,
       "modelName": null,
       "name": "ESP Regeneration",
-      "optional": true,
+      "optional": false,
       "optionalQuestionText": "Not an agreed management action under my funding agreement",
       "template": {
         "dataModel": [
@@ -2665,7 +2665,7 @@
       "collapsedByDefault": false,
       "modelName": null,
       "name": "ESP Restoration of Habitat Features",
-      "optional": true,
+      "optional": false,
       "optionalQuestionText": "Not an agreed management action under my funding agreement",
       "template": {
         "dataModel": [
