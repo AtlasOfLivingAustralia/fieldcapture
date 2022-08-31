@@ -209,8 +209,8 @@
         }); // end document ready
 
     </script>
-<!-- current env = ${grails.util.Environment.getCurrent().name} -->
-    <g:if test="${grails.util.Environment.getCurrent().name =~ /test|prod/}">
+    <!-- current env = ${grails.util.Environment.getCurrent().name} -->
+    <g:if test="${grails.util.Environment.current == grails.util.Environment.PRODUCTION}">
         <script type="text/javascript">
 
             var _gaq = _gaq || [];
@@ -228,6 +228,17 @@
             })();
 
         </script>
+
+        <!-- Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-STM6SLZYD7"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-R2MPF6GZK3');
+        </script>
+
     </g:if>
 </body>
 </html>
