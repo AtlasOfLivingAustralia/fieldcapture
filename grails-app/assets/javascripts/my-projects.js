@@ -1,7 +1,9 @@
+//= require reportService.js
 
 var ProjectReportsViewModel = function (project) {
 
     var self = this;
+    var reportService = new ReportService({});
 
     self.projectId = project.projectId;
     self.organisationId = project.orgIdSvcProvider || project.organisationId;
@@ -110,27 +112,6 @@ var ProjectReportsViewModel = function (project) {
 
     self.currentReport = currentReport;
 
-
-    self.getHistory = function () {
-        var id = 'reportingHistory-' + project.projectId;
-        var history = '<div style="float:right" id="' + id + '"><img src="' + fcConfig.imageLocation + '/ajax-saver.gif"></div>';
-        var url = fcConfig.projectReportsUrl + '/' + project.projectId;
-        $.ajax({
-            url: url,
-            type: 'GET',
-            dataType: 'html'
-        }).done(function (data) {
-            $('#' + id).html(data).slideDown();
-        }).fail(function (data) {
-            $('#' + id).html('<div float:right">There was an error retrieving the reporting history for this project.</div>');
-        }).always(function (data) {
-            self.historyVisible(true);
-        });
-
-
-        return history;
-    };
-
     self.extendedStatusVisible = ko.observable(false);
 
     self.toggleExtendedStatus = function () {
@@ -154,7 +135,9 @@ var ProjectReportsViewModel = function (project) {
             self.historyVisible(false);
         } else {
             // Open this row
-            var data = self.getHistory() || '';
+            var obj = {objId:project.projectId,objUrl:fcConfig.projectReportsUrl};
+            var data = reportService.getHistory(obj) || '';
+            self.historyVisible(data);
 
             row.child(data).show();
             tr.addClass('shown');
@@ -190,6 +173,7 @@ var ProjectReportsViewModel = function (project) {
 };
 
 var ProjectReportingViewModel = function (projects) {
+
     var self = this;
     self.projects = [];
     for (var i = 0; i < projects.length; i++) {

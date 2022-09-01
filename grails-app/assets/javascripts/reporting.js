@@ -419,32 +419,13 @@ var ReportViewModel = function(report, config) {
             self.historyVisible(false);
         } else {
             // Open this row
-            var data = self.getHistory() || '';
-
+            var obj = {objId:report.reportId,objUrl:fcConfig.reportsHistoryUrl};
+            var data = reportService.getHistory(obj) || '';
+            self.historyVisible(data);
             row.child(data).show();
             tr.addClass('shown');
         }
         toggling = false;
-    };
-
-    self.getHistory = function () {
-        var id = 'reportingHistory-' + report.reportId;
-        var history = '<div style="float:right" id="' + id + '"><img src="' + fcConfig.imageLocation + '/ajax-saver.gif"></div>';
-        var url = fcConfig.reportsHistoryUrl + '/' + report.reportId;
-        $.ajax({
-            url: url,
-            type: 'GET',
-            dataType: 'html'
-        }).done(function (data) {
-            $('#' + id).html(data).slideDown();
-        }).fail(function (data) {
-            $('#' + id).html('<div float:right">There was an error retrieving the reporting history for this project.</div>');
-        }).always(function (data) {
-            self.historyVisible(true);
-        });
-
-
-        return history;
     };
 };
 

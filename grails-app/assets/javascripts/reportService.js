@@ -93,4 +93,23 @@ var ReportService = function(config) {
     self.hasReportBeenViewed = function(reportId) {
         return amplify.store.sessionStorage(reportViewKey(reportId));
     }
+
+    /** retrieves the project/managementUnit reporting history **/
+    self.getHistory = function (obj) {
+        var objId = obj.objId;
+        var id = 'reportingHistory-' + objId;
+        var history = '<div style="float:right" id="' + id + '"><img src="' + fcConfig.imageLocation + '/ajax-saver.gif"></div>';
+        var url = obj.objUrl + '/' + objId;
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'html'
+        }).done(function (data) {
+            $('#' + id).html(data).slideDown();
+        }).fail(function (data) {
+            $('#' + id).html('<div float:right">There was an error retrieving the reporting history for this project.</div>');
+        });
+
+        return history;
+    };
 }
