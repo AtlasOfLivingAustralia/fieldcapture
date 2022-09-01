@@ -473,7 +473,6 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
     def "the report service will return the history of a report"() {
 
         setup:
-
         String reportId = 'r1'
         String userId = "u1"
         Map report = [reportId:reportId, statusChangeHistory:[
@@ -482,7 +481,7 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         ]]
 
         when:
-        def result = service.getReportHistory(reportId)
+        List result = service.getReportHistory(reportId)
 
         then:
         1 * webService.getJson({it.endsWith('report/'+reportId)}) >> report

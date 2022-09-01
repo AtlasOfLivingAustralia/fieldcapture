@@ -939,9 +939,9 @@ class ReportService {
      * @param reportId
      */
     def getReportHistory(String reportId) {
-        def report = get(reportId)
+        Map report = get(reportId)
 
-        def history = []
+        List history = []
         report.statusChangeHistory.each { change ->
             def changingUser = authService.getUserForUserId(change.changedBy)
             def displayName = changingUser?changingUser.displayName:'unknown'
