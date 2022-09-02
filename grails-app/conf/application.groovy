@@ -125,9 +125,14 @@ if (!sld.polgon.highlight.url) {
 if (!lists.baseURL) {
     lists.baseURL = "https://lists.ala.org.au"
 }
-if (!bie.baseURL) {
-    bie.baseURL = "https://bie-ws.ala.org.au"
+
+//this is for SpeciesService class in Merit
+if (!bie.service.baseURL) {
+    bie.service.baseURL = "https://bie-ws.ala.org.au"
 }
+//this is for ecodata-client-plugin
+bie.baseURL = "https://bie.ala.org.au"
+
 if (!regions.baseURL) {
     regions.baseURL = 'http://regions.ala.org.au/regions/'
 }
