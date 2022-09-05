@@ -50,3 +50,14 @@ function createProgram(name, parentId) {
 
     return db.program.findOne({programId:program.programId});
 }
+
+function createProgramAsCopy(name, nameOfProgramToCopy) {
+    const now = ISODate();
+    let copy = db.program.findOne({name:nameOfProgramToCopy});
+    delete copy._id;
+    copy.name = name;
+    copy.programId = UUID.generate();
+    copy.dateCreated = now;
+    copy.dateUpdate = now;
+    db.program.insert(copy);
+}
