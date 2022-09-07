@@ -38,12 +38,12 @@ function ActivityViewModel (act, site, project, metaModel, themes, config) {
         }
     };
 
+    var reportService = new ReportService(options);
     /**
      * Displays a popup to the user if this report/activity
      * contributes to over-delivery of project targets
      */
     self.checkForOverDelivery = function() {
-        var reportService = new ReportService(options);
         reportService.findOverDeliveredTargets().done(function(result) {
             if (!result || !result.length) {
                 return;
@@ -57,6 +57,7 @@ function ActivityViewModel (act, site, project, metaModel, themes, config) {
     }
 
     if (options.performOverDeliveryCheck) {
+        reportService.recordReportView(config.reportId);
         self.checkForOverDelivery();
     }
 }

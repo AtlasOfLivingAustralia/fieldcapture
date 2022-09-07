@@ -99,7 +99,10 @@
     <div class="row">
         <span class="col-sm-6">
             <span class="label label-info label-small">Project ID:</span> ${project.externalId}<br/>
-            <span class="label label-info label-small">Reporting Period:</span><select id="type" data-bind="options:financialYears, value:selectedChoice, event: {change: selectionChanged }"></select>
+            <span class="label label-info label-small">Reporting Period:</span>
+            <span class="reportingPeriodSpan">
+                <select id="type" data-bind="options:financialYears, value:selectedChoice, event: {change: selectionChanged }"></select>
+            </span>
         </span>
         <span class="col-sm-6">
             <g:if test="${projectArea}">

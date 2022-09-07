@@ -312,7 +312,7 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         String role = 'siteAdmin'
 
         when:
-        def result = service.convertHubRoleToAccesLevel(role)
+        def result = service.convertHubRoleToAccessLevel(role)
 
         then:
         result == 'admin'

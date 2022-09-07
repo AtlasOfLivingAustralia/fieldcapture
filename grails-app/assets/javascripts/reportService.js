@@ -35,9 +35,12 @@ var ReportService = function(config) {
             if (projectScores && projectScores.length > 0) {
                 for (var i = 0; i < projectScores.length; i++) {
                     var target = projectScores[i];
-                    if (reportScores && reportScores[i]) {
-                        var reportScore = reportScores[i].result && reportScores[i].result.result;
-                        if (target.overDelivered && reportScore) {
+
+                    if (target.overDelivered && reportScores) {
+                        var reportScore = _.find(reportScores, function(score) {
+                            return score.scoreId == target.scoreId;
+                        });
+                        if (reportScore && reportScore.result && reportScore.result.result) {
                             overDeliveredTargets.push({overall:target, report:reportScores[i]});
                         }
                     }
@@ -74,5 +77,20 @@ var ReportService = function(config) {
         }
         message += '</ul>';
         return message;
+    }
+
+    /** Builds the key used in local storage that indicates a report has been viewed */
+    function reportViewKey(reportId) {
+        var reportViewKeyPrefix = "report.viewed.";
+        return reportViewKeyPrefix+reportId;
+    }
+    /** Saves that a report has been viewed to local storage */
+    self.recordReportView = function(reportId) {
+        amplify.store.sessionStorage(reportViewKey(reportId), true);
+    }
+
+    /** Checks local storage to see if a report has been viewed in this session */
+    self.hasReportBeenViewed = function(reportId) {
+        return amplify.store.sessionStorage(reportViewKey(reportId));
     }
 }

@@ -18,6 +18,7 @@ class ViewReportPage extends Page {
         reportContent {module ReportContentModule }
         returnButton { $('#cancel') }
         reportLockedMessage (required: false) { $(".report-locked")}
+        overDeliveryModal(required: false) { $('div.bootbox')}
     }
 
 

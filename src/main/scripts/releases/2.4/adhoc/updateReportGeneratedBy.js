@@ -27,7 +27,7 @@ subprograms.forEach(function (subProgram) {
 
                 print("Found label: "+report.generatedBy+" for report "+report.name+ "("+report.reportId+") in and project "+project.projectId);
 
-                if (report.name.indexOf("Outputs Report") >= 0) {
+                if (report.name.indexOf("Quarter") >= 0) {
                     report.generatedBy = 'Quarter';
                     db.report.save(report);
                 }

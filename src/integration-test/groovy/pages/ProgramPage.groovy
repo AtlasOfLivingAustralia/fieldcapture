@@ -2,12 +2,14 @@ package pages
 
 import geb.Module
 import geb.Page
+import groovy.util.logging.Slf4j
 import pages.modules.ProgramAdminTab
 import pages.modules.subProgramContent
 
 class ProjectRow extends Module {
     static content = {
         grantId { $('td.grantId') }
+        grantIdLink { $('td.grantId a') }
         name { $('td.projectName') }
         description { $('td.description') }
         startDate { $('td.startDate') }
@@ -15,7 +17,16 @@ class ProjectRow extends Module {
     }
 
     def openProject() {
-        grantId.find('a').click()
+
+        // Chrome in the CI environment suddenly decided the data in the table was not displayed, even
+        // after scrolling, so this is a workaround.
+        if (grantIdLink.displayed) {
+            grantIdLink.click()
+        }
+        else {
+            println("WARNING: Grant id link not clickable")
+            browser.go(grantIdLink.attr('href'))
+        }
     }
 }
 
@@ -23,7 +34,9 @@ class ProgramPage extends Page {
 
     static url = 'program/index'
 
-    static at = { $('.program-view').displayed }
+    static at = {
+        $('.program-view').displayed
+    }
 
     static content= {
         name {$('h2')}
@@ -38,6 +51,8 @@ class ProgramPage extends Page {
         description {$('.row .col-md-4 span[data-bind*="html:description"] p')}
         subProgramTabContent(required:false) {$("div#subProgramWrapper").moduleList(subProgramContent)}
         projectRows(required:false) { $('#projectOverviewList tbody tr').moduleList(ProjectRow) }
+        projectTable { $('#projectOverviewList')}
+        programBlogSection(required: false) { $('div.program-blog') }
     }
 
     List grantIds() {
@@ -70,8 +85,9 @@ class ProgramPage extends Page {
 
     /** Clicks the grant id link in the project table */
     void openProjectByGrantId(String grantId) {
-        def project = waitFor {
-            projectRows.find{ it.grantId.text() == grantId}
+        def project = waitFor 60, {
+            // .text() is returning an empty string so we've switched to 'textContent"
+            projectRows.find{it.grantIdLink.attr('textContent') == grantId}
         }
         project.openProject()
     }

@@ -173,7 +173,7 @@ dependencies {
     provided "io.methvin:directory-watcher:0.4.0"
 
     if (!Boolean.valueOf(inplace)) {
-        compile "org.grails.plugins:ecodata-client-plugin:5.0-SNAPSHOT"
+        compile "org.grails.plugins:ecodata-client-plugin:5.1-SNAPSHOT"
     }
 }
 
@@ -202,6 +202,7 @@ tasks.withType(Test) {
     testLogging {
         events "passed", "skipped", "failed"
         exceptionFormat "full"
+        showStandardStreams true
     }
 }
 

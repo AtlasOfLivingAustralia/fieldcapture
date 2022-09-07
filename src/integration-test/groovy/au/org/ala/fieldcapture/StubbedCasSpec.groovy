@@ -5,6 +5,7 @@ import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemp
 import geb.Browser
 import grails.converters.JSON
 import org.grails.web.converters.marshaller.json.MapMarshaller
+import org.openqa.selenium.StaleElementReferenceException
 import org.pac4j.jwt.config.signature.SignatureConfiguration
 import org.pac4j.jwt.profile.JwtGenerator
 import spock.lang.Shared
@@ -67,26 +68,45 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
     }
 
     /** Presses the OK button on a displayed bootbox modal */
-    def okBootbox() {
+    def okBootbox(buttonSelector = '.btn-primary') {
         Thread.sleep(1000) // wait for the animation to finish
-        $('.bootbox .btn-primary').each { ok ->
+        // The reason we are doing an "each" and catching exception is sometimes previous dialogs remain
+        // in scope despite being detached from the DOM and StaleElementException is thrown.
+        def backdrop = $('.modal-backdrop')
+        $('.bootbox '+buttonSelector).each { ok ->
 
-
-            waitFor 20, {
-                try {
-                    if (ok.displayed) {
-                        ok.click()
-                    }
-
-                }
-                catch (Exception e) {
-                    e.printStackTrace()
-                }
-                waitFor {
-                    $('.modal-backdrop').size() == 0
+            try {
+                if (ok.displayed) {
+                    ok.click()
                 }
             }
-
+            catch (Exception e) {
+                e.printStackTrace()
+            }
+        }
+        Thread.sleep(1000)
+        // Dismissing bootbox modals is intermittently unreliable, so trying a javascript fallback.
+        // The other issue here is one of the tests transitions from a page with bootbox up to a page which
+        // immediately displays a modal, so the Thread.sleep means we can actually be catching the dialog on the
+        // second page.  Hence why we get the element reference at the start.
+        try {
+            if (backdrop.displayed) {
+                js.exec('$(".bootbox ' + buttonSelector + '").click();')
+                Thread.sleep(1000)
+                waitFor {
+                    boolean backdropDisplayed
+                    try {
+                        backdropDisplayed = backdrop.displayed
+                    }
+                    catch (StaleElementReferenceException e) {
+                        backdropDisplayed = false
+                        // The backdrop was already detached from the DOM due to page transition
+                    }
+                    backdropDisplayed
+                }
+            }
+        }
+        catch (StaleElementReferenceException e) { // Do nothing, backdrop was already detached
         }
     }
 

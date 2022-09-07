@@ -64,6 +64,11 @@ class ProgramController {
         boolean canViewNonPublicTabs = userService.canUserViewNonPublicProgramInformation(userService.getUser()?.userId, program.programId)
         Map result = programService.getProgramProjects(program.programId)
         List projects = result?.projects
+        println projects?.collect{it.projectId}
+        println projects?.collect{it.grantId}
+        println projects?.collect{it.name}
+
+
         List blogs = blogService.getBlog(program)
         def hasNewsAndEvents = blogs.find { it.type == 'News and Events' }
         def hasProgramStories = blogs.find { it.type == 'Program Stories' }

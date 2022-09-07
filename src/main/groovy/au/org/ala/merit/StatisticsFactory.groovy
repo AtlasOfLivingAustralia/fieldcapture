@@ -126,7 +126,8 @@ class StatisticsFactory {
     // Refresh the statistics every day after midnight
     @Scheduled(cron="0 3 0 * * *")
     public void reloadStatistics() {
-        UserDetails user = new UserDetails("statisticsTask", null, "merit")
+        String systemEmail = grailsApplication.config.getProperty("fieldcapture.system.email.address")
+        UserDetails user = new UserDetails("statisticsTask", systemEmail, "merit")
         userService.withUser(user) {
             settingService.withDefaultHub {
 

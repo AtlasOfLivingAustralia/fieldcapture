@@ -30,6 +30,7 @@ class ReportPage extends Page {
         attachDocumentModal (required: false) { $("#attachDocument").module(DocumentDialog) }
         doAttach (required: false) { $("#RLP_-_Baseline_data-content .model-form .table.assuranceDocuments .btn#doAttach") }
         attachDocument (required: false) { $("#RLP_-_Baseline_data-content .model-form .table.assuranceDocuments tr td").first() }
+        overDeliveryModal(required: false) { $('div.bootbox')}
     }
 
     def field(String name) {
@@ -39,6 +40,18 @@ class ReportPage extends Page {
         }
         if (fields.size() == 0) {
             fields = $("[data-bind*="+name+"]")
+        }
+        fields
+    }
+
+    def field(String name, Navigator parent) {
+
+        Navigator fields = parent.find("input[data-bind*="+name+"]")
+        if (fields.size() == 0) {
+            fields = parent.find("select[data-bind*="+name+"]")
+        }
+        if (fields.size() == 0) {
+            fields = parent.find("[data-bind*="+name+"]")
         }
         fields
     }

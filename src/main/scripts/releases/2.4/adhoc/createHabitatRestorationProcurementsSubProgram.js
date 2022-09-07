@@ -154,20 +154,8 @@ var projectConfig = {
     },
     priorities: [
         {
-            "category": "Habitat Restoration Threatened Species",
+            "category": "Habitat Restoration Threatened Species Primary",
             "priority": "Phascolarctos cinereus (Koala)"
-        },
-        {
-            "category": "Habitat Restoration Threatened Species",
-            "priority": "Botaurus poiciloptilus (Australasian Bittern)"
-        },
-        {
-            "category": "Habitat Restoration Threatened Species",
-            "priority": "Numenius madagascariensis (Eastern Curlew)"
-        },
-        {
-            "category": "Habitat Restoration Threatened Species",
-            "priority": "Thinornis rubricollis rubricollis (Hooded Plover (eastern))"
         },
         {
             "category": "Habitat Restoration Threatened Species",
@@ -579,12 +567,27 @@ var outcomes = [
     {
         "priorities": [
             {
+                "category": "Habitat Restoration Threatened Species Primary"
+            }
+        ],
+        "targeted": true,
+        "supportsMultiplePrioritiesAsPrimary": false,
+        "shortDescription": "Threatened Species Strategy",
+        "type": "primary",
+        "category": "environment",
+        "supportsMultiplePrioritiesAsSecondary": true,
+        "outcome": "By 2026 the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved."
+    },
+    {
+        "priorities": [
+            {
                 "category": "Habitat Restoration Threatened Species"
             }
         ],
         "targeted": true,
         "supportsMultiplePrioritiesAsPrimary": false,
         "shortDescription": "Threatened Species Strategy",
+        "type": "secondary",
         "category": "environment",
         "supportsMultiplePrioritiesAsSecondary": true,
         "outcome": "2. By 2026, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved."

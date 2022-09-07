@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import au.org.ala.merit.command.SaveReportDataCommand
+import au.org.ala.merit.hub.HubSettings
 import org.apache.http.HttpStatus
 import spock.lang.Specification
 import grails.testing.web.controllers.ControllerUnitTest
@@ -72,17 +73,19 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
     }
 
     def "management unit admins should see all content"() {
+        String userId = "u1"
         String managementUnitId = 'p1'
         userService.getUser() >> [userId:'u1']
         managementUnitService.get(managementUnitId) >> [managementUnitId:managementUnitId, name:"test"]
-        userService.getMembersOfManagementUnit(managementUnitId) >> [members:[[userId:'u1', role:'admin']]]
         managementUnitService.getProjects(managementUnitId) >>[projects:[]]
 
         when:
         Map model = controller.index(managementUnitId)
 
         then:
-        1 * userService.canUserEditManagementUnit("u1", managementUnitId) >> true
+        1 * userService.isUserAdminForManagementUnit(userId, managementUnitId) >> true
+        1 * userService.isUserGrantManagerForManagementUnit(userId, managementUnitId) >> false
+        1 * userService.isUserEditorForManagementUnit(userId, managementUnitId) >> false
         1 * userService.isManagementUnitStarredByUser(_, _) >> [isManagementUnitStarredByUser:true]
 
         model.content.size() == 4
@@ -92,39 +95,45 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
         model.content.admin.visible == true
     }
 
-    def "the admin tab is not visible for management unit grant managers"() {
+    def "the admin tab is visible for management unit grant managers"() {
+        String userId = "u1"
         String managementUnitId = 'p1'
-        userService.getUser() >> [userId:'u1']
+        userService.getUser() >> [userId:userId]
         managementUnitService.get(managementUnitId) >> [managementUnitId:managementUnitId, name:"test"]
-        userService.getMembersOfManagementUnit(managementUnitId) >> [members:[[userId:'u1', role:'caseManager']]]
         managementUnitService.getProjects(managementUnitId) >>[projects:[]]
 
         when:
         Map model = controller.index(managementUnitId)
 
         then:
-        1 * userService.canUserEditManagementUnit("u1", managementUnitId) >> true
+        1 * userService.userIsSiteAdmin() >> true
+        1 * userService.isUserAdminForManagementUnit(userId, managementUnitId) >> false
+        1 * userService.isUserGrantManagerForManagementUnit(userId, managementUnitId) >> true
+        1 * userService.isUserEditorForManagementUnit(userId, managementUnitId) >> false
         1 * userService.isManagementUnitStarredByUser(_, _) >> [isManagementUnitStarredByUser:true]
 
         model.content.size() == 4
         model.content.about.visible == true
         model.content.projects.visible == true
         model.content.sites.visible == true
-        model.content.admin.visible == false
+        model.content.admin.visible == true
+
     }
 
     def "the admin tab is not visible for management unit editors"() {
         String managementUnitId = 'p1'
-        userService.getUser() >> [userId:'u1']
+        String userId = 'u1'
+        userService.getUser() >> [userId:userId]
         managementUnitService.get(managementUnitId) >> [managementUnitId:managementUnitId, name:"test"]
-        userService.getMembersOfManagementUnit(managementUnitId) >> [members:[[userId:'u1', role:'editor']]]
         managementUnitService.getProjects(managementUnitId) >>[projects:[]]
 
         when:
         Map model = controller.index(managementUnitId)
 
         then:
-        1 * userService.canUserEditManagementUnit("u1", managementUnitId) >> true
+        1 * userService.isUserAdminForManagementUnit(userId, managementUnitId) >> false
+        1 * userService.isUserGrantManagerForManagementUnit(userId, managementUnitId) >> false
+        1 * userService.isUserEditorForManagementUnit(userId, managementUnitId) >> true
         1 * userService.isManagementUnitStarredByUser(_, _) >> [isManagementUnitStarredByUser:true]
 
         model.content.size() == 4
@@ -136,17 +145,19 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
 
     def "read only users should be able to see the permission access in the admin content"() {
         String managementUnitId = 'p1'
-        userService.getUser() >> [userId: 'u1']
+        String userId = 'u1'
+        userService.getUser() >> [userId: userId]
         managementUnitService.get(managementUnitId) >> [managementUnitId: managementUnitId, name: "test"]
-        userService.getMembersOfManagementUnit(managementUnitId) >> [members:[]]
         managementUnitService.getProjects(managementUnitId) >>[projects:[]]
 
         when:
         Map model = controller.index(managementUnitId)
 
         then:
-        1 * userService.canUserEditManagementUnit("u1", managementUnitId) >> false
-        2 * userService.userHasReadOnlyAccess() >> true
+        1 * userService.isUserAdminForManagementUnit(userId, managementUnitId) >> false
+        1 * userService.isUserGrantManagerForManagementUnit(userId, managementUnitId) >> false
+        1 * userService.isUserEditorForManagementUnit(userId, managementUnitId) >> false
+        1 * userService.userHasReadOnlyAccess(userId) >> true
 
         model.content.size() == 4
         model.content.about.visible == true
@@ -393,9 +404,9 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
     def "The management unit controller supports the display of program outcomes that are targeted by projects in that management unit"() {
         setup:
         String managementUnitId = 'mu1'
-        userService.getUser() >> [userId:'u1']
+        String userId = 'u1'
+        userService.getUser() >> [userId:userId]
         managementUnitService.get(managementUnitId) >> [managementUnitId:managementUnitId, name:"test"]
-        userService.getMembersOfManagementUnit(managementUnitId) >> [members:[[userId:'u1', role:'admin']]]
         managementUnitService.getProjects(managementUnitId) >> [projects:[[projectId:'p1', programId:"program1"]]]
         managementUnitService.serviceScores(managementUnitId, _, _) >> [:]
         projectService.getPrimaryOutcome(_) >> "Outcome 1"
@@ -409,7 +420,9 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
         then:
         1 * programService.getPrimaryOutcomes(program) >> [[outcome:"Outcome 1", shortDescription:"o1"], [outcome:"Outcome 2", shortDescription:"o2"], [outcome:"Outcome 3", shortDescription:"o3", type:"primary"]]
         1 * programService.getSecondaryOutcomes(program) >> [[outcome:"Outcome 1", shortDescription:"o1"], [outcome:"Outcome 2", shortDescription:"o2"], [outcome:"Outcome 4", shortDescription:"o4", type:"secondary"]]
-        1 * userService.canUserEditManagementUnit("u1", managementUnitId) >> true
+        1 * userService.isUserAdminForManagementUnit(userId, managementUnitId) >> false
+        1 * userService.isUserGrantManagerForManagementUnit(userId, managementUnitId) >> false
+        1 * userService.isUserEditorForManagementUnit(userId, managementUnitId) >> true
 
         model.content.about.displayedPrograms.size() == 1
         model.content.about.displayedPrograms[0].primaryOutcomes == [[outcome:"Outcome 1", shortDescription:"o1", targeted:true], [outcome:"Outcome 2", shortDescription:"o2"], [outcome:"Outcome 3", shortDescription:"o3"]]

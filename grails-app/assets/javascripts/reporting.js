@@ -66,6 +66,7 @@ var ReportStatusChangeReasonViewModel = function(config) {
 var ReportViewModel = function(report, config) {
     $.extend(this, report);
     var self = this;
+    var reportService = new ReportService(config);
 
     self.description = report.description || report.name;
     self.fromDate = ko.observable(report.fromDate).extend({simpleDate:false});
@@ -200,7 +201,45 @@ var ReportViewModel = function(report, config) {
         });
     };
     self.approveReport = function() {
-        self.changeReportStatus(config.approveReportUrl, 'approve', 'Approving report...', 'Report approved.');
+        var doApproval = function() {
+            self.changeReportStatus(config.approveReportUrl, 'approve', 'Approving report...', 'Report approved.');
+        }
+        if (self.overDelivered() && !reportService.hasReportBeenViewed(report.reportId)) {
+            bootbox.dialog({
+                title: 'Please confirm the report approval',
+                message: '<p>'+self.overDeliveryMessage()+'</p>',
+                size: 'large',
+                onEscape: true,
+                backdrop: true,
+                buttons: {
+                    goToReport: {
+                        label: 'View Report',
+                        className: 'btn-info',
+                        callback: function(){
+                            document.location = self.viewUrl;
+                        }
+                    },
+                    approve: {
+                        label: 'Approve Report',
+                        className: 'btn-primary',
+                        callback: function(){
+                            doApproval();
+                        }
+                    },
+                    cancel: {
+                        label: 'Cancel',
+                        className: '',
+                        callback: function(){
+                            // Do nothing, close this dialog.
+                        }
+                    }
+                }
+            })
+        }
+        else {
+            doApproval();
+        }
+
     };
     self.submitReport = function() {
         var declaration = $('#declaration')[0];
@@ -334,17 +373,19 @@ var ReportViewModel = function(report, config) {
         self.showReportStatusChangeModal(options)
     };
 
+    // Flag to track the over delivery check so we can disallow report submission until the check has completed.
+    self.overDeliveryCheckInProgress = ko.observable(false);
     self.overDeliveryMessage = ko.observable();
     self.overDelivered = ko.observable(false);
     self.checkForOverDelivery = function() {
-        var reportService = new ReportService(config);
+        self.overDeliveryCheckInProgress(true);
         reportService.findOverDeliveredTargets(report.activityId).done(function(result) {
-            if (!result || !result.length) {
-                return;
+            if (result && result.length) {
+                self.overDelivered(true);
+                var message = reportService.formatOverDeliveryMessage(result);
+                self.overDeliveryMessage(message);
             }
-            self.overDelivered(true);
-            var message = reportService.formatOverDeliveryMessage(result);
-            self.overDeliveryMessage(message);
+            self.overDeliveryCheckInProgress(false);
         });
 
     };
@@ -353,11 +394,11 @@ var ReportViewModel = function(report, config) {
         return report.category == "Outcomes Report 1";
     });
 
-    self.cancelledComment = ko.observable();
     $.each(report.statusChangeHistory, function(i, history) {
-        self.cancelledComment = history.comment
+        self.cancelledCommentText = history.comment
     });
-    if (report.publicationStatus == 'pendingApproval') {
+
+    if (config.projectTargetsAndScoresUrl && report.publicationStatus == 'pendingApproval') {
         self.checkForOverDelivery();
     }
 };
@@ -571,7 +612,7 @@ var CategorisedReportsViewModel = function(allReports, order, availableReports, 
             self.reportsByCategory.push({
                 title:category.category,
                 description:ko.observable(category.description).extend({markdown:true}),
-
+                banner:ko.observable(category.banner).extend({markdown:true}),
                 model:new ReportsViewModel(reports, undefined, availableReports, reportOwner, reportsOptions)
             });
         }

@@ -1,10 +1,12 @@
 package au.org.ala.fieldcapture
 
+import groovy.util.logging.Slf4j
 import pages.Organisation
 import pages.ProgramPage
 import pages.ProjectImport
 import pages.RlpProjectPage
 
+@Slf4j
 class ImportProjectsSpec extends StubbedCasSpec {
 
     def setup() {

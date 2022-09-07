@@ -153,7 +153,7 @@
 </div>
 <hr/>
 <g:if test="${blog.editable || blog.hasNewsAndEvents || blog.hasProgramStories || blog.hasPhotos}">
-    <div class="row">
+    <div class="row program-blog">
         <div class="well-title ml-2 col-sm-11">Program blog</div>
         <g:if test="${blog.editable}">
             <div class="col-sm-11 ml-2">

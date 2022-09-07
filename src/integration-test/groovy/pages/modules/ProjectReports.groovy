@@ -24,6 +24,7 @@ class ProjectReports extends Module {
 
         reasonModal { $('#reason-modal') }
         notRequiredReason { $('#reason-modal [id="reason"]') }
+        overDeliveryModal(required: false) { $('div.bootbox')}
     }
 
     def cancellationReason() {
