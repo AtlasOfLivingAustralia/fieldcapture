@@ -39,18 +39,34 @@
                   "Unable to rate"
                 ],
                 "validate": "required"
+              },
+              {
+                "name": "monitoringIndicator",
+                "dataType": "text",
+                "description": "",
+                "validate": "required",
+                "constraints": {
+                  "textProperty": "data1",
+                  "valueProperty": "data2",
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "context-path": "owner.custom.details.objectives.rows"
+                    }
+                  }
+                }
               }
             ]
           },
           {
             "dataType": "text",
             "name": "achievedOutcomesSummary",
-            "validate": "required,maxSize[5000]"
+            "validate": "required,maxSize[500]"
           },
           {
             "dataType": "text",
             "name": "achievedOutcomesMaintained",
-            "validate": "required,maxSize[3000]"
+            "validate": "required,maxSize[500]"
           },
           {
             "dataType": "stringList",
@@ -115,13 +131,13 @@
             "dataType": "text",
             "description": "",
             "name": "projectLearningsSummary",
-            "validate": "required,maxSize[5000]"
+            "validate": "required,maxSize[500]"
           },
           {
             "dataType": "text",
             "description": "",
             "name": "futureEffortLessons",
-            "validate": "required,maxSize[5000]"
+            "validate": "required,maxSize[500]"
           }
         ],
         "viewModel": [
@@ -237,14 +253,20 @@
                 "source": "outcomeStatement",
                 "title": "Outcome",
                 "rows": 5,
-                "width": "40%"
+                "width": "30%"
+              },
+              {
+                "source": "monitoringIndicator",
+                "type": "selectOne",
+                "title": "Monitoring Indicator",
+                "width": "20%"
               },
               {
                 "type": "textarea",
                 "source": "achievement",
-                "title": "Achievement against the outcome",
+                "title": "Achievement/s",
                 "rows": 5,
-                "width": "40%"
+                "width": "30%"
               },
               {
                 "width": "15%",

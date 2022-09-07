@@ -53,12 +53,12 @@
               {
                 "dataType": "text",
                 "name": "outcomeStatement",
-                "validate": "required,maxSize[5000]"
+                "validate": "required,maxSize[500]"
               },
               {
                 "dataType": "text",
                 "name": "achievement",
-                "validate": "required,maxSize[5000]"
+                "validate": "required,maxSize[500]"
               }
             ]
           },
@@ -79,17 +79,17 @@
               {
                 "dataType": "text",
                 "name": "nature",
-                "validate": "required,maxSize[5000]"
+                "validate": "required,maxSize[500]"
               },
               {
                 "dataType": "text",
                 "name": "how",
-                "validate": "required,maxSize[5000]"
+                "validate": "required,maxSize[500]"
               },
               {
                 "dataType": "text",
                 "name": "implication",
-                "validate": "required,maxSize[5000]"
+                "validate": "required,maxSize[500]"
               }
             ]
           },
@@ -102,7 +102,7 @@
                 "dataType": "text",
                 "description": "",
                 "name": "storyDetails",
-                "validate": "required,maxSize[5000]"
+                "validate": "required,maxSize[500]"
               },
               {
                 "dataType": "image",
