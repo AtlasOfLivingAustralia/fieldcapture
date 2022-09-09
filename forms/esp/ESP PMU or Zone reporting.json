@@ -777,7 +777,7 @@
           {
             "items": [
               {
-                "source": "If you undertook grazing, please record sward height prior to and following your grazing periods (in the table under “Livestock Grazing Management). If you did not undertake grazing, then record sward height (below) at the same time that you take the photo-point photograph for this site. Please ensure that this is done at the same time each year.",
+                "source": "Record sward height at the same time that you take the photo-point photograph for this site. Please ensure that this is done at the same time each year.<br>You can find instructions on measuring Sward height here:<a href='https://www.dcceew.gov.au/environment/land/landcare/my-project/monitoring-reporting/environmental-stewardship/sward-height'> Measuring Sward height - DCCEEW</a><br>You can insert an image to demonstrate sward height as a way to enhance records of the impact of the Environmental Stewardship Program.",
                 "type": "literal"
               }
             ],
