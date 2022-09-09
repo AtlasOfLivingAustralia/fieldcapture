@@ -510,7 +510,7 @@
             "validate": "required"
           }
         ],
-        "modelName": "ESP Livestock Grazing ManagementFFF",
+        "modelName": "ESP Livestock Grazing Management",
         "title": "Livestock Grazing Management",
         "viewModel": [
           {
@@ -712,7 +712,8 @@
               {
                 "preLabel": "Total cost of management actions",
                 "source": "cost",
-                "type": "currency",
+                "type": "number",
+                "width": "50%",
                 "helpText": "These costs can include, but are not limited to: cost of time taken to move stock or cost to repair fences and infrastructure damaged."
               }
             ]
@@ -737,7 +738,7 @@
         ]
       },
       "templateName": "espLivestockGrazingManagement",
-      "title": "Livestock Grazing ManagementDDDD"
+      "title": "Livestock Grazing Management"
     },
     {
       "class": "au.org.ala.ecodata.FormSection",
@@ -909,7 +910,8 @@
             "constraints": [
               "Yes",
               "No"
-            ]
+            ],
+            "validate": "required"
           },
           {
             "columns": [
@@ -998,7 +1000,7 @@
             "name": "nativeSpeciesMonitoring"
           },
           {
-            "dataType": "number",
+            "dataType": "text",
             "behaviour": [
               {
                 "type": "enable_and_clear",
@@ -1006,7 +1008,7 @@
               }
             ],
             "name": "cost",
-            "validate": "required,min[0]"
+            "validate": "required"
           },
           {
             "dataType": "text",
@@ -1040,7 +1042,7 @@
           {
             "items": [
               {
-                "source": "<b> What are the conservation outcomes sought?</b> <br> 1) to reduce browsing impact on palatable native plants; <br> 2) to maintain native species diversity; <br> 3) to reduce overgrazing thus weed infestation; <br> 4) to improve litter and soil condition; <br> 5) to facilitate natural regeneration.",
+                "source": "<b> What are the conservation outcomes sought?</b> <br> 1. Reducing browsing impact on palatable native plants; <br> 2. Maintaining native species diversity and facilitating natural regeneration; <br> 3. Reducing overgrazing, thus weed infestation; and <br> 4. Improving litter and soil condition.",
                 "type": "literal"
               }
             ],
@@ -1049,7 +1051,7 @@
           {
             "items": [
               {
-                "source": "<b> Implementation: </b> <br> Actions that involve reduction in the native herbivore numbers to reduce total grazing pressure include exclusion or culling. Exclusion of macropods (i.e. kangaroos) is best carried out with a 3-strand plain wire fence affixed to the top of a stock-proof fence. <br> Culling of native herbivores can only be conducted with the authorisation of and a license issued by the appropriate government authority. <br> Ideally, culling should be coordinated with other similar actions in the region in order to maximise impact, and would be undertaken in a humane manner consistent with conservation and land stewardship values. <br> Trapping and relocation is an option for native herbivores, but only under licence. Enticement away from the site (e.g. through strategic placement of watering points) is also an option, but success would need to be monitored.",
+                "source": "<b> Implementation: </b> <br> Actions that involve reduction in the native herbivore numbers include:<br>Exclusion is best carried out with a 3-strand plain wire fence affixed to the top of a stock-proof fence.<br>Trapping and relocation is an option for native herbivores, but only under licence.<br><br>Enticement away from the site (e.g. through strategic placement of watering points) is also an option, but success would need to be monitored.<br><br>Culling of native herbivores, which can only be conducted with the authorisation of and a license issued by the appropriate government authority. Ideally, culling should be coordinated with other similar actions in the region in order to maximise impact, and would be undertaken in a humane manner consistent with conservation and land stewardship values.",
                 "type": "literal"
               }
             ],
@@ -1114,7 +1116,7 @@
                 ],
                 "userAddedRows": true,
                 "source": "nativeSpeciesMonitoring",
-                "title": "Please complete the following: To enter details take care to add in a new row for each different species and each different season you have monitored or managed Herbivores.",
+                "title": "Please complete the following (adding a new row for each different species and each different season you have monitored or managed Herbivores):",
                 "type": "table"
               }
             ]
@@ -1129,7 +1131,7 @@
             ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year. This comment could include, but is not limited to, the following information:</label></span><ul><li>The impact of native herbivores on the site. Such as the impact of the grazing pressure on ground cover and sward height, impact to native trees seedlings and saplings present; impact on native grasses and flowers; soil disturbance due to dens being constructed or damage to fences.  State if this impact is significant or minimal.</li><li>The effectiveness of the management action and how it was conducted – is the culling effective or is the population too large? If no direct action required against a species why? Do you see the need for further action?</li><li>Was a permit obtained from NSW National Parks and Wildlife Service to authorise this culling or was it a licences shooter?</li><li>Any additional comments or observations impacting native herbivore management.</li></ul>",
+                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year. This comment could include, but is not limited to, the following information:</label></span><ul><li>The impact of native herbivores on the site on  trees seedlings and saplings ; impact on native grasses and flowers.  State if this impact is significant or minimal.</li><li>Damage to infrastructure and soil disturbance due to dens;</li><li>•The effectiveness of the management action; is the culling effective or is the population too large? Do you see the need for further action?</li><li>Was a permit obtained from NSW National Parks and Wildlife Service to authorise this culling or was it a licenced shooter?</li><li>Any additional comments or observations.</li></ul>",
                 "type": "literal"
               }
             ]
@@ -1162,7 +1164,9 @@
               {
                 "preLabel": "Total cost of management actions",
                 "source": "cost",
-                "type": "currency"
+                "type": "number",
+                "width": "50%",
+                "helpText": "These costs can include, but are not limited to: hours steward takes to undertake native herbivore management, ammunition or cost of contractors."
               }
             ]
           },
