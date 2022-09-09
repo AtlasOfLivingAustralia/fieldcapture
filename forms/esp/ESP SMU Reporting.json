@@ -1512,7 +1512,8 @@
             "constraints": [
               "Yes",
               "No"
-            ]
+            ],
+            "validate": "required"
           },
           {
             "dataType": "list",
@@ -1565,7 +1566,7 @@
                   }
                 ],
                 "name": "weedAreaTreatedHa",
-                "validate": "min[0]"
+                "validate": "min[0], required"
               },
               {
                 "dataType": "text",
@@ -1580,7 +1581,8 @@
                   "Dense infestation",
                   "Isolated plant",
                   "Scattered plants"
-                ]
+                ],
+                "validate": "required"
               },
               {
                 "dataType": "text",
@@ -1599,12 +1601,13 @@
                   "Under monitoring",
                   "Cleared",
                   "Unknown"
-                ]
+                ],
+                "validate": "required"
               }
             ]
           },
           {
-            "dataType": "number",
+            "dataType": "text",
             "behaviour": [
               {
                 "type": "enable_and_clear",
@@ -1635,7 +1638,8 @@
               }
             ],
             "name": "activityNotUndertaken",
-            "description": ""
+            "description": "",
+            "validate": "required"
           }
         ],
         "description": "When you enter the details for this activity please make sure that you only enter the number and cost details once. Either as a single total record, encompassing the details and costs of this activity across all of your sites or as separate entries for each site.",
@@ -1645,7 +1649,7 @@
           {
             "items": [
               {
-                "source": "<b> What are the conservation outcomes sought?</b> <br> 1) to reduce exotic plant cover, thereby reducing competition with native plants; <br> 2) to reduce exotic plant biomass; <br> 3) to create more gaps in the groundlayer to facilitate regeneration of native groundcover species.",
+                "source": "<b> What are the conservation outcomes sought?</b> <br> 1. to reduce exotic plant cover, thereby reducing competition with native plants; <br> 2. to reduce exotic plant biomass; <br> 3. to create more gaps in the groundlayer to facilitate regeneration of native groundcover species.",
                 "type": "literal"
               }
             ],
@@ -1654,7 +1658,7 @@
           {
             "items": [
               {
-                "source": "<b> Controlled through: </b> <br> Strategic grazing and targeted controls including localised application of herbicides (spot spraying, weed wiping), hand pulling or chipping of target weed species, mowing and slashing or possibly localised conservation burning (under an appropriate management plan and permission from relevant agencies as required).",
+                "source": "<b> Controlled through: </b> <br> Strategic grazing and targeted controls including localised application of herbicides (spot spraying, weed wiping), hand pulling or chipping of target weed species, mowing, and slashing or possibly localised conservation burning (under an appropriate management plan and permission from relevant agencies as required).",
                 "type": "literal"
               }
             ],
@@ -1740,7 +1744,7 @@
             ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management, the chosen weed management strategy and if ongoing management will be required. Please consider:</label></span><ul><li>Are the native plants moving into areas where weed management has occurred or are the weeds coming back.</li><li>Have you noticed any trend in the weeds observed, are there more of less this reporting period?</li><li>Are the weeds occurring from established seed banks, existing weed infestations or spreading from the surrounding areas?</li><li>Have you noticed any new weeds occurring on the property that you have not previously seen?</li><li>Any additional comments or observations please detail here.</li></ul>",
+                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management, the chosen weed management strategy and if ongoing management will be required. This comment could include, but is not limited to, the following information:</label></span><ul><li>Are the native plants moving into areas where weed management has occurred or are the weeds coming back.</li><li>Have you noticed any trend in the weeds observed, are there more of less this reporting period?</li><li>Are the weeds occurring from established seed banks, existing weed infestations or spreading from the surrounding areas?</li><li>Have you noticed any new weeds occurring on the property that you have not previously seen?</li><li>Any additional comments or observations please detail here.</li></ul>",
                 "type": "literal"
               }
             ]
@@ -1764,9 +1768,11 @@
           {
             "items": [
               {
-                "source": "cost",
                 "preLabel": "Total cost of management actions",
-                "type": "currency"
+                "source": "cost",
+                "type": "number",
+                "width": "50%",
+                "helpText": "These costs can include, but are not limited to: costs like sprays, equipment, contractors, PPE, hours of work undertaken."
               }
             ],
             "behaviour": [
@@ -1787,7 +1793,7 @@
             ],
             "items": [
               {
-                "preLabel": "If this activity is a management action under your funding agreement but you were not able to undertake this activity, during the reporting period, please state the reason.",
+                "preLabel": "If this activity is a management action under your Funding Agreement but you did not undertake this activity, during the reporting period, please state the reason.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
