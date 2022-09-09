@@ -1617,7 +1617,7 @@
               }
             ],
             "name": "cost",
-            "validate": "required,min[0]"
+            "validate": "required"
           },
           {
             "dataType": "text",
@@ -1823,7 +1823,8 @@
             "constraints": [
               "Yes",
               "No"
-            ]
+            ],
+            "validate": "required"
           },
           {
             "dataType": "list",
@@ -1874,17 +1875,6 @@
                 ],
                 "name": "areaTreatedHa",
                 "validate": "min[0]"
-              },
-              {
-                "dataType": "number",
-                "behaviour": [
-                  {
-                    "type": "enable_and_clear",
-                    "condition": "wasActivityUndertaken == \"Yes\""
-                  }
-                ],
-                "name": "activityCost",
-                "validate": "required,min[0]"
               }
             ]
           },
@@ -1901,7 +1891,7 @@
             "validate": "required"
           },
           {
-            "dataType": "number",
+            "dataType": "text",
             "behaviour": [
               {
                 "type": "enable_and_clear",
@@ -1909,7 +1899,7 @@
               }
             ],
             "name": "cost",
-            "validate": "required,min[0]"
+            "validate": "required"
           },
           {
             "dataType": "text",
@@ -1931,7 +1921,7 @@
           {
             "items": [
               {
-                "source": "<b> What are the conservation outcomes sought?</b> <br>Reducing the density of the dominant perennial species (the biomass) often enhances the diversity of the native ground flora by promoting the growth and spread of other grasses and herbs.<br> Box gum grassy woodland in good condition has a predominance of native tussock species in the understorey sufficiently spaced to enable native forbs and herbs to generate and prosper.<br> Biomass may be controlled through small scale ecological burns, by strategic grazing or by slashing over relatively small areas at an agreed timing and frequency.",
+                "source": "<b> What are the conservation outcomes sought?</b> <br>1. Enhancing the diversity of the native ground flora by promoting the growth and spread of other grasses and herbs.<br>2. Implementation through small scale ecological burns, by strategic grazing or by slashing over relatively small areas at an agreed timing and frequency.",
                 "type": "literal"
               }
             ],
@@ -1977,11 +1967,6 @@
                     "title": "Area treated (Ha)",
                     "source": "areaTreatedHa",
                     "type": "number"
-                  },
-                  {
-                    "title": "Cost",
-                    "source": "activityCost",
-                    "type": "currency"
                   }
                 ],
                 "userAddedRows": true,
@@ -2007,7 +1992,7 @@
             ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year: Please provide information about the effectiveness of the biomass control measure.</label></span><ul><li>Do you have any feedback about this management action and its impact on the state of the environment in the zone?</li><li>As a result of undertaking biomass control have you seen an increase in the diversity of the species in the zone.</li><li>Any additional comments or observations about Biomass please detail here.</li></ul>",
+                "source": "<span class=\"preLabel required\"><label>Please provide comment about the effectiveness of the biomass control measure. This comment could include, but is not limited to, the following information:</label></span><ul><li>Do you have any feedback about this management action and its impact on the state of the environment in the zone?</li><li>As a result of undertaking biomass control have you seen an increase in the diversity of the species in the zone?</li><li>Any additional comments or observations.</li></ul>",
                 "type": "literal"
               }
             ]
@@ -2031,9 +2016,11 @@
           {
             "items": [
               {
+                "preLabel": "Total cost of management actions",
                 "source": "cost",
-                "preLabel": "Total cost of this management actions",
-                "type": "currency"
+                "type": "number",
+                "width": "50%",
+                "helpText": "These costs can include, but are not limited to: fuel for slashing or time taken to reduce biomass. Do not include cost for grazing is included in Livestock Grazing Management."
               }
             ],
             "behaviour": [
@@ -2082,7 +2069,8 @@
             "constraints": [
               "Yes",
               "No"
-            ]
+            ],
+            "validate": "required"
           },
           {
             "dataType": "list",
@@ -2219,7 +2207,7 @@
             "validate": "required"
           },
           {
-            "dataType": "number",
+            "dataType": "text",
             "behaviour": [
               {
                 "type": "enable_and_clear",
@@ -2227,7 +2215,7 @@
               }
             ],
             "name": "cost",
-            "validate": "required,min[0]"
+            "validate": "required"
           },
           {
             "dataType": "text",
@@ -2447,7 +2435,8 @@
             "constraints": [
               "Yes",
               "No"
-            ]
+            ],
+            "validate": "required"
           },
           {
             "dataType": "list",
@@ -2492,7 +2481,7 @@
             ]
           },
           {
-            "dataType": "number",
+            "dataType": "text",
             "behaviour": [
               {
                 "type": "enable_and_clear",
@@ -2500,7 +2489,7 @@
               }
             ],
             "name": "cost",
-            "validate": "required,min[0]"
+            "validate": "required"
           },
           {
             "dataType": "text",
@@ -2697,7 +2686,8 @@
             "constraints": [
               "Yes",
               "No"
-            ]
+            ],
+            "validate": "required"
           },
           {
             "dataType": "list",
@@ -2756,7 +2746,7 @@
             "name": "otherHabitatFeature"
           },
           {
-            "dataType": "number",
+            "dataType": "text",
             "behaviour": [
               {
                 "type": "enable_and_clear",
@@ -2764,7 +2754,7 @@
               }
             ],
             "name": "cost",
-            "validate": "required,min[0]"
+            "validate": "required"
           },
           {
             "dataType": "text",
