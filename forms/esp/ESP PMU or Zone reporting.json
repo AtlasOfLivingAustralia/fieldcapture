@@ -61,6 +61,7 @@
       "collapsedByDefault": false,
       "modelName": null,
       "name": "ESP Livestock Grazing Management",
+      "description": "Livestock Grazing description sample",
       "optional": false,
       "optionalQuestionText": "Not an agreed management action under my funding agreement",
       "template": {
@@ -71,7 +72,8 @@
             "constraints": [
               "Yes",
               "No"
-            ]
+            ],
+            "validate": "required"
           },
           {
             "dataType": "text",
@@ -473,7 +475,7 @@
             "name": "grazingPeriods"
           },
           {
-            "dataType": "number",
+            "dataType": "text",
             "behaviour": [
               {
                 "type": "enable_and_clear",
@@ -481,7 +483,7 @@
               }
             ],
             "name": "cost",
-            "validate": "required,min[0]"
+            "validate": "required"
           },
           {
             "dataType": "text",
@@ -504,10 +506,11 @@
               }
             ],
             "name": "activityNotUndertaken",
-            "description": ""
+            "description": "",
+            "validate": "required"
           }
         ],
-        "modelName": "ESP Livestock Grazing Management",
+        "modelName": "ESP Livestock Grazing ManagementFFF",
         "title": "Livestock Grazing Management",
         "viewModel": [
           {
@@ -523,7 +526,7 @@
             "type": "row",
             "items": [
               {
-                "source": "<b>Please note</b> Grazing activities may also be included under “Conservation grazing”, “Strategic grazing”, “Monitoring and manage grazing pressure from domestic livestock” and “Monitor and manage total grazing pressure”. <br> Endeavour to record sward height and ground cover percentage after each grazing period.",
+                "source": "<b>Please note</b> Grazing activities may also be included under “Conservation grazing”, “Strategic grazing”, “Monitoring and manage grazing pressure from domestic livestock” and “Monitor and manage total grazing pressure”. <br> Endeavour to record sward height and ground cover percentage prior to and after each grazing period.",
                 "type": "literal"
               }
             ]
@@ -604,12 +607,12 @@
                   },
                   {
                     "source": "swardHeight",
-                    "title": "sward height PRIOR to grazing",
+                    "title": "Sward height PRIOR to grazing",
                     "type": "number"
                   },
                   {
                     "source": "groundCover",
-                    "title": "ground cover PRIOR to grazing",
+                    "title": "Ground cover PRIOR to grazing",
                     "type": "number"
                   },
                   {
@@ -649,12 +652,12 @@
                   },
                   {
                     "source": "swardHeightCm",
-                    "title": "Sward Height (cm)",
+                    "title": "Sward Height (cm) after grazing",
                     "type": "number"
                   },
                   {
                     "source": "groundCoverPercent",
-                    "title": "Ground cover %",
+                    "title": "Ground cover % after grazing",
                     "type": "number"
                   }
                 ],
@@ -675,7 +678,7 @@
             ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year. This can include the following:</label></span><ul><li>The impact of grazing on the site. Such as the impact on weeds; impact on native grasses; if changes to the permitted grazing dates would have more positive impact on the site’s environment; impact on native trees and new saplings/seedlings present.</li><li>Any unusual circumstances that occurred whilst grazing. For example: Fencing damaged so sheep/cattle spread to different section; saw an increase in feral animals near the site whilst stock present; issues with stock removal due to conditions etc.</li><li>If you grazed on dates outside the set grazing limitations in the management actions. Please provide an explanation and indicate if you have informed the ESP team via email/phone, as required.</li><li>Any additional comments or observations impacting native herbivore management.</li></ul>",
+                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year. This comment could include, but is not limited to, the following information:</label></span><br><span>The impact on weeds on the site;</span><ul><li>Impact on native trees, saplings/seedlings, native grasses and forbs present.</li><li>Any unusual circumstances that occurred whilst grazing (e.g. fencing damaged so stock spread to different area; increase in feral animals near the site whilst stock present; issues with stock removal due to conditions).</li><li>If you grazed on dates outside the set grazing limitations in the management actions please provide an explanation and indicate if you have informed the ESP team via email/phone, as required;</li><li>If changes to the permitted grazing dates would have more positive impact on the site’s environment;</li><li>Any additional comments or observations.</li></ul>",
                 "type": "literal"
               }
             ]
@@ -709,7 +712,8 @@
               {
                 "preLabel": "Total cost of management actions",
                 "source": "cost",
-                "type": "currency"
+                "type": "currency",
+                "helpText": "These costs can include, but are not limited to: cost of time taken to move stock or cost to repair fences and infrastructure damaged."
               }
             ]
           },
@@ -723,7 +727,7 @@
             ],
             "items": [
               {
-                "preLabel": "If this activity is a management action under your funding agreement but you were not able to undertake this activity, during the reporting period, please state the reason.",
+                "preLabel": "If this activity is a management action under your funding agreement but you did not undertake this activity, during the reporting period, please state the reason.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -733,7 +737,7 @@
         ]
       },
       "templateName": "espLivestockGrazingManagement",
-      "title": "Livestock Grazing Management"
+      "title": "Livestock Grazing ManagementDDDD"
     },
     {
       "class": "au.org.ala.ecodata.FormSection",
@@ -1025,7 +1029,8 @@
               }
             ],
             "name": "activityNotUndertaken",
-            "description": ""
+            "description": "",
+            "validate": "required"
           }
         ],
         "description": "When you enter the details for this activity please make sure that you only enter the number and cost details once. Either as a single total record, encompassing the details and costs of this activity across all of your sites or as separate entries for each site.",
@@ -1124,7 +1129,7 @@
             ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year. This can include the following:</label></span><ul><li>The impact of native herbivores on the site. Such as the impact of the grazing pressure on ground cover and sward height, impact to native trees seedlings and saplings present; impact on native grasses and flowers; soil disturbance due to dens being constructed or damage to fences.  State if this impact is significant or minimal.</li><li>The effectiveness of the management action and how it was conducted – is the culling effective or is the population too large? If no direct action required against a species why? Do you see the need for further action?</li><li>Was a permit obtained from NSW National Parks and Wildlife Service to authorise this culling or was it a licences shooter?</li><li>Any additional comments or observations impacting native herbivore management.</li></ul>",
+                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year. This comment could include, but is not limited to, the following information:</label></span><ul><li>The impact of native herbivores on the site. Such as the impact of the grazing pressure on ground cover and sward height, impact to native trees seedlings and saplings present; impact on native grasses and flowers; soil disturbance due to dens being constructed or damage to fences.  State if this impact is significant or minimal.</li><li>The effectiveness of the management action and how it was conducted – is the culling effective or is the population too large? If no direct action required against a species why? Do you see the need for further action?</li><li>Was a permit obtained from NSW National Parks and Wildlife Service to authorise this culling or was it a licences shooter?</li><li>Any additional comments or observations impacting native herbivore management.</li></ul>",
                 "type": "literal"
               }
             ]
@@ -1171,7 +1176,7 @@
             ],
             "items": [
               {
-                "preLabel": "If this activity is a management action under your funding agreement but you were not able to undertake this activity, during the reporting period, please state the reason.",
+                "preLabel": "If this activity is a management action under your funding agreement but you did not undertake this activity, during the reporting period, please state the reason.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -1321,7 +1326,8 @@
               }
             ],
             "name": "activityNotUndertaken",
-            "description": ""
+            "description": "",
+            "validate": "required"
           }
         ],
         "description": "When you enter the details for this activity please make sure that you only enter the number and cost details once. Either as a single total record, encompassing the details and costs of this activity across all of your sites or as separate entries for each site.",
@@ -1473,7 +1479,7 @@
             ],
             "items": [
               {
-                "preLabel": "If this activity is a management action under your funding agreement but you were not able to undertake this activity, during the reporting period, please state the reason.",
+                "preLabel": "If this activity is a management action under your funding agreement but you did not undertake this activity, during the reporting period, please state the reason.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -1624,7 +1630,8 @@
               }
             ],
             "name": "activityNotUndertaken",
-            "description": ""
+            "description": "",
+            "validate": "required"
           }
         ],
         "description": "When you enter the details for this activity please make sure that you only enter the number and cost details once. Either as a single total record, encompassing the details and costs of this activity across all of your sites or as separate entries for each site.",
@@ -1776,7 +1783,7 @@
             ],
             "items": [
               {
-                "preLabel": "If this activity is a management action under your funding agreement but you were not able to undertake this activity, during the reporting period, please state the reason.",
+                "preLabel": "If this activity is a management action under your funding agreement but you did not undertake this activity, during the reporting period, please state the reason.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -1901,7 +1908,8 @@
               }
             ],
             "name": "activityNotUndertaken",
-            "description": ""
+            "description": "",
+            "validate": "required"
           }
         ],
         "description": "When you enter the details for this activity please make sure that you only enter the number and cost details once. Either as a single total record, encompassing the details and costs of this activity across all of your sites or as separate entries for each site.",
@@ -2034,7 +2042,7 @@
             ],
             "items": [
               {
-                "preLabel": "If this activity is a management action under your funding agreement but you were not able to undertake this activity, during the reporting period, please state the reason.",
+                "preLabel": "If this activity is a management action under your funding agreement but you did not undertake this activity, during the reporting period, please state the reason.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -2218,7 +2226,8 @@
               }
             ],
             "name": "activityNotUndertaken",
-            "description": ""
+            "description": "",
+            "validate": "required"
           }
         ],
         "description": "When you enter the details for this activity please make sure that you only enter the number and cost details once. Either as a single total record, encompassing the details and costs of this activity across all of your sites or as separate entries for each site.",
@@ -2398,7 +2407,7 @@
             ],
             "items": [
               {
-                "preLabel": "If this activity is a management action under your funding agreement but you were not able to undertake this activity, during the reporting period, please state the reason.",
+                "preLabel": "If this activity is a management action under your funding agreement but you did not undertake this activity, during the reporting period, please state the reason.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -2502,7 +2511,8 @@
               }
             ],
             "name": "activityNotUndertaken",
-            "description": ""
+            "description": "",
+            "validate": "required"
           }
         ],
         "modelName": "ESP Regeneration",
@@ -2647,7 +2657,7 @@
             ],
             "items": [
               {
-                "preLabel": "If this activity is a management action under your funding agreement but you were not able to undertake this activity, during the reporting period, please state the reason.",
+                "preLabel": "If this activity is a management action under your funding agreement but you did not undertake this activity, during the reporting period, please state the reason.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -2765,7 +2775,8 @@
               }
             ],
             "name": "activityNotUndertaken",
-            "description": ""
+            "description": "",
+            "validate": "required"
           }
         ],
         "description": "When you enter the details for this activity please make sure that you only enter the number and cost details once. Either as a single total record, encompassing the details and costs of this activity across all of your sites or as separate entries for each site.",
@@ -2908,7 +2919,7 @@
             ],
             "items": [
               {
-                "preLabel": "If this activity is a management action under your funding agreement but you were not able to undertake this activity, during the reporting period, please state the reason.",
+                "preLabel": "If this activity is a management action under your funding agreement but you did not undertake this activity, during the reporting period, please state the reason.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
