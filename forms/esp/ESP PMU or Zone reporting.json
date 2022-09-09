@@ -854,7 +854,7 @@
           {
             "items": [
               {
-                "source": "If you undertook grazing, please record ground cover % prior to and following your grazing periods (in the table under “Ground cover estimate”). If you did not undertake grazing, then record ground cover percentage (below) at the same time that you take the photo-point photograph for this site. Please ensure that this is done at the same time each year.",
+                "source": "Record ground cover % at the same time that you take the photo-point photograph for this site. Please ensure that this is done at the same time each year.<br>You can find instructions on measuring Ground cover here:<a href='https://www.dcceew.gov.au/environment/land/landcare/my-project/monitoring-reporting/environmental-stewardship/ground-cover-percentage'> Estimating ground cover percentage - DCCEEW</a><br>You can insert an image to demonstrate ground cover as a way to enhance records of the impact of the Environmental Stewardship Program.",
                 "type": "literal"
               }
             ],
