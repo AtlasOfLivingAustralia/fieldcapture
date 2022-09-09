@@ -1208,7 +1208,8 @@
             "constraints": [
               "Yes",
               "No"
-            ]
+            ],
+            "validate": "required"
           },
           {
             "columns": [
@@ -1279,9 +1280,9 @@
                   "Excessive population",
                   "Land degradation",
                   "Nil",
-                  "Predation",
-                  "Removal of feral animals"
-                ]
+                  "Predation"
+                ],
+                "validate": "required"
               },
               {
                 "dataType": "number",
@@ -1292,14 +1293,14 @@
                   }
                 ],
                 "name": "noCulled",
-                "validate": "min[0]"
+                "validate": "min[0],required"
               }
             ],
             "dataType": "list",
             "name": "feralAnimalManagement"
           },
           {
-            "dataType": "number",
+            "dataType": "text",
             "behaviour": [
               {
                 "type": "enable_and_clear",
@@ -1307,7 +1308,7 @@
               }
             ],
             "name": "cost",
-            "validate": "required,min[0]"
+            "validate": "required"
           },
           {
             "dataType": "text",
@@ -1341,7 +1342,7 @@
           {
             "items": [
               {
-                "source": "<b> What are the conservation outcomes sought?</b> <br> 1) to reduce browsing impact on palatable native plants; <br> 2) to maintain native species diversity; <br> 3) to reduce overgrazing leading to weed infestation; <br> 4) to improve litter and soil condition; <br> 5) to facilitate natural regeneration; <br> 6) to reduce predation on local native fauna.",
+                "source": "<b> What are the conservation outcomes sought?</b> <br>1.To reduce browsing impact on palatable native plants and local native fauna; <br> 2. Maintain native species diversity and facilitate natural regeneration; <br> 3. Reduce overgrazing leading to weed infestation; <br> 4. Improve litter and soil condition.",
                 "type": "literal"
               }
             ],
@@ -1350,7 +1351,7 @@
           {
             "items": [
               {
-                "source": "<b> Implementation: </b> <br> Land managers are encouraged to control feral herbivores and carnivores (e.g. rabbits, hares, goats, deer, pigs, foxes, feral cats) where these are having a detrimental impact on the target ecological community. Control measures will differ between species and may include both preventative (e.g. fencing) and destructive measures as appropriate. <br> Destructive control measures should minimise unintended adverse impacts on non-target species and be undertaken humanely and in accordance with NSW legislation. Warren ripping to control rabbits within a target ecological community should be undertaken as a last resort and every effort should be taken to minimise soil disturbance away from the immediate warren site.",
+                "source": "<b> Implementation: </b> <br> Land managers are encouraged to control feral herbivores and carnivores (for example rabbits, hares, goats, deer, pigs, foxes or feral cats) where these are having a detrimental impact on the target ecological community. Control measures will differ between species and may include both preventative (e.g. fencing) and destructive measures as appropriate. <br> Destructive control measures should minimise unintended adverse impacts on non-target species and be undertaken humanely and in accordance with NSW legislation. Warren ripping to control rabbits within a target ecological community should be undertaken as a last resort and every effort should be taken to minimise soil disturbance away from the immediate warren site.",
                 "type": "literal"
               }
             ],
@@ -1410,7 +1411,7 @@
                     "width": "20%",
                     "source": "managementReason",
                     "title": "Reason for management",
-                    "type": "selectOne"
+                    "type": "select2Many"
                   },
                   {
                     "width": "10%",
@@ -1436,7 +1437,7 @@
             ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year. This could include: </label></span><ul><li>The impact of the grazing pressure, soil disturbance and damage to native trees and grasses.</li><li>Have the feral animals caused any damage to infrastructure on the property? State if this impact is significant or minimal.</li><li>Are there significant feral animals in the surrounding property moving on the ESP Site? Has any action been taken to reduce this movement?</li></ul>",
+                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year. This comment could include, but is not limited to, the following information: </label></span><ul><li>The impact of the grazing pressure, soil disturbance and damage to native trees and grasses from feral animals.</li><li>Have the feral animals caused any damage to infrastructure on the property? State if this impact is significant or minimal.</li><li>Was a permit obtained from NSW National Parks and Wildlife Service to authorise this culling or was it a licenced shooter?</li><li>Are there significant feral animals in the surrounding properties moving on the ESP Site?</li><li>What actions have been undertaken to reduce feral animal movement onto the ESP sire.</li><li>Any additional comments or observations.</li></ul>",
                 "type": "literal"
               }
             ]
@@ -1469,7 +1470,9 @@
               {
                 "preLabel": "Total cost of management actions",
                 "source": "cost",
-                "type": "currency"
+                "type": "number",
+                "width": "50%",
+                "helpText": "These costs can include, but are not limited to: hours steward takes to undertake native herbivore management, ammunition or cost of contractors."
               }
             ]
           },
@@ -1483,7 +1486,7 @@
             ],
             "items": [
               {
-                "preLabel": "If this activity is a management action under your funding agreement but you did not undertake this activity, during the reporting period, please state the reason.",
+                "preLabel": "If this activity is a management action under your Funding Agreement but you did not undertake this activity, during the reporting period, please state the reason.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -1787,7 +1790,7 @@
             ],
             "items": [
               {
-                "preLabel": "If this activity is a management action under your funding agreement but you did not undertake this activity, during the reporting period, please state the reason.",
+                "preLabel": "If this activity is a management action under your Funding Agreement but you did not undertake this activity, during the reporting period, please state the reason.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -2046,7 +2049,7 @@
             ],
             "items": [
               {
-                "preLabel": "If this activity is a management action under your funding agreement but you did not undertake this activity, during the reporting period, please state the reason.",
+                "preLabel": "If this activity is a management action under your Funding Agreement but you did not undertake this activity, during the reporting period, please state the reason.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -2411,7 +2414,7 @@
             ],
             "items": [
               {
-                "preLabel": "If this activity is a management action under your funding agreement but you did not undertake this activity, during the reporting period, please state the reason.",
+                "preLabel": "If this activity is a management action under your Funding Agreement but you did not undertake this activity, during the reporting period, please state the reason.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -2661,7 +2664,7 @@
             ],
             "items": [
               {
-                "preLabel": "If this activity is a management action under your funding agreement but you did not undertake this activity, during the reporting period, please state the reason.",
+                "preLabel": "If this activity is a management action under your Funding Agreement but you did not undertake this activity, during the reporting period, please state the reason.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -2923,7 +2926,7 @@
             ],
             "items": [
               {
-                "preLabel": "If this activity is a management action under your funding agreement but you did not undertake this activity, during the reporting period, please state the reason.",
+                "preLabel": "If this activity is a management action under your Funding Agreement but you did not undertake this activity, during the reporting period, please state the reason.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
