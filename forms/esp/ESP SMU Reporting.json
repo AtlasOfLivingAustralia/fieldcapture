@@ -3191,21 +3191,6 @@
                 "condition": "wasActivityUndertaken == \"Yes\""
               }
             ],
-            "name": "undertakeTreeRootDisturbanceControl",
-            "constraints": [
-              "Yes",
-              "No"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "text",
-            "behaviour": [
-              {
-                "type": "enable_and_clear",
-                "condition": "wasActivityUndertaken == \"Yes\""
-              }
-            ],
             "name": "treeRootDisturbanceControlActions"
           },
           {
@@ -3217,7 +3202,8 @@
               }
             ],
             "name": "activityNotUndertaken",
-            "description": ""
+            "description": "",
+            "validate": "required"
           }
         ],
         "modelName": "ESP Tree Root Disturbances",
@@ -3226,7 +3212,7 @@
           {
             "items": [
               {
-                "source": "<b>Information TBA</b>",
+                "source": "<b> What is the conservation outcomes sought?</b> <br>1. To improve tree health by minimizing disturbance to tree roots.<br><br><b>Implementation</b><br>Land managers are required to cease cultivation within a 20 metre buffer immediately adjacent to those PMUs that are wooded.",
                 "type": "literal"
               }
             ],
@@ -3254,24 +3240,8 @@
           {
             "items": [
               {
-                "source": "undertakeTreeRootDisturbanceControl",
-                "preLabel": "Did you undertake actions to reduce disturbance to tree roots on your sites this year? (Yes / No)",
-                "type": "selectOne"
-              }
-            ],
-            "behaviour": [
-              {
-                "type": "if_expression",
-                "condition": "wasActivityUndertaken == \"Yes\""
-              }
-            ],
-            "type": "row"
-          },
-          {
-            "items": [
-              {
                 "source": "treeRootDisturbanceControlActions",
-                "preLabel": "If 'Yes', please describe the actions taken:",
+                "preLabel": "Please describe the actions taken:",
                 "type": "textarea"
               }
             ],
@@ -3293,7 +3263,22 @@
             ],
             "items": [
               {
-                "preLabel": "If this activity is a management action under your funding agreement but you were not able to undertake this activity, during the reporting period, please state the reason.",
+                "source": "<span class=\"preLabel required\"><label>If this activity is a management action under your funding agreement but no action was taken, this reporting period, please provide comment. This comment can include, but is not limited to, the following information:</label></span><ul><li>The effectiveness of previous actions taken; and</li><li>If you believe any actions will be taken in the future. </li></ul>",
+                "type": "literal"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"No\""
+              }
+            ],
+            "items": [
+              {
+                "preLabel": "",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
