@@ -2067,7 +2067,8 @@
             "constraints": [
               "Yes",
               "No"
-            ]
+            ],
+            "validate": "required"
           },
           {
             "dataType": "list",
@@ -2204,7 +2205,7 @@
             "validate": "required"
           },
           {
-            "dataType": "number",
+            "dataType": "text",
             "behaviour": [
               {
                 "type": "enable_and_clear",
@@ -2212,7 +2213,7 @@
               }
             ],
             "name": "cost",
-            "validate": "required,min[0]"
+            "validate": "required"
           },
           {
             "dataType": "text",
@@ -2223,7 +2224,8 @@
               }
             ],
             "name": "activityNotUndertaken",
-            "description": ""
+            "description": "",
+            "validate": "required"
           }
         ],
         "description": "When you enter the details for this activity please make sure that you only enter the number and cost details once. Either as a single total record, encompassing the details and costs of this activity across all of your sites or as separate entries for each site.",
@@ -2233,7 +2235,7 @@
           {
             "items": [
               {
-                "source": "<b> What is the conservation outcome sought?</b> <br>Environmental re-vegetation refers to planting of native vegetation into a patch to assist with the restoration of its ecological values and condition.<br> Planting or direct seeding is encouraged where it is likely to speed up the recovery of the woodland, namely to assist in rehabilitating stock camps, re-introducing locally rare endemic plants, re-introducing trees into large areas of derived grassland or degraded woodland, or to provide competition to established or vigorous weed species.",
+                "source": "<b> What is the conservation outcome sought?</b> <br>1. Speed up the recovery of the woodland, namely to assist in rehabilitating stock camps;<br> 2. Re-introducing locally rare endemic plants;<br>3. Re-introducing trees into large areas of derived grassland or degraded woodland;<br>4. Provide competition to established or vigorous weed species.",
                 "type": "literal"
               }
             ],
@@ -2356,7 +2358,7 @@
             ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year. If you have undertaken any planting over the life of the project, please comment on the state of these plants.</label></span><ul><li>Have you replaced any of the plants that have not survived?</li><li>If you have planted this year why did you choose the area you planted these species? How are they doing?</li><li>Where do you source your plants/seeds from?</li></ul>",
+                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year. This comment could include, but is not limited to, the following information:</label></span><ul><li>Please include a list of species and numbers planted for prior year plantings.</li><li>Have you replaced any of the plants that have not survived?</li><li>If you have planted this year why did you choose the area you planted these species? What is the state of those plants?</li><li>Where do you source your plants/seeds from?</li><li>Any additional comments or observations.</li></ul>",
                 "type": "literal"
               }
             ]
@@ -2380,9 +2382,11 @@
           {
             "items": [
               {
+                "preLabel": "Total cost of management actions",
                 "source": "cost",
-                "preLabel": "Total cost of this management actions",
-                "type": "currency"
+                "type": "number",
+                "width": "50%",
+                "helpText": "These costs can include, but are not limited to: Cost of plants and seeds, time taken to plant, plant guards or cost of sourcing plants."
               }
             ],
             "behaviour": [
@@ -2403,7 +2407,7 @@
             ],
             "items": [
               {
-                "preLabel": "If this activity is a management action under your funding agreement but you were not able to undertake this activity, during the reporting period, please state the reason.",
+                "preLabel": "If this activity is a management action under your Funding Agreement but you did not undertake this activity, during the reporting period, please state the reason. Please include a list of species and numbers planted and for prior year plantings and the rate of survival.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -2431,7 +2435,8 @@
             "constraints": [
               "Yes",
               "No"
-            ]
+            ],
+            "validate": "required"
           },
           {
             "dataType": "list",
@@ -2476,7 +2481,7 @@
             ]
           },
           {
-            "dataType": "number",
+            "dataType": "text",
             "behaviour": [
               {
                 "type": "enable_and_clear",
@@ -2484,7 +2489,7 @@
               }
             ],
             "name": "cost",
-            "validate": "required,min[0]"
+            "validate": "required"
           },
           {
             "dataType": "text",
@@ -2507,7 +2512,8 @@
               }
             ],
             "name": "activityNotUndertaken",
-            "description": ""
+            "description": "",
+            "validate": "required"
           }
         ],
         "modelName": "ESP Regeneration",
@@ -2516,7 +2522,7 @@
           {
             "items": [
               {
-                "source": "<b> What is the conservation outcomes sought?</b> <br>Healthy box gum grassy woodland comprises both mature and immature examples of the dominant eucalypt species and hence it is important that management of the patch facilitates natural regeneration.<br> Young trees provide a number of important ecological functions in box gum grassy woodland including providing structural diversity, cover and shelter for woodland birds and other animals, increasing the available foraging potential and maintenance of the woodland overstorey in the long term. <br> In woodland under significant grazing pressure, regeneration of trees and shrubs is often sparse or non-existent as they are very susceptible to grazing when young. Removal of grazing pressure alone may result in extensive regeneration of trees and shrubs. However, in some patches additional measures such as control of exotic species in the understorey may be required to encourage regeneration. <br>If a remnant tree exists in isolation within a patch (i.e. paddock tree), particularly in a derived grassland, land managers may consider fencing an area around the tree to encourage natural regeneration. In general an area at least twice the canopy cover (diameter) is considered suffi cient to allow local seedling establishment",
+                "source": "<b> What is the conservation outcomes sought?</b> <br>1. Establish mature and immature examples of the dominant eucalypt species and understory.<br>2. Improve the structural diversity, cover and shelter for woodland birds and other animals, increasing the available foraging potential and maintenance of the woodland overstorey in the long term.<br><br><b>Implementation</b><br>Removal of grazing pressure and exotic weed competition can support the regeneration of trees and shrubs. If a remnant tree exists in isolation within a patch (i.e. paddock tree), land managers may consider fencing an area around the tree to encourage natural regeneration.",
                 "type": "literal"
               }
             ],
@@ -2535,7 +2541,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "Was this activity undertaken during this reporting period?",
+                "preLabel": "Have you observed any regeneration, or undertaken any actions to improve regeneration, during this reporting period?",
                 "type": "selectOne",
                 "source": "wasActivityUndertaken"
               }
@@ -2605,7 +2611,7 @@
             ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year.</label></span><div>Land managers are asked to observe and record eucalypt regeneration in their patch.<br>Have you observed any natural regeneration across the site. Is this in grassland or existing woodland. <br>How well have previous years saplings/seedlings survived? <br>How extensive is the natural regeneration?<br>Have you seen any regeneration of native grasses, forbs or flowers?</div>",
+                "source": "<span class=\"preLabel required\"><label>Please provide comment on any actions taken to support natural regeneration and the regeneration observed. This comment could include, but is not limited to, the following information:</label></span><div><ul><li>What direct actions have you taken to improve natural regeneration?</li><li>Does the natural regeneration overserved occur inin the grassland or existing woodland?</li><li>How well have previous years naturally occurring saplings/seedlings survived?</li><li>How extensive across the site, is the natural regeneration?</li><li>Do you feel that the implementation of the Environmental Stewardship Program has improved regeneration?</li><li>Have you seen any regeneration of native grasses, forbs or flowers?</li><li>Any additional comments regarding this activity.</li></ul></div>",
                 "type": "literal"
               }
             ]
@@ -2629,9 +2635,11 @@
           {
             "items": [
               {
+                "preLabel": "Total cost of management actions",
                 "source": "cost",
-                "preLabel": "Total cost of this management actions",
-                "type": "currency"
+                "type": "number",
+                "width": "50%",
+                "helpText": "These costs can include, but are not limited to: time taken to identify and record observed regeneration or cost of actions taken to improve regeneration."
               }
             ],
             "behaviour": [
@@ -2652,7 +2660,7 @@
             ],
             "items": [
               {
-                "preLabel": "If this activity is a management action under your funding agreement but you were not able to undertake this activity, during the reporting period, please state the reason.",
+                "preLabel": "If this activity is a management action under your Funding Agreement but you did not undertake this activity, during the reporting period, please state the reason.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
