@@ -2409,7 +2409,7 @@
             ],
             "items": [
               {
-                "preLabel": "If this activity is a management action under your Funding Agreement but you did not undertake this activity, during the reporting period, please state the reason. Please include a list of species and numbers planted and for prior year plantings and the rate of survival.",
+                "preLabel": "If this activity is a management action under your Funding Agreement but to undertake this activity, during the reporting period, please state the reason. Please include a list of species and numbers planted and for prior year plantings and the rate of survival.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -2662,7 +2662,7 @@
             ],
             "items": [
               {
-                "preLabel": "If this activity is a management action under your Funding Agreement but you did not undertake this activity, during the reporting period, please state the reason.",
+                "preLabel": "If this activity is a management action under your Funding Agreement but you did not  undertake this activity, during the reporting period, please state the reason.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -2792,7 +2792,7 @@
           {
             "items": [
               {
-                "source": "Land managers are encouraged to leave fallen trees or branches where they fall within their woodland patch. Often if a tree or substantial branch falls to the ground it provides a sheltered habitat enabling seeds to germinate and the process of natural regeneration to occur. <br> The use of rocks and other habitat objects like nest boxes, old untreated fence posts can improve the habitat features of the ESP zone.",
+                "source": "<b> What are the conservation outcomes sought?</b> <br>1. Tree or substantial branches that fall to the ground it provides a sheltered habitat enabling seeds to germinate and the process of natural regeneration to occur;<br>2. Fall branches, rocks and small objects create habitats for native fauna species.<br><br><b>Implementation</b><br>Land managers are encouraged to leave fallen trees or branches where they fall within their woodland patch. .The use of rocks and other habitat objects like nest boxes, old untreated fence posts can improve the habitat features of the ESP zone.",
                 "type": "literal"
               }
             ],
@@ -2902,9 +2902,11 @@
           {
             "items": [
               {
+                "preLabel": "Total cost of management actions",
                 "source": "cost",
-                "preLabel": "Total cost of this management actions",
-                "type": "currency"
+                "type": "number",
+                "width": "50%",
+                "helpText": "These costs can include, but are not limited to: time taken to identify and record observed regeneration or cost of actions taken to improve regeneration."
               }
             ],
             "behaviour": [
