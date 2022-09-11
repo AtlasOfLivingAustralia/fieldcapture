@@ -2906,7 +2906,7 @@
                 "source": "cost",
                 "type": "number",
                 "width": "50%",
-                "helpText": "These costs can include, but are not limited to: time taken to identify and record observed regeneration or cost of actions taken to improve regeneration."
+                "helpText": "These costs can include, but are not limited to: time taken to establish habitats, material for habitats or cost of observation time."
               }
             ],
             "behaviour": [

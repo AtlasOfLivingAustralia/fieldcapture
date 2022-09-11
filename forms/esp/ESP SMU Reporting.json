@@ -2904,7 +2904,7 @@
                 "source": "cost",
                 "type": "number",
                 "width": "50%",
-                "helpText": "These costs can include, but are not limited to: time taken to identify and record observed regeneration or cost of actions taken to improve regeneration."
+                "helpText": "These costs can include, but are not limited to: time taken to establish habitats, material for habitats or cost of observation time."
               }
             ],
             "behaviour": [
@@ -3026,7 +3026,8 @@
               }
             ],
             "name": "activityNotUndertaken",
-            "description": ""
+            "description": "",
+            "validate": "required"
           }
         ],
         "modelName": "ESP Control of Agrochemicals",
@@ -3131,7 +3132,7 @@
                 "source": "cost",
                 "type": "number",
                 "width": "50%",
-                "helpText": "These costs can include, but are not limited to: time taken to identify and record observed regeneration or cost of actions taken to improve regeneration."
+                "helpText": "These costs can include, but are not limited to: cost of establishing dense forbs and grasses. This DOES NOT include costs of not undertaken cultivation, spraying chemicals or grazing."
               }
             ],
             "behaviour": [
@@ -3198,6 +3199,17 @@
             "behaviour": [
               {
                 "type": "enable_and_clear",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
+            "name": "cost",
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
                 "condition": "wasActivityUndertaken == \"No\""
               }
             ],
@@ -3243,6 +3255,23 @@
                 "source": "treeRootDisturbanceControlActions",
                 "preLabel": "Please describe the actions taken:",
                 "type": "textarea"
+              }
+            ],
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "wasActivityUndertaken == \"Yes\""
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "preLabel": "Total cost of management actions",
+                "source": "cost",
+                "type": "number",
+                "width": "50%"
               }
             ],
             "behaviour": [
@@ -3310,68 +3339,8 @@
             "validate": "required"
           },
           {
-            "dataType": "text",
-            "behaviour": [
-              {
-                "type": "enable_and_clear",
-                "condition": "wasActivityUndertaken == \"Yes\""
-              }
-            ],
-            "name": "undertakeFencingPaddockTrees",
-            "constraints": [
-              "Yes",
-              "No"
-            ],
-            "validate": "required"
-          },
-          {
             "name": "fencingPaddockTreesActions",
             "type": "text"
-          },
-          {
-            "dataType": "list",
-            "name": "fencing",
-            "columns": [
-              {
-                "dataType": "text",
-                "behaviour": [
-                  {
-                    "type": "enable_and_clear",
-                    "condition": "wasActivityUndertaken == \"Yes\""
-                  }
-                ],
-                "description": "The type of fencing activity",
-                "name": "fenceActivityType",
-                "constraints": [
-                  "Extension of existing fence line",
-                  "Repairs to existing fence line",
-                  "New fencing"
-                ]
-              },
-              {
-                "dataType": "number",
-                "behaviour": [
-                  {
-                    "type": "enable_and_clear",
-                    "condition": "wasActivityUndertaken == \"Yes\""
-                  }
-                ],
-                "description": "Approximate area fenced in m2",
-                "name": "areaFenced",
-                "validate": "min[0]"
-              },
-              {
-                "dataType": "number",
-                "behaviour": [
-                  {
-                    "type": "enable_and_clear",
-                    "condition": "wasActivityUndertaken == \"Yes\""
-                  }
-                ],
-                "name": "activityCost",
-                "validate": "integer,min[0]"
-              }
-            ]
           },
           {
             "dataType": "text",
@@ -3405,7 +3374,8 @@
               }
             ],
             "name": "activityNotUndertaken",
-            "description": ""
+            "description": "",
+            "validate": "required"
           }
         ],
         "description": "When you enter the details for this activity please make sure that you only enter the number and cost details once. Either as a single total record, encompassing the details and costs of this activity across all of your sites or as separate entries for each site.",
@@ -3415,7 +3385,7 @@
           {
             "items": [
               {
-                "source": "<b>Information TBA</b>",
+                "source": "<b> What are the conservation outcomes sought?</b> <br>1. Protect individual trees to promote connectivity between a PMU and other patches of native vegetation.<br><br><b>Implementation</b><br>Individual paddock trees may be fenced sufficient to allow natural regeneration i.e. the area around the tree is protected from livestock grazing and trampling to encourage germination of tree seedlings following seedfall.",
                 "type": "literal"
               }
             ],
@@ -3441,58 +3411,6 @@
             ]
           },
           {
-            "items": [
-              {
-                "source": "undertakeFencingPaddockTrees",
-                "preLabel": "Did you undertake any activities relating to the fencing of Paddock trees on this site this year? (Yes / No)",
-                "type": "selectOne"
-              }
-            ],
-            "behaviour": [
-              {
-                "type": "if_expression",
-                "condition": "wasActivityUndertaken == \"Yes\""
-              }
-            ],
-            "type": "row"
-          },
-          {
-            "items": [
-              {
-                "title": "<i>Please note that this section also applies to repairs made to existing fencing.</i> If your situation makes it impractical to record your information in the table/rows below, please delete any row(s) from the table by clicking the X at the far right hand side.",
-                "source": "fencing",
-                "columns": [
-                  {
-                    "title": "Type of Fencing Activity",
-                    "source": "fenceActivityType",
-                    "type": "selectOne"
-                  },
-                  {
-                    "title": "Area fenced (approximate m2):",
-                    "source": "areaFenced",
-                    "computed": null,
-                    "type": "number"
-                  },
-                  {
-                    "title": "Cost",
-                    "source": "activityCost",
-                    "type": "currency"
-                  }
-                ],
-                "userAddedRows": true,
-                "disableTableUpload": true,
-                "type": "table"
-              }
-            ],
-            "behaviour": [
-              {
-                "type": "if_expression",
-                "condition": "wasActivityUndertaken == \"Yes\""
-              }
-            ],
-            "type": "row"
-          },
-          {
             "type": "row",
             "behaviour": [
               {
@@ -3502,7 +3420,7 @@
             ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year.</label></span>",
+                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness Fencing Paddock Trees:</label></span>",
                 "type": "literal"
               }
             ]
@@ -3530,7 +3448,7 @@
                 "source": "cost",
                 "type": "number",
                 "width": "50%",
-                "helpText": "These costs can include, but are not limited to: time taken to identify and record observed regeneration or cost of actions taken to improve regeneration."
+                "helpText": "These costs can include, but are not limited to: cost of fencing materials or cost of time taken to fencing trees."
               }
             ],
             "behaviour": [
@@ -3551,7 +3469,7 @@
             ],
             "items": [
               {
-                "preLabel": "If this activity is a management action under your funding agreement but you were not able to undertake this activity, during the reporting period, please state the reason.",
+                "preLabel": "If this activity is a management action under your Funding Agreement but you did not undertake this activity, during the reporting period, please state the reason.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -3614,7 +3532,8 @@
               }
             ],
             "name": "activityNotUndertaken",
-            "description": ""
+            "description": "",
+            "validate": "required"
           }
         ],
         "description": "When you enter the details for this activity please make sure that you only enter the number and cost details once. Either as a single total record, encompassing the details and costs of this activity across all of your sites or as separate entries for each site.",
@@ -3624,16 +3543,7 @@
           {
             "items": [
               {
-                "source": "<b> What are the conservation outcomes sought?</b> <br> Ecological thinning is encouraged in patches of dense young regeneration, in order to increase structural diversity or to allow for the regeneration of understorey species by reducing competition and increasing light penetration to ground level.<br> Natural thinning will most likely occur, but can take decades to reach desired final densities. During this time there can be an increased risk of degradation. <br> Ecological thinning refers to the strategic, manual removal of a number of tree stems within a patch of vegetation where the tree density may be such that there are few mature trees, numerous young stems and a sparse ground layer.",
-                "type": "literal"
-              }
-            ],
-            "type": "row"
-          },
-          {
-            "items": [
-              {
-                "source": "<b>Please note</b> TBA",
+                "source": "<b> What are the conservation outcomes sought?</b> <br> Ecological thinning increases  structural diversity and allows for the regeneration of understorey species by reducing competition and increasing light penetration to ground level.<br><br><b>Implementation</b><br>Ecological thinning refers to the strategic, manual removal of a number of tree stems within a patch of vegetation where the tree density may be such that there are few mature trees, numerous young stems and a sparse ground layer.",
                 "type": "literal"
               }
             ],
@@ -3649,8 +3559,6 @@
               }
             ]
           },
-
-
           {
             "type": "row",
             "behaviour": [
@@ -3661,7 +3569,7 @@
             ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label>Please provide detail the effectiveness of the action undertaken.</label></span><ul><li>How often has thinning occurred and do you think it will be required going forward?</li></ul>",
+                "source": "<span class=\"preLabel required\"><label>Please provide detail the effectiveness of the action undertaken. This comment could include, but is not limited to, the following information:</label></span><ul><li>What type of species of plants were thinned e.g. Callitris, Acacia or grass and forbs?</li><li>How large was the area thinned?</li><li>How was the thinning undertaken?</li><li>How often has thinning occurred and do you think it will be required going forward?</li></ul>",
                 "type": "literal"
               }
             ]
@@ -3689,7 +3597,7 @@
                 "source": "cost",
                 "type": "number",
                 "width": "50%",
-                "helpText": "These costs can include, but are not limited to: time taken to identify and record observed regeneration or cost of actions taken to improve regeneration."
+                "helpText": "These costs can include, but are not limited to: cost of tools used to thinning vegetation or time taken."
               }
             ],
             "behaviour": [
@@ -3710,7 +3618,7 @@
             ],
             "items": [
               {
-                "preLabel": "If this activity is a management action under your funding agreement but you were not able to undertake this activity, during the reporting period, please state the reason.",
+                "preLabel": "If this activity is a management action under your Funding Agreement but you did not undertake this activity, during the reporting period, please state the reason.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
