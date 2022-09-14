@@ -7,12 +7,14 @@
     <!-- ko if:transients.description -->
     <div data-bind="if:transients.description">
         <div>
-            <button data-bind="toggleVisibility:${blockId}"></button>
+            <button data-bind="toggleVisibility:{blockId: ${blockId}, collapsedByDefault: transients.collapsedByDefault}"></button>
             <span>Information Box</span>
             <div data-bind="if:transients.collapsedByDefault">
                 <div id="${blockId}" data-bind="html:transients.description"></div>
             </div>
-            <div id="${blockId}" data-bind="html:transients.description" style="display: none"></div>
+            <div data-bind="if:!transients.collapsedByDefault">
+                <div id="${blockId}" data-bind="html:transients.description" style="display: none"></div>
+            </div>
         </div>
         <br>
     </div>
