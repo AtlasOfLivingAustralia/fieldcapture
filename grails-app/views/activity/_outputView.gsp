@@ -5,7 +5,6 @@
     <g:set var="title" value="${model?.title ?: outputName}"/>
     <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{ title:'Has been modified'}">${title}</h3><g:if test="${model?.description}"><span class="output-help"><fc:iconHelp titleCode="n/a" title="${title}">${model?.description}</fc:iconHelp></span></g:if>
     <!-- ko if:transients.description -->
-    <div data-bind="if:transients.description">
         <div>
             <button data-bind="toggleVisibility:{blockId: ${blockId}, collapsedByDefault: transients.collapsedByDefault}"></button>
             <span>Information Box</span>
@@ -17,7 +16,6 @@
             </div>
         </div>
         <br>
-    </div>
     <!-- /ko -->
     <div data-bind="if:transients.optional">
         <label class="checkbox"><input type="checkbox" data-bind="checked:outputNotCompleted">
