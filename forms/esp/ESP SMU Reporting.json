@@ -3516,31 +3516,6 @@
             "title": "Information Box"
           },
           {
-            "type": "row",
-            "items": [
-              {
-                "preLabel": "Was this activity undertaken during this reporting period?",
-                "type": "selectOne",
-                "source": "wasActivityUndertaken"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "behaviour": [
-              {
-                "type": "if_expression",
-                "condition": "wasActivityUndertaken == \"Yes\""
-              }
-            ],
-            "items": [
-              {
-                "source": "<span class=\"preLabel required\"><label>Please provide detail the effectiveness of the action undertaken. This comment could include, but is not limited to, the following information:</label></span><ul><li>What type of species of plants were thinned e.g. Callitris, Acacia or grass and forbs?</li><li>How large was the area thinned?</li><li>How was the thinning undertaken?</li><li>How often has thinning occurred and do you think it will be required going forward?</li></ul>",
-                "type": "literal"
-              }
-            ]
-          },
-          {
             "items": [
               {
                 "source": "notes",
