@@ -476,7 +476,7 @@
             "name": "grazingPeriods"
           },
           {
-            "dataType": "text",
+            "dataType": "number",
             "behaviour": [
               {
                 "type": "enable_and_clear",
@@ -484,7 +484,8 @@
               }
             ],
             "name": "cost",
-            "validate": "required"
+            "validate": "required",
+            "defaultValue": ""
           },
           {
             "dataType": "text",
@@ -706,7 +707,7 @@
               {
                 "preLabel": "Total cost of management actions",
                 "source": "cost",
-                "type": "number",
+                "type": "currency",
                 "width": "50%",
                 "helpText": "These costs can include, but are not limited to: cost of time taken to move stock or cost to repair fences and infrastructure damaged."
               }
@@ -995,7 +996,7 @@
             "name": "nativeSpeciesMonitoring"
           },
           {
-            "dataType": "text",
+            "dataType": "number",
             "behaviour": [
               {
                 "type": "enable_and_clear",
@@ -1003,7 +1004,8 @@
               }
             ],
             "name": "cost",
-            "validate": "required"
+            "validate": "required",
+            "defaultValue": ""
           },
           {
             "dataType": "text",
@@ -1144,7 +1146,7 @@
               {
                 "preLabel": "Total cost of management actions",
                 "source": "cost",
-                "type": "number",
+                "type": "currency",
                 "width": "50%",
                 "helpText": "These costs can include, but are not limited to: hours steward takes to undertake native herbivore management, ammunition or cost of contractors."
               }
@@ -1281,7 +1283,7 @@
             "name": "feralAnimalManagement"
           },
           {
-            "dataType": "text",
+            "dataType": "number",
             "behaviour": [
               {
                 "type": "enable_and_clear",
@@ -1289,7 +1291,8 @@
               }
             ],
             "name": "cost",
-            "validate": "required"
+            "validate": "required",
+            "defaultValue": ""
           },
           {
             "dataType": "text",
@@ -1436,7 +1439,7 @@
               {
                 "preLabel": "Total cost of management actions",
                 "source": "cost",
-                "type": "number",
+                "type": "currency",
                 "width": "50%",
                 "helpText": "These costs can include, but are not limited to: hours steward takes to undertake native herbivore management, ammunition or cost of contractors."
               }
@@ -1576,7 +1579,7 @@
             ]
           },
           {
-            "dataType": "text",
+            "dataType": "number",
             "behaviour": [
               {
                 "type": "enable_and_clear",
@@ -1584,7 +1587,8 @@
               }
             ],
             "name": "cost",
-            "validate": "required"
+            "validate": "required",
+            "defaultValue": ""
           },
           {
             "dataType": "text",
@@ -1724,7 +1728,7 @@
               {
                 "preLabel": "Total cost of management actions",
                 "source": "cost",
-                "type": "number",
+                "type": "currency",
                 "width": "50%",
                 "helpText": "These costs can include, but are not limited to: costs like sprays, equipment, contractors, PPE, hours of work undertaken."
               }
@@ -1844,7 +1848,7 @@
             "validate": "required"
           },
           {
-            "dataType": "text",
+            "dataType": "number",
             "behaviour": [
               {
                 "type": "enable_and_clear",
@@ -1852,7 +1856,8 @@
               }
             ],
             "name": "cost",
-            "validate": "required"
+            "validate": "required",
+            "defaultValue": ""
           },
           {
             "dataType": "text",
@@ -1965,7 +1970,7 @@
               {
                 "preLabel": "Total cost of management actions",
                 "source": "cost",
-                "type": "number",
+                "type": "currency",
                 "width": "50%",
                 "helpText": "These costs can include, but are not limited to: fuel for slashing or time taken to reduce biomass. Do not include cost for grazing is included in Livestock Grazing Management."
               }
@@ -2155,7 +2160,7 @@
             "validate": "required"
           },
           {
-            "dataType": "text",
+            "dataType": "number",
             "behaviour": [
               {
                 "type": "enable_and_clear",
@@ -2163,7 +2168,8 @@
               }
             ],
             "name": "cost",
-            "validate": "required"
+            "validate": "required",
+            "defaultValue": ""
           },
           {
             "dataType": "text",
@@ -2328,7 +2334,7 @@
               {
                 "preLabel": "Total cost of management actions",
                 "source": "cost",
-                "type": "number",
+                "type": "currency",
                 "width": "50%",
                 "helpText": "These costs can include, but are not limited to: Cost of plants and seeds, time taken to plant, plant guards or cost of sourcing plants."
               }
@@ -2426,7 +2432,7 @@
             ]
           },
           {
-            "dataType": "text",
+            "dataType": "number",
             "behaviour": [
               {
                 "type": "enable_and_clear",
@@ -2434,7 +2440,8 @@
               }
             ],
             "name": "cost",
-            "validate": "required"
+            "validate": "required",
+            "defaultValue": ""
           },
           {
             "dataType": "text",
@@ -2576,7 +2583,7 @@
               {
                 "preLabel": "Total cost of management actions",
                 "source": "cost",
-                "type": "number",
+                "type": "currency",
                 "width": "50%",
                 "helpText": "These costs can include, but are not limited to: time taken to identify and record observed regeneration or cost of actions taken to improve regeneration."
               }
@@ -2688,7 +2695,7 @@
             "name": "otherHabitatFeature"
           },
           {
-            "dataType": "text",
+            "dataType": "number",
             "behaviour": [
               {
                 "type": "enable_and_clear",
@@ -2696,7 +2703,8 @@
               }
             ],
             "name": "cost",
-            "validate": "required"
+            "validate": "required",
+            "defaultValue": ""
           },
           {
             "dataType": "text",
@@ -2836,7 +2844,7 @@
               {
                 "preLabel": "Total cost of management actions",
                 "source": "cost",
-                "type": "number",
+                "type": "currency",
                 "width": "50%",
                 "helpText": "These costs can include, but are not limited to: time taken to establish habitats, material for habitats or cost of observation time."
               }
