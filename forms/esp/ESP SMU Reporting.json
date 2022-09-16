@@ -1112,7 +1112,7 @@
             ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year. This comment could include, but is not limited to, the following information:</label></span><ul><li>The impact of native herbivores on the site on  trees seedlings and saplings ; impact on native grasses and flowers.  State if this impact is significant or minimal.</li><li>Damage to infrastructure and soil disturbance due to dens;</li><li>•The effectiveness of the management action; is the culling effective or is the population too large? Do you see the need for further action?</li><li>Was a permit obtained from NSW National Parks and Wildlife Service to authorise this culling or was it a licenced shooter?</li><li>Any additional comments or observations.</li></ul>",
+                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year. This comment could include, but is not limited to, the following information:</label></span><ul><li>The impact of native herbivores on the site on  trees seedlings and saplings ; impact on native grasses and flowers.  State if this impact is significant or minimal.</li><li>Damage to infrastructure and soil disturbance due to dens;</li><li>The effectiveness of the management action; is the culling effective or is the population too large? Do you see the need for further action?</li><li>Was a permit obtained from NSW National Parks and Wildlife Service to authorise this culling or was it a licenced shooter?</li><li>Any additional comments or observations.</li></ul>",
                 "type": "literal"
               }
             ]
