@@ -853,6 +853,44 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
 
     }
 
+    def "The scoresForFinanicalYear function will return 0s even if scores are missing"() {
+        setup:
+        String projectId = 'p1'
+        List scoreIds = ['1', '2', '3']
+        List report = [
+                [group:'2020 - 2021', results:[[scoreId:'1', count: 1, result: [ result: 10 ]]]],
+                [group:'2021 - 2022', results:[[scoreId:'1', count: 1, result: [ result: 1 ]], [scoreId:'2', count: 2, result: [result: 2]]]]
+        ]
+        Map resp = [status:200, resp:report]
+
+        when:
+        params.id = projectId
+        params.scoreIds = scoreIds
+        params.date = '2022-04-30T14:00:00Z'
+
+        controller.scoresForFinancialYear(projectId)
+
+        then:
+        1 * projectService.scoresByFinancialYear(projectId, scoreIds) >> resp
+        response.json == ['1':1, '2':2, '3':0]
+    }
+
+    def "The scoresForFinancialYear method returns zeros if it cannot obtain scores"() {
+        setup:
+        String projectId = 'p1'
+        List scoreIds = ['1', '2', '3']
+
+        when:
+        params.id = projectId
+        params.scoreIds = scoreIds
+        params.date = '2022-04-30T14:00:00Z'
+
+        controller.scoresForFinancialYear(projectId)
+
+        then:
+        1 * projectService.scoresByFinancialYear(projectId, scoreIds) >> [status:500, error:'']
+        response.json == ['1':0, '2':0, '3':0]
+    }
 
     private Map stubPublicUser() {
         userServiceStub.getUser() >> null

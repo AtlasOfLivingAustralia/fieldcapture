@@ -940,6 +940,20 @@ class ProjectController {
         render results as JSON
     }
 
+    @PreAuthorise
+    def scoresForFinancialYear(String id) {
+        List scoreIds = params.getList('scoreIds')
+        String date = params.get('date')
+        Map results = projectService.scoresByFinancialYear(id, scoreIds)
+        DateTime financialYearStart = DateUtils.alignToFinancialYear(DateUtils.parse(date))
+        String yearGroupToMatch = financialYearStart.year + " - " + (financialYearStart.year+1)
+
+        Map financialYearResult = results.resp?.find{ it.group == yearGroupToMatch } ?: [:]
+        Map resp = scoreIds.collectEntries{ String scoreId ->[(scoreId):financialYearResult.results?.find{it.scoreId == scoreId}?.result?.result ?: 0]}
+
+        render resp as JSON
+    }
+
     @PreAuthorise(accessLevel = 'editor')
     def projectTargetsAndScores(String id) {
         boolean approvedDataOnly = params.getBoolean("approvedDataOnly", true)
