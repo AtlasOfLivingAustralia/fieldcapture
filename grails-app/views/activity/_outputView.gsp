@@ -7,7 +7,7 @@
     <!-- ko if:transients.description -->
         <div>
             <button data-bind="toggleVisibility:{blockId: ${blockId}, collapsedByDefault: transients.collapsedByDefault}"></button>
-            <span>Information Box</span>
+            <span class="font-weight-bold"><g:message code="label.esp.collapsible"/></span>
             <div data-bind="if:transients.collapsedByDefault">
                 <div id="${blockId}" data-bind="html:transients.description"></div>
             </div>
