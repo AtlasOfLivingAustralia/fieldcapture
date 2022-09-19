@@ -62,7 +62,7 @@
       "collapsedByDefault": false,
       "modelName": null,
       "name": "ESP Livestock Grazing Management",
-      "description": "1) Reducing the ability of exotic annual plant species to set seed and vegetation biomass <br> 2) Facilitating seed set by native perennials and promoting regeneration of native plants; <br> 3) Reducing soil disturbance and compaction caused by hard-hooved domestic livestock; <br> 4) Reducing selective grazing of palatable native perennial plants; <br> 5) Reducing nutrient input through animal excrement.<br><br><b>Please note</b> Grazing activities may also be included under “Conservation grazing”, “Strategic grazing”, “Monitoring and manage grazing pressure from domestic livestock” and “Monitor and manage total grazing pressure”. <br> Endeavour to record sward height and ground cover percentage prior to and after each grazing period.<br>",
+      "description": "1. Reducing the ability of exotic annual plant species to set seed and vegetation biomass <br> 2. Facilitating seed set by native perennials and promoting regeneration of native plants; <br> 3. Reducing soil disturbance and compaction caused by hard-hooved domestic livestock; <br> 4. Reducing selective grazing of palatable native perennial plants; <br> 5. Reducing nutrient input through animal excrement.<br><br><b>Please note</b> Grazing activities may also be included under “Conservation grazing”, “Strategic grazing”, “Monitoring and manage grazing pressure from domestic livestock” and “Monitor and manage total grazing pressure”. <br> Endeavour to record sward height and ground cover percentage prior to and after each grazing period.<br>",
       "optional": false,
       "optionalQuestionText": "Not an agreed management action under my funding agreement",
       "template": {
@@ -602,12 +602,12 @@
                   },
                   {
                     "source": "swardHeight",
-                    "title": "Sward height PRIOR to grazing",
+                    "title": "Sward Height (cm) PRIOR to grazing",
                     "type": "number"
                   },
                   {
                     "source": "groundCover",
-                    "title": "Ground cover PRIOR to grazing",
+                    "title": "Ground Cover (%) PRIOR to grazing",
                     "type": "number"
                   },
                   {
@@ -673,7 +673,7 @@
             ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year. This comment could include, but is not limited to, the following information:</label></span><br><span>The impact on weeds on the site;</span><ul><li>Impact on native trees, saplings/seedlings, native grasses and forbs present.</li><li>Any unusual circumstances that occurred whilst grazing (e.g. fencing damaged so stock spread to different area; increase in feral animals near the site whilst stock present; issues with stock removal due to conditions).</li><li>If you grazed on dates outside the set grazing limitations in the management actions please provide an explanation and indicate if you have informed the ESP team via email/phone, as required;</li><li>If changes to the permitted grazing dates would have more positive impact on the site’s environment;</li><li>Any additional comments or observations.</li></ul>",
+                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year. This comment could include, but is not limited to, the following information:</label></span><br><ul><li>the impact of weeds on native trees, saplings/seedlings, native grasses and forbs</li><li>any unusual circumstances that occurred whilst grazing (e.g. fencing damaged so stock spread to different area; increase in feral animals or native herbivores near the site whilst stock present; issues with stock removal due to conditions)</li><li>if you grazed on dates outside the set grazing limits outlined in the management actions please provide an explanation and indicate if you have informed the Department via email/phone, as required</li><li>would changes to the permitted grazing dates have a more positive impact on the site’s environment?</li><li>any additional comments or observations.</li></ul>",
                 "type": "literal"
               }
             ]
@@ -705,7 +705,7 @@
             ],
             "items": [
               {
-                "preLabel": "Total cost of management actions",
+                "preLabel": "Total cost of management actions:",
                 "source": "cost",
                 "type": "currency",
                 "width": "50%",
@@ -723,7 +723,7 @@
             ],
             "items": [
               {
-                "preLabel": "If this activity is a management action under your Funding Agreement but you did not undertake this activity, during the reporting period, please state the reason.",
+                "preLabel": "If you did not undertake this activity during this reporting period, but it is a Management Action under your Funding Agreement, please state the reason:",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -773,7 +773,7 @@
           {
             "items": [
               {
-                "source": "Record sward height at the same time that you take the photo-point photograph for this site. Please ensure that this is done at the same time each year.<br>You can find instructions on measuring Sward height here:<a href='https://www.dcceew.gov.au/environment/land/landcare/my-project/monitoring-reporting/environmental-stewardship/sward-height'> Measuring Sward height - DCCEEW</a><br>You can insert an image to demonstrate sward height as a way to enhance records of the impact of the Environmental Stewardship Program.",
+                "source": "Record sward height at the same time that you take the photo-point photograph for this site. Please ensure that this is done at the same time each year.<br>You can find instructions on measuring Sward height here:<a href='https://www.dcceew.gov.au/environment/land/landcare/my-project/monitoring-reporting/environmental-stewardship/sward-height'> Measuring Sward height - DCCEEW</a><br>You can include an image of the sward height as a way to enhance records of the impact of the Environmental Stewardship Program.",
                 "type": "literal"
               }
             ],
@@ -790,7 +790,7 @@
                     "type": "number"
                   },
                   {
-                    "title": "Date measured",
+                    "title": "Date Measured",
                     "source": "dateMeasured",
                     "type": "date"
                   },
@@ -845,12 +845,12 @@
         ],
         "description": "Ground cover is the plant material covering the ground, both living and dead. To get a % estimate stand with your feet about 50cm apart. Visualise a 50cm square in front of your feet and estimate the percentage of groundcover in it. Do this a few times across the site and average the results.",
         "modelName": "ESP Ground Cover",
-        "title": "Ground Cover % Estimate",
+        "title": "Ground Cover Percentage (%) Estimate",
         "viewModel": [
           {
             "items": [
               {
-                "source": "Record ground cover % at the same time that you take the photo-point photograph for this site. Please ensure that this is done at the same time each year.<br>You can find instructions on measuring Ground cover here:<a href='https://www.dcceew.gov.au/environment/land/landcare/my-project/monitoring-reporting/environmental-stewardship/ground-cover-percentage'> Estimating ground cover percentage - DCCEEW</a><br>You can insert an image to demonstrate ground cover as a way to enhance records of the impact of the Environmental Stewardship Program.",
+                "source": "Record ground cover % at the same time that you take the photo-point photograph for this site. Please ensure that this is done at the same time each year.<br>You can find instructions on measuring Ground cover here:<a href='https://www.dcceew.gov.au/environment/land/landcare/my-project/monitoring-reporting/environmental-stewardship/ground-cover-percentage'> Estimating ground cover percentage - DCCEEW</a><br>You can include an image of the ground cover as a way to enhance records of the impact of the Environmental Stewardship Program.",
                 "type": "literal"
               }
             ],
@@ -862,12 +862,12 @@
                 "source": "groundCoverPercent",
                 "columns": [
                   {
-                    "title": "Ground cover %",
+                    "title": "Ground Cover %",
                     "source": "groundCoverPercent",
                     "type": "number"
                   },
                   {
-                    "title": "Date measured",
+                    "title": "Date Measured",
                     "source": "dateMeasured",
                     "type": "date"
                   },
@@ -895,7 +895,7 @@
       "collapsedByDefault": false,
       "modelName": null,
       "name": "ESP Native herbivore management",
-      "description": "1. Reducing browsing impact on palatable native plants; <br> 2. Maintaining native species diversity and facilitating natural regeneration; <br> 3. Reducing overgrazing, thus weed infestation; and <br> 4. Improving litter and soil condition.<br><br><b> Implementation: </b> <br> Actions that involve reduction in the native herbivore numbers include:<br>Exclusion is best carried out with a 3-strand plain wire fence affixed to the top of a stock-proof fence.<br>Trapping and relocation is an option for native herbivores, but only under licence.<br><br>Enticement away from the site (e.g. through strategic placement of watering points) is also an option, but success would need to be monitored.<br><br>Culling of native herbivores, which can only be conducted with the authorisation of and a license issued by the appropriate government authority. Ideally, culling should be coordinated with other similar actions in the region in order to maximise impact, and would be undertaken in a humane manner consistent with conservation and land stewardship values.<br><br><b>Please note</b> Activities to monitor and/or manage native herbivores may also be included under “Monitor and manage total grazing pressure”, “Monitor and manage grazing pressure from native species” or “Monitor and manage native herbivores.”",
+      "description": "1. Reducing browsing impact on palatable native plants; <br> 2. Maintaining native species diversity and facilitating natural regeneration; <br> 3. Reducing overgrazing, thus weed infestation; and <br> 4. Improving litter and soil condition.<br><br><b> Implementation: </b> <br> Actions that involve reduction in the native herbivore numbers include:<ul><li>exclusion is best carried out with a 3-strand plain wire fence affixed to the top of a stock-proof fence</li><li>trapping and relocation, but only under licence</li><li>enticement away from the site (e.g. through strategic placement of watering points), the success of which would need to be monitored</li><li>culling of native herbivores, which can only be conducted with the authorisation of and a license issued by the appropriate government authority</li></ul><span>Please note ideally culling should be coordinated with other similar actions in the region in order to maximise impact, and undertaken in a humane manner consistent with legislative requirements.</span><br><br><b>Please note</b> Activities to monitor and/or manage native herbivores may also be included under “Monitor and manage total grazing pressure”, “Monitor and manage grazing pressure from native species” or “Monitor and manage native herbivores.”",
       "optional": false,
       "optionalQuestionText": "Not an agreed management action under my funding agreement",
       "template": {
@@ -1077,7 +1077,7 @@
                   },
                   {
                     "source": "season",
-                    "title": "Season observed / managed",
+                    "title": "Season Observed / Managed",
                     "type": "selectOne"
                   },
                   {
@@ -1113,7 +1113,7 @@
             ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year. This comment could include, but is not limited to, the following information:</label></span><ul><li>The impact of native herbivores on the site on  trees seedlings and saplings ; impact on native grasses and flowers.  State if this impact is significant or minimal.</li><li>Damage to infrastructure and soil disturbance due to dens;</li><li>The effectiveness of the management action; is the culling effective or is the population too large? Do you see the need for further action?</li><li>Was a permit obtained from NSW National Parks and Wildlife Service to authorise this culling or was it a licenced shooter?</li><li>Any additional comments or observations.</li></ul>",
+                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year. This comment could include, but is not limited to, the following information:</label></span><ul><li>the impact of native herbivores on the site on  trees seedlings and saplings ; impact on native grasses and flowers. (State if this impact is significant or minimal)</li><li>damage to infrastructure and soil disturbance</li><li>is the culling effective or is the population too large?</li><li>do you see the need for further action?</li><li>was a permit obtained from NSW National Parks and Wildlife Service to authorise this culling or was it a licenced shooter?</li><li>any additional comments or observations.</li></ul>",
                 "type": "literal"
               }
             ]
@@ -1144,7 +1144,7 @@
             ],
             "items": [
               {
-                "preLabel": "Total cost of management actions",
+                "preLabel": "Total cost of management actions:",
                 "source": "cost",
                 "type": "currency",
                 "width": "50%",
@@ -1162,7 +1162,7 @@
             ],
             "items": [
               {
-                "preLabel": "If this activity is a management action under your Funding Agreement but you did not undertake this activity, during the reporting period, please state the reason.",
+                "preLabel": "If you did not undertake this activity this reporting period, but it is an agreed Management Action under your Funding Agreement, please state the reason.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -1180,7 +1180,7 @@
       "collapsedByDefault": false,
       "modelName": null,
       "name": "ESP Feral animal management",
-      "description": "1.To reduce browsing impact on palatable native plants and local native fauna; <br> 2. Maintain native species diversity and facilitate natural regeneration; <br> 3. Reduce overgrazing leading to weed infestation; <br> 4. Improve litter and soil condition. <br><br><b> Implementation: </b> <br> Land managers are encouraged to control feral herbivores and carnivores (for example rabbits, hares, goats, deer, pigs, foxes or feral cats) where these are having a detrimental impact on the target ecological community. Control measures will differ between species and may include both preventative (e.g. fencing) and destructive measures as appropriate. <br> Destructive control measures should minimise unintended adverse impacts on non-target species and be undertaken humanely and in accordance with NSW legislation. Warren ripping to control rabbits within a target ecological community should be undertaken as a last resort and every effort should be taken to minimise soil disturbance away from the immediate warren site.<br><br><b>Please note</b> Activities to monitor and/or manage feral animals may also be included under; “Monitor and manage total grazing pressure” and “Monitor and manage feral animals”.",
+      "description": "1.To reduce browsing impact on palatable native plants and local native fauna; <br> 2. Maintain native species diversity and facilitate natural regeneration; <br> 3. Reduce overgrazing leading to weed infestation; <br> 4. Improve litter and soil condition. <br><br><b> Implementation: </b> <br> Land managers are required to control feral herbivores and carnivores (for example rabbits, hares, goats, deer, pigs, foxes or feral cats) where these are having a detrimental impact on the target ecological community. Control measures will differ between species and may include both preventative (e.g. fencing) and destructive measures as appropriate. <br> Destructive control measures should minimise unintended adverse impacts on non-target species and be undertaken humanely and in accordance with NSW legislation. Warren ripping to control rabbits within a target ecological community should be undertaken as a last resort and every effort should be taken to minimise soil disturbance away from the immediate warren site.<br><br><b>Please note</b> Activities to monitor and/or manage feral animals may also be included under; “Monitor and manage total grazing pressure” and “Monitor and manage feral animals”.",
       "optional": false,
       "optionalQuestionText": "Not an agreed management action under my funding agreement",
       "template": {
@@ -1367,7 +1367,7 @@
                   {
                     "width": "10%",
                     "source": "season",
-                    "title": "Season observed / managed",
+                    "title": "Season Observed / Managed",
                     "type": "selectOne"
                   },
                   {
@@ -1406,7 +1406,7 @@
             ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year. This comment could include, but is not limited to, the following information: </label></span><ul><li>The impact of the grazing pressure, soil disturbance and damage to native trees and grasses from feral animals.</li><li>Have the feral animals caused any damage to infrastructure on the property? State if this impact is significant or minimal.</li><li>Was a permit obtained from NSW National Parks and Wildlife Service to authorise this culling or was it a licenced shooter?</li><li>Are there significant feral animals in the surrounding properties moving on the ESP Site?</li><li>What actions have been undertaken to reduce feral animal movement onto the ESP sire.</li><li>Any additional comments or observations.</li></ul>",
+                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year. This comment could include, but is not limited to, the following information: </label></span><ul><li>the impact of the grazing pressure, soil disturbance and damage to native trees and grasses from feral animals.</li><li>any damage to infrastructure on the property, stating if this impact is significant or minimal</li><li>was a permit obtained from NSW National Parks and Wildlife Service to authorise this culling or was it a licenced shooter?</li><li>if there are significant feral animals in the surrounding properties moving on the ESP site</li><li>actions undertaken to reduce feral animal movement onto the ESP site</li><li>any additional comments or observations.</li></ul>",
                 "type": "literal"
               }
             ]
@@ -1437,7 +1437,7 @@
             ],
             "items": [
               {
-                "preLabel": "Total cost of management actions",
+                "preLabel": "Total cost of management actions:",
                 "source": "cost",
                 "type": "currency",
                 "width": "50%",
@@ -1455,7 +1455,7 @@
             ],
             "items": [
               {
-                "preLabel": "If this activity is a management action under your Funding Agreement but you did not undertake this activity, during the reporting period, please state the reason.",
+                "preLabel": "If you did not undertake this activity this reporting period, but it is an agreed Management Action under your Funding Agreement, please state the reason.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -1473,7 +1473,7 @@
       "collapsedByDefault": false,
       "modelName": null,
       "name": "ESP Weed management",
-      "description": "1. to reduce exotic plant cover, thereby reducing competition with native plants; <br> 2. to reduce exotic plant biomass; <br> 3. to create more gaps in the groundlayer to facilitate regeneration of native groundcover species.<br><br><b> Controlled through: </b> <br> Strategic grazing and targeted controls including localised application of herbicides (spot spraying, weed wiping), hand pulling or chipping of target weed species, mowing, and slashing or possibly localised conservation burning (under an appropriate management plan and permission from relevant agencies as required).<br><br><b>Please note</b> Activities to monitor and/or manage weeds may also be included under any or all of the following; “Monitor and manage herbaceous exotic plants (aggressive)”, “Monitor and manage herbaceous exotic plants (non-aggressive)”, “Monitor and manage exotic shrubs (aggressive)”, “Monitor and manage exotic plants”, “Monitor and manage aggressive exotic plants” and “Monitor and manage non-aggressive exotic plants”.",
+      "description": "1. To reduce exotic plant cover, thereby reducing competition with native plants.<br> 2. To reduce exotic plant biomass. <br> 3. To create more gaps in the ground layer to facilitate regeneration of native groundcover species.<br><br><b> Implementation: </b> <br> Land managers are  required to control weeds through: Strategic grazing and targeted controls including localised application of herbicides (spot spraying, weed wiping), hand pulling or chipping of target weed species, mowing, and slashing or possibly localised conservation burning (under an appropriate management plan and permission from NSW Rural Fire Service as required).<br><br><b>Please note</b> Activities to monitor and/or manage weeds may also be included under any or all of the following; “Monitor and manage herbaceous exotic plants (aggressive)”, “Monitor and manage herbaceous exotic plants (non-aggressive)”, “Monitor and manage exotic shrubs (aggressive)”, “Monitor and manage exotic plants”, “Monitor and manage aggressive exotic plants” and “Monitor and manage non-aggressive exotic plants”.",
       "optional": false,
       "optionalQuestionText": "Not an agreed management action under my funding agreement",
       "template": {
@@ -1644,11 +1644,11 @@
           {
             "items": [
               {
-                "title": "Please complete the following: To enter details of activities undertaken to monitor and/or manage weeds, take care to add in a new row for each different species and each different season you have managed weeds.",
+                "title": "Please complete the following: (to enter details of activities undertaken to monitor and/or manage weeds, take care to add in a new row for each different species and each different season you have managed weeds).",
                 "source": "weedManagement",
                 "columns": [
                   {
-                    "title": "Species (do not include noxious (NSW) or declared (SA) plants)",
+                    "title": "Species",
                     "source": "species",
                     "width": "25%",
                     "type": "speciesSelect"
@@ -1702,7 +1702,7 @@
             ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management, the chosen weed management strategy and if ongoing management will be required. This comment could include, but is not limited to, the following information:</label></span><ul><li>Are the native plants moving into areas where weed management has occurred or are the weeds coming back.</li><li>Have you noticed any trend in the weeds observed, are there more of less this reporting period?</li><li>Are the weeds occurring from established seed banks, existing weed infestations or spreading from the surrounding areas?</li><li>Have you noticed any new weeds occurring on the property that you have not previously seen?</li><li>Any additional comments or observations please detail here.</li></ul>",
+                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management, the chosen weed management strategy and if ongoing management will be required. This comment could include, but is not limited to, the following information:</label></span><ul><li>are the native plants moving into areas where weed management has occurred or are the weeds coming back.</li><li>any trend in the weeds observed, more or less of a species occurring in this reporting period</li><li>weeds occurring from established seed banks, existing weed infestations or spreading from the surrounding areas</li><li>any new weeds occurring on the property that you have not previously seen</li><li>any additional comments or observations</li></ul>",
                 "type": "literal"
               }
             ]
@@ -1726,7 +1726,7 @@
           {
             "items": [
               {
-                "preLabel": "Total cost of management actions",
+                "preLabel": "Total cost of management actions:",
                 "source": "cost",
                 "type": "currency",
                 "width": "50%",
@@ -1751,7 +1751,7 @@
             ],
             "items": [
               {
-                "preLabel": "If this activity is a management action under your Funding Agreement but you did not undertake this activity, during the reporting period, please state the reason.",
+                "preLabel": "If you did not undertake this activity this reporting period, but it is an agreed Management Action under your Funding Agreement, please state the reason.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -1769,7 +1769,7 @@
       "collapsedByDefault": false,
       "modelName": null,
       "name": "ESP Biomass control measures",
-      "description": "1. Enhancing the diversity of the native ground flora by promoting the growth and spread of other grasses and herbs.<br>2. Implementation through small scale ecological burns, by strategic grazing or by slashing over relatively small areas at an agreed timing and frequency.<br><br><b>Please note</b> Activities to control Biomass may also be included under “Monitor and manage dominant native species”, “Biomass control to reduce dominance of a single native plant species”, “Biomass Control” and “Thinning”.<br><br>",
+      "description": "1. Enhancing the diversity of the native ground flora by promoting the growth and spread of other grasses and herbs.<br><br><b>Implementation:</b><br>Reducing the density of the dominant perennial species (the biomass) through small scale ecological burns, by strategic grazing or by slashing over relatively small areas at an agreed timing and frequency.<br><br><b>Please note</b> Activities to control Biomass may also be included under “Monitor and manage dominant native species”, “Biomass control to reduce dominance of a single native plant species”, “Biomass Control” and “Thinning”.<br>",
       "optional": true,
       "optionalQuestionText": "Not an agreed management action under my funding agreement",
       "template": {
@@ -1906,7 +1906,7 @@
                 "source": "biomassControl",
                 "columns": [
                   {
-                    "title": "Biomass control activity",
+                    "title": "Biomass Control Activity",
                     "source": "controlType",
                     "type": "selectOne"
                   },
@@ -1944,7 +1944,7 @@
             ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label>Please provide comment about the effectiveness of the biomass control measure. This comment could include, but is not limited to, the following information:</label></span><ul><li>Do you have any feedback about this management action and its impact on the state of the environment in the zone?</li><li>As a result of undertaking biomass control have you seen an increase in the diversity of the species in the zone?</li><li>Any additional comments or observations.</li></ul>",
+                "source": "<span class=\"preLabel required\"><label>Please provide comment about the effectiveness of the biomass control measure. This comment could include, but is not limited to, the following information:</label></span><ul><li>any feedback about this management action and its impact on the state of the environment in the zone</li><li>increase in the diversity of the species in the zone due to the management action</li><li>any additional comments or observations.</li></ul>",
                 "type": "literal"
               }
             ]
@@ -1968,7 +1968,7 @@
           {
             "items": [
               {
-                "preLabel": "Total cost of management actions",
+                "preLabel": "Total cost of management actions:",
                 "source": "cost",
                 "type": "currency",
                 "width": "50%",
@@ -1993,7 +1993,7 @@
             ],
             "items": [
               {
-                "preLabel": "If this activity is a management action under your Funding Agreement but you did not undertake this activity, during the reporting period, please state the reason.",
+                "preLabel": "If you did not undertake this activity this reporting period, but it is an agreed Management Action under your Funding Agreement, please state the reason.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -2011,7 +2011,7 @@
       "collapsedByDefault": false,
       "modelName": null,
       "name": "ESP Revegetation",
-      "description": "1. Speed up the recovery of the woodland, namely to assist in rehabilitating stock camps;<br> 2. Re-introducing locally rare endemic plants;<br>3. Re-introducing trees into large areas of derived grassland or degraded woodland;<br>4. Provide competition to established or vigorous weed species.<br><br><b>Please note</b> that revegetation activities may also be included under; “Re-establish perennial native species”, “Plants overstorey tree species of target community”, “Re-establish understorey shrubs”, “Plant perennial species” and “Planting/direct seeding”.",
+      "description": "1. Speed up the recovery of the woodland, namely to assist in rehabilitating stock camps;<br> 2. Re-introducing of locally rare endemic plants;<br>3. Re-introducing of trees into large areas of derived grassland or degraded woodland;<br>4. Provide competition to established or vigorous weed species.<br><br><b>Please note</b> that revegetation activities may also be included under; “Re-establish perennial native species”, “Plants overstorey tree species of target community”, “Re-establish understorey shrubs”, “Plant perennial species” and “Planting/direct seeding”.",
       "optional": true,
       "optionalQuestionText": "Not an agreed management action under my funding agreement",
       "template": {
@@ -2211,7 +2211,7 @@
             ]
           },
           {
-            "title": "Please list each species planted during this activity and any additional information that you can on separate rows:",
+            "title": "Please list each species planted during this activity, and any additional information that you can, on separate rows:",
             "source": "planting",
             "columns": [
               {
@@ -2222,7 +2222,7 @@
                 "type": "selectOne"
               },
               {
-                "title": "Species planted",
+                "title": "Species Planted",
                 "source": "species",
                 "computed": null,
                 "width": "40%",
@@ -2254,7 +2254,7 @@
             "type": "table"
           },
           {
-            "title": "Survival rates of previous revegetation activities. <br/>Please note that this is voluntary and can be recorded as often as you like.",
+            "title": "Survival rates of previous revegetation activities.",
             "source": "survival",
             "columns": [
               {
@@ -2308,7 +2308,7 @@
             ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year. This comment could include, but is not limited to, the following information:</label></span><ul><li>Please include a list of species and numbers planted for prior year plantings.</li><li>Have you replaced any of the plants that have not survived?</li><li>If you have planted this year why did you choose the area you planted these species? What is the state of those plants?</li><li>Where do you source your plants/seeds from?</li><li>Any additional comments or observations.</li></ul>",
+                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year. This comment could include, but is not limited to, the following information:</label></span><ul><li>include a list of species and numbers planted for prior year plantings.</li><li>replacement activities of any of the plants that have not survived</li><li>why the area of planting was undertaken was chosen</li><li>any plans to plant in the future</li><li>source your plants/seeds from</li><li>any additional comments or observations.</li></ul>",
                 "type": "literal"
               }
             ]
@@ -2332,7 +2332,7 @@
           {
             "items": [
               {
-                "preLabel": "Total cost of management actions",
+                "preLabel": "Total cost of management actions:",
                 "source": "cost",
                 "type": "currency",
                 "width": "50%",
@@ -2357,7 +2357,7 @@
             ],
             "items": [
               {
-                "preLabel": "If this activity is a management action under your Funding Agreement but to undertake this activity, during the reporting period, please state the reason. Please include a list of species and numbers planted and for prior year plantings and the rate of survival.",
+                "preLabel": "If you did not undertake this activity this reporting period, but it is an agreed Management Action under your Funding Agreement, please state the reason (please also include a list of species and numbers for prior year plantings and the rate of survival, if planting has occurred over the life of the Environmental Stewardship Program):",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -2557,7 +2557,7 @@
             ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label>Please provide comment on any actions taken to support natural regeneration and the regeneration observed. This comment could include, but is not limited to, the following information:</label></span><div><ul><li>What direct actions have you taken to improve natural regeneration?</li><li>Does the natural regeneration overserved occur inin the grassland or existing woodland?</li><li>How well have previous years naturally occurring saplings/seedlings survived?</li><li>How extensive across the site, is the natural regeneration?</li><li>Do you feel that the implementation of the Environmental Stewardship Program has improved regeneration?</li><li>Have you seen any regeneration of native grasses, forbs or flowers?</li><li>Any additional comments regarding this activity.</li></ul></div>",
+                "source": "<span class=\"preLabel required\"><label>Please provide comment on any actions taken to support natural regeneration and the regeneration observed. This comment could include, but is not limited to, the following information:</label></span><div><ul><li>actions taken to improve natural regeneration</li><li>if natural regeneration is occurring in the grassland or existing woodland</li><li>have previous years naturally occurring saplings/seedlings survived</li><li>expanse of natural regeneration across ESP area</li><li>do you feel that the implementation of the Environmental Stewardship Program has improved regeneration?</li><li>observed any regeneration of native grasses, forbs or flowers</li><li>any additional comments regarding this activity.</li></ul></div>",
                 "type": "literal"
               }
             ]
@@ -2581,7 +2581,7 @@
           {
             "items": [
               {
-                "preLabel": "Total cost of management actions",
+                "preLabel": "Total cost of management actions:",
                 "source": "cost",
                 "type": "currency",
                 "width": "50%",
@@ -2606,7 +2606,7 @@
             ],
             "items": [
               {
-                "preLabel": "If this activity is a management action under your Funding Agreement but you did not  undertake this activity, during the reporting period, please state the reason.",
+                "preLabel": "If you did not undertake this activity this reporting period, but it is an agreed Management Action under your Funding Agreement, please state the reason.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -2624,7 +2624,7 @@
       "collapsedByDefault": false,
       "modelName": null,
       "name": "ESP Restoration of Habitat Features",
-      "description": "1. Tree or substantial branches that fall to the ground it provides a sheltered habitat enabling seeds to germinate and the process of natural regeneration to occur;<br>2. Fall branches, rocks and small objects create habitats for native fauna species.<br><br><b>Implementation</b><br>Land managers are encouraged to leave fallen trees or branches where they fall within their woodland patch. The use of rocks and other habitat objects like nest boxes, old untreated fence posts can improve the habitat features of the ESP zone.<br><br><b>Please note</b> Activities to restore habitat features may also be included under “Add coarse woody debris” and “Retain fallen timber”.",
+      "description": "1. Tree or substantial branches that fall to the ground it provides a sheltered habitat enabling seeds to germinate and the process of natural regeneration to occur;<br>2. Fallen branches, rocks and small objects create habitats for native fauna species.<br><br><b>Implementation</b><br>Land managers are encouraged to leave fallen trees or branches where they fall within their woodland patch. The use of rocks and other habitat objects like nest boxes, old untreated fence posts and corrugated iron can improve the habitat features of the ESP zone.<br><br><b>Please note</b> Activities to restore habitat features may also be included under “Add coarse woody debris” and “Retain fallen timber”.",
       "optional": false,
       "optionalQuestionText": "Not an agreed management action under my funding agreement",
       "template": {
@@ -2818,7 +2818,7 @@
             ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year.</label></span><div><ul><li>Have you observed any species utilising the habitat features?</li><li>Was there a specific animal you were targeting in creating these habitat features?</li></ul></div>",
+                "source": "<span class=\"preLabel required\"><label>Please provide comment on the effectiveness of the above management this year.</label></span><div><ul><li>any observed species utilising the habitat features?</li><li>was there a specific animal you were targeting in creating these habitat features?</li><li>any other comments or observations</li></ul></div>",
                 "type": "literal"
               }
             ]
@@ -2842,7 +2842,7 @@
           {
             "items": [
               {
-                "preLabel": "Total cost of management actions",
+                "preLabel": "Total cost of management actions:",
                 "source": "cost",
                 "type": "currency",
                 "width": "50%",
@@ -2867,7 +2867,7 @@
             ],
             "items": [
               {
-                "preLabel": "If this activity is a management action under your Funding Agreement but you did not undertake this activity, during the reporting period, please state the reason.",
+                "preLabel": "If you did not undertake this activity this reporting period, but it is an agreed Management Action under your Funding Agreement, please state the reason.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
