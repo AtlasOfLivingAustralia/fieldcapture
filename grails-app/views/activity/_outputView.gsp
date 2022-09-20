@@ -7,7 +7,12 @@
     <!-- ko if:transients.description -->
         <div>
             <button data-bind="toggleVisibility:{blockId: ${blockId}, collapsedByDefault: transients.collapsedByDefault}"></button>
-            <span class="font-weight-bold" data-bind="text:transients.collapsibleHeading"></span>
+            <span data-bind="if:transients.collapsibleHeading">
+                <span class="font-weight-bold" data-bind="text:transients.collapsibleHeading"></span>
+            </span>
+            <span data-bind="if:!transients.collapsibleHeading">
+                <span class="font-weight-bold"><g:message code="label.collapsible.heading"/> ${title}</span>
+            </span>
             <div data-bind="if:transients.collapsedByDefault">
                 <div id="${blockId}" data-bind="html:transients.description"></div>
             </div>
