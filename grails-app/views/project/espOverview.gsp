@@ -122,7 +122,6 @@
     <ul class="nav nav-tabs" data-tab="tab" id="espProjectsTab" role="tablist">
         <li class="nav-item active"><a class="nav-link active" id='sites-tab' href="#mysites">My ESP Sites</a></li>
         <li class="nav-item"><a class="nav-link" href="#species-records-tab">My Species Records</a></li>
-        <li class="nav-item"><a class="nav-link" href="#dashboard-tab">Dashboard</a></li>
         <li class="nav-item"><a class="nav-link" href="#photographs-tab">Photographs</a></li>
         <li class="nav-item"><a class="nav-link" href="#documents-tab">Documents</a></li>
         <li class="nav-item"><a class="nav-link" id="annual-submission-report-tab" href="#reporting-tab">Annual Report Submission</a></li>
@@ -147,15 +146,6 @@
         </div>
         <div class="tab-pane" id="species-records-tab">
             <div id="species-form">
-
-            </div>
-        </div>
-        <div class="tab-pane" id="dashboard-tab">
-            <div class="row">
-                <div class="col-sm-12">
-                    <h3>Dashboard</h3>
-                    <div id="dashboard"></div>
-                </div>
 
             </div>
         </div>
@@ -376,10 +366,6 @@
                 initialiser: function() {
                     initialisePhotos(photopointSelector, '#public-images-slider');
                 }
-            },
-            'dashboard-tab': {
-                selector:'#dashboard',
-                url:fcConfig.dashboardUrl
             },
             'documents-tab': {
                 initialiser: function() {
