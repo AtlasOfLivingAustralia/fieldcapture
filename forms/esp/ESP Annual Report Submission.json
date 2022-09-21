@@ -455,7 +455,7 @@
           {
             "mapping": [
               {
-                "source-path": "4c3efc0f-c3c9-4667-8ca4-5f5f7fe69c3d",
+                "source-path": "4d03150f-763b-4baf-b49f-60a2dbda0235",
                 "target": "totalCostOfManagementActions"
               }
             ],
@@ -478,7 +478,7 @@
                 },
                 {
                   "name": "scoreIds",
-                  "value": "4c3efc0f-c3c9-4667-8ca4-5f5f7fe69c3d"
+                  "value": "4d03150f-763b-4baf-b49f-60a2dbda0235"
                 }
               ],
               "url": "/project/scoresForFinancialYear/"
