@@ -25,6 +25,10 @@
         "dataModel": [
           {
             "dataType": "number",
+            "name": "totalCostOfManagementActions"
+          },
+          {
+            "dataType": "number",
             "name": "foregoneProductionCost"
           },
           {
@@ -247,6 +251,26 @@
             "type": "row",
             "items": [
               {
+                "source": "<h4>Reported cost management actions</h4>",
+                "type": "literal"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "You have reported the following cost of management actions this year:",
+                "source": "totalCostOfManagementActions",
+                "type": "currency",
+                "readonly": true
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
                 "source": "<h4>Cost of foregone production</h4>",
                 "type": "literal"
               }
@@ -426,12 +450,47 @@
               }
             ]
           }
+        ],
+        "pre-populate": [
+          {
+            "mapping": [
+              {
+                "source-path": "4d03150f-763b-4baf-b49f-60a2dbda0235",
+                "target": "totalCostOfManagementActions"
+              }
+            ],
+            "merge": {
+              "totalCostOfManagementActions": {
+                "replaceExisting": true
+              }
+            },
+            "source": {
+              "params": [
+                {
+                  "expression": "activity.projectId",
+                  "name": "id",
+                  "type": "computed"
+                },
+                {
+                  "expression": "activity.plannedEndDate",
+                  "name": "date",
+                  "type": "computed"
+                },
+                {
+                  "name": "scoreIds",
+                  "value": "4d03150f-763b-4baf-b49f-60a2dbda0235"
+                }
+              ],
+              "url": "/project/scoresForFinancialYear/"
+            }
+          }
         ]
       },
       "templateName": "espOverview",
       "title": "ESP Overview"
     }
   ],
+
   "status": "active",
   "supportsPhotoPoints": false,
   "supportsSites": false,
