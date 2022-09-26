@@ -126,8 +126,8 @@ var projectConfig = {
             {
                 "template": "serviceTargets",
                 "model": {
-                    "title": "Services and Targets Table",
-                    "serviceName": "Service"
+                    "title": "Activities and Targets Table",
+                    "serviceName": "Activities"
                 }
             }
         ],
