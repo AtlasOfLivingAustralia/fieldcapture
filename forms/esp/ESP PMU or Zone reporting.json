@@ -709,7 +709,6 @@
                 "preLabel": "Total cost of management actions:",
                 "source": "cost",
                 "type": "currency",
-                "width": "50%",
                 "helpText": "These costs can include, but are not limited to: cost of time taken to move stock or cost to repair fences and infrastructure damaged."
               }
             ]
@@ -1151,7 +1150,6 @@
                 "preLabel": "Total cost of management actions:",
                 "source": "cost",
                 "type": "currency",
-                "width": "50%",
                 "helpText": "These costs can include, but are not limited to: hours steward takes to undertake native herbivore management, ammunition or cost of contractors."
               }
             ]
@@ -1445,7 +1443,6 @@
                 "preLabel": "Total cost of management actions:",
                 "source": "cost",
                 "type": "currency",
-                "width": "50%",
                 "helpText": "These costs can include, but are not limited to: hours steward takes to undertake native herbivore management, ammunition or cost of contractors."
               }
             ]
@@ -1735,7 +1732,6 @@
                 "preLabel": "Total cost of management actions:",
                 "source": "cost",
                 "type": "currency",
-                "width": "50%",
                 "helpText": "These costs can include, but are not limited to: costs like sprays, equipment, contractors, PPE, hours of work undertaken."
               }
             ],
@@ -1978,7 +1974,6 @@
                 "preLabel": "Total cost of management actions:",
                 "source": "cost",
                 "type": "currency",
-                "width": "50%",
                 "helpText": "These costs can include, but are not limited to: fuel for slashing or time taken to reduce biomass. Do not include cost for grazing is included in Livestock Grazing Management."
               }
             ],
@@ -2343,7 +2338,6 @@
                 "preLabel": "Total cost of management actions:",
                 "source": "cost",
                 "type": "currency",
-                "width": "50%",
                 "helpText": "These costs can include, but are not limited to: Cost of plants and seeds, time taken to plant, plant guards or cost of sourcing plants."
               }
             ],
@@ -2593,7 +2587,6 @@
                 "preLabel": "Total cost of management actions:",
                 "source": "cost",
                 "type": "currency",
-                "width": "50%",
                 "helpText": "These costs can include, but are not limited to: time taken to identify and record observed regeneration or cost of actions taken to improve regeneration."
               }
             ],
@@ -2855,7 +2848,6 @@
                 "preLabel": "Total cost of management actions:",
                 "source": "cost",
                 "type": "currency",
-                "width": "50%",
                 "helpText": "These costs can include, but are not limited to: time taken to establish habitats, material for habitats or cost of observation time."
               }
             ],
