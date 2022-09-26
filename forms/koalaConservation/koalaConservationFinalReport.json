@@ -24,7 +24,7 @@
               {
                 "dataType": "text",
                 "name": "achievement",
-                "validate": "required,maxSize[5000]"
+                "validate": "required,maxSize[1250]"
               },
               {
                 "dataType": "text",
@@ -61,12 +61,12 @@
           {
             "dataType": "text",
             "name": "achievedOutcomesSummary",
-            "validate": "required,maxSize[500]"
+            "validate": "required,maxSize[1250]"
           },
           {
             "dataType": "text",
             "name": "achievedOutcomesMaintained",
-            "validate": "required,maxSize[500]"
+            "validate": "required,maxSize[1250]"
           },
           {
             "dataType": "stringList",
@@ -131,13 +131,13 @@
             "dataType": "text",
             "description": "",
             "name": "projectLearningsSummary",
-            "validate": "required,maxSize[500]"
+            "validate": "required,maxSize[1250]"
           },
           {
             "dataType": "text",
             "description": "",
             "name": "futureEffortLessons",
-            "validate": "required,maxSize[500]"
+            "validate": "required,maxSize[1250]"
           }
         ],
         "viewModel": [
