@@ -250,9 +250,10 @@ var SimplifiedReportingViewModel = function(project, config) {
     });
 
     // will set the value of the dropdown Reporting Period
-    self.selectedChoice = ko.observable(isoDateToFinancialYear(currentReport.toDate))
-    $('.reportingPeriodSpan').popover({content:'*The reporting period being displayed is ' + self.selectedChoice() + '. If you want to complete your report for a different period, please select it from this dropdown?', placement:'top', trigger:'hover'})
+    self.selectedChoice = ko.observable(isoDateToFinancialYear(currentReport.toDate));
 
+    $('.reportingPeriodSpan').popover({title:'Please select reporting period', content:'The reporting period being displayed is ' + self.selectedChoice() + '. If you want to complete your report for a different period, please select it from this dropdown.', placement:'top', trigger:'hover'})
+    $('.reportingPeriodSpan').popover('show');
     // refreshes the page with the financial year selected
     self.selectionChanged = function(event) {
         blockUIWithMessage('Reloading project...');
