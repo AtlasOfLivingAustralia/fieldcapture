@@ -723,7 +723,7 @@
             ],
             "items": [
               {
-                "preLabel": "If you did not undertake this activity during this reporting period, but it is a Management Action under your Funding Agreement, please state the reason:",
+                "preLabel": "Please explain the reasons this activity was not undertaken.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -1164,7 +1164,7 @@
             ],
             "items": [
               {
-                "preLabel": "If you did not undertake this activity this reporting period, but it is an agreed Management Action under your Funding Agreement, please state the reason.",
+                "preLabel": "Please explain the reasons this activity was not undertaken.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -1457,7 +1457,7 @@
             ],
             "items": [
               {
-                "preLabel": "If you did not undertake this activity this reporting period, but it is an agreed Management Action under your Funding Agreement, please state the reason.",
+                "preLabel": "Please explain the reasons this activity was not undertaken.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -1753,7 +1753,7 @@
             ],
             "items": [
               {
-                "preLabel": "If you did not undertake this activity this reporting period, but it is an agreed Management Action under your Funding Agreement, please state the reason.",
+                "preLabel": "Please explain the reasons this activity was not undertaken.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -1995,7 +1995,7 @@
             ],
             "items": [
               {
-                "preLabel": "If you did not undertake this activity this reporting period, but it is an agreed Management Action under your Funding Agreement, please state the reason.",
+                "preLabel": "Please explain the reasons this activity was not undertaken.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -2608,7 +2608,7 @@
             ],
             "items": [
               {
-                "preLabel": "If you did not undertake this activity this reporting period, but it is an agreed Management Action under your Funding Agreement, please state the reason.",
+                "preLabel": "Please explain the reasons this activity was not undertaken.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -2869,7 +2869,7 @@
             ],
             "items": [
               {
-                "preLabel": "If you did not undertake this activity this reporting period, but it is an agreed Management Action under your Funding Agreement, please state the reason.",
+                "preLabel": "Please explain the reasons this activity was not undertaken.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -3093,7 +3093,7 @@
             ],
             "items": [
               {
-                "preLabel": "If you did not undertake this activity this reporting period, but it is an agreed Management Action under your Funding Agreement, please state the reason.",
+                "preLabel": "Please explain the reasons this activity was not undertaken.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -3229,7 +3229,7 @@
             ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label>If you did not undertake this activity this reporting period, but it is an agreed Management Action under your Funding Agreement, please state the reason. This comment can include, but is not limited to, the following information:</label></span><ul><li>the effectiveness of previous actions taken</li><li>if you believe any actions will be taken in the future</li><li>any additional comments or observations.</li></ul>",
+                "source": "<span class=\"preLabel required\"><label>Please explain the reasons this activity was not undertaken. This comment can include, but is not limited to, the following information:</label></span><ul><li>the effectiveness of previous actions taken</li><li>if you believe any actions will be taken in the future</li><li>any additional comments or observations.</li></ul>",
                 "type": "literal"
               }
             ]
@@ -3402,7 +3402,7 @@
             ],
             "items": [
               {
-                "preLabel": "If you did not undertake this activity this reporting period, but it is an agreed Management Action under your Funding Agreement, please state the reason.",
+                "preLabel": "Please explain the reasons this activity was not undertaken.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4

@@ -1164,7 +1164,7 @@
             ],
             "items": [
               {
-                "preLabel": "If you did not undertake this activity this reporting period, but it is an agreed Management Action under your Funding Agreement, please state the reason.",
+                "preLabel": "Please explain the reasons this activity was not undertaken.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -1457,7 +1457,7 @@
             ],
             "items": [
               {
-                "preLabel": "If you did not undertake this activity this reporting period, but it is an agreed Management Action under your Funding Agreement, please state the reason.",
+                "preLabel": "Please explain the reasons this activity was not undertaken.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -1753,7 +1753,7 @@
             ],
             "items": [
               {
-                "preLabel": "If you did not undertake this activity this reporting period, but it is an agreed Management Action under your Funding Agreement, please state the reason.",
+                "preLabel": "Please explain the reasons this activity was not undertaken.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -1995,7 +1995,7 @@
             ],
             "items": [
               {
-                "preLabel": "If you did not undertake this activity this reporting period, but it is an agreed Management Action under your Funding Agreement, please state the reason.",
+                "preLabel": "Please explain the reasons this activity was not undertaken.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -2359,7 +2359,7 @@
             ],
             "items": [
               {
-                "preLabel": "If you did not undertake this activity this reporting period, but it is an agreed Management Action under your Funding Agreement, please state the reason (please also include a list of species and numbers for prior year plantings and the rate of survival, if planting has occurred over the life of the Environmental Stewardship Program):",
+                "preLabel": "Please explain the reasons this activity was not undertaken (please also include a list of species and numbers for prior year plantings and the rate of survival, if planting has occurred over the life of the Environmental Stewardship Program):",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -2608,7 +2608,7 @@
             ],
             "items": [
               {
-                "preLabel": "If you did not undertake this activity this reporting period, but it is an agreed Management Action under your Funding Agreement, please state the reason.",
+                "preLabel": "Please explain the reasons this activity was not undertaken.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -2869,7 +2869,7 @@
             ],
             "items": [
               {
-                "preLabel": "If you did not undertake this activity this reporting period, but it is an agreed Management Action under your Funding Agreement, please state the reason.",
+                "preLabel": "Please explain the reasons this activity was not undertaken.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
