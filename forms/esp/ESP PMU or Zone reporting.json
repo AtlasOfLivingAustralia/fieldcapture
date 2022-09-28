@@ -723,7 +723,7 @@
             ],
             "items": [
               {
-                "preLabel": "If you did not undertake this activity during this reporting period, but it is a Management Action under your Funding Agreement, please state the reason:",
+                "preLabel": "Please explain the reasons this activity was not undertaken",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
