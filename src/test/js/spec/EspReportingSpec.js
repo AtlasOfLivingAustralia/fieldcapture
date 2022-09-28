@@ -5,10 +5,18 @@ describe("The ESP reporting process works slightly differently to the normal MER
             imageLocation:'/'
         };
         window.ecodata = { forms: {} };
+
     });
     afterAll(function() {
         delete window.fcConfig;
         delete window.ecodata;
+    });
+
+    beforeEach(function() {
+        amplify.store('selectedFinancialYear-p1', null);
+    });
+    afterEach(function() {
+        amplify.store('selectedFinancialYear-p1', null);
     });
 
     function buildEspProject() {
@@ -265,13 +273,24 @@ describe("The ESP reporting process works slightly differently to the normal MER
     it("will stage a report based from the selected reporting period", function() {
 
         var project = buildEspProject();
-        project.financialYearSelected = "2019/2020"
+        project.financialYearSelected = "2019/2020";
         var config = {showEmptyStages:true };
         var viewModel = new SimplifiedReportingViewModel(project, config);
 
-        expect(viewModel.stageToReport()).toEqual("Stage 2")
-        expect(viewModel.reportableStages().length).toEqual(2)
+        expect(viewModel.stageToReport()).toEqual("Stage 2");
+        expect(viewModel.reportableStages().length).toEqual(2);
 
+        expect(amplify.store('selectedFinancialYear-p1')).toEqual(project.financialYearSelected);
+
+    });
+
+    it("will select a saved report if one has been previously selected", function() {
+        var project = buildEspProject();
+        amplify.store('selectedFinancialYear-p1', "2019/2020");
+        var config = {showEmptyStages:true };
+        var viewModel = new SimplifiedReportingViewModel(project, config);
+
+        expect(viewModel.stageToReport()).toEqual("Stage 2");
     });
 
     it("will default and stage the oldest report that has not yet been approved", function() {
@@ -285,8 +304,5 @@ describe("The ESP reporting process works slightly differently to the normal MER
         expect(viewModel.reportableStages().length).toEqual(4)
 
     });
-
-
-
 
 });

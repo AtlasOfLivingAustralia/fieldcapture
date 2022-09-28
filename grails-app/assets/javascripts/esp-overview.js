@@ -110,6 +110,36 @@ var SiteStatusModel = function(site, currentStage, map, sitesViewModel) {
 
 };
 
+
+/**
+ * The ESP project needs to display data from a single reporting stage.
+ * This function attempts to find the correct report, the order of preferred selection is:
+ * 1. The user has explicitly selected a report from the drop-down.
+ * 2. The most recent report the user selected (and which was then saved to local storage)
+ * 3. The report that matches the current date.
+ * 4. The most recent report for the project.
+ *
+ * This function has a side effect of saving a selected reporting period in local storage
+ */
+function selectReportingPeriod(project) {
+    var selectedYearStorageKey = 'selectedFinancialYear-'+project.projectId;
+    var selectedYear = project.financialYearSelected || amplify.store(selectedYearStorageKey);
+    var currentReport;
+    if (selectedYear) {
+        currentReport = findReportFromFinancialYear(project.reports,selectedYear);
+        amplify.store(selectedYearStorageKey, selectedYear);
+    }
+    else {
+        currentReport = findReportFromDate(project.reports);
+
+        // will fetch the latest report
+        if (!currentReport) {
+            currentReport = project.reports[project.reports.length-1];
+        }
+    }
+    return currentReport;
+}
+
 var SimplifiedReportingViewModel = function(project, config) {
     var self = this;
 
@@ -120,25 +150,7 @@ var SimplifiedReportingViewModel = function(project, config) {
         return report.publicationStatus == 'published' || report.publicationStatus == 'pendingApproval';
     });
 
-    // Find the oldest report that has not yet been approved to work with.
-    // var currentReport = _.find(project.reports || [], function(report) {
-    //     return report.publicationStatus != 'published';
-    // });
-
-    // will fetch the current report
-    // wherein current report is defined by the report with the greatest toDate
-    // that is still less than the current date.
-    var currentReport = findReportFromDate(project.reports);
-
-    // will fetch the latest report
-    if (!currentReport) {
-        currentReport = project.reports[project.reports.length-1];
-    }
-
-    // will fetch report based from the selected financial year
-    if (project.financialYearSelected) {
-        currentReport = findReportFromFinancialYear(project.reports,project.financialYearSelected);
-    }
+    var currentReport = selectReportingPeriod(project);
 
     currentReport = new Report(currentReport);
 
@@ -238,9 +250,10 @@ var SimplifiedReportingViewModel = function(project, config) {
     });
 
     // will set the value of the dropdown Reporting Period
-    self.selectedChoice = ko.observable(isoDateToFinancialYear(currentReport.toDate))
-    $('.reportingPeriodSpan').popover({content:'*The reporting period being displayed is ' + self.selectedChoice() + '. If you want to complete your report for a different period, please select it from this dropdown?', placement:'top', trigger:'hover'})
+    self.selectedChoice = ko.observable(isoDateToFinancialYear(currentReport.toDate));
 
+    $('.reportingPeriodSpan').popover({title:'Please select reporting period', content:'The reporting period being displayed is ' + self.selectedChoice() + '. If you want to complete your report for a different period, please select it from this dropdown.', placement:'top', trigger:'hover'})
+    $('.reportingPeriodSpan').popover('show');
     // refreshes the page with the financial year selected
     self.selectionChanged = function(event) {
         blockUIWithMessage('Reloading project...');
