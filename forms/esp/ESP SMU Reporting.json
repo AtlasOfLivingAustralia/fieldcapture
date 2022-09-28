@@ -61,7 +61,7 @@
       "collapsedByDefault": false,
       "modelName": null,
       "name": "ESP Livestock Grazing Management",
-      "description": "1. Reducing the ability of exotic annual plant species to set seed and vegetation biomass <br> 2. Facilitating seed set by native perennials and promoting regeneration of native plants; <br> 3. Reducing soil disturbance and compaction caused by hard-hooved domestic livestock; <br> 4. Reducing selective grazing of palatable native perennial plants; <br> 5. Reducing nutrient input through animal excrement.<br><br><b>Please note</b> Grazing activities may also be included under “Conservation grazing”, “Strategic grazing”, “Monitoring and manage grazing pressure from domestic livestock” and “Monitor and manage total grazing pressure”. <br> Endeavour to record sward height and ground cover percentage prior to and after each grazing period.<br>",
+      "description": "1. Reducing the ability of exotic annual plant species to set seed and vegetation biomass <br> 2. Facilitating seed set by native perennials and promoting regeneration of native plants; <br> 3. Reducing soil disturbance and compaction caused by hard-hooved domestic livestock; <br> 4. Reducing selective grazing of palatable native perennial plants; <br> 5. Reducing nutrient input through animal excrement.<br><br><b>Please note</b> Grazing activities may also be included in your Funding Agreement under “Conservation grazing”, “Strategic grazing”, “Monitoring and manage grazing pressure from domestic livestock” and “Monitor and manage total grazing pressure”. <br> Endeavour to record sward height and ground cover percentage prior to and after each grazing period.<br>",
       "collapsibleHeading": "What are the conservation outcomes sought?",
       "optional": false,
       "optionalQuestionText": "Not an agreed management action under my funding agreement",
@@ -518,7 +518,7 @@
           {
             "items": [
               {
-                "source": "<b> What are the conservation outcomes sought?</b><br> 1) Reducing the ability of exotic annual plant species to set seed and vegetation biomass <br> 2) Facilitating seed set by native perennials and promoting regeneration of native plants; <br> 3) Reducing soil disturbance and compaction caused by hard-hooved domestic livestock; <br> 4) Reducing selective grazing of palatable native perennial plants; <br> 5) Reducing nutrient input through animal excrement.<br><br><b>Please note</b> Grazing activities may also be included under “Conservation grazing”, “Strategic grazing”, “Monitoring and manage grazing pressure from domestic livestock” and “Monitor and manage total grazing pressure”. <br> Endeavour to record sward height and ground cover percentage prior to and after each grazing period.<br>",
+                "source": "<b> What are the conservation outcomes sought?</b><br> 1) Reducing the ability of exotic annual plant species to set seed and vegetation biomass <br> 2) Facilitating seed set by native perennials and promoting regeneration of native plants; <br> 3) Reducing soil disturbance and compaction caused by hard-hooved domestic livestock; <br> 4) Reducing selective grazing of palatable native perennial plants; <br> 5) Reducing nutrient input through animal excrement.<br><br><b>Please note</b> Grazing activities may also be included in your Funding Agreement under “Conservation grazing”, “Strategic grazing”, “Monitoring and manage grazing pressure from domestic livestock” and “Monitor and manage total grazing pressure”. <br> Endeavour to record sward height and ground cover percentage prior to and after each grazing period.<br>",
                 "type": "literal"
               }
             ],
@@ -653,7 +653,7 @@
                   },
                   {
                     "source": "groundCoverPercent",
-                    "title": "Ground cover % after grazing",
+                    "title": "Ground Cover % after grazing",
                     "type": "number"
                   }
                 ],
@@ -774,7 +774,7 @@
           {
             "items": [
               {
-                "source": "Record sward height at the same time that you take the photo-point photograph for this site. Please ensure that this is done at the same time each year.<br>You can find instructions on measuring Sward height here:<a href='https://www.dcceew.gov.au/environment/land/landcare/my-project/monitoring-reporting/environmental-stewardship/sward-height'> Measuring Sward height - DCCEEW</a><br>You can include an image of the sward height as a way to enhance records of the impact of the Environmental Stewardship Program.",
+                "source": "Record sward height at the same time that you take the photo-point photograph for this site. Please ensure that this is done at the same time each year.<br>You can find instructions on measuring Sward height here:<a href='https://www.dcceew.gov.au/environment/land/landcare/my-project/monitoring-reporting/environmental-stewardship/sward-height' target='_blank'> Measuring Sward height - DCCEEW</a><br>You can include an image of the sward height as a way to enhance records of the impact of the Environmental Stewardship Program.",
                 "type": "literal"
               }
             ],
@@ -852,7 +852,7 @@
           {
             "items": [
               {
-                "source": "Record ground cover % at the same time that you take the photo-point photograph for this site. Please ensure that this is done at the same time each year.<br>You can find instructions on measuring Ground cover here:<a href='https://www.dcceew.gov.au/environment/land/landcare/my-project/monitoring-reporting/environmental-stewardship/ground-cover-percentage'> Estimating ground cover percentage - DCCEEW</a><br>You can include an image of the ground cover as a way to enhance records of the impact of the Environmental Stewardship Program.",
+                "source": "Record ground cover % at the same time that you take the photo-point photograph for this site. Please ensure that this is done at the same time each year.<br>You can find instructions on measuring Ground cover here:<a href='https://www.dcceew.gov.au/environment/land/landcare/my-project/monitoring-reporting/environmental-stewardship/ground-cover-percentage' target='_blank'> Estimating ground cover percentage - DCCEEW</a><br>You can include an image of the ground cover as a way to enhance records of the impact of the Environmental Stewardship Program.",
                 "type": "literal"
               }
             ],
@@ -897,7 +897,7 @@
       "collapsedByDefault": false,
       "modelName": null,
       "name": "ESP Native herbivore management",
-      "description": "1. Reducing browsing impact on palatable native plants; <br> 2. Maintaining native species diversity and facilitating natural regeneration; <br> 3. Reducing overgrazing, thus weed infestation; and <br> 4. Improving litter and soil condition.<br><br><b> Implementation: </b> <br> Actions that involve reduction in the native herbivore numbers include:<ul><li>exclusion is best carried out with a 3-strand plain wire fence affixed to the top of a stock-proof fence</li><li>trapping and relocation, but only under licence</li><li>enticement away from the site (e.g. through strategic placement of watering points), the success of which would need to be monitored</li><li>culling of native herbivores, which can only be conducted with the authorisation of and a license issued by the appropriate government authority</li></ul><span>Please note ideally culling should be coordinated with other similar actions in the region in order to maximise impact, and undertaken in a humane manner consistent with legislative requirements.</span><br><br><b>Please note</b> Activities to monitor and/or manage native herbivores may also be included under “Monitor and manage total grazing pressure”, “Monitor and manage grazing pressure from native species” or “Monitor and manage native herbivores.”",
+      "description": "1. Reducing browsing impact on palatable native plants; <br> 2. Maintaining native species diversity and facilitating natural regeneration; <br> 3. Reducing overgrazing, thus weed infestation; and <br> 4. Improving litter and soil condition.<br><br><b> Implementation: </b> <br> Actions that involve reduction in the native herbivore numbers include:<ul><li>exclusion is best carried out with a 3-strand plain wire fence affixed to the top of a stock-proof fence</li><li>trapping and relocation, but only under licence</li><li>enticement away from the site (e.g. through strategic placement of watering points), the success of which would need to be monitored</li><li>culling of native herbivores, which can only be conducted with the authorisation of and a license issued by the appropriate government authority</li></ul><span>Ideally culling should be coordinated with other similar actions in the region in order to maximise impact, and undertaken in a humane manner consistent with legislative requirements.</span><br><br><b>Please note</b> Activities to monitor and/or manage native herbivores may also be included under “Monitor and manage total grazing pressure”, “Monitor and manage grazing pressure from native species” or “Monitor and manage native herbivores.”",
       "collapsibleHeading": "What are the conservation outcomes sought?",
       "optional": false,
       "optionalQuestionText": "Not an agreed management action under my funding agreement",
@@ -1042,7 +1042,7 @@
           {
             "items": [
               {
-                "source": "<b> What are the conservation outcomes sought?</b> <br> 1. Reducing browsing impact on palatable native plants; <br> 2. Maintaining native species diversity and facilitating natural regeneration; <br> 3. Reducing overgrazing, thus weed infestation; and <br> 4. Improving litter and soil condition.<br><br><b> Implementation: </b> <br> Actions that involve reduction in the native herbivore numbers include:<br>Exclusion is best carried out with a 3-strand plain wire fence affixed to the top of a stock-proof fence.<br>Trapping and relocation is an option for native herbivores, but only under licence.<br><br>Enticement away from the site (e.g. through strategic placement of watering points) is also an option, but success would need to be monitored.<br><br>Culling of native herbivores, which can only be conducted with the authorisation of and a license issued by the appropriate government authority. Ideally, culling should be coordinated with other similar actions in the region in order to maximise impact, and would be undertaken in a humane manner consistent with conservation and land stewardship values.<br><br><b>Please note</b> Activities to monitor and/or manage native herbivores may also be included under “Monitor and manage total grazing pressure”, “Monitor and manage grazing pressure from native species” or “Monitor and manage native herbivores.”",
+                "source": "<b> What are the conservation outcomes sought?</b> <br> 1. Reducing browsing impact on palatable native plants; <br> 2. Maintaining native species diversity and facilitating natural regeneration; <br> 3. Reducing overgrazing, thus weed infestation; and <br> 4. Improving litter and soil condition.<br><br><b> Implementation: </b> <br> Actions that involve reduction in the native herbivore numbers include:<br>Exclusion is best carried out with a 3-strand plain wire fence affixed to the top of a stock-proof fence.<br>Trapping and relocation is an option for native herbivores, but only under licence.<br><br>Enticement away from the site (e.g. through strategic placement of watering points) is also an option, but success would need to be monitored.<br><br>Culling of native herbivores, which can only be conducted with the authorisation of and a license issued by the appropriate government authority. Ideally culling should be coordinated with other similar actions in the region in order to maximise impact, and would be undertaken in a humane manner consistent with conservation and land stewardship values.<br><br><b>Please note</b> Activities to monitor and/or manage native herbivores may also be included in your Funding Agreement under “Monitor and manage total grazing pressure”, “Monitor and manage grazing pressure from native species” or “Monitor and manage native herbivores.”",
                 "type": "literal"
               }
             ],
@@ -1091,7 +1091,7 @@
                   {
                     "source": "managementReason",
                     "title": "Reason for management",
-                    "type": "selectOne"
+                    "type": "select2Many"
                   },
                   {
                     "source": "noCulled",
@@ -1182,7 +1182,7 @@
       "collapsedByDefault": false,
       "modelName": null,
       "name": "ESP Feral animal management",
-      "description": "1.To reduce browsing impact on palatable native plants and local native fauna; <br> 2. Maintain native species diversity and facilitate natural regeneration; <br> 3. Reduce overgrazing leading to weed infestation; <br> 4. Improve litter and soil condition. <br><br><b> Implementation: </b> <br> Land managers are required to control feral herbivores and carnivores (for example rabbits, hares, goats, deer, pigs, foxes or feral cats) where these are having a detrimental impact on the target ecological community. Control measures will differ between species and may include both preventative (e.g. fencing) and destructive measures as appropriate. <br> Destructive control measures should minimise unintended adverse impacts on non-target species and be undertaken humanely and in accordance with NSW legislation. Warren ripping to control rabbits within a target ecological community should be undertaken as a last resort and every effort should be taken to minimise soil disturbance away from the immediate warren site.<br><br><b>Please note</b> Activities to monitor and/or manage feral animals may also be included under; “Monitor and manage total grazing pressure” and “Monitor and manage feral animals”.",
+      "description": "1.To reduce browsing impact on palatable native plants and local native fauna; <br> 2. Maintain native species diversity and facilitate natural regeneration; <br> 3. Reduce overgrazing leading to weed infestation; <br> 4. Improve litter and soil condition. <br><br><b> Implementation: </b> <br> Land managers are required to control feral herbivores and carnivores (for example rabbits, hares, goats, deer, pigs, foxes or feral cats) where these are having a detrimental impact on the target ecological community. Control measures will differ between species and may include both preventative (e.g. fencing) and destructive measures as appropriate. <br> Destructive control measures should minimise unintended adverse impacts on non-target species and be undertaken humanely and in accordance with NSW legislation. Warren ripping to control rabbits within a target ecological community should be undertaken as a last resort and every effort should be taken to minimise soil disturbance away from the immediate warren site.<br><br><b>Please note</b> Activities to monitor and/or manage feral animals may also be included in your Funding Agreement under; “Monitor and manage total grazing pressure” and “Monitor and manage feral animals”.",
       "collapsibleHeading": "What are the conservation outcomes sought?",
       "optional": false,
       "optionalQuestionText": "Not an agreed management action under my funding agreement",
@@ -1279,7 +1279,7 @@
                   }
                 ],
                 "name": "noCulled",
-                "validate": "min[0],required"
+                "validate": "min[0]"
               }
             ],
             "dataType": "list",
@@ -1382,13 +1382,13 @@
                   {
                     "width": "20%",
                     "source": "managementReason",
-                    "title": "Reason for management",
+                    "title": "Reason for Management",
                     "type": "select2Many"
                   },
                   {
                     "width": "10%",
                     "source": "noCulled",
-                    "title": "If applicable, no. culled (if known)",
+                    "title": "If applicable, No. Culled (if known)",
                     "type": "number"
                   }
                 ],
@@ -1475,7 +1475,7 @@
       "collapsedByDefault": false,
       "modelName": null,
       "name": "ESP Weed management",
-      "description": "1. To reduce exotic plant cover, thereby reducing competition with native plants.<br> 2. To reduce exotic plant biomass. <br> 3. To create more gaps in the ground layer to facilitate regeneration of native groundcover species.<br><br><b> Implementation: </b> <br> Land managers are  required to control weeds through: Strategic grazing and targeted controls including localised application of herbicides (spot spraying, weed wiping), hand pulling or chipping of target weed species, mowing, and slashing or possibly localised conservation burning (under an appropriate management plan and permission from NSW Rural Fire Service as required).<br><br><b>Please note</b> Activities to monitor and/or manage weeds may also be included under any or all of the following; “Monitor and manage herbaceous exotic plants (aggressive)”, “Monitor and manage herbaceous exotic plants (non-aggressive)”, “Monitor and manage exotic shrubs (aggressive)”, “Monitor and manage exotic plants”, “Monitor and manage aggressive exotic plants” and “Monitor and manage non-aggressive exotic plants”.",
+      "description": "1. To reduce exotic plant cover, thereby reducing competition with native plants.<br> 2. To reduce exotic plant biomass. <br> 3. To create more gaps in the ground layer to facilitate regeneration of native groundcover species.<br><br><b> Implementation: </b> <br> Land managers are  required to control weeds through: Strategic grazing and targeted controls including localised application of herbicides (spot spraying, weed wiping), hand pulling or chipping of target weed species, mowing, and slashing or possibly localised conservation burning (under an appropriate management plan and permission from NSW Rural Fire Service as required).<br><br><b>Please note</b> Activities to monitor and/or manage weeds may also be included in your Funding Agreement under any or all of the following; “Monitor and manage herbaceous exotic plants (aggressive)”, “Monitor and manage herbaceous exotic plants (non-aggressive)”, “Monitor and manage exotic shrubs (aggressive)”, “Monitor and manage exotic plants”, “Monitor and manage aggressive exotic plants” and “Monitor and manage non-aggressive exotic plants”.",
       "collapsibleHeading": "What are the conservation outcomes sought?",
       "optional": false,
       "optionalQuestionText": "Not an agreed management action under my funding agreement",
@@ -1625,7 +1625,7 @@
           {
             "items": [
               {
-                "source": "<b> What are the conservation outcomes sought?</b> <br> 1. to reduce exotic plant cover, thereby reducing competition with native plants; <br> 2. to reduce exotic plant biomass; <br> 3. to create more gaps in the groundlayer to facilitate regeneration of native groundcover species.<br><br><b> Controlled through: </b> <br> Strategic grazing and targeted controls including localised application of herbicides (spot spraying, weed wiping), hand pulling or chipping of target weed species, mowing, and slashing or possibly localised conservation burning (under an appropriate management plan and permission from relevant agencies as required).<br><br><b>Please note</b> Activities to monitor and/or manage weeds may also be included under any or all of the following; “Monitor and manage herbaceous exotic plants (aggressive)”, “Monitor and manage herbaceous exotic plants (non-aggressive)”, “Monitor and manage exotic shrubs (aggressive)”, “Monitor and manage exotic plants”, “Monitor and manage aggressive exotic plants” and “Monitor and manage non-aggressive exotic plants”.",
+                "source": "<b> What are the conservation outcomes sought?</b> <br> 1. to reduce exotic plant cover, thereby reducing competition with native plants; <br> 2. to reduce exotic plant biomass; <br> 3. to create more gaps in the groundlayer to facilitate regeneration of native groundcover species.<br><br><b> Controlled through: </b> <br> Strategic grazing and targeted controls including localised application of herbicides (spot spraying, weed wiping), hand pulling or chipping of target weed species, mowing, and slashing or possibly localised conservation burning (under an appropriate management plan and permission from relevant agencies as required).<br><br><b>Please note</b> Activities to monitor and/or manage weeds may also be included in your Funding Agreement under any or all of the following; “Monitor and manage herbaceous exotic plants (aggressive)”, “Monitor and manage herbaceous exotic plants (non-aggressive)”, “Monitor and manage exotic shrubs (aggressive)”, “Monitor and manage exotic plants”, “Monitor and manage aggressive exotic plants” and “Monitor and manage non-aggressive exotic plants”.",
                 "type": "literal"
               }
             ],
@@ -1771,7 +1771,7 @@
       "collapsedByDefault": false,
       "modelName": null,
       "name": "ESP Biomass control measures",
-      "description": "1. Enhancing the diversity of the native ground flora by promoting the growth and spread of other grasses and herbs.<br><br><b>Implementation:</b><br>Reducing the density of the dominant perennial species (the biomass) through small scale ecological burns, by strategic grazing or by slashing over relatively small areas at an agreed timing and frequency.<br><br><b>Please note</b> Activities to control Biomass may also be included under “Monitor and manage dominant native species”, “Biomass control to reduce dominance of a single native plant species”, “Biomass Control” and “Thinning”.<br>",
+      "description": "1. Enhancing the diversity of the native ground flora by promoting the growth and spread of other grasses and herbs.<br><br><b>Implementation:</b><br>Reducing the density of the dominant perennial species (the biomass) through small scale ecological burns, by strategic grazing or by slashing over relatively small areas at an agreed timing and frequency.<br><br><b>Please note</b> Activities to control Biomass may also be included in your Funding Agreement under “Monitor and manage dominant native species”, “Biomass control to reduce dominance of a single native plant species”, “Biomass Control” and “Thinning”.<br>",
       "collapsibleHeading": "What are the conservation outcomes sought?",
       "optional": true,
       "optionalQuestionText": "Not an agreed management action under my funding agreement",
@@ -1882,7 +1882,7 @@
           {
             "items": [
               {
-                "source": "<b> What are the conservation outcomes sought?</b> <br>1. Enhancing the diversity of the native ground flora by promoting the growth and spread of other grasses and herbs.<br>2. Implementation through small scale ecological burns, by strategic grazing or by slashing over relatively small areas at an agreed timing and frequency.<br><br><b>Please note</b> Activities to control Biomass may also be included under “Monitor and manage dominant native species”, “Biomass control to reduce dominance of a single native plant species”, “Biomass Control” and “Thinning”.<br><br>",
+                "source": "<b> What are the conservation outcomes sought?</b> <br>1. Enhancing the diversity of the native ground flora by promoting the growth and spread of other grasses and herbs.<br>2. Implementation through small scale ecological burns, by strategic grazing or by slashing over relatively small areas at an agreed timing and frequency.<br><br><b>Please note</b> Activities to control Biomass may also be included in your Funding Agreement under “Monitor and manage dominant native species”, “Biomass control to reduce dominance of a single native plant species”, “Biomass Control” and “Thinning”.<br><br>",
                 "type": "literal"
               }
             ],
@@ -1919,7 +1919,7 @@
                     "type": "select2Many"
                   },
                   {
-                    "title": "Area treated (Ha)",
+                    "title": "Area Treated (Ha)",
                     "source": "areaTreatedHa",
                     "type": "number"
                   }
@@ -2013,7 +2013,7 @@
       "collapsedByDefault": false,
       "modelName": null,
       "name": "ESP Revegetation",
-      "description": "1. Speed up the recovery of the woodland, namely to assist in rehabilitating stock camps;<br> 2. Re-introducing of locally rare endemic plants;<br>3. Re-introducing of trees into large areas of derived grassland or degraded woodland;<br>4. Provide competition to established or vigorous weed species.<br><br><b>Please note</b> that revegetation activities may also be included under; “Re-establish perennial native species”, “Plants overstorey tree species of target community”, “Re-establish understorey shrubs”, “Plant perennial species” and “Planting/direct seeding”.",
+      "description": "1. Speed up the recovery of the woodland, namely to assist in rehabilitating stock camps;<br> 2. Re-introducing of locally rare endemic plants;<br>3. Re-introducing of trees into large areas of derived grassland or degraded woodland;<br>4. Provide competition to established or vigorous weed species.<br><br>Environmental re-vegetation refers to planting of native vegetation into a patch to assist with the restoration of its ecological values and condition.<br><br><b>Please note</b> that revegetation activities may also be included in you Funding Agreement under; “Re-establish perennial native species”, “Plantoverstorey tree species of target community”, “Re-establish understorey shrubs”, “Plant perennial species” and “Planting/direct seeding”.",
       "collapsibleHeading": "What are the conservation outcomes sought?",
       "optional": true,
       "optionalQuestionText": "Not an agreed management action under my funding agreement",
@@ -2232,7 +2232,7 @@
                 "type": "speciesSelect"
               },
               {
-                "title": "Number planted (if applicable)",
+                "title": "Number Planted (if applicable)",
                 "source": "numberPlanted",
                 "computed": null,
                 "width": "10%",
@@ -2270,21 +2270,21 @@
                 }
               },
               {
-                "title": "Species planted",
+                "title": "Species Planted",
                 "source": "species",
                 "computed": null,
                 "width": "40%",
                 "type": "speciesSelect"
               },
               {
-                "title": "Number planted (if applicable)",
+                "title": "Number Planted (if applicable)",
                 "source": "numberPlanted",
                 "computed": null,
                 "width": "10%",
                 "type": "number"
               },
               {
-                "title": "Estimated survival rate (%)",
+                "title": "Estimated Survival Rate (%)",
                 "source": "estimatedSurvivalPercent",
                 "computed": null,
                 "width": "10%",
@@ -2377,7 +2377,7 @@
       "collapsedByDefault": false,
       "modelName": null,
       "name": "ESP Regeneration",
-      "description": "1. Establish mature and immature examples of the dominant eucalypt species and understory.<br>2. Improve the structural diversity, cover and shelter for woodland birds and other animals, increasing the available foraging potential and maintenance of the woodland overstorey in the long term.<br><br><b>Implementation</b><br>Removal of grazing pressure and exotic weed competition can support the regeneration of trees and shrubs. If a remnant tree exists in isolation within a patch (i.e. paddock tree), land managers may consider fencing an area around the tree to encourage natural regeneration.<br><br><b>Please note</b> Activities relating to Regeneration may also be included under any or all of the following; “Monitor and manage regeneration”, “Buffering”, “Connectivity” and “Reduce isolation”.",
+      "description": "1. Establish mature and immature examples of the dominant eucalypt species and understory.<br>2. Improve the structural diversity, cover and shelter for woodland birds and other animals, increasing the available foraging potential and maintenance of the woodland overstorey in the long term.<br><br><b>Implementation</b><br>Removal of grazing pressure and exotic weed competition can support the regeneration of trees and shrubs. If a remnant tree exists in isolation within a patch (i.e. paddock tree), land managers may consider fencing an area around the tree to encourage natural regeneration.<br><br><b>Please note</b> Activities relating to Regeneration may also be included in your Funding Agreement under any or all of the following; “Monitor and manage regeneration”, “Buffering”, “Connectivity” and “Reduce isolation”.",
       "collapsibleHeading": "What are the conservation outcomes sought?",
       "optional": false,
       "optionalQuestionText": "Not an agreed management action under my funding agreement",
@@ -2499,22 +2499,7 @@
           {
             "items": [
               {
-                "source": "Please feel free to upload a photograph(s) of any regenerating plant species from your ESP site.",
-                "type": "literal"
-              }
-            ],
-            "behaviour": [
-              {
-                "type": "if_expression",
-                "condition": "wasActivityUndertaken == \"Yes\""
-              }
-            ],
-            "type": "row"
-          },
-          {
-            "items": [
-              {
-                "title": "Please complete the following:",
+                "title": "Please feel free to upload a photograph(s) of any regenerating plant species from your ESP site and complete the following:",
                 "source": "regeneration",
                 "columns": [
                   {
@@ -2560,7 +2545,7 @@
             ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label>Please provide comment on any actions taken to support natural regeneration and the regeneration observed. This comment could include, but is not limited to, the following information:</label></span><div><ul><li>actions taken to improve natural regeneration</li><li>if natural regeneration is occurring in the grassland or existing woodland</li><li>have previous years naturally occurring saplings/seedlings survived</li><li>expanse of natural regeneration across ESP area</li><li>do you feel that the implementation of the Environmental Stewardship Program has improved regeneration?</li><li>observed any regeneration of native grasses, forbs or flowers</li><li>any additional comments regarding this activity.</li></ul></div>",
+                "source": "<span class=\"preLabel required\"><label>Please provide comment on any actions taken to support natural regeneration and the regeneration observed. This comment could include, but is not limited to, the following information:</label></span><div><ul><li>actions taken to improve natural regeneration</li><li>if natural regeneration is occurring in the grassland or existing woodland</li><li>have previous years naturally occurring saplings/seedlings survived</li><li>increase of natural regeneration across ESP area</li><li>do you feel that the implementation of the Environmental Stewardship Program has improved regeneration?</li><li>observed any regeneration of native grasses, forbs or flowers</li><li>any additional comments regarding this activity.</li></ul></div>",
                 "type": "literal"
               }
             ]
@@ -2626,7 +2611,7 @@
       "collapsedByDefault": false,
       "modelName": null,
       "name": "ESP Restoration of Habitat Features",
-      "description": "1. Tree or substantial branches that fall to the ground it provides a sheltered habitat enabling seeds to germinate and the process of natural regeneration to occur;<br>2. Fallen branches, rocks and small objects create habitats for native fauna species.<br><br><b>Implementation</b><br>Land managers are encouraged to leave fallen trees or branches where they fall within their woodland patch. The use of rocks and other habitat objects like nest boxes, old untreated fence posts and corrugated iron can improve the habitat features of the ESP zone.<br><br><b>Please note</b> Activities to restore habitat features may also be included under “Add coarse woody debris” and “Retain fallen timber”.",
+      "description": "1. Tree or substantial branches that fall to the ground provide a sheltered habitat enabling seeds to germinate and the process of natural regeneration to occur;<br>2. Fallen branches, rocks and small objects create habitats for native fauna species.<br><br><b>Implementation</b><br>Land managers are encouraged to leave fallen trees or branches where they fall within their woodland patch. The use of rocks and other habitat objects like nest boxes, old untreated fence posts and corrugated iron can improve the habitat features of the ESP zone.<br><br><b>Please note</b> Activities to restore habitat features may also be included in your Funding Agreement under “Add coarse woody debris” and “Retain fallen timber”.",
       "collapsibleHeading": "What are the conservation outcomes sought?",
       "optional": false,
       "optionalQuestionText": "Not an agreed management action under my funding agreement",
@@ -2663,6 +2648,18 @@
                 ]
               },
               {
+                "dataType": "text",
+                "description": "Please describe the habitat feature if other was selected",
+                "name": "otherHabitatFeature",
+                "behaviour": [
+                  {
+                    "condition": "habitatFeature == \"Other\"",
+                    "type": "enable_and_clear"
+                  }
+                ],
+                "validate": "required"
+              },
+              {
                 "dataType": "number",
                 "behaviour": [
                   {
@@ -2685,17 +2682,6 @@
                 "validate": "integer,min[0]"
               }
             ]
-          },
-          {
-            "dataType": "text",
-            "behaviour": [
-              {
-                "type": "enable_and_clear",
-                "condition": "wasActivityUndertaken == \"Yes\""
-              }
-            ],
-            "description": "Please describe the habitat feature if other was selected",
-            "name": "otherHabitatFeature"
           },
           {
             "dataType": "number",
@@ -2772,6 +2758,11 @@
                     "type": "selectOne"
                   },
                   {
+                    "title": "Habitat Feature (if Other)",
+                    "source": "otherHabitatFeature",
+                    "type": "text"
+                  },
+                  {
                     "title": "Number of habitat features added",
                     "source": "numberAdded",
                     "type": "number"
@@ -2785,22 +2776,6 @@
                 "userAddedRows": true,
                 "disableTableUpload": true,
                 "type": "table"
-              }
-            ],
-            "behaviour": [
-              {
-                "type": "if_expression",
-                "condition": "wasActivityUndertaken == \"Yes\""
-              }
-            ],
-            "type": "row"
-          },
-          {
-            "items": [
-              {
-                "source": "otherHabitatFeature",
-                "preLabel": "Habitat Feature (if Other)",
-                "type": "textarea"
               }
             ],
             "behaviour": [
@@ -2887,7 +2862,7 @@
       "collapsedByDefault": false,
       "modelName": null,
       "name": "ESP Control of Agrochemicals",
-      "description": "1. To prevent enrichment of soils in the Primary Management Unit;<br>2. To prevent microbial impacts associated with chemical spray drift; <br> 3. To prevent microbial impacts associated with water borne agrochemicals.<br><br><b>Implementation</b><br>Land managers are encouraged to establish a dense sward of native perennial grasses within a buffer adjacent to the PMU to reduce the water-borne movement of agrochemicals from adjoining agricultural land into the PMU. <br> No fertiliser, no cultivation and no spraying of agro-chemicals in the buffer, regardless of whether the buffer contains trees.<br><br><b>Please note</b> Activities to reduce the impacts of nutrients and agrochemicals may also be included under; “Nutrient management”, “Reduce wind-borne agrochemicals” and “Reduce water-borne movement of agrochemicals”.",
+      "description": "1. To prevent enrichment of soils in the Primary Management Unit;<br>2. To prevent microbial impacts associated with chemical spray drift; <br> 3. To prevent microbial impacts associated with water borne agrochemicals.<br><br><b>Implementation</b><br>Land managers are encouraged to establish a dense sward of native perennial grasses within a buffer adjacent to the PMU to reduce the water-borne movement of agrochemicals from adjoining agricultural land into the PMU. <br> No fertiliser, no cultivation and no spraying of agro-chemicals in the buffer, regardless of whether the buffer contains trees.<br><br><b>Please note</b> Activities to reduce the impacts of nutrients and agrochemicals may also be included in your Funding Agreement under; “Nutrient management”, “Reduce wind-borne agrochemicals” and “Reduce water-borne movement of agrochemicals”.",
       "collapsibleHeading": "What are the conservation outcomes sought?",
       "optional": true,
       "optionalQuestionText": "Not an agreed management action under my funding agreement",
@@ -3262,7 +3237,7 @@
       "collapsedByDefault": false,
       "modelName": null,
       "name": "ESP Fencing Paddock Trees",
-      "description": "1. Protect individual trees to promote connectivity between a PMU and other patches of native vegetation.<br><br><b>Implementation:</b><br>Individual paddock trees may be fenced sufficient to allow natural regeneration i.e. the area around the tree is protected from livestock grazing and trampling to encourage germination of tree seedlings following seedfall.<br><br><b>Please note</b> Activities to Fence paddock trees may also be included under; “Activities to reduce isolation” and/or “Activities to improve connectivity”.",
+      "description": "1. Protect individual trees to promote connectivity between a PMU and other patches of native vegetation.<br><br><b>Implementation:</b><br>Individual paddock trees may be fenced sufficient to allow natural regeneration i.e. the area around the tree is protected from livestock grazing and trampling to encourage germination of tree seedlings following seedfall.<br><br><b>Please note</b> Activities to Fence paddock trees may also be included in your Funding Agreement under; “Activities to reduce isolation” and/or “Activities to improve connectivity”.",
       "collapsibleHeading": "What are the conservation outcomes sought?",
       "optional": true,
       "optionalQuestionText": "Not an agreed management action under my funding agreement",
@@ -3420,7 +3395,7 @@
       "collapsedByDefault": false,
       "modelName": null,
       "name": "ESP Thinning",
-      "description": "Ecological thinning increases  structural diversity and allows for the regeneration of understorey species by reducing competition and increasing light penetration to ground level.<br><br><b>Implementation</b><br>Ecological thinning refers to the strategic, manual removal of a number of tree stems within a patch of vegetation where the tree density may be such that there are few mature trees, numerous young stems and a sparse ground layer.",
+      "description": "1. Ecological thinning increases  structural diversity and allows for the regeneration of understorey species by reducing competition and increasing light penetration to ground level.<br><br><b>Implementation</b><br>Ecological thinning refers to the strategic, manual removal of a number of tree stems within a patch of vegetation where the tree density may be such that there are few mature trees, numerous young stems and a sparse ground layer.",
       "collapsibleHeading": "What are the conservation outcomes sought?",
       "optional": true,
       "optionalQuestionText": "Not an agreed management action under my funding agreement",
@@ -3479,7 +3454,7 @@
           {
             "items": [
               {
-                "source": "<b> What are the conservation outcomes sought?</b> <br> Ecological thinning increases  structural diversity and allows for the regeneration of understorey species by reducing competition and increasing light penetration to ground level.<br><br><b>Implementation</b><br>Ecological thinning refers to the strategic, manual removal of a number of tree stems within a patch of vegetation where the tree density may be such that there are few mature trees, numerous young stems and a sparse ground layer.",
+                "source": "<b> What are the conservation outcomes sought?</b> <br>Ecological thinning increases  structural diversity and allows for the regeneration of understorey species by reducing competition and increasing light penetration to ground level.<br><br><b>Implementation</b><br>Ecological thinning refers to the strategic, manual removal of a number of tree stems within a patch of vegetation where the tree density may be such that there are few mature trees, numerous young stems and a sparse ground layer.",
                 "type": "literal"
               }
             ],
