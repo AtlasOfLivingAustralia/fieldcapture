@@ -30,7 +30,8 @@
           {
             "dataType": "number",
             "name": "foregoneProductionCost",
-            "defaultValue": ""
+            "defaultValue": "",
+            "validate": "required"
           },
           {
             "dataType": "text",
@@ -203,6 +204,33 @@
             "name": "notes",
             "description": "",
             "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "contactDetailsChanged",
+            "description": "",
+            "constraints": [
+              "Yes", "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "bankDetailsChanged",
+            "description": "",
+            "constraints": [
+              "Yes", "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "abnChanged",
+            "description": "",
+            "constraints": [
+              "Yes", "No"
+            ],
+            "validate": "required"
           }
         ],
         "modelName": "ESP Overview",
@@ -290,7 +318,7 @@
             "type": "row",
             "items": [
               {
-                "source": "<h4>Cost of Foregone Production</h4>What are the cost restrictions imposed on your farm?\nConsider the costs that the management action restrictions impose on your farm business, either in terms of income foregone (commercial firewood sales, reduction of stock that could be sold) or additional costs (e.g. buying strainers or firewood).",
+                "source": "<h4>Cost of Foregone Production</h4>What are the cost restrictions imposed on your farm?<p>Consider the costs that the management action restrictions impose on your farm business, either in terms of income foregone (commercial firewood sales, reduction of stock that could be sold) or additional costs (e.g. buying strainers or firewood).</p>",
                 "type": "literal"
               }
             ]
@@ -299,7 +327,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "If you would like to provide information on any foregone production costs incurred through your involvement in the ESP please record the dollar value below:",
+                "preLabel": "Please record the dollar value of any foregone production costs incurred this reporting period",
                 "source": "foregoneProductionCost",
                 "type": "currency"
               }
@@ -348,7 +376,7 @@
             "type": "row",
             "items": [
               {
-                "source": "<h4>Total cost for this Reporting Period</h4>",
+                "source": "<h4>Total cost for this Reporting Period</h4><p><strong>Please Note:</strong> This value should be equal to or exceed the last funding amount received from the Department. If you wish to carry over any funds to the next reporting period, a request must be submitted to the Department via the Environmental Stewardship inbox at <a href=\"mailto:EnviroStewardship@environment.gov.au\">EnviroStewardship@environment.gov.au</a></p>",
                 "type": "literal"
               }
             ]
@@ -357,7 +385,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "You have reported the following cost of management actions this year:",
+                "preLabel": "You have reported the total following costs this year:",
                 "source": "totalCostThisReportingPeriod",
                 "type": "currency"
               }
@@ -474,7 +502,7 @@
             "type": "row",
             "items": [
               {
-                "source": "<h4>Personal Details:</h4> <p>Have any of your contact details or your bank account details changed since you last reported? If “Yes” then please contact the Department to advise us of any change(s).</p>",
+                "source": "<h4>Personal Details:</h4><p>Have any of your following details changed since your last report?</p>",
                 "type": "literal"
               }
             ]
@@ -483,7 +511,55 @@
             "type": "row",
             "items": [
               {
-                "source": "<h4>Financial Reports:</h4> <p>Please note that if the total amount of funding you are receiving under the Environmental Stewardship Program is less than $750,000 (GST exclusive) you must download the Statutory Declaration form available under the <a href=\"https://www.dcceew.gov.au/environment/land/landcare/my-project/monitoring-reporting/environmental-stewardship/box-gum-grassy-woodland\">BGGW Financial templates</a>  – less than $750,000. This must then be submitted to the Department via the Environmental Stewardship inbox at <a href=\"mailto:EnviroStewardship@environment.gov.au\">EnviroStewardship@environment.gov.au</a>  </p><p>However, </p><p>If the total amount of funding you are receiving under the Environmental Stewardship program is more than $750,000 (GST exclusive) you must download the Financial Report available under the <a href=\"https://www.dcceew.gov.au/environment/land/landcare/my-project/monitoring-reporting/environmental-stewardship/box-gum-grassy-woodland\">BGGW Financial templates</a> - more than $750,000.  It must be prepared and certified by a qualified accountant. This must then be submitted to the Department via the Environmental Stewardship inbox at <a href=\"mailto:EnviroStewardship@environment.gov.au\">EnviroStewardship@environment.gov.au</a>.</p>",
+                "preLabel": "Contact details [Yes / No]",
+                "source": "contactDetailsChanged",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Bank details [Yes / No]",
+                "source": "bankDetailsChanged",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "If \"Yes\" then please forward your new details to your contact officer and cc EnviroStewardship@environment.gov.au",
+                "type": "literal"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "ABN [Yes / No]",
+                "source": "bankDetailsChanged",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "If \"Yes\" please forward your new details to your contact officer and check that the ABN number matches the statutory declaration / financial report information.",
+                "type": "literal"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "<h4>Financial Reports:</h4> <p>Please note that if the total amount of funding you are receiving under the Environmental Stewardship Program is less than $750,000 (GST exclusive) you must download the Statutory Declaration form available under the <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://www.dcceew.gov.au/environment/land/landcare/my-project/monitoring-reporting/environmental-stewardship/box-gum-grassy-woodland\">BGGW Financial templates</a>  – less than $750,000. This must then be submitted to the Department via the Environmental Stewardship inbox at <a href=\"mailto:EnviroStewardship@environment.gov.au\">EnviroStewardship@environment.gov.au</a>  </p><p>However, </p><p>If the total amount of funding you are receiving under the Environmental Stewardship program is more than $750,000 (GST exclusive) you must download the Financial Report available under the <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://www.dcceew.gov.au/environment/land/landcare/my-project/monitoring-reporting/environmental-stewardship/box-gum-grassy-woodland\">BGGW Financial templates</a> - more than $750,000.  It must be prepared and certified by a qualified accountant. This must then be submitted to the Department via the Environmental Stewardship inbox at <a href=\"mailto:EnviroStewardship@environment.gov.au\">EnviroStewardship@environment.gov.au</a>.</p>",
                 "type": "literal"
               }
             ]
