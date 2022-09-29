@@ -38,7 +38,9 @@
         wmsServiceUrl:"${grailsApplication.config.getProperty('spatial.geoserverUrl')}",
         unlockActivityUrl:"${createLink(controller:'activity', action:'ajaxUnlock')}/<fc:currentUserId/>",
         projectActivitiesUrl:"${createLink(controller:'project', action:'searchActivities', id:activity.projectId)}",
-        healthCheckUrl:"${createLink(controller:'ajax', action:'keepSessionAlive')}"
+        healthCheckUrl:"${createLink(controller:'ajax', action:'keepSessionAlive')}",
+        prepopUrlPrefix:"${grailsApplication.config.getProperty('grails.serverURL')}"
+
         },
         here = document.location.href;
     </script>

@@ -1,0 +1,462 @@
+{
+  "name": "Koala Conservation Final Report",
+  "type": "Report",
+  "sections": [
+    {
+      "name": "Koala Conservation Final Report",
+      "optionalQuestionText": null,
+      "optional": false,
+      "collapsedByDefault": false,
+      "templateName": "kc_final_report",
+      "template": {
+        "modelName": "Koala Conservation Final Report",
+        "dataModel": [
+          {
+            "dataType": "list",
+            "name": "projectOutcomes",
+            "allowRowDelete": "false",
+            "columns": [
+              {
+                "dataType": "text",
+                "name": "outcomeStatement",
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "achievement",
+                "validate": "required,maxSize[1250]"
+              },
+              {
+                "dataType": "text",
+                "name": "basedRating",
+                "constraints": [
+                  "Achieved (100%)",
+                  "Significantly achieved (76-99%)",
+                  "Satisfactorily achieved (51-75%)",
+                  "Partially achieved (26-50%)",
+                  "Inadequately achieved (1-25%)",
+                  "Not achieved (0%)",
+                  "Unable to rate"
+                ],
+                "validate": "required"
+              },
+              {
+                "name": "monitoringIndicator",
+                "dataType": "text",
+                "description": "",
+                "validate": "required",
+                "constraints": {
+                  "textProperty": "data1",
+                  "valueProperty": "data2",
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "context-path": "owner.custom.details.objectives.rows"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "achievedOutcomesSummary",
+            "validate": "required,maxSize[1250]"
+          },
+          {
+            "dataType": "text",
+            "name": "achievedOutcomesMaintained",
+            "validate": "required,maxSize[1250]"
+          },
+          {
+            "dataType": "stringList",
+            "name": "isTargetAchieved",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "columns": [
+              {
+                "dataType": "text",
+                "name": "serviceName"
+              },
+              {
+                "dataType": "text",
+                "name": "targetMeasure",
+                "description": "The output target measure to be adjusted."
+              },
+              {
+                "dataType": "text",
+                "name": "scoreId",
+                "description": "Identifier for the target measure"
+              },
+              {
+                "dataType": "text",
+                "name": "projectTarget"
+              },
+              {
+                "dataType": "text",
+                "name": "delivered"
+              },
+              {
+                "dataType": "text",
+                "name": "actualTotalDeliveredIfDifferent",
+                "behaviour": [
+                  {
+                    "condition": "delivered > projectTarget",
+                    "type": "enable_and_clear"
+                  }
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "reasonTargetNotMet",
+                "behaviour": [
+                  {
+                    "condition": "delivered < projectTarget",
+                    "type": "enable_and_clear"
+                  }
+                ],
+                "validate": "required"
+              }
+            ],
+            "dataType": "list",
+            "allowRowDelete": "false",
+            "name": "projectTargets"
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "projectLearningsSummary",
+            "validate": "required,maxSize[1250]"
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "futureEffortLessons",
+            "validate": "required,maxSize[1250]"
+          }
+        ],
+        "viewModel": [
+          {
+            "items": [
+              {
+                "source": "<h4>1. Project Outputs</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "isTargetAchieved",
+                "preLabel": "1.1 Did you achieve the target for each activity listed in the MERI Plan?",
+                "type": "selectOne"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "disableTableUpload": true,
+            "columns": [
+              {
+                "source": "",
+                "type": "literal",
+                "width": "5%",
+                "preLabel": {
+                  "computed": "\\'No. \\' || (index + 1)"
+                },
+                "title": "Activity No."
+              },
+              {
+                "readonly": true,
+                "width": "13%",
+                "source": "serviceName",
+                "type": "textarea",
+                "rows": 3,
+                "title": "Activity"
+              },
+              {
+                "readonly": true,
+                "width": "15%",
+                "source": "targetMeasure",
+                "type": "textarea",
+                "rows": 3,
+                "title": "Target measure"
+              },
+              {
+                "readonly": true,
+                "width": "13%",
+                "source": "projectTarget",
+                "type": "text",
+                "title": "Total to be delivered"
+              },
+              {
+                "readonly": true,
+                "width": "12%",
+                "source": "delivered",
+                "type": "text",
+                "title": "Total delivered",
+                "helpText": "please refer to the Dashboard for your project for this figure.  The dashboard automatically adds the figures from each of your progress reports (as a cumulative figure)."
+              },
+              {
+                "width": "30%",
+                "source": "reasonTargetNotMet",
+                "type": "textarea",
+                "rows": 3,
+                "title": "<b>Explanation if target not fully delivered</b><br>No response is required if the target was reached or exceeded."
+              }
+            ],
+            "userAddedRows": false,
+            "source": "projectTargets",
+            "title": "If you have answered no¸ please list the activity, target measure and target, the amount you delivered and explain why the target was not reached.<br><i>Refer to the Activities and Targets Table in the MERI Plan.</i>",
+            "type": "table"
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>2. Project Outcomes</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<b>2.1 Briefly describe the achievements that have been made against each outcome statement in the MERI Plan and how they align with and demonstrate achievement towards relevant actions and strategies in the National Recovery Plan for the Koala Phascolarctos cinereus (combined populations of Queensland, New South Wales and the Australian Capital Territory).</b><p>Where possible, please reference the project monitoring indicators that are listed in the MERI Plan to support your response. Please provide other supporting information (e.g. report, photos), where this has not been previously supplied, as attachments to this report via the Admin tab > Documents sub-tab of MERIT. Where supporting evidence contains sensitive or confidential information, please send to the department Project Manager (DCCEW) by email.",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "source": "projectOutcomes",
+            "type": "table",
+            "userAddedRows": true,
+            "columns": [
+              {
+                "source": "",
+                "type": "literal",
+                "width": "5%",
+                "preLabel": {
+                  "computed": "\\'No. \\' || (index + 1)"
+                },
+                "title": "Outcome No."
+              },
+              {
+                "type": "textarea",
+                "source": "outcomeStatement",
+                "title": "Outcome",
+                "rows": 5,
+                "width": "30%"
+              },
+              {
+                "source": "monitoringIndicator",
+                "type": "selectOne",
+                "title": "Monitoring Indicator",
+                "width": "20%"
+              },
+              {
+                "type": "textarea",
+                "source": "achievement",
+                "title": "Achievement/s",
+                "rows": 5,
+                "width": "30%"
+              },
+              {
+                "width": "15%",
+                "source": "basedRating",
+                "title": "Rating based on the effectiveness evaluation criteria",
+                "type": "select2"
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "source": "<b>2.2 Provide a brief summary of other outcomes achieved for this project that you wish to highlight, such as other environmental or social outcomes (e.g. engagement with Traditional Owners, landholders and local community, the contribution of partners, the generation/use of new technology).</b>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "achievedOutcomesSummary",
+                "type": "textarea",
+                "rows": 5,
+                "preLabel": "As part of your response you may wish to describe any unexpected or unintended outcomes."
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "achievedOutcomesMaintained",
+                "type": "textarea",
+                "rows": 5,
+                "preLabel": "<b>2.3 In your view, how will the outcomes achieved by this project be maintained, and if relevant, who will do this?</b>"
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>3. Monitoring, Evaluation and Project Learnings</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<b>3.1 Briefly describe how you applied adaptive management for this project. This should consider:</b>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "a) any key project-level monitoring and/or evaluation activities <br>b) any key findings or learnings that you gained during project implementation<br>c) any changes that you made in response to these during the project, including changes in methodology",
+                "source": "projectLearningsSummary",
+                "type": "textarea",
+                "rows": 3
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "<b>3.2 Provide a project summary highlighting achievements, including photos (with appropriate credits) that can be shared with the public to promote koala conservation and recovery efforts.</b>",
+                "source": "futureEffortLessons",
+                "type": "textarea",
+                "rows": 3
+              }
+            ]
+          }
+        ],
+        "pre-populate": [
+          {
+            "source": {
+              "context-path": "owner"
+            },
+            "merge": {
+              "projectOutcomes": {
+                "deleteUnmatchedExistingRows": true,
+                "addUnmatchedNewRows": true,
+                "keys": [
+                  "outcomeStatement"
+                ]
+              }
+            },
+            "mapping": [
+              {
+                "target": "projectOutcomes",
+                "mapping": [
+                  {
+                    "target": "outcomeStatement",
+                    "source-path": "description"
+                  }
+                ],
+                "source-path": "custom.details.outcomes.shortTermOutcomes"
+              }
+            ]
+          },
+          {
+            "mapping": [
+              {
+                "mapping": [
+                  {
+                    "source-path": "service",
+                    "target": "serviceName"
+                  },
+                  {
+                    "source-path": "targetMeasure",
+                    "target": "targetMeasure"
+                  },
+                  {
+                    "source-path": "scoreId",
+                    "target": "scoreId"
+                  },
+                  {
+                    "source-path": "projectTarget",
+                    "target": "projectTarget"
+                  },
+                  {
+                    "source-path": "result",
+                    "target": "delivered"
+                  }
+                ],
+                "source-path": "targets",
+                "target": "projectTargets"
+              }
+            ],
+            "merge": {
+              "projectTargets": {
+                "keys": [
+                  "serviceName",
+                  "targetMeasure"
+                ],
+                "projectTarget": {
+                  "replaceExisting": true
+                },
+                "delivered": {
+                  "replaceExisting": true
+                },
+                "sort": [
+                  "service",
+                  "outputTargetMeasure"
+                ],
+                "addUnmatchedNewRows": true,
+                "deleteUnmatchedExistingRows": true
+              }
+            },
+            "source": {
+              "params": [
+                {
+                  "expression": "owner.projectId",
+                  "name": "id",
+                  "type": "computed"
+                },
+                {
+                  "name": "missedTargetsOnly",
+                  "value": false
+                },
+                {
+                  "name": "onlyNonZeroTargets",
+                  "value": true
+                },
+                {
+                  "name": "approvedDataOnly",
+                  "value": false
+                }
+              ],
+              "url": "/project/projectTargetsAndScores/"
+            }
+          }
+        ],
+        "title": "Project Final Report"
+      }
+    }
+  ],
+  "formVersion": 1,
+  "category": null,
+  "status": "active",
+  "gmsId": null,
+  "supportsSites": false,
+  "supportsPhotoPoints": false,
+  "minOptionalSectionsCompleted": 1
+}
