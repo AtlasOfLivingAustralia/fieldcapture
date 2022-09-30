@@ -184,7 +184,7 @@ function loadActivityForms() {
     });
 
     var forms2 = db.activity.find({});
-    print("Total Forms in DB: " + forms2.count());
+    print("Total activities in DB: " + forms2.count());
     forms2.forEach( function (form){
         if (form){
             print("Updating Form Version From Double to Int: " + form.type)
@@ -200,9 +200,10 @@ function loadActivityForms() {
  * @param des
  */
 function assign(src, des){
+    print("assign")
     for(var prop in src){
         if(src.hasOwnProperty(prop)){
-            if(src[prop] && isObject(src[prop]) && !(src[prop] instanceof Date) && !(src[prop] instanceof NumberDecimal)) {
+            if(src[prop] && (typeof src[prop] == 'object') && !(src[prop] instanceof Date) && !(src[prop] instanceof NumberDecimal)) {
                 if ( Array.isArray(src[prop]))
                     des[prop] = []
                 else
