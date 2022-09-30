@@ -531,17 +531,8 @@
             "type": "row",
             "items": [
               {
-                "source": "If \"Yes\" then please forward your new details to your contact officer and cc EnviroStewardship@environment.gov.au",
-                "type": "literal"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "preLabel": "ABN [Yes / No]",
-                "source": "bankDetailsChanged",
+                "preLabel": "Australian Business Number (ABN) [Yes / No]",
+                "source": "abnChanged",
                 "type": "selectOne"
               }
             ]
@@ -550,7 +541,7 @@
             "type": "row",
             "items": [
               {
-                "source": "If \"Yes\" please forward your new details to your contact officer and check that the ABN number matches the statutory declaration / financial report information.",
+                "source": "If you have answered \"Yes\" to any of the personal details above please send an email to <a href=\"mailto:EnviroStewardship@environment.gov.au\">EnviroStewardship@environment.gov.au</a> and provide details of your change(s).",
                 "type": "literal"
               }
             ]
