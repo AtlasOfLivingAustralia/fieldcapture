@@ -24,9 +24,14 @@
       "template": {
         "dataModel": [
           {
-            "dataType": "text",
-            "name": "reportingDates",
-            "validate": "required"
+            "dataType": "date",
+            "name": "reportingStartDate",
+            "description": ""
+          },
+          {
+            "dataType": "date",
+            "name": "reportingEndDate",
+            "description": ""
           }
         ],
         "title": "ESP SMU Reporting",
@@ -43,12 +48,35 @@
           {
             "items": [
               {
-                "source": "reportingDates",
-                "type": "text",
-                "preLabel": "Please confirm the 12 month period that this report covers"
+                "source": "<b>Please confirm the 12 month period that this report covers</b>",
+                "type": "literal"
               }
             ],
             "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "",
+                "type": "table",
+                "disableTableUpload": true,
+                "columns": [
+                  {
+                    "title": "Reporting Start Date",
+                    "source": "reportingStartDate",
+                    "type": "date",
+                    "width": "10%"
+                  },
+                  {
+                    "title": "Reporting End Date",
+                    "source": "reportingEndDate",
+                    "type": "date",
+                    "width": "10%"
+                  }
+                ]
+              }
+            ]
           }
         ]
       },
@@ -897,7 +925,7 @@
       "collapsedByDefault": false,
       "modelName": null,
       "name": "ESP Native herbivore management",
-      "description": "1. Reducing browsing impact on palatable native plants; <br> 2. Maintaining native species diversity and facilitating natural regeneration; <br> 3. Reducing overgrazing, thus weed infestation; and <br> 4. Improving litter and soil condition.<br><br><b> Implementation: </b> <br> Actions that involve reduction in the native herbivore numbers include:<ul><li>exclusion is best carried out with a 3-strand plain wire fence affixed to the top of a stock-proof fence</li><li>trapping and relocation, but only under licence</li><li>enticement away from the site (e.g. through strategic placement of watering points), the success of which would need to be monitored</li><li>culling of native herbivores, which can only be conducted with the authorisation of and a license issued by the appropriate government authority</li></ul><span>Ideally culling should be coordinated with other similar actions in the region in order to maximise impact, and undertaken in a humane manner consistent with legislative requirements.</span><br><br><b>Please note</b> Activities to monitor and/or manage native herbivores may also be included under “Monitor and manage total grazing pressure”, “Monitor and manage grazing pressure from native species” or “Monitor and manage native herbivores.”",
+      "description": "1. Reducing browsing impact on palatable native plants; <br> 2. Maintaining native species diversity and facilitating natural regeneration; <br> 3. Reducing overgrazing, thus weed infestation; and <br> 4. Improving litter and soil condition.<br><br><b> Implementation: </b> <br> Actions that involve reduction in the native herbivore numbers include:<ul><li>exclusion is best carried out with a 3-strand plain wire fence affixed to the top of a stock-proof fence</li><li>trapping and relocation, but only under licence</li><li>enticement away from the site (e.g. through strategic placement of watering points), the success of which would need to be monitored</li><li>culling of native herbivores, which can only be conducted with the authorisation of and a license issued by the appropriate government authority</li></ul><span>Ideally culling should be coordinated with other similar actions in the region in order to maximise impact, and undertaken in a humane manner consistent with legislative requirements.</span><br><br><b>Please note</b> Activities to monitor and/or manage native herbivores may also be included in your Funding Agreement under “Monitor and manage total grazing pressure”, “Monitor and manage grazing pressure from native species” or “Monitor and manage native herbivores.”",
       "collapsibleHeading": "What are the conservation outcomes sought?",
       "optional": false,
       "optionalQuestionText": "Not an agreed management action under my funding agreement",
@@ -1182,7 +1210,7 @@
       "collapsedByDefault": false,
       "modelName": null,
       "name": "ESP Feral animal management",
-      "description": "1.To reduce browsing impact on palatable native plants and local native fauna; <br> 2. Maintain native species diversity and facilitate natural regeneration; <br> 3. Reduce overgrazing leading to weed infestation; <br> 4. Improve litter and soil condition. <br><br><b> Implementation: </b> <br> Land managers are required to control feral herbivores and carnivores (for example rabbits, hares, goats, deer, pigs, foxes or feral cats) where these are having a detrimental impact on the target ecological community. Control measures will differ between species and may include both preventative (e.g. fencing) and destructive measures as appropriate. <br> Destructive control measures should minimise unintended adverse impacts on non-target species and be undertaken humanely and in accordance with NSW legislation. Warren ripping to control rabbits within a target ecological community should be undertaken as a last resort and every effort should be taken to minimise soil disturbance away from the immediate warren site.<br><br><b>Please note</b> Activities to monitor and/or manage feral animals may also be included in your Funding Agreement under; “Monitor and manage total grazing pressure” and “Monitor and manage feral animals”.",
+      "description": "1.To reduce browsing impact on palatable native plants and local native fauna; <br> 2. Maintain native species diversity and facilitate natural regeneration; <br> 3. Reduce overgrazing leading to weed infestation; <br> 4. Improve litter and soil condition. <br><br><b> Implementation: </b> <br> Land managers are required to control feral herbivores and carnivores (for example rabbits, hares, goats, deer, pigs, foxes or feral cats) where these are having a detrimental impact on the target ecological community. Control measures will differ between species and may include both preventative (e.g. fencing) and destructive measures as appropriate. <br><br> Destructive control measures should minimise unintended adverse impacts on non-target species and be undertaken humanely and in accordance with NSW legislation. Warren ripping to control rabbits within a target ecological community should be undertaken as a last resort and every effort should be taken to minimise soil disturbance away from the immediate warren site.<br><br><b>Please note</b> Activities to monitor and/or manage feral animals may also be included in your Funding Agreement under; “Monitor and manage total grazing pressure” and “Monitor and manage feral animals”.",
       "collapsibleHeading": "What are the conservation outcomes sought?",
       "optional": false,
       "optionalQuestionText": "Not an agreed management action under my funding agreement",
@@ -2359,7 +2387,7 @@
             ],
             "items": [
               {
-                "preLabel": "If you did not undertake this activity this reporting period, but it is an agreed Management Action under your Funding Agreement, please state the reason (please also include a list of species and numbers for prior year plantings and the rate of survival, if planting has occurred over the life of the Environmental Stewardship Program):",
+                "preLabel": "Please explain the reasons this activity was not undertaken (please also include a list of species and numbers for prior year plantings and the rate of survival, if planting has occurred over the life of the Environmental Stewardship Program).",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
@@ -3531,7 +3559,7 @@
             ],
             "items": [
               {
-                "preLabel": "If you did not undertake this activity this reporting period, but it is an agreed Management Action under your Funding Agreement, , please state the reason. If this activity is a management action under your Funding Agreement but  you did not undertake this activity, during the reporting period, please state the reason.",
+                "preLabel": "Please explain the reasons this activity was not undertaken.",
                 "source": "activityNotUndertaken",
                 "type": "textarea",
                 "rows": 4
