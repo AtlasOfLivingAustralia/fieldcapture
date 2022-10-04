@@ -1712,8 +1712,9 @@ class ProjectService  {
         Map project = get(projectId)
 
         DateTime start = DateUtils.alignToFinancialYear(DateUtils.parse(project.plannedStartDate))
+        DateTime end = DateUtils.alignToFinancialYear( DateUtils.parse(project.plannedEndDate))
 
-        Map report = reportService.dateHistogramForScores(projectId, start, DateUtils.parse(project.plannedEndDate), Period.months(12), 'YYYY', scoreIds)
+        Map report = reportService.dateHistogramForScores(projectId, start, end.plusYears(2), Period.months(12), 'YYYY', scoreIds)
 
         return report
     }

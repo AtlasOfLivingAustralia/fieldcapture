@@ -993,6 +993,54 @@
               ],
               "url": "/managementUnit/previousReportContents/"
             },
+            "merge": {
+                "subcontractedWorkForceByFinancialYear": {
+                  "contractWorkforce2018_19": {
+                    "replaceExisting": true
+                  },
+                  "contractWorkforce2019_20": {
+                    "replaceExisting": true
+                  },
+                  "contractWorkforce2020_21": {
+                    "replaceExisting": true
+                  },
+                  "addUnmatchedNewRows": true,
+                  "deleteUnmatchedExistingRows": true
+                },
+                "organisationWorkForceByFinancialYear": {
+                  "organisationWorkforce2018_19": {
+                    "replaceExisting": true
+                  },
+                  "organisationWorkforce2019_20": {
+                    "replaceExisting": true
+                  },
+                  "organisationWorkforce2020_21": {
+                    "replaceExisting": true
+                  },
+                  "addUnmatchedNewRows": true,
+                  "deleteUnmatchedExistingRows": true
+                },
+                "investment2018_19": {
+                  "replaceExisting": true
+                },
+                "investment2019_20": {
+                  "replaceExisting": true
+                },
+                "investment2020_21": {
+                  "replaceExisting": true
+                },
+                "serviceSubcontracted2018_19": {
+                  "replaceExisting": true
+                },
+                "serviceSubcontracted2019_20": {
+                  "replaceExisting": true
+                },
+                "serviceSubcontracted2020_21": {
+                  "replaceExisting": true
+                },
+                "addUnmatchedNewRows": true,
+                "deleteUnmatchedExistingRows": true
+            },
             "mapping": [
               {
                 "source-path": "model.data.investment2018_19",

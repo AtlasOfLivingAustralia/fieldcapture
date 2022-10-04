@@ -52,7 +52,8 @@
             stage: stageNumberFromStage('${activity.projectStage}'),
             disablePrepop: ${activity.progress == au.org.ala.merit.ActivityService.PROGRESS_FINISHED},
             speciesConfig:<fc:modelAsJavascript model="${speciesConfig}"/>,
-            recoveryDataStorageKey: 'activity-'+activityId
+            recoveryDataStorageKey: 'activity-'+activityId,
+            prepopUrlPrefix:"${grailsApplication.config.getProperty('grails.serverURL')}"
         };
         outputModelConfig = _.extend(fcConfig, outputModelConfig);
 

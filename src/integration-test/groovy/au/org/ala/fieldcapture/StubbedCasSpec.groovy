@@ -102,7 +102,7 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
                         backdropDisplayed = false
                         // The backdrop was already detached from the DOM due to page transition
                     }
-                    backdropDisplayed
+                    !backdropDisplayed
                 }
             }
         }

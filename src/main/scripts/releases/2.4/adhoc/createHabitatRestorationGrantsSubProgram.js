@@ -47,32 +47,6 @@ var projectConfig = {
                 }
             },
             {
-                "template": "assets",
-                "model": {
-                    "priorityCategories": [
-                        "Priority Vertebrate Animals",
-                        "Additional Priority Species",
-                        "Priority Invertebrate Species",
-                        "Priority Natural Asset",
-                        "Priority Plants",
-                        "Additional Priority Plants",
-                        "Threatened Ecological Community",
-                        "Additional Priority Natural Asset",
-                        "Additional Threatened Ecological Community",
-                        "Threatened Species",
-                        "Asset Types as listed for Habitat Restoration Projects – NRM Procurements"
-                    ],
-                    "assetHeading": "Asset",
-                    "viewExplanation": "Species, ecological community or environmental asset(s) the project is targeting",
-                    "useCategorySelection": true,
-                    "explanation": "List the natural assets within the bushfire region that will benefit from this project",
-                    "fromPriorities": true,
-                    "assetHelpText": "Scientific and/or common name",
-                    "assetCategoryHelpText": "As identified within the regional workshop reports.  Types with no assets are not selectable",
-                    "placeHolder": "Please select"
-                }
-            },
-            {
                 "template": "outcomeStatements",
                 "model": {
                     "subtitle": "Please provide outcome statements. Outcomes statements should: <br/>- outline the degree of impact having undertaken the actions within the project timeframe;<br/>- be expressed as a SMART statement (Specific, Measurable, Attainable, Realistic and Time-bound); and<br/>- ensure the outcomes are measurable with consideration to the monitoring methodology provided below.",
@@ -152,8 +126,8 @@ var projectConfig = {
             {
                 "template": "serviceTargets",
                 "model": {
-                    "title": "Services and Targets Table",
-                    "serviceName": "Service"
+                    "title": "Activities and Targets Table",
+                    "serviceName": "Activities"
                 }
             }
         ],
@@ -181,9 +155,10 @@ var projectConfig = {
                 "reportNameFormat": "Progress Report %1d",
                 "reportingPeriodInMonths": 6,
                 "description": "",
+                "minimumReportDurationInDays": 3,
                 "label": "Semester",
                 "category": "Progress Reports",
-                "activityType": "Bushfires States Progress Report",
+                "activityType": "Koala Conservation Progress Report",
                 "reportsAlignedToCalendar": true,
                 "canSubmitDuringReportingPeriod": true
             },
@@ -198,7 +173,7 @@ var projectConfig = {
                 "label": "Final Report",
                 "category": "Final Report",
                 "reportsAlignedToCalendar": false,
-                "activityType": "Regional Fund – Co-design States Final Report",
+                "activityType": "Koala Conservation Final Report",
                 "alignToOwnerStart": true
             }
         ],
@@ -264,28 +239,51 @@ var projectConfig = {
         {
             "category": "Habitat Restoration Grants Secondary",
             "priority": "Quality of existing Koala habitat improved by controlling pests and weeds"
-        },
-        {
-            "category": "Asset Types as listed for Habitat Restoration Projects – NRM Procurements",
-            "priority": "Asset Types as listed for Habitat Restoration Projects – NRM Procurements"
         }
-
     ]
 };
 var outcomes = [
     {
         "priorities": [
             {
-                "category": "Habitat Restoration Grants"
+                "category": "Habitat Restoration Threatened Species Primary"
             }
         ],
         "targeted": true,
         "supportsMultiplePrioritiesAsPrimary": false,
-        "shortDescription": "Asset Types as listed for Habitat Restoration Projects - NRM Procurements",
+        "shortDescription": "Threatened Species Strategy",
         "type": "primary",
         "category": "environment",
         "supportsMultiplePrioritiesAsSecondary": true,
-        "outcome":"Support efforts to improve the trajectory of the listed Koala (combined populations of Queensland, NSW and the ACT) through habitat restoration and protection, threat mitigation and improving health outcomes."
+        "outcome": "By 2026 the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved."
+    },
+    {
+        "priorities": [
+            {
+                "category": "Habitat Restoration Threatened Species"
+            }
+        ],
+        "targeted": true,
+        "supportsMultiplePrioritiesAsPrimary": false,
+        "shortDescription": "Threatened Species Strategy",
+        "type": "secondary",
+        "category": "environment",
+        "supportsMultiplePrioritiesAsSecondary": true,
+        "outcome": "By 2026, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved."
+    },
+    {
+        "priorities": [
+            {
+                "category": "Threatened Ecological Communities"
+            }
+        ],
+        "targeted": true,
+        "supportsMultiplePrioritiesAsPrimary": true,
+        "shortDescription": "Threatened Ecological Communities",
+        "type": "secondary",
+        "category": "environment",
+        "supportsMultiplePrioritiesAsSecondary": true,
+        "outcome": "By 2026, the implementation of priority actions is leading to an improvement in the condition of EPBC Act listed Threatened Ecological Communities."
     },
     {
         "priorities": [
@@ -298,33 +296,7 @@ var outcomes = [
         "type": "secondary",
         "category": "environment",
         "supportsMultiplePrioritiesAsSecondary": true,
-        "outcome":"Improve the extent, quality and connectivity of the nationally listed Koala’s habitat and reduced local threats."
-    },
-    {
-        "priorities": [
-            {
-                "category": "Habitat Restoration Grants Secondary"
-            }
-        ],
-        "targeted": true,
-        "shortDescription": "Asset Types as listed for Habitat Restoration Projects - NRM Procurements",
-        "type": "secondary",
-        "category": "environment",
-        "supportsMultiplePrioritiesAsSecondary": true,
-        "outcome":"Improve data and knowledge of Koala populations and health across their range to support effective decision making and conservation action."
-    },
-    {
-        "priorities": [
-            {
-                "category": "Habitat Restoration Grants Secondary"
-            }
-        ],
-        "targeted": true,
-        "shortDescription": "Asset Types as listed for Habitat Restoration Projects - NRM Procurements",
-        "type": "secondary",
-        "category": "environment",
-        "supportsMultiplePrioritiesAsSecondary": true,
-        "outcome":"Strengthen coordination of recovery efforts for the Koala and cross-sector engagement, collaboration and capability."
+        "outcome": "Improve the extent, quality and connectivity of the nationally listed Koala’s habitat and reduced local threats."
     }
 ]
 

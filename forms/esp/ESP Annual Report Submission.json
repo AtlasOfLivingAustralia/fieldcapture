@@ -25,7 +25,13 @@
         "dataModel": [
           {
             "dataType": "number",
-            "name": "foregoneProductionCost"
+            "name": "totalCostOfManagementActions"
+          },
+          {
+            "dataType": "number",
+            "name": "foregoneProductionCost",
+            "defaultValue": "",
+            "validate": "required"
           },
           {
             "dataType": "text",
@@ -45,7 +51,8 @@
                 "type": "enable"
               }
             ],
-            "validate": "required"
+            "validate": "required",
+            "defaultValue":""
           },
           {
             "dataType": "text",
@@ -58,6 +65,13 @@
               }
             ],
             "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "totalCostThisReportingPeriod",
+            "computed": {
+              "expression": "otherCosts + totalCostOfManagementActions + foregoneProductionCost"
+            }
           },
           {
             "dataType": "text",
@@ -190,6 +204,33 @@
             "name": "notes",
             "description": "",
             "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "contactDetailsChanged",
+            "description": "",
+            "constraints": [
+              "Yes", "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "bankDetailsChanged",
+            "description": "",
+            "constraints": [
+              "Yes", "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "abnChanged",
+            "description": "",
+            "constraints": [
+              "Yes", "No"
+            ],
+            "validate": "required"
           }
         ],
         "modelName": "ESP Overview",
@@ -214,6 +255,16 @@
               }
             ]
           },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "If you would you like to record any endangered animals that you have observed on the site/s please go to the ‘My Species Records’ tab.",
+                "type": "literal"
+              }
+            ]
+          },
+
           {
             "type": "row",
             "items": [
@@ -247,7 +298,7 @@
             "type": "row",
             "items": [
               {
-                "source": "<h4>Cost of foregone production</h4>",
+                "source": "<h4>Reported Cost of Management Actions</h4>",
                 "type": "literal"
               }
             ]
@@ -256,7 +307,27 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "If you would like to provide information on any foregone production costs incurred through your involvement in the ESP please record the dollar value below:",
+                "preLabel": "You have reported the following cost of management actions this year:",
+                "source": "totalCostOfManagementActions",
+                "type": "currency",
+                "readonly": true
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "<h4>Cost of Foregone Production</h4>What are the cost restrictions imposed on your farm?<p>Consider the costs that the management action restrictions impose on your farm business, either in terms of income foregone (commercial firewood sales, reduction of stock that could be sold) or additional costs (e.g. buying strainers or firewood).</p>",
+                "type": "literal"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Please record the dollar value of any foregone production costs incurred this reporting period",
                 "source": "foregoneProductionCost",
                 "type": "currency"
               }
@@ -298,6 +369,25 @@
                 "preLabel": "",
                 "source": "reportingNotes",
                 "type": "textarea"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "<h4>Total cost for this Reporting Period</h4><p><strong>Please Note:</strong> This value should be equal to or exceed the last funding amount received from the Department. If you wish to carry over any funds to the next reporting period, a request must be submitted to the Department via the Environmental Stewardship inbox at <a href=\"mailto:EnviroStewardship@environment.gov.au\">EnviroStewardship@environment.gov.au</a></p>",
+                "type": "literal"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "You have reported the total following costs this year:",
+                "source": "totalCostThisReportingPeriod",
+                "type": "currency"
               }
             ]
           },
@@ -412,7 +502,7 @@
             "type": "row",
             "items": [
               {
-                "source": "<h4>Personal Details:</h4> <p>Have any of your contact details or your bank account details changed since you last reported? If “Yes” then please contact the Department to advise us of any change(s).</p>",
+                "source": "<h4>Personal Details:</h4><p>Have any of your following details changed since your last report?</p>",
                 "type": "literal"
               }
             ]
@@ -421,10 +511,83 @@
             "type": "row",
             "items": [
               {
-                "source": "<h4>Financial Reports:</h4> <p>Please note that if the total amount of funding you are receiving under the Environmental Stewardship Program is less than $750,000 (GST exclusive) you must download the Statutory Declaration form: <a href=\"http://www.nrm.gov.au/system/files/pages/4d23c260-ca67-4ff8-bc80-76536236a1f8/files/statutory-declaration.pdf\">[PDF]</a> <a href=\"http://www.nrm.gov.au/system/files/pages/4d23c260-ca67-4ff8-bc80-76536236a1f8/files/statutory-declaration.doc\">[Microsoft Word]</a>. This must then be submitted to the Department via the Environmental Stewardship inbox at <a href=\"mailto:EnviroStewardship@environment.gov.au\">EnviroStewardship@environment.gov.au</a>  </p><p>However, </p><p>If the total amount of funding you are receiving under the Environmental Stewardship program is more than $750,000 (GST exclusive) you must download the Financial Report: <a href=\"http://www.nrm.gov.au/system/files/pages/4d23c260-ca67-4ff8-bc80-76536236a1f8/files/financial-report-prepared-accountant.pdf\">[PDF]</a> <a href=\"http://www.nrm.gov.au/system/files/pages/4d23c260-ca67-4ff8-bc80-76536236a1f8/files/financial-report-prepared-accountant.doc\">[Microsoft Word]</a> and have it prepared and certified by a qualifies accountant. This must then be submitted to the Department via the Environmental Stewardship inbox at <a href=\"mailto:EnviroStewardship@environment.gov.au\">EnviroStewardship@environment.gov.au</a>.</p>",
+                "preLabel": "Contact details [Yes / No]",
+                "source": "contactDetailsChanged",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Bank details [Yes / No]",
+                "source": "bankDetailsChanged",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Australian Business Number (ABN) [Yes / No]",
+                "source": "abnChanged",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "If you have answered \"Yes\" to any of the personal details above please send an email to <a href=\"mailto:EnviroStewardship@environment.gov.au\">EnviroStewardship@environment.gov.au</a> and provide details of your change(s).",
                 "type": "literal"
               }
             ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "<h4>Financial Reports:</h4> <p>Please note that if the total amount of funding you are receiving under the Environmental Stewardship Program is less than $750,000 (GST exclusive) you must download the Statutory Declaration form available under the <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://www.dcceew.gov.au/environment/land/landcare/my-project/monitoring-reporting/environmental-stewardship/box-gum-grassy-woodland\">BGGW Financial templates</a>  – less than $750,000. This must then be submitted to the Department via the Environmental Stewardship inbox at <a href=\"mailto:EnviroStewardship@environment.gov.au\">EnviroStewardship@environment.gov.au</a>  </p><p>However, </p><p>If the total amount of funding you are receiving under the Environmental Stewardship program is more than $750,000 (GST exclusive) you must download the Financial Report available under the <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://www.dcceew.gov.au/environment/land/landcare/my-project/monitoring-reporting/environmental-stewardship/box-gum-grassy-woodland\">BGGW Financial templates</a> - more than $750,000.  It must be prepared and certified by a qualified accountant. This must then be submitted to the Department via the Environmental Stewardship inbox at <a href=\"mailto:EnviroStewardship@environment.gov.au\">EnviroStewardship@environment.gov.au</a>.</p>",
+                "type": "literal"
+              }
+            ]
+          }
+        ],
+        "pre-populate": [
+          {
+            "mapping": [
+              {
+                "source-path": "4d03150f-763b-4baf-b49f-60a2dbda0235",
+                "target": "totalCostOfManagementActions"
+              }
+            ],
+            "merge": {
+              "totalCostOfManagementActions": {
+                "replaceExisting": true
+              }
+            },
+            "source": {
+              "params": [
+                {
+                  "expression": "activity.projectId",
+                  "name": "id",
+                  "type": "computed"
+                },
+                {
+                  "expression": "activity.plannedEndDate",
+                  "name": "date",
+                  "type": "computed"
+                },
+                {
+                  "name": "scoreIds",
+                  "value": "4d03150f-763b-4baf-b49f-60a2dbda0235"
+                }
+              ],
+              "url": "/project/scoresForFinancialYear/"
+            }
           }
         ]
       },
@@ -432,6 +595,7 @@
       "title": "ESP Overview"
     }
   ],
+
   "status": "active",
   "supportsPhotoPoints": false,
   "supportsSites": false,
