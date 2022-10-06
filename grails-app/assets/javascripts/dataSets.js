@@ -98,6 +98,7 @@ var DataSetViewModel = function(dataSet, projectService, options) {
         }
     });
     self.addition = ko.observable(dataSet.addition);
+    self.threatenedSpeciesIndex = ko.observable(dataSet.threatenedSpeciesIndex);
     self.collectorType = ko.observable(dataSet.collectorType);
     self.qa = ko.observable(dataSet.qa);
     self.published = ko.observable(dataSet.published);
