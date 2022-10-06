@@ -45,7 +45,7 @@ class DatasetSpec extends StubbedCasSpec{
         dataSet.startDate ="21-01-2021"
         dataSet.endDate ="21-01-2022"
         dataSet.addition = "Yes"
-        set.threatenedSpeciesIndex = "Yes"
+        dataSet.threatenedSpeciesIndex = "Yes"
         dataSet.collectorType = "University researcher"
         dataSet.qa = "Yes"
         dataSet.published = "Yes"
