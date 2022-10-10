@@ -1,10 +1,11 @@
 print("This script is expected to be executed with a working directory containing this script");
-print("Current working dir: " + pwd());
+print("Current working dir: " + process.cwd());
 load('../data_common/loadMeritHub.js');
 load('../data_common/insertData.js');
 
 loadActivityForms();
 
+print("Coeatep ")
 createProgram({});
 var config = {
     projectTemplate: "rlp",
@@ -128,7 +129,7 @@ createProgram({programId:"grants", name:"Grant Program"});
 var grantProgram = db.program.findOne({programId:"grants"});
 grantProgram.config.projectTemplate=null;
 grantProgram.config.meriPlanTemplate=null;
-db.program.save(grantProgram);
+db.program.replaceOne({_id:grantProgram._id}, grantProgram);
 createProject({name:'Grants project', projectId:"grants_project", programId:"grants", status:"active", planStatus:'',
     custom: {details: {objectives: {rows1:[{assets:["Threatened Species"], description:"Objective 1"}, {assets: ["Threatened Species"], description: "Objective 2"}]}}}});
 db.userPermission.insert({entityType:'au.org.ala.ecodata.Project', entityId:'grants_project', userId:'2', accessLevel:'admin'});
