@@ -28,6 +28,7 @@ var ReportService = function(config) {
             var overDeliveredTargets = [];
             if (!result || !result.resp) {
                 console.log("Warning: over-delivery check failed "+result);
+                deferred.fail();
                 return;
             }
             var projectScores = result.resp.projectScores;

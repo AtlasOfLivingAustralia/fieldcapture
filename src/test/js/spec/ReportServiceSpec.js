@@ -95,6 +95,26 @@ describe("ProjectViewModel Spec", function () {
         });
     });
 
+    it("findOverDeliveredTargets will fail when the service returns in invalid response", function () {
+
+        var passedUrl;
+        spyOn($, 'get').and.callFake(function(url) {
+            passedUrl = url;
+            var fakeResult = $.Deferred();
+            fakeResult.resolve(null);
+            return fakeResult;
+        });
+
+        var options = {projectTargetsAndScoresUrl:'/project/projectTargetsAndScores'};
+
+        var reportService = new ReportService(options);
+        reportService.findOverDeliveredTargets('a1').fail(function() {
+            expect(passedUrl).toEqual('/project/projectTargetsAndScores?activityId=a1');
+        }).done(function() {
+            fail();
+        });
+    });
+
     it("Can format over-delivered targets in a consistent way for display to the user", function () {
         var reportService = new ReportService({});
         var message = reportService.formatOverDeliveredTarget({
