@@ -89,12 +89,6 @@
           {
             "dataType": "text",
             "name": "meriPlanChangesRequired",
-            "behaviour": [
-              {
-                "condition": "adaptiveManagementImplemented == \"Yes\"",
-                "type": "enable"
-              }
-            ],
             "constraints": [
               "Yes",
               "No"
