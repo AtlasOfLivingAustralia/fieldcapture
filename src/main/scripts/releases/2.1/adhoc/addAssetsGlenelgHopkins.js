@@ -1257,7 +1257,70 @@ var muConfig = {
             "category": "Threatened Ecological Community",
             "priority": "Castlereagh Scribbly Gum and Agnes Banks Woodlands of the Sydney Basin Bioregion"
         },
-
+        {
+            "category": "Ramsar",
+            "priority": "Piccaninnie Ponds Karst Wetlands"
+        },
+        {
+            "category": "Ramsar",
+            "priority": "Western District Lakes"
+        },
+        {
+            "category": "Ramsar",
+            "priority": "Glenelg Estuary and Discovery Bay Ramsar Site"
+        },
+        {
+            "category": "Threatened Species",
+            "priority": "Calyptorhynchus banksii graptogyne (Red-tailed Black-Cockatoo (south-eastern))"
+        },
+        {
+            "category": "Threatened Species",
+            "priority": "Leipoa ocellata (Malleefowl)"
+        },
+        {
+            "category": "Threatened Species",
+            "priority": "Neophema chrysogaster (Orange-bellied Parrot)"
+        },
+        {
+            "category": "Threatened Species",
+            "priority": "Pedionomus torquatus (Plains-wanderer)"
+        },
+        {
+            "category": "Threatened Species",
+            "priority": "Perameles gunnii Victorian subspecies (Eastern Barred Bandicoot (Mainland))"
+        },
+        {
+            "category": "Threatened Species",
+            "priority": "Pimelea spinescens subsp. spinescens (Plains Rice-flower, Spiny Rice-flower, Prickly Pimelea)"
+        },
+        {
+            "category": "Threatened Species",
+            "priority": "Rutidosis leptorrhynchoides (Button Wrinklewort)"
+        },
+        {
+            "category": "Threatened Species",
+            "priority": "Thinornis rubricollis rubricollis (Hooded Plover (eastern))"
+        },
+        {
+            "category": "Threatened Ecological Communities",
+            "priority": "Grassy Eucalypt Woodland of the Victorian Volcanic Plain"
+        },
+        {
+            "category": "Threatened Ecological Communities",
+            "priority": "Grey Box (Eucalyptus microcarpa) Grassy Woodlands and Derived Native Grasslands of South-eastern Australia"
+        },
+        {
+            "category": "Threatened Ecological Communities",
+            "priority": "Natural Temperate Grassland of the Victorian Volcanic Plain"
+        },
+        {
+            "category": "Threatened Ecological Communities",
+            "priority": "Seasonal Herbaceous Wetlands (Freshwater) of the Temperate Lowland Plains"
+        },
+        {
+            "category": "Threatened Ecological Communities",
+            "priority": "Subtropical and Temperate Coastal Saltmarsh"
+        }
     ]
 };
 
