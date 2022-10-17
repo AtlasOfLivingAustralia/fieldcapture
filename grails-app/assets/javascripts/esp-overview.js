@@ -244,7 +244,7 @@ var SimplifiedReportingViewModel = function(project, config) {
     self.financialYears = [];
     var currentDate = new Date().toISOStringNoMillis();
     _.each(project.reports, function (report){
-        if (report.toDate <= currentDate) {
+        if (report.fromDate <= currentDate) {
             self.financialYears.push(isoDateToFinancialYear(report.toDate))
         }
     });
