@@ -20,6 +20,7 @@ class DatasetPageModule extends Module{
         endDate(required: false) {$("#endDate")}
         addition(required: false) {$("#addition")}
         collectorType(required: false){$('#collectorType')}
+        threatenedSpeciesIndex(required: false){$('#threatenedSpeciesIndex')}
         qa(required: false) {$("#qa")}
         published(required: false) {$("#published")}
         storageType(required: false) {$("#storageType")}

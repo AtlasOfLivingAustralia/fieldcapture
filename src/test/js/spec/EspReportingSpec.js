@@ -59,6 +59,16 @@ describe("The ESP reporting process works slightly differently to the normal MER
                     publicationStatus:'not published',
                     fromDate:'2021-01-31T13:00:00Z',
                     toDate:'2022-01-31T13:00:00Z'
+                },{
+                    name: 'Stage 5',
+                    publicationStatus:'not published',
+                    fromDate:'2022-01-31T13:00:00Z',
+                    toDate:'2023-01-31T13:00:00Z'
+                },{
+                    name: 'Stage ',
+                    publicationStatus:'not published',
+                    fromDate:'2023-01-31T13:00:00Z',
+                    toDate:'2024-01-31T13:00:00Z'
                 }],
             activities:[{
                 activityId:'a1',
@@ -302,6 +312,18 @@ describe("The ESP reporting process works slightly differently to the normal MER
 
         expect(viewModel.stageToReport()).toEqual("Stage 4")
         expect(viewModel.reportableStages().length).toEqual(4)
+
+    });
+
+    it("the reporting period dropdown will display it's value based on the rule where the reports fromDate are less than the current date", function() {
+
+        var project = buildEspProject();
+        project.financialYearSelected = ""
+        var config = {showEmptyStages:true };
+        var viewModel = new SimplifiedReportingViewModel(project, config);
+
+        expect(viewModel.financialYears.length).toEqual(5)
+
 
     });
 
