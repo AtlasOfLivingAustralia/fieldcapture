@@ -127,7 +127,6 @@
             </th>
         </g:if>
         <th class="report-status">Status <fc:iconHelp html="html">Reports cannot be submitted until after the end of the reporting period. <br/> Reports must be marked as complete before they can be submitted. </fc:iconHelp><br/></th>
-        <th class="">Reporting History</th>
     </tr>
     </thead>
     <tbody data-bind="foreach:{ data:filteredReports, as:'report', afterAdd: attachHelp}">
@@ -154,6 +153,8 @@
             <a class="btn btn-container btn-sm disabled-icon" data-bind="visible:!viewable">
                 <i class="fa fa-download" title="Please mark the report as complete before generating a PDF"></i>
             </a>
+            <a class="btn btn-container btn-sm" data-bind="visible:!historyVisible(), click:toggleHistory"><i class="fa fa-plus" title="Show report history"></i></a>
+            <a class="btn btn-container btn-sm" data-bind="visible:historyVisible(), click:toggleHistory"><i class="fa fa-minus" title="Hide report history"></i></a>
 
             <g:if test="${fc.userIsAlaOrFcAdmin()}">
                 <a class="btn btn-container btn-sm pull-right" href="javascript:void(0)" title="Delete all data entered for this report"
@@ -177,12 +178,6 @@
             <span class="label"
                   data-bind="text:approvalStatus, css:{'label-success':approvalStatus=='Report approved', 'label-info':approvalStatus=='Report submitted', 'label-warning':approvalStatus == 'Report not submitted'}"></span>
 
-        </td>
-        <td data-bind="click:toggleHistory">
-            <div class="layout-container">
-                <em data-bind="visible:!historyVisible()">Show history </em><i data-bind="visible:!historyVisible()" class="see-more fa fa-plus pointer"></i>
-                <em data-bind="visible:historyVisible()">Hide history </em><i data-bind="visible:historyVisible()" class="fa fa-minus see-more pointer"></i>
-            </div>
         </td>
     </tr>
     </tbody>
