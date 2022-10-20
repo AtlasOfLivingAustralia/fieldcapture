@@ -276,7 +276,7 @@ describe("The ESP reporting process works slightly differently to the normal MER
 
         console.log(JSON.stringify(viewModel.stageToReport()));
         expect(viewModel.stageToReport()).toEqual("Stage 4")
-        expect(viewModel.reportableStages().length).toEqual(4)
+        expect(viewModel.reportSelectionList.length).toEqual(5)
 
     });
 
@@ -288,7 +288,7 @@ describe("The ESP reporting process works slightly differently to the normal MER
         var viewModel = new SimplifiedReportingViewModel(project, config);
 
         expect(viewModel.stageToReport()).toEqual("Stage 2");
-        expect(viewModel.reportableStages().length).toEqual(2);
+        expect(viewModel.reportSelectionList.length).toEqual(5);
 
         expect(amplify.store('selectedFinancialYear-p1')).toEqual(project.financialYearSelected);
 
@@ -311,7 +311,7 @@ describe("The ESP reporting process works slightly differently to the normal MER
         var viewModel = new SimplifiedReportingViewModel(project, config);
 
         expect(viewModel.stageToReport()).toEqual("Stage 4")
-        expect(viewModel.reportableStages().length).toEqual(4)
+        expect(viewModel.reportSelectionList.length).toEqual(5)
 
     });
 
@@ -322,7 +322,7 @@ describe("The ESP reporting process works slightly differently to the normal MER
         var config = {showEmptyStages:true };
         var viewModel = new SimplifiedReportingViewModel(project, config);
 
-        expect(viewModel.financialYears.length).toEqual(5)
+        expect(viewModel.reportSelectionList.length).toEqual(5)
 
 
     });
