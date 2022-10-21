@@ -162,23 +162,6 @@ var SimplifiedReportingViewModel = function(project, config) {
 
     self.stageToReport = ko.observable(currentStage.label)
 
-    self.reportableStages = ko.computed(function() {
-        var stages = [];
-
-        var theLastAvailableReportIdx = planViewModel.stages.length
-        $.each( planViewModel.stages || [], function(i, stage) {
-            //DO NOT use self.stageToReport - it changes
-            if(currentStage.label == stage.label)
-                theLastAvailableReportIdx = i
-            if (i <= theLastAvailableReportIdx) {
-                stages.push({financialYear: isoDateToFinancialYear(stage.toDate), "stage": stage.label});
-            }
-        });
-
-        return stages;
-    });
-
-
     self.orientation = ko.observable('portrait');
     self.generateProjectReport = function(url) {
         var url = url + '?fromStage='+self.stageToReport()+'&toStage='+self.stageToReport();
@@ -240,19 +223,32 @@ var SimplifiedReportingViewModel = function(project, config) {
     self.currentStage = currentStage;
     self.currentReport = currentReport;
 
+    /** Formats the label to display for report selection */
+    function buildReportLabel(report) {
+        var fromDateLabel = moment.tz(report.fromDate, "Australia/Sydney").format("MMM YYYY");
+        // We subtract an hour because the end date is actually 00:00 on 1st of the next month so there are no gaps in the reports
+        // but we actually want it to mean midnight on the last day of the previous month (e.g. Dec 1 2020 - Nov 30 2021)
+        // We don't need to worry about reports being truncated by the project end date (like e.g. RLP reports)
+        // because we are only displaying the month, not the day.
+        var toDateLabel = moment.tz(report.toDate, "Australia/Sydney").subtract('1', 'h').format("MMM YYYY");
+        return fromDateLabel + ' / '+ toDateLabel + ' - '+ report.name;
+    }
 
-    self.financialYears = [];
+    self.reportSelectionList = [];
     var currentDate = new Date().toISOStringNoMillis();
     _.each(project.reports, function (report){
-        if (report.toDate <= currentDate) {
-            self.financialYears.push(isoDateToFinancialYear(report.toDate))
+        if (report.fromDate <= currentDate) {
+            self.reportSelectionList.push({label:buildReportLabel(report), value:isoDateToFinancialYear(report.toDate), stage: report.name});
         }
     });
 
     // will set the value of the dropdown Reporting Period
     self.selectedChoice = ko.observable(isoDateToFinancialYear(currentReport.toDate));
 
-    $('.reportingPeriodSpan').popover({title:'Please select reporting period', content:'The reporting period being displayed is ' + self.selectedChoice() + '. If you want to complete your report for a different period, please select it from this dropdown.', placement:'top', trigger:'hover'})
+    var selectedReport = _.find(self.reportSelectionList, function(report) { return report.value == self.selectedChoice()});
+    var selectedReportLabel = selectedReport && selectedReport.label;
+
+    $('.reportingPeriodSpan').popover({title:'Please select reporting period', content:'The reporting period being displayed is ' + selectedReportLabel + '. If you want to complete your report for a different period, please select it from this dropdown.', placement:'top', trigger:'hover'})
     $('.reportingPeriodSpan').popover('show');
     // refreshes the page with the financial year selected
     self.selectionChanged = function(event) {

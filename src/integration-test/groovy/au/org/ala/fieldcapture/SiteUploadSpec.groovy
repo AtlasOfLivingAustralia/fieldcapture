@@ -23,6 +23,7 @@ class SiteUploadSpec extends StubbedCasSpec {
         waitFor { sitesTabContent.displayed }
 
         when:
+        waitFor { !sitesTabContent.siteUpload.@disabled }
         sitesTabContent.siteUpload.click()
 
         then:

@@ -98,6 +98,7 @@ describe("The data set summaries view models behave correctly", function () {
             "publicationUrl" : "https://test.com.au",
             "startDate" : "2020-11-30T13:00:00Z",
             "addition" : "Yes",
+            "threatenedSpeciesIndex" : "Yes",
             "progress" : "started",
             "markedAsFinished": false,
             "term": "Short-term outcome statement",

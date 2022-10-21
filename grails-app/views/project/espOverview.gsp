@@ -101,7 +101,7 @@
             <span class="label label-info label-small">Project ID:</span> ${project.externalId}<br/>
             <span class="label label-info label-small">Reporting Period:</span>
             <span class="reportingPeriodSpan">
-                <select id="type" data-bind="options:financialYears, value:selectedChoice, event: {change: selectionChanged }"></select>
+                <select id="type" data-bind="options:reportSelectionList, optionsText: 'label', optionsValue: 'value', value:selectedChoice, event: {change: selectionChanged }"></select>
             </span>
         </span>
         <span class="col-sm-6">
@@ -223,14 +223,14 @@
             <form class="form-horizontal" id = "stageReportPDF">
 
                 <div class="form-group row">
-                    <label class="col-sm-1 col-form-label" for="stageToReport">Report of financial year: </label>
-                    <div class="col-sm-1">
-                        <select id="stageToReport" class="form-control form-control-sm" data-bind="value:stageToReport, options:reportableStages, optionsText: 'financialYear', optionsValue: 'stage' " ></select>
+                    <label class="col-sm-2 col-form-label" for="stageToReport">Report to download: </label>
+                    <div class="col-sm-6">
+                        <select id="stageToReport" class="form-control form-control-sm" data-bind="value:stageToReport, options:reportSelectionList, optionsText: 'label', optionsValue: 'stage' " ></select>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-sm-1 col-form-label" for="orientation">PDF Orientation: <fc:iconHelp>If your PDF includes activities with wide tables, the Landscape setting may improve the result.  This setting has no effect on the HTML view. </fc:iconHelp></label>
-                    <div class="col-sm-1">
+                    <label class="col-sm-2 col-form-label" for="orientation">PDF Orientation: <fc:iconHelp>If your PDF includes activities with wide tables, the Landscape setting may improve the result.  This setting has no effect on the HTML view. </fc:iconHelp></label>
+                    <div class="col-sm-2">
                         <select class="form-control form-control-sm" id="orientation" data-bind="value:orientation">
                             <option value="portrait">Portrait</option>
                             <option value="landscape">Landscape</option>

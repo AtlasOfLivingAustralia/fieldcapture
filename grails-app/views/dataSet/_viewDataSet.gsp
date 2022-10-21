@@ -124,6 +124,13 @@
         </div>
     </div>
 
+    <div class="form-group row">
+        <label class="col-sm-5 col-form-label">16a. Has your data been included in the Threatened Species Index?</label>
+        <div class="col-sm-7">
+            <span data-bind="text:threatenedSpeciesIndex"></span>
+        </div>
+    </div>
+
     <div class="row form-subheading">
         <div class="col-12">
             <i>Dataset accessibility</i>
