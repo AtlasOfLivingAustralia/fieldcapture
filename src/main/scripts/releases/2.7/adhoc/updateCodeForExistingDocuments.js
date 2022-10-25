@@ -1,0 +1,1 @@
+db.document.updateMany({role:'programmeLogic'},{$set:{role:"projectLogic"}}, {multi:true})
