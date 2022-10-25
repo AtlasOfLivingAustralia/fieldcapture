@@ -1,7 +1,7 @@
 
 var DOCUMENT_INFORMATION = 'information';
 var DOCUMENT_EMBEDDED_VIDEO = 'embeddedVideo';
-var DOCUMENT_PROGRAM_LOGIC = 'programmeLogic';
+var DOCUMENT_PROJECT_LOGIC = 'projectLogic';
 var DOCUMENT_CONTRACT_ASSURANCE = 'contractAssurance';
 var DOCUMENT_AUDITABLE_OUTPUTS = 'auditableOutputs';
 
@@ -9,7 +9,7 @@ var documentRoles =
     [
         {id: DOCUMENT_INFORMATION, name: 'Information', isPublicRole:true},
         {id: DOCUMENT_EMBEDDED_VIDEO, name:'Embedded Video', isPublicRole:true},
-        {id: DOCUMENT_PROGRAM_LOGIC, name: 'Program Logic', isPublicRole:false},
+        {id: DOCUMENT_PROJECT_LOGIC, name: 'Project Logic', isPublicRole:false},
         {id: DOCUMENT_CONTRACT_ASSURANCE, name:'Contract Assurance', isPublicRole:false},
         {id: DOCUMENT_AUDITABLE_OUTPUTS, name:'Auditable Outputs', isPublicRole:false}
         ];
