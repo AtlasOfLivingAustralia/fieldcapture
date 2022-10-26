@@ -1844,7 +1844,7 @@ class ProjectService  {
             return null
         }
 
-        Map content = webService.getJson(result.url)
+        Map content = webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') + result.url)
         content?.project
     }
 
