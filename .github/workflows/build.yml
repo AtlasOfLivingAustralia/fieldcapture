@@ -83,5 +83,4 @@ jobs:
         with:
           arguments: publish
         env:
-          TRAVIS_DEPLOY_USERNAME: ${{secrets.DEPLOY_USERNAME}}
-          TRAVIS_DEPLOY_PASSWORD: ${{secrets.DEPLOY_PASSWORD}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
