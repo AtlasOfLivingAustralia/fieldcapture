@@ -58,6 +58,9 @@ jobs:
         uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
         with:
           arguments: -PenableClover=true cloverGenerateReport
+        env:
+          GPR_USER: ${{env.GITHUB_ACTOR}}
+          GPR_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Install javascript packages using the gradle clientInstall plugin
         uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee

@@ -41,6 +41,12 @@ repositories {
     mavenLocal()
     maven { url "https://repo.osgeo.org/repository/release/" }
     maven { url "https://repo.grails.org/grails/core" }
+    maven { url = uri("https://maven.pkg.github.com/atlasoflivingaustralia/ecodata-client-plugin")
+        credentials {
+            username = project.findProperty("gpr.user") ?: System.getenv('GPR_USER')
+            password = project.findProperty("gpr.token") ?: System.getenv('GPR_TOKEN')
+        }
+    }
     maven { url "https://nexus.ala.org.au/content/groups/public/" }
     gradlePluginPortal()
 }
@@ -173,7 +179,7 @@ dependencies {
     provided "io.methvin:directory-watcher:0.4.0"
 
     if (!Boolean.valueOf(inplace)) {
-        compile "org.grails.plugins:ecodata-client-plugin:5.1"
+        compile "org.grails.plugins:ecodata-client-plugin:5.2-SNAPSHOT"
     }
 }
 
