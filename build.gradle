@@ -48,7 +48,6 @@ repositories {
         }
     }
     maven { url "https://nexus.ala.org.au/content/groups/public/" }
-    gradlePluginPortal()
 }
 
 
