@@ -78,6 +78,20 @@ jobs:
         with:
           arguments: clean
 
+
+      - name: Read the MERIT version from the gradle.properties file
+        id: read_property
+        uses: christian-draeger/read-properties@1.1.0
+        with:
+          path: './gradle.properties'
+          properties: 'meritVersion'
+
+      - name: Delete old package versions to work around ansible not deploying latest snapshot
+        uses: actions/delete-package-versions@v3
+        with:
+          package-name: 'fieldcapture-${{steps.read_property.outputs.meritVersion}}'
+          token: ${{ secrets.GITHUB_PAT }}
+
       - name: Publish the JAR to the repository
         uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
         with:
