@@ -90,7 +90,7 @@ jobs:
         uses: actions/delete-package-versions@v3
         with:
           package-name: 'fieldcapture-${{steps.read_property.outputs.meritVersion}}'
-          token: ${{ secrets.GITHUB_PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish the JAR to the repository
         uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
