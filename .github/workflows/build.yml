@@ -86,10 +86,16 @@ jobs:
           path: './gradle.properties'
           properties: 'meritVersion'
 
-      - name: Delete old package versions to work around ansible not deploying latest snapshot
-        uses: actions/delete-package-versions@v3
+      - uses: castlabs/get-package-version-id-action@v2.0
+        id: versions
         with:
-          package-name: 'fieldcapture-${{steps.read_property.outputs.meritVersion}}'
+          versions: ${{steps.read_property.outputs.meritVersion}}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/delete-package-versions@v2
+        if: ${{ steps.versions.outputs.ids != '' }}
+        with:
+          package-version-ids: "${{ steps.versions.outputs.ids }}"
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish the JAR to the repository
