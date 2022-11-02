@@ -89,7 +89,7 @@ jobs:
       - uses: castlabs/get-package-version-id-action@v2.0
         id: versions
         with:
-          versions: ${{steps.read_property.outputs.meritVersion}}
+          version: ${{steps.read_property.outputs.meritVersion}}
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/delete-package-versions@v2
