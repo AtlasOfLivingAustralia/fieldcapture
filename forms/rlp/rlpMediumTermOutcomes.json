@@ -288,12 +288,6 @@
                         "dataType": "text",
                         "description": "",
                         "name": "keyThreat",
-                        "behaviour": [
-                          {
-                            "type": "visible",
-                            "condition": "agOrEnv == \"Environment\""
-                          }
-                        ],
                         "constraints": {
                           "type": "computed",
                           "default": [
@@ -1218,7 +1212,7 @@
                     "items": [
                       {
                         "type": "literal",
-                        "source": "<span class=\"preLabel required\"><label><b>c) Select the relevant outcome indicator</b></label></span><span>  &nbsp Include only those outcome indicators that align with Primary or Secondary outcome within the MERI Plan (e.g. If your Primary outcome is <i>1. Ramsar</i> and your secondary is <i>2. Threatened Species</i>, only include outcome indicators relevant to those categories, such as <i>Ramsar - Creation or enhancement of ecological niches</i> and <i>Threatened species - Control of pest, predator and competitor species.</i> <br>If it has been agreed that your project will measure against Services rather than Outcomes,</span><span>select the relevant ‘Other (please specify’) category (e.g. Ramsar – Other (please specify) from the drop-down list and list the Services in the Outcome Indicator (if other)<span style=\"font-weight:normal;color:red\">*</span> free text field</span>"
+                        "source": "<span class=\"preLabel required\"><label><b>c) Select the relevant outcome indicator</b></label></span><span>  &nbsp Include only those outcome indicators that align with Primary or Secondary outcome within the MERI Plan (e.g. If your Primary outcome is <i>1. Ramsar</i> and your secondary is <i>2. Threatened Species</i>, only include outcome indicators relevant to those categories, such as <i>Ramsar - Creation or enhancement of ecological niches</i> and <i>Threatened species - Control of pest, predator and competitor species.</i><br>If it has been agreed that your project will measure against Services rather than Outcomes,</span><span>select the relevant ‘Other (please specify’) category (e.g. Ramsar – Other (please specify) from the drop-down list and list the Services in the Outcome Indicator (if other)<span style=\"font-weight:normal;color:red\">*</span> free text field</span>"
                       }
                     ]
                   },
@@ -1476,7 +1470,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "KEQ2 -To what extent has the project increased knowledge of best practice NRM for the investment priority? (Significantly, Satisfactorily, Partially, Not at all)<span data-bind=\"popover:{content:'Qualatative responses only to support Service Provider general observations'}\" data-original-title=\"\" title=\"\"><i class=\"fa fa-question-circle\">&nbsp;</i></span>",
+                "preLabel": "KEQ2 -To what extent has the project increased knowledge of best practice NRM for the investment priority? (Significantly, Satisfactorily, Partially, Not at all) <span data-bind=\"popover:{content:'Qualitative responses only to support Service Provider general observations'}\" data-original-title=\"\" title=\"\"><i class=\"fa fa-question-circle\">&nbsp;</i></span>",
                 "type": "selectOne",
                 "rows": 5,
                 "source": "keq2"
@@ -1619,7 +1613,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "KEQ9 - To what extent has the project achieved the desired behavioural change and ongoing commitment among the participating land managers towards the investment priority? (Significantly, Satisfactorily, Partially, Not at all, N/A)<span data-bind=\"popover:{content:'Qualatative responses only to support Service Provider general observations'}\" data-original-title=\"\" title=\"\"><i class=\"fa fa-question-circle\">&nbsp;</i></span>",
+                "preLabel": "KEQ9 - To what extent has the project achieved the desired behavioural change and ongoing commitment among the participating land managers towards the investment priority? (Significantly, Satisfactorily, Partially, Not at all, N/A) <span data-bind=\"popover:{content:'Qualitative responses only to support Service Provider general observations'}\" data-original-title=\"\" title=\"\"><i class=\"fa fa-question-circle\">&nbsp;</i></span>",
                 "type": "selectOne",
                 "rows": 5,
                 "source": "keq9"
