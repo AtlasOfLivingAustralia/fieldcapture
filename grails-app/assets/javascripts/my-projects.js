@@ -135,7 +135,7 @@ var ProjectReportsViewModel = function (project) {
             self.historyVisible(false);
         } else {
             // Open this row
-            var obj = {objId:project.projectId,objUrl:fcConfig.projectReportsUrl};
+            var obj = {objId:project.projectId,objUrl:fcConfig.projectReportsUrl,myProjects:true};
             var data = reportService.getHistory(obj) || '';
             self.historyVisible(data);
 

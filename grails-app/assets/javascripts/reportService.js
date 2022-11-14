@@ -99,6 +99,9 @@ var ReportService = function(config) {
         var objId = obj.objId;
         var id = 'reportingHistory-' + objId;
         var history = '<div style="float:right" id="' + id + '"><img src="' + fcConfig.imageLocation + '/ajax-saver.gif"></div>';
+        if (!obj.myProjects) {
+            history = '<tr><td colspan="5"><div style="float:right" id="' + id + '"><img src="' + fcConfig.imageLocation + '/ajax-saver.gif"></div></td></tr>';
+        }
         var url = obj.objUrl + '/' + objId;
         $.ajax({
             url: url,

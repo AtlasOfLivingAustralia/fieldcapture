@@ -405,27 +405,19 @@ var ReportViewModel = function(report, config) {
     self.historyVisible = ko.observable(false);
     var toggling = false;
     self.toggleHistory = function (data, e) {
-        if (toggling) {
-            return;
-        }
-        toggling = true;
-
         var tr = $(e.currentTarget).closest('tr');
-        var row = tr.closest('table').DataTable().row(tr);
-        if (row.child.isShown()) {
-            // This row is already open - close it
-            row.child.hide();
+        if (tr.hasClass("shown")) {
+            $('#reportHistory').empty();
             tr.removeClass('shown');
             self.historyVisible(false);
         } else {
-            // Open this row
-            var obj = {objId:report.reportId,objUrl:fcConfig.reportsHistoryUrl};
+            var obj = {objId:report.reportId,objUrl:fcConfig.reportsHistoryUrl,myProjects:false};
             var data = reportService.getHistory(obj) || '';
-            self.historyVisible(data);
-            row.child(data).show();
-            tr.addClass('shown');
+            tr.after(data);
+            tr.addClass("shown");
+            self.historyVisible(true);
         }
-        toggling = false;
+
     };
 };
 
