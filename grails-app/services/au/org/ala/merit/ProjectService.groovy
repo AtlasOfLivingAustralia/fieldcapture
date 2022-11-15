@@ -1809,10 +1809,10 @@ class ProjectService  {
         if (documents) {
             documents = documents.collect {
                 String url = grailsApplication.config.getProperty('ecodata.baseUrl') + it.url
-                Map resp = webService.getJson(url)
+                Map response = webService.getJson2(url)
                 Map doc = null
-                if (resp?.statusCode == null || resp?.statusCode == HttpStatus.SC_OK) {
-                    Map content = resp
+                if (response?.statusCode == HttpStatus.SC_OK) {
+                    Map content = response.resp
                     String displayName = userService.lookupUser(content.approvedBy)?.displayName ?: 'Unknown'
                     doc = [
                             documentId:it.documentId,

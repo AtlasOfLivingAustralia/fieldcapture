@@ -933,11 +933,11 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
 
         then:
         1 * documentService.search([projectId:projectId, role:ProjectService.DOCUMENT_ROLE_APPROVAL, labels:'MERI']) >> [documents:documents]
-        1 * webService.getJson('url1') >> [statusCode:200,referenceDocument:"ref doc",dateApproved:"2022-07-01T00:00:1Z",approvedBy:'1234', reason:'r',resp:documents]
-        1 * webService.getJson('url2') >> [statusCode:200,referenceDocument:"ref doc",dateApproved:"2022-07-01T00:00:2Z",approvedBy:'1234', reason:'r',resp:documents]
-        1 * webService.getJson('url3') >> [statusCode:200,referenceDocument:"ref doc",dateApproved:"2022-07-01T00:00:3Z",approvedBy:'1234', reason:'r',resp:documents]
-        1 * webService.getJson('url4') >> [statusCode:200,referenceDocument:"ref doc",dateApproved:"2022-07-01T00:00:4Z",approvedBy:'1234', reason:'r',resp:documents]
-        1 * webService.getJson('url5') >> [statusCode:200,referenceDocument:"ref doc",dateApproved:"2022-07-01T00:00:5Z",approvedBy:'1234', reason:'r',resp:documents]
+        1 * webService.getJson2('url1') >> [statusCode: 200,resp:[referenceDocument:"ref doc",dateApproved:"2022-07-01T00:00:1Z",approvedBy:'1234', reason:'r',resp:documents]];
+        1 * webService.getJson2('url2') >> [statusCode: 200,resp:[referenceDocument:"ref doc",dateApproved:"2022-07-01T00:00:2Z",approvedBy:'1234', reason:'r',resp:documents]];
+        1 * webService.getJson2('url3') >> [statusCode: 200,resp:[referenceDocument:"ref doc",dateApproved:"2022-07-01T00:00:3Z",approvedBy:'1234', reason:'r',resp:documents]];
+        1 * webService.getJson2('url4') >> [statusCode: 200,resp:[referenceDocument:"ref doc",dateApproved:"2022-07-01T00:00:4Z",approvedBy:'1234', reason:'r',resp:documents]];
+        1 * webService.getJson2('url5') >> [statusCode: 200,resp:[referenceDocument:"ref doc",dateApproved:"2022-07-01T00:00:5Z",approvedBy:'1234', reason:'r',resp:documents]];
 
         history.size() == 5
         history[0] == [documentId:5, date:'2022-07-01T00:00:5Z', userDisplayName:'test', referenceDocument:'ref doc', reason:'r']
