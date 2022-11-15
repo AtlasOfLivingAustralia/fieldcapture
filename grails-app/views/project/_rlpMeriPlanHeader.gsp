@@ -9,7 +9,7 @@
     <div class="row">
         <div class="col-sm-3 title">Program name</div>
 
-        <div class="col-sm-9">${project?.associatedProgram} <g:if test="${project.associatedSubProgram}"> - ${project.associatedSubProgram}</g:if></div>
+        <div class="col-sm-9">${project?.associatedProgram} <g:if test="${project?.associatedSubProgram}"> - ${project?.associatedSubProgram}</g:if></div>
 
     </div>
     <div class="row">
