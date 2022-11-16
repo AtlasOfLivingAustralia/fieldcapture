@@ -847,8 +847,9 @@
                     "constraints": [
                       "Achieved (100%)",
                       "Significantly achieved (76 - 99%)",
-                      "Satisfactorily achieved (51 to 75%)",
-                      "Inadequately achieved (1 to 25%)",
+                      "Satisfactorily achieved (51 - 75%)",
+                      "Partially achieved (26 - 50%)",
+                      "Inadequately achieved (1 - 25%)",
                       "Not achieved (0%)"
                     ],
                     "validate": "required"
@@ -859,8 +860,9 @@
                     "constraints": [
                       "Achieved (100%)",
                       "Significantly achieved (76 - 99%)",
-                      "Satisfactorily achieved (51 to 75%)",
-                      "Inadequately achieved (1 to 25%)",
+                      "Satisfactorily achieved (51 - 75%)",
+                      "Partially achieved (26 - 50%)",
+                      "Inadequately achieved (1 - 25%)",
                       "Not achieved (0%)"
                     ],
                     "validate": "required"
@@ -871,8 +873,9 @@
                     "constraints": [
                       "Achieved (100%)",
                       "Significantly achieved (76 - 99%)",
-                      "Satisfactorily achieved (51 to 75%)",
-                      "Inadequately achieved (1 to 25%)",
+                      "Satisfactorily achieved (51 - 75%)",
+                      "Partially achieved (26 - 50%)",
+                      "Inadequately achieved (1 - 25%)",
                       "Not achieved (0%)"
                     ],
                     "validate": "required"
@@ -883,8 +886,9 @@
                     "constraints": [
                       "Achieved (100%)",
                       "Significantly achieved (76 - 99%)",
-                      "Satisfactorily achieved (51 to 75%)",
-                      "Inadequately achieved (1 to 25%)",
+                      "Satisfactorily achieved (51 - 75%)",
+                      "Partially achieved (26 - 50%)",
+                      "Inadequately achieved (1 - 25%)",
                       "Not achieved (0%)"
                     ],
                     "validate": "required"
@@ -960,9 +964,9 @@
             "constraints": [
               "Achieved (100%)",
               "Significantly achieved (76 - 99%)",
-              "Satisfactorily achieved (51 to 75%)",
-              "Partially achieved (26 to 50%)",
-              "Inadequately achieved (1 to 25%)",
+              "Satisfactorily achieved (51 - 75%)",
+              "Partially achieved (26 - 50%)",
+              "Inadequately achieved (1 - 25%)",
               "Not achieved (0%)"
             ]
           },
