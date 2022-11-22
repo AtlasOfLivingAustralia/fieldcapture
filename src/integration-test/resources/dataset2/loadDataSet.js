@@ -5,7 +5,6 @@ load('../data_common/insertData.js');
 
 loadActivityForms();
 
-print("Coeatep ")
 createProgram({});
 var config = {
     projectTemplate: "rlp",
