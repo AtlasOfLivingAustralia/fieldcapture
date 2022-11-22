@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.config.EmailTemplate
 import grails.plugins.mail.MailService
 import grails.testing.spring.AutowiredTest
 import spock.lang.Specification

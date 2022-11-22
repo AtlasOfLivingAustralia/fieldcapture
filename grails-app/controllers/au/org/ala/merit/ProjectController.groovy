@@ -4,7 +4,8 @@ import au.org.ala.merit.command.MeriPlanReportCommand
 import au.org.ala.merit.command.ProjectSummaryReportCommand
 import au.org.ala.merit.command.ReportCommand
 import au.org.ala.merit.command.SaveReportDataCommand
-import au.org.ala.merit.reports.ReportConfig
+import au.org.ala.merit.config.ProgramConfig
+import au.org.ala.merit.config.ReportConfig
 import au.org.ala.merit.reports.ReportGenerationOptions
 import grails.converters.JSON
 import grails.core.GrailsApplication

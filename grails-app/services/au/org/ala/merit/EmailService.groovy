@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.config.EmailTemplate
 import groovy.util.logging.Slf4j
 
 

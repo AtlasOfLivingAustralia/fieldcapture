@@ -1,6 +1,7 @@
 package au.org.ala.merit.reports
 
 import au.org.ala.merit.DateUtils
+import au.org.ala.merit.config.ReportConfig
 import org.joda.time.DateTime
 import spock.lang.Specification
 

@@ -1,6 +1,7 @@
 package au.org.ala.merit.reports
 
 import au.org.ala.merit.DateUtils
+import au.org.ala.merit.config.ReportConfig
 import org.apache.commons.logging.LogFactory
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone

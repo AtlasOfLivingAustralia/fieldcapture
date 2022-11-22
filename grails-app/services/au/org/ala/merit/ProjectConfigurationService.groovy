@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.config.ProgramConfig
 import groovy.util.logging.Slf4j
 
 /**
@@ -35,10 +36,29 @@ class ProjectConfigurationService {
         Map program = programService.get(project.programId)
         ProgramConfig programConfig = new ProgramConfig(program.inheritedConfig ?: [:])
         if (!programConfig.activityBasedReporting) {
-            programConfig.services = metadataService.getProjectServices()
-            if (programConfig.supportedServiceIds) {
-                List supportedServiceIds = programConfig.supportedServiceIds?.collect{it as Integer}
-                programConfig.services = programConfig.services.findAll{it.id in supportedServiceIds}
+
+            List<Map> allServices = metadataService.getProjectServices()
+            if (programConfig.programServiceConfig) {
+
+                // We could do a bit more validation here and only allow scores that can be
+                // used by this form.
+                List<Map> serviceScores = metadataService.getScores(false)
+
+                programConfig.services = programConfig.programServiceConfig.programServices.collect { serviceConfig ->
+                    List scores = serviceScores.findAll { it.scoreId in serviceConfig.serviceTargets }
+                    // We could only return scores here that can be affected by the form section?
+                    Map service = allServices.find{it.id == serviceConfig.serviceId}
+                    [
+                       id: service.id,
+                       name: service.name,
+                       service: service,
+                       output: serviceConfig.formSectionName,
+                       scores: scores
+                    ]
+                }
+            }
+            else {
+                programConfig.services = allServices
             }
         }
         // Outcomes are defined by the program

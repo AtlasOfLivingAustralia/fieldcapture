@@ -1,9 +1,10 @@
 package au.org.ala.merit
 
-import au.org.ala.merit.reports.ReportConfig
+import au.org.ala.merit.config.EmailTemplate
+import au.org.ala.merit.config.ProgramConfig
+import au.org.ala.merit.config.ReportConfig
 import au.org.ala.merit.reports.ReportOwner
 import grails.testing.services.ServiceUnitTest
-import grails.testing.spring.AutowiredTest
 import spock.lang.Specification
 
 /**
