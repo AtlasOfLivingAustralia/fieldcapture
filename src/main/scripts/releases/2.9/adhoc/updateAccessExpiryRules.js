@@ -20,3 +20,4 @@ while (users.hasNext()) {
 meritHub.accessManagementOptions.expireUsersAfterPeriodInactive = 'P26W';
 meritHub.accessManagementOptions.warnUsersAfterPeriodInactive = 'P24W';
 db.hub.replaceOne({hubId:meritHub.hubId}, meritHub);
+audit(meritHub, meritHub.hubId, 'au.org.ala.ecodata.Hub', adminUserId);
