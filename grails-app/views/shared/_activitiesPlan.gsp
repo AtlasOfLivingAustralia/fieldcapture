@@ -223,6 +223,7 @@
     <span class="badge badge-danger" data-bind="if:hasReadOnlyStatus"><g:message code="report.status.readonly.badge"/></span>
     <g:if test="${fc.userIsAlaOrFcAdmin()}">
         <button type="button" class="btn btn=sm delete-stage" title="Delete all activities in this stage" data-bind="visible:activities.length > 0, click:deleteStage">Delete stage</button>
+        <button type="button" data-bind="enable:canCancelReport, visible:activities.length > 0, click:cancelReport" class="btn btn-sm btn-danger"><i class="fa fa-remove icon-white"></i> Not required</button>
     </g:if>
 </script>
 
@@ -247,6 +248,7 @@
 </g:else>
 <g:if test="${fc.userIsAlaOrFcAdmin()}">
     <button type="button" class="btn delete-stage btn-sm" title="Delete all activities in this stage" data-bind="visible:activities.length > 0, click:deleteStage">Delete stage</button>
+    <button type="button" data-bind="enable:canCancelReport, visible:activities.length > 0, click:cancelReport" class="btn btn-sm btn-danger"><i class="fa fa-remove icon-white"></i> Not required</button>
 </g:if>
 <br/>
 </script>

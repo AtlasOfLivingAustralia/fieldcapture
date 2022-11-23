@@ -122,6 +122,10 @@ var PlannedActivity = function (act, isFirst, project, stage, options) {
         return [ActivityProgress.finished, ActivityProgress.deferred, ActivityProgress.cancelled].indexOf(self.progress()) >= 0;
     };
 
+    this.isPlanned = function() {
+        return [ActivityProgress.planned].indexOf(self.progress()) >= 0;
+    };
+
     this.hasOutputData = function(progress) {
         return _.contains([ActivityProgress.finished, ActivityProgress.started], progress);
     };
@@ -255,6 +259,12 @@ var PlanStage = function (stage, activities, planViewModel, isCurrentStage, proj
         return !self.isComplete && (self.isSubmitted() || self.isApproved());
     });
 
+    this.canCancelReport = ko.pureComputed(function() {
+        return $.grep(self.activities, function (act, i) {
+            return !act.isPlanned();
+        }).length === 0;
+    }, this, {deferEvaluation: true});
+
     this.submitReportHelp = ko.pureComputed(function() {
         if (self.readyForApproval()) {
             return 'Submit this stage for implementation approval.';
@@ -310,6 +320,9 @@ var PlanStage = function (stage, activities, planViewModel, isCurrentStage, proj
             }
         });
 
+    };
+    this.cancelReport = function() {
+        self.approveOrRejectStage(config.cancelReportUrl, 'Report not required reason', 'Yes', rejectionCategories);
     };
 
     this.variationModal = function() {
