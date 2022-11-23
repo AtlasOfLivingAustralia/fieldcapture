@@ -220,14 +220,14 @@
 </script>
 
 <script id="stageNotReportableTmpl" type="text/html">
-    <span class="badge badge-danger" data-bind="if:isReadOnly()">Template being updated</span>
+    <span class="badge badge-danger" data-bind="if:hasReadOnlyStatus"><g:message code="report.status.readonly.badge"/></span>
     <g:if test="${fc.userIsAlaOrFcAdmin()}">
         <button type="button" class="btn btn=sm delete-stage" title="Delete all activities in this stage" data-bind="visible:activities.length > 0, click:deleteStage">Delete stage</button>
     </g:if>
 </script>
 
 <script id="stageNotApprovedTmpl" type="text/html">
-<span class="badge badge-danger" data-bind="if:isReadOnly()">Template being updated</span>
+<span class="badge badge-danger" data-bind="if:hasReadOnlyStatus"><g:message code="report.status.readonly.badge"/></span>
 <span class="badge badge-warning">Report not submitted</span>
 <!-- Disable button for editor with help text -->
 <g:if test="${user?.isAdmin}">

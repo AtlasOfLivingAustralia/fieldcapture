@@ -349,8 +349,14 @@ var PlanStage = function (stage, activities, planViewModel, isCurrentStage, proj
         });
     };
 
+    /**
+     * A report can have it's status field set to read only to prevent reporting while the form is being
+     * re-designed or changed.
+     */
+    this.hasReadOnlyStatus = ReportStatus.isReadOnly(stage.status);
+
     this.isReadOnly = ko.computed(function() {
-        if (!userIsEditor || ReportStatus.isReadOnly(stage.status)) {
+        if (!userIsEditor || self.hasReadOnlyStatus) {
             return true;
         }
         return (planViewModel.planStatus() != PlanStatus.UNLOCKED && (self.isSubmitted() || self.isApproved()));
