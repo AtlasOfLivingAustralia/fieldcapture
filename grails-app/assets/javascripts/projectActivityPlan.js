@@ -230,13 +230,19 @@ var PlanStage = function (stage, activities, planViewModel, isCurrentStage, proj
         return plannedActivity;
     });
 
+    $.each(stage.statusChangeHistory, function(i, history) {
+        self.cancelledCommentText = history.comment
+    });
+
     this.isApproved = function() {
         return stage.publicationStatus == 'published';
     };
     this.isSubmitted = function() {
         return stage.publicationStatus == 'pendingApproval';
     };
-
+    this.isCancelled = function() {
+        return stage.publicationStatus == 'cancelled';
+    };
 
     this.readyForApproval = ko.computed(function() {
         return $.grep(self.activities, function (act, i) {
@@ -369,14 +375,18 @@ var PlanStage = function (stage, activities, planViewModel, isCurrentStage, proj
     this.hasReadOnlyStatus = ReportStatus.isReadOnly(stage.status);
 
     this.isReadOnly = ko.computed(function() {
-        if (!userIsEditor || self.hasReadOnlyStatus) {
+        if (!userIsEditor || self.hasReadOnlyStatus || self.isCancelled()) {
             return true;
         }
         return (planViewModel.planStatus() != PlanStatus.UNLOCKED && (self.isSubmitted() || self.isApproved()));
     });
+
     this.stageStatusTemplateName = ko.computed(function(){
         if (!self.activities || self.activities.length == 0) {
             return 'stageNotReportableTmpl';
+        }
+        if (self.isCancelled()) {
+            return 'stageCancelledTmpl';
         }
         if (!self.isReportable) {
             return 'stageNotReportableTmpl';

@@ -253,6 +253,11 @@
 <br/>
 </script>
 
+<script id="stageCancelledTmpl" type="text/html">
+<span class="badge p-1 text-white badge-danger">Report not required
+</span><fc:iconHelp dynamic-help="cancelledCommentText"></fc:iconHelp>
+</script>
+
 <script id="stageApprovedTmpl" type="text/html">
 
 <span class="badge badge-success">Report Approved</span>
