@@ -1,4 +1,4 @@
-<%@ page import="au.org.ala.merit.ActivityService; au.org.ala.merit.DateUtils" contentType="text/html;charset=UTF-8" %>
+<%@ page import="org.grails.web.json.JSONObject; au.org.ala.merit.ActivityService; au.org.ala.merit.DateUtils;" contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -234,9 +234,16 @@
         </div>
     </g:if>
 
-    <g:each in="${outputModels}" var="outputModel">
+    <g:each in="${activityForms}" var="form">
+        <g:each in="${form.sections}" var="formSection">
         <g:render template="/output/outputJSModel" plugin="ecodata-client-plugin"
-                  model="${[model:outputModel.value, outputName:outputModel.key, edit:false, speciesLists:[], printable:printable]}"></g:render>
+                  model="${[model:formSection.template,
+                            outputName:formSection.name,
+                            formVersion:form.formVersion,
+                            edit:false,
+                            speciesLists:[],
+                            printable:printable]}"></g:render>
+        </g:each>
     </g:each>
 
     <g:if test="${latestStageReport && ('Stage report' in content)}">
@@ -390,20 +397,23 @@
 
                 </div>
                 <g:if test="${activity.progress == 'started' || activity.progress == 'finished'}">
-                    <g:set var="activityModel" value="${activityModels.find{it.name == activity.type}}"/>
-                    <g:each in="${activityModel.outputs}" var="outputName">
-                        <g:if test="${outputName != 'Photo Points'}">
+                    <g:set var="activityForm" value="${activityForms.find{it.name == activity.type}}"/>
+                    <g:set var="outputConfig" value="${new org.grails.web.json.JSONArray(activityForm.sections.collect{new org.grails.web.json.JSONObject(outputName:it.name, optional:it.optional, collapsedByDefault:it.collapsedByDefault, optionalQuestionText:it.optionalQuestionText, outputDescription:it.description, collapsibleHeading:it.collapsibleHeading)})}"/>
+                    <g:each in="${activityForm.sections}" var="formSection">
+                        <g:if test="${formSection.name != 'Photo Points'}">
                             <g:render template="/output/readOnlyOutput"
                                       model="${[activity:activity,
-                                                outputModel:outputModels[outputName],
-                                                outputName:outputName,
-                                                activityModel:activityModel,
+                                                output:activity.outputs?.find{it.name == formSection.name},
+                                                outputModel:formSection.template,
+                                                outputName:formSection.name,
+                                                formVersion:activityForm.formVersion,
+                                                activityModel:[outputConfig:outputConfig],
                                                 disablePrepop:true]}"
                                       plugin="ecodata-client-plugin"></g:render>
                         </g:if>
 
                     </g:each>
-                    <g:if test="${activityModel.supportsPhotoPoints}">
+                    <g:if test="${activityForm.supportsPhotoPoints}">
                         <div id="photopoints-${activity.activityId}" class="output-block">
                             <h3>Photo Points</h3>
 
