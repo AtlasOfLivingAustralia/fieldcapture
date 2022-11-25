@@ -127,25 +127,18 @@ function selectReportingPeriod(project) {
     var currentReport;
     if (selectedYear) {
         currentReport = findReportFromFinancialYear(project.reports,selectedYear);
-
-        // will fetch the latest report with filters
-        if (!currentReport) {
-            var filteredReports = _.filter(project.reports || [], function(report) {
-                // return report.publicationStatus == 'cancelled' && report.toDate <= new Date().toISOStringNoMillis()
-                return ReportStatus.isCancelled(report.publicationStatus) && report.toDate <= new Date().toISOStringNoMillis()
-            });
-            currentReport = project.reports[filteredReports.length];
-        }
-
         amplify.store(selectedYearStorageKey, selectedYear);
     }
     else {
         currentReport = findReportFromDate(project.reports);
-
+    }
+    if (!currentReport) {
         // will fetch the latest report
-        if (!currentReport) {
-            currentReport = project.reports[project.reports.length-1];
-        }
+        var currentDate = new Date().toISOStringNoMillis();
+        var filteredReports = _.filter(project.reports || [], function(report) {
+            return ReportStatus.isCancelled(report.publicationStatus) && report.toDate <= currentDate
+        });
+        currentReport = project.reports[filteredReports.length];
     }
     return currentReport;
 }
