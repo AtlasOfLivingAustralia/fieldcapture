@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.ecodata.forms.ActivityFormService
 import au.org.ala.merit.command.ProjectSummaryReportCommand
 import spock.lang.Specification
 
@@ -8,12 +9,12 @@ class ProjectSummaryReportCommandSpec extends Specification {
     ProjectService projectService = Mock(ProjectService)
     ProjectSummaryReportCommand command = new ProjectSummaryReportCommand()
     UserService userService = Mock(UserService)
-    MetadataService metadataService = Mock(MetadataService)
+    ActivityFormService activityFormService = Mock(ActivityFormService)
 
     void setup() {
         command.projectService = projectService
         command.userService = userService
-        command.metadataService = metadataService
+        command.activityFormService = activityFormService
     }
 
     void "The project summary report can accept dates for the report"() {
@@ -28,7 +29,7 @@ class ProjectSummaryReportCommandSpec extends Specification {
 
         then:
         1 * projectService.get(command.id, 'all') >> [projectId:command.id]
-        1 * metadataService.activitiesModel() >> [:]
+        0 * activityFormService.findActivityForm(_,_)
         model.project == [projectId:command.id]
         model.role == "MERIT user"
         model.content == command.sections
@@ -54,7 +55,7 @@ class ProjectSummaryReportCommandSpec extends Specification {
 
         then:
         1 * projectService.get(command.id, 'all') >> project
-        1 * metadataService.activitiesModel() >> [:]
+        0 * activityFormService.findActivityForm(_,_)
         model.project == project
         model.role == "MERIT user"
         model.content == command.sections

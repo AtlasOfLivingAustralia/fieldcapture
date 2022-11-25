@@ -301,7 +301,7 @@ class EditableMeriPlan extends Module {
     }
 
     void checkActivity(String value) {
-        activities.find("input[value=\"${value}\"]").click()
+        activities.find("input[value=\"${value}\"]").module(Checkbox).check()
     }
 
     List checkedActivities() {
