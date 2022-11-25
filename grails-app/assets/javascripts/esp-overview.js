@@ -131,11 +131,14 @@ function selectReportingPeriod(project) {
     }
     else {
         currentReport = findReportFromDate(project.reports);
-
+    }
+    if (!currentReport) {
         // will fetch the latest report
-        if (!currentReport) {
-            currentReport = project.reports[project.reports.length-1];
-        }
+        var currentDate = new Date().toISOStringNoMillis();
+        var filteredReports = _.filter(project.reports || [], function(report) {
+            return ReportStatus.isCancelled(report.publicationStatus) && report.toDate <= currentDate
+        });
+        currentReport = project.reports[filteredReports.length];
     }
     return currentReport;
 }
@@ -238,9 +241,17 @@ var SimplifiedReportingViewModel = function(project, config) {
     var currentDate = new Date().toISOStringNoMillis();
     _.each(project.reports, function (report){
         if (report.fromDate <= currentDate) {
-            self.reportSelectionList.push({label:buildReportLabel(report), value:isoDateToFinancialYear(report.toDate), stage: report.name});
+            self.reportSelectionList.push({label:buildReportLabel(report), value:isoDateToFinancialYear(report.toDate), stage: report.name, disable: report.publicationStatus == 'cancelled'});
         }
     });
+
+    /**
+     * Function will be used in optionsAfterRender
+     * Disables the option value equals to "not required"
+    **/
+    self.setOptionDisable = function(option, item) {
+        ko.applyBindingsToNode(option, {disable: item.disable}, item);
+    }
 
     // will set the value of the dropdown Reporting Period
     self.selectedChoice = ko.observable(isoDateToFinancialYear(currentReport.toDate));
@@ -484,7 +495,7 @@ function findReportFromDate (reports) {
 function findReportFromFinancialYear (reports,financialYearSelected) {
     var report;
     $.each(reports, function (i, period) {
-        if (financialYearSelected == isoDateToFinancialYear(period.toDate)) {
+        if (!ReportStatus.isCancelled(period.publicationStatus) && financialYearSelected == isoDateToFinancialYear(period.toDate)) {
             report = period;
         }
     });
