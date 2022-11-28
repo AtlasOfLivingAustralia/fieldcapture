@@ -468,3 +468,12 @@ while (programs.hasNext()) {
         audit(program, program.programId, 'au.org.ala.ecodata.Program', adminUserId);
     }
 }
+
+const filterableActivityForm = 'Wildlife Recovery Progress Report - WRR';
+const activityBasedPrograms = db.program.find({'config.projectReports.activityType':filterableActivityForm});
+while (activityBasedPrograms.hasNext()) {
+    let program = activityBasedPrograms.next();
+    program.config.programServiceConfig = {serviceFormName: filterableActivityForm, programServices: []};
+    db.program.replaceOne({_id:program._id}, program);
+    audit(program, program.programId, 'au.org.ala.ecodata.Program', adminUserId);
+}
