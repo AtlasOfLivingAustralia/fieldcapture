@@ -184,15 +184,14 @@ class ProjectConfigurationServiceSpec extends Specification implements Autowired
         then:
         1 * programService.get(programId) >> programConfig
         1 * metadataService.getProjectServices() >> allServices
-        1 * metadataService.getScores(false) >> (1..20).collect{[scoreId:"score"+it]}
-        config.services == programConfig.inheritedConfig.programServiceConfig.programServices.collect{[id: it.serviceId, name: "service "+it.serviceId, service: allServices.find({service -> service.id == it.serviceId}), output: it.formSectionName, scores:[[scoreId:it.serviceTargets[0]]]]}
+        config.services == programConfig.inheritedConfig.programServiceConfig.programServices.collect{[id: it.serviceId, name: "service "+it.serviceId, service: allServices.find({service -> service.id == it.serviceId}), output:allServices.find({service -> service.id == it.serviceId}).outputs[0].sectionName, scores:[[scoreId:it.serviceTargets[0]]]]}
     }
 
     private Map buildServiceConfig() {
         List serviceIds = [2, 3, 4, 11, 15, 18]
         Map config = [serviceFormName: 'ServiceForm']
         config.programServices = serviceIds.collect {
-            [serviceId:it, formSectionName:"Section "+it, serviceTargets:['score'+it]]
+            [serviceId:it, serviceTargets:['score'+it]]
         }
         config
     }
@@ -200,7 +199,7 @@ class ProjectConfigurationServiceSpec extends Specification implements Autowired
     private List buildServiceList() {
         List services = []
         for (int i=0; i<20; i++) {
-            services << [id: i, name: "service ${i}", output: "output ${i}"]
+            services << [id: i, name: "service ${i}", outputs: [[formName:"ServiceForm", sectionName:"output ${i}"]], scores:[[scoreId:'score'+i]]]
         }
         services
     }

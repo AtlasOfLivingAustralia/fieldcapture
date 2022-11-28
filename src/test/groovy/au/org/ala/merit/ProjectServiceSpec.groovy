@@ -1093,8 +1093,8 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         if (!services) {
             services =[[name: "Output Test 1", outputs:[[sectionName: "Output Test 1"]], scores: [[scoreId:"1", label: "Test label 1", isOutputTarget:true]], id: 1, category: null]]
         }
-        Map programServiceConfig = [serviceFormName: 'output', programServices:[[]]]
-        ProgramConfig config = new ProgramConfig([inheritedConfig:[programServiceConfig:programServiceConfig]])
+        Map programServiceConfig = [serviceFormName: 'output', programServices:[[serviceId:1, serviceTargets:['1']]]]
+        ProgramConfig config = new ProgramConfig([programServiceConfig:programServiceConfig])
         config.services = services.collect {
             [id:it.id, output:it.outputs[0].sectionName, name: it.name, scores:it.scores]}
         config
