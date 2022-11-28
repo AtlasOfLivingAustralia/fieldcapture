@@ -307,7 +307,7 @@ class MetadataService {
         })
     }
 
-    @Cacheable("serviceList")
+    //@Cacheable("serviceList")
     List<Map> getProjectServices() {
         String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "metadata/services"
         Map result = webService.getJson2(url)

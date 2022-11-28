@@ -227,3 +227,7 @@ function addStaticContentSettings() {
 function addSetting(key, value) {
     db.setting.insert({key:key, value:value});
 }
+
+function createServices() {
+    load('../data_common/createServices.js')
+}

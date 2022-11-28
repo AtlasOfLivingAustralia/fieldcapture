@@ -33,8 +33,8 @@ class ProgramConfig implements Map {
     /** List of service ids that are supported by this program */
     ProgramServiceConfig getProgramServices() {
         ProgramServiceConfig programServiceConfig = null
-        if (config.programServices) {
-            programServiceConfig = new ProgramServiceConfig(config.programServices)
+        if (config.programServiceConfig) {
+            programServiceConfig = new ProgramServiceConfig(config.programServiceConfig)
         }
         programServiceConfig
     }

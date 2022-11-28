@@ -39,26 +39,30 @@ class ProjectConfigurationService {
 
             List<Map> allServices = metadataService.getProjectServices()
             if (programConfig.programServiceConfig) {
-
-                // We could do a bit more validation here and only allow scores that can be
-                // used by this form.
-                List<Map> serviceScores = metadataService.getScores(false)
-
                 programConfig.services = programConfig.programServiceConfig.programServices.collect { serviceConfig ->
-                    List scores = serviceScores.findAll { it.scoreId in serviceConfig.serviceTargets }
-                    // We could only return scores here that can be affected by the form section?
                     Map service = allServices.find{it.id == serviceConfig.serviceId}
+
+                    Map serviceFormConfig = service.outputs?.find{ it.serviceFormName == serviceConfig.formName}
+                    List scores = service?.scores?.findAll { it.scoreId in serviceConfig.serviceTargets }
+                    String output = serviceFormConfig?.sectionName
                     [
                        id: service.id,
                        name: service.name,
                        service: service,
-                       output: serviceConfig.formSectionName,
+                       output: output,
                        scores: scores
                     ]
                 }
             }
             else {
-                programConfig.services = allServices
+                programConfig.services = allServices.collect { Map service ->
+                    [id: service.id,
+                     name: service.name,
+                     service: service,
+                     output:null,
+                     scores: service.scores
+                    ]
+                }
             }
         }
         // Outcomes are defined by the program

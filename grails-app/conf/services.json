@@ -203,7 +203,7 @@
       ]
    },
    {
-      "outputs": [{"formName": "RLP Output Report", "sectionName":"Site preparation"}],
+      "outputs": [{"formName": "RLP Output Report", "sectionName":"RLP - Site preparation"}],
       "name": "Site preparation",
       "id": 35,
       "categories": [

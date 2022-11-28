@@ -1670,11 +1670,6 @@ class ProjectService  {
     private boolean isFilterable(ProgramConfig config, String formName) {
 
         boolean filterable = config.getProgramServices()?.serviceFormName == formName
-
-        if (!filterable) {
-            List filterableActivityTypes = grailsApplication.config.getProperty('reports.filterableActivityTypes', List, [])
-            filterable = formName in filterableActivityTypes
-        }
         filterable
     }
 
