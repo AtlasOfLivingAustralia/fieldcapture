@@ -64,6 +64,12 @@ class MeriPlanReportCommand implements Validateable{
         }
         else {
             Map config = projectService.getProgramConfiguration(project)
+
+            /*
+              Pre-2020 the project template was determined differently,
+              the historical MERI plan function was only enabled on RLP projects during that time.
+              For this issue(github 2748) it is sensible to default the RLP template.
+            */
             String meriPlanTemplate = config.meriPlanTemplate ?: RLP_MERI_PLAN_TEMPLATE
             model = [project:project,
                      config:config,
