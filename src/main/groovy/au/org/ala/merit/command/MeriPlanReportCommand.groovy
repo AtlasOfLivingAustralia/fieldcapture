@@ -15,6 +15,8 @@ import javax.persistence.Transient
  */
 class MeriPlanReportCommand implements Validateable{
 
+    static String RLP_MERI_PLAN_TEMPLATE = "rlpMeriPlan"
+
     @Transient
     ProjectService projectService
 
@@ -62,8 +64,7 @@ class MeriPlanReportCommand implements Validateable{
         }
         else {
             Map config = projectService.getProgramConfiguration(project)
-            String meriPlanTemplate = config.meriPlanTemplate ?: 'meriPlan'
-
+            String meriPlanTemplate = config.meriPlanTemplate ?: RLP_MERI_PLAN_TEMPLATE
             model = [project:project,
                      config:config,
                      headerTemplate:'/project/'+meriPlanTemplate+'Header',
