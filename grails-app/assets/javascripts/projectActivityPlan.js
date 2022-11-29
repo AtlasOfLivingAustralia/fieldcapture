@@ -294,13 +294,14 @@ var PlanStage = function (stage, activities, planViewModel, isCurrentStage, proj
 
     };
 
-    this.approveOrRejectStage = function(url, title, buttonText, rejectionCategories) {
+    this.approveOrRejectStage = function(url, title, buttonText, explanationText, rejectionCategories) {
         var $reasonModal = $('#reason-modal');
         var reasonViewModel = {
             reason: ko.observable(),
             rejectionCategories:rejectionCategories,
             rejectionCategory: ko.observable(),
             title:title,
+            explanationText:explanationText,
             buttonText: buttonText,
             submit:function() {
                 self.updateStageStatus(url, this.reason(), this.rejectionCategory());
@@ -317,7 +318,7 @@ var PlanStage = function (stage, activities, planViewModel, isCurrentStage, proj
         self.updateStageStatus(config.approveReportUrl, '', '');
     };
     this.rejectStage = function() {
-        self.approveOrRejectStage(config.rejectReportUrl, 'Rejection', 'Reject', rejectionCategories);
+        self.approveOrRejectStage(config.rejectReportUrl, 'Rejection', 'Reject', 'Please enter a reason.  This reason will be included in the email sent to the project administrator(s).', rejectionCategories);
     };
     this.deleteStage = function() {
         bootbox.confirm('<span class="label label-important">Warning!</span>  This will delete all of the activities in this stage.  This operation cannot be undone!', function(result) {
@@ -328,7 +329,7 @@ var PlanStage = function (stage, activities, planViewModel, isCurrentStage, proj
 
     };
     this.cancelReport = function() {
-        self.approveOrRejectStage(config.cancelReportUrl, 'Report not required reason', 'Yes', rejectionCategories);
+        self.approveOrRejectStage(config.cancelReportUrl, 'Reason this report is not required', 'Yes', 'Please enter a reason.', rejectionCategories);
     };
 
     this.variationModal = function() {

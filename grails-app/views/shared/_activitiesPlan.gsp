@@ -310,7 +310,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             </div>
             <div class="modal-body">
-                <p>Please enter a reason.  This reason will be included in the email sent to the project administrator(s).</p>
+                <p data-bind="text:explanationText"></p>
                 <textarea rows="5" class="form-control form-control-sm" data-bind="textInput:reason"></textarea>
             </div>
             <div class="modal-footer">
