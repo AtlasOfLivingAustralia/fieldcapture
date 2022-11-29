@@ -38,7 +38,7 @@ class ProjectConfigurationService {
         if (!programConfig.activityBasedReporting) {
 
             List<Map> allServices = metadataService.getProjectServices()
-            if (programConfig.programServiceConfig) {
+            if (programConfig.programServiceConfig && programConfig.programServiceConfig.programServices) {
                 programConfig.services = programConfig.programServiceConfig.programServices.collect { serviceConfig ->
                     Map service = allServices.find{it.id == serviceConfig.serviceId}
 
