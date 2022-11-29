@@ -307,7 +307,11 @@ var PlanStage = function (stage, activities, planViewModel, isCurrentStage, proj
                 self.updateStageStatus(url, this.reason(), this.rejectionCategory());
             }
         };
-        ko.applyBindings(reasonViewModel, $reasonModal[0]);
+
+        var hasDataBinding = !!ko.dataFor($reasonModal[0]);
+        if (!hasDataBinding) {
+            ko.applyBindings(reasonViewModel, $reasonModal[0]);
+        }
         $reasonModal.modal({backdrop: 'static', keyboard:true, show:true}).on('hidden', function() {ko.cleanNode($reasonModal[0])});
     };
 
