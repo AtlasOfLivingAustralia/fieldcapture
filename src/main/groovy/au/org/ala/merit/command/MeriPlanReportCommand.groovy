@@ -15,6 +15,8 @@ import javax.persistence.Transient
  */
 class MeriPlanReportCommand implements Validateable{
 
+    static String RLP_MERI_PLAN_TEMPLATE = "rlpMeriPlan"
+
     @Transient
     ProjectService projectService
 
@@ -62,8 +64,13 @@ class MeriPlanReportCommand implements Validateable{
         }
         else {
             Map config = projectService.getProgramConfiguration(project)
-            String meriPlanTemplate = config.meriPlanTemplate ?: 'meriPlan'
 
+            /*
+              Pre-2020 the project template was determined differently,
+              the historical MERI plan function was only enabled on RLP projects during that time.
+              For this issue(github 2748) it is sensible to default the RLP template.
+            */
+            String meriPlanTemplate = config.meriPlanTemplate ?: RLP_MERI_PLAN_TEMPLATE
             model = [project:project,
                      config:config,
                      headerTemplate:'/project/'+meriPlanTemplate+'Header',

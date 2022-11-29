@@ -91,4 +91,22 @@ class MeriPlanReportCommandSpec extends Specification implements AutowiredTest{
         result.statusCode == HttpStatus.SC_NOT_FOUND
         result.error != null
     }
+
+    def "checks to ensure it's not using the old MeriPlan template"() {
+        setup:
+        String projectId = 'p1'
+
+        when:
+        command.id = projectId
+        Map result = command.meriPlanReportModel()
+
+        then:
+        1 * projectService.get(projectId, _) >> [projectId:projectId]
+        1 * projectService.getProgramConfiguration([projectId:projectId]) >> [meriPlanTemplate:MeriPlanReportCommand.RLP_MERI_PLAN_TEMPLATE]
+        0 * projectService.getApprovedMeriPlanProject(_)
+
+        result.project.projectId == projectId
+        result.meriPlanTemplate != '/project/meriPlanView'
+
+    }
 }
