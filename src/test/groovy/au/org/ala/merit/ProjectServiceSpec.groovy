@@ -1007,16 +1007,16 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
     def "The service can return a list of activity types nominated by the project"() {
         setup:
         Map project = [custom:[details:[activities:[activities:['a1', 'a2']]]]]
+        ProgramConfig programConfig = new ProgramConfig([activities:[[name:'a1', output:'o1'],[name:'a2', output:'o2']]])
 
         when:
-        List activities = service.getProjectActivities(project)
+        List activities = service.getProjectActivities(project, programConfig)
 
         then:
-        1 * projectConfigurationService.getProjectConfiguration(project) >> [activities:[[name:'a1', output:'o1'],[name:'a2', output:'o2']]]
         activities == [[name:'a1', output:'o1'],[name:'a2', output:'o2']]
 
         when:
-        activities = service.getProjectActivities([:])
+        activities = service.getProjectActivities([:], programConfig)
 
         then:
         activities == []
