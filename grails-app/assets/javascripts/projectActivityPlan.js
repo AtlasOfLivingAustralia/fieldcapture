@@ -290,7 +290,8 @@ var PlanStage = function (stage, activities, planViewModel, isCurrentStage, proj
             }
         };
         ko.applyBindings(declarationViewModel, declaration);
-        $(declaration).modal({ backdrop: 'static', keyboard: true, show: true }).on('hidden', function() {ko.cleanNode(declaration);});
+        var unbind = function() {ko.cleanNode(declaration)};
+        $(declaration).modal({ backdrop: 'static', keyboard: true, show: true }).on('hidden', unbind).on('hidden.bs.modal', unbind);
 
     };
 
@@ -307,8 +308,11 @@ var PlanStage = function (stage, activities, planViewModel, isCurrentStage, proj
                 self.updateStageStatus(url, this.reason(), this.rejectionCategory());
             }
         };
+
         ko.applyBindings(reasonViewModel, $reasonModal[0]);
-        $reasonModal.modal({backdrop: 'static', keyboard:true, show:true}).on('hidden', function() {ko.cleanNode($reasonModal[0])});
+        var unbind = function() {ko.cleanNode($reasonModal[0])};
+        $($reasonModal[0]).modal({ backdrop: 'static', keyboard: true, show: true }).on('hidden', unbind).on('hidden.bs.modal', unbind);
+
     };
 
     this.submitStage = function() {
