@@ -43,7 +43,8 @@ class ProjectConfigurationService {
                     Map service = allServices.find{it.id == serviceConfig.serviceId}
 
                     Map serviceFormConfig = service.outputs?.find{ it.serviceFormName == serviceConfig.formName}
-                    List scores = service?.scores?.findAll { it.scoreId in serviceConfig.serviceTargets }
+                    List scores = service?.scores?.findAll { it.scoreId in (serviceConfig.serviceTargets ?: serviceFormConfig.scoreIds) }
+
                     String output = serviceFormConfig?.sectionName
                     [
                        id: service.id,

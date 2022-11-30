@@ -458,7 +458,6 @@ while (programs.hasNext()) {
 
             const programService = {
                 serviceId: serviceId,
-                formSectionName: service.output,
                 serviceTargets: scoreIds
             }
             config.programServiceConfig.programServices.push(programService);
