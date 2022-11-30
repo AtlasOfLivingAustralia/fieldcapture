@@ -249,8 +249,14 @@ var SimplifiedReportingViewModel = function(project, config) {
      * Function will be used in optionsAfterRender
      * Disables the option value equals to "not required"
     **/
-    self.setOptionDisable = function(option, item) {
-        ko.applyBindingsToNode(option, {disable: item.disable}, item);
+    self.formatEspReportOption = function(option) {
+        var report = _.find(self.reportSelectionList, function(selection) {
+            return selection.value == option.id;
+        });
+        if (report && report.disable) {
+            return $('<span style="text-decoration: line-through">'+option.text+' (Not Required)</span>');
+        }
+        return $('<span>'+option.text+'</span>');
     }
 
     // will set the value of the dropdown Reporting Period
@@ -259,7 +265,12 @@ var SimplifiedReportingViewModel = function(project, config) {
     var selectedReport = _.find(self.reportSelectionList, function(report) { return report.value == self.selectedChoice()});
     var selectedReportLabel = selectedReport && selectedReport.label;
 
-    $('.reportingPeriodSpan').popover({title:'Please select reporting period', content:'The reporting period being displayed is ' + selectedReportLabel + '. If you want to complete your report for a different period, please select it from this dropdown.', placement:'top', trigger:'hover'})
+    var popoverText = 'The reporting period being displayed is ' + selectedReportLabel + '. If you want to complete your report for a different period, please select it from this dropdown.';
+    var useHtml = selectedReport.disable;
+    if (selectedReport.disable) {
+        popoverText = 'This report has been marked as <strong>Not Required</strong>. Please contact your ESP Project Manager for further information.';
+    }
+    $('.reportingPeriodSpan').popover({html:useHtml, title:'Please select reporting period', content:popoverText, placement:'top', trigger:'hover'})
     $('.reportingPeriodSpan').popover('show');
     // refreshes the page with the financial year selected
     self.selectionChanged = function(event) {
@@ -495,7 +506,7 @@ function findReportFromDate (reports) {
 function findReportFromFinancialYear (reports,financialYearSelected) {
     var report;
     $.each(reports, function (i, period) {
-        if (!ReportStatus.isCancelled(period.publicationStatus) && financialYearSelected == isoDateToFinancialYear(period.toDate)) {
+        if (financialYearSelected == isoDateToFinancialYear(period.toDate)) {
             report = period;
         }
     });
