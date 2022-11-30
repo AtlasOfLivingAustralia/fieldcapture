@@ -101,7 +101,7 @@
             <span class="label label-info label-small">Project ID:</span> ${project.externalId}<br/>
             <span class="label label-info label-small">Reporting Period:</span>
             <span class="reportingPeriodSpan">
-                <select id="type" data-bind="options:reportSelectionList, optionsText: 'label', optionsValue: 'value', value:selectedChoice, event: {change: selectionChanged },  optionsAfterRender: setOptionDisable"></select>
+                <select id="type" data-bind="options:reportSelectionList, optionsText: 'label', optionsValue: 'value', value:selectedChoice, event: {change: selectionChanged }, select2:{width:'350px', templateSelection:formatEspReportOption, templateResult: formatEspReportOption}"></select>
             </span>
         </span>
         <span class="col-sm-6">
