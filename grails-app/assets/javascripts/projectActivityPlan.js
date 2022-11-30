@@ -289,9 +289,10 @@ var PlanStage = function (stage, activities, planViewModel, isCurrentStage, proj
                 self.submitStage();
             }
         };
+
         ko.applyBindings(declarationViewModel, declaration);
         var unbind = function() {ko.cleanNode(declaration)};
-        $(declaration).modal({ backdrop: 'static', keyboard: true, show: true }).on('hidden', unbind).on('hidden.bs.modal', unbind);
+        $(declaration).modal({ backdrop: 'static', keyboard: true, show: true }).on('hidden.bs.modal', unbind);
 
     };
 
@@ -311,7 +312,7 @@ var PlanStage = function (stage, activities, planViewModel, isCurrentStage, proj
 
         ko.applyBindings(reasonViewModel, $reasonModal[0]);
         var unbind = function() {ko.cleanNode($reasonModal[0])};
-        $($reasonModal[0]).modal({ backdrop: 'static', keyboard: true, show: true }).on('hidden', unbind).on('hidden.bs.modal', unbind);
+        $($reasonModal[0]).modal({ backdrop: 'static', keyboard: true, show: true }).on('hidden.bs.modal', unbind);
 
     };
 
