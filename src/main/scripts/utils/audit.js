@@ -1,9 +1,9 @@
 /** Inserts a document into the auditMessage collection */
-function audit(entity, entityId, type, userId, projectId) {
+function audit(entity, entityId, type, userId, projectId, eventType) {
     var auditMessage = {
         date: ISODate(),
         entity: entity,
-        eventType: 'Update',
+        eventType: eventType || 'Update',
         entityType: type,
         entityId: entityId,
         userId: userId
