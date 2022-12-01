@@ -409,6 +409,7 @@ var ReportViewModel = function(report, config) {
         if (tr.hasClass("shown")) {
             $('#reportHistory').empty();
             tr.removeClass('shown');
+            tr.next().remove();
             self.historyVisible(false);
         } else {
             var obj = {objId:report.reportId,objUrl:fcConfig.reportsHistoryUrl,myProjects:false};
@@ -417,7 +418,6 @@ var ReportViewModel = function(report, config) {
             tr.addClass("shown");
             self.historyVisible(true);
         }
-
     };
 };
 
