@@ -336,3 +336,8 @@ li.select2-search input {
 .outputs-without-targets .well, .outputTargets .well {
 	margin-bottom: 1rem;
 }
+
+.fa-color-size {
+	color: #337ab7;
+	font-size: 13px;
+}

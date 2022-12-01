@@ -153,8 +153,8 @@
             <a class="btn btn-container btn-sm disabled-icon" data-bind="visible:!viewable">
                 <i class="fa fa-download" title="Please mark the report as complete before generating a PDF"></i>
             </a>
-            <a class="btn btn-container btn-sm" data-bind="visible:!historyVisible(), click:toggleHistory"><i class="fa fa-plus" title="Show report history"></i></a>
-            <a class="btn btn-container btn-sm" data-bind="visible:historyVisible(), click:toggleHistory"><i class="fa fa-minus" title="Hide report history"></i></a>
+            <a class="btn btn-container btn-sm" data-bind="visible:!historyVisible(), click:toggleHistory"><i class="fa fa-plus fa-color-size" title="Show report history"></i></a>
+            <a class="btn btn-container btn-sm" data-bind="visible:historyVisible(), click:toggleHistory"><i class="fa fa-minus fa-color-size" title="Hide report history"></i></a>
 
             <g:if test="${fc.userIsAlaOrFcAdmin()}">
                 <a class="btn btn-container btn-sm pull-right" href="javascript:void(0)" title="Delete all data entered for this report"
