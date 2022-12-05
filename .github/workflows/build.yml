@@ -14,7 +14,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
       - uses: actions/checkout@v3
@@ -52,7 +52,7 @@ jobs:
       - name: Install and start mongodb
         uses: supercharge/mongodb-github-action@1.7.0
         with:
-          mongodb-version: '4.0'
+          mongodb-version: '5.0'
 
       - name: Build and run clover coverage report with Gradle
         uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
