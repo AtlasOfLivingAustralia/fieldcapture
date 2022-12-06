@@ -46,9 +46,12 @@ class ProjectConfigurationService {
                     List scores = service?.scores?.findAll { it.scoreId in (serviceConfig.serviceTargets ?: serviceFormConfig.scoreIds) }
 
                     String output = serviceFormConfig?.sectionName
+                    // This allows programs to override the service name if required.  This is needed as the
+                    // service names are listed in contracts so need to be kept the same for a program.
+                    String serviceName = service?.programLabels[project.programId]?.label ?: service.name
                     [
                        id: service.id,
-                       name: service.name,
+                       name: serviceName,
                        service: service,
                        output: output,
                        scores: scores
