@@ -30,6 +30,7 @@ class ESPProjectSpec extends StubbedCasSpec {
         waitFor { hasBeenReloaded() }
     }
 
+    /**
     def "generate Document PDF from document report tab"() {
         setup:
         loginAsUser('1', browser)
@@ -61,4 +62,6 @@ class ESPProjectSpec extends StubbedCasSpec {
             groundCoverPercentage.text() == "60"
         })
     }
+
+ **/
 }
