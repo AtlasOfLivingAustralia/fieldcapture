@@ -1,7 +1,7 @@
 package au.org.ala.fieldcapture
 
 import pages.AdminTools
-import pages.DownloadReportPDF
+import pages.DownloadReport
 import pages.ESPProjectIndex
 import spock.lang.Stepwise
 
@@ -30,7 +30,6 @@ class ESPProjectSpec extends StubbedCasSpec {
         waitFor { hasBeenReloaded() }
     }
 
-    /**
     def "generate Document PDF from document report tab"() {
         setup:
         loginAsUser('1', browser)
@@ -50,18 +49,21 @@ class ESPProjectSpec extends StubbedCasSpec {
 
         waitFor {
             downloadReportContent.generateHTML.displayed
-
-            downloadReportContent.generatePDF.displayed
         }
         when:
         downloadReportContent.generateHTML.click()
 
         then:
         withWindow("project-report", {
-            at DownloadReportPDF
+            at DownloadReport
+            waitFor {
+                printInstructions.displayed
+            }
+            closePrintInstructions()
+            waitFor {
+                !printInstructions.displayed
+            }
             groundCoverPercentage.text() == "60"
         })
     }
-
- **/
 }
