@@ -9,18 +9,7 @@
                 </button>
             </div>
             <div class="modal-body">
-
-                <h3>Chrome / Firefox / Edge</h3>
-                <p>
-                Press the "Open Print Dialog" button to display the browser print dialog.
-                This can also be accessed by using your browsers control menu (3 vertical dots <i class="fa fa-ellipsis-v"></i> for Chrome and Edge, 3 horizontal bars for Firefox) and selecting the "Print..." menu item.
-                </p>
-                <p>
-                    On the system print dialog that is displayed, select "Save as PDF" as the Print Destination.
-                </p>
-                <h3>Safari</h3>
-                <p>Press "Close" to dismiss these instructions.</p>
-                <p>Select "Export as PDF" from the "File" menu.</p>
+                <fc:getSettingContent settingType="${au.org.ala.merit.SettingPageType.PDF_INSTRUCTIONS}"/>
             </div>
             <div class="modal-footer">
                 <input type="checkbox" name="instructionHide" data-bind="checked:dontShowAgain">Don't show these instructions again</input>
