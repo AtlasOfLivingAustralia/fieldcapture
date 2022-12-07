@@ -1756,7 +1756,7 @@
           {
             "items": [
               {
-                "title": "Please complete the following: (to enter details of activities undertaken to monitor and/or manage weeds, take care to add in a new row for each different species and each different season you have managed weeds).",
+                "title": "<b>Please complete the following table:</b><br>To enter details of activities undertaken to monitor and/or manage weeds, take care to add in a new row for each different species and each different season you have managed weeds.<br><b>Please Note:</b> ESP funds must not be attributed to management of noxious (NSW) or declared (SA) plants unless they are also Weeds of National Significance (WONS) - which should only occur under the total cost of management actions.",
                 "source": "weedManagement",
                 "columns": [
                   {
@@ -1841,7 +1841,7 @@
                 "preLabel": "Total cost of management actions:",
                 "source": "cost",
                 "type": "currency",
-                "helpText": "These costs can include, but are not limited to: costs like sprays, equipment, contractors, PPE, hours of work undertaken."
+                "helpText": "ESP funds must not be attributed to management of noxious (NSW) or declared (SA) plants unless they are also Weeds of National Significance (WONS)."
               }
             ],
             "behaviour": [
@@ -1853,19 +1853,21 @@
             "type": "row"
           },
           {
-            "items": [
-              {
-                "source": "To search a list of noxious (NSW) weed species click <a href=\"https://weeds.dpi.nsw.gov.au/\" target=\"_blank\">here</a>. To search a list of declared (SA) weeds click <a href=\"https://pir.sa.gov.au/biosecurity/weeds_and_pest_animals/weeds_in_sa\" target=\"_blank\">here</a>.  To find a list of Weeds of National Significance (WONS) click <a href=\"https://www.environment.gov.au/biodiversity/invasive/weeds/weeds/lists/wons.html\">here</a>",
-                "type": "literal"
-              }
-            ],
+            "type": "row",
             "behaviour": [
               {
                 "type": "if_expression",
-                "condition": "wasActivityUndertaken == \"Yes\""
+                "condition": "wasActivityUndertaken == \"No\""
               }
             ],
-            "type": "row"
+            "items": [
+              {
+                "preLabel": "Please explain the reasons this activity was not undertaken.",
+                "source": "activityNotUndertaken",
+                "type": "textarea",
+                "rows": 4
+              }
+            ]
           },
           {
             "items": [
@@ -1886,7 +1888,7 @@
           {
             "items": [
               {
-                "title": "If \"Yes\", please complete the following:",
+                "title": "<b>If \"Yes\", please complete the following table:</b><br>To search a list of noxious (NSW) weed species click <a href=\"https://weeds.dpi.nsw.gov.au/\" target=\"_blank\">here</a>. To search a list of declared (SA) weeds click <a href=\"https://pir.sa.gov.au/biosecurity/weeds_and_pest_animals/weeds_in_sa\" target=\"_blank\">here</a>.  To find a list of Weeds of National Significance (WONS) click <a href=\"https://www.environment.gov.au/biodiversity/invasive/weeds/weeds/lists/wons.html\">here</a>",
                 "source": "noxiousWeedManagement",
                 "columns": [
                   {
@@ -1929,27 +1931,10 @@
             "behaviour": [
               {
                 "type": "if_expression",
-                "condition": "wasActivityUndertaken == \"Yes\""
+                "condition": "wasActivityUndertaken == \"Yes\" and undertakenNoxiousWeedControl == \"Yes\""
               }
             ],
             "type": "row"
-          },
-          {
-            "type": "row",
-            "behaviour": [
-              {
-                "type": "if_expression",
-                "condition": "wasActivityUndertaken == \"No\""
-              }
-            ],
-            "items": [
-              {
-                "preLabel": "Please explain the reasons this activity was not undertaken.",
-                "source": "activityNotUndertaken",
-                "type": "textarea",
-                "rows": 4
-              }
-            ]
           }
         ]
       },
