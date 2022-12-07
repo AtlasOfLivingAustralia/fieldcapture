@@ -461,6 +461,7 @@
     <g:render template="/shared/documentTemplate"/>
 
 </div>
+
 <asset:script>
     $(function() {
 
@@ -479,12 +480,17 @@
         // We need to reinitialise the popovers as the content has been moved by the columnizer.
         $('.helphover').data('popover', null);
         $('.helphover').popover({container:'body', animation: true, trigger:'hover'});
-        });
+    });
 
 </asset:script>
 
+<g:render template="/shared/pdfInstructions"/>
 <asset:javascript src="common-bs4.js"/>
 <asset:javascript src="project-report-manifest.js"/>
+<g:if test="showPrintInstructions">
+<asset:javascript src="print-instructions.js"/>
+</g:if>
 <asset:deferredScripts/>
+
 </body>
 </html>

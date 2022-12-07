@@ -165,11 +165,9 @@ var SimplifiedReportingViewModel = function(project, config) {
 
     self.stageToReport = ko.observable(currentStage.label)
 
-    self.orientation = ko.observable('portrait');
     self.generateProjectReport = function(url) {
         var url = url + '?fromStage='+self.stageToReport()+'&toStage='+self.stageToReport();
-        url+='&sections=Progress against activities'
-        url+='&orientation='+self.orientation();
+        url+='&sections=Progress against activities';
         window.open(url,'project-report');
     };
     self.generateProjectReportHTML = function() {
