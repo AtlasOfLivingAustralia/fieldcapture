@@ -487,7 +487,7 @@
 <g:render template="/shared/pdfInstructions"/>
 <asset:javascript src="common-bs4.js"/>
 <asset:javascript src="project-report-manifest.js"/>
-<g:if test="showPrintInstructions">
+<g:if test="${printable != 'pdf'}">
 <asset:javascript src="print-instructions.js"/>
 </g:if>
 <asset:deferredScripts/>

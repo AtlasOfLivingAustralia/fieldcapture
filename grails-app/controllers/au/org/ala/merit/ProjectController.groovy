@@ -789,7 +789,6 @@ class ProjectController {
             return
         }
         Map model = activityReportModel(id, reportId, ReportMode.PRINT)
-        model.showPrintInstructions = true
 
         render view:'/activity/activityReportView', model:model
     }
