@@ -12,6 +12,10 @@ import org.apache.http.HttpStatus
 import org.grails.web.json.JSONArray
 import org.grails.web.json.JSONObject
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
+import org.joda.time.Days
+import org.joda.time.Months
+import org.joda.time.Period
 
 import static ReportService.ReportMode
 
@@ -941,17 +945,13 @@ class ProjectController {
     }
 
     @PreAuthorise
-    def scoresForFinancialYear(String id) {
+    def scoresForReport(String id) {
         List scoreIds = params.getList('scoreIds')
-        String date = params.get('date')
-        Map results = projectService.scoresByFinancialYear(id, scoreIds)
-        DateTime financialYearStart = DateUtils.alignToFinancialYear(DateUtils.parse(date))
-        String yearGroupToMatch = financialYearStart.year + " - " + (financialYearStart.year+1)
+        String reportId = params.get('reportId')
 
-        Map financialYearResult = results.resp?.find{ it.group == yearGroupToMatch } ?: [:]
-        Map resp = scoreIds.collectEntries{ String scoreId ->[(scoreId):financialYearResult.results?.find{it.scoreId == scoreId}?.result?.result ?: 0]}
+        Map result = projectService.scoresForReport(id, reportId, scoreIds)
 
-        render resp as JSON
+        render result as JSON
     }
 
     @PreAuthorise(accessLevel = 'editor')

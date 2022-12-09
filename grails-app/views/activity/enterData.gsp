@@ -293,6 +293,7 @@
         var activityId = '${activity.activityId}';
         var projectId = '${activity.projectId}';
         var siteId = '${activity.siteId?:""}';
+        var reportId = '${report?.reportId}';
         var options = {navigationUrl:url, activityUrl:activityUrl};
         options.navContext = '${navContext}';
         options.returnTo = '${returnToUrl}';
@@ -306,7 +307,7 @@
           projectId:projectId,
           activityId:activityId,
           stage:  stageNumberFromStage('${activity.projectStage}'),
-          disablePrepop : ${activity.progress == au.org.ala.merit.ActivityService.PROGRESS_FINISHED},
+          disablePrepop : false,
           speciesConfig :<fc:modelAsJavascript model="${speciesConfig}"/>,
           recoveryDataStorageKey: 'activity-'+activityId
         };
@@ -329,7 +330,8 @@
             project:fcConfig.project,
             activity:activity,
             documents:activity.documents,
-            site:activity.site
+            site:activity.site,
+            reportId:reportId
         };
 
         master.createAndBindOutput(output, context, config);
