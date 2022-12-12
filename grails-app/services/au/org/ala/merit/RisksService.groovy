@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.config.EmailTemplate
 import grails.core.GrailsApplication
 import groovy.util.logging.Slf4j
 import org.joda.time.DateTime
@@ -86,7 +87,7 @@ class RisksService {
             // Using the PROJECT_ADMIN_ROLE as the initiator has the effect of sending the email to grant managers.
             log.info("Sending risks and threats email for project: ${project.projectId}")
             Map model = [project:project, reportUrl:buildReportUrl(project.projectId, fromDate, toDate)]
-            projectService.sendEmail({EmailTemplate.RISKS_AND_THREATS_CHANGED_EMAIL}, project, RoleService.PROJECT_ADMIN_ROLE, systemEmail, model)
+            projectService.sendEmail({ EmailTemplate.RISKS_AND_THREATS_CHANGED_EMAIL}, project, RoleService.PROJECT_ADMIN_ROLE, systemEmail, model)
         }
     }
 

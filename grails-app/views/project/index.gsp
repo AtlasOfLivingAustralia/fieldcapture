@@ -1,4 +1,4 @@
-<%@ page import="au.org.ala.merit.ProgramConfig; au.org.ala.merit.ProjectController" contentType="text/html;charset=UTF-8" expressionCodec="none"%>
+<%@ page import="au.org.ala.merit.config.ProgramConfig; au.org.ala.merit.ProjectController" contentType="text/html;charset=UTF-8" expressionCodec="none"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -294,7 +294,7 @@ var config = {
     config.showSiteType = ${Boolean.valueOf(projectContent.site.showSiteType)};
     config.services = services;
 
-    config.useRlpTemplate = ${config.getProjectTemplate() == au.org.ala.merit.ProgramConfig.ProjectTemplate.RLP};
+    config.useRlpTemplate = ${config.getProjectTemplate() == au.org.ala.merit.config.ProgramConfig.ProjectTemplate.RLP};
     config.useRlpRisksModel = config.useRlpTemplate;
     config.risksStorageKey = PROJECT_RISKS_KEY;
 

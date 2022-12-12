@@ -1,4 +1,6 @@
-package au.org.ala.merit
+package au.org.ala.merit.config
+
+import au.org.ala.merit.SettingPageType
 
 enum EmailTemplate {
     DEFAULT_PLAN_SUBMITTED_EMAIL_TEMPLATE(SettingPageType.PLAN_SUBMITTED_EMAIL_SUBJECT_LINE, SettingPageType.PLAN_SUBMITTED_EMAIL),

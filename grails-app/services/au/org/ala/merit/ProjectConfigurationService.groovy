@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.config.ProgramConfig
 import groovy.util.logging.Slf4j
 
 /**
@@ -35,10 +36,40 @@ class ProjectConfigurationService {
         Map program = programService.get(project.programId)
         ProgramConfig programConfig = new ProgramConfig(program.inheritedConfig ?: [:])
         if (!programConfig.activityBasedReporting) {
-            programConfig.services = metadataService.getProjectServices()
-            if (programConfig.supportedServiceIds) {
-                List supportedServiceIds = programConfig.supportedServiceIds?.collect{it as Integer}
-                programConfig.services = programConfig.services.findAll{it.id in supportedServiceIds}
+
+            List<Map> allServices = metadataService.getProjectServices()
+            if (programConfig.programServiceConfig && programConfig.programServiceConfig.programServices) {
+                programConfig.services = programConfig.programServiceConfig.programServices.collect { serviceConfig ->
+                    Map service = allServices.find{it.id == serviceConfig.serviceId}
+
+                    Map serviceFormConfig = service.outputs?.find{ it.serviceFormName == serviceConfig.formName}
+                    List scores = service?.scores?.findAll { it.scoreId in (serviceConfig.serviceTargets ?: serviceFormConfig.scoreIds) }
+
+                    String output = serviceFormConfig?.sectionName
+                    // This allows programs to override the service name if required.  This is needed as the
+                    // service names are listed in contracts so need to be kept the same for a program.
+                    String serviceName = service.name
+                    if (service?.programLabels && service.programLabels[project.programId]) {
+                        serviceName = service.programLabels[project.programId].label ?: serviceName
+                    }
+                    [
+                       id: service.id,
+                       name: serviceName,
+                       service: service,
+                       output: output,
+                       scores: scores
+                    ]
+                }
+            }
+            else {
+                programConfig.services = allServices.collect { Map service ->
+                    [id: service.id,
+                     name: service.name,
+                     service: service,
+                     output:null,
+                     scores: service.scores
+                    ]
+                }
             }
         }
         // Outcomes are defined by the program

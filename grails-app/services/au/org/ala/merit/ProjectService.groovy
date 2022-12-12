@@ -1,7 +1,8 @@
 package au.org.ala.merit
 
-
-import au.org.ala.merit.reports.ReportConfig
+import au.org.ala.merit.config.EmailTemplate
+import au.org.ala.merit.config.ProgramConfig
+import au.org.ala.merit.config.ReportConfig
 import au.org.ala.merit.reports.ReportGenerationOptions
 import au.org.ala.merit.reports.ReportGenerator
 import au.org.ala.merit.reports.ReportOwner
@@ -1478,20 +1479,23 @@ class ProjectService  {
         getProjectServices(project)
     }
 
-    List<Map> getProjectServices(Map project) {
-        ProgramConfig config = projectConfigurationService.getProjectConfiguration(project)
-        List<Map> supportedServices = config.services
+    List<Map> getProjectServices(Map project, ProgramConfig programConfig) {
+        List<Map> supportedServices = programConfig.services
         List serviceIds = project.custom?.details?.serviceIds?.collect{it as Integer}
-
         List projectServices = supportedServices?.findAll {it.id in serviceIds }
 
         projectServices
     }
 
+    List<Map> getProjectServices(Map project) {
+        ProgramConfig config = projectConfigurationService.getProjectConfiguration(project)
+        getProjectServices(project, config)
+    }
+
     /** Returns a list of activity types that have been selected for implementation by a project in the MERI plan */
-    List<String> getProjectActivities(Map project) {
+    List<String> getProjectActivities(Map project, ProgramConfig config) {
         List activityNames = project?.custom?.details?.activities?.activities ?: []
-        List programActivities = getProgramConfiguration(project)?.activities ?: []
+        List programActivities = config?.activities ?: []
 
         // Match the program activities by the activity name recorded in the project MERI plan
         activityNames.collect { String activityName ->  programActivities.find{it.name == activityName} }
@@ -1619,18 +1623,19 @@ class ProjectService  {
     Map filterOutputModel(Map activityModel, Map project, Map existingActivityData) {
 
         Map filteredModel = activityModel
-        if (isFilterable(activityModel)) {
 
-            List serviceList
+        ProgramConfig config = getProgramConfiguration(project)
+        if (isFilterable(config, activityModel.name)) {
+
+            List serviceOutputs
             List selectedForProject
 
             // The values to be filtered can come from either project services or activities in the MERI plan.
-            selectedForProject = getProjectServices(project)
+            selectedForProject = getProjectServices(project, config)
 
             if (!selectedForProject) {
-
-                serviceList = getProgramConfiguration(project).activities
-                selectedForProject = getProjectActivities(project)
+                serviceOutputs = config.activities?.collect{it.output}.findAll()
+                selectedForProject = getProjectActivities(project, config)
             }
             else {
                 // We are deliberately filtering the project services against the
@@ -1639,11 +1644,11 @@ class ProjectService  {
                 // and have the services filtered out.  If we just used the project/program
                 // service list here, any services not on the program list would be treated
                 // as non-service form sections (like WHS) and always display in the report.
-                serviceList = metadataService.getProjectServices()
+                serviceOutputs = metadataService.getProjectServices().collect{it.outputs.find(
+                        {it.formName == activityModel.name})?.sectionName}.findAll()
             }
 
             if (selectedForProject) {
-                List serviceOutputs = serviceList.collect{it.output}
                 List projectOutputs = selectedForProject.collect{it.output}
                 filteredModel = filterActivityModel(activityModel, existingActivityData, serviceOutputs, projectOutputs)
             }
@@ -1651,9 +1656,20 @@ class ProjectService  {
         filteredModel
     }
 
-    private boolean isFilterable(Map activityModel) {
-        List filterableActivityTypes = grailsApplication.config.getProperty('reports.filterableActivityTypes', List, [])
-        return activityModel?.name in filterableActivityTypes
+    /**
+     * Determines if the FormSections / outputs of the form described by the activityModel
+     * can be filtered by the selection of project services.
+     * This is determined by the "filterable" flag in the report configuration defined
+     * in the program configuration for the project.
+     * @param config The program configuration
+     * @param formName the name of the form to check
+     * @return true if the form is filterable when used in a project run under the 
+     * supplied ProgramConfig
+     */
+    private boolean isFilterable(ProgramConfig config, String formName) {
+
+        boolean filterable = config.getProgramServices()?.serviceFormName == formName
+        filterable
     }
 
     private Map filterActivityModel(Map activityModel, Map existingActivityData, List filterableSections, List sectionsToInclude) {

@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.config.ProgramConfig
 import grails.testing.spring.AutowiredTest
 import spock.lang.Specification
 
@@ -36,7 +37,6 @@ class ProjectConfigurationServiceSpec extends Specification implements Autowired
 
         then:
         1 * programService.get(programId) >> [inheritedConfig:[projectReports:[], test:'test']]
-        1 * metadataService.getProjectServices() >> []
         config.test == 'test'
     }
 
@@ -175,30 +175,31 @@ class ProjectConfigurationServiceSpec extends Specification implements Autowired
         String programId = 'programId'
         Map project = [projectId:'project1', programId:programId]
         Map programConfig = [inheritedConfig:[projectReports:[[activityType:'1', reportType:ReportService.REPORT_TYPE_STAGE_REPORT]], test:'test', activityBasedReporting:false]]
+        List allServices = buildServiceList()
+        programConfig.inheritedConfig.programServiceConfig = buildServiceConfig()
 
         when:
-        Map config = service.getProjectConfiguration(project)
+        ProgramConfig config = service.getProjectConfiguration(project)
 
         then:
         1 * programService.get(programId) >> programConfig
-        1 * metadataService.getProjectServices() >> buildServiceList()
-        config.services == buildServiceList()
-
-        when:
-        programConfig.inheritedConfig.supportedServiceIds = [2, 3, 4, 11, 15, 18]
-        config = service.getProjectConfiguration(project)
-
-        then:
-        1 * programService.get(programId) >> programConfig
-        1 * metadataService.getProjectServices() >> buildServiceList()
-        config.services == programConfig.inheritedConfig.supportedServiceIds.collect{[id: it, name: "service ${it}", output: "output ${it}"]}
+        1 * metadataService.getProjectServices() >> allServices
+        config.services == programConfig.inheritedConfig.programServiceConfig.programServices.collect{[id: it.serviceId, name: "service "+it.serviceId, service: allServices.find({service -> service.id == it.serviceId}), output:allServices.find({service -> service.id == it.serviceId}).outputs[0].sectionName, scores:[[scoreId:it.serviceTargets[0]]]]}
     }
 
+    private Map buildServiceConfig() {
+        List serviceIds = [2, 3, 4, 11, 15, 18]
+        Map config = [serviceFormName: 'ServiceForm']
+        config.programServices = serviceIds.collect {
+            [serviceId:it, serviceTargets:['score'+it]]
+        }
+        config
+    }
 
     private List buildServiceList() {
         List services = []
         for (int i=0; i<20; i++) {
-            services << [id: i, name: "service ${i}", output: "output ${i}"]
+            services << [id: i, name: "service ${i}", outputs: [[formName:"ServiceForm", sectionName:"output ${i}"]], scores:[[scoreId:'score'+i]]]
         }
         services
     }

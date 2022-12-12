@@ -106,7 +106,25 @@ var programDefaults = {
                       "reportsAlignedToCalendar": false,
                       "activityType": "RLP Medium term project outcomes"
                   }
-              ]
+              ],
+              "programServiceConfig": {
+                  "serviceFormName": "RLP Output Report",
+                  "programServices": [
+                      {
+                          "serviceId": 1,
+                          "serviceTargets": ['score_42']
+                      },
+                      {
+                          "serviceId": 2,
+                          "serviceTargets": ['score_43']
+                      },
+                      {
+                          "serviceId": 33,
+                          "serviceTargets": ['score_44']
+                      }
+
+                  ]
+              }
           },
           "dateCreated": ISODate("2018-06-30T14:00:00Z"),
           "description": "A description of the management unit and / or service provider",

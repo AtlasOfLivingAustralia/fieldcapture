@@ -1,4 +1,4 @@
-package au.org.ala.merit.reports
+package au.org.ala.merit.config
 
 import au.org.ala.merit.DateUtils
 import org.joda.time.DateTime

@@ -2,6 +2,7 @@ package au.org.ala.merit
 
 import au.org.ala.merit.command.MeriPlanReportCommand
 import au.org.ala.merit.command.SaveReportDataCommand
+import au.org.ala.merit.config.ProgramConfig
 import org.apache.http.HttpStatus
 import spock.lang.Specification
 import grails.testing.web.controllers.ControllerUnitTest
