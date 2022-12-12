@@ -3,8 +3,6 @@ package au.org.ala.merit
 import au.org.ala.merit.config.EmailTemplate
 import au.org.ala.merit.config.ProgramConfig
 import au.org.ala.merit.config.ReportConfig
-import au.org.ala.merit.hub.HubSettings
-import au.org.ala.merit.reports.ReportConfig
 import au.org.ala.merit.reports.ReportOwner
 import au.org.ala.web.AuthService
 import grails.testing.services.ServiceUnitTest

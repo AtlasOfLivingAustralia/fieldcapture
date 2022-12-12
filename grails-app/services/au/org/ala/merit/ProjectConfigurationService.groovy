@@ -48,7 +48,10 @@ class ProjectConfigurationService {
                     String output = serviceFormConfig?.sectionName
                     // This allows programs to override the service name if required.  This is needed as the
                     // service names are listed in contracts so need to be kept the same for a program.
-                    String serviceName = service?.programLabels[project.programId]?.label ?: service.name
+                    String serviceName = service.name
+                    if (service?.programLabels && service.programLabels[project.programId]) {
+                        serviceName = service.programLabels[project.programId].label ?: serviceName
+                    }
                     [
                        id: service.id,
                        name: serviceName,
