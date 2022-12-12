@@ -220,14 +220,15 @@
 </script>
 
 <script id="stageNotReportableTmpl" type="text/html">
-    <span class="badge badge-danger" data-bind="if:isReadOnly()">Template being updated</span>
+    <span class="badge badge-danger" data-bind="if:hasReadOnlyStatus"><g:message code="report.status.readonly.badge"/></span>
     <g:if test="${fc.userIsAlaOrFcAdmin()}">
         <button type="button" class="btn btn=sm delete-stage" title="Delete all activities in this stage" data-bind="visible:activities.length > 0, click:deleteStage">Delete stage</button>
+        <button type="button" data-bind="enable:canCancelReport, visible:activities.length > 0, click:cancelReport" class="btn btn-sm btn-danger"><i class="fa fa-remove icon-white"></i> Not required</button>
     </g:if>
 </script>
 
 <script id="stageNotApprovedTmpl" type="text/html">
-<span class="badge badge-danger" data-bind="if:isReadOnly()">Template being updated</span>
+<span class="badge badge-danger" data-bind="if:hasReadOnlyStatus"><g:message code="report.status.readonly.badge"/></span>
 <span class="badge badge-warning">Report not submitted</span>
 <!-- Disable button for editor with help text -->
 <g:if test="${user?.isAdmin}">
@@ -247,8 +248,14 @@
 </g:else>
 <g:if test="${fc.userIsAlaOrFcAdmin()}">
     <button type="button" class="btn delete-stage btn-sm" title="Delete all activities in this stage" data-bind="visible:activities.length > 0, click:deleteStage">Delete stage</button>
+    <button type="button" data-bind="enable:canCancelReport, visible:activities.length > 0, click:cancelReport" class="btn btn-sm btn-danger"><i class="fa fa-remove icon-white"></i> Not required</button>
 </g:if>
 <br/>
+</script>
+
+<script id="stageCancelledTmpl" type="text/html">
+<span class="badge p-1 text-white badge-danger">Report not required
+</span><fc:iconHelp dynamic-help="cancelledCommentText"></fc:iconHelp>
 </script>
 
 <script id="stageApprovedTmpl" type="text/html">
@@ -303,7 +310,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             </div>
             <div class="modal-body">
-                <p>Please enter a reason.  This reason will be included in the email sent to the project administrator(s).</p>
+                <p data-bind="text:explanationText"></p>
                 <textarea rows="5" class="form-control form-control-sm" data-bind="textInput:reason"></textarea>
             </div>
             <div class="modal-footer">

@@ -1,0 +1,1 @@
+db.program.update({'config.projectTemplate':"index"},{$set:{'config.projectTemplate':'default'}}, {multi:true});

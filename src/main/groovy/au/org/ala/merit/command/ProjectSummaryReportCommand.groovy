@@ -1,5 +1,6 @@
 package au.org.ala.merit.command
 
+import au.org.ala.ecodata.forms.ActivityFormService
 import au.org.ala.merit.DocumentService
 import au.org.ala.merit.UserService
 import au.org.ala.merit.ActivityService
@@ -15,16 +16,16 @@ import grails.validation.Validateable
  * Handles a request for a project summary report.  Assembles data from various services to produce the model
  * required for the report.
  */
-class ProjectSummaryReportCommand implements Validateable{
+class ProjectSummaryReportCommand implements Validateable {
 
     DocumentService documentService
     ProjectService projectService
     ReportService reportService
     ActivityService activityService
-    MetadataService metadataService
     UserService userService
     SiteService siteService
     BlogService blogService
+    ActivityFormService activityFormService
 
     // Report parameters
     String id
@@ -94,7 +95,7 @@ class ProjectSummaryReportCommand implements Validateable{
         documents
     }
 
-    private def latestStageReport(Map project, List reportedStages, Map activitiesModel, Set activityModels) {
+    private Map latestStageReport(Map project, List reportedStages, Map activitiesModel, Set activityModels) {
         // Use the final report if available, otherwise fall back to the stage report.
         Map stageReportModel = null
         Map latestStageReport = findStageReport(project.activities, reportedStages)
@@ -138,10 +139,7 @@ class ProjectSummaryReportCommand implements Validateable{
 
         List reportedStageNames = reportedStages.collect{it.name}
 
-        Map activitiesModel = metadataService.activitiesModel()
-        Set activityModels = new HashSet()
-        Map outputModels = [:]
-
+        List activityForms = []
         Map activitiesByStage = [:].withDefault{[]}
         project.activities?.each { activity ->
             if (activity.plannedEndDate >= fromDate && activity.plannedEndDate <= toDate) {
@@ -153,21 +151,14 @@ class ProjectSummaryReportCommand implements Validateable{
                     Map document = searchResults?.documents?.find{it.role = 'deferReason'}
                     activity.reason = document?.notes
                 }
-                Map activityModel = activitiesModel.activities.find{it.name == activity.type}
-                if (activityModel) {
-                    activityModels << activityModel
+                if (!activityForms.find{it.name == activity.type && it.formVersion == activity.formVersion}) {
+                    activityForms << activityFormService.findActivityForm(activity.type, activity.formVersion)
                 }
 
                 Map report = reportService.findReportForDate(activity.plannedEndDate, project.reports)
                 if (report && report.name) {
                     activitiesByStage[report.name] << activity
                 }
-            }
-        }
-        activityModels.each { activityModel ->
-            activityModel.outputs.each { outputName ->
-                outputModels << [(outputName):metadataService.getDataModelFromOutputName(outputName)]
-
             }
         }
 
@@ -193,10 +184,9 @@ class ProjectSummaryReportCommand implements Validateable{
 
         model.putAll([
                 activityCountByStage:activityCountByStage,
-                activityModels:activityModels,
+                activityForms:activityForms,
                 orderedStageNames:reportedStageNames,
-                activitiesByStage:activitiesByStage,
-                outputModels:outputModels])
+                activitiesByStage:activitiesByStage])
         model
     }
 

@@ -933,18 +933,19 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
 
         then:
         1 * documentService.search([projectId:projectId, role:ProjectService.DOCUMENT_ROLE_APPROVAL, labels:'MERI']) >> [documents:documents]
-        1 * webService.getJson2('url1') >> [statusCode:200, resp:documents[0].content]
-        1 * webService.getJson2('url2') >> [statusCode:200, resp:documents[1].content]
-        1 * webService.getJson2('url3') >> [statusCode:200, resp:documents[2].content]
-        1 * webService.getJson2('url4') >> [statusCode:200, resp:documents[3].content]
-        1 * webService.getJson2('url5') >> [statusCode:200, resp:documents[4].content]
+        1 * webService.getJson2('url1') >> [statusCode: 200,resp:[referenceDocument:"ref doc",dateApproved:"2022-07-01T00:00:1Z",approvedBy:'1234', reason:'r',resp:documents]];
+        1 * webService.getJson2('url2') >> [statusCode: 200,resp:[referenceDocument:"ref doc",dateApproved:"2022-07-01T00:00:2Z",approvedBy:'1234', reason:'r',resp:documents]];
+        1 * webService.getJson2('url3') >> [statusCode: 200,resp:[referenceDocument:"ref doc",dateApproved:"2022-07-01T00:00:3Z",approvedBy:'1234', reason:'r',resp:documents]];
+        1 * webService.getJson2('url4') >> [statusCode: 200,resp:[referenceDocument:"ref doc",dateApproved:"2022-07-01T00:00:4Z",approvedBy:'1234', reason:'r',resp:documents]];
+        1 * webService.getJson2('url5') >> [statusCode: 200,resp:[referenceDocument:"ref doc",dateApproved:"2022-07-01T00:00:5Z",approvedBy:'1234', reason:'r',resp:documents]];
 
         history.size() == 5
-        history[0] == [documentId:5, date:'2019-07-01T00:00:05Z', userDisplayName:'test', reason:'r', referenceDocument:'c']
-        history[1] == [documentId:4, date:'2019-07-01T00:00:04Z', userDisplayName:'test', reason:'r', referenceDocument:'c']
-        history[2] == [documentId:3, date:'2019-07-01T00:00:03Z', userDisplayName:'test', reason:'r', referenceDocument:'c']
-        history[3] == [documentId:2, date:'2019-07-01T00:00:02Z', userDisplayName:'test', reason:'r', referenceDocument:'c']
-        history[4] == [documentId:1, date:'2019-07-01T00:00:01Z', userDisplayName:'test', reason:'r', referenceDocument:'c']
+        history[0] == [documentId:5, date:'2022-07-01T00:00:5Z', userDisplayName:'test', referenceDocument:'ref doc', reason:'r']
+        history[1] == [documentId:4, date:'2022-07-01T00:00:4Z', userDisplayName:'test', referenceDocument:'ref doc', reason:'r']
+        history[2] == [documentId:3, date:'2022-07-01T00:00:3Z', userDisplayName:'test', referenceDocument:'ref doc', reason:'r']
+        history[3] == [documentId:2, date:'2022-07-01T00:00:2Z', userDisplayName:'test', referenceDocument:'ref doc', reason:'r']
+        history[4] == [documentId:1, date:'2022-07-01T00:00:1Z', userDisplayName:'test', referenceDocument:'ref doc', reason:'r']
+
     }
 
     def "A cutdown project view will be returned for anonymous users and users without permissions"(Map user) {
@@ -1500,7 +1501,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
                 referenceDocument: 'c',
                 project: [projectId:projectId]
         ]
-        Map document = [documentId:i, projectId:projectId, url:'url'+i, content:approval]
+        Map document = [documentId:i, projectId:projectId, url:'url'+i, content:[statusCode:null]]
 
         document
     }

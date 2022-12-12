@@ -1,6 +1,7 @@
 package pages.modules
 
 import geb.Module
+import geb.module.Checkbox
 import geb.module.FormElement
 import org.openqa.selenium.StaleElementReferenceException
 
@@ -283,7 +284,8 @@ class EditableMeriPlan extends Module {
     }
 
     void checkObjective(String value) {
-        objectivesList.find("input[value=\"${value}\"]").click()
+        def checkbox = objectivesList.find("input[value=\"${value}\"]").module(Checkbox)
+        checkbox.check()
     }
 
     void generatePDF() {
@@ -299,7 +301,7 @@ class EditableMeriPlan extends Module {
     }
 
     void checkActivity(String value) {
-        activities.find("input[value=\"${value}\"]").click()
+        activities.find("input[value=\"${value}\"]").module(Checkbox).check()
     }
 
     List checkedActivities() {

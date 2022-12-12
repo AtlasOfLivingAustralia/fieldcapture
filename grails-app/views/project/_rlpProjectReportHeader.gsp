@@ -1,10 +1,12 @@
 <h3>${report.description}</h3>
 <div class="report-header">
-
+    <div class="row mb-2">
+        <div class="col-sm-2 header-label">Program name</div>
+        <div class="col-sm-9">${context?.associatedProgram} <g:if test="${context?.associatedSubProgram}"> - ${context?.associatedSubProgram}</g:if></div>
+    </div>
     <div class="row mb-2">
         <div class="col-sm-2 header-label">Management Unit</div>
-
-        <div class="col-sm-9">${config?.program?.name}</div>
+        <div class="col-sm-9">${context?.managementUnitName}</div>
     </div>
 
     <g:if test="${context.organisationName}">

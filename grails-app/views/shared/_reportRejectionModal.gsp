@@ -4,7 +4,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title"><span data-bind="text:title"></span> reason </h3>
+                <h3 class="modal-title"><span data-bind="text:title"></span></h3>
                 <button type="button" class="close btn-sm" data-dismiss="modal" aria-hidden="true">&times;</button>
             </div>
             <div class="modal-body">

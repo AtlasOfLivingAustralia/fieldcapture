@@ -131,11 +131,14 @@ function selectReportingPeriod(project) {
     }
     else {
         currentReport = findReportFromDate(project.reports);
-
+    }
+    if (!currentReport) {
         // will fetch the latest report
-        if (!currentReport) {
-            currentReport = project.reports[project.reports.length-1];
-        }
+        var currentDate = new Date().toISOStringNoMillis();
+        var filteredReports = _.filter(project.reports || [], function(report) {
+            return ReportStatus.isCancelled(report.publicationStatus) && report.toDate <= currentDate
+        });
+        currentReport = project.reports[filteredReports.length];
     }
     return currentReport;
 }
@@ -162,11 +165,9 @@ var SimplifiedReportingViewModel = function(project, config) {
 
     self.stageToReport = ko.observable(currentStage.label)
 
-    self.orientation = ko.observable('portrait');
     self.generateProjectReport = function(url) {
         var url = url + '?fromStage='+self.stageToReport()+'&toStage='+self.stageToReport();
-        url+='&sections=Progress against activities'
-        url+='&orientation='+self.orientation();
+        url+='&sections=Progress against activities';
         window.open(url,'project-report');
     };
     self.generateProjectReportHTML = function() {
@@ -238,9 +239,23 @@ var SimplifiedReportingViewModel = function(project, config) {
     var currentDate = new Date().toISOStringNoMillis();
     _.each(project.reports, function (report){
         if (report.fromDate <= currentDate) {
-            self.reportSelectionList.push({label:buildReportLabel(report), value:isoDateToFinancialYear(report.toDate), stage: report.name});
+            self.reportSelectionList.push({label:buildReportLabel(report), value:isoDateToFinancialYear(report.toDate), stage: report.name, disable: report.publicationStatus == 'cancelled'});
         }
     });
+
+    /**
+     * Function will be used in optionsAfterRender
+     * Disables the option value equals to "not required"
+    **/
+    self.formatEspReportOption = function(option) {
+        var report = _.find(self.reportSelectionList, function(selection) {
+            return selection.value == option.id;
+        });
+        if (report && report.disable) {
+            return $('<span style="text-decoration: line-through">'+option.text+' (Not Required)</span>');
+        }
+        return $('<span>'+option.text+'</span>');
+    }
 
     // will set the value of the dropdown Reporting Period
     self.selectedChoice = ko.observable(isoDateToFinancialYear(currentReport.toDate));
@@ -248,7 +263,12 @@ var SimplifiedReportingViewModel = function(project, config) {
     var selectedReport = _.find(self.reportSelectionList, function(report) { return report.value == self.selectedChoice()});
     var selectedReportLabel = selectedReport && selectedReport.label;
 
-    $('.reportingPeriodSpan').popover({title:'Please select reporting period', content:'The reporting period being displayed is ' + selectedReportLabel + '. If you want to complete your report for a different period, please select it from this dropdown.', placement:'top', trigger:'hover'})
+    var popoverText = 'The reporting period being displayed is ' + selectedReportLabel + '. If you want to complete your report for a different period, please select it from this dropdown.';
+    var useHtml = selectedReport.disable;
+    if (selectedReport.disable) {
+        popoverText = 'This report has been marked as <strong>Not Required</strong>. Please contact your ESP Project Manager for further information.';
+    }
+    $('.reportingPeriodSpan').popover({html:useHtml, title:'Please select reporting period', content:popoverText, placement:'top', trigger:'hover'})
     $('.reportingPeriodSpan').popover('show');
     // refreshes the page with the financial year selected
     self.selectionChanged = function(event) {

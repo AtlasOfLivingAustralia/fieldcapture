@@ -14,7 +14,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
       - uses: actions/checkout@v3
@@ -52,12 +52,15 @@ jobs:
       - name: Install and start mongodb
         uses: supercharge/mongodb-github-action@1.7.0
         with:
-          mongodb-version: '4.0'
+          mongodb-version: '5.0'
 
       - name: Build and run clover coverage report with Gradle
         uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
         with:
           arguments: -PenableClover=true cloverGenerateReport
+        env:
+          GPR_USER: ${{env.GITHUB_ACTOR}}
+          GPR_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Install javascript packages using the gradle clientInstall plugin
         uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
@@ -75,10 +78,29 @@ jobs:
         with:
           arguments: clean
 
+
+      - name: Read the MERIT version from the gradle.properties file
+        id: read_property
+        uses: christian-draeger/read-properties@1.1.0
+        with:
+          path: './gradle.properties'
+          properties: 'meritVersion'
+
+      - uses: castlabs/get-package-version-id-action@v2.0
+        id: versions
+        with:
+          version: ${{steps.read_property.outputs.meritVersion}}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/delete-package-versions@v2
+        if: ${{ steps.versions.outputs.ids != '' }}
+        with:
+          package-version-ids: "${{ steps.versions.outputs.ids }}"
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Publish the JAR to the repository
         uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
         with:
           arguments: publish
         env:
-          TRAVIS_DEPLOY_USERNAME: ${{secrets.DEPLOY_USERNAME}}
-          TRAVIS_DEPLOY_PASSWORD: ${{secrets.DEPLOY_PASSWORD}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

@@ -53,7 +53,7 @@
         config.services = services;
         var outcomes = <fc:modelAsJavascript model="${config.outcomes?:[]}"/>;
         project.outcomes = outcomes;
-        config.useRlpTemplate = services.length > 0;
+        config.useRlpTemplate = ${config.getProjectTemplate() == au.org.ala.merit.ProgramConfig.ProjectTemplate.RLP};
         var programName = '${(config.program?.acronym?:project.associatedSubProgram) ?: project.associatedProgram}';
         config.programName = programName;
         config.programObjectives = <fc:modelAsJavascript model="${config.program?.config?.objectives ?: []}"/>;

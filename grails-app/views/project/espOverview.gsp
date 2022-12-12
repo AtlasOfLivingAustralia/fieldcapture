@@ -101,7 +101,7 @@
             <span class="label label-info label-small">Project ID:</span> ${project.externalId}<br/>
             <span class="label label-info label-small">Reporting Period:</span>
             <span class="reportingPeriodSpan">
-                <select id="type" data-bind="options:reportSelectionList, optionsText: 'label', optionsValue: 'value', value:selectedChoice, event: {change: selectionChanged }"></select>
+                <select id="type" data-bind="options:reportSelectionList, optionsText: 'label', optionsValue: 'value', value:selectedChoice, event: {change: selectionChanged }, select2:{width:'350px', templateSelection:formatEspReportOption, templateResult: formatEspReportOption}"></select>
             </span>
         </span>
         <span class="col-sm-6">
@@ -217,7 +217,7 @@
         <div class="tab-pane " id="stage-report-pdf">
 
             <h4 class="modal-title">Download Report</h4>
-            <p>Select the financial year of the report you want to download then press the "Generate Report (PDF)" button</p>
+            <p>Select the financial year of the report you want to download then press the "Generate Report" button</p>
             <hr/>
 
             <form class="form-horizontal" id = "stageReportPDF">
@@ -228,20 +228,9 @@
                         <select id="stageToReport" class="form-control form-control-sm" data-bind="value:stageToReport, options:reportSelectionList, optionsText: 'label', optionsValue: 'stage' " ></select>
                     </div>
                 </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label" for="orientation">PDF Orientation: <fc:iconHelp>If your PDF includes activities with wide tables, the Landscape setting may improve the result.  This setting has no effect on the HTML view. </fc:iconHelp></label>
-                    <div class="col-sm-2">
-                        <select class="form-control form-control-sm" id="orientation" data-bind="value:orientation">
-                            <option value="portrait">Portrait</option>
-                            <option value="landscape">Landscape</option>
-                        </select>
-                    </div>
-                </div>
                 <div class="form-group">
                     <button type="button" class="btn btn-sm btn-success"
-                            data-bind="click:generateProjectReportHTML">Generate Report (HTML)</button>
-                    <button type="button" class="btn btn-sm btn-success"
-                            data-bind="click:generateProjectReportPDF">Generate Report (PDF)</button>
+                            data-bind="click:generateProjectReportHTML">Generate Report</button>
                 </div>
             </form>
         </div>
