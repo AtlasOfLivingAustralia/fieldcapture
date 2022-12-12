@@ -573,4 +573,9 @@ class ReportController {
         render model:model, view: '_reef2050PlanActionReport'
     }
 
+    def reportingHistory(String id) {
+        def reportingHistory = reportService.getReportHistory(id)
+        render view: '/report/_reportingHistory', model: [reportingHistory: reportingHistory]
+    }
+
 }
