@@ -45,8 +45,13 @@ ActivityProgress = {
 ReportStatus = {
     ACTIVE: 'active',
     READ_ONLY: 'readonly',
+    CANCELLED: 'cancelled',
 
     isReadOnly: function(status) {
         return status && status.toLowerCase() == this.READ_ONLY;
+    },
+
+    isCancelled: function(status) {
+        return status && status.toLowerCase() == this.CANCELLED;
     }
 }

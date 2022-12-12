@@ -3,7 +3,10 @@ package au.org.ala.merit
 import au.org.ala.merit.config.EmailTemplate
 import au.org.ala.merit.config.ProgramConfig
 import au.org.ala.merit.config.ReportConfig
+import au.org.ala.merit.hub.HubSettings
+import au.org.ala.merit.reports.ReportConfig
 import au.org.ala.merit.reports.ReportOwner
+import au.org.ala.web.AuthService
 import grails.testing.services.ServiceUnitTest
 import spock.lang.Specification
 
@@ -18,6 +21,7 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
     def activityService = Mock(ActivityService)
     def emailService = Mock(EmailService)
     def userService = Mock(UserService)
+    def authService = Mock(AuthService)
 
     def setup() {
 
@@ -28,6 +32,7 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         service.emailService = emailService
         service.grailsApplication = grailsApplication
         service.userService = userService
+        service.authService = authService
     }
 
     /**
@@ -464,6 +469,26 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
 
         and:
         model.editable == false
+
+    }
+
+    def "the report service will return the history of a report"() {
+
+        setup:
+        String reportId = 'r1'
+        String userId = "u1"
+        Map report = [reportId:reportId, statusChangeHistory:[
+                [comment:"test comment1",status:"submitted",changedBy:userId, dateChanged:"2019-05-31T00:58:31Z"],
+                [comment:"test comment2",status:"returned",changedBy: userId, dateChanged: "2019-06-01T01:02:07Z"]
+        ]]
+
+        when:
+        List result = service.getReportHistory(reportId)
+
+        then:
+        1 * webService.getJson({it.endsWith('report/'+reportId)}) >> report
+        2 * authService.getUserForUserId(userId) >> new au.org.ala.web.UserDetails(userId:'u1', firstName:"Merit", lastName:'User')
+        result.size() == 2
 
     }
 }

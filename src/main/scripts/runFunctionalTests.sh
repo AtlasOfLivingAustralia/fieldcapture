@@ -31,8 +31,8 @@ else
 fi
 
 echo "Dropping database"
-mongo ecodata-functional-test --eval 'db.dropDatabase();'
-mongo ecodata-functional-test --eval 'db.project.count();'
+mongosh ecodata-functional-test --eval 'db.dropDatabase();'
+mongosh ecodata-functional-test --eval 'db.project.count();'
 
 echo "Starting ecodata from `pwd`"
 ls -la

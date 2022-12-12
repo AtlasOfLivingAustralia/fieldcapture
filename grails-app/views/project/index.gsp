@@ -1,4 +1,4 @@
-<%@ page import="au.org.ala.merit.ProjectController" contentType="text/html;charset=UTF-8" expressionCodec="none"%>
+<%@ page import="au.org.ala.merit.ProgramConfig; au.org.ala.merit.ProjectController" contentType="text/html;charset=UTF-8" expressionCodec="none"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -94,7 +94,8 @@
                 unlockActivityUrl:"${createLink(controller:'activity', action:'ajaxUnlock')}",
                 projectTargetsAndScoresUrl: "${createLink(controller:'project', action:'targetsAndScoresForActivity', id:project.projectId)}",
                 i18nURL: "${g.createLink(controller: 'home', action: 'i18n')}",
-                returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
+                returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}",
+                reportsHistoryUrl:"${createLink(controller: 'report', action:'reportingHistory')}"
 
             },
             here = window.location.href;
@@ -292,7 +293,8 @@ var config = {
     config.useAlaMap = ${Boolean.valueOf(projectContent.site.useAlaMap)};
     config.showSiteType = ${Boolean.valueOf(projectContent.site.showSiteType)};
     config.services = services;
-    config.useRlpTemplate = services.length > 0;
+
+    config.useRlpTemplate = ${config.getProjectTemplate() == au.org.ala.merit.ProgramConfig.ProjectTemplate.RLP};
     config.useRlpRisksModel = config.useRlpTemplate;
     config.risksStorageKey = PROJECT_RISKS_KEY;
 

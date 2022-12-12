@@ -122,6 +122,10 @@ var PlannedActivity = function (act, isFirst, project, stage, options) {
         return [ActivityProgress.finished, ActivityProgress.deferred, ActivityProgress.cancelled].indexOf(self.progress()) >= 0;
     };
 
+    this.isPlanned = function() {
+        return [ActivityProgress.planned].indexOf(self.progress()) >= 0;
+    };
+
     this.hasOutputData = function(progress) {
         return _.contains([ActivityProgress.finished, ActivityProgress.started], progress);
     };
@@ -226,13 +230,19 @@ var PlanStage = function (stage, activities, planViewModel, isCurrentStage, proj
         return plannedActivity;
     });
 
+    $.each(stage.statusChangeHistory, function(i, history) {
+        self.cancelledCommentText = history.comment
+    });
+
     this.isApproved = function() {
         return stage.publicationStatus == 'published';
     };
     this.isSubmitted = function() {
         return stage.publicationStatus == 'pendingApproval';
     };
-
+    this.isCancelled = function() {
+        return stage.publicationStatus == 'cancelled';
+    };
 
     this.readyForApproval = ko.computed(function() {
         return $.grep(self.activities, function (act, i) {
@@ -255,6 +265,12 @@ var PlanStage = function (stage, activities, planViewModel, isCurrentStage, proj
         return !self.isComplete && (self.isSubmitted() || self.isApproved());
     });
 
+    this.canCancelReport = ko.pureComputed(function() {
+        return $.grep(self.activities, function (act, i) {
+            return !act.isPlanned();
+        }).length === 0;
+    }, this, {deferEvaluation: true});
+
     this.submitReportHelp = ko.pureComputed(function() {
         if (self.readyForApproval()) {
             return 'Submit this stage for implementation approval.';
@@ -273,25 +289,31 @@ var PlanStage = function (stage, activities, planViewModel, isCurrentStage, proj
                 self.submitStage();
             }
         };
+
         ko.applyBindings(declarationViewModel, declaration);
-        $(declaration).modal({ backdrop: 'static', keyboard: true, show: true }).on('hidden', function() {ko.cleanNode(declaration);});
+        var unbind = function() {ko.cleanNode(declaration)};
+        $(declaration).modal({ backdrop: 'static', keyboard: true, show: true }).on('hidden.bs.modal', unbind);
 
     };
 
-    this.approveOrRejectStage = function(url, title, buttonText, rejectionCategories) {
+    this.approveOrRejectStage = function(url, title, buttonText, explanationText, rejectionCategories) {
         var $reasonModal = $('#reason-modal');
         var reasonViewModel = {
             reason: ko.observable(),
             rejectionCategories:rejectionCategories,
             rejectionCategory: ko.observable(),
             title:title,
+            explanationText:explanationText,
             buttonText: buttonText,
             submit:function() {
                 self.updateStageStatus(url, this.reason(), this.rejectionCategory());
             }
         };
+
         ko.applyBindings(reasonViewModel, $reasonModal[0]);
-        $reasonModal.modal({backdrop: 'static', keyboard:true, show:true}).on('hidden', function() {ko.cleanNode($reasonModal[0])});
+        var unbind = function() {ko.cleanNode($reasonModal[0])};
+        $($reasonModal[0]).modal({ backdrop: 'static', keyboard: true, show: true }).on('hidden.bs.modal', unbind);
+
     };
 
     this.submitStage = function() {
@@ -301,7 +323,7 @@ var PlanStage = function (stage, activities, planViewModel, isCurrentStage, proj
         self.updateStageStatus(config.approveReportUrl, '', '');
     };
     this.rejectStage = function() {
-        self.approveOrRejectStage(config.rejectReportUrl, 'Rejection', 'Reject', rejectionCategories);
+        self.approveOrRejectStage(config.rejectReportUrl, 'Rejection', 'Reject', 'Please enter a reason.  This reason will be included in the email sent to the project administrator(s).', rejectionCategories);
     };
     this.deleteStage = function() {
         bootbox.confirm('<span class="label label-important">Warning!</span>  This will delete all of the activities in this stage.  This operation cannot be undone!', function(result) {
@@ -310,6 +332,9 @@ var PlanStage = function (stage, activities, planViewModel, isCurrentStage, proj
             }
         });
 
+    };
+    this.cancelReport = function() {
+        self.approveOrRejectStage(config.cancelReportUrl, 'Reason this report is not required', 'Yes', 'Please enter a reason.', rejectionCategories);
     };
 
     this.variationModal = function() {
@@ -349,15 +374,25 @@ var PlanStage = function (stage, activities, planViewModel, isCurrentStage, proj
         });
     };
 
+    /**
+     * A report can have it's status field set to read only to prevent reporting while the form is being
+     * re-designed or changed.
+     */
+    this.hasReadOnlyStatus = ReportStatus.isReadOnly(stage.status);
+
     this.isReadOnly = ko.computed(function() {
-        if (!userIsEditor || ReportStatus.isReadOnly(stage.status)) {
+        if (!userIsEditor || self.hasReadOnlyStatus || self.isCancelled()) {
             return true;
         }
         return (planViewModel.planStatus() != PlanStatus.UNLOCKED && (self.isSubmitted() || self.isApproved()));
     });
+
     this.stageStatusTemplateName = ko.computed(function(){
         if (!self.activities || self.activities.length == 0) {
             return 'stageNotReportableTmpl';
+        }
+        if (self.isCancelled()) {
+            return 'stageCancelledTmpl';
         }
         if (!self.isReportable) {
             return 'stageNotReportableTmpl';

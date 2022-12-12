@@ -132,13 +132,13 @@
                         "Sustainable agriculture - Increase in knowledge and awareness among landholders of sustainable agricultural practices.",
                         "Sustainable agriculture - Increase in knowledge and awareness among landholders of the tools, technologies and practices which improve climate resilience.",
                         "Sustainable agriculture - Increase in knowledge and awareness among landholders of the tools, technologies and practices which improve market access based on sustainability credentials.",
-                        "Other (please specify)",
                         "Sustainable agriculture - Increase in skills and confidence among landholders in sustainable land management practices.",
                         "Sustainable agriculture - Increase in adoption among landholders of the tools, technologies and practices that improve sustainable land management practices.",
                         "Sustainable agriculture - Increase in skills and confidence among landholders in the tools, technologies and practices which promote climate resilience.",
                         "Sustainable agriculture - Increase in skills and confidence among landholders in the tools, technologies and practices which improve market access based on sustainability credentials.",
                         "Sustainable agriculture - Increase in the adoption among landholders of climate resilient approaches to sustainable land management.",
-                        "Sustainable agriculture - Increase in the adoption among landholders of tools, technologies and practices which improve market access based on sustainability credentials."
+                        "Sustainable agriculture - Increase in the adoption among landholders of tools, technologies and practices which improve market access based on sustainability credentials.",
+                        "Other (please specify)"
                       ],
                       "options": [
                         {
@@ -288,12 +288,6 @@
                         "dataType": "text",
                         "description": "",
                         "name": "keyThreat",
-                        "behaviour": [
-                          {
-                            "type": "visible",
-                            "condition": "agOrEnv == \"Environment\""
-                          }
-                        ],
                         "constraints": {
                           "type": "computed",
                           "default": [
@@ -852,9 +846,10 @@
                     "dataType": "text",
                     "constraints": [
                       "Achieved (100%)",
-                      "Significantly achieved (76% - 99)",
-                      "Satisfactorily achieved (51 to 75%)",
-                      "Inadequately achieved (1 to 25%)",
+                      "Significantly achieved (76 - 99%)",
+                      "Satisfactorily achieved (51 - 75%)",
+                      "Partially achieved (26 - 50%)",
+                      "Inadequately achieved (1 - 25%)",
                       "Not achieved (0%)"
                     ],
                     "validate": "required"
@@ -864,9 +859,10 @@
                     "dataType": "text",
                     "constraints": [
                       "Achieved (100%)",
-                      "Significantly achieved (76% - 99)",
-                      "Satisfactorily achieved (51 to 75%)",
-                      "Inadequately achieved (1 to 25%)",
+                      "Significantly achieved (76 - 99%)",
+                      "Satisfactorily achieved (51 - 75%)",
+                      "Partially achieved (26 - 50%)",
+                      "Inadequately achieved (1 - 25%)",
                       "Not achieved (0%)"
                     ],
                     "validate": "required"
@@ -876,9 +872,10 @@
                     "dataType": "text",
                     "constraints": [
                       "Achieved (100%)",
-                      "Significantly achieved (76% - 99)",
-                      "Satisfactorily achieved (51 to 75%)",
-                      "Inadequately achieved (1 to 25%)",
+                      "Significantly achieved (76 - 99%)",
+                      "Satisfactorily achieved (51 - 75%)",
+                      "Partially achieved (26 - 50%)",
+                      "Inadequately achieved (1 - 25%)",
                       "Not achieved (0%)"
                     ],
                     "validate": "required"
@@ -888,9 +885,10 @@
                     "dataType": "text",
                     "constraints": [
                       "Achieved (100%)",
-                      "Significantly achieved (76% - 99)",
-                      "Satisfactorily achieved (51 to 75%)",
-                      "Inadequately achieved (1 to 25%)",
+                      "Significantly achieved (76 - 99%)",
+                      "Satisfactorily achieved (51 - 75%)",
+                      "Partially achieved (26 - 50%)",
+                      "Inadequately achieved (1 - 25%)",
                       "Not achieved (0%)"
                     ],
                     "validate": "required"
@@ -965,10 +963,10 @@
             "validate": "required",
             "constraints": [
               "Achieved (100%)",
-              "Significantly achieved (76% - 99)",
-              "Satisfactorily achieved (51 to 75%)",
-              "Partially achieved (26 to 50%)",
-              "Inadequately achieved (1 to 25%)",
+              "Significantly achieved (76 - 99%)",
+              "Satisfactorily achieved (51 - 75%)",
+              "Partially achieved (26 - 50%)",
+              "Inadequately achieved (1 - 25%)",
               "Not achieved (0%)"
             ]
           },
@@ -1128,7 +1126,7 @@
               {
                 "computed": null,
                 "type": "literal",
-                "source": "Please complete the questions in this form for each short term outcome statement in the project MERI plan"
+                "source": "Please complete the questions in this form for each medium-term outcome statement in the project MERI plan"
               }
             ]
           },
@@ -1218,7 +1216,7 @@
                     "items": [
                       {
                         "type": "literal",
-                        "source": "<span class=\"preLabel required\"><label><b>c) Select the relevant outcome indicator</b></label></span><span>  &nbsp If it has been agreed that your project will measure against Services rather than Outcomes,</span><span> select ‘Other (please specify)’ from the bottom of the drop-down list and list the Services in the free-text box.<br> Include only those outcome indicators that align with Primary or Secondary outcome within the MERI Plan (e.g. If your Primary outcome is <i>1. Ramsar</i> and your secondary is <i>2. Threatened Species</i>, only include outcome indicators relevant to those categories, such as <i>Ramsar - Creation or enhancement of ecological niches</i> and <i>Threatened species - Control of pest, predator and competitor species</i></span>"
+                        "source": "<span class=\"preLabel required\"><label><b>c) Select the relevant outcome indicator</b></label></span><span>  &nbsp Include only those outcome indicators that align with Primary or Secondary outcome within the MERI Plan (e.g. If your Primary outcome is <i>1. Ramsar</i> and your secondary is <i>2. Threatened Species</i>, only include outcome indicators relevant to those categories, such as <i>Ramsar - Creation or enhancement of ecological niches</i> and <i>Threatened species - Control of pest, predator and competitor species.</i><br>If it has been agreed that your project will measure against Services rather than Outcomes,</span><span>select the relevant ‘Other (please specify’) category (e.g. Ramsar – Other (please specify) from the drop-down list and list the Services in the Outcome Indicator (if other)<span style=\"font-weight:normal;color:red\">*</span> free text field</span>"
                       }
                     ]
                   },
@@ -1269,7 +1267,7 @@
                           },
                           {
                             "width": "50%",
-                            "title": "Threat (outcomes 1-4)",
+                            "title": "Threat (subcategory)",
                             "type": "select2",
                             "source": "keyThreat"
                           }
@@ -1383,7 +1381,7 @@
                     ],
                     "items": [
                       {
-                        "preLabel": "If you answered 'No' (Q4), please explain why you were unable to quantify the level of achievement.",
+                        "preLabel": "If you answered ‘No’, please explain why you were unable to quantify the level of achievement.",
                         "type": "textarea",
                         "rows": 4,
                         "source": "unableToQuantifyOutcomeReason"
@@ -1420,7 +1418,7 @@
                 "type": "row",
                 "items": [
                   {
-                    "preLabel": "4. To what extent were the Program Logic assumptions underpinning the outcome statement accurate and/or inaccurate?",
+                    "preLabel": "4. To what extent were the Program Logic assumptions underpinning the outcome statement accurate?",
                     "type": "selectOne",
                     "rows": 4,
                     "source": "programLogic"
@@ -1476,7 +1474,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "KEQ2 -To what extent has the project increased knowledge of best practice NRM for the investment priority? (Significantly, Satisfactorily, Partially, Not at all)",
+                "preLabel": "KEQ2 -To what extent has the project increased knowledge of best practice NRM for the investment priority? (Significantly, Satisfactorily, Partially, Not at all) <span data-bind=\"popover:{content:'Qualitative responses only to support Service Provider general observations'}\" data-original-title=\"\" title=\"\"><i class=\"fa fa-question-circle\">&nbsp;</i></span>",
                 "type": "selectOne",
                 "rows": 5,
                 "source": "keq2"
@@ -1520,7 +1518,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "KEQ4 - Did the projects risk assessment and risk management remain appropriate and effective throughout the life of the project? (Yes, No, Partially, N/A)",
+                "preLabel": "KEQ4 - Did the project’s risk assessment and risk management remain appropriate and effective throughout the life of the project?",
                 "type": "selectOne",
                 "rows": 5,
                 "source": "keq4"
@@ -1619,7 +1617,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "KEQ9 - To what extent has the project achieved the desired behavioural change and ongoing commitment among the participating land managers towards the investment priority? (Significantly, Satisfactorily, Partially, Not at all, N/A)",
+                "preLabel": "KEQ9 - To what extent has the project achieved the desired behavioural change and ongoing commitment among the participating land managers towards the investment priority? (Significantly, Satisfactorily, Partially, Not at all, N/A) <span data-bind=\"popover:{content:'Qualitative responses only to support Service Provider general observations'}\" data-original-title=\"\" title=\"\"><i class=\"fa fa-question-circle\">&nbsp;</i></span>",
                 "type": "selectOne",
                 "rows": 5,
                 "source": "keq9"
@@ -1656,6 +1654,16 @@
                 "type": "textarea",
                 "rows": 5,
                 "source": "keq10Text"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "computed": null,
+                "type": "literal",
+                "source": "Please note that a few of the Questions in this form contain drop down lists (with pre-defined responses such as ‘Significantly’). Not all of these are intended as quantitative responses but based on Service Provider general observations."
               }
             ]
           }

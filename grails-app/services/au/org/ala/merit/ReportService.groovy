@@ -936,4 +936,21 @@ class ReportService {
         model
     }
 
+    /**
+     * Return the history of the report
+     * @param reportId
+     */
+    def getReportHistory(String reportId) {
+        Map report = get(reportId)
+
+        List history = []
+        report.statusChangeHistory.each { change ->
+            def changingUser = authService.getUserForUserId(change.changedBy)
+            def displayName = changingUser?changingUser.displayName:'unknown'
+            history << [name:report.name, date:change.dateChanged, who:displayName, status:change.status, comment: change.comment, categories: change.categories?.join(', ')]
+        }
+        history.sort {it.dateChanged}
+        history
+    }
+
 }

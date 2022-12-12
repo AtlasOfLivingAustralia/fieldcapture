@@ -297,7 +297,7 @@ var ReportViewModel = function(report, config) {
             explanationText: 'Please enter a reason. This reason will be included in the email sent to the project administrator(s).',
             reasonCategoryOptions: rejectionReasonCategoryOptions,
             otherCategoryValue: 'Other (PM to describe)',
-            title:'Return report',
+            title:'Return report reason',
             reasonTitle:'Explanation / Comments',
             buttonText: 'Return',
             buttonTextNo: 'Cancel',
@@ -312,7 +312,7 @@ var ReportViewModel = function(report, config) {
     self.cancelReport = function() {
         var options = {
             explanationText:'Do you wish to set this report as “not required”? Please enter the reason the report is not required.',
-            title:'Report not required',
+            title:'Reason this report is not required',
             buttonText: 'Yes (exempt by PPO)',
             action: 'cancel',
             blockingMessage: 'Marking this report as not required...',
@@ -360,7 +360,7 @@ var ReportViewModel = function(report, config) {
             }
         };
         var options = {
-            title:'Adjust report',
+            title:'Adjust report reason',
             buttonText: 'Create adjustment',
             buttonTextNo: 'Cancel',
             blockingMessage: 'Creating an adjustment for the report...',
@@ -401,6 +401,24 @@ var ReportViewModel = function(report, config) {
     if (config.projectTargetsAndScoresUrl && report.publicationStatus == 'pendingApproval') {
         self.checkForOverDelivery();
     }
+
+    self.historyVisible = ko.observable(false);
+    var toggling = false;
+    self.toggleHistory = function (data, e) {
+        var tr = $(e.currentTarget).closest('tr');
+        if (tr.hasClass("shown")) {
+            $('#reportHistory').empty();
+            tr.removeClass('shown');
+            tr.next().remove();
+            self.historyVisible(false);
+        } else {
+            var obj = {objId:report.reportId,objUrl:fcConfig.reportsHistoryUrl,myProjects:false};
+            var data = reportService.getHistory(obj) || '';
+            tr.after(data);
+            tr.addClass("shown");
+            self.historyVisible(true);
+        }
+    };
 };
 
 var ReportsViewModel = function(reports, projects, availableReports, reportOwner, config) {
@@ -575,7 +593,6 @@ var ReportsViewModel = function(reports, projects, availableReports, reportOwner
         };
     };
     self.newReport = new AdHocReportViewModel();
-
 };
 
 var CategorisedReportsViewModel = function(allReports, order, availableReports, reportOwner, config) {
