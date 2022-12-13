@@ -1,10 +1,10 @@
 {
-  "name": "Habitat Augmentation",
+  "name": "Habitat augmentation",
   "description": null,
   "type": "Activity",
   "sections": [
     {
-      "name": "Habitat Augmentation",
+      "name": "Habitat augmentation",
       "description": null,
       "optionalQuestionText": null,
       "optional": false,
