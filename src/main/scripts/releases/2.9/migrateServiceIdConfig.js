@@ -434,10 +434,12 @@ while (programs.hasNext()) {
     if (config && config.supportedServiceIds) {
 
         let serviceFormName = null;
-        for (let i = 0; i < config.projectReports.length; i++) {
-            if (serviceForms.indexOf(config.projectReports[i].activityType) >= 0) {
-                serviceFormName = config.projectReports[i].activityType;
-                break;
+        if (config.projectReports) {
+            for (let i = 0; i < config.projectReports.length; i++) {
+                if (serviceForms.indexOf(config.projectReports[i].activityType) >= 0) {
+                    serviceFormName = config.projectReports[i].activityType;
+                    break;
+                }
             }
         }
 
@@ -463,6 +465,7 @@ while (programs.hasNext()) {
             config.programServiceConfig.programServices.push(programService);
         }
         // delete program.config.supportedServiceIds
+        print("Updating program config for:  "+program.name);
         db.program.replaceOne({_id:program._id}, program);
         audit(program, program.programId, 'au.org.ala.ecodata.Program', adminUserId);
     }
