@@ -138,6 +138,7 @@
         var activityId = '${activity.activityId}';
         var projectId = '${activity.projectId}';
         var siteId = '${activity.siteId?:""}';
+        var reportId = '${report?.reportId}';
         var options = {navigationUrl:url, activityUrl:activityUrl};
         options.navContext = '${navContext}';
         options.returnTo = '${returnToUrl}';

@@ -386,8 +386,13 @@ class ReportService {
 
 
     Map dateHistogramForScores(String projectId, DateTime startDate, DateTime endDate, Period period, String format, List<String> scoreIds) {
+        List dateBuckets = dateHistogramGroup(startDate, endDate, period, format)
+        dateHistogramForScores(projectId, dateBuckets, format, scoreIds)
+    }
 
-        Map dateGrouping = dateHistogramGroup(startDate, endDate, period, format)
+    Map dateHistogramForScores(String projectId, List dateBuckets, String format, List scoreIds) {
+
+        Map dateGrouping = [type:'date', buckets:dateBuckets, format:format, property:'activity.plannedEndDate']
 
         String url =  grailsApplication.config.getProperty('ecodata.baseUrl')+"project/projectMetrics/"+projectId
 
@@ -398,8 +403,7 @@ class ReportService {
         return report
     }
 
-    Map dateHistogramGroup(DateTime startDate, DateTime endDate, Period period, String format = 'YYYY') {
-
+    private List dateHistogramGroup(DateTime startDate, DateTime endDate, Period period, String format = 'YYYY') {
 
         DateTime date = startDate
         List dateBuckets = [DateUtils.format(date)]
@@ -407,9 +411,7 @@ class ReportService {
             date = date.plus(period)
             dateBuckets.add(DateUtils.format(date))
         }
-
-        [type:'date', buckets:dateBuckets, format:format, property:'activity.plannedEndDate']
-
+        dateBuckets
     }
 
     def reject(String reportId, List categories, String reason) {

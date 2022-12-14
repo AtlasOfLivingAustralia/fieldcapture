@@ -1478,6 +1478,47 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
 
     }
 
+    def "The scoresForReport method returns zeros if it cannot obtain scores"() {
+        setup:
+        String projectId = 'p1'
+        String reportId = 'r1'
+        List scoreIds = ['1', '2', '3']
+        String fromDate = '2022-01-01T00:00:00Z'
+        String toDate = '2022-07-01T00:00:00Z'
+
+        when:
+        Map result = service.scoresForReport(projectId, reportId, scoreIds)
+
+        then:
+        1 * webService.getJson('project/'+projectId+'?includeDeleted=false') >> [reports:[[reportId:reportId, fromDate:fromDate, toDate:toDate]]]
+        1 * reportService.dateHistogramForScores(projectId, [fromDate, toDate], 'YYYY-MM', scoreIds) >> [status:500, error:'']
+        result == ['1':0, '2':0, '3':0]
+    }
+
+    def "The scoresForReport function will return 0s even if scores are missing"() {
+        setup:
+        String projectId = 'p1'
+        List scoreIds = ['1', '2', '3']
+        String reportId = 'r1'
+        List report = [
+                [group:'2020-01 - 2021-06', results:[[scoreId:'1', count: 1, result: [ result: 10 ]]]],
+                [group:'2022-01 - 2022-06', results:[[scoreId:'1', count: 1, result: [ result: 1 ]], [scoreId:'2', count: 2, result: [result: 2]]]]
+        ]
+        Map resp = [status:200, resp:report]
+        String fromDate = '2021-12-31T13:00:00Z'
+        String toDate = '2022-06-30T14:00:00Z'
+
+        when:
+        Map result = service.scoresForReport(projectId, reportId, scoreIds)
+
+        then:
+        1 * webService.getJson('project/'+projectId+'?includeDeleted=false') >> [reports:[[reportId:reportId, fromDate:fromDate, toDate:toDate]]]
+        1 * reportService.dateHistogramForScores(projectId, [fromDate, toDate], 'YYYY-MM', scoreIds) >> resp
+
+        result == ['1':1, '2':2, '3':0]
+    }
+
+
     private Map setupActivityModelForFiltering(List services) {
         Map activityModel = [name:'output', outputs:[]]
         services.each {
