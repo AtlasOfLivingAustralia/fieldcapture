@@ -306,7 +306,7 @@
           projectId:projectId,
           activityId:activityId,
           stage:  stageNumberFromStage('${activity.projectStage}'),
-          disablePrepop : ${activity.progress == au.org.ala.merit.ActivityService.PROGRESS_FINISHED},
+          disablePrepop : false,
           speciesConfig :<fc:modelAsJavascript model="${speciesConfig}"/>,
           recoveryDataStorageKey: 'activity-'+activityId
         };
