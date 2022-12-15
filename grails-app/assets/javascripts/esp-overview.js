@@ -269,7 +269,7 @@ var SimplifiedReportingViewModel = function(project, config) {
         popoverText = 'This report has been marked as <strong>Not Required</strong>. Please contact your ESP Project Manager for further information.';
     }
     $('.reportingPeriodSpan').popover({html:useHtml, title:'Please select reporting period', content:popoverText, placement:'top', trigger:'hover'})
-    $('.reportingPeriodSpan').popover('show');
+
     // refreshes the page with the financial year selected
     self.selectionChanged = function(event) {
         blockUIWithMessage('Reloading project...');
