@@ -1,4 +1,5 @@
 load('../../utils/uuid.js');
+db.service.remove({});
 const services = [
     {
         "outputs": [{"formName": "RLP Output Report", "sectionName":"RLP - Baseline data"}],

@@ -41,11 +41,16 @@ class ProjectConfigurationService {
             if (programConfig.programServiceConfig && programConfig.programServiceConfig.programServices) {
                 programConfig.services = programConfig.programServiceConfig.programServices.collect { serviceConfig ->
                     Map service = allServices.find{it.id == serviceConfig.serviceId}
+                    Map serviceFormSectionConfig = service.outputs?.find{ it.formName == programConfig.programServiceConfig.serviceFormName}
+                    String output = serviceFormSectionConfig?.sectionName
 
-                    Map serviceFormConfig = service.outputs?.find{ it.serviceFormName == serviceConfig.formName}
-                    List scores = service?.scores?.findAll { it.scoreId in (serviceConfig.serviceTargets ?: serviceFormConfig.scoreIds) }
+                    List scores = service?.scores
+                    // If the program configuration has specified a list of scores for the service, use those,
+                    // otherwise use all possible scores that can be used by the service.
+                    if (serviceConfig.serviceTargets) {
+                        scores = scores?.findAll { it.scoreId in serviceConfig.serviceTargets }
+                    }
 
-                    String output = serviceFormConfig?.sectionName
                     // This allows programs to override the service name if required.  This is needed as the
                     // service names are listed in contracts so need to be kept the same for a program.
                     String serviceName = service.name
