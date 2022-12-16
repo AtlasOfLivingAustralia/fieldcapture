@@ -49,5 +49,21 @@
         <div class="col-sm-3 title">MERI Plan generated</div>
         <div class="col-sm-9"><g:formatDate format="yyyy-MM-dd HH:mm:ss" date="${new Date()}"/></div>
     </div>
+    <div class="row">
+        <div class="col-sm-3 title">MERI Plan Date/Time Approved</div>
+
+        <div class="col-sm-9"><g:formatDate format="yyyy-MM-dd HH:mm:ss"
+                                            date="${au.org.ala.merit.DateUtils.parse(project.dateApproved).toDate()}"/></div>
+
+    </div>
+    <g:if test="${project.referenceDocument}">
+        <div class="row">
+            <div class="col-sm-3 title">Change Order Number</div>
+
+            <div class="col-sm-9">${project.referenceDocument}</div>
+        </div>
+    </g:if>
+
+
 
 </div>
