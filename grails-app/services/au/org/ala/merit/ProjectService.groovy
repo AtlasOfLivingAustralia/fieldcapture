@@ -1883,7 +1883,7 @@ class ProjectService  {
         }
 
         Map content = webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') + result.url)
-        content?.project
+        content
     }
 
     private Score findScore(String scoreId, Map scoresWithTargets) {
