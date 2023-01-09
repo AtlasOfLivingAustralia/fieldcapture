@@ -793,7 +793,7 @@ var AlaMapAdapter = function(map, options) {
     });
 
     function getId(feature) {
-        return feature.siteId || feature.id || feature.properties.id || feature.properties.siteId;
+        return feature.siteId || feature.id || feature.properties && feature.properties.id || feature.properties && feature.properties.siteId;
     };
 
 

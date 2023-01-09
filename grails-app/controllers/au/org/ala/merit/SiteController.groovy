@@ -237,6 +237,12 @@ class SiteController {
         chain(action: 'index', id:  id)
     }
 
+    // This check will be done against the project - the supplied id must be the project id
+    @PreAuthorise(accessLevel = 'editor')
+    def upload(String id) {
+        render model:[:], view:'localUpload'
+    }
+
     def siteUpload() {
         String projectId = params.projectId
         if (!projectService.canUserEditProject(userService.getCurrentUserId(), projectId)) {

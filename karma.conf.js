@@ -18,7 +18,7 @@ module.exports = function (config) {
         // base path that will be used to resolve all patterns (eg. files, exclude)
         basePath: '',
 
-        plugins: ['@metahub/karma-jasmine-jquery', 'karma-*'],
+        plugins: ['@metahub/karma-jasmine-jquery', 'karma-*', 'karma-webpack',],
 
 
         // frameworks to use
@@ -49,6 +49,7 @@ module.exports = function (config) {
             'grails-app/assets/components/components.js',
             'grails-app/assets/components/compile/*.js',
             'grails-app/assets/components/javascript/*.js',
+            'src/main/webapp/js/*.js',
             'src/test/js/spec/**/*.js'
         ],
 
@@ -60,7 +61,12 @@ module.exports = function (config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            'grails-app/assets/javascripts/*.js':sourcePreprocessors
+            'grails-app/assets/javascripts/*.js':sourcePreprocessors,
+            'src/main/webapp/js/*.js':['webpack']
+        },
+
+        webpack: {
+            "mode": "development",
         },
 
 

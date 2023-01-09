@@ -2,16 +2,22 @@
   "name": "fieldcapture",
   "version": "2.3",
   "description": "Karma / jasmine configuration for testing project javascript",
-  "main": "test/unit/javascript",
   "directories": {},
   "private": true,
   "dependencies": {
+    "@geoman-io/leaflet-geoman-free": "^2.13.1",
+    "bootbox": "^6.0.0",
     "bootstrap": "4.6",
+    "buffer": "^6.0.3",
+    "jszip": "^3.10.1",
+    "karma-webpack": "^5.0.0",
+    "shpjs": "4.0.4",
     "slickgrid": "^2.4.34"
   },
   "devDependencies": {
     "@metahub/karma-jasmine-jquery": "^2.0.1",
     "chromedriver": "107.0.3",
+    "css-loader": "^6.7.3",
     "jasmine-core": "^3.5.0",
     "jasmine-jquery": "^2.0.0",
     "jquery": "3.6",
@@ -23,12 +29,18 @@
     "karma-jquery": "^0.2.4",
     "knockout": "^3.5.1",
     "lodash": "^4.17.21",
+    "mini-css-extract-plugin": "^2.7.2",
     "moment": "^2.29.4",
-    "moment-timezone": "^0.5.37"
+    "moment-timezone": "^0.5.37",
+    "webpack": "^5.62.1",
+    "webpack-bundle-analyzer": "^4.7.0",
+    "webpack-cli": "^4.9.1"
   },
   "scripts": {
     "test": "karma start karma.conf.js",
-    "debug": "karma start --debug --browsers=Chrome --single-run=false"
+    "debug": "karma start --debug --browsers=Chrome --single-run=false",
+    "bundle": "webpack",
+    "start": "webpack --progress --watch --mode=development"
   },
   "author": "",
   "license": ""
