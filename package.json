@@ -1,14 +1,11 @@
 {
   "name": "fieldcapture",
-  "version": "2.3",
+  "version": "2.10",
   "description": "Karma / jasmine configuration for testing project javascript",
-  "main": "test/unit/javascript",
+  "main": "grails-app/assets/javascripts",
   "directories": {},
   "private": true,
-  "dependencies": {
-    "bootstrap": "4.6",
-    "slickgrid": "^2.4.34"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@metahub/karma-jasmine-jquery": "^2.0.1",
     "chromedriver": "107.0.3",
@@ -24,12 +21,32 @@
     "knockout": "^3.5.1",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
-    "moment-timezone": "^0.5.37"
+    "moment-timezone": "^0.5.37",
+    "css-loader": "^6.5.1",
+    "expose-loader": "^3.1.0",
+    "mini-css-extract-plugin": "^2.4.4",
+    "webpack": "^5.62.1",
+    "webpack-cli": "^4.9.1"
   },
   "scripts": {
     "test": "karma start karma.conf.js",
-    "debug": "karma start --debug --browsers=Chrome --single-run=false"
+    "debug": "karma start --debug --browsers=Chrome --single-run=false",
+    "bundle": "webpack",
+    "start": "webpack --progress --watch --mode=development"
   },
   "author": "",
-  "license": ""
+  "license": "",
+  "dependencies": {
+    "bootstrap": "^5.1.3",
+    "bootstrap-datepicker": "1.9.0",
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.6.0",
+    "jquery-ui": "^1.13.0",
+    "jsoneditor": "9.5.6",
+    "knockout": "^3.5.1",
+    "knockout-mapping": "^2.6.0",
+    "knockout-sortable": "^1.2.2",
+    "select2": "4.0.13",
+    "lodash": "^4.17.21"
+  }
 }
