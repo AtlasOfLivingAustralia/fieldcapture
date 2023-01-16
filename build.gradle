@@ -53,6 +53,7 @@ repositories {
         }
     }
     maven { url "https://nexus.ala.org.au/content/groups/public/" }
+    mavenCentral()
 }
 
 
@@ -153,7 +154,7 @@ dependencies {
     profile "org.grails.profiles:web"
     runtimeOnly "org.glassfish.web:el-impl:2.1.2-b03"
     runtimeOnly "com.h2database:h2"
-    runtimeOnly "org.apache.tomcat:tomcat-jdbc"
+//    runtimeOnly "org.apache.tomcat:tomcat-jdbc"
     runtimeOnly "javax.xml.bind:jaxb-api:2.3.1"
 
     runtimeOnly "net.java.dev.jna:jna:4.5.1"
@@ -169,7 +170,7 @@ dependencies {
     testCompileOnly "org.grails:grails-web-testing-support"
     testCompileOnly "org.grails.plugins:geb"
     testRuntimeOnly "net.sourceforge.htmlunit:htmlunit:2.18"
-    testRuntimeOnly "org.gebish:geb-spock:5.1"
+    testRuntimeOnly 'org.gebish:geb-spock:6.0'
     testRuntimeOnly "net.sourceforge.nekohtml:nekohtml:1.9.22"
     testCompileOnly "org.pac4j:pac4j-jwt:5.4.3"
     testCompileOnly "org.grails:grails-test-mixins:3.3.0"
