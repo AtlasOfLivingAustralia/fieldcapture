@@ -35,6 +35,11 @@ apply plugin: 'com.craigburke.client-dependencies'
 if (Boolean.valueOf(enableClover)) {
     apply from: "${project.projectDir}/gradle/clover.gradle"
 }
+
+if (Boolean.valueOf(enableJacoco)) {
+    apply from: "${project.projectDir}/gradle/jacoco.gradle"
+}
+
 apply from: "${project.projectDir}/gradle/publish.gradle"
 
 repositories {
