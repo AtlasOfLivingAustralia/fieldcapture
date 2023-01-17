@@ -11,12 +11,12 @@ buildscript {
         classpath 'org.grails.plugins:quartz:2.0.13'
         classpath "com.bertramlabs.plugins:asset-pipeline-gradle:$assetPipelineVersion"
         classpath 'com.bmuschko:gradle-clover-plugin:3.0.1'
-        classpath 'com.craigburke.gradle:client-dependencies:1.4.1'
     }
 }
 
 plugins {
     id 'war'
+    id "com.magnetichq.client-dependencies" version "2.0.0"
 }
 
 version "$meritVersion"
@@ -30,7 +30,6 @@ apply plugin:"org.grails.grails-web"
 apply plugin:"com.github.erdi.webdriver-binaries"
 apply plugin:"asset-pipeline"
 apply plugin:"org.grails.grails-gsp"
-apply plugin: 'com.craigburke.client-dependencies'
 
 if (Boolean.valueOf(enableClover)) {
     apply from: "${project.projectDir}/gradle/clover.gradle"
@@ -218,55 +217,55 @@ tasks.withType(Test) {
     }
 }
 
-//clientDependencies {
-//    installDir = "grails-app/assets/vendor-ext"
-//    npm {
-//        'bootstrap'('4.6.0', transitive:false)
-//        'bootbox'('5.5.2') {
-//            include 'bootbox.all.min.js'
-//        }
-//        'jquery'('3.6.0')
-//        'font-awesome'('4.7.0')
-//        'knockout'('3.5.1', from:'build/output')
-//        'knockout-mapping'('2.6.0')
-//        'bootstrap-datepicker'('1.9.0')
-//        'select2'('4.0.13')
-//        'underscore'('1.12.1') {
-//            include 'underscore.js'
-//        }
-//        'datatables.net-bs4'("1.10.25")
-//        "datatables.net-buttons-dt"("1.7.1")
-//        'datatables.net-buttons-bs4'("1.7.1")
-//        '@danielfarrell/bootstrap-combobox'('1.1.8', transitive:false)
-//        'fancybox'('3.0.1')
-//        "fuelux"("3.17.2", transitive:false)
-//        "fuse.js"("6.4.6", transitive:false)
-//        "leaflet"("0.7.7")
-//        "select2-theme-bootstrap4"("1.0.0")
-//        "slickgrid"("2.4.38")
-//        "slider-pro"("1.6.0", transitive:false)
-//        "jquery-appear-original"("0.4.1", transitive:false)
-//        "jquery-file-download"("1.4.6", from: "src/Scripts") {
-//            include "jquery.fileDownload.js"
-//        }
-//        "jquery.shorten"("1.0.0", from: "src")
-//        "js-cookie"("3.0.0")
-//        "@taitems/jquery-gantt"("1.1.2")
-//        "jstimezonedetect"("1.0.7")
-//        "jszip"("3.7.1", transitive:false)
-//        "pdfmake"("0.1.36", from: "build", transitive:false)
-//        "typeahead.js"("0.11.1")
-//        'frigus02-vkbeautify'("1.0.1") {
-//            include "vkbeautify.js"
-//        }
-//
-//    }
-//    bower {
-//        'html5shiv'("3.7.3", transitive:false)
-//        "blockui"("2.69")
-//        'jquery-ui'('1.12.1')
-//    }
-//}
+clientDependencies {
+    installDir = "grails-app/assets/vendor-ext"
+    npm {
+        'bootstrap'('4.6.0', transitive:false)
+        'bootbox'('5.5.2') {
+            include 'bootbox.all.min.js'
+        }
+        'jquery'('3.6.0')
+        'font-awesome'('4.7.0')
+        'knockout'('3.5.1', from:'build/output')
+        'knockout-mapping'('2.6.0')
+        'bootstrap-datepicker'('1.9.0')
+        'select2'('4.0.13')
+        'underscore'('1.12.1') {
+            include 'underscore.js'
+        }
+        'datatables.net-bs4'("1.10.25")
+        "datatables.net-buttons-dt"("1.7.1")
+        'datatables.net-buttons-bs4'("1.7.1")
+        '@danielfarrell/bootstrap-combobox'('1.1.8', transitive:false)
+        'fancybox'('3.0.1')
+        "fuelux"("3.17.2", transitive:false)
+        "fuse.js"("6.4.6", transitive:false)
+        "leaflet"("0.7.7")
+        "select2-theme-bootstrap4"("1.0.0")
+        "slickgrid"("2.4.38")
+        "slider-pro"("1.6.0", transitive:false)
+        "jquery-appear-original"("0.4.1", transitive:false)
+        "jquery-file-download"("1.4.6", from: "src/Scripts") {
+            include "jquery.fileDownload.js"
+        }
+        "jquery.shorten"("1.0.0", from: "src")
+        "js-cookie"("3.0.0")
+        "@taitems/jquery-gantt"("1.1.2")
+        "jstimezonedetect"("1.0.7")
+        "jszip"("3.7.1", transitive:false)
+        "pdfmake"("0.1.36", from: "build", transitive:false)
+        "typeahead.js"("0.11.1")
+        'frigus02-vkbeautify'("1.0.1") {
+            include "vkbeautify.js"
+        }
+
+    }
+    bower {
+        'html5shiv'("3.7.3", transitive:false)
+        "blockui"("2.69")
+        'jquery-ui'('1.12.1')
+    }
+}
 
 assets {
     minifyJs = true
