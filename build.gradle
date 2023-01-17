@@ -93,7 +93,7 @@ dependencies {
     implementation "org.grails.plugins:scaffolding"
     implementation "org.grails.plugins:events"
     implementation "org.grails.plugins:gsp"
-    implementation "org.grails.plugins:external-config:2.0.0"
+    implementation 'dk.glasius:external-config:3.0.0'
     implementation "org.grails.plugins:ala-auth:5.1.1"
     implementation "org.grails.plugins:ala-admin-plugin:2.1"
     runtimeOnly "org.grails.plugins:ala-bootstrap3:4.0.0"
