@@ -159,24 +159,23 @@ dependencies {
     runtimeOnly "net.java.dev.jna:jna:4.5.1"
     runtimeOnly("org.springframework.boot:spring-boot-properties-migrator")
 
-    testCompileOnly "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
-    testCompileOnly "org.seleniumhq.selenium:selenium-support:2.53.1"
     testCompileOnly "com.codeborne:phantomjsdriver:1.3.0"
     testCompileOnly "com.icegreen:greenmail:1.5.14"
-    testCompileOnly "io.micronaut:micronaut-inject-groovy"
     testCompileOnly "org.grails:grails-gorm-testing-support"
-    testCompileOnly "org.mockito:mockito-core"
-    testCompileOnly "org.grails:grails-web-testing-support"
     testCompileOnly "org.grails.plugins:geb"
-    testRuntimeOnly "net.sourceforge.htmlunit:htmlunit:2.18"
-    testRuntimeOnly 'org.gebish:geb-spock:6.0'
-    testRuntimeOnly "net.sourceforge.nekohtml:nekohtml:1.9.22"
     testCompileOnly "org.pac4j:pac4j-jwt:5.4.3"
     testCompileOnly "org.grails:grails-test-mixins:3.3.0"
-    testCompileOnly "org.grails:grails-gorm-testing-support"
     testCompileOnly "org.grails:grails-web-testing-support"
-    testRuntimeOnly "net.sourceforge.htmlunit:htmlunit:2.18"
     testCompileOnly "com.github.tomakehurst:wiremock-jre8-standalone:2.28.0"
+    implementation "org.hibernate:hibernate-validator:6.2.0.Final"
+    testCompileOnly "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
+    testImplementation "org.seleniumhq.selenium:selenium-chrome-driver:$seleniumVersion"
+    testImplementation "org.seleniumhq.selenium:selenium-remote-driver:$seleniumVersion"
+    testImplementation "org.seleniumhq.selenium:selenium-api:$seleniumVersion"
+    testImplementation "org.seleniumhq.selenium:selenium-support:$seleniumVersion"
+    testRuntimeOnly "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion"
+    testRuntimeOnly "org.seleniumhq.selenium:selenium-safari-driver:$seleniumSafariDriverVersion"
+    testRuntimeOnly "net.sourceforge.htmlunit:htmlunit:2.18"
 
     assets 'com.bertramlabs.plugins:less-asset-pipeline:3.3.1'
 //    assets "com.bertramlabs.plugins:asset-pipeline-core:$assetPipelineVersion"
