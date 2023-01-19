@@ -2,6 +2,7 @@ package au.org.ala.fieldcapture
 
 
 import pages.RlpProjectPage
+import pages.modules.ReportCategory
 import spock.lang.Stepwise
 
 @Stepwise
@@ -45,7 +46,12 @@ class ProgressAndFinalReportingSpec extends StubbedCasSpec {
         }
 
         when: "We ensure all of the reports are displayed"
-        projectReports.reportsByCategory.each { it.showAllReports() }
+        displayReportingTab()
+        projectReports.reportsByCategory.each { ReportCategory reportCategory ->
+            if (reportCategory.showAllReportsCheckbox.displayed) {
+                reportCategory.showAllReports()
+            }
+        }
 
         then: "The correct number of reports have been generated for each category"
         waitFor {
