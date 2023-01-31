@@ -206,6 +206,10 @@ class EditableMeriPlan extends Module {
         externalIds {$('.externalIds').module(ExternalIds)}
         projectStartDate(required:false) { $('#changeProjectStartDate') }
         submissionModal(required:false) { $("#meriSubmissionDeclaration").module(SubmissionModal) }
+
+        toggleMeriPlanHistory(required:false){ $('[data-bind*="toggleMeriPlanHistory"]') }
+        meriPlanHistory {module HistoryApprovedMeriPlansModule}
+
     }
 
     void addBudgetRow() {

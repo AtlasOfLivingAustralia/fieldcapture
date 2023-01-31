@@ -52,7 +52,7 @@ class MeriPlanReportCommandSpec extends Specification implements AutowiredTest{
 
         then:
         0 * projectService.get(projectId, _)
-        1 * projectService.getApprovedMeriPlanProject(documentId) >> ["projectId":"p1"]
+        1 * projectService.getApprovedMeriPlanProject(documentId) >> [project:["projectId":"p1"],referenceDocument:"ref123", "projectId":projectId]
         1 * projectService.getProgramConfiguration([projectId:projectId]) >> [meriPlanTemplate:'rlp']
 
         result.project.projectId == projectId
