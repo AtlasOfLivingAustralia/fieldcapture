@@ -56,7 +56,7 @@
 
 
 </div>
-<asset:javascript src="sites.js"/>
+<asset:javascript src="site-bs4.js"/>
 <asset:javascript src="vendor-bundle.js"/>
 <asset:javascript src="vendor.css"/>
 

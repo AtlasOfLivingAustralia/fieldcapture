@@ -19,7 +19,7 @@ module.exports = {
             chunks:'all',
             // Move all of the libraries into a separate bundle, mainly because
             // the asset pipeline takes a long time to parse and compile the bundle
-            // which makes for a poor dev experience.  There may be a way to service this
+            // which makes for a poor dev experience.  There may be a way to serve this
             // not via the asset pipeline which might be better.
             cacheGroups: {
                 vendor: {
@@ -54,6 +54,14 @@ module.exports = {
             {
                 test: /\.(jpe?g|png|gif|svg|eot|woff|woff2|ttf)$/i,
                 type: 'asset/resource'
+            },
+            {
+                test: require.resolve("jquery"), // Expose $/jQuery for bit of javascript embedded in GSPs in MERIT (e.g. the page template, nrm_bs4.gsp)
+                loader: "expose-loader",
+                options: {
+                    exposes: [ { globalName:"$", override:true }, {globalName:"jQuery", override:true} ],
+                },
+
             },
         ]
     },

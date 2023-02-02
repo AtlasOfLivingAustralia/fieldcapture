@@ -2,10 +2,11 @@ import shp from 'shpjs';
 import bootbox from 'bootbox';
 import {coordEach} from "@turf/meta";
 
+import ko from "gradle/knockout/knockout-latest";
+import L from "leaflet/dist/leaflet";
 import '@geoman-io/leaflet-geoman-free';
 import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
 import {modal} from "gradle/bootstrap/js/bootstrap";
-import ko from "gradle/knockout/knockout-latest";
 
 let ViewModel = function() {
     const self = this;

@@ -11,6 +11,7 @@
     "buffer": "^6.0.3",
     "jszip": "^3.10.1",
     "karma-webpack": "^5.0.0",
+    "leaflet": "1.7",
     "shpjs": "4.0.4",
     "slickgrid": "^2.4.34"
   },
@@ -30,6 +31,7 @@
     "knockout": "^3.5.1",
     "lodash": "^4.17.21",
     "mini-css-extract-plugin": "^2.7.2",
+    "expose-loader": "^3.1.0",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.37",
     "webpack": "^5.62.1",
