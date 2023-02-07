@@ -12,7 +12,6 @@
   "name": "Priority Species Grants Final Report",
   "sections": [
     {
-      "collapsedByDefault": false,
       "template": {
         "modelName": "Priority Species Grants Final Report",
         "dataModel": [
@@ -215,125 +214,6 @@
             ]
           },
           {
-            "disableTableUpload": true,
-            "columns": [
-              {
-                "source": "",
-                "type": "literal",
-                "width": "5%",
-                "preLabel": {
-                  "computed": "\\'No. \\' || (index + 1)"
-                },
-                "title": "Activity No."
-              },
-              {
-                "readonly": true,
-                "width": "13%",
-                "source": "serviceName",
-                "type": "textarea",
-                "rows": 3,
-                "title": "Activity"
-              },
-              {
-                "readonly": true,
-                "width": "10%",
-                "source": "targetMeasure",
-                "type": "textarea",
-                "rows": 3,
-                "title": "Target measure"
-              },
-              {
-                "width": "8%",
-                "source": "sitesAvailable",
-                "type": "selectOne",
-                "title": "Is site data available for / applicable to this service?"
-              },
-              {
-                "width": "10%",
-                "type": "col",
-                "title": "Site/s where the service has been delivered",
-                "items": [
-                  {
-                    "source": "serviceMappedArea",
-                    "type": "feature",
-                    "width": "5%",
-                    "title": ""
-                  },
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "readonly": true,
-                        "source": "serviceCalculatedAreaHa",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "readonly": true,
-                        "source": "serviceCalculatedLengthKm",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "width": "17%",
-                "source": "assets",
-                "title": "Assets",
-                "type": "select2Many"
-              },
-              {
-                "width": "7%",
-                "source": "activityStartDate",
-                "title": "Date activity started",
-                "type": "simpleDate"
-              },
-              {
-                "width": "7%",
-                "source": "activityEndDate",
-                "title": "Date activity ended",
-                "type": "simpleDate"
-              },
-              {
-                "readonly": true,
-                "width": "6%",
-                "source": "projectTarget",
-                "type": "text",
-                "rows": 1,
-                "title": "Total to be delivered"
-              },
-              {
-                "width": "6%",
-                "source": "delivered",
-                "type": "text",
-                "rows": 2,
-                "title": "Total delivered"
-              },
-              {
-                "width": "15%",
-                "source": "reasonTargetNotMet",
-                "type": "textarea",
-                "rows": 3,
-                "title": "Explanation if target not fully delivered"
-              }
-            ],
-            "userAddedRows": true,
-            "source": "projectTargets",
-            "title": "<b>1.2 Please detail outputs against project actions and targets to improve the trajectory of priority species.</b>",
-            "type": "table"
-          },
-          {
             "type": "row",
             "items": [
               {
@@ -440,6 +320,15 @@
               }
             ],
             "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "<hr><h4>5. Please detail outputs against project actions and targets to improve the trajectory of priority species.</h4>",
+                "type": "literal"
+              }
+            ]
           }
         ],
         "pre-populate": [
@@ -578,7 +467,7 @@
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "title": "Collecting or synthesising baseline data",
         "modelName": "RLP - Baseline data",
@@ -642,11 +531,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Baseline data",
+      "name": "RLP - Baseline data",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "dataModel": [
           {
@@ -758,11 +647,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Communication materials",
+      "name": "RLP - Communication materials",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "dataModel": [
           {
@@ -931,11 +820,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Community engagement",
+      "name": "RLP - Community engagement",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "dataModel": [
           {
@@ -1330,11 +1219,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Controlling access",
+      "name": "RLP - Controlling access",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "dataModel": [
           {
@@ -1861,11 +1750,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Pest animal management",
+      "name": "RLP - Pest animal management",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "dataModel": [
           {
@@ -2167,11 +2056,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Management plan development",
+      "name": "RLP - Management plan development",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "dataModel": [
           {
@@ -2518,11 +2407,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Debris removal",
+      "name": "RLP - Debris removal",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "dataModel": [
           {
@@ -2969,11 +2858,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Erosion Management",
+      "name": "RLP - Erosion Management",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "dataModel": [
           {
@@ -3318,11 +3207,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Maintaining feral free enclosures",
+      "name": "RLP - Maintaining feral free enclosures",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "dataModel": [
           {
@@ -3594,11 +3483,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Establishing ex-situ breeding programs",
+      "name": "RLP - Establishing ex-situ breeding programs",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "dataModel": [
           {
@@ -3895,11 +3784,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Establishing Agreements",
+      "name": "RLP - Establishing Agreements",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "title": "Establishing monitoring regimes",
         "modelName": "RLP - Establishing monitoring regimes",
@@ -4032,11 +3921,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Establishing monitoring regimes",
+      "name": "RLP - Establishing monitoring regimes",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "title": "Farm management surveys",
         "modelName": "RLP - Farm Management Survey",
@@ -4137,11 +4026,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Farm Management Survey",
+      "name": "RLP - Farm Management Survey",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "dataModel": [
           {
@@ -4487,11 +4376,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Fauna survey",
+      "name": "RLP - Fauna survey",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "dataModel": [
           {
@@ -4899,11 +4788,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Fire management",
+      "name": "RLP - Fire management",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "dataModel": [
           {
@@ -5259,11 +5148,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Flora survey",
+      "name": "RLP - Flora survey",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "dataModel": [
           {
@@ -5662,11 +5551,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Habitat augmentation",
+      "name": "RLP - Habitat augmentation",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "title": "Identifying the location of potential sites",
         "modelName": "RLP - Identifying sites",
@@ -5745,11 +5634,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Identifying sites",
+      "name": "RLP - Identifying sites",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "dataModel": [
           {
@@ -6159,11 +6048,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Improving hydrological regimes",
+      "name": "RLP - Improving hydrological regimes",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "dataModel": [
           {
@@ -6578,11 +6467,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Improving land management practices",
+      "name": "RLP - Improving land management practices",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "dataModel": [
           {
@@ -6995,11 +6884,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Disease management",
+      "name": "RLP - Disease management",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "dataModel": [
           {
@@ -7099,11 +6988,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Negotiations",
+      "name": "RLP - Negotiations",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "title": "Obtaining relevant approvals",
         "modelName": "RLP - Obtaining approvals",
@@ -7168,11 +7057,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Obtaining approvals",
+      "name": "RLP - Obtaining approvals",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "dataModel": [
           {
@@ -7555,11 +7444,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Pest animal survey",
+      "name": "RLP - Pest animal survey",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "dataModel": [
           {
@@ -7921,11 +7810,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Plant survival survey",
+      "name": "RLP - Plant survival survey",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "title": "Project planning and delivery of documents as required for the delivery of the Project and monitoring",
         "modelName": "RLP - Project planning",
@@ -8010,11 +7899,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Project planning",
+      "name": "RLP - Project planning",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "dataModel": [
           {
@@ -8413,11 +8302,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Remediating riparian and aquatic areas",
+      "name": "RLP - Remediating riparian and aquatic areas",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "dataModel": [
           {
@@ -8912,11 +8801,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Revegetating habitat",
+      "name": "RLP - Revegetating habitat",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "dataModel": [
           {
@@ -9358,266 +9247,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Weed treatment",
+      "name": "RLP - Weed treatment",
       "description": null
     },
     {
-      "collapsedByDefault": true,
-      "template": {
-        "dataModel": [
-          {
-            "columns": [
-              {
-                "dataType": "text",
-                "name": "initialOrMaintenance",
-                "constraints": [
-                  "Initial",
-                  "Maintenance"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "feature",
-                "name": "siteSeedCollected",
-                "validate": "required"
-              },
-              {
-                "defaultValue": {
-                  "expression": "$geom.areaHa(siteSeedCollected)",
-                  "type": "computed"
-                },
-                "dataType": "number",
-                "name": "calculatedAreaHabitatRevegetedHa",
-                "units": "ha",
-                "decimalPlaces": 3
-              },
-              {
-                "computed": {
-                  "expression": "$geom.lengthKm(siteSeedCollected)"
-                },
-                "dataType": "number",
-                "name": "calculatedLengthHabitatRevegetedKm",
-                "units": "km",
-                "decimalPlaces": 3
-              },
-              {
-                "defaultValue": {
-                  "expression": "calculatedAreaHabitatRevegetedHa",
-                  "type": "computed"
-                },
-                "dataType": "number",
-                "name": "areaHabitatRevegetedHa",
-                "units": "ha",
-                "decimalPlaces": 3,
-                "validate": "required,min[0]"
-              },
-              {
-                "defaultValue": {
-                  "expression": "calculatedLengthHabitatRevegetedKm",
-                  "type": "computed"
-                },
-                "dataType": "number",
-                "name": "lengthHabitatRevegetedKm",
-                "units": "km",
-                "decimalPlaces": 3,
-                "validate": "required,min[0]"
-              },
-              {
-                "dataType": "species",
-                "name": "species",
-                "validate": "required"
-              },
-              {
-                "name": "noOfDaysSeedCollected",
-                "dataType": "number"
-              },
-              {
-                "dataType": "text",
-                "name": "inKgSeedCollected",
-                "constraints": [
-                  "Individuals",
-                  "Kilograms"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "number",
-                "name": "amountSeedCollected",
-                "decimalPlaces": 5
-              },
-              {
-                "dataType": "number",
-                "name": "numberOfSourcePlants"
-              },
-              {
-                "dataType": "text",
-                "name": "storingFacility"
-              },
-              {
-                "dataType": "number",
-                "name": "noOfPlantsPropogated"
-              },
-              {
-                "dataType": "text",
-                "name": "threatEcoCommunity",
-                "validate": "maxSize[100]"
-              }
-            ],
-            "dataType": "list",
-            "name": "seedCollectionDetails"
-          },
-          {
-            "computed": {
-              "expression": "amountSeedCollected"
-            },
-            "dataType": "number",
-            "name": "totalSeedCollected"
-          },
-          {
-            "computed": {
-              "expression": "numberOfSourcePlants"
-            },
-            "dataType": "number",
-            "name": "totalPlantsPropogated"
-          }
-        ],
-        "modelName": "Seed Collecting - Bushfire Program",
-        "title": "Seed Collecting",
-        "viewModel": [
-          {
-            "type": "section",
-            "items": [
-              {
-                "columns": [
-                  {
-                    "width": "5%",
-                    "source": "initialOrMaintenance",
-                    "title": "Initial or Maintenance activity?",
-                    "type": "selectOne"
-                  },
-                  {
-                    "width": "5%",
-                    "type": "col",
-                    "title": "Site/s where collection was undertaken",
-                    "items": [
-                      {
-                        "source": "siteSeedCollected",
-                        "type": "feature"
-                      },
-                      {
-                        "readonly": "readonly",
-                        "source": "calculatedAreaHabitatRevegetedHa",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
-                      },
-                      {
-                        "readonly": "readonly",
-                        "source": "calculatedLengthHabitatRevegetedKm",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "width": "10%",
-                    "type": "col",
-                    "title": "Area (ha) of habitat revegated",
-                    "items": [
-                      {
-                        "source": "areaHabitatRevegetedHa",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "width": "10%",
-                    "type": "col",
-                    "title": "Length (km) of habitat revegeted",
-                    "items": [
-                      {
-                        "source": "lengthHabitatRevegetedKm",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "width": "7%",
-                    "source": "species",
-                    "title": "Species",
-                    "type": "speciesSelect"
-                  },
-                  {
-                    "width": "7%",
-                    "source": "noOfDaysSeedCollected",
-                    "title": "Number of days collecting Seed",
-                    "type": "number"
-                  },
-                  {
-                    "width": "7%",
-                    "source": "inKgSeedCollected",
-                    "title": "Individuals / Kilograms collected",
-                    "type": "selectOne"
-                  },
-                  {
-                    "width": "7%",
-                    "source": "amountSeedCollected",
-                    "title": "Amount collected",
-                    "type": "number"
-                  },
-                  {
-                    "width": "7%",
-                    "source": "numberOfSourcePlants",
-                    "title": "Number of Source plants",
-                    "type": "number"
-                  },
-                  {
-                    "width": "12%",
-                    "source": "storingFacility",
-                    "title": "Storing facility",
-                    "type": "textarea"
-                  },
-                  {
-                    "width": "12%",
-                    "source": "noOfPlantsPropogated",
-                    "title": "Number of plants propogated",
-                    "type": "number"
-                  },
-                  {
-                    "width": "12%",
-                    "source": "threatEcoCommunity",
-                    "title": "Threatened ecological community (if applicable)",
-                    "type": "textarea"
-                  }
-                ],
-                "userAddedRows": true,
-                "source": "seedCollectionDetails",
-                "type": "table"
-              }
-            ]
-          }
-        ]
-      },
-      "modelName": null,
-      "templateName": "statesSeedCollecting",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Seed Collecting - Bushfire Program",
-      "description": null
-    },
-    {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "dataModel": [
           {
@@ -10000,11 +9634,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Site preparation",
+      "name": "RLP - Site preparation",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "title": "Skills and knowledge survey",
         "modelName": "RLP - Skills and knowledge survey",
@@ -10158,11 +9792,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Skills and knowledge survey",
+      "name": "RLP - Skills and knowledge survey",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "dataModel": [
           {
@@ -10433,76 +10067,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Soil testing",
+      "name": "RLP - Soil testing",
       "description": null
     },
     {
-      "collapsedByDefault": true,
-      "template": {
-        "modelName": "Supplementary food and water",
-        "dataModel": [
-          {
-            "name": "supplementaryFoodAndWaterDetails",
-            "dataType": "list",
-            "columns": [
-              {
-                "name": "species",
-                "dataType": "species",
-                "validate": "required"
-              },
-              {
-                "name": "locationOfProvisions",
-                "dataType": "feature"
-              },
-              {
-                "name": "comments",
-                "dataType": "text",
-                "validate": "maxSize[1000]"
-              }
-            ]
-          }
-        ],
-        "viewModel": [
-          {
-            "source": "supplementaryFoodAndWaterDetails",
-            "type": "table",
-            "userAddedRows": true,
-            "columns": [
-              {
-                "type": "speciesSelect",
-                "source": "species",
-                "width": "35%",
-                "title": "Target species",
-                "helpText": "Enter the scientific name"
-              },
-              {
-                "type": "feature",
-                "source": "locationOfProvisions",
-                "width": "10%",
-                "title": "Location/s of food and water provisions"
-              },
-              {
-                "type": "text",
-                "source": "comments",
-                "width": "55%",
-                "title": "Other comments"
-              }
-            ]
-          }
-        ],
-        "title": "Supplementary food and water"
-      },
-      "modelName": null,
-      "templateName": "statesSupplementaryFoodAndWater",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Supplementary food and water",
-      "description": null
-    },
-    {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "dataModel": [
           {
@@ -10779,11 +10348,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Emergency Interventions",
+      "name": "RLP - Emergency Interventions",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "dataModel": [
           {
@@ -11151,11 +10720,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Water quality survey",
+      "name": "RLP - Water quality survey",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "dataModel": [
           {
@@ -11498,11 +11067,11 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Weed distribution survey",
+      "name": "RLP - Weed distribution survey",
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "title": "Cultural value survey and/or assessment",
         "modelName": "Cultural value survey and or assessment",
@@ -11836,7 +11405,7 @@
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "title": "Cultural Site Management",
         "modelName": "Cultural Site Management",
@@ -12133,7 +11702,7 @@
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "title": "On Country Visits",
         "modelName": "On Country Visits",
@@ -12427,7 +11996,7 @@
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "title": "Cultural Practices",
         "modelName": "Cultural Practices",
@@ -12718,7 +12287,7 @@
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "collapsedByDefault": false,
       "template": {
         "title": "Developing/updating Guidelines/Protocols/Plans",
         "modelName": "Developing/updating Guidelines/Protocols/Plans",
