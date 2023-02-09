@@ -131,3 +131,47 @@ function removeNotRequiredStatus(reportId, reason, adminUserId) {
         audit(activity, activity.activityId, 'au.org.ala.ecodata.Activity', adminUserId);
     }
 }
+
+/**
+ * This currently doesn't delete or restore documents associated with a report due to the
+ * complications with the actual document location on the file system.
+ *
+ * @param reportId the report to change the status of
+ * @param status the new status ('deleted' or 'active')
+ */
+function changeReportStatus(reportId, status, adminUserId) {
+    const report = db.report.findOne({reportId:reportId});
+    const activity = db.activity.findOne({activityId:report.activityId});
+    const outputs = db.output.find({activityId:report.activityId});
+
+    report.status = status;
+    db.report.replaceOne({reportId:reportId}, report);
+    audit(report, reportId, 'au.org.ala.ecodata.Report', adminUserId, report.projectId);
+
+    activity.status = status;
+    db.activity.replaceOne({activityId:report.activityId}, activity);
+    audit(activity, report.activityId, 'au.org.ala.ecodata.Activity', adminUserId, report.projectId);
+
+    while (outputs.hasNext()) {
+        const output = outputs.next();
+        output.status = status;
+        db.output.replaceOne({outputId:output.outputId}, output);
+        audit(output, output.outputId, 'au.org.ala.ecodata.Output', adminUserId, report.projectId);
+    }
+
+    if (activity.siteId) {
+        var site = db.site.findOne({siteId:activity.siteId});
+        site.status = status;
+        db.site.replaceOne(site);
+        audit(site, site.siteId, 'au.org.ala.ecodata.Site', adminUserId, project.projectId);
+        print("Removing site: "+site.siteId+" "+site.name+ " from "+activity.activityId);
+    }
+}
+
+function undeleteReport(reportId, adminUserId) {
+    changeReportStatus(reportId, 'active', adminUserId);
+}
+
+function deleteReport(reportId, adminUserId) {
+    changeReportStatus(reportId, 'deleted', adminUserId);
+}
