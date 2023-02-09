@@ -205,7 +205,7 @@ const services = [
         ]
     },
     {
-        "outputs": [{"formName": "RLP Output Report", "sectionName":"Site preparation"}],
+        "outputs": [{"formName": "RLP Output Report", "sectionName":"RLP - Site preparation"}],
         "name": "Site preparation",
         "id":NumberInt(35),
         "categories": [
