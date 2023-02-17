@@ -35,9 +35,8 @@ class ProjectConfigurationService {
     private ProgramConfig buildConfigFromProgram(Map project) {
         Map program = programService.get(project.programId)
         Map rawProgramConfig = program.inheritedConfig ?: [:]
-        if (project.config) {
-            rawProgramConfig.putAll(project.config)
-        }
+        Map projectConfig = project.config ?: [:]
+        rawProgramConfig.putAll(projectConfig)
         ProgramConfig programConfig = new ProgramConfig(rawProgramConfig)
 
         if (!programConfig.activityBasedReporting) {
@@ -82,9 +81,9 @@ class ProjectConfigurationService {
                 }
             }
         }
-        // Outcomes are defined by the program
-        programConfig.outcomes = program.outcomes ?: []
-        programConfig.priorities = program.priorities ?: []
+        // Outcomes are defined by the program (optionally replaced by the project)
+        programConfig.outcomes = projectConfig.outcomes ?: (program.outcomes ?: [])
+        programConfig.priorities = projectConfig.priorities ?: (program.priorities ?: [])
         programConfig.themes = program.themes ?: []
         programConfig.program = program
 
@@ -99,7 +98,7 @@ class ProjectConfigurationService {
             // actually exist within the boundary of the management unit.
             // (e.g. threatened species may be known to exist within some
             // management units but not others)
-            if (managementUnit.priorities) {
+            if (managementUnit.priorities && !projectConfig.priorities) {
                 programConfig.priorities = managementUnit.priorities
             }
             // If the program doesn't define outcomes, use ones for the management unit.
@@ -108,31 +107,31 @@ class ProjectConfigurationService {
             }
 
             // Allow management units to override project reporting frequency
-            List extraReports = []
             if (!programConfig.projectReports) {
                 programConfig.projectReports = []
             }
-            config.projectReports?.each { Map configuration ->
-                Map projectReport = programConfig.projectReports?.find {
-                    return it.category == configuration.category && it.activityType == configuration.activityType
-                }
-                if (projectReport) {
-                    // Both the frequency and start date are required so the report dates
-                    // align correctly.
-                    if (configuration.reportingPeriodInMonths) {
-                        projectReport.reportingPeriodInMonths = configuration.reportingPeriodInMonths
+            if (!projectConfig.projectReports) {
+                config.projectReports?.each { Map configuration ->
+                    Map projectReport = programConfig.projectReports?.find {
+                        return it.category == configuration.category && it.activityType == configuration.activityType
                     }
-                    if (configuration.firstReportingPeriodEnd) {
-                        projectReport.firstReportingPeriodEnd = configuration.firstReportingPeriodEnd
-                    }
-                    // RLP projects label 3 monthly reports as "Quarter" and 6 monthly reports as "Semester"
-                    // to simplify downstream reporting.
-                    if (configuration.label) {
-                        projectReport.label = configuration.label
+                    if (projectReport) {
+                        // Both the frequency and start date are required so the report dates
+                        // align correctly.
+                        if (configuration.reportingPeriodInMonths) {
+                            projectReport.reportingPeriodInMonths = configuration.reportingPeriodInMonths
+                        }
+                        if (configuration.firstReportingPeriodEnd) {
+                            projectReport.firstReportingPeriodEnd = configuration.firstReportingPeriodEnd
+                        }
+                        // RLP projects label 3 monthly reports as "Quarter" and 6 monthly reports as "Semester"
+                        // to simplify downstream reporting.
+                        if (configuration.label) {
+                            projectReport.label = configuration.label
+                        }
                     }
                 }
             }
-            programConfig.projectReports?.addAll(extraReports)
         }
         programConfig
     }
