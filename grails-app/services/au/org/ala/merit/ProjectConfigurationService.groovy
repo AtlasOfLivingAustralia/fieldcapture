@@ -34,7 +34,12 @@ class ProjectConfigurationService {
 
     private ProgramConfig buildConfigFromProgram(Map project) {
         Map program = programService.get(project.programId)
-        ProgramConfig programConfig = new ProgramConfig(program.inheritedConfig ?: [:])
+        Map rawProgramConfig = program.inheritedConfig ?: [:]
+        if (project.config) {
+            rawProgramConfig.putAll(project.config)
+        }
+        ProgramConfig programConfig = new ProgramConfig(rawProgramConfig)
+
         if (!programConfig.activityBasedReporting) {
 
             List<Map> allServices = metadataService.getProjectServices()
