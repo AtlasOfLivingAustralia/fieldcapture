@@ -4,7 +4,7 @@ import pages.RlpProjectPage
 
 class ProjectContentConfigurationSpec extends StubbedCasSpec {
 
-    def setup() {
+    def setupSpec() {
         useDataSet('dataset3')
     }
 
@@ -35,13 +35,35 @@ class ProjectContentConfigurationSpec extends StubbedCasSpec {
         adminTab.displayed == true
 
         when:
-        adminTab.click()
+        openAdminTab()
 
         then:
-        waitFor { adminContent.displayed }
         adminContent.risksAndThreats.displayed == false
 
     }
 
+    def "The project configuration can override the program configuration"() {
+        setup:
+        String projectId = 'excludedContent'
+        loginAsMeritAdmin(browser)
 
+        when: "We override the config in the project"
+        to RlpProjectPage, projectId
+        waitFor { at RlpProjectPage }
+        openAdminTab()
+        adminContent.openConfig()
+        adminContent.configOverride.config = '{ "excludes":null }'
+        adminContent.configOverride.save()
+
+        then:
+        waitFor { hasBeenReloaded() }
+        overviewTab.displayed == true
+        dashboardTab.displayed == true
+        documentsTab.displayed == true
+        meriPlanTab.displayed == true
+        sitesTab.displayed == true
+        reportingTab.displayed == true
+        adminTab.displayed == true
+
+    }
 }
