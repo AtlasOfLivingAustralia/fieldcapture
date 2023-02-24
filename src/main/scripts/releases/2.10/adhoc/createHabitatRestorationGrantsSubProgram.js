@@ -4,7 +4,7 @@ load('../../../utils/program.js');
 var userId = '129333';
 
 //Create the parent program
-let programName = "Koala Conservation and Protection Program";
+let programName = "Saving Koalas Fund";
 var parentProgram = createOrFindProgram(programName);
 
 let refProgram = "Regional Fund - Co-design NRMs";

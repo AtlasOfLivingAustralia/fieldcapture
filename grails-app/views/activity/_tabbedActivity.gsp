@@ -45,6 +45,7 @@
 
         var activityId = '${activity.activityId}';
         var projectId = '${activity.projectId}';
+        var reportId = '${report?.reportId}';
 
         var outputModelConfig = {
             projectId: projectId,
@@ -74,7 +75,8 @@
             project:fcConfig.project,
             activity:activity,
             documents:activity.documents,
-            site:activity.site
+            site:activity.site,
+            reportId:reportId
         };
 
         var viewModel = ecodata.forms.initialiseOutputViewModel(blockId, config.model.dataModel, output, config, context);

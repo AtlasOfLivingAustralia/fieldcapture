@@ -2,6 +2,7 @@
     <div id="adminNav" class="nav flex-column nav-pills col-sm-2 pl-2 pr-0">
         <g:if test="${fc.userIsAlaOrFcAdmin()}">
             <a class="nav-link active" data-toggle="pill" href="#settings" id="settings-tab" role="tab">Project Settings</a>
+            <a class="nav-link" data-toggle="pill" href="#configuration" id="configuration-tab" role="tab">Override Program Configuration</a>
         </g:if>
         <g:if test="${user.isAdmin || user.isCaseManager}">
             <a class="nav-link" data-toggle="pill" href="#projectDetails" id="projectDetails-tab" role="tab" >MERI Plan</a>
@@ -55,6 +56,14 @@
                                       model="[project: project, canChangeProjectDates:projectContent.admin.canChangeProjectDates, canRegenerateReports:projectContent.admin.canRegenerateReports]"/>
                         </div>
                     </div>
+                </div>
+
+                <div class="tab-pane" id="configuration">
+                    <h4 style="display:inline-block">Override program configuration</h4> <button class="btn btn-success float-right" data-bind="click:saveConfiguration">Save Configuration</button>
+
+                    <textarea rows="80" style="width:100%" data-bind="value:config">
+
+                    </textarea>
                 </div>
             </g:if>
 
