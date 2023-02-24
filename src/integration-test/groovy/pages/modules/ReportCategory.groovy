@@ -12,6 +12,10 @@ class ReportCategory extends Module {
     }
 
     def showAllReports() {
-        showAllReportsCheckbox.check()
+        // If all reports are visible for the project this checkbox is not on the page
+        if (showAllReportsCheckbox.displayed) {
+            showAllReportsCheckbox.check()
+        }
+
     }
 }

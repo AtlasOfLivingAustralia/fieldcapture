@@ -9,7 +9,7 @@ fi
 
 BRANCH=$3
 if [ -z $BRANCH ]; then
-    BRANCH=feature/newAuthAndJava11
+    BRANCH=feature/issue788
 fi
 
 ECODATA_LOCAL_DIR=$2

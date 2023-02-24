@@ -11,6 +11,7 @@ load('../data/activityForms/ESPActivityReport.js')
 load('../data/scoreDefaults.js');
 load('../data/activityDefaults.js');
 load('../data/outputDefaults.js');
+load('../data_common/createServices.js');
 
 
 function createProject(projectProperties) {

@@ -1,4 +1,4 @@
-<%@ page import="au.org.ala.merit.ProgramConfig; au.org.ala.merit.ProjectController" contentType="text/html;charset=UTF-8" expressionCodec="none"%>
+<%@ page import="au.org.ala.merit.config.ProgramConfig; au.org.ala.merit.ProjectController" contentType="text/html;charset=UTF-8" expressionCodec="none"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -94,7 +94,8 @@
                 unlockActivityUrl:"${createLink(controller:'activity', action:'ajaxUnlock')}",
                 projectTargetsAndScoresUrl: "${createLink(controller:'project', action:'targetsAndScoresForActivity', id:project.projectId)}",
                 i18nURL: "${g.createLink(controller: 'home', action: 'i18n')}",
-                returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
+                returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}",
+                reportsHistoryUrl:"${createLink(controller: 'report', action:'reportingHistory')}"
 
             },
             here = window.location.href;
@@ -142,8 +143,11 @@
     </section> <!-- end of breadcrumb -->
     <g:render template="banner"/>
     <section class="row">
-        <div class="col-sm-10">
-            <h1 class="pull-left" data-bind="text:name"></h1>
+        <div class="col-sm-10 heading-container">
+            <h1 class="project-header" data-bind="text:name"></h1>
+            <g:if test="${fc.userIsAlaOrFcAdmin() && project.config}">
+                <sup data-bind="popover:{content:'This project has changes to the normal program configuration'}" class="project-config-warning fa fa-2x fa-cog"></sup>
+            </g:if>
             <g:if test="${flash.errorMessage || flash.message}">
                 <div class="col-sm-5">
                     <div class="alert alert-danger">
@@ -154,7 +158,7 @@
             </g:if>
         </div>
 
-    <div class="col-sm-2">
+    <div class="col-sm-2 heading-buttons-container">
         <div class="float-right pull-right">
             <g:if test="${showAlternateTemplate}">
                 <a href="${createLink(action: 'index', id: project.projectId)}"><button class="btn btn-sm " type="button">User View</button></a>
@@ -293,7 +297,7 @@ var config = {
     config.showSiteType = ${Boolean.valueOf(projectContent.site.showSiteType)};
     config.services = services;
 
-    config.useRlpTemplate = ${config.getProjectTemplate() == au.org.ala.merit.ProgramConfig.ProjectTemplate.RLP};
+    config.useRlpTemplate = ${config.getProjectTemplate() == au.org.ala.merit.config.ProgramConfig.ProjectTemplate.RLP};
     config.useRlpRisksModel = config.useRlpTemplate;
     config.risksStorageKey = PROJECT_RISKS_KEY;
 

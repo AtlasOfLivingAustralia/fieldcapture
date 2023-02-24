@@ -1,8 +1,8 @@
 package au.org.ala.merit
 
-import grails.converters.JSON
+import grails.plugin.cache.Cacheable
+import org.apache.http.HttpStatus
 import org.grails.plugin.cache.GrailsCacheManager
-import org.grails.web.json.JSONArray
 
 class MetadataService {
 
@@ -307,24 +307,19 @@ class MetadataService {
         })
     }
 
+    @Cacheable("serviceList")
     List<Map> getProjectServices() {
-        cacheService.get(PROJECT_SERVICES_KEY, {
-            List services
-            String servicesJson = settingService.getSettingText(SettingPageType.SERVICES)
-            if (servicesJson) {
-                services = JSON.parse(servicesJson)
-            }
-            else {
-                services = JSON.parse(getClass().getResourceAsStream('/services.json'), 'UTF-8')
-            }
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "metadata/services"
+        Map result = webService.getJson2(url)
 
-            List scores = getScores(false)
-            services.each { service ->
-                service.scores = new JSONArray(scores.findAll{it.outputType == service.output})
-            }
-
-            services
-        })
+        List services = []
+        if (result.statusCode == HttpStatus.SC_OK) {
+            services = result.resp
+        }
+        else {
+            log.error("Error attempting to retrieve the service list: "+result.statusCode)
+        }
+        services
     }
 
     Map findByName(String name, List model) {

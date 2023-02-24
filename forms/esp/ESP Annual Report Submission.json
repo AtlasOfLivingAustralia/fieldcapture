@@ -577,8 +577,8 @@
                   "type": "computed"
                 },
                 {
-                  "expression": "activity.plannedEndDate",
-                  "name": "date",
+                  "expression": "reportId",
+                  "name": "reportId",
                   "type": "computed"
                 },
                 {
@@ -586,7 +586,7 @@
                   "value": "4d03150f-763b-4baf-b49f-60a2dbda0235"
                 }
               ],
-              "url": "/project/scoresForFinancialYear/"
+              "url": "/project/scoresForReport/"
             }
           }
         ]

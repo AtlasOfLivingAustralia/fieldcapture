@@ -121,13 +121,15 @@ var SiteStatusModel = function(site, currentStage, map, sitesViewModel) {
  *
  * This function has a side effect of saving a selected reporting period in local storage
  */
-function selectReportingPeriod(project) {
-    var selectedYearStorageKey = 'selectedFinancialYear-'+project.projectId;
-    var selectedYear = project.financialYearSelected || amplify.store(selectedYearStorageKey);
+function selectReportingPeriod(project, options) {
+    var selectedYearStorageKey = 'selectedReportId-'+project.projectId;
+    var selectedReportId = options.selectedReportId || amplify.store(selectedYearStorageKey);
     var currentReport;
-    if (selectedYear) {
-        currentReport = findReportFromFinancialYear(project.reports,selectedYear);
-        amplify.store(selectedYearStorageKey, selectedYear);
+    if (selectedReportId) {
+        currentReport = _.find(project.reports, function(selectedReport) {
+            return selectedReport.reportId == selectedReportId;
+        });
+        amplify.store(selectedYearStorageKey, selectedReportId);
     }
     else {
         currentReport = findReportFromDate(project.reports);
@@ -153,7 +155,7 @@ var SimplifiedReportingViewModel = function(project, config) {
         return report.publicationStatus == 'published' || report.publicationStatus == 'pendingApproval';
     });
 
-    var currentReport = selectReportingPeriod(project);
+    var currentReport = selectReportingPeriod(project, config);
 
     currentReport = new Report(currentReport);
 
@@ -192,7 +194,6 @@ var SimplifiedReportingViewModel = function(project, config) {
 
     var reportToDate = currentReport.toDate;
 
-    self.reportingFinancialYear = isoDateToFinancialYear(reportToDate);
     self.dueDate = convertToSimpleDate(reportToDate);
 
     self.finishedReporting = currentStage.canSubmitReport();
@@ -239,7 +240,7 @@ var SimplifiedReportingViewModel = function(project, config) {
     var currentDate = new Date().toISOStringNoMillis();
     _.each(project.reports, function (report){
         if (report.fromDate <= currentDate) {
-            self.reportSelectionList.push({label:buildReportLabel(report), value:isoDateToFinancialYear(report.toDate), stage: report.name, disable: report.publicationStatus == 'cancelled'});
+            self.reportSelectionList.push({label:buildReportLabel(report), value:report.reportId, stage: report.name, disable: report.publicationStatus == 'cancelled'});
         }
     });
 
@@ -258,7 +259,7 @@ var SimplifiedReportingViewModel = function(project, config) {
     }
 
     // will set the value of the dropdown Reporting Period
-    self.selectedChoice = ko.observable(isoDateToFinancialYear(currentReport.toDate));
+    self.selectedChoice = ko.observable(currentReport.reportId);
 
     var selectedReport = _.find(self.reportSelectionList, function(report) { return report.value == self.selectedChoice()});
     var selectedReportLabel = selectedReport && selectedReport.label;
@@ -269,12 +270,12 @@ var SimplifiedReportingViewModel = function(project, config) {
         popoverText = 'This report has been marked as <strong>Not Required</strong>. Please contact your ESP Project Manager for further information.';
     }
     $('.reportingPeriodSpan').popover({html:useHtml, title:'Please select reporting period', content:popoverText, placement:'top', trigger:'hover'})
-    $('.reportingPeriodSpan').popover('show');
+
     // refreshes the page with the financial year selected
     self.selectionChanged = function(event) {
         blockUIWithMessage('Reloading project...');
         var url = config.projectUrl;
-        document.location.href = url + "/" + "?financialYearSelected=" + event.selectedChoice();
+        document.location.href = url + "/" + "?selectedReportId=" + event.selectedChoice();
     }
 
     self.adminReportingHelp = ko.pureComputed(function() {
@@ -440,9 +441,6 @@ var SimplifiedReportingViewModel = function(project, config) {
     if (!hasSubmittedOrPublishedReport && !self.hasCollectedReportingDates()) {
         self.collectReportDates();
     }
-    else if (self.hasCollectedReportingDates()) {
-        self.reportingFinancialYear = isoDateToFinancialYear(project.custom.reportindPeriodEnd);
-    }
 
 };
 
@@ -494,17 +492,6 @@ function findReportFromDate (reports) {
     var report;
     $.each(reports, function (i, period) {
         if (period.toDate <= currentDate) {
-            report = period;
-        }
-    });
-
-    return report;
-}
-
-function findReportFromFinancialYear (reports,financialYearSelected) {
-    var report;
-    $.each(reports, function (i, period) {
-        if (financialYearSelected == isoDateToFinancialYear(period.toDate)) {
             report = period;
         }
     });

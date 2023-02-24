@@ -25,7 +25,7 @@ function updateReportDetails(reportId, name, fromDate, toDate, userId, submissio
     report.description = description || name;
     report.submissionDate = submissionDate || toDate;
 
-    db.report.save(report);
+    db.report.replaceOne({_id: report._id}, report);
     audit(report, report.reportId, 'au.org.ala.ecodata.Report', userId);
 
     updateActivity(report, userId);
@@ -42,7 +42,7 @@ function updateActivity(report, userId)  {
 
     activity.lastUpdated = report.lastUpdated;
 
-    db.activity.save(activity);
+    db.activity.replaceOne({_id:activity._id}, activity);
     audit(activity, activity.activityId, 'au.org.ala.ecodata.Activity', userId);
 }
 

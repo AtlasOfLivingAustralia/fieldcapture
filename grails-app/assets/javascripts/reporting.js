@@ -401,6 +401,24 @@ var ReportViewModel = function(report, config) {
     if (config.projectTargetsAndScoresUrl && report.publicationStatus == 'pendingApproval') {
         self.checkForOverDelivery();
     }
+
+    self.historyVisible = ko.observable(false);
+    var toggling = false;
+    self.toggleHistory = function (data, e) {
+        var tr = $(e.currentTarget).closest('tr');
+        if (tr.hasClass("shown")) {
+            $('#reportHistory').empty();
+            tr.removeClass('shown');
+            tr.next().remove();
+            self.historyVisible(false);
+        } else {
+            var obj = {objId:report.reportId,objUrl:fcConfig.reportsHistoryUrl,myProjects:false};
+            var data = reportService.getHistory(obj) || '';
+            tr.after(data);
+            tr.addClass("shown");
+            self.historyVisible(true);
+        }
+    };
 };
 
 var ReportsViewModel = function(reports, projects, availableReports, reportOwner, config) {
@@ -575,7 +593,6 @@ var ReportsViewModel = function(reports, projects, availableReports, reportOwner
         };
     };
     self.newReport = new AdHocReportViewModel();
-
 };
 
 var CategorisedReportsViewModel = function(allReports, order, availableReports, reportOwner, config) {

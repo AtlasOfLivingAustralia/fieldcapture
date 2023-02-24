@@ -1,13 +1,13 @@
 package au.org.ala.merit
 
-import au.org.ala.merit.reports.ReportConfig
+import au.org.ala.merit.config.EmailTemplate
+import au.org.ala.merit.config.ReportConfig
 import au.org.ala.merit.reports.ReportGenerationOptions
 import au.org.ala.merit.reports.ReportOwner;
 import grails.core.GrailsApplication
 import grails.plugin.cache.Cacheable
 import groovy.util.logging.Slf4j
 import org.grails.web.json.JSONArray
-import org.codehaus.groovy.util.ListHashMap
 
 @Slf4j
 class ProgramService {

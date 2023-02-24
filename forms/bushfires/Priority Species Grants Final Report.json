@@ -12,7 +12,6 @@
   "name": "Priority Species Grants Final Report",
   "sections": [
     {
-      "collapsedByDefault": false,
       "template": {
         "modelName": "Priority Species Grants Final Report",
         "dataModel": [
@@ -206,132 +205,13 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "a) Environmental outcomes and project actions, including whether on-ground actions were successful in supporting the recovery of target species. <br>b) Cultural outcomes, such as the engagement and participation of Traditional Owners, landholders and local community.",
+                "preLabel": "a) Environmental outcomes and project actions, including whether on-ground actions were successful in supporting the recovery of target species. <br>b) Social outcomes, including engagement and participation of Traditional Owners, landholders and local community.",
                 "source": "projectOutcomesSummary",
                 "type": "textarea",
                 "helpText": "(e.g. for night parrot it might be avoiding wildfires burning run-on areas during breeding and before seed set, avoiding wildfires burning old-growth spinifex, avoiding the increase in on-ground human activities in areas likely to support night parrots.)",
                 "rows": 3
               }
             ]
-          },
-          {
-            "disableTableUpload": true,
-            "columns": [
-              {
-                "source": "",
-                "type": "literal",
-                "width": "5%",
-                "preLabel": {
-                  "computed": "\\'No. \\' || (index + 1)"
-                },
-                "title": "Activity No."
-              },
-              {
-                "readonly": true,
-                "width": "13%",
-                "source": "serviceName",
-                "type": "textarea",
-                "rows": 3,
-                "title": "Activity"
-              },
-              {
-                "readonly": true,
-                "width": "10%",
-                "source": "targetMeasure",
-                "type": "textarea",
-                "rows": 3,
-                "title": "Target measure"
-              },
-              {
-                "width": "8%",
-                "source": "sitesAvailable",
-                "type": "selectOne",
-                "title": "Is site data available for / applicable to this service?"
-              },
-              {
-                "width": "10%",
-                "type": "col",
-                "title": "Site/s where the service has been delivered",
-                "items": [
-                  {
-                    "source": "serviceMappedArea",
-                    "type": "feature",
-                    "width": "5%",
-                    "title": ""
-                  },
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "readonly": true,
-                        "source": "serviceCalculatedAreaHa",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "readonly": true,
-                        "source": "serviceCalculatedLengthKm",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "width": "17%",
-                "source": "assets",
-                "title": "Assets",
-                "type": "select2Many"
-              },
-              {
-                "width": "7%",
-                "source": "activityStartDate",
-                "title": "Date activity started",
-                "type": "simpleDate"
-              },
-              {
-                "width": "7%",
-                "source": "activityEndDate",
-                "title": "Date activity ended",
-                "type": "simpleDate"
-              },
-              {
-                "readonly": true,
-                "width": "6%",
-                "source": "projectTarget",
-                "type": "text",
-                "rows": 1,
-                "title": "Total to be delivered"
-              },
-              {
-                "width": "6%",
-                "source": "delivered",
-                "type": "text",
-                "rows": 2,
-                "title": "Total delivered"
-              },
-              {
-                "width": "15%",
-                "source": "reasonTargetNotMet",
-                "type": "textarea",
-                "rows": 3,
-                "title": "Explanation if target not fully delivered"
-              }
-            ],
-            "userAddedRows": true,
-            "source": "projectTargets",
-            "title": "<b>1.2 Please detail outputs against project actions and targets to improve the trajectory of priority species.</b>",
-            "type": "table"
           },
           {
             "type": "row",
@@ -440,6 +320,15 @@
               }
             ],
             "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "<hr><h4>5. Please detail outputs against project actions and targets to improve the trajectory of priority species.</h4>",
+                "type": "literal"
+              }
+            ]
           }
         ],
         "pre-populate": [
@@ -568,6 +457,8 @@
         ],
         "title": "Project Final Report"
       },
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
       "modelName": null,
       "templateName": "priority_species_grants_final_report",
       "optional": false,
@@ -578,7 +469,13 @@
       "description": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Baseline data",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "title": "Collecting or synthesising baseline data",
         "modelName": "RLP - Baseline data",
@@ -636,17 +533,17 @@
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesBaselineData",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Baseline data",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Communication materials",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "dataModel": [
           {
@@ -709,6 +606,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "modelName": "RLP - Communication Materials",
@@ -747,22 +650,27 @@
                 "userAddedRows": true,
                 "source": "communicationMaterials",
                 "type": "table"
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ]
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesCommunicationMaterials",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Communication materials",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Community engagement",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "dataModel": [
           {
@@ -848,6 +756,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "modelName": "RLP - Community engagement",
@@ -920,22 +834,27 @@
                     "type": "image"
                   }
                 ]
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ]
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesCommunityEngagement",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Community engagement",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Controlling access",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "dataModel": [
           {
@@ -1159,6 +1078,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "modelName": "RLP - Controlling access",
@@ -1319,22 +1244,27 @@
                     "type": "image"
                   }
                 ]
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ]
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesControllingAccess",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Controlling access",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Pest animal management",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "dataModel": [
           {
@@ -1630,6 +1560,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "modelName": "RLP - Pest animal management",
@@ -1850,22 +1786,27 @@
                     "type": "image"
                   }
                 ]
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ]
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesPestAnimalManagement",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Pest animal management",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Management plan development",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "dataModel": [
           {
@@ -2034,6 +1975,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "modelName": "RLP - Management plan development",
@@ -2156,22 +2103,27 @@
                 "userAddedRows": true,
                 "source": "managementPlans",
                 "type": "table"
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ]
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesManagementPlanDevelopment",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Management plan development",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Debris removal",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "dataModel": [
           {
@@ -2364,6 +2316,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "modelName": "RLP - Debris removal",
@@ -2507,22 +2465,27 @@
                     "type": "image"
                   }
                 ]
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ]
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesDebrisRemoval",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Debris removal",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Erosion Management",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "dataModel": [
           {
@@ -2770,6 +2733,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "modelName": "RLP - Erosion Management",
@@ -2958,22 +2927,27 @@
                     "type": "image"
                   }
                 ]
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ]
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesErosionManagement",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Erosion Management",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Maintaining feral free enclosures",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "dataModel": [
           {
@@ -3147,6 +3121,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "modelName": "RLP - Maintaining feral free enclosures",
@@ -3307,22 +3287,27 @@
                     "type": "image"
                   }
                 ]
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ]
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesFeralFreeEnclosures",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Maintaining feral free enclosures",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Establishing ex-situ breeding programs",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "dataModel": [
           {
@@ -3468,6 +3453,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "modelName": "RLP - Establishing ex-situ breeding programs",
@@ -3583,22 +3574,27 @@
                     "type": "image"
                   }
                 ]
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ]
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesExSituBreedingSites",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Establishing ex-situ breeding programs",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Establishing Agreements",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "dataModel": [
           {
@@ -3761,6 +3757,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "modelName": "RLP - Establishing Agreements",
@@ -3884,22 +3886,27 @@
                 "userAddedRows": true,
                 "source": "agreements",
                 "type": "table"
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ]
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesEstablishingAgreements",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Establishing Agreements",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Establishing monitoring regimes",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "title": "Establishing monitoring regimes",
         "modelName": "RLP - Establishing monitoring regimes",
@@ -3968,6 +3975,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "viewModel": [
@@ -4021,22 +4034,27 @@
                     "preLabel": "Optionally attach photos"
                   }
                 ]
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ]
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesMonitoringRegimes",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Establishing monitoring regimes",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Farm Management Survey",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "title": "Farm management surveys",
         "modelName": "RLP - Farm Management Survey",
@@ -4089,6 +4107,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "viewModel": [
@@ -4125,23 +4149,28 @@
                 ],
                 "userAddedRows": true,
                 "type": "table"
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ],
             "type": "section"
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesFarmManagementSurvey",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Farm Management Survey",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Fauna survey",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "dataModel": [
           {
@@ -4315,6 +4344,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "modelName": "RLP - Fauna survey",
@@ -4476,22 +4511,27 @@
                     "type": "image"
                   }
                 ]
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ]
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesFaunaSurvey",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Fauna survey",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Fire management",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "dataModel": [
           {
@@ -4733,6 +4773,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "modelName": "RLP - Fire management",
@@ -4888,22 +4934,27 @@
                     "type": "image"
                   }
                 ]
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ]
           }
         ]
       },
-      "modelName": null,
       "templateName": "isiFireManagement",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Fire management",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Flora survey",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "dataModel": [
           {
@@ -5082,6 +5133,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "modelName": "RLP - Flora survey",
@@ -5248,22 +5305,27 @@
                     "type": "image"
                   }
                 ]
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ]
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesFloraSurvey",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Flora survey",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Habitat augmentation",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "dataModel": [
           {
@@ -5415,6 +5477,7 @@
                   "Environmental thinning",
                   "Improving fish passage",
                   "Natural features (rocks, logs)",
+                  "Reef restoration/creation",
                   "Other"
                 ],
                 "validate": "required"
@@ -5489,6 +5552,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "modelName": "RLP - Habitat augmentation",
@@ -5651,22 +5720,27 @@
                 "userAddedRows": true,
                 "source": "habitatAugmentationDetails",
                 "type": "table"
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ]
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesHabitatAugmentation",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Habitat augmentation",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Identifying sites",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "title": "Identifying the location of potential sites",
         "modelName": "RLP - Identifying sites",
@@ -5701,6 +5775,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "viewModel": [
@@ -5733,23 +5813,28 @@
                     "preLabel": "Optionally attach photos"
                   }
                 ]
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ],
             "type": "section"
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesIdentifyingSites",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Identifying sites",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Improving hydrological regimes",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "dataModel": [
           {
@@ -5958,6 +6043,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "modelName": "RLP - Improving hydrological regimes",
@@ -6148,22 +6239,27 @@
                     "type": "image"
                   }
                 ]
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ]
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesImprovingHydrologicalRegimes",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Improving hydrological regimes",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Improving land management practices",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "dataModel": [
           {
@@ -6401,6 +6497,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "modelName": "RLP - Improving land management practices",
@@ -6567,22 +6669,27 @@
                     "type": "image"
                   }
                 ]
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ]
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesLandManagementPractices",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Improving land management practices",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Disease management",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "dataModel": [
           {
@@ -6811,6 +6918,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "modelName": "RLP - Disease management",
@@ -6984,22 +7097,27 @@
                     "type": "image"
                   }
                 ]
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ]
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesDiseaseManagement",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Disease management",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Negotiations",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "dataModel": [
           {
@@ -7053,6 +7171,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "modelName": "RLP - Negotiations",
@@ -7088,22 +7212,27 @@
                 "userAddedRows": true,
                 "source": "negotiations",
                 "type": "table"
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ]
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesNegotiations",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Negotiations",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Obtaining approvals",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "title": "Obtaining relevant approvals",
         "modelName": "RLP - Obtaining approvals",
@@ -7134,6 +7263,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "viewModel": [
@@ -7156,23 +7291,28 @@
                     "css": "span9"
                   }
                 ]
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ],
             "type": "section"
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesObtainingApprovals",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Obtaining approvals",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Pest animal survey",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "dataModel": [
           {
@@ -7368,6 +7508,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "modelName": "RLP - Pest animal survey",
@@ -7544,22 +7690,27 @@
                     "type": "image"
                   }
                 ]
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ]
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesPestAnimalSurvey",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Pest animal survey",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Plant survival survey",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "dataModel": [
           {
@@ -7743,6 +7894,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "modelName": "RLP - Plant survival survey",
@@ -7910,22 +8067,27 @@
                     "type": "image"
                   }
                 ]
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ]
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesPlantSurvivalSurvey",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Plant survival survey",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Project planning",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "title": "Project planning and delivery of documents as required for the delivery of the Project and monitoring",
         "modelName": "RLP - Project planning",
@@ -7968,6 +8130,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "viewModel": [
@@ -7998,23 +8166,28 @@
                     "width": "70%"
                   }
                 ]
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ],
             "type": "section"
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesProjectPlanning",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Project planning",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Remediating riparian and aquatic areas",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "dataModel": [
           {
@@ -8241,6 +8414,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "modelName": "RLP - Remediating riparian and aquatic areas",
@@ -8402,22 +8581,27 @@
                     "type": "image"
                   }
                 ]
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ]
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesRemediatingRiparianAndAquaticAreas",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Remediating riparian and aquatic areas",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Revegetating habitat",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "dataModel": [
           {
@@ -8678,6 +8862,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "modelName": "RLP - Revegetating habitat",
@@ -8901,22 +9091,27 @@
                     "type": "image"
                   }
                 ]
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ]
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesRevegetatingHabitat",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Revegetating habitat",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Weed treatment",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "dataModel": [
           {
@@ -9162,6 +9357,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "modelName": "RLP - Weed treatment",
@@ -9347,22 +9548,27 @@
                     "type": "image"
                   }
                 ]
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ]
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesWeedTreatment",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Weed treatment",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Seed Collecting - Bushfire Program",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "dataModel": [
           {
@@ -9479,6 +9685,12 @@
             },
             "dataType": "number",
             "name": "totalPlantsPropogated"
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "modelName": "Seed Collecting - Bushfire Program",
@@ -9602,22 +9814,27 @@
                 "userAddedRows": true,
                 "source": "seedCollectionDetails",
                 "type": "table"
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ]
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesSeedCollecting",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Seed Collecting - Bushfire Program",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Site preparation",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "dataModel": [
           {
@@ -9840,6 +10057,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "modelName": "RLP - Site preparation",
@@ -9989,22 +10212,27 @@
                     "type": "image"
                   }
                 ]
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ]
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesSitePreparation",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Site preparation",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Skills and knowledge survey",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "title": "Skills and knowledge survey",
         "modelName": "RLP - Skills and knowledge survey",
@@ -10081,6 +10309,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "viewModel": [
@@ -10146,23 +10380,28 @@
                     "preLabel": "Optionally attach photos"
                   }
                 ]
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ],
             "type": "section"
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesSkillsAndKnowledgeSurvey",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Skills and knowledge survey",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Soil testing",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "dataModel": [
           {
@@ -10299,6 +10538,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "modelName": "RLP - Soil testing",
@@ -10422,87 +10667,27 @@
                     "type": "image"
                   }
                 ]
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ]
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesSoilTesting",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Soil testing",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
-      "template": {
-        "modelName": "Supplementary food and water",
-        "dataModel": [
-          {
-            "name": "supplementaryFoodAndWaterDetails",
-            "dataType": "list",
-            "columns": [
-              {
-                "name": "species",
-                "dataType": "species",
-                "validate": "required"
-              },
-              {
-                "name": "locationOfProvisions",
-                "dataType": "feature"
-              },
-              {
-                "name": "comments",
-                "dataType": "text",
-                "validate": "maxSize[1000]"
-              }
-            ]
-          }
-        ],
-        "viewModel": [
-          {
-            "source": "supplementaryFoodAndWaterDetails",
-            "type": "table",
-            "userAddedRows": true,
-            "columns": [
-              {
-                "type": "speciesSelect",
-                "source": "species",
-                "width": "35%",
-                "title": "Target species",
-                "helpText": "Enter the scientific name"
-              },
-              {
-                "type": "feature",
-                "source": "locationOfProvisions",
-                "width": "10%",
-                "title": "Location/s of food and water provisions"
-              },
-              {
-                "type": "text",
-                "source": "comments",
-                "width": "55%",
-                "title": "Other comments"
-              }
-            ]
-          }
-        ],
-        "title": "Supplementary food and water"
-      },
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
       "modelName": null,
-      "templateName": "statesSupplementaryFoodAndWater",
+      "name": "Emergency Interventions",
       "optional": true,
       "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Supplementary food and water",
-      "description": null
-    },
-    {
-      "collapsedByDefault": true,
       "template": {
         "dataModel": [
           {
@@ -10658,6 +10843,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "modelName": "RLP - Emergency Interventions",
@@ -10768,22 +10959,27 @@
                     "type": "image"
                   }
                 ]
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ]
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesEmergencyInterventions",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Emergency Interventions",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Water quality survey",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "dataModel": [
           {
@@ -10973,6 +11169,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "modelName": "RLP - Water quality survey",
@@ -11140,22 +11342,27 @@
                     "type": "image"
                   }
                 ]
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ]
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesWaterQualitySurvey",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Water quality survey",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Weed distribution survey",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "dataModel": [
           {
@@ -11326,6 +11533,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "modelName": "RLP - Weed distribution survey",
@@ -11487,22 +11700,27 @@
                     "type": "image"
                   }
                 ]
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ]
           }
         ]
       },
-      "modelName": null,
       "templateName": "statesWeedDistributionSurvey",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Weed distribution survey",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Cultural value survey and/or assessment",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "title": "Cultural value survey and/or assessment",
         "modelName": "Cultural value survey and or assessment",
@@ -11666,6 +11884,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "viewModel": [
@@ -11820,23 +12044,28 @@
                     "preLabel": "Optionally attach photos"
                   }
                 ]
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ],
             "type": "section"
           }
         ]
       },
-      "modelName": null,
       "templateName": "culturalValueSurveysAndAssessments",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Cultural value survey and/or assessment",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Cultural Site Management",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "title": "Cultural Site Management",
         "modelName": "Cultural Site Management",
@@ -11982,6 +12211,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "viewModel": [
@@ -12117,23 +12352,28 @@
                     "preLabel": "Optionally attach photos"
                   }
                 ]
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ],
             "type": "section"
           }
         ]
       },
-      "modelName": null,
       "templateName": "culturalSiteManagement",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Cultural Site Management",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "On Country Visits",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "title": "On Country Visits",
         "modelName": "On Country Visits",
@@ -12274,6 +12514,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "viewModel": [
@@ -12411,23 +12657,28 @@
                     "preLabel": "Optionally attach photos"
                   }
                 ]
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ],
             "type": "section"
           }
         ]
       },
-      "modelName": null,
       "templateName": "onCountryVisits",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "On Country Visits",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": "Cultural Practices",
+      "name": "Cultural Practices",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "title": "Cultural Practices",
         "modelName": "Cultural Practices",
@@ -12566,6 +12817,18 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "viewModel": [
@@ -12702,23 +12965,28 @@
                     "preLabel": "Optionally attach photos"
                   }
                 ]
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ],
             "type": "section"
           }
         ]
       },
-      "modelName": "Cultural Practices",
       "templateName": "culturalPractices",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Cultural Practices",
-      "description": null
+      "title": null
     },
     {
-      "collapsedByDefault": true,
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": "Developing/updating Guidelines/Protocols/Plans",
+      "name": "Developing/updating Guidelines/Protocols/Plans",
+      "optional": true,
+      "optionalQuestionText": null,
       "template": {
         "title": "Developing/updating Guidelines/Protocols/Plans",
         "modelName": "Developing/updating Guidelines/Protocols/Plans",
@@ -12780,6 +13048,12 @@
                 "description": "Please attach any Evidence of Service Delivery here"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[500]",
+            "description": ""
           }
         ],
         "viewModel": [
@@ -12817,20 +13091,55 @@
                 ],
                 "userAddedRows": true,
                 "type": "table"
+              },
+              {
+                "source": "comments",
+                "preLabel": "Comments",
+                "type": "textarea"
               }
             ],
             "type": "section"
           }
         ]
       },
-      "modelName": "Developing/updating Guidelines/Protocols/Plans",
       "templateName": "guidelinesProtocolsAndPlans",
-      "optional": true,
+      "title": null
+    },
+    {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": "OtherComments",
+      "name": "OtherComments",
+      "optional": false,
       "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "Developing/updating Guidelines/Protocols/Plans",
-      "description": null
+      "template": {
+        "title": "Other Comments",
+        "modelName": "OtherComments",
+        "dataModel": [
+          {
+            "dataType": "text",
+            "name": "otherComments",
+            "validate": "maxSize[500]",
+            "description": ""
+          }
+        ],
+        "viewModel": [
+          {
+            "items": [
+              {
+                "source": "otherComments",
+                "preLabel": "",
+                "rows": 5,
+                "type": "textarea"
+              }
+            ],
+            "type": "section"
+          }
+        ]
+      },
+      "templateName": "otherComments",
+      "title": null
     }
   ],
   "type": "Report",

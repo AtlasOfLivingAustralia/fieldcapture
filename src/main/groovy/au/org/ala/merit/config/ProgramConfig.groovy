@@ -1,6 +1,6 @@
-package au.org.ala.merit
+package au.org.ala.merit.config
 
-import au.org.ala.merit.reports.ReportConfig
+
 import groovy.util.logging.Slf4j
 
 /**
@@ -31,7 +31,13 @@ class ProgramConfig implements Map {
     @Delegate Map config
 
     /** List of service ids that are supported by this program */
-    List<Integer> supportedServiceIds
+    ProgramServiceConfig getProgramServices() {
+        ProgramServiceConfig programServiceConfig = null
+        if (config.programServiceConfig) {
+            programServiceConfig = new ProgramServiceConfig(config.programServiceConfig)
+        }
+        programServiceConfig
+    }
 
     ProgramConfig(Map config) {
         this.config = new HashMap(config)
@@ -107,8 +113,11 @@ class ProgramConfig implements Map {
      * This is currently used to determine if a report is eligible for an adjustment.
      */
     ReportConfig findProjectReportConfigForReport(Map report) {
-        Map reportConfig = config.projectReports?.find{it.activityType == report.activityType}
+        findProjectReportConfigForActivityType(report.activityType)
+    }
 
+    ReportConfig findProjectReportConfigForActivityType(String activityType) {
+        Map reportConfig = config.projectReports?.find{it.activityType == activityType}
         return reportConfig ? new ReportConfig(reportConfig) : null
     }
 

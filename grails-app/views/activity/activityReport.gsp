@@ -229,7 +229,7 @@
             var outputModelConfig = {
                 activityId: activityId,
                 projectId: projectId,
-                disablePrepop: ${activity.progress == au.org.ala.merit.ActivityService.PROGRESS_FINISHED},
+                disablePrepop: false,
                 speciesConfig:<fc:modelAsJavascript model="${speciesConfig}"/>,
                 recoveryDataStorageKey: recoveryDataStorageKey
             };

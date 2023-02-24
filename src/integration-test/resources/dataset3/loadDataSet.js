@@ -230,7 +230,8 @@ config = {
             "activityType": "Progress Report",
             "canSubmitDuringReportingPeriod": true
         },
-    ]
+    ],
+    programServiceConfig:{serviceFormName:'Progress Report'}
 };
 createProgram({programId: "state_intervention", name: "State Intervention", description: "", config: config});
 

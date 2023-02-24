@@ -1,13 +1,12 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.config.EmailTemplate
+import au.org.ala.merit.config.ProgramConfig
 import au.org.ala.merit.reports.ReportGenerationOptions
-import grails.config.Config
 import grails.converters.JSON
 import grails.testing.services.ServiceUnitTest
-import grails.testing.spring.AutowiredTest
 import groovy.json.JsonSlurper
 import org.apache.http.HttpStatus
-import org.grails.config.PropertySourcesConfig
 import org.grails.web.converters.marshaller.json.CollectionMarshaller
 import org.grails.web.converters.marshaller.json.MapMarshaller
 import org.joda.time.Period
@@ -1009,16 +1008,16 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
     def "The service can return a list of activity types nominated by the project"() {
         setup:
         Map project = [custom:[details:[activities:[activities:['a1', 'a2']]]]]
+        ProgramConfig programConfig = new ProgramConfig([activities:[[name:'a1', output:'o1'],[name:'a2', output:'o2']]])
 
         when:
-        List activities = service.getProjectActivities(project)
+        List activities = service.getProjectActivities(project, programConfig)
 
         then:
-        1 * projectConfigurationService.getProjectConfiguration(project) >> [activities:[[name:'a1', output:'o1'],[name:'a2', output:'o2']]]
         activities == [[name:'a1', output:'o1'],[name:'a2', output:'o2']]
 
         when:
-        activities = service.getProjectActivities([:])
+        activities = service.getProjectActivities([:], programConfig)
 
         then:
         activities == []
@@ -1091,11 +1090,14 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
 
 
     private ProgramConfig setupMockServiceProgramConfig(List services) {
+
         if (!services) {
-            services =[[output: "Output Test 1",name: "Output Test 1", scores: [[scoreId:"1", label: "Test label 1", isOutputTarget:true]], id: 1, category: null]]
+            services =[[name: "Output Test 1", outputs:[[sectionName: "Output Test 1"]], scores: [[scoreId:"1", label: "Test label 1", isOutputTarget:true]], id: 1, category: null]]
         }
-        ProgramConfig config = new ProgramConfig([:])
-        config.services = services
+        Map programServiceConfig = [serviceFormName: 'output', programServices:[[serviceId:1, serviceTargets:['1']]]]
+        ProgramConfig config = new ProgramConfig([programServiceConfig:programServiceConfig])
+        config.services = services.collect {
+            [id:it.id, output:it.outputs[0].sectionName, name: it.name, scores:it.scores]}
         config
     }
 
@@ -1476,10 +1478,51 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
 
     }
 
+    def "The scoresForReport method returns zeros if it cannot obtain scores"() {
+        setup:
+        String projectId = 'p1'
+        String reportId = 'r1'
+        List scoreIds = ['1', '2', '3']
+        String fromDate = '2022-01-01T00:00:00Z'
+        String toDate = '2022-07-01T00:00:00Z'
+
+        when:
+        Map result = service.scoresForReport(projectId, reportId, scoreIds)
+
+        then:
+        1 * webService.getJson('project/'+projectId+'?includeDeleted=false') >> [reports:[[reportId:reportId, fromDate:fromDate, toDate:toDate]]]
+        1 * reportService.dateHistogramForScores(projectId, [fromDate, toDate], 'YYYY-MM', scoreIds) >> [status:500, error:'']
+        result == ['1':0, '2':0, '3':0]
+    }
+
+    def "The scoresForReport function will return 0s even if scores are missing"() {
+        setup:
+        String projectId = 'p1'
+        List scoreIds = ['1', '2', '3']
+        String reportId = 'r1'
+        List report = [
+                [group:'2020-01 - 2021-06', results:[[scoreId:'1', count: 1, result: [ result: 10 ]]]],
+                [group:'2022-01 - 2022-06', results:[[scoreId:'1', count: 1, result: [ result: 1 ]], [scoreId:'2', count: 2, result: [result: 2]]]]
+        ]
+        Map resp = [status:200, resp:report]
+        String fromDate = '2021-12-31T13:00:00Z'
+        String toDate = '2022-06-30T14:00:00Z'
+
+        when:
+        Map result = service.scoresForReport(projectId, reportId, scoreIds)
+
+        then:
+        1 * webService.getJson('project/'+projectId+'?includeDeleted=false') >> [reports:[[reportId:reportId, fromDate:fromDate, toDate:toDate]]]
+        1 * reportService.dateHistogramForScores(projectId, [fromDate, toDate], 'YYYY-MM', scoreIds) >> resp
+
+        result == ['1':1, '2':2, '3':0]
+    }
+
+
     private Map setupActivityModelForFiltering(List services) {
         Map activityModel = [name:'output', outputs:[]]
         services.each {
-            activityModel.outputs << it.output
+            activityModel.outputs << it.outputs[0].sectionName
         }
         activityModel
     }
@@ -1488,7 +1531,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
 
         List services = [1,2,3,4,5,6,7,8,9,10].collect{
             String output = 'o'+it
-            [id:it, output:output]
+            [id:it, outputs:[[formName:'output', sectionName:output]]]
         }
         services
     }

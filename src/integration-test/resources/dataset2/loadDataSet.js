@@ -2,10 +2,8 @@ print("This script is expected to be executed with a working directory containin
 print("Current working dir: " + process.cwd());
 load('../data_common/loadMeritHub.js');
 load('../data_common/insertData.js');
-
 loadActivityForms();
 
-print("Coeatep ")
 createProgram({});
 var config = {
     projectTemplate: "rlp",
