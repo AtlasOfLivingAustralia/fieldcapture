@@ -189,188 +189,199 @@
         "modelName": "RLP - Baseline data",
         "dataModel": [
           {
+            "dataType": "list",
+            "name": "baselineDetails",
             "columns": [
               {
-                "dataType": "list",
-                "description": "",
-                "name": "baselineData",
-                "columns": [
-                  {
-                    "name": "baselineName",
-                    "dataType": "text",
-                    "description": "Select the relevant Project Baseline as listed in the MERI Plan.",
-                    "validate": "required",
-                    "constraints": {
-                      "textProperty": "baseline",
-                      "valueProperty": "method",
-                      "type": "pre-populated",
-                      "config": {
-                        "source": {
-                          "context-path": "owner.custom.details.baseline.rows"
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "name": "focus",
-                    "dataType": "text",
-                    "validate": "required"
-                  }
-                ]
+                "dataType": "text",
+                "name": "datasetName",
+                "validate": "required"
               },
               {
-                "dataType": "list",
-                "description": "",
-                "name": "dataSets",
-                "columns": [
-                  {
-                    "name": "dataSetName",
-                    "dataType": "text",
-                    "description": "This section will require the Data Set Name so the Metadata fields in the Data Set Summary tab should be filled out sooner than the Outcome Reporting requirement.",
-                    "validate": "required",
-                    "constraints": {
-                      "textProperty": "name",
-                      "valueProperty": "dataSetId",
-                      "type": "pre-populated",
-                      "config": {
-                        "source": {
-                          "context-path": "owner.custom.dataSets"
-                        }
-                      }
+                "dataType": "text",
+                "name": "purpose",
+                "validate": "required"
+              },
+              {
+                "name": "projectBaseline",
+                "dataType": "text",
+                "description": "Select the relevant Project Baseline as listed in the MERI Plan.",
+                "validate": "required",
+                "constraints": {
+                  "textProperty": "baseline",
+                  "valueProperty": "method",
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "context-path": "owner.custom.details.baseline.rows"
                     }
-                  },
-                  {
-                    "name": "focus",
-                    "dataType": "text",
-                    "validate": "required"
                   }
-                ]
+                }
+              },
+              {
+                "name": "datasetSupports",
+                "dataType": "text",
+                "description": "This section will require the Data Set Name so the Metadata fields in the Data Set Summary tab should be filled out sooner than the Outcome Reporting requirement.",
+                "validate": "required",
+                "constraints": {
+                  "textProperty": "name",
+                  "valueProperty": "dataSetId",
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "context-path": "owner.custom.dataSets"
+                    }
+                  }
+                }
               },
               {
                 "dataType": "text",
                 "name": "baselineDescription",
                 "validate": "required,maxSize[500]"
-              },
-              {
-                "dataType": "text",
-                "name": "projectAssuranceDetails"
-              },
-              {
-                "dataType": "list",
-                "name": "assuranceDocuments",
-                "columns": [
-                  {
-                    "dataType": "document",
-                    "name": "attachments",
-                    "description": "Please attach any Evidence of Service Delivery here"
-                  }
-                ]
               }
-            ],
+            ]
+          },
+          {
+            "name": "baselineNameCountHeader",
+            "type": "number",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "count(baselineDetails, \"projectBaseline\")"
+            }
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[1500]"
+          },
+          {
+            "dataType": "text",
+            "name": "projectAssuranceDetails",
+            "description": ""
+          },
+          {
             "dataType": "list",
-            "name": "weedDistributionSurveySites"
+            "name": "assuranceDocuments",
+            "columns": [
+              {
+                "dataType": "document",
+                "name": "attachments",
+                "description": "Please attach any Evidence of Service Delivery here"
+              }
+            ]
           }
         ],
         "viewModel": [
           {
             "items": [
               {
-                "type": "row",
-                "items": [
+                "preLabel": "Total number of baseline datasets synthesised and finalised:",
+                "noEdit": true,
+                "type": "number",
+                "source": "baselineNameCountHeader"
+              },
+              {
+                "type": "table",
+                "source": "baselineDetails",
+                "userAddedRows": true,
+                "columns": [
                   {
-                    "type": "literal",
-                    "source": "<p><b>Tell us how many types of data sets you synthesised and finalised.</b></p>"
+                    "source": "datasetName",
+                    "type": "text",
+                    "width": "15%",
+                    "title": "Name of Dataset"
+                  },
+                  {
+                    "source": "purpose",
+                    "type": "text",
+                    "width": "15%",
+                    "title": "Purpose"
+                  },
+                  {
+                    "source": "projectBaseline",
+                    "type": "selectOne",
+                    "width": "15%",
+                    "title": "Which Project Baseline are you reporting on?"
+                  },
+                  {
+                    "source": "datasetSupports",
+                    "type": "selectOne",
+                    "width": "15%",
+                    "title": "What Dataset supports this Project Baseline?"
+                  },
+                  {
+                    "preLabel": "",
+                    "source": "baselineDescription",
+                    "type": "textarea",
+                    "width": "40%",
+                    "rows": 3,
+                    "placeholder": "",
+                    "title": "Briefly describe the baseline you have established under this service."
                   }
                 ]
               },
               {
-                "addRowText": "Add Section",
-                "userAddedRows": true,
-                "source": "weedDistributionSurveySites",
-                "type": "repeat",
+                "type": "row",
                 "items": [
                   {
-                    "type": "table",
-                    "source": "baselineData",
-                    "userAddedRows": false,
-                    "disableTableDownload": true,
-                    "disableTableUpload": true,
-                    "columns": [
-                      {
-                        "source": "baselineName",
-                        "type": "selectOne",
-                        "title": "Which Project Baseline are you reporting on?"
-                      }
-                    ]
-                  },
+                    "source": "<i>Note: to upload a communication material refer to the documents tab.</i>",
+                    "type": "literal"
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
                   {
-                    "type": "table",
-                    "source": "dataSets",
-                    "userAddedRows": true,
-                    "disableTableDownload": true,
-                    "disableTableUpload": true,
-                    "columns": [
-                      {
-                        "source": "dataSetName",
-                        "type": "selectOne",
-                        "title": "What Dataset supports this Project Baseline?"
-                      }
-                    ]
-                  },
+                    "preLabel": "Clarification, if needed",
+                    "type": "textarea",
+                    "rows": 4,
+                    "css": "span8",
+                    "source": "comments",
+                    "placeholder": "Clarification comments include points for follow up with the project manager about this service like:\n• any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
                   {
-                    "type": "row",
-                    "items": [
-                      {
-                        "type": "literal",
-                        "source": "<p><b>Briefly describe the baseline you have established under this service.</b></p>"
-                      }
-                    ]
-                  },
+                    "type": "literal",
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects. This field identifies what evidence you have available for this service and where the evidence is stored. This helps the Department and Service Providers during future assurance activities. Refer to the <a href=\"http://nrm.gov.au/publications/rlp-merit-user-guide\" target=\"_evidence\">Evidence Guide</a> for details of the types of acceptable evidence."
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
                   {
-                    "type": "row",
-                    "items": [
-                      {
-                        "preLabel": "",
-                        "source": "baselineDescription",
-                        "type": "textarea",
-                        "rows": 4,
-                        "placeholder": ""
-                      }
-                    ]
-                  },
+                    "preLabel": "",
+                    "source": "projectAssuranceDetails",
+                    "type": "textarea",
+                    "rows": 4,
+                    "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
                   {
-                    "type": "row",
-                    "items": [
-                      {
-                        "type": "literal",
-                        "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects but optional for Agriculture projects. This field identifies what evidence you have available for this service and where the evidence is stored. This helps the Department and Service Providers during future assurance activities. Refer to the <a href=\"http://nrm.gov.au/publications/rlp-merit-user-guide\" target=\"_evidence\">Evidence Guide</a> for details of the types of acceptable evidence."
-                      }
-                    ]
-                  },
+                    "type": "literal",
+                    "source": "<p><b>Evidence of Service Delivery</b></p>This field is mandatory for all projects as part of the invoicing process, where you have been notified as undergoing an <u>audit or quarterly assurance check</u>. The field allows you to attach evidence against a specific service."
+                  }
+                ]
+              },
+              {
+                "type": "table",
+                "source": "assuranceDocuments",
+                "userAddedRows": true,
+                "disableTableUpload": true,
+                "columns": [
                   {
-                    "type": "row",
-                    "items": [
-                      {
-                        "preLabel": "",
-                        "source": "projectAssuranceDetails",
-                        "type": "textarea",
-                        "rows": 4,
-                        "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
-                      }
-                    ]
-                  },
-                  {
-                    "type": "table",
-                    "source": "assuranceDocuments",
-                    "userAddedRows": true,
-                    "disableTableUpload": true,
-                    "columns": [
-                      {
-                        "title": "Attached documents",
-                        "source": "attachments",
-                        "type": "document"
-                      }
-                    ]
+                    "title": "Attached documents",
+                    "source": "attachments",
+                    "type": "document"
                   }
                 ]
               }

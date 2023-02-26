@@ -13,10 +13,6 @@ import org.apache.http.HttpStatus
 import org.grails.web.json.JSONArray
 import org.grails.web.json.JSONObject
 import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
-import org.joda.time.Days
-import org.joda.time.Months
-import org.joda.time.Period
 
 import static ReportService.ReportMode
 
@@ -24,7 +20,10 @@ class ProjectController {
 
     static allowedMethods =  [listProjectInvestmentPriorities: 'GET', ajaxUpdate: 'POST']
     static defaultAction = "index"
-    static ignore = ['action', 'controller', 'id', 'planStatus', 'hubId']
+    static ignore = ['action', 'controller', 'id', 'planStatus', 'hubId', 'projectId', 'isMERIT']
+    static final ADMIN_ONLY_FIELDS = ['config', 'programId', 'associatedProgram', 'associatedSubProgram', 'grantId', 'status', 'organisationId', 'orgIdSvcProvider']
+    static MANAGER_ONLY_FIELDS = ['plannedStartDate', 'plannedEndDate', 'contractStartDate', 'contractEndDate']
+
     static String ESP_TEMPLATE = "esp"
     static String RLP_TEMPLATE = "rlp"
     static String MERI_ONLY_TEMPLATE = "meri"
@@ -306,6 +305,18 @@ class ProjectController {
 
     }
 
+    /** Creates a list of properties that should be ignored depending on the current user role */
+    private List buildIgnoreList() {
+        List ignoreList = [] + ignore
+        if (!userService.userIsAlaOrFcAdmin()) {
+            ignoreList += ADMIN_ONLY_FIELDS
+        }
+        if (!userService.userIsSiteAdmin())       {
+            ignoreList += MANAGER_ONLY_FIELDS
+        }
+        ignoreList
+    }
+
     /**
      * Updates an existing project.
      * @param id projectId
@@ -324,8 +335,9 @@ class ProjectController {
         log.debug "Params: ${params}"
         def values = [:]
         // filter params to remove keys in the ignore list
+        List nonBindingProperties = buildIgnoreList()
         postBody.each { k, v ->
-            if (!(k in ignore)) {
+            if (!(k in nonBindingProperties)) {
                 values[k] = v
             }
         }
@@ -383,15 +395,7 @@ class ProjectController {
         render projectService.getServiceScoresForProject(id) as JSON
     }
 
-
-    @PreAuthorise
-    def update(String id) {
-        //params.each { println it }
-        projectService.update(id, params)
-        chain action: 'index', id: id
-    }
-
-    @PreAuthorise(accessLevel = 'admin')
+    @PreAuthorise(accessLevel = 'siteAdmin')
     def delete(String id) {
         projectService.delete(id)
         forward(controller: 'home')
