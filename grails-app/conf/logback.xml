@@ -11,7 +11,7 @@
     </encoder>
   </appender>
 
-  <logger name="au.org.ala.ecodata" level="INFO">
+  <logger name="au.org.ala.merit" level="INFO">
     <appender-ref ref="STDOUT" />
   </logger>
 
