@@ -143,8 +143,11 @@
     </section> <!-- end of breadcrumb -->
     <g:render template="banner"/>
     <section class="row">
-        <div class="col-sm-10">
-            <h1 class="pull-left" data-bind="text:name"></h1>
+        <div class="col-sm-10 heading-container">
+            <h1 class="project-header" data-bind="text:name"></h1>
+            <g:if test="${fc.userIsAlaOrFcAdmin() && project.config}">
+                <sup data-bind="popover:{content:'This project has changes to the normal program configuration'}" class="project-config-warning fa fa-2x fa-cog"></sup>
+            </g:if>
             <g:if test="${flash.errorMessage || flash.message}">
                 <div class="col-sm-5">
                     <div class="alert alert-danger">
@@ -155,7 +158,7 @@
             </g:if>
         </div>
 
-    <div class="col-sm-2">
+    <div class="col-sm-2 heading-buttons-container">
         <div class="float-right pull-right">
             <g:if test="${showAlternateTemplate}">
                 <a href="${createLink(action: 'index', id: project.projectId)}"><button class="btn btn-sm " type="button">User View</button></a>

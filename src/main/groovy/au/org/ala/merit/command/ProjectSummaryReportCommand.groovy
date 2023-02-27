@@ -18,6 +18,8 @@ import grails.validation.Validateable
  */
 class ProjectSummaryReportCommand implements Validateable {
 
+    static List<String> stageReportTypes = [ActivityService.FINAL_REPORT_ACTIVITY_TYPE, ActivityService.REDUCED_STAGE_REPORT_ACTIVITY_TYPE, ActivityService.STAGE_REPORT_ACTIVITY_TYPE, ActivityService.ALG_FINAL_REPORT, ActivityService.ALG_PROGRESS_REPORT]
+
     DocumentService documentService
     ProjectService projectService
     ReportService reportService
@@ -95,15 +97,12 @@ class ProjectSummaryReportCommand implements Validateable {
         documents
     }
 
-    private Map latestStageReport(Map project, List reportedStages, Map activitiesModel, Set activityModels) {
+    private Map latestStageReport(Map project, List reportedStages) {
         // Use the final report if available, otherwise fall back to the stage report.
         Map stageReportModel = null
         Map latestStageReport = findStageReport(project.activities, reportedStages)
-        if (latestStageReport){
-            stageReportModel = activitiesModel.activities.find {it.name == latestStageReport.type}
-            if (!activityModels.find{it.name == stageReportModel.name}) {
-                activityModels << stageReportModel
-            }
+        if (latestStageReport) {
+            stageReportModel = activityFormService.findActivityForm(latestStageReport.type, latestStageReport.formVersion)
         }
 
         [latestStageReport:latestStageReport, stageReportModel: stageReportModel]
@@ -171,7 +170,7 @@ class ProjectSummaryReportCommand implements Validateable {
         }
 
         if ('Stage report' in contentToInclude) {
-            model.putAll(latestStageReport(project, reportedStages, activitiesModel, activityModels))
+            model.putAll(latestStageReport(project, reportedStages))
         }
 
         if (('Project risks changes'in contentToInclude) || ('Project risks' in contentToInclude)) {
@@ -193,12 +192,11 @@ class ProjectSummaryReportCommand implements Validateable {
 
     private Map findStageReport(List activities, List reports) {
 
-        List<String> reportTypes = [ActivityService.FINAL_REPORT_ACTIVITY_TYPE, ActivityService.REDUCED_STAGE_REPORT_ACTIVITY_TYPE, ActivityService.STAGE_REPORT_ACTIVITY_TYPE, ActivityService.ALG_FINAL_REPORT, ActivityService.ALG_PROGRESS_REPORT]
         List reportsNewestFirst = reports?.reverse() ?:[]
         reportsNewestFirst.findResult { report ->
             Map activity = null
             if (reportService.excludesNotApproved(report)) {
-                activity = reportTypes.findResult { type ->
+                activity = stageReportTypes.findResult { type ->
                     activities?.findAll{it.type == type && it.progress == ActivityService.PROGRESS_FINISHED && it.plannedEndDate > report.fromDate && it.plannedEndDate <= report.toDate}?.max{it.plannedEndDate}
                 }
             }
