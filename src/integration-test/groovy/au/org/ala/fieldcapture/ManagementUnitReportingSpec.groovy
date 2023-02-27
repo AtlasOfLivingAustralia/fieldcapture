@@ -1,13 +1,11 @@
 package au.org.ala.fieldcapture
 
-import com.icegreen.greenmail.junit.GreenMailRule
+import com.icegreen.greenmail.util.GreenMail
 import com.icegreen.greenmail.util.GreenMailUtil
-import com.icegreen.greenmail.util.ServerSetup
-import com.icegreen.greenmail.util.ServerSetupTest
-import org.junit.Rule
 import pages.ManagementUnitPage
 import pages.ReportPage
 import pages.ViewReportPage
+import spock.lang.Shared
 import spock.lang.Stepwise
 
 import javax.mail.internet.MimeMessage
@@ -15,17 +13,19 @@ import javax.mail.internet.MimeMessage
 @Stepwise
 class ManagementUnitReportingSpec extends StubbedCasSpec {
 
-    @Rule
-    public GreenMailRule greenMail = new GreenMailRule(ServerSetup.verbose(ServerSetupTest.SMTP))
+    @Shared
+    GreenMail greenMail = new GreenMail()
 
     def setupSpec() {
         useDataSet('dataset_mu')
+        greenMail.start()
     }
 
-    def cleanup() {
+    def cleanupSpec() {
         waitFor {
             logout(browser)
         }
+        greenMail.stop()
     }
 
 
@@ -133,6 +133,7 @@ class ManagementUnitReportingSpec extends StubbedCasSpec {
             messages[0].getSubject() == "Report submitted subject"
             GreenMailUtil.getBody(messages[0]) == "<p>Report submitted body</p>"
         }
+
     }
 
     def "A user with the MU grant manager role can approve and return MU reports"() {

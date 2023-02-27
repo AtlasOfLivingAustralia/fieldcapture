@@ -1,23 +1,25 @@
 package au.org.ala.fieldcapture
 
-import com.icegreen.greenmail.junit.GreenMailRule
+import com.icegreen.greenmail.util.GreenMail
 import com.icegreen.greenmail.util.GreenMailUtil
-import com.icegreen.greenmail.util.ServerSetup
-import com.icegreen.greenmail.util.ServerSetupTest
-import org.junit.Rule
 import pages.ProjectIndex
+import spock.lang.Shared
+
 import javax.mail.Message
 
 class AccessExpirySpec extends StubbedCasSpec {
-    @Rule
-    public GreenMailRule greenMail = new GreenMailRule(ServerSetup.verbose(ServerSetupTest.SMTP))
+
+    @Shared
+    GreenMail greenMail = new GreenMail()
 
     def setupSpec() {
         useDataSet('dataset1')
+        greenMail.start()
     }
 
-    def cleanup() {
+    def cleanupSpec() {
         logout(browser)
+        greenMail.stop()
     }
 
     def "Once we trigger the access expiry, we expect access to be gone and an email to be sent"() {
