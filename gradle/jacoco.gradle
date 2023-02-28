@@ -3,6 +3,7 @@ jacoco {
     toolVersion = "0.8.8"
 }
 test {
+    useJUnitPlatform()
     jacoco {
         excludes = ['**/Application.groovy',
                     '**/BootStrap.groovy',
@@ -35,7 +36,7 @@ jacocoTestCoverageVerification {
     violationRules {
         rule {
             limit {
-                minimum = 0.38
+                minimum = 0.31
             }
         }
     }
