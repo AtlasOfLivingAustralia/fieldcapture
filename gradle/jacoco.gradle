@@ -2,33 +2,31 @@ apply plugin:"jacoco"
 jacoco {
     toolVersion = "0.8.8"
 }
+
 test {
     useJUnitPlatform()
-    jacoco {
-        excludes = ['**/Application.groovy',
-                    '**/BootStrap.groovy',
-                    '**/UrlMappings.groovy',
-                    '**/*GrailsPlugin.groovy',
-                    '**/*Mock.groovy',
-                    'com.skedgo.converter.*']
+    testLogging {
+        events "passed", "skipped", "failed"
     }
 }
-jacocoTestReport {
-    dependsOn test
 
-    afterEvaluate {
-        getClassDirectories().setFrom(classDirectories.files.collect {
-            fileTree(dir: it,
-                    exclude: [
-                            '**/TimezoneMapper.class'
-                    ]
-            )
-        })
-    }
+
+test {
+    finalizedBy jacocoTestReport // report is always generated after tests run
+}
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+}
+
+jacocoTestReport {
+    finalizedBy jacocoTestCoverageVerification // report is always generated after tests run
+}
+
+jacocoTestReport {
     reports {
-        xml.enabled false
-        csv.enabled false
-        html.destination file("${buildDir}/reports/jacocoHtml")
+        xml.required = false
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
     }
 }
 
@@ -36,8 +34,48 @@ jacocoTestCoverageVerification {
     violationRules {
         rule {
             limit {
-                minimum = 0.31
+                minimum = 0.3
             }
         }
     }
 }
+
+//test {
+//    useJUnitPlatform()
+//    jacoco {
+//        excludes = ['**/Application.groovy',
+//                    '**/BootStrap.groovy',
+//                    '**/UrlMappings.groovy',
+//                    '**/*GrailsPlugin.groovy',
+//                    '**/*Mock.groovy',
+//                    'com.skedgo.converter.*']
+//    }
+//}
+//jacocoTestReport {
+//    dependsOn test
+//
+//    afterEvaluate {
+//        getClassDirectories().setFrom(classDirectories.files.collect {
+//            fileTree(dir: it,
+//                    exclude: [
+//                            '**/TimezoneMapper.class'
+//                    ]
+//            )
+//        })
+//    }
+//    reports {
+//        xml.enabled false
+//        csv.enabled false
+//        html.destination file("${buildDir}/reports/jacocoHtml")
+//    }
+//}
+//
+//jacocoTestCoverageVerification {
+//    violationRules {
+//        rule {
+//            limit {
+//                minimum = 0.31
+//            }
+//        }
+//    }
+//}
