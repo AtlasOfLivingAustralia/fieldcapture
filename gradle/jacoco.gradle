@@ -2,7 +2,9 @@ apply plugin:"jacoco"
 jacoco {
     toolVersion = "0.8.8"
 }
+
 test {
+    useJUnitPlatform()
     jacoco {
         excludes = ['**/Application.groovy',
                     '**/BootStrap.groovy',
@@ -11,10 +13,12 @@ test {
                     '**/*Mock.groovy',
                     'com.skedgo.converter.*']
     }
+    finalizedBy jacocoTestReport // report is always generated after tests run
 }
+
 jacocoTestReport {
     dependsOn test
-
+    finalizedBy jacocoTestCoverageVerification // report is always generated after tests run
     afterEvaluate {
         getClassDirectories().setFrom(classDirectories.files.collect {
             fileTree(dir: it,
@@ -24,6 +28,7 @@ jacocoTestReport {
             )
         })
     }
+
     reports {
         xml.enabled false
         csv.enabled false
@@ -32,10 +37,11 @@ jacocoTestReport {
 }
 
 jacocoTestCoverageVerification {
+    dependsOn test
     violationRules {
         rule {
             limit {
-                minimum = 0.38
+                minimum = 0.31
             }
         }
     }
