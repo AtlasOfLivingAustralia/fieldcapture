@@ -169,24 +169,24 @@ class AdminControllerSpec extends Specification implements ControllerUnitTest<Ad
         0 * settingService._
     }
 
-//    void "Retriever HUB Roles"(){
-//        setup:
-//        HubSettings hubSettings = new HubSettings(hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
-//        SettingService.setHubConfig(hubSettings)
-//        def roles = roleService.MERIT_HUB_ROLES
-//        def hubFlg = true
-//
-//        when:
-//        def results = controller.createUserHubPermission()
-//
-//        then:
-//        1 * userService.getUser() >> [userId:'129333', userName: 'jsalomon']
-//
-//        and:
-//        view == '/admin/createUserHubPermission'
-//        model.roles == roles
-//        model.hubId == '00cf9ffd-e30c-45f8-99db-abce8d05c0d8'
-//        model.hubFlg == true
-//
-//    }
+    void "Retriever HUB Roles"(){
+        setup:
+        HubSettings hubSettings = new HubSettings(hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
+        SettingService.setHubConfig(hubSettings)
+        def roles = roleService.MERIT_HUB_ROLES
+        def hubFlg = true
+
+        when:
+        def results = controller.createUserHubPermission()
+
+        then:
+        1 * userService.getUser() >> [userId:'129333', userName: 'jsalomon']
+
+        and:
+        view == '/admin/createUserHubPermission'
+        model.roles == roles
+        model.hubId == '00cf9ffd-e30c-45f8-99db-abce8d05c0d8'
+        model.hubFlg == true
+
+    }
 }
