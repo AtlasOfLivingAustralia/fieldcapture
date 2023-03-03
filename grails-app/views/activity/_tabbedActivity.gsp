@@ -45,12 +45,13 @@
 
         var activityId = '${activity.activityId}';
         var projectId = '${activity.projectId}';
+        var reportId = '${report?.reportId}';
 
         var outputModelConfig = {
             projectId: projectId,
             activityId: activityId,
             stage: stageNumberFromStage('${activity.projectStage}'),
-            disablePrepop: ${activity.progress == au.org.ala.merit.ActivityService.PROGRESS_FINISHED},
+            disablePrepop: false,
             speciesConfig:<fc:modelAsJavascript model="${speciesConfig}"/>,
             recoveryDataStorageKey: 'activity-'+activityId,
             prepopUrlPrefix:"${grailsApplication.config.getProperty('grails.serverURL')}"
@@ -74,7 +75,8 @@
             project:fcConfig.project,
             activity:activity,
             documents:activity.documents,
-            site:activity.site
+            site:activity.site,
+            reportId:reportId
         };
 
         var viewModel = ecodata.forms.initialiseOutputViewModel(blockId, config.model.dataModel, output, config, context);

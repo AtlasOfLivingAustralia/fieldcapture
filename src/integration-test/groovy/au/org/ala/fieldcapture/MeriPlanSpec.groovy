@@ -562,4 +562,64 @@ class MeriPlanSpec extends StubbedCasSpec {
         then:
         overview.projectStatus[1].text() == 'ACTIVE'
     }
+
+    def "Open the history of the MERI plan approval"() {
+
+        setup:
+        loginAsGrantManager(browser)
+
+        when:
+        to ProjectIndex, 'project_active'
+
+        then:
+        waitFor { at ProjectIndex }
+
+        when:
+        adminTab.click()
+
+        then:
+        def meriplan = waitFor { admin.openMeriPlan() }
+        waitFor {
+            !meriplan.approveButton.@disabled
+        }
+
+        when:
+        waitFor { meriplan.approveButton.click() }
+
+        then:
+        waitFor {
+            meriplan.approvePlanDialog.changeOrderNumbers.displayed
+        }
+
+        when:
+        meriplan.approvePlanDialog.changeOrderNumbers = 'test'
+        meriplan.approvePlanDialog.comment = 'test'
+
+        meriplan.approvePlanDialog.approve()
+
+        then:
+        waitFor{hasBeenReloaded()}
+        at ProjectIndex
+
+        when:
+        adminTab.click()
+
+        then:
+        def openMeriPlan = waitFor { admin.openMeriPlan() }
+        openMeriPlan.modifyApprovedPlanButton.displayed
+        openMeriPlan.toggleMeriPlanHistory.displayed
+
+        when:
+        waitFor { openMeriPlan.toggleMeriPlanHistory.click() }
+
+        then:
+        openMeriPlan.meriPlanHistory.size() == 1
+        waitFor { openMeriPlan.meriPlanHistory.open[0].click() }
+
+        when:
+        overviewTab.click()
+
+        then:
+        overview.projectStatus[1].text() == 'ACTIVE'
+    }
 }

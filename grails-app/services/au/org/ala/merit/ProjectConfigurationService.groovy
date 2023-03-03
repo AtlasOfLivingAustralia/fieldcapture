@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.config.ProgramConfig
 import groovy.util.logging.Slf4j
 
 /**
@@ -33,17 +34,56 @@ class ProjectConfigurationService {
 
     private ProgramConfig buildConfigFromProgram(Map project) {
         Map program = programService.get(project.programId)
-        ProgramConfig programConfig = new ProgramConfig(program.inheritedConfig ?: [:])
+        Map rawProgramConfig = program.inheritedConfig ?: [:]
+        Map projectConfig = project.config ?: [:]
+        rawProgramConfig.putAll(projectConfig)
+        ProgramConfig programConfig = new ProgramConfig(rawProgramConfig)
+
         if (!programConfig.activityBasedReporting) {
-            programConfig.services = metadataService.getProjectServices()
-            if (programConfig.supportedServiceIds) {
-                List supportedServiceIds = programConfig.supportedServiceIds?.collect{it as Integer}
-                programConfig.services = programConfig.services.findAll{it.id in supportedServiceIds}
+
+            List<Map> allServices = metadataService.getProjectServices()
+            if (programConfig.programServiceConfig && programConfig.programServiceConfig.programServices) {
+                programConfig.services = programConfig.programServiceConfig.programServices.collect { serviceConfig ->
+                    Map service = allServices.find{it.id == serviceConfig.serviceId}
+                    Map serviceFormSectionConfig = service.outputs?.find{ it.formName == programConfig.programServiceConfig.serviceFormName}
+                    String output = serviceFormSectionConfig?.sectionName
+
+                    List scores = service?.scores
+                    // If the program configuration has specified a list of scores for the service, use those,
+                    // otherwise use all possible scores that can be used by the service.
+                    if (serviceConfig.serviceTargets) {
+                        scores = scores?.findAll { it.scoreId in serviceConfig.serviceTargets }
+                    }
+
+                    // This allows programs to override the service name if required.  This is needed as the
+                    // service names are listed in contracts so need to be kept the same for a program.
+                    String serviceName = service.name
+                    if (service?.programLabels && service.programLabels[project.programId]) {
+                        serviceName = service.programLabels[project.programId].label ?: serviceName
+                    }
+                    [
+                       id: service.id,
+                       name: serviceName,
+                       service: service,
+                       output: output,
+                       scores: scores
+                    ]
+                }
+            }
+            else {
+                programConfig.services = allServices.collect { Map service ->
+                    [id: service.id,
+                     name: service.name,
+                     service: service,
+                     output:null,
+                     scores: service.scores
+                    ]
+                }
             }
         }
-        // Outcomes are defined by the program
-        programConfig.outcomes = program.outcomes ?: []
-        programConfig.priorities = program.priorities ?: []
+        // Outcomes are defined by the program (optionally replaced by the project)
+        programConfig.outcomes = projectConfig.outcomes ?: (program.outcomes ?: [])
+        programConfig.priorities = projectConfig.priorities ?: (program.priorities ?: [])
         programConfig.themes = program.themes ?: []
         programConfig.program = program
 
@@ -58,7 +98,7 @@ class ProjectConfigurationService {
             // actually exist within the boundary of the management unit.
             // (e.g. threatened species may be known to exist within some
             // management units but not others)
-            if (managementUnit.priorities) {
+            if (managementUnit.priorities && !projectConfig.priorities) {
                 programConfig.priorities = managementUnit.priorities
             }
             // If the program doesn't define outcomes, use ones for the management unit.
@@ -67,31 +107,31 @@ class ProjectConfigurationService {
             }
 
             // Allow management units to override project reporting frequency
-            List extraReports = []
             if (!programConfig.projectReports) {
                 programConfig.projectReports = []
             }
-            config.projectReports?.each { Map configuration ->
-                Map projectReport = programConfig.projectReports?.find {
-                    return it.category == configuration.category && it.activityType == configuration.activityType
-                }
-                if (projectReport) {
-                    // Both the frequency and start date are required so the report dates
-                    // align correctly.
-                    if (configuration.reportingPeriodInMonths) {
-                        projectReport.reportingPeriodInMonths = configuration.reportingPeriodInMonths
+            if (!projectConfig.projectReports) {
+                config.projectReports?.each { Map configuration ->
+                    Map projectReport = programConfig.projectReports?.find {
+                        return it.category == configuration.category && it.activityType == configuration.activityType
                     }
-                    if (configuration.firstReportingPeriodEnd) {
-                        projectReport.firstReportingPeriodEnd = configuration.firstReportingPeriodEnd
-                    }
-                    // RLP projects label 3 monthly reports as "Quarter" and 6 monthly reports as "Semester"
-                    // to simplify downstream reporting.
-                    if (configuration.label) {
-                        projectReport.label = configuration.label
+                    if (projectReport) {
+                        // Both the frequency and start date are required so the report dates
+                        // align correctly.
+                        if (configuration.reportingPeriodInMonths) {
+                            projectReport.reportingPeriodInMonths = configuration.reportingPeriodInMonths
+                        }
+                        if (configuration.firstReportingPeriodEnd) {
+                            projectReport.firstReportingPeriodEnd = configuration.firstReportingPeriodEnd
+                        }
+                        // RLP projects label 3 monthly reports as "Quarter" and 6 monthly reports as "Semester"
+                        // to simplify downstream reporting.
+                        if (configuration.label) {
+                            projectReport.label = configuration.label
+                        }
                     }
                 }
             }
-            programConfig.projectReports?.addAll(extraReports)
         }
         programConfig
     }

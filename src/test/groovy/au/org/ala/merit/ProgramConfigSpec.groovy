@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.config.ProgramConfig
 import spock.lang.Specification
 
 class ProgramConfigSpec extends Specification {

@@ -1,6 +1,8 @@
 package au.org.ala.merit
 
-import au.org.ala.merit.reports.ReportConfig
+import au.org.ala.merit.config.EmailTemplate
+import au.org.ala.merit.config.ProgramConfig
+import au.org.ala.merit.config.ReportConfig
 import au.org.ala.merit.reports.ReportGenerator
 import au.org.ala.merit.reports.ReportOwner
 import grails.plugin.cache.Cacheable
@@ -384,8 +386,13 @@ class ReportService {
 
 
     Map dateHistogramForScores(String projectId, DateTime startDate, DateTime endDate, Period period, String format, List<String> scoreIds) {
+        List dateBuckets = dateHistogramGroup(startDate, endDate, period, format)
+        dateHistogramForScores(projectId, dateBuckets, format, scoreIds)
+    }
 
-        Map dateGrouping = dateHistogramGroup(startDate, endDate, period, format)
+    Map dateHistogramForScores(String projectId, List dateBuckets, String format, List scoreIds) {
+
+        Map dateGrouping = [type:'date', buckets:dateBuckets, format:format, property:'activity.plannedEndDate']
 
         String url =  grailsApplication.config.getProperty('ecodata.baseUrl')+"project/projectMetrics/"+projectId
 
@@ -396,8 +403,7 @@ class ReportService {
         return report
     }
 
-    Map dateHistogramGroup(DateTime startDate, DateTime endDate, Period period, String format = 'YYYY') {
-
+    private List dateHistogramGroup(DateTime startDate, DateTime endDate, Period period, String format = 'YYYY') {
 
         DateTime date = startDate
         List dateBuckets = [DateUtils.format(date)]
@@ -405,9 +411,7 @@ class ReportService {
             date = date.plus(period)
             dateBuckets.add(DateUtils.format(date))
         }
-
-        [type:'date', buckets:dateBuckets, format:format, property:'activity.plannedEndDate']
-
+        dateBuckets
     }
 
     def reject(String reportId, List categories, String reason) {
@@ -932,6 +936,23 @@ class ReportService {
             model.data = activity.outputs.find{it.name == OUTPUT_TYPE}.data
         }
         model
+    }
+
+    /**
+     * Return the history of the report
+     * @param reportId
+     */
+    def getReportHistory(String reportId) {
+        Map report = get(reportId)
+
+        List history = []
+        report.statusChangeHistory.each { change ->
+            def changingUser = authService.getUserForUserId(change.changedBy)
+            def displayName = changingUser?changingUser.displayName:'unknown'
+            history << [name:report.name, date:change.dateChanged, who:displayName, status:change.status, comment: change.comment, categories: change.categories?.join(', ')]
+        }
+        history.sort {it.dateChanged}
+        history
     }
 
 }

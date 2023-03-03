@@ -13,10 +13,10 @@ describe("The ESP reporting process works slightly differently to the normal MER
     });
 
     beforeEach(function() {
-        amplify.store('selectedFinancialYear-p1', null);
+        amplify.store('selectedReportId-p1', null);
     });
     afterEach(function() {
-        amplify.store('selectedFinancialYear-p1', null);
+        amplify.store('selectedReportId-p1', null);
     });
 
     function buildEspProject() {
@@ -40,35 +40,35 @@ describe("The ESP reporting process works slightly differently to the normal MER
                 name: 'Stage 1',
                 publicationStatus:'not published',
                 fromDate:'2018-01-31T13:00:00Z',
-                toDate:'2019-01-31T13:00:00Z'
+                toDate:'2019-01-31T13:00:00Z',
+                reportId:'r1'
             },
             {
                     name: 'Stage 2',
                     publicationStatus:'published',
                     fromDate:'2019-01-31T13:00:00Z',
-                    toDate:'2020-01-31T13:00:00Z'
+                    toDate:'2020-01-31T13:00:00Z',
+                    reportId:'r2'
             },
                 {
                     name: 'Stage 3',
                     publicationStatus:'not published',
                     fromDate:'2020-01-31T13:00:00Z',
-                    toDate:'2021-01-31T13:00:00Z'
+                    toDate:'2021-01-31T13:00:00Z',
+                    reportId:'r3'
                 },
                 {
                     name: 'Stage 4',
                     publicationStatus:'not published',
                     fromDate:'2021-01-31T13:00:00Z',
-                    toDate:'2022-01-31T13:00:00Z'
+                    toDate:'2022-01-31T13:00:00Z',
+                    reportId:'r4'
                 },{
                     name: 'Stage 5',
                     publicationStatus:'not published',
                     fromDate:'2022-01-31T13:00:00Z',
-                    toDate:'2023-01-31T13:00:00Z'
-                },{
-                    name: 'Stage ',
-                    publicationStatus:'not published',
-                    fromDate:'2023-01-31T13:00:00Z',
-                    toDate:'2024-01-31T13:00:00Z'
+                    toDate:'2023-01-31T13:00:00Z',
+                    reportId:'r5'
                 }],
             activities:[{
                 activityId:'a1',
@@ -92,8 +92,30 @@ describe("The ESP reporting process works slightly differently to the normal MER
                 plannedEndDate:'2022-01-31T13:00:00Z',
                 progress:'planned',
                 documents:[]
-            }
-            ]
+            },
+            {
+                activityId:'a4',
+                type:"ESP PMU or Zone Report",
+                plannedStartDate:'2022-01-31T13:00:00Z',
+                plannedEndDate:'2023-01-31T13:00:00Z',
+                progress:'planned',
+                siteId:'site1',
+                documents:[]
+            }, {
+                activityId:'a5',
+                type:"ESP Species",
+                plannedStartDate:'2022-01-31T13:00:00Z',
+                plannedEndDate:'2023-01-31T13:00:00Z',
+                progress:'planned',
+                documents:[]
+            }, {
+                activityId:'a6',
+                type:"ESP Overview",
+                plannedStartDate:'2022-01-31T13:00:00Z',
+                plannedEndDate:'2023-01-31T13:00:00Z',
+                progress:'planned',
+                documents:[]
+            }]
         };
     }
 
@@ -120,13 +142,13 @@ describe("The ESP reporting process works slightly differently to the normal MER
         var config = {
             activityUpdateUrl:"/activity/ajaxUpdate"
         };
-        ecodata.forms.a3 = {
+        ecodata.forms.a6 = {
             save:function(callback) {
                 callback(true, {});
             }
         };
         var viewModel = new SimplifiedReportingViewModel(project, config);
-        project.activities[0].progress = 'finished';
+        project.activities[3].progress = 'finished';
 
         var ajaxParamsForSpeciesActivity;
         spyOn($, 'ajax').and.callFake(function(params) {
@@ -139,9 +161,9 @@ describe("The ESP reporting process works slightly differently to the normal MER
 
         viewModel.submitReport();
         expect(ajaxParamsForSpeciesActivity).toEqual({
-            url:config.activityUpdateUrl+'/a2',
+            url:config.activityUpdateUrl+'/a5',
             type:'POST',
-            data: '{"activityId":"a2","outputs":[{"name":"ESP Optional Reporting","data":{},"outputNotCompleted":true}],"progress":"finished"}',
+            data: '{"activityId":"a5","outputs":[{"name":"ESP Optional Reporting","data":{},"outputNotCompleted":true}],"progress":"finished"}',
             contentType: 'application/json'
 
         });
@@ -152,14 +174,14 @@ describe("The ESP reporting process works slightly differently to the normal MER
     it("will not attempt to submit the form if the form validation fails", function() {
         var project = buildEspProject();
         // Setup the Zone report and Species report as completed.
-        project.activities[0].progress = 'finished';
-        project.activities[1].progress = 'finished';
+        project.activities[3].progress = 'finished';
+        project.activities[4].progress = 'finished';
 
         var config = {
             activityUpdateUrl:"/activity/ajaxUpdate"
         };
         var saveCalled = false;
-        ecodata.forms.a3 = {
+        ecodata.forms.a6 = {
             save:function(callback) {
                 saveCalled = true;
                 callback(false, {});
@@ -189,14 +211,14 @@ describe("The ESP reporting process works slightly differently to the normal MER
     it("will submit the form if the form validation succeeds", function() {
         var project = buildEspProject();
         // Setup the Zone report and Species report as completed.
-        project.activities[0].progress = 'finished';
-        project.activities[1].progress = 'finished';
+        project.activities[3].progress = 'finished';
+        project.activities[4].progress = 'finished';
 
         var config = {
             activityUpdateUrl:"/activity/ajaxUpdate"
         };
         var saveCalled = false;
-        ecodata.forms.a3 = {
+        ecodata.forms.a6 = {
             save:function(callback) {
                 saveCalled = true;
                 callback(true, {});
@@ -275,7 +297,7 @@ describe("The ESP reporting process works slightly differently to the normal MER
         var viewModel = new SimplifiedReportingViewModel(project, config);
 
         console.log(JSON.stringify(viewModel.stageToReport()));
-        expect(viewModel.stageToReport()).toEqual("Stage 4")
+        expect(viewModel.stageToReport()).toEqual("Stage 5")
         expect(viewModel.reportSelectionList.length).toEqual(5)
 
     });
@@ -283,34 +305,33 @@ describe("The ESP reporting process works slightly differently to the normal MER
     it("will stage a report based from the selected reporting period", function() {
 
         var project = buildEspProject();
-        project.financialYearSelected = "2019/2020";
-        var config = {showEmptyStages:true };
+
+        var config = {showEmptyStages:true, selectedReportId:'r2' };
         var viewModel = new SimplifiedReportingViewModel(project, config);
 
         expect(viewModel.stageToReport()).toEqual("Stage 2");
         expect(viewModel.reportSelectionList.length).toEqual(5);
 
-        expect(amplify.store('selectedFinancialYear-p1')).toEqual(project.financialYearSelected);
+        expect(amplify.store('selectedReportId-p1')).toEqual(config.selectedReportId);
 
     });
 
     it("will select a saved report if one has been previously selected", function() {
         var project = buildEspProject();
-        amplify.store('selectedFinancialYear-p1', "2019/2020");
+        amplify.store('selectedReportId-p1', "r2");
         var config = {showEmptyStages:true };
         var viewModel = new SimplifiedReportingViewModel(project, config);
 
         expect(viewModel.stageToReport()).toEqual("Stage 2");
     });
 
-    it("will default and stage the oldest report that has not yet been approved", function() {
+    it("will select as the default reporting stage the most recent report that has a to date of before the current time", function() {
 
         var project = buildEspProject();
-        project.financialYearSelected = ""
         var config = {showEmptyStages:true };
         var viewModel = new SimplifiedReportingViewModel(project, config);
 
-        expect(viewModel.stageToReport()).toEqual("Stage 4")
+        expect(viewModel.stageToReport()).toEqual("Stage 5")
         expect(viewModel.reportSelectionList.length).toEqual(5)
 
     });
@@ -318,7 +339,6 @@ describe("The ESP reporting process works slightly differently to the normal MER
     it("the reporting period dropdown will display it's value based on the rule where the reports fromDate are less than the current date", function() {
 
         var project = buildEspProject();
-        project.financialYearSelected = ""
         var config = {showEmptyStages:true };
         var viewModel = new SimplifiedReportingViewModel(project, config);
 

@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.config.EmailTemplate
 import au.org.ala.merit.hub.HubSettings
 import au.org.ala.merit.reports.ReportGenerationOptions
 import grails.testing.spring.AutowiredTest

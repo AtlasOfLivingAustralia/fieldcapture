@@ -2,6 +2,7 @@ package au.org.ala.merit
 
 import au.org.ala.merit.command.MeriPlanReportCommand
 import au.org.ala.merit.command.SaveReportDataCommand
+import au.org.ala.merit.config.ProgramConfig
 import org.apache.http.HttpStatus
 import spock.lang.Specification
 import grails.testing.web.controllers.ControllerUnitTest
@@ -11,7 +12,7 @@ import grails.testing.web.controllers.ControllerUnitTest
  */
 class ProjectControllerSpec extends Specification implements ControllerUnitTest<ProjectController>{
 
-    def userServiceStub = Stub(UserService)
+    def userServiceStub = Mock(UserService)
     def metadataServiceStub = Stub(MetadataService)
     def projectService = Mock(ProjectService)
     def siteServiceStub = Stub(SiteService)
@@ -23,6 +24,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
     def reportService = Mock(ReportService)
     def activityService = Mock(ActivityService)
     def siteService = Mock(SiteService)
+
     WebService webService = Mock(WebService)
 
     ProjectService realProjectService
@@ -839,7 +841,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         response.json == [message:'updated']
     }
 
-    def "The ajaxUpdate action is invoked from the Project's report tab with unmodified project start and end dates"() {
+    def "Grant / project managers can update the project dates from the Reporting tab"() {
         setup:
         String projectId = 'p1'
 
@@ -849,47 +851,73 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         controller.ajaxUpdate(projectId)
 
         then:
+        1 * userServiceStub.userIsSiteAdmin() >> true
         1 * projectService.update(projectId, [plannedStartDate:'2022-06-09T14:00:00Z', plannedEndDate:'2024-06-29T14:00:00Z']) >> [:]
+    }
+
+    def "Only admins can update come properties including programId and config"(boolean isGrantManager) {
+        setup:
+        String projectId = 'p1'
+        Map data = ProjectController.ADMIN_ONLY_FIELDS.collectEntries { [(it):it] }
+
+        when:
+        request.method = 'POST'
+        request.json = data
+        controller.ajaxUpdate(projectId)
+
+        then:
+        1 * userServiceStub.userIsSiteAdmin() >> isGrantManager
+        1 * userServiceStub.userIsAlaOrFcAdmin() >> false
+        1 * projectService.update(projectId, [:]) >> [:]
+
+        where:
+        isGrantManager | _
+        true | _
+        false | _
 
     }
 
-    def "The scoresForFinanicalYear function will return 0s even if scores are missing"() {
+    def "Project managers and admin can update some properties admins cannot"(boolean isGrantManager, boolean isAdmin, int expectedSize) {
+        setup:
+        String projectId = 'p1'
+        Map data = ProjectController.ADMIN_ONLY_FIELDS.collectEntries { [(it):it] }
+        data += ProjectController.MANAGER_ONLY_FIELDS.collectEntries { [(it):it] }
+
+        when:
+        request.method = 'POST'
+        request.json = data
+        controller.ajaxUpdate(projectId)
+
+        then:
+        userServiceStub.userIsSiteAdmin() >> (isAdmin || isGrantManager)
+        userServiceStub.userIsAlaOrFcAdmin() >> isAdmin
+        1 * projectService.update(projectId, { it.size() == expectedSize }) >> [:]
+
+        where:
+        isGrantManager | isAdmin | expectedSize
+        true | false | ProjectController.MANAGER_ONLY_FIELDS.size()
+        false | true | ProjectController.MANAGER_ONLY_FIELDS.size() + ProjectController.ADMIN_ONLY_FIELDS.size()
+        false | false | 0
+
+    }
+
+    def "The scoresForReport method delegates to the projectService"() {
         setup:
         String projectId = 'p1'
         List scoreIds = ['1', '2', '3']
-        List report = [
-                [group:'2020 - 2021', results:[[scoreId:'1', count: 1, result: [ result: 10 ]]]],
-                [group:'2021 - 2022', results:[[scoreId:'1', count: 1, result: [ result: 1 ]], [scoreId:'2', count: 2, result: [result: 2]]]]
-        ]
-        Map resp = [status:200, resp:report]
+        String reportId = 'r1'
+        Map result =  ['1':1, '2':2, '3':3]
 
         when:
         params.id = projectId
         params.scoreIds = scoreIds
-        params.date = '2022-04-30T14:00:00Z'
+        params.reportId = reportId
 
-        controller.scoresForFinancialYear(projectId)
-
-        then:
-        1 * projectService.scoresByFinancialYear(projectId, scoreIds) >> resp
-        response.json == ['1':1, '2':2, '3':0]
-    }
-
-    def "The scoresForFinancialYear method returns zeros if it cannot obtain scores"() {
-        setup:
-        String projectId = 'p1'
-        List scoreIds = ['1', '2', '3']
-
-        when:
-        params.id = projectId
-        params.scoreIds = scoreIds
-        params.date = '2022-04-30T14:00:00Z'
-
-        controller.scoresForFinancialYear(projectId)
+        controller.scoresForReport(projectId)
 
         then:
-        1 * projectService.scoresByFinancialYear(projectId, scoreIds) >> [status:500, error:'']
-        response.json == ['1':0, '2':0, '3':0]
+        1 * projectService.scoresForReport(projectId, reportId, scoreIds) >> result
+        response.json == result
     }
 
     private Map stubPublicUser() {

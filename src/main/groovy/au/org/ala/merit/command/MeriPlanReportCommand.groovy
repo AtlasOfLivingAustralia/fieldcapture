@@ -46,9 +46,10 @@ class MeriPlanReportCommand implements Validateable{
         if (!validate()) {
             return [statusCode:HttpStatus.SC_UNPROCESSABLE_ENTITY, error:getErrors()]
         }
-        Map project
+        Map project, content
         if (documentId) {
-            project = projectService.getApprovedMeriPlanProject(documentId)
+            content = projectService.getApprovedMeriPlanProject(documentId)
+            project = content?.project
         }
         else {
             project = projectService.get(id, 'all')
@@ -65,12 +66,14 @@ class MeriPlanReportCommand implements Validateable{
         else {
             Map config = projectService.getProgramConfiguration(project)
 
+            project?.referenceDocument = content?.referenceDocument
+            project?.dateApproved = content?.dateApproved
             /*
               Pre-2020 the project template was determined differently,
               the historical MERI plan function was only enabled on RLP projects during that time.
               For this issue(github 2748) it is sensible to default the RLP template.
             */
-            String meriPlanTemplate = config.meriPlanTemplate ?: RLP_MERI_PLAN_TEMPLATE
+            String meriPlanTemplate = config?.meriPlanTemplate ?: RLP_MERI_PLAN_TEMPLATE
             model = [project:project,
                      config:config,
                      headerTemplate:'/project/'+meriPlanTemplate+'Header',

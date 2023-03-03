@@ -4,7 +4,8 @@ import au.org.ala.merit.command.MeriPlanReportCommand
 import au.org.ala.merit.command.ProjectSummaryReportCommand
 import au.org.ala.merit.command.ReportCommand
 import au.org.ala.merit.command.SaveReportDataCommand
-import au.org.ala.merit.reports.ReportConfig
+import au.org.ala.merit.config.ProgramConfig
+import au.org.ala.merit.config.ReportConfig
 import au.org.ala.merit.reports.ReportGenerationOptions
 import grails.converters.JSON
 import grails.core.GrailsApplication
@@ -19,7 +20,10 @@ class ProjectController {
 
     static allowedMethods =  [listProjectInvestmentPriorities: 'GET', ajaxUpdate: 'POST']
     static defaultAction = "index"
-    static ignore = ['action', 'controller', 'id', 'planStatus', 'hubId']
+    static ignore = ['action', 'controller', 'id', 'planStatus', 'hubId', 'projectId', 'isMERIT']
+    static final ADMIN_ONLY_FIELDS = ['config', 'programId', 'associatedProgram', 'associatedSubProgram', 'grantId', 'status', 'organisationId', 'orgIdSvcProvider']
+    static MANAGER_ONLY_FIELDS = ['plannedStartDate', 'plannedEndDate', 'contractStartDate', 'contractEndDate']
+
     static String ESP_TEMPLATE = "esp"
     static String RLP_TEMPLATE = "rlp"
     static String MERI_ONLY_TEMPLATE = "meri"
@@ -79,7 +83,6 @@ class ProjectController {
 
             String template = projectTemplate(config, params.template)
             if (template == ESP_TEMPLATE && user?.isEditor) {
-                project.financialYearSelected = params?.financialYearSelected
                 espOverview(project, user, config)
             } else {
                 project.sites?.sort { it.name }
@@ -302,6 +305,18 @@ class ProjectController {
 
     }
 
+    /** Creates a list of properties that should be ignored depending on the current user role */
+    private List buildIgnoreList() {
+        List ignoreList = [] + ignore
+        if (!userService.userIsAlaOrFcAdmin()) {
+            ignoreList += ADMIN_ONLY_FIELDS
+        }
+        if (!userService.userIsSiteAdmin())       {
+            ignoreList += MANAGER_ONLY_FIELDS
+        }
+        ignoreList
+    }
+
     /**
      * Updates an existing project.
      * @param id projectId
@@ -320,8 +335,9 @@ class ProjectController {
         log.debug "Params: ${params}"
         def values = [:]
         // filter params to remove keys in the ignore list
+        List nonBindingProperties = buildIgnoreList()
         postBody.each { k, v ->
-            if (!(k in ignore)) {
+            if (!(k in nonBindingProperties)) {
                 values[k] = v
             }
         }
@@ -379,15 +395,7 @@ class ProjectController {
         render projectService.getServiceScoresForProject(id) as JSON
     }
 
-
-    @PreAuthorise
-    def update(String id) {
-        //params.each { println it }
-        projectService.update(id, params)
-        chain action: 'index', id: id
-    }
-
-    @PreAuthorise(accessLevel = 'admin')
+    @PreAuthorise(accessLevel = 'siteAdmin')
     def delete(String id) {
         projectService.delete(id)
         forward(controller: 'home')
@@ -941,17 +949,13 @@ class ProjectController {
     }
 
     @PreAuthorise
-    def scoresForFinancialYear(String id) {
+    def scoresForReport(String id) {
         List scoreIds = params.getList('scoreIds')
-        String date = params.get('date')
-        Map results = projectService.scoresByFinancialYear(id, scoreIds)
-        DateTime financialYearStart = DateUtils.alignToFinancialYear(DateUtils.parse(date))
-        String yearGroupToMatch = financialYearStart.year + " - " + (financialYearStart.year+1)
+        String reportId = params.get('reportId')
 
-        Map financialYearResult = results.resp?.find{ it.group == yearGroupToMatch } ?: [:]
-        Map resp = scoreIds.collectEntries{ String scoreId ->[(scoreId):financialYearResult.results?.find{it.scoreId == scoreId}?.result?.result ?: 0]}
+        Map result = projectService.scoresForReport(id, reportId, scoreIds)
 
-        render resp as JSON
+        render result as JSON
     }
 
     @PreAuthorise(accessLevel = 'editor')

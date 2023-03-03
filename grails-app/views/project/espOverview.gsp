@@ -314,8 +314,9 @@
 
     $(function() {
         var project = <fc:renderProject project="${project}"/>;
-
-        var simplifiedReportingViewModel = new SimplifiedReportingViewModel(project, fcConfig);
+        var selectedReportId = '${params.selectedReportId ?: ""}';
+        var options = _.extend({}, fcConfig, {selectedReportId:selectedReportId});
+        var simplifiedReportingViewModel = new SimplifiedReportingViewModel(project, options);
         ko.applyBindings(simplifiedReportingViewModel);
 
         var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');

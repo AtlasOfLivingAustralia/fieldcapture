@@ -889,6 +889,28 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
 
     };
 
+    /** Formats / pretty-prints the saved config JSON for display */
+    var savedProjectConfig = project.config && vkbeautify.json(project.config);
+
+    self.config = ko.observable(savedProjectConfig);
+
+    /** Saves project config */
+    self.saveConfiguration = function() {
+        var config = null;
+        try {
+            config = JSON.parse(self.config());
+        }
+        catch (e) {
+            bootbox.alert("Invalid JSON");
+            return;
+        }
+
+        var jsData = {
+            config: config
+        };
+        projectService.saveProjectData(jsData);
+    };
+
     self.saveSettings = function () {
         var jsData = {
             name: self.name(),
