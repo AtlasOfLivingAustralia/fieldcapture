@@ -83,7 +83,13 @@
                         </div>
                     </g:if>
                 </g:if>
+                <g:else>
+                    <div class="btn-group login-logout">
+                        <a class="btn btn-small btn-signup" href="${grailsApplication.config.getProperty('user.registration.url')}"><span>Sign up</span></a>
+                    </div>
+                </g:else>
                 <div class="btn-group login-logout">
+
                     <auth:loginLogout
                             ignoreCookie="true"
                             loginReturnToUrl="${createLink(controller:'home', action:'login', absolute:true)}"
