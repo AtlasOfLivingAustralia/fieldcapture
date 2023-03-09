@@ -639,7 +639,7 @@ class UserService {
     }
 
     def getMembersForHubPerPage(String hubId, int pageStart, int pageSize, String userId = null) {
-        def url = grailsApplication.config.ecodata.service.url + "/permissions/getMembersForHubPerPage?hubId=${hubId}&offset=${pageStart}&max=${pageSize}&userId=${userId}"
+        def url = grailsApplication.config.getProperty('ecodata.service.url') + "/permissions/getMembersForHubPerPage?hubId=${hubId}&offset=${pageStart}&max=${pageSize}&userId=${userId}"
         def resp = webService.getJson(url)
         convertAccessLevelToHubRole(resp)
         return resp
