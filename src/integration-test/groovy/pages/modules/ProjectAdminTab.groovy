@@ -13,12 +13,14 @@ class ProjectAdminTab extends Module {
         projectAccessTab {$('#permissions-tab')}
         speciesOfInterestTab(required:false) { $('#species-tab') }
         documentsTab { $('#edit-documents-tab') }
+        configOverrideTab(required:false) { $('#configuration-tab')}
 
         documents { module AdminDocumentsTab }
         projectSettings { module AdminProjectSettingsTab }
         meriPlan { $('#edit-meri-plan').module EditableMeriPlan }
         risksAndThreats(required:false) { $('#risks').module RisksAndThreats }
         projectAccess { $('#permissions').module PermissionsAdminModule }
+        configOverride(required:false) { $('#configuration').module ProjectConfigModule }
 
     }
 
@@ -51,5 +53,10 @@ class ProjectAdminTab extends Module {
     def openProjectAccess() {
         projectAccessTab.click()
         waitFor { projectAccess.displayed }
+    }
+
+    def openConfig() {
+        configOverrideTab.click()
+        waitFor { configOverride.displayed }
     }
 }

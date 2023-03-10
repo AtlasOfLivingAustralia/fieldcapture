@@ -12,7 +12,7 @@ import grails.testing.web.controllers.ControllerUnitTest
  */
 class ProjectControllerSpec extends Specification implements ControllerUnitTest<ProjectController>{
 
-    def userServiceStub = Stub(UserService)
+    def userServiceStub = Mock(UserService)
     def metadataServiceStub = Stub(MetadataService)
     def projectService = Mock(ProjectService)
     def siteServiceStub = Stub(SiteService)
@@ -24,6 +24,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
     def reportService = Mock(ReportService)
     def activityService = Mock(ActivityService)
     def siteService = Mock(SiteService)
+
     WebService webService = Mock(WebService)
 
     ProjectService realProjectService
@@ -840,7 +841,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         response.json == [message:'updated']
     }
 
-    def "The ajaxUpdate action is invoked from the Project's report tab with unmodified project start and end dates"() {
+    def "Grant / project managers can update the project dates from the Reporting tab"() {
         setup:
         String projectId = 'p1'
 
@@ -850,7 +851,53 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         controller.ajaxUpdate(projectId)
 
         then:
+        1 * userServiceStub.userIsSiteAdmin() >> true
         1 * projectService.update(projectId, [plannedStartDate:'2022-06-09T14:00:00Z', plannedEndDate:'2024-06-29T14:00:00Z']) >> [:]
+    }
+
+    def "Only admins can update come properties including programId and config"(boolean isGrantManager) {
+        setup:
+        String projectId = 'p1'
+        Map data = ProjectController.ADMIN_ONLY_FIELDS.collectEntries { [(it):it] }
+
+        when:
+        request.method = 'POST'
+        request.json = data
+        controller.ajaxUpdate(projectId)
+
+        then:
+        1 * userServiceStub.userIsSiteAdmin() >> isGrantManager
+        1 * userServiceStub.userIsAlaOrFcAdmin() >> false
+        1 * projectService.update(projectId, [:]) >> [:]
+
+        where:
+        isGrantManager | _
+        true | _
+        false | _
+
+    }
+
+    def "Project managers and admin can update some properties admins cannot"(boolean isGrantManager, boolean isAdmin, int expectedSize) {
+        setup:
+        String projectId = 'p1'
+        Map data = ProjectController.ADMIN_ONLY_FIELDS.collectEntries { [(it):it] }
+        data += ProjectController.MANAGER_ONLY_FIELDS.collectEntries { [(it):it] }
+
+        when:
+        request.method = 'POST'
+        request.json = data
+        controller.ajaxUpdate(projectId)
+
+        then:
+        userServiceStub.userIsSiteAdmin() >> (isAdmin || isGrantManager)
+        userServiceStub.userIsAlaOrFcAdmin() >> isAdmin
+        1 * projectService.update(projectId, { it.size() == expectedSize }) >> [:]
+
+        where:
+        isGrantManager | isAdmin | expectedSize
+        true | false | ProjectController.MANAGER_ONLY_FIELDS.size()
+        false | true | ProjectController.MANAGER_ONLY_FIELDS.size() + ProjectController.ADMIN_ONLY_FIELDS.size()
+        false | false | 0
 
     }
 

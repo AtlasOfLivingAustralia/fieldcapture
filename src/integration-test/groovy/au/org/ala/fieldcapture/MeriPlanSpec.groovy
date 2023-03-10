@@ -1,30 +1,30 @@
 package au.org.ala.fieldcapture
 
-import com.icegreen.greenmail.junit.GreenMailRule
-import com.icegreen.greenmail.util.ServerSetup
-import com.icegreen.greenmail.util.ServerSetupTest
-import org.junit.Rule
+import com.icegreen.greenmail.util.GreenMail
 import pages.AdminClearCachePage
 import pages.MeriPlanPDFPage
 import pages.ProjectIndex
 import pages.RlpProjectPage
+import spock.lang.Shared
 import spock.lang.Stepwise
 
 @Stepwise
 class MeriPlanSpec extends StubbedCasSpec {
 
-    @Rule
-    public GreenMailRule greenMail = new GreenMailRule(ServerSetup.verbose(ServerSetupTest.SMTP))
+    @Shared
+    GreenMail greenMail = new GreenMail()
 
     def setupSpec() {
         useDataSet('dataset2')
         loginAsAlaAdmin(browser)
         to AdminClearCachePage
         clearProgramListCache()
+        greenMail.start()
     }
 
-    def cleanup() {
+    def cleanupSpec() {
         logout(browser)
+        greenMail.stop()
     }
 
     def "Primary and secondary outcome selection lists can be different"() {

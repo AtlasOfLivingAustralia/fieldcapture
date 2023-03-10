@@ -195,9 +195,7 @@ if(!app.default.hub) {
 if (!pdfgen.baseURL){
     pdfgen.baseURL="http://pdfgen.ala.org.au/"
 }
-if (!userDetailsById.path) {
-    userDetailsById.path = "getUserDetails"
-}
+
 abn.abnLookupToken = "Insert abn Token here"
 abn.abnUrl= "https://abr.business.gov.au/json/AbnDetails.aspx?abn="
 
@@ -217,7 +215,7 @@ grails {
 }
 
 auth.baseUrl = 'https://auth-test.ala.org.au'
-
+userDetails.url = "${auth.baseUrl}/userdetails/"
 user.registration.url = "${auth.baseUrl}/userdetails/registration/createAccount"
 security {
     cas {
@@ -287,8 +285,6 @@ environments {
         security.cas.loginUrl="${security.cas.casServerUrlPrefix}/login"
         security.cas.casLoginUrl="${security.cas.casServerUrlPrefix}/login"
         userDetails.url = "${casBaseUrl}/userdetails/userDetails/"
-        userDetailsSingleUrl = "${userDetails.Url}getUserDetails"
-        userDetailsUrl = "${userDetatails.url}getUserListFull"
         logging.dir = '.'
         upload.images.path = '/tmp'
         upload.images.url = grails.serverURL+'/image/'

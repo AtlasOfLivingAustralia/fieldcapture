@@ -337,3 +337,17 @@ li.select2-search input {
 	margin-bottom: 1rem;
 }
 
+.heading-container {
+	margin-bottom: 25px;
+}
+.heading-container h1.project-header {
+	display: inline;
+}
+
+.heading-buttons-container {
+	margin-top: 7px;
+}
+
+.project-config-warning {
+	color: orange;
+}

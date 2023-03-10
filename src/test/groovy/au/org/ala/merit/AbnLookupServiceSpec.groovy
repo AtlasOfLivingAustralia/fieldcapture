@@ -102,9 +102,8 @@ class AbnLookupServiceSpec extends Specification implements AutowiredTest{
         Map expected = [abn:"41687119230", entityName: "COMMONWEALTH SCIENTIFIC AND INDUSTRIAL RESEARCH ORGANISATION"]
         Map wsResponse = [resp:abnValue, statusCode: HttpStatus.SC_OK]
 
-
-        String abnLookupToken = grailsApplication.config.abn.abnLookupToken
-        String url = grailsApplication.config.abn.abnUrl
+        String abnLookupToken = grailsApplication.config.getProperty('abn.abnLookupToken')
+        String url = grailsApplication.config.getProperty('abn.abnUrl')
         String abnLookupUrlString = url + abn + "&guid=" + abnLookupToken
 
         when:
@@ -122,8 +121,8 @@ class AbnLookupServiceSpec extends Specification implements AutowiredTest{
         setup:
         String abn = "41687119231"
 
-        String abnLookupToken = grailsApplication.config.abn.abnLookupToken
-        String url = grailsApplication.config.abn.abnUrl
+        String abnLookupToken = grailsApplication.config.getProperty('abn.abnLookupToken')
+        String url = grailsApplication.config.getProperty('abn.abnUrl')
         String abnLookupUrlString = url + abn + "&guid=" + abnLookupToken
         Map wsResponse = [error:"Error", statusCode: HttpStatus.SC_BAD_REQUEST]
 

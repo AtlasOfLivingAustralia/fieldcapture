@@ -102,7 +102,7 @@ enum SettingPageType {
     String title
     String key
 
-    public SettingPageType(name, title, key) {
+    private SettingPageType(name, title, key) {
         this.name = name
         this.title = title
         this.key = key
