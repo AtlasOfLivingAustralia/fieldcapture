@@ -213,7 +213,7 @@ class ReportService {
         if (!report.type == REPORT_TYPE_SINGLE_ACTIVITY) {
             throw new IllegalArgumentException("Only reports of type ${REPORT_TYPE_SINGLE_ACTIVITY} can be tested")
         }
-        return activityService.isStartedOrFinished([progress:report.progress]) && excludesNotApproved(report)
+        return activityService.isStartedOrFinished([progress:report.progress])
     }
     
     /**
