@@ -233,6 +233,22 @@
                 "dataType": "text",
                 "name": "baselineDescription",
                 "validate": "required,maxSize[500]"
+              },
+              {
+                "name": "outcomeStatement",
+                "dataType": "text",
+                "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
+                "validate": "required",
+                "constraints": {
+                  "textProperty": "description",
+                  "valueProperty": "description",
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "context-path": "owner.custom.details.outcomes.shortTermOutcomes"
+                    }
+                  }
+                }
               }
             ]
           },
@@ -308,7 +324,7 @@
                     "title": "Briefly describe the baseline you have established under this service and its purpose."
                   },
                   {
-                    "source": "datasetOutcomeStatements",
+                    "source": "outcomeStatement",
                     "type": "select2Many",
                     "width": "15%",
                     "title": "Which outcome statement/s aligns with this Baseline Dataset?"
@@ -386,7 +402,7 @@
         ]
       },
       "templateName": "rlpBaselineData",
-      "title": "Collecting, or synthesising baseline data"
+      "title": "Collecting, or synthesising baseline dataXX"
     },
     {
       "class": "au.org.ala.ecodata.FormSection",
