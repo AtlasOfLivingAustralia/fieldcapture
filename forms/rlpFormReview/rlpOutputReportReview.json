@@ -198,11 +198,6 @@
                 "validate": "required"
               },
               {
-                "dataType": "text",
-                "name": "purpose",
-                "validate": "required"
-              },
-              {
                 "name": "projectBaseline",
                 "dataType": "text",
                 "description": "Select the relevant Project Baseline as listed in the MERI Plan.",
@@ -289,13 +284,7 @@
                     "source": "datasetName",
                     "type": "text",
                     "width": "15%",
-                    "title": "Name of Dataset"
-                  },
-                  {
-                    "source": "purpose",
-                    "type": "text",
-                    "width": "15%",
-                    "title": "Purpose"
+                    "title": "Name of Baseline Dataset"
                   },
                   {
                     "source": "projectBaseline",
