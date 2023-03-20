@@ -305,7 +305,7 @@ if (Boolean.valueOf(inplace)) {
     grails {
         exploded = true
         plugins {
-            compile(project(':ecodata-client-plugin'))
+            implementation(project(':ecodata-client-plugin'))
         }
     }
 
