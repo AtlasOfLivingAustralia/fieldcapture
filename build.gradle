@@ -330,3 +330,7 @@ integrationTest {
 assetCompile.dependsOn(_Events)
 compileGroovy.dependsOn(_Events)
 bootRun.dependsOn(_Events)
+
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor snapshotCacheTime as Integer, 'seconds'
+}
