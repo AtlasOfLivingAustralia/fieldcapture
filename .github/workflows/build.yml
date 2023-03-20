@@ -66,6 +66,9 @@ jobs:
         uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
         with:
           arguments: clientInstall
+        env:
+          GPR_USER: ${{env.GITHUB_ACTOR}}
+          GPR_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Run javascript unit tests
         run: node_modules/karma/bin/karma start karma.conf.js --single-run --browsers ChromeHeadless
