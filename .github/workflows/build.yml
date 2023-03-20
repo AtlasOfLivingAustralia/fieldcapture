@@ -75,11 +75,17 @@ jobs:
 
       - name: Run MERIT functional tests
         run: ./src/main/scripts/runFunctionalTests.sh
+        env:
+          GPR_USER: ${{env.GITHUB_ACTOR}}
+          GPR_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Clean to remove clover instrumentation
         uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
         with:
           arguments: clean
+        env:
+          GPR_USER: ${{env.GITHUB_ACTOR}}
+          GPR_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
 
       - name: Read the MERIT version from the gradle.properties file
