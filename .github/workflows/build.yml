@@ -106,4 +106,6 @@ jobs:
         with:
           arguments: publish
         env:
+          GPR_USER: ${{env.GITHUB_ACTOR}}
+          GPR_TOKEN: ${{secrets.GITHUB_TOKEN}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
