@@ -14,9 +14,6 @@
   <logger name="au.org.ala.merit" level="INFO">
     <appender-ref ref="STDOUT" />
   </logger>
-  <logger name="au.org.ala.merit.reports" level="DEBUG">
-    <appender-ref ref="STDOUT" />
-  </logger>
 
   <root level="error">
     <appender-ref ref="STDOUT" />
