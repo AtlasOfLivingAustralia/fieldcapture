@@ -3,7 +3,9 @@ load('../../../utils/program.js');
 
 var biodiversityFund = createOrFindProgram('Biodiversity Fund');
 
-var subprograms = ["Reef Rescue 2013/14","Round 1","Round 2 - 2013/14","Round 2 - Expression of Interest 2013/14","Round 2 - Northern Landscape Strategy","Tasmania's Native Forests 2013/14"];
+var subprograms = ["Reef Rescue 2013/14","Round 1","Round 2 - 2013/14","Round 2 - Expression of Interest 2013/14","Round 2 - Northern Landscape Strategy","Tasmania's Native Forests 2013/14","Round 1 ext"];
+var excludesRound1Ext = ["DATA_SETS"];
+
 var config = {
     "projectReports": [
         {
@@ -62,6 +64,9 @@ var config = {
 for (var i=0; i<subprograms.length; i++) {
     var sub = createOrFindProgram(subprograms[i], biodiversityFund._id);
     sub.config = config;
+    if (sub.name === "Round 1 ext"){
+        config.excludes = excludesRound1Ext;
+    }
     print("******************************* "+sub.programId+" ****************************");
     // db.program.save(sub);
     //inserts the config
