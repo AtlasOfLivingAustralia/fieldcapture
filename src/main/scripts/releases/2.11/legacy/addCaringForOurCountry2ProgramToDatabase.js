@@ -3,7 +3,7 @@ load('../../../utils/program.js');
 
 var caringForOurCountry2 = createOrFindProgram('Caring for Our Country 2');
 
-var subprograms = ['0210 1318','Community Environment Grants 1314','Reef Rescue 2013/14','Regional Delivery 1318','Target Area Grants -  Expression of Interest 2013/14','Target Area Grants - 2013/14'];
+var subprograms = ['Regional Delivery 1318','Target Area Grants - 2013/14', 'Community Environment Grants 1314', 'Reef Rescue 2013/14','Regional Delivery (sustainable agriculture)', 'Target Area Grants -  Expression of Interest 2013/14','0210 1318'];
 var config = {
     "projectReports": [
         {
