@@ -173,8 +173,8 @@ class AdminControllerSpec extends Specification implements ControllerUnitTest<Ad
         setup:
         HubSettings hubSettings = new HubSettings(hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
         SettingService.setHubConfig(hubSettings)
-        def roles = roleService.MERIT_HUB_ROLES
-        def hubFlg = true
+        List roles = RoleService.MERIT_HUB_ROLES
+        Boolean hubFlg = true
 
         when:
         def results = controller.createUserHubPermission()

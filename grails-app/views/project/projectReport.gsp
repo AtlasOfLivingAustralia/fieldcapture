@@ -250,13 +250,16 @@
 
         <h3>Stage report</h3>
         (${DateUtils.isoToDisplayFormat(latestStageReport.plannedStartDate)} - ${DateUtils.isoToDisplayFormat(latestStageReport.plannedEndDate)})
-        <g:each in="${stageReportModel.outputs}" var="outputName">
+        <g:set var="outputConfig" value="${new org.grails.web.json.JSONArray(latestStageReport.sections.collect{new org.grails.web.json.JSONObject(outputName:it.name, optional:it.optional, collapsedByDefault:it.collapsedByDefault, optionalQuestionText:it.optionalQuestionText, outputDescription:it.description, collapsibleHeading:it.collapsibleHeading)})}"/>
+
+        <g:each in="${stageReportModel.sections}" var="formSection">
             <g:render template="/output/readOnlyOutput"
-                  model="${[divId:'latest-stage-report-'+outputName,
+                  model="${[divId:'latest-stage-report-'+formSection.name,
                             activity:latestStageReport,
-                            outputModel:outputModels[outputName],
-                            outputName:outputName,
-                            activityModel:stageReportModel,
+                            outputModel:formSection.template,
+                            outputName:formSection.name,
+                            formVersion:latestStageReport.formVersion,
+                            activityModel:[outputConfig:outputConfig],
                             printable:printable,
                             disablePrepop: true]}"
                   plugin="ecodata-client-plugin"></g:render>

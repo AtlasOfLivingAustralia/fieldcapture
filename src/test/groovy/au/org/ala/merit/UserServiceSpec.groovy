@@ -275,7 +275,7 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         service.userIsAlaAdmin()
 
         then:
-        1 * authService.userInRole(service.grailsApplication.config.security.cas.alaAdminRole)
+        1 * authService.userInRole(service.grailsApplication.config.getProperty('security.cas.alaAdminRole'))
 
     }
 

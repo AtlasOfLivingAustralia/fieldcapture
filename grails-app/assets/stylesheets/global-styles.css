@@ -430,6 +430,10 @@ ul#adminNav li.active a {
 	font-size: 14px;
 }
 
+.btn-group > .btn-signup {
+	font-size: 14px;
+}
+
 
 .btn-primary {
 	background-color: #44b6ae;

@@ -54,10 +54,10 @@ jobs:
         with:
           mongodb-version: '5.0'
 
-      - name: Build and run clover coverage report with Gradle
+      - name: Build and run jacoco coverage report with Gradle
         uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
         with:
-          arguments: -PenableClover=true cloverGenerateReport
+          arguments: test
         env:
           GPR_USER: ${{env.GITHUB_ACTOR}}
           GPR_TOKEN: ${{secrets.GITHUB_TOKEN}}
@@ -66,17 +66,26 @@ jobs:
         uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
         with:
           arguments: clientInstall
+        env:
+          GPR_USER: ${{env.GITHUB_ACTOR}}
+          GPR_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Run javascript unit tests
         run: node_modules/karma/bin/karma start karma.conf.js --single-run --browsers ChromeHeadless
 
       - name: Run MERIT functional tests
         run: ./src/main/scripts/runFunctionalTests.sh
+        env:
+          GPR_USER: ${{env.GITHUB_ACTOR}}
+          GPR_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Clean to remove clover instrumentation
         uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
         with:
           arguments: clean
+        env:
+          GPR_USER: ${{env.GITHUB_ACTOR}}
+          GPR_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
 
       - name: Read the MERIT version from the gradle.properties file
@@ -103,4 +112,6 @@ jobs:
         with:
           arguments: publish
         env:
+          GPR_USER: ${{env.GITHUB_ACTOR}}
+          GPR_TOKEN: ${{secrets.GITHUB_TOKEN}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
