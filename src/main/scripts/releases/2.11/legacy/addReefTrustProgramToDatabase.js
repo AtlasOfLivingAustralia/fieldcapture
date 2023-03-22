@@ -3,7 +3,58 @@ load('../../../utils/program.js');
 
 var reefTrust = createOrFindProgram('Reef Trust');
 
-var subprograms = ["Reef Trust Discretionary Grants","Reef Trust Phase 1 Investment","Reef Trust Phase 2 Investment","Reef Trust Phase 3 Investment","Reef Trust Phase 4 Investment","Reef Trust Phase 5 Investment","Reef Trust Phase 6 Investment"];
+
+var subprograms = ["Reef Trust Phase 1 Investment","Reef Trust Phase 2 Investment","Reef Trust Phase 3 Investment", "Reef Trust Discretionary Grants", "Reef Trust Phase 4 Investment", "Reef Trust Phase 5 Investment", "Reef Trust Offsets", "Reef Trust Phase 6 Investment - 6 month", "Reef Trust Phase 6 Investment - 12 month"]
+
+
+var projectReportsReefTrustPhase6Investment12month = [
+    {
+        reportType:'Activity',
+        reportingPeriodInMonths: 12,
+        "reportsAlignedToCalendar": true,
+        reportNameFormat: "Stage %1d",
+        reportDescriptionFormat: "Stage %1d for ${project.name}"
+    }
+]
+var activitiesReefTrustPhase6Investment12month = [
+    {name:"Indigenous Employment and Businesses"},
+    {name:"Outcomes, Evaluation and Learning - final report"},
+    {name:"Project Administration"},
+    {name:"Progress, Outcomes and Learning - stage report"},
+    {name:"Reef Trust Final Report"},
+    {name:"Fauna Survey - general"},
+    {name:"Flora Survey - general"},
+    {name:"Pest Animal Survey"},
+    {name:"Plant Survival Survey"},
+    {name:"Site Monitoring Plan"},
+    {name:"Water Quality Survey"},
+    {name:"Weed Mapping & Monitoring"},
+    {name:"Vegetation Assessment - Commonwealth government methodology"},
+    {name:"Community Participation and Engagement"},
+    {name:"Debris Removal"},
+    {name:"Disease Management"},
+    {name:"Erosion Management"},
+    {name:"Fencing"},
+    {name:"Conservation Grazing Management"},
+    {name:"Fire Management"},
+    {name:"Heritage Conservation"},
+    {name:"Management Plan Development"},
+    {name:"Management Practice Change"},
+    {name:"Conservation Actions for Species and Communities"},
+    {name:"Pest Management"},
+    {name:"Plant Propagation"},
+    {name:"Public Access and Infrastructure"},
+    {name:"Research"},
+    {name:"Revegetation"},
+    {name:"Seed Collection"},
+    {name:"Site Preparation"},
+    {name:"Water Management"},
+    {name:"Weed Treatment"},
+    {name:"Works Planning and Risk"},
+    {name:"Indigenous Knowledge Transfer"},
+    {name:"Training and Skills Development"}
+]
+
 var config = {
     "projectReports": [
         {
@@ -62,6 +113,15 @@ var config = {
 for (var i=0; i<subprograms.length; i++) {
     var sub = createOrFindProgram(subprograms[i], reefTrust._id);
     sub.config = config;
+
+    if (sub.name === "Reef Trust Phase 6 Investment - 12 month"){
+        config.projectReports = projectReportsReefTrustPhase6Investment12month;
+    }
+    if (sub.name === "Reef Trust Phase 6 Investment - 12 month"){
+        config.activities = activitiesReefTrustPhase6Investment12month;
+    }
+
+
     print("******************************* "+sub.programId+" ****************************");
     // db.program.save(sub);
     //inserts the config
