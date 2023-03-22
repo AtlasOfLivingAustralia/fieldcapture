@@ -7,7 +7,7 @@ var config = {
     "projectReports": [
         {
             reportType:'Activity',
-            reportingPeriodInMonths: 12,
+            reportingPeriodInMonths: 6,
             "reportsAlignedToCalendar": false,
             reportNameFormat: "Stage %1d",
             reportDescriptionFormat: "Stage %1d for ${project.name}"
