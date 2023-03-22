@@ -6,6 +6,18 @@ var nationalLandcare = createOrFindProgram('National Landcare Programme');
 var subprograms = ["Regional Delivery","Local Programmes", "25th Anniversary Landcare Grants 2014-15","20 Million Trees Grants Round 1","World Heritage","Regional Funding","Landcare Network Grants 2014-16", "20 Million Trees Grants Round 2", "20 Million Trees West Melbourne", "20 Million Trees Discretionary Grants","20 Million Trees Cumberland Conservation Corridor Grants","20 Million Trees Cumberland Conservation Corridor Land Management","20 Million Trees Service Providers Tranche 1","20 Million Trees Service Providers","20 Million Trees Service Providers Tranche 2","20 Million Trees Grants Round 3","20 Million Trees Service Providers Tranche 3"];
 var excludes25thAnniversaryLandcareGrants201415 = ["DATA_SETS","RISKS_AND_THREATS"];
 
+
+var projectReportsNotAligned = [
+    {
+        reportType:'Activity',
+        reportingPeriodInMonths: 6,
+        "reportsAlignedToCalendar": false,
+        reportNameFormat: "Stage %1d",
+        reportDescriptionFormat: "Stage %1d for ${project.name}"
+    }
+]
+
+
 var activities25thAnniversaryLandcareGrants201415 = [
     {name:"Indigenous Employment and Businesses"},
     {name:"Outcomes, Evaluation and Learning - final report"},
@@ -157,6 +169,9 @@ for (var i=0; i<subprograms.length; i++) {
     }
     if (sub.name === "Regional Funding"){
         config.activities = activitiesRegionalFunding;
+    }
+    if (sub.name === "20 Million Trees Service Providers" || sub.name === "20 Million Trees Service Providers Tranche 2" || sub.name === "20 Million Trees Service Providers Tranche 3"){
+        config.projectReports = projectReportsNotAligned;
     }
     print("******************************* "+sub.programId+" ****************************");
     // db.program.save(sub);
