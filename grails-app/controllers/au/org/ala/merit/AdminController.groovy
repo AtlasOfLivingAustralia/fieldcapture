@@ -157,7 +157,7 @@ class AdminController {
     def editSettingText(String id) {
         String content
 
-        String returnController = (params.returnTo.equals("about")) ? 'home' : (params.returnTo.equals("help")) ? "home" : (params.returnTo.equals("contacts")) ? "home" : 'admin'
+        String returnController = (params.returnTo.equals("staticPage")) ? "admin" : 'home'
         String returnAction = (params.returnTo.equals("about")) ? 'about' :  (params.returnTo.equals("help")) ? "help" : (params.returnTo.equals("contacts")) ? "contacts" : 'staticPages'
 
         String returnUrl = g.createLink(controller:returnController, action:returnAction)
