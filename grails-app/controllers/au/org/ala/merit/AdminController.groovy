@@ -157,8 +157,8 @@ class AdminController {
     def editSettingText(String id) {
         String content
 
-        String returnController = (params.returnTo.equals("about")) ? 'home' : 'admin'
-        String returnAction = (params.returnTo.equals("about")) ? 'about' : 'staticPages'
+        String returnController = (params.returnTo.equals("about")) ? 'home' : (params.returnTo.equals("help")) ? "home" : (params.returnTo.equals("contacts")) ? "home" : 'admin'
+        String returnAction = (params.returnTo.equals("about")) ? 'about' :  (params.returnTo.equals("help")) ? "help" : (params.returnTo.equals("contacts")) ? "contacts" : 'staticPages'
 
         String returnUrl = g.createLink(controller:returnController, action:returnAction)
         String returnLabel = GrailsNameUtils.getScriptName(returnAction).replaceAll('-',' ').capitalize()
