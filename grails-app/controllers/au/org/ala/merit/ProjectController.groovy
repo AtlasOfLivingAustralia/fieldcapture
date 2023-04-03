@@ -223,7 +223,6 @@ class ProjectController {
             rlpModel.admin.showMERIActivityWarning = false
             rlpModel.admin.allowMeriPlanUpload = false
             rlpModel.admin.showSpecies = false
-            rlpModel.admin.hidePrograms = true
             rlpModel.admin.showAnnouncementsTab = false
             rlpModel.admin.risksAndThreatsVisible = risksAndThreatsVisible
 

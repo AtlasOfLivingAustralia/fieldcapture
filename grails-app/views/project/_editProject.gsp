@@ -39,7 +39,7 @@
 
     </div>
 </div>
-<g:if test="${meriPlanStatus == true && hidePrograms}">
+<g:if test="${meriPlanStatus == true}">
     <div class="row mb-2">
         <div class="col-sm-6">
             <label for="programId" class="control-label">Program </label>
@@ -50,7 +50,7 @@
         </div>
     </div>
 </g:if>
-<g:elseif test="${meriPlanStatus == false  && hidePrograms}">
+<g:elseif test="${meriPlanStatus == false}">
     <div class="row mb-2">
         <div class="col-sm-6">
             <label for="programId" class="control-label">Program </label>
@@ -124,40 +124,9 @@
 
 </div>
 
-<g:if test="${!hidePrograms}">
-    <g:if test="${!canChangeProjectDates}">
-<div class="alert alert-block">You cannot change the start date or programme for a project with submitted or approved reports or MERI plan.</div>
-</g:if>
-
-<div class="row mb-2">
-    <div class="col-sm-4">
-        <label class="control-label" for="programme">Program name</label>
-
-        <div class="control">
-            <select id="programme"
-                    data-bind="value:associatedProgram,options:transients.programs,optionsCaption: 'Choose...',enable:${canChangeProjectDates ?: 'false'}"
-                    data-validation-engine="validate[required]"
-                    class="form-control form-control-sm input-small"></select>
-        </div>
-
-    </div>
-
-    <div class="col-sm-4">
-        <label class="control-label" for="subProgramme">Sub-program name</label>
-
-        <div class="control">
-            <select id="subProgramme" class="form-control form-control-sm input-small"
-                    data-bind="value:associatedSubProgram,options:transients.subprogramsToDisplay,optionsCaption: 'Choose...',,enable:${canChangeProjectDates ?: 'false'}"></select>
-        </div>
-
-    </div>
-</div>
-</g:if>
-<g:else>
-    <g:if test="${!canChangeProjectDates}">
+<g:if test="${!canChangeProjectDates}">
     <div class="alert alert-block">You cannot change the start date for a project with submitted or approved reports or MERI plan.</div>
-    </g:if>
-</g:else>
+</g:if>
 
 <div class="row mb-2">
     <div class="col-sm-4">
