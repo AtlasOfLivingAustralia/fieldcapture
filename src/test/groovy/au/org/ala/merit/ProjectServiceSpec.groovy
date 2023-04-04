@@ -709,6 +709,35 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         endDate == '2021-12-30T13:00:00Z'
     }
 
+    def "Validates if the project's planned end date change is valid against the from date field of the last report with data and also taking account the minimum report length set in the project config"(String plannedEndDate, String fromDate, boolean expectedResult, int minimumReportDurationInDays) {
+
+        setup:
+        Map project = [projectId:'p1', plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z', planStatus:ProjectService.PLAN_APPROVED]
+
+        Map lastReport = [description:"Year 2022/2023 - Quarter 1 Outputs Report", reportId:"888", toDate:"2022-09-30T14:00:00Z", fromDate:fromDate,
+                          name:"Year 2022/2023 - Quarter 1 Outputs Report", progress:"started", activityType:"RLP Output Report - Review", category:"Outputs Reporting",
+                          projectId:"777", status:"active", activityType:"type"]
+
+        ProgramConfig programConfig = new ProgramConfig([activityBasedReporting: false, projectReports:[[activityType:'type', adjustmentActivityType:'adjustment', minimumReportDurationInDays: minimumReportDurationInDays]]])
+
+        reportService.lastReportWithDataByCriteria(_, _) >> lastReport
+
+        when:
+        String result = service.validateProjectEndDate(project, programConfig, plannedEndDate, new ReportGenerationOptions())
+
+
+        then:
+        (result != null) == expectedResult
+
+        where:
+        plannedEndDate | fromDate | expectedResult | minimumReportDurationInDays
+        '2022-07-01T00:00Z' | '2022-06-30T14:00:00Z' | true | 7
+        '2022-07-02T00:00Z' | '2022-06-30T14:00:00Z' | true | 3
+        '2022-07-09T00:00Z' | '2022-06-30T14:00:00Z' | false | 1
+        '2022-06-30T14:00:00Z' | '2022-06-30T14:00:00Z' | false | 1
+
+    }
+
     def "A traditional MERIT project with no activities will not have end date changes restricted"() {
 
         setup:
