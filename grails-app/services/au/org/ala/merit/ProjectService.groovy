@@ -771,11 +771,11 @@ class ProjectService  {
         }
         else {
             Map lastReport = reportService.lastReportWithDataByCriteria(project.reports, {it.toDate})
-            ReportConfig reportConfig = config.findProjectReportConfigForReport(lastReport)
+            String plannedEndDateAlignedToReportingSchedule = DateUtils.format(DateUtils.parse(plannedEndDate).plusDays(1))
             // We allow reports to be generated up to 24 hours after the end of a project due to
             // project end dates being 00:00 of the last day of the project instead of 23:59:...
-            String plannedEndDateAlignedToReportingSchedule = DateUtils.format(DateUtils.parse(plannedEndDate).plusDays(1))
             if (lastReport) {
+                ReportConfig reportConfig = config.findProjectReportConfigForReport(lastReport)
                 String lastReportFromDate = DateUtils.format(DateUtils.parse(lastReport?.fromDate).plusDays(reportConfig.minimumReportDurationInDays))
                 if (plannedEndDateAlignedToReportingSchedule < lastReportFromDate) {
                     message = "The project end date must be on or after ${DateUtils.isoToDisplayFormat(DateUtils.format(DateUtils.parse(lastReportFromDate).minusDays(1)))}"
