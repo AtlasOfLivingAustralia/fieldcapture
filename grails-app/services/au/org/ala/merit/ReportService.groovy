@@ -27,6 +27,9 @@ class ReportService {
     public static final String REPORT_ACTIVITY_TYPE = 'RLP Core Services annual report'
     public static final String OUTPUT_TYPE = 'RLP - Core services annual report'
 
+    public static final String PERFORMANCE_MANAGEMENT_REPORT = 'Performance Management Framework - Self Assessment'
+
+
     static enum ReportMode {
         VIEW,
         EDIT,
@@ -892,19 +895,26 @@ class ReportService {
         activityService.unlock(report.activityId)
     }
 
+    /** This is to handle the legacy performance management report which has a custom rendering template */
+    private boolean isCustomReportType(Map report) {
+        return report.type == PERFORMANCE_MANAGEMENT_REPORT
+    }
+
     Map activityReportModel(String reportId, ReportMode mode, Integer formVersion = null) {
         Map report = get(reportId)
+        Map model = [report: report]
+        if (!isCustomReportType(report)) {
+            Map activity = activityService.get(report.activityId)
+            model += activityService.getActivityMetadata(activity.type, formVersion ?: activity.formVersion)
+            model.activity = activity
+            model.themes = []
+            model.locked = activity.lock != null
 
-        Map activity = activityService.get(report.activityId)
-        Map model = activityService.getActivityMetadata(activity.type, formVersion ?: activity.formVersion)
-        model.report = report
-        model.activity = activity
-        model.themes = []
-        model.locked = activity.lock != null
-
-        if (mode == ReportMode.EDIT) {
-            model.editable = canEdit(userService.currentUserId, report, activity)
+            if (mode == ReportMode.EDIT) {
+                model.editable = canEdit(userService.currentUserId, report, activity)
+            }
         }
+
         else if (mode == ReportMode.PRINT) {
             model.printView = true
         }

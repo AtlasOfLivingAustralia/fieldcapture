@@ -1,9 +1,9 @@
 package au.org.ala.merit
 
+
+import au.org.ala.merit.command.OrganisationReportCommand
 import grails.converters.JSON
-import org.joda.time.Duration
-import org.joda.time.Period
-import org.joda.time.Weeks
+
 /**
  * Extends the plugin OrganisationController to support Green Army project reporting.
  */
@@ -57,13 +57,19 @@ class OrganisationController {
         def orgRole = members.find { it.userId == user?.userId } ?: [:]
         def hasAdminAccess = userService.userIsSiteAdmin() || orgRole.role == RoleService.PROJECT_ADMIN_ROLE
 
-        def reportingVisible = organisation.state && ((organisation.reports && (hasAdminAccess || userService.userHasReadOnlyAccess())) || userService.userIsAlaOrFcAdmin())
+        def reportingVisible = (organisation.reports && (hasAdminAccess || userService.userHasReadOnlyAccess())) || userService.userIsAlaOrFcAdmin()
 
         def dashboardReports = [[name:'dashboard', label:'Activity Outputs']]
         if (hasAdminAccess) {
             dashboardReports += [name:'announcements', label:'Announcements']
         }
+        List reportOrder = null
         if (reportingVisible) {
+            // TODO change me to use the configuration once it's been decided how that
+            // is going to work.
+            reportOrder = organisation.reports?.collect{[category:it.category, description:it.description, rejectionReasonCategoryOptions:it.rejectionReasonCategoryOptions?:[]]} ?: []
+            reportOrder = reportOrder.unique({it.category})
+
             // We need at least one finished report to show data.
             if (organisation.reports?.find{it.progress == 'finished'}) {
                 dashboardReports += [name: 'performanceAssessmentSummary', label: 'Performance Assessment Summary']
@@ -72,10 +78,10 @@ class OrganisationController {
             }
         }
 
-        List adHocReportTypes =[ [type:'Performance Management Framework - Self Assessment']]
+        List adHocReportTypes =[ [type: ReportService.PERFORMANCE_MANAGEMENT_REPORT]]
 
         [about     : [label: 'About', visible: true, stopBinding: false, type:'tab'],
-         reporting : [label: 'Reporting', visible: reportingVisible, stopBinding:true, template:'/shared/reporting', default:reportingVisible, type: 'tab', reports:organisation.reports, adHocReportTypes:adHocReportTypes],
+         reporting : [label: 'Reporting', visible: reportingVisible, stopBinding:true, template:'/shared/categorizedReporting', default:reportingVisible, type: 'tab', reports:organisation.reports, adHocReportTypes:adHocReportTypes, reportOrder:reportOrder],
          projects  : [label: 'Projects', visible: true, default:!reportingVisible, stopBinding:true, type: 'tab'],
          sites     : [label: 'Sites', visible: true, type: 'tab', stopBinding:true, projectCount:organisation.projects?.size()?:0, showShapefileDownload:hasAdminAccess],
          dashboard : [label: 'Dashboard', visible: true, stopBinding:true, type: 'tab', template:'/shared/dashboard', reports:dashboardReports],
@@ -450,20 +456,45 @@ class OrganisationController {
 
     }
 
-    def viewOrganisationReport(String reportId) {
-        viewOrEditOrganisationReport(reportId, false)
+    @PreAuthorise(accessLevel = 'editor')
+    def viewOrganisationReport(OrganisationReportCommand cmd) {
+        if (cmd.hasErrors()) {
+            error(cmd.errors.toString())
+            return
+        }
+
+        if (cmd.report.type == ReportService.PERFORMANCE_MANAGEMENT_REPORT) {
+            viewOrEditOrganisationReport(cmd.report, false)
+        }
+        else {
+            render model:cmd.model, view:'/activity/activityReportView'
+        }
     }
 
-    def editOrganisationReport(String reportId) {
-        viewOrEditOrganisationReport(reportId, true)
+    def testCmd(OrganisationReportCommand cmd) {
+        render "ok"
     }
 
-    private def viewOrEditOrganisationReport(String reportId, Boolean edit) {
-        Map report = reportService.get(reportId)
+    @PreAuthorise(accessLevel = 'editor')
+    def editOrganisationReport(OrganisationReportCommand cmd) {
+        if (cmd.hasErrors()) {
+            error(cmd.errors.toString())
+            return
+        }
+
+        if (cmd.report.type ==  ReportService.PERFORMANCE_MANAGEMENT_REPORT) {
+            viewOrEditOrganisationReport(cmd.report, true)
+        }
+        else {
+           cmd.processEdit(this)
+        }
+    }
+
+    private def viewOrEditOrganisationReport(Map report, Boolean edit) {
         int version = report.toDate < "2017-01-01T00:00:00Z" ? 1 : 2
         Map organisation = organisationService.get(report.organisationId)
         if (organisationService.isUserAdminForOrganisation(report.organisationId)) {
-            Map model = reportService.performanceReportModel(reportId, version)
+            Map model = reportService.performanceReportModel(report.reportId, version)
             model.state = organisation.state ?: 'Unknown'
             model.organisation = organisation
 
@@ -559,49 +590,27 @@ class OrganisationController {
         render result as JSON
     }
 
+    private Map activityReportModel(String organisationId, String reportId, ReportService.ReportMode mode, Integer formVersion = null) {
+        Map organisation = organisationService.get(organisationId)
+        Map config = organisation.config
+        Map model = reportService.activityReportModel(reportId, mode, formVersion)
 
+        model.context = organisation
+        model.returnTo = createLink(action:'index', id:organisationId)
+        model.contextViewUrl = model.returnTo
+        model.reportHeaderTemplate = '/organisation/organisationReportHeader'
+        model.config = config
+        model
+    }
 
-    private void updateActivities(project, errors, plannedStartDate, plannedEndDate) {
-        def activitiesWithDefaultDates = project.activities.findAll {
-
-            if (it.plannedStartDate == project.plannedStartDate && it.plannedEndDate == project.plannedEndDate) {
-                return true
-            }
-            def actStart = DateUtils.parse(it.plannedStartDate)
-            def actEnd = DateUtils.parse(it.plannedEndDate)
-
-            return new Duration(actStart, actEnd).isLongerThan(Weeks.weeks(19).toStandardDuration())
+    private def error(String message, String organisationId) {
+        flash.message = message
+        if (programId) {
+            redirect(action: 'index', id: organisationId)
+        }
+        else {
+            redirect(controller:'home', action:'publicHome')
         }
 
-        def modifiedActivities = project.activities.findAll {
-            !(it.activityId in activitiesWithDefaultDates.collect { a -> a.activityId })
-        }
-
-        if (modifiedActivities) {
-            errors << "${project.grantId}: Number of activities with non-default dates: ${modifiedActivities.size()}"
-        }
-
-
-        if (modifiedActivities) {
-            modifiedActivities.each {
-                if (it.plannedStartDate < plannedStartDate) {
-                    errors << "${project.grantId}: Activity ${it.description} starts before contract date: ${it.plannedStartDate}, ${plannedStartDate}"
-                }
-                if (it.plannedEndDate > plannedEndDate) {
-                    errors << "${project.grantId}: Activity ${it.description} ends after contract end date: ${it.plannedEndDate}, ${plannedEndDate}"
-                }
-                if (it.plannedEndDate < plannedStartDate) {
-                    errors << "${project.grantId}: Activity ${it.description} ends before contract start date: ${it.plannedEndDate}, ${plannedStartDate}"
-                }
-            }
-
-        }
-
-        if (activitiesWithDefaultDates) {
-            // Update the dates of the works activities that haven't been modified from the original defaults.
-            def activityIds = activitiesWithDefaultDates.collect { it.activityId }
-            activityService.bulkUpdateActivities(activityIds, [plannedStartDate: plannedStartDate, plannedEndDate: plannedEndDate])
-        }
-        projectService.createReportingActivitiesForProject(project.projectId, [[period: Period.months(1), type: 'Green Army - Monthly project status report']])
     }
 }
