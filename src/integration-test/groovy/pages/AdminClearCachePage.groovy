@@ -16,6 +16,7 @@ class AdminClearCachePage extends ReloadablePage {
         userProfileCache{ $("#userProfileCache")}
         homePageStatistics{ $("#homePageStatistics")}
         programListCache{$('#programList')}
+        serviceListCache{$('#serviceList')}
 
 
     }
@@ -28,5 +29,10 @@ class AdminClearCachePage extends ReloadablePage {
     void clearProgramListCache() {
         waitFor {programListCache.displayed }
         programListCache.click()
+    }
+
+    void clearServiceListCache() {
+        waitFor {serviceListCache.displayed}
+        serviceListCache.click()
     }
 }
