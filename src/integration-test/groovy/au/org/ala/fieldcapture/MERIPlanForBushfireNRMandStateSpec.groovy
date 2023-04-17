@@ -17,13 +17,13 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
     }
 
     // Clear the metadata cache to ensure the services and scores are loaded correctly.
-    def clearCache() {
-        setup:
-        loginAsAlaAdmin(browser)
-        to AdminTools
-        clearMetadata()
-
-    }
+//    def clearCache() {
+//        setup:
+//        loginAsAlaAdmin(browser)
+//        to AdminTools
+//        clearMetadata()
+//
+//    }
 
     def "Clear the cache to ensure activity forms are loaded"() {
         setup:
