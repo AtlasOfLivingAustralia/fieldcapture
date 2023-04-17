@@ -1,6 +1,6 @@
 package au.org.ala.fieldcapture
 
-
+import pages.AdminClearCachePage
 import pages.AdminTools
 import pages.RlpProjectPage
 import spock.lang.Stepwise
@@ -22,6 +22,8 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
         loginAsAlaAdmin(browser)
         to AdminTools
         clearMetadata()
+        to AdminClearCachePage
+        clearServiceListCache()
 
     }
 

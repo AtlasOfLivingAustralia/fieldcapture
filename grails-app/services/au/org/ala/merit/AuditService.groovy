@@ -34,7 +34,7 @@ class AuditService {
     }
 
     def getAutoCompareAuditMessage(String id){
-        String url = grailsApplication.config.ecodata.service.url + "/audit/getAutoCompareAuditMessage?auditId=${id}";
+        String url = grailsApplication.config.getProperty('ecodata.service.url') + "/audit/getAutoCompareAuditMessage?auditId=${id}";
         return webService.getJson(url);
     }
 

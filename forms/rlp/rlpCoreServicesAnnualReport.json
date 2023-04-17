@@ -634,13 +634,13 @@
                   {
                     "title": "2021/22 ($)",
                     "source": "investment2021_22",
-                    "type": "number"
+                    "type": "number",
+                    "readonly": true
                   },
                   {
                     "title": "2022/23 ($)",
                     "source": "investment2022_23",
-                    "type": "number",
-                    "readonly": true
+                    "type": "number"
                   },
                   {
                     "title": "Total ($)",
@@ -771,13 +771,13 @@
                   {
                     "title": "2021/22 ($)",
                     "source": "serviceSubcontracted2021_22",
-                    "type": "number"
+                    "type": "number",
+                    "readonly": true
                   },
                   {
                     "title": "2022/23 ($)",
                     "source": "serviceSubcontracted2022_23",
-                    "type": "number",
-                    "readonly": true
+                    "type": "number"
                   },
                   {
                     "title": "Total ($)",
@@ -833,14 +833,14 @@
                     "title": "2021/22",
                     "source": "contractWorkforce2021_22",
                     "type": "number",
-                    "width": "10%"
+                    "width": "10%",
+                    "readonly": true
                   },
                   {
                     "title": "2022/23",
                     "source": "contractWorkforce2022_23",
                     "type": "number",
-                    "width": "10%",
-                    "readonly": true
+                    "width": "10%"
                   },
                   {
                     "title": "Total",
@@ -902,14 +902,14 @@
                     "title": "2021/22",
                     "source": "organisationWorkforce2021_22",
                     "type": "number",
-                    "width": "10%"
+                    "width": "10%",
+                    "readonly": true
                   },
                   {
                     "title": "2022/23",
                     "source": "organisationWorkforce2022_23",
                     "type": "number",
-                    "width": "10%",
-                    "readonly": true
+                    "width": "10%"
                   },
                   {
                     "title": "Total",
@@ -984,11 +984,11 @@
                 },
                 {
                   "name": "startDate",
-                  "value": "2020-07-01T13:00:00Z"
+                  "value": "2021-07-01T13:00:00Z"
                 },
                 {
                   "name": "endDate",
-                  "value": "2021-07-01T13:00:00Z"
+                  "value": "2022-07-01T13:00:00Z"
                 }
               ],
               "url": "/managementUnit/previousReportContents/"
@@ -1007,6 +1007,10 @@
                 "target": "investment2020_21"
               },
               {
+                "source-path": "model.data.investment2021_22",
+                "target": "investment2021_22"
+              },
+              {
                 "source-path": "model.data.serviceSubcontracted2018_19",
                 "target": "serviceSubcontracted2018_19"
               },
@@ -1017,6 +1021,10 @@
               {
                 "source-path": "model.data.serviceSubcontracted2020_21",
                 "target": "serviceSubcontracted2020_21"
+              },
+              {
+                "source-path": "model.data.serviceSubcontracted2021_22",
+                "target": "serviceSubcontracted2021_22"
               },
               {
                 "mapping": [
@@ -1035,6 +1043,10 @@
                   {
                     "source-path": "contractWorkforce2020_21",
                     "target": "contractWorkforce2020_21"
+                  },
+                  {
+                    "source-path": "contractWorkforce2021_22",
+                    "target": "contractWorkforce2021_22"
                   }
                 ],
                 "source-path": "model.data.subcontractedWorkForceByFinancialYear",
@@ -1057,6 +1069,10 @@
                   {
                     "source-path": "organisationWorkforce2020_21",
                     "target": "organisationWorkforce2020_21"
+                  },
+                  {
+                    "source-path": "organisationWorkforce2021_22",
+                    "target": "organisationWorkforce2021_22"
                   }
                 ],
                 "source-path": "model.data.organisationWorkForceByFinancialYear",

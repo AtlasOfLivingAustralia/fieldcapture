@@ -1,12 +1,10 @@
 package au.org.ala.fieldcapture
 
-import com.icegreen.greenmail.junit.GreenMailRule
+import com.icegreen.greenmail.util.GreenMail
 import com.icegreen.greenmail.util.GreenMailUtil
-import com.icegreen.greenmail.util.ServerSetup
-import com.icegreen.greenmail.util.ServerSetupTest
-import org.junit.Rule
 import pages.ProjectIndex
 import pages.RlpProjectPage
+import spock.lang.Shared
 import spock.lang.Stepwise
 
 import javax.mail.internet.MimeMessage
@@ -14,15 +12,17 @@ import javax.mail.internet.MimeMessage
 @Stepwise
 class RisksSpec extends StubbedCasSpec {
 
-    @Rule
-    public GreenMailRule greenMail = new GreenMailRule(ServerSetup.verbose(ServerSetupTest.SMTP))
+    @Shared
+    GreenMail greenMail = new GreenMail()
 
     def setupSpec() {
         useDataSet('dataset3')
+        greenMail.start()
     }
 
-    def cleanup() {
+    def cleanupSpec() {
        logout(browser)
+       greenMail.stop()
     }
 
     def "The risks and threats appears on the activity tab on the original MERIT template"() {

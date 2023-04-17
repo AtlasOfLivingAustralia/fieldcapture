@@ -1,26 +1,26 @@
 package au.org.ala.fieldcapture
 
 import au.org.ala.merit.SettingPageType
-import com.icegreen.greenmail.junit.GreenMailRule
-import com.icegreen.greenmail.util.ServerSetup
-import com.icegreen.greenmail.util.ServerSetupTest
-import org.junit.Rule
+import com.icegreen.greenmail.util.GreenMail
 import pages.AdminReportsPage
 import pages.MERITAdministrationPage
+import spock.lang.Shared
 
 import javax.mail.internet.MimeMessage
 
 class AdminSpec extends StubbedCasSpec {
 
-    @Rule
-    public GreenMailRule greenMail = new GreenMailRule(ServerSetup.verbose(ServerSetupTest.SMTP))
+    @Shared
+    GreenMail greenMail = new GreenMail()
 
     def setupSpec() {
         useDataSet("dataset3")
+        greenMail.start()
     }
 
-    def cleanup() {
+    def cleanupSpec() {
         logout(browser)
+        greenMail.stop()
     }
 
     def "Admin Index"() {
