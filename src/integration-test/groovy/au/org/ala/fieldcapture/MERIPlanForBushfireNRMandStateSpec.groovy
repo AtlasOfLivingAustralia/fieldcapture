@@ -25,6 +25,20 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
 
     }
 
+    def "Clear the cache to ensure activity forms are loaded"() {
+        setup:
+        loginAsAlaAdmin(browser)
+
+        when:
+        to AdminTools
+
+        waitFor { $("#btnClearMetadataCache").displayed }
+        $("#btnClearMetadataCache").click()
+
+        then:
+        waitFor { hasBeenReloaded() }
+    }
+
     //  Regional Fund for Wildlife and Habitat Bushfire Recovery (the Regional Fund) - States
     def "The MERI Plan will only display only specific section for the Bushfire Recovery (the Regional Fund) - States"() {
         // Clear cache to ensure services are loaded correctly
