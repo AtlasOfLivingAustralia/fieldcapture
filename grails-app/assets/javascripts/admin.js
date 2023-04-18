@@ -160,7 +160,14 @@ var ProjectImportViewModel = function (config) {
             if (data.result) {
                 var result = data.result;
                 self.progressDetail(result.projects);
-                self.progressSummary('Processed ' + result.projects.length + ' projects');
+
+                var resultsCount = result.projects.length;
+                if (resultsCount > 0) {
+                    resultsCount = result.projects.length - 1;
+                }
+                self.progressDetail(result.projects);
+                self.progressSummary('Processed ' + resultsCount + ' projects');
+
                 if (self.preview()) {
                     self.preview(false);
                     self.finishedPreview(true);
@@ -241,8 +248,12 @@ var ProjectImportViewModel = function (config) {
                     self.progressDetail(result.projects?result.projects:[])
                 }
                 else {
+                    var resultsCount = result.projects.length;
+                    if (resultsCount > 0) {
+                        resultsCount = result.projects.length - 1;
+                    }
                     self.progressDetail(result.projects);
-                    self.progressSummary('Import complete. ('+result.projects.length+' projects)');
+                    self.progressSummary('Import complete. ' + resultsCount + ' projects');
                 }
             },
             data: {
