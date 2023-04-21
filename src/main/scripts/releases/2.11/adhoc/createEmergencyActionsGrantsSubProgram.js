@@ -8,7 +8,7 @@ let programName = "Saving Native Species";
 var parentProgram = createOrFindProgram(programName);
 
 let refProgram = "Threatened Species Strategy Action Plan Priority Species";
-var subprograms = ["Emergency Actions - Grants"]
+var subprograms = ["Emergency Actions for Threatened Species"]
 
 subprograms.forEach(function (subProgram) {
     var now = ISODate();
@@ -39,8 +39,11 @@ var projectConfig = {
                         "Birds",
                         "Mammals",
                         "Fish",
+                        "Frogs",
+                        "Invertebrates",
                         "Plants",
                         "Priority Plants",
+                        "Reptiles",
                         "Vertebrate species"
                     ],
                     "assetHeading": "Asset",
@@ -172,15 +175,17 @@ var projectConfig = {
         "projectReports": [
             {
                 "reportType": "Single",
-                "firstReportingPeriodEnd": "2023-03-31T14:00:00Z",
                 "reportDescriptionFormat": "Final Report",
                 "reportNameFormat": "Final Report",
                 "reportingPeriodInMonths": 0,
                 "multiple": false,
                 "description": "",
+                "alignToOwnerEnd": true,
+                "label": "Final Report",
                 "category": "Final Report",
                 "reportsAlignedToCalendar": false,
-                "activityType": "Final Report"
+                "activityType": "Final Report",
+                "alignToOwnerStart": true
             }
         ],
         "activities": [
@@ -544,8 +549,6 @@ var projectConfig = {
             "category": "Invertebrates",
             "priority": "Tasmanian Giant Freshwater Crayfish Astacopsis gouldi"
         },
-
-
         {
             "category": "Plants",
             "priority": "Adamson’s Blown-grass Lachnagrostis adamsonii"
@@ -675,7 +678,7 @@ subprograms.forEach(function (subprogram){
     var program = db.program.find({name: subprogram});
     while(program.hasNext()){
         var p = program.next();
-        if (p.name === "Emergency Actions - Grants"){
+        if (p.name === "Emergency Actions for Threatened Species"){
             p.config = projectConfig.config
             p.priorities = projectConfig.priorities
         }
