@@ -94,11 +94,12 @@ dependencies {
     implementation "org.grails.plugins:events"
     implementation "org.grails.plugins:gsp"
     implementation 'dk.glasius:external-config:3.0.0'
-    implementation "org.grails.plugins:ala-auth:5.1.1"
-    implementation "org.grails.plugins:ala-admin-plugin:2.1"
+    implementation "org.grails.plugins:ala-auth:$alaSecurityLibsVersion"
+    implementation "org.grails.plugins:ala-ws-security-plugin:$alaSecurityLibsVersion"
+    implementation "org.grails.plugins:ala-ws-plugin:$alaSecurityLibsVersion"
+    implementation "au.org.ala:userdetails-service-client:$alaSecurityLibsVersion"
+    implementation "com.github.ben-manes.caffeine:caffeine:3.1.6"
     runtimeOnly "org.grails.plugins:ala-bootstrap3:4.0.0"
-    implementation "au.org.ala:userdetails-service-client:1.5.0"
-    implementation "org.grails.plugins:ala-ws-plugin:2.0"
     implementation 'org.grails.plugins:excel-export:2.1'
     implementation 'org.grails.plugins:mail:2.0.0'
     implementation 'javax.mail:javax.mail-api:1.6.2'
@@ -124,8 +125,6 @@ dependencies {
 
     implementation 'au.com.bytecode:opencsv:2.4'
     implementation 'org.grails.plugins:csv:1.0.1'
-
-    implementation "org.grails.plugins:ala-ws-security-plugin:2.0"
 
     implementation "org.grails.plugins:grails-google-visualization:2.2.1"
     implementation 'javax.media:jai-core:1.1.3'
