@@ -1168,8 +1168,12 @@ function OutcomesViewModel(outcomes, config) {
 
     var PRIMARY_OUTCOMES = 'primary';
     var SECONDARY_OUTCOMES = 'secondary';
+    var MEDIUM_TERM_OUTCOMES = 'medium';
+    var SHORT_TERM_OUTCOMES = 'short';
     self.selectablePrimaryOutcomes = selectableOutcomes(config.outcomes, PRIMARY_OUTCOMES);
     self.selectableSecondaryOutcomes = selectableOutcomes(config.outcomes, SECONDARY_OUTCOMES);
+    self.selectableMidTermOutcomes = selectableOutcomes(config.outcomes, MEDIUM_TERM_OUTCOMES);
+    self.selectableShortTermOutcomes = selectableOutcomes(config.outcomes, SHORT_TERM_OUTCOMES);
 
     // If the program has specified a default primary outcome, and the project has not yet selected an outcome,
     // set the default.
@@ -1245,7 +1249,9 @@ function OutcomesViewModel(outcomes, config) {
     self.shortTermOutcomes = ko.observableArray(_.map(outcomes.shortTermOutcomes || [], function (outcome) {
         return new SingleAssetOutcomeViewModel(outcome)
     }));
-    self.midTermOutcomes = ko.observableArray(_.map(outcomes.midTermOutcomes || [], outcomeToViewModel));
+    self.midTermOutcomes = ko.observableArray(_.map(outcomes.midTermOutcomes || [], function (outcome) {
+        return new SingleAssetOutcomeViewModel(outcome)
+    }));
     self.otherOutcomes = ko.observableArray(outcomes.otherOutcomes);
 
     self.selectedPrimaryAndSecondaryPriorities = ko.pureComputed(function() {
@@ -1261,7 +1267,14 @@ function OutcomesViewModel(outcomes, config) {
     })
     self.toJSON = function () {
         // Exclude the computed used by the view model
-        var excludes = ['primaryOutcomeSupportsMultiplePriorities', 'selectablePrimaryOutcomes', 'selectableSecondaryOutcomes'];
+        var excludes = [
+            'primaryOutcomeSupportsMultiplePriorities',
+            'selectablePrimaryOutcomes',
+            'selectableSecondaryOutcomes',
+            'selectedPrimaryAndSecondaryPriorities',
+            'selectableMidTermOutcomes',
+            'selectableShortTermOutcomes'
+        ];
         return ko.mapping.toJS(self, {ignore:excludes});
     }
 }
