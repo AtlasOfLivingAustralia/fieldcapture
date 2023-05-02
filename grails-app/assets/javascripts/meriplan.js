@@ -315,6 +315,8 @@ function MERIPlan(project, projectService, config) {
         return result && result.category;
     };
 
+    self.allServices = config.services;
+
     self.programObjectives = config.programObjectives || [];
 
     self.obligationOptions = ['Yes', 'No'];
@@ -330,6 +332,8 @@ function MERIPlan(project, projectService, config) {
         'Migratory Species', 'Ramsar Wetland', 'World Heritage area', 'Community awareness/participation in NRM', 'Indigenous Cultural Values',
         'Indigenous Ecological Knowledge', 'Remnant Vegetation', 'Aquatic and Coastal systems including wetlands', 'Not Applicable'];
     self.controls = ['Yes', 'No'];
+    self.keyThreats = config.keyThreats || ['Native fauna - predation'];
+    self.monitoringProtocols = config.monitoringProtocols || ["P1", "P2", "Other"];
 
     self.addBudget = function () {
         self.meriPlan().budget.rows.push(new BudgetRowViewModel({}, periods));
@@ -351,12 +355,24 @@ function MERIPlan(project, projectService, config) {
         self.meriPlan().objectives.rows1.remove(row);
     };
     self.addNationalAndRegionalPriorities = function () {
-        self.meriPlan().priorities.rows.push(new GenericRowViewModel());
+        self.meriPlan().priorities.addRow();
     };
     self.removeNationalAndRegionalPriorities = function (row) {
         self.meriPlan().priorities.rows.remove(row);
     };
 
+    self.monitoringIndicators = function(code) {
+        var relatedIndicators = _.filter(self.meriPlan().monitoring.rows(), function(row) {
+            return row.relatedBaseline() == ko.utils.unwrapObservable(code);
+        });
+        return relatedIndicators;
+    }
+    self.addMonitoringIndicator = function(code) {
+        self.meriPlan().monitoring.rows.push(self.meriPlan().monitoring.newRow({relatedBaseline:ko.utils.unwrapObservable(code)}));
+    }
+    self.removeMonitoringIndicator = function(row) {
+        self.meriPlan().monitoring.removeRow(row);
+    }
     self.addKEQ = function () {
         self.meriPlan().keq.rows.push(new GenericRowViewModel());
     };
@@ -386,13 +402,15 @@ function MERIPlan(project, projectService, config) {
         self.meriPlan().outcomes.secondaryOutcomes.remove(outcome);
     };
     self.addMidTermOutcome = function () {
-        self.meriPlan().outcomes.midTermOutcomes.push(new OutcomeRowViewModel());
+        var index = self.meriPlan().outcomes.midTermOutcomes().length + 1;
+        self.meriPlan().outcomes.midTermOutcomes.push(new OutcomeRowViewModel({code:'MT'+index}));
     };
     self.removeMidTermOutcome = function (outcome) {
         self.meriPlan().outcomes.midTermOutcomes.remove(outcome);
     };
     self.addShortTermOutcome = function () {
-        self.meriPlan().outcomes.shortTermOutcomes.push(new OutcomeRowViewModel());
+        var index = self.meriPlan().outcomes.shortTermOutcomes().length + 1;
+        self.meriPlan().outcomes.shortTermOutcomes.push(new OutcomeRowViewModel({code:'ST'+index}));
     };
     self.removeShortTermOutcome = function (outcome) {
         self.meriPlan().outcomes.shortTermOutcomes.remove(outcome);
@@ -417,6 +435,15 @@ function MERIPlan(project, projectService, config) {
     self.saveProjectDetails = function(){
         self.saveMeriPlan(false);
     };
+
+
+    self.selectedOutcomes = ko.pureComputed(function() {
+        var outcomes = [];
+        outcomes = outcomes.concat(self.meriPlan().outcomes.midTermOutcomes());
+        outcomes = outcomes.concat(self.meriPlan().outcomes.shortTermOutcomes());
+        return outcomes;
+    });
+
 
     // Save project details
     self.saveMeriPlan = function(enableSubmit){
@@ -632,19 +659,20 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
     self.keq = new GenericViewModel(o.keq);
     self.objectives = new ObjectiveViewModel(o.objectives, config.programObjectives || []); // Used in original MERI plan template
     self.outcomes = new OutcomesViewModel(o.outcomes, {outcomes:project.outcomes, priorities:project.priorities}); // Use in new MERI plan template
-    self.priorities = new GenericViewModel(o.priorities);
+    self.priorities = new GenericViewModel(o.priorities, ['data1', 'data2', 'data3', 'documentUrl']);
     self.implementation = new ImplementationViewModel(o.implementation);
     self.partnership = new GenericViewModel(o.partnership, ['data1', 'data2', 'data3', 'otherOrganisationType']);
     self.lastUpdated = o.lastUpdated ? o.lastUpdated : moment().format();
     self.budget = new BudgetViewModel(o.budget, period);
     self.adaptiveManagement = ko.observable(o.adaptiveManagement);
     self.rationale = ko.observable(o.rationale);
-    self.baseline = new GenericViewModel(o.baseline, ['baseline', 'method']);
-    self.threats = new GenericViewModel(o.threats, ['threat', 'intervention']);
+    self.baseline = new GenericViewModel(o.baseline, ['code', 'relatedOutcome', 'monitoringDataStatus', 'baseline', 'relatedServices', 'protocol', 'method', 'evidence'], 'B');
+    self.threats = new ThreatsViewModel(o.threats);
     self.consultation = ko.observable(o.consultation);
     self.communityEngagement = ko.observable(o.communityEngagement);
     self.threatToNativeSpecies = new GenericViewModel(o.threatToNativeSpecies, ['couldBethreatToSpecies', 'details']);
     self.threatControlMethod = new GenericViewModel(o.threatControlMethod, ['currentControlMethod', 'hasBeenSuccessful', 'methodType', 'details']);
+    self.monitoring = new GenericViewModel(o.monitoring, ['relatedBaseline', 'description', 'relatedService', 'methodology', 'evidence']);
 
     var row = [];
     o.events ? row = o.events : row.push(ko.mapping.toJS(new EventsRowViewModel()));
@@ -924,7 +952,6 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
         });
     };
 
-
     // Populate the model from existing data.
     for (var i = 0; i < outputTargets.length; i++) {
 
@@ -968,22 +995,31 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
 
 
 
-function GenericViewModel(o, propertyNames) {
+function GenericViewModel(o, propertyNames, codePrefix) {
     var self = this;
     if (!o) o = {};
     self.description = ko.observable(o.description);
     self.newRow = function (row) {
         return new GenericRowViewModel(row, propertyNames)
     };
-    var row = [];
-    o.rows ? row = o.rows : row.push(ko.mapping.toJS(self.newRow()));
+    var row = o.rows || [];
+
+    function newObj() {
+        var obj = {};
+        if (codePrefix) {
+            obj.code = codePrefix + (self.rows().length+1);
+        }
+        return obj;
+    }
+
+    //o.rows ? row = o.rows : [] //row.push(ko.mapping.toJS(self.newRow(newObj())));
 
 
     self.rows = ko.observableArray($.map(row, function (obj, i) {
         return self.newRow(obj);
     }));
     self.addRow = function () {
-        self.rows.push(self.newRow());
+        self.rows.push(self.newRow(newObj()));
     };
     self.removeRow = function (row) {
         self.rows.remove(row);
@@ -1212,6 +1248,17 @@ function OutcomesViewModel(outcomes, config) {
     self.midTermOutcomes = ko.observableArray(_.map(outcomes.midTermOutcomes || [], outcomeToViewModel));
     self.otherOutcomes = ko.observableArray(outcomes.otherOutcomes);
 
+    self.selectedPrimaryAndSecondaryPriorities = ko.pureComputed(function() {
+        var priorities = [];
+        if (self.primaryOutcome.asset) {
+            priorities.push(self.primaryOutcome.asset);
+        }
+        if (self.primaryOutcome.assets && self.primaryOutcome.assets.length > 0) {
+            priorities.concat(self.primaryOutcome.assets);
+        }
+        // TODO do this again for secondary outcomes.
+        return priorities;
+    })
     self.toJSON = function () {
         // Exclude the computed used by the view model
         var excludes = ['primaryOutcomeSupportsMultiplePriorities', 'selectablePrimaryOutcomes', 'selectableSecondaryOutcomes'];
@@ -1241,10 +1288,23 @@ function EventsRowViewModel(o) {
 function OutcomeRowViewModel(o, programObjectives) {
     var self = this;
     if (!o) o = {};
+    self.code = ko.observable(o.code);
     self.description = ko.observable(o.description);
     if (!o.assets) o.assets = [];
     self.assets = ko.observableArray(o.assets);
+
+    // Issue here is we are using description for the text of the primary and secondary outcomes, but
+    // also using it for free-text user defined outcomes.  New requirement is that the user defined outcome
+    // must relate to pre-defined "medium/short term outcome.  It would be neater to use the same field
+    // for all outcome types but means we'll need to do a data migration of all existing outcomes.
+    // Probably neater to use the same field
+    self.relatedOutcome = ko.observable(o.relatedOutcome);
 };
+
+function links() {
+    fromOutcome = ko.observable();
+    toOutcome = ko.observable();
+}
 
 function AssetViewModel(asset) {
     var self = this;
@@ -1258,6 +1318,8 @@ function AssetViewModel(asset) {
 function SingleAssetOutcomeViewModel(o) {
     var self = this;
     if (!o) o = {};
+
+    self.code = o.code;
     self.description = ko.observable(o.description);
     if (!o.assets || !_.isArray(o.assets)) o.assets = [];
     self.assets = ko.observableArray(o.assets);
@@ -1277,6 +1339,12 @@ function SingleAssetOutcomeViewModel(o) {
     self.description.subscribe(function () {
         self.assets([]);
     });
+    // Issue here is we are using description for the text of the primary and secondary outcomes, but
+    // also using it for free-text user defined outcomes.  New requirement is that the user defined outcome
+    // must relate to pre-defined "medium/short term outcome.  It would be neater to use the same field
+    // for all outcome types but means we'll need to do a data migration of all existing outcomes.
+    // Probably neater to use the same field
+    self.relatedOutcome = ko.observable(o.relatedOutcome);
     self.toJSON = function () {
         if (!self.description() && self.assets.length == 0) {
             return {};
@@ -1460,6 +1528,34 @@ function ActivitiesViewModel(activities, programActivities) {
         }
         return js;
     };
+}
+
+var ThreatsViewModel = function(threats) {
+
+    var self = this;
+    self.threats = ko.observableArray();
+
+    self.newThreat = function(row) {
+        self.threats.push(new ThreatViewModel(row));
+    }
+
+    if (!threats) {
+        threats = [];
+    }
+    for (var i=0; i<threats.length; i++) {
+        self.newThreat(threats[i])
+    }
+}
+
+var ThreatViewModel = function(threat) {
+    var self = this;
+    threat = threat || {};
+    self.threatCode = ko.observable(threat.threatCode);
+    self.threat = ko.observable(threat.threat);
+    self.intervention = ko.observable(threat.intervention);
+    self.relatedServices = ko.observableArray(threat.relatedServices);
+    self.evidence = ko.observable(threat.evidence);
+    self.relatedOutcomes = ko.observableArray(threat.relatedOutcomes);
 }
 
 function limitText(field, maxChar) {
