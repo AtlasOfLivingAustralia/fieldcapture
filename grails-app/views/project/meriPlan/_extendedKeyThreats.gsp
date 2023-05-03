@@ -11,8 +11,8 @@
         <th class="index"></th>
         <th class="threat-code">Key threat(s) and/or key threatening processes</th>
         <th class="threat required">Description <fc:iconHelp>${threatHelpText ?: "Describe the key threats (or key threatening processes) to the primary investment priority"}</fc:iconHelp></th>
-        <th class="services">Project service measure/s to address threats (the what)</th>
-        <th class="intervention required">Methodology (the how) <fc:iconHelp>${interventionHelpText ?: "Describe the proposed interventions to address the threat and how this will deliver on the 5 year outcome."}</fc:iconHelp></th>
+        <th class="services">Project service measure/s to address threats</th>
+        <th class="intervention required">Methodology <fc:iconHelp>${interventionHelpText ?: "Describe the proposed interventions to address the threat and how this will deliver on the 5 year outcome."}</fc:iconHelp></th>
         <th class="evidence">Evidence</th>
         <th class="related-outcomes">ST/MT Outcome Statement</th>
         <th class="remove"></th>
@@ -37,7 +37,7 @@
             </textarea>
         </td>
         <td class="related-outcomes">
-            <select data-bind="options:$root.selectedOutcomes, value:relatedOutcomes, optionsText:'code', optionsValue:'code'"></select>
+            <select data-bind="options:$root.selectedOutcomes, value:relatedOutcomes, optionsText:'code', optionsValue:'code', multiSelect2:{}"></select>
         </td>
         <td class="remove">
             <span data-bind="if: $index() && !$root.isProjectDetailsLocked()"><i class="fa fa-remove"

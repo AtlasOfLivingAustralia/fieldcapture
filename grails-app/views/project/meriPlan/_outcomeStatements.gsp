@@ -40,7 +40,7 @@
                 <select class="form-control form-control-sm" data-bind="options:details.outcomes.selectedPrimaryAndSecondaryPriorities,value:assets"></select>
             </td>
             <td class="medium-term-outcome">
-                <select class="form-control form-control-sm" data-bind="options:$root.selectable${outcomeType.capitalize()}TermOutcomes, value:relatedOutcome"></select>
+                <select class="form-control form-control-sm" data-bind="options:details.outcomes.selectable${outcomeType.capitalize()}TermOutcomes, value:relatedOutcome"></select>
             </td>
         </g:if>
         <td class="remove">

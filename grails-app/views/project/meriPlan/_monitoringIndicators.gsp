@@ -51,7 +51,7 @@
             </tbody>
             <tfoot>
             <tr>
-                <td colspan="5">
+                <td colspan="${extendedMonitoring ? '6' : '5'}">
                     <button type="button" class="btn btn-sm" data-bind="disable:$root.isProjectDetailsLocked(), click: ${addIndictorExpression?:'addObjectives'}">
                         <i class="fa fa-plus"></i> ${newIndicatorText ?: 'Add a row'}</button>
                 </td>

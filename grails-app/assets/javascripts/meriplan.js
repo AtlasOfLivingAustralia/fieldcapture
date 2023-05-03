@@ -442,7 +442,7 @@ function MERIPlan(project, projectService, config) {
         outcomes = outcomes.concat(self.meriPlan().outcomes.midTermOutcomes());
         outcomes = outcomes.concat(self.meriPlan().outcomes.shortTermOutcomes());
         return outcomes;
-    });
+    }).extend({rateLimit:200});
 
 
     // Save project details
@@ -1120,10 +1120,6 @@ function OutcomesViewModel(outcomes, config) {
     if (!outcomes) {
         outcomes = {};
     }
-    var outcomeToViewModel = function (outcome) {
-        return new OutcomeRowViewModel(outcome);
-    };
-
     if (!outcomes.primaryOutcome) {
         outcomes.primaryOutcome = {
             description: null, asset: ''
@@ -1131,7 +1127,7 @@ function OutcomesViewModel(outcomes, config) {
     }
     if (!outcomes.shortTermOutcomes) {
         outcomes.shortTermOutcomes = [{
-            description: null, assets: []
+            code:"ST1", description: null, assets: []
         }];
     }
     if (!outcomes.secondaryOutcomes) {
@@ -1247,24 +1243,30 @@ function OutcomesViewModel(outcomes, config) {
         return new SingleAssetOutcomeViewModel(outcome)
     }));
     self.shortTermOutcomes = ko.observableArray(_.map(outcomes.shortTermOutcomes || [], function (outcome) {
-        return new SingleAssetOutcomeViewModel(outcome)
+        return new SingleAssetOutcomeViewModel(outcome);
     }));
     self.midTermOutcomes = ko.observableArray(_.map(outcomes.midTermOutcomes || [], function (outcome) {
-        return new SingleAssetOutcomeViewModel(outcome)
+        return new SingleAssetOutcomeViewModel(outcome);
     }));
     self.otherOutcomes = ko.observableArray(outcomes.otherOutcomes);
 
     self.selectedPrimaryAndSecondaryPriorities = ko.pureComputed(function() {
         var priorities = [];
-        if (self.primaryOutcome.asset) {
-            priorities.push(self.primaryOutcome.asset);
+        if (self.primaryOutcome.assets && self.primaryOutcome.assets().length > 0) {
+            priorities = priorities.concat(self.primaryOutcome.assets());
         }
-        if (self.primaryOutcome.assets && self.primaryOutcome.assets.length > 0) {
-            priorities.concat(self.primaryOutcome.assets);
+        if (self.secondaryOutcomes() && self.secondaryOutcomes().length > 0) {
+            for (var i=0; i<self.secondaryOutcomes().length; i++) {
+                if (self.secondaryOutcomes()[i].assets && self.secondaryOutcomes()[i].assets().length > 0) {
+                    priorities = priorities.concat(self.secondaryOutcomes()[i].assets());
+                }
+            }
+
         }
-        // TODO do this again for secondary outcomes.
+
         return priorities;
-    })
+    }).extend({ rateLimit: 50 });
+
     self.toJSON = function () {
         // Exclude the computed used by the view model
         var excludes = [
@@ -1339,7 +1341,8 @@ function SingleAssetOutcomeViewModel(o) {
 
     self.asset = ko.pureComputed({
         read: function () {
-            if (self.assets().length == 0) {
+            var assets = self.assets();
+            if (!assets || assets.length == 0) {
                 return undefined;
             }
             return self.assets()[0];
