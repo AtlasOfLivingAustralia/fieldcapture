@@ -33,7 +33,7 @@
             </textarea>
         </td>
         <td class="service">
-            <select class="form-control form-control-sm" data-bind="options:$root.allServices, value:relatedServices, optionsText:'name'"></select>
+            <select style="width:20%" class="form-control form-control-sm" data-bind="options:$root.allServices, optionsText:'label', optionsValue:'scoreId', select2:{value:relatedServices}"></select>
         </td>
         <td class="baseline-method">
             <select data-bind="options:$root.monitoringProtocols, value:protocol">

@@ -314,8 +314,21 @@ function MERIPlan(project, projectService, config) {
         });
         return result && result.category;
     };
-
-    self.allServices = config.services;
+    // List of service / target measure
+    self.allServices = [];
+    var services = config.services || [];
+    for (var i=0; i<services.length; i++) {
+        for (var j=0; j<services[i].scores.length; j++) {
+            self.allServices.push( {
+               label:services[i].name+' - '+services[i].scores[j].label,
+               serviceId:services[i].serviceId,
+               scoreId:services[i].scores[j].scoreId,
+               service:services[i],
+               score:services[i].scores[j],
+               value:services[i].scores[j].scoreId
+            });
+        }
+    }
 
     self.programObjectives = config.programObjectives || [];
 
@@ -444,6 +457,16 @@ function MERIPlan(project, projectService, config) {
         return outcomes;
     }).extend({rateLimit:200});
 
+    /** All parts of the model able to specify services are collected together here */
+    self.selectedServices = ko.pureComputed(function() {
+        var services = [];
+        var threats = self.meriPlan().threats.threats();
+        for (var i=0; i<threats.length; i++) {
+            services = services.concat(threats[i].relatedServices());
+        }
+
+        return services;
+    }).extend({rateLimit:1000});
 
     // Save project details
     self.saveMeriPlan = function(enableSubmit){
@@ -672,7 +695,8 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
     self.communityEngagement = ko.observable(o.communityEngagement);
     self.threatToNativeSpecies = new GenericViewModel(o.threatToNativeSpecies, ['couldBethreatToSpecies', 'details']);
     self.threatControlMethod = new GenericViewModel(o.threatControlMethod, ['currentControlMethod', 'hasBeenSuccessful', 'methodType', 'details']);
-    self.monitoring = new GenericViewModel(o.monitoring, ['relatedBaseline', 'description', 'relatedService', 'methodology', 'evidence']);
+    self.monitoring = new GenericViewModel(o.monitoring, ['relatedBaseline', 'data1', 'relatedService', 'data2', 'evidence']);
+
 
     var row = [];
     o.events ? row = o.events : row.push(ko.mapping.toJS(new EventsRowViewModel()));
@@ -1011,13 +1035,13 @@ function GenericViewModel(o, propertyNames, codePrefix) {
         }
         return obj;
     }
-
-    //o.rows ? row = o.rows : [] //row.push(ko.mapping.toJS(self.newRow(newObj())));
-
-
     self.rows = ko.observableArray($.map(row, function (obj, i) {
         return self.newRow(obj);
     }));
+    o.rows ? row = o.rows : row.push(ko.mapping.toJS(self.newRow(newObj())));
+
+
+
     self.addRow = function () {
         self.rows.push(self.newRow(newObj()));
     };
@@ -1549,11 +1573,16 @@ function ActivitiesViewModel(activities, programActivities) {
 var ThreatsViewModel = function(threats) {
 
     var self = this;
+
     self.threats = ko.observableArray();
 
     self.newThreat = function(row) {
         self.threats.push(new ThreatViewModel(row));
     }
+    // Temporary legacy support
+    self.rows = self.threats;
+    self.newRow = self.newThreat;
+    self.addRow = self.newThreat;
 
     if (!threats) {
         threats = [];
@@ -1565,6 +1594,7 @@ var ThreatsViewModel = function(threats) {
 
 var ThreatViewModel = function(threat) {
     var self = this;
+
     threat = threat || {};
     self.threatCode = ko.observable(threat.threatCode);
     self.threat = ko.observable(threat.threat);
@@ -1572,6 +1602,10 @@ var ThreatViewModel = function(threat) {
     self.relatedServices = ko.observableArray(threat.relatedServices);
     self.evidence = ko.observable(threat.evidence);
     self.relatedOutcomes = ko.observableArray(threat.relatedOutcomes);
+
+    // temporary legacy support
+    self.data1 = self.threat;
+    self.data2 = self.intervention;
 }
 
 function limitText(field, maxChar) {

@@ -27,7 +27,7 @@
                       data-bind="value: threat, disable: $root.isProjectDetailsLocked()">
             </textarea>
         </td>
-        <td class="services"><select data-bind="options:$root.allServices, value:relatedServices, optionsText:'name'"></select> </td>
+        <td class="services"><select multiple="true" class="form-control form-control-sm" data-bind="options:$root.allServices, optionsText:'label', optionsValue:'scoreId', multiSelect2:{value:relatedServices}"></select> </td>
         <td class="intervention"><textarea class="form-control form-control-sm" data-validation-engine="validate[required]"
                                            data-bind="value: intervention, disable: $root.isProjectDetailsLocked()"
                                            rows="4"></textarea></td>
@@ -37,7 +37,7 @@
             </textarea>
         </td>
         <td class="related-outcomes">
-            <select data-bind="options:$root.selectedOutcomes, value:relatedOutcomes, optionsText:'code', optionsValue:'code', multiSelect2:{}"></select>
+            <select multiple="true" data-bind="options:$root.selectedOutcomes, optionsText:'code', optionsValue:'code', multiSelect2:{value:relatedOutcomes}"></select>
         </td>
         <td class="remove">
             <span data-bind="if: $index() && !$root.isProjectDetailsLocked()"><i class="fa fa-remove"

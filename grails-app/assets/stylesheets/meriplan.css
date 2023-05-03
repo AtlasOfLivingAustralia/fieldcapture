@@ -482,3 +482,7 @@ input#changeProjectStartDate {
 .meri-plan .extended-threats .related-outcomes {
     width:10%;
 }
+
+.meri-plan .select2-selection {
+    width: 100% !important;
+}
