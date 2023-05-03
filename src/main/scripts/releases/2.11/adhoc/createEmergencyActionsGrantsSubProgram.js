@@ -8,7 +8,7 @@ let programName = "Saving Native Species";
 var parentProgram = createOrFindProgram(programName);
 
 let refProgram = "Threatened Species Strategy Action Plan Priority Species";
-var subprograms = ["Emergency Actions - Grants"]
+var subprograms = ["Emergency Actions for Threatened Species"]
 
 subprograms.forEach(function (subProgram) {
     var now = ISODate();
@@ -32,6 +32,24 @@ subprograms.forEach(function (subProgram) {
 var projectConfig = {
     config: {
         "meriPlanContents": [
+            {
+                "template": "name",
+                "model": {
+                    "helpTextHeading": "A succinct overview of the project: (i) what will be done and (ii) why it will be done",
+                    "maxSize": "1000",
+                    "placeholder": "[Free text; limit response to 1000 characters (approx. 150 words)]",
+                    "explanation": ""
+                }
+            },
+            {
+                "template": "description",
+                "model": {
+                    "helpTextHeading": "",
+                    "maxSize": "1000",
+                    "placeholder": "[Free text; limit response to 1000 characters (approx. 150 words)]",
+                    "explanation": " Please provide a short succinct description of this project. The description should state what will be done and why it will be done. This project description will be publicly visible on the project overview page in MERIT"
+                }
+            },
             {
                 "template": "assets",
                 "model": {
@@ -69,30 +87,7 @@ var projectConfig = {
                 "model": {
                     "subtitle": "Please provide outcome statements. Outcomes statements should: <br/>- Clearly describe the intent of the project, specifically the benefit or change that the project is expected to deliver by June 2022;<br/>- Be expressed as a SMART statement (Specific, Measurable, Attainable, Realistic and Time-bound); and<br/>- Ensure that the outcomes are measurable with consideration to the monitoring methodology provided below",
                     "placeholder": "By 30 June 2021, [Free text]",
-                    "title": "Outcome statements"
-                }
-            },
-            {
-                "template": "sectionHeading",
-                "model": {
-                    "heading": "Project Details"
-                }
-            },
-            {
-                "template": "description",
-                "model": {
-                    "helpTextHeading": "A succinct overview of the project: (i) what will be done and (ii) why it will be done",
-                    "maxSize": "1000",
-                    "placeholder": "[Free text; limit response to 1000 characters (approx. 150 words)]",
-                    "explanation": " Please provide a short succinct description of this project. The description should state what will be done and why it will be done. This project description will be publicly visible on the project overview page in MERIT"
-                }
-            },
-            {
-                "template": "projectPartnerships",
-                "model": {
-                    "namePlaceHolder": "[Free text]",
-                    "helpTextPartnerNature": "If partnership with an organisation: provide the name of the organisation and the role they will play/how you will support them. If partnering with community groups or members of the public: indicate each group or individual you will engage with",
-                    "partnershipPlaceHolder": "[Free text]"
+                    "title": "Project Outcome"
                 }
             },
             {
@@ -127,6 +122,13 @@ var projectConfig = {
                 }
             },
             {
+                "template": "adaptiveManagement",
+                "model": {
+                    "title": "Project Review, Evaluation and Improvement Methodology and Approach",
+                    "explanation": "Outline the methods and processes that will enable adaptive management during the lifetime of this project"
+                }
+            },
+            {
                 "template": "nationalAndRegionalPlans",
                 "model": {
                     "documentNameHelpText": "List the name of the Recovery Plan or Conservation Advice for species listed under the Environment Protection and Biodiversity Conservation Act 1999 (if applicable), or state recovery plan.",
@@ -137,8 +139,16 @@ var projectConfig = {
                 "template": "serviceTargets",
                 "model": {
                     "showTargetDate": true,
-                    "title": "Actions and Targets Table",
-                    "serviceName": "Service"
+                    "title": "Activities and Targets Table",
+                    "serviceName": "Activities"
+                }
+            },
+            {
+                "template": "projectPartnerships",
+                "model": {
+                    "namePlaceHolder": "[Free text]",
+                    "helpTextPartnerNature": "If partnership with an organisation: provide the name of the organisation and the role they will play/how you will support them. If partnering with community groups or members of the public: indicate each group or individual you will engage with",
+                    "partnershipPlaceHolder": "[Free text]"
                 }
             },
             {
@@ -172,15 +182,17 @@ var projectConfig = {
         "projectReports": [
             {
                 "reportType": "Single",
-                "firstReportingPeriodEnd": "2023-03-31T14:00:00Z",
                 "reportDescriptionFormat": "Final Report",
                 "reportNameFormat": "Final Report",
                 "reportingPeriodInMonths": 0,
                 "multiple": false,
                 "description": "",
+                "alignToOwnerEnd": true,
+                "label": "Final Report",
                 "category": "Final Report",
                 "reportsAlignedToCalendar": false,
-                "activityType": "Final Report"
+                "activityType": "Final Report",
+                "alignToOwnerStart": true
             }
         ],
         "activities": [
@@ -506,8 +518,6 @@ var projectConfig = {
             "category": "Reptiles",
             "priority": "Yinnietharra Rock-dragon Ctenophorus yinnietharra"
         },
-
-
         {
             "category": "Invertebrates",
             "priority": "Ammonite Snail Ammoniropa vigens"
@@ -544,8 +554,6 @@ var projectConfig = {
             "category": "Invertebrates",
             "priority": "Tasmanian Giant Freshwater Crayfish Astacopsis gouldi"
         },
-
-
         {
             "category": "Plants",
             "priority": "Adamson’s Blown-grass Lachnagrostis adamsonii"
@@ -675,7 +683,7 @@ subprograms.forEach(function (subprogram){
     var program = db.program.find({name: subprogram});
     while(program.hasNext()){
         var p = program.next();
-        if (p.name === "Emergency Actions - Grants"){
+        if (p.name === "Emergency Actions for Threatened Species"){
             p.config = projectConfig.config
             p.priorities = projectConfig.priorities
         }
