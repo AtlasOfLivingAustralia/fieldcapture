@@ -8,7 +8,7 @@
     <th class="outcome">Outcome statement</th>
     <th class="monitoring-data">Monitoring data</th>
     <th class="baseline required">Baseline data description <g:if test="${baselineHelpText}"><fc:iconHelp>${baselineHelpText}</fc:iconHelp></g:if></th>
-    <th class="service">Project Service / Target Measure</th>
+    <th class="service">Project Service / Target Measure/s</th>
     <th class="baseline-method required">Describe the method used to obtain the baseline, or how the baseline will be established <fc:iconHelp>${baselineMethodHelpText ?: "Describe the project baseline(s) units of measure or data which will be used to report progress towards this project's outcomes (short-term, medium-term and 5 year program outcome), and the monitoring design."}</fc:iconHelp></th>
     <th class="evidence">Evidence</th>
     <th class="remove"></th>
@@ -22,9 +22,9 @@
         </td>
         <th class="monitoring-data">
             <select class="form-control form-control-sm" data-bind="value:monitoringDataStatus">
+                <option>Needs to be collected</option>ataStatus">
                 <option></option>
                 <option>Data exists</option>
-                <option>Needs to be collected</option>
             </select>
         </th>
         <td class="baseline">
@@ -33,7 +33,7 @@
             </textarea>
         </td>
         <td class="service">
-            <select style="width:20%" class="form-control form-control-sm" data-bind="options:$root.allServices, optionsText:'label', optionsValue:'scoreId', select2:{value:relatedServices}"></select>
+            <select multiple="true" class="form-control form-control-sm" data-bind="options:$root.allServices, optionsText:'label', optionsValue:'scoreId', multiSelect2:{value:relatedServices}"></select>
         </td>
         <td class="baseline-method">
             <select data-bind="options:$root.monitoringProtocols, value:protocol">

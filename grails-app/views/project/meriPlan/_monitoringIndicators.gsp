@@ -30,7 +30,7 @@
                 <g:if test="${monitoringValidation}">
                     <td class="baseline"> <textarea class="form-control form-control-sm" data-validation-engine="validate[required]" data-bind="value: data1, disable: $root.isProjectDetailsLocked()" rows="3" placeholder="${indicatorPlaceHolder}"> </textarea></td>
                     <g:if test="${extendedMonitoring}">
-                        <td class="monitoring-service"><select class="form-control form-control-sm" data-bind="options:$root.allServices, optionsText:'label', select2:{value:relatedService}"></select></td>
+                        <td class="monitoring-service"><select class="form-control form-control-sm" data-bind="options:$root.allServices, optionsText:'label', optionsValue:'scoreId', select2:{value:relatedService}"></select></td>
 
                     </g:if>
                     <td class="baseline-method"> <textarea class="form-control form-control-sm" data-validation-engine="validate[required]" data-bind="value: data2, disable: $root.isProjectDetailsLocked()" rows="5" placeholder="${approachPlaceHolder}"></textarea> </td>

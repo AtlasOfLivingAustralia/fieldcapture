@@ -691,7 +691,7 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
     self.budget = new BudgetViewModel(o.budget, period);
     self.adaptiveManagement = ko.observable(o.adaptiveManagement);
     self.rationale = ko.observable(o.rationale);
-    self.baseline = new GenericViewModel(o.baseline, ['code', 'relatedOutcome', 'monitoringDataStatus', 'baseline', 'relatedServices', 'protocol', 'method', 'evidence'], 'B');
+    self.baseline = new GenericViewModel(o.baseline, ['code', 'relatedOutcome', 'monitoringDataStatus', 'baseline',  'protocol', 'method', 'evidence'], 'B', ['relatedServices']);
     self.threats = new ThreatsViewModel(o.threats);
     self.consultation = ko.observable(o.consultation);
     self.communityEngagement = ko.observable(o.communityEngagement);
@@ -1021,12 +1021,13 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
 
 
 
-function GenericViewModel(o, propertyNames, codePrefix) {
+function GenericViewModel(o, propertyNames, codePrefix, arrayPropertyNames) {
     var self = this;
+
     if (!o) o = {};
     self.description = ko.observable(o.description);
     self.newRow = function (row) {
-        return new GenericRowViewModel(row, propertyNames)
+        return new GenericRowViewModel(row, propertyNames, arrayPropertyNames)
     };
     var row = o.rows || [];
 
@@ -1053,7 +1054,7 @@ function GenericViewModel(o, propertyNames, codePrefix) {
 
 };
 
-function GenericRowViewModel(o, propertyNames) {
+function GenericRowViewModel(o, propertyNames, arrayPropertyNames) {
     var self = this;
     if (!o) o = {};
     if (!propertyNames || propertyNames.length == 0) {
@@ -1061,6 +1062,11 @@ function GenericRowViewModel(o, propertyNames) {
     }
     for (var i = 0; i < propertyNames.length; i++) {
         self[propertyNames[i]] = ko.observable(o[propertyNames[i]]);
+    }
+    if (arrayPropertyNames) {
+        for (var i = 0; i < arrayPropertyNames.length; i++) {
+            self[arrayPropertyNames[i]] = ko.observableArray(o[arrayPropertyNames[i]]);
+        }
     }
 };
 
