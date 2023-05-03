@@ -318,15 +318,17 @@ function MERIPlan(project, projectService, config) {
     self.allServices = [];
     var services = config.services || [];
     for (var i=0; i<services.length; i++) {
-        for (var j=0; j<services[i].scores.length; j++) {
-            self.allServices.push( {
-               label:services[i].name+' - '+services[i].scores[j].label,
-               serviceId:services[i].serviceId,
-               scoreId:services[i].scores[j].scoreId,
-               service:services[i],
-               score:services[i].scores[j],
-               value:services[i].scores[j].scoreId
-            });
+        if (services[i].scores) {
+            for (var j=0; j<services[i].scores.length; j++) {
+                self.allServices.push( {
+                    label:services[i].name+' - '+services[i].scores[j].label,
+                    serviceId:services[i].serviceId,
+                    scoreId:services[i].scores[j].scoreId,
+                    service:services[i],
+                    score:services[i].scores[j],
+                    value:services[i].scores[j].scoreId
+                });
+            }
         }
     }
 
