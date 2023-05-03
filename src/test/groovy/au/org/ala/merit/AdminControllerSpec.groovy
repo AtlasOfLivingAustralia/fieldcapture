@@ -156,7 +156,7 @@ class AdminControllerSpec extends Specification implements ControllerUnitTest<Ad
         'about'    | 'about' | '/home/about'     | 'About'
         'help'     | 'help' | '/home/help'      | 'Help'
         'contacts' | 'contacts' | '/home/contacts' | 'Contacts'
-        'rlpMeriDeclaration' | null | '/admin/staticPages' | 'Static pages'
+        'rlpMeriDeclaration' | 'staticPage' | '/admin/staticPages' | 'Static pages'
 
     }
 
