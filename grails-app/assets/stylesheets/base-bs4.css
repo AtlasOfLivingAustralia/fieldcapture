@@ -9,3 +9,9 @@
 .validationEngineContainer .required label:after, .validationEngineContainer th.required:after, .validationEngineContainer label.required:after {
     font-size: inherit;
 }
+input.hidden-validation-holder {
+    width:0px !important;
+    height:0px !important;
+    padding: 0;
+    border: none;
+}

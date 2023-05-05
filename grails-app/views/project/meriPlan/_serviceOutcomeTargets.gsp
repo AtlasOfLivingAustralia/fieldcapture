@@ -1,4 +1,4 @@
-<!-- ko with:details.services -->
+<!-- ko with:details.serviceOutcomes -->
 <h4>${title ?: "Project services and minimum targets"}</h4>
 
 <table class="table service-targets">
@@ -10,20 +10,25 @@
         <th></th>
     </tr>
     </thead>
-    <tbody data-bind="foreach : services">
+    <tbody data-bind="foreach : outcomeTargets">
     <tr>
         <td class="index"><span data-bind="text:$index()+1"></span></td>
         <td class="">
-            <select readonly="readonly" class="form-control form-control-sm"
-                    data-bind="options: selectableServices, optionsText:'name', optionsValue:'id', optionsCaption: 'Please select', value:serviceId, disable: $root.isProjectDetailsLocked()"
-                    data-validation-engine="validate[required]"></select>
+            <input readonly="readonly" class="form-control form-control-sm"
+                    data-bind="value:serviceLabel, disable: $root.isProjectDetailsLocked()"
+                    >
         </td>
         <td class="">
-            <select readonly="readonly"  class="form-control form-control-sm"
-                    data-bind="options: selectableScores, optionsText:'label', optionsValue:'scoreId', optionsCaption: 'Please select', value:scoreId, disable: $root.isProjectDetailsLocked()"
-                    data-validation-engine="validate[required]"></select>
+            <input readonly="readonly"  class="form-control form-control-sm"
+                    data-bind="value:scoreLabel, disable: $root.isProjectDetailsLocked()"
+                   >
         </td>
-        <td></td>
+        <td>
+            <!-- ko if:orphaned -->
+            <input type="text" value="" class="hidden-validation-holder" data-validation-engine="validate[required]" data-errormessage="This target is not associated with any outcomes">
+            <i data-bind="click:$parent.removeOutcomeTarget" class="fa fa-remove"></i>
+            <!-- /ko -->
+        </td>
     </tr>
 
 <tr>
@@ -31,45 +36,26 @@
         <th>Project Outcome/s</th>
         <th>Target</th>
         <th></th>
+    </tr>
+    <!-- ko foreach:outcomeTargets -->
     <tr>
         <td class="index"></td>
         <td>
-            <select multiple>
-                <option>MT1</option>
-                <option>MT2</option>
-                <option>ST1</option>
+            <select multiple class="form-control form-control-sm" data-bind="options:$root.selectedOutcomes, optionsText:'code', optionsValue:'code', multiSelect2:{value:relatedOutcomes}">
             </select>
         </td>
-        <td><input type="number" class="form-control form-control-sm"></td>
-        <td>x</td>
+        <td><input type="number" class="form-control form-control-sm" data-bind="value:target"></td>
+        <td><i class="fa fa-remove" data-bind="click:$parent.removeOutcomeTarget"></i></td>
     </tr>
+    <!-- /ko -->
     <tr>
-        <td class="index"></td>
-        <td>
-            <select multiple>
-                <option>MT1</option>
-                <option>MT2</option>
-                <option>ST1</option>
-            </select>
+        <td colspan="4">
+            <button class="btn btn-sm" data-bind="click:addOutcomeTarget"><i class="fa fa-plus"></i>Add outcome target</button>
         </td>
-        <td><input type="number" class="form-control form-control-sm"></td>
-        <td>x</td>
-    </tr>
-    <tr><td colspan="4">
-        <button class="btn btn-sm"><i class="fa fa-plus"></i>Add another outcome target</button>
-    </td>
     </tr>
     </tbody>
-    <tfoot>
 
-    <tr>
-        <td data-bind="attr:{colspan:periods.length+${showTargetDate ? 6 : 5}}">
-            <button type="button" class="btn btn-sm"
-                    data-bind="disable: $parent.isProjectDetailsLocked(), click: addService">
-                <i class="fa fa-plus"></i> Add a row</button>
-        </td>
-    </tr>
-    </tfoot>
+
 </table>
 
 <!-- /ko -->
