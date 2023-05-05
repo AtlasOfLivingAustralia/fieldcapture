@@ -27,7 +27,7 @@
                       data-bind="value: threat, disable: $root.isProjectDetailsLocked()">
             </textarea>
         </td>
-        <td class="services"><select multiple="true" class="form-control form-control-sm" data-bind="options:$root.allServices, optionsText:'label', optionsValue:'scoreId', multiSelect2:{value:relatedServices}"></select> </td>
+        <td class="services"><select multiple="true" class="form-control form-control-sm" data-bind="options:$root.allServices, optionsText:'label', optionsValue:'scoreId', multiSelect2:{preserveColumnWidth:true, value:relatedServices}"></select> </td>
         <td class="intervention"><textarea class="form-control form-control-sm" data-validation-engine="validate[required]"
                                            data-bind="value: intervention, disable: $root.isProjectDetailsLocked()"
                                            rows="4"></textarea></td>

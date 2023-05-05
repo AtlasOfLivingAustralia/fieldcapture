@@ -18,7 +18,9 @@
     <tr>
         <td class="code"><span data-bind="text:code"></span></td>
         <td class="outcome">
-            <select class="form-control form-control-sm" data-bind="options:$root.selectedOutcomes, optionsText:'code', value:relatedOutcome"></select>
+            <select class="form-control form-control-sm" data-bind="foreach:$root.selectedOutcomes,  value:relatedOutcome">
+                <option data-bind="text:code, attr:{title:description}"></option>
+            </select>
         </td>
         <th class="monitoring-data">
             <select class="form-control form-control-sm" data-bind="value:monitoringDataStatus">
@@ -33,7 +35,7 @@
             </textarea>
         </td>
         <td class="service">
-            <select multiple="true" class="form-control form-control-sm" data-bind="options:$root.allServices, optionsText:'label', optionsValue:'scoreId', multiSelect2:{value:relatedServices}"></select>
+            <select multiple="true" class="form-control form-control-sm" data-bind="options:$root.allServices, optionsText:'label', optionsValue:'scoreId', multiSelect2:{value:relatedServices, preserveColumnWidth:true}"></select>
         </td>
         <td class="baseline-method">
             <select data-bind="options:$root.monitoringProtocols, value:protocol">
