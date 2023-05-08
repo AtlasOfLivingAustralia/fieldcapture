@@ -18,6 +18,7 @@
             organisationDeleteUrl: '${g.createLink(action:"ajaxDelete", id:"${organisation.organisationId}")}',
             organisationEditUrl: '${g.createLink(action:"edit", id:"${organisation.organisationId}")}',
             organisationListUrl: '${g.createLink(action:"list")}',
+            organisationSaveUrl: "${createLink(action:'ajaxUpdate')}",
             organisationViewUrl: '${g.createLink(action:"index", id:"${organisation.organisationId}")}',
             viewReportUrl: "${g.createLink(action:'viewOrganisationReport', id:organisation.organisationId)}",
             editReportUrl: "${g.createLink(action:'editOrganisationReport', id:organisation.organisationId)}",

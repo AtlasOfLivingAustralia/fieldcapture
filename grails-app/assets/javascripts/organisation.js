@@ -14,6 +14,7 @@ OrganisationViewModel = function (props, options) {
     };
 
     var config = _.extend({}, defaults, options);
+    self.config = ko.observable(vkbeautify.json(props.config));
 
     var orgTypesMap = {
     aquarium:'Aquarium',
@@ -80,6 +81,37 @@ OrganisationViewModel = function (props, options) {
        window.location = fcConfig.organisationEditUrl;
     };
 
+    self.saveOrganisationConfiguration = function() {
+        try {
+            config = JSON.parse(self.config());
+        }
+        catch (e) {
+            bootbox.alert("Invalid JSON");
+            return;
+        }
+        var json = {
+            config: config,
+            organisationId: self.organisationId,
+            abn: self.abn()
+        };
+        self.saveOrganisationConfig(json).done(function (data) {
+            bootbox.alert("Organisation configuration saved");
+        });
+
+    };
+
+    self.saveOrganisationConfig = function(json) {
+        return $.ajax({
+            url: fcConfig.organisationSaveUrl,
+            type: 'POST',
+            data: JSON.stringify(json),
+            dataType:'json',
+            contentType: 'application/json'
+        }).fail(function() {
+            bootbox.alert("Save failed");
+        });
+    };
+
     self.transients = self.transients || {};
     self.transients.orgTypes = [];
     for (var ot in orgTypesMap) {
@@ -106,7 +138,7 @@ OrganisationViewModel = function (props, options) {
         if ($('.validationEngineContainer').validationEngine('validate')) {
 
             var orgData = self.modelAsJSON(true);
-            $.ajax(config.organisationSaveUrl, {type:'POST', data:orgData, contentType:'application/json'}).done( function(data) {
+            $.ajax(fcConfig.organisationSaveUrl, {type:'POST', data:orgData, contentType:'application/json'}).done( function(data) {
                 if (data.errors) {
 
                 }
