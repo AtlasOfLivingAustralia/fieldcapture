@@ -284,6 +284,7 @@ environments {
         security.cas.casServerUrlPrefix="${casBaseUrl}/cas"
         security.cas.loginUrl="${security.cas.casServerUrlPrefix}/login"
         security.cas.casLoginUrl="${security.cas.casServerUrlPrefix}/login"
+        security.cas.logoutUrl="${security.cas.casServerUrlPrefix}/logout"
         userDetails.url = "${casBaseUrl}/userdetails/userDetails/"
         logging.dir = '.'
         upload.images.path = '/tmp'
