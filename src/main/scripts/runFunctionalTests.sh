@@ -40,11 +40,14 @@ cd $MERIT_DIR
 GRADLE_OPTS="-Xmx1g" ./gradlew bootRun "-Dorg.gradle.jvmargs=-Xmx1g" -Dgrails.env=test -PstartWiremock=true -Dgrails.server.port.http=8087 &
 sleep 180
 
+cd $ECODATA_LOCAL_DIR
 echo "Starting ecodata from `pwd`"
 ls -la
 GRADLE_OPTS="-Xmx1g" ./gradlew bootRun "-Dorg.gradle.jvmargs=-Xmx1g" -Dgrails.env=meritfunctionaltest &
 sleep 240
 
+
+cd $MERIT_DIR
 chmod u+x src/main/scripts/loadFunctionalTestData.sh
 
 echo "Running functional tests"

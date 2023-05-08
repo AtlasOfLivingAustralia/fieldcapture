@@ -204,7 +204,7 @@ bootRun {
     String springProfilesActive = 'spring.profiles.active'
     systemProperty springProfilesActive, System.getProperty(springProfilesActive)
 
-    if (!Boolean.valueOf(startWiremock)) {
+    if (Boolean.valueOf(startWiremock)) {
         runWithWiremock = true
     }
 }
