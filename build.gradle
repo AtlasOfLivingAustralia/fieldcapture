@@ -224,7 +224,7 @@ tasks.withType(Test) {
 
 wiremock {
     dir "${project.projectDir}/src/integration-test/resources/wiremock/"
-    params "--port=8018 --global-response-templating --verbose --local-response-templating"
+    params "--port=8018 --global-response-templating --local-response-templating"
 }
 
 clientDependencies {
