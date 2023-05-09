@@ -12,7 +12,7 @@ class Organisation extends Page{
         name {$('h2')}
         aboutTab{$('a#about-tab',0)}
         adminTab{$('a#admin-tab')}
-        adminTabContent { module OrganisationAdminTab }
+        adminTabContent(required: false)  { module OrganisationAdminTab }
         orgName { $('.header-text') }
         orgDescription { $('span#orgDescription') }
         orgAbn {$('span#orgAbn')}
@@ -26,6 +26,12 @@ class Organisation extends Page{
         waitFor 10, { adminTabContent.displayed }
         waitFor 10, { adminTabContent.editButton.displayed }
         adminTabContent.editButton.click()
+    }
+
+    def openAdminTab() {
+        waitFor {adminTab.displayed}
+        adminTab.click()
+        waitFor 10, { adminTabContent.displayed }
     }
 
 }

@@ -26,4 +26,26 @@ class OrganisationProjectSpec extends StubbedCasSpec {
             projectContent[1].text() == "Project Script Injection <script>alert('Test')</script>"
         }
     }
+
+    void "Can setup organisation configuration in the admin tab"() {
+
+        setup:
+        loginAsMeritAdmin(browser)
+
+        when:
+        to Organisation, orgId
+
+        then:
+        waitFor {at Organisation}
+
+        openAdminTab()
+        adminTabContent.openConfig()
+
+        when:
+        adminTabContent.configOverride.config = '{ "visibility": "public" }'
+        adminTabContent.configOverride.save()
+
+        then:
+        adminTab.displayed == true
+    }
 }

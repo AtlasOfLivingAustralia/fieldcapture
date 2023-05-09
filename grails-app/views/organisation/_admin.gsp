@@ -1,8 +1,8 @@
 <div class="row">
     <div class="nav flex-column nav-pills col-3">
         <a class="nav-link active" data-toggle="pill" href="#edit-program-details" id="edit-program-details-tab" role="tab">Edit</a>
-        <a class="nav-link" data-toggle="pill" href="#program-permissions" role="tab">Permissions</a>
-        <a class="nav-link" data-toggle="pill" href="#config" role="tab">Configuration</a>
+        <a class="nav-link" data-toggle="pill" href="#program-permissions" id="permissions-tab" role="tab">Permissions</a>
+        <a class="nav-link" data-toggle="pill" href="#config" id="configuration-tab" role="tab">Configuration</a>
     </div>
 
     <div class="tab-content col-9">
@@ -39,7 +39,7 @@
         <div class="tab-pane" id="config">
             <h4 style="display:inline-block">Program configuration</h4> <button class="btn btn-success float-right" data-bind="click:saveOrganisationConfiguration">Save Configuration</button>
 
-            <textarea rows="80" style="width:100%" data-bind="value:config">
+            <textarea id="textConfig" rows="80" style="width:100%" data-bind="value:config">
 
             </textarea>
         </div>
