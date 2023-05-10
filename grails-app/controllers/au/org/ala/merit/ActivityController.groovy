@@ -241,8 +241,7 @@ class ActivityController {
         def model = [activity: activity, returnTo: buildReturnToUrl(activity, params.returnTo, false), create: true]
         model.project = projectId ? projectService.get(projectId) : null
 
-        ProgramConfig config = projectConfigurationService.getProjectConfiguration(model.project)
-        model.activityTypes = (config.activities) ? config.activities : metadataService.activityTypesList(model.project?.associatedProgram, model.project?.associatedSubProgram)
+        model.activityTypes = metadataService.activityTypesList(model.project?.associatedProgram, model.project?.associatedSubProgram)
 
         model.site = siteId ? siteService.get(siteId) : null
         if (projectId) {
