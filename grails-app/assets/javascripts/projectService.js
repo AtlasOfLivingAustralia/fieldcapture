@@ -15,7 +15,7 @@ ProjectStatus = {
 };
 
 PROJECT_EXTERNAL_ID_TYPES =  [
-    'TECH_ONE_CODE', 'INTERNAL_ORDER_NUMBER', 'GRANT_AWARD'
+    'TECH_ONE_CODE', 'INTERNAL_ORDER_NUMBER', 'GRANT_AWARD', 'RELATED_PROJECT'
 ];
 
 /**
@@ -278,6 +278,12 @@ function ProjectService(project, options) {
             var typeMatches = _.contains(requiredIdTypes, externalId.idType);
             return typeMatches && externalId.externalId && externalId.externalId.length > 0;
         });
+    }
+
+    self.validateExternalIds = function(externalIds) {
+        if (!self.areExternalIdsValid(externalIds)) {
+            return 'At least one SAP Internal Order or Tech One Project Code is required';
+        }
     }
 
     self.getBudgetHeaders = function() {

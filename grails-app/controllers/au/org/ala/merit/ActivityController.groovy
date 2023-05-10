@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.config.ProgramConfig
 import grails.converters.JSON
 import grails.core.GrailsApplication
 import org.apache.http.HttpStatus
@@ -12,7 +13,7 @@ import org.grails.web.json.JSONObject
 
 class ActivityController {
 
-    def activityService, siteService, projectService, metadataService, userService, excelImportService, webService, speciesService, documentService, reportService
+    def activityService, siteService, projectService, metadataService, userService, excelImportService, webService, speciesService, documentService, reportService, programService, projectConfigurationService
     GrailsApplication grailsApplication
 
     static ignore = ['action','controller','id']
@@ -239,7 +240,10 @@ class ActivityController {
         def activity = [activityId: "", siteId: siteId, projectId: projectId, progress: ActivityService.PROGRESS_PLANNED]
         def model = [activity: activity, returnTo: buildReturnToUrl(activity, params.returnTo, false), create: true]
         model.project = projectId ? projectService.get(projectId) : null
-        model.activityTypes = metadataService.activityTypesList(model.project?.associatedProgram, model.project?.associatedSubProgram)
+
+        ProgramConfig config = projectConfigurationService.getProjectConfiguration(model.project)
+        model.activityTypes = (config.activities) ? config.activities : metadataService.activityTypesList(model.project?.associatedProgram, model.project?.associatedSubProgram)
+
         model.site = siteId ? siteService.get(siteId) : null
         if (projectId) {
             model.themes = metadataService.getThemesForProject(model.project)
