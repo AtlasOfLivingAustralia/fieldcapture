@@ -733,7 +733,9 @@ function DetailsViewModel(o, project, budgetHeaders, risks, allServices, selecte
     self.threatToNativeSpecies = new GenericViewModel(o.threatToNativeSpecies, ['couldBethreatToSpecies', 'details']);
     self.threatControlMethod = new GenericViewModel(o.threatControlMethod, ['currentControlMethod', 'hasBeenSuccessful', 'methodType', 'details']);
     self.monitoring = new GenericViewModel(o.monitoring, ['relatedBaseline', 'data1', 'data2', 'evidence'], null, ['relatedServices']);
-
+    self.indigenousInvolved = ko.observable(o.indigenousInvolved);
+    self.indigenousInvolvementType = ko.observable(o.indigenousInvolvementType);
+    self.indigenousInvolvementComment = ko.observable(o.indigenousInvolvementComment);
 
     var row = [];
     o.events ? row = o.events : row.push(ko.mapping.toJS(new EventsRowViewModel()));
