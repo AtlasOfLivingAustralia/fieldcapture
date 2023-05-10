@@ -1081,6 +1081,12 @@ class ProjectController {
         render projectService.projectPrioritiesByOutcomeType(id) as JSON
     }
 
+    @PreAuthorise(accessLevel = 'editor')
+    def monitoringProtocolForms() {
+        List<Map> forms = activityService.monitoringProtocolForms()
+        render forms as JSON
+    }
+
     private def error(String message, String projectId) {
         flash.message = message
         if (projectId) {

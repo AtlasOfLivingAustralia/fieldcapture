@@ -32,6 +32,7 @@ function ProjectService(project, options) {
         modifyPlanUrl : fcConfig.modifyPlanUrl,
         approvalPlanUrl : fcConfig.approvalPlanUrl,
         rejectPlanUrl : fcConfig.rejectPlanUrl,
+        monitoringProtocolsUrl : fcConfig.monitoringProtocolsUrl,
         excludeFinancialYearData : false
     };
 
@@ -341,4 +342,10 @@ function ProjectService(project, options) {
         var url = config.documentDeleteUrl+'/'+documentId;
         return $.post(url);
     };
+
+
+    self.getMonitoringProtocols = function() {
+        var url = config.monitoringProtocolsUrl;
+        return $.get(url);
+    }
 };

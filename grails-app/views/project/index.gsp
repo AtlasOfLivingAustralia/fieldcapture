@@ -95,7 +95,8 @@
                 projectTargetsAndScoresUrl: "${createLink(controller:'project', action:'targetsAndScoresForActivity', id:project.projectId)}",
                 i18nURL: "${g.createLink(controller: 'home', action: 'i18n')}",
                 returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}",
-                reportsHistoryUrl:"${createLink(controller: 'report', action:'reportingHistory')}"
+                reportsHistoryUrl:"${createLink(controller: 'report', action:'reportingHistory')}",
+                monitoringProtocolsUrl:"${createLink(action:'monitoringProtocolForms')}"
 
             },
             here = window.location.href;
@@ -299,6 +300,7 @@ var config = {
 
     config.useRlpTemplate = ${config.getProjectTemplate() == au.org.ala.merit.config.ProgramConfig.ProjectTemplate.RLP};
     config.useRlpRisksModel = config.useRlpTemplate;
+    config.keyThreatCodes  = <fc:modelAsJavascript model="${config.program?.config?.keyThreatCodes ?: []}"/>;
     config.risksStorageKey = PROJECT_RISKS_KEY;
 
     config.requireMeriApprovalReason = ${projectContent.admin.requireMeriPlanApprovalReason};

@@ -350,8 +350,11 @@ function MERIPlan(project, projectService, config) {
         'Migratory Species', 'Ramsar Wetland', 'World Heritage area', 'Community awareness/participation in NRM', 'Indigenous Cultural Values',
         'Indigenous Ecological Knowledge', 'Remnant Vegetation', 'Aquatic and Coastal systems including wetlands', 'Not Applicable'];
     self.controls = ['Yes', 'No'];
-    self.keyThreats = config.keyThreats || ['Native fauna - predation'];
-    self.monitoringProtocols = config.monitoringProtocols || ["P1", "P2", "Other"];
+    self.keyThreatCodes = config.keyThreatCodes || [];
+    self.monitoringProtocols = ko.observableArray();
+    projectService.getMonitoringProtocols().done(function(protocols) {
+        self.monitoringProtocols(protocols);
+    });
 
     self.addBudget = function () {
         self.meriPlan().budget.rows.push(new BudgetRowViewModel({}, periods));
