@@ -352,6 +352,7 @@ function MERIPlan(project, projectService, config) {
         'Indigenous Ecological Knowledge', 'Remnant Vegetation', 'Aquatic and Coastal systems including wetlands', 'Not Applicable'];
     self.controls = ['Yes', 'No'];
     self.keyThreatCodes = config.keyThreatCodes || [];
+    self.priorityPlaces = config.priorityPlaces || [];
     self.monitoringProtocols = ko.observableArray();
     projectService.getMonitoringProtocols().done(function(protocols) {
         self.monitoringProtocols(protocols);
@@ -779,6 +780,8 @@ function DetailsViewModel(o, project, budgetHeaders, risks, allServices, selecte
     self.threatToNativeSpecies = new GenericViewModel(o.threatToNativeSpecies, ['couldBethreatToSpecies', 'details']);
     self.threatControlMethod = new GenericViewModel(o.threatControlMethod, ['currentControlMethod', 'hasBeenSuccessful', 'methodType', 'details']);
     self.monitoring = new GenericViewModel(o.monitoring, ['relatedBaseline', 'data1', 'data2', 'evidence'], null, ['relatedServices']);
+    self.supportsPriorityPlace = ko.observable(o.supportsPriorityPlace);
+    self.supportedPriorityPlaces = ko.observableArray(o.priorityPlace);
     self.indigenousInvolved = ko.observable(o.indigenousInvolved);
     self.indigenousInvolvementType = ko.observable(o.indigenousInvolvementType);
     self.indigenousInvolvementComment = ko.observable(o.indigenousInvolvementComment);

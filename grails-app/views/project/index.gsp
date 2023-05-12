@@ -301,6 +301,7 @@ var config = {
     config.useRlpTemplate = ${config.getProjectTemplate() == au.org.ala.merit.config.ProgramConfig.ProjectTemplate.RLP};
     config.useRlpRisksModel = config.useRlpTemplate;
     config.keyThreatCodes  = <fc:modelAsJavascript model="${config.program?.config?.keyThreatCodes ?: []}"/>;
+    config.priorityPlaces = <fc:modelAsJavascript model="${config.program?.config?.priorityPlaces ?: []}"/>;
     config.risksStorageKey = PROJECT_RISKS_KEY;
 
     config.requireMeriApprovalReason = ${projectContent.admin.requireMeriPlanApprovalReason};
