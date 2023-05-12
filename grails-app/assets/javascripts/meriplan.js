@@ -1480,10 +1480,13 @@ function OutcomesViewModel(outcomes, config) {
 }
 
 
+/** Supports Methodology and Project Design and Delivery sections */
 function ImplementationViewModel(o) {
     var self = this;
     if (!o) o = {};
     self.description = ko.observable(o.description);
+
+
 };
 
 function EventsRowViewModel(o) {
@@ -1756,6 +1759,7 @@ var ThreatsViewModel = function(threats) {
     // Temporary legacy support
     self.rows = self.threats;
     self.newRow = self.newThreat;
+    self.addRow = function() { self.newThreat({}) };
 
     if (!threats) {
         threats = [];
