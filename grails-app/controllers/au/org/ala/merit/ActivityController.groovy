@@ -242,7 +242,11 @@ class ActivityController {
         model.project = projectId ? projectService.get(projectId) : null
 
         ProgramConfig config = projectConfigurationService.getProjectConfiguration(model.project)
-        model.activityTypes = (config.activities) ? config.activities : metadataService.activityTypesList(model.project?.associatedProgram, model.project?.associatedSubProgram)
+        if (model.project.programId) {
+            model.activityTypes = metadataService.activitiesListByProgramId(model.project?.programId)
+        } else {
+            model.activityTypes = metadataService.activityTypesList(model.project?.associatedProgram, model.project?.associatedSubProgram)
+        }
 
         model.site = siteId ? siteService.get(siteId) : null
         if (projectId) {
