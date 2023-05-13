@@ -16,7 +16,7 @@
         </td>
         <td class="priority">
             <!-- ko if:!details.outcomes.secondaryOutcomeSupportsMultiplePriorities($data.description()) -->
-            <select data-bind="value:asset, options: details.outcomes.outcomePriorities(description()), optionsCaption: 'Please select', select2:{}, disable: $parent.isProjectDetailsLocked()" class="form-control form-control-sm asset"></select>
+            <select data-bind="value:asset, options: details.outcomes.outcomePriorities(description()), optionsCaption: 'Please select', select2:{preserveColumnWidth:true}, disable: $parent.isProjectDetailsLocked()" class="form-control form-control-sm asset"></select>
             <!-- /ko -->
             <!-- ko if:details.outcomes.secondaryOutcomeSupportsMultiplePriorities($data.description()) -->
             <ul class="list-unstyled" data-bind="foreach:details.outcomes.outcomePriorities(description())">

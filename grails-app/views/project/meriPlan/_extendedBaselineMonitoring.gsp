@@ -38,7 +38,7 @@
             <select multiple="true" class="form-control form-control-sm" data-bind="options:$root.allServices, optionsText:'label', optionsValue:'scoreId', multiSelect2:{value:relatedServices, preserveColumnWidth:true}"></select>
         </td>
         <td class="baseline-method">
-            <select data-bind="options:$root.monitoringProtocols, optionsText:'name', optionsValue:'name', value:protocol">
+            <select data-bind="options:$root.monitoringProtocols, optionsText:'name', optionsValue:'name', value:protocol, optionsCaption:'Please select...'">
                 <option value="other">Other</option>
             </select>
 

@@ -21,7 +21,10 @@
     <tbody data-bind="foreach: rows">
     <tr>
         <td class="index"><span data-bind="text:$index()+1"></span></td>
-        <td class="threat-code"><select data-bind="options:$root.keyThreatCodes, value:threatCode"></select> </td>
+        <td class="threat-code">
+            <select data-bind="options:$root.keyThreatCodes, value:threatCode, optionsCaption:'Please select...'">
+
+            </select> </td>
         <td class="threat">
             <textarea rows="4" class="form-control form-control-sm" data-validation-engine="validate[required]"
                       data-bind="value: threat, disable: $root.isProjectDetailsLocked()">

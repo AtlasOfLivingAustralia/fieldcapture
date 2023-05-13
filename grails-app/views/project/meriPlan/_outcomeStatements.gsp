@@ -37,10 +37,10 @@
         </td>
         <g:if test="${extendedOutcomes}">
             <td class="investment-priority">
-                <select class="form-control form-control-sm" data-bind="options:details.outcomes.selectedPrimaryAndSecondaryPriorities,value:assets"></select>
+                <select class="form-control form-control-sm" data-bind="options:details.outcomes.selectedPrimaryAndSecondaryPriorities,value:assets, optionsCaption:'Please select...'"></select>
             </td>
             <td class="medium-term-outcome">
-                <select class="form-control form-control-sm" data-bind="options:details.outcomes.selectable${outcomeType.capitalize()}TermOutcomes, value:relatedOutcome"></select>
+                <select class="form-control form-control-sm" data-bind="options:details.outcomes.selectable${outcomeType.capitalize()}TermOutcomes, value:relatedOutcome, optionsCaption:'Please select...'"></select>
             </td>
         </g:if>
         <td class="remove">
