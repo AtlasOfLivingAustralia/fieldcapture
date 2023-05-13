@@ -289,6 +289,12 @@ tasks.withType(Test) {
     systemProperty "webdriver.gecko.driver", System.getProperty('webdriver.gecko.driver')
 }
 
+integrationTest {
+    // When tests are failing github actions is producing no log file at all.
+    // I'm theorising we are exceeding a log limit so trying to end tests on first failure.
+    failFast = true
+}
+
 
 bootJar {
     duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
