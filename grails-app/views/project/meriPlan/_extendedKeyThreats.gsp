@@ -18,7 +18,7 @@
         <th class="remove"></th>
     </tr>
     </thead>
-    <tbody data-bind="foreach: threats">
+    <tbody data-bind="foreach: rows">
     <tr>
         <td class="index"><span data-bind="text:$index()+1"></span></td>
         <td class="threat-code"><select data-bind="options:$root.keyThreatCodes, value:threatCode"></select> </td>
@@ -50,7 +50,7 @@
     <tr>
         <td colspan="8">
             <button type="button" class="btn btn-sm"
-                    data-bind="disable: $root.isProjectDetailsLocked(), click: newThreat">
+                    data-bind="disable: $root.isProjectDetailsLocked(), click: addRow">
                 <i class="fa fa-plus"></i> Add a row</button></td>
     </tr>
     </tfoot>

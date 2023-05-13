@@ -416,18 +416,13 @@ var config =
                 "template": "extendedKeyThreats"
             },
             {
-                "template": "sectionHeading",
-                "model": {
-                    "heading": "Project Details"
-                }
+                "template": "projectMethodology",
+
+                "maxSize": "4000",
+                "tableHeading": "Project delivery assumptions (4000 character limit [approx. 650 words])"
             },
             {
-                "template": "projectMethodology",
-                "model": {
-                    "helpText": "Describe the methodology that will be used to achieve the project outcomes. To help demonstrate best practice delivery approaches and cost effectiveness of methodologies used, include details of the specific delivery mechanisms to leverage change (e.g. delivery method, approach and justification, and any assumptions).",
-                    "maxSize": "4000",
-                    "tableHeading": "Project methodology (4000 character limit [approx. 650 words])"
-                }
+                "template": "projectPartnerships"
             },
             {
                 "template": "extendedBaselineMonitoring",

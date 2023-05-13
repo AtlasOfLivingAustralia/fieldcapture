@@ -690,7 +690,7 @@ function ReadOnlyMeriPlan(project, projectService, config) {
     self.selectedServiceWatcher = ko.computed(function() {
         var services = [];
         var serviceOutcomeMap = {};
-        var threats = self.meriPlan().threats.threats();
+        var threats = self.meriPlan().threats.rows();
         for (var i=0; i<threats.length; i++) {
             var s = threats[i].relatedServices();
             var o = threats[i].relatedOutcomes();
@@ -774,7 +774,7 @@ function DetailsViewModel(o, project, budgetHeaders, risks, allServices, selecte
     self.adaptiveManagement = ko.observable(o.adaptiveManagement);
     self.rationale = ko.observable(o.rationale);
     self.baseline = new GenericViewModel(o.baseline, ['code', 'relatedOutcome', 'monitoringDataStatus', 'baseline',  'protocol', 'method', 'evidence'], 'B', ['relatedServices']);
-    self.threats = new ThreatsViewModel(o.threats);
+    self.threats = new GenericViewModel(o.threats, ['threatCode', 'threat', 'intervention', 'evidence'], 'KT',['relatedServices', 'relatedOutcomes']);
     self.consultation = ko.observable(o.consultation);
     self.communityEngagement = ko.observable(o.communityEngagement);
     self.threatToNativeSpecies = new GenericViewModel(o.threatToNativeSpecies, ['couldBethreatToSpecies', 'details']);
@@ -1745,44 +1745,6 @@ function ActivitiesViewModel(activities, programActivities) {
         }
         return js;
     };
-}
-
-var ThreatsViewModel = function(threats) {
-
-    var self = this;
-
-    self.threats = ko.observableArray();
-
-    self.newThreat = function(row) {
-        self.threats.push(new ThreatViewModel(row));
-    }
-    // Temporary legacy support
-    self.rows = self.threats;
-    self.newRow = self.newThreat;
-    self.addRow = function() { self.newThreat({}) };
-
-    if (!threats) {
-        threats = [];
-    }
-    for (var i=0; i<threats.length; i++) {
-        self.newThreat(threats[i])
-    }
-}
-
-var ThreatViewModel = function(threat) {
-    var self = this;
-
-    threat = threat || {};
-    self.threatCode = ko.observable(threat.threatCode);
-    self.threat = ko.observable(threat.threat);
-    self.intervention = ko.observable(threat.intervention);
-    self.relatedServices = ko.observableArray(threat.relatedServices);
-    self.evidence = ko.observable(threat.evidence);
-    self.relatedOutcomes = ko.observableArray(threat.relatedOutcomes);
-
-    // temporary legacy support
-    self.data1 = self.threat;
-    self.data2 = self.intervention;
 }
 
 function limitText(field, maxChar) {
