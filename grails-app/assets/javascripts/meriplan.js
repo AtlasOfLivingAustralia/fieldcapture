@@ -1187,15 +1187,17 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
 
 
 
-function GenericViewModel(o, propertyNames, codePrefix, arrayPropertyNames) {
+function GenericViewModel(o, propertyNames, codePrefix, arrayPropertyNames, numDefaultRows) {
     var self = this;
 
+    if (numDefaultRows === undefined) {
+        numDefaultRows = 1;
+    }
     if (!o) o = {};
     self.description = ko.observable(o.description);
     self.newRow = function (row) {
         return new GenericRowViewModel(row, propertyNames, arrayPropertyNames)
     };
-    var row = o.rows || [];
 
     function newObj() {
         var obj = {};
@@ -1204,12 +1206,7 @@ function GenericViewModel(o, propertyNames, codePrefix, arrayPropertyNames) {
         }
         return obj;
     }
-    self.rows = ko.observableArray($.map(row, function (obj, i) {
-        return self.newRow(obj);
-    }));
-    o.rows ? row = o.rows : row.push(ko.mapping.toJS(self.newRow(newObj())));
-
-
+    self.rows = ko.observableArray();
 
     self.addRow = function () {
         self.rows.push(self.newRow(newObj()));
@@ -1218,6 +1215,17 @@ function GenericViewModel(o, propertyNames, codePrefix, arrayPropertyNames) {
         self.rows.remove(row);
     };
 
+    if (!o.rows) {
+        o.rows = [];
+        for (var i=0; i<numDefaultRows; i++) {
+            self.addRow();
+        }
+    }
+    else {
+        _.each(o.rows, function (obj) {
+            self.rows.push(self.newRow(obj));
+        });
+    }
 };
 
 function GenericRowViewModel(o, propertyNames, arrayPropertyNames) {
