@@ -860,9 +860,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
 
     self.validateExternalIds = function() {
         if (self.status() != ProjectStatus.APPLICATION) {
-            if (!projectService.areExternalIdsValid(ko.mapping.toJS(self.externalIds))) {
-                return 'At least one internal order number is required';
-            }
+            return projectService.validateExternalIds(ko.mapping.toJS(self.externalIds));
         }
     }
 

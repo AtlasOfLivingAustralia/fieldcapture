@@ -164,6 +164,7 @@ var config = {
     ],
     excludes:["DATA_SETS"],
     projectTemplate: "default",
+    "meriPlanTemplate": "meriPlan",
     activities: [
         {
             name: "Administration, management & reporting",
