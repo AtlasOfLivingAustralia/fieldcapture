@@ -201,7 +201,7 @@ abn.abnUrl= "https://abr.business.gov.au/json/AbnDetails.aspx?abn="
 
 esp.activities.admin = 'ESP Annual Report Submission'
 reports.filterableActivityTypes = ['RLP Output Report', 'Wildlife Recovery Progress Report - WRR']
-
+reports.initialScrollPositionDelay = 1000
 risks.scheduleCheckingPeriod = 7
 grails.mail.poolSize = 1
 
