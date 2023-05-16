@@ -12,7 +12,7 @@ class OrganisationController {
     static allowedMethods = [ajaxDelete: "POST", delete:"POST", ajaxUpdate: "POST", prepopulateAbn:"GET"]
 
     def organisationService, searchService, documentService, userService, roleService, commonService, webService
-    def activityService, metadataService, projectService, excelImportService, reportService, pdfConverterService, authService
+    def activityService, metadataService, projectService, excelImportService, reportService, pdfConverterService, authService, managementUnitService
 
     def list() {}
 
@@ -63,11 +63,13 @@ class OrganisationController {
         if (hasAdminAccess) {
             dashboardReports += [name:'announcements', label:'Announcements']
         }
+
+        Map mu = managementUnitService.get("6357aa1b-b301-4ccf-9fbf-c372e3e3eee5")
         List reportOrder = null
         if (reportingVisible) {
             // TODO change me to use the configuration once it's been decided how that
             // is going to work.
-            reportOrder = organisation.reports?.collect{[category:it.category, description:it.description, rejectionReasonCategoryOptions:it.rejectionReasonCategoryOptions?:[]]} ?: []
+            reportOrder = mu.config?.managementUnitReports?.collect{[category:it.category, description:it.description, rejectionReasonCategoryOptions:it.rejectionReasonCategoryOptions?:[]]} ?: []
             reportOrder = reportOrder.unique({it.category})
 
             // We need at least one finished report to show data.
@@ -81,7 +83,7 @@ class OrganisationController {
         List adHocReportTypes =[ [type: ReportService.PERFORMANCE_MANAGEMENT_REPORT]]
 
         [about     : [label: 'About', visible: true, stopBinding: false, type:'tab'],
-         reporting : [label: 'Reporting', visible: reportingVisible, stopBinding:true, template:'/shared/categorizedReporting', default:reportingVisible, type: 'tab', reports:organisation.reports, adHocReportTypes:adHocReportTypes, reportOrder:reportOrder],
+         reporting : [label: 'Reporting', visible: reportingVisible, stopBinding:true, template:'/shared/categorizedReporting', default:reportingVisible, type: 'tab', reports:mu.reports, adHocReportTypes:adHocReportTypes, reportOrder:reportOrder],
          projects  : [label: 'Projects', visible: true, default:!reportingVisible, stopBinding:true, type: 'tab'],
          sites     : [label: 'Sites', visible: true, type: 'tab', stopBinding:true, projectCount:organisation.projects?.size()?:0, showShapefileDownload:hasAdminAccess],
          dashboard : [label: 'Dashboard', visible: true, stopBinding:true, type: 'tab', template:'/shared/dashboard', reports:dashboardReports],

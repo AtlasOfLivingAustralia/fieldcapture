@@ -2,6 +2,7 @@
     <div class="nav flex-column nav-pills col-3">
         <a class="nav-link active" data-toggle="pill" href="#edit-program-details" id="edit-program-details-tab" role="tab">Edit</a>
         <a class="nav-link" data-toggle="pill" href="#program-permissions" id="permissions-tab" role="tab">Permissions</a>
+        <a class="nav-link" data-toggle="pill" href="#reporting-config" id="reporting-tab" role="tab">Reporting</a>
         <a class="nav-link" data-toggle="pill" href="#config" id="configuration-tab" role="tab">Configuration</a>
     </div>
 
@@ -35,7 +36,50 @@
             <g:render template="/admin/permissionTable" model="[loadPermissionsUrl:loadPermissionsUrl, removeUserUrl:g.createLink(controller:'organisation', action:'removeUserWithRoleFromOrganisation'), entityId:organisation.organisationId, user:user]"/>
 
         </div>
+%{--        <div class="tab-pane" id="reporting">--}%
+%{--            Hello WORLD--}%
+%{--        </div>--}%
+        <div class="tab-pane" id="reporting-config">
+            <form>
+                <h3>Core services and output reporting frequency</h3>
+                <div class="form-group">
+                    <label for="start-date">Start date</label>
+                    <div class="input-group">
+                        <fc:datePicker class="form-control dateControl" id="start-date" name="start-date" bs4="bs4" targetField="startDate.date" data-validation-engine="validate[required,future[30-06-2018]]"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="end-date">End date</label>
+                    <div class="input-group">
+                        <fc:datePicker class="form-control dateControl" id="end-date" name="end-date" bs4="bs4" targetField="endDate.date" data-validation-engine="validate[required,future[start-date]]"/>
+                    </div>
+                </div>
 
+                <div class="form-group">
+                    <label for="core-services-group">Core services reporting group</label>
+                    <select class="form-control" id="core-services-group" data-bind="value:coreServicesPeriod, options:coreServicesOptions, optionsText:'label', optionsValue:'label', optionsCaption:'Please select'" data-validation-engine="validate[required]"></select>
+                </div>
+
+                <div class="form-group">
+                    <label for="progress-reporting-group">Project Output reporting group</label>
+                    <select class="form-control" id="progress-reporting-group" data-bind="value:activityReportingPeriod, options:activityReportingOptions, optionsText:'label', optionsValue:'label', optionsCaption:'Please select'" data-validation-engine="validate[required]"></select>
+
+                </div>
+
+            </form>
+            <hr/>
+            <form class="utilities">
+                <h3>Regenerate reports</h3>
+                <p>This may need to be done if the report configuration is edited.</p>
+                <h4>Management Unit report categories</h4>
+                <ul class="list-unstyled" data-bind="foreach:managementUnitReportCategories">
+                    <li><label class="checkbox"><input type="checkbox" data-bind="value:$data, checked:$parent.selectedManagementUnitReportCategories"> <span data-bind="text:$data"></span></label></li>
+                </ul>
+
+                <button class="btn btn-success" data-bind="click:regenerateReportsByCategory">Regenerate reports</button>
+            </form>
+
+        </div>
         <div class="tab-pane" id="config">
             <h4 style="display:inline-block">Program configuration</h4> <button class="btn btn-success float-right" data-bind="click:saveOrganisationConfiguration">Save Configuration</button>
 

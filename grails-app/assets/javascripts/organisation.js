@@ -16,6 +16,75 @@ OrganisationViewModel = function (props, options) {
     var config = _.extend({}, defaults, options);
     self.config = ko.observable(vkbeautify.json(props.config));
 
+    self.startDate = ko.observable(props.startDate).extend({simpleDate:false});
+    self.endDate = ko.observable(props.endDate).extend({simpleDate:false});
+    self.activityReportingPeriod = ko.observable(currentOption ? currentOption.label : null);
+    self.managementUnitReportCategories = ko.computed(function() {
+        return _.map(config.managementUnitReports || [], function(report) {
+            return report.category;
+        });
+    });
+
+    var coreServicesReportCategory = 'Core Services Reporting';
+    var getManagementUnitReportConfig = function() {
+        if (!config.managementUnitReports || config.managementUnitReports.length == 0) {
+            config.managementUnitReports = [{type:'Administrative', category:coreServicesReportCategory}];
+        }
+        return config.managementUnitReports[0];
+    };
+
+    var getActivityReportConfig = function() {
+        var activityReportConfig;
+        if (!config.projectReports) {
+            config.projectReports = [];
+        }
+        activityReportConfig = _.find(config.projectReports, function(report) {
+            return report.category == projectOutputReportCategory;
+        });
+        if (!activityReportConfig) {
+            activityReportConfig = {reportType:'Activity', category:projectOutputReportCategory};
+            config.projectReports.push(activityReportConfig);
+        }
+
+        return activityReportConfig;
+    };
+
+    var projectOutputReportCategory = 'Outputs Reporting';
+    var activityReportConfig = getActivityReportConfig();
+    var managementUnitReportConfig = getManagementUnitReportConfig();
+
+    self.coreServicesOptions = [
+        {label:'Monthly (First period ends 31 July 2018)', firstReportingPeriodEnd:'2018-07-31T14:00:00Z', reportingPeriodInMonths:1, reportConfigLabel:'Monthly'},
+        {label:'Bi-monthly (First period ends 31 August 2018)', firstReportingPeriodEnd:'2018-08-31T14:00:00Z', reportingPeriodInMonths:2, reportConfigLabel:'Bi-monthly'},
+        {label:"Quarterly - Group A (First period ends 30 September 2018)", firstReportingPeriodEnd:'2018-09-30T14:00:00Z', reportingPeriodInMonths:3, reportConfigLabel:'Quarterly - Group A'},
+        {label:"Quarterly - Group B (First period ends 31 August 2018)", firstReportingPeriodEnd:'2018-08-31T14:00:00Z', reportingPeriodInMonths:3, reportConfigLabel:'Quarterly - Group B'}];
+
+    var currentOption = _.find(self.coreServicesOptions, function(option) {
+        return option.firstReportingPeriodEnd == managementUnitReportConfig.firstReportingPeriodEnd && option.reportingPeriodInMonths == managementUnitReportConfig.reportingPeriodInMonths;
+    });
+    self.coreServicesPeriod = ko.observable(currentOption ? currentOption.label : null);
+
+    self.activityReportingOptions = [
+        {label:"Quarterly (First period ends 30 September 2018)", firstReportingPeriodEnd:'2018-09-30T14:00:00Z', reportingPeriodInMonths:3, reportConfigLabel:'Quarter'},
+        {label:"Half-yearly (First period ends 31 December 2018)", firstReportingPeriodEnd:'2018-12-31T13:00:00Z', reportingPeriodInMonths:6, reportConfigLabel:'Semester'}];
+
+    currentOption = _.find(self.activityReportingOptions, function(option) {
+        return option.firstReportingPeriodEnd == activityReportConfig.firstReportingPeriodEnd && option.reportingPeriodInMonths == activityReportConfig.reportingPeriodInMonths;
+    });
+
+    self.regenerateReportsByCategory = function() {
+        blockUIWithMessage("Regenerating reports...");
+        self.regenerateReports(self.selectedManagementUnitReportCategories(), self.selectedProjectReportCategories()).done(function() {
+            blockUIWithMessage("Reports successfully regenerated, reloading page...");
+            setTimeout(function(){
+                window.location.reload();
+            }, 1000);
+
+        }).fail(function() {
+            $.unblockUI();
+        });
+    };
+
     var orgTypesMap = {
     aquarium:'Aquarium',
     archive:'Archive',

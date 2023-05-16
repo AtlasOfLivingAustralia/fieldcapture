@@ -4,7 +4,7 @@
 
     <div data-bind="foreach:reportsByCategory">
         <div class="report-category">
-            <h3 data-bind="text:title"></h3>
+            <h3 data-bind="text:title">FCK</h3>
 
             <div class="report-category-description" data-bind="if:description">
                 <div data-bind="html:description.markdownToHtml()"></div>
@@ -19,7 +19,7 @@
         </div>
     </div>
     <div data-bind="if:reportsByCategory.length == 0">
-        No reports found.
+        No reports found. kkk
     </div>
 
 </div>
@@ -117,7 +117,7 @@
 
     <tr>
         <th class="report-actions">
-            Actions <fc:iconHelp html="html">Submitted and approved reports cannot be edited<br/>Only reports marked as completed can be viewed or downloaded as a PDF</fc:iconHelp></th>
+            Actions XXX<fc:iconHelp html="html">Submitted and approved reports cannot be edited<br/>Only reports marked as completed can be viewed or downloaded as a PDF</fc:iconHelp></th>
         <th class="report-name">Report</th>
         <th class="report-start">Period start</th>
         <th class="report-end">Period end
@@ -183,7 +183,7 @@
     </tbody>
     <tfoot>
     <tr data-bind="visible:filteredReports().length == 0">
-        <td colspan="5">No reports found.</td>
+        <td colspan="5">No reports found.XXX</td>
     </tr>
     </tfoot>
 
