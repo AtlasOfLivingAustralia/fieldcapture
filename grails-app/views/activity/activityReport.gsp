@@ -36,7 +36,8 @@
                 prepopUrlPrefix:"${grailsApplication.config.getProperty('grails.serverURL')}",
                 useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.PRODUCTION},
                 unlockActivityUrl: "${createLink(controller:'activity', action:'ajaxUnlock')}/<fc:currentUserId/>",
-                projectTargetsAndScoresUrl: "${createLink(controller:'project', action:'targetsAndScoresForActivity', id:activity.projectId, params:[activityId:activity.activityId])}"
+                projectTargetsAndScoresUrl: "${createLink(controller:'project', action:'targetsAndScoresForActivity', id:activity.projectId, params:[activityId:activity.activityId])}",
+                initialScrollPositionDelay: "${grailsApplication.config.getProperty('reports.initialScrollPositionDelay')} ?: '1000'"
             },
             here = document.location.href;
     </script>
@@ -278,7 +279,9 @@
             var $validationContainer = $('#validation-container');
             $validationContainer.validationEngine('attach', {scroll: true});
 
-            navigator.initialiseScrollPosition($validationContainer, activity.progress);
+            setTimeout(function() {
+                navigator.initialiseScrollPosition($validationContainer, activity.progress);
+            }, fcConfig.initialScrollPositionDelay);
 
             $('.imageList a[target="_photo"]').attr('rel', 'gallery').fancybox({
                 type: 'image',

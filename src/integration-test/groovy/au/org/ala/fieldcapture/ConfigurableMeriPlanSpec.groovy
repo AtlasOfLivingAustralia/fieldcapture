@@ -1,5 +1,6 @@
 package au.org.ala.fieldcapture
 
+import pages.AdminClearCachePage
 import pages.AdminTools
 import pages.MeriPlanPDFPage
 import pages.RlpProjectPage
@@ -10,6 +11,10 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
     def setupSpec() {
         useDataSet('dataset3')
+        loginAsAlaAdmin(browser)
+        to AdminClearCachePage
+        clearProgramListCache()
+        clearServiceListCache()
     }
 
     def cleanup() {
