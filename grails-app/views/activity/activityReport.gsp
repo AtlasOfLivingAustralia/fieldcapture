@@ -37,7 +37,7 @@
                 useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.PRODUCTION},
                 unlockActivityUrl: "${createLink(controller:'activity', action:'ajaxUnlock')}/<fc:currentUserId/>",
                 projectTargetsAndScoresUrl: "${createLink(controller:'project', action:'targetsAndScoresForActivity', id:activity.projectId, params:[activityId:activity.activityId])}",
-                initialScrollPositionDelay: "${grailsApplication.config.getProperty('reports.initialScrollPositionDelay')} ?: '1000'"
+                initialScrollPositionDelay: "${grailsApplication.config.getProperty('reports.initialScrollPositionDelay') ?: 1000}"
             },
             here = document.location.href;
     </script>
