@@ -29,32 +29,35 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
     static String MERIT_ADMIN_USER_ID = '1002'
     static String ALA_ADMIN_USER_ID = '2000'
 
-    @Shared WireMockServer wireMockServer
+   // @Shared WireMockServer wireMockServer
     def setupSpec() {
         JSON.registerObjectMarshaller(new MapMarshaller())
-        Handlebars handlebars = new Handlebars()
-        handlebars.escapingStrategy = EscapingStrategy.NOOP
+        if (testConfig.wiremock.embedded) {
 
-        // This is done so we can use a custom handlebars with a NOOP escaping strategy - the default escapes HTML
-        // which breaks the redirect URL returned by the PDF generation stub.
-        Helper noop = new Helper() {
-            Object apply(Object context, Options options) throws IOException {
-                return context[0]
+            Handlebars handlebars = new Handlebars()
+            handlebars.escapingStrategy = EscapingStrategy.NOOP
+
+            // This is done so we can use a custom handlebars with a NOOP escaping strategy - the default escapes HTML
+            // which breaks the redirect URL returned by the PDF generation stub.
+            Helper noop = new Helper() {
+                Object apply(Object context, Options options) throws IOException {
+                    return context[0]
+                }
             }
-        }
-        wireMockServer = new WireMockServer(options()
-                .port(testConfig.wiremock.port)
-                .usingFilesUnderDirectory(getMappingsPath())
-                .extensions(new ResponseTemplateTransformer(false, handlebars, ImmutableMap.of("noop", noop), null, null)))
+            wireMockServer = new WireMockServer(options()
+                    .port(testConfig.wiremock.port)
+                    .usingFilesUnderDirectory(getMappingsPath())
+                    .extensions(new ResponseTemplateTransformer(false, handlebars, ImmutableMap.of("noop", noop), null, null)))
 
-        wireMockServer.start()
+            wireMockServer.start()
+        }
 
         // Configure the client
-        configureFor("localhost", testConfig.wiremock.port)
+        configureFor("devt.ala.org.au", testConfig.wiremock.port)
     }
 
     def cleanupSpec() {
-        wireMockServer.stop()
+        //wireMockServer.stop()
     }
 
     /**
