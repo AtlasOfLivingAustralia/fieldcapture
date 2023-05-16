@@ -16,6 +16,7 @@ var config = {
     ],
     excludes:["DATA_SETS", "MERI_PLAN", "RISKS_AND_THREATS"],
     "projectTemplate": "default",
+    "meriPlanTemplate": "meriPlan",
     "activities": [
         {
             name: "Administration, management & reporting",
