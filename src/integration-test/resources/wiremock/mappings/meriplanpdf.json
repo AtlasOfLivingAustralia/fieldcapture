@@ -9,7 +9,7 @@
     ],
     "status": 302,
     "headers": {
-      "Location": "{{request.requestLine.query.docUrl}}"
+      "Location": "{{{request.requestLine.query.docUrl}}}"
     }
   }
 }

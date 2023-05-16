@@ -39,7 +39,7 @@
                     <h4>My Management Units</h4>
                     <ul class="management-unit-list">
                         <g:each in="${memberManagementUnits}" var="managementUnit">
-                            <li><a href="${createLink(controller:'managementUnit', action:'index', id:managementUnit.managementUnitId)}">${managementUnit.name}</a></li>
+                            <li><a href="${createLink(controller:'managementUnit', action:'index', id:managementUnit.managementUnitId)}">${managementUnit.name?.encodeAsHTML()}</a></li>
                         </g:each>
 
                     </ul>
@@ -50,7 +50,7 @@
                     <h4>My Programs</h4>
                     <ul class="program-list">
                         <g:each in="${memberPrograms}" var="program">
-                            <li><a href="${createLink(controller:'program', action:'index', id:program.programId)}">${program.name}</a></li>
+                            <li><a href="${createLink(controller:'program', action:'index', id:program.programId)}">${program.name?.encodeAsHTML()}</a></li>
                         </g:each>
 
                     </ul>
@@ -61,7 +61,7 @@
                     <h4>My Organisations</h4>
                     <ul class="organisation-list">
                         <g:each var="p" in="${memberOrganisations}">
-                            <li><g:link controller="organisation" id="${p.organisation?.organisationId}">${p.organisation?.name}</g:link></li>
+                            <li><g:link controller="organisation" id="${p.organisation?.organisationId}">${p.organisation?.name?.encodeAsHTML()}</g:link></li>
                         </g:each>
                     </ul>
                 </g:if>
@@ -70,7 +70,7 @@
                 <g:if test="${starredProjects}">
                     <ul class="favourite-projects-list">
                         <g:each var="p" in="${starredProjects}">
-                            <li><g:link controller="project" id="${p.projectId}">${p.name}</g:link></li>
+                            <li><g:link controller="project" id="${p.projectId}">${p.name?.encodeAsHTML()}</g:link></li>
                         </g:each>
                     </ul>
                 </g:if>

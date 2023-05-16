@@ -57,7 +57,11 @@ grails.assets.excludes = ["bootstrap/less/**"]
 grails.assets.minifyOptions.excludes = ["**/*.min.js"]
 
 // The default codec used to encode data with ${}
-grails.views.default.codec = "none" // none, html, base64
+grails.views.default.codec = "html"
+grails.views.gsp.codecs.expression = "html"
+grails.views.gsp.codecs.scriptlets = "html"
+grails.views.gsp.codecs.taglib = "none"
+grails.views.gsp.codecs.staticparts = "none"
 grails.views.gsp.encoding = "UTF-8"
 grails.converters.encoding = "UTF-8"
 // enable Sitemesh preprocessing of GSP pages
@@ -284,6 +288,7 @@ environments {
         security.cas.casServerUrlPrefix="${casBaseUrl}/cas"
         security.cas.loginUrl="${security.cas.casServerUrlPrefix}/login"
         security.cas.casLoginUrl="${security.cas.casServerUrlPrefix}/login"
+        security.cas.logoutUrl="${security.cas.casServerUrlPrefix}/logout"
         userDetails.url = "${casBaseUrl}/userdetails/userDetails/"
         logging.dir = '.'
         upload.images.path = '/tmp'
