@@ -6,7 +6,7 @@
   "response": {
     "status": 302,
     "headers": {
-      "location": "{{request.requestLine.query.redirect_uri}}&state={{request.query.state}}&code=12345"
+      "location": "{{{request.requestLine.query.redirect_uri}}}&state={{request.query.state}}&code=12345"
     },
     "transformers": [
       "response-template"

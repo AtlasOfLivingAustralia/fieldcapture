@@ -21,10 +21,7 @@ class HelpLinksSpec extends StubbedCasSpec {
         when: "Clear the help links cache as other specs will have run caching zero links"
         to AdminClearCachePage
         homePageDocuments.click()
-        waitFor {
-            logout(browser)
-        }
-        to HomePage
+        logout(browser)
 
         then:
         waitFor 30,{ at HomePage}

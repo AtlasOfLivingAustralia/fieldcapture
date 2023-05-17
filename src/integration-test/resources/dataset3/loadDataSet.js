@@ -3,6 +3,7 @@ print("Current working dir: " + process.cwd());
 load('../data_common/loadMeritHub.js');
 load('../data_common/insertData.js');
 load('../data/settingDefaults.js');
+load('../data_common/createServices.js');
 loadActivityForms();
 
 var config = {
