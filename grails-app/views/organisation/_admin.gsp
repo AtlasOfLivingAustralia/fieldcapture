@@ -1,7 +1,7 @@
 <div class="row">
     <div class="nav flex-column nav-pills col-3">
         <a class="nav-link active" data-toggle="pill" href="#edit-program-details" id="edit-program-details-tab" role="tab">Edit</a>
-        <a class="nav-link" data-toggle="pill" href="#program-permissions" id="permissions-tab" role="tab">Permissions</a>
+        <a class="nav-link" data-toggle="pill" href="#organisation-permissions" id="permissions-tab" role="tab">Permissions</a>
         <a class="nav-link" data-toggle="pill" href="#reporting-config" id="reporting-tab" role="tab">Reporting</a>
         <a class="nav-link" data-toggle="pill" href="#config" id="configuration-tab" role="tab">Configuration</a>
     </div>
@@ -24,7 +24,7 @@
             </g:if>
         </div>
 
-        <div class="tab-pane" id="program-permissions">
+        <div class="tab-pane" id="organisation-permissions">
             <h4>Add Permissions</h4>
 
             <div class="row">
@@ -36,9 +36,6 @@
             <g:render template="/admin/permissionTable" model="[loadPermissionsUrl:loadPermissionsUrl, removeUserUrl:g.createLink(controller:'organisation', action:'removeUserWithRoleFromOrganisation'), entityId:organisation.organisationId, user:user]"/>
 
         </div>
-%{--        <div class="tab-pane" id="reporting">--}%
-%{--            Hello WORLD--}%
-%{--        </div>--}%
         <div class="tab-pane" id="reporting-config">
             <form>
                 <h3>Core services and output reporting frequency</h3>
@@ -65,6 +62,7 @@
                     <select class="form-control" id="progress-reporting-group" data-bind="value:activityReportingPeriod, options:activityReportingOptions, optionsText:'label', optionsValue:'label', optionsCaption:'Please select'" data-validation-engine="validate[required]"></select>
 
                 </div>
+                <button class="btn btn-primary" data-bind="click:saveReportingConfiguration">Save</button>
 
             </form>
             <hr/>

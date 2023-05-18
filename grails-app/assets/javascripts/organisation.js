@@ -1,3 +1,4 @@
+//= require tab-init.js
 /**
  * Knockout view model for organisation pages.
  * @param props JSON/javascript representation of the organisation.
@@ -13,24 +14,21 @@ OrganisationViewModel = function (props, options) {
         validationContainerSelector: '.validationEngineContainer',
     };
 
-    var config = _.extend({}, defaults, options);
+    var config = props.config || {};
     self.config = ko.observable(vkbeautify.json(props.config));
 
-    self.startDate = ko.observable(props.startDate).extend({simpleDate:false});
-    self.endDate = ko.observable(props.endDate).extend({simpleDate:false});
-    self.activityReportingPeriod = ko.observable(currentOption ? currentOption.label : null);
     self.managementUnitReportCategories = ko.computed(function() {
-        return _.map(config.managementUnitReports || [], function(report) {
+        return _.map(config.organisationReports || [], function(report) {
             return report.category;
         });
     });
 
     var coreServicesReportCategory = 'Core Services Reporting';
-    var getManagementUnitReportConfig = function() {
-        if (!config.managementUnitReports || config.managementUnitReports.length == 0) {
-            config.managementUnitReports = [{type:'Administrative', category:coreServicesReportCategory}];
+    var getOrganisationReportConfig = function() {
+        if (!config.organisationReports || config.organisationReports.length == 0) {
+            config.organisationReports = [{type:'Administrative', category:coreServicesReportCategory}];
         }
-        return config.managementUnitReports[0];
+        return config.organisationReports[0];
     };
 
     var getActivityReportConfig = function() {
@@ -51,7 +49,7 @@ OrganisationViewModel = function (props, options) {
 
     var projectOutputReportCategory = 'Outputs Reporting';
     var activityReportConfig = getActivityReportConfig();
-    var managementUnitReportConfig = getManagementUnitReportConfig();
+    var organisationReportConfig = getOrganisationReportConfig();
 
     self.coreServicesOptions = [
         {label:'Monthly (First period ends 31 July 2018)', firstReportingPeriodEnd:'2018-07-31T14:00:00Z', reportingPeriodInMonths:1, reportConfigLabel:'Monthly'},
@@ -60,7 +58,7 @@ OrganisationViewModel = function (props, options) {
         {label:"Quarterly - Group B (First period ends 31 August 2018)", firstReportingPeriodEnd:'2018-08-31T14:00:00Z', reportingPeriodInMonths:3, reportConfigLabel:'Quarterly - Group B'}];
 
     var currentOption = _.find(self.coreServicesOptions, function(option) {
-        return option.firstReportingPeriodEnd == managementUnitReportConfig.firstReportingPeriodEnd && option.reportingPeriodInMonths == managementUnitReportConfig.reportingPeriodInMonths;
+        return option.firstReportingPeriodEnd == organisationReportConfig.firstReportingPeriodEnd && option.reportingPeriodInMonths == organisationReportConfig.reportingPeriodInMonths;
     });
     self.coreServicesPeriod = ko.observable(currentOption ? currentOption.label : null);
 
@@ -71,6 +69,41 @@ OrganisationViewModel = function (props, options) {
     currentOption = _.find(self.activityReportingOptions, function(option) {
         return option.firstReportingPeriodEnd == activityReportConfig.firstReportingPeriodEnd && option.reportingPeriodInMonths == activityReportConfig.reportingPeriodInMonths;
     });
+
+    self.activityReportingPeriod = ko.observable(currentOption ? currentOption.label : null);
+    self.startDate = ko.observable(props.startDate).extend({simpleDate:false});
+    self.endDate = ko.observable(props.endDate).extend({simpleDate:false});
+
+    self.saveReportingConfiguration = function() {
+
+        if ($(options.reportingConfigSelector).validationEngine('validate')) {
+            var selectedCoreServicesPeriod = _.find(self.coreServicesOptions, function(option) {
+                return option.label == self.coreServicesPeriod();
+            });
+
+            organisationReportConfig.firstReportingPeriodEnd = selectedCoreServicesPeriod.firstReportingPeriodEnd;
+            organisationReportConfig.reportingPeriodInMonths = selectedCoreServicesPeriod.reportingPeriodInMonths;
+            organisationReportConfig.label = selectedCoreServicesPeriod.reportConfigLabel;
+
+            var selectedActivityReportingPeriod = _.find(self.activityReportingOptions, function(option) {
+                return option.label == self.activityReportingPeriod();
+            });
+
+            activityReportConfig.firstReportingPeriodEnd = selectedActivityReportingPeriod.firstReportingPeriodEnd;
+            activityReportConfig.reportingPeriodInMonths = selectedActivityReportingPeriod.reportingPeriodInMonths;
+            activityReportConfig.label = selectedActivityReportingPeriod.reportConfigLabel;
+
+            blockUIWithMessage("Saving configuration...");
+            self.saveConfig(config).done(function() {
+                // blockUIWithMessage("Regenerating reports XXX...");
+                // self.regenerateReports([coreServicesReportCategory], [projectOutputReportCategory]).done(function() {
+                document.location.reload();
+                // }).fail(function() {
+                //     $.unblockUI();
+                // });
+            });
+        }
+    };
 
     self.regenerateReportsByCategory = function() {
         blockUIWithMessage("Regenerating reports...");
@@ -83,6 +116,29 @@ OrganisationViewModel = function (props, options) {
         }).fail(function() {
             $.unblockUI();
         });
+    };
+
+    var tabs = {
+        'admin': {
+            initialiser: function () {
+                populatePermissionsTable();
+                $(options.reportingConfigSelector).validationEngine();
+            }
+        }
+    };
+
+    self.initialise = function() {
+        $.fn.dataTable.moment( 'dd-MM-yyyy' );
+        initialiseTabs(tabs, {tabSelector:'#orgTabs.nav a', tabStorageKey:'selected-organisation-tab'});
+    };
+
+    self.saveConfig = function(config) {
+        var json = {
+            config: config,
+            startDate:self.startDate(),
+            endDate:self.endDate()
+        };
+        return saveOrganisation(json);
     };
 
     var orgTypesMap = {
@@ -158,18 +214,26 @@ OrganisationViewModel = function (props, options) {
             bootbox.alert("Invalid JSON");
             return;
         }
-        var json = {
-            config: config,
-            organisationId: self.organisationId,
-            abn: self.abn()
-        };
-        self.saveOrganisationConfig(json).done(function (data) {
+        self.saveConfig(config).done(function (data) {
             bootbox.alert("Organisation configuration saved");
         });
 
     };
 
-    self.saveOrganisationConfig = function(json) {
+
+    self.saveConfig = function(config) {
+        var json = {
+            config: config,
+            startDate:self.startDate(),
+            endDate:self.endDate(),
+            organisationId: self.organisationId,
+            abn: self.abn()
+        };
+        return saveOrganisation(json);
+    };
+
+
+    var saveOrganisation = function(json) {
         return $.ajax({
             url: fcConfig.organisationSaveUrl,
             type: 'POST',

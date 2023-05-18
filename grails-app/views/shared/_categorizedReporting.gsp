@@ -117,7 +117,7 @@
 
     <tr>
         <th class="report-actions">
-            Actions XXX<fc:iconHelp html="html">Submitted and approved reports cannot be edited<br/>Only reports marked as completed can be viewed or downloaded as a PDF</fc:iconHelp></th>
+            Actions <fc:iconHelp html="html">Submitted and approved reports cannot be edited<br/>Only reports marked as completed can be viewed or downloaded as a PDF</fc:iconHelp></th>
         <th class="report-name">Report</th>
         <th class="report-start">Period start</th>
         <th class="report-end">Period end
@@ -183,7 +183,7 @@
     </tbody>
     <tfoot>
     <tr data-bind="visible:filteredReports().length == 0">
-        <td colspan="5">No reports found.XXX</td>
+        <td colspan="5">No reports found.</td>
     </tr>
     </tfoot>
 

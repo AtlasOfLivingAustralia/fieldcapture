@@ -53,9 +53,10 @@
     <div id="organisationDetails"  class="clearfix" style="display:none;">
 
         <g:render template="/shared/flashScopeMessage"/>
-        <ul class="nav nav-tabs" id="orgTabs" role="tabList">
+        <ul id="orgTabs" class="nav nav-tabs" data-tabs="tabs">
             <fc:tabList tabs="${content}"/>
         </ul>
+
         <div class="tab-content" id="tabContent">
             <fc:tabContent tabs="${content}"/>
         </div>
@@ -73,9 +74,11 @@
     $(function () {
 
         var organisation =<fc:modelAsJavascript model="${organisation}"/>;
-        var organisationViewModel = new OrganisationViewModel(organisation);
+        var config = _.extend({reportingConfigSelector:'#reporting-config form'}, fcConfig);
+        var organisationViewModel = new OrganisationViewModel(organisation, config);
 
         ko.applyBindings(organisationViewModel);
+        organisationViewModel.initialise();
         $('#loading').hide();
         $('#organisationDetails').show({complete:function() {
             if (organisationViewModel.mainImageUrl()) {
