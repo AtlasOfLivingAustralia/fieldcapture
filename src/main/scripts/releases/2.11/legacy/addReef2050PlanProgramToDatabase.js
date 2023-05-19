@@ -95,6 +95,7 @@ var config = {
     ],
     excludes:["DATA_SETS","RISKS_AND_THREATS"],
     "projectTemplate": "default",
+    "meriPlanTemplate": "meriPlan",
     "activities": [
         {name:"Reef 2050 Plan Action Reporting"}
     ],

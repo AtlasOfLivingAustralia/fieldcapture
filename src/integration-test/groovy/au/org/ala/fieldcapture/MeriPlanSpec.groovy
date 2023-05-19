@@ -19,6 +19,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         loginAsAlaAdmin(browser)
         to AdminClearCachePage
         clearProgramListCache()
+        clearServiceListCache()
         greenMail.start()
     }
 
