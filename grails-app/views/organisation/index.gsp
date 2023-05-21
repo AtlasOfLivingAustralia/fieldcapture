@@ -22,6 +22,7 @@
             organisationViewUrl: '${g.createLink(action:"index", id:"${organisation.organisationId}")}',
             viewReportUrl: "${g.createLink(action:'viewOrganisationReport', id:organisation.organisationId)}",
             editReportUrl: "${g.createLink(action:'editOrganisationReport', id:organisation.organisationId)}",
+            regenerateOrganisationReportsUrl: "${createLink(action:"regenerateOrganisationReports", id:organisation.organisationId)}",
             reportPDFUrl: "${g.createLink(action:'performanceReportPDF')}",
             organisationMembersUrl: "${loadPermissionsUrl}",
             imageLocation:"${assetPath(src:'/')}",

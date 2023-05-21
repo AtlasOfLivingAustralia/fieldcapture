@@ -1,5 +1,8 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.config.ReportConfig
+import au.org.ala.merit.reports.ReportGenerationOptions
+import au.org.ala.merit.reports.ReportOwner
 import org.joda.time.DateTime
 import org.joda.time.DateTimeConstants
 import org.joda.time.DateTimeZone
@@ -110,6 +113,41 @@ class OrganisationService {
         }
         return result
     }
+
+    void regenerateReports(String id, List<String> organisationReportCategories = null, List<String> projectReportCategories = null) {
+        Map organisation = get(id)
+
+        regenerateOrganisationReports(organisation, organisationReportCategories)
+//        regenerateProjectReports(organisation, projectReportCategories)
+    }
+
+    private void regenerateOrganisationReports(Map organisation, List<String> reportCategories = null) {
+
+        List organisationReportConfig = organisation.config?.organisationReports
+        ReportOwner owner = new ReportOwner(
+            id:[organisationId:organisation.organisationId],
+            name:organisation.name,
+            periodStart:organisation.startDate,
+            periodEnd:organisation.endDate
+        )
+        List toRegenerate = organisationReportConfig.findAll{it.category in reportCategories}
+        toRegenerate?.each {
+            ReportConfig reportConfig = new ReportConfig(it)
+            List relevantReports = organisation.reports?.findAll{it.category == reportConfig.category}
+            reportService.regenerateReports(relevantReports, reportConfig, owner)
+        }
+    }
+
+//    private void regenerateProjectReports(Map organisation, List<String> reportCategories = null) {
+//
+//        Map projects = getProjects(organisation.organisationId)
+//        projects?.projects?.each{ project ->
+//            project.reports = reportService.getReportsForProject(project.projectId)
+//            if (projectService.canBulkRegenerateReports(project)) {
+//                projectService.generateProjectStageReports(project.projectId, new ReportGenerationOptions(), reportCategories)
+//            }
+//        }
+//    }
 
 
     def isUserAdminForOrganisation(organisationId) {

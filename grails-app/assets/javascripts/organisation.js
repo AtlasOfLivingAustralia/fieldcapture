@@ -95,14 +95,28 @@ OrganisationViewModel = function (props, options) {
 
             blockUIWithMessage("Saving configuration...");
             self.saveConfig(config).done(function() {
-                // blockUIWithMessage("Regenerating reports XXX...");
-                // self.regenerateReports([coreServicesReportCategory], [projectOutputReportCategory]).done(function() {
+                blockUIWithMessage("Regenerating reports XXX...");
+                self.regenerateReports([coreServicesReportCategory], [projectOutputReportCategory]).done(function() {
                 document.location.reload();
-                // }).fail(function() {
-                //     $.unblockUI();
-                // });
+                }).fail(function() {
+                    $.unblockUI();
+                });
             });
         }
+    };
+
+    self.regenerateReports = function(organisationReportCategories, projectReportCategories) {
+        var data = JSON.stringify({organisationReportCategories:organisationReportCategories, projectReportCategories:projectReportCategories});
+        return $.ajax({
+            url: options.regenerateOrganisationReportsUrl,
+            type: 'POST',
+            data: data,
+            dataType:'json',
+            contentType: 'application/json'
+        }).fail(function() {
+            bootbox.alert("Failed to regenerate organisation reports");
+        });
+
     };
 
     self.regenerateReportsByCategory = function() {

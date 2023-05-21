@@ -3,6 +3,7 @@ package au.org.ala.merit
 
 import au.org.ala.merit.command.OrganisationReportCommand
 import grails.converters.JSON
+import org.apache.http.HttpStatus
 
 /**
  * Extends the plugin OrganisationController to support Green Army project reporting.
@@ -64,12 +65,11 @@ class OrganisationController {
             dashboardReports += [name:'announcements', label:'Announcements']
         }
 
-        Map mu = managementUnitService.get("6357aa1b-b301-4ccf-9fbf-c372e3e3eee5")
         List reportOrder = null
         if (reportingVisible) {
             // TODO change me to use the configuration once it's been decided how that
             // is going to work.
-            reportOrder = mu.config?.managementUnitReports?.collect{[category:it.category, description:it.description, rejectionReasonCategoryOptions:it.rejectionReasonCategoryOptions?:[]]} ?: []
+            reportOrder = organisation.config?.organisationReports?.collect{[category:it.category, description:it.description, rejectionReasonCategoryOptions:it.rejectionReasonCategoryOptions?:[]]} ?: []
             reportOrder = reportOrder.unique({it.category})
 
             // We need at least one finished report to show data.
@@ -83,7 +83,7 @@ class OrganisationController {
         List adHocReportTypes =[ [type: ReportService.PERFORMANCE_MANAGEMENT_REPORT]]
 
         [about     : [label: 'About', visible: true, stopBinding: false, type:'tab'],
-         reporting : [label: 'Reporting', visible: reportingVisible, stopBinding:true, template:'/shared/categorizedReporting', default:reportingVisible, type: 'tab', reports:mu.reports, adHocReportTypes:adHocReportTypes, reportOrder:reportOrder],
+         reporting : [label: 'Reporting', visible: reportingVisible, stopBinding:true, template:'/shared/categorizedReporting', default:reportingVisible, type: 'tab', reports:organisation.reports, adHocReportTypes:adHocReportTypes, reportOrder:reportOrder],
          projects  : [label: 'Projects', visible: true, default:!reportingVisible, stopBinding:true, type: 'tab'],
          sites     : [label: 'Sites', visible: true, type: 'tab', stopBinding:true, projectCount:organisation.projects?.size()?:0, showShapefileDownload:hasAdminAccess],
          dashboard : [label: 'Dashboard', visible: true, stopBinding:true, type: 'tab', template:'/shared/dashboard', reports:dashboardReports],
@@ -590,6 +590,20 @@ class OrganisationController {
         def result = organisationService.rejectReport(id, reportDetails.reportId, reportDetails.reason, reportDetails.categories)
 
         render result as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'caseManager')
+    def regenerateOrganisationReports(String id) {
+        Map resp
+        if (!id) {
+            resp = [status: HttpStatus.SC_NOT_FOUND]
+        }
+        else {
+            Map categoriesToRegenerate = request.JSON
+            organisationService.regenerateReports(id, categoriesToRegenerate?.organisationReportCategories, categoriesToRegenerate?.projectReportCategories)
+            resp = [status:HttpStatus.SC_OK]
+        }
+        render resp as JSON
     }
 
     private Map activityReportModel(String organisationId, String reportId, ReportService.ReportMode mode, Integer formVersion = null) {
