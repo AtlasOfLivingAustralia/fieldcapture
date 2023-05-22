@@ -7,7 +7,7 @@
             </p>
         </g:if>
     </g:if>
-    <div class="objective" data-bind="foreach:${config.program?.config?.objectives}">
+    <div class="objective" data-bind='foreach:${config.program?.config?.objectives}'>
         <div class="form-check">
             <input type="checkbox" class="form-check-input"
                    data-bind="value: $data,checked:details.objectives.simpleObjectives, disable: $root.isProjectDetailsLocked(), attr: {'id': 'objective'+$index()}">
