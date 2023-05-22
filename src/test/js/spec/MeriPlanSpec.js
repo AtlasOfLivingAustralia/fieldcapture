@@ -552,7 +552,7 @@ describe("Loading the MERI plan is handled correctly", function () {
         var serialized = JSON.parse(viewModel.meriPlan().modelAsJSON());
 
         var savedMeriPlan = serialized.custom.details;
-        expect(savedMeriPlan.outcomes.primaryOutcome).toEqual({});
+        expect(savedMeriPlan.outcomes.primaryOutcome).toBeNull();
 
     });
 
@@ -715,7 +715,7 @@ describe("Loading the MERI plan is handled correctly", function () {
         var viewModel = new OutcomesViewModel({}, options);
 
         var serialized = JSON.parse(JSON.stringify(viewModel));
-        expect(serialized).toEqual({"primaryOutcome":{"description":"Outcome 2","assets":[]},"secondaryOutcomes":[{}],"shortTermOutcomes":[{}],"midTermOutcomes":[], otherOutcomes:[]});
+        expect(serialized).toEqual({"primaryOutcome":{"description":"Outcome 2","assets":[]},"secondaryOutcomes":[],"shortTermOutcomes":[],"midTermOutcomes":[], otherOutcomes:[]});
 
     });
 
@@ -829,12 +829,12 @@ describe("Loading the MERI plan is handled correctly", function () {
         };
 
         let projectService = new ProjectService(project, {})
-        let viewModel = new MERIPlan(project, projectService, _.extend({targetMeasureUpdateLimit:0}, config));
+        let viewModel = new MERIPlan(project, projectService, _.extend({targetMeasureUpdateLimit:0, useServiceOutcomesModel:true}, config));
         let meriPlan = viewModel.meriPlan();
 
         const results = meriPlan.serviceOutcomes.toJSON();
         expect(results.serviceIds).toEqual([1]);
-        expect(results.outputTargets).toEqual(project.outputTargets);
+        expect(results.targets).toEqual(project.outputTargets);
 
         meriPlan.baseline.rows()[1].relatedTargetMeasures(["3"]);
         viewModel.selectedServiceWatcher(); // Because this computed is throttled to 1/s we need to manually force it in the test

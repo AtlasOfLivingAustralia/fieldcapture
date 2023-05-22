@@ -313,29 +313,6 @@ function MERIPlan(project, projectService, config) {
         return result && result.category;
     };
 
-    self.selectedTargetMeasures.subscribe(function(targetMeasures) {
-
-        var added = _.filter(targetMeasures, function(selectedService) {
-            var found = _.find(self.meriPlan().serviceOutcomes.outcomeTargets(), function(outcomeTarget) {
-                return outcomeTarget.scoreId == selectedService.scoreId;
-            });
-            return !found;
-        });
-        for (var i=0; i<added.length; i++) {
-            self.meriPlan().serviceOutcomes.targetAdded(added[i]);
-        }
-        var removed = _.filter(self.meriPlan().serviceOutcomes.outcomeTargets(), function(outcomeTarget) {
-            var found = _.find(targetMeasures, function(selectedService) {
-                return outcomeTarget.scoreId == selectedService.scoreId;
-            });
-            return !found;
-        });
-        for (var i=0; i<removed.length; i++) {
-            self.meriPlan().serviceOutcomes.targetRemoved(removed[i]);
-        }
-
-    });
-
     self.programObjectives = config.programObjectives || [];
 
     self.obligationOptions = ['Yes', 'No'];
@@ -871,6 +848,28 @@ function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPerio
         self.outcomeTargets.remove(target);
     }
 
+    selectedTargetMeasures.subscribe(function(targetMeasures) {
+
+        var added = _.filter(targetMeasures, function(selectedService) {
+            var found = _.find(self.outcomeTargets(), function(outcomeTarget) {
+                return outcomeTarget.scoreId == selectedService.scoreId;
+            });
+            return !found;
+        });
+        for (var i=0; i<added.length; i++) {
+            self.targetAdded(added[i]);
+        }
+        var removed = _.filter(self.outcomeTargets(), function(outcomeTarget) {
+            var found = _.find(targetMeasures, function(selectedService) {
+                return outcomeTarget.scoreId == selectedService.scoreId;
+            });
+            return !found;
+        });
+        for (var i=0; i<removed.length; i++) {
+            self.targetRemoved(removed[i]);
+        }
+    });
+
 
     function Targets(outputTarget) {
         var self = this;
@@ -976,8 +975,8 @@ function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPerio
             return {
                 scoreId: self.scoreId,
                 target: self.target(),
-                periodTargets: ko.toJS(self.periodTargets),
-                outcomeTargets: ko.toJS(self.outcomeTargets)
+                periodTargets: ko.mapping.toJS(self.periodTargets),
+                outcomeTargets: ko.mapping.toJS(self.outcomeTargets, {ignore:['availableOutcomes']})
             }
         }
     };
@@ -1571,16 +1570,19 @@ function OutcomesViewModel(outcomes, config) {
     }).extend({ rateLimit: 50 });
 
     self.toJSON = function () {
-        // Exclude the computed used by the view model
-        var excludes = [
-            'primaryOutcomeSupportsMultiplePriorities',
-            'selectablePrimaryOutcomes',
-            'selectableSecondaryOutcomes',
-            'selectedPrimaryAndSecondaryPriorities',
-            'selectableMidTermOutcomes',
-            'selectableShortTermOutcomes'
-        ];
-        return ko.mapping.toJS(self, {ignore:excludes});
+        // Calls toJSON on each outcome and strips out nulls from the resulting array.
+        function outcomesToJSON(outcomeArray) {
+            return _.filter(_.map(outcomeArray, function (outcome) {
+                return outcome.toJSON();
+            }), function(outcome) { return outcome != null});
+        };
+        return {
+            primaryOutcome: self.primaryOutcome.toJSON(),
+            secondaryOutcomes: outcomesToJSON(self.secondaryOutcomes()),
+            shortTermOutcomes: outcomesToJSON(self.shortTermOutcomes()),
+            midTermOutcomes: outcomesToJSON(self.midTermOutcomes()),
+            otherOutcomes: outcomesToJSON(self.otherOutcomes())
+        }
     }
 }
 
@@ -1661,13 +1663,17 @@ function SingleAssetOutcomeViewModel(o) {
     self.description.subscribe(function () {
         self.assets([]);
     });
-    // Issue here is we are using description for the text of the primary and secondary outcomes, but
-    // also using it for free-text user defined outcomes.  New requirement is that the user defined outcome
-    // must relate to pre-defined "medium/short term outcome.  It would be neater to use the same field
-    // for all outcome types but means we'll need to do a data migration of all existing outcomes.
-    // Probably neater to use the same field
+
     self.relatedOutcome = ko.observable(o.relatedOutcome);
     self.toJSON = function () {
+        // If the user hasn't entered any data, return null.
+        // The code is auto-populated so is not included in
+        // the comparison.
+        if (!self.description() &&
+            self.assets().length == 0 &&
+            !self.relatedOutcome()) {
+            return null;
+        }
         return {
             code:self.code,
             description: self.description(),
