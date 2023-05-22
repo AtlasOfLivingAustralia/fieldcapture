@@ -63,7 +63,7 @@ jobs:
           GPR_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Install javascript packages using the gradle clientInstall plugin
-        uses: gradle/gradle-build-action@v2.4.0
+        uses: gradle/gradle-build-action@v2.4.2
         with:
           arguments: clientInstall
         env:
@@ -80,7 +80,7 @@ jobs:
           GPR_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Clean to remove clover instrumentation
-        uses: gradle/gradle-build-action@v2.4.0
+        uses: gradle/gradle-build-action@v2.4.2
         with:
           arguments: clean
         env:
@@ -108,7 +108,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish the JAR to the repository
-        uses: gradle/gradle-build-action@v2.4.0
+        uses: gradle/gradle-build-action@v2.4.2
         with:
           arguments: publish
         env:
