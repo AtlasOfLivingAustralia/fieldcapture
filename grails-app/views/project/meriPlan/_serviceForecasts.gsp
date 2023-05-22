@@ -7,13 +7,13 @@
         <th class="index" rowspan="2"></th>
         <th class="required" rowspan="2">${serviceName ?: "Service"}</th>
         <th class="required" rowspan="2" style="min-width: 500px;">Target measure</th>
-        <!-- ko if: periodTargets && periodTargets.length -->
-        <th data-bind="attr:{colspan:periodTargets.length+1}">Annual target forecast (indicative only) <fc:iconHelp>${minHelptext ?:"Specify the minimum total target for each Project Service to be delivered each financial year. Note: the sum of these targets will not necessarily equal the total services to be delivered."}</fc:iconHelp></th>
+        <!-- ko if: forecastPeriods && forecastPeriods.length -->
+        <th data-bind="attr:{colspan:forecastPeriods.length+1}">Annual target forecast (indicative only) <fc:iconHelp>${minHelptext ?:"Specify the minimum total target for each Project Service to be delivered each financial year. Note: the sum of these targets will not necessarily equal the total services to be delivered."}</fc:iconHelp></th>
         <!-- /ko -->
     </tr>
     <tr>
 
-        <!-- ko foreach: periodTargets -->
+        <!-- ko foreach: forecastPeriods -->
         <th class="budget-cell"><div data-bind="text:$data"></div></th>
         <!-- /ko -->
     </tr>

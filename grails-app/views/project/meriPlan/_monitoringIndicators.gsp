@@ -33,7 +33,7 @@
                     </td>
                     <g:if test="${extendedMonitoring}">
                         <td class="monitoring-service">
-                            <select multiple="true" class="form-control form-control-sm" data-bind="options:$root.allServices, optionsText:'label', optionsValue:'scoreId', multiSelect2:{value:relatedServices, preserveColumnWidth:true}"></select>
+                            <select multiple="true" class="form-control form-control-sm" data-bind="options:$root.allTargetMeasures, optionsText:'label', optionsValue:'scoreId', multiSelect2:{value:relatedTargetMeasures, preserveColumnWidth:20}"></select>
                         </td>
 
                     </g:if>

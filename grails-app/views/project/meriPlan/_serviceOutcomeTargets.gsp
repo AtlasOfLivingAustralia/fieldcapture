@@ -41,7 +41,7 @@
     <tr>
         <td class="index"></td>
         <td>
-            <select multiple class="form-control form-control-sm" data-bind="options:$parent.availableOutcomes, multiSelect2:{value:relatedOutcomes}">
+            <select multiple class="form-control form-control-sm" data-bind="options:availableOutcomes, multiSelect2:{value:relatedOutcomes}">
             </select>
         </td>
         <td><input type="number" class="form-control form-control-sm" data-bind="value:target"></td>
