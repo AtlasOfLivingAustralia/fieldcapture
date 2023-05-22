@@ -69,9 +69,9 @@
             <form class="utilities">
                 <h3>Regenerate reports</h3>
                 <p>This may need to be done if the report configuration is edited.</p>
-                <h4>Management Unit report categories</h4>
-                <ul class="list-unstyled" data-bind="foreach:managementUnitReportCategories">
-                    <li><label class="checkbox"><input type="checkbox" data-bind="value:$data, checked:$parent.selectedManagementUnitReportCategories"> <span data-bind="text:$data"></span></label></li>
+                <h4>Organisation report categories</h4>
+                <ul class="list-unstyled" data-bind="foreach:organisationReportCategories">
+                    <li><label class="checkbox"><input type="checkbox" data-bind="value:$data, checked:$parent.selectedOrganisationReportCategories"> <span data-bind="text:$data"></span></label></li>
                 </ul>
 
                 <button class="btn btn-success" data-bind="click:regenerateReportsByCategory">Regenerate reports</button>

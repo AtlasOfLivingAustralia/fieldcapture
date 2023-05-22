@@ -600,7 +600,7 @@ class OrganisationController {
         }
         else {
             Map categoriesToRegenerate = request.JSON
-            organisationService.regenerateReports(id, categoriesToRegenerate?.organisationReportCategories, categoriesToRegenerate?.projectReportCategories)
+            organisationService.regenerateReports(id, categoriesToRegenerate?.organisationReportCategories)
             resp = [status:HttpStatus.SC_OK]
         }
         render resp as JSON

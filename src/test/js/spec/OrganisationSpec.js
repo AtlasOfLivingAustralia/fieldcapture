@@ -25,7 +25,7 @@ describe("OrganisationViewModel Spec", function () {
             {label:"Quarterly - Group B (First period ends 31 August 2018)", firstReportingPeriodEnd:'2018-08-31T14:00:00Z', reportingPeriodInMonths:3, reportConfigLabel:'Quarterly - Group B'}];
 
         var organisation = { organisationId:'1', description:'Org 1 description', collectoryInstitutionId:'dr123', newsAndEvents:'this is the latest news',
-            documents:[], links:[], coreServicesPeriod:null, startDate:'', endDate:'', managementUnitReportCategories:[], coreServicesOptions:coreServicesOptions, activityReportingPeriod:null, activityReportingOptions:activityReportingOptions
+            documents:[], links:[], coreServicesPeriod:null, startDate:'', endDate:'',organisationReportCategories:[],selectedOrganisationReportCategories:[], coreServicesOptions:coreServicesOptions, activityReportingPeriod:null, activityReportingOptions:activityReportingOptions
         };
 
         var model = new OrganisationViewModel(organisation);

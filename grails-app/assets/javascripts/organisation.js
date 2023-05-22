@@ -17,7 +17,7 @@ OrganisationViewModel = function (props, options) {
     var config = props.config || {};
     self.config = ko.observable(vkbeautify.json(props.config));
 
-    self.managementUnitReportCategories = ko.computed(function() {
+    self.organisationReportCategories = ko.computed(function() {
         return _.map(config.organisationReports || [], function(report) {
             return report.category;
         });
@@ -73,7 +73,8 @@ OrganisationViewModel = function (props, options) {
     self.activityReportingPeriod = ko.observable(currentOption ? currentOption.label : null);
     self.startDate = ko.observable(props.startDate).extend({simpleDate:false});
     self.endDate = ko.observable(props.endDate).extend({simpleDate:false});
-
+    self.selectedOrganisationReportCategories = ko.observableArray();
+    
     self.saveReportingConfiguration = function() {
 
         if ($(options.reportingConfigSelector).validationEngine('validate')) {
@@ -105,8 +106,8 @@ OrganisationViewModel = function (props, options) {
         }
     };
 
-    self.regenerateReports = function(organisationReportCategories, projectReportCategories) {
-        var data = JSON.stringify({organisationReportCategories:organisationReportCategories, projectReportCategories:projectReportCategories});
+    self.regenerateReports = function(organisationReportCategories) {
+        var data = JSON.stringify({organisationReportCategories:organisationReportCategories});
         return $.ajax({
             url: options.regenerateOrganisationReportsUrl,
             type: 'POST',
@@ -121,7 +122,7 @@ OrganisationViewModel = function (props, options) {
 
     self.regenerateReportsByCategory = function() {
         blockUIWithMessage("Regenerating reports...");
-        self.regenerateReports(self.selectedManagementUnitReportCategories(), self.selectedProjectReportCategories()).done(function() {
+        self.regenerateReports(self.selectedOrganisationReportCategories()).done(function() {
             blockUIWithMessage("Reports successfully regenerated, reloading page...");
             setTimeout(function(){
                 window.location.reload();
