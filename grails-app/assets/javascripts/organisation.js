@@ -249,7 +249,7 @@ OrganisationViewModel = function (props, options) {
 
     var saveOrganisation = function(json) {
         return $.ajax({
-            url: fcConfig.organisationSaveUrl,
+            url: options.organisationSaveUrl,
             type: 'POST',
             data: JSON.stringify(json),
             dataType:'json',
