@@ -55,7 +55,7 @@ jobs:
           mongodb-version: '5.0'
 
       - name: Build and run jacoco coverage report with Gradle
-        uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
+        uses: gradle/gradle-build-action@v2.4.2
         with:
           arguments: test
         env:
