@@ -267,6 +267,8 @@ var config = {
     projectDatesValidationUrl: fcConfig.projectDatesValidationUrl,
     approvedMeriPlanHistoryUrl: fcConfig.approvedMeriPlanHistoryUrl,
     viewHistoricalMeriPlanUrl: fcConfig.viewHistoricalMeriPlanUrl,
+    regenerateStageReportsUrl: fcConfig.regenerateStageReportsUrl,
+
     documentDeleteUrl: fcConfig.documentDeleteUrl,
     featureServiceUrl: fcConfig.featureServiceUrl,
     wmsServerUrl: fcConfig.geoserverUrl,
