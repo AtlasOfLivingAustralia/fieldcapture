@@ -1581,7 +1581,7 @@ function OutcomesViewModel(outcomes, config) {
             secondaryOutcomes: outcomesToJSON(self.secondaryOutcomes()),
             shortTermOutcomes: outcomesToJSON(self.shortTermOutcomes()),
             midTermOutcomes: outcomesToJSON(self.midTermOutcomes()),
-            otherOutcomes: outcomesToJSON(self.otherOutcomes())
+            otherOutcomes: self.otherOutcomes()
         }
     }
 }
