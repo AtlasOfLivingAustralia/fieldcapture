@@ -346,7 +346,7 @@ function MERIPlan(project, projectService, config) {
         self.meriPlan().objectives.rows.push(new GenericRowViewModel());
     };
     self.addOutcome = function () {
-        self.meriPlan().objectives.rows1.push(new OutcomeRowViewModel());
+        self.meriPlan().objectives.rows1.push(new SingleAssetOutcomeViewModel());
     };
     self.removeObjectives = function (row) {
         self.meriPlan().objectives.rows.remove(row);
@@ -403,14 +403,14 @@ function MERIPlan(project, projectService, config) {
     };
     self.addMidTermOutcome = function () {
         var index = self.meriPlan().outcomes.midTermOutcomes().length + 1;
-        self.meriPlan().outcomes.midTermOutcomes.push(new OutcomeRowViewModel({code:'MT'+index}));
+        self.meriPlan().outcomes.midTermOutcomes.push(new SingleAssetOutcomeViewModel({code:'MT'+index}));
     };
     self.removeMidTermOutcome = function (outcome) {
         self.meriPlan().outcomes.midTermOutcomes.remove(outcome);
     };
     self.addShortTermOutcome = function () {
         var index = self.meriPlan().outcomes.shortTermOutcomes().length + 1;
-        self.meriPlan().outcomes.shortTermOutcomes.push(new OutcomeRowViewModel({code:'ST'+index}));
+        self.meriPlan().outcomes.shortTermOutcomes.push(new SingleAssetOutcomeViewModel({code:'ST'+index}));
     };
     self.removeShortTermOutcome = function (outcome) {
         self.meriPlan().outcomes.shortTermOutcomes.remove(outcome);
@@ -1351,9 +1351,9 @@ function ObjectiveViewModel(o, programObjectives) {
     }));
 
     var row1 = [];
-    o.rows1 ? row1 = o.rows1 : row1.push(ko.mapping.toJS(new OutcomeRowViewModel()));
+    o.rows1 ? row1 = o.rows1 : row1.push(ko.mapping.toJS(new SingleAssetOutcomeViewModel()));
     self.rows1 = ko.observableArray(_.map(row1, function (obj, i) {
-        return new OutcomeRowViewModel(obj);
+        return new SingleAssetOutcomeViewModel(obj);
     }));
 
     /**
@@ -1378,7 +1378,7 @@ function ObjectiveViewModel(o, programObjectives) {
 
             for (var i=0; i<values.length; i++) {
                 if (self.rows1().length <= i) {
-                    self.rows1.push(new OutcomeRowViewModel({description:values[i]}));
+                    self.rows1.push(new SingleAssetOutcomeViewModel({description:values[i]}));
                 }
                 else {
                     self.rows1()[i].description(values[i]);
@@ -1608,22 +1608,6 @@ function EventsRowViewModel(o) {
     self.grantAnnouncementDate = ko.observable(o.grantAnnouncementDate);
 };
 
-function OutcomeRowViewModel(o, programObjectives) {
-    var self = this;
-    if (!o) o = {};
-    self.code = ko.observable(o.code);
-    self.description = ko.observable(o.description);
-    if (!o.assets) o.assets = [];
-    self.assets = ko.observableArray(o.assets);
-
-    // Issue here is we are using description for the text of the primary and secondary outcomes, but
-    // also using it for free-text user defined outcomes.  New requirement is that the user defined outcome
-    // must relate to pre-defined "medium/short term outcome.  It would be neater to use the same field
-    // for all outcome types but means we'll need to do a data migration of all existing outcomes.
-    // Probably neater to use the same field
-    self.relatedOutcome = ko.observable(o.relatedOutcome);
-};
-
 function links() {
     fromOutcome = ko.observable();
     toOutcome = ko.observable();
@@ -1665,6 +1649,7 @@ function SingleAssetOutcomeViewModel(o) {
     });
 
     self.relatedOutcome = ko.observable(o.relatedOutcome);
+
     self.toJSON = function () {
         // If the user hasn't entered any data, return null.
         // The code is auto-populated so is not included in
