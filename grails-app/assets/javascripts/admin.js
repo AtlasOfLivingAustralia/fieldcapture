@@ -159,8 +159,6 @@ var ProjectImportViewModel = function (config) {
 
             if (data.result) {
                 var result = data.result;
-                self.progressDetail(result.projects);
-
                 var resultsCount = result.projects.length;
                 if (resultsCount > 0) {
                     resultsCount = result.projects.length - 1;
