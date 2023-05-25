@@ -2,6 +2,7 @@ describe("ProjectService Spec", function () {
 
     var savedBlockUI;
     var savedUnblockUI;
+    let showAlert;
     beforeAll(function () {
         window.fcConfig = {};
         savedBlockUI = $.blockUI;
@@ -11,11 +12,13 @@ describe("ProjectService Spec", function () {
         };
         $.unblockUI = function () {
         };
+        window.showAlert = function () {};
     });
     afterAll(function () {
         delete window.fcConfig;
         $.blockUI = savedBlockUI;
         $.unblockUI = savedUnblockUI;
+        window.showAlert = showAlert;
     });
 
     it("Will return an empty array of budget headers if configured with the option excludeFinancialYearData", function () {
@@ -152,5 +155,45 @@ describe("ProjectService Spec", function () {
         externalIds = null;
         expect(projectService.areExternalIdsValid(externalIds)).toBeFalsy();
 
-    })
+    });
+
+    it('Can support the generation of project reports, including to new contract dates', function() {
+        let savedOptions = null;
+        spyOn($, 'ajax').and.callFake(function (options) {
+            savedOptions = options;
+            const result = $.Deferred();
+            result.resolve({error:'test'}); // Resolve an error as a success triggers a page refresh
+            return result;
+        });
+        spyOn($, 'blockUI');
+        const project = {
+            status: 'active',
+            plannedStartDate:'2023-06-30T14:00:00Z',
+            plannedEndDate:'2028-06-2914:00:00Z',
+            projectId: 'p1',
+            name:'Project 1'
+        };
+        const options = {
+            regenerateStageReportsUrl: '/regenerate/p1',
+            projectUpdateUrl: '/update/p1'
+        };
+        const projectService = new ProjectService(project, options);
+        projectService.generateProjectReports(project.plannedStartDate, project.plannedEndDate);
+
+        expect($.ajax).toHaveBeenCalled();
+        expect($.blockUI).toHaveBeenCalled();
+
+        expect(savedOptions.url).toEqual(options.regenerateStageReportsUrl);
+        expect(savedOptions.data).toBeFalsy();
+
+        projectService.generateProjectReports(project.plannedStartDate, '2029-06-29T14:00:00Z');
+
+        expect($.ajax).toHaveBeenCalled();
+        expect($.blockUI).toHaveBeenCalled();
+
+        expect(savedOptions.url).toEqual(options.projectUpdateUrl);
+        expect(savedOptions.data).toEqual(JSON.stringify({plannedStartDate:'2023-06-30T14:00:00Z', plannedEndDate:'2029-06-29T14:00:00Z'}));
+
+
+    });
 });

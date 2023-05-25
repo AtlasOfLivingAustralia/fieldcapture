@@ -349,6 +349,47 @@ function ProjectService(project, options) {
         return $.post(url);
     };
 
+    /**
+     * Generates project reports for the current project.  If start and end date are supplied, the project
+     * plannedStartDate and plannedEndDate will be updated and the reports generated based on the new dates.
+     *
+     * @param startDate The new project start date
+     * @param endDate The new project end date
+     */
+    self.generateProjectReports = function(startDate, endDate) {
+        if (!startDate || !endDate || (startDate == project.plannedStartDate && endDate == project.plannedEndDate)) {
+            self.regenerateProjectReports();
+        }
+        else {
+            self.saveProjectData({
+                plannedStartDate: startDate,
+                plannedEndDate: endDate,
+            });
+        }
+    };
+
+    self.regenerateProjectReports = function() {
+        blockUIWithMessage("Generating reports....");
+        $.ajax({
+            url: config.regenerateStageReportsUrl,
+            type: 'POST',
+            contentType: 'application/json'
+        }).done(function(data) {
+            if (data.error) {
+                $.unblockUI();
+                showAlert("Failed to generate: " + data.detail + ' \n' + data.error,
+                    "alert-error","save-result-placeholder");
+            } else {
+                blockUIWithMessage("Refreshing page...");
+                showAlert("Project reports generated","alert-success","save-result-placeholder");
+                window.location.reload();
+            }
+        }).fail(function(data) {
+            $.unblockUI();
+            alert('An unhandled error occurred: ' + data.status + " Please refresh the page and try again");
+        });
+    };
+
 
     self.getMonitoringProtocols = function() {
         var url = config.monitoringProtocolsUrl;
