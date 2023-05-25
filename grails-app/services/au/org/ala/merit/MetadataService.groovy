@@ -135,6 +135,16 @@ class MetadataService {
         })
     }
 
+    def activitiesListByProgramId(String programId='') {
+        cacheService.get('activitiesSelectList'+programId, {
+            String url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'metadata/activitiesListByProgram'
+            url += '?programId='+programId.encodeAsURL()
+            def activityTypes = webService.getJson(url)
+            activityTypes.collect {key, value -> [name:key, list:value]}.sort{it.name}
+
+        })
+    }
+
     boolean isOptionalContent(String contentName, Map config) {
         return contentName in (config.optionalProjectContent?:[])
     }

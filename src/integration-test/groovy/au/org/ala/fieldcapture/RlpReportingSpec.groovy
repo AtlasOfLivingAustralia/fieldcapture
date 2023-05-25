@@ -565,10 +565,8 @@ class RlpReportingSpec extends StubbedCasSpec {
 
         when:
         projectReports.projectStartDate = "01/06/2018"
-        projectReports.projectEndDate = "01/06/2019"
-
-        then:
-        waitFor { projectReports.generateButton.click() }
+        projectReports.projectEndDate = "30/06/2023" // These dates match existing dates - ensuring the reports are generated correctly
+        projectReports.generateButton.click()
 
         then:
         waitFor 30, { hasBeenReloaded() }
@@ -576,6 +574,20 @@ class RlpReportingSpec extends StubbedCasSpec {
         and: "List of reports will be displayed"
         waitFor {
             projectReports.reports.size() > 0
+        }
+
+        when: "We change one of the dates"
+        projectReports.projectStartDate = "01/07/2018"
+        projectReports.projectEndDate = "30/06/2023"
+        projectReports.generateButton.click()
+
+        then:
+        waitFor 30, { hasBeenReloaded() }
+
+        and: "The reports will have updated to the new dates"
+        waitFor {
+            projectReports.reports.size() > 0
+            projectReports.reports[0].fromDate == "01-07-2018"
         }
 
         when: "update one of the report from the list"

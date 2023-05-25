@@ -253,7 +253,7 @@ class DatasetSpec extends StubbedCasSpec{
         adminContent.projectSettings.saveChanges()
 
         and: "We reload the page and reopen the data set summary tab"
-        to RlpProjectPage, projectId
+        waitFor {hasBeenReloaded()}
         openDataSetSummaryTab()
 
         then: "We still have a single data set summary displayed in the table"

@@ -669,11 +669,7 @@ var GrantManagerReportsViewModel = function(config) {
         $(config.datesFormSelector).validationEngine();
         var result = $(config.datesFormSelector).validationEngine('validate');
         if (result) {
-            var jsData = {
-                plannedStartDate: self.plannedStartDate(),
-                plannedEndDate: self.plannedEndDate(),
-            };
-            projectService.saveProjectData(jsData);
+            projectService.generateProjectReports(self.plannedStartDate(), self.plannedEndDate());
         }
     }
 

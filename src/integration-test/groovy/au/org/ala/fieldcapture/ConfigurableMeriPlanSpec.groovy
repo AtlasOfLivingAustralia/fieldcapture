@@ -1,5 +1,6 @@
 package au.org.ala.fieldcapture
 
+import pages.AdminClearCachePage
 import pages.AdminTools
 import pages.MeriPlanPDFPage
 import pages.RlpProjectPage
@@ -10,21 +11,33 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
     def setupSpec() {
         useDataSet('dataset3')
+        loginAsAlaAdmin(browser)
+        to AdminClearCachePage
+        clearProgramListCache()
+        clearServiceListCache()
     }
 
     def cleanup() {
         logout(browser)
     }
 
+    def "Clear the cache to ensure activity forms are loaded"() {
+        setup:
+        loginAsAlaAdmin(browser)
+
+        when:
+        to AdminTools
+
+        waitFor { $("#btnClearMetadataCache").displayed }
+        $("#btnClearMetadataCache").click()
+
+        then:
+        waitFor { hasBeenReloaded() }
+    }
+
     def "The MERI Plan will display only sections specified in the program configuration"() {
 
         setup:
-        // Clear cache to ensure services are loaded correctly
-        loginAsAlaAdmin(browser)
-        to AdminTools
-        clearCache()
-        logout(browser)
-
         String projectId = 'p3'
         loginAsUser('1', browser)
 
@@ -104,6 +117,12 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
     def "The MERI Plan will display only sections specified in state intervention config for state intervention projects"() {
         setup:
+        // Clear cache to ensure services are loaded correctly
+        loginAsAlaAdmin(browser)
+        to AdminTools
+        clearCache()
+        logout(browser)
+
         String projectId = 'meri2'
         loginAsUser('1', browser)
 
@@ -150,6 +169,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
             meriPlan.floatingSaveDisplayed()
         }
         meriPlan.hideFloatingSave() // if we don't do that we can't click on the activity
+        meriPlan.checkObjective("objective 2")
         meriPlan.checkObjective("Other")
         waitFor{!meriPlan.otherObjective.@readonly}
         meriPlan.otherObjective = "Other objective"
@@ -181,7 +201,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
         then:
         meriPlan.assets[0].description == "asset 1"
-        meriPlan.checkedObjectives() == ["objective 2", 'Other']
+        waitFor 40, { meriPlan.checkedObjectives() == ["objective 2", "Other"] }
         meriPlan.otherObjective == "Other objective"
         meriPlan.shortTermOutcomes[0].value() == "outcome 1"
         meriPlan.projectDescription == 'Project description'

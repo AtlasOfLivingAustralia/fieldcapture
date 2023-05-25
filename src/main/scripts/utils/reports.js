@@ -175,3 +175,33 @@ function undeleteReport(reportId, adminUserId) {
 function deleteReport(reportId, adminUserId) {
     changeReportStatus(reportId, 'deleted', adminUserId);
 }
+
+/**
+ * This currently doesn't delete or restore documents associated with a report due to the
+ * complications with the actual document location on the file system.
+ *
+ * @param reportId the report to change the status of
+ * @param status the new status ('deleted' or 'active')
+ */
+function restoreNotRequiredReport(reportId, adminUserId, comment) {
+    const report = db.report.findOne({reportId:reportId});
+    const activity = db.activity.findOne({activityId:report.activityId});
+
+    const now = ISODate();
+    report.publicationStatus = 'unpublished';
+    report.dateReturned = now;
+    report.returnedBy = adminUserId;
+    report.statusChangeHistory.push({
+        changedBy:adminUserId,
+        dateChanged:now,
+        status:'unpublished',
+        comment:comment
+    });
+
+    db.report.replaceOne({reportId:reportId}, report);
+    audit(report, reportId, 'au.org.ala.ecodata.Report', adminUserId, report.projectId);
+
+    activity.publicationStatus = 'unpublished';
+    db.activity.replaceOne({activityId:report.activityId}, activity);
+    audit(activity, report.activityId, 'au.org.ala.ecodata.Activity', adminUserId, report.projectId);
+}

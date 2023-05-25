@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.config.ProgramConfig
 import grails.converters.JSON
 import org.apache.http.HttpStatus
 import org.grails.plugins.excelimport.ExcelImportService
@@ -24,6 +25,7 @@ class ActivityControllerSpec extends Specification implements ControllerUnitTest
     def siteService = Mock(SiteService)
     def excelImportService = Mock(ExcelImportService)
     def speciesService = Mock(SpeciesService)
+    def projectConfigurationService = Mock(ProjectConfigurationService)
 
     def setup() {
         controller.activityService = activityService
@@ -35,6 +37,7 @@ class ActivityControllerSpec extends Specification implements ControllerUnitTest
         controller.siteService = siteService
         controller.excelImportService = excelImportService
         controller.speciesService = speciesService
+        controller.projectConfigurationService = projectConfigurationService
 
     }
 
@@ -578,6 +581,31 @@ class ActivityControllerSpec extends Specification implements ControllerUnitTest
         0 * speciesService.searchByScientificName(_) >> getScientificModel()
 
         response.status == HttpStatus.SC_BAD_REQUEST
+    }
+
+    def "Activities will not be retrieved from the activities-model when a project has a programId"() {
+
+        setup:
+        def activityTypes = [[name:'category 1', list:[[name:'activity 1', description:'description 1'], [name:'activity 2', description:'description 2']]]]
+        def siteId = "111"
+        def projectId = "222"
+        def programId = "333"
+        def project = [projectId:projectId, associatedProgram:'Programme 1', associatedSubProgram:'Sub-Programme 1', programId:programId]
+        def model = model.project
+        ProgramConfig programConfig = new ProgramConfig(projectReports:[[activityType:'type', adjustmentActivityType:'adjustment']])
+
+        when:
+        def result = controller.createPlan(siteId,projectId)
+
+        then:
+        1 * projectService.get(projectId) >> project
+        1 * projectConfigurationService.getProjectConfiguration(project) >> programConfig
+        0 * metadataService.activityTypesList('Programme 1', 'Sub-Programme 1') >> null
+        1 * metadataService.activitiesListByProgramId(programId) >> activityTypes
+
+        and:
+        result.activityTypes != null
+        result.activityTypes == activityTypes
     }
 
 

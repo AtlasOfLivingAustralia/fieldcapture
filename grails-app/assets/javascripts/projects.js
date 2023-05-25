@@ -124,6 +124,7 @@ function ProjectViewModel(project, isUserEditor, organisations) {
     self.externalId = ko.observable(project.externalId);
     self.grantId = ko.observable(project.grantId);
     self.manager = ko.observable(project.manager);
+    self.comment = ko.observable(project.comment);
     self.plannedStartDate = ko.observable(project.plannedStartDate).extend({simpleDate: false});
     self.plannedEndDate = ko.observable(project.plannedEndDate).extend({simpleDate: false});
     self.funding = ko.observable(project.funding).extend({currency:{}});
@@ -174,7 +175,6 @@ function ProjectViewModel(project, isUserEditor, organisations) {
     self.associatedSubProgram = ko.observable(project.associatedSubProgram);
     self.newsAndEvents = ko.observable(project.newsAndEvents).extend({markdown:true});
     self.projectStories = ko.observable(project.projectStories).extend({markdown:true});
-
     self.dataSharing = ko.observable(project.isDataSharing? "Enabled": "Disabled");
     self.dataSharingLicense = ko.observable(project.dataSharingLicense);
     self.difficulty = ko.observable(project.difficulty);
@@ -860,9 +860,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
 
     self.validateExternalIds = function() {
         if (self.status() != ProjectStatus.APPLICATION) {
-            if (!projectService.areExternalIdsValid(ko.mapping.toJS(self.externalIds))) {
-                return 'At least one internal order number is required';
-            }
+            return projectService.validateExternalIds(ko.mapping.toJS(self.externalIds));
         }
     }
 
@@ -918,6 +916,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             externalId: self.externalId(),
             grantId: self.grantId(),
             manager: self.manager(),
+            comment: self.comment(),
             plannedStartDate: self.plannedStartDate(),
             plannedEndDate: self.plannedEndDate(),
             contractStartDate: self.contractStartDate(),

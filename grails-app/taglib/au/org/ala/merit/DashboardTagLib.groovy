@@ -132,7 +132,7 @@ class DashboardTagLib {
         out << """
             <div class="progress progress-info active " style="position:relative">
                 <div class="${progressBarClass}" style="width: ${percentComplete}%;"></div>
-                <span class="pull-right progress-label ${percentComplete >= 99 ? 'progress-100':''}" style="position:absolute; top:0; right:0;"> ${g.formatNumber(type:'number',number:result, maxFractionDigits: 2, groupingUsed:true)}/${score.target}</span>
+                <span class="pull-right progress-label ${percentComplete >= 99 ? 'progress-100':''}" style="position:absolute; top:0; right:0;"> ${g.formatNumber(type:'number',number:result, maxFractionDigits: 2, groupingUsed:true)}/${g.formatNumber(type:'number',number:target, maxFractionDigits: 2, groupingUsed:true)}</span>
             </div>"""
     }
 

@@ -39,6 +39,12 @@
 
     </div>
 </div>
+<div class="row mb-2">
+    <div class="col-sm-12">
+        <label for="comment">Comment (including organisation changes)</label>
+        <textarea id="comment" rows="3" cols="50" class="form-control form-control-sm input-large" data-bind="value:comment"></textarea>
+    </div>
+</div>
 <g:if test="${meriPlanStatus == true && hidePrograms}">
     <div class="row mb-2">
         <div class="col-sm-6">
@@ -84,18 +90,6 @@
             <g:textField class="form-control form-control-sm input-small" name="grantId" data-bind="value:grantId"/>
         </div>
     </div>
-%{--    <div class="col-sm-4">--}%
-%{--        <label class="control-label" for="internalOrderId">Internal order number</label>--}%
-%{--        <div class="controls">--}%
-%{--            <!-- Once the MERI plan is approved, the internal order number becomes a mandatory field. -->--}%
-%{--            <g:if test="${ProjectService.APPLICATION_STATUS != project.status}">--}%
-%{--                <input class="form-control form-control-sm input-small" placeholder="If unavailable, use 'TBA'" name="internalOrderId" id="internalOrderId" data-bind="value:internalOrderId" data-validation-engine="validate[required]"/>--}%
-%{--            </g:if>--}%
-%{--            <g:else>--}%
-%{--                <input class="form-control form-control-sm input-small" placeholder="If not available, use TBA" name="internalOrderId" data-bind="value:internalOrderId"/>--}%
-%{--            </g:else>--}%
-%{--        </div>--}%
-%{--    </div>--}%
 </div>
 
 <external-ids params="externalIds:externalIds, externalIdTypes:externalIdTypes, validationNamespace:'projectSettingsExternalId', validate:validateExternalIds"></external-ids>
