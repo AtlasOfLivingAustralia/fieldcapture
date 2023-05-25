@@ -832,6 +832,18 @@ function DetailsViewModel(o, project, budgetHeaders, risks, allServices, selecte
             healthCheckUrl:config.healthCheckUrl
         });
 };
+/** Removes nulls from arrays after toJSON is called */
+function outcomesToJSON(outcomeArray) {
+    return _.filter(_.map(outcomeArray, function (outcome) {
+        if (_.isFunction(outcome.toJSON)) {
+            return outcome.toJSON();
+        }
+        else {
+            return ko.toJS(outcome);
+        }
+
+    }), function(outcome) { return outcome != null});
+};
 
 function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPeriods, allServices, selectedTargetMeasures) {
 
@@ -1354,7 +1366,7 @@ function ObjectiveViewModel(o, programObjectives) {
     o.rows1 ? row1 = o.rows1 : row1.push(ko.mapping.toJS(new SingleAssetOutcomeViewModel()));
     self.rows1 = ko.observableArray(_.map(row1, function (obj, i) {
         return new SingleAssetOutcomeViewModel(obj);
-    }));
+    })).extend({removeNullsOnSave:true});
 
     /**
      * This pure computed observable provides a mapping from a simple array of selected program objectives to
@@ -1404,7 +1416,10 @@ function ObjectiveViewModel(o, programObjectives) {
         });
     }
     self.toJSON = function () {
-        var js = ko.mapping.toJS(self, {ignore:['simpleObjectives']});
+        var js = {
+            rows1: outcomesToJSON(self.rows1()),
+            rows: self.rows()
+        }
         if (self.simpleObjectives.otherChecked && self.simpleObjectives.otherChecked() && self.simpleObjectives.otherValue()) {
             js.rows1.push({description:self.simpleObjectives.otherValue(), assets:[]});
         }
@@ -1571,11 +1586,6 @@ function OutcomesViewModel(outcomes, config) {
 
     self.toJSON = function () {
         // Calls toJSON on each outcome and strips out nulls from the resulting array.
-        function outcomesToJSON(outcomeArray) {
-            return _.filter(_.map(outcomeArray, function (outcome) {
-                return outcome.toJSON();
-            }), function(outcome) { return outcome != null});
-        };
         return {
             primaryOutcome: self.primaryOutcome.toJSON(),
             secondaryOutcomes: outcomesToJSON(self.secondaryOutcomes()),
