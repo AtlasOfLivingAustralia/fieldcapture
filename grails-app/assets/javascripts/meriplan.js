@@ -1418,7 +1418,7 @@ function ObjectiveViewModel(o, programObjectives) {
     self.toJSON = function () {
         var js = {
             rows1: outcomesToJSON(self.rows1()),
-            rows: self.rows()
+            rows: ko.toJS(self.rows())
         }
         if (self.simpleObjectives.otherChecked && self.simpleObjectives.otherChecked() && self.simpleObjectives.otherValue()) {
             js.rows1.push({description:self.simpleObjectives.otherValue(), assets:[]});
