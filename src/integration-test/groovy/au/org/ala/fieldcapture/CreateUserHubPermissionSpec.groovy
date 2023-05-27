@@ -53,9 +53,9 @@ class CreateUserHubPermissionSpec extends StubbedCasSpec {
         to CreateUserHubPermissionPage
 
         then:
-        permissions.size() == 3
-
-
+        waitFor {
+            permissions.size() == 3
+        }
     }
 
     def "I can add,update and remove the user permission in Merit Hub"() {

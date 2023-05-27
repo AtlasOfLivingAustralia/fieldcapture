@@ -15,10 +15,10 @@ class AdminClearCachePage extends ReloadablePage {
         homePageDocuments{ $("#homePageDocuments")}
         userProfileCache{ $("#userProfileCache")}
         homePageStatistics{ $("#homePageStatistics")}
-        programListCache{$('#programList')}
-        serviceListCache{$('#serviceList')}
-
-
+        // These two cache items will not exist on startup (they are created when a test is run
+        // that initialises them)
+        programListCache(required:false){$('#programList')}
+        serviceListCache(required:false){$('#serviceList')}
     }
 
     void clearHomePageStatistics(){
@@ -27,12 +27,14 @@ class AdminClearCachePage extends ReloadablePage {
     }
 
     void clearProgramListCache() {
-        waitFor {programListCache.displayed }
-        programListCache.click()
+        if (programListCache.displayed) {
+            programListCache.click()
+        }
     }
 
     void clearServiceListCache() {
-        waitFor {serviceListCache.displayed}
-        serviceListCache.click()
+        if (serviceListCache.displayed) {
+            serviceListCache.click()
+        }
     }
 }
