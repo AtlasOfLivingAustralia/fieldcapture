@@ -30,7 +30,12 @@
                                         data-bind="value: data3, disable: $parent.isProjectDetailsLocked()"
                                         rows="5"></textarea></td>
 <g:if test="${includeUrl}">
-        <td class="document-url"><input type="text" class="form-control form-control-sm" data-bind="value:documentUrl" data-validation-engine="validate[url]"></td>
+        <td class="document-url">
+            <input type="text"
+                   class="form-control form-control-sm"
+                   data-bind="value:documentUrl, disable: $parent.isProjectDetailsLocked()"
+                   data-validation-engine="validate[url]">
+        </td>
 </g:if>
         <td class="remove">
             <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()"><i class="fa fa-remove"

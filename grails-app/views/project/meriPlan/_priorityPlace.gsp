@@ -3,7 +3,7 @@
 </g:if>
 <div class="priority-place row">
     <div class="col-md-8">
-        <label for="supports-priority-place">Does this project directly support a priority place?</label>
+        <label class="required" for="supports-priority-place">Does this project directly support a priority place?</label>
     </div>
     <div class="col-md-4">
         <select id="supports-priority-place" class="form-control form-control-sm"
@@ -18,7 +18,7 @@
 <!-- ko if:details.supportsPriorityPlace() == 'Yes' -->
 <div class="form-group">
 
-    <label for="priority-place">Please select the supported priority places</label>
+    <label class="required" for="priority-place">Please select the supported priority places</label>
     <select id="priority-place"
             multiple="multiple"
             class="form-control form-control-sm"

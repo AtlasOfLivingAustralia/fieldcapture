@@ -6,12 +6,15 @@
         Does this project directly support a priority place?
     </div>
     <div class="col-sm-4">
-        <select class="form-control form-control-sm"
-                data-bind="value:details.priorityPlace, optionsCaption:'Please select...'"
-                data-validation-engine="validate[required]">
-            <option></option>
-            <option>Yes</option>
-            <option>No</option>
-        </select>
+        <span data-bind="text:details.supportsPriorityPlace"></span>
     </div>
 </div>
+<!-- ko if:details.supportsPriorityPlace() == 'Yes' -->
+<div class="form-group">
+
+    <label>Please select the supported priority places</label>
+    <span data-bind="text:details.supportedPriorityPlaces">
+    </span>
+
+</div>
+<!-- /ko -->

@@ -1,24 +1,24 @@
 <!-- ko with:details.serviceOutcomes -->
-<h4>${title ?: "Project services and minimum targets"}</h4>
+<h4>${title ?: "Project services and outcome targets"}</h4>
 
-<table class="table service-targets">
+<table class="table service-outcomes-targets">
     <thead>
     <tr>
-        <th class="index" rowspan="2"></th>
-        <th class="required" rowspan="2">${serviceName ?: "Service"}</th>
-        <th class="required" rowspan="2" style="min-width: 500px;">Target measure</th>
+        <th class="index"></th>
+        <th class="required service">${serviceName ?: "Service"}</th>
+        <th class="required score">Target measure</th>
         <th></th>
     </tr>
     </thead>
     <tbody data-bind="foreach : outcomeTargets">
     <tr>
         <td class="index"><span data-bind="text:$index()+1"></span></td>
-        <td class="">
+        <td class="service">
             <input readonly="readonly" class="form-control form-control-sm"
                     data-bind="value:serviceLabel, disable: $root.isProjectDetailsLocked()"
                     >
         </td>
-        <td class="">
+        <td class="score">
             <input readonly="readonly"  class="form-control form-control-sm"
                     data-bind="value:scoreLabel, disable: $root.isProjectDetailsLocked()"
                    >
@@ -40,17 +40,21 @@
     <!-- ko foreach:outcomeTargets -->
     <tr>
         <td class="index"></td>
-        <td>
-            <select multiple class="form-control form-control-sm" data-bind="options:availableOutcomes, multiSelect2:{value:relatedOutcomes}">
+        <td class="service">
+            <select multiple class="form-control form-control-sm" data-bind="options:availableOutcomes, multiSelect2:{value:relatedOutcomes}, disable: $root.isProjectDetailsLocked()">
             </select>
         </td>
-        <td><input type="number" class="form-control form-control-sm" data-bind="value:target"></td>
-        <td><i class="fa fa-remove" data-bind="click:$parent.removeOutcomeTarget"></i></td>
+        <td class="score"><input type="number" class="form-control form-control-sm" data-bind="value:target, disable: $root.isProjectDetailsLocked()"></td>
+        <td>
+            <span data-bind="if:!$root.isProjectDetailsLocked()">
+            <i class="fa fa-remove" data-bind="click:$parent.removeOutcomeTarget, disable: $root.isProjectDetailsLocked()"></i>
+            </span>
+        </td>
     </tr>
     <!-- /ko -->
     <tr>
         <td colspan="4">
-            <button class="btn btn-sm" data-bind="click:addOutcomeTarget"><i class="fa fa-plus"></i>Add outcome target</button>
+            <button class="btn btn-sm" data-bind="click:addOutcomeTarget, disable: $root.isProjectDetailsLocked()"><i class="fa fa-plus"></i>Add outcome target</button>
         </td>
     </tr>
     </tbody>

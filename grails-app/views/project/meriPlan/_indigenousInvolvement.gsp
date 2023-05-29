@@ -2,7 +2,7 @@
 
 <div class="form-group row">
     <div class="col-sm-8">
-        <label for="indigenous-involved">Are First Nations people (Indigenous) involved in the management and recovery of threatened species, threatened ecological communities and priority places within the project?</label>
+        <label class="required" for="indigenous-involved">Are First Nations people (Indigenous) involved in the management and recovery of threatened species, threatened ecological communities and priority places within the project?</label>
     </div>
 
     <div class="col-sm-4">
@@ -19,7 +19,7 @@
 <!-- ko if:details.indigenousInvolved() == 'Yes' -->
 <div class="form-group">
 
-    <label for="indigenous-involvement">What is the nature of the involvement?</label>
+    <label class="required" for="indigenous-involvement">What is the nature of the involvement?</label>
 
 
     <select id="indigenous-involvement"

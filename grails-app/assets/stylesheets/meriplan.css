@@ -216,6 +216,22 @@ table tr.header th {
     width:7em;
 }
 
+.meri-plan .service-outcomes-targets .service {
+    width: 50%;
+}
+
+.meri-plan .service-outcomes-targets .score {
+    width: 50%;
+}
+
+.meri-plan .service-outcomes-targets-view .service {
+    width: 50%;
+}
+
+.meri-plan .service-outcomes-targets-view .score {
+    width: 50%;
+}
+
 .meri-plan td .select2.select2-container {
     width: 100% !important;
 }
@@ -485,4 +501,8 @@ input#changeProjectStartDate {
 
 .meri-plan .select2-selection {
     width: 100% !important;
+}
+
+.meri-plan .textarea-view {
+    white-space: pre-wrap;
 }

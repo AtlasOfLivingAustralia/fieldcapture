@@ -635,6 +635,26 @@ function ReadOnlyMeriPlan(project, projectService, config) {
         }
     }
 
+    /**
+     * This function allows the UI to convert an array of scoreIds into the same labels
+     * that are used in the editable version of the MERI plan.
+     * @param scoreIds {Array} An array of scoreIds
+     * @returns {string} A string containing the labels for the scoreIds
+     */
+    self.targetMeasureLabels = function(scoreIds) {
+        var result = '';
+        scoreIds = ko.utils.unwrapObservable(scoreIds);
+        for (var i=0; i<scoreIds.length; i++) {
+            var scoreId = scoreIds[i];
+            for (var j=0; j<self.allTargetMeasures.length; j++) {
+                if (self.allTargetMeasures[j].scoreId == scoreId) {
+                    result = result + self.allTargetMeasures[j].label;
+                }
+            }
+        }
+        return result;
+    }
+
     function cat(services, outcomes, serviceOutcomeMap) {
         for (var j=0; j<services.length; j++) {
             var service = services[j];

@@ -22,25 +22,29 @@
     <tr>
         <td class="index"><span data-bind="text:$index()+1"></span></td>
         <td class="threat-code">
-            <select data-bind="options:$root.keyThreatCodes, value:threatCode, optionsCaption:'Please select...'">
-
-            </select> </td>
+            <select class="form-control form-control-sm" data-bind="options:$root.keyThreatCodes, value:threatCode, optionsCaption:'Please select...', disable: $root.isProjectDetailsLocked()">
+            </select>
+        </td>
         <td class="threat">
             <textarea rows="4" class="form-control form-control-sm" data-validation-engine="validate[required]"
                       data-bind="value: threat, disable: $root.isProjectDetailsLocked()">
             </textarea>
         </td>
-        <td class="services"><select multiple="true" class="form-control form-control-sm" data-bind="options:$root.allTargetMeasures, optionsText:'label', optionsValue:'scoreId', multiSelect2:{preserveColumnWidth:20, value:relatedTargetMeasures}"></select> </td>
-        <td class="intervention"><textarea class="form-control form-control-sm" data-validation-engine="validate[required]"
+        <td class="services">
+            <select multiple="true" class="form-control form-control-sm" data-bind="options:$root.allTargetMeasures, optionsText:'label', optionsValue:'scoreId', multiSelect2:{preserveColumnWidth:20, value:relatedTargetMeasures}, disable: $root.isProjectDetailsLocked()"></select>
+        </td>
+        <td class="intervention">
+            <textarea class="form-control form-control-sm" data-validation-engine="validate[required]"
                                            data-bind="value: intervention, disable: $root.isProjectDetailsLocked()"
-                                           rows="4"></textarea></td>
+                                           rows="4"></textarea>
+        </td>
         <td class="evidence">
             <textarea rows="4" class="form-control form-control-sm" data-validation-engine="validate[required]"
                       data-bind="value: evidence, disable: $root.isProjectDetailsLocked()">
             </textarea>
         </td>
         <td class="related-outcomes">
-            <select multiple="true" data-bind="options:$root.selectedOutcomes, optionsText:'code', optionsValue:'code', multiSelect2:{value:relatedOutcomes}"></select>
+            <select multiple="true" data-bind="options:$root.selectedOutcomes, optionsText:'code', optionsValue:'code', multiSelect2:{value:relatedOutcomes}, disable: $root.isProjectDetailsLocked()"></select>
         </td>
         <td class="remove">
             <span data-bind="if: $index() && !$root.isProjectDetailsLocked()"><i class="fa fa-remove"
