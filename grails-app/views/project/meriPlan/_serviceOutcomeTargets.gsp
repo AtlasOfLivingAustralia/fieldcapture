@@ -41,7 +41,7 @@
     <tr>
         <td class="index"></td>
         <td class="service">
-            <select multiple class="form-control form-control-sm" data-bind="options:availableOutcomes, multiSelect2:{value:relatedOutcomes}, disable: $root.isProjectDetailsLocked()">
+            <select multiple class="form-control form-control-sm" data-bind="options:availableOutcomes, multiSelect2:{value:relatedOutcomes, templateResult:$root.renderOutcome, tags:false}, disable: $root.isProjectDetailsLocked()">
             </select>
         </td>
         <td class="score"><input type="number" class="form-control form-control-sm" data-bind="value:target, disable: $root.isProjectDetailsLocked()"></td>

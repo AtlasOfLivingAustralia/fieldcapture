@@ -23,7 +23,7 @@
         <td class="outcome">
             <select class="form-control form-control-sm"
                     data-validation-engine="validate[required]"
-                    data-bind="foreach:$root.selectedOutcomes, value:relatedOutcome, disable: $root.isProjectDetailsLocked()">
+                    data-bind="foreach:$root.selectedOutcomes, select2:{value:relatedOutcome, templateResult:$root.renderOutcome}, disable: $root.isProjectDetailsLocked()">
                 <option data-bind="text:code, attr:{title:description}"></option>
             </select>
         </td>

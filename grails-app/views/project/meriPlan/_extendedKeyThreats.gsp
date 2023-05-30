@@ -60,7 +60,7 @@
                     class="form-control form-control-sm"
                     data-validation-engine="validate[required]"
                     multiple="true"
-                    data-bind="options:$root.selectedOutcomes, optionsText:'code', optionsValue:'code', multiSelect2:{value:relatedOutcomes}, disable: $root.isProjectDetailsLocked()"></select>
+                    data-bind="options:$root.selectedOutcomes, optionsText:'code', optionsValue:'code', multiSelect2:{value:relatedOutcomes, templateResult:$root.renderOutcome, tags:false}, disable: $root.isProjectDetailsLocked()"></select>
         </td>
         <td class="remove">
             <span data-bind="if: $index() && !$root.isProjectDetailsLocked()">
