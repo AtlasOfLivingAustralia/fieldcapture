@@ -96,7 +96,7 @@ OrganisationViewModel = function (props, options) {
 
             blockUIWithMessage("Saving configuration...");
             self.saveConfig(config).done(function() {
-                blockUIWithMessage("Regenerating reports XXX...");
+                blockUIWithMessage("Regenerating reports...");
                 self.regenerateReports([coreServicesReportCategory], [projectOutputReportCategory]).done(function() {
                 document.location.reload();
                 }).fail(function() {
@@ -206,7 +206,7 @@ OrganisationViewModel = function (props, options) {
 
     self.deleteOrganisation = function() {
         if (window.confirm("Delete this organisation?  Are you sure?")) {
-            $.post(config.organisationDeleteUrl).complete(function() {
+            $.post(options.organisationDeleteUrl).complete(function() {
                     window.location = fcConfig.organisationListUrl;
                 }
             );
@@ -304,7 +304,7 @@ OrganisationViewModel = function (props, options) {
     self.prepopulateFromABN = function() {
         if ($(config.abnSelector).validationEngine()) {
             var abn = self.abn;
-            $.get(config.prepopulateAbnUrl, {abn:abn, contentType:'application/json'}).done(function (orgDetails) {
+            $.get(options.prepopulateAbnUrl, {abn:abn, contentType:'application/json'}).done(function (orgDetails) {
                     if (orgDetails.error === "invalid"){
                         bootbox.alert("Abn Number is invalid");
                     }else{
