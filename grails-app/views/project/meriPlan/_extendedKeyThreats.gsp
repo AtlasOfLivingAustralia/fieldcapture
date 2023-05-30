@@ -11,9 +11,9 @@
         <th class="index"></th>
         <th class="threat-code required">Key threat(s) and/or key threatening processes</th>
         <th class="threat required">Description <fc:iconHelp>${threatHelpText ?: "Describe the key threats (or key threatening processes) to the primary investment priority"}</fc:iconHelp></th>
-        <th class="services required">Project service measure/s to address threats</th>
+        <th class="services required">Project Service / Target Measure/s to address threats</th>
         <th class="intervention required">Methodology <fc:iconHelp>${interventionHelpText ?: "Describe the proposed interventions to address the threat and how this will deliver on the 5 year outcome."}</fc:iconHelp></th>
-        <th class="evidence required">Evidence</th>
+        <th class="evidence required">Evidence to be retained <g:if test="${evidenceHelpText}"><fc:iconHelp>${evidenceHelpText}</fc:iconHelp></g:if></th>
         <th class="related-outcomes required">ST/MT Outcome Statement</th>
         <th class="remove"></th>
     </tr>

@@ -3,7 +3,7 @@ load('../../../utils/audit.js');
 load('../../../utils/program.js');
 var userId = '';
 
-let programName = "Project Services Review Group";
+
 
 
 var config =
@@ -385,20 +385,23 @@ var config =
                 "template": "programOutcome",
                 "model": {
                     "maximumPriorities": "1000",
-                    "priorityHelpText": "Enter the primary investment priority/ies for the primary outcome. <br/>For outcomes 1-4, only one primary investment priority can be selected.<br/>For outcomes 5-6, select one or a maximum of two primary investment priorities"
+                    "priorityHelpText": "Enter the primary investment priority for the primary outcome, noting only one can be selected."
                 }
             },
             {
                 "template": "additionalOutcomes",
                 "model": {
-                    "title": "Secondary benefits"
+                    "title": "Additional benefits",
+                    "outcomePriority":"Additional outcome/s",
+                    "priority":"Additional Investment Priorities",
+                    "priorityHelpText":"Other investment priorities that will benefit from the project.  Delete the row if there are no additional outcomes."
                 }
             },
             {
                 "template": "outcomeStatements",
                 "model": {
                     "outcomeType": "mid",
-                    "subtitle": "Medium-terms outcome statement/s",
+                    "subtitle": "Medium-term outcome statement/s",
                     "title": "Project Outcomes",
                     "extendedOutcomes": true
                 }
@@ -407,37 +410,44 @@ var config =
                 "template": "outcomeStatements",
                 "model": {
                     "outcomeType": "short",
-                    "helpText": "Short term outcomes statements should: <br/><ul> <li>Contribute to the 5-year Outcome (e.g. what degree of impact are you expecting from the Project's interventions )</li> <li>Outline the degree of impact having undertaken the Services for  up to 3 years, for example 'area of relevant vegetation type has increased'.</li><li>Be expressed as a SMART statement. SMART stands for Specific, Measurable, Attainable, Realistic, and Time-bound. Ensure the outcomes are measurable with consideration to the baseline and proposed monitoring regime.</li></ul><b>Please Note: </b> for Project three years or less in duration, a short-term Project outcome achievable at the Project's completion must be set.",
-                    "subtitle": "Short-terms outcome statement/s",
+                    "helpText": "Outline the degree of impact having undertaken the services for up to three years. Ensure the outcomes are measurable with consideration to the baseline and proposed monitoring regime",
+                    "subtitle": "Short-term outcome statement/s",
                     "extendedOutcomes": true
                 }
             },
             {
-                "template": "extendedKeyThreats"
+                "template": "extendedKeyThreats",
+                "model": {
+                    "evidenceHelpText": "List evidence that will be retained to demonstrate delivery of this service. Refer to Evidence Guide and Project Service Summaries for guidance"
+                }
             },
             {
                 "template": "projectMethodology",
 
                 "maxSize": "4000",
-                "tableHeading": "Project delivery assumptions (4000 character limit [approx. 650 words])"
+                "title": "Project delivery assumptions (4000 character limit [approx. 650 words])"
             },
             {
-                "template": "projectPartnerships"
+                "template": "projectPartnerships",
+                "model": {
+                    "helpTextPartnerName":"Insert name of project partner. To be a project partner, they need to be actively involved in the planning or delivery of the project"
+                }
             },
             {
                 "template": "extendedBaselineMonitoring",
                 "model": {
                     "approachHeading": "Monitoring indicator",
                     "indicatorHeading": "Monitoring methodology",
-                    "baselineMethodHelpText": "Describe the project baseline(s) units of measure or data which will be used to report progress towards this project's outcomes (short-term, medium-term, Future Drought Fund, NRM Landscapes and 5 year program outcome), and the monitoring design. ",
-                    "titleHelpText": "Describe the project baseline(s) units of measure or data which will be used to report progress towards this project's outcomes (short-term, medium-term, Future Drought Fund, NRM Landscapes and 5 year program outcome), and the monitoring design.",
-                    "newIndicatorText": "New monitoring indicator"
+                    "baselineHelpText": "Describe the Project Baseline(s) and ongoing monitoring which will be used to report progress towards this projects outcome(s)",
+                    "titleHelpText": "Describe the Project Baseline(s) and ongoing monitoring which will be used to report progress towards this projects outcome(s)",
+                    "newIndicatorText": "New monitoring indicator",
+                    "evidenceHelpText": "List evidence that will be retained to demonstrate delivery of this service. Refer to Evidence Guide and Project Service Summaries for guidance"
                 }
             },
             {
                 "template": "projectReview",
                 "model": {
-                    "title": "Project review, evaluation and improvement methodology and approach (3000 character limit [approximately 500 words])"
+                    "title": "Project review, improvement and evaluation methodology and approach (3000 character limit [approximately 500 words])"
                 }
             },
             {
@@ -852,7 +862,7 @@ var outcomes = [
     }
 
 ];
-
+let programName = "Project Services Review Group";
 var program = createOrFindProgram(programName);
 
 program.config = config;

@@ -1,4 +1,4 @@
-<h4>First Nations people (Indigenous) involvement</h4>
+<h4>First Nations people involvement</h4>
 
 <div class="form-group row">
     <div class="col-sm-8">
