@@ -10,11 +10,11 @@
                 <g:if test="${monitoringValidation}">
                     <th class="baseline required">${indicatorHeading} <g:if test="${indicatorHelpText}"><fc:iconHelp title="${indicatorHeading}">${indicatorHelpText}</fc:iconHelp></g:if></th>
                     <g:if test="${extendedMonitoring}">
-                        <th class="monitoring-service">Service / Target Measure</th>
+                        <th class="monitoring-service required">Service / Target Measure</th>
                     </g:if>
                     <th class="baseline-method required">${approachHeading} <g:if test="${approachHelpText}"><fc:iconHelp title="${approachHeading}">${approachHelpText}</fc:iconHelp></g:if></th>
                     <g:if test="${extendedMonitoring}">
-                        <th class="monitoring-evidence">Evidence</th>
+                        <th class="monitoring-evidence required">Evidence</th>
                     </g:if>
                 </g:if>
                 <g:else>
@@ -38,14 +38,22 @@
                         <td class="monitoring-service">
                             <select multiple="true"
                                     class="form-control form-control-sm"
+                                    data-validation-engine="validate[required]"
                                     data-bind="options:$root.allTargetMeasures, optionsText:'label', optionsValue:'scoreId', multiSelect2:{value:relatedTargetMeasures, preserveColumnWidth:20}, disable: $root.isProjectDetailsLocked()"></select>
                         </td>
                     </g:if>
                     <td class="baseline-method">
-                        <textarea class="form-control form-control-sm" data-validation-engine="validate[required]" data-bind="value: data2, disable: $root.isProjectDetailsLocked()" rows="5" placeholder="${approachPlaceHolder}"></textarea> </td>
+                        <textarea
+                                class="form-control form-control-sm"
+                                data-validation-engine="validate[required]"
+                                data-bind="value: data2, disable: $root.isProjectDetailsLocked()"
+                                rows="5"
+                                placeholder="${approachPlaceHolder}"></textarea>
+                    </td>
                     <g:if test="${extendedMonitoring}">
                         <td class="monitoring-evidence">
                             <textarea class="form-control form-control-sm"
+                                      data-validation-engine="validate[required]"
                                       data-bind="value:evidence, disable: $root.isProjectDetailsLocked()"
                                       rows="3"
                                       data-validation-engine="validate[required,maxSize[4000]]"></textarea>

@@ -18,8 +18,8 @@
         </g:else>
         <th class="outcome required">${subtitle ?: ""} <g:if test="${helpText}"><fc:iconHelp html="true" container="body">${helpText}</fc:iconHelp></g:if> </th>
         <g:if test="${extendedOutcomes}">
-            <th class="investment-priority">Investment Priority</th>
-            <th class="program-outcome">Related program outcome/s</th>
+            <th class="investment-priority required">Investment Priority</th>
+            <th class="program-outcome required">Related program outcome/s</th>
         </g:if>
         <th class="remove"></th>
     </tr>
@@ -37,10 +37,10 @@
         </td>
         <g:if test="${extendedOutcomes}">
             <td class="investment-priority">
-                <select class="form-control form-control-sm" data-bind="options:details.outcomes.selectedPrimaryAndSecondaryPriorities,value:asset, optionsCaption:'Please select...', disable: $parent.isProjectDetailsLocked()"></select>
+                <select class="form-control form-control-sm" data-validation-engine="validate[required]" data-bind="options:details.outcomes.selectedPrimaryAndSecondaryPriorities,value:asset, optionsCaption:'Please select...', disable: $parent.isProjectDetailsLocked()"></select>
             </td>
             <td class="medium-term-outcome">
-                <select class="form-control form-control-sm" data-bind="options:details.outcomes.selectable${outcomeType.capitalize()}TermOutcomes, value:relatedOutcome, optionsCaption:'Please select...', disable: $parent.isProjectDetailsLocked()"></select>
+                <select class="form-control form-control-sm" data-validation-engine="validate[required]" data-bind="options:details.outcomes.selectable${outcomeType.capitalize()}TermOutcomes, value:relatedOutcome, optionsCaption:'Please select...', disable: $parent.isProjectDetailsLocked()"></select>
             </td>
         </g:if>
         <td class="remove">

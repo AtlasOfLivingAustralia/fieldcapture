@@ -22,12 +22,13 @@
         <td class="code"><span data-bind="text:code"></span></td>
         <td class="outcome">
             <select class="form-control form-control-sm"
+                    data-validation-engine="validate[required]"
                     data-bind="foreach:$root.selectedOutcomes, value:relatedOutcome, disable: $root.isProjectDetailsLocked()">
                 <option data-bind="text:code, attr:{title:description}"></option>
             </select>
         </td>
-        <th class="monitoring-data">pre
-            <select class="form-control form-control-sm" data-bind="value:monitoringDataStatus, disable: $root.isProjectDetailsLocked()">
+        <th class="monitoring-data">
+            <select class="form-control form-control-sm" data-validation-engine="validate[required]" data-bind="value:monitoringDataStatus, disable: $root.isProjectDetailsLocked()">
                 <option></option>
                 <option>Needs to be collected</option>
                 <option>Data exists</option>
@@ -39,21 +40,31 @@
             </textarea>
         </td>
         <td class="service">
-            <select multiple="true" class="form-control form-control-sm"
+            <select
+                    multiple="true"
+                    class="form-control form-control-sm"
+                    data-validation-engine="validate[required]"
                     data-bind="options:$root.allTargetMeasures, optionsText:'label', optionsValue:'scoreId', multiSelect2:{value:relatedTargetMeasures, preserveColumnWidth:20}, disable: $root.isProjectDetailsLocked()"></select>
         </td>
         <td class="baseline-method">
             <select class="form-control form-control-sm"
+                    data-validation-engine="validate[required]"
                     data-bind="options:$root.monitoringProtocols, optionsText:'name', optionsValue:'name', value:protocol, optionsCaption:'Please select...', disable: $root.isProjectDetailsLocked()">
                 <option value="other">Other</option>
             </select>
 
-            <textarea class="form-control form-control-sm" data-validation-engine="validate[required]"
-                                              data-bind="visible:protocol() == 'Other', value: method, disable: $root.isProjectDetailsLocked()"
-                                              rows="4"></textarea>
+            <textarea
+                    class="form-control form-control-sm"
+                    data-validation-engine="validate[required]"
+                    data-bind="visible:protocol() == 'Other', value: method, disable: $root.isProjectDetailsLocked()"
+                    rows="4"></textarea>
         </td>
         <td class="evidence">
-            <textarea class="form-control form-control-sm" data-bind="value:evidence, disable: $root.isProjectDetailsLocked()" rows="3" data-validation-engine="validate[required,maxSize:4000]"></textarea>
+            <textarea
+                    class="form-control form-control-sm"
+                    data-bind="value:evidence, disable: $root.isProjectDetailsLocked()"
+                    rows="3"
+                    data-validation-engine="validate[required,maxSize:4000]"></textarea>
         </td>
         <td class="remove">
             <span data-bind="if: $index() && !$root.isProjectDetailsLocked()"><i class="fa fa-remove"
