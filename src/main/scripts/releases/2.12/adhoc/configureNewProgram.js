@@ -423,9 +423,10 @@ var config =
             },
             {
                 "template": "projectMethodology",
-
-                "maxSize": "4000",
-                "title": "Project delivery assumptions (4000 character limit [approx. 650 words])"
+                "model": {
+                    "maxSize": "4000",
+                    "tableHeading": "Project delivery assumptions (4000 character limit [approx. 650 words])"
+                }
             },
             {
                 "template": "projectPartnerships",

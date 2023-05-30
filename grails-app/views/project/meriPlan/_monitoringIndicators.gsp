@@ -14,7 +14,7 @@
                     </g:if>
                     <th class="baseline-method required">${approachHeading} <g:if test="${approachHelpText}"><fc:iconHelp title="${approachHeading}">${approachHelpText}</fc:iconHelp></g:if></th>
                     <g:if test="${extendedMonitoring}">
-                        <th class="monitoring-evidence required">Evidence</th>
+                        <th class="monitoring-evidence required">Evidence <g:if test="${evidenceHelpText}"><fc:iconHelp>${evidenceHelpText}</fc:iconHelp></g:if></th>
                     </g:if>
                 </g:if>
                 <g:else>

@@ -448,7 +448,7 @@ function MERIPlan(project, projectService, config) {
     self.renderOutcome = function(outcome) {
         var outcome2 = _.find(self.selectedOutcomes(), function(outcome1) {return outcome1.code == outcome.text});
         var description = outcome2 && outcome2.description();
-        return $('<span><strong>'+outcome.text+'</strong> - ' + description+'</span>');
+        return $('<span><strong>'+outcome.text+'</strong> - ' + (description || '<i>No outcome statement supplied</i>') +'</span>');
     }
 
     // Save project details
