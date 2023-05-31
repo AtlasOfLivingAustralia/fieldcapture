@@ -705,7 +705,6 @@ function ReadOnlyMeriPlan(project, projectService, config) {
         var baseLineOutcomeMap = {};
         var baselines = self.meriPlan().baseline.rows();
         for (var i=0; i<baselines.length; i++) {
-            baseLineOutcomeMap[baselines[i].code()] = baselines[i].relatedOutcome();
             cat(baselines[i].relatedTargetMeasures(), [baselines[i].relatedOutcome()], serviceOutcomeMap);
         }
 

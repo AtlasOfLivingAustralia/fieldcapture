@@ -23,7 +23,7 @@
         <td class="outcome">
             <select class="form-control form-control-sm"
                     data-validation-engine="validate[required]"
-                    data-bind="options:$root.selectedOutcomes, optionsCaption:'Please select...', optionsText:'code', optionsValue:'code', select2:{value:relatedOutcome, templateResult:$root.renderOutcome}, disable: $root.isProjectDetailsLocked()">
+                    data-bind="options:$root.selectedOutcomes, optionsCaption:'Please select...', optionsText:'code', optionsValue:'code', value:relatedOutcome, select2:{templateResult:$root.renderOutcome}, disable: $root.isProjectDetailsLocked()">
             </select>
         </td>
         <th class="monitoring-data">
