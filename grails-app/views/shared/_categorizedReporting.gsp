@@ -4,7 +4,7 @@
 
     <div data-bind="foreach:reportsByCategory">
         <div class="report-category">
-            <h3 data-bind="text:title">FCK</h3>
+            <h3 data-bind="text:title"></h3>
 
             <div class="report-category-description" data-bind="if:description">
                 <div data-bind="html:description.markdownToHtml()"></div>

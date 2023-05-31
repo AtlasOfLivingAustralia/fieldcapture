@@ -57,11 +57,6 @@
                     <select class="form-control" id="core-services-group" data-bind="value:coreServicesPeriod, options:coreServicesOptions, optionsText:'label', optionsValue:'label', optionsCaption:'Please select'" data-validation-engine="validate[required]"></select>
                 </div>
 
-%{--                <div class="form-group">--}%
-%{--                    <label for="progress-reporting-group">Project Output reporting group</label>--}%
-%{--                    <select class="form-control" id="progress-reporting-group" data-bind="value:activityReportingPeriod, options:activityReportingOptions, optionsText:'label', optionsValue:'label', optionsCaption:'Please select'" data-validation-engine="validate[required]"></select>--}%
-%{--                </div>--}%
-
                 <button class="btn btn-primary" data-bind="click:saveReportingConfiguration">Save</button>
 
             </form>

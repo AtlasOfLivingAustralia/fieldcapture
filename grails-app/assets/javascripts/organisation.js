@@ -31,24 +31,6 @@ OrganisationViewModel = function (props, options) {
         return config.organisationReports[0];
     };
 
-    var getActivityReportConfig = function() {
-        var activityReportConfig;
-        if (!config.projectReports) {
-            config.projectReports = [];
-        }
-        activityReportConfig = _.find(config.projectReports, function(report) {
-            return report.category == projectOutputReportCategory;
-        });
-        if (!activityReportConfig) {
-            activityReportConfig = {reportType:'Activity', category:projectOutputReportCategory};
-            config.projectReports.push(activityReportConfig);
-        }
-
-        return activityReportConfig;
-    };
-
-    var projectOutputReportCategory = 'Outputs Reporting';
-    var activityReportConfig = getActivityReportConfig();
     var organisationReportConfig = getOrganisationReportConfig();
 
     self.coreServicesOptions = [
@@ -61,14 +43,6 @@ OrganisationViewModel = function (props, options) {
         return option.firstReportingPeriodEnd == organisationReportConfig.firstReportingPeriodEnd && option.reportingPeriodInMonths == organisationReportConfig.reportingPeriodInMonths;
     });
     self.coreServicesPeriod = ko.observable(currentOption ? currentOption.label : null);
-
-    self.activityReportingOptions = [
-        {label:"Quarterly (First period ends 30 September 2018)", firstReportingPeriodEnd:'2018-09-30T14:00:00Z', reportingPeriodInMonths:3, reportConfigLabel:'Quarter'},
-        {label:"Half-yearly (First period ends 31 December 2018)", firstReportingPeriodEnd:'2018-12-31T13:00:00Z', reportingPeriodInMonths:6, reportConfigLabel:'Semester'}];
-
-    currentOption = _.find(self.activityReportingOptions, function(option) {
-        return option.firstReportingPeriodEnd == activityReportConfig.firstReportingPeriodEnd && option.reportingPeriodInMonths == activityReportConfig.reportingPeriodInMonths;
-    });
 
     self.activityReportingPeriod = ko.observable(currentOption ? currentOption.label : null);
     self.startDate = ko.observable(props.startDate).extend({simpleDate:false});
@@ -86,18 +60,10 @@ OrganisationViewModel = function (props, options) {
             organisationReportConfig.reportingPeriodInMonths = selectedCoreServicesPeriod.reportingPeriodInMonths;
             organisationReportConfig.label = selectedCoreServicesPeriod.reportConfigLabel;
 
-            var selectedActivityReportingPeriod = _.find(self.activityReportingOptions, function(option) {
-                return option.label == self.activityReportingPeriod();
-            });
-
-            activityReportConfig.firstReportingPeriodEnd = selectedActivityReportingPeriod.firstReportingPeriodEnd;
-            activityReportConfig.reportingPeriodInMonths = selectedActivityReportingPeriod.reportingPeriodInMonths;
-            activityReportConfig.label = selectedActivityReportingPeriod.reportConfigLabel;
-
             blockUIWithMessage("Saving configuration...");
             self.saveConfig(config).done(function() {
                 blockUIWithMessage("Regenerating reports...");
-                self.regenerateReports([coreServicesReportCategory], [projectOutputReportCategory]).done(function() {
+                self.regenerateReports([coreServicesReportCategory]).done(function() {
                 document.location.reload();
                 }).fail(function() {
                     $.unblockUI();
