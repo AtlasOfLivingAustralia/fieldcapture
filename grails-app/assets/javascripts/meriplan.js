@@ -661,20 +661,6 @@ function ReadOnlyMeriPlan(project, projectService, config) {
         return result;
     }
 
-    function cat(services, outcomes, serviceOutcomeMap) {
-        for (var j=0; j<services.length; j++) {
-            var service = services[j];
-            if (!serviceOutcomeMap[service]) {
-                serviceOutcomeMap[service] = {};
-            }
-            for (var k=0; k<outcomes.length; k++) {
-                serviceOutcomeMap[service][outcomes[k]] = true;
-            }
-        }
-    }
-
-
-
     _.extend(self, new Risks(project.risks, riskModel, disableFlag, config.risksStorageKey));
     self.selectedTargetMeasures = ko.observableArray();
     var details = new DetailsViewModel(project.custom.details, project, self.periods, self.risks, self.allTargetMeasures, self.selectedTargetMeasures, config);
@@ -690,6 +676,23 @@ function ReadOnlyMeriPlan(project, projectService, config) {
     });
 
 
+    function processServicesAndOutcomes(services, outcomes, serviceOutcomeMap) {
+        services = services || [];
+        outcomes = outcomes || [];
+        for (var j=0; j<services.length; j++) {
+            var service = services[j];
+            if (service) {
+                if (!serviceOutcomeMap[service]) {
+                    serviceOutcomeMap[service] = {};
+                }
+                for (var k = 0; k < outcomes.length; k++) {
+                    if (outcomes[k]) {
+                        serviceOutcomeMap[service][outcomes[k]] = true;
+                    }
+                }
+            }
+        }
+    }
     /** All parts of the model able to specify services are collected together here */
     self.selectedServiceWatcher = ko.computed(function() {
 
@@ -699,19 +702,22 @@ function ReadOnlyMeriPlan(project, projectService, config) {
         for (var i=0; i<threats.length; i++) {
             var s = threats[i].relatedTargetMeasures();
             var o = threats[i].relatedOutcomes();
-            cat(s, o, serviceOutcomeMap);
+            processServicesAndOutcomes(s, o, serviceOutcomeMap);
         }
 
-        var baseLineOutcomeMap = {};
+
+        var baseLineOutcomeMap = {}; // Tracks the outcomes related to each baseline
         var baselines = self.meriPlan().baseline.rows();
         for (var i=0; i<baselines.length; i++) {
-            cat(baselines[i].relatedTargetMeasures(), [baselines[i].relatedOutcome()], serviceOutcomeMap);
+            baseLineOutcomeMap[baselines[i].code()] = baselines[i].relatedOutcome();
+            processServicesAndOutcomes(baselines[i].relatedTargetMeasures(), [baselines[i].relatedOutcome()], serviceOutcomeMap);
         }
 
         var monitoring = self.meriPlan().monitoring.rows();
         for (var i=0; i<monitoring.length; i++) {
-            // Monitoring - find baseline related to monitoring
-            cat(monitoring[i].relatedTargetMeasures(), baseLineOutcomeMap[monitoring[i].relatedBaseline()], serviceOutcomeMap);
+            // The outcome related to this monitoring indicator depends on the related baseline
+            var monitoringOutcome = baseLineOutcomeMap[monitoring[i].relatedBaseline()];
+            processServicesAndOutcomes(monitoring[i].relatedTargetMeasures(), [monitoringOutcome], serviceOutcomeMap);
         }
 
         for (var prop in serviceOutcomeMap) {
