@@ -2,9 +2,10 @@ package au.org.ala.merit
 
 
 import au.org.ala.merit.command.OrganisationReportCommand
+import au.org.ala.merit.command.SaveReportDataCommand
 import grails.converters.JSON
 import org.apache.http.HttpStatus
-
+import static ReportService.ReportMode
 /**
  * Extends the plugin OrganisationController to support Green Army project reporting.
  */
@@ -475,6 +476,42 @@ class OrganisationController {
 
     def testCmd(OrganisationReportCommand cmd) {
         render "ok"
+    }
+
+    @PreAuthorise(accessLevel = 'editor')
+    def editReport(String id, String reportId) {
+        if (!id || !reportId) {
+            error('An invalid report was selected for data entry', id)
+            return
+        }
+
+        Map model = activityReportModel(id, reportId, ReportMode.EDIT, params.getInt('formVersion', null))
+
+        if (!model.editable) {
+            redirect action:'viewReport', id:id, params:[reportId:reportId, attemptedEdit:true]
+        }
+        else {
+            if (model.config.requiresActivityLocking) {
+                Map result = reportService.lockForEditing(model.report)
+                model.locked = true
+            }
+            model.saveReportUrl = createLink(controller:'organisation', action:'saveReport', id:id, params:[reportId:reportId])
+            render model:model, view:'/activity/activityReport'
+        }
+    }
+
+    @PreAuthorise(accessLevel = 'editor')
+    def saveReport(SaveReportDataCommand saveReportDataCommand) {
+        Map result
+        if (saveReportDataCommand.report?.organisationId != params.id) {
+            result = [status:HttpStatus.SC_UNAUTHORIZED, error:"You do not have permission to save this report: check if the report belongs to this management unit: " + params?.id ]
+        }
+        else {
+            result = saveReportDataCommand.save()
+        }
+
+        render result as JSON
+
     }
 
     @PreAuthorise(accessLevel = 'editor')
