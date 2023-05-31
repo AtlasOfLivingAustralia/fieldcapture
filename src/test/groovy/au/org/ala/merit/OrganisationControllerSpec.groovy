@@ -14,6 +14,11 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
     def roleService = Stub(RoleService)
     def userService = Stub(UserService)
     def projectService = Mock(ProjectService)
+    def reportService = Mock(ReportService)
+
+    String adminUserId = 'admin'
+    String editorUserId = 'editor'
+    String grantManagerUserId = 'grantManager'
 
     def setup() {
         controller.organisationService = organisationService
@@ -22,6 +27,7 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         controller.roleService = roleService
         controller.userService = userService
         controller.projectService = projectService
+        controller.reportService = reportService
     }
 
     def "only the organisation projects and sites should be viewable anonymously"() {
@@ -236,7 +242,7 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
 
     def "an organisation admin can bulk edit project announcements"() {
         setup:
-        def testOrg = testOrganisation(true)
+        def testOrg = testOrganisation('id',true)
         testOrg.projects = [[projectId:'1234', associatedProgram:'Program 1']]
         organisationService.get(_,_) >> testOrg
         setupOrganisationAdmin()
@@ -307,7 +313,7 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
 
     def "an organisation admin can save project announcements"() {
         setup:
-        def testOrg = testOrganisation(true)
+        def testOrg = testOrganisation('id',true)
         testOrg.projects = [[projectId:'1234', associatedProgram:'Program 1']]
         organisationService.get(_,_) >> testOrg
         projectService.get('1') >> [projectId:'1', custom:[details:[:]]]
@@ -329,7 +335,7 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
 
     def "A blank announcement should be returned for a project with no announcements to make it easier for the user"() {
         setup:
-        def testOrg = testOrganisation(true)
+        def testOrg = testOrganisation('id',true)
         organisationService.get(_,_) >> testOrg
         def projectsWithAnnouncements = projectsWithAnnouncements(3)
         projectsWithAnnouncements[1].custom.details.events = []
@@ -351,7 +357,7 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
 
     def "The list of announcements for an organisation can be downloaded as a spreadsheet"() {
         setup:
-        def testOrg = testOrganisation(true)
+        def testOrg = testOrganisation('id', true)
         organisationService.get(_,_) >> testOrg
         def projectsWithAnnouncements = projectsWithAnnouncements(3)
 
@@ -411,11 +417,68 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         response.json.size() == 10
     }
 
-    private Map testOrganisation(boolean includeReports) {
-        def org = [organisationId:'id', name:'name', description:'description']
+    def "when editing a organisation report, the model will be customized for organisation reporting"() {
+        setup:
+        setupOrganisationAdmin()
+        String organisationId = 'id'
+        String reportId = 'r1'
+        Map program = testOrganisation(organisationId,true)
+
+        when:
+        controller.editReport(organisationId, reportId)
+        then:
+        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> [editable:true]
+        view == '/activity/activityReport'
+        model.context == program
+        model.contextViewUrl == '/organisation/index/'+organisationId
+        model.reportHeaderTemplate == '/organisation/organisationReportHeader'
+    }
+
+    def "if a report is not editable, the organisation controller should present the report view instead"() {
+        setup:
+        setupOrganisationAdmin()
+        String organisationId = 'p1'
+        String reportId = 'r1'
+        Map organisation = testOrganisation(organisationId, true)
+        organisation.config.requiresActivityLocking = true
+
+        when:
+        reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> [editable:false]
+        controller.editReport(organisationId, reportId)
+
+        then: "the report activity should not be locked"
+        0 * reportService.lockForEditing(_)
+
+        and: "the user should be redirected to the report view"
+        response.redirectUrl == '/organisation/viewReport/'+organisationId+"?reportId="+reportId+"&attemptedEdit=true"
+    }
+
+    def "if the organisation uses pessimistic locking for reports, the report activity should be locked when the report is edited"() {
+        setup:
+        setupOrganisationAdmin()
+        String organisationId = 'p1'
+        String reportId = 'r1'
+        Map organisation = testOrganisation(organisationId, true)
+
+        when:
+        organisation.config.requiresActivityLocking = true
+        controller.editReport(organisationId, reportId)
+        then:
+        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> [report:organisation.reports[0], editable:true]
+        1 * reportService.lockForEditing(organisation.reports[0])
+        view == '/activity/activityReport'
+    }
+
+    private Map testOrganisation(String id="", boolean includeReports) {
+        Map org = [organisationId:id, name:'name', description:'description', config:[:], inheritedConfig:[:]]
         if (includeReports) {
-            org.reports = [[type:'report1'], [type:'report1']]
+            org.reports = [[type:'report1', reportId:'r1', activityId:'a1'], [type:'report1', reportId:'r2', activityId:'a2']]
         }
+        organisationService.get(id) >> org
+        userService.getMembersOfProgram() >> [
+            [userId:adminUserId, role:RoleService.PROJECT_ADMIN_ROLE],
+            [userId:editorUserId, role:RoleService.PROJECT_EDITOR_ROLE],
+            [userId:grantManagerUserId, role:RoleService.GRANT_MANAGER_ROLE]]
         return org
     }
 
