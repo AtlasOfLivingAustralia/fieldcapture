@@ -40,7 +40,7 @@
                 <select class="form-control form-control-sm" data-validation-engine="validate[required]" data-bind="options:details.outcomes.selectedPrimaryAndSecondaryPriorities,value:asset, optionsCaption:'Please select...', disable: $parent.isProjectDetailsLocked()"></select>
             </td>
             <td class="medium-term-outcome">
-                <select class="form-control form-control-sm" data-validation-engine="validate[required]" data-bind="options:details.outcomes.selectable${outcomeType.capitalize()}TermOutcomes, optionsCaption:'Please select...', select2:{value:relatedOutcome}, disable: $parent.isProjectDetailsLocked()"></select>
+                <select class="form-control form-control-sm dropdown-right" data-validation-engine="validate[required]" data-bind="options:details.outcomes.selectable${outcomeType.capitalize()}TermOutcomes, optionsCaption:'Please select...', select2:{value:relatedOutcome}, disable: $parent.isProjectDetailsLocked()"></select>
             </td>
         </g:if>
         <td class="remove">

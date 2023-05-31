@@ -57,7 +57,7 @@
         </td>
         <td class="related-outcomes">
             <select
-                    class="form-control form-control-sm"
+                    class="form-control form-control-sm dropdown-right"
                     data-validation-engine="validate[required]"
                     multiple="true"
                     data-bind="options:$root.selectedOutcomes, optionsText:'code', optionsValue:'code', multiSelect2:{value:relatedOutcomes, templateResult:$root.renderOutcome, tags:false}, disable: $root.isProjectDetailsLocked()"></select>

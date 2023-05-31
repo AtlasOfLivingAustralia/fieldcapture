@@ -498,10 +498,12 @@ var config = {
 </asset:script>
 <asset:javascript src="common-bs4.js"/>
 <asset:javascript src="tab-init.js"/>
+<asset:javascript src="select2/js/select2.full.js"/>
+<asset:javascript src="select2-dropdown-placement-override.js"/>
 <asset:javascript src="projects.js"/>
 <asset:javascript src="document.js"/>
 <asset:javascript src="reporting.js"/>
-<asset:javascript src="select2/js/select2.full.js"/>
+
 <asset:javascript src="forms-knockout-bindings.js"/>
 <asset:javascript src="leaflet-manifest.js"/>
 <asset:javascript src="feature.js"/>
