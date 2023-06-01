@@ -514,6 +514,16 @@ class OrganisationController {
 
     }
 
+    @PreAuthorise(accessLevel = 'admin')
+    def resetReport(String id, String reportId) {
+        if (!id || !reportId) {
+            error('An invalid report was selected', id)
+            return
+        }
+        Map result = reportService.reset(reportId)
+        render result as JSON
+    }
+
     @PreAuthorise(accessLevel = 'editor')
     def editOrganisationReport(OrganisationReportCommand cmd) {
         if (cmd.hasErrors()) {

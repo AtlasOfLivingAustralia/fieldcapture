@@ -1,4 +1,5 @@
 //= require tab-init.js
+//= require coreReportService
 /**
  * Knockout view model for organisation pages.
  * @param props JSON/javascript representation of the organisation.
@@ -9,6 +10,9 @@
  */
 OrganisationViewModel = function (props, options) {
     var self = $.extend(this, new Documents(options));
+
+    var coreReportService = new CoreReportService(options)
+    _.extend(this, coreReportService);
 
     var defaults = {
         validationContainerSelector: '.validationEngineContainer',
@@ -63,40 +67,16 @@ OrganisationViewModel = function (props, options) {
             blockUIWithMessage("Saving configuration...");
             self.saveConfig(config).done(function() {
                 blockUIWithMessage("Regenerating reports...");
-                self.regenerateReports([coreServicesReportCategory]).done(function() {
-                document.location.reload();
-                }).fail(function() {
-                    $.unblockUI();
-                });
+                var data = JSON.stringify({organisationReportCategories:[coreServicesReportCategory]});
+                coreReportService.regenerateReports(data,options.regenerateOrganisationReportsUrl);
             });
         }
     };
 
-    self.regenerateReports = function(organisationReportCategories) {
-        var data = JSON.stringify({organisationReportCategories:organisationReportCategories});
-        return $.ajax({
-            url: options.regenerateOrganisationReportsUrl,
-            type: 'POST',
-            data: data,
-            dataType:'json',
-            contentType: 'application/json'
-        }).fail(function() {
-            bootbox.alert("Failed to regenerate organisation reports");
-        });
-
-    };
-
     self.regenerateReportsByCategory = function() {
         blockUIWithMessage("Regenerating reports...");
-        self.regenerateReports(self.selectedOrganisationReportCategories()).done(function() {
-            blockUIWithMessage("Reports successfully regenerated, reloading page...");
-            setTimeout(function(){
-                window.location.reload();
-            }, 1000);
-
-        }).fail(function() {
-            $.unblockUI();
-        });
+        var data = JSON.stringify({organisationReportCategories:self.selectedOrganisationReportCategories()});
+        coreReportService.regenerateReports(data,options.regenerateOrganisationReportsUrl);
     };
 
     var tabs = {
