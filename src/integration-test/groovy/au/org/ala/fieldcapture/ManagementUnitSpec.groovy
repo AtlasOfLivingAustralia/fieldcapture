@@ -159,7 +159,6 @@ class ManagementUnitSpec extends StubbedCasSpec {
 
         when:
         displayReportsTab()
-        reportsTabPane.showAllReports()
 
         then:
         waitFor {
