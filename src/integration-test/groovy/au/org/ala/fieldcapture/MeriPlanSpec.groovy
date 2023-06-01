@@ -196,6 +196,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         then:
         withWindow"meri-plan-report", {
             at MeriPlanPDFPage
+            closePrintInstructions()
             meriPlan.primaryOutcome.text().contains("Ramsar")
             // Direct comparison fails due to &nbsp in the HTML due to the length of the options
             meriPlan.primaryPriority == "Ginini Flats Wetland Complex"
@@ -220,32 +221,6 @@ class MeriPlanSpec extends StubbedCasSpec {
             meriPlan.nationalAndRegionalPlans[0].alignment.text() == "Alignment 1"
         }
     }
-
-    /*
-    def "cancel MERI Plan dialog declaration"() {
-
-        setup:
-        loginAsUser('1', browser)
-
-        when: "We open the MERI plan and press the Submit button"
-        to ProjectIndex, '1'
-        openAdminTab()
-        def meriplan = admin.openMeriPlan()
-        meriplan.submit()
-
-        then: "The MERI plan submission declaration is displayed"
-        waitFor 20, {
-            meriplan.submissionModal.displayed
-        }
-
-        when: "The cancel button is pressed on the declaration"
-        meriplan.submissionModal.cancel()
-
-        then: "The declaration is closed"
-        waitFor { !meriplan.submissionModal.displayed }
-    }
-    */
-
 
     def "A program can set a default primary outcome"()  {
         setup:

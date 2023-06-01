@@ -631,15 +631,6 @@ class ProjectController {
         }
     }
 
-    @PreAuthorise(accessLevel = 'admin')
-    def meriPlanPDF(String id) {
-        Map reportUrlConfig = [controller: 'report', action: 'meriPlanReportCallback', id: id, absolute: true]
-        boolean result = pdfGenerationService.generatePDF(reportUrlConfig, [:], response)
-        if (!result) {
-            render view: '/error', model: [error: "An error occurred generating the MERI plan report."]
-        }
-    }
-
     /**
      * Accepts a MERI Plan as an attached file and attempts to convert it into a format compatible with
      * MERIT.

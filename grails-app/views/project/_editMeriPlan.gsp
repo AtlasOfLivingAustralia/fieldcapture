@@ -146,7 +146,7 @@
 				<br/>
 				<button type="button" data-bind="click: saveProjectDetails, disable: isProjectDetailsLocked()" class="btn btn-sm btn-primary">Save changes</button>
 				<button type="button" class="btn btn-sm btn-danger" data-bind="click: cancelProjectDetailsEdits">Cancel</button>
-				<button type="button" class="btn btn-sm btn-info" data-bind="click: meriPlanPDF">Generate PDF</button>
+				<button type="button" class="btn btn-sm btn-info" data-bind="click: meriPlanPDF">Display Printable MERI Plan</button>
 
 				<!--  Admin - submit to approval. -->
 				<g:if test="${user?.isAdmin}">
@@ -204,7 +204,7 @@
 
 			<button type="button" data-bind="click: saveProjectDetails, disable: isProjectDetailsLocked()" class="btn btn-sm btn-primary">Save changes</button>
 			<button type="button" class="btn btn-sm btn-danger" data-bind="click: cancelProjectDetailsEdits">Cancel</button>
-			<g:if test="${projectContent.details.visible}"><button type="button" class="btn btn-sm btn-info" data-bind="click: meriPlanPDF">Generate PDF</button></g:if>
+			<g:if test="${projectContent.details.visible}"><button type="button" class="btn btn-sm btn-info" data-bind="click: meriPlanPDF">Display Printable MERI Plan</button></g:if>
 
 			<!--  Admin - submit to approval. -->
 			<g:if test="${user?.isAdmin}">

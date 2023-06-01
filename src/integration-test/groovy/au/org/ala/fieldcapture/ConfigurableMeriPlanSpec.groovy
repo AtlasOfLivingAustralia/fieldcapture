@@ -236,6 +236,10 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         driver.switchTo().window("meri-plan-report")
         waitFor { at MeriPlanPDFPage }
 
+        when:
+        closePrintInstructions()
+
+        then:
         def meriPlan2 = meriPlan
         meriPlan2.assets[0].description.text() == "asset 1"
         waitFor { meriPlan2.objectives() == ["objective 2", "Other objective"] }

@@ -66,8 +66,10 @@
     });
     </asset:script>
 </div>
+<g:render template="/shared/pdfInstructions"/>
 <asset:javascript src="common-bs4.js"/>
 <asset:javascript src="projects.js"/>
 <asset:deferredScripts/>
+<asset:javascript src="print-instructions.js"/>
 </body>
 </html>
