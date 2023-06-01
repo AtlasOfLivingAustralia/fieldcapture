@@ -187,7 +187,7 @@
 		<b>From: </b><span data-bind="text: plannedStartDate.formattedDate"></span>  <b>To: </b> <span data-bind="text: plannedEndDate.formattedDate"></span>
 	</div>
 
-	<g:render template="${meriPlanTemplate}" model="${[config:config]}"/>
+	<g:render template="${meriPlanTemplate}" model="${[config:config, mode : au.org.ala.merit.ReportService.ReportMode.EDIT.name()]}"/>
 
 </g:if>
 

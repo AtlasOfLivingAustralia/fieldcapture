@@ -361,12 +361,6 @@ function MERIPlan(project, projectService, config) {
         self.meriPlan().priorities.rows.remove(row);
     };
 
-    self.monitoringIndicators = function(code) {
-        var relatedIndicators = _.filter(self.meriPlan().monitoring.rows(), function(row) {
-            return row.relatedBaseline() == ko.utils.unwrapObservable(code);
-        });
-        return relatedIndicators;
-    }
     self.addMonitoringIndicator = function(code) {
         self.meriPlan().monitoring.rows.push(self.meriPlan().monitoring.newRow({relatedBaseline:ko.utils.unwrapObservable(code)}));
     }
@@ -751,7 +745,12 @@ function ReadOnlyMeriPlan(project, projectService, config) {
 
         return services;
     }).extend({rateLimit:config.targetMeasureUpdateLimit || 1000});
-
+    self.monitoringIndicators = function(code) {
+        var relatedIndicators = _.filter(self.meriPlan().monitoring.rows(), function(row) {
+            return row.relatedBaseline() == ko.utils.unwrapObservable(code);
+        });
+        return relatedIndicators;
+    }
 };
 
 function DetailsViewModel(o, project, budgetHeaders, risks, allServices, selectedTargetMeasures, config) {

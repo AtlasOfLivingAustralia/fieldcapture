@@ -27,7 +27,7 @@
             </select>
         </td>
         <th class="monitoring-data">
-            <select class="form-control form-control-sm" data-validation-engine="validate[required]" data-bind="value:monitoringDataStatus, disable: $root.isProjectDetailsLocked()">
+            <select class="form-control form-control-sm" data-validation-engine="validate[required]" placeholder="Please select..." data-bind="value:monitoringDataStatus,disable: $root.isProjectDetailsLocked()">
                 <option></option>
                 <option>Needs to be collected</option>
                 <option>Data exists</option>

@@ -21,7 +21,7 @@
     <tr>
         <td class="code"><span data-bind="text:code"></span></td>
         <td class="outcome">
-            <span data-bind="text:code, attr:{title:description}"></span>
+            <span data-bind="text:code"></span>
         </td>
         <td class="monitoring-data">
             <span data-bind="text:monitoringDataStatus"></span>
