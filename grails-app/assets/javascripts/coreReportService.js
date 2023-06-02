@@ -11,7 +11,7 @@ function CoreReportService(options) {
             dataType:'json',
             contentType: 'application/json'
         }).done(function() {
-            document.location.reload();
+            options.$window.location.reload();
         }).fail(function() {
             bootbox.alert("Failed to regenerate organisation reports");
             $.unblockUI();
