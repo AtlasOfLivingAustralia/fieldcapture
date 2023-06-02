@@ -58,6 +58,6 @@ function createProgramAsCopy(name, nameOfProgramToCopy) {
     copy.name = name;
     copy.programId = UUID.generate();
     copy.dateCreated = now;
-    copy.dateUpdate = now;
+    copy.lastUpdated = now;
     db.program.insert(copy);
 }
