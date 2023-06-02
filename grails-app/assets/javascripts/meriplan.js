@@ -941,9 +941,16 @@ function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPerio
             target = target || {};
             self.target = ko.observable(target.target);
             self.relatedOutcomes = ko.observableArray(target.relatedOutcomes);
-
+            self.orphanedOutcomes = ko.observableArray();
+            self.orphanedOutcomesError = function() {
+                return 'The outcomes '+self.orphanedOutcomes().join(', ')+' are no longer linked to a target measure and should be removed from this target.';
+            }
             self.availableOutcomes = ko.computed(function() {
-                return availableOutcomes(self);
+                var selectableOutcomes = availableOutcomes(self);
+                var selectedOutcomes = self.relatedOutcomes();
+                var orphanedOutcomes = _.difference(selectedOutcomes, selectableOutcomes)
+                self.orphanedOutcomes(orphanedOutcomes);
+                return _.union(selectableOutcomes, orphanedOutcomes);
             });
         }
 
