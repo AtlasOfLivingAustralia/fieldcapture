@@ -403,7 +403,8 @@ var config =
                     "outcomeType": "mid",
                     "subtitle": "Medium-term outcome statement/s",
                     "title": "Project Outcomes",
-                    "extendedOutcomes": true
+                    "extendedOutcomes": true,
+                    "helpText":"Projects more than 3 years in duration must set medium-term Project outcomes achievable at project completion. Ensure proposed outcomes are measurable with consideration to the baseline and proposed monitoring regime"
                 }
             },
             {
@@ -418,14 +419,17 @@ var config =
             {
                 "template": "extendedKeyThreats",
                 "model": {
-                    "evidenceHelpText": "List evidence that will be retained to demonstrate delivery of this service. Refer to Evidence Guide and Project Service Summaries for guidance"
+                    "threatHelpText":"Describe the key threats (or key threatening processes to the investment priority",
+                    "evidenceHelpText": "List evidence that will be retained to demonstrate delivery of this service. Refer to Evidence Guide and Project Service Summaries for guidance",
+                    "interventionHelpText":"Describe the proposed method to address the threat or threatening process"
                 }
             },
             {
                 "template": "projectMethodology",
                 "model": {
                     "maxSize": "4000",
-                    "tableHeading": "Project delivery assumptions (4000 character limit [approx. 650 words])"
+                    "tableHeading": "Project delivery assumptions (4000 character limit [approx. 650 words])",
+                    "helpText": "Include all those conditions or factors that are sufficient to guarantee the success of the project, for example, on ground activities were not adversely impacted by adverse weather conditions"
                 }
             },
             {
