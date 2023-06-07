@@ -5498,7 +5498,7 @@
                   },
                   {
                     "dataType": "text",
-                    "description": "Please describe the survey technique if other was selected",
+                    "description": "Please describe the survey technique if other was selected.",
                     "name": "otherTernSurveyTechnique",
                     "behaviour": [
                       {
@@ -5906,7 +5906,7 @@
                   },
                   {
                     "dataType": "text",
-                    "description": "Please describe the survey technique if other was selected",
+                    "description": "Please describe the survey technique if other was selected.",
                     "name": "otherTernSurveyTechnique",
                     "behaviour": [
                       {
@@ -6978,7 +6978,7 @@
                   },
                   {
                     "dataType": "text",
-                    "description": "Please describe the survey technique if other was selected",
+                    "description": "Please describe the survey technique if other was selected.",
                     "name": "otherTernSurveyTechnique",
                     "behaviour": [
                       {
@@ -13822,57 +13822,209 @@
         "modelName": "RLP - Skills and knowledge survey",
         "dataModel": [
           {
-            "dataType": "list",
-            "name": "skillsAndKnowledgeSurveys",
             "columns": [
               {
-                "dataType": "text",
-                "description": "",
-                "name": "baselineOrIndictorSurvey",
-                "constraints": [
-                  "Baseline",
-                  "Indicator"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "number",
-                "name": "numberOfSkillsAndKnowledgeSurveys",
-                "validate": "required,min[0]"
-              },
-              {
-                "dataType": "text",
-                "name": "dateRange",
-                "validate": "required,maxSize[100]",
-                "description": "What time of year (eg. Dates by dd/mm/yyyyy, Months, Season/s)"
-              },
-              {
-                "dataType": "number",
-                "name": "numberOfParticipants",
-                "validate": "required,min[0]"
-              },
-              {
-                "dataType": "text",
-                "name": "surveyTechnique",
-                "validate": "required,maxSize[300]",
-                "constraints": [
-                  "Other"
-                ],
-                "description": "What/How will these survey/s capture information"
-              },
-              {
-                "dataType": "text",
-                "name": "surveyObjective",
-                "validate": "required,maxSize[300]",
-                "description": "How will the information obtained from the surveys be used"
-              },
-              {
-                "dataType": "number",
-                "name": "numberOfDaysAdministeringSurveys",
-                "validate": "required,min[0]",
-                "description": "Number of days should be calculated as number of days by number of people (eg. 4.5 days by 3 people is 13.5 days)"
+                "dataType": "list",
+                "name": "skillsKnowledgeSurveyBaselineDetails",
+                "columns": [
+                  {
+                    "dataType": "text",
+                    "name": "baselineOrIndicatorSkillsKnowledgeSurvey",
+                    "description": "",
+                    "constraints": [
+                      "Baseline",
+                      "Indicator"
+                    ],
+                    "validate": "required"
+                  },
+                  {
+                    "name": "projectBaseline",
+                    "dataType": "text",
+                    "description": "Select the relevant Project Baseline as listed in the Monitoring Methodology section of the MERI Plan.",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "baseline",
+                      "valueProperty": "method",
+                      "type": "pre-populated",
+                      "excludePath": "projectBaseline",
+                      "config": {
+                        "source": {
+                          "context-path": "owner.custom.details.baseline.rows"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "name": "datasetSupports",
+                    "dataType": "text",
+                    "description": "This section will require the Data Set Name so the Metadata fields in the Data Set Summary tab should be filled out before the Outcome Report is due. More than one dataset if relevant for this Project Baseline could be selected.",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "name",
+                      "valueProperty": "dataSetId",
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "context-path": "owner.custom.dataSets"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "name": "outcomeStatementPrePop",
+                    "dataType": "text",
+                    "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "description",
+                      "valueProperty": "description",
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "context-path": "owner.custom.details.outcomes.shortTermOutcomes"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "dataType": "date",
+                    "name": "activitiesStartDate",
+                    "description": "",
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "date",
+                    "name": "activitiesEndDate",
+                    "description": "",
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "stringList",
+                    "description": "The technique used to conduct the survey.",
+                    "name": "ternSurveyTechnique",
+                    "validate": "required",
+                    "constraints": [
+                      "Tern Survey Technique 1",
+                      "Tern Survey Technique 1",
+                      "Tern Survey Technique 1",
+                      "Other"
+                    ]
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "numberOfPeopleSurveying",
+                    "validate": "required,min[0]"
+                  },
+                  {
+                    "dataType": "text",
+                    "description": "Please describe the survey technique if other was selected.",
+                    "name": "otherTernSurveyTechnique",
+                    "behaviour": [
+                      {
+                        "condition": "ternSurveyTechnique == \"Other\"",
+                        "type": "enable_and_clear"
+                      }
+                    ],
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "surveyMethodology",
+                    "description": "Survey Methodology",
+                    "validate": "required,maxSize[3000]"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "surveyObjective",
+                    "description": "Survey Objective",
+                    "validate": "required,maxSize[3000]"
+                  }
+                ]
               }
-            ]
+            ],
+            "dataType": "list",
+            "name": "skillsKnowledgeSurveys",
+            "minSize": 1
+          },
+          {
+            "dataType": "text",
+            "name": "participationIndividualsOrGroups",
+            "constraints": [
+              "Individuals",
+              "Groups"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "participationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "participationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "firstNationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "firstNationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "participationDetails",
+            "validate": "maxSize[3000]"
+          },
+          {
+            "name": "farmSurveyCountHeader",
+            "type": "number",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "count(skillsKnowledgeSurveys, \"baselineOrIndicatorSkillsKnowledgeSurvey\")"
+            }
           },
           {
             "dataType": "text",
@@ -13880,8 +14032,13 @@
             "validate": "maxSize[1500]"
           },
           {
-            "name": "photographicEvidence",
-            "dataType": "image"
+            "dataType": "image",
+            "name": "photographicEvidence"
+          },
+          {
+            "dataType": "boolean",
+            "name": "dataUploaded",
+            "description": ""
           },
           {
             "dataType": "text",
@@ -13899,68 +14056,145 @@
               }
             ]
           }
-        ],
+          ],
         "viewModel": [
           {
+            "type": "section",
             "items": [
               {
-                "source": "skillsAndKnowledgeSurveys",
                 "columns": [
                   {
-                    "title": "Baseline survey or indicator (follow-up) survey?",
-                    "source": "baselineOrIndictorSurvey",
-                    "type": "selectOne",
-                    "width": "15%"
+                    "width": "10%",
+                    "source": "participationIndividualsOrGroups",
+                    "title": "Individuals or groups?",
+                    "type": "selectOne"
                   },
                   {
-                    "title": "Number of skills and knowledge surveys conducted",
-                    "source": "numberOfSkillsAndKnowledgeSurveys",
-                    "type": "number",
-                    "width": "10%"
+                    "width": "20%",
+                    "type": "col",
+                    "title": "Total Number of people delivering this service",
+                    "items": [
+                      {
+                        "source": "participationIndividualNumber",
+                        "type": "number"
+                      },
+                      {
+                        "source": "participationGroupNumber",
+                        "type": "selectOne"
+                      }
+                    ]
                   },
                   {
-                    "title": "Date range",
-                    "type": "text",
-                    "source": "dateRange",
-                    "width": "10%"
+                    "type": "col",
+                    "width": "20%",
+                    "title": "Total Number of First Nations people delivering this service ",
+                    "items": [
+                      {
+                        "source": "firstNationIndividualNumber",
+                        "type": "number"
+                      },
+                      {
+                        "source": "firstNationGroupNumber",
+                        "type": "selectOne"
+                      }
+                    ]
                   },
                   {
-                    "title": "Number of people completing survey",
-                    "source": "numberOfParticipants",
-                    "type": "number",
-                    "width": "10%"
-                  },
-                  {
-                    "title": "Survey technique",
-                    "type": "textarea",
-                    "source": "surveyTechnique",
-                    "width": "22%",
-                    "rows": 3
-                  },
-                  {
-                    "title": "Survey objective",
-                    "type": "textarea",
-                    "source": "surveyObjective",
-                    "width": "23%",
-                    "rows": 3
-                  },
-                  {
-                    "title": "Number of days spent on administering survey/s",
-                    "source": "numberOfDaysAdministeringSurveys",
-                    "type": "number",
-                    "width": "10%"
+                    "source": "participationDetails",
+                    "rows": 4,
+                    "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                    "type": "textarea"
                   }
                 ],
-                "userAddedRows": true,
+                "userAddedRows": false,
+                "disableTableUpload": false,
+                "source": "",
                 "type": "table"
+              },
+              {
+                "preLabel": "Number of Skills and Knowledge surveys conducted:",
+                "noEdit": true,
+                "type": "number",
+                "source": "skillsKnowledgeSurveyCountHeader"
+              },
+              {
+                "addRowText": "New survey site",
+                "userAddedRows": true,
+                "source": "skillsKnowledgeSurveys",
+                "type": "repeat",
+                "items": [
+
+                  {
+                    "type": "table",
+                    "source": "skillsKnowledgeSurveyBaselineDetails",
+                    "userAddedRows": true,
+                    "disableTableUpload": true,
+                    "columns": [
+                      {
+                        "source": "baselineOrIndicatorSkillsKnowledgeSurvey",
+                        "type": "selectOne",
+                        "width": "10%",
+                        "title": "Baseline survey or indicator (follow-up) survey?"
+                      },
+                      {
+                        "source": "projectBaseline",
+                        "type": "selectOne",
+                        "width": "10%",
+                        "title": "Which Project Baseline relates to this survey?"
+                      },
+                      {
+                        "source": "datasetSupports",
+                        "type": "select2Many",
+                        "width": "10%",
+                        "title": "What Dataset supports?"
+                      },
+                      {
+                        "source": "outcomeStatementPrePop",
+                        "type": "select2Many",
+                        "width": "15%",
+                        "title": "Which outcome statement/s relates to this survey?"
+                      },
+                      {
+                        "title": "Activities Start Date",
+                        "source": "activitiesStartDate",
+                        "type": "date",
+                        "width": "10%"
+                      },
+                      {
+                        "title": "Activities End Date",
+                        "source": "activitiesEndDate",
+                        "type": "date",
+                        "width": "10%"
+                      },
+                      {
+                        "width": "10%",
+                        "title": "Number of people completing survey",
+                        "source": "numberOfPeopleSurveying",
+                        "type": "number"
+                      },
+                      {
+                        "width": "10%",
+                        "title": "Survey Technique",
+                        "source": "ternSurveyTechnique",
+                        "type": "selectOne"
+                      },
+                      {
+                        "width": "15%",
+                        "title": "Survey Technique (if Other)",
+                        "source": "otherTernSurveyTechnique",
+                        "type": "textarea"
+                      }
+                    ]
+                  }
+                ]
               },
               {
                 "type": "row",
                 "items": [
                   {
-                    "type": "image",
+                    "preLabel": "Optionally attach photos",
                     "source": "photographicEvidence",
-                    "preLabel": "Optionally attach photos"
+                    "type": "image"
                   }
                 ]
               },
@@ -13973,7 +14207,7 @@
                     "rows": 4,
                     "css": "span8",
                     "source": "comments",
-                    "placeholder": "Clarification comments include points for follow up with the project manager about this service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
+                    "placeholder": "Clarification comments include information for your project manager about the service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
                   }
                 ]
               },
@@ -13983,6 +14217,11 @@
                   {
                     "type": "literal",
                     "source": "<p><b>Available Evidence</b></p>This field is mandatory for all <u>Environment</u> projects but optional for Agriculture projects. This field identifies what evidence you have available for this service and where the evidence is stored. This helps the Department and Service Providers during future assurance activities. Refer to the <a href=\"http://nrm.gov.au/publications/rlp-merit-user-guide\" target=\"_evidence\">Evidence Guide</a> for details of the types of acceptable evidence."
+                  },
+                  {
+                    "preLabel": "Data have been uploaded",
+                    "source": "dataUploaded",
+                    "type": "boolean"
                   }
                 ]
               },
@@ -14020,8 +14259,7 @@
                   }
                 ]
               }
-            ],
-            "type": "section"
+            ]
           }
         ]
       },
