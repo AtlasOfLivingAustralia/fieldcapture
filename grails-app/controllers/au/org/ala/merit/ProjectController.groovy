@@ -1073,9 +1073,10 @@ class ProjectController {
     }
 
     @PreAuthorise(accessLevel = 'editor')
-    def monitoringProtocolForms() {
+    def monitoringProtocolFormCategories() {
         List<Map> forms = activityService.monitoringProtocolForms()
-        render forms as JSON
+        List<String> categories = forms?.collect{it.category}?.unique()?.sort()
+        render categories as JSON
     }
 
     private def error(String message, String projectId) {

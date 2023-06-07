@@ -437,9 +437,13 @@ var config =
             {
                 "template": "extendedBaselineMonitoring",
                 "model": {
-                    "approachHeading": "Monitoring indicator",
+                    "approachHeading": "Monitoring method",
                     "indicatorHeading": "Monitoring methodology",
-                    "baselineHelpText": "Describe the Project Baseline(s) and ongoing monitoring which will be used to report progress towards this projects outcome(s)",
+                    "baselineHelpText": "Describe the project baseline to be established",
+                    "baselineServiceHelpText": "Select the relevant Project Service(s)/Target measure(s) that will be used to support the development of the baseline",
+                    "monitoringServiceHelpText": "Select the relevant Project Service(s)/Target measure(s) that will be used to support the development of the baseline",
+                    "baselineMethodHelpText": "EMSA modules mandatory unless exemption agreed to by the Department. Where an exemption has been provided the user can then select \"Other\"",
+                    "approachHelpText": "EMSA modules mandatory unless exemption agreed to by the Department. Where an exemption has been provided the user can then select \"Other\"",
                     "titleHelpText": "Describe the Project Baseline(s) and ongoing monitoring which will be used to report progress towards this projects outcome(s)",
                     "newIndicatorText": "New monitoring indicator",
                     "evidenceHelpText": "List evidence that will be retained to demonstrate delivery of this service. Refer to Evidence Guide and Project Service Summaries for guidance"

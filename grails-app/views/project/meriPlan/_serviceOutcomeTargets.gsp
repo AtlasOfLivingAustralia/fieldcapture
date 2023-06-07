@@ -11,7 +11,7 @@
     </tr>
     </thead>
     <tbody data-bind="foreach : outcomeTargets">
-    <tr>
+    <tr class="service-target">
         <td class="index"><span data-bind="text:$index()+1"></span></td>
         <td class="service">
             <input readonly="readonly" class="form-control form-control-sm"
@@ -31,14 +31,14 @@
         </td>
     </tr>
 
-<tr>
+    <tr>
         <td class="index"></td>
         <th>Project Outcome/s</th>
         <th>Target</th>
         <th></th>
     </tr>
     <!-- ko foreach:outcomeTargets -->
-    <tr>
+    <tr class="outcome-target">
         <td class="index"></td>
         <td class="service">
             <!-- ko if:orphanedOutcomes().length > 0 -->

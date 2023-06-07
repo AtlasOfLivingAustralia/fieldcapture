@@ -71,7 +71,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         meriPlan.primaryPriority = "Ginini Flats Wetland Complex"
         meriPlan.secondaryOutcomes[0].outcome = "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
         meriPlan.secondaryOutcomes[0].priority = "Ginini Flats Wetland Complex"
-        meriPlan.shortTermOutcomes[0].value("Short term outcome 1")
+        meriPlan.shortTermOutcomes[0].outcome.value("Short term outcome 1")
         meriPlan.addMediumTermOutcome("Medium term outcome 1")
         meriPlan.projectName = "MERI plan edited name"
         meriPlan.projectDescription = "MERI plan edited description"
@@ -107,8 +107,8 @@ class MeriPlanSpec extends StubbedCasSpec {
         meriPlan.primaryPriority == "Ginini Flats Wetland Complex"
         meriPlan.secondaryOutcomes[0].outcome.value().contains("Ramsar")
         meriPlan.secondaryOutcomes[0].priority.value() == "Ginini Flats Wetland Complex"
-        meriPlan.shortTermOutcomes[0].value() == "Short term outcome 1"
-        meriPlan.mediumTermOutcomes[0].value() == "Medium term outcome 1"
+        meriPlan.shortTermOutcomes[0].outcome.value() == "Short term outcome 1"
+        meriPlan.mediumTermOutcomes[0].outcome.value() == "Medium term outcome 1"
         meriPlan.projectName == "MERI plan edited name"
         meriPlan.projectDescription == "MERI plan edited description"
         meriPlan.keyThreats[0].threat.value() == "Threat 1"

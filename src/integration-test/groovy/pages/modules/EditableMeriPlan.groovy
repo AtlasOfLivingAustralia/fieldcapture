@@ -9,32 +9,79 @@ class OutcomeRow extends Module {
     static content = {
         outcome { $('.outcome-priority select') }
         priority { $('.priority select') }
-        remove { $('i.icon-remove') }
+        remove { $('i.fa-remove') }
         priorityUnstyle{$('.list-unstyled')}
+    }
+}
+
+class ProjectOutcomeRow extends Module {
+    static content = {
+        outcome { $('.outcome textarea') }
+        priority(required:false) { $('.investment-priority select') }
+        relatedProgramOutcomes(required: false) { $('.program-outcome select') }
+        remove(required:false) { $('i.fa-remove') }
+    }
+
+    void remove() {
+        remove.click()
     }
 }
 
 class ThreatRow extends Module {
     static content = {
+        threatCode(required:false) { $('.threat-code select') }
         threat { $('textarea[data-bind*=threat]') }
         intervention { $('textarea[data-bind*=intervention]') }
+        targetMeasures(required:false) { $('.services select') }
+        evidence(required:false) { $('.evidence textarea') }
+        relatedOutcomes(required:false) { $('.related-outcomes select') }
+
         remove { $('i.icon-remove') }
     }
+}
+
+/**
+ * Represents the extendedBaselineMonitoring.gsp MERI plan section tha build a relationship between the
+ * project baseline and the monitoring indicators for that baseline.
+ */
+class ExtendedBaseline extends Module {
+    static content = {
+        projectBaselines(required: false) { $('tr.baseline-row').moduleList(BaselineRow) }
+        monitoringIndicators(required: false) { $('.meri-monitoring-indicators  table tbody tr').moduleList(MonitoringIndicatorRow) }
+        addMonitoringIndicatorButtons(required:false) { $('button[data-bind*=addMonitoringIndicator]') }
+
+    }
+
+    void addMonitoringIndicator(int baselineIndex) {
+        addMonitoringIndicatorButtons[baselineIndex].click()
+    }
+
+    void addBaseline() {
+        $('button[data-bind*=addRow]').click()
+    }
+
 }
 
 class BaselineRow extends Module {
     static content = {
+        outcome(required: false) { $('.outcome select') }
+        monitoringData(required: false) { $('.monitoring-data select') }
         baseline { $('.baseline textarea[data-bind*=baseline]') }
+        targetMeasures(required:false) { $('.service select') }
         method { $('.baseline-method textarea[data-bind*=method]') }
+        evidence(required:false) { $('.evidence textarea') }
+        methodProtocols(required:false) { $('.baseline-method select') }
         remove { $('i.icon-remove') }
     }
-
 }
 
-class MonitoringIndictorRow extends Module {
+class MonitoringIndicatorRow extends Module {
     static content = {
         indicator { $('textarea[data-bind*=data1]') }
         approach { $('textarea[data-bind*=data2]' ) }
+        targetMeasures(required:false) { $('.monitoring-service select') }
+        evidence(required:false) { $('.monitoring-evidence textarea') }
+        methodProtocols(required:false) { $('.baseline-method select') }
         remove { $('i.icon-remove') }
     }
 }
@@ -44,6 +91,7 @@ class PlanRow extends Module {
         name { $('.document-name textarea') }
         section { $('.section textarea') }
         alignment { $('.alignment textarea') }
+        documentUrl {$('.document-url input')}
         remove { $('i.icon-remove') }
     }
 }
@@ -149,10 +197,68 @@ class ControlMethodRow extends Module {
     }
 }
 
+
+/**
+ * A module representing the Priority Place section of the MERI plan.
+ */
+class PriorityPlace extends Module {
+    static content = {
+        supportsPriorityPlaces { $('#supports-priority-place') }
+        priorityPlace { $('#priority-place') }
+    }
+}
+
+/**
+ * A module representing the First Nations People Involvement section of the MERI plan.
+ */
+class FirstNationsPeopleInvolvement extends Module {
+    static content = {
+        supportsFirstNationsPeopleInvolvement { $('#indigenous-involved') }
+        firstNationsPeopleInvolvement { $('#indigenous-involvement') }
+        comments { $('#indigenous-involvement-comments') }
+    }
+}
+
+class ServiceOutcomeTarget extends Module {
+    static content = {
+        outcomes { $('.service select') }
+        target { $('.score input') }
+    }
+}
+class ServiceOutcomeTargets extends Module {
+    static content = {
+        service { $('.service input') }
+        targetMeasure { $('.score input') }
+    }
+}
+
+class ServiceOutcomes extends Module {
+    static content = {
+
+        serviceAndTargets(required:false) { $('tr.service-target').moduleList(ServiceOutcomeTargets) }
+        outcomeTargets(required:false) { $('tr.outcome-target').moduleList(ServiceOutcomeTarget) }
+    }
+}
+
+class ServiceForecasts extends Module {
+    static content = {
+        forecasts(required:false) { $('tbody tr').moduleList(ForecastRow) }
+    }
+}
+
+class ForecastRow extends Module {
+    static content = {
+        service { $('.service input') }
+        score { $('.score input') }
+        targets { $('.budget-cell input') }
+    }
+}
+
 class EditableMeriPlan extends Module {
 
-
     static content = {
+        priorityPlace(required: false) { module(PriorityPlace) }
+        firstNationsPeopleInvolvement(required: false) { module(FirstNationsPeopleInvolvement) }
         primaryOutcome(required: false) { $('.outcome-priority select[data-bind*="primaryOutcome.description"]') }
         primaryPriority(required: false) { $('select[data-bind*="primaryOutcome.asset"]') }
         primaryPriorityUnstyled(required: false) {$('.priority li label')}
@@ -162,8 +268,9 @@ class EditableMeriPlan extends Module {
         otherOutcomeColumn1(required: false) {$('.column-1 li label')}
         otherOutcomeColumn2(required: false) {$('.column-2 li label')}
         secondaryOutcomes(required: false) { $('table.secondary-outcome tbody tr').moduleList(OutcomeRow) }
-        shortTermOutcomes(required: false) { $('tbody[data-bind*="shortTermOutcomes"] textarea') }
-        mediumTermOutcomes(required: false) {  $('tbody[data-bind*="midTermOutcomes"] textarea') }
+        shortTermOutcomes(required: false) { $('tbody[data-bind*="shortTermOutcomes"] tr').moduleList(ProjectOutcomeRow) }
+        addShortTermOutcomeButton(required:false) { $('button[data-bind*="addShortTermOutcome"]') }
+        mediumTermOutcomes(required: false) {  $('tbody[data-bind*="midTermOutcomes"] tr').moduleList(ProjectOutcomeRow) }
         addMediumTermOutcomeButton(required:false) { $('button[data-bind*="addMidTermOutcome"]') }
         projectName(required: false) { $('input[data-bind*="details.name"]') }
         projectDescription(required: false) { $('textarea[data-bind*="details.description"]') }
@@ -172,8 +279,9 @@ class EditableMeriPlan extends Module {
         projectMethodology(required: false) { $('table.methodology textarea[data-bind*="implementation.description"]') }
         projectImplementation(required: false) { $('#project-implementation textarea') }
         projectBaseline(required: false) { $('table.monitoring-baseline tbody tr').moduleList(BaselineRow) }
-        monitoringIndicators(required: false) { $('.meri-monitoring-indicators  table tbody tr').moduleList(MonitoringIndictorRow) }
-        rlpMonitoringIndicators(required: false) { $('table.monitoring tbody tr').moduleList(MonitoringIndictorRow) }
+        extendedBaseline(required:false) { $('table.monitoring-baseline.extended').module(ExtendedBaseline) }
+        monitoringIndicators(required: false) { $('.meri-monitoring-indicators  table tbody tr').moduleList(MonitoringIndicatorRow) }
+        rlpMonitoringIndicators(required: false) { $('table.monitoring tbody tr').moduleList(MonitoringIndicatorRow) }
         reviewMethodology(required: false) { $('textarea[data-bind*="projectEvaluationApproach"]') }
         nationalAndRegionalPlans(required: false) { $('table.plans tbody tr').moduleList(PlanRow) }
         projectServices(required: false) { $('table.service-targets tbody tr').moduleList(ServiceTargetRow) }
@@ -192,7 +300,8 @@ class EditableMeriPlan extends Module {
         objectivesAndAssets(required:false) { $('table tbody[data-bind*="objectives.rows1"] tr').moduleList(ObjectivesAndAssets) }
         controlMethods(required: false) { $('table.control-method tbody tr').moduleList(ControlMethodRow) }
         controlApproaches(required: false) { $('table.control-approach-threat tbody tr').moduleList(ControlApproachRow) }
-
+        serviceOutcomeTargets(required: false) { $('table.service-outcomes-targets').module(ServiceOutcomes) }
+        serviceForecasts(required: false) { $('table.forecasts').module(ServiceForecasts) }
         floatingSaveButton { $('#floating-save [data-bind*="saveProjectDetails"]') }
         saveButton { $('.form-actions [data-bind*="saveProjectDetails"]').first() }
         pdfButton { $('.btn[data-bind*="meriPlanPDF"]').first() }
@@ -312,7 +421,7 @@ class EditableMeriPlan extends Module {
         activities.find('input:checked').collect{it.attr("value")}
     }
 
-    void addMediumTermOutcome(String outcome) {
+    void addMediumTermOutcome(String outcome, String investmentPriority = null, String relatedProgramOutcome = null) {
         // If we don't do this, the click will hit the floating save instead of the
         // button.
         hideFloatingSave()
@@ -322,7 +431,31 @@ class EditableMeriPlan extends Module {
         addMediumTermOutcomeButton.click()
         waitFor{ mediumTermOutcomes.size() > midTermOutcomeCount }
 
-        mediumTermOutcomes[midTermOutcomeCount].value(outcome)
+        mediumTermOutcomes[midTermOutcomeCount].outcome.value(outcome)
+        if (investmentPriority) {
+            mediumTermOutcomes[midTermOutcomeCount].priority.value(investmentPriority)
+        }
+        if (relatedProgramOutcome) {
+            mediumTermOutcomes[midTermOutcomeCount].relatedProgramOutcomes.value(relatedProgramOutcome)
+        }
+    }
+
+    void addShortTermOutcome(String outcome, String investmentPriority = null, String relatedProgramOutcome = null) {
+        // If we don't do this, the click will hit the floating save instead of the
+        // button.
+        hideFloatingSave()
+        int midTermOutcomeCount = shortTermOutcomes.size()
+
+        addShortTermOutcomeButton.click()
+        waitFor{ shortTermOutcomes.size() > midTermOutcomeCount }
+
+        shortTermOutcomes[midTermOutcomeCount].outcome.value(outcome)
+        if (investmentPriority) {
+            shortTermOutcomes[midTermOutcomeCount].investmentPriority.value(investmentPriority)
+        }
+        if (relatedProgramOutcome) {
+            shortTermOutcomes[midTermOutcomeCount].relatedProgramOutcome.value(relatedProgramOutcome)
+        }
     }
 
 }

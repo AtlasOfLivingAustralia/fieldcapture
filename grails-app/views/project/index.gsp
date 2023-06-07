@@ -96,7 +96,7 @@
                 i18nURL: "${g.createLink(controller: 'home', action: 'i18n')}",
                 returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}",
                 reportsHistoryUrl:"${createLink(controller: 'report', action:'reportingHistory')}",
-                monitoringProtocolsUrl:"${createLink(action:'monitoringProtocolForms')}"
+                monitoringProtocolsUrl:"${createLink(action:'monitoringProtocolFormCategories', id: project.projectId)}"
 
             },
             here = window.location.href;

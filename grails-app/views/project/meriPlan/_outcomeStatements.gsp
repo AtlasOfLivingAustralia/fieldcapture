@@ -19,7 +19,7 @@
         <th class="outcome required">${subtitle ?: ""} <g:if test="${helpText}"><fc:iconHelp html="true" container="body">${helpText}</fc:iconHelp></g:if> </th>
         <g:if test="${extendedOutcomes}">
             <th class="investment-priority required">Investment Priority</th>
-            <th class="program-outcome required">Related program outcome/s</th>
+            <th class="program-outcome required">Related program outcome</th>
         </g:if>
         <th class="remove"></th>
     </tr>
@@ -39,8 +39,8 @@
             <td class="investment-priority">
                 <select class="form-control form-control-sm" data-validation-engine="validate[required]" data-bind="options:details.outcomes.selectedPrimaryAndSecondaryPriorities,value:asset, optionsCaption:'Please select...', disable: $parent.isProjectDetailsLocked()"></select>
             </td>
-            <td class="medium-term-outcome">
-                <select class="form-control form-control-sm dropdown-right" data-validation-engine="validate[required]" data-bind="options:details.outcomes.selectable${outcomeType.capitalize()}TermOutcomes, optionsCaption:'Please select...', select2:{value:relatedOutcome, preserveColumnWidth:25}, disable: $parent.isProjectDetailsLocked()"></select>
+            <td class="program-outcome">
+                <select class="form-control form-control-sm dropdown-right" data-validation-engine="validate[required]" data-bind="options:details.outcomes.selectable${outcomeType.capitalize()}TermOutcomes, optionsCaption:'Please select...', value:relatedOutcome, select2:{preserveColumnWidth:25}, disable: $parent.isProjectDetailsLocked()"></select>
             </td>
         </g:if>
         <td class="remove">

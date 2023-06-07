@@ -1,7 +1,7 @@
 <!-- ko with:details.serviceOutcomes -->
 <h4>${title ?: "Project services forecasts"}</h4>
 
-<table class="table service-targets">
+<table class="table service-target forecasts">
     <thead>
     <tr>
         <th class="index" rowspan="2"></th>

@@ -96,28 +96,28 @@ describe("Loading the MERI plan is handled correctly", function () {
                     "code":"B1",
                     "baseline": "Baseline 1",
                     "method": "Baseline method 1",
-                    "relatedOutcome":"ST1",
+                    "relatedOutcomes":["ST1"],
                     "relatedTargetMeasures":["1"],
                     "protocol":"p1"
                 }, {
                     "code":"B2",
                     "baseline": "Baseline 2",
                     "method": "Baseline method 2",
-                    "relatedOutcome":"MT1",
+                    "relatedOutcomes":["MT1"],
                     "relatedTargetMeasures":[],
                     "protocol":"p2"
                 }, {
                     "code":"B3",
                     "baseline": "Baseline 3",
                     "method": "Baseline method 3",
-                    "relatedOutcome":"MT2",
+                    "relatedOutcomes":["MT2"],
                     "relatedTargetMeasures":[],
                     "protocol":"p3"
                 }, {
                     "code":"B4",
                     "baseline": "Baseline 4",
                     "method": "Baseline method 4",
-                    "relatedOutcome":"MT3",
+                    "relatedOutcomes":["MT3"],
                     "relatedTargetMeasures":[],
                     "protocol":"p4"
                 }]

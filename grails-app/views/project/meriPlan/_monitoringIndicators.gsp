@@ -10,11 +10,11 @@
                 <g:if test="${monitoringValidation}">
                     <th class="baseline required">${indicatorHeading} <g:if test="${indicatorHelpText}"><fc:iconHelp title="${indicatorHeading}">${indicatorHelpText}</fc:iconHelp></g:if></th>
                     <g:if test="${extendedMonitoring}">
-                        <th class="monitoring-service required">Service / Target Measure</th>
+                        <th class="monitoring-service required">Project Service / Target Measure/s <g:if test="${monitoringServiceHelpText}"><fc:iconHelp>${monitoringServiceHelpText}</fc:iconHelp></g:if></th>
                     </g:if>
                     <th class="baseline-method required">${approachHeading} <g:if test="${approachHelpText}"><fc:iconHelp title="${approachHeading}">${approachHelpText}</fc:iconHelp></g:if></th>
                     <g:if test="${extendedMonitoring}">
-                        <th class="monitoring-evidence required">Evidence <g:if test="${evidenceHelpText}"><fc:iconHelp>${evidenceHelpText}</fc:iconHelp></g:if></th>
+                        <th class="monitoring-evidence required">Evidence to be retained <g:if test="${evidenceHelpText}"><fc:iconHelp>${evidenceHelpText}</fc:iconHelp></g:if></th>
                     </g:if>
                 </g:if>
                 <g:else>
@@ -36,12 +36,29 @@
                     </td>
                     <g:if test="${extendedMonitoring}">
                         <td class="monitoring-service">
-                            <select multiple="true"
+                            <select multiple="multiple"
                                     class="form-control form-control-sm"
                                     data-validation-engine="validate[required]"
                                     data-bind="options:$root.allTargetMeasures, optionsText:'label', optionsValue:'scoreId', multiSelect2:{value:relatedTargetMeasures, preserveColumnWidth:20}, disable: $root.isProjectDetailsLocked()"></select>
                         </td>
+                        <td class="baseline-method">
+                            <select multiple="multiple"
+                                    class="form-control form-control-sm"
+                                    data-validation-engine="validate[required]"
+                                    data-bind="options:$root.monitoringProtocols, multiSelect2:{value:protocols, preserveColumnWidth:20}, optionsCaption:'Please select...', disable: $root.isProjectDetailsLocked()">
+                            </select>
+
+                            <!-- ko if: _.contains(protocols(), 'Other') -->
+                            <textarea
+                                    class="form-control form-control-sm"
+                                    data-validation-engine="validate[required]"
+                                    placeholder="Details of method here..."
+                                    data-bind="value: method, disable: $root.isProjectDetailsLocked()"
+                                    rows="4"></textarea>
+                            <!-- /ko -->
+                        </td>
                     </g:if>
+                    <g:else>
                     <td class="baseline-method">
                         <textarea
                                 class="form-control form-control-sm"
@@ -50,6 +67,7 @@
                                 rows="5"
                                 placeholder="${approachPlaceHolder}"></textarea>
                     </td>
+                    </g:else>
                     <g:if test="${extendedMonitoring}">
                         <td class="monitoring-evidence">
                             <textarea class="form-control form-control-sm"

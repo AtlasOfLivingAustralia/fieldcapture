@@ -39,7 +39,7 @@ var config = {
         {
             "template": "meriBudget",
             "model": {
-                "showThemeColumn":true
+                "showThemeColumn": true
             }
         }
     ],
@@ -55,8 +55,8 @@ var config = {
             "reportDescriptionFormat": "Progress Report %1d",
             "reportNameFormat": "Progress Report %1d",
             "reportingPeriodInMonths": 3,
-            "reportsAlignedToCalendar":true,
-            "skipFinalPeriod":true,
+            "reportsAlignedToCalendar": true,
+            "skipFinalPeriod": true,
             "description": "",
             "category": "Progress Reports",
             "activityType": "State Intervention Progress Report",
@@ -69,12 +69,12 @@ var config = {
             "reportDescriptionFormat": "Final Report",
             "reportNameFormat": "Final Report",
             "reportingPeriodInMonths": 3,
-            "reportsAlignedToCalendar":true,
+            "reportsAlignedToCalendar": true,
             "description": "",
             "category": "Final Report",
             "activityType": "Final Report",
             "canSubmitDuringReportingPeriod": true,
-            "multiple":false
+            "multiple": false
         }
     ]
 };
@@ -100,13 +100,32 @@ db.userPermission.insert({
     accessLevel: 'admin'
 });
 
-var originalProject = createProject({projectId: "p1", name: "Original project", programId: "original", planStatus:'approved'});
+var originalProject = createProject({
+    projectId: "p1",
+    name: "Original project",
+    programId: "original",
+    planStatus: 'approved'
+});
 db.userPermission.insert({entityType: 'au.org.ala.ecodata.Project', entityId: "p1", userId: '1', accessLevel: 'admin'});
 db.userPermission.insert({entityType: 'au.org.ala.ecodata.Project', entityId: "p1", userId: '2', accessLevel: 'admin'});
 
-var report = {name:"Stage 1", projectId: "p1", fromDate:originalProject.plannedStartDate, toDate:originalProject.plannedEndDate};
+var report = {
+    name: "Stage 1",
+    projectId: "p1",
+    fromDate: originalProject.plannedStartDate,
+    toDate: originalProject.plannedEndDate
+};
 db.report.insert(report);
-var activity = {activityId:'a1', projectId:originalProject.projectId, type:'Progress Report', description:'An activity', plannedStartDate:report.fromDate, plannedEndDate:report.toDate, progress:'planned', status:'active'};
+var activity = {
+    activityId: 'a1',
+    projectId: originalProject.projectId,
+    type: 'Progress Report',
+    description: 'An activity',
+    plannedStartDate: report.fromDate,
+    plannedEndDate: report.toDate,
+    progress: 'planned',
+    status: 'active'
+};
 db.activity.insert(activity);
 
 createProject({projectId: "p2", name: "RLP project", programId: "rlp"});
@@ -215,11 +234,11 @@ config = {
             "output": "Output 1"
         },
         {
-            "name":"activity 2",
+            "name": "activity 2",
             "output": "Output 2"
         }
     ],
-    projectReports:[
+    projectReports: [
         {
             "reportType": "Activity",
             "firstReportingPeriodEnd": "2018-09-30T14:00:00Z",
@@ -232,11 +251,16 @@ config = {
             "canSubmitDuringReportingPeriod": true
         },
     ],
-    programServiceConfig:{serviceFormName:'Progress Report'}
+    programServiceConfig: {serviceFormName: 'Progress Report'}
 };
 createProgram({programId: "state_intervention", name: "State Intervention", description: "", config: config});
 
-createProject({projectId: "meri2", name: "State intervention project", programId: "state_intervention", managementUnitId:null});
+createProject({
+    projectId: "meri2",
+    name: "State intervention project",
+    programId: "state_intervention",
+    managementUnitId: null
+});
 db.userPermission.insert({
     entityType: 'au.org.ala.ecodata.Project',
     entityId: "meri2",
@@ -319,7 +343,7 @@ config.meriPlanContents = [
     {
         "template": "consultation",
         "model": {
-            "title":"Consultation",
+            "title": "Consultation",
             "placeHolder": "[Free text]",
             "explanation": "Please provide details of consultation with relevant state / territory agencies and NRM organisations to identify any duplication between activities proposed in the Activity and any other government-funded actions already underway in the project location. Where duplication has been identified, please describe how this has been resolved. If a modification to the Activity is required, you must submit a written request for a variation to the Department."
         }
@@ -327,14 +351,14 @@ config.meriPlanContents = [
     {
         "template": "serviceTargets",
         "model": {
-            "title":"Activities and minimum targets",
+            "title": "Activities and minimum targets",
             "serviceName": "Activity"
         }
     },
     {
         "template": "meriBudget",
         "model": {
-            "title":"Activities and minimum targets",
+            "title": "Activities and minimum targets",
             "serviceName": "Activity",
             "showActivityColumn": true,
             "itemName": "Budget item"
@@ -353,12 +377,11 @@ db.userPermission.insert({
 });
 
 
-
 addSetting('meritfielddata.risks.lastCheckTime', '2020-07-01T00:00:00Z');
 addSetting('meritfielddata.risk_changes.emailSubject', 'Risks and threats changed subject');
 addSetting('meritfielddata.risk_changes.emailBody', 'Risks and threats changed body');
 
-config.meriPlanContents =  [
+config.meriPlanContents = [
     {
         "template": "programOutcome"
     },
@@ -443,7 +466,7 @@ db.userPermission.insert({
     accessLevel: 'admin'
 });
 
-config.meriPlanContents =  [
+config.meriPlanContents = [
     {
         "template": "assets",
         "model": {
@@ -612,8 +635,20 @@ var priorities = [
     }
 ];
 createProgram({programId: "bushfireProgram", name: "New Bushfire Program", description: "", config: config});
-db.managementUnit.insert({managementUnitId: "bushfireManagement", name: "New Bushfire Management", config:{}, priorities: priorities, status: "active"});
-createProject({projectId: "bushfireProject", name: "New Bushfire Project", description: "", programId: "bushfireProgram", managementUnitId: "bushfireManagement"})
+db.managementUnit.insert({
+    managementUnitId: "bushfireManagement",
+    name: "New Bushfire Management",
+    config: {},
+    priorities: priorities,
+    status: "active"
+});
+createProject({
+    projectId: "bushfireProject",
+    name: "New Bushfire Project",
+    description: "",
+    programId: "bushfireProgram",
+    managementUnitId: "bushfireManagement"
+})
 db.userPermission.insert({
     entityType: 'au.org.ala.ecodata.Project',
     entityId: "bushfireProject",
@@ -624,11 +659,11 @@ db.userPermission.insert({
 
 config.meriPlanContents = [
     {
-    "template": "programOutcome",
-    "model": {
-        "maximumPriorities": "1000"
-    }
-},
+        "template": "programOutcome",
+        "model": {
+            "maximumPriorities": "1000"
+        }
+    },
     {
         "template": "additionalOutcomes",
         "model": {
@@ -733,89 +768,106 @@ config.meriPlanContents = [
             "serviceName": "Service"
         }
     }
-    ];
+];
 var outcomes = [
-        {
-            "priorities": [
-                {
-                    "category": "Threatened Species"
-                }
-            ],
-            "targeted": true,
-            "supportsMultiplePrioritiesAsPrimary": true,
-            "shortDescription": "Threatened Species Strategy",
-            "category": "environment",
-            "supportsMultiplePrioritiesAsSecondary": true,
-            "outcome": "2. By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved."
-        },
-        {
-            "priorities": [
-                {
-                    "category": "World Heritage Sites"
-                }
-            ],
-            "targeted": true,
-            "shortDescription": "World Heritage Areas",
-            "supportsMultiplePrioritiesAsPrimary": true,
-            "category": "environment",
-            "supportsMultiplePrioritiesAsSecondary": true,
-            "outcome": "3. By 2023, invasive species management has reduced threats to the natural heritage Outstanding Universal Value of World Heritage properties through the implementation of priority actions."
-        },
-        {
-            "priorities": [
-                {
-                    "category": "Threatened Ecological Communities"
-                }
-            ],
-            "targeted": true,
-            "supportsMultiplePrioritiesAsPrimary": true,
-            "shortDescription": "Threatened Ecological Communities",
-            "category": "environment",
-            "supportsMultiplePrioritiesAsSecondary": true,
-            "outcome": "4. By 2023, the implementation of priority actions is leading to an improvement in the condition of EPBC Act listed Threatened Ecological Communities."
-        },
-        {
-            "priorities": [
-                {
-                    "category": "Land Management"
-                }
-            ],
-            "targeted": true,
-            "shortDescription": "Soil Condition",
-            "type": "secondary",
-            "category": "agriculture",
-            "supportsMultiplePrioritiesAsSecondary": true,
-            "outcome": "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
-        },
-        {
-            "priorities": [
-                {
-                    "category": "Sustainable Agriculture"
-                }
-            ],
-            "shortDescription": "Climate / Weather Adaption",
-            "type": "secondary",
-            "category": "agriculture",
-            "supportsMultiplePrioritiesAsSecondary": true,
-            "outcome": "6. By 2023, there is an increase in the capacity of agriculture systems to adapt to significant changes in climate and market demands for information on provenance and sustainable production."
-        },
-        {
-            "priorities": [
-                {
-                    "category": "Bushfires"
-                }
-            ],
-            "shortDescription": "Bushfire Recovery",
-            "type": "secondary",
-            "category": "bushfires",
-            "outcome": "Enhance the recovery and maximise the resilience of fire affected priority species, ecological communities and other natural assets within the seven regions impacted by the 2019-20 bushfires",
-            "supportsMultiplePrioritiesAsSecondary": true
-        }
+    {
+        "priorities": [
+            {
+                "category": "Threatened Species"
+            }
+        ],
+        "targeted": true,
+        "supportsMultiplePrioritiesAsPrimary": true,
+        "shortDescription": "Threatened Species Strategy",
+        "category": "environment",
+        "supportsMultiplePrioritiesAsSecondary": true,
+        "outcome": "2. By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved."
+    },
+    {
+        "priorities": [
+            {
+                "category": "World Heritage Sites"
+            }
+        ],
+        "targeted": true,
+        "shortDescription": "World Heritage Areas",
+        "supportsMultiplePrioritiesAsPrimary": true,
+        "category": "environment",
+        "supportsMultiplePrioritiesAsSecondary": true,
+        "outcome": "3. By 2023, invasive species management has reduced threats to the natural heritage Outstanding Universal Value of World Heritage properties through the implementation of priority actions."
+    },
+    {
+        "priorities": [
+            {
+                "category": "Threatened Ecological Communities"
+            }
+        ],
+        "targeted": true,
+        "supportsMultiplePrioritiesAsPrimary": true,
+        "shortDescription": "Threatened Ecological Communities",
+        "category": "environment",
+        "supportsMultiplePrioritiesAsSecondary": true,
+        "outcome": "4. By 2023, the implementation of priority actions is leading to an improvement in the condition of EPBC Act listed Threatened Ecological Communities."
+    },
+    {
+        "priorities": [
+            {
+                "category": "Land Management"
+            }
+        ],
+        "targeted": true,
+        "shortDescription": "Soil Condition",
+        "type": "secondary",
+        "category": "agriculture",
+        "supportsMultiplePrioritiesAsSecondary": true,
+        "outcome": "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
+    },
+    {
+        "priorities": [
+            {
+                "category": "Sustainable Agriculture"
+            }
+        ],
+        "shortDescription": "Climate / Weather Adaption",
+        "type": "secondary",
+        "category": "agriculture",
+        "supportsMultiplePrioritiesAsSecondary": true,
+        "outcome": "6. By 2023, there is an increase in the capacity of agriculture systems to adapt to significant changes in climate and market demands for information on provenance and sustainable production."
+    },
+    {
+        "priorities": [
+            {
+                "category": "Bushfires"
+            }
+        ],
+        "shortDescription": "Bushfire Recovery",
+        "type": "secondary",
+        "category": "bushfires",
+        "outcome": "Enhance the recovery and maximise the resilience of fire affected priority species, ecological communities and other natural assets within the seven regions impacted by the 2019-20 bushfires",
+        "supportsMultiplePrioritiesAsSecondary": true
+    }
 
 ]
-db.managementUnit.insert({managementUnitId: "bushfireManagement1", name: "New Bushfire Management1", config:{}, priorities: priorities, status: "active"});
-createProgram({programId: "bushfireProgramNRM", name: "New Bushfire program NRM", description: "", config:config, outcomes: outcomes});
-createProject({projectId: "bushfireProjectNRM", name: "New Bushfire Project NRM", programId: "bushfireProgramNRM", managementUnitId: "bushfireManagement1"});
+db.managementUnit.insert({
+    managementUnitId: "bushfireManagement1",
+    name: "New Bushfire Management1",
+    config: {},
+    priorities: priorities,
+    status: "active"
+});
+createProgram({
+    programId: "bushfireProgramNRM",
+    name: "New Bushfire program NRM",
+    description: "",
+    config: config,
+    outcomes: outcomes
+});
+createProject({
+    projectId: "bushfireProjectNRM",
+    name: "New Bushfire Project NRM",
+    programId: "bushfireProgramNRM",
+    managementUnitId: "bushfireManagement1"
+});
 db.userPermission.insert({
     entityType: 'au.org.ala.ecodata.Project',
     entityId: "bushfireProjectNRM",
@@ -824,7 +876,7 @@ db.userPermission.insert({
 });
 
 // Future Drought Fund
-config.meriPlanContents =[
+config.meriPlanContents = [
     {
         "template": "programOutcome",
         "model": {
@@ -984,12 +1036,28 @@ outcomes = [
         "outcome": "Improved NRM in agricultural landscapes for increased capacity to prepare and respond to drought"
     }
 ];
-createProgram({programId:"fdFundProgram", name: "Future Drought Fund Program", description: "", config:config, outcomes: outcomes});
-createProject({projectId: "fdFundProject", name: "fdFund Projects", programId: "fdFundProgram", managementUnitId: "bushfireManagement1",
-    custom:{details:{outcomes:{
-        otherOutcomes:["Partnerships and engagement is built between stakeholders responsible for managing natural resources",
-       "More primary producers adopt risk management practices to improve their sustainability and resilience",
-        "More primary producers and agricultural communities are experimenting with adaptive or transformative NRM practices, systems and approaches that link and contribute to building drought resilience"]}}}})
+createProgram({
+    programId: "fdFundProgram",
+    name: "Future Drought Fund Program",
+    description: "",
+    config: config,
+    outcomes: outcomes
+});
+createProject({
+    projectId: "fdFundProject",
+    name: "fdFund Projects",
+    programId: "fdFundProgram",
+    managementUnitId: "bushfireManagement1",
+    custom: {
+        details: {
+            outcomes: {
+                otherOutcomes: ["Partnerships and engagement is built between stakeholders responsible for managing natural resources",
+                    "More primary producers adopt risk management practices to improve their sustainability and resilience",
+                    "More primary producers and agricultural communities are experimenting with adaptive or transformative NRM practices, systems and approaches that link and contribute to building drought resilience"]
+            }
+        }
+    }
+})
 
 db.userPermission.insert({
     entityType: 'au.org.ala.ecodata.Project',
@@ -999,7 +1067,7 @@ db.userPermission.insert({
 });
 
 var projectESP = {
-    "hubId":"merit",
+    "hubId": "merit",
     "alaHarvest": false,
     "associatedProgram": "Environmental Stewardship",
     "associatedSubProgram": "MEC1",
@@ -1133,14 +1201,18 @@ db.userPermission.insert({
 });
 
 
-db.setting.insert({"key":"meritservices.config", "value":JSON.stringify(projectDashboardService) ,"version":NumberInt(0)});
+db.setting.insert({
+    "key": "meritservices.config",
+    "value": JSON.stringify(projectDashboardService),
+    "version": NumberInt(0)
+});
 // Load scores used by RLP services to enable their selection in the MERI plan.
-createProjectNumberBaselineDataSets({ "scoreId":"score_42"});
-createProjectNumberOfCommunicationMaterialsPublished({ "scoreId":"score_43"});
-createProjectWeedAreaSurveyedHaDefault({ "scoreId":"score_44"});
+createProjectNumberBaselineDataSets({"scoreId": "score_42"});
+createProjectNumberOfCommunicationMaterialsPublished({"scoreId": "score_43"});
+createProjectWeedAreaSurveyedHaDefault({"scoreId": "score_44"});
 
 //Advancing Pest Animal and Weed Control Solutions - Pipeline
-config.meriPlanContents =  [
+config.meriPlanContents = [
     {
         "template": "programOutcome",
         "model": {
@@ -1281,4 +1353,134 @@ db.userPermission.insert({
     accessLevel: 'admin'
 });
 
+// create a program with config from the /src/main/scripts/releases/2.12/adhoc/configureNewProgram.js script
+config.meriPlanContents = [
+    {
+        "template": "name",
+        "model": {
+            "tableFormatting": true
+        }
+    },
+    {
+        "template": "priorityPlace"
+    },
+    {
+        "template": "indigenousInvolvement"
+    },
+    {
+        "template": "description",
+        "model": {
+            "tableFormatting": true,
+            "maxSize": "1000",
+            "placeholder": "Please provide a short description of this project. This project description will be visible on the project overview page in MERIT [Free text; limit response to 1000 characters (approx. 150 words)]"
+        }
+    },
+    {
+        "template": "programOutcome",
+        "model": {
+            "maximumPriorities": "1000",
+            "priorityHelpText": "Enter the primary investment priority for the primary outcome, noting only one can be selected."
+        }
+    },
+    {
+        "template": "additionalOutcomes",
+        "model": {
+            "title": "Additional benefits",
+            "outcomePriority": "Additional outcome/s",
+            "priority": "Additional Investment Priorities",
+            "priorityHelpText": "Other investment priorities that will benefit from the project.  Delete the row if there are no additional outcomes."
+        }
+    },
+    {
+        "template": "outcomeStatements",
+        "model": {
+            "outcomeType": "mid",
+            "subtitle": "Medium-term outcome statement/s",
+            "title": "Project Outcomes",
+            "extendedOutcomes": true
+        }
+    },
+    {
+        "template": "outcomeStatements",
+        "model": {
+            "outcomeType": "short",
+            "helpText": "Outline the degree of impact having undertaken the services for up to three years. Ensure the outcomes are measurable with consideration to the baseline and proposed monitoring regime",
+            "subtitle": "Short-term outcome statement/s",
+            "extendedOutcomes": true
+        }
+    },
+    {
+        "template": "extendedKeyThreats",
+        "model": {
+            "evidenceHelpText": "List evidence that will be retained to demonstrate delivery of this service. Refer to Evidence Guide and Project Service Summaries for guidance"
+        }
+    },
+    {
+        "template": "projectMethodology",
+        "model": {
+            "maxSize": "4000",
+            "tableHeading": "Project delivery assumptions (4000 character limit [approx. 650 words])"
+        }
+    },
+    {
+        "template": "projectPartnerships",
+        "model": {
+            "helpTextPartnerName": "Insert name of project partner. To be a project partner, they need to be actively involved in the planning or delivery of the project"
+        }
+    },
+    {
+        "template": "extendedBaselineMonitoring",
+        "model": {
+            "approachHeading": "Monitoring indicator",
+            "indicatorHeading": "Monitoring methodology",
+            "baselineHelpText": "Describe the Project Baseline(s) and ongoing monitoring which will be used to report progress towards this projects outcome(s)",
+            "titleHelpText": "Describe the Project Baseline(s) and ongoing monitoring which will be used to report progress towards this projects outcome(s)",
+            "newIndicatorText": "New monitoring indicator",
+            "evidenceHelpText": "List evidence that will be retained to demonstrate delivery of this service. Refer to Evidence Guide and Project Service Summaries for guidance"
+        }
+    },
+    {
+        "template": "projectReview",
+        "model": {
+            "title": "Project review, improvement and evaluation methodology and approach (3000 character limit [approximately 500 words])"
+        }
+    },
+    {
+        "template": "nationalAndRegionalPlans",
+        "model": {
+            "includeUrl": true,
+            "headingTitle": "Conservation and management plans"
+        }
+    },
+    {
+        "template": "serviceOutcomeTargets",
+        "model": {
+            "title": "Project services and targets",
+            "serviceName": "Service"
+        }
+    },
+    {
+        "template": "serviceForecasts"
+    }
+];
+config.keyThreatCodes = [
+    "Key threat 1",
+    "Key threat 2",
+    "Key threat 3"
+];
+config.priorityPlaces = [
+    "Priority place 1",
+    "Priority place 2",
+    "Priority place 3"
+];
+config.excludeFinancialYearData = false;
 
+createProgram({programId: "outcomeMeriPlan", name: "Outcome MERI Plan", description: "", config: config});
+createProject({projectId: "outcomeMeriPlanProject", name: "Outcome MERI Plan project", programId: "outcomeMeriPlan"});
+
+db.userPermission.insert({
+    entityType: 'au.org.ala.ecodata.Project',
+    entityId: "outcomeMeriPlanProject",
+    userId: '1',
+    accessLevel: 'admin'
+});
