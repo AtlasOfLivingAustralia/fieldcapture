@@ -47,7 +47,7 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
             meriPlan.asset.find('[value="Euastacus jagara (Freshwater crayfish)"')
         }
         meriPlan.asset = "Euastacus jagara (Freshwater crayfish)"
-        meriPlan.shortTermOutcomes[0].value("Short term outcome 1")
+        meriPlan.shortTermOutcomes[0].outcome.value("Short term outcome 1")
         meriPlan.projectDescription = "MERI plan edited description"
         meriPlan.relatedProjects = "Related projects"
         meriPlan.projectPartnerships[0].name = 'partner name'
@@ -91,7 +91,7 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
         then:
         meriPlan.asset == "Euastacus jagara (Freshwater crayfish)"
         meriPlan.assetType.text() == "Priority Invertebrate Species"
-        meriPlan.shortTermOutcomes[0].value() == "Short term outcome 1"
+        meriPlan.shortTermOutcomes[0].outcome.value() == "Short term outcome 1"
         meriPlan.projectDescription == "MERI plan edited description"
         meriPlan.relatedProjects == "Related projects"
         meriPlan.projectPartnerships[0].name == 'partner name'
@@ -168,7 +168,7 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
         meriPlan.secondaryOutcomes[0].outcome = "2. By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved."
         meriPlan.primaryPriorityUnstyled[0].click()
         meriPlan.secondaryOutcomes[0].click()
-        meriPlan.shortTermOutcomes[0].value("Short term outcome 1")
+        meriPlan.shortTermOutcomes[0].outcome.value("Short term outcome 1")
         waitFor {
             meriPlan.assetType.find('[value="Priority Invertebrate Species"')
             meriPlan.asset.find('[value="Euastacus jagara (Freshwater crayfish)"')
@@ -210,7 +210,7 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
         meriPlan.primaryPriorityUnstyled[0].text() == "Numenius madagascariensis (Eastern Curlew, Far Eastern Curlew)"
         meriPlan.secondaryOutcomes[0].outcome.value().contains("Threatened")
         meriPlan.secondaryOutcomes[0].priorityUnstyle.text() == "Numenius madagascariensis (Eastern Curlew, Far Eastern Curlew)"
-        meriPlan.shortTermOutcomes[0].value() == "Short term outcome 1"
+        meriPlan.shortTermOutcomes[0].outcome.value() == "Short term outcome 1"
         meriPlan.assetType == "Priority Invertebrate Species"
         meriPlan.asset == "Euastacus jagara (Freshwater crayfish)"
 
