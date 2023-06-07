@@ -5409,42 +5409,217 @@
         "modelName": "RLP - Farm Management Survey",
         "dataModel": [
           {
-            "dataType": "list",
-            "name": "farmManagementSurveys",
             "columns": [
               {
-                "dataType": "text",
-                "description": "",
-                "name": "baselineOrIndicatorSurvey",
-                "constraints": [
-                  "Baseline",
-                  "Indicator"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "number",
-                "name": "numberOfFarmManagementSurveys",
-                "validate": "required,min[0]"
-              },
-              {
-                "dataType": "number",
-                "name": "numberOfDaysConductingSurveys",
-                "validate": "required,min[0]",
-                "description": "Number of days should be calculated as number of days by number of people (eg. 4.5 days by 3 people is 13.5 days)"
-              },
-              {
-                "dataType": "text",
-                "name": "surveyPurpose",
-                "validate": "required,maxSize[500]",
-                "description": "What will the survey aim to capture?"
+                "dataType": "list",
+                "name": "farmSurveyBaselineDetails",
+                "columns": [
+                  {
+                    "dataType": "text",
+                    "name": "baselineOrIndicatorFarmSurvey",
+                    "description": "",
+                    "constraints": [
+                      "Baseline",
+                      "Indicator"
+                    ],
+                    "validate": "required"
+                  },
+                  {
+                    "name": "projectBaseline",
+                    "dataType": "text",
+                    "description": "Select the relevant Project Baseline as listed in the Monitoring Methodology section of the MERI Plan.",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "baseline",
+                      "valueProperty": "method",
+                      "type": "pre-populated",
+                      "excludePath": "projectBaseline",
+                      "config": {
+                        "source": {
+                          "context-path": "owner.custom.details.baseline.rows"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "name": "datasetSupports",
+                    "dataType": "text",
+                    "description": "This section will require the Data Set Name so the Metadata fields in the Data Set Summary tab should be filled out before the Outcome Report is due. More than one dataset if relevant for this Project Baseline could be selected.",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "name",
+                      "valueProperty": "dataSetId",
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "context-path": "owner.custom.dataSets"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "name": "outcomeStatementPrePop",
+                    "dataType": "text",
+                    "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "description",
+                      "valueProperty": "description",
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "context-path": "owner.custom.details.outcomes.shortTermOutcomes"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "dataType": "date",
+                    "name": "activitiesStartDate",
+                    "description": "",
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "date",
+                    "name": "activitiesEndDate",
+                    "description": "",
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "stringList",
+                    "name": "ternSurveyTechnique",
+                    "validate": "required",
+                    "constraints": [
+                      "Tern Survey Technique 1",
+                      "Tern Survey Technique 1",
+                      "Tern Survey Technique 1",
+                      "Other"
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "description": "Please describe the survey technique if other was selected",
+                    "name": "otherTernSurveyTechnique",
+                    "behaviour": [
+                      {
+                        "condition": "ternSurveyTechnique == \"Other\"",
+                        "type": "enable_and_clear"
+                      }
+                    ],
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "surveyMethodology",
+                    "description": "Survey Methodology",
+                    "validate": "required,maxSize[3000]"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "surveyObjective",
+                    "description": "Survey Objective",
+                    "validate": "required,maxSize[3000]"
+                  }
+                ]
               }
-            ]
+            ],
+            "dataType": "list",
+            "name": "farmSurveys",
+            "minSize": 1
+          },
+          {
+            "dataType": "text",
+            "name": "participationIndividualsOrGroups",
+            "constraints": [
+              "Individuals",
+              "Groups"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "participationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "participationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "firstNationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "firstNationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "participationDetails",
+            "validate": "maxSize[3000]"
+          },
+          {
+            "name": "farmSurveyCountHeader",
+            "type": "number",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "count(farmSurveys, \"baselineOrIndicatorFarmSurvey\")"
+            }
           },
           {
             "dataType": "text",
             "name": "comments",
             "validate": "maxSize[1500]"
+          },
+          {
+            "dataType": "image",
+            "name": "photographicEvidence"
+          },
+          {
+            "dataType": "boolean",
+            "name": "dataUploaded",
+            "description": ""
           },
           {
             "dataType": "text",
@@ -5465,38 +5640,152 @@
         ],
         "viewModel": [
           {
+            "type": "section",
             "items": [
               {
-                "source": "farmManagementSurveys",
                 "columns": [
                   {
-                    "title": "Baseline survey or indicator (follow-up) survey?",
-                    "source": "baselineOrIndicatorSurvey",
-                    "type": "selectOne",
-                    "width": "25%"
+                    "width": "10%",
+                    "source": "participationIndividualsOrGroups",
+                    "title": "Individuals or groups?",
+                    "type": "selectOne"
                   },
                   {
-                    "title": "Number of farm management surveys conducted",
-                    "source": "numberOfFarmManagementSurveys",
-                    "type": "number",
-                    "width": "10%"
+                    "width": "20%",
+                    "type": "col",
+                    "title": "Total Number of people delivering this service",
+                    "items": [
+                      {
+                        "source": "participationIndividualNumber",
+                        "type": "number"
+                      },
+                      {
+                        "source": "participationGroupNumber",
+                        "type": "selectOne"
+                      }
+                    ]
                   },
                   {
-                    "title": "Number of days spent on these farm management surveys",
-                    "source": "numberOfDaysConductingSurveys",
-                    "type": "number",
-                    "width": "10%"
+                    "type": "col",
+                    "width": "20%",
+                    "title": "Total Number of First Nations people delivering this service ",
+                    "items": [
+                      {
+                        "source": "firstNationIndividualNumber",
+                        "type": "number"
+                      },
+                      {
+                        "source": "firstNationGroupNumber",
+                        "type": "selectOne"
+                      }
+                    ]
                   },
                   {
-                    "title": "Survey purpose",
-                    "type": "textarea",
-                    "rows": 3,
-                    "source": "surveyPurpose",
-                    "width": "55%"
+                    "source": "participationDetails",
+                    "rows": 4,
+                    "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                    "type": "textarea"
                   }
                 ],
-                "userAddedRows": true,
+                "userAddedRows": false,
+                "disableTableUpload": false,
+                "source": "",
                 "type": "table"
+              },
+              {
+                "preLabel": "Number of Farm Management surveys conducted:",
+                "noEdit": true,
+                "type": "number",
+                "source": "farmSurveyCountHeader"
+              },
+              {
+                "addRowText": "New survey site",
+                "userAddedRows": true,
+                "source": "farmSurveys",
+                "type": "repeat",
+                "items": [
+
+                  {
+                    "type": "table",
+                    "source": "farmSurveyBaselineDetails",
+                    "userAddedRows": true,
+                    "disableTableUpload": true,
+                    "columns": [
+                      {
+                        "source": "baselineOrIndicatorFarmSurvey",
+                        "type": "selectOne",
+                        "width": "8%",
+                        "title": "Baseline survey or indicator (follow-up) survey?"
+                      },
+                      {
+                        "source": "projectBaseline",
+                        "type": "selectOne",
+                        "width": "8%",
+                        "title": "Which Project Baseline relates to this survey?"
+                      },
+                      {
+                        "source": "datasetSupports",
+                        "type": "select2Many",
+                        "width": "10%",
+                        "title": "What Dataset supports?"
+                      },
+                      {
+                        "source": "outcomeStatementPrePop",
+                        "type": "select2Many",
+                        "width": "10%",
+                        "title": "Which outcome statement/s relates to this survey?"
+                      },
+                      {
+                        "title": "Activities Start Date",
+                        "source": "activitiesStartDate",
+                        "type": "date",
+                        "width": "10%"
+                      },
+                      {
+                        "title": "Activities End Date",
+                        "source": "activitiesEndDate",
+                        "type": "date",
+                        "width": "10%"
+                      },
+                      {
+                        "width": "10%",
+                        "title": "Survey Technique",
+                        "source": "ternSurveyTechnique",
+                        "type": "selectOne"
+                      },
+                      {
+                        "width": "10%",
+                        "title": "Survey Technique (if Other)",
+                        "source": "otherTernSurveyTechnique",
+                        "type": "textarea"
+                      },
+                      {
+                        "width": "12%",
+                        "rows": 4,
+                        "source": "surveyMethodology",
+                        "title": "Survey Methodology",
+                        "type": "textarea"
+                      },
+                      {
+                        "width": "12%",
+                        "rows": 4,
+                        "source": "surveyObjective",
+                        "title": "Survey Objective",
+                        "type": "textarea"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "preLabel": "Optionally attach photos",
+                    "source": "photographicEvidence",
+                    "type": "image"
+                  }
+                ]
               },
               {
                 "type": "row",
@@ -5507,7 +5796,7 @@
                     "rows": 4,
                     "css": "span8",
                     "source": "comments",
-                    "placeholder": "Clarification comments include points for follow up with the project manager about this service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
+                    "placeholder": "Clarification comments include information for your project manager about the service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
                   }
                 ]
               },
@@ -5517,6 +5806,11 @@
                   {
                     "type": "literal",
                     "source": "<p><b>Available Evidence</b></p>This field is mandatory for all <u>Environment</u> projects but optional for Agriculture projects. This field identifies what evidence you have available for this service and where the evidence is stored. This helps the Department and Service Providers during future assurance activities. Refer to the <a href=\"http://nrm.gov.au/publications/rlp-merit-user-guide\" target=\"_evidence\">Evidence Guide</a> for details of the types of acceptable evidence."
+                  },
+                  {
+                    "preLabel": "Data have been uploaded",
+                    "source": "dataUploaded",
+                    "type": "boolean"
                   }
                 ]
               },
@@ -5554,8 +5848,7 @@
                   }
                 ]
               }
-            ],
-            "type": "section"
+            ]
           }
         ]
       },
@@ -5575,146 +5868,6 @@
           {
             "columns": [
               {
-                "dataType": "text",
-                "name": "baselineOrIndicatorSurvey",
-                "description": "",
-                "constraints": [
-                  "Baseline",
-                  "Indicator"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "number",
-                "name": "numberOfFaunaSurveys",
-                "validate": "required,min[0]"
-              },
-              {
-                "dataType": "text",
-                "name": "dateRange",
-                "description": "What time of year (eg. Dates by dd/mm/yyyyy, Months, Season/s)",
-                "validate": "required,maxSize[300]"
-              },
-              {
-                "dataType": "feature",
-                "name": "sitesSurveyed"
-              },
-              {
-                "computed": {
-                  "expression": "$geom.areaHa(sitesSurveyed)"
-                },
-                "dataType": "number",
-                "name": "siteCalculatedAreaHa",
-                "units": "ha",
-                "decimalPlaces": 3,
-                "behaviour": [
-                  {
-                    "condition": "areaInvoicedHa > 0",
-                    "type": "conditional_validation",
-                    "value": {
-                      "message": "The area surveyed must be mapped",
-                      "validate": "required,min[0.0001]"
-                    }
-                  }
-                ]
-              },
-              {
-                "defaultValue": {
-                  "expression": "$geom.areaHa(sitesSurveyed)",
-                  "type": "computed"
-                },
-                "dataType": "number",
-                "name": "areaSurveyedHa",
-                "units": "ha",
-                "decimalPlaces": 3,
-                "validate": "required,min[0]"
-              },
-              {
-                "dataType": "number",
-                "name": "areaInvoicedHa",
-                "units": "ha",
-                "decimalPlaces": 3,
-                "validate": [
-                  {
-                    "rule": "required"
-                  },
-                  {
-                    "rule": "min[0]"
-                  },
-                  {
-                    "param": {
-                      "expression": "areaSurveyedHa",
-                      "type": "computed"
-                    },
-                    "rule": "max"
-                  }
-                ]
-              },
-              {
-                "dataType": "text",
-                "name": "mappingNotAlignedReason",
-                "behaviour": [
-                  {
-                    "condition": "not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1)",
-                    "type": "if"
-                  }
-                ],
-                "constraints": [
-                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
-                  "Other"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "text",
-                "name": "mappingNotAlignedComments",
-                "behaviour": [
-                  {
-                    "condition": "\"Other\" == mappingNotAlignedReason",
-                    "type": "if"
-                  }
-                ],
-                "validate": "required,maxSize[300]"
-              },
-              {
-                "dataType": "text",
-                "name": "invoicedNotActualReason",
-                "behaviour": [
-                  {
-                    "condition": "roundTo(areaSurveyedHa, 2) != roundTo(areaInvoicedHa, 2)",
-                    "type": "visible"
-                  }
-                ],
-                "constraints": [
-                  "Work was undertaken over a greater area than will be invoiced for",
-                  "Other"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "text",
-                "name": "invoicedNotActualComments",
-                "behaviour": [
-                  {
-                    "condition": "\"Other\" == invoicedNotActualReason",
-                    "type": "if"
-                  }
-                ],
-                "validate": "required,maxSize[300]"
-              },
-              {
-                "dataType": "document",
-                "name": "extraMappingDetails",
-                "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
-                "behaviour": [
-                  {
-                    "condition": "not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1) or roundTo(areaSurveyedHa, 2) != roundTo(areaInvoicedHa, 2)",
-                    "type": "if"
-                  }
-                ],
-                "validate": "required"
-              },
-              {
                 "columns": [
                   {
                     "dataType": "species",
@@ -5723,9 +5876,8 @@
                   },
                   {
                     "dataType": "text",
-                    "name": "surveyTechnique",
-                    "description": "What/how will the survey capture the fauna data",
-                    "validate": "required,maxSize[500]"
+                    "name": "threatenedEcologicalCommunity",
+                    "validate": "maxSize[300]"
                   },
                   {
                     "dataType": "text",
@@ -5740,15 +5892,221 @@
                     "dataType": "number",
                     "name": "numberOfIndividualsOrGroups",
                     "validate": "required,min[0]"
+                  },
+                  {
+                    "dataType": "stringList",
+                    "name": "ternSurveyTechnique",
+                    "validate": "required",
+                    "constraints": [
+                      "Tern Survey Technique 1",
+                      "Tern Survey Technique 1",
+                      "Tern Survey Technique 1",
+                      "Other"
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "description": "Please describe the survey technique if other was selected",
+                    "name": "otherTernSurveyTechnique",
+                    "behaviour": [
+                      {
+                        "condition": "ternSurveyTechnique == \"Other\"",
+                        "type": "enable_and_clear"
+                      }
+                    ],
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "surveyMethodology",
+                    "description": "Survey Methodology",
+                    "validate": "required,maxSize[3000]"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "surveyObjective",
+                    "description": "Survey Objective",
+                    "validate": "required,maxSize[3000]"
                   }
                 ],
                 "dataType": "list",
                 "name": "faunaSurveyDetails"
+              },
+              {
+                "dataType": "list",
+                "name": "faunaSurveyBaselineDetails",
+                "columns": [
+                  {
+                    "dataType": "text",
+                    "name": "baselineOrIndicatorFaunaSurvey",
+                    "description": "",
+                    "constraints": [
+                      "Baseline",
+                      "Indicator"
+                    ],
+                    "validate": "required"
+                  },
+                  {
+                    "name": "projectBaseline",
+                    "dataType": "text",
+                    "description": "Select the relevant Project Baseline as listed in the Monitoring Methodology section of the MERI Plan.",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "baseline",
+                      "valueProperty": "method",
+                      "type": "pre-populated",
+                      "excludePath": "projectBaseline",
+                      "config": {
+                        "source": {
+                          "context-path": "owner.custom.details.baseline.rows"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "name": "datasetSupports",
+                    "dataType": "text",
+                    "description": "This section will require the Data Set Name so the Metadata fields in the Data Set Summary tab should be filled out before the Outcome Report is due. More than one dataset if relevant for this Project Baseline could be selected.",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "name",
+                      "valueProperty": "dataSetId",
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "context-path": "owner.custom.dataSets"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "name": "outcomeStatementPrePop",
+                    "dataType": "text",
+                    "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "description",
+                      "valueProperty": "description",
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "context-path": "owner.custom.details.outcomes.shortTermOutcomes"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "dataType": "date",
+                    "name": "activitiesStartDate",
+                    "description": "",
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "date",
+                    "name": "activitiesEndDate",
+                    "description": "",
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "sitesSurveyedHa",
+                    "units": "ha",
+                    "decimalPlaces": 3,
+                    "validate": "required,min[0]"
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "areaSurveyedHa",
+                    "units": "ha",
+                    "decimalPlaces": 3,
+                    "validate": "required,min[0]"
+                  }
+                ]
               }
             ],
             "dataType": "list",
             "name": "faunaSurveys",
             "minSize": 1
+          },
+          {
+            "dataType": "text",
+            "name": "participationIndividualsOrGroups",
+            "constraints": [
+              "Individuals",
+              "Groups"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "participationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "participationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "firstNationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "firstNationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "participationDetails",
+            "validate": "maxSize[3000]"
+          },
+          {
+            "name": "faunaSurveyCountHeader",
+            "type": "number",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "count(faunaSurveys, \"baselineOrIndicatorFaunaSurvey\")"
+            }
           },
           {
             "dataType": "text",
@@ -5758,6 +6116,11 @@
           {
             "dataType": "image",
             "name": "photographicEvidence"
+          },
+          {
+            "dataType": "boolean",
+            "name": "dataUploaded",
+            "description": ""
           },
           {
             "dataType": "text",
@@ -5783,174 +6146,149 @@
             "type": "section",
             "items": [
               {
+                "columns": [
+                  {
+                    "width": "10%",
+                    "source": "participationIndividualsOrGroups",
+                    "title": "Individuals or groups?",
+                    "type": "selectOne"
+                  },
+                  {
+                    "width": "20%",
+                    "type": "col",
+                    "title": "Total Number of people delivering this service",
+                    "items": [
+                      {
+                        "source": "participationIndividualNumber",
+                        "type": "number"
+                      },
+                      {
+                        "source": "participationGroupNumber",
+                        "type": "selectOne"
+                      }
+                    ]
+                  },
+                  {
+
+                    "type": "col",
+                    "width": "20%",
+                    "title": "Total Number of First Nations people delivering this service ",
+                    "items": [
+                      {
+                        "source": "firstNationIndividualNumber",
+                        "type": "number"
+                      },
+                      {
+                        "source": "firstNationGroupNumber",
+                        "type": "selectOne"
+                      }
+                    ]
+                  },
+                  {
+                    "source": "participationDetails",
+                    "rows": 4,
+                    "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                    "type": "textarea"
+                  }
+                ],
+                "userAddedRows": false,
+                "disableTableUpload": false,
+                "source": "",
+                "type": "table"
+              },
+              {
+                "preLabel": "Number of Fauna surveys conducted:",
+                "noEdit": true,
+                "type": "number",
+                "source": "faunaSurveyCountHeader"
+              },
+              {
                 "addRowText": "New survey site",
                 "userAddedRows": true,
                 "source": "faunaSurveys",
                 "type": "repeat",
                 "items": [
+
                   {
-                    "css": "border-bottom",
-                    "type": "row",
-                    "items": [
-                      {
-                        "preLabel": "Baseline survey or indicator (follow-up) survey?",
-                        "css": "span3",
-                        "source": "baselineOrIndicatorSurvey",
-                        "type": "selectOne"
-                      },
-                      {
-                        "preLabel": "Number of fauna surveys conducted",
-                        "css": "span3",
-                        "source": "numberOfFaunaSurveys",
-                        "type": "number"
-                      },
-                      {
-                        "preLabel": "Date range",
-                        "css": "span3",
-                        "source": "dateRange",
-                        "type": "text"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "css": "span3 col-border-right",
-                        "type": "col",
-                        "items": [
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "Site/s covered by fauna surveys",
-                                "source": "sitesSurveyed",
-                                "type": "feature"
-                              }
-                            ]
-                          },
-                          {
-                            "readonly": true,
-                            "source": "siteCalculatedAreaHa",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            }
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "Please attach mapping details",
-                                "source": "extraMappingDetails",
-                                "type": "document"
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "css": "span4 col-border-right",
-                        "type": "col",
-                        "items": [
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "Actual area (ha) covered by fauna surveys",
-                                "helpText": "Manually enter correct figure for this reporting period if different to mapped value.",
-                                "source": "areaSurveyedHa",
-                                "type": "number",
-                                "displayOptions": {
-                                  "displayUnits": true
-                                }
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "Reason for actual being different to mapped amount",
-                                "source": "mappingNotAlignedReason",
-                                "type": "selectOne"
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
-                                "source": "mappingNotAlignedComments",
-                                "type": "textarea",
-                                "rows": 5
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "css": "span4",
-                        "type": "col",
-                        "items": [
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "Invoiced area (ha) covered by fauna surveys",
-                                "helpText": "Enter the amount you will invoice for during this reporting period.",
-                                "source": "areaInvoicedHa",
-                                "type": "number",
-                                "validate": "required",
-                                "displayOptions": {
-                                  "displayUnits": true
-                                }
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "Reason for invoiced amount being different to actual amount",
-                                "source": "invoicedNotActualReason",
-                                "type": "selectOne"
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
-                                "source": "invoicedNotActualComments",
-                                "type": "textarea",
-                                "rows": 5
-                              }
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "addRowText": "Add a species",
+                    "type": "table",
+                    "source": "faunaSurveyBaselineDetails",
+                    "userAddedRows": true,
+                    "disableTableUpload": true,
                     "columns": [
                       {
-                        "width": "40%",
+                        "source": "baselineOrIndicatorFaunaSurvey",
+                        "type": "selectOne",
+                        "width": "15%",
+                        "title": "Baseline survey or indicator (follow-up) survey?"
+                      },
+                      {
+                        "source": "projectBaseline",
+                        "type": "selectOne",
+                        "width": "10%",
+                        "title": "Which Project Baseline relates to this survey?"
+                      },
+                      {
+                        "source": "datasetSupports",
+                        "type": "select2Many",
+                        "width": "15%",
+                        "title": "What Dataset supports?"
+                      },
+                      {
+                        "source": "outcomeStatementPrePop",
+                        "type": "select2Many",
+                        "width": "15%",
+                        "title": "Which outcome statement/s relates to this survey?"
+                      },
+                      {
+                        "title": "Activities Start Date",
+                        "source": "activitiesStartDate",
+                        "type": "date",
+                        "width": "10%"
+                      },
+                      {
+                        "title": "Activities End Date",
+                        "source": "activitiesEndDate",
+                        "type": "date",
+                        "width": "10%"
+                      },
+                      {
+                        "title": "Sites covered by flora surveys",
+                        "helpText": "Manually enter correct figure for this reporting period if different to mapped value.",
+                        "source": "sitesSurveyedHa",
+                        "width": "10%",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      },
+                      {
+                        "title": "Actual area (ha) covered by flora surveys",
+                        "helpText": "Manually enter correct figure for this reporting period if different to mapped value.",
+                        "source": "areaSurveyedHa",
+                        "width": "10%",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "columns": [
+                      {
+                        "width": "20%",
                         "source": "species",
                         "title": "Target species recorded",
                         "type": "speciesSelect"
                       },
                       {
-                        "width": "35%",
-                        "source": "surveyTechnique",
-                        "title": "Survey technique",
+                        "width": "15%",
+                        "source": "threatenedEcologicalCommunity",
+                        "title": "Threatened ecological communities (if applicable)",
                         "type": "text"
                       },
                       {
-                        "width": "15%",
+                        "width": "10%",
                         "source": "individualsOrGroups",
                         "title": "Individuals or groups?",
                         "type": "selectOne"
@@ -5958,11 +6296,36 @@
                       {
                         "width": "10%",
                         "source": "numberOfIndividualsOrGroups",
-                        "title": "Number of groups / individuals in fauna survey",
+                        "title": "Number of groups / individuals in flora survey",
                         "type": "number"
+                      },
+                      {
+                        "width": "10%",
+                        "title": "Survey Technique",
+                        "source": "ternSurveyTechnique",
+                        "type": "selectOne"
+                      },
+                      {
+                        "width": "10%",
+                        "title": "Survey Technique (if Other)",
+                        "source": "otherTernSurveyTechnique",
+                        "type": "text"
+                      },
+                      {
+                        "width": "15%",
+                        "source": "surveyMethodology",
+                        "title": "Survey Methodology",
+                        "type": "text"
+                      },
+                      {
+                        "width": "15%",
+                        "source": "surveyObjective",
+                        "title": "Survey Objective",
+                        "type": "text"
                       }
                     ],
                     "userAddedRows": true,
+                    "disableTableUpload": true,
                     "source": "faunaSurveyDetails",
                     "type": "table"
                   }
@@ -5987,7 +6350,7 @@
                     "rows": 4,
                     "css": "span8",
                     "source": "comments",
-                    "placeholder": "Clarification comments include points for follow up with the project manager about this service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
+                    "placeholder": "Clarification comments include information for your project manager about the service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
                   }
                 ]
               },
@@ -5997,6 +6360,11 @@
                   {
                     "type": "literal",
                     "source": "<p><b>Available Evidence</b></p>This field is mandatory for all <u>Environment</u> projects but optional for Agriculture projects. This field identifies what evidence you have available for this service and where the evidence is stored. This helps the Department and Service Providers during future assurance activities. Refer to the <a href=\"http://nrm.gov.au/publications/rlp-merit-user-guide\" target=\"_evidence\">Evidence Guide</a> for details of the types of acceptable evidence."
+                  },
+                  {
+                    "preLabel": "Data have been uploaded",
+                    "source": "dataUploaded",
+                    "type": "boolean"
                   }
                 ]
               },
@@ -6572,197 +6940,6 @@
           {
             "columns": [
               {
-                "dataType": "feature",
-                "name": "sitesSurveyed"
-              },
-              {
-                "computed": {
-                  "expression": "$geom.areaHa(sitesSurveyed)"
-                },
-                "dataType": "number",
-                "name": "siteCalculatedAreaHa",
-                "units": "ha",
-                "decimalPlaces": 3,
-                "behaviour": [
-                  {
-                    "condition": "areaInvoicedHa > 0",
-                    "type": "conditional_validation",
-                    "value": {
-                      "message": "The surveyed area must be mapped",
-                      "validate": "required,min[0.0001]"
-                    }
-                  }
-                ]
-              },
-              {
-                "defaultValue": {
-                  "expression": "$geom.areaHa(sitesSurveyed)",
-                  "type": "computed"
-                },
-                "dataType": "number",
-                "name": "areaSurveyedHa",
-                "units": "ha",
-                "decimalPlaces": 3,
-                "validate": "required,min[0]"
-              },
-              {
-                "dataType": "number",
-                "name": "areaInvoicedHa",
-                "units": "ha",
-                "decimalPlaces": 3,
-                "validate": [
-                  {
-                    "rule": "required"
-                  },
-                  {
-                    "rule": "min[0]"
-                  },
-                  {
-                    "param": {
-                      "expression": "areaSurveyedHa",
-                      "type": "computed"
-                    },
-                    "rule": "max"
-                  }
-                ]
-              },
-              {
-                "dataType": "text",
-                "name": "mappingNotAlignedReason",
-                "behaviour": [
-                  {
-                    "condition": "not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1)",
-                    "type": "if"
-                  }
-                ],
-                "constraints": [
-                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
-                  "Other"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "text",
-                "name": "mappingNotAlignedComments",
-                "behaviour": [
-                  {
-                    "condition": "\"Other\" == mappingNotAlignedReason",
-                    "type": "if"
-                  }
-                ],
-                "validate": "required,maxSize[300]"
-              },
-              {
-                "dataType": "text",
-                "name": "invoicedNotActualReason",
-                "behaviour": [
-                  {
-                    "condition": "roundTo(areaSurveyedHa, 2) != roundTo(areaInvoicedHa, 2)",
-                    "type": "visible"
-                  }
-                ],
-                "constraints": [
-                  "Work was undertaken over a greater area than will be invoiced for",
-                  "Other"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "text",
-                "name": "invoicedNotActualComments",
-                "behaviour": [
-                  {
-                    "condition": "\"Other\" == invoicedNotActualReason",
-                    "type": "if"
-                  }
-                ],
-                "validate": "required,maxSize[300]"
-              },
-              {
-                "dataType": "document",
-                "name": "extraMappingDetails",
-                "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
-                "behaviour": [
-                  {
-                    "condition": "not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1) or roundTo(areaSurveyedHa, 2) != roundTo(areaInvoicedHa, 2)",
-                    "type": "if"
-                  }
-                ],
-                "validate": "required"
-              },
-              {
-                  "dataType": "text",
-                  "name": "participationIndividualsOrGroups",
-                  "constraints": [
-                    "Individuals",
-                    "Groups"
-                  ],
-                  "validate": "required"
-              },
-              {
-                "dataType": "number",
-                "name": "participationIndividualNumber",
-                "behaviour": [
-                  {
-                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
-                  }
-                ],
-                "validate": "required,min[0]"
-              },
-              {
-                "dataType": "text",
-                "name": "participationGroupNumber",
-                "behaviour": [
-                  {
-                    "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
-                  }
-                ],
-                "constraints": [
-                  "1-10",
-                  "11-20",
-                  "21-30",
-                  "31-40",
-                  "41-50"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "number",
-                "name": "firstNationIndividualNumber",
-                "behaviour": [
-                  {
-                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
-                  }
-                ],
-                "validate": "required,min[0]"
-              },
-              {
-                "dataType": "text",
-                "name": "firstNationGroupNumber",
-                "behaviour": [
-                  {
-                    "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
-                  }
-                ],
-                "constraints": [
-                  "1-10",
-                  "11-20",
-                  "21-30",
-                  "31-40",
-                  "41-50"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "text",
-                "name": "participationDetails",
-                "validate": "maxSize[3000]"
-              },
-              {
                 "columns": [
                   {
                     "dataType": "species",
@@ -6924,6 +7101,78 @@
             "minSize": 1
           },
           {
+            "dataType": "text",
+            "name": "participationIndividualsOrGroups",
+            "constraints": [
+              "Individuals",
+              "Groups"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "participationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "participationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "firstNationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "firstNationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "participationDetails",
+            "validate": "maxSize[3000]"
+          },
+          {
             "name": "floraSurveyCountHeader",
             "type": "number",
             "decimalPlaces": 0,
@@ -6969,6 +7218,57 @@
             "type": "section",
             "items": [
               {
+                "columns": [
+                  {
+                    "width": "10%",
+                    "source": "participationIndividualsOrGroups",
+                    "title": "Individuals or groups?",
+                    "type": "selectOne"
+                  },
+                  {
+                    "width": "20%",
+                    "type": "col",
+                    "title": "Total Number of people delivering this service",
+                    "items": [
+                      {
+                        "source": "participationIndividualNumber",
+                        "type": "number"
+                      },
+                      {
+                        "source": "participationGroupNumber",
+                        "type": "selectOne"
+                      }
+                    ]
+                  },
+                  {
+
+                    "type": "col",
+                    "width": "20%",
+                    "title": "Total Number of First Nations people delivering this service ",
+                    "items": [
+                      {
+                        "source": "firstNationIndividualNumber",
+                        "type": "number"
+                      },
+                      {
+                        "source": "firstNationGroupNumber",
+                        "type": "selectOne"
+                      }
+                    ]
+                  },
+                  {
+                    "source": "participationDetails",
+                    "rows": 4,
+                    "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                    "type": "textarea"
+                  }
+                ],
+                "userAddedRows": false,
+                "disableTableUpload": false,
+                "source": "",
+                "type": "table"
+              },
+              {
                 "preLabel": "Number of Flora surveys conducted:",
                 "noEdit": true,
                 "type": "number",
@@ -6980,57 +7280,7 @@
                 "source": "floraSurveys",
                 "type": "repeat",
                 "items": [
-                  {
-                    "columns": [
-                      {
-                        "width": "10%",
-                        "source": "participationIndividualsOrGroups",
-                        "title": "Individuals or groups?",
-                        "type": "selectOne"
-                      },
-                      {
-                        "width": "20%",
-                        "type": "col",
-                        "title": "Total Number of people delivering this service",
-                        "items": [
-                          {
-                            "source": "participationIndividualNumber",
-                            "type": "number"
-                          },
-                          {
-                            "source": "participationGroupNumber",
-                            "type": "selectOne"
-                          }
-                        ]
-                      },
-                      {
 
-                        "type": "col",
-                        "width": "20%",
-                        "title": "Total Number of First Nations people delivering this service ",
-                        "items": [
-                          {
-                            "source": "firstNationIndividualNumber",
-                            "type": "number"
-                          },
-                          {
-                            "source": "firstNationGroupNumber",
-                            "type": "selectOne"
-                          }
-                        ]
-                      },
-                      {
-                        "source": "participationDetails",
-                        "rows": 4,
-                        "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
-                        "type": "textarea"
-                      }
-                    ],
-                    "userAddedRows": false,
-                    "disableTableUpload": false,
-                    "source": "",
-                    "type": "table"
-                  },
                   {
                     "type": "table",
                     "source": "floraSurveyBaselineDetails",
