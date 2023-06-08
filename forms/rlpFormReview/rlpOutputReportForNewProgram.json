@@ -5412,11 +5412,11 @@
             "columns": [
               {
                 "dataType": "list",
-                "name": "farmSurveyBaselineDetails",
+                "name": "surveyBaselineDetails",
                 "columns": [
                   {
                     "dataType": "text",
-                    "name": "baselineOrIndicatorFarmSurvey",
+                    "name": "baselineOrIndicatorSurvey",
                     "description": "",
                     "constraints": [
                       "Baseline",
@@ -5600,11 +5600,11 @@
             "validate": "maxSize[3000]"
           },
           {
-            "name": "farmSurveyCountHeader",
+            "name": "surveyCountHeader",
             "type": "number",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(farmSurveys, \"baselineOrIndicatorFarmSurvey\")"
+              "expression": "count(farmSurveys, \"baselineOrIndicatorSurvey\")"
             }
           },
           {
@@ -5696,7 +5696,7 @@
                 "preLabel": "Number of Farm Management surveys conducted:",
                 "noEdit": true,
                 "type": "number",
-                "source": "farmSurveyCountHeader"
+                "source": "surveyCountHeader"
               },
               {
                 "addRowText": "New survey site",
@@ -5707,12 +5707,12 @@
 
                   {
                     "type": "table",
-                    "source": "farmSurveyBaselineDetails",
+                    "source": "surveyBaselineDetails",
                     "userAddedRows": true,
                     "disableTableUpload": true,
                     "columns": [
                       {
-                        "source": "baselineOrIndicatorFarmSurvey",
+                        "source": "baselineOrIndicatorSurvey",
                         "type": "selectOne",
                         "width": "8%",
                         "title": "Baseline survey or indicator (follow-up) survey?"
@@ -5805,7 +5805,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all <u>Environment</u> projects but optional for Agriculture projects. This field identifies what evidence you have available for this service and where the evidence is stored. This helps the Department and Service Providers during future assurance activities. Refer to the <a href=\"http://nrm.gov.au/publications/rlp-merit-user-guide\" target=\"_evidence\">Evidence Guide</a> for details of the types of acceptable evidence."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -14477,7 +14477,7 @@
             "validate": "maxSize[3000]"
           },
           {
-            "name": "farmSurveyCountHeader",
+            "name": "surveyCountHeader",
             "type": "number",
             "decimalPlaces": 0,
             "computed": {
