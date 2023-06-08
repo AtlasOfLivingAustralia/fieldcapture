@@ -19,8 +19,8 @@
 
 <div class="form-group" data-bind="visible:details.indigenousInvolved() == 'Yes'">
 
-    <label class="required" for="indigenous-involvement">What is the nature of the involvement? <fc:iconHelp>Leading – First Nations peoples leadership, knowledge and involvement as a substantial component across all stages of the project from co-design, delivery, monitoring, evaluation and reporting. <br/>
-Participating - Involvement of First Nations people in at least one aspect of project co-design, delivery, monitoring, evaluation or reporting.</fc:iconHelp></label>
+    <label class="required" for="indigenous-involvement">What is the nature of the involvement? <fc:iconHelp html="true"><b>Leading</b> – First Nations peoples leadership, knowledge and involvement as a substantial component across all stages of the project from co-design, delivery, monitoring, evaluation and reporting. <br/>
+        <b>Participating</b> - Involvement of First Nations people in at least one aspect of project co-design, delivery, monitoring, evaluation or reporting.</fc:iconHelp></label>
 
 
     <select id="indigenous-involvement"
