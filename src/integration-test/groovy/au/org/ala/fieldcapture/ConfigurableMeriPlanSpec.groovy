@@ -476,6 +476,15 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlan2.shortTermOutcomes[0].text() == "outcome 1"
         meriPlan2.projectDescription.text() == 'Project description'
         meriPlan2.projectMethodology.text() == 'Project Methodology'
+
+        when:
+        // Sometimes .text() returns an empty string if the element is not in the viewport.
+        // Trying this as a workaround.
+        interact {
+            moveToElement(meriPlan2.adaptiveManagement)
+        }
+
+        then:
         meriPlan2.monitoringIndicators[0].indicator.text() == "Indicator 1"
         meriPlan2.monitoringIndicators[0].approach.text() == 'Approach 1'
         meriPlan2.adaptiveManagement.text() == 'Adaptive management'
