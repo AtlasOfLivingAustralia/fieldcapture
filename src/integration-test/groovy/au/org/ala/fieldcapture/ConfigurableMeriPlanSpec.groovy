@@ -473,7 +473,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlan2.assets[0].description.text() == "asset 1"
         waitFor { meriPlan2.objectives() == ["objective 2", "Other objective"] }
 
-        meriPlan2.shortTermOutcomes[0].text() == "outcome 1"
+        meriPlan2.shortTermOutcomes[0].outcome.text() == "outcome 1"
         meriPlan2.projectDescription.text() == 'Project description'
         meriPlan2.projectMethodology.text() == 'Project Methodology'
 

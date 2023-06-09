@@ -10,6 +10,14 @@ class ReadOnlyOutcomeRow extends Module {
     }
 }
 
+class ReadOnlyProjectOutcomeRow extends Module {
+    static content = {
+        outcome { $('.outcome span') }
+        priority(required:false) { $('.investment-priority span') }
+        relatedProgramOutcomes(required: false) { $('.program-outcome span') }
+    }
+}
+
 class ReadOnlyThreatRow extends Module {
     static content = {
         threat { $('span[data-bind*=threat]') }
@@ -67,6 +75,8 @@ class ReadOnlyBudgetRow extends Module {
 class ReadOnlyAssetRow extends Module {
     static content = {
         description { $('td.asset span') }
+        asset { $('td.asset-detail span') }
+        assetType { $('td.asset-category span') }
     }
 }
 
@@ -75,18 +85,80 @@ class ReadOnlyServiceTargetRow extends Module {
         service { $('.service span') }
         score { $('.score span') }
         targets { $('.budget-cell span') }
+        date(required:false) { $('.target-date span') }
+
     }
 }
+
+
+/**
+ * A module representing the Priority Place section of the MERI plan.
+ */
+class ReadOnlyPriorityPlace extends Module {
+    static content = {
+        supportsPriorityPlaces { $('#supports-priority-place') }
+        priorityPlace { $('#priority-place') }
+    }
+}
+
+/**
+ * A module representing the First Nations People Involvement section of the MERI plan.
+ */
+class ReadOnlyFirstNationsPeopleInvolvement extends Module {
+    static content = {
+        supportsFirstNationsPeopleInvolvement { $('#indigenous-involved') }
+        firstNationsPeopleInvolvement { $('#indigenous-involvement') }
+        comments { $('#indigenous-involvement-comments') }
+    }
+}
+
+class ReadOnlyServiceOutcomeTarget extends Module {
+    static content = {
+        outcomes { $('.service select') }
+        target { $('.score input') }
+    }
+}
+class ReadOnlyServiceOutcomeTargets extends Module {
+    static content = {
+        service { $('.service input') }
+        targetMeasure { $('.score input') }
+    }
+}
+
+class ReadOnlyServiceOutcomes extends Module {
+    static content = {
+
+        serviceAndTargets(required:false) { $('tr.service-target').moduleList(ServiceOutcomeTargets) }
+        outcomeTargets(required:false) { $('tr.outcome-target').moduleList(ServiceOutcomeTarget) }
+    }
+}
+
+class ReadOnlyServiceForecasts extends Module {
+    static content = {
+        forecasts(required:false) { $('tbody tr').moduleList(ForecastRow) }
+    }
+}
+
+class ReadOnlyForecastRow extends Module {
+    static content = {
+        service { $('.service input') }
+        score { $('.score input') }
+        targets { $('.budget-cell input') }
+    }
+}
+
 
 class ReadOnlyMeriPlan extends Module {
 
 
     static content = {
+        priorityPlace(required: false) { module(ReadOnlyPriorityPlace) }
+        firstNationsPeopleInvolvement(required: false) { module(ReadOnlyFirstNationsPeopleInvolvement) }
         primaryOutcome(required: false) { $('.primary-outcome .outcome-priority span') }
         primaryPriority(required: false) { $('.primary-outcome span[data-bind*=asset]') }
         secondaryOutcomes(required: false) { $('table.secondary-outcome tbody tr').moduleList(ReadOnlyOutcomeRow) }
-        shortTermOutcomes(required: false) { $('tbody[data-bind*="shortTermOutcomes"] span') }
-        mediumTermOutcomes(required: false) {  $('tbody[data-bind*="midTermOutcomes"] span') }
+        shortTermOutcomes(required: false) { $('tbody[data-bind*="shortTermOutcomes"] tr').moduleList(ReadOnlyProjectOutcomeRow) }
+        mediumTermOutcomes(required: false) {  $('tbody[data-bind*="midTermOutcomes"] tr').moduleList(ReadOnlyProjectOutcomeRow) }
         projectName(required: false) { $('input[data-bind*="details.name"]') }
         projectDescription(required: false) { $('span[data-bind*="details.description"]') }
         rationale(required: false) { $('textarea[data-bind*="details.rationale"]') }
@@ -103,10 +175,13 @@ class ReadOnlyMeriPlan extends Module {
         objectivesList(required: false) { $('#objectives-list') }
         projectPartnerships(required: false) { $('#project-partnership-view tbody tr').moduleList(ReadOnlyPartnershipRow) }
         keq(required:false) { $('#keq tbody tr').moduleList(ReadOnlyKeqRow) }
-        budget(required:false) { $('.meri-budget').moduleList(ReadOnlyBudgetRow) }
+        budget(required:false) { $('.meri-budget-view tbody tr').moduleList(ReadOnlyBudgetRow) }
         activities(required:false) { $('#activity-list') }
         assets(required:false) { $('table.assets-view tbody tr').moduleList(ReadOnlyAssetRow) }
         adaptiveManagement(required:false) { $('#adaptive-management-view span') }
+        priorityAction(required:false) { $("#activity-list-view .activity") }
+        relatedProjects(required:false) { $("span.relatedProjects") }
+        consultation(required:false) { $(".consultation-view span") }
     }
 
     List objectives() {
