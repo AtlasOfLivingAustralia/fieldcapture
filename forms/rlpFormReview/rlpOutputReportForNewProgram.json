@@ -10982,30 +10982,6 @@
               {
                 "columns": [
                   {
-                    "dataType": "species",
-                    "name": "species",
-                    "validate": "required"
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "threatenedEcologicalCommunity",
-                    "validate": "maxSize[300]"
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "individualsOrGroups",
-                    "constraints": [
-                      "Individuals",
-                      "Groups"
-                    ],
-                    "validate": "required"
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "numberOfIndividualsOrGroups",
-                    "validate": "required,min[0]"
-                  },
-                  {
                     "dataType": "stringList",
                     "name": "ternSurveyTechnique",
                     "validate": "required",
@@ -11042,21 +11018,58 @@
                   }
                 ],
                 "dataType": "list",
-                "name": "floraSurveyDetails"
+                "name": "surveyTechniqueTable"
               },
               {
-                "dataType": "list",
-                "name": "floraSurveyBaselineDetails",
                 "columns": [
                   {
+                    "dataType": "species",
+                    "name": "species",
+                    "validate": "required"
+                  },
+                  {
                     "dataType": "text",
-                    "name": "baselineOrIndicatorSurvey",
-                    "description": "",
+                    "name": "plantingMethod",
                     "constraints": [
-                      "Baseline",
-                      "Indicator"
+                      "Direct seeding",
+                      "Tubestock/Seedling planting"
                     ],
                     "validate": "required"
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "hectaresPlanted",
+                    "validate": "required,min[0]"
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "kilosOfDirectSeeding",
+                    "validate": "required,min[0]"
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "numberPlanted",
+                    "validate": "required,min[0]"
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "numberSurvived",
+                    "validate": "required,min[0]"
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "survivalRate",
+                    "validate": "required,min[0]"
+                  }
+                ],
+                "dataType": "list",
+                "name": "surveySpeciesTable"
+              },
+              {
+                "columns": [
+                  {
+                    "dataType": "number",
+                    "name": "numberSurveysConducted"
                   },
                   {
                     "name": "projectBaseline",
@@ -11120,24 +11133,173 @@
                     "validate": "required"
                   },
                   {
+                    "dataType": "feature",
+                    "name": "sitesTreated"
+                  },
+                  {
+                    "computed": {
+                      "expression": "$geom.areaHa(sitesTreated)"
+                    },
                     "dataType": "number",
-                    "name": "sitesSurveyedHa",
+                    "name": "calculatedAreaTreatedHa",
+                    "units": "ha",
+                    "decimalPlaces": 3,
+                    "behaviour": [
+                      {
+                        "condition": "areaInvoicedTreatedHa > 0",
+                        "type": "conditional_validation",
+                        "value": {
+                          "message": "The managed area must be mapped",
+                          "validate": "required,min[0.0001]"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "computed": {
+                      "expression": "$geom.lengthKm(sitesTreated)"
+                    },
+                    "dataType": "number",
+                    "name": "calculatedLengthTreatedKm",
+                    "units": "km",
+                    "decimalPlaces": 3,
+                    "behaviour": [
+                      {
+                        "condition": "lengthTreatedKm > 0",
+                        "type": "conditional_validation",
+                        "value": {
+                          "message": "The managed length must be mapped",
+                          "validate": "required,min[0.0001]"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "defaultValue": {
+                      "type": "computed",
+                      "expression": "calculatedAreaTreatedHa"
+                    },
+                    "dataType": "number",
+                    "name": "areaTreatedHa",
                     "units": "ha",
                     "decimalPlaces": 3,
                     "validate": "required,min[0]"
                   },
                   {
+                    "dataType": "text",
+                    "name": "mappingNotAlignedReason",
+                    "constraints": [
+                      "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                      "Other"
+                    ],
+                    "validate": "required",
+                    "behaviour": [
+                      {
+                        "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1))",
+                        "type": "visible"
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "mappingNotAlignedComments",
+                    "validate": "required,maxSize[300]",
+                    "behaviour": [
+                      {
+                        "type": "visible",
+                        "condition": "\"Other\" == mappingNotAlignedReason"
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "document",
+                    "name": "extraMappingDetails",
+                    "validate": "required",
+                    "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                    "behaviour": [
+                      {
+                        "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1)) or roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedTreatedHa, 2)",
+                        "type": "visible"
+                      }
+                    ]
+                  },
+                  {
                     "dataType": "number",
-                    "name": "areaSurveyedHa",
+                    "name": "areaInvoicedTreatedHa",
                     "units": "ha",
                     "decimalPlaces": 3,
-                    "validate": "required,min[0]"
+                    "validate": [
+                      {
+                        "rule": "min[0]"
+                      },
+                      {
+                        "rule": "max",
+                        "param": {
+                          "type": "computed",
+                          "expression": "areaTreatedHa"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "invoicedNotActualReason",
+                    "constraints": [
+                      "Work was undertaken over a greater area than will be invoiced for",
+                      "Other"
+                    ],
+                    "validate": "required",
+                    "behaviour": [
+                      {
+                        "condition": "roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedTreatedHa, 2)",
+                        "type": "visible"
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "invoicedNotActualComments",
+                    "behaviour": [
+                      {
+                        "type": "visible",
+                        "condition": "\"Other\" == invoicedNotActualReason"
+                      }
+                    ],
+                    "validate": "required,maxSize[300]"
+                  },
+                  {
+                    "defaultValue": {
+                      "type": "computed",
+                      "expression": "$geom.lengthKm(sitesTreated)"
+                    },
+                    "dataType": "number",
+                    "name": "lengthTreatedKm",
+                    "units": "km",
+                    "decimalPlaces": 3,
+                    "validate": [
+                      {
+                        "rule": "min",
+                        "param": {
+                          "type": "computed",
+                          "expression": "$geom.lengthKm(sitesTreated)*0.9"
+                        }
+                      },
+                      {
+                        "rule": "max",
+                        "param": {
+                          "type": "computed",
+                          "expression": "$geom.lengthKm(sitesTreated)*1.1"
+                        }
+                      }
+                    ]
                   }
-                ]
+                ],
+                "dataType": "list",
+                "name": "plantSurveyBaselineTable"
               }
             ],
             "dataType": "list",
-            "name": "floraSurveys",
+            "name": "plantSurveys",
             "minSize": 1
           },
           {
@@ -11217,7 +11379,7 @@
             "type": "number",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(floraSurveys, \"baselineOrIndicatorSurvey\")"
+              "expression": "count(plantSurveys, \"projectBaseline\")"
             }
           },
           {
@@ -11250,7 +11412,6 @@
               }
             ]
           }
-
         ],
         "modelName": "RLP - Plant survival survey",
         "title": "Plant survival survey",
@@ -11283,7 +11444,6 @@
                     ]
                   },
                   {
-
                     "type": "col",
                     "width": "20%",
                     "title": "Total Number of First Nations people delivering this service ",
@@ -11311,7 +11471,7 @@
                 "type": "table"
               },
               {
-                "preLabel": "Number of Flora surveys conducted:",
+                "preLabel": "Number of surveys completed:",
                 "noEdit": true,
                 "type": "number",
                 "source": "surveyCountHeader"
@@ -11319,21 +11479,16 @@
               {
                 "addRowText": "New survey site",
                 "userAddedRows": true,
-                "source": "floraSurveys",
+                "source": "plantSurveys",
                 "type": "repeat",
                 "items": [
-
                   {
-                    "type": "table",
-                    "source": "floraSurveyBaselineDetails",
-                    "userAddedRows": true,
-                    "disableTableUpload": true,
                     "columns": [
                       {
-                        "source": "baselineOrIndicatorSurvey",
-                        "type": "selectOne",
-                        "width": "15%",
-                        "title": "Baseline survey or indicator (follow-up) survey?"
+                        "width": "10%",
+                        "source": "numberSurveysConducted",
+                        "title": "Number of surveys conducted",
+                        "type": "number"
                       },
                       {
                         "source": "projectBaseline",
@@ -11366,73 +11521,113 @@
                         "width": "10%"
                       },
                       {
-                        "title": "Sites covered by flora surveys",
-                        "helpText": "Manually enter correct figure for this reporting period if different to mapped value.",
-                        "source": "sitesSurveyedHa",
                         "width": "10%",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
+                        "title": "Sites covered by flora surveys",
+                        "type": "col",
+                        "items": [
+                          {
+                            "source": "sitesTreated",
+                            "type": "feature"
+                          },
+                          {
+                            "source": "calculatedAreaTreatedHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            },
+                            "readonly": "readonly"
+                          },
+                          {
+                            "source": "calculatedLengthTreatedKm",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            },
+                            "readonly": "readonly"
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Please attach mapping details",
+                                "source": "extraMappingDetails",
+                                "type": "document"
+                              }
+                            ]
+                          }
+                        ]
                       },
                       {
-                        "title": "Actual area (ha) covered by flora surveys",
-                        "helpText": "Manually enter correct figure for this reporting period if different to mapped value.",
-                        "source": "areaSurveyedHa",
-                        "width": "10%",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
+                        "width": "20%",
+                        "type": "col",
+                        "title": "Actual area (ha) / length (km) treated by flora surveys",
+                        "helpText": "Enter the amount you will invoice for during this reporting period.",
+                        "items": [
+                          {
+                            "source": "areaTreatedHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          },
+                          {
+                            "source": "lengthTreatedKm",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Reason for actual being different to mapped amount",
+                                "source": "mappingNotAlignedReason",
+                                "type": "selectOne"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                                "source": "mappingNotAlignedComments",
+                                "type": "textarea",
+                                "rows": 5
+                              }
+                            ]
+                          }
+                        ]
                       }
-                    ]
+                    ],
+                    "userAddedRows": true,
+                    "disableTableUpload": true,
+                    "source": "plantSurveyBaselineTable",
+                    "type": "table"
                   },
                   {
                     "columns": [
                       {
                         "width": "20%",
-                        "source": "species",
-                        "title": "Target species recorded",
-                        "type": "speciesSelect"
-                      },
-                      {
-                        "width": "15%",
-                        "source": "threatenedEcologicalCommunity",
-                        "title": "Threatened ecological communities (if applicable)",
-                        "type": "text"
-                      },
-                      {
-                        "width": "10%",
-                        "source": "individualsOrGroups",
-                        "title": "Individuals or groups?",
-                        "type": "selectOne"
-                      },
-                      {
-                        "width": "10%",
-                        "source": "numberOfIndividualsOrGroups",
-                        "title": "Number of groups / individuals in flora survey",
-                        "type": "number"
-                      },
-                      {
-                        "width": "10%",
                         "title": "Survey Technique",
                         "source": "ternSurveyTechnique",
                         "type": "selectOne"
                       },
                       {
-                        "width": "10%",
+                        "width": "20%",
                         "title": "Survey Technique (if Other)",
                         "source": "otherTernSurveyTechnique",
                         "type": "text"
                       },
                       {
-                        "width": "15%",
+                        "width": "25%",
                         "source": "surveyMethodology",
                         "title": "Survey Methodology",
                         "type": "text"
                       },
                       {
-                        "width": "15%",
+                        "width": "25%",
                         "source": "surveyObjective",
                         "title": "Survey Objective",
                         "type": "text"
@@ -11440,7 +11635,57 @@
                     ],
                     "userAddedRows": true,
                     "disableTableUpload": true,
-                    "source": "floraSurveyDetails",
+                    "source": "surveyTechniqueTable",
+                    "type": "table"
+                  },
+                  {
+                    "columns": [
+                      {
+                        "width": "30%",
+                        "source": "species",
+                        "title": "Target species recorded",
+                        "type": "speciesSelect"
+                      },
+                      {
+                        "width": "20%",
+                        "title": "Planting Method",
+                        "source": "plantingMethod",
+                        "type": "selectOne"
+                      },
+                      {
+                        "width": "10%",
+                        "source": "hectaresPlanted",
+                        "title": "How many hectares planted?",
+                        "type": "number"
+                      },
+                      {
+                        "width": "10%",
+                        "source": "kilosOfDirectSeeding",
+                        "title": "Number of kilos for direct seeding",
+                        "type": "number"
+                      },
+                      {
+                        "width": "10%",
+                        "source": "numberPlanted",
+                        "title": "Number planted (Tubestock/Seedling planting)",
+                        "type": "number"
+                      },
+                      {
+                        "width": "10%",
+                        "source": "numberSurvived",
+                        "title": "Number Survived",
+                        "type": "number"
+                      },
+                      {
+                        "width": "10%",
+                        "source": "survivalRate",
+                        "title": "Survival Rate %",
+                        "type": "number"
+                      }
+                    ],
+                    "userAddedRows": true,
+                    "disableTableUpload": true,
+                    "source": "surveySpeciesTable",
                     "type": "table"
                   }
                 ]
@@ -11473,7 +11718,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all <u>Environment</u> projects but optional for Agriculture projects. This field identifies what evidence you have available for this service and where the evidence is stored. This helps the Department and Service Providers during future assurance activities. Refer to the <a href=\"http://nrm.gov.au/publications/rlp-merit-user-guide\" target=\"_evidence\">Evidence Guide</a> for details of the types of acceptable evidence."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -11491,15 +11736,6 @@
                     "type": "textarea",
                     "rows": 4,
                     "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "type": "literal",
-                    "source": "<p><b>Evidence of Service Delivery</b></p>This field is mandatory for all <u>Agriculture</u> projects as part of the invoicing process, as well as any environment projects where you have been notified as undergoing an <u>audit or quarterly assurance check</u>. The field allows you to attach evidence against a specific service."
                   }
                 ]
               },
@@ -14405,6 +14641,66 @@
             "minSize": 1
           },
           {
+            "columns": [
+              {
+                "dataType": "species",
+                "name": "species",
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "individualsOrGroups",
+                "constraints": [
+                  "Individuals",
+                  "Groups"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "number",
+                "name": "numberOfIndividualsOrGroups",
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "stringList",
+                "name": "ternSurveyTechnique",
+                "validate": "required",
+                "constraints": [
+                  "Tern Survey Technique 1",
+                  "Tern Survey Technique 1",
+                  "Tern Survey Technique 1",
+                  "Other"
+                ]
+              },
+              {
+                "dataType": "text",
+                "description": "Please describe the survey technique if other was selected.",
+                "name": "otherTernSurveyTechnique",
+                "behaviour": [
+                  {
+                    "condition": "ternSurveyTechnique == \"Other\"",
+                    "type": "enable_and_clear"
+                  }
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "surveyMethodology",
+                "description": "Survey Methodology",
+                "validate": "required,maxSize[3000]"
+              },
+              {
+                "dataType": "text",
+                "name": "surveyObjective",
+                "description": "Survey Objective",
+                "validate": "required,maxSize[3000]"
+              }
+            ],
+            "dataType": "list",
+            "name": "faunaSurveyBaselineTable"
+          },
+          {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
             "constraints": [
@@ -14573,7 +14869,7 @@
                 "preLabel": "Number of Skills and Knowledge surveys conducted:",
                 "noEdit": true,
                 "type": "number",
-                "source": "skillsKnowledgeSurveyCountHeader"
+                "source": "surveyCountHeader"
               },
               {
                 "addRowText": "New survey site",
@@ -14609,23 +14905,23 @@
                       {
                         "source": "outcomeStatementPrePop",
                         "type": "select2Many",
-                        "width": "15%",
+                        "width": "10%",
                         "title": "Which outcome statement/s relates to this survey?"
                       },
                       {
                         "title": "Activities Start Date",
                         "source": "activitiesStartDate",
                         "type": "date",
-                        "width": "10%"
+                        "width": "8%"
                       },
                       {
                         "title": "Activities End Date",
                         "source": "activitiesEndDate",
                         "type": "date",
-                        "width": "10%"
+                        "width": "8%"
                       },
                       {
-                        "width": "10%",
+                        "width": "5%",
                         "title": "Number of people completing survey",
                         "source": "numberOfPeopleSurveying",
                         "type": "number"
@@ -14637,9 +14933,23 @@
                         "type": "selectOne"
                       },
                       {
-                        "width": "15%",
+                        "width": "10%",
                         "title": "Survey Technique (if Other)",
                         "source": "otherTernSurveyTechnique",
+                        "type": "textarea"
+                      },
+                      {
+                        "width": "10%",
+                        "rows": 4,
+                        "source": "surveyMethodology",
+                        "title": "Survey Methodology",
+                        "type": "textarea"
+                      },
+                      {
+                        "width": "10%",
+                        "rows": 4,
+                        "source": "surveyObjective",
+                        "title": "Survey Objective",
                         "type": "textarea"
                       }
                     ]
@@ -14674,7 +14984,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all <u>Environment</u> projects but optional for Agriculture projects. This field identifies what evidence you have available for this service and where the evidence is stored. This helps the Department and Service Providers during future assurance activities. Refer to the <a href=\"http://nrm.gov.au/publications/rlp-merit-user-guide\" target=\"_evidence\">Evidence Guide</a> for details of the types of acceptable evidence."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
                   },
                   {
                     "preLabel": "Data have been uploaded",
