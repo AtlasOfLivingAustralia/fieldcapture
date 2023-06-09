@@ -41,7 +41,7 @@
                                     data-validation-engine="validate[required]"
                                     data-bind="options:$root.allTargetMeasures, optionsText:'label', optionsValue:'scoreId', multiSelect2:{value:relatedTargetMeasures, preserveColumnWidth:20}, disable: $root.isProjectDetailsLocked()"></select>
                         </td>
-                        <td class="baseline-method">
+                        <td class="monitoring-method">
                             <select multiple="multiple"
                                     class="form-control form-control-sm"
                                     data-validation-engine="validate[required]"
@@ -53,7 +53,7 @@
                                     class="form-control form-control-sm"
                                     data-validation-engine="validate[required]"
                                     placeholder="Details of method here..."
-                                    data-bind="value: method, disable: $root.isProjectDetailsLocked()"
+                                    data-bind="value: data2, disable: $root.isProjectDetailsLocked()"
                                     rows="4"></textarea>
                             <!-- /ko -->
                         </td>

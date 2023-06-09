@@ -15,7 +15,7 @@
     </div>
 
     <div class="col-md-4">
-        <span id="indigenous-involvement" data-bind="text:details.indigenousInvolvementType"></span>
+        <span id="indigenous-involvement-view" data-bind="text:details.indigenousInvolvementType"></span>
     </div>
 </div>
 <div class="row" data-bind="if:details.indigenousInvolved() == 'No'">

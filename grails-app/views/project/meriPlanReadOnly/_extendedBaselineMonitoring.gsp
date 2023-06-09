@@ -18,10 +18,10 @@
         <th class="evidence required">Evidence</th>
     </tr>
 
-    <tr>
+    <tr class="baseline-row">
         <td class="code"><span data-bind="text:code"></span></td>
         <td class="outcome">
-            <span data-bind="text:code"></span>
+            <span data-bind="text:relatedOutcomes"></span>
         </td>
         <td class="monitoring-data">
             <span data-bind="text:monitoringDataStatus"></span>
@@ -34,9 +34,9 @@
             <span data-bind="text:$root.targetMeasureLabels(relatedTargetMeasures)"></span>
         </td>
         <td class="baseline-method">
-            <span data-bind="text:protocol"></span>
+            <span data-bind="text:protocols"></span>
             <br/>
-            <span data-bind="visible:protocol() == 'Other', text: method"></span>
+            <span data-bind="visible:_.contains(protocols(), 'Other'), text: method"></span>
         </td>
         <td class="evidence">
             <span class="textarea-view" data-bind="text:evidence"></span>

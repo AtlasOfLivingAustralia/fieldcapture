@@ -24,7 +24,17 @@
                 <span data-bind="text:$root.targetMeasureLabels(relatedTargetMeasures)"></span>
             </td>
         </g:if>
-        <td class="baseline-method"><span data-bind="text:data2"></span></td>
+        <td class="monitoring-method">
+        <g:if test="${extendedMonitoring}">
+            <span data-bind="text:protocols"></span>
+            <br/>
+            <span data-bind="visible:_.contains(protocols(), 'Other'), text: data2"></span>
+
+        </g:if>
+        <g:else>
+            <span data-bind="text:data2"></span>
+        </g:else>
+        </td>
         <g:if test="${extendedMonitoring}">
             <td class="monitoring-evidence">
                 <span class="textarea-view" data-bind="text:evidence"></span>

@@ -21,10 +21,10 @@
     <tbody data-bind="foreach : outcomeTargets">
     <tr>
         <td class="index"><span data-bind="text:$index()+1"></span></td>
-        <td class="">
+        <td class="service">
             <span data-bind="text:serviceLabel"></span>
         </td>
-        <td class="">
+        <td class="score">
             <span data-bind="text:scoreLabel"></span>
         </td>
         <!-- ko foreach: periodTargets -->

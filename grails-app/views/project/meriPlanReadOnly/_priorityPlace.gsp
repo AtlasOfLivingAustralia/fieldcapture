@@ -10,11 +10,12 @@
     </div>
 </div>
 <!-- ko if:details.supportsPriorityPlace() == 'Yes' -->
-<div class="form-group">
+<div class="row">
 
-    <label>Please select the supported priority places</label>
-    <span data-bind="text:details.supportedPriorityPlaces">
-    </span>
+    <div class="col-sm-8">Please select the supported priority places</div>
+    <div class="col-sm-4">
+        <span data-bind="text:details.supportedPriorityPlaces"></span>
+    </div>
 
 </div>
 <!-- /ko -->

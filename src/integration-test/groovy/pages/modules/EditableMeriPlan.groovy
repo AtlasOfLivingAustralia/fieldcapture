@@ -81,7 +81,7 @@ class MonitoringIndicatorRow extends Module {
         approach { $('textarea[data-bind*=data2]' ) }
         targetMeasures(required:false) { $('.monitoring-service select') }
         evidence(required:false) { $('.monitoring-evidence textarea') }
-        methodProtocols(required:false) { $('.baseline-method select') }
+        methodProtocols(required:false) { $('.monitoring-method select') }
         remove { $('i.icon-remove') }
     }
 }

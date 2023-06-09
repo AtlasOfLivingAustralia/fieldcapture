@@ -14,29 +14,55 @@ class ReadOnlyProjectOutcomeRow extends Module {
     static content = {
         outcome { $('.outcome span') }
         priority(required:false) { $('.investment-priority span') }
-        relatedProgramOutcomes(required: false) { $('.program-outcome span') }
+        relatedProgramOutcomes(required: false) { $('.medium-term-outcome span') }
     }
 }
 
 class ReadOnlyThreatRow extends Module {
     static content = {
-        threat { $('span[data-bind*=threat]') }
+        threatCode(required:false) { $('.threat-code span') }
+        threat { $('.threat span') }
         intervention { $('span[data-bind*=intervention]') }
+        targetMeasures(required:false) { $('.services span') }
+        evidence(required:false) { $('.evidence span') }
+        relatedOutcomes(required:false) { $('.related-outcomes span') }
+
+    }
+}
+
+/**
+ * Represents the extendedBaselineMonitoring.gsp MERI plan section tha build a relationship between the
+ * project baseline and the monitoring indicators for that baseline.
+ */
+class ReadOnlyExtendedBaseline extends Module {
+    static content = {
+        projectBaselines(required: false) { $('tr.baseline-row').moduleList(ReadOnlyBaselineRow) }
+        monitoringIndicators(required: false) { $('.meri-monitoring-indicators  table tbody tr').moduleList(ReadOnlyMonitoringIndicatorRow) }
+
     }
 }
 
 class ReadOnlyBaselineRow extends Module {
     static content = {
+        outcome(required: false) { $('.outcome span') }
+        monitoringData(required: false) { $('.monitoring-data span') }
         baseline { $('.baseline span[data-bind*=baseline]') }
-        method { $('.baseline-method span') }
+        targetMeasures(required:false) { $('.service span') }
+        method { $('.baseline-method span[data-bind*=method]') }
+        evidence(required:false) { $('.evidence span') }
+        methodProtocols(required:false) { $('.baseline-method span[data-bind*=protocols]')[0] }
+        otherMethodProtocol(required:false) { $('.baseline-method span[data-bind*=method]') }
     }
-
 }
 
-class ReadOnlyMonitoringIndictorRow extends Module {
+class ReadOnlyMonitoringIndicatorRow extends Module {
     static content = {
         indicator { $('span[data-bind*=data1]') }
         approach { $('span[data-bind*=data2]' ) }
+        targetMeasures(required:false) { $('.monitoring-service span') }
+        evidence(required:false) { $('.monitoring-evidence span') }
+        methodProtocols(required:false) { $('.monitoring-method span[data-bind*=protocols]')[0] }
+        otherMethodProtocol(required:false) { $('.monitoring-method span[data-bind*=method]') }
     }
 }
 
@@ -45,6 +71,7 @@ class ReadOnlyPlanRow extends Module {
         name { $('.document-name span') }
         section { $('.section span') }
         alignment { $('.alignment span') }
+        documentUrl { $('.document-url span') }
     }
 }
 
@@ -96,8 +123,8 @@ class ReadOnlyServiceTargetRow extends Module {
  */
 class ReadOnlyPriorityPlace extends Module {
     static content = {
-        supportsPriorityPlaces { $('#supports-priority-place') }
-        priorityPlace { $('#priority-place') }
+        supportsPriorityPlaces { $('[data-bind*=supportsPriorityPlace]') }
+        priorityPlace { $('[data-bind*=supportedPriorityPlaces]') }
     }
 }
 
@@ -106,44 +133,44 @@ class ReadOnlyPriorityPlace extends Module {
  */
 class ReadOnlyFirstNationsPeopleInvolvement extends Module {
     static content = {
-        supportsFirstNationsPeopleInvolvement { $('#indigenous-involved') }
-        firstNationsPeopleInvolvement { $('#indigenous-involvement') }
-        comments { $('#indigenous-involvement-comments') }
+        supportsFirstNationsPeopleInvolvement { $('span[data-bind*=indigenousInvolved]') }
+        firstNationsPeopleInvolvement { $('#indigenous-involvement-view') }
+        comments { $('[data-bind*=indigenousInvolvementComment]') }
     }
 }
 
 class ReadOnlyServiceOutcomeTarget extends Module {
     static content = {
-        outcomes { $('.service select') }
-        target { $('.score input') }
+        outcomes { $('.service span') }
+        target { $('.score span') }
     }
 }
 class ReadOnlyServiceOutcomeTargets extends Module {
     static content = {
-        service { $('.service input') }
-        targetMeasure { $('.score input') }
+        service { $('.service span') }
+        targetMeasure { $('.score span') }
     }
 }
 
 class ReadOnlyServiceOutcomes extends Module {
     static content = {
 
-        serviceAndTargets(required:false) { $('tr.service-target').moduleList(ServiceOutcomeTargets) }
-        outcomeTargets(required:false) { $('tr.outcome-target').moduleList(ServiceOutcomeTarget) }
+        serviceAndTargets(required:false) { $('tr.service-target').moduleList(ReadOnlyServiceOutcomeTargets) }
+        outcomeTargets(required:false) { $('tr.outcome-target').moduleList(ReadOnlyServiceOutcomeTarget) }
     }
 }
 
 class ReadOnlyServiceForecasts extends Module {
     static content = {
-        forecasts(required:false) { $('tbody tr').moduleList(ForecastRow) }
+        forecasts(required:false) { $('tbody tr').moduleList(ReadOnlyForecastRow) }
     }
 }
 
 class ReadOnlyForecastRow extends Module {
     static content = {
-        service { $('.service input') }
-        score { $('.score input') }
-        targets { $('.budget-cell input') }
+        service { $('.service span') }
+        score { $('.score span') }
+        targets { $('.budget-cell span') }
     }
 }
 
@@ -159,19 +186,23 @@ class ReadOnlyMeriPlan extends Module {
         secondaryOutcomes(required: false) { $('table.secondary-outcome tbody tr').moduleList(ReadOnlyOutcomeRow) }
         shortTermOutcomes(required: false) { $('tbody[data-bind*="shortTermOutcomes"] tr').moduleList(ReadOnlyProjectOutcomeRow) }
         mediumTermOutcomes(required: false) {  $('tbody[data-bind*="midTermOutcomes"] tr').moduleList(ReadOnlyProjectOutcomeRow) }
-        projectName(required: false) { $('input[data-bind*="details.name"]') }
+        projectName(required: false) { $('span[data-bind*="details.name"]') }
         projectDescription(required: false) { $('span[data-bind*="details.description"]') }
-        rationale(required: false) { $('textarea[data-bind*="details.rationale"]') }
+        rationale(required: false) { $('[data-bind*="details.rationale"]') }
         keyThreats(required: false) { $('table.threats-view tbody tr').moduleList(ReadOnlyThreatRow) }
         projectMethodology(required: false) { $('table span[data-bind*="implementation.description"]') }
         projectImplementation(required: false) { $('#project-implementation span') }
         projectBaseline(required: false) { $('table.baseline-view tbody tr').moduleList(ReadOnlyBaselineRow) }
-        monitoringIndicators(required: false) { $('table.meri-monitoring-indicators tbody tr').moduleList(ReadOnlyMonitoringIndictorRow) }
-        rlpMonitoringIndicators(required: false) { $('table.monitoring-indicators-view tbody tr').moduleList(ReadOnlyMonitoringIndictorRow) }
+        extendedBaseline(required:false) { $('table.monitoring-baseline.extended').module(ReadOnlyExtendedBaseline) }
+        monitoringIndicators(required: false) { $('table.meri-monitoring-indicators tbody tr').moduleList(ReadOnlyMonitoringIndicatorRow) }
+        rlpMonitoringIndicators(required: false) { $('table.monitoring-indicators-view tbody tr').moduleList(ReadOnlyMonitoringIndicatorRow) }
 
         reviewMethodology(required: false) { $('span[data-bind*="projectEvaluationApproach"]') }
         nationalAndRegionalPlans(required: false) { $('table.plans-view tbody tr').moduleList(ReadOnlyPlanRow) }
         projectServices(required: false) { $('table.service-targets-view tbody tr').moduleList(ReadOnlyServiceTargetRow) }
+        serviceOutcomeTargets(required: false) { $('table.service-outcomes-targets-view').module(ReadOnlyServiceOutcomes) }
+        serviceForecasts(required: false) { $('table.forecasts').module(ReadOnlyServiceForecasts) }
+
         objectivesList(required: false) { $('#objectives-list') }
         projectPartnerships(required: false) { $('#project-partnership-view tbody tr').moduleList(ReadOnlyPartnershipRow) }
         keq(required:false) { $('#keq tbody tr').moduleList(ReadOnlyKeqRow) }

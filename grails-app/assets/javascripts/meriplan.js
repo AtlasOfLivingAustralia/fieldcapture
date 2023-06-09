@@ -286,6 +286,7 @@ function MERIPlan(project, projectService, config) {
 
     /**
      * Returns a list of distinct asset categories available for this project.
+     * Returns a list of distinct asset categories available for this project.
      * @param filter (optional) if supplied, only categories in this array will be returned.
      */
     self.assetCategories = function(filter) {

@@ -5,7 +5,7 @@
     <p>${explanation}</p>
 </g:if>
 <!-- ko with:details.threats -->
-<table class="table threats extended-threats">
+<table class="table threats-view threats extended-threats">
     <thead>
     <tr>
         <th class="index"></th>

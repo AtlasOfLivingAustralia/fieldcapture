@@ -11,7 +11,7 @@
     </tr>
     </thead>
     <tbody data-bind="foreach : outcomeTargets">
-    <tr>
+    <tr class="service-target">
         <td class="index"><span data-bind="text:$index()+1"></span></td>
         <td class="service">
             <span data-bind="text:serviceLabel"></span>
@@ -26,7 +26,7 @@
         <th>Target</th>
     </tr>
     <!-- ko foreach:outcomeTargets -->
-    <tr>
+    <tr class="outcome-target">
         <td class="index"></td>
         <td class="service">
             <span data-bind="text:relatedOutcomes"></span>

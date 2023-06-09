@@ -262,6 +262,83 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlan.serviceForecasts.forecasts[1].targets[3].value() == "2"
         meriPlan.serviceForecasts.forecasts[1].targets[4].value() == "1"
 
+        when: "We navigate to the read only version of the MERI plan"
+        def meriPlanView = openMERIPlanTab()
+
+        then:
+        meriPlanView.projectName.text() == "MERI plan edited name"
+        meriPlanView.projectDescription.text() == "MERI plan edited description"
+        meriPlanView.priorityPlace.supportsPriorityPlaces.text() == 'Yes'
+        meriPlanView.priorityPlace.priorityPlace.text() == 'Priority place 1'
+        meriPlanView.firstNationsPeopleInvolvement.supportsFirstNationsPeopleInvolvement.text() == 'Yes'
+        meriPlanView.firstNationsPeopleInvolvement.firstNationsPeopleInvolvement.text() == 'Leading'
+
+        meriPlanView.primaryOutcome.text() == "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
+        meriPlanView.primaryPriority.text() == "Ginini Flats Wetland Complex"
+        meriPlanView.secondaryOutcomes[0].outcome.text() == "By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved."
+        meriPlanView.secondaryOutcomes[0].priority.text() == "Swainsona recta"
+        meriPlanView.mediumTermOutcomes.size() == 2
+        meriPlanView.mediumTermOutcomes[0].outcome.text() == "Medium term outcome 1"
+        meriPlanView.mediumTermOutcomes[0].priority.text() == "Swainsona recta"
+        meriPlanView.mediumTermOutcomes[0].relatedProgramOutcomes.text() == "Medium term outcome 1"
+        meriPlanView.mediumTermOutcomes[1].outcome.text() == "Medium term outcome 2"
+        meriPlanView.mediumTermOutcomes[1].priority.text() == "Ginini Flats Wetland Complex"
+        meriPlanView.mediumTermOutcomes[1].relatedProgramOutcomes.text() == "Medium term outcome 2"
+        meriPlanView.shortTermOutcomes.size() == 1
+        meriPlanView.shortTermOutcomes[0].outcome.text() == "Short term outcome 1"
+        meriPlanView.shortTermOutcomes[0].priority.text() == "Swainsona recta"
+        meriPlanView.shortTermOutcomes[0].relatedProgramOutcomes.text() == "Short term outcome 3"
+
+        meriPlanView.keyThreats[0].threatCode.text() == "Key threat 2"
+        meriPlanView.keyThreats[0].threat.text() == "Threat 1"
+        meriPlanView.keyThreats[0].intervention.text() == "Intervention 1"
+        meriPlanView.keyThreats[0].targetMeasures.text() == 'Collecting, or synthesising baseline data - Number of baseline data sets collected and/or synthesised'
+        meriPlanView.keyThreats[0].evidence.text() == "Evidence 1"
+        meriPlanView.keyThreats[0].relatedOutcomes.text() == 'ST1'
+        meriPlanView.projectMethodology.text() == "Project assumptions 1"
+        meriPlanView.projectPartnerships[0].name == 'partner name'
+        meriPlanView.projectPartnerships[0].partnership == 'partnership'
+        meriPlanView.projectPartnerships[0].orgType == 'Trust'
+        meriPlanView.extendedBaseline.projectBaselines[0].outcome.text() == "MT1"
+        meriPlanView.extendedBaseline.projectBaselines[0].monitoringData.text() == "Needs to be collected"
+        meriPlanView.extendedBaseline.projectBaselines[0].baseline.text() == "Project baseline 1"
+        meriPlanView.extendedBaseline.projectBaselines[0].targetMeasures.text() == 'Weed distribution survey - Area (ha) surveyed for weeds'
+        meriPlanView.extendedBaseline.projectBaselines[0].methodProtocols.text() == 'Category 1'
+        meriPlanView.extendedBaseline.projectBaselines[0].evidence.text() == "Baseline Evidence 1"
+        meriPlanView.monitoringIndicators[0].methodProtocols.text() == 'Category 1'
+        meriPlanView.monitoringIndicators[0].indicator.text() == "Indicator 1"
+        meriPlanView.monitoringIndicators[0].targetMeasures.text() == 'Collecting, or synthesising baseline data - Number of baseline data sets collected and/or synthesised'
+        meriPlanView.monitoringIndicators[0].evidence.text() == "Evidence 2"
+        meriPlanView.reviewMethodology.text() == "Review methodology"
+        meriPlanView.nationalAndRegionalPlans[0].name.text() == "Plan 1"
+        meriPlanView.nationalAndRegionalPlans[0].section.text() == "Section 1"
+        meriPlanView.nationalAndRegionalPlans[0].alignment.text() == "Alignment 1"
+        meriPlanView.nationalAndRegionalPlans[0].documentUrl.text() == "http://www.test.org"
+        meriPlanView.serviceOutcomeTargets.serviceAndTargets[0].service.text() == "Collecting, or synthesising baseline data"
+        meriPlanView.serviceOutcomeTargets.serviceAndTargets[0].targetMeasure.text() == "Number of baseline data sets collected and/or synthesised"
+        meriPlanView.serviceOutcomeTargets.outcomeTargets[0].outcomes.text() == "ST1"
+        meriPlanView.serviceOutcomeTargets.outcomeTargets[0].target.text() == "2"
+        meriPlanView.serviceOutcomeTargets.serviceAndTargets[1].service.text() == "Weed distribution survey"
+        meriPlanView.serviceOutcomeTargets.serviceAndTargets[1].targetMeasure.text() == "Area (ha) surveyed for weeds"
+        meriPlanView.serviceOutcomeTargets.outcomeTargets[1].outcomes.text() == "MT1"
+        meriPlanView.serviceOutcomeTargets.outcomeTargets[1].target.text() == "1"
+
+        meriPlanView.serviceForecasts.forecasts[0].service.text() == "Collecting, or synthesising baseline data"
+        meriPlanView.serviceForecasts.forecasts[0].score.text() == "Number of baseline data sets collected and/or synthesised"
+        meriPlanView.serviceForecasts.forecasts[1].service.text() == "Weed distribution survey"
+        meriPlanView.serviceForecasts.forecasts[1].score.text() == "Area (ha) surveyed for weeds"
+
+        meriPlanView.serviceForecasts.forecasts[0].targets[0].text() == "1"
+        meriPlanView.serviceForecasts.forecasts[0].targets[1].text() == "2"
+        meriPlanView.serviceForecasts.forecasts[0].targets[2].text() == "3"
+        meriPlanView.serviceForecasts.forecasts[0].targets[3].text() == "4"
+        meriPlanView.serviceForecasts.forecasts[0].targets[4].text() == "5"
+        meriPlanView.serviceForecasts.forecasts[1].targets[0].text() == "5"
+        meriPlanView.serviceForecasts.forecasts[1].targets[1].text() == "4"
+        meriPlanView.serviceForecasts.forecasts[1].targets[2].text() == "3"
+        meriPlanView.serviceForecasts.forecasts[1].targets[3].text() == "2"
+        meriPlanView.serviceForecasts.forecasts[1].targets[4].text() == "1"
+
     }
 
     def "The MERI Plan will display only sections specified in the program configuration"() {
