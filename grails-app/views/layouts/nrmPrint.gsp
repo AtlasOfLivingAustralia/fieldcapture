@@ -1,8 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
-<!--[if IE 7]><html lang="en" class="ie ie7"><![endif]-->
-<!--[if IE 8]><html lang="en" class="ie ie8"><![endif]-->
-<!--[if IE 9]><html lang="en" class="ie ie9"><![endif]-->
 <!--[if !IE]><!--><html lang="en"><!--<![endif]-->
 <head>
     <link href="${grailsApplication.config.getProperty('ala.baseURL', String, 'http://www.ala.org.au')}/wp-content/themes/ala2011/images/favicon.ico" rel="shortcut icon" />
@@ -15,6 +12,9 @@
     </style>
     <g:layoutHead />
     <g:set var="containerType" scope="request" value="${containerType?:'container'}"/>
+    <g:if test="${grailsApplication.config.getProperty('analytics.fathom.trackingId')}">
+        <script src="https://cdn.usefathom.com/script.js" data-site="${grailsApplication.config.getProperty('analytics.fathom.trackingId')}" defer></script>
+    </g:if>
 </head>
 <body>
 
@@ -22,12 +22,7 @@
     <g:layoutBody />
 </div><!-- /#content -->
 
-<asset:script>
-    // Prevent console.log() killing IE
-    if (typeof console == "undefined") {
-        this.console = {log: function() {}};
-    }
-</asset:script>
+<g:if test="${grailsApplication.config.getProperty('analytics.google.enable')}">
 <!-- current env = ${grails.util.Environment.getCurrent().name} -->
 <g:if test="${ grails.util.Environment.getCurrent().name =~ /test|prod/ }">
     <asset:script type="text/javascript">
@@ -44,6 +39,7 @@
         })();
 
     </asset:script>
+</g:if>
 </g:if>
 </body>
 </html>
