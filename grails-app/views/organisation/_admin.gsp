@@ -74,7 +74,7 @@
 
         </div>
         <div class="tab-pane" id="config">
-            <h4 style="display:inline-block">Program configuration</h4> <button class="btn btn-success float-right" data-bind="click:saveOrganisationConfiguration">Save Configuration</button>
+            <h4 style="display:inline-block">Organisation configuration</h4> <button class="btn btn-success float-right" data-bind="click:saveOrganisationConfiguration">Save Configuration</button>
 
             <textarea id="textConfig" rows="80" style="width:100%" data-bind="value:config">
 
