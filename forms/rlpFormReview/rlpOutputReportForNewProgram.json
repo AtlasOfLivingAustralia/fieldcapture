@@ -8393,24 +8393,323 @@
         "modelName": "RLP - Identifying sites",
         "dataModel": [
           {
+            "columns": [
+              {
+                "columns": [
+                  {
+                    "dataType": "number",
+                    "name": "numberOfSitesIdentifiedPrioritised",
+                    "validate": "required,min[0]"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "sitesHaveBeenIdentified",
+                    "description": "",
+                    "validate": "required,maxSize[300]"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "methodsUsedToIdentify",
+                    "description": "",
+                    "validate": "required,maxSize[300]"
+                  },
+                  {
+                    "name": "outcomeStatementPrePop",
+                    "dataType": "text",
+                    "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "description",
+                      "valueProperty": "description",
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "context-path": "owner.custom.details.outcomes.shortTermOutcomes"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "investmentPrioritiesActivityRelates",
+                    "description": "",
+                    "validate": "required,maxSize[300]"
+                  },
+                  {
+                    "dataType": "feature",
+                    "name": "sitesTreated"
+                  },
+                  {
+                    "computed": {
+                      "expression": "$geom.areaHa(sitesTreated)"
+                    },
+                    "dataType": "number",
+                    "name": "calculatedAreaTreatedHa",
+                    "units": "ha",
+                    "decimalPlaces": 3,
+                    "behaviour": [
+                      {
+                        "condition": "areaInvoicedTreatedHa > 0",
+                        "type": "conditional_validation",
+                        "value": {
+                          "message": "The managed area must be mapped",
+                          "validate": "required,min[0.0001]"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "computed": {
+                      "expression": "$geom.lengthKm(sitesTreated)"
+                    },
+                    "dataType": "number",
+                    "name": "calculatedLengthTreatedKm",
+                    "units": "km",
+                    "decimalPlaces": 3,
+                    "behaviour": [
+                      {
+                        "condition": "lengthTreatedKm > 0",
+                        "type": "conditional_validation",
+                        "value": {
+                          "message": "The managed length must be mapped",
+                          "validate": "required,min[0.0001]"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "defaultValue": {
+                      "type": "computed",
+                      "expression": "calculatedAreaTreatedHa"
+                    },
+                    "dataType": "number",
+                    "name": "areaTreatedHa",
+                    "units": "ha",
+                    "decimalPlaces": 3,
+                    "validate": "required,min[0]"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "mappingNotAlignedReason",
+                    "constraints": [
+                      "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                      "Other"
+                    ],
+                    "validate": "required",
+                    "behaviour": [
+                      {
+                        "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1))",
+                        "type": "visible"
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "mappingNotAlignedComments",
+                    "validate": "required,maxSize[300]",
+                    "behaviour": [
+                      {
+                        "type": "visible",
+                        "condition": "\"Other\" == mappingNotAlignedReason"
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "document",
+                    "name": "extraMappingDetails",
+                    "validate": "required",
+                    "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                    "behaviour": [
+                      {
+                        "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1)) or roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedTreatedHa, 2)",
+                        "type": "visible"
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "identifiedSitesName",
+                    "description": "",
+                    "validate": "required,maxSize[300]"
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "areaInvoicedTreatedHa",
+                    "units": "ha",
+                    "decimalPlaces": 3,
+                    "validate": [
+                      {
+                        "rule": "min[0]"
+                      },
+                      {
+                        "rule": "max",
+                        "param": {
+                          "type": "computed",
+                          "expression": "areaTreatedHa"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "invoicedNotActualReason",
+                    "constraints": [
+                      "Work was undertaken over a greater area than will be invoiced for",
+                      "Other"
+                    ],
+                    "validate": "required",
+                    "behaviour": [
+                      {
+                        "condition": "roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedTreatedHa, 2)",
+                        "type": "visible"
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "invoicedNotActualComments",
+                    "behaviour": [
+                      {
+                        "type": "visible",
+                        "condition": "\"Other\" == invoicedNotActualReason"
+                      }
+                    ],
+                    "validate": "required,maxSize[300]"
+                  },
+                  {
+                    "defaultValue": {
+                      "type": "computed",
+                      "expression": "$geom.lengthKm(sitesTreated)"
+                    },
+                    "dataType": "number",
+                    "name": "lengthTreatedKm",
+                    "units": "km",
+                    "decimalPlaces": 3,
+                    "validate": [
+                      {
+                        "rule": "min",
+                        "param": {
+                          "type": "computed",
+                          "expression": "$geom.lengthKm(sitesTreated)*0.9"
+                        }
+                      },
+                      {
+                        "rule": "max",
+                        "param": {
+                          "type": "computed",
+                          "expression": "$geom.lengthKm(sitesTreated)*1.1"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "assessedSitesName",
+                    "description": "",
+                    "validate": "required,maxSize[300]"
+                  }
+                ],
+                "dataType": "list",
+                "name": "potentialSitesSurveyBaselineTable"
+              }
+            ],
+            "dataType": "list",
+            "name": "floraSurveys",
+            "minSize": 1
+          },
+          {
+            "dataType": "text",
+            "name": "participationIndividualsOrGroups",
+            "constraints": [
+              "Individuals",
+              "Groups"
+            ],
+            "validate": "required"
+          },
+          {
             "dataType": "number",
-            "name": "numberSitesIdentified",
+            "name": "participationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
             "validate": "required,min[0]"
           },
           {
             "dataType": "text",
-            "name": "sitesPurpose",
-            "description": "Please start with the '[RLP Service name]:' for which the site has been identified for. Then a brief description of what work/s are required to fix the area.",
-            "validate": "required,maxSize[500]"
+            "name": "participationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
           },
           {
-            "name": "photographicEvidence",
-            "dataType": "image"
+            "dataType": "number",
+            "name": "firstNationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "firstNationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "participationDetails",
+            "validate": "maxSize[3000]"
+          },
+          {
+            "name": "surveyCountHeader",
+            "type": "number",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "count(floraSurveys, \"baselineOrIndicatorSurvey\")"
+            }
           },
           {
             "dataType": "text",
             "name": "comments",
             "validate": "maxSize[1500]"
+          },
+          {
+            "dataType": "image",
+            "name": "photographicEvidence"
+          },
+          {
+            "dataType": "boolean",
+            "name": "dataUploaded",
+            "description": ""
           },
           {
             "dataType": "text",
@@ -8431,22 +8730,198 @@
         ],
         "viewModel": [
           {
+            "type": "section",
             "items": [
               {
-                "type": "row",
-                "items": [
+                "columns": [
                   {
-                    "source": "numberSitesIdentified",
-                    "preLabel": "Number of potential sites identified",
-                    "type": "number",
-                    "css": "span3"
+                    "width": "10%",
+                    "source": "participationIndividualsOrGroups",
+                    "title": "Individuals or groups?",
+                    "type": "selectOne"
                   },
                   {
-                    "source": "sitesPurpose",
-                    "preLabel": "What have these sites been identified for?",
-                    "type": "textarea",
-                    "rows": 5,
-                    "css": "span9"
+                    "width": "20%",
+                    "type": "col",
+                    "title": "Total Number of people delivering this service",
+                    "items": [
+                      {
+                        "source": "participationIndividualNumber",
+                        "type": "number"
+                      },
+                      {
+                        "source": "participationGroupNumber",
+                        "type": "selectOne"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "width": "20%",
+                    "title": "Total Number of First Nations people delivering this service ",
+                    "items": [
+                      {
+                        "source": "firstNationIndividualNumber",
+                        "type": "number"
+                      },
+                      {
+                        "source": "firstNationGroupNumber",
+                        "type": "selectOne"
+                      }
+                    ]
+                  },
+                  {
+                    "source": "participationDetails",
+                    "rows": 4,
+                    "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                    "type": "textarea"
+                  }
+                ],
+                "userAddedRows": false,
+                "disableTableUpload": false,
+                "source": "",
+                "type": "table"
+              },
+              {
+                "preLabel": "Number of Potential sites conducted:",
+                "noEdit": true,
+                "type": "number",
+                "source": "surveyCountHeader"
+              },
+              {
+                "addRowText": "New survey site",
+                "userAddedRows": true,
+                "source": "floraSurveys",
+                "type": "repeat",
+                "items": [
+                  {
+                    "columns": [
+                      {
+                        "width": "10%",
+                        "source": "numberOfSitesIdentifiedPrioritised",
+                        "title": "Number of potential sites identified and prioritised",
+                        "type": "number"
+                      },
+                      {
+                        "width": "10%",
+                        "source": "sitesHaveBeenIdentified",
+                        "title": "What sites have been identified?",
+                        "type": "text"
+                      },
+                      {
+                        "width": "15%",
+                        "source": "methodsUsedToIdentify",
+                        "title": "What method/s were used to identify and prioritise?",
+                        "type": "text"
+                      },
+                      {
+                        "source": "outcomeStatementPrePop",
+                        "type": "select2Many",
+                        "width": "10%",
+                        "title": "Which outcome statement/s relates to this survey?"
+                      },
+                      {
+                        "width": "15%",
+                        "source": "investmentPrioritiesActivityRelates",
+                        "title": "Which investment priority does this activity relate to?",
+                        "type": "text"
+                      },
+                      {
+                        "width": "10%",
+                        "title": "Identified and prioritised sites",
+                        "type": "col",
+                        "items": [
+                          {
+                            "source": "sitesTreated",
+                            "type": "feature"
+                          },
+                          {
+                            "source": "calculatedAreaTreatedHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            },
+                            "readonly": "readonly"
+                          },
+                          {
+                            "source": "calculatedLengthTreatedKm",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            },
+                            "readonly": "readonly"
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Please attach mapping details",
+                                "source": "extraMappingDetails",
+                                "type": "document"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "width": "10%",
+                        "source": "identifiedSitesName",
+                        "title": "Name of identified and prioritised site/s",
+                        "type": "text"
+                      },
+                      {
+                        "width": "10%",
+                        "type": "col",
+                        "title": "Assessed sites",
+                        "helpText": "",
+                        "items": [
+                          {
+                            "source": "areaTreatedHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          },
+                          {
+                            "source": "lengthTreatedKm",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Reason for actual being different to mapped amount",
+                                "source": "mappingNotAlignedReason",
+                                "type": "selectOne"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                                "source": "mappingNotAlignedComments",
+                                "type": "textarea",
+                                "rows": 5
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "width": "10%",
+                        "source": "assessedSitesName",
+                        "title": "Name of assessed site/s",
+                        "type": "text"
+                      }
+                    ],
+                    "userAddedRows": true,
+                    "source": "potentialSitesSurveyBaselineTable",
+                    "type": "table"
                   }
                 ]
               },
@@ -8454,9 +8929,9 @@
                 "type": "row",
                 "items": [
                   {
-                    "type": "image",
+                    "preLabel": "Optionally attach photos",
                     "source": "photographicEvidence",
-                    "preLabel": "Optionally attach photos"
+                    "type": "image"
                   }
                 ]
               },
@@ -8469,7 +8944,7 @@
                     "rows": 4,
                     "css": "span8",
                     "source": "comments",
-                    "placeholder": "Clarification comments include points for follow up with the project manager about this service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
+                    "placeholder": "Clarification comments include information for your project manager about the service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
                   }
                 ]
               },
@@ -8478,7 +8953,12 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all <u>Environment</u> projects but optional for Agriculture projects. This field identifies what evidence you have available for this service and where the evidence is stored. This helps the Department and Service Providers during future assurance activities. Refer to the <a href=\"http://nrm.gov.au/publications/rlp-merit-user-guide\" target=\"_evidence\">Evidence Guide</a> for details of the types of acceptable evidence."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                  },
+                  {
+                    "preLabel": "Data have been uploaded",
+                    "source": "dataUploaded",
+                    "type": "boolean"
                   }
                 ]
               },
@@ -8495,15 +8975,6 @@
                 ]
               },
               {
-                "type": "row",
-                "items": [
-                  {
-                    "type": "literal",
-                    "source": "<p><b>Evidence of Service Delivery</b></p>This field is mandatory for all <u>Agriculture</u> projects as part of the invoicing process, as well as any environment projects where you have been notified as undergoing an <u>audit or quarterly assurance check</u>. The field allows you to attach evidence against a specific service."
-                  }
-                ]
-              },
-              {
                 "type": "table",
                 "source": "assuranceDocuments",
                 "userAddedRows": true,
@@ -8516,8 +8987,7 @@
                   }
                 ]
               }
-            ],
-            "type": "section"
+            ]
           }
         ]
       },
