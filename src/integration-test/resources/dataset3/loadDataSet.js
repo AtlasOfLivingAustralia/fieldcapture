@@ -1460,7 +1460,8 @@ config.meriPlanContents = [
         }
     },
     {
-        "template": "serviceForecasts"
+        "template": "serviceForecasts",
+        "excludedModes":["PRINT"]
     }
 ];
 config.keyThreatCodes = [

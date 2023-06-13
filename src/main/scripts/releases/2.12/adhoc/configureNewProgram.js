@@ -474,7 +474,8 @@ var config =
                 }
             },
             {
-                "template": "serviceForecasts"
+                "template": "serviceForecasts",
+                "excludedModes":["PRINT"]
             }
         ],
         keyThreatCodes: [
