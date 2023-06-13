@@ -6,9 +6,8 @@ class AuditService {
     def grailsApplication
     def commonService
 
-    def getAuditMessagesForProject(String projectId) {
-        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'audit/ajaxGetAuditMessagesForProject?projectId=' + projectId
-        return webService.getJson(url, 60000)
+    def getAuditMessagesForProject(String projectId, int offset = 0, int pageSize = 200, String sort = 'date', String orderBy = 'desc') {
+        getAuditMessagesForProject(projectId, offset, pageSize,  sort, orderBy, 'au.org.ala.ecodata.Project' )
     }
 
     def getAuditMessagesForProject(String projectId, int offset, int pageSize, String sort, String orderBy, String q) {
@@ -45,42 +44,52 @@ class AuditService {
 
     Map compareProjectEntity(String projectId, String baselineDate, String beforeDate, String entityPath) {
 
-        Map auditResult = getAuditMessagesForProject(projectId)
+        int offset = 0
+        int pageSize = 100
+        List auditMessages = []
+
+        // Retrieve audit messages in batches until we have all the messages for the project.
+        Map auditResult = getAuditMessagesForProject(projectId, offset, pageSize)
+        auditMessages.addAll(auditResult.data ?: [])
+        while (auditMessages.size() < auditResult.recordsTotal) {
+            offset += pageSize
+            auditResult = getAuditMessagesForProject(projectId, offset, pageSize)
+            auditMessages.addAll(auditResult.data)
+        }
 
         // Holder for the most recent version of the entity recorded in the audit trail during the selected period.
         Map baselineEdit = null
-        // Holder for the the most recent version of the enitity recorded in the audit trail before the start of the selected period.
+        // Holder for the the most recent version of the entity recorded in the audit trail before the start of the selected period.
         Map comparisonEdit = null
         // Holder for the most recent copy of the entity that was made before or on the baseline date.
         Map mostRecentEditBeforeOrOnBaselineDate = null
 
-        if (auditResult && auditResult.messages) {
 
-            boolean finished = false
-            int i = 0
-            while (i < auditResult.messages.size() && !finished) {
-                Map message = auditResult.messages[i]
-                if (message.entityType == "au.org.ala.ecodata.Project") {
+        boolean finished = false
+        int i = 0
+        while (i < auditMessages.size() && !finished) {
+            Map message = auditMessages[i]
+            if (message.entityType == "au.org.ala.ecodata.Project") {
 
-                    if (!baselineEdit && (message.date <= baselineDate && message.date >= beforeDate) && message.entity[entityPath]) {
-                        // This is the most recent version of the project entity that falls inside the selected date range.
-                        baselineEdit = message
-                        mostRecentEditBeforeOrOnBaselineDate = message
-                    }
-                    else if (baselineEdit && !comparisonEdit && (message.date < beforeDate) && message.entity[entityPath]) {
-                        // This is the most recent version of the project entity before the start of the selected date range.
-                        comparisonEdit = message
-                    }
-                    else if (!mostRecentEditBeforeOrOnBaselineDate && message.date < beforeDate && message.entity[entityPath]) {
-                        mostRecentEditBeforeOrOnBaselineDate = message
-                    }
+                if (!baselineEdit && (message.date <= baselineDate && message.date >= beforeDate) && message.entity[entityPath]) {
+                    // This is the most recent version of the project entity that falls inside the selected date range.
+                    baselineEdit = message
+                    mostRecentEditBeforeOrOnBaselineDate = message
                 }
-                if (baselineEdit != null && comparisonEdit != null && mostRecentEditBeforeOrOnBaselineDate != null) {
-                    finished = true
+                else if (baselineEdit && !comparisonEdit && (message.date < beforeDate) && message.entity[entityPath]) {
+                    // This is the most recent version of the project entity before the start of the selected date range.
+                    comparisonEdit = message
                 }
-                i++
+                else if (!mostRecentEditBeforeOrOnBaselineDate && message.date < beforeDate && message.entity[entityPath]) {
+                    mostRecentEditBeforeOrOnBaselineDate = message
+                }
             }
+            if (baselineEdit != null && comparisonEdit != null && mostRecentEditBeforeOrOnBaselineDate != null) {
+                finished = true
+            }
+            i++
         }
+
         [baseline: baselineEdit, comparison:comparisonEdit, mostRecentEditBeforeOrOnBaselineDate:mostRecentEditBeforeOrOnBaselineDate]
     }
 
