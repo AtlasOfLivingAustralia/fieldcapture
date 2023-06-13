@@ -16588,180 +16588,382 @@
       "collapsedByDefault": false,
       "template": {
         "dataModel": [
+
           {
             "columns": [
-              {
-                "dataType": "text",
-                "name": "baselineOrIndicator",
-                "description": "",
-                "constraints": [
-                  "Baseline",
-                  "Indicator"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "number",
-                "name": "numberOfSurveysConducted",
-                "validate": "required,min[0]"
-              },
-              {
-                "dataType": "text",
-                "name": "dateRange",
-                "description": "What time of year (eg. Dates by dd/mm/yyyyy, Months, Season/s)",
-                "validate": "required,maxSize[100]"
-              },
-              {
-                "dataType": "feature",
-                "name": "sitesSurveyed"
-              },
-              {
-                "computed": {
-                  "expression": "$geom.areaHa(sitesSurveyed)"
-                },
-                "dataType": "number",
-                "name": "siteCalculatedAreaHa",
-                "units": "ha",
-                "decimalPlaces": 3,
-                "behaviour": [
-                  {
-                    "condition": "areaInvoicedHa > 0",
-                    "type": "conditional_validation",
-                    "value": {
-                      "message": "The surveyed area must be mapped",
-                      "validate": "required,min[0.0001]"
-                    }
-                  }
-                ]
-              },
-              {
-                "defaultValue": {
-                  "expression": "$geom.areaHa(sitesSurveyed)",
-                  "type": "computed"
-                },
-                "dataType": "number",
-                "name": "areaSurveyedHa",
-                "units": "ha",
-                "decimalPlaces": 3,
-                "validate": "required,min[0]"
-              },
-              {
-                "dataType": "number",
-                "name": "areaInvoicedHa",
-                "units": "ha",
-                "decimalPlaces": 3,
-                "validate": [
-                  {
-                    "rule": "required"
-                  },
-                  {
-                    "rule": "min[0]"
-                  },
-                  {
-                    "param": {
-                      "expression": "areaSurveyedHa",
-                      "type": "computed"
-                    },
-                    "rule": "max"
-                  }
-                ]
-              },
-              {
-                "dataType": "text",
-                "name": "mappingNotAlignedReason",
-                "behaviour": [
-                  {
-                    "condition": "not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1)",
-                    "type": "if"
-                  }
-                ],
-                "constraints": [
-                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
-                  "Other"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "text",
-                "name": "mappingNotAlignedComments",
-                "behaviour": [
-                  {
-                    "condition": "\"Other\" == mappingNotAlignedReason",
-                    "type": "if"
-                  }
-                ],
-                "validate": "required,maxSize[300]"
-              },
-              {
-                "dataType": "text",
-                "name": "invoicedNotActualReason",
-                "behaviour": [
-                  {
-                    "condition": "roundTo(areaSurveyedHa, 2) != roundTo(areaInvoicedHa, 2)",
-                    "type": "visible"
-                  }
-                ],
-                "constraints": [
-                  "Work was undertaken over a greater area than will be invoiced for",
-                  "Other"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "text",
-                "name": "invoicedNotActualComments",
-                "behaviour": [
-                  {
-                    "condition": "\"Other\" == invoicedNotActualReason",
-                    "type": "if"
-                  }
-                ],
-                "validate": "required,maxSize[300]"
-              },
-              {
-                "dataType": "document",
-                "name": "extraMappingDetails",
-                "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
-                "behaviour": [
-                  {
-                    "condition": "not within(areaSurveyedHa, siteCalculatedAreaHa, 0.1) or roundTo(areaSurveyedHa, 2) != roundTo(areaInvoicedHa, 2)",
-                    "type": "if"
-                  }
-                ],
-                "validate": "required"
-              },
               {
                 "columns": [
                   {
                     "dataType": "species",
-                    "name": "targetWeedSpecies",
-                    "dwcAttribute": "scientificName",
+                    "name": "species",
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "estimatedWeedCover",
+                    "validate": "required,min[0]"
+                  },
+                  {
+                    "dataType": "stringList",
+                    "name": "ternSurveyTechnique",
+                    "validate": "required",
+                    "constraints": [
+                      "Tern Survey Technique 1",
+                      "Tern Survey Technique 1",
+                      "Tern Survey Technique 1",
+                      "Other"
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "description": "Please describe the survey technique if other was selected.",
+                    "name": "otherTernSurveyTechnique",
+                    "behaviour": [
+                      {
+                        "condition": "ternSurveyTechnique == \"Other\"",
+                        "type": "enable_and_clear"
+                      }
+                    ],
                     "validate": "required"
                   },
                   {
                     "dataType": "text",
-                    "name": "surveyTechnique",
-                    "description": "What/How will these survey/s capture information",
-                    "validate": "required,maxSize[300]"
+                    "name": "surveyMethodology",
+                    "description": "Survey Methodology",
+                    "validate": "required,maxSize[3000]"
                   },
                   {
                     "dataType": "text",
                     "name": "surveyObjective",
-                    "description": "How will the information obtained from the surveys be used",
-                    "validate": "required,maxSize[300]"
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "estimatedCoverPercent",
-                    "validate": "required,min[0],max[100]"
+                    "description": "Survey Objective",
+                    "validate": "required,maxSize[3000]"
                   }
                 ],
                 "dataType": "list",
-                "name": "weedDistributionSurveyDetails"
+                "name": "weedSurveySpeciesTable"
+              },
+              {
+                "columns": [
+                  {
+                    "dataType": "text",
+                    "name": "baselineOrIndicatorSurvey",
+                    "description": "",
+                    "constraints": [
+                      "Baseline",
+                      "Indicator"
+                    ],
+                    "validate": "required"
+                  },
+                  {
+                    "name": "projectBaseline",
+                    "dataType": "text",
+                    "description": "Select the relevant Project Baseline as listed in the Monitoring Methodology section of the MERI Plan.",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "baseline",
+                      "valueProperty": "method",
+                      "type": "pre-populated",
+                      "excludePath": "projectBaseline",
+                      "config": {
+                        "source": {
+                          "context-path": "owner.custom.details.baseline.rows"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "name": "datasetSupports",
+                    "dataType": "text",
+                    "description": "This section will require the Data Set Name so the Metadata fields in the Data Set Summary tab should be filled out before the Outcome Report is due. More than one dataset if relevant for this Project Baseline could be selected.",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "name",
+                      "valueProperty": "dataSetId",
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "context-path": "owner.custom.dataSets"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "name": "outcomeStatementPrePop",
+                    "dataType": "text",
+                    "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "description",
+                      "valueProperty": "description",
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "context-path": "owner.custom.details.outcomes.shortTermOutcomes"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "dataType": "date",
+                    "name": "activitiesStartDate",
+                    "description": "",
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "date",
+                    "name": "activitiesEndDate",
+                    "description": "",
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "feature",
+                    "name": "sitesTreated"
+                  },
+                  {
+                    "computed": {
+                      "expression": "$geom.areaHa(sitesTreated)"
+                    },
+                    "dataType": "number",
+                    "name": "calculatedAreaTreatedHa",
+                    "units": "ha",
+                    "decimalPlaces": 3,
+                    "behaviour": [
+                      {
+                        "condition": "areaInvoicedTreatedHa > 0",
+                        "type": "conditional_validation",
+                        "value": {
+                          "message": "The managed area must be mapped",
+                          "validate": "required,min[0.0001]"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "computed": {
+                      "expression": "$geom.lengthKm(sitesTreated)"
+                    },
+                    "dataType": "number",
+                    "name": "calculatedLengthTreatedKm",
+                    "units": "km",
+                    "decimalPlaces": 3,
+                    "behaviour": [
+                      {
+                        "condition": "lengthTreatedKm > 0",
+                        "type": "conditional_validation",
+                        "value": {
+                          "message": "The managed length must be mapped",
+                          "validate": "required,min[0.0001]"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "defaultValue": {
+                      "type": "computed",
+                      "expression": "calculatedAreaTreatedHa"
+                    },
+                    "dataType": "number",
+                    "name": "areaTreatedHa",
+                    "units": "ha",
+                    "decimalPlaces": 3,
+                    "validate": "required,min[0]"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "mappingNotAlignedReason",
+                    "constraints": [
+                      "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                      "Other"
+                    ],
+                    "validate": "required",
+                    "behaviour": [
+                      {
+                        "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1))",
+                        "type": "visible"
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "mappingNotAlignedComments",
+                    "validate": "required,maxSize[300]",
+                    "behaviour": [
+                      {
+                        "type": "visible",
+                        "condition": "\"Other\" == mappingNotAlignedReason"
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "document",
+                    "name": "extraMappingDetails",
+                    "validate": "required",
+                    "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                    "behaviour": [
+                      {
+                        "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1)) or roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedTreatedHa, 2)",
+                        "type": "visible"
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "areaInvoicedTreatedHa",
+                    "units": "ha",
+                    "decimalPlaces": 3,
+                    "validate": [
+                      {
+                        "rule": "min[0]"
+                      },
+                      {
+                        "rule": "max",
+                        "param": {
+                          "type": "computed",
+                          "expression": "areaTreatedHa"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "invoicedNotActualReason",
+                    "constraints": [
+                      "Work was undertaken over a greater area than will be invoiced for",
+                      "Other"
+                    ],
+                    "validate": "required",
+                    "behaviour": [
+                      {
+                        "condition": "roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedTreatedHa, 2)",
+                        "type": "visible"
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "invoicedNotActualComments",
+                    "behaviour": [
+                      {
+                        "type": "visible",
+                        "condition": "\"Other\" == invoicedNotActualReason"
+                      }
+                    ],
+                    "validate": "required,maxSize[300]"
+                  },
+                  {
+                    "defaultValue": {
+                      "type": "computed",
+                      "expression": "$geom.lengthKm(sitesTreated)"
+                    },
+                    "dataType": "number",
+                    "name": "lengthTreatedKm",
+                    "units": "km",
+                    "decimalPlaces": 3,
+                    "validate": [
+                      {
+                        "rule": "min",
+                        "param": {
+                          "type": "computed",
+                          "expression": "$geom.lengthKm(sitesTreated)*0.9"
+                        }
+                      },
+                      {
+                        "rule": "max",
+                        "param": {
+                          "type": "computed",
+                          "expression": "$geom.lengthKm(sitesTreated)*1.1"
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "dataType": "list",
+                "name": "surveyBaselineTable"
               }
             ],
             "dataType": "list",
-            "name": "weedDistributionSurveySites"
+            "name": "floraSurveys",
+            "minSize": 1
+          },
+          {
+            "dataType": "text",
+            "name": "participationIndividualsOrGroups",
+            "constraints": [
+              "Individuals",
+              "Groups"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "participationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "participationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "firstNationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "firstNationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "participationDetails",
+            "validate": "maxSize[3000]"
+          },
+          {
+            "name": "surveyCountHeader",
+            "type": "number",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "count(floraSurveys, \"baselineOrIndicatorSurvey\")"
+            }
           },
           {
             "dataType": "text",
@@ -16771,6 +16973,11 @@
           {
             "dataType": "image",
             "name": "photographicEvidence"
+          },
+          {
+            "dataType": "boolean",
+            "name": "dataUploaded",
+            "description": ""
           },
           {
             "dataType": "text",
@@ -16792,63 +16999,134 @@
         "modelName": "RLP - Weed distribution survey",
         "title": "Weed distribution survey",
         "viewModel": [
+
           {
             "type": "section",
             "items": [
               {
-                "addRowText": "Add survey site",
-                "userAddedRows": true,
-                "source": "weedDistributionSurveySites",
-                "type": "repeat",
-                "items": [
+                "columns": [
                   {
-                    "css": "border-bottom",
-                    "type": "row",
+                    "width": "10%",
+                    "source": "participationIndividualsOrGroups",
+                    "title": "Individuals or groups?",
+                    "type": "selectOne"
+                  },
+                  {
+                    "width": "20%",
+                    "type": "col",
+                    "title": "Total Number of people delivering this service",
                     "items": [
                       {
-                        "preLabel": "Baseline survey or indicator (follow-up) survey?",
-                        "css": "span3",
-                        "source": "baselineOrIndicator",
-                        "type": "selectOne"
-                      },
-                      {
-                        "preLabel": "Number of weed distribution surveys conducted",
-                        "css": "span2",
-                        "source": "numberOfSurveysConducted",
+                        "source": "participationIndividualNumber",
                         "type": "number"
                       },
                       {
-                        "preLabel": "Date range",
-                        "css": "span4",
-                        "source": "dateRange",
-                        "type": "text"
+                        "source": "participationGroupNumber",
+                        "type": "selectOne"
                       }
                     ]
                   },
                   {
-                    "type": "row",
+                    "type": "col",
+                    "width": "20%",
+                    "title": "Total Number of First Nations people delivering this service ",
                     "items": [
                       {
-                        "css": "span3 col-border-right",
+                        "source": "firstNationIndividualNumber",
+                        "type": "number"
+                      },
+                      {
+                        "source": "firstNationGroupNumber",
+                        "type": "selectOne"
+                      }
+                    ]
+                  },
+                  {
+                    "source": "participationDetails",
+                    "rows": 4,
+                    "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                    "type": "textarea"
+                  }
+                ],
+                "userAddedRows": false,
+                "disableTableUpload": false,
+                "source": "",
+                "type": "table"
+              },
+              {
+                "preLabel": "Number of Weed Distribution surveys conducted:",
+                "noEdit": true,
+                "type": "number",
+                "source": "surveyCountHeader"
+              },
+              {
+                "addRowText": "New survey site",
+                "userAddedRows": true,
+                "source": "floraSurveys",
+                "type": "repeat",
+                "items": [
+                  {
+                    "columns": [
+                      {
+                        "source": "baselineOrIndicatorSurvey",
+                        "type": "selectOne",
+                        "width": "10%",
+                        "title": "Baseline survey or indicator (follow-up) survey?"
+                      },
+                      {
+                        "source": "projectBaseline",
+                        "type": "selectOne",
+                        "width": "10%",
+                        "title": "Which Project Baseline relates to this survey?"
+                      },
+                      {
+                        "source": "datasetSupports",
+                        "type": "select2Many",
+                        "width": "15%",
+                        "title": "What Dataset supports?"
+                      },
+                      {
+                        "source": "outcomeStatementPrePop",
+                        "type": "select2Many",
+                        "width": "15%",
+                        "title": "Which outcome statement/s relates to this survey?"
+                      },
+                      {
+                        "title": "Activities Start Date",
+                        "source": "activitiesStartDate",
+                        "type": "date",
+                        "width": "10%"
+                      },
+                      {
+                        "title": "Activities End Date",
+                        "source": "activitiesEndDate",
+                        "type": "date",
+                        "width": "10%"
+                      },
+                      {
+                        "width": "10%",
+                        "title": "Sites surveyed for Weed Distribution",
                         "type": "col",
                         "items": [
                           {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "Site/s surveyed for weed distribution",
-                                "source": "sitesSurveyed",
-                                "type": "feature"
-                              }
-                            ]
+                            "source": "sitesTreated",
+                            "type": "feature"
                           },
                           {
-                            "readonly": true,
-                            "source": "siteCalculatedAreaHa",
+                            "source": "calculatedAreaTreatedHa",
                             "type": "number",
                             "displayOptions": {
                               "displayUnits": true
-                            }
+                            },
+                            "readonly": "readonly"
+                          },
+                          {
+                            "source": "calculatedLengthTreatedKm",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            },
+                            "readonly": "readonly"
                           },
                           {
                             "type": "row",
@@ -16863,22 +17141,24 @@
                         ]
                       },
                       {
-                        "css": "span4 col-border-right",
+                        "width": "20%",
                         "type": "col",
+                        "title": "Actual area (ha) surveyed for Weed Distribution",
+                        "helpText": "Enter the amount you will invoice for during this reporting period.",
                         "items": [
                           {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "Actual area (ha) surveyed for weed distribution",
-                                "helpText": "Manually enter correct figure for this reporting period if different to mapped value.",
-                                "source": "areaSurveyedHa",
-                                "type": "number",
-                                "displayOptions": {
-                                  "displayUnits": true
-                                }
-                              }
-                            ]
+                            "source": "areaTreatedHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          },
+                          {
+                            "source": "lengthTreatedKm",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
                           },
                           {
                             "type": "row",
@@ -16902,81 +17182,54 @@
                             ]
                           }
                         ]
-                      },
-                      {
-                        "css": "span4",
-                        "type": "col",
-                        "items": [
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "Invoiced area (ha) surveyed for weed distribution",
-                                "helpText": "Enter the amount you will invoice for during this reporting period.",
-                                "source": "areaInvoicedHa",
-                                "type": "number",
-                                "validate": "required",
-                                "displayOptions": {
-                                  "displayUnits": true
-                                }
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "Reason for invoiced amount being different to actual amount",
-                                "source": "invoicedNotActualReason",
-                                "type": "selectOne"
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
-                                "source": "invoicedNotActualComments",
-                                "type": "textarea",
-                                "rows": 5
-                              }
-                            ]
-                          }
-                        ]
                       }
-                    ]
+                    ],
+                    "userAddedRows": true,
+                    "source": "surveyBaselineTable",
+                    "type": "table"
                   },
                   {
                     "columns": [
                       {
-                        "width": "40%",
-                        "source": "targetWeedSpecies",
-                        "type": "speciesSelect",
-                        "title": "Target weed species recorded"
+                        "width": "20%",
+                        "source": "species",
+                        "title": "Target species recorded",
+                        "type": "speciesSelect"
                       },
                       {
-                        "width": "25%",
-                        "source": "surveyTechnique",
-                        "title": "Survey technique",
-                        "type": "textarea"
-                      },
-                      {
-                        "width": "25%",
-                        "source": "surveyObjective",
-                        "title": "Survey objective",
-                        "type": "textarea"
+                        "width": "15%",
+                        "source": "estimatedWeedCover",
+                        "title": "Estimated Weed Cover (%)",
+                        "type": "number"
                       },
                       {
                         "width": "10%",
-                        "source": "estimatedCoverPercent",
-                        "title": "Estimated weed cover (%)",
-                        "type": "number",
-                        "rows": 3
+                        "title": "Survey Technique",
+                        "source": "ternSurveyTechnique",
+                        "type": "selectOne"
+                      },
+                      {
+                        "width": "15%",
+                        "title": "Survey Technique (if Other)",
+                        "source": "otherTernSurveyTechnique",
+                        "type": "text"
+                      },
+                      {
+                        "width": "20%",
+                        "source": "surveyMethodology",
+                        "title": "Survey Methodology",
+                        "type": "text"
+                      },
+                      {
+                        "width": "20%",
+                        "source": "surveyObjective",
+                        "title": "Survey Objective",
+                        "type": "text"
                       }
                     ],
                     "userAddedRows": true,
-                    "source": "weedDistributionSurveyDetails",
+                    "disableTableUpload": true,
+                    "source": "weedSurveySpeciesTable",
                     "type": "table"
                   }
                 ]
@@ -17000,7 +17253,7 @@
                     "rows": 4,
                     "css": "span8",
                     "source": "comments",
-                    "placeholder": "Clarification comments include points for follow up with the project manager about this service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
+                    "placeholder": "Clarification comments include information for your project manager about the service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
                   }
                 ]
               },
@@ -17009,7 +17262,12 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all <u>Environment</u> projects but optional for Agriculture projects. This field identifies what evidence you have available for this service and where the evidence is stored. This helps the Department and Service Providers during future assurance activities. Refer to the <a href=\"http://nrm.gov.au/publications/rlp-merit-user-guide\" target=\"_evidence\">Evidence Guide</a> for details of the types of acceptable evidence."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                  },
+                  {
+                    "preLabel": "Data have been uploaded",
+                    "source": "dataUploaded",
+                    "type": "boolean"
                   }
                 ]
               },
@@ -17022,15 +17280,6 @@
                     "type": "textarea",
                     "rows": 4,
                     "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "type": "literal",
-                    "source": "<p><b>Evidence of Service Delivery</b></p>This field is mandatory for all <u>Agriculture</u> projects as part of the invoicing process, as well as any environment projects where you have been notified as undergoing an <u>audit or quarterly assurance check</u>. The field allows you to attach evidence against a specific service."
                   }
                 ]
               },
