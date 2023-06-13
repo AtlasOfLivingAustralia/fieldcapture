@@ -118,7 +118,6 @@ class OrganisationService {
         Map organisation = get(id)
 
         regenerateOrganisationReports(organisation, organisationReportCategories)
-//        regenerateProjectReports(organisation, projectReportCategories)
     }
 
     private void regenerateOrganisationReports(Map organisation, List<String> reportCategories = null) {
@@ -137,18 +136,6 @@ class OrganisationService {
             reportService.regenerateReports(relevantReports, reportConfig, owner)
         }
     }
-
-//    private void regenerateProjectReports(Map organisation, List<String> reportCategories = null) {
-//
-//        Map projects = getProjects(organisation.organisationId)
-//        projects?.projects?.each{ project ->
-//            project.reports = reportService.getReportsForProject(project.projectId)
-//            if (projectService.canBulkRegenerateReports(project)) {
-//                projectService.generateProjectStageReports(project.projectId, new ReportGenerationOptions(), reportCategories)
-//            }
-//        }
-//    }
-
 
     def isUserAdminForOrganisation(organisationId) {
         def userIsAdmin

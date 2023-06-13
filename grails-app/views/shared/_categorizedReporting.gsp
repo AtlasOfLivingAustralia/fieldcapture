@@ -19,7 +19,7 @@
         </div>
     </div>
     <div data-bind="if:reportsByCategory.length == 0">
-        No reports found. kkk
+        No reports found.
     </div>
 
 </div>

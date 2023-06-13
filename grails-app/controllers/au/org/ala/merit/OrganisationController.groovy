@@ -14,7 +14,7 @@ class OrganisationController {
     static allowedMethods = [ajaxDelete: "POST", delete:"POST", ajaxUpdate: "POST", prepopulateAbn:"GET"]
 
     def organisationService, searchService, documentService, userService, roleService, commonService, webService
-    def activityService, metadataService, projectService, excelImportService, reportService, pdfConverterService, authService, managementUnitService
+    def activityService, metadataService, projectService, excelImportService, reportService, pdfConverterService, authService
 
     def list() {}
 
@@ -472,10 +472,6 @@ class OrganisationController {
         else {
             render model:cmd.model, view:'/activity/activityReportView'
         }
-    }
-
-    def testCmd(OrganisationReportCommand cmd) {
-        render "ok"
     }
 
     @PreAuthorise(accessLevel = 'editor')
