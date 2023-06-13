@@ -21,9 +21,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page import="au.org.ala.merit.SettingPageType" %>
 <!DOCTYPE html>
-<!--[if IE 7]><html lang="en" class="ie ie7"><![endif]-->
-<!--[if IE 8]><html lang="en" class="ie ie8"><![endif]-->
-<!--[if IE 9]><html lang="en" class="ie ie9"><![endif]-->
 <!--[if !IE]><!--><html lang="en"><!--<![endif]-->
 <head>
     <link rel="icon" href="https://www.ala.org.au/app/uploads/2019/01/cropped-favicon-32x32.png" sizes="32x32" />
@@ -40,6 +37,9 @@
             fcConfig.healthCheckUrl = "${createLink(controller: 'ajax', action:'keepSessionAlive')}";
         }
     </script>
+    <g:if test="${grailsApplication.config.getProperty('analytics.fathom.trackingId')}">
+        <script src="https://cdn.usefathom.com/script.js" data-site="${grailsApplication.config.getProperty('analytics.fathom.trackingId')}" defer></script>
+    </g:if>
 </head>
 
 <body class="${pageProperty(name: 'body.class')}" id="${pageProperty(name: 'body.id')}"
@@ -215,6 +215,8 @@
         }); // end document ready
 
     </script>
+
+    <g:if test="${grailsApplication.config.getProperty('analytics.google.enable')}">
     <!-- current env = ${grails.util.Environment.getCurrent().name} -->
     <g:if test="${grails.util.Environment.current == grails.util.Environment.PRODUCTION}">
         <script type="text/javascript">
@@ -246,5 +248,6 @@
         </script>
 
     </g:if>
+</g:if>
 </body>
 </html>
