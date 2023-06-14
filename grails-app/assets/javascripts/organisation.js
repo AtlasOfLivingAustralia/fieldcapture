@@ -1,5 +1,5 @@
 //= require tab-init.js
-//= require coreReportService
+//= require reportService
 /**
  * Knockout view model for organisation pages.
  * @param props JSON/javascript representation of the organisation.
@@ -11,8 +11,7 @@
 OrganisationViewModel = function (props, options) {
     var self = $.extend(this, new Documents(options));
 
-    var coreReportService = new CoreReportService(options)
-    _.extend(this, coreReportService);
+    var reportService = new ReportService(options)
 
     var defaults = {
         validationContainerSelector: '.validationEngineContainer',
@@ -38,10 +37,8 @@ OrganisationViewModel = function (props, options) {
     var organisationReportConfig = getOrganisationReportConfig();
 
     self.coreServicesOptions = [
-        {label:'Monthly (First period ends 31 July 2018)', firstReportingPeriodEnd:'2018-07-31T14:00:00Z', reportingPeriodInMonths:1, reportConfigLabel:'Monthly'},
-        {label:'Bi-monthly (First period ends 31 August 2018)', firstReportingPeriodEnd:'2018-08-31T14:00:00Z', reportingPeriodInMonths:2, reportConfigLabel:'Bi-monthly'},
-        {label:"Quarterly - Group A (First period ends 30 September 2018)", firstReportingPeriodEnd:'2018-09-30T14:00:00Z', reportingPeriodInMonths:3, reportConfigLabel:'Quarterly - Group A'},
-        {label:"Quarterly - Group B (First period ends 31 August 2018)", firstReportingPeriodEnd:'2018-08-31T14:00:00Z', reportingPeriodInMonths:3, reportConfigLabel:'Quarterly - Group B'}];
+        {label:'Quarterly (First period ends 30 September 2023)', firstReportingPeriodEnd:'2023-09-30T14:00:00Z', reportingPeriodInMonths:3, reportConfigLabel:'Quarterly'},
+    ];
 
     var currentOption = _.find(self.coreServicesOptions, function(option) {
         return option.firstReportingPeriodEnd == organisationReportConfig.firstReportingPeriodEnd && option.reportingPeriodInMonths == organisationReportConfig.reportingPeriodInMonths;
@@ -68,7 +65,7 @@ OrganisationViewModel = function (props, options) {
             self.saveConfig(config).done(function() {
                 blockUIWithMessage("Regenerating reports...");
                 var data = JSON.stringify({organisationReportCategories:[coreServicesReportCategory]});
-                coreReportService.regenerateReports(data,options.regenerateOrganisationReportsUrl);
+                reportService.regenerateReports(data,options.regenerateOrganisationReportsUrl);
             });
         }
     };
@@ -76,7 +73,7 @@ OrganisationViewModel = function (props, options) {
     self.regenerateReportsByCategory = function() {
         blockUIWithMessage("Regenerating reports...");
         var data = JSON.stringify({organisationReportCategories:self.selectedOrganisationReportCategories()});
-        coreReportService.regenerateReports(data,options.regenerateOrganisationReportsUrl);
+        reportService.regenerateReports(data,options.regenerateOrganisationReportsUrl);
     };
 
     var tabs = {
@@ -232,7 +229,7 @@ OrganisationViewModel = function (props, options) {
         if ($('.validationEngineContainer').validationEngine('validate')) {
 
             var orgData = self.modelAsJSON(true);
-            $.ajax(fcConfig.organisationSaveUrl, {type:'POST', data:orgData, contentType:'application/json'}).done( function(data) {
+            $.ajax(config.organisationSaveUrl, {type:'POST', data:orgData, contentType:'application/json'}).done( function(data) {
                 if (data.errors) {
 
                 }

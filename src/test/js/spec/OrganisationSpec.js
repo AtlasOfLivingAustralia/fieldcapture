@@ -16,10 +16,8 @@ describe("OrganisationViewModel Spec", function () {
     it("should serialize into JSON which does not contain any fields that are only useful to the view", function() {
 
         var coreServicesOptions = [
-            {label:'Monthly (First period ends 31 July 2018)', firstReportingPeriodEnd:'2018-07-31T14:00:00Z', reportingPeriodInMonths:1, reportConfigLabel:'Monthly'},
-            {label:'Bi-monthly (First period ends 31 August 2018)', firstReportingPeriodEnd:'2018-08-31T14:00:00Z', reportingPeriodInMonths:2, reportConfigLabel:'Bi-monthly'},
-            {label:"Quarterly - Group A (First period ends 30 September 2018)", firstReportingPeriodEnd:'2018-09-30T14:00:00Z', reportingPeriodInMonths:3, reportConfigLabel:'Quarterly - Group A'},
-            {label:"Quarterly - Group B (First period ends 31 August 2018)", firstReportingPeriodEnd:'2018-08-31T14:00:00Z', reportingPeriodInMonths:3, reportConfigLabel:'Quarterly - Group B'}];
+            {label:'Quarterly (First period ends 30 September 2023)', firstReportingPeriodEnd:'2023-09-30T14:00:00Z', reportingPeriodInMonths:3, reportConfigLabel:'Quarterly'}
+        ];
 
         var organisation = { organisationId:'1', description:'Org 1 description', collectoryInstitutionId:'dr123', newsAndEvents:'this is the latest news',
             documents:[], links:[], coreServicesPeriod:null, startDate:'', endDate:'',organisationReportCategories:[],selectedOrganisationReportCategories:[], coreServicesOptions:coreServicesOptions, activityReportingPeriod:null

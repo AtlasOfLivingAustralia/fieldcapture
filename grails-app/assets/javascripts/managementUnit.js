@@ -8,7 +8,7 @@
 //= require blog
 //= require leaflet-heatmap/heatmap.js
 //= require leaflet-heatmap/leaflet-heatmap.js
-//= require coreReportService
+//= require reportService
 
 
 /**
@@ -171,8 +171,7 @@ var ManagementUnitPageViewModel = function(props, options) {
     }
     _.extend(self, new ManagementUnitViewModel(props, options));
 
-    var coreReportService = new CoreReportService(options)
-    _.extend(this, coreReportService);
+    var reportService = new ReportService(options)
 
     var config = props.config || {};
     var priorities = props.priorities || [];
@@ -270,7 +269,7 @@ var ManagementUnitPageViewModel = function(props, options) {
             self.saveConfig(config).done(function() {
                 blockUIWithMessage("Regenerating reports...");
                 var data = JSON.stringify({managementUnitReportCategories:[coreServicesReportCategory], projectReportCategories:[projectOutputReportCategory]});
-                coreReportService.regenerateReports(data,options.regenerateManagementUnitReportsUrl);
+                reportService.regenerateReports(data,options.regenerateManagementUnitReportsUrl);
             });
         }
     };
@@ -299,7 +298,7 @@ var ManagementUnitPageViewModel = function(props, options) {
     self.regenerateReportsByCategory = function() {
         blockUIWithMessage("Regenerating reports...");
         var data = JSON.stringify({managementUnitReportCategories:self.selectedManagementUnitReportCategories(), projectReportCategories:self.selectedProjectReportCategories()});
-        coreReportService.regenerateReports(data,options.regenerateManagementUnitReportsUrl);
+        reportService.regenerateReports(data,options.regenerateManagementUnitReportsUrl);
     };
 
     self.saveManagementUnitConfiguration = function() {
