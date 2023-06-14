@@ -175,7 +175,13 @@ table tr.header th {
     width: 20%;
 }
 .meri-plan .extended.monitoring-baseline .baseline {
-    width: 25%;
+    width: 20%;
+}
+.meri-plan .extended.monitoring-baseline .baseline-method {
+    width: 20%;
+}
+.meri-plan .extended.monitoring-baseline .baseline-evidence {
+    width: 20%;
 }
 .meri-plan .extended.monitoring-baseline .monitoring-service {
     width: 25%;
@@ -183,6 +189,7 @@ table tr.header th {
 .meri-plan .extended.monitoring-baseline .monitoring-method {
     width: 25%;
 }
+
 .meri-plan .extended.monitoring-baseline .monitoring-evidence {
     width: 25%;
 }

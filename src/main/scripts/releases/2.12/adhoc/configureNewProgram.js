@@ -419,7 +419,7 @@ var config =
             {
                 "template": "extendedKeyThreats",
                 "model": {
-                    "threatHelpText":"Describe the key threats (or key threatening processes to the investment priority",
+                    "threatHelpText":"Describe the key threats or key threatening processes to the investment priority",
                     "evidenceHelpText": "List evidence that will be retained to demonstrate delivery of this service. Refer to Evidence Guide and Project Service Summaries for guidance",
                     "interventionHelpText":"Describe the proposed method to address the threat or threatening process"
                 }
@@ -429,13 +429,14 @@ var config =
                 "model": {
                     "maxSize": "4000",
                     "tableHeading": "Project delivery assumptions (4000 character limit [approx. 650 words])",
-                    "helpText": "Include all those conditions or factors that are sufficient to guarantee the success of the project, for example, on ground activities were not adversely impacted by adverse weather conditions"
+                    "helpText": "Include all those conditions or factors that are sufficient to guarantee the success of the project, for example, on ground activities were not impacted by adverse weather conditions. Ensure what’s documented here aligns to those assumptions documented within the Project Logic."
                 }
             },
             {
                 "template": "projectPartnerships",
                 "model": {
-                    "helpTextPartnerName":"Insert name of project partner. To be a project partner, they need to be actively involved in the planning or delivery of the project"
+                    "helpTextPartnerName":"Insert name of project partner. To be a project partner, they need to be actively involved in the planning or delivery of the project",
+                    "helpTextHeading":"Note: Not limited to key subcontractors."
                 }
             },
             {
@@ -445,7 +446,7 @@ var config =
                     "indicatorHeading": "Monitoring methodology",
                     "baselineHelpText": "Describe the project baseline to be established",
                     "baselineServiceHelpText": "Select the relevant Project Service(s)/Target measure(s) that will be used to support the development of the baseline",
-                    "monitoringServiceHelpText": "Select the relevant Project Service(s)/Target measure(s) that will be used to support the development of the baseline",
+                    "monitoringServiceHelpText": "Select the relevant Project Services(s)/Target measure(s) that will be used to support ongoing monitoring",
                     "baselineMethodHelpText": "EMSA modules mandatory unless exemption agreed to by the Department. Where an exemption has been provided the user can then select \"Other\"",
                     "approachHelpText": "EMSA modules mandatory unless exemption agreed to by the Department. Where an exemption has been provided the user can then select \"Other\"",
                     "titleHelpText": "Describe the Project Baseline(s) and ongoing monitoring which will be used to report progress towards this projects outcome(s)",
@@ -545,27 +546,28 @@ var config =
             "Human interference - industrial development"
         ],
         priorityPlaces: [
-            "Eastern Forests of Far North Queensland – QLD",
-            "Brigalow Country – QLD",
-            "Greater Blue Mountains - NSW",
             "Australian Alps – NSW/ACT/VIC",
-            "South East Coastal Ranges - NSW/VIC",
-            "Southern Plains, including the Western Victorian volcanic plain and karst springs – VIC/SA",
-            "Midlands region of central Tasmanian – TAS",
-            "Giant Kelp Ecological Community – TAS",
-            "Mallee Birds Ecological Community – VIC/SA/NSW",
-            "MacDonnell Ranges – NT",
-            "Kakadu & West Arnhem – NT",
-            "Yampi Sounds and surrounds  -WA",
-            "Remnant WA Wheatbelt Woodlands – WA",
-            "Fitz-Stirlings – WA",
-            "Kangaroo Island – SA",
+            "Brigalow Country – QLD",
             "Bruny Island – TAS",
-            "French Island – VIC",
             "Christmas Island – External Territory",
+            "Eastern Forests of Far North Queensland – QLD",
+            "Fitz-Stirlings – WA",
+            "French Island – VIC",
+            "Giant Kelp Ecological Community – TAS",
+            "Greater Blue Mountains – NSW",
+            "Kakadu & West Arnhem – NT",
+            "Kangaroo Island – SA",
+            "MacDonnell Ranges – NT",
+            "Mallee Birds Ecological Community – VIC/SA/NSW",
+            "Midlands region of central Tasmanian – TAS",
             "Norfolk Island – External Territory",
             "Raine Island – Queensland",
+            "Remnant WA Wheatbelt Woodlands – WA",
+            "South East Coastal Ranges – NSW/VIC",
+            "Southern Plains, including the Western Victorian volcanic plain and karst springs – VIC/SA",
+            "Yampi Sounds and surrounds – WA"
         ]
+
     };
 
 

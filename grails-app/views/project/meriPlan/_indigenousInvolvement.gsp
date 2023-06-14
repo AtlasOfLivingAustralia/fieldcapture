@@ -29,7 +29,7 @@
             data-validation-engine="validate[required]">
         <option value="">Please select...</option>
         <option>Leading</option>
-        <option>Partnership</option>
+        <option>Participating</option>
     </select>
 
 </div>
