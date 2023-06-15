@@ -7,7 +7,7 @@
 <table class="table methodology">
     <thead>
     <tr class="header required">
-        <th class="required">${tableHeading}<g:if test="${helpText}"><fc:iconHelp>${helpText}</fc:iconHelp></g:if></th>
+        <th class="required">${tableHeading}<g:if test="${helpText}"><fc:iconHelp html="true">${helpText}</fc:iconHelp></g:if></th>
     </tr>
     </thead>
     <tbody>
