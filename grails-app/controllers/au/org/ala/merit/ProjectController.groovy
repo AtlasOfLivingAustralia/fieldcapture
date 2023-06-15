@@ -1075,7 +1075,9 @@ class ProjectController {
     @PreAuthorise(accessLevel = 'editor')
     def monitoringProtocolFormCategories() {
         List<Map> forms = activityService.monitoringProtocolForms()
-        List<String> categories = forms?.collect{it.category}?.unique()?.sort()
+
+        List<String> categories = forms?.collect{
+            [label:g.message(code:it.category, default:it.category.capitalize()), value:it.category]}?.unique()?.sort({it.label})
         render categories as JSON
     }
 

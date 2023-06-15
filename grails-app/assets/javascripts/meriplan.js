@@ -336,7 +336,7 @@ function MERIPlan(project, projectService, config) {
         if (!_.isArray(protocols)) {
             protocols = [];
         }
-        protocols.push('Other');
+        protocols.push({label:'Other', value:'Other'});
         self.monitoringProtocols(protocols);
     });
 
