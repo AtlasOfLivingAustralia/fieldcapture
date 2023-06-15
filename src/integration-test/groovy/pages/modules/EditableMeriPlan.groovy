@@ -69,7 +69,7 @@ class BaselineRow extends Module {
         baseline { $('.baseline textarea[data-bind*=baseline]') }
         targetMeasures(required:false) { $('.service select') }
         method { $('.baseline-method textarea[data-bind*=method]') }
-        evidence(required:false) { $('.evidence textarea') }
+        evidence(required:false) { $('.baseline-evidence textarea') }
         methodProtocols(required:false) { $('.baseline-method select') }
         remove { $('i.icon-remove') }
     }

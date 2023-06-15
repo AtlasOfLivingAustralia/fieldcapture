@@ -138,14 +138,15 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlan.extendedBaseline.projectBaselines[0].evidence = "Baseline Evidence 1"
         meriPlan.extendedBaseline.addMonitoringIndicator(0)
 
-        then: "The monitoring protocol should be pre-popped from the baseline protocol"
+        then: "Wait for the monitoring indicator to be displayed"
         waitFor {
-            meriPlan.monitoringIndicators[0].methodProtocols == ['Category 1']
+            meriPlan.monitoringIndicators.size() == 1
         }
 
         when:
         meriPlan.monitoringIndicators[0].indicator = "Indicator 1"
         meriPlan.monitoringIndicators[0].targetMeasures = ['score_42']
+        meriPlan.monitoringIndicators[0].methodProtocols = ['Category 1']
         meriPlan.monitoringIndicators[0].evidence = "Evidence 2"
 
         meriPlan.reviewMethodology = "Review methodology"

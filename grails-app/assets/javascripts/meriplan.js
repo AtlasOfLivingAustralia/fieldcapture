@@ -366,11 +366,10 @@ function MERIPlan(project, projectService, config) {
         self.meriPlan().priorities.rows.remove(row);
     };
 
-    /** Called by the extendedBaselineMonitoring page to assocaite a new monitoring indicator with a baseline */
+    /** Called by the extendedBaselineMonitoring page to associate a new monitoring indicator with a baseline */
     self.addMonitoringIndicator = function(baseline) {
         var code = baseline.code();
-        var monitoringProtocols = baseline.protocols(); // Default the monitoring protocols to the baseline's protocols.
-        self.meriPlan().monitoring.rows.push(self.meriPlan().monitoring.newRow({relatedBaseline:code, protocols:monitoringProtocols}));
+        self.meriPlan().monitoring.rows.push(self.meriPlan().monitoring.newRow({relatedBaseline:code}));
     }
     self.removeMonitoringIndicator = function(row) {
         self.meriPlan().monitoring.removeRow(row);
