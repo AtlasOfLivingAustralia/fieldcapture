@@ -1,6 +1,7 @@
 package pages
 
 import geb.Page
+import pages.modules.OrganisationReports
 import pages.modules.OrganisationAdminTab
 
 class Organisation extends Page{
@@ -18,6 +19,9 @@ class Organisation extends Page{
         orgAbn {$('span#orgAbn')}
         projectTab {$("#projects-tab")}
         projectContent {$("#projectList tbody tr td")}
+        reportingTab(required: false) { $('#projects-tab') }
+        sitesTab {$("#sites-tab")}
+        reportsTabPane(required: false) { module OrganisationReports }
     }
 
     void edit() {
