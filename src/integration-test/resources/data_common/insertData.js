@@ -42,7 +42,7 @@ function createOrganisation(organisationProperties){
 
     var org = orgDefaults.create()
     assign(organisationProperties,org)
-    db.organisation.insert(organisationProperties)
+    db.organisation.insert(org)
 }
 
 function createMu(muProperties) {

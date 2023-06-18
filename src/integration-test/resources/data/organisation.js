@@ -5,7 +5,7 @@ var orgDefaults = {
                 "organisationReports": [
                     {
                         "reportType": "Administrative",
-                        "firstReportingPeriodEnd": "2023-09-30T14:00:00Z",
+                        "firstReportingPeriodEnd": "2023-06-30T14:00:00Z",
                         "reportDescriptionFormat": "Core services report %d for %4$s",
                         "reportNameFormat": "Core services report %d",
                         "reportingPeriodInMonths": 3,

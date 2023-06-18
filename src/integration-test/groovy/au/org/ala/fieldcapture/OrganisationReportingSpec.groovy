@@ -43,7 +43,7 @@ class OrganisationReportingSpec extends StubbedCasSpec {
         waitFor { reportsTabPane.displayed }
 
 //        comment out for now as the list is returning empty list
-//        reportsTabPane.reports.size() > 0
+        reportsTabPane.reports.size() > 0
 
     }
 
