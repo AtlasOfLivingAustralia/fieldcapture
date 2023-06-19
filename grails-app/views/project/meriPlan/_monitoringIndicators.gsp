@@ -39,7 +39,7 @@
                             <select multiple="multiple"
                                     class="form-control form-control-sm"
                                     data-validation-engine="validate[required]"
-                                    data-bind="options:$root.allTargetMeasures, optionsText:'label', optionsValue:'scoreId', multiSelect2:{value:relatedTargetMeasures, preserveColumnWidth:20}, disable: $root.isProjectDetailsLocked()"></select>
+                                    data-bind="options:$root.monitoringTargetMeasures, optionsText:'label', optionsValue:'scoreId', multiSelect2:{value:relatedTargetMeasures, preserveColumnWidth:20}, disable: $root.isProjectDetailsLocked()"></select>
                         </td>
                         <td class="monitoring-method">
                             <select multiple="multiple"

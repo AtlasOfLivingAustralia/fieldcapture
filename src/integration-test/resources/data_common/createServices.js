@@ -5,7 +5,7 @@ if (db.service.count() == 0) {
             "outputs": [{"formName": "RLP Output Report", "sectionName": "RLP - Baseline data"}],
             "name": "Collecting, or synthesising baseline data",
             "id": 1,
-            "categories": ["Project initiation activities"]
+            "categories": ["Project initiation activities", "Survey"]
         },
         {
             "outputs": [{"formName": "RLP Output Report", "sectionName": "RLP - Communication materials"}],
