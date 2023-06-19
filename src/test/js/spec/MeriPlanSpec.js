@@ -7,9 +7,9 @@ describe("Loading the MERI plan is handled correctly", function () {
             useRlpTemplate:true,
             healthCheckUrl:'testing',
             services: [{
-                    id:1, name:"Service 1", scores:[{scoreId:"1", label:"Score 1"}]
+                    id:1, name:"Service 1", service:{categories:[]}, scores:[{scoreId:"1", label:"Score 1"}]
                 }, {
-                    id:2, name:"Service 2", scores:[{scoreId:"2", label:"Score 2"}, {scoreId:"3", label:"Score 3"}]
+                    id:2, name:"Service 2", service:{categories:[]}, scores:[{scoreId:"2", label:"Score 2"}, {scoreId:"3", label:"Score 3"}]
                 }
             ]
         };
