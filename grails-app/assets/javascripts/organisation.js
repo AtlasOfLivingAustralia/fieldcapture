@@ -11,6 +11,159 @@
 OrganisationViewModel = function (props, options) {
     var self = $.extend(this, new Documents(options));
 
+    var defaults = {
+        validationContainerSelector: '.validationEngineContainer',
+    };
+
+    var config = _.extend({}, defaults, options);
+
+    var orgTypesMap = {
+        aquarium:'Aquarium',
+        archive:'Archive',
+        botanicGarden:'Botanic Garden',
+        conservation:'Conservation',
+        fieldStation:'Field Station',
+        government:'Government',
+        governmentDepartment:'Government Department',
+        herbarium:'Herbarium',
+        historicalSociety:'Historical Society',
+        horticulturalInstitution:'Horticultural Institution',
+        independentExpert:'Independent Expert',
+        industry:'Industry',
+        laboratory:'Laboratory',
+        library:'Library',
+        management:'Management',
+        museum:'Museum',
+        natureEducationCenter:'Nature Education Center',
+        nonUniversityCollege:'Non-University College',
+        park:'Park',
+        repository:'Repository',
+        researchInstitute:'Research Institute',
+        school:'School',
+        scienceCenter:'Science Center',
+        society:'Society',
+        university:'University',
+        voluntaryObserver:'Voluntary Observer',
+        zoo:'Zoo'
+    };
+
+    self.organisationId = props.organisationId;
+    self.orgType = ko.observable(props.orgType);
+    self.orgTypeDisplayOnly = ko.computed(function() {
+        return orgTypesMap[self.orgType()] || "Unspecified";
+    });
+    self.name = ko.observable(props.name);
+    self.acronym = ko.observable(props.acronym);
+    self.description = ko.observable(props.description).extend({markdown:true});
+    self.abn = ko.observable(props.abn);
+    self.url = ko.observable(props.url);
+    self.newsAndEvents = ko.observable(props.newsAndEvents).extend({markdown:true});;
+    self.collectoryInstitutionId = props.collectoryInstitutionId;
+    self.breadcrumbName = ko.computed(function() {
+        return self.name()?self.name():'New Organisation';
+    });
+
+    self.projects = props.projects;
+
+    self.deleteOrganisation = function() {
+        if (window.confirm("Delete this organisation?  Are you sure?")) {
+            $.post(config.organisationDeleteUrl).complete(function() {
+                    window.location = fcConfig.organisationListUrl;
+                }
+            );
+        };
+    };
+
+    self.editDescription = function() {
+        editWithMarkdown('Edit organisation description', self.description);
+    };
+
+    self.editOrganisation = function() {
+        window.location = fcConfig.organisationEditUrl;
+    };
+
+    self.transients = self.transients || {};
+    self.transients.orgTypes = [];
+    for (var ot in orgTypesMap) {
+        if (orgTypesMap.hasOwnProperty(ot))
+            self.transients.orgTypes.push({orgType:ot, name:orgTypesMap[ot]});
+    }
+
+    self.toJS = function(includeDocuments) {
+        var ignore = self.ignore.concat(['breadcrumbName', 'orgTypeDisplayOnly', 'collectoryInstitutionId', 'projects', 'reports']);
+        var js = ko.mapping.toJS(self, {include:['documents'], ignore:ignore} );
+        if (includeDocuments) {
+            js.documents = ko.toJS(self.documents);
+            js.links = ko.mapping.toJS(self.links());
+        }
+        return js;
+    };
+
+    self.modelAsJSON = function(includeDocuments) {
+        var orgJs = self.toJS(includeDocuments);
+        return JSON.stringify(orgJs);
+    };
+
+    self.save = function() {
+        if ($('.validationEngineContainer').validationEngine('validate')) {
+
+            var orgData = self.modelAsJSON(true);
+            $.ajax(config.organisationSaveUrl, {type:'POST', data:orgData, contentType:'application/json'}).done( function(data) {
+                if (data.errors) {
+
+                }
+                else {
+                    var orgId = self.organisationId?self.organisationId:data.organisationId;
+                    window.location = config.organisationViewUrl+'/'+orgId;
+                }
+
+            }).fail( function() {
+
+            });
+        }
+    };
+
+    self.prepopulateFromABN = function() {
+        if ($(config.abnSelector).validationEngine()) {
+            var abn = self.abn;
+            $.get(config.prepopulateAbnUrl, {abn:abn, contentType:'application/json'}).done(function (orgDetails) {
+                if (orgDetails.error === "invalid"){
+                    bootbox.alert("Abn Number is invalid");
+                }else{
+                    self.name(orgDetails.name);
+                }
+            }).fail(function () {
+                bootbox.alert("Abn Web Service is failed to lookup abn name. Please press ok to continue to create organisation");
+                self.name(" ");
+            });
+
+        }
+    };
+
+    if (props.documents !== undefined && props.documents.length > 0) {
+        $.each(['logo', 'banner', 'mainImage'], function(i, role){
+            var document = self.findDocumentByRole(props.documents, role);
+            if (document) {
+                self.documents.push(document);
+            }
+        });
+    }
+
+    // links
+    if (props.links) {
+        $.each(props.links, function(i, link) {
+            self.addLink(link.role, link.url);
+        });
+    }
+
+    return self;
+
+};
+
+
+OrganisationPageViewModel = function (props, options) {
+    var self = $.extend(this, new Documents(options));
+
     var reportService = new ReportService(options)
 
     var defaults = {
@@ -18,7 +171,7 @@ OrganisationViewModel = function (props, options) {
     };
 
     var config = props.config || {};
-    self.config = ko.observable(vkbeautify.json(props.config));
+    self.config = ko.observable(vkbeautify.json(config));
 
     self.organisationReportCategories = ko.computed(function() {
         return _.map(config.organisationReports || [], function(report) {
@@ -49,7 +202,7 @@ OrganisationViewModel = function (props, options) {
     self.startDate = ko.observable(props.startDate).extend({simpleDate:false});
     self.endDate = ko.observable(props.endDate).extend({simpleDate:false});
     self.selectedOrganisationReportCategories = ko.observableArray();
-    
+
     self.saveReportingConfiguration = function() {
 
         if ($(options.reportingConfigSelector).validationEngine('validate')) {
@@ -128,7 +281,7 @@ OrganisationViewModel = function (props, options) {
     voluntaryObserver:'Voluntary Observer',
     zoo:'Zoo'
     };
-    
+
     self.organisationId = props.organisationId;
     self.orgType = ko.observable(props.orgType);
     self.orgTypeDisplayOnly = ko.computed(function() {

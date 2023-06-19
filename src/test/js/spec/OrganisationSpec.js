@@ -20,7 +20,7 @@ describe("OrganisationViewModel Spec", function () {
         ];
 
         var organisation = { organisationId:'1', description:'Org 1 description', collectoryInstitutionId:'dr123', newsAndEvents:'this is the latest news',
-            documents:[], links:[], coreServicesPeriod:null, startDate:'', endDate:'',organisationReportCategories:[],selectedOrganisationReportCategories:[], coreServicesOptions:coreServicesOptions, activityReportingPeriod:null
+            documents:[], links:[]
         };
 
         var model = new OrganisationViewModel(organisation);
@@ -101,7 +101,7 @@ describe("OrganisationViewModel Spec", function () {
     it("Organisation config can be saved", function() {
         var options = {organisationSaveUrl:'/test/url', healthCheckUrl:'/test/health'};
         var mu = { name: 'Test Org', organisationId:"org1" };
-        var model = new OrganisationViewModel(mu, options);
+        var model = new OrganisationPageViewModel(mu, options);
 
         spyOn($, 'ajax').and.callFake(function () {
             var d = $.Deferred();

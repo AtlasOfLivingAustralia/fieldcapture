@@ -78,7 +78,7 @@
 
         var organisation =<fc:modelAsJavascript model="${organisation}"/>;
         var config = _.extend({reportingConfigSelector:'#reporting-config form'}, fcConfig);
-        var organisationViewModel = new OrganisationViewModel(organisation, config);
+        var organisationViewModel = new OrganisationPageViewModel(organisation, config);
 
         ko.applyBindings(organisationViewModel);
         organisationViewModel.initialise();
