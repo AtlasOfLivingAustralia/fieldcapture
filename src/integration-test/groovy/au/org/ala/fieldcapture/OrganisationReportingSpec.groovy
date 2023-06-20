@@ -69,13 +69,10 @@ class OrganisationReportingSpec extends StubbedCasSpec {
         }
 
         then:
-        waitFor 30, {
-            reportingTab.click()
-        }
-
+        reportingTab.click()
 
         then:
-        waitFor 60, { reportsTabPane.displayed }
+        waitFor { reportsTabPane.displayed }
         reportsTabPane.reports.size() > 0
 
     }

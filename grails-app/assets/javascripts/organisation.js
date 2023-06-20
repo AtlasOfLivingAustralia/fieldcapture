@@ -206,15 +206,15 @@ OrganisationPageViewModel = function (props, options) {
     self.saveReportingConfiguration = function() {
 
         if ($(options.reportingConfigSelector).validationEngine('validate')) {
-            // var selectedCoreServicesPeriod = _.find(self.coreServicesOptions, function(option) {
-            //     return option.label == self.coreServicesPeriod();
-            // });
-            //
-            // organisationReportConfig.firstReportingPeriodEnd = selectedCoreServicesPeriod.firstReportingPeriodEnd;
-            // organisationReportConfig.reportingPeriodInMonths = selectedCoreServicesPeriod.reportingPeriodInMonths;
-            // organisationReportConfig.label = selectedCoreServicesPeriod.reportConfigLabel;
+            var selectedCoreServicesPeriod = _.find(self.coreServicesOptions, function(option) {
+                return option.label == self.coreServicesPeriod();
+            });
 
-            blockUIWithMessage("Saving configuration motherfckers...");
+            organisationReportConfig.firstReportingPeriodEnd = selectedCoreServicesPeriod.firstReportingPeriodEnd;
+            organisationReportConfig.reportingPeriodInMonths = selectedCoreServicesPeriod.reportingPeriodInMonths;
+            organisationReportConfig.label = selectedCoreServicesPeriod.reportConfigLabel;
+
+            blockUIWithMessage("Saving configuration...");
             self.saveConfig(config).done(function() {
                 blockUIWithMessage("Regenerating reports...");
                 var data = JSON.stringify({organisationReportCategories:[coreServicesReportCategory]});
