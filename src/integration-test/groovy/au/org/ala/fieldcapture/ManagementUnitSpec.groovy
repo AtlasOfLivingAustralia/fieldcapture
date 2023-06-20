@@ -87,7 +87,7 @@ class ManagementUnitSpec extends StubbedCasSpec {
 
         then:
 
-        grantIds() == ['RLP-Test-Program-Project-1']
+        grantIds() == ['RLP-Test-Program-Project-1', 'RLP-Test-Program-Project-Org-1']
         projectLinks().size() >= 1
         gotoProgram().size() >= 1
 
