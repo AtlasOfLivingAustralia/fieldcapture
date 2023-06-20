@@ -1,10 +1,7 @@
 package au.org.ala.fieldcapture
 
 import com.icegreen.greenmail.util.GreenMail
-import pages.CreateOrganisation
-import pages.EditOrganisation
 import pages.Organisation
-import pages.OrganisationList
 import spock.lang.Shared
 
 class OrganisationReportingSpec extends StubbedCasSpec {
@@ -44,6 +41,34 @@ class OrganisationReportingSpec extends StubbedCasSpec {
         reportsTabPane.reports.size() > 0
 
     }
+
+    def "We can specify the core services reporting frequency"() {
+        setup:
+        loginAsGrantManager(browser)
+
+        when: "Display the reporting tab"
+        to Organisation, orgId
+        adminTab.click()
+
+        then:
+        waitFor 10, { adminTabContent.displayed }
+
+        when:
+        def reportingSection = adminTabContent.viewReportingSection()
+        reportingSection.coreServicesGroup = "Quarterly (First period ends 30 September 2023)"
+        reportingSection.saveReportingGroups()
+
+        then:
+        waitFor 20,{
+            hasBeenReloaded()
+        }
+
+        then:
+        waitFor 60, { reportsTabPane.displayed }
+        reportsTabPane.reports.size() > 0
+
+    }
+
 
 }
 

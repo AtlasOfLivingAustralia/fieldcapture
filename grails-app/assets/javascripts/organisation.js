@@ -206,15 +206,15 @@ OrganisationPageViewModel = function (props, options) {
     self.saveReportingConfiguration = function() {
 
         if ($(options.reportingConfigSelector).validationEngine('validate')) {
-            var selectedCoreServicesPeriod = _.find(self.coreServicesOptions, function(option) {
-                return option.label == self.coreServicesPeriod();
-            });
+            // var selectedCoreServicesPeriod = _.find(self.coreServicesOptions, function(option) {
+            //     return option.label == self.coreServicesPeriod();
+            // });
+            //
+            // organisationReportConfig.firstReportingPeriodEnd = selectedCoreServicesPeriod.firstReportingPeriodEnd;
+            // organisationReportConfig.reportingPeriodInMonths = selectedCoreServicesPeriod.reportingPeriodInMonths;
+            // organisationReportConfig.label = selectedCoreServicesPeriod.reportConfigLabel;
 
-            organisationReportConfig.firstReportingPeriodEnd = selectedCoreServicesPeriod.firstReportingPeriodEnd;
-            organisationReportConfig.reportingPeriodInMonths = selectedCoreServicesPeriod.reportingPeriodInMonths;
-            organisationReportConfig.label = selectedCoreServicesPeriod.reportConfigLabel;
-
-            blockUIWithMessage("Saving configuration...");
+            blockUIWithMessage("Saving configuration motherfckers...");
             self.saveConfig(config).done(function() {
                 blockUIWithMessage("Regenerating reports...");
                 var data = JSON.stringify({organisationReportCategories:[coreServicesReportCategory]});
@@ -241,15 +241,6 @@ OrganisationPageViewModel = function (props, options) {
     self.initialise = function() {
         $.fn.dataTable.moment( 'dd-MM-yyyy' );
         initialiseTabs(tabs, {tabSelector:'#orgTabs.nav a', tabStorageKey:'selected-organisation-tab'});
-    };
-
-    self.saveConfig = function(config) {
-        var json = {
-            config: config,
-            startDate:self.startDate(),
-            endDate:self.endDate()
-        };
-        return saveOrganisation(json);
     };
 
     var orgTypesMap = {
