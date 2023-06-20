@@ -38,9 +38,9 @@ class ProgramSpec extends StubbedCasSpec {
         }
         then:
 
-        projectNames().size() == 3
+        projectNames().size() == 4
         //grantIds().containsAll(['RLP-Test-Program-Project-1','RLP-Test-Program-Project-2','RLP-Test-Program-Project-3'])
-        grantIds().size()==3
+        grantIds().size()==4
         //muInStates().containsAll(['test mu', 'test mu 2'])
     }
 

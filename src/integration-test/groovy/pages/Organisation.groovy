@@ -4,7 +4,7 @@ import geb.Page
 import pages.modules.OrganisationReports
 import pages.modules.OrganisationAdminTab
 
-class Organisation extends Page{
+class Organisation extends ReloadablePage {
     static url = 'organisation/index'
 
     static at = { $('#organisationDetails').displayed }

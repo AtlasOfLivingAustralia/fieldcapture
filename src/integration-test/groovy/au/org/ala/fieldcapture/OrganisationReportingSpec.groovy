@@ -48,7 +48,11 @@ class OrganisationReportingSpec extends StubbedCasSpec {
 
         when: "Display the reporting tab"
         to Organisation, orgId
-        adminTab.click()
+
+        waitFor 20, {
+            adminTab.click()
+        }
+
 
         then:
         waitFor 10, { adminTabContent.displayed }
@@ -57,16 +61,18 @@ class OrganisationReportingSpec extends StubbedCasSpec {
         def reportingSection = adminTabContent.viewReportingSection()
         reportingSection.coreServicesGroup = "Quarterly (First period ends 30 September 2023)"
 
-        //commenting for now as when save button is clicked 401 is returned*************
-//        reportingSection.saveReportingGroups()
-
-//        then:
-//        waitFor 20,{
-//            hasBeenReloaded()
-//        }
+        reportingSection.saveReportingGroups()
 
         then:
-        reportingTab.click()
+        waitFor 20,{
+            hasBeenReloaded()
+        }
+
+        then:
+        waitFor 30, {
+            reportingTab.click()
+        }
+
 
         then:
         waitFor 60, { reportsTabPane.displayed }

@@ -635,7 +635,6 @@ class OrganisationController {
         render result as JSON
     }
 
-    @PreAuthorise(accessLevel = 'caseManager')
     def regenerateOrganisationReports(String id) {
         Map resp
         if (!id) {
