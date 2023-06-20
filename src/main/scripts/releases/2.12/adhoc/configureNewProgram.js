@@ -5,9 +5,15 @@ var userId = '';
 
 const serviceFormName = "RLP Output Report - Review";
 function addService(newServiceName, legacyId, sectionName) {
+    let outputs = [
+        {
+            formName:serviceFormName,
+            sectionName:sectionName
+        }
+    ];
     if (!db.service.findOne({legacyId:legacyId})) {
-        var newService = {
-            "outputs": [],
+        let newService = {
+            "outputs": outputs,
             "name": newServiceName,
             "legacyId": legacyId,
             serviceId: UUID.generate(),
@@ -16,7 +22,9 @@ function addService(newServiceName, legacyId, sectionName) {
         }
         db.service.insertOne(newService);
     } else {
-        db.service.updateOne({legacyId: legacyId}, {$set: {name: newServiceName}});
+        db.service.updateOne(
+            {legacyId: legacyId},
+            {$set: {name: newServiceName, outputs:outputs, lastUpdated:ISODate()}});
     }
 
     let service = db.service.findOne({legacyId:legacyId});
@@ -27,13 +35,13 @@ function addService(newServiceName, legacyId, sectionName) {
         }]
     }
 }
-addService("Habitat Condition Assessment Survey", NumberInt(42));
+addService("Habitat Condition Assessment Survey", NumberInt(42), "RLP - Habitat condition assessment");
 
 
 const newScores = [
     {
         serviceId: 10,
-        formSection:  'RLP Review - Establishing ex-situ breeding programs',
+        formSection:  'RLP - Establishing ex-situ breeding programs',
         scores: [
             {
                 label: 'Number of captive breeding and release, translocation, or re-introduction programs established',
@@ -47,7 +55,7 @@ const newScores = [
     },
     {
         serviceId: 34,
-        formSection:  'RLP Review - Debris removal',
+        formSection:  'RLP - Debris removal',
         scores: [
             {
                 label: 'Area (ha) of debris removal - initial',
@@ -69,8 +77,16 @@ const newScores = [
     },
     {
         serviceId: 7,
-        formSection:  'RLP Review - Erosion managmeent',
+        formSection:  'RLP - Erosion Management',
         scores: [
+            {
+                label: 'Area (ha) of erosion control - initial',
+                path: 'data.tba'
+            },
+            {
+                label: 'Area (ha) of erosion control - follow-up',
+                path: 'data.tba'
+            },
             {
                 label: 'Length (km) of stream/coastline treated for erosion - initial',
                 path: 'data.tba'
@@ -83,7 +99,7 @@ const newScores = [
     },
     {
         serviceId: 8,
-        formSection:  'RLP Review - Establishing agreements',
+        formSection:  'RLP - Establishing Agreements',
         scores: [
             {
                 label: 'Area (ha) covered by conservation agreements established',
@@ -97,7 +113,7 @@ const newScores = [
     },
     {
         serviceId: 9,
-        formSection:  'RLP Review - Maintaining feral free enclosures',
+        formSection:  'RLP - Maintaining feral free enclosures',
         scores: [
             {
                 label: 'Number of pest animal-free enclosures - initial',
@@ -119,7 +135,7 @@ const newScores = [
     },
     {
         serviceId: 12,
-        formSection:  'RLP Review - Farm management survey',
+        formSection:  'RLP - Farm Management Survey',
         scores: [
             {
                 label: 'Number of farm management surveys conducted - baseline',
@@ -133,7 +149,7 @@ const newScores = [
     },
     {
         serviceId: 13,
-        formSection:  'RLP Review - Fauna surveys',
+        formSection:  'RLP - Fauna surveys',
         scores: [
             {
                 label: 'Number of fauna surveys conducted - baseline',
@@ -147,7 +163,7 @@ const newScores = [
     },
     {
         serviceId: 14,
-        formSection:  'RLP Review - Flora surveys',
+        formSection:  'RLP - Flora surveys',
         scores: [
             {
                 label: 'Number of flora surveys conducted - baseline',
@@ -161,7 +177,7 @@ const newScores = [
     },
     {
         serviceId: 16,
-        formSection:  'RLP Review - Habitat augmentation',
+        formSection:  'RLP - Habitat augmentation',
         scores: [
             {
                 label: 'Area (ha) of augmentation - initial',
@@ -183,7 +199,7 @@ const newScores = [
     },
     {
         serviceId: 42,
-        formSection:  'RLP Review - Habitat condition assessment',
+        formSection:  'RLP - Habitat condition assessment',
         scores: [
             {
                 label: 'Number of habitat condition assessment surveys conducted - baseline',
@@ -197,7 +213,7 @@ const newScores = [
     },
     {
         serviceId: 17,
-        formSection:  'RLP Review - Identifying sites',
+        formSection:  'RLP - Identifying sites',
         scores: [
             {
                 label: 'Number of potential sites assessed',
@@ -207,7 +223,7 @@ const newScores = [
     },
     {
         serviceId: 14,
-        formSection:  'RLP Review - Fire management',
+        formSection:  'RLP - Fire management',
         scores: [
             {
                 label: 'Area (ha) treated by fire management action/s - initial',
@@ -221,7 +237,7 @@ const newScores = [
     },
     {
         serviceId: 18,
-        formSection:  'RLP Review - Improving hydrological regimes',
+        formSection:  'RLP - Improving hydrological regimes',
         scores: [
             {
                 label: 'Number of treatments implemented to improve site eco-hydrology - initial',
@@ -235,7 +251,7 @@ const newScores = [
     },
     {
         serviceId: 19,
-        formSection:  'RLP Review - Improving land management practices',
+        formSection:  'RLP - Improving land management practices',
         scores: [
             {
                 label: 'Area (ha) covered by practice change - initial',
@@ -249,7 +265,7 @@ const newScores = [
     },
     {
         serviceId: 20,
-        formSection:  'RLP Review - Managing disease',
+        formSection:  'RLP - Managing disease',
         scores: [
             {
                 label: 'Area (ha) for disease treatment/prevention - initial',
@@ -271,7 +287,7 @@ const newScores = [
     },
     {
         serviceId: 23,
-        formSection:  'RLP Review - Pest animal survey',
+        formSection:  'RLP - Pest animal survey',
         scores: [
             {
                 label: 'Number of pest animal surveys conducted - baseline',
@@ -285,7 +301,7 @@ const newScores = [
     },
     {
         serviceId: 26,
-        formSection:  'RLP Review - Improving hydrological regimes',
+        formSection:  'RLP - Remediating riparian and aquatic areas',
         scores: [
             {
                 label: 'Number of structures installed to promote aquatic health',
@@ -311,7 +327,7 @@ const newScores = [
     },
     {
         serviceId: 28,
-        formSection:  'RLP Review - Revegetating habitat',
+        formSection:  'RLP - Revegetating habitat',
         scores: [
             {
                 label: 'Area (ha) of habitat revegetated - initial',
@@ -325,21 +341,25 @@ const newScores = [
     },
     {
         serviceId: 36,
-        formSection:  'RLP Review - Seed collection',
+        formSection:  'Seed Collecting - Bushfire Program',
         scores: [
             {
-                label: 'Amount (grams) seed collected',
+                label: 'Amount (grams)/number of seeds/cuttings collected',
                 path: 'data.tba'
             },
             {
                 label: 'Number of days propagating',
+                path: 'data.tba'
+            },
+            {
+                label: 'Number of plants propagated',
                 path: 'data.tba'
             }
         ]
     },
     {
         serviceId: 24,
-        formSection:  'RLP Review - Plant survival survey',
+        formSection:  'RLP - Plant survival survey',
         scores: [
             {
                 label: 'Number of seed germination/plant survival surveys completed - indicator',
@@ -349,7 +369,7 @@ const newScores = [
     },
     {
         serviceId: 35,
-        formSection:  'RLP Review - Site preparation',
+        formSection:  'RLP - Site preparation',
         scores: [
             {
                 label: 'Length (km) of site preparation',
@@ -359,7 +379,7 @@ const newScores = [
     },
     {
         serviceId: 32,
-        formSection:  'RLP Review - Water quality survey',
+        formSection:  'RLP - Water quality survey',
         scores: [
             {
                 label: 'Number of water quality surveys conducted - baseline',
@@ -373,7 +393,7 @@ const newScores = [
     },
     {
         serviceId: 33,
-        formSection:  'RLP Review - Weed distribution survey',
+        formSection:  'RLP - Weed distribution survey',
         scores: [
             {
                 label: 'Number of weed distribution surveys conducted - baseline',
@@ -387,7 +407,7 @@ const newScores = [
     },
     {
         serviceId: 31,
-        formSection:  'RLP Review - Emergency interventions',
+        formSection:  'RLP - Emergency Interventions',
         scores: [
             {
                 label: 'Number of interventions - initial',
@@ -401,7 +421,7 @@ const newScores = [
     },
     {
         serviceId: 30,
-        formSection:  'RLP Review - Soil testing',
+        formSection:  'RLP - Soil testing',
         scores: [
             {
                 label: 'Number of soil tests conducted - baseline',
@@ -415,7 +435,7 @@ const newScores = [
     },
     {
         serviceId: 18,
-        formSection:  'RLP Review - Improving hydrological regimes',
+        formSection:  'RLP - Improving hydrological regimes',
         scores: [
             {
                 label: 'Number of treatments implemented to improve site eco-hydrology - initial',
@@ -429,7 +449,7 @@ const newScores = [
     },
     {
         serviceId: 29,
-        formSection:  'RLP Review - Skills and knowledge survey',
+        formSection:  'RLP - Skills and knowledge survey',
         scores: [
             {
                 label: 'Number of skills and knowledge surveys conducted - baseline',
@@ -519,6 +539,8 @@ var config=
                 {
                     serviceId: 7,
                     serviceTargetLabels: [
+                        'Area (ha) of erosion control - initial',
+                        'Area (ha) of erosion control - follow-up',
                         'Length (km) of stream/coastline treated for erosion - initial',
                         'Length (km) of stream/coastline treated for erosion - follow-up'
                     ]
@@ -577,6 +599,15 @@ var config=
                 {
                     serviceId: 16,
                     serviceTargetLabels: [
+                        'Area (ha) of augmentation - initial',
+                        'Area (ha) of augmentation - maintained',
+                        'Number of locations where structures installed - initial',
+                        'Number of locations where structures installed - maintained'
+                    ]
+                },
+                {
+                    serviceId: 18,
+                    serviceTargetLabels: [
                         'Number of treatments implemented to improve site eco-hydrology - initial',
                         'Number of treatments implemented to improve site eco-hydrology - follow-up'
                     ]
@@ -591,13 +622,6 @@ var config=
                 {
                     serviceId: 17,
                     serviceTargetLabels: [ 'Number of potential sites assessed' ]
-                },
-                {
-                    serviceId: 18,
-                    serviceTargetLabels: [
-                        'Number of treatments implemented to improve water management',
-                        'Area (ha) of catchment being managed as a result of this management action'
-                    ]
                 },
                 {
                     serviceId: 19,
@@ -707,7 +731,7 @@ var config=
                 {
                     serviceId: 36,
                     serviceTargetLabels: [
-                        'Amount (grams) seed collected',
+                        'Amount (grams)/number of seeds/cuttings collected',
                         'Number of days propagating',
                         'Number of plants propagated'
                     ]
