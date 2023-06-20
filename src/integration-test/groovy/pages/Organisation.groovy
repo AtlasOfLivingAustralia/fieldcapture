@@ -12,7 +12,7 @@ class Organisation extends Page{
     static content = {
         name {$('h2')}
         aboutTab{$('a#about-tab',0)}
-        adminTab{$('a#admin-tab')}
+        adminTab(required: false) { $('#admin-tab') }
         adminTabContent(required: false)  { module OrganisationAdminTab }
         orgName { $('.header-text') }
         orgDescription { $('span#orgDescription') }
