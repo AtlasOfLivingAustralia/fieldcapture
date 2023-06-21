@@ -141,11 +141,17 @@ class OrganisationReportingSpec extends StubbedCasSpec {
         then:
         reportsTabPane.reports[0].isSubmitted()
 
+        waitFor 20, {
+            MimeMessage[] messages = greenMail.getReceivedMessages()
+            messages?.length == 1
+            messages[0].getSubject() == "Report submitted subject"
+            GreenMailUtil.getBody(messages[0]) == "<p>Report submitted body</p>"
+        }
+
     }
 
     def "A user with the grant manager role can approve and return reports"() {
         setup:
-        String managementUnitId = 'test_mu'
         loginAsGrantManager(browser)
 
         when:
@@ -173,13 +179,12 @@ class OrganisationReportingSpec extends StubbedCasSpec {
 
     }
 
-    def "A user with the MERIT siteReadOnly role can view, but not edit management unit reports"() {
-        String managementUnitId = 'test_mu'
+    def "A user with the MERIT siteReadOnly role can view, but not edit reports"() {
         loginAsReadOnlyUser(browser)
 
         when: "Display the reporting tab, then view the approved report"
         to Organisation, orgId
-        //displayReportsTab()
+
         then:
         waitFor {at Organisation}
         reportingTab.click()
@@ -196,7 +201,7 @@ class OrganisationReportingSpec extends StubbedCasSpec {
         when: "The user exits the report view page"
         exitReport()
 
-        then: "The user should be returned to the management unit page"
+        then: "The user should be returned to the organisation page"
         waitFor { at Organisation }
     }
 
@@ -221,7 +226,6 @@ class OrganisationReportingSpec extends StubbedCasSpec {
 
     def "The not required button is visible to a Site Admin user"() {
         setup:
-        String managementUnitId = 'test_mu'
         loginAsMeritAdmin(browser)
 
         when: "Display the reporting tab, then view the approved report"

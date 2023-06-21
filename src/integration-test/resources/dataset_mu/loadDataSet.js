@@ -249,7 +249,7 @@ var activity2 = {
     "lastUpdated" : ISODate("2022-09-04T05:38:41.470Z"),
     "plannedEndDate" : ISODate("2022-12-31T14:00:00.000Z"),
     "plannedStartDate" : ISODate("2022-06-30T14:00:00.000Z"),
-    "progress" : "started",
+    "progress" : "planned",
     "startDate" : ISODate("2022-06-01T14:00:00.000Z"),
     "status" : "active",
     "type" : "RLP Core Services report",
