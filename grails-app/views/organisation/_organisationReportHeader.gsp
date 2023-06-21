@@ -2,7 +2,7 @@
 
 <div class="report-header">
     <div class="row mb-2">
-        <div class="col-sm-2 header-label">Organisation Management Unit</div>
+        <div class="col-sm-2 header-label">Organisation</div>
 
         <div class="col-sm-9 value">${context.name}</div>
     </div>

@@ -38,6 +38,12 @@ class Organisation extends ReloadablePage {
         waitFor 10, { adminTabContent.displayed }
     }
 
+    void displayReportsTab() {
+        reportingTab.click()
+        waitFor { reportsTabPane.displayed }
+        reportsTabPane
+    }
+
 }
 class EditOrganisation extends Page{
     static url = 'organisation/edit' // requires a program id parameter

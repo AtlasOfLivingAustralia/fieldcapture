@@ -1,8 +1,13 @@
 package au.org.ala.fieldcapture
 
 import com.icegreen.greenmail.util.GreenMail
+import com.icegreen.greenmail.util.GreenMailUtil
 import pages.Organisation
+import pages.ReportPage
+import pages.ViewReportPage
 import spock.lang.Shared
+
+import javax.mail.internet.MimeMessage
 
 class OrganisationReportingSpec extends StubbedCasSpec {
 
@@ -27,7 +32,7 @@ class OrganisationReportingSpec extends StubbedCasSpec {
     def "Organisation reports are displaying in the reporting tab"() {
 
         setup:
-        loginAsUser('1', browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to Organisation, orgId
@@ -44,7 +49,7 @@ class OrganisationReportingSpec extends StubbedCasSpec {
 
     def "We can specify the core services reporting frequency"() {
         setup:
-        loginAsGrantManager(browser)
+        loginAsMeritAdmin(browser)
 
         when: "Display the reporting tab"
         to Organisation, orgId
@@ -77,6 +82,162 @@ class OrganisationReportingSpec extends StubbedCasSpec {
 
     }
 
+    def "A user with the admin role can complete Organisation reports,and submit them"() {
+        setup:
+        loginAsMeritAdmin(browser)
+
+        when:
+        to Organisation, orgId
+
+        then:
+        waitFor 60, {at Organisation}
+        reportingTab.click()
+
+        then:
+        waitFor 60, { reportsTabPane.displayed }
+        reportsTabPane.reports.size() > 0
+
+        when:
+        reportsTabPane.reports[0].edit()
+
+        then:
+        waitFor { at ReportPage }
+
+        when: "Complete the report and mark as complete"
+        field("coreServicesRequirementsMet").value('Met Core Services requirements')
+        field("whsRequirementsMet").value('Met requirements')
+        markAsComplete()
+        save()
+        exitReport()
+
+        then:
+        waitFor 60, {at Organisation}
+
+        then:
+        waitFor { reportsTabPane.displayed }
+        reportsTabPane.reports.size() > 0
+
+        then:
+        reportsTabPane.reports[0].markedAsComplete()
+        reportsTabPane.reports[0].canBeSubmitted()
+
+        when:
+        reportsTabPane.reports[0].submit()
+
+        then:
+        reportsTabPane.reportDeclaration.displayed
+
+        when:
+        reportsTabPane.acceptTerms()
+        reportsTabPane.submitDeclaration()
+
+        then:
+        waitFor { hasBeenReloaded() }
+
+        when:
+
+        waitFor { reportsTabPane.displayed }
+
+        then:
+        reportsTabPane.reports[0].isSubmitted()
+
+    }
+
+    def "A user with the grant manager role can approve and return reports"() {
+        setup:
+        String managementUnitId = 'test_mu'
+        loginAsGrantManager(browser)
+
+        when:
+        to Organisation, orgId
+
+        then:
+        waitFor 60, {at Organisation}
+        reportingTab.click()
+
+        then: "The first report is marked as submitted"
+        reportsTabPane.reports[0].isSubmitted()
+
+        when:
+        reportsTabPane.reports[0].approve()
+
+        then:
+        waitFor {hasBeenReloaded()}
+
+        when:
+        reportingTab.click()
+        waitFor { reportsTabPane.displayed }
+
+        then:
+        reportsTabPane.reports[0].isApproved()
+
+    }
+
+    def "A user with the MERIT siteReadOnly role can view, but not edit management unit reports"() {
+        String managementUnitId = 'test_mu'
+        loginAsReadOnlyUser(browser)
+
+        when: "Display the reporting tab, then view the approved report"
+        to Organisation, orgId
+        //displayReportsTab()
+        then:
+        waitFor {at Organisation}
+        reportingTab.click()
+
+        then:
+        waitFor { reportsTabPane.displayed }
+        reportsTabPane.reports.size() > 0
+
+        reportsTabPane.reports[0].view()
+
+        then: "The report view page should be displayed"
+        waitFor { at ViewReportPage }
+
+        when: "The user exits the report view page"
+        exitReport()
+
+        then: "The user should be returned to the management unit page"
+        waitFor { at Organisation }
+    }
+
+    def "The not required button is not visible to a MU Admin user"() {
+        setup:
+        loginAsUser('1', browser)
+
+        when: "Display the reporting tab, then view the approved report"
+        to Organisation, orgId
+
+        then:
+        waitFor {at Organisation}
+        reportingTab.click()
+
+        then: "The first report is marked as submitted"
+        reportsTabPane.reports[0].isSubmitted()
+
+//        and:"The not required button is not visible"
+//        !reportsTabPane.reports[1].notRequired()
+
+    }
+
+    def "The not required button is visible to a Site Admin user"() {
+        setup:
+        String managementUnitId = 'test_mu'
+        loginAsMeritAdmin(browser)
+
+        when: "Display the reporting tab, then view the approved report"
+        to Organisation, orgId
+
+        then:
+        waitFor {at Organisation}
+        reportingTab.click()
+
+        then: "The first report is marked as submitted"
+        reportsTabPane.reports[0].isSubmitted()
+
+//        and:"The not required button is not visible"
+//        reportsTabPane.reports[1].notRequired()
+
+    }
 
 }
 

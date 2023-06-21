@@ -34,7 +34,7 @@ abstract class EditOrViewReportCommand implements Validateable {
             model.context = entity
             model.config = entity.config ?: [:]
 
-            model.reportHeaderTemplate = '/$entityType/organisationReportHeader'
+            model.reportHeaderTemplate = '/organisation/organisationReportHeader'
             model.returnTo = linkGenerator.link(controller:entityType, action:'index', id: id)
             model.contextViewUrl = model.returnTo
             model.saveReportUrl = linkGenerator.link(controller:entityType, action:'saveReport', id:id)
