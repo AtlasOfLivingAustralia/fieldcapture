@@ -647,4 +647,78 @@ class ReportGeneratorSpec extends Specification {
         reports[7].fromDate == '2023-03-31T13:00:00Z'
         reports[7].toDate == '2023-06-30T14:00:00Z'
     }
+
+    def "Reports can be selectively generated based on the duration of the project/owner"(Integer maximumOwnerDurationInMonths, Integer minimumOwnerDurationInMonths, String periodStart, String periodEnd, Integer expectedReportCount) {
+        setup:
+        ReportGenerator generator = new ReportGenerator()
+        ReportConfig config = new ReportConfig(
+                minimumReportDurationInDays: 1,
+                reportingPeriodInMonths: 24,
+                reportsAlignedToCalendar: true,
+                activityType: 'Outcomes Report 1',
+                category: 'Outcomes Reporting',
+                canSubmitDuringReportingPeriod: true,
+                reportNameFormat: "Outcomes Report 1",
+                multiple: false,
+                reportDescriptionFormat: "Outcomes Report 1",
+                maximumOwnerDurationInMonths: maximumOwnerDurationInMonths,
+                minimumOwnerDurationInMonths: minimumOwnerDurationInMonths
+        )
+
+        projectOwner = new ReportOwner(id:[projectId:'p1'], name:'Project 1', periodStart: periodStart, periodEnd: periodEnd)
+
+        when:
+        List reports = generator.generateReports(config, projectOwner, 0, null)
+
+        then:
+        (reports ?: []).size() == expectedReportCount
+
+        where:
+        maximumOwnerDurationInMonths | minimumOwnerDurationInMonths | periodStart | periodEnd | expectedReportCount
+        24                           | 12                          | '2021-06-30T14:00:00Z' | '2023-06-29T14:00:00Z' | 1
+        24                           | 12                          | '2021-06-30T14:00:00Z' | '2023-07-31T14:00:00Z' | 0
+        24                           | 12                          | '2021-06-30T14:00:00Z' | '2022-06-30T14:00:00Z' | 1
+        24                           | 12                          | '2021-06-30T14:00:00Z' | '2022-06-29T14:00:00Z' | 0
+        24                           | null                        | '2021-06-30T14:00:00Z' | '2023-06-29T14:00:00Z' | 1
+        24                           | null                        | '2021-06-30T14:00:00Z' | '2023-07-31T14:00:00Z' | 0
+        null                         | 12                          | '2021-06-30T14:00:00Z' | '2022-06-30T14:00:00Z' | 1
+        null                         | 12                          | '2021-06-30T14:00:00Z' | '2022-06-29T14:00:00Z' | 0
+
+    }
+
+    def "We produce an outcomes 1 report covering between 2-3 years ending on June 30"(String periodStart, String expectedReportEndDate) {
+        setup:
+        ReportGenerator generator = new ReportGenerator()
+        ReportConfig config = new ReportConfig(
+                minimumReportDurationInDays: 1,
+                reportingPeriodInMonths: 36,
+                reportsAlignedToCalendar: true,
+                activityType: 'Outcomes Report 1',
+                category: 'Outcomes Reporting',
+                canSubmitDuringReportingPeriod: true,
+                reportNameFormat: "Outcomes Report 1",
+                multiple: false,
+                reportDescriptionFormat: "Outcomes Report 1",
+                maximumOwnerDurationInMonths: null,
+                minimumOwnerDurationInMonths: 25,
+                calendarAlignmentMonth: 7
+        )
+
+        projectOwner = new ReportOwner(id:[projectId:'p1'], name:'Project 1', periodStart: periodStart, periodEnd: '2028-06-29T14:00:00Z')
+
+        when:
+        List reports = generator.generateReports(config, projectOwner, 0, null)
+
+        then:
+        reports.size() == 1
+        reports[0].fromDate == periodStart
+        reports[0].toDate == expectedReportEndDate
+
+        where:
+        periodStart | expectedReportEndDate
+//
+        '2024-03-01T14:00:00Z' | '2026-06-30T14:00:00Z'
+        '2024-06-29T14:00:00Z' | '2026-06-30T14:00:00Z'
+
+    }
 }
