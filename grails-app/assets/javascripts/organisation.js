@@ -190,7 +190,8 @@ OrganisationPageViewModel = function (props, options) {
     var organisationReportConfig = getOrganisationReportConfig();
 
     self.coreServicesOptions = [
-        {label:'Quarterly (First period ends 30 September 2023)', firstReportingPeriodEnd:'2023-09-30T14:00:00Z', reportingPeriodInMonths:3, reportConfigLabel:'Quarterly'},
+        {label:'Quarterly - A (First period ends 31 March 2023)', firstReportingPeriodEnd:'2023-03-31T14:00:00Z', reportingPeriodInMonths:3, reportConfigLabel:'Quarterly'},
+        {label:'Quarterly - B (First period ends 30 September 2023)', firstReportingPeriodEnd:'2023-09-30T14:00:00Z', reportingPeriodInMonths:3, reportConfigLabel:'Quarterly'}
     ];
 
     var currentOption = _.find(self.coreServicesOptions, function(option) {

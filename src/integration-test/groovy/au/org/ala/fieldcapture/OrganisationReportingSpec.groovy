@@ -58,13 +58,13 @@ class OrganisationReportingSpec extends StubbedCasSpec {
             adminTab.click()
         }
 
-
         then:
         waitFor 10, { adminTabContent.displayed }
 
         when:
         def reportingSection = adminTabContent.viewReportingSection()
-        reportingSection.coreServicesGroup = "Quarterly (First period ends 30 September 2023)"
+//        reportingSection.coreServicesGroup = "Quarterly (First period ends 30 September 2023)"
+        reportingSection.coreServicesGroup = "Quarterly - A (First period ends 31 March 2023)"
 
         reportingSection.saveReportingGroups()
 
@@ -89,9 +89,9 @@ class OrganisationReportingSpec extends StubbedCasSpec {
         when:
         to Organisation, orgId
 
-        then:
-        waitFor 60, {at Organisation}
-        reportingTab.click()
+        waitFor 20 ,{
+            reportingTab.click()
+        }
 
         then:
         waitFor 60, { reportsTabPane.displayed }
@@ -118,8 +118,10 @@ class OrganisationReportingSpec extends StubbedCasSpec {
         reportsTabPane.reports.size() > 0
 
         then:
-        reportsTabPane.reports[0].markedAsComplete()
-        reportsTabPane.reports[0].canBeSubmitted()
+        waitFor {
+            reportsTabPane.reports[0].markedAsComplete()
+            reportsTabPane.reports[0].canBeSubmitted()
+        }
 
         when:
         reportsTabPane.reports[0].submit()
@@ -141,7 +143,7 @@ class OrganisationReportingSpec extends StubbedCasSpec {
         then:
         reportsTabPane.reports[0].isSubmitted()
 
-        //temp comment out, still investigating the issue
+//        temp comment out, still investigating the issue
 //        waitFor 20, {
 //            MimeMessage[] messages = greenMail.getReceivedMessages()
 //            messages?.length == 1
@@ -158,9 +160,9 @@ class OrganisationReportingSpec extends StubbedCasSpec {
         when:
         to Organisation, orgId
 
-        then:
-        waitFor 60, {at Organisation}
-        reportingTab.click()
+        waitFor 20, {
+            reportingTab.click()
+        }
 
         then: "The first report is marked as submitted"
         reportsTabPane.reports[0].isSubmitted()
@@ -186,9 +188,9 @@ class OrganisationReportingSpec extends StubbedCasSpec {
         when: "Display the reporting tab, then view the approved report"
         to Organisation, orgId
 
-        then:
-        waitFor {at Organisation}
-        reportingTab.click()
+        waitFor {
+            reportingTab.click()
+        }
 
         then:
         waitFor { reportsTabPane.displayed }
@@ -213,15 +215,15 @@ class OrganisationReportingSpec extends StubbedCasSpec {
         when: "Display the reporting tab, then view the approved report"
         to Organisation, orgId
 
-        then:
-        waitFor {at Organisation}
-        reportingTab.click()
+        waitFor {
+            reportingTab.click()
+        }
 
         then: "The first report is marked as submitted"
         reportsTabPane.reports[0].isSubmitted()
 
-//        and:"The not required button is not visible"
-//        !reportsTabPane.reports[1].notRequired()
+        and:"The not required button is not visible"
+        !reportsTabPane.reports[1].notRequired()
 
     }
 
@@ -232,15 +234,15 @@ class OrganisationReportingSpec extends StubbedCasSpec {
         when: "Display the reporting tab, then view the approved report"
         to Organisation, orgId
 
-        then:
-        waitFor {at Organisation}
-        reportingTab.click()
+        waitFor {
+            reportingTab.click()
+        }
 
         then: "The first report is marked as submitted"
         reportsTabPane.reports[0].isSubmitted()
 
-//        and:"The not required button is not visible"
-//        reportsTabPane.reports[1].notRequired()
+        and:"The not required button is not visible"
+        reportsTabPane.reports[1].notRequired()
 
     }
 
