@@ -631,15 +631,6 @@ class ProjectController {
         }
     }
 
-    @PreAuthorise(accessLevel = 'admin')
-    def meriPlanPDF(String id) {
-        Map reportUrlConfig = [controller: 'report', action: 'meriPlanReportCallback', id: id, absolute: true]
-        boolean result = pdfGenerationService.generatePDF(reportUrlConfig, [:], response)
-        if (!result) {
-            render view: '/error', model: [error: "An error occurred generating the MERI plan report."]
-        }
-    }
-
     /**
      * Accepts a MERI Plan as an attached file and attempts to convert it into a format compatible with
      * MERIT.
@@ -1079,6 +1070,15 @@ class ProjectController {
     @PreAuthorise(accessLevel = 'editor')
     def projectPrioritiesByOutcomeType(String id) {
         render projectService.projectPrioritiesByOutcomeType(id) as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'editor')
+    def monitoringProtocolFormCategories() {
+        List<Map> forms = activityService.monitoringProtocolForms()
+
+        List<String> categories = forms?.collect{
+            [label:g.message(code:it.category, default:it.category.capitalize()), value:it.category]}?.unique()?.sort({it.label})
+        render categories as JSON
     }
 
     private def error(String message, String projectId) {

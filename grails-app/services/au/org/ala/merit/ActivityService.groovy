@@ -2,6 +2,8 @@ package au.org.ala.merit
 
 import au.org.ala.ecodata.forms.ActivityFormService
 import au.org.ala.merit.DateUtils
+import grails.converters.JSON
+import grails.plugin.cache.Cacheable
 import groovy.util.logging.Slf4j
 import org.joda.time.DateTime
 import org.joda.time.Period
@@ -24,7 +26,7 @@ class ActivityService {
     static final String REDUCED_STAGE_REPORT_ACTIVITY_TYPE = 'Stage Report'
     static final String ALG_PROGRESS_REPORT = '25th Anniversary Landcare Grants - Progress Report'
     static final String ALG_FINAL_REPORT = '25th Anniversary Landcare Grants - Final Report'
-
+    static final String MONITORING_PROTOCOL_FORM_TYPE = 'Protocol'
     private static def PROGRESS = [PROGRESS_PLANNED, PROGRESS_STARTED, PROGRESS_FINISHED, PROGRESS_CANCELLED, PROGRESS_DEFERRED]
 
     public static Comparator<String> PROGRESS_COMPARATOR = {a,b -> PROGRESS.indexOf(a) <=> PROGRESS.indexOf(b)}
@@ -273,6 +275,24 @@ class ActivityService {
             }
         }
         result
+    }
+
+
+    /**
+     * Returns a list of summary information about the available monitoring
+     * protocols.
+     *
+     * @return List<Map> with keys [externalId:, name:, formVersion: ]
+     */
+    @Cacheable("monitoringProtocols")
+    List<Map> monitoringProtocolForms() {
+        Map criteria = [type:MONITORING_PROTOCOL_FORM_TYPE]
+
+        Map resp = activityFormService.searchActivityForms(criteria)
+        List<Map> forms = resp?.resp ?: []
+        forms = forms.collect{[externalId:it.externalId, name:it.name, formVersion:it.formVersion, category:it.category]}
+
+        forms
     }
 
 }

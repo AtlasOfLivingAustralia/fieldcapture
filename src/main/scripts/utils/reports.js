@@ -205,3 +205,63 @@ function restoreNotRequiredReport(reportId, adminUserId, comment) {
     db.activity.replaceOne({activityId:report.activityId}, activity);
     audit(activity, report.activityId, 'au.org.ala.ecodata.Activity', adminUserId, report.projectId);
 }
+
+/**
+ * Creates a new report for the given project.
+ * @param reportDetails
+ * @param project
+ * @param adminUserId
+ */
+function createReportForProject(reportDetails, project, adminUserId) {
+    let now = ISODate();
+    if (!reportDetails.fromDate) {
+        reportDetails.fromDate = project.plannedStartDate;
+    }
+    if (!reportDetails.toDate) {
+        reportDetails.toDate = project.plannedEndDate;
+    }
+    if (!reportDetails.submissionDate) {
+        reportDetails.submissionDate = reportDetails.toDate;
+    }
+    reportDetails.dateCreated = now;
+    reportDetails.lastUpdated = now;
+    reportDetails.projectId = project.projectId;
+    reportDetails.reportId = UUID.generate();
+    reportDetails.status = 'active';
+    reportDetails.publicationStatus =null;
+
+
+    if (!reportDetails.name ||
+        !reportDetails.description ||
+        !reportDetails.activityType ||
+        !reportDetails.category ||
+        !reportDetails.generatedBy ||
+        !reportDetails.type) {
+        throw "Missing report details"
+    }
+
+    let activity = {
+        activityId: UUID.generate(),
+        assessment: false,
+        dateCreated:now,
+        lastUpdated:now,
+        description:reportDetails.name,
+        type:reportDetails.activityType,
+        progress:'planned',
+        startDate:reportDetails.fromDate,
+        endDate:reportDetails.toDate,
+        status:'active',
+        publicationStatus:null
+    };
+    reportDetails.activityId = activity.activityId;
+
+    db.report.insertOne(reportDetails);
+
+    let savedReport = db.report.findOne({reportId:reportDetails.reportId});
+    audit(savedReport, savedReport.reportId, 'au.org.ala.ecodata.Report', adminUserId, project.projectId);
+
+    db.activity.insertOne(activity);
+    let savedActivity = db.activity.findOne({activityId:activity.activityId});
+    audit(savedActivity, savedActivity.activityId, 'au.org.ala.ecodata.Activity', adminUserId, project.projectId);
+
+}
