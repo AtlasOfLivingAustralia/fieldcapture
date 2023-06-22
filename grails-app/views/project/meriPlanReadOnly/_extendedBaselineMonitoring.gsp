@@ -1,4 +1,3 @@
-<h4>Monitoring methodology</h4>
 <!-- ko with:details.baseline -->
 <h4 class="header-with-help">Monitoring methodology</h4><fc:iconHelp>${titleHelpText ?: "Describe the project baseline(s) units of measure or data which will be used to report progress towards this project's outcomes (short-term, medium-term and 5 year program outcome), and the monitoring design. Refer to the Regional Land Partnerships Evaluation Plan, which provides guidance on baselines and the monitoring indicators for each RLP outcome. Note, other monitoring indicators can also be used."}</fc:iconHelp>
 <br/>
@@ -43,7 +42,7 @@
         </td>
 
     </tr>
-    <tr><td class="code"></td><th colspan="7">Monitoring indicators for this baseline</th></tr>
+    <tr><td class="code"></td><th colspan="7">Monitoring indicators</th></tr>
     <tr>
         <td class="code" data-bind="text:code"></td>
         <td colspan="8" class="embedded-monitoring">
