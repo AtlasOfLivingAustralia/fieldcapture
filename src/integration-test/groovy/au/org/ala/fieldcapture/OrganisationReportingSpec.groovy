@@ -42,7 +42,7 @@ class OrganisationReportingSpec extends StubbedCasSpec {
         reportingTab.click()
 
         then:
-        waitFor { reportsTabPane.displayed }
+        waitFor 30, { reportsTabPane.displayed }
         reportsTabPane.reports.size() > 0
 
     }
@@ -196,6 +196,7 @@ class OrganisationReportingSpec extends StubbedCasSpec {
         waitFor { reportsTabPane.displayed }
         reportsTabPane.reports.size() > 0
 
+        when:
         reportsTabPane.reports[0].view()
 
         then: "The report view page should be displayed"
