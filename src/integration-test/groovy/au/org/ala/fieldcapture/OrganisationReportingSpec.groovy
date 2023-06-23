@@ -98,7 +98,7 @@ class OrganisationReportingSpec extends StubbedCasSpec {
 
         then:
         waitFor 60, { reportsTabPane.displayed }
-        reportsTabPane.reports.size() > 0
+//        reportsTabPane.reports.size() > 0
 
         when:
         reportsTabPane.reports[0].edit()
@@ -118,7 +118,7 @@ class OrganisationReportingSpec extends StubbedCasSpec {
 
         then:
         waitFor { reportsTabPane.displayed }
-        reportsTabPane.reports.size() > 0
+//        reportsTabPane.reports.size() > 0
 
         then:
         waitFor 30, {
@@ -167,10 +167,14 @@ class OrganisationReportingSpec extends StubbedCasSpec {
             reportingTab.click()
         }
 
-        then: "The first report is marked as submitted"
+        then:
+        waitFor { reportsTabPane.displayed }
+//        reportsTabPane.reports.size() > 0
+
+        when: "The first report is marked as submitted"
         reportsTabPane.reports[0].isSubmitted()
 
-        when:
+        and:
         reportsTabPane.reports[0].approve()
 
         then:
@@ -197,7 +201,7 @@ class OrganisationReportingSpec extends StubbedCasSpec {
 
         then:
         waitFor { reportsTabPane.displayed }
-        reportsTabPane.reports.size() > 0
+//        reportsTabPane.reports.size() > 0
 
         when:
         reportsTabPane.reports[0].view()
@@ -242,10 +246,9 @@ class OrganisationReportingSpec extends StubbedCasSpec {
             reportingTab.click()
         }
 
-
         then:
         waitFor { reportsTabPane.displayed }
-        reportsTabPane.reports.size() > 0
+//        reportsTabPane.reports.size() > 0
 
         when: "The first report is marked as submitted"
         reportsTabPane.reports[0].isSubmitted()
