@@ -216,10 +216,13 @@ class OrganisationReportingSpec extends StubbedCasSpec {
             reportingTab.click()
         }
 
-        then: "The first report is marked as submitted"
+        then:
+        waitFor { reportsTabPane.displayed }
+
+        when: "The first report is marked as submitted"
         reportsTabPane.reports[0].isSubmitted()
 
-        and:"The not required button is not visible"
+        then:"The not required button is not visible"
         !reportsTabPane.reports[1].notRequired()
 
     }
