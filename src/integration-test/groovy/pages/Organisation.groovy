@@ -21,7 +21,8 @@ class Organisation extends ReloadablePage {
         projectContent {$("#projectList tbody tr td")}
         reportingTab(required: false) { $('#projects-tab') }
         sitesTab {$("#sites-tab")}
-        reportsTabPane(required: false) { module OrganisationReports }
+        reportsTabPane(required:false) { $('#reporting-content').module(OrganisationReports)}
+        reportDeclaration { $('#declaration') }
     }
 
     void edit() {
@@ -40,10 +41,17 @@ class Organisation extends ReloadablePage {
 
     void displayReportsTab() {
         reportingTab.click()
-        waitFor { reportsTabPane.displayed }
+        waitFor 60, { reportsTabPane.displayed }
         reportsTabPane
     }
 
+    def acceptTerms() {
+        $('#declaration [name="acceptTerms"]').value(true)
+    }
+
+    def submitDeclaration() {
+        $('#declaration [data-bind*="submitReport"]').click()
+    }
 }
 class EditOrganisation extends Page{
     static url = 'organisation/edit' // requires a program id parameter

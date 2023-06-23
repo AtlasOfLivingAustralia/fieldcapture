@@ -36,13 +36,9 @@ class OrganisationReportingSpec extends StubbedCasSpec {
 
         when:
         to Organisation, orgId
+        displayReportsTab()
 
         then:
-        waitFor {at Organisation}
-        reportingTab.click()
-
-        then:
-        waitFor 60, { reportsTabPane.displayed }
         reportsTabPane.reports.size() > 0
 
     }
@@ -76,11 +72,10 @@ class OrganisationReportingSpec extends StubbedCasSpec {
             hasBeenReloaded()
         }
 
-        then:
-        reportingTab.click()
+        when:
+        displayReportsTab()
 
         then:
-        waitFor { reportsTabPane.displayed }
         reportsTabPane.reports.size() > 0
 
     }
@@ -98,7 +93,6 @@ class OrganisationReportingSpec extends StubbedCasSpec {
 
         then:
         waitFor 60, { reportsTabPane.displayed }
-//        reportsTabPane.reports.size() > 0
 
         when:
         reportsTabPane.reports[0].edit()
@@ -118,7 +112,6 @@ class OrganisationReportingSpec extends StubbedCasSpec {
 
         then:
         waitFor { reportsTabPane.displayed }
-//        reportsTabPane.reports.size() > 0
 
         then:
         waitFor 30, {
@@ -130,11 +123,9 @@ class OrganisationReportingSpec extends StubbedCasSpec {
         reportsTabPane.reports[0].submit()
 
         then:
-        reportsTabPane.reportDeclaration.displayed
-
-        when:
-        reportsTabPane.acceptTerms()
-        reportsTabPane.submitDeclaration()
+        reportDeclaration.displayed
+        acceptTerms()
+        submitDeclaration()
 
         then:
         waitFor { hasBeenReloaded() }
@@ -169,7 +160,6 @@ class OrganisationReportingSpec extends StubbedCasSpec {
 
         then:
         waitFor { reportsTabPane.displayed }
-//        reportsTabPane.reports.size() > 0
 
         when: "The first report is marked as submitted"
         reportsTabPane.reports[0].isSubmitted()
@@ -201,7 +191,6 @@ class OrganisationReportingSpec extends StubbedCasSpec {
 
         then:
         waitFor { reportsTabPane.displayed }
-//        reportsTabPane.reports.size() > 0
 
         when:
         reportsTabPane.reports[0].view()
@@ -248,7 +237,6 @@ class OrganisationReportingSpec extends StubbedCasSpec {
 
         then:
         waitFor { reportsTabPane.displayed }
-//        reportsTabPane.reports.size() > 0
 
         when: "The first report is marked as submitted"
         reportsTabPane.reports[0].isSubmitted()
