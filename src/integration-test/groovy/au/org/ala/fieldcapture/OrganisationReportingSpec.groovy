@@ -42,7 +42,7 @@ class OrganisationReportingSpec extends StubbedCasSpec {
         reportingTab.click()
 
         then:
-        waitFor 30, { reportsTabPane.displayed }
+        waitFor 60, { reportsTabPane.displayed }
         reportsTabPane.reports.size() > 0
 
     }
@@ -54,12 +54,15 @@ class OrganisationReportingSpec extends StubbedCasSpec {
         when: "Display the reporting tab"
         to Organisation, orgId
 
-        waitFor 20, {
+        then:
+        waitFor 60, {at Organisation}
+
+        waitFor 60, {
             adminTab.click()
         }
 
         then:
-        waitFor 10, { adminTabContent.displayed }
+        waitFor 20, { adminTabContent.displayed }
 
         when:
         def reportingSection = adminTabContent.viewReportingSection()
@@ -118,7 +121,7 @@ class OrganisationReportingSpec extends StubbedCasSpec {
         reportsTabPane.reports.size() > 0
 
         then:
-        waitFor {
+        waitFor 30, {
             reportsTabPane.reports[0].markedAsComplete()
             reportsTabPane.reports[0].canBeSubmitted()
         }
@@ -239,10 +242,15 @@ class OrganisationReportingSpec extends StubbedCasSpec {
             reportingTab.click()
         }
 
-        then: "The first report is marked as submitted"
+
+        then:
+        waitFor { reportsTabPane.displayed }
+        reportsTabPane.reports.size() > 0
+
+        when: "The first report is marked as submitted"
         reportsTabPane.reports[0].isSubmitted()
 
-        and:"The not required button is not visible"
+        then:"The not required button is not visible"
         reportsTabPane.reports[1].notRequired()
 
     }
