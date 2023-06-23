@@ -6,7 +6,7 @@
             <span class="badge text-white" style="font-size: 13px;" data-bind="text:meriPlanStatus().text, css:meriPlanStatus().badgeClass"></span>
             <span data-bind="if:detailsLastUpdated"> <br/>Last update date : <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
         </div>
-    <g:render template="${meriPlanTemplate}" model="[project: project, risksAndThreatsVisible:risksAndThreatsVisible, announcementsVisible:announcementsVisible]"/>
+    <g:render template="${meriPlanTemplate}" model="[project: project, risksAndThreatsVisible:risksAndThreatsVisible, announcementsVisible:announcementsVisible, mode: au.org.ala.merit.ReportService.ReportMode.VIEW.name()]"/>
     </div>
     <!-- /ko -->
 

@@ -11,10 +11,10 @@
   },
   "devDependencies": {
     "@metahub/karma-jasmine-jquery": "^2.0.1",
-    "chromedriver": "113.0.0",
+    "chromedriver": "114.0.1",
     "jasmine-core": "^3.5.0",
     "jasmine-jquery": "^2.0.0",
-    "jquery": "3.6",
+    "jquery": "3.6.2",
     "karma": "^6.1.1",
     "karma-chrome-launcher": "^2.2.0",
     "karma-coverage": "^2.0.2",

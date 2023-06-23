@@ -71,7 +71,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         meriPlan.primaryPriority = "Ginini Flats Wetland Complex"
         meriPlan.secondaryOutcomes[0].outcome = "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
         meriPlan.secondaryOutcomes[0].priority = "Ginini Flats Wetland Complex"
-        meriPlan.shortTermOutcomes[0].value("Short term outcome 1")
+        meriPlan.shortTermOutcomes[0].outcome.value("Short term outcome 1")
         meriPlan.addMediumTermOutcome("Medium term outcome 1")
         meriPlan.projectName = "MERI plan edited name"
         meriPlan.projectDescription = "MERI plan edited description"
@@ -107,8 +107,8 @@ class MeriPlanSpec extends StubbedCasSpec {
         meriPlan.primaryPriority == "Ginini Flats Wetland Complex"
         meriPlan.secondaryOutcomes[0].outcome.value().contains("Ramsar")
         meriPlan.secondaryOutcomes[0].priority.value() == "Ginini Flats Wetland Complex"
-        meriPlan.shortTermOutcomes[0].value() == "Short term outcome 1"
-        meriPlan.mediumTermOutcomes[0].value() == "Medium term outcome 1"
+        meriPlan.shortTermOutcomes[0].outcome.value() == "Short term outcome 1"
+        meriPlan.mediumTermOutcomes[0].outcome.value() == "Medium term outcome 1"
         meriPlan.projectName == "MERI plan edited name"
         meriPlan.projectDescription == "MERI plan edited description"
         meriPlan.keyThreats[0].threat.value() == "Threat 1"
@@ -196,6 +196,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         then:
         withWindow"meri-plan-report", {
             at MeriPlanPDFPage
+            closePrintInstructions()
             meriPlan.primaryOutcome.text().contains("Ramsar")
             // Direct comparison fails due to &nbsp in the HTML due to the length of the options
             meriPlan.primaryPriority == "Ginini Flats Wetland Complex"
@@ -220,32 +221,6 @@ class MeriPlanSpec extends StubbedCasSpec {
             meriPlan.nationalAndRegionalPlans[0].alignment.text() == "Alignment 1"
         }
     }
-
-    /*
-    def "cancel MERI Plan dialog declaration"() {
-
-        setup:
-        loginAsUser('1', browser)
-
-        when: "We open the MERI plan and press the Submit button"
-        to ProjectIndex, '1'
-        openAdminTab()
-        def meriplan = admin.openMeriPlan()
-        meriplan.submit()
-
-        then: "The MERI plan submission declaration is displayed"
-        waitFor 20, {
-            meriplan.submissionModal.displayed
-        }
-
-        when: "The cancel button is pressed on the declaration"
-        meriplan.submissionModal.cancel()
-
-        then: "The declaration is closed"
-        waitFor { !meriplan.submissionModal.displayed }
-    }
-    */
-
 
     def "A program can set a default primary outcome"()  {
         setup:

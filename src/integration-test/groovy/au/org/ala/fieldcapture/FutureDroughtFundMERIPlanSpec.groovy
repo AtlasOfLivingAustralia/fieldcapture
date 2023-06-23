@@ -28,7 +28,7 @@ class FutureDroughtFundMERIPlanSpec extends StubbedCasSpec {
 
         meriPlan.primaryOutcome = "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
         meriPlan.primaryPriorityUnstyled[0].click()
-        meriPlan.shortTermOutcomes[0].value("Short term outcome 1")
+        meriPlan.shortTermOutcomes[0].outcome.value("Short term outcome 1")
         meriPlan.addMediumTermOutcome("Medium term outcome 1")
         meriPlan.projectDescription = "MERI plan edited description"
         meriPlan.rationale = "rationale"
@@ -61,8 +61,8 @@ class FutureDroughtFundMERIPlanSpec extends StubbedCasSpec {
         meriPlan.otherOutcomeColumn2[0].text() == "More primary producers and agricultural communities are experimenting with adaptive or transformative NRM practices, systems and approaches that link and contribute to building drought resilience"
         meriPlan.otherOutcomeColumn2[1].text() == "Partnerships and engagement is built between stakeholders responsible for managing natural resources"
 
-        meriPlan.shortTermOutcomes[0].value() == "Short term outcome 1"
-        meriPlan.mediumTermOutcomes[0].value() == "Medium term outcome 1"
+        meriPlan.shortTermOutcomes[0].outcome.value() == "Short term outcome 1"
+        meriPlan.mediumTermOutcomes[0].outcome.value() == "Medium term outcome 1"
         meriPlan.projectDescription == "MERI plan edited description"
         meriPlan.rationale == "rationale"
         meriPlan.projectMethodology == "Project methodology"

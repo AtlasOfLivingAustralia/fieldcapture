@@ -47,7 +47,7 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
             meriPlan.asset.find('[value="Euastacus jagara (Freshwater crayfish)"')
         }
         meriPlan.asset = "Euastacus jagara (Freshwater crayfish)"
-        meriPlan.shortTermOutcomes[0].value("Short term outcome 1")
+        meriPlan.shortTermOutcomes[0].outcome.value("Short term outcome 1")
         meriPlan.projectDescription = "MERI plan edited description"
         meriPlan.relatedProjects = "Related projects"
         meriPlan.projectPartnerships[0].name = 'partner name'
@@ -91,7 +91,7 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
         then:
         meriPlan.asset == "Euastacus jagara (Freshwater crayfish)"
         meriPlan.assetType.text() == "Priority Invertebrate Species"
-        meriPlan.shortTermOutcomes[0].value() == "Short term outcome 1"
+        meriPlan.shortTermOutcomes[0].outcome.value() == "Short term outcome 1"
         meriPlan.projectDescription == "MERI plan edited description"
         meriPlan.relatedProjects == "Related projects"
         meriPlan.projectPartnerships[0].name == 'partner name'
@@ -123,28 +123,28 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
 
         then:
 
-        meriPlan.assetType[0].text() == "Priority Invertebrate Species"
-        meriPlan.asset[0].text() == "Euastacus jagara (Freshwater crayfish)"
+        meriPlan.assets[0].assetType.text() == "Priority Invertebrate Species"
+        meriPlan.assets[0].asset.text() == "Euastacus jagara (Freshwater crayfish)"
         meriPlan.priorityAction[1].text() == "No priority actions have been nominated for this project"
-        meriPlan.outcomeStatements[0].text() == "Short term outcome 1"
-        meriPlan.description[0].text() == "MERI plan edited description"
+        meriPlan.shortTermOutcomes[0].outcome.text() == "Short term outcome 1"
+        meriPlan.projectDescription.text() == "MERI plan edited description"
         meriPlan.relatedProjects[0].text() == "Related projects"
         meriPlan.consultation[0].text() == "Consultation"
-        meriPlan.projectMethodology[0].text() == "Project methodology"
-        meriPlan.nationalAndRegionalPlansName[1].text() == "Plan 1"
-        meriPlan.nationalAndRegionalPlansSection[1].text() == "Section 1"
-        meriPlan.nationalAndRegionalPlansAlignment[1].text() == "Alignment 1"
-        meriPlan.keyThreatsThreats[0].text() == "Threat 1"
-        meriPlan.keyThreatsIntervention[0].text() == "Intervention 1"
-        meriPlan.ppPartnerName[1].text() == "partner name"
-        meriPlan.ppNature[1].text() == "partnership"
-        meriPlan.ppOrganisationType[1].text() == "Trust"
-        meriPlan.projectService[1].text() == "Communication materials"
-        meriPlan.projectTargetMeasure[1].text() == "Number of communication materials published"
-        meriPlan.projectTotalDelivered[1].text() == "5"
-        meriPlan.projectDeliveryDate[1].text() == "01-07-2021"
-        meriPlan.budgetDescription[1].text() == "budget description"
-        meriPlan.budgetAmount[1].text() == "\$100.00"
+        meriPlan.projectMethodology.text() == "Project methodology"
+        meriPlan.nationalAndRegionalPlans[0].name.text() == "Plan 1"
+        meriPlan.nationalAndRegionalPlans[0].section.text() == "Section 1"
+        meriPlan.nationalAndRegionalPlans[0].alignment.text() == "Alignment 1"
+        meriPlan.keyThreats[0].threat.text() == "Threat 1"
+        meriPlan.keyThreats[0].intervention.text() == "Intervention 1"
+        meriPlan.projectPartnerships[0].name == "partner name"
+        meriPlan.projectPartnerships[0].partnership == "partnership"
+        meriPlan.projectPartnerships[0].orgType == "Trust"
+        meriPlan.projectServices[0].service.text() == "Communication materials"
+        meriPlan.projectServices[0].score.text() == "Number of communication materials published"
+        meriPlan.projectServices[0].targets[0].text() == "5"
+        meriPlan.projectServices[0].date.text() == "01-07-2021"
+        meriPlan.budget[0].description.text() == "budget description"
+        meriPlan.budget[0].budgetAmounts[0].text() == "\$100.00"
 
     }
 
@@ -168,7 +168,7 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
         meriPlan.secondaryOutcomes[0].outcome = "2. By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved."
         meriPlan.primaryPriorityUnstyled[0].click()
         meriPlan.secondaryOutcomes[0].click()
-        meriPlan.shortTermOutcomes[0].value("Short term outcome 1")
+        meriPlan.shortTermOutcomes[0].outcome.value("Short term outcome 1")
         waitFor {
             meriPlan.assetType.find('[value="Priority Invertebrate Species"')
             meriPlan.asset.find('[value="Euastacus jagara (Freshwater crayfish)"')
@@ -210,7 +210,7 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
         meriPlan.primaryPriorityUnstyled[0].text() == "Numenius madagascariensis (Eastern Curlew, Far Eastern Curlew)"
         meriPlan.secondaryOutcomes[0].outcome.value().contains("Threatened")
         meriPlan.secondaryOutcomes[0].priorityUnstyle.text() == "Numenius madagascariensis (Eastern Curlew, Far Eastern Curlew)"
-        meriPlan.shortTermOutcomes[0].value() == "Short term outcome 1"
+        meriPlan.shortTermOutcomes[0].outcome.value() == "Short term outcome 1"
         meriPlan.assetType == "Priority Invertebrate Species"
         meriPlan.asset == "Euastacus jagara (Freshwater crayfish)"
 

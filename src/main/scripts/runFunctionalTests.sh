@@ -9,7 +9,7 @@ fi
 
 BRANCH=$3
 if [ -z $BRANCH ]; then
-    BRANCH=feature/issue788
+    BRANCH=feature/paratoo
 fi
 
 ECODATA_LOCAL_DIR=$2
@@ -51,7 +51,7 @@ cd $MERIT_DIR
 chmod u+x src/main/scripts/loadFunctionalTestData.sh
 
 echo "Running functional tests"
-GRADLE_OPTS="-Xmx1g" ./gradlew integrationTest "-Dorg.gradle.jvmargs=-Xmx1g" --stacktrace -Dgeb.env=$GEB_ENV
+GRADLE_OPTS="-Xmx1g" ./gradlew integrationTest "-Dorg.gradle.jvmargs=-Xmx1g" --stacktrace -Dgeb.env=$GEB_ENV -Dwebdriver.chrome.driver=/usr/bin/chromedriver
 
 RETURN_VALUE=$?
 
