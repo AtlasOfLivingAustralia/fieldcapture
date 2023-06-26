@@ -21,7 +21,6 @@
             organisationSaveUrl: "${createLink(action:'ajaxUpdate')}",
             organisationViewUrl: '${g.createLink(action:"index", id:"${organisation.organisationId}")}',
             viewReportUrl: "${g.createLink(action:'viewOrganisationReport', id:organisation.organisationId)}",
-            %{--editReportUrl: "${g.createLink(action:'editOrganisationReport', id:organisation.organisationId)}",--}%
             editReportUrl: "${g.createLink(action:'editReport', id:organisation.organisationId)}",
             resetReportUrl: "${createLink(action:'resetReport', id:organisation.organisationId)}",
             regenerateOrganisationReportsUrl: "${createLink(action:"regenerateOrganisationReports", id:organisation.organisationId)}",

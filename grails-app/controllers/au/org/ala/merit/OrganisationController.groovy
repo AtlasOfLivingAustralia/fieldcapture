@@ -520,21 +520,6 @@ class OrganisationController {
         render result as JSON
     }
 
-    @PreAuthorise(accessLevel = 'editor')
-    def editOrganisationReport(OrganisationReportCommand cmd) {
-        if (cmd.hasErrors()) {
-            error(cmd.errors.toString())
-            return
-        }
-
-        if (cmd.report.type ==  ReportService.PERFORMANCE_MANAGEMENT_REPORT) {
-            viewOrEditOrganisationReport(cmd.report, true)
-        }
-        else {
-           cmd.processEdit(this)
-        }
-    }
-
     private def viewOrEditOrganisationReport(Map report, Boolean edit) {
         int version = report.toDate < "2017-01-01T00:00:00Z" ? 1 : 2
         Map organisation = organisationService.get(report.organisationId)
