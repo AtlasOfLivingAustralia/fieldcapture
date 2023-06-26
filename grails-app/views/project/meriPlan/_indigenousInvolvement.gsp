@@ -2,7 +2,7 @@
 
 <div class="form-group row">
     <div class="col-sm-8">
-        <label class="required" for="indigenous-involved">Are First Nations people (Indigenous) involved in the management and recovery of threatened species, threatened ecological communities and priority places within the project?</label>
+        <label class="required" for="indigenous-involved">${indigenousInvolvementQuestion ?: 'Are First Nations people (Indigenous) involved in the project?'}</label>
     </div>
 
     <div class="col-sm-4">

@@ -1,5 +1,5 @@
 <!-- ko with:details.baseline -->
-<h4 class="header-with-help">Monitoring methodology</h4><fc:iconHelp>${titleHelpText ?: "Describe the project baseline(s) units of measure or data which will be used to report progress towards this project's outcomes (short-term, medium-term and 5 year program outcome), and the monitoring design. Refer to the Regional Land Partnerships Evaluation Plan, which provides guidance on baselines and the monitoring indicators for each RLP outcome. Note, other monitoring indicators can also be used."}</fc:iconHelp>
+<h4 class="header-with-help">Monitoring methodology</h4><fc:iconHelp html="true">${titleHelpText ?: "Describe the project baseline(s) units of measure or data which will be used to report progress towards this project's outcomes (short-term, medium-term and 5 year program outcome), and the monitoring design. Refer to the Regional Land Partnerships Evaluation Plan, which provides guidance on baselines and the monitoring indicators for each RLP outcome. Note, other monitoring indicators can also be used."}</fc:iconHelp>
 <br/>
 <strong>Project baseline</strong>
 <g:set var="baselineHeader">
@@ -10,7 +10,7 @@
     <tr class="header">
         <th class="code"></th>
         <th class="outcome required">Outcome statement/s</th>
-        <th class="monitoring-data required">Monitoring data</th>
+        <th class="monitoring-data required">Baseline data</th>
         <th class="baseline required">Baseline data description <g:if test="${baselineHelpText}"><fc:iconHelp>${baselineHelpText}</fc:iconHelp></g:if></th>
         <th class="service required">Project Service / Target Measure/s <g:if test="${baselineHelpText}"><fc:iconHelp>${baselineServiceHelpText}</fc:iconHelp></g:if></th>
         <th class="baseline-method required">Select the method used to obtain the baseline, or how the baseline will be established if ‘Other’<fc:iconHelp html="true">${baselineMethodHelpText ?: "Describe the project baseline(s) units of measure or data which will be used to report progress towards this project's outcomes (short-term, medium-term and 5 year program outcome), and the monitoring design."}</fc:iconHelp></th>
@@ -44,7 +44,7 @@
                     multiple="true"
                     class="form-control form-control-sm"
                     data-validation-engine="validate[required]"
-                    data-bind="options:$root.allTargetMeasures, optionsText:'label', optionsValue:'scoreId', multiSelect2:{value:relatedTargetMeasures, preserveColumnWidth:20}, disable: monitoringDataStatus() != 'Needs to be collected' || $root.isProjectDetailsLocked()"></select>
+                    data-bind="options:$root.monitoringTargetMeasures, optionsText:'label', optionsValue:'scoreId', multiSelect2:{value:relatedTargetMeasures, preserveColumnWidth:20}, disable: monitoringDataStatus() != 'Needs to be collected' || $root.isProjectDetailsLocked()"></select>
         </td>
         <td class="baseline-method">
             <select multiple="multiple"

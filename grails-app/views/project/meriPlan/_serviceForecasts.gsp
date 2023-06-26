@@ -1,5 +1,5 @@
 <!-- ko with:details.serviceOutcomes -->
-<h4>${title ?: "Project services forecasts"}</h4>
+<h4 class="header-with-help">${title ?: "Project services forecasts"}</h4><g:if test="${titleHelpText}"> <fc:iconHelp>${titleHelpText}</fc:iconHelp></g:if>
 
 <table class="table service-targets forecasts">
     <thead>
