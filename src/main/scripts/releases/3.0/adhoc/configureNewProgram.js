@@ -830,6 +830,7 @@ var config=
                 "template": "additionalOutcomes",
                 "model": {
                     "title": "Additional benefits",
+                    "helpTextHeading":"If the project is not delivering additional benefits, delete the row using the 'x' in the right-most column.",
                     "outcomePriority":"Additional outcome/s",
                     "priority":"Additional Investment Priorities",
                     "priorityHelpText":"Other investment priorities that will benefit from the project.  Delete the row if there are no additional outcomes."
@@ -859,7 +860,8 @@ var config=
                 "model": {
                     "threatHelpText":"Describe the key threats or key threatening processes to the investment priority",
                     "evidenceHelpText": "List evidence that will be retained to demonstrate delivery of this service. Refer to Evidence Guide and Project Service Summaries for guidance",
-                    "interventionHelpText":"Describe the proposed method to address the threat or threatening process"
+                    "interventionHelpText":"Describe the proposed method to address the threat or threatening process",
+                    "servicesHelpText": "Project Services/Target measures selected in this section will be pre-populated into the Project services and targets and Project service forecasts tables"
                 }
             },
             {
@@ -887,7 +889,7 @@ var config=
                     "monitoringServiceHelpText": "Select the relevant Project Services(s)/Target measure(s) that will be used to support ongoing monitoring",
                     "baselineMethodHelpText": "EMSA modules mandatory unless exemption agreed to by the Department. Where an exemption has been provided the user can then select \"Other\"",
                     "approachHelpText": "EMSA modules mandatory unless exemption agreed to by the Department. Where an exemption has been provided the user can then select \"Other\"",
-                    "titleHelpText": "Describe the Project Baseline(s) and ongoing monitoring which will be used to report progress towards this projects outcome(s)",
+                    "titleHelpText": "Describe the Project Baseline(s) and ongoing monitoring which will be used to report progress towards this projects outcome(s).  Project Services/Target measures selected in this section will be pre-populated into the Project services and targets and Project service forecasts tables",
                     "newIndicatorText": "New monitoring indicator",
                     "evidenceHelpText": "List evidence that will be retained to demonstrate delivery of this service. Refer to Evidence Guide and Project Service Summaries for guidance"
                 }
@@ -909,12 +911,17 @@ var config=
                 "template": "serviceOutcomeTargets",
                 "model": {
                     "title": "Project services and targets",
-                    "serviceName": "Service"
+                    "serviceName": "Service",
+                    "titleHelpText":"Service and Target measure fields pre-populated through the Project Service/Target Measure/s to address threats field and Monitoring methodology sections"
                 }
             },
             {
                 "template": "serviceForecasts",
-                "excludedModes":["PRINT"]
+                "excludedModes":["PRINT"],
+                "model": {
+                    "titleHelpText":"Service and Target measure fields pre-populated through the Project Service/Target Measure/s to address threats field and Monitoring methodology sections"
+                }
+
             }
         ],
         keyThreatCodes: [
