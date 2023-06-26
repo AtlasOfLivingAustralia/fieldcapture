@@ -3,7 +3,9 @@
         <a class="nav-link active" data-toggle="pill" href="#edit-program-details" id="edit-program-details-tab" role="tab">Edit</a>
         <a class="nav-link" data-toggle="pill" href="#organisation-permissions" id="permissions-tab" role="tab">Permissions</a>
         <a class="nav-link" data-toggle="pill" href="#reporting-config" id="reporting-tab" role="tab">Reporting</a>
-        <a class="nav-link" data-toggle="pill" href="#config" id="configuration-tab" role="tab">Configuration</a>
+        <g:if test="${fc.userIsAlaOrFcAdmin()}">
+            <a class="nav-link" data-toggle="pill" href="#config" id="configuration-tab" role="tab">Configuration</a>
+        </g:if>
     </div>
 
     <div class="tab-content col-9">
@@ -38,7 +40,7 @@
         </div>
         <div class="tab-pane" id="reporting-config">
             <form>
-                <h3>Core services and output reporting frequency</h3>
+                <h3>Reporting configuration</h3>
                 <div class="form-group">
                     <label for="start-date">Start date</label>
                     <div class="input-group">
@@ -53,8 +55,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="core-services-group">Core services reporting group</label>
-                    <select class="form-control" id="core-services-group" data-bind="value:coreServicesPeriod, options:coreServicesOptions, optionsText:'label', optionsValue:'label', optionsCaption:'Please select'" data-validation-engine="validate[required]"></select>
+                    <label for="regional-capacity-services-group">Regional capacity services reporting group</label>
+                    <select class="form-control" id="regional-capacity-services-group" data-bind="value:coreServicesPeriod, options:coreServicesOptions, optionsText:'label', optionsValue:'label', optionsCaption:'Please select'" data-validation-engine="validate[required]"></select>
                 </div>
 
                 <button class="btn btn-primary" data-bind="click:saveReportingConfiguration">Save</button>
@@ -73,13 +75,14 @@
             </form>
 
         </div>
-        <div class="tab-pane" id="config">
-            <h4 style="display:inline-block">Organisation configuration</h4> <button class="btn btn-success float-right" data-bind="click:saveOrganisationConfiguration">Save Configuration</button>
+        <g:if test="${fc.userIsAlaOrFcAdmin()}">
+            <div class="tab-pane" id="config">
+                <h4 style="display:inline-block">Organisation configuration</h4> <button class="btn btn-success float-right" data-bind="click:saveOrganisationConfiguration">Save Configuration</button>
 
-            <textarea id="textConfig" rows="80" style="width:100%" data-bind="value:config">
+                <textarea id="textConfig" rows="80" style="width:100%" data-bind="value:config">
 
-            </textarea>
-        </div>
-
+                </textarea>
+            </div>
+        </g:if>
     </div>
 </div>
