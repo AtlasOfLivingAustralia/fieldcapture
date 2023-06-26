@@ -459,7 +459,7 @@ class OrganisationController {
 
     }
 
-
+    @PreAuthorise(accessLevel = 'readOnly')
     def viewOrganisationReport(OrganisationReportCommand cmd) {
         if (cmd.hasErrors()) {
             error(cmd.errors.toString())
@@ -474,7 +474,7 @@ class OrganisationController {
         }
     }
 
-
+    @PreAuthorise(accessLevel = 'editor')
     def editReport(String id, String reportId) {
         if (!id || !reportId) {
             error('An invalid report was selected for data entry', id)
@@ -496,7 +496,7 @@ class OrganisationController {
         }
     }
 
-
+    @PreAuthorise(accessLevel = 'editor')
     def saveReport(SaveReportDataCommand saveReportDataCommand) {
         Map result
         if (saveReportDataCommand.report?.organisationId != params.id) {
@@ -520,7 +520,7 @@ class OrganisationController {
         render result as JSON
     }
 
-
+    @PreAuthorise(accessLevel = 'editor')
     def editOrganisationReport(OrganisationReportCommand cmd) {
         if (cmd.hasErrors()) {
             error(cmd.errors.toString())
@@ -596,12 +596,9 @@ class OrganisationController {
 
     }
 
+    @PreAuthorise(accessLevel = 'admin')
     def ajaxSubmitReport(String id) {
 
-//        if (!organisationService.isUserAdminForOrganisation(id)) {
-//            render status:401, message:'No permission to submit report'
-//            return
-//        }
         def reportDetails = request.JSON
 
         def result = organisationService.submitReport(id, reportDetails.reportId)
