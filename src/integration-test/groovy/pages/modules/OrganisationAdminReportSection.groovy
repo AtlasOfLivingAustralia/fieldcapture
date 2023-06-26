@@ -5,7 +5,7 @@ import geb.Module
 class OrganisationAdminReportSection extends Module {
 
     static content = {
-        coreServicesGroup { $('#core-services-group')}
+        regionalCapacityServicesGroup { $('#regional-capacity-services-group')}
         saveButton {$('[data-bind*="saveReportingConfiguration"]')}
     }
 

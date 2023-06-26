@@ -62,8 +62,8 @@ class OrganisationReportingSpec extends StubbedCasSpec {
 
         when:
         def reportingSection = adminTabContent.viewReportingSection()
-//        reportingSection.coreServicesGroup = "Quarterly (First period ends 30 September 2023)"
-        reportingSection.coreServicesGroup = "Quarterly - A (First period ends 31 March 2023)"
+//        reportingSection.regionalCapacityServicesGroup = "Quarterly (First period ends 30 September 2023)"
+        reportingSection.regionalCapacityServicesGroup = "Quarterly - A (First period ends 31 March 2023)"
 
         reportingSection.saveReportingGroups()
 

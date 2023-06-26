@@ -9,8 +9,8 @@ class OrganisationAdminTab extends Module{
         editButton{$('[data-bind="click:editOrganisation"]')}
         deleteButton{ $('[data-bind="click:deleteOrganisation"]')}
 
-        configOverrideTab(required:false) { $('#configuration-tab')}
-        configOverride(required:false) { $('#config').module OrganisationConfigModule }
+        configTab(required:false) { $('#configuration-tab')}
+        config(required:false) { $('#config').module OrganisationConfigModule }
 
         reportingSectionTab(required:false) { $('#reporting-tab') }
         reportingSection(required:false) { $('#reporting-config').module OrganisationAdminReportSection }
@@ -18,8 +18,8 @@ class OrganisationAdminTab extends Module{
     }
 
     def openConfig() {
-        configOverrideTab.click()
-        waitFor { configOverride.displayed }
+        configTab.click()
+        waitFor { config.displayed }
     }
 
     def viewReportingSection() {

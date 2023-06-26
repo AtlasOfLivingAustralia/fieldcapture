@@ -42,8 +42,8 @@ class OrganisationProjectSpec extends StubbedCasSpec {
         adminTabContent.openConfig()
 
         when:
-        adminTabContent.configOverride.config = '{ "visibility": "public" }'
-        adminTabContent.configOverride.save()
+        adminTabContent.config.config = '{ "visibility": "public" }'
+        adminTabContent.config.save()
 
         then:
         adminTab.displayed == true
