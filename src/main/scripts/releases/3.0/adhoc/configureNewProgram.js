@@ -771,7 +771,9 @@ var config=
                 "description": "",
                 "category": "Outputs Reporting",
                 "activityType": "RLP Output Report - Review",
-                "canSubmitDuringReportingPeriod": true
+                "canSubmitDuringReportingPeriod": true,
+                "label": "Quarter"
+
             },
             {
                 "firstReportingPeriodEnd": "2021-06-30T14:00:00Z",
@@ -781,19 +783,64 @@ var config=
                 "reportingPeriodInMonths": 12,
                 "description": "",
                 "category": "Annual Progress Reporting",
-                "activityType": "RLP Annual Report"
+                "activityType": "RLP Annual Report",
+                "label": "Annual"
             },
             {
                 "reportType": "Single",
-                "firstReportingPeriodEnd": "2024-06-30T14:00:00Z",
                 "reportDescriptionFormat": "Outcomes Report 1 for %4$s",
+                "minimumOwnerDurationInMonths": null,
+                "reportNameFormat": "Outcomes Report 1",
+                "reportingPeriodInMonths": 36,
+                "alignToOwnerStart":true,
+                "alignToOwnerEnd":true,
+                "multiple": false,
+                "description": "Before beginning Outcomes Report 1, please go to the Data set summary tab and complete a form for each data set collected for this project. Help with completing this form can be found in Section 10 of the [RLP MERIT User Guide](http://www.nrm.gov.au/my-project/monitoring-and-reporting-plan/merit)",
+                "maximumOwnerDurationInMonths": 36,
+                "category": "Outcomes Report 1",
+                "reportsAlignedToCalendar": false,
+                "activityType": "RLP Short term project outcomes",
+                "label":"Outcomes Report 1"
+            },
+            {
+                "reportType": "Single",
+                "reportDescriptionFormat": "Outcomes Report 1 for %4$s",
+                "minimumOwnerDurationInMonths": 37,
+                "reportNameFormat": "Outcomes Report 1",
+                "reportingPeriodInMonths": 36,
+                "multiple": false,
+                "description": "Before beginning Outcomes Report 1, please go to the Data set summary tab and complete a form for each data set collected for this project. Help with completing this form can be found in Section 10 of the [RLP MERIT User Guide](http://www.nrm.gov.au/my-project/monitoring-and-reporting-plan/merit)",
+                "maximumOwnerDurationInMonths": 48,
+                "calendarAlignmentMonth": 7,
+                "category": "Outcomes Report",
+                "reportsAlignedToCalendar": true,
+                "activityType": "RLP Short term project outcomes",
+                "label": "Outcomes Report 1"
+            },
+            {
+                "reportType": "Single",
+                "reportDescriptionFormat": "Outcomes Report 1 for %4$s",
+                "minimumOwnerDurationInMonths": 49,
                 "reportNameFormat": "Outcomes Report 1",
                 "reportingPeriodInMonths": 36,
                 "multiple": false,
                 "description": "Before beginning Outcomes Report 1, please go to the Data set summary tab and complete a form for each data set collected for this project. Help with completing this form can be found in Section 10 of the [RLP MERIT User Guide](http://www.nrm.gov.au/my-project/monitoring-and-reporting-plan/merit)",
                 "category": "Outcomes Report 1",
-                "reportsAlignedToCalendar": false,
-                "activityType": "RLP Short term project outcomes"
+                "activityType": "RLP Short term project outcomes",
+                "label": "Outcomes Report 1"
+            },
+            {
+                "reportType": "Single",
+                "reportDescriptionFormat": "Outcomes Report 1 for %4$s",
+                "minimumOwnerDurationInMonths": 36,
+                "reportNameFormat": "Outcomes Report 2",
+                "alignToOwnerStart":true,
+                "alignToOwnerEnd":true,
+                "multiple": false,
+                "description": "Before beginning Outcomes Report 1, please go to the Data set summary tab and complete a form for each data set collected for this project. Help with completing this form can be found in Section 10 of the [RLP MERIT User Guide](http://www.nrm.gov.au/my-project/monitoring-and-reporting-plan/merit)",
+                "category": "Outcomes Report 2",
+                "activityType": "RLP Short term project outcomes",
+                "label": "Outcomes Report 2"
             }
         ],
         "navigationMode": "returnToProject",

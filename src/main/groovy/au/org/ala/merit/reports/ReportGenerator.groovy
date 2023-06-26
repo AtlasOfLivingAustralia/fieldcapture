@@ -5,6 +5,7 @@ import au.org.ala.merit.config.ReportConfig
 import org.apache.commons.logging.LogFactory
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
+import org.joda.time.Duration
 import org.joda.time.Interval
 import org.joda.time.Period
 import org.joda.time.PeriodType
@@ -44,10 +45,9 @@ class ReportGenerator {
         // loaded at UTC midnight (newer ones use AEST/ADST) which causes issues with the new requirement the reports must be
         // able to be generated to a single day precision.
         DateTime endDate = reportOwner.periodEnd.withZone(DateTimeZone.default).withTimeAtStartOfDay()
-        DateTime onlyGenerateReportsForDatesBefore = reportConfig.onlyGenerateReportsForDatesBefore
 
-        List<Map> reports
-        if (!onlyGenerateReportsForDatesBefore || reportOwner.periodStart.isBefore(onlyGenerateReportsForDatesBefore)) {
+        List<Map> reports = null
+        if (reportConfig.shouldGenerateReports(reportOwner)) {
             if (reportConfig.multiple && !reportConfig.endDates) {
                 reports = generatePeriodicReports(reportConfig, reportOwner, latestApprovedReportPeriodEnd, startingSequenceNo, endDate, period)
             } else if (reportConfig.endDates) {
@@ -60,6 +60,12 @@ class ReportGenerator {
         reports
     }
 
+    /**
+     * The categories of "single" reports currently used in MERIT are:
+     * - Outcomes Report 2 - covers the entire project period
+     * - Outcomes Report 1 - starts at project start, but ends at a variable date, often before the project end date
+     * - Final Report - Used in bushfires projects where the final report replaces the final outputs report so is aligned to the project end date
+     */
     private List<Map> generateSingleReport(ReportOwner reportOwner, DateTime endDate, ReportConfig reportConfig, Period period, List existingReports) {
         List<Map> reports = []
         // Single reports are aligned with the owner dates.
@@ -76,7 +82,12 @@ class ReportGenerator {
             if (reportConfig.getFirstReportingPeriodEnd()) {
                 end = reportConfig.getFirstReportingPeriodEnd()
             }
-            else if (reportConfig.reportingPeriodInMonths) {
+            else if (reportConfig.reportsAlignedToCalendar) {
+                // We can use the routine that generates the first report of a periodic schedule in this case.
+                Interval interval = determineFirstReportInterval(reportConfig, reportOwner, reportOwner.periodStart)
+                end = interval.end
+            }
+            else {
                 end = start.plus(period)
             }
         }
@@ -88,7 +99,7 @@ class ReportGenerator {
                 // midnight on the last day of the month
                 DateTime fudgedEndDate = endDate.plusDays(DATE_FUDGE_FACTOR)
                 // This is the first period after the end date that matches the requested alignment (e.g. quarterly / semesterly / monthly)
-                DateTime alignedDate = DateUtils.alignToPeriod(fudgedEndDate, reportConfig.reportingPeriod).minus(reportConfig.reportingPeriod)
+                DateTime alignedDate = DateUtils.alignToPeriod(fudgedEndDate, reportConfig.reportingPeriod, reportConfig.calendarAlignmentMonth).minus(reportConfig.reportingPeriod)
                 Interval interval = new Interval(alignedDate, fudgedEndDate)
                 while (interval.toPeriod(PeriodType.months()).getMonths() < reportConfig.reportingPeriodInMonths) {
                     alignedDate = alignedDate.minus(reportConfig.reportingPeriod)
@@ -246,8 +257,8 @@ class ReportGenerator {
     }
 
     /**
-     * This method will determine the st
-     * art and end dates for the first report to be generated based on the supplied contextual information.
+     * This method will determine the start and end dates for the first report to be generated based on the
+     * supplied contextual information.
      * The rules are:
      * * Report generation must start after any approved or submitted reports.
      * * The reports must fit within the report owners time constraints.
@@ -275,7 +286,7 @@ class ReportGenerator {
         else {
             // Otherwise we align the reports to the owners reporting time constraints
             if (reportConfig.reportsAlignedToCalendar) {
-                DateTime alignedStartDate = DateUtils.alignToPeriod(startConstraint, period)
+                DateTime alignedStartDate = DateUtils.alignToPeriod(startConstraint, period, reportConfig.calendarAlignmentMonth)
                 firstReportPeriodEnd = alignedStartDate.plus(period)
                 // It is possible that the first report period end is before the constrained reporting start.  This could happen with
                 // approved reports or in the case of program aligned reporting.  (e.g the first report date is specified at a program level

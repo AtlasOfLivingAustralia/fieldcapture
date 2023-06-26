@@ -6,6 +6,7 @@ import org.joda.time.format.DateTimeFormatter
 import org.joda.time.format.ISODateTimeFormat
 
 import java.text.SimpleDateFormat
+import java.time.Month
 
 /**
  * Utilities for working with fieldcapture / ecodata ISO8601 dates.
@@ -30,11 +31,20 @@ class DateUtils {
      * 01/01/2014 will be returned.
      * @param toAlign the date to align
      * @param period the period to align to.
+     * @param fudgeFactor the number of days before the period end to allow the date to fall into the period.  Used to account for date storage and time zones
+     * @param startMonth the month the period starts in.  Used to align from January (the default) or end of financial year for example
      * @return the start date of the period the date falls into.
      */
-    static DateTime alignToPeriod(DateTime toAlign, Period period, int fudgeFactor = 1) {
+    static DateTime alignToPeriod(DateTime toAlign, Period period, Month startMonth = Month.JANUARY, int fudgeFactor = 1) {
 
-        DateTime periodStart = new DateTime(toAlign.year().get(), DateTimeConstants.JANUARY, 1, 0, 0, toAlign.getZone())
+        int year = toAlign.year().get()
+        // We need to make sure the alignment goes back in time to ensure consistent behaviour for
+        // startMonths > january
+        int month = toAlign.monthOfYear().get()
+        if (month < startMonth.value) {
+            year--
+        }
+        DateTime periodStart = new DateTime(year, startMonth.value, 1, 0, 0, toAlign.getZone())
 
         Interval interval = new Interval(periodStart, period)
 
@@ -50,7 +60,7 @@ class DateUtils {
 
     static String alignToPeriodEnd(String toAlign, Period period, DateTimeZone timeZone = DateTimeZone.default) {
         DateTime date = parse(toAlign).withZone(timeZone)
-        DateTime aligned = alignToPeriod(date, period, 2)
+        DateTime aligned = alignToPeriod(date, period, Month.JANUARY,2)
 
         format(aligned.withZone(DateTimeZone.UTC))
     }
