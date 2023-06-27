@@ -80,10 +80,6 @@ table tr.header th {
     text-align: right;
 }
 
-.meri-plan .priority div {
-    width: 100%;
-}
-
 .meri-plan .priority input:not([type=checkbox]) {
     width: 90%;
     height: 30px;
