@@ -154,40 +154,24 @@ class OrganisationService {
 
     /**
      * Adds a user with the supplied role to the identified organisation.
-     * Adds the same user with the same role to all of the organisation's projects.
      *
      * @param userId the id of the user to add permissions for.
      * @param organisationId the organisation to add permissions for.
      * @param role the role to assign to the user.
      */
     def addUserAsRoleToOrganisation(String userId, String organisationId, String role) {
-
-        def organisation = get(organisationId, 'flat')
-        def resp = userService.addUserAsRoleToOrganisation(userId, organisationId, role)
-        organisation.projects.each { project ->
-            if (project.isMERIT) {
-                userService.addUserAsRoleToProject(userId, project.projectId, role)
-            }
-        }
-        resp
+        userService.addUserAsRoleToOrganisation(userId, organisationId, role)
     }
 
     /**
      * Removes the user access with the supplied role from the identified organisation.
-     * Removes the same user from all of the organisation's projects.
      *
      * @param userId the id of the user to remove permissions for.
      * @param organisationId the organisation to remove permissions for.
 
      */
     def removeUserWithRoleFromOrganisation(String userId, String organisationId, String role) {
-        def organisation = get(organisationId, 'flat')
         userService.removeUserWithRoleFromOrganisation(userId, organisationId, role)
-        organisation.projects.each { project ->
-            if (project.isMERIT) {
-                userService.removeUserWithRole(project.projectId, userId, role)
-            }
-        }
     }
 
     def search(Integer offset = 0, Integer max = 100, String searchTerm = null, String sort = null) {
