@@ -30,11 +30,11 @@ abstract class EditOrViewReportCommand implements Validateable {
 
     def beforeValidate() {
         if (reportId && id) {
-            model = reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, formVersion)
+            model = reportService.activityReportModel(reportId, mode, formVersion)
             model.context = entity
             model.config = entity.config ?: [:]
 
-            model.reportHeaderTemplate = '/organisation/organisationReportHeader'
+            model.reportHeaderTemplate = headerTemplate
             model.returnTo = linkGenerator.link(controller:entityType, action:'index', id: id)
             model.contextViewUrl = model.returnTo
             model.saveReportUrl = linkGenerator.link(controller:entityType, action:'saveReport', id:id)
@@ -56,6 +56,8 @@ abstract class EditOrViewReportCommand implements Validateable {
 
     abstract String getEntityType()
     abstract Map getEntity()
+    abstract ReportService.ReportMode getMode()
+    abstract String getHeaderTemplate()
 
     boolean isOwnedByEntity(Map report) {
         String idField = getEntityType()+'Id'
@@ -84,7 +86,7 @@ abstract class EditOrViewReportCommand implements Validateable {
                 model.locked = true
             }
         }
-        render model: model, view:'/activity/activityReport'
+        owner.render model: model, view:'/activity/activityReport'
     }
 
 }

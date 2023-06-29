@@ -903,20 +903,21 @@ class ReportService {
     Map activityReportModel(String reportId, ReportMode mode, Integer formVersion = null) {
         Map report = get(reportId)
         Map model = [report: report]
+
         if (!isCustomReportType(report)) {
             Map activity = activityService.get(report.activityId)
             model += activityService.getActivityMetadata(activity.type, formVersion ?: activity.formVersion)
             model.activity = activity
             model.themes = []
             model.locked = activity.lock != null
-
-            if (mode == ReportMode.EDIT) {
-                model.editable = canEdit(userService.currentUserId, report, activity)
-            }
         }
-
         else if (mode == ReportMode.PRINT) {
             model.printView = true
+        }
+        // Custom report types don't necessarily have an associated activity but the canEdit only uses that
+        // to see if the activity is locked so passing null is OK
+        if (mode == ReportMode.EDIT) {
+            model.editable = canEdit(userService.currentUserId, report, model.activity)
         }
 
         model
@@ -930,7 +931,7 @@ class ReportService {
         }
 
         // If we are using pessimistic locking, the report is not editable if another user holds a lock on the activity.
-        return !activity.lock || (activity.lock.userId == userId)
+        return !(activity?.lock) || (activity.lock.userId == userId)
 
     }
 

@@ -41,10 +41,16 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
         Map managementUnit = testManagementUnit(managementUnitId, true)
 
         when:
-        controller.viewReport(managementUnitId, reportId)
+        params.id = managementUnitId
+        params.reportId = reportId
+        params.reportService = reportService
+        params.managementUnitService = managementUnitService
+        params.activityService = activityService
+        controller.viewReport()
 
         then:
-        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.VIEW, null) >> [:]
+        1 * managementUnitService.get(managementUnitId) >> managementUnit
+        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.VIEW, null) >> [editable:true, report:[reportId:reportId, managementUnitId:managementUnitId]]
         view == '/activity/activityReportView'
         model.context == managementUnit
         model.contextViewUrl == '/managementUnit/index/'+managementUnitId
@@ -198,14 +204,20 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
         setupManagementUnitAdmin()
         String managementUnitId = 'p1'
         String reportId = 'r1'
-        Map program = testManagementUnit(managementUnitId, true)
+        Map mu = testManagementUnit(managementUnitId, true)
 
         when:
-        controller.editReport(managementUnitId, reportId)
+        params.id = managementUnitId
+        params.reportId = reportId
+        params.reportService = reportService
+        params.managementUnitService = managementUnitService
+        params.activityService = activityService
+
+        controller.editReport()
         then:
-        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> [editable:true]
+        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> [editable:true,  report:[reportId:reportId, managementUnitId:managementUnitId]]
         view == '/activity/activityReport'
-        model.context == program
+        model.context == mu
         model.contextViewUrl == '/managementUnit/index/'+managementUnitId
         model.reportHeaderTemplate == '/managementUnit/managementUnitReportHeader'
     }
@@ -219,8 +231,14 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
         managementUnit.config.requiresActivityLocking = true
 
         when:
-        reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> [editable:false]
-        controller.editReport(managementUnitId, reportId)
+        reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> [editable:false,  report:[reportId:reportId, managementUnitId:managementUnitId]]
+        params.id = managementUnitId
+        params.reportId = reportId
+        params.reportService = reportService
+        params.managementUnitService = managementUnitService
+        params.activityService = activityService
+
+        controller.editReport()
 
         then: "the report activity should not be locked"
         0 * reportService.lockForEditing(_)
@@ -238,10 +256,17 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
 
         when:
         managementUnit.config.requiresActivityLocking = true
-        controller.editReport(managementUnitId, reportId)
+        params.id = managementUnitId
+        params.reportId = reportId
+        params.reportService = reportService
+        params.managementUnitService = managementUnitService
+        params.activityService = activityService
+
+        controller.editReport()
         then:
+        1 * managementUnitService.get(managementUnitId) >> managementUnit
         1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> [report:managementUnit.reports[0], editable:true]
-        1 * reportService.lockForEditing(managementUnit.reports[0])
+        1 * reportService.lockForEditing(managementUnit.reports[0]) >> [locked:true]
         view == '/activity/activityReport'
     }
 
@@ -433,7 +458,7 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
     private Map testManagementUnit(String id, boolean includeReports) {
         Map program = [managementUnitId:id, name:'name', config:[:], config:[:]]
         if (includeReports) {
-            program.reports = [[type:'report1', reportId:'r1', activityId:'a1'], [type:'report1', reportId:'r2', activityId:'a2']]
+            program.reports = [[type:'report1', reportId:'r1', activityId:'a1', 'managementUnitId':id], [type:'report1', reportId:'r2', activityId:'a2', 'managementUnitId':id]]
         }
         managementUnitService.get(id) >> program
         userService.getMembersOfManagementUnit() >> [

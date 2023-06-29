@@ -160,4 +160,10 @@ class ReportConfig {
         return periodEnd ? DateUtils.parse(periodEnd) : reportOwner.getPeriodEnd()
     }
 
+    /**
+     * If a report is adhoc, then it will not be generated automatically.
+     * We still need a configuration in place for adhoc reports or they won't show up on the page.
+     */
+    boolean adhoc = false
+
 }
