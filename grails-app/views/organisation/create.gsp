@@ -8,7 +8,7 @@
     <script disposition="head">
         var fcConfig = {
             serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
-            organisationSaveUrl: "${createLink(action:'ajaxUpdate')}",
+            organisationSaveUrl: "${createLink(action:'ajaxCreate')}",
             prepopulateAbnUrl:"${createLink(action:'prepopulateAbn')}",
             organisationViewUrl: "${createLink(action:'index')}",
             documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",

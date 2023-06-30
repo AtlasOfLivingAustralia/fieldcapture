@@ -1,6 +1,10 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.command.EditManagementUnitReportCommand
+import au.org.ala.merit.command.ManagementUnitReportCommand
+import au.org.ala.merit.command.PrintManagementUnitReportCommand
 import au.org.ala.merit.command.SaveReportDataCommand
+import au.org.ala.merit.command.ViewManagementUnitReportCommand
 import grails.converters.JSON
 import grails.core.GrailsApplication
 import grails.plugin.cache.Cacheable
@@ -333,25 +337,12 @@ class ManagementUnitController {
     }
 
     @PreAuthorise(accessLevel = 'editor', redirectController = 'managementUnit')
-    def editReport(String id, String reportId) {
-        if (!id || !reportId) {
-            error('An invalid report was selected for data entry', id)
+    def editReport(EditManagementUnitReportCommand cmd) {
+        if (cmd.hasErrors()) {
+            error(cmd.errors.toString(), cmd.id)
             return
         }
-
-        Map model = activityReportModel(id, reportId, ReportMode.EDIT, params.getInt('formVersion', null))
-
-        if (!model.editable) {
-            redirect action:'viewReport', id:id, params:[reportId:reportId, attemptedEdit:true]
-        }
-        else {
-            if (model.config.requiresActivityLocking) {
-                Map result = reportService.lockForEditing(model.report)
-                model.locked = true
-            }
-            model.saveReportUrl = createLink(controller:'managementUnit', action:'saveReport', id:id, params:[reportId:reportId])
-            render model:model, view:'/activity/activityReport'
-        }
+        cmd.processEdit(this)
     }
 
     @PreAuthorise(accessLevel = 'admin')
@@ -384,15 +375,13 @@ class ManagementUnitController {
     }
 
     @PreAuthorise(accessLevel = 'readOnly', redirectController = 'managementUnit')
-    def viewReport(String id, String reportId) {
-        if (!id || !reportId) {
-            error('An invalid report was selected for viewing', id)
+    def viewReport(ViewManagementUnitReportCommand cmd) {
+        if (cmd.hasErrors()) {
+            error(cmd.errors.toString(), cmd.id)
             return
         }
 
-        Map model = activityReportModel(id, reportId, ReportMode.VIEW)
-
-        render model:model, view:'/activity/activityReportView'
+        render model:cmd.model, view:'/activity/activityReportView'
     }
 
     @PreAuthorise(accessLevel = 'readOnly', redirectController = 'managementUnit')
@@ -419,11 +408,10 @@ class ManagementUnitController {
      * be converted into PDF.
      * @param id the project id
      */
-    def viewReportCallback(String id, String reportId) {
+    def viewReportCallback(PrintManagementUnitReportCommand cmd) {
 
         if (pdfGenerationService.authorizePDF(request)) {
-            Map model = activityReportModel(id, reportId, ReportMode.PRINT)
-            render view:'/activity/activityReportView', model:model
+            render view:'/activity/activityReportView', model:cmd.model
         }
         else {
             render status:HttpStatus.SC_UNAUTHORIZED

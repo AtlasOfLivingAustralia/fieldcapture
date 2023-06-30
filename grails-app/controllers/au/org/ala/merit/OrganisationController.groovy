@@ -1,11 +1,11 @@
 package au.org.ala.merit
 
-
-import au.org.ala.merit.command.OrganisationReportCommand
+import au.org.ala.merit.command.EditOrganisationReportCommand
 import au.org.ala.merit.command.SaveReportDataCommand
+import au.org.ala.merit.command.ViewOrganisationReportCommand
 import grails.converters.JSON
 import org.apache.http.HttpStatus
-import static ReportService.ReportMode
+
 /**
  * Extends the plugin OrganisationController to support Green Army project reporting.
  */
@@ -91,6 +91,7 @@ class OrganisationController {
 
     }
 
+    @PreAuthorise(accessLevel = 'siteAdmin')
     def create() {
         [organisation:[:], isNameEditable: true]
     }
@@ -99,7 +100,8 @@ class OrganisationController {
      * and name using abn web service.
      * @render result as json format.
      */
-    def prepopulateAbn(){
+    @PreAuthorise(accessLevel = 'admin')
+    def prepopulateAbn() {
         Map result=[:]
         Map requestParameter = params
         String abnNumber = requestParameter.abn
@@ -111,6 +113,7 @@ class OrganisationController {
         render result as JSON
     }
 
+    @PreAuthorise(accessLevel = 'admin')
     def edit(String id) {
 
         def organisation = organisationService.get(id)
@@ -131,36 +134,32 @@ class OrganisationController {
         }
     }
 
-    def delete(String id) {
-        if (organisationService.isUserAdminForOrganisation(id)) {
-            organisationService.update(id, [status: 'deleted'])
-        }
-        else {
-            flash.message = 'You do not have permission to perform that action'
-        }
-        redirect action: 'list'
-    }
-
+    @PreAuthorise(accessLevel = 'siteAdmin')
     def ajaxDelete(String id) {
 
-        if (organisationService.isUserAdminForOrganisation(id)) {
-            def result = organisationService.update(id, [status: 'deleted'])
+        def result = organisationService.update(id, [status: 'deleted'])
+        respond result
 
-            respond result
-        }
-        else {
-            render status:403, text:'You do not have permission to perform that action'
-        }
     }
 
-    def ajaxUpdate() {
-        def organisationDetails = request.JSON
+    @PreAuthorise(accessLevel = 'siteAdmin')
+    def ajaxCreate() {
+        Map organisationDetails = request.JSON
+        createOrUpdateOrganisation(null, organisationDetails)
+    }
 
+    @PreAuthorise(accessLevel = 'admin')
+    def ajaxUpdate(String id) {
+        Map organisationDetails = request.JSON
+        createOrUpdateOrganisation(id, organisationDetails)
+    }
+
+    private void createOrUpdateOrganisation(String organisationId, Map organisationDetails) {
         def documents = organisationDetails.remove('documents')
         def links = organisationDetails.remove('links')
-        def result = organisationService.update(organisationDetails.organisationId?:'', organisationDetails)
+        def result = organisationService.update(organisationId, organisationDetails)
 
-        def organisationId = organisationDetails.organisationId?:result.resp?.organisationId
+        organisationId = organisationId?:result.resp?.organisationId
         if (documents && !result.error) {
             documents.each { doc ->
                 doc.organisationId = organisationId
@@ -186,6 +185,7 @@ class OrganisationController {
      * by an organisation.
      * @param id the organisationId of the organisation.
      */
+    @PreAuthorise(accessLevel = 'admin')
     def downloadShapefile(String id) {
 
         def userId = userService.getCurrentUserId()
@@ -211,6 +211,7 @@ class OrganisationController {
         }
     }
 
+    @PreAuthorise(accessLevel = 'admin')
     def getMembersForOrganisation(String id) {
         def adminUserId = userService.getCurrentUserId()
 
@@ -229,6 +230,7 @@ class OrganisationController {
         }
     }
 
+    @PreAuthorise(accessLevel = 'admin')
     def addUserAsRoleToOrganisation() {
         String userId = params.userId
         String organisationId = params.entityId
@@ -247,6 +249,7 @@ class OrganisationController {
         }
     }
 
+    @PreAuthorise(accessLevel = 'admin')
     def removeUserWithRoleFromOrganisation() {
         String userId = params.userId
         String role = params.role
@@ -285,6 +288,7 @@ class OrganisationController {
      * Presents a page which allows the user to edit the events/announcements for all of the projects managed by
      * this organisation at once.
      */
+    @PreAuthorise(accessLevel = 'admin')
     def editAnnouncements(String id) {
 
         def organisation = id ? organisationService.get(id, 'flat') : null
@@ -334,6 +338,7 @@ class OrganisationController {
     /**
      * Bulk saves the edits to project events/announcements.
      */
+    @PreAuthorise(accessLevel = 'admin')
     def saveAnnouncements(String id) {
 
         def organisation = id ? organisationService.get(id, 'flat') : null
@@ -365,6 +370,7 @@ class OrganisationController {
         respond(resp)
     }
 
+    @PreAuthorise(accessLevel = 'admin')
     def downloadAnnouncementsTemplate(String id) {
 
         def organisation = id ? organisationService.get(id, 'flat') : null
@@ -379,7 +385,8 @@ class OrganisationController {
         new AnnouncementsMapper(excelImportService).announcementsToExcel(response, announcements)
     }
 
-    def bulkUploadAnnouncements() {
+    @PreAuthorise(accessLevel = 'admin')
+    def bulkUploadAnnouncements(String id) {
         if (request.respondsTo('getFile')) {
             def file = request.getFile('announcementsTemplate')
             if (file) {
@@ -392,6 +399,7 @@ class OrganisationController {
         respond status:400, text: 'Missing file'
     }
 
+    @PreAuthorise(accessLevel = 'admin')
     def report(String id) {
 
         def organisation = organisationService.get(id, 'all')
@@ -451,18 +459,18 @@ class OrganisationController {
                        outputModels:outputModels]
     }
 
+    @PreAuthorise(accessLevel = 'admin')
+    def getAdHocReportTypes(String id) {
 
-    def getAdHocReportTypes(String projectId) {
-
-        def supportedTypes = organisationService.getSupportedAdHocReports(projectId)
+        def supportedTypes = organisationService.getSupportedAdHocReports(id)
         render supportedTypes as JSON
 
     }
 
     @PreAuthorise(accessLevel = 'readOnly')
-    def viewOrganisationReport(OrganisationReportCommand cmd) {
+    def viewOrganisationReport(ViewOrganisationReportCommand cmd) {
         if (cmd.hasErrors()) {
-            error(cmd.errors.toString())
+            error(cmd.errors.toString(), cmd.id)
             return
         }
 
@@ -474,29 +482,22 @@ class OrganisationController {
         }
     }
 
-    @PreAuthorise(accessLevel = 'editor')
-    def editReport(String id, String reportId) {
-        if (!id || !reportId) {
-            error('An invalid report was selected for data entry', id)
+    @PreAuthorise(accessLevel = 'admin', redirectController = 'organisation')
+    def editOrganisationReport(EditOrganisationReportCommand cmd) {
+        if (cmd.hasErrors()) {
+            error(cmd.errors.toString(), cmd.id)
             return
         }
 
-        Map model = activityReportModel(id, reportId, ReportMode.EDIT, params.getInt('formVersion', null))
-
-        if (!model.editable) {
-            redirect action:'viewReport', id:id, params:[reportId:reportId, attemptedEdit:true]
+        if (cmd.report.type ==  ReportService.PERFORMANCE_MANAGEMENT_REPORT) {
+            viewOrEditOrganisationReport(cmd.report, true)
         }
         else {
-            if (model.config.requiresActivityLocking) {
-                Map result = reportService.lockForEditing(model.report)
-                model.locked = true
-            }
-            model.saveReportUrl = createLink(controller:'organisation', action:'saveReport', id:id, params:[reportId:reportId])
-            render model:model, view:'/activity/activityReport'
+            cmd.processEdit(this)
         }
     }
 
-    @PreAuthorise(accessLevel = 'editor')
+    @PreAuthorise(accessLevel = 'admin')
     def saveReport(SaveReportDataCommand saveReportDataCommand) {
         Map result
         if (saveReportDataCommand.report?.organisationId != params.id) {
@@ -563,7 +564,7 @@ class OrganisationController {
         }
     }
 
-
+    @PreAuthorise(accessLevel = 'admin')
     def createAdHocReport(String id) {
 
         Map report = request.getJSON()
@@ -591,6 +592,7 @@ class OrganisationController {
         render result as JSON
     }
 
+    @PreAuthorise(accessLevel = 'caseManager')
     def ajaxApproveReport(String id) {
 
         if (!organisationService.isUserGrantManagerForOrganisation(id)) {
@@ -604,6 +606,7 @@ class OrganisationController {
         render result as JSON
     }
 
+    @PreAuthorise(accessLevel = 'caseManager')
     def ajaxRejectReport(String id) {
 
         if (!organisationService.isUserGrantManagerForOrganisation(id)) {
@@ -617,6 +620,7 @@ class OrganisationController {
         render result as JSON
     }
 
+    @PreAuthorise(accessLevel = 'caseManager')
     def regenerateOrganisationReports(String id) {
         Map resp
         if (!id) {
@@ -630,22 +634,9 @@ class OrganisationController {
         render resp as JSON
     }
 
-    private Map activityReportModel(String organisationId, String reportId, ReportService.ReportMode mode, Integer formVersion = null) {
-        Map organisation = organisationService.get(organisationId)
-        Map config = organisation.config
-        Map model = reportService.activityReportModel(reportId, mode, formVersion)
-
-        model.context = organisation
-        model.returnTo = createLink(action:'index', id:organisationId)
-        model.contextViewUrl = model.returnTo
-        model.reportHeaderTemplate = '/organisation/organisationReportHeader'
-        model.config = config
-        model
-    }
-
     private def error(String message, String organisationId) {
         flash.message = message
-        if (programId) {
+        if (organisationId) {
             redirect(action: 'index', id: organisationId)
         }
         else {

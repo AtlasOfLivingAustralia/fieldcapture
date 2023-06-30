@@ -11,12 +11,12 @@
             viewProjectUrl: "${createLink(controller:'project', action:'index')}",
             documentUpdateUrl: '${g.createLink(controller:"document", action:"documentUpdate")}',
             documentDeleteUrl: '${g.createLink(controller:"document", action:"deleteDocument")}',
-            organisationDeleteUrl: '${g.createLink(action:"ajaxDelete", id:"${organisation.organisationId}")}',
-            organisationEditUrl: '${g.createLink(action:"edit", id:"${organisation.organisationId}")}',
-            organisationViewUrl: '${g.createLink(action:"index")}',
-            prepopulateAbnUrl:"${createLink(action:'prepopulateAbn')}",
+            organisationDeleteUrl: '${g.createLink(action:"ajaxDelete", id:organisation.organisationId)}',
+            organisationEditUrl: '${g.createLink(action:"edit", id:organisation.organisationId)}',
+            organisationViewUrl: '${g.createLink(action:"index", id:organisation.organisationId)}',
+            prepopulateAbnUrl:"${createLink(action:'prepopulateAbn', id:organisation.organisationId)}",
             organisationListUrl: '${g.createLink(action:"list")}',
-            organisationSaveUrl: "${createLink(action:'ajaxUpdate')}",
+            organisationSaveUrl: "${createLink(action:'ajaxUpdate', id:organisation.organisationId)}",
             imageUploadUrl: "${createLink(controller: 'image', action:'upload')}",
             returnTo: "${params.returnTo?:createLink(action:'index', id:organisation.organisationId)}"
 
