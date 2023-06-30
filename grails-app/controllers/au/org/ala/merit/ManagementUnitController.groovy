@@ -229,28 +229,6 @@ class ManagementUnitController {
         }
     }
 
-    @PreAuthorise(accessLevel='siteAdmin')
-    def delete(String id) {
-        if (userService.isUserAdminForProgram(id)) {
-            programService.update(id, [status: 'deleted'])
-        } else {
-            flash.message = 'You do not have permission to perform that action'
-        }
-        redirect action: 'list'
-    }
-
-    @PreAuthorise(accessLevel='siteAdmin')
-    def ajaxDelete(String id) {
-
-        if (userService.isUserAdminForProgram(id)) {
-            def result = programService.update(id, [status: 'deleted'])
-
-            respond result
-        } else {
-            render status: 403, text: 'You do not have permission to perform that action'
-        }
-    }
-
     @PreAuthorise(accessLevel = 'admin')
     def ajaxUpdate(String id) {
         def muDetails = request.JSON

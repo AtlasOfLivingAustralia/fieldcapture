@@ -100,38 +100,6 @@ class OrganisationServiceSpec extends Specification implements ServiceUnitTest<O
 
     }
 
-	def "User permissions on an organisation should cascade to the organisations projects"() {
-
-		setup:
-		String orgId = '1234'
-		Map organisation = [organisationId:orgId, name:'name', description:'description']
-		List organisationProjects = ['5', '6', '7', '8', '9'].collect{[projectId:it, name:'p'+it, isMERIT:(Integer.parseInt(it) %2 == 0)]}
-
-		webService.getJson(_) >> organisation
-		projectService.search([organisationId:orgId, view:'enhanced', isMERIT:true]) >> [resp:[projects:organisationProjects]]
-		projectService.search([orgIdSvcProvider:orgId, view:'enhanced', isMERIT:true]) >> [resp:[projects:[]]]
-
-		String userId = 'u1'
-
-		when: "A user is added as admin to the organisation"
-		service.addUserAsRoleToOrganisation(userId, orgId, 'admin')
-
-		then: "the user should be added to the organisation and only the MERIT projects run by the organisation"
-		1 * userService.addUserAsRoleToOrganisation(userId, orgId, 'admin')
-		1 * userService.addUserAsRoleToProject(userId, '6', 'admin')
-		1 * userService.addUserAsRoleToProject(userId, '8', 'admin')
-		0 * userService._
-
-		when:"A user is removed as admin to the organisation"
-		service.removeUserWithRoleFromOrganisation(userId, orgId, 'admin')
-
-		then: "the user should be removed from the organisation and only the MERIT projects run by the organisation"
-		1 * userService.removeUserWithRoleFromOrganisation(userId, orgId, 'admin')
-		1 * userService.removeUserWithRole('6', userId, 'admin')
-		1 * userService.removeUserWithRole('8', userId, 'admin')
-		0 * userService._
-	}
-
 	def "Checking if abn already exist in db"(){
 		setup:
 		String ordId = "123"

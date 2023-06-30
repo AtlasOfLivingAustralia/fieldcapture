@@ -203,6 +203,36 @@ var programDefaults = {
                   "type":"secondary",
                   "category": "agriculture",
                   "shortDescription": "Climate / Weather Adaption"
+              },
+              {
+                  "outcome": "Short term outcome 1",
+                  "type": "short",
+                  "category": "Threatened Species"
+              },
+              {
+                  "outcome": "Short term outcome 2",
+                  "type": "short",
+                  "category": "Threatened Species"
+              },
+              {
+                  "outcome": "Short term outcome 3",
+                  "type": "short",
+                  "category": "Threatened Species"
+              },
+              {
+                  "outcome": "Medium term outcome 1",
+                  "type": "medium",
+                  "category": "Threatened Species"
+              },
+              {
+                  "outcome": "Medium term outcome 2",
+                  "type": "medium",
+                  "category": "Threatened Species"
+              },
+              {
+                  "outcome": "Medium term outcome 3",
+                  "type": "medium",
+                  "category": "Threatened Species"
               }
           ],
           "priorities": [

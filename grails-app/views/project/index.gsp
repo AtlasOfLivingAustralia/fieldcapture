@@ -54,7 +54,7 @@
                 previewStageReportUrl: "${createLink(controller:'project', action:'previewStageReport')}",
                 projectReportUrl: "${createLink(controller:'project', action:'projectReport', id:project.projectId)}",
                 projectReportPDFUrl: "${createLink(controller:'project', action:'projectReportPDF', id:project.projectId)}",
-                meriPlanPDFUrl: "${createLink(controller:'project', action:'meriPlanPDF', id:project.projectId)}",
+                meriPlanPDFUrl: "${createLink(controller:'project', action:'viewMeriPlan', id:project.projectId)}",
                 sitesPhotoPointsUrl: "${createLink(controller:'project', action:'projectSitePhotos', id:project.projectId)}",
                 organisationSearchUrl: "${createLink(controller: 'organisation', action: 'search')}",
                 submitReportUrl: "${createLink(controller: 'project', action: 'ajaxSubmitReport', id:project.projectId)}/",
@@ -95,7 +95,8 @@
                 projectTargetsAndScoresUrl: "${createLink(controller:'project', action:'targetsAndScoresForActivity', id:project.projectId)}",
                 i18nURL: "${g.createLink(controller: 'home', action: 'i18n')}",
                 returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}",
-                reportsHistoryUrl:"${createLink(controller: 'report', action:'reportingHistory')}"
+                reportsHistoryUrl:"${createLink(controller: 'report', action:'reportingHistory')}",
+                monitoringProtocolsUrl:"${createLink(action:'monitoringProtocolFormCategories', id: project.projectId)}"
 
             },
             here = window.location.href;
@@ -300,7 +301,10 @@ var config = {
     config.services = services;
 
     config.useRlpTemplate = ${config.getProjectTemplate() == au.org.ala.merit.config.ProgramConfig.ProjectTemplate.RLP};
+    config.useServiceOutcomesModel = ${config.program?.config?.meriPlanContents?.find{it.template == 'serviceOutcomeTargets'} != null};
     config.useRlpRisksModel = config.useRlpTemplate;
+    config.keyThreatCodes  = <fc:modelAsJavascript model="${config.program?.config?.keyThreatCodes ?: []}"/>;
+    config.priorityPlaces = <fc:modelAsJavascript model="${config.program?.config?.priorityPlaces ?: []}"/>;
     config.risksStorageKey = PROJECT_RISKS_KEY;
 
     config.requireMeriApprovalReason = ${projectContent.admin.requireMeriPlanApprovalReason};
@@ -494,10 +498,12 @@ var config = {
 </asset:script>
 <asset:javascript src="common-bs4.js"/>
 <asset:javascript src="tab-init.js"/>
+<asset:javascript src="select2/js/select2.full.js"/>
+<asset:javascript src="select2-dropdown-placement-override.js"/>
 <asset:javascript src="projects.js"/>
 <asset:javascript src="document.js"/>
 <asset:javascript src="reporting.js"/>
-<asset:javascript src="select2/js/select2.full.js"/>
+
 <asset:javascript src="forms-knockout-bindings.js"/>
 <asset:javascript src="leaflet-manifest.js"/>
 <asset:javascript src="feature.js"/>

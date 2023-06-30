@@ -34,6 +34,18 @@ table tr.header th {
 .meri-plan .outcome {
     width: 100%;
 }
+
+.meri-plan .extended .outcome {
+    width: 40%;
+}
+.meri-plan .extended .investment-priority {
+    width: 30%;
+}
+
+.meri-plan .extended .program-outcome {
+    width: 30%;
+}
+
 .meri-plan .index {
     min-width: 2em;
     max-width: 2em;
@@ -52,8 +64,9 @@ table tr.header th {
     padding-right: 1em;
 }
 
-.meri-plan td.index {
+.meri-plan td.index, .meri-plan td.code {
     background-color: #f5f5f5;
+    font-weight: normal;
 }
 
 .meri-plan .remove {
@@ -65,10 +78,6 @@ table tr.header th {
 
 .meri-plan tfoot td {
     text-align: right;
-}
-
-.meri-plan .priority div {
-    width: 100%;
 }
 
 .meri-plan .priority input:not([type=checkbox]) {
@@ -98,6 +107,13 @@ table tr.header th {
 .meri-plan .alignment {
     width: 60%;
     word-break: break-word;
+}
+.meri-plan table.with-url .alignment {
+    width: 40%;
+}
+
+.meri-plan .document-url {
+    width: 20%;
 }
 
 .meri-plan .service {
@@ -139,6 +155,49 @@ table tr.header th {
     word-break: break-word;
 }
 
+/* The extended version of the baseline table has a lot more columns */
+.meri-plan .code {
+    min-width: 3em;
+    max-width: 5em;
+    width: 1%;
+}
+.meri-plan .extended.monitoring-baseline .outcome {
+    width: 10%;
+}
+.meri-plan .extended.monitoring-baseline .monitoring-data {
+    width: 10%;
+}
+.meri-plan .extended.monitoring-baseline .service {
+    width: 20%;
+}
+.meri-plan .extended.monitoring-baseline .baseline {
+    width: 20%;
+}
+.meri-plan .extended.monitoring-baseline .baseline-method {
+    width: 20%;
+}
+.meri-plan .extended.monitoring-baseline .baseline-evidence {
+    width: 20%;
+}
+.meri-plan .extended.monitoring-baseline .monitoring-service {
+    width: 25%;
+}
+.meri-plan .extended.monitoring-baseline .monitoring-method {
+    width: 25%;
+}
+
+.meri-plan .extended.monitoring-baseline .monitoring-evidence {
+    width: 25%;
+}
+
+.meri-plan .embedded-monitoring {
+    padding: 0;
+    marging: 0;
+}
+.meri-plan.embedded-monitoring table {
+    border: none;
+}
+
 .meri-plan .service-targets td.service {
     width: 30%;
 }
@@ -158,6 +217,22 @@ table tr.header th {
 }
 .meri-plan .service-targets td.target-date input {
     width:7em;
+}
+
+.meri-plan .service-outcomes-targets .service {
+    width: 50%;
+}
+
+.meri-plan .service-outcomes-targets .score {
+    width: 50%;
+}
+
+.meri-plan .service-outcomes-targets-view .service {
+    width: 50%;
+}
+
+.meri-plan .service-outcomes-targets-view .score {
+    width: 50%;
 }
 
 .meri-plan td .select2.select2-container {
@@ -406,4 +481,31 @@ input#changeProjectStartDate {
 .meri-plan .approach-details {
     width: 67%;
     word-break: break-word;
+}
+
+.meri-plan .extended-threats .threat-code {
+    width:15%;
+}
+.meri-plan .extended-threats .threat {
+    width:20%;
+}
+.meri-plan .extended-threats .services {
+    width:20%;
+}
+.meri-plan .extended-threats .intervention {
+    width:20%;
+}
+.meri-plan .extended-threats .evidence {
+    width:20%;
+}
+.meri-plan .extended-threats .related-outcomes {
+    width:10%;
+}
+
+.meri-plan .select2-selection {
+    width: 100% !important;
+}
+
+.meri-plan .textarea-view {
+    white-space: pre-wrap;
 }

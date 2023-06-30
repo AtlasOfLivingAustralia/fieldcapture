@@ -12,14 +12,14 @@
     <tbody>
     <tr>
         <td class="outcome-priority">
-            <select class="form-control form-control-sm" data-validation-engine="validate[required]" data-bind="options:details.outcomes.selectablePrimaryOutcomes, value:details.outcomes.primaryOutcome.description, optionsCaption: 'Please select', disable: isProjectDetailsLocked()" >
+            <select class="form-control form-control-sm" data-validation-engine="validate[required]" data-bind="options:details.outcomes.selectablePrimaryOutcomes, value:details.outcomes.primaryOutcome.description, optionsCaption: 'Please select', select2:{preserveColumnWidth:48}, disable: isProjectDetailsLocked()" >
             </select>
 
         </td>
-        <td colspan="2" class="priority">
+        <td class="priority">
             <!-- ko if:!isAgricultureProject() && !details.outcomes.primaryOutcomeSupportsMultiplePriorities() -->
 
-            <select class="form-control form-control-sm asset w-100" data-validation-engine="validate[required]" data-bind="options:details.outcomes.outcomePriorities(details.outcomes.primaryOutcome.description()), optionsCaption: 'Please select', value:details.outcomes.primaryOutcome.asset, select2:{},  disable: isProjectDetailsLocked()" >
+            <select class="form-control form-control-sm asset w-100" data-validation-engine="validate[required]" data-bind="options:details.outcomes.outcomePriorities(details.outcomes.primaryOutcome.description()), optionsCaption: 'Please select', value:details.outcomes.primaryOutcome.asset, select2:{preserveColumnWidth:48},  disable: isProjectDetailsLocked()" >
             </select>
             <!-- /ko -->
             <!-- ko if:isAgricultureProject() || details.outcomes.primaryOutcomeSupportsMultiplePriorities() -->
@@ -31,6 +31,7 @@
 
             <!-- /ko -->
         </td>
+        <th class="remove"></th>
     </tr>
 
     </tbody>

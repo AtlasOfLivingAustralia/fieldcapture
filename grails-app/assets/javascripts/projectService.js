@@ -32,6 +32,7 @@ function ProjectService(project, options) {
         modifyPlanUrl : fcConfig.modifyPlanUrl,
         approvalPlanUrl : fcConfig.approvalPlanUrl,
         rejectPlanUrl : fcConfig.rejectPlanUrl,
+        monitoringProtocolsUrl : fcConfig.monitoringProtocolsUrl,
         excludeFinancialYearData : false
     };
 
@@ -388,4 +389,10 @@ function ProjectService(project, options) {
             alert('An unhandled error occurred: ' + data.status + " Please refresh the page and try again");
         });
     };
+
+
+    self.getMonitoringProtocols = function() {
+        var url = config.monitoringProtocolsUrl;
+        return $.get(url);
+    }
 };

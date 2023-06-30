@@ -197,17 +197,11 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
         1 * managementUnitService.getByName("ACT") >> [managementUnitId:"actId", name:"ACT"]
         1 * programService.getByName("Green Army Round 1") >> null
         1 * projectService.update('', _) >> [resp:[projectId:'p1']]
-        1 * managementUnitService.getMembersOfManagementUnit("actId") >> [[userId:"u1", role:"admin"], [userId:"u2", role:"caseManager"]]
         1 * userService.checkEmailExists('editor@test.com') >> "u3"
         1 * userService.checkEmailExists('editor2@test.com') >> "u4"
         1 * userService.checkEmailExists('gm@test.com') >> "u5"
         1 * userService.checkEmailExists('gm2@test.com') >> "u6"
         2 * userService.checkEmailExists('test@test.com') >> "u7"
-
-
-        and: "The users with roles for the management unit will have the same roles added to the project"
-        1 * userService.addUserAsRoleToProject("u1", 'p1', "admin")
-        1 * userService.addUserAsRoleToProject("u2", 'p1', "caseManager")
 
         and: "The project was processed without errors"
         !result.error

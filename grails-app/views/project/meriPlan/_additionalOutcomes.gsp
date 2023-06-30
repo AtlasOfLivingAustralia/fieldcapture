@@ -1,4 +1,4 @@
-<h4>${title ?:"Additional benefits"}</h4>
+<h4 class="header-with-help">${title ?:"Additional benefits"}</h4><g:if test="${helpTextHeading}"> <fc:iconHelp html="true" container="body">${helpTextHeading}</fc:iconHelp></g:if>
 <table class="table secondary-outcome">
 
     <thead>
@@ -12,11 +12,11 @@
     <tbody data-bind="foreach:details.outcomes.secondaryOutcomes">
     <tr>
         <td class="outcome-priority"><select class="form-control form-control-sm" data-validation-engine="validate[required]"
-                                             data-bind="value:description, options: details.outcomes.selectableSecondaryOutcomes, optionsCaption: 'Please select', disable: $parent.isProjectDetailsLocked()"></select>
+                                             data-bind="value:description, options: details.outcomes.selectableSecondaryOutcomes, optionsCaption: 'Please select', select2:{preserveColumnWidth:48}, disable: $parent.isProjectDetailsLocked()"></select>
         </td>
         <td class="priority">
             <!-- ko if:!details.outcomes.secondaryOutcomeSupportsMultiplePriorities($data.description()) -->
-            <select data-bind="value:asset, options: details.outcomes.outcomePriorities(description()), optionsCaption: 'Please select', select2:{}, disable: $parent.isProjectDetailsLocked()" class="form-control form-control-sm asset"></select>
+            <select data-bind="value:asset, options: details.outcomes.outcomePriorities(description()), optionsCaption: 'Please select', select2:{preserveColumnWidth:48}, disable: $parent.isProjectDetailsLocked()" class="form-control form-control-sm asset"></select>
             <!-- /ko -->
             <!-- ko if:details.outcomes.secondaryOutcomeSupportsMultiplePriorities($data.description()) -->
             <ul class="list-unstyled" data-bind="foreach:details.outcomes.outcomePriorities(description())">

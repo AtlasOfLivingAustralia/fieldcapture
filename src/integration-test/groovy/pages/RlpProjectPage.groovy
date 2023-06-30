@@ -1,7 +1,7 @@
 package pages
 
 import pages.modules.DocumentsTab
-import pages.modules.MeriPlanTabContent
+import pages.modules.ReadOnlyMeriPlan
 import pages.modules.ProjectAdminTab
 import pages.modules.ProjectReports
 import pages.modules.RlpOverviewTab
@@ -39,7 +39,7 @@ class RlpProjectPage extends ReloadablePage {
         datasetDetails(required: false) {module DataSetSummary}
         addNewDataset(required: false) {$('.btn-primary')}
 
-        meriPlanTabContent {module MeriPlanTabContent }
+        meriPlanTabContent { $('#view-meri-plan').module ReadOnlyMeriPlan }
     }
 
     def openDocumentDialog() {

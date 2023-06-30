@@ -272,26 +272,17 @@ class ManagementUnitService {
 
     /**
      * Adds a user with the supplied role to the identified management unit.
-     * Adds the same user with the same role to all of the management unit's projects.
      *
      * @param userId the id of the user to add permissions for.
      * @param managementUnitId the management unit to add permissions for.
      * @param role the role to assign to the user.
      */
-    def addUserAsRoleToManagementUnit(String userId, String managementUnitId, String role) {
-        Map resp = userService.addUserAsRoleToManagementUnit(userId, managementUnitId, role)
-        Map projects = getProjects(managementUnitId)
-        projects?.projects?.each { project ->
-            if (project.isMERIT) {
-                userService.addUserAsRoleToProject(userId, project.projectId, role)
-            }
-        }
-        resp
+    Map addUserAsRoleToManagementUnit(String userId, String managementUnitId, String role) {
+        userService.addUserAsRoleToManagementUnit(userId, managementUnitId, role)
     }
 
     /**
      * Removes the user access with the supplied role from the identified management unit.
-     * Removes the same user from all of the management unit's projects.
      *
      * @param userId the id of the user to remove permissions for.
      * @param managementUnitId the management unit to remove permissions for.
@@ -299,12 +290,6 @@ class ManagementUnitService {
      */
     def removeUserWithRoleFromManagementUnit(String userId, String managementUnitId, String role) {
         userService.removeUserWithRoleFromManagementUnit(userId, managementUnitId, role)
-        Map projects = getProjects(managementUnitId)
-        projects?.projects?.each { project ->
-            if (project.isMERIT) {
-                userService.removeUserWithRole(project.projectId, userId, role)
-            }
-        }
     }
 
     /**

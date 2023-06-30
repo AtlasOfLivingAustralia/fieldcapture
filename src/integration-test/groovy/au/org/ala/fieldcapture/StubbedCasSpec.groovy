@@ -6,6 +6,7 @@ import geb.Browser
 import grails.converters.JSON
 import org.grails.web.converters.marshaller.json.MapMarshaller
 import org.openqa.selenium.StaleElementReferenceException
+import org.openqa.selenium.WebDriverException
 import org.pac4j.jwt.config.signature.SignatureConfiguration
 import org.pac4j.jwt.profile.JwtGenerator
 import spock.lang.Shared
@@ -110,6 +111,9 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
             }
         }
         catch (StaleElementReferenceException e) { // Do nothing, backdrop was already detached
+        }
+        catch (WebDriverException e) {
+            // We are now seeing WebDriverException instead of StateElementReferenceException in some cases
         }
     }
 

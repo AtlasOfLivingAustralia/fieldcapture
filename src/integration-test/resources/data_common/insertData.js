@@ -196,6 +196,35 @@ function loadActivityForms() {
             db.activity.update({activityId: form.activityId},{$set: {formVersion:NumberInt(form.formVersion)}})
         }
     });
+
+    // Insert protocol forms into activityForm collection
+    var forms = [{
+        "name": "Protocol 1",
+        "type":"Protocol",
+        "category":"Category 1",
+        "externalId": NumberInt(1),
+        "formVersion": NumberInt(1),
+        "publicationStatus":"published"
+    }, {
+        "name": "Protocol 2",
+        "type":"Protocol",
+        "category":"Category 2",
+        "externalId": NumberInt(2),
+
+        "formVersion": NumberInt(1),
+        "publicationStatus":"published"
+    }, {
+        "name": "Protocol 3",
+        "type":"Protocol",
+        "category":"Category 3",
+        "externalId": NumberInt(3),
+        "formVersion": NumberInt(1),
+        "publicationStatus":"published"
+
+    }];
+    for (let i= 0; i < forms.length; i++) {
+        db.activityForm.insert(forms[i]);
+    }
 }
 
 

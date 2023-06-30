@@ -209,7 +209,8 @@ class ProjectController {
             boolean reportsVisible = config.includesContent(ProgramConfig.ProjectContent.REPORTING) && userHasViewAccess
             Map reportingTab = [label: 'Reporting', visible:reportsVisible, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true, services: config.services, scores:scores, hideDueDate:true, isAdmin:user?.isAdmin, isGrantManager:user?.isCaseManager]
             if (reportingTab.visible) {
-                reportingTab.reportOrder = config?.projectReports?.collect{[category:it.category, description:it.description, banner:it.banner, rejectionReasonCategoryOptions:it.rejectionReasonCategoryOptions?:[]]} ?: []
+                reportingTab.reportOrder = config?.projectReports?.collect{
+                    [category:it.category, description:it.description, banner:it.banner, rejectionReasonCategoryOptions:it.rejectionReasonCategoryOptions?:[]]}?.unique({it.category}) ?: []
                 project.reports?.each { Map report ->
                     ReportConfig reportConfig = ((ProgramConfig)config).findProjectReportConfigForReport(report)
                     report.isAdjustable = reportConfig?.isAdjustable()
@@ -628,15 +629,6 @@ class ProjectController {
         boolean result = pdfGenerationService.generatePDF(reportUrlConfig, pdfGenParams, response)
         if (!result) {
             render view: '/error', model: [error: "An error occurred generating the project report."]
-        }
-    }
-
-    @PreAuthorise(accessLevel = 'admin')
-    def meriPlanPDF(String id) {
-        Map reportUrlConfig = [controller: 'report', action: 'meriPlanReportCallback', id: id, absolute: true]
-        boolean result = pdfGenerationService.generatePDF(reportUrlConfig, [:], response)
-        if (!result) {
-            render view: '/error', model: [error: "An error occurred generating the MERI plan report."]
         }
     }
 
@@ -1079,6 +1071,15 @@ class ProjectController {
     @PreAuthorise(accessLevel = 'editor')
     def projectPrioritiesByOutcomeType(String id) {
         render projectService.projectPrioritiesByOutcomeType(id) as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'editor')
+    def monitoringProtocolFormCategories() {
+        List<Map> forms = activityService.monitoringProtocolForms()
+
+        List<String> categories = forms?.collect{
+            [label:g.message(code:it.category, default:it.category.capitalize()), value:it.category]}?.unique()?.sort({it.label})
+        render categories as JSON
     }
 
     private def error(String message, String projectId) {

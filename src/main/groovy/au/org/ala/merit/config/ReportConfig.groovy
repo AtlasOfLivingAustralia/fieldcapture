@@ -3,8 +3,13 @@ package au.org.ala.merit.config
 import au.org.ala.merit.DateUtils
 import au.org.ala.merit.reports.ReportOwner
 import org.joda.time.DateTime
+import org.joda.time.DateTimeConstants
 import org.joda.time.DateTimeZone
+import org.joda.time.Interval
 import org.joda.time.Period
+import org.joda.time.PeriodType
+
+import java.time.Month
 
 /**
  * Parameters that specify how a sequence of reports should be generated.
@@ -16,8 +21,19 @@ class ReportConfig {
     /** The date the first reporting period should end.  Used to align reports across programs */
     String firstReportingPeriodEnd = null
 
-    /** The generate report before.  Used to align reports across programs */
+    /** This was introduced to allow projects that start in round 2 of a program to have a different reporting configuration */
     String onlyGenerateReportsForDatesBefore = null
+
+    /**
+     * Used to specify that reports should only be generated if the owner (e.g. project) duration is within a range.
+     * These rules were introduced to support differing length Outcomes 1 Reports based on overall project
+     * duration.
+     */
+    Integer minimumOwnerDurationInMonths = null
+
+    /** Used to specify that reports should only be generated if the owner (e.g. project) duration is within a range */
+    Integer maximumOwnerDurationInMonths = null
+
     /** Allows reporting dates to be explicitly specified if they are not periodic */
     List<String> endDates
 
@@ -31,8 +47,14 @@ class ReportConfig {
      */
     boolean skipFinalPeriod = false
 
-    /** True if the start and end dates for generated reports should be aligned from January 1 */
+    /** True if the start and end dates for generated reports should be aligned from the 1 of a month, January by default */
     boolean reportsAlignedToCalendar = false
+
+    /**
+     * The starting month used when aligning dates to a calendar month.  Specifying another month is
+     * useful for annual reports when they need to be lined to financial years (e.g. DateTimeConstants.JULY)
+     */
+    int calendarAlignmentMonth = DateTimeConstants.JANUARY
 
     /**
      * Template for the generated report name as per java.text.Format pattern.  Parameters passed
@@ -166,4 +188,21 @@ class ReportConfig {
      */
     boolean adhoc = false
 
+    /**
+     * Report configurations can sometimes not be applicable to a particular owner depending on the owner dates
+     * and durations.  This is to support differing length reports for projects of different durations.
+     * @param reportOwner The entity the report is being generated for.
+     * @return true if this configuration should be used to generated reports for the supplied owner.
+     */
+    boolean shouldGenerateReports(ReportOwner reportOwner) {
+        Period ownerPeriod = new Interval(reportOwner.periodStart, reportOwner.periodEnd).toPeriod(PeriodType.months())
+
+        return !((minimumOwnerDurationInMonths && (ownerPeriod.months < minimumOwnerDurationInMonths)) ||  // If we've specified a minimum period and the owner duration is less than the period OR
+                (maximumOwnerDurationInMonths && (ownerPeriod.months > maximumOwnerDurationInMonths)) ||   // We've specified a maximum period and the owner duration is greater than the period OR
+                (onlyGenerateReportsForDatesBefore && reportOwner.periodStart.isAfter(getOnlyGenerateReportsForDatesBefore())))  // We've specified to generate reports for owners with start dates before a certain date and the owner start date is after that date
+    }
+
+    Month getCalendarAlignmentMonth() {
+        Month.of(calendarAlignmentMonth)
+    }
 }
