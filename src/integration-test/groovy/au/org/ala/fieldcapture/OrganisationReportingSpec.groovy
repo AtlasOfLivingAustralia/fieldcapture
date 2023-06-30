@@ -32,7 +32,7 @@ class OrganisationReportingSpec extends StubbedCasSpec {
     def "Organisation reports are displaying in the reporting tab"() {
 
         setup:
-        loginAsMeritAdmin(browser)
+        loginAsUser('1', browser)
 
         when:
         to Organisation, orgId
@@ -82,7 +82,7 @@ class OrganisationReportingSpec extends StubbedCasSpec {
 
     def "A user with the admin role can complete Organisation reports,and submit them"() {
         setup:
-        loginAsMeritAdmin(browser)
+        loginAsUser('1', browser)
 
         when:
         to Organisation, orgId
