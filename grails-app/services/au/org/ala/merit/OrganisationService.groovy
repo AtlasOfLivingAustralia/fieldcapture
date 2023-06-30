@@ -114,7 +114,7 @@ class OrganisationService {
         return result
     }
 
-    void regenerateReports(String id, List<String> organisationReportCategories = null, List<String> projectReportCategories = null) {
+    void regenerateReports(String id, List<String> organisationReportCategories = null) {
         Map organisation = get(id)
 
         regenerateOrganisationReports(organisation, organisationReportCategories)
