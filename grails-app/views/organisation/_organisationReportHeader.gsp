@@ -6,13 +6,6 @@
 
         <div class="col-sm-9 value">${context.name}</div>
     </div>
-    <g:if test="${context.associatedOrganisations}">
-        <div class="row mb-2">
-            <div class="col-sm-2 header-label">Service provider</div>
-
-            <div class="col-sm-9 value">${context.associatedOrganisations[0].name}</div>
-        </div>
-    </g:if>
 
     <div class="row mb-2">
         <div class="col-sm-2 header-label">Reporting period start</div>
