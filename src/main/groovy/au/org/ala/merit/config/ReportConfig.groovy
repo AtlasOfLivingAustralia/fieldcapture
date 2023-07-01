@@ -195,7 +195,7 @@ class ReportConfig {
      * @return true if this configuration should be used to generated reports for the supplied owner.
      */
     boolean shouldGenerateReports(ReportOwner reportOwner) {
-        Period ownerPeriod = new Interval(reportOwner.periodStart, reportOwner.periodEnd).toPeriod(PeriodType.months())
+        Period ownerPeriod = new Interval(getPeriodStart(reportOwner), getPeriodEnd(reportOwner)).toPeriod(PeriodType.months())
 
         return !((minimumOwnerDurationInMonths && (ownerPeriod.months < minimumOwnerDurationInMonths)) ||  // If we've specified a minimum period and the owner duration is less than the period OR
                 (maximumOwnerDurationInMonths && (ownerPeriod.months > maximumOwnerDurationInMonths)) ||   // We've specified a maximum period and the owner duration is greater than the period OR
