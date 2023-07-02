@@ -11396,7 +11396,7 @@
                 "type": "table"
               },
               {
-                "preLabel": "Number of Flora surveys conducted:",
+                "preLabel": "Number of Pest Animal surveys conducted:",
                 "noEdit": true,
                 "type": "number",
                 "source": "surveyCountHeader"
@@ -11447,7 +11447,7 @@
                       },
                       {
                         "width": "10%",
-                        "title": "Sites covered by flora surveys",
+                        "title": "Sites covered by Pest Animal surveys",
                         "type": "col",
                         "items": [
                           {
@@ -11485,7 +11485,7 @@
                       {
                         "width": "20%",
                         "type": "col",
-                        "title": "Actual area (ha) / length (km) treated by flora surveys",
+                        "title": "Actual area (ha) / length (km) covered by Pest Animal surveys",
                         "helpText": "Enter the amount you will invoice for during this reporting period.",
                         "items": [
                           {
@@ -12206,7 +12206,7 @@
                       },
                       {
                         "width": "10%",
-                        "title": "Sites covered by flora surveys",
+                        "title": "Sites surveyed for plant survival",
                         "type": "col",
                         "items": [
                           {
@@ -12244,7 +12244,7 @@
                       {
                         "width": "20%",
                         "type": "col",
-                        "title": "Actual area (ha) / length (km) treated by flora surveys",
+                        "title": "Actual area (ha) / length (km) surveyed",
                         "helpText": "Enter the amount you will invoice for during this reporting period.",
                         "items": [
                           {
