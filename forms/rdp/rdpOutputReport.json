@@ -9,16 +9,16 @@
   "supportsPhotoPoints": false,
   "publicationStatus": "published",
   "gmsId": null,
-  "name": "RLP Output Report - for New Program",
+  "name": "RDP Output Report",
   "sections": [
     {
       "collapsedByDefault": false,
       "template": {
-        "name": "RLP - Communications",
+        "name": "RDP - Communications",
         "title": "Communications",
         "dataModel": [
           {
-            "name": "rlpCommunications",
+            "name": "rdp Communications",
             "dataType": "text",
             "description": "This <u>does not</u> include communication activities undertaken under the 'Communication Materials' Project Service or regional capacity service. All Communication Materials must correctly acknowledge Australian Government funding.",
             "validate": "required",
@@ -33,7 +33,7 @@
             "validate": "required,maxSize[300]",
             "behaviour": [
               {
-                "condition": "rlpCommunications == \"Yes\"",
+                "condition": "rdp Communications == \"Yes\"",
                 "type": "enable"
               }
             ]
@@ -46,7 +46,7 @@
               {
                 "css": "span6",
                 "type": "selectOne",
-                "source": "rlpCommunications",
+                "source": "rdp Communications",
                 "preLabel": "Duringg this reporting period was any communication material developed and published?"
               }
             ]
@@ -64,19 +64,19 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpOutputCommunications",
+      "templateName": "rdpOutputCommunications",
       "optional": false,
       "optionalQuestionText": null,
-      "title": "RLP - Communications",
+      "title": "RDP - Communications",
       "collapsibleHeading": null,
-      "name": "RLP - Communications",
+      "name": "RDP - Communications",
       "description": null
     },
     {
       "collapsedByDefault": false,
       "template": {
         "title": "Engagement activities or events, to the Community, which are directly relevant to delivery of Project",
-        "modelName": "RLP - Project Engagements",
+        "modelName": "RDP - Project Engagements",
         "dataModel": [
           {
             "dataType": "list",
@@ -178,19 +178,19 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpProjectEngagements",
+      "templateName": "rdpProjectEngagements",
       "optional": false,
       "optionalQuestionText": null,
-      "title": "RLP - Project Engagements",
+      "title": "RDP - Project Engagements",
       "collapsibleHeading": null,
-      "name": "RLP - Project Engagements",
+      "name": "RDP - Project Engagements",
       "description": null
     },
     {
       "collapsedByDefault": false,
       "template": {
         "title": "Coordinate Projects and MERI",
-        "modelName": "RLP - Coordinate",
+        "modelName": "RDP - Coordinate",
         "dataModel": [
           {
             "name": "undergoneReview",
@@ -407,18 +407,18 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpCoordinate",
+      "templateName": "rdpCoordinate",
       "optional": false,
       "optionalQuestionText": null,
-      "title": "RLP - Coordinate",
+      "title": "RDP - Coordinate",
       "collapsibleHeading": null,
-      "name": "RLP - Coordinate",
+      "name": "RDP - Coordinate",
       "description": null
     },
     {
       "collapsedByDefault": false,
       "template": {
-        "name": "RLP - Project Commencement",
+        "name": "RDP - Project Commencement",
         "title": "Project Commencement",
         "dataModel": [
 
@@ -436,18 +436,18 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpProjectCommencement",
+      "templateName": "rdpProjectCommencement",
       "optional": false,
       "optionalQuestionText": null,
-      "title": "RLP - Project Commencement",
+      "title": "RDP - Project Commencement",
       "collapsibleHeading": null,
-      "name": "RLP - Project Commencement",
+      "name": "RDP - Project Commencement",
       "description": null
     },
     {
       "collapsedByDefault": false,
       "template": {
-        "name": "RLP - Project WHS",
+        "name": "RDP - Project WHS",
         "title": "Project WHS Risk Register",
         "dataModel": [
           {
@@ -601,19 +601,19 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpProjectWHS",
+      "templateName": "rdpProjectWHS",
       "optional": false,
       "optionalQuestionText": null,
-      "title": "RLP - Project WHS",
+      "title": "RDP - Project WHS",
       "collapsibleHeading": null,
-      "name": "RLP - Project WHS",
+      "name": "RDP - Project WHS",
       "description": null
     },
     {
       "collapsedByDefault": false,
       "template": {
         "title": "Synthesising and finalising baseline data",
-        "modelName": "RLP - Baseline data",
+        "modelName": "RDP - Baseline data",
         "dataModel": [
           {
             "dataType": "list",
@@ -827,12 +827,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpBaselineData",
+      "templateName": "rdpBaselineData",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Collecting, or synthesising baseline data",
       "collapsibleHeading": null,
-      "name": "RLP - Baseline data",
+      "name": "RDP - Baseline data",
       "description": null
     },
     {
@@ -906,7 +906,7 @@
             ]
           }
         ],
-        "modelName": "RLP - Communication Materials",
+        "modelName": "RDP - Communication Materials",
         "title": "Communication Materials",
         "viewModel": [
           {
@@ -1013,12 +1013,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpCommunicationMaterials",
+      "templateName": "rdpCommunicationMaterials",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Communication materials",
       "collapsibleHeading": null,
-      "name": "RLP - Communication materials",
+      "name": "RDP - Communication materials",
       "description": null
     },
     {
@@ -1115,7 +1115,7 @@
             ]
           }
         ],
-        "modelName": "RLP - Community engagement",
+        "modelName": "RDP - Community engagement",
         "title": "Community/stakeholder engagement",
         "viewModel": [
           {
@@ -1247,12 +1247,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpCommunityEngagement",
+      "templateName": "rdpCommunityEngagement",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Community/stakeholder engagement",
       "collapsibleHeading": null,
-      "name": "RLP - Community engagement",
+      "name": "RDP - Community engagement",
       "description": null
     },
     {
@@ -1513,7 +1513,7 @@
             ]
           }
         ],
-        "modelName": "RLP - Controlling access",
+        "modelName": "RDP - Controlling access",
         "title": "Controlling access",
         "viewModel": [
           {
@@ -1776,12 +1776,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpControllingAccess",
+      "templateName": "rdpControllingAccess",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Controlling access",
       "collapsibleHeading": null,
-      "name": "RLP - Controlling access",
+      "name": "RDP - Controlling access",
       "description": null
     },
     {
@@ -2119,7 +2119,7 @@
             ]
           }
         ],
-        "modelName": "RLP - Pest animal management",
+        "modelName": "RDP - Pest animal management",
         "title": "Controlling pest animals",
         "viewModel": [
           {
@@ -2475,12 +2475,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpPestAnimalManagement",
+      "templateName": "rdpPestAnimalManagement",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Controlling pest animals",
       "collapsibleHeading": null,
-      "name": "RLP - Pest animal management",
+      "name": "RDP - Pest animal management",
       "description": null
     },
     {
@@ -2686,7 +2686,7 @@
             ]
           }
         ],
-        "modelName": "RLP - Management plan development",
+        "modelName": "RDP - Management plan development",
         "title": "Developing farm / project / site management plan",
         "viewModel": [
           {
@@ -2904,12 +2904,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpManagementPlanDevelopment",
+      "templateName": "rdpManagementPlanDevelopment",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Developing farm/project/site management plan",
       "collapsibleHeading": null,
-      "name": "RLP - Management plan development",
+      "name": "RDP - Management plan development",
       "description": null
     },
     {
@@ -3139,7 +3139,7 @@
             ]
           }
         ],
-        "modelName": "RLP - Debris removal",
+        "modelName": "RDP - Debris removal",
         "title": "Debris removal",
         "viewModel": [
           {
@@ -3378,12 +3378,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpDebrisRemoval",
+      "templateName": "rdpDebrisRemoval",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Debris removal",
       "collapsibleHeading": null,
-      "name": "RLP - Debris removal",
+      "name": "RDP - Debris removal",
       "description": null
     },
     {
@@ -3668,7 +3668,7 @@
             ]
           }
         ],
-        "modelName": "RLP - Erosion Management",
+        "modelName": "RDP - Erosion Management",
         "title": "Erosion management",
         "viewModel": [
           {
@@ -3959,12 +3959,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpErosionManagement",
+      "templateName": "rdpErosionManagement",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Erosion management",
       "collapsibleHeading": null,
-      "name": "RLP - Erosion Management",
+      "name": "RDP - Erosion Management",
       "description": null
     },
     {
@@ -4175,7 +4175,7 @@
             ]
           }
         ],
-        "modelName": "RLP - Maintaining feral free enclosures",
+        "modelName": "RDP - Maintaining feral free enclosures",
         "title": "Establishing and maintaining feral-free enclosures",
         "viewModel": [
           {
@@ -4435,12 +4435,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpFeralFreeEnclosures",
+      "templateName": "rdpFeralFreeEnclosures",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Establishing and maintaining feral-free enclosures",
       "collapsibleHeading": null,
-      "name": "RLP - Maintaining feral free enclosures",
+      "name": "RDP - Maintaining feral free enclosures",
       "description": null
     },
     {
@@ -4597,7 +4597,7 @@
             ]
           }
         ],
-        "modelName": "RLP - Establishing ex-situ breeding programs",
+        "modelName": "RDP - Establishing ex-situ breeding programs",
         "title": "Establishing and maintaining breeding programs",
         "viewModel": [
           {
@@ -4772,12 +4772,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpExSituBreedingSites",
+      "templateName": "rdpExSituBreedingSites",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Establishing ex-situ breeding program",
       "collapsibleHeading": null,
-      "name": "RLP - Establishing ex-situ breeding programs",
+      "name": "RDP - Establishing ex-situ breeding programs",
       "description": null
     },
     {
@@ -4977,7 +4977,7 @@
             ]
           }
         ],
-        "modelName": "RLP - Establishing Agreements",
+        "modelName": "RDP - Establishing Agreements",
         "title": "Establishing and maintaining agreements",
         "viewModel": [
           {
@@ -5196,19 +5196,19 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpEstablishingAgreements",
+      "templateName": "rdpEstablishingAgreements",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Establishing and maintaining agreements",
       "collapsibleHeading": null,
-      "name": "RLP - Establishing Agreements",
+      "name": "RDP - Establishing Agreements",
       "description": null
     },
     {
       "collapsedByDefault": false,
       "template": {
         "title": "Establishing monitoring regimes",
-        "modelName": "RLP - Establishing monitoring regimes",
+        "modelName": "RDP - Establishing monitoring regimes",
         "dataModel": [
           {
             "name": "monitoringRegimes",
@@ -5394,19 +5394,19 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpMonitoringRegimes",
+      "templateName": "rdpMonitoringRegimes",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Establishing monitoring regimes",
       "collapsibleHeading": null,
-      "name": "RLP - Establishing monitoring regimes",
+      "name": "RDP - Establishing monitoring regimes",
       "description": null
     },
     {
       "collapsedByDefault": false,
       "template": {
         "title": "Farm management surveys",
-        "modelName": "RLP - Farm Management Survey",
+        "modelName": "RDP - Farm Management Survey",
         "dataModel": [
           {
             "columns": [
@@ -5853,12 +5853,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpFarmManagementSurvey",
+      "templateName": "rdpFarmManagementSurvey",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Farm management survey",
       "collapsibleHeading": null,
-      "name": "RLP - Farm Management Survey",
+      "name": "RDP - Farm Management Survey",
       "description": null
     },
     {
@@ -6281,7 +6281,7 @@
             ]
           }
         ],
-        "modelName": "RLP - Fauna survey",
+        "modelName": "RDP - Fauna survey",
         "title": "Fauna survey",
         "viewModel": [
           {
@@ -6600,12 +6600,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpFaunaSurvey",
+      "templateName": "rdpFaunaSurvey",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Fauna survey",
       "collapsibleHeading": null,
-      "name": "RLP - Fauna survey",
+      "name": "RDP - Fauna survey",
       "description": null
     },
     {
@@ -6867,7 +6867,7 @@
             ]
           }
         ],
-        "modelName": "RLP - Fire management",
+        "modelName": "RDP - Fire management",
         "title": "Implementing fire management actions",
         "viewModel": [
           {
@@ -7118,12 +7118,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpFireManagement",
+      "templateName": "rdpFireManagement",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Fire management actions",
       "collapsibleHeading": null,
-      "name": "RLP - Fire management",
+      "name": "RDP - Fire management",
       "description": null
     },
     {
@@ -7551,7 +7551,7 @@
             ]
           }
         ],
-        "modelName": "RLP - Flora survey",
+        "modelName": "RDP - Flora survey",
         "title": "Flora survey",
         "viewModel": [
           {
@@ -7867,12 +7867,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpFloraSurvey",
+      "templateName": "rdpFloraSurvey",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Flora survey",
       "collapsibleHeading": null,
-      "name": "RLP - Flora survey",
+      "name": "RDP - Flora survey",
       "description": null
     },
     {
@@ -8120,7 +8120,7 @@
             ]
           }
         ],
-        "modelName": "RLP - Habitat augmentation",
+        "modelName": "RDP - Habitat augmentation",
         "title": "Habitat augmentation",
         "viewModel": [
           {
@@ -8378,19 +8378,19 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpHabitatAugmentation",
+      "templateName": "rdpHabitatAugmentation",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Habitat augmentation",
       "collapsibleHeading": null,
-      "name": "RLP - Habitat augmentation",
+      "name": "RDP - Habitat augmentation",
       "description": null
     },
     {
       "collapsedByDefault": false,
       "template": {
         "title": "Identifying the location of potential sites",
-        "modelName": "RLP - Identifying sites",
+        "modelName": "RDP - Identifying sites",
         "dataModel": [
           {
             "columns": [
@@ -8992,12 +8992,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpIdentifyingSites",
+      "templateName": "rdpIdentifyingSites",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Identifying the location of potential sites",
       "collapsibleHeading": null,
-      "name": "RLP - Identifying sites",
+      "name": "RDP - Identifying sites",
       "description": null
     },
     {
@@ -9243,7 +9243,7 @@
             ]
           }
         ],
-        "modelName": "RLP - Improving hydrological regimes",
+        "modelName": "RDP - Improving hydrological regimes",
         "title": "Improving hydrological regimes",
         "viewModel": [
           {
@@ -9533,12 +9533,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpImprovingHydrologicalRegimes",
+      "templateName": "rdpImprovingHydrologicalRegimes",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Improving hydrological regimes",
       "collapsibleHeading": null,
-      "name": "RLP - Improving hydrological regimes",
+      "name": "RDP - Improving hydrological regimes",
       "description": null
     },
     {
@@ -9813,7 +9813,7 @@
             ]
           }
         ],
-        "modelName": "RLP - Improving land management practices",
+        "modelName": "RDP - Improving land management practices",
         "title": "Improving land management practices",
         "viewModel": [
           {
@@ -10075,12 +10075,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpLandManagementPractices",
+      "templateName": "rdpLandManagementPractices",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Improving land management practices",
       "collapsibleHeading": null,
-      "name": "RLP - Improving land management practices",
+      "name": "RDP - Improving land management practices",
       "description": null
     },
     {
@@ -10346,7 +10346,7 @@
             ]
           }
         ],
-        "modelName": "RLP - Disease management",
+        "modelName": "RDP - Disease management",
         "title": "Managing disease",
         "viewModel": [
           {
@@ -10615,12 +10615,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpDiseaseManagement",
+      "templateName": "rdpDiseaseManagement",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Managing disease",
       "collapsibleHeading": null,
-      "name": "RLP - Disease management",
+      "name": "RDP - Disease management",
       "description": null
     },
     {
@@ -10685,7 +10685,7 @@
             ]
           }
         ],
-        "modelName": "RLP - Negotiations",
+        "modelName": "RDP - Negotiations",
         "title": "Negotiating with the Community, landholders, Traditional Owner groups etc.",
         "viewModel": [
           {
@@ -10780,19 +10780,19 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpNegotiations",
+      "templateName": "rdpNegotiations",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Negotiating with the Community, Landholders, Farmers, Traditional Owner groups, Agriculture industry groups etc.",
       "collapsibleHeading": null,
-      "name": "RLP - Negotiations",
+      "name": "RDP - Negotiations",
       "description": null
     },
     {
       "collapsedByDefault": false,
       "template": {
         "title": "Obtaining relevant approvals",
-        "modelName": "RLP - Obtaining approvals",
+        "modelName": "RDP - Obtaining approvals",
         "dataModel": [
           {
             "dataType": "number",
@@ -10910,12 +10910,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpObtainingApprovals",
+      "templateName": "rdpObtainingApprovals",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Obtaining relevant approvals",
       "collapsibleHeading": null,
-      "name": "RLP - Obtaining approvals",
+      "name": "RDP - Obtaining approvals",
       "description": null
     },
     {
@@ -11338,7 +11338,7 @@
             ]
           }
         ],
-        "modelName": "RLP - Pest animal survey",
+        "modelName": "RDP - Pest animal survey",
         "title": "Pest animal survey",
         "viewModel": [
 
@@ -11649,12 +11649,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpPestAnimalSurvey",
+      "templateName": "rdpPestAnimalSurvey",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Pest animal survey",
       "collapsibleHeading": null,
-      "name": "RLP - Pest animal survey",
+      "name": "RDP - Pest animal survey",
       "description": null
     },
     {
@@ -12097,7 +12097,7 @@
             ]
           }
         ],
-        "modelName": "RLP - Plant survival survey",
+        "modelName": "RDP - Plant survival survey",
         "title": "Plant survival survey",
         "viewModel": [
 
@@ -12441,19 +12441,19 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpPlantSurvivalSurvey",
+      "templateName": "rdpPlantSurvivalSurvey",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Plant survival survey",
       "collapsibleHeading": null,
-      "name": "RLP - Plant survival survey",
+      "name": "RDP - Plant survival survey",
       "description": null
     },
     {
       "collapsedByDefault": false,
       "template": {
         "title": "Project planning and delivery of documents as required for the delivery of the Project Services and monitoring",
-        "modelName": "RLP - Project planning",
+        "modelName": "RDP - Project planning",
         "dataModel": [
           {
             "dataType": "list",
@@ -12591,12 +12591,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpProjectPlanning",
+      "templateName": "rdpProjectPlanning",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Project planning and delivery of documents as required for the delivery of the Project Services and monitoring",
       "collapsibleHeading": null,
-      "name": "RLP - Project planning",
+      "name": "RDP - Project planning",
       "description": null
     },
     {
@@ -12860,7 +12860,7 @@
             ]
           }
         ],
-        "modelName": "RLP - Remediating riparian and aquatic areas",
+        "modelName": "RDP - Remediating riparian and aquatic areas",
         "title": "Remediating riparian and aquatic areas",
         "viewModel": [
           {
@@ -13124,12 +13124,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpRemediatingRiparianAndAquaticAreas",
+      "templateName": "rdpRemediatingRiparianAndAquaticAreas",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Remediating riparian and aquatic areas",
       "collapsibleHeading": null,
-      "name": "RLP - Remediating riparian and aquatic areas",
+      "name": "RDP - Remediating riparian and aquatic areas",
       "description": null
     },
     {
@@ -13412,7 +13412,7 @@
             ]
           }
         ],
-        "modelName": "RLP - Weed treatment",
+        "modelName": "RDP - Weed treatment",
         "title": "Removing weeds",
         "viewModel": [
           {
@@ -13707,12 +13707,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpWeedTreatment",
+      "templateName": "rdpWeedTreatment",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Removing weeds",
       "collapsibleHeading": null,
-      "name": "RLP - Weed treatment",
+      "name": "RDP - Weed treatment",
       "description": null
     },
     {
@@ -14010,7 +14010,7 @@
             ]
           }
         ],
-        "modelName": "RLP - Revegetating habitat",
+        "modelName": "RDP - Revegetating habitat",
         "title": "Revegetating habitat",
         "viewModel": [
           {
@@ -14335,12 +14335,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpRevegetatingHabitat",
+      "templateName": "rdpRevegetatingHabitat",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Revegetating habitat",
       "collapsibleHeading": null,
-      "name": "RLP - Revegetating habitat",
+      "name": "RDP - Revegetating habitat",
       "description": null
     },
     {
@@ -14940,7 +14940,7 @@
             ]
           }
         ],
-        "modelName": "RLP - Site preparation",
+        "modelName": "RDP - Site preparation",
         "title": "Site preparation",
         "viewModel": [
           {
@@ -15185,19 +15185,19 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpSitePreparation",
+      "templateName": "rdpSitePreparation",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Site preparation",
       "collapsibleHeading": null,
-      "name": "RLP - Site preparation",
+      "name": "RDP - Site preparation",
       "description": null
     },
     {
       "collapsedByDefault": false,
       "template": {
         "title": "Skills and knowledge survey",
-        "modelName": "RLP - Skills and knowledge survey",
+        "modelName": "RDP - Skills and knowledge survey",
         "dataModel": [
           {
             "columns": [
@@ -15716,12 +15716,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpSkillsAndKnowledgeSurvey",
+      "templateName": "rdpSkillsAndKnowledgeSurvey",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Skills and knowledge survey",
       "collapsibleHeading": null,
-      "name": "RLP - Skills and knowledge survey",
+      "name": "RDP - Skills and knowledge survey",
       "description": null
     },
     {
@@ -15844,7 +15844,7 @@
             ]
           }
         ],
-        "modelName": "RLP - Soil testing",
+        "modelName": "RDP - Soil testing",
         "title": "Soil testing",
         "viewModel": [
           {
@@ -15981,12 +15981,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpSoilTesting",
+      "templateName": "rdpSoilTesting",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Soil testing",
       "collapsibleHeading": null,
-      "name": "RLP - Soil testing",
+      "name": "RDP - Soil testing",
       "description": null
     },
     {
@@ -16148,7 +16148,7 @@
             ]
           }
         ],
-        "modelName": "RLP - Emergency Interventions",
+        "modelName": "RDP - Emergency Interventions",
         "title": "Undertaking emergency interventions to prevent extinctions",
         "viewModel": [
           {
@@ -16306,12 +16306,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpEmergencyInterventions",
+      "templateName": "rdpEmergencyInterventions",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Undertaking emergency interventions to prevent extinctions",
       "collapsibleHeading": null,
-      "name": "RLP - Emergency Interventions",
+      "name": "RDP - Emergency Interventions",
       "description": null
     },
     {
@@ -16741,7 +16741,7 @@
             ]
           }
         ],
-        "modelName": "RLP - Water quality survey",
+        "modelName": "RDP - Water quality survey",
         "title": "Water quality survey",
         "viewModel": [
 
@@ -17046,12 +17046,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpWaterQualitySurvey",
+      "templateName": "rdpWaterQualitySurvey",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Water quality survey",
       "collapsibleHeading": null,
-      "name": "RLP - Water quality survey",
+      "name": "RDP - Water quality survey",
       "description": null
     },
     {
@@ -17466,7 +17466,7 @@
             ]
           }
         ],
-        "modelName": "RLP - Weed distribution survey",
+        "modelName": "RDP - Weed distribution survey",
         "title": "Weed distribution survey",
         "viewModel": [
 
@@ -17771,17 +17771,17 @@
         ]
       },
       "modelName": null,
-      "templateName": "rlpWeedDistributionSurvey",
+      "templateName": "rdpWeedDistributionSurvey",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Weed distribution survey",
       "collapsibleHeading": null,
-      "name": "RLP - Weed distribution survey",
+      "name": "RDP - Weed distribution survey",
       "description": null
     }
   ],
   "type": "Report",
-  "category": "RLP Reports",
+  "category": "RDP Reports",
   "status": "active",
   "lastUpdatedUserId": "56575",
   "description": null,
