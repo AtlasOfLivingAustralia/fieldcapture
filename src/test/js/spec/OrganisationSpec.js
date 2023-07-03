@@ -119,7 +119,7 @@ describe("OrganisationViewModel Spec", function () {
         var expected = {
             url: options.organisationSaveUrl,
             type: 'POST',
-            data: '{"config":[{"excludes":[],"config":"Test config"}],"startDate":"","endDate":"","organisationId":"org1"}',
+            data: '{"config":[{"excludes":[],"config":"Test config"}]}',
             dataType: 'json',
             contentType: 'application/json'
         };

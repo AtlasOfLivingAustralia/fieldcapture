@@ -21,3 +21,4 @@ while (reports.hasNext()) {
         audit(organisation, organisation.organisationId, 'au.org.ala.ecodata.Organisation', adminUserId);
     }
 }
+

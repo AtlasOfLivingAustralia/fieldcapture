@@ -250,10 +250,19 @@ class OrganisationServiceSpec extends Specification implements ServiceUnitTest<O
 
 		then: "The update will succeed"
 		1 * metadataService.organisationList() >> [list:[[organisationId:"o2", abn:"134566778"]]]
+		1 * webService.doPost({it.endsWith('organisation/o2')}, [abn:"134566778", name:"Organisation 1"])
+
+	}
+
+	def "If an organisationId is included in update props, if it's different to the id an error will be returned"() {
+		setup:
+		SettingService.setHubConfig(new HubSettings(hubId:"merit"))
+
+		when: "The ABN exists on another organisation"
+		Map result = service.update("o2", [name:"Organisation 1", abn:"134566778", organisationId:"o1"])
+
+		then:
 		result.error != null
-		0 * webService.doPost({it.endsWith('organisation/o2')}, [abn:"134566778", name:"Organisation 1", hubId:"merit"])
-
-
 	}
 
 	static int activityId = 0

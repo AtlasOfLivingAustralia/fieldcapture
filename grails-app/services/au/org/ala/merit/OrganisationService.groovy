@@ -74,8 +74,15 @@ class OrganisationService {
     Map update(String id, Map organisation) {
         Map result = [:]
         String abn = organisation.abn
-        String orgId = organisation.organisationId
-        def error = checkExistingAbnNumber(orgId,abn)
+
+        String error = null
+        if (organisation.organisationId && organisation.organisationId != id) {
+            // We don't want to update the organisationId
+            error = 'Invalid organisationId supplied'
+        }
+        else {
+            error = checkExistingAbnNumber(id,abn)
+        }
         if (error) {
             result.error = error
             result.detail = error

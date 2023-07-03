@@ -266,9 +266,6 @@ OrganisationPageViewModel = function (props, options) {
     self.saveConfig = function(config) {
         var json = {
             config: config,
-            startDate:self.startDate(),
-            endDate:self.endDate(),
-            organisationId: self.organisationId,
             abn: self.abn()
         };
         return saveOrganisation(json);
