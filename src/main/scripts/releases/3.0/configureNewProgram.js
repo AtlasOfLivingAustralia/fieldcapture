@@ -1,9 +1,9 @@
-load('../../../utils/uuid.js');
-load('../../../utils/audit.js');
-load('../../../utils/program.js');
+load('../../utils/uuid.js');
+load('../../utils/audit.js');
+load('../../utils/program.js');
 var userId = '';
 
-const serviceFormName = "RLP Output Report - Review";
+const serviceFormName = "RDP Output Report";
 function addService(newServiceName, legacyId, sectionName) {
     let outputs = [
         {
@@ -35,13 +35,13 @@ function addService(newServiceName, legacyId, sectionName) {
         }]
     }
 }
-addService("Habitat Condition Assessment Survey", NumberInt(42), "RLP - Habitat condition assessment");
+addService("Habitat Condition Assessment Survey", NumberInt(42), "RDP - Habitat condition assessment");
 
 
 const newScores = [
     {
         serviceId: 10,
-        formSection:  'RLP - Establishing ex-situ breeding programs',
+        formSection:  'RDP - Establishing ex-situ breeding programs',
         scores: [
             {
                 label: 'Number of captive breeding and release, translocation, or re-introduction programs established',
@@ -55,7 +55,7 @@ const newScores = [
     },
     {
         serviceId: 34,
-        formSection:  'RLP - Debris removal',
+        formSection:  'RDP - Debris removal',
         scores: [
             {
                 label: 'Area (ha) of debris removal - initial',
@@ -77,7 +77,7 @@ const newScores = [
     },
     {
         serviceId: 7,
-        formSection:  'RLP - Erosion Management',
+        formSection:  'RDP - Erosion Management',
         scores: [
             {
                 label: 'Area (ha) of erosion control - initial',
@@ -99,7 +99,7 @@ const newScores = [
     },
     {
         serviceId: 8,
-        formSection:  'RLP - Establishing Agreements',
+        formSection:  'RDP - Establishing Agreements',
         scores: [
             {
                 label: 'Area (ha) covered by conservation agreements established',
@@ -113,7 +113,7 @@ const newScores = [
     },
     {
         serviceId: 9,
-        formSection:  'RLP - Maintaining feral free enclosures',
+        formSection:  'RDP - Maintaining feral free enclosures',
         scores: [
             {
                 label: 'Number of pest animal-free enclosures - initial',
@@ -135,7 +135,7 @@ const newScores = [
     },
     {
         serviceId: 12,
-        formSection:  'RLP - Farm Management Survey',
+        formSection:  'RDP - Farm Management Survey',
         scores: [
             {
                 label: 'Number of farm management surveys conducted - baseline',
@@ -149,7 +149,7 @@ const newScores = [
     },
     {
         serviceId: 13,
-        formSection:  'RLP - Fauna surveys',
+        formSection:  'RDP - Fauna surveys',
         scores: [
             {
                 label: 'Number of fauna surveys conducted - baseline',
@@ -163,7 +163,7 @@ const newScores = [
     },
     {
         serviceId: 14,
-        formSection:  'RLP - Flora surveys',
+        formSection:  'RDP - Flora surveys',
         scores: [
             {
                 label: 'Number of flora surveys conducted - baseline',
@@ -177,7 +177,7 @@ const newScores = [
     },
     {
         serviceId: 16,
-        formSection:  'RLP - Habitat augmentation',
+        formSection:  'RDP - Habitat augmentation',
         scores: [
             {
                 label: 'Area (ha) of augmentation - initial',
@@ -199,7 +199,7 @@ const newScores = [
     },
     {
         serviceId: 42,
-        formSection:  'RLP - Habitat condition assessment',
+        formSection:  'RDP - Habitat condition assessment',
         scores: [
             {
                 label: 'Number of habitat condition assessment surveys conducted - baseline',
@@ -213,7 +213,7 @@ const newScores = [
     },
     {
         serviceId: 17,
-        formSection:  'RLP - Identifying sites',
+        formSection:  'RDP - Identifying sites',
         scores: [
             {
                 label: 'Number of potential sites assessed',
@@ -223,7 +223,7 @@ const newScores = [
     },
     {
         serviceId: 14,
-        formSection:  'RLP - Fire management',
+        formSection:  'RDP - Fire management',
         scores: [
             {
                 label: 'Area (ha) treated by fire management action/s - initial',
@@ -237,7 +237,7 @@ const newScores = [
     },
     {
         serviceId: 18,
-        formSection:  'RLP - Improving hydrological regimes',
+        formSection:  'RDP - Improving hydrological regimes',
         scores: [
             {
                 label: 'Number of treatments implemented to improve site eco-hydrology - initial',
@@ -251,7 +251,7 @@ const newScores = [
     },
     {
         serviceId: 19,
-        formSection:  'RLP - Improving land management practices',
+        formSection:  'RDP - Improving land management practices',
         scores: [
             {
                 label: 'Area (ha) covered by practice change - initial',
@@ -265,7 +265,7 @@ const newScores = [
     },
     {
         serviceId: 20,
-        formSection:  'RLP - Managing disease',
+        formSection:  'RDP - Managing disease',
         scores: [
             {
                 label: 'Area (ha) for disease treatment/prevention - initial',
@@ -287,7 +287,7 @@ const newScores = [
     },
     {
         serviceId: 23,
-        formSection:  'RLP - Pest animal survey',
+        formSection:  'RDP - Pest animal survey',
         scores: [
             {
                 label: 'Number of pest animal surveys conducted - baseline',
@@ -301,7 +301,7 @@ const newScores = [
     },
     {
         serviceId: 26,
-        formSection:  'RLP - Remediating riparian and aquatic areas',
+        formSection:  'RDP - Remediating riparian and aquatic areas',
         scores: [
             {
                 label: 'Number of structures installed to promote aquatic health',
@@ -327,7 +327,7 @@ const newScores = [
     },
     {
         serviceId: 28,
-        formSection:  'RLP - Revegetating habitat',
+        formSection:  'RDP - Revegetating habitat',
         scores: [
             {
                 label: 'Area (ha) of habitat revegetated - initial',
@@ -359,7 +359,7 @@ const newScores = [
     },
     {
         serviceId: 24,
-        formSection:  'RLP - Plant survival survey',
+        formSection:  'RDP - Plant survival survey',
         scores: [
             {
                 label: 'Number of seed germination/plant survival surveys completed - indicator',
@@ -369,7 +369,7 @@ const newScores = [
     },
     {
         serviceId: 35,
-        formSection:  'RLP - Site preparation',
+        formSection:  'RDP - Site preparation',
         scores: [
             {
                 label: 'Length (km) of site preparation',
@@ -379,7 +379,7 @@ const newScores = [
     },
     {
         serviceId: 32,
-        formSection:  'RLP - Water quality survey',
+        formSection:  'RDP - Water quality survey',
         scores: [
             {
                 label: 'Number of water quality surveys conducted - baseline',
@@ -393,7 +393,7 @@ const newScores = [
     },
     {
         serviceId: 33,
-        formSection:  'RLP - Weed distribution survey',
+        formSection:  'RDP - Weed distribution survey',
         scores: [
             {
                 label: 'Number of weed distribution surveys conducted - baseline',
@@ -407,7 +407,7 @@ const newScores = [
     },
     {
         serviceId: 31,
-        formSection:  'RLP - Emergency Interventions',
+        formSection:  'RDP - Emergency Interventions',
         scores: [
             {
                 label: 'Number of interventions - initial',
@@ -421,7 +421,7 @@ const newScores = [
     },
     {
         serviceId: 30,
-        formSection:  'RLP - Soil testing',
+        formSection:  'RDP - Soil testing',
         scores: [
             {
                 label: 'Number of soil tests conducted - baseline',
@@ -435,7 +435,7 @@ const newScores = [
     },
     {
         serviceId: 18,
-        formSection:  'RLP - Improving hydrological regimes',
+        formSection:  'RDP - Improving hydrological regimes',
         scores: [
             {
                 label: 'Number of treatments implemented to improve site eco-hydrology - initial',
@@ -449,7 +449,7 @@ const newScores = [
     },
     {
         serviceId: 29,
-        formSection:  'RLP - Skills and knowledge survey',
+        formSection:  'RDP - Skills and knowledge survey',
         scores: [
             {
                 label: 'Number of skills and knowledge surveys conducted - baseline',
@@ -469,7 +469,7 @@ for (let i=0; i<newScores.length; i++) {
 
         let config = {
             filter: {
-                propertyName: 'name',
+                property: 'name',
                 filterValue: newScores[i].formSection,
                 type: 'filter'
             },
@@ -770,7 +770,7 @@ var config=
                 "reportingPeriodInMonths": 3,
                 "description": "",
                 "category": "Outputs Reporting",
-                "activityType": "RLP Output Report - Review",
+                "activityType": "RDP Output Report",
                 "canSubmitDuringReportingPeriod": true,
                 "label": "Quarter"
 
@@ -1348,7 +1348,7 @@ var outcomes = [
     }
 
 ];
-let programName = "Project Services Review Group";
+let programName = "Regional Delivery Partners";
 var program = createOrFindProgram(programName);
 
 program.config = config;
@@ -1374,7 +1374,7 @@ for (let i=0; i<s.length; i++) {
         else {
             let found = false;
             for (let k=0; k<service.outputs.length; k++) {
-                if (service.outputs[k].formName == 'RLP Output Report - Review') {
+                if (service.outputs[k].formName == 'RDP Output Report') {
                     found = true;
                 }
             }
@@ -1384,9 +1384,7 @@ for (let i=0; i<s.length; i++) {
                     print("No sectionName for service "+service.legacyId);
                 }
                 service.outputs.push({
-                    // TODO - this needs to be updated to match the new form
-                    // when it's built
-                    formName: 'RLP Output Report - Review',
+                    formName: 'RDP Output Report',
                     sectionName: sectionName
                 });
                 db.service.replaceOne({legacyId:s[i].serviceId}, service);
