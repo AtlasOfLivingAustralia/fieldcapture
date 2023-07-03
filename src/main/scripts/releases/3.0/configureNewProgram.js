@@ -40,6 +40,16 @@ addService("Habitat Condition Assessment Survey", NumberInt(42), "RDP - Habitat 
 
 const newScores = [
     {
+        serviceId: 1,
+        formSection:  'RDP - Baseline data',
+        scores: [
+            {
+                label: 'Number of baseline datasets synthesised and finalised',
+                path: 'data.tba'
+            }
+        ]
+    },
+    {
         serviceId: 10,
         formSection:  'RDP - Establishing ex-situ breeding programs',
         scores: [
@@ -162,7 +172,7 @@ const newScores = [
         ]
     },
     {
-        serviceId: 14,
+        serviceId: 15,
         formSection:  'RDP - Flora surveys',
         scores: [
             {
@@ -425,11 +435,15 @@ const newScores = [
         scores: [
             {
                 label: 'Number of soil tests conducted - baseline',
-                path: 'data.tba'
+                path: 'data.tba',
+                filterValue: "Baseline",
+                filterPath: "data.tba.baselineOrIndicator",
             },
             {
                 label: 'Number of soil tests conducted - indicator',
-                path: 'data.tba'
+                path: 'data.tba',
+                filterValue: "Indicator",
+                filterPath: "data.tba.baselineOrIndicator",
             }
         ]
     },
@@ -461,24 +475,37 @@ const newScores = [
             }
         ]
     }
-]
+];
 
 for (let i=0; i<newScores.length; i++) {
+    let service = db.service.findOne({legacyId: newScores[i].serviceId});
     for (let j=0; j<newScores[i].scores.length; j++) {
         let score = db.score.findOne({label: newScores[i].scores[j].label});
 
+        let aggregation =
+             [{
+                property: newScores[i].scores[j].path,
+                type: 'SUM'
+            }];
         let config = {
             filter: {
                 property: 'name',
                 filterValue: newScores[i].formSection,
                 type: 'filter'
-            },
-            childAggregations: [
-                {
-                    property: newScores[i].scores[j].path,
-                    type: 'SUM'
-                }
-            ]
+            }
+        }
+        if (newScores[i].scores[j].filterPath) {
+            config.childAggregations = [{
+                filter: {
+                    property: newScores[i].scores[j].filterPath,
+                    filterValue: newScores[i].scores[j].filterValue,
+                    type:"filter"
+                },
+                childAggregations: aggregation
+            }]
+        }
+        else {
+            config.childAggregations = aggregation;
         }
         if (!score) {
             // Insert the score
@@ -487,15 +514,108 @@ for (let i=0; i<newScores.length; i++) {
                 label: newScores[i].scores[j].label,
                 status: 'active',
                 isOutputTarget: true,
-                category: 'New program',
-                configuration: config,
+                category: 'RLP and Bushfire Recovery',
+                outputType: service.name,
+                configuration: {childAggregations: [config]},
                 dateCreated: ISODate(),
                 lastUpdated: ISODate()
             };
             db.score.insertOne(score);
         } else {
-            db.score.update({_id: score._id}, {$set: {configuration: config, serviceId: newScores[i].serviceId}});
+            db.score.update(
+                {_id: score._id},
+                {$set: {
+                    configuration: {childAggregations: [config]}, serviceId: newScores[i].serviceId,
+                    category:'RLP and Bushfire Recovery',
+                    outputType: service.name
+                }});
         }
+    }
+}
+
+const existingScores = [
+    {
+        serviceId: 2, // communication materials
+        formSection: 'RDP - Communication materials',
+        rlpFormSection: 'RLP - Communication materials',
+        scores: [
+             'Number of communication materials published'
+        ]
+    },
+    {
+        serviceId: 3, // community / stakeholder engagement
+        formSection: 'RDP - Community engagement',
+        rlpFormSection: 'RLP - Community engagement',
+        scores: [
+           'Number of field days',
+            'Number of training / workshop events',
+            'Number of on-ground trials / demonstrations'
+        ]
+    },
+    {
+        serviceId: 4, // controlling access
+        formSection: 'RDP - Controlling access',
+        rlpFormSection: 'RLP - Controlling access',
+        scores: [
+            'Number of structures installed'
+        ]
+    },
+    {
+        serviceId: 5,
+        formSection: 'RDP - Pest animal management',
+        rlpFormSection: 'RLP - Pest animal management',
+        scores: [
+            'Area (ha) treated for pest animals - initial',
+            'Area (ha) treated for pest animals - follow-up',
+            'Length (km) treated for pest animals - follow-up',
+            'Length (km) treated for pest animals - initial'
+        ]
+    },
+    {
+        serviceId: 27,
+        formSection: 'RDP - Weed treatment',
+        rlpFormSection: 'RLP - Weed treatment',
+        scores: [
+            'Area (ha) treated for weeds - initial',
+            'Area (ha) treated for weeds - follow-up',
+            'Length (km) treated for weeds - initial',
+            'Length (km) treated for weeds - follow-up'
+        ]
+    },
+];
+
+for (let i=0; i<existingScores.length; i++) {
+    let service = db.service.findOne({legacyId: existingScores[i].serviceId});
+    for (let j=0; j<existingScores[i].scores.length; j++) {
+        let score = db.score.findOne({label: existingScores[i].scores[j]});
+
+        if (!score) {
+            throw "Cannot find score with label: " + existingScores[i].scores[j];
+        }
+
+        let foundRlp = false;
+        let foundRdp = false;
+        for (let k=0; k<score.configuration.childAggregations.length; k++) {
+            if (score.configuration.childAggregations[k].filter && score.configuration.childAggregations[k].filter.filterValue === existingScores[i].rlpFormSection) {
+                foundRlp = score.configuration.childAggregations[k];
+            }
+            if (score.configuration.childAggregations[k].filter && score.configuration.childAggregations[k].filter.filterValue === existingScores[i].formSection) {
+                foundRdp = score.configuration.childAggregations[k];
+            }
+        }
+        if (!foundRlp) {
+            throw "Cannot find RLP form section to copy to RDP "+existingScores[i].rlpFormSection+' for score '+existingScores[i].scores[j].label;
+        }
+        if (!foundRdp) {
+            let rdpConfig = Object.assign({}, foundRlp);
+            rdpConfig.filter = Object.assign ({}, foundRlp.filter);
+            rdpConfig.filter.filterValue = existingScores[i].formSection;
+            score.configuration.childAggregations.push(rdpConfig);
+        }
+        else {
+            foundRdp.childAggregations = foundRlp.childAggregations;
+        }
+        db.score.updateOne({_id: score._id}, {$set: {configuration: score.configuration, outputType: service.name}});
     }
 }
 
@@ -508,7 +628,7 @@ var config=
             "programServices": [
                 {
                     serviceId: 1,
-                    serviceTargetLabels: [ 'Number of baseline data sets collected and/or synthesised' ]
+                    serviceTargetLabels: [ 'Number of baseline datasets synthesised and finalised' ]
                 },
                 {
                     serviceId: 2,
@@ -662,7 +782,7 @@ var config=
                     ]
                 },
                 {
-                    serviceId: 27,
+                    serviceId: 27, // Weed treatment
                     serviceTargetLabels: [
                         'Area (ha) treated for weeds - initial',
                         'Area (ha) treated for weeds - follow-up',
@@ -1375,20 +1495,36 @@ for (let i=0; i<s.length; i++) {
             let found = false;
             for (let k=0; k<service.outputs.length; k++) {
                 if (service.outputs[k].formName == 'RDP Output Report') {
-                    found = true;
+                    found = service.outputs[k];
                 }
+            }
+            let match = null;
+            for (let l=0; l<newScores.length; l++) {
+                if (newScores[l].serviceId == s[i].serviceId) {
+                    match = newScores[l];
+                }
+            }
+            if (!match) {
+                for (let l=0; l<existingScores.length; l++) {
+                    if (existingScores[l].serviceId == s[i].serviceId) {
+                        match = existingScores[l];
+                    }
+                }
+            }
+            if (!match) {
+                throw "Can't find form section for score "+score.label;
             }
             if (!found) {
-                let sectionName = service.outputs[0] ? service.outputs[0].sectionName : '';
-                if (sectionName == '') {
-                    print("No sectionName for service "+service.legacyId);
-                }
                 service.outputs.push({
                     formName: 'RDP Output Report',
-                    sectionName: sectionName
+                    sectionName: match.formSection
                 });
-                db.service.replaceOne({legacyId:s[i].serviceId}, service);
+
             }
+            else {
+                found.sectionName = match.formSection;
+            }
+            db.service.replaceOne({legacyId:s[i].serviceId}, service);
         }
     }
     delete s[i].serviceTargetLabels;
@@ -1440,7 +1576,7 @@ let services = db.service.find();
 while (services.hasNext()) {
     let service = services.next();
 
-    // if the service.name matches a case insentive regex of "survey"
+    // if the service.name matches a case insensitive regex of "survey"
     // then add the "Survey" category
     if (service.name.match(/survey/i) || service.legacyId == 30 || service.legacyId == 1) {
         // Add the Survey category to the service if it doesn't already have it
