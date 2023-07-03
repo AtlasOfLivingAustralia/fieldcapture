@@ -340,11 +340,13 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
     def "A blank announcement should be returned for a project with no announcements to make it easier for the user"() {
         setup:
         def testOrg = testOrganisation('id',true)
-        organisationService.get(_,_) >> testOrg
-        def projectsWithAnnouncements = projectsWithAnnouncements(3)
-        projectsWithAnnouncements[1].custom.details.events = []
 
-        searchService.allProjects(_, _) >> [hits:[hits:projectsWithAnnouncements.collect {[_source:it]}]]
+        organisationService.get(_,_) >> testOrg
+        def projects = projectsWithAnnouncements(3)
+        projects[1].custom.details.events = []
+        projects[0].status = 'completed' // only active projects should have their announcements returned
+        testOrg.projects = projects
+
         setupOrganisationAdmin()
 
         when:
@@ -353,8 +355,8 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
 
         then:
         response.status == 200
-        model.projectList.size() == 3
-        model.events.size() == 21
+        model.projectList.size() == 2
+        model.events.size() == 11
 
     }
 
@@ -615,7 +617,7 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         List projects = []
         def annoucementsCount = 0
         for (int i=0; i<projectCount; i++) {
-            projects << [projectId:'project'+i, name:'Project '+i, grantId:'Grant '+i, custom:[details:[events:buildAnnouncements(10, annoucementsCount)]]]
+            projects << [status:'active', projectId:'project'+i, name:'Project '+i, grantId:'Grant '+i, custom:[details:[events:buildAnnouncements(10, annoucementsCount)]]]
             annoucementsCount+=10
         }
         return projects
