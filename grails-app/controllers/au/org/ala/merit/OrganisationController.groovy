@@ -81,13 +81,15 @@ class OrganisationController {
             }
         }
 
+        boolean showEditAnnoucements = organisation.projects?.find{Status.isActive(it.status)}
+
         List adHocReportTypes =[ [type: ReportService.PERFORMANCE_MANAGEMENT_REPORT]]
 
         [about     : [label: 'About', visible: true, stopBinding: false, type:'tab'],
          projects : [label: 'Reporting', visible: true, stopBinding:true, default:!reportingVisible, type: 'tab', reports:organisation.reports, adHocReportTypes:adHocReportTypes, reportOrder:reportOrder],
          sites     : [label: 'Sites', visible: true, type: 'tab', stopBinding:true, projectCount:organisation.projects?.size()?:0, showShapefileDownload:hasAdminAccess],
          dashboard : [label: 'Dashboard', visible: true, stopBinding:true, type: 'tab', template:'/shared/dashboard', reports:dashboardReports],
-         admin     : [label: 'Admin', visible: hasAdminAccess, type: 'tab', template:'admin', showEditAnnoucements:organisation.projects?.size()]]
+         admin     : [label: 'Admin', visible: hasAdminAccess, type: 'tab', template:'admin', showEditAnnoucements:showEditAnnoucements]]
 
     }
 
@@ -314,25 +316,29 @@ class OrganisationController {
     }
 
     private List findOrganisationAnnouncements(organisation) {
-        def queryParams = [max: 1500, fq: ['organisationFacet:' + organisation.name]]
-        queryParams.query = "docType:project"
-        def results = searchService.allProjects(queryParams, queryParams.query)
-        def projects = results?.hits?.hits?.collect { it._source }
+        List projects = organisation.projects
+        if (!projects) {
+            def queryParams = [max: 1500, fq: ['organisationFacet:' + organisation.name]]
+            queryParams.query = "docType:project"
+            def results = searchService.allProjects(queryParams, queryParams.query)
+            projects = results?.hits?.hits?.collect { it._source }
+        }
 
         def announcements = []
         projects.each { project ->
-            if (project.custom?.details?.events) {
-                project.custom.details.events.each { event ->
-                    announcements << [projectId: project.projectId, grantId: project.grantId, name: project.name, planStatus: project.planStatus, eventDate: event.scheduledDate, eventName: event.name, eventType: event.type, eventDescription: event.description, grantAnnouncementDate: event.grantAnnouncementDate, funding: event.funding]
+            if (Status.isActive(project.status)) {
+                if (project.custom?.details?.events) {
+                    project.custom.details.events.each { event ->
+                        announcements << [projectId: project.projectId, grantId: project.grantId, name: project.name, planStatus: project.planStatus, eventDate: event.scheduledDate, eventName: event.name, eventType: event.type, eventDescription: event.description, grantAnnouncementDate: event.grantAnnouncementDate, funding: event.funding]
+                    }
+                } else {
+                    // Add a blank row to make it easier to add announcements for that project. (so the user
+                    // doesn't have to select the project name which could be from a long list).
+                    announcements << [projectId: project.projectId, grantId: project.grantId, name: project.name, planStatus: project.planStatus, eventDate: '', eventName: '', eventDescription: '', eventType: '', funding: '', grantAnnouncementDate:'']
                 }
-            } else {
-                // Add a blank row to make it easier to add announcements for that project. (so the user
-                // doesn't have to select the project name which could be from a long list).
-                announcements << [projectId: project.projectId, grantId: project.grantId, name: project.name, planStatus: project.planStatus, eventDate: '', eventName: '', eventDescription: '', eventType: '', funding: '', grantAnnouncementDate:'']
             }
         }
         announcements
-
     }
 
     /**
