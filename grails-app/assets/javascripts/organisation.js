@@ -160,53 +160,102 @@ OrganisationPageViewModel = function (props, options) {
     var config = props.config || {};
     self.config = ko.observable(vkbeautify.json(config));
 
+    self.availableReportCategories = _.flatten(_.map(options.availableReportCategories || {}, function(reports, label) {
+        return reports;
+    }));
+
     self.organisationReportCategories = ko.computed(function() {
-        return _.map(config.organisationReports || [], function(report) {
-            return report.category;
-        });
+        return config.organisationReports || [];
     });
 
-    var coreServicesReportCategory = 'Core Services Reporting';
-    var getOrganisationReportConfig = function() {
-        if (!config.organisationReports || config.organisationReports.length == 0) {
-            config.organisationReports = [{type:'Administrative', category:coreServicesReportCategory}];
+    var parsedConfig = function(suppressAlert) {
+        var currentConfig = null;
+        try {
+            currentConfig = JSON.parse(self.config());
         }
-        return config.organisationReports[0];
+        catch (e) {
+            if (!suppressAlert) {
+                bootbox.alert("The configuration is invalid. Please fix the configuration and try again.");
+            }
+        }
+        return currentConfig;
+    }
+
+    self.isReportingEnabled = ko.computed(function() {
+        var currentConfig = parsedConfig(true);
+        if (!currentConfig) {
+            return false;
+        }
+        if (self.availableReportCategories.length > 0) {
+            return _.find(currentConfig.organisationReports || [], function(reportCategory) {
+                return reportCategory.category == self.availableReportCategories[0].category;
+            });
+        }
+        return false;
+    });
+    self.enableReporting = function() {
+        if (self.isReportingEnabled()) {
+            return;
+        }
+        var currentConfig = parsedConfig();
+        if (!currentConfig) {
+            return;
+        }
+        if (!currentConfig.organisationReports) {
+            currentConfig.organisationReports = [];
+        }
+        // We want to put the reports at the front of the configuration so the (for some organisations) existing
+        // performance management reports are at the end.
+        for (var i=0; i<self.availableReportCategories.length; i++) {
+            currentConfig.organisationReports.splice(0, 0, self.availableReportCategories[i]);
+        }
+        self.config(vkbeautify.json(currentConfig));
+        setStartAndEndDateDefaults();
     };
 
-    var organisationReportConfig = getOrganisationReportConfig();
-
-    self.coreServicesOptions = [
-        {label:'Quarterly - A (First period ends 31 March 2023)', firstReportingPeriodEnd:'2023-03-31T14:00:00Z', reportingPeriodInMonths:3, reportConfigLabel:'Quarterly'},
-        {label:'Quarterly - B (First period ends 30 September 2023)', firstReportingPeriodEnd:'2023-09-30T14:00:00Z', reportingPeriodInMonths:3, reportConfigLabel:'Quarterly'}
-    ];
-
-    var currentOption = _.find(self.coreServicesOptions, function(option) {
-        return option.firstReportingPeriodEnd == organisationReportConfig.firstReportingPeriodEnd && option.reportingPeriodInMonths == organisationReportConfig.reportingPeriodInMonths;
-    });
-    self.coreServicesPeriod = ko.observable(currentOption ? currentOption.label : null);
-
-    self.activityReportingPeriod = ko.observable(currentOption ? currentOption.label : null);
-    self.startDate = ko.observable(props.startDate).extend({simpleDate:false});
-    self.endDate = ko.observable(props.endDate).extend({simpleDate:false});
+    self.startDate = ko.observable().extend({simpleDate:false});
+    self.endDate = ko.observable().extend({simpleDate:false});
+    self.reportingEnabled = ko.observable();
     self.selectedOrganisationReportCategories = ko.observableArray();
+
+    var setStartAndEndDateDefaults = function() {
+        var currentConfig = parsedConfig();
+        if (!currentConfig || !currentConfig.organisationReports || currentConfig.organisationReports.length == 0) {
+            return;
+        }
+        var periodStart = null;
+        var periodEnd = null;
+        for (var i=0; i<currentConfig.organisationReports.length; i++) {
+            if (currentConfig.organisationReports[i].periodStart) {
+                periodStart = currentConfig.organisationReports[i].periodStart;
+            }
+            if (currentConfig.organisationReports[i].periodEnd) {
+                periodEnd = currentConfig.organisationReports[i].periodEnd;
+            }
+        }
+        self.startDate(periodStart);
+        self.endDate(periodEnd);
+    };
+    setStartAndEndDateDefaults();
 
     self.saveReportingConfiguration = function() {
 
         if ($(options.reportingConfigSelector).validationEngine('validate')) {
-            var selectedCoreServicesPeriod = _.find(self.coreServicesOptions, function(option) {
-                return option.label == self.coreServicesPeriod();
+
+            var currentConfig = parsedConfig();
+            if (!currentConfig) {
+                return;
+            }
+
+            _.each(currentConfig.organisationReports, function(reportCategory) {
+                reportCategory.periodStart = self.startDate();
+                reportCategory.periodEnd = self.endDate();
             });
 
-            organisationReportConfig.firstReportingPeriodEnd = selectedCoreServicesPeriod.firstReportingPeriodEnd;
-            organisationReportConfig.reportingPeriodInMonths = selectedCoreServicesPeriod.reportingPeriodInMonths;
-            organisationReportConfig.label = selectedCoreServicesPeriod.reportConfigLabel;
-
             blockUIWithMessage("Saving configuration...");
-            self.saveConfig(config).done(function() {
-                blockUIWithMessage("Regenerating reports...");
-                var data = JSON.stringify({organisationReportCategories:[coreServicesReportCategory]});
-                reportService.regenerateReports(data,options.regenerateOrganisationReportsUrl);
+            self.saveConfig(currentConfig).done(function() {
+                blockUIWithMessage("Configuration saved.  Reloading page...");
+                window.location.reload();
             });
         }
     };
@@ -250,15 +299,14 @@ OrganisationPageViewModel = function (props, options) {
     };
 
     self.saveOrganisationConfiguration = function() {
-        try {
-            config = JSON.parse(self.config());
-        }
-        catch (e) {
-            bootbox.alert("Invalid JSON");
+        var currentConfig = parsedConfig();
+        if (!currentConfig) {
             return;
         }
-        self.saveConfig(config).done(function (data) {
-            bootbox.alert("Organisation configuration saved");
+        blockUIWithMessage("Saving configuration...");
+        return self.saveConfig(currentConfig).done(function (data) {
+            blockUIWithMessage("Configuration saved...");
+            setTimeout($.unblockUI, 1000);
         });
 
     };

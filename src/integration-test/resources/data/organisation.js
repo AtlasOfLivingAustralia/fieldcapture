@@ -5,20 +5,25 @@ var orgDefaults = {
                 "organisationReports": [
                     {
                         "reportType": "Administrative",
-                        "firstReportingPeriodEnd": "2023-03-31T14:00:00Z",
-                        "reportDescriptionFormat": "Core services report %d for %4$s",
-                        "reportNameFormat": "Core services report %d",
+                        "periodStart": "2023-06-30T14:00:00Z",
+                        "periodEnd": "2028-06-29T14:00:00Z",
+                        "reportDescriptionFormat": "Regional capacity services report %d for %4$s",
+                        "reportNameFormat": "Regional capacity report %d",
                         "reportingPeriodInMonths": 3,
-                        "category": "Core Services Reporting",
+                        "label": "Quarterly",
+                        "category": "Regional Capacity Services Reporting",
                         "activityType": "RLP Core Services report"
                     },
                     {
                         "reportType": "Administrative",
-                        "firstReportingPeriodEnd": "2023-09-30T14:00:00Z",
-                        "reportDescriptionFormat": "Core services annual report %d for %4$s",
-                        "reportNameFormat": "Core services annual report %d",
+                        "periodStart": "2023-06-30T14:00:00Z",
+                        "periodEnd": "2028-06-29T14:00:00Z",
+                        "reportDescriptionFormat": "Regional capacity annual report %d for %4$s",
+                        "reportNameFormat": "Regional capacity annual report %d",
                         "reportingPeriodInMonths": 12,
-                        "category": "Core Services Annual Reporting",
+                        "label": "Annual",
+                        "description": "The core services annual report is being updated for the 21/22 financial year.  _Please do not commence annual reporting until the new report is ready for use._",
+                        "category": "Regional Capacity Services Annual Reporting",
                         "activityType": "RLP Core Services annual report"
                     }
                 ]
@@ -36,5 +41,45 @@ var orgDefaults = {
             "hubId": "merit"
         };
     }
+}
+
+const reportConfig = {
+    "Regional Capacity Services": [
+        {
+            "reportType": "Administrative",
+            "periodStart": "2023-06-30T14:00:00Z",
+            "periodEnd":"2028-06-29T14:00:00Z",
+            "reportDescriptionFormat": "Regional capacity services report %d for %4$s",
+            "reportNameFormat": "Regional capacity report %d",
+            "reportingPeriodInMonths": 3,
+            "label": "Quarterly",
+            "category": "Regional Capacity Services Reporting",
+            "activityType": "Regional Capacity Services Report"
+        },
+        {
+            "periodStart": "2023-06-30T14:00:00Z",
+            "periodEnd":"2028-06-29T14:00:00Z",
+            "reportType": "Administrative",
+            "reportDescriptionFormat": "Regional capacity annual report %d for %4$s",
+            "reportNameFormat": "Regional capacity annual report %d",
+            "reportingPeriodInMonths": 12,
+            "label": "Annual",
+            "description": "The core services annual report is being updated for the 21/22 financial year.  _Please do not commence annual reporting until the new report is ready for use._",
+            "category": "Regional Capacity Services Annual Reporting",
+            "activityType": "RLP Core Services annual report"
+        }
+    ]
+};
+var setting = {
+    key:'meritorganisation.availableReportsConfig',
+    value:JSON.stringify(reportConfig),
+    dateCreated:ISODate(),
+    lastUpdated:ISODate()
+};
+if (db.setting.findOne({key:setting.key})) {
+    db.setting.replaceOne({key:setting.key}, setting);
+}
+else {
+    db.setting.insertOne(setting);
 }
 

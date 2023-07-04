@@ -97,7 +97,8 @@ enum SettingPageType {
     ACCESS_ROLE_EXPIRED_EMAIL_BODY('roleExpiredEmailBody', 'The body of the email sent to a user when their elevated access has expired','permissionexpiry.expired.email.body'),
     ACCESS_WARNING_EXPIRED_EMAIL_SUBJECT('roleWarningEmailSubject', 'The subject of the email sent to a user when their elevated access will expire 1 month from now','permissionwarning.expiry.email.subject'),
     ACCESS_WARNING_EXPIRED_EMAIL_BODY('roleWarningEmailBody', 'The body of the email sent to a user when their elevated access will expire 1 month from now','permissionwarning.expiry.email.body'),
-    PDF_INSTRUCTIONS('pdfInstructions', 'Instructions on how to generate a PDF document from a web page', 'pdfInstructions')
+    PDF_INSTRUCTIONS('pdfInstructions', 'Instructions on how to generate a PDF document from a web page', 'pdfInstructions'),
+    ORGANISATION_REPORT_CONFIG('organisationReportConfig', 'Report configuration options for organisations', 'organisation.availableReportsConfig')
     String name
     String title
     String key

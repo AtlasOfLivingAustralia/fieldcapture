@@ -40,6 +40,7 @@ class Organisation extends ReloadablePage {
     }
 
     void displayReportsTab() {
+        waitFor {reportingTab.displayed}
         reportingTab.click()
         waitFor 60, { reportsTabPane.displayed }
         reportsTabPane

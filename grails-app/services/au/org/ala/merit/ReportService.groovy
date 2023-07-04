@@ -117,6 +117,10 @@ class ReportService {
     }
 
     void regenerateReports(List existingReports, ReportConfig reportConfig, ReportOwner reportOwner) {
+        if (reportConfig.adhoc) {
+            log.warn("Cannot regenerate ${reportConfig.category} reports as they are adhoc")
+            return
+        }
         // Ensure the reports are sorted in Date order
         existingReports = (existingReports?:[]).sort{it.toDate}
 

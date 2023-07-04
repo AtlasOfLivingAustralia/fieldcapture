@@ -119,6 +119,11 @@ class SettingService {
         return res?.settingText?:""
     }
 
+    def getJson(SettingPageType type) {
+        String settings = getSettingText(type)
+        settings ? JSON.parse(settings) : [:]
+    }
+
     def getJson(key) {
         cacheService.get(key, {
             def settings = get(key)

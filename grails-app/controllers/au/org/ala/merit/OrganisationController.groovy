@@ -15,6 +15,7 @@ class OrganisationController {
 
     def organisationService, searchService, documentService, userService, roleService, commonService, webService
     def activityService, metadataService, projectService, excelImportService, reportService, pdfConverterService, authService
+    SettingService settingService
 
     def list() {}
 
@@ -62,8 +63,11 @@ class OrganisationController {
         def reportingVisible = (organisation.reports && (hasAdminAccess || userService.userHasReadOnlyAccess())) || userService.userIsAlaOrFcAdmin()
 
         def dashboardReports = [[name:'dashboard', label:'Activity Outputs']]
+
+        Map availableReportCategories = null
         if (hasAdminAccess) {
             dashboardReports += [name:'announcements', label:'Announcements']
+            availableReportCategories = settingService.getJson(SettingPageType.ORGANISATION_REPORT_CONFIG)
         }
 
         List reportOrder = null
@@ -86,10 +90,10 @@ class OrganisationController {
         List adHocReportTypes =[ [type: ReportService.PERFORMANCE_MANAGEMENT_REPORT]]
 
         [about     : [label: 'About', visible: true, stopBinding: false, type:'tab'],
-         projects : [label: 'Reporting', visible: true, stopBinding:true, default:!reportingVisible, type: 'tab', reports:organisation.reports, adHocReportTypes:adHocReportTypes, reportOrder:reportOrder],
+         projects : [label: 'Reporting', visible: true, stopBinding:true, default:!reportingVisible, type: 'tab', reports:organisation.reports, adHocReportTypes:adHocReportTypes, reportOrder:reportOrder, hideDueDate:true],
          sites     : [label: 'Sites', visible: true, type: 'tab', stopBinding:true, projectCount:organisation.projects?.size()?:0, showShapefileDownload:hasAdminAccess],
          dashboard : [label: 'Dashboard', visible: true, stopBinding:true, type: 'tab', template:'/shared/dashboard', reports:dashboardReports],
-         admin     : [label: 'Admin', visible: hasAdminAccess, type: 'tab', template:'admin', showEditAnnoucements:showEditAnnoucements]]
+         admin     : [label: 'Admin', visible: hasAdminAccess, type: 'tab', template:'admin', showEditAnnoucements:showEditAnnoucements, availableReportCategories:availableReportCategories]]
 
     }
 
