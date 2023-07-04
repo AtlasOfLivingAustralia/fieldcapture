@@ -37,7 +37,7 @@ var projectConfig = {
                 "model": {
                     "helpTextHeading": "A succinct overview of the project: (i) what will be done and (ii) why it will be done",
                     "maxSize": "1000",
-                    "placeholder": "[Free text; limit response to 1000 characters (approx. 150 words)]",
+                    "placeholder": "[Free text; limit response to 150 characters)]",
                     "explanation": ""
                 }
             },
@@ -51,26 +51,7 @@ var projectConfig = {
                 }
             },
             {
-                "template": "assets",
-                "model": {
-                    "priorityCategories": [
-                        "Birds",
-                        "Mammals",
-                        "Fish",
-                        "Plants",
-                        "Priority Plants",
-                        "Vertebrate species"
-                    ],
-                    "assetHeading": "Asset",
-                    "autoSelectCategory": true,
-                    "assetClass": "asset-with-category",
-                    "viewExplanation": "Species, ecological community or environmental asset(s) the project is targeting",
-                    "explanation": "List the natural assets that will benefit from this project",
-                    "fromPriorities": true,
-                    "assetHelpText": "Scientific and/or common name",
-                    "assetCategoryHelpText": "as identified within the regional workshop reports.  Types with no assets are not selectable",
-                    "placeHolder": "Please select"
-                }
+                "template": "programOutcome"
             },
             {
                 "template": "activities",
@@ -85,7 +66,7 @@ var projectConfig = {
             {
                 "template": "outcomeStatements",
                 "model": {
-                    "subtitle": "Please provide outcome statements. Outcomes statements should: <br/>- Clearly describe the intent of the project, specifically the benefit or change that the project is expected to deliver by June 2022;<br/>- Be expressed as a SMART statement (Specific, Measurable, Attainable, Realistic and Time-bound); and<br/>- Ensure that the outcomes are measurable with consideration to the monitoring methodology provided below",
+                    "subtitle": "Please provide outcome statements",
                     "placeholder": "By 30 June 2021, [Free text]",
                     "title": "Project Outcome"
                 }
@@ -105,8 +86,15 @@ var projectConfig = {
                     "maxSize": "4000",
                     "title": "Project Methodology",
                     "explanation": "The methodology should describe how each project service (i.e., action) will be implemented to achieve outcomes and why that specific approach or technique was chosen. The methodology could include the location, partner/s involvement and outputs. The methodology should clearly link to the outcome statement. At least one method for each project outcome should be identified.",
-                    "tableHeading": "Please describe the methodology that will be used to achieve the project’s outcome statements.",
+                    "tableHeading": "Describe how each project activity will be implemented.",
                     "placeHolder": "[Free text; limit response to 4000 characters (approx. 650 words)]"
+                }
+            },
+            {
+                "template": "monitoringBaseline",
+                "model": {
+                    "baselineMethodHelpText": "Describe the project baseline (s) units of measure or data which will be used to report progress towards this project’s outcome and the monitoring design",
+                    "titleHelpText": "Describe the project baseline(s) units of measure or data which will be used to report progress towards this project’s outcomes and the monitoring design. Refer to the Regional Land Partnerships Evaluation Plan which provides guidance on baselines and the monitoring indicators for each outcome. Note, other monitoring indicators can also be used."
                 }
             },
             {
@@ -139,6 +127,7 @@ var projectConfig = {
                 "template": "serviceTargets",
                 "model": {
                     "showTargetDate": true,
+                    "totalHelpText": "The overall total of Project Activities to be delivered during the project delivery period. This total is not necessarily the sum of the minimum annual targets set out for the activities.",
                     "title": "Activities and Targets Table",
                     "serviceName": "Activities"
                 }
@@ -164,6 +153,256 @@ var projectConfig = {
             }
         ],
         "excludes": [],
+        "programServiceConfig": {
+            "serviceFormName": "Priority Threatened Species Progress Report",
+            "programServices": [
+                {
+                    "serviceTargets": [
+                        "0df7c177-2864-4a25-b420-2cf3c45ce749"
+                    ],
+                    "serviceId": 1
+                },
+                {
+                    "serviceTargets": [
+                        "69deaaf9-cdc2-439a-b684-4cffdc7f224e"
+                    ],
+                    "serviceId": 2
+                },
+                {
+                    "serviceTargets": [
+                        "1f8161bc-908b-4ec8-ab7f-edac973a657d",
+                        "88908921-1248-4a7c-b185-51c625c737e3",
+                        "26a8213e-1770-4dc4-8f99-7e6302197504",
+                        "15a49c6f-2177-4183-9955-c7e487970171",
+                        "fe9f1a6c-e614-489a-80fa-4d6d76f1cf95",
+                        "f7089b5b-333f-4f33-b0df-f7ef88e9f683"
+                    ],
+                    "serviceId": 3
+                },
+                {
+                    "serviceTargets": [
+                        "aa0c6b29-285e-4344-987e-dfeaf1d95648",
+                        "c464b652-be5e-4658-b62f-02bf1a80bcf8",
+                        "a901232d-8244-40dd-9bb7-ff9e4e9dbeac"
+                    ],
+                    "serviceId": 4
+                },
+                {
+                    "serviceTargets": [
+                        "55d76c03-c89d-40fe-867b-93f7a48ff9c1",
+                        "3cbf653f-f74c-4066-81d2-e3f78268185c",
+                        "3855d565-3b77-497b-90af-addb271aa598",
+                        "5dbfb32a-5933-4d8a-9937-41f350fb5f75"
+                    ],
+                    "serviceId": 5
+                },
+                {
+                    "serviceTargets": [
+                        "d97037d2-7ee4-429b-bd26-cdcc5a269d9d",
+                        "e48faf01-72eb-479c-be9b-d2d71d254fa4"
+                    ],
+                    "serviceId": 6
+                },
+                {
+                    "serviceTargets": [
+                        "482bdf4e-6f7a-4bdf-80d5-d619ac7cdf50",
+                        "2ef32f94-14f1-4878-9eb7-c115fa18ce25"
+                    ],
+                    "serviceId": 7
+                },
+                {
+                    "serviceTargets": [
+                        "7709de92-0f85-490b-bc5f-2748b3db42c2",
+                        "8025b157-44d7-4283-bc1c-f40fb9b99501",
+                        "0ec5fd50-13e2-4bde-8e01-5955e7145cae"
+                    ],
+                    "serviceId": 8
+                },
+                {
+                    "serviceTargets": [
+                        "46925c6c-e222-4f6a-8553-c69929929d10",
+                        "757d6c9e-ec24-486f-a128-acc9bfb87830",
+                        "ffa44bad-209d-414a-bc96-e8ca3c96092f"
+                    ],
+                    "serviceId": 9
+                },
+                {
+                    "serviceTargets": [
+                        "edb6e94a-d781-447c-8792-5e06e5c912a8",
+                        "a3afea6e-711c-4ef2-bb20-6d2630b7ee93"
+                    ],
+                    "serviceId": 10
+                },
+                {
+                    "serviceTargets": [
+                        "607e2cd4-d7c5-4d5b-867f-c2c8e7b62948",
+                        "b7c067e3-6ae7-4e76-809a-312165b75f94"
+                    ],
+                    "serviceId": 11
+                },
+                {
+                    "serviceTargets": [
+                        "d1c10295-05e5-4265-a5f1-8a5683af2efe"
+                    ],
+                    "serviceId": 12
+                },
+                {
+                    "serviceTargets": [
+                        "011a161f-7275-4b5e-986e-3fe4640d0265",
+                        "3e402423-3e0b-4549-9e09-2b71329ea069"
+                    ],
+                    "serviceId": 13
+                },
+                {
+                    "serviceTargets": [
+                        "c2dc6f91-ccb1-412e-99d0-a842a4ac4b03"
+                    ],
+                    "serviceId": 14
+                },
+                {
+                    "serviceTargets": [
+                        "def4e2af-dcad-4a15-8336-3765e6671f08",
+                        "cf3ccbf5-d031-4a22-a746-961cdefa7318"
+                    ],
+                    "serviceId": 15
+                },
+                {
+                    "serviceTargets": [
+                        "c46842b6-d7b6-4917-b56f-f1b0594663fa",
+                        "ab822db5-ed79-47af-badc-5a3772dab87d"
+                    ],
+                    "serviceId": 16
+                },
+                {
+                    "serviceTargets": [
+                        "2d877a91-6312-4c44-9ae1-2494ea3e43db"
+                    ],
+                    "serviceId": 17
+                },
+                {
+                    "serviceTargets": [
+                        "d4ba13a1-00c8-4e7f-8463-36b6ea37eee6",
+                        "01ee5719-e814-43ce-a1b1-4e26063b5a6c"
+                    ],
+                    "serviceId": 18
+                },
+                {
+                    "serviceTargets": [
+                        "4bcab901-879a-402d-83f3-01528c6c86a5"
+                    ],
+                    "serviceId": 19
+                },
+                {
+                    "serviceTargets": [
+                        "45994b98-21f1-4927-a03e-3d940ac75116"
+                    ],
+                    "serviceId": 20
+                },
+                {
+                    "serviceTargets": [
+                        "6eaa061c-b77b-4440-8e8f-7ebaa2ff6207"
+                    ],
+                    "serviceId": 21
+                },
+                {
+                    "serviceTargets": [
+                        "0e887410-a3c5-49ca-a6f5-0f2f6fae30db"
+                    ],
+                    "serviceId": 22
+                },
+                {
+                    "serviceTargets": [
+                        "725d9365-0889-4355-8a7f-a21ef260c468",
+                        "996e3dc7-1376-47ad-a941-648cbae246b4"
+                    ],
+                    "serviceId": 23
+                },
+                {
+                    "serviceTargets": [
+                        "0f11a699-6063-4e91-96ca-53e45cf26b80",
+                        "1144fc3d-4d31-42bd-b9fb-ab5f91db37ca"
+                    ],
+                    "serviceId": 24
+                },
+                {
+                    "serviceTargets": [
+                        "8a5dac4a-0bef-431c-b857-2085eca9ae7c",
+                        "3c2c4aaa-fd5f-43d8-a72f-3567e6dea6f4"
+                    ],
+                    "serviceId": 25
+                },
+                {
+                    "serviceTargets": [
+                        "ed30b80b-7bb9-4c04-9949-093df64d124c",
+                        "3d4f1932-7a5b-45d6-ae68-d0571860ea94"
+                    ],
+                    "serviceId": 26
+                },
+                {
+                    "serviceTargets": [
+                        "a516c78d-740f-463b-a1ce-5b02b8c82dd3",
+                        "4cbcb2b5-45cd-42dc-96bf-a9a181a4865b",
+                        "fbc45154-1d60-4f5e-a484-fdff514f9d51",
+                        "85191c99-f56d-46e6-9311-a58c1f37965d"
+                    ],
+                    "serviceId": 27
+                },
+                {
+                    "serviceTargets": [
+                        "6ab3298e-c24b-49d8-9f86-441e71858b6a",
+                        "f23f9fb0-99ec-4fbf-ade3-b6581fe25dcf",
+                        "fd77b1b1-8234-4d06-8a02-aea6f4abb01d",
+                        "f38fbd9e-d208-4750-96ce-3c032ad37684"
+                    ],
+                    "serviceId": 28
+                },
+                {
+                    "serviceTargets": [
+                        "4f747371-fa5f-4200-ae37-6cd59d268fe8"
+                    ],
+                    "serviceId": 29
+                },
+                {
+                    "serviceTargets": [
+                        "685d61e9-2ebd-4198-a83a-ac7a2fc1477a"
+                    ],
+                    "serviceId": 30
+                },
+                {
+                    "serviceTargets": [
+                        "91387f2b-258d-4325-aa60-828d1acf6ac6"
+                    ],
+                    "serviceId": 31
+                },
+                {
+                    "serviceTargets": [
+                        "ba3d0a20-1e4d-404a-9907-b95239499c2f",
+                        "aa92f559-6260-4947-a714-ae6b80776b47"
+                    ],
+                    "serviceId": 32
+                },
+                {
+                    "serviceTargets": [
+                        "28dd9736-b66a-4ab4-9111-504d5cffba88",
+                        "4670a4ba-62bb-401c-a7ed-4fbd8dc5999c"
+                    ],
+                    "serviceId": 33
+                },
+                {
+                    "serviceTargets": [
+                        "0f9ef068-b2f9-4e6f-9ab5-521857b036f4"
+                    ],
+                    "serviceId": 34
+                },
+                {
+                    "serviceTargets": [
+                        "dea1ff8b-f4eb-4987-8073-500bbbf97fcd",
+                        "d48e05f4-a1cb-40e6-a4a3-bafa86b137f0"
+                    ],
+                    "serviceId": 35
+                }
+            ]
+        },
         "visibility": "public",
         "organisationRelationship": "Grantee",
         "excludeFinancialYearData": true,
@@ -181,6 +420,20 @@ var projectConfig = {
         ],
         "projectReports": [
             {
+                "reportType": "Activity",
+                "firstReportingPeriodEnd": "2023-12-31T13:00:00Z",
+                "reportDescriptionFormat": "Progress Report %1d",
+                "reportNameFormat": "Progress Report %1d",
+                "reportingPeriodInMonths": 6,
+                "description": "",
+                "minimumReportDurationInDays": 3,
+                "label": "Semester",
+                "category": "Progress Reports",
+                "activityType": "Priority Threatened Species Progress Report",
+                "reportsAlignedToCalendar": true,
+                "canSubmitDuringReportingPeriod": true
+            },
+            {
                 "reportType": "Single",
                 "reportDescriptionFormat": "Final Report",
                 "reportNameFormat": "Final Report",
@@ -191,7 +444,7 @@ var projectConfig = {
                 "label": "Final Report",
                 "category": "Final Report",
                 "reportsAlignedToCalendar": false,
-                "activityType": "Final Report",
+                "activityType": "Emergency Actions Threatened Species Final Report",
                 "alignToOwnerStart": true
             }
         ],
@@ -269,6 +522,7 @@ var projectConfig = {
             41
         ]
     },
+
     priorities: [
         {
             "category": "Birds",
@@ -673,10 +927,473 @@ var projectConfig = {
         {
             "category": "Plants",
             "priority": "Wood Well Spyridium Spyridium fontis-woodii "
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Australasian Bittern Botaurus poiciloptilus"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Black-eared Miner Manorina melanotis"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Carnaby's Cockatoo Calyptorhynchus latirostris"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Christmas Island Goshawk Accipiter hiogaster natalis"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Eastern Curlew Numenius madagascariensis"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Golden-shouldered Parrot, Alwal Psephotus chrysopterygius"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Hooded Plover (eastern) Thinornis cucullatus cucullatus"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "King Island Brown Thornbill Acanthiza pusilla archibaldi"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Malleefowl Leipoa ocellata"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Night Parrot Pezoporus occidentalis"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Norfolk Island Green Parrot Cyanoramphus cookii"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Orange-bellied Parrot Neophema chrysogaster"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Plains-wanderer Pedionomus torquatus"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Princess Parrot Polytelis alexandrae"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Red Goshawk Erythrotriorchis radiatus"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Red-tailed Black Cockatoo (SE) Calyptorhynchus banksii graptogyne"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Regent Honeyeater Anthochaera phrygia"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Swift Parrot Lathamus discolor"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Western Ground Parrot, Kyloring Pezoporus flaviventris"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "White-throated Grasswren, Yirlinkirrkirr Amytornis woodwardi"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "King Island Scrubtit Acanthornis magna greeniana"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Noisy Scrub-bird Atrichornis clamosus"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Australian Sea-lion Neophoca cinerea"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Brush-tailed Rock-wallaby Petrogale penicillata"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Central Rock-rat Antina Zyzomys pedunculatus"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Chuditch, Western Quoll Dasyurus geoffroii"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Eastern Quoll Dasyurus viverrinus"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Gilbert's Potoroo Ngilkat Potorous gilbertii"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Greater Bilby Macrotis lagotis"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Kangaroo Island Echidna Tachyglossus aculeatus multiaculeatus"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Koala Phascolarctos cinereus"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Leadbeater’s Possum Gymnobelideus leadbeateri"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Mountain Pygmy-possum Burramys parvus"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "New Holland Mouse, Pookila Pseudomys novaehollandiae"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Northern Brushtail Possum Trichosurus vulpecula arnhemensis"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Northern Hairy-nosed Wombat, Yaminon Lasiorhinus krefftii"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Northern Hopping-mouse, Woorrentinta Notomys aquilo"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Northern Quoll Dasyurus hallucatus"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Numbat Myrmecobius fasciatus"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Quokka Setonix brachyurus"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Spectacled Flying-fox Pteropus conspicillatus"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Western Ringtail Possum Pseudocheirus occidentalis"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Freshwater Sawfish Pristis pristis"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Grey Nurse Shark (eastern) Carcharias taurus"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Maugean Skate Zearaja maugeana"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Murray Hardyhead Craterocephalus fluviatilis"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Red Handfish Thymichthys politus"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Redfin Blue-eye Scaturiginichthys vermeilipinnis"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Stocky Galaxias Galaxias tantangara"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Swan Galaxias Galaxias fontanus"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "White's Seahorse Hippocampus whitei"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Growling Grass Frog, Southern Bell Frog Litoria raniformis"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Kroombit Tinker Frog Taudactylus pleione"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Southern Corroboree Frog Pseudophryne corroboree"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Mountain Frog Philoria kundagungan"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Mountain-top Nursery-frog Cophixalus monticola"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "White-bellied Frog Anstisia alba"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Arnhem Land Gorges Skink Bellatorias obiri"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Bellinger River Snapping Turtle Wollumbinia georgesi"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Collared Delma, Adorned Delma Delma torquata"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Great Desert Skink, Tjakura, Warrarna, Mulyamiji Liopholis kintorei"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Green Turtle Chelonia mydas"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Olive Ridley Turtle Lepidochelys olivacea"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Pygmy Blue-tongue Lizard Tiliqua adelaidensis"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Short-nosed Seasnake Aipysurus apraefrontalis"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Yinnietharra Rock-dragon Ctenophorus yinnietharra"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Canberra Grassland Earless Dragon Tympanocryptis lineata"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Western Swamp Tortoise Pseudemydura umbrina"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Ammonite Snail Ammoniropa vigens"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Cauliflower Soft Coral Dendronephthya australis"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Eltham Copper Butterfly Paralucia pyrodiscus lucida"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Giant Gippsland Earthworm Megascolides australis"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Lord Howe Island Phasmid Dryococelus australis"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Margaret River Burrowing Crayfish Engaewa pseudoreducta"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Mount Lidgbird Charopid Land Snail Pseudocharopa ledgbirdi"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Pink Underwing Moth Phyllodes imperialis smithersi"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Tasmanian Giant Freshwater Crayfish Astacopsis gouldi"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Glenelg Freshwater Mussel Hyridella glenelgensis"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Kangaroo Island Assassin Spider Zephyrarchaea austini"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Adamson’s Blown-grass Lachnagrostis adamsonii"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Angle-stemmed Myrtle Gossia gonoclada"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Arckaringa Daisy Olearia arckaringensis"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Border Ranges Lined Fern Antrophyum austroqueenslandicum"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Bulberin Nut Macadamia jansenii "
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Carrington Falls Pomaderris Pomaderris walshii"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Davies' Waxflower Phebalium daviesii"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Eremophila subangustifolia"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Foote's Grevillea Grevillea calliantha"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Forked Spyridium Spyridium furculentum"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Giant Andersonia Andersonia axilliflora"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Graveside Leek-orchid Prasophyllum taphanyx"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Imlay Mallee Eucalyptus imlayensis"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "King Blue-grass Dichanthium queenslandicum"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Lax Leek Orchid Prasophyllum laxum"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Little Mountain Palm Lepidorrhachis mooreana"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "MacDonnell Ranges Cycad Macrozamia macdonnellii"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Native Guava Rhodomyrtus psidioides"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Pimelea cremnophila"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Pimelea venosa"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Scaly-butt Mallee Eucalyptus leprophloia"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Small-flowered Snottygobble Persoonia micranthera"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Smooth Davidson's Plum Davidsonia johnsonii"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Stiff Groundsel Senecio behrianus"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Stirling Range Dryandra Banksia montana"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Tangled Wattle Acacia volubilis"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Waddy, Waddi, Waddy-wood, Birdsville Wattle Acacia peuce"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Wollemi Pine Wollemia nobilis"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Wongan Eriostemon Philotheca wonganensis"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Wood Well Spyridium Spyridium fontis-woodii"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Narrow-leaf Eremophila Eremophila subangustifolia"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Gorge Rice-flower, Pimelelea cremnophila"
+        },
+        {
+            "category": "Plants and animals extinction prevention",
+            "priority": "Bolivia Hill Rice-flower, Pimelea venosa"
         }
     ]
 };
 
+var outcomes = [
+    {
+        "priorities": [
+            {
+                "category": "Plants and animals extinction prevention"
+            }
+        ],
+        "targeted": true,
+        "shortDescription": "Prevent new extinctions of plants and animals",
+        "type": "primary",
+        "category": "environment",
+        "supportsMultiplePrioritiesAsSecondary": false,
+        "outcome": "Prevent new extinctions of plants and animals"
+    }
+]
 
 
 subprograms.forEach(function (subprogram){
