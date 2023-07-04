@@ -207,7 +207,7 @@ OrganisationPageViewModel = function (props, options) {
         // We want to put the reports at the front of the configuration so the (for some organisations) existing
         // performance management reports are at the end.
         for (var i=0; i<self.availableReportCategories.length; i++) {
-            currentConfig.organisationReports.splice(0, 0, self.availableReportCategories[i]);
+            currentConfig.organisationReports.splice(i, 0, self.availableReportCategories[i]);
         }
         self.config(vkbeautify.json(currentConfig));
         setStartAndEndDateDefaults();

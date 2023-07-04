@@ -52,9 +52,17 @@ while (reports.hasNext()) {
         organisation.config = {};
     }
     if (!organisation.config.organisationReports) {
-        organisation.config.organisationReports = reportConfig;
+        organisation.config.organisationReports = [];
     }
-    if (!organisation.config.organisationReports.find(function(report) {return report.category == PERFORMANCE_MANAGEMENT_FRAMEWORK_CATEGORY})) {
+    let found = false;
+    for (let i=0; i<organisation.config.organisationReports.length; i++) {
+        if  (organisation.config.organisationReports[i].category == PERFORMANCE_MANAGEMENT_FRAMEWORK_CATEGORY) {
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
         organisation.config.organisationReports.push({category:PERFORMANCE_MANAGEMENT_FRAMEWORK_CATEGORY, adhoc:true});
 
         db.organisation.replaceOne({organisationId:organisation.organisationId}, organisation);
