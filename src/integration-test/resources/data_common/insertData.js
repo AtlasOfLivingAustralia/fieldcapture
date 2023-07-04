@@ -12,6 +12,7 @@ load('../data/scoreDefaults.js');
 load('../data/activityDefaults.js');
 load('../data/outputDefaults.js');
 load('../data_common/createServices.js');
+load('../data/organisation.js');
 
 
 function createProject(projectProperties) {
@@ -38,7 +39,10 @@ function createOrganisation(organisationProperties){
     if (!organisationProperties.hubId) {
         organisationProperties.hubId = "merit";
     }
-    db.organisation.insert(organisationProperties)
+
+    var org = orgDefaults.create()
+    assign(organisationProperties,org)
+    db.organisation.insert(org)
 }
 
 function createMu(muProperties) {

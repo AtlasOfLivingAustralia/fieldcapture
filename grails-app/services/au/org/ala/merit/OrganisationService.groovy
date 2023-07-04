@@ -1,5 +1,7 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.config.ReportConfig
+import au.org.ala.merit.reports.ReportOwner
 import org.joda.time.DateTime
 import org.joda.time.DateTimeConstants
 import org.joda.time.DateTimeZone
@@ -47,52 +49,40 @@ class OrganisationService {
         organisation
     }
 
-    def getByName(orgName) {
-        // The result of the service call will be a JSONArray if it's successful
-        return list().list.find({ it.name == orgName })
-    }
-
-    def getNameFromId(orgId) {
-        // The result of the service call will be a JSONArray if it's successful
-        return orgId ? list().list.find({ it.organisationId == orgId })?.name : ''
-    }
-
     def list() {
         metadataService.organisationList()
     }
-    Map getOrgByAbn(String abnNumber){
+
+    Map findOrgByAbn(String abnNumber) {
         return list().list.find({ it.abn == abnNumber }) as Map
     }
 
-    String checkExistingAbnNumber(String organisationId, String abnNumber){
+    String checkExistingAbnNumber(String organisationId, String abnNumber) {
         String error = null
-        boolean creating = !organisationId
+        // We are allowing a blank ABN for now, this rule may change
+        if (abnNumber) {
+            Map organisation = findOrgByAbn(abnNumber)
 
-        Map orgList = getOrgByAbn(abnNumber)
-
-        if (orgList == null) {
-            error
-        }else{
-            if (!creating){
-                if(orgList.organisationId == organisationId && orgList.abn == abnNumber) {
-                    error
-                }else if (orgList.organisationId != organisationId && orgList.abn == abnNumber) {
-                    error = "Abn Number is not unique"
-                }
-            }else{
-                if (orgList.abn == abnNumber){
-                    error = "Abn Number is not unique"
-                }
+            if (organisation && organisation.organisationId != organisationId) {
+                error = "Abn Number is not unique"
             }
         }
+
         return error
     }
 
     Map update(String id, Map organisation) {
         Map result = [:]
         String abn = organisation.abn
-        String orgId = organisation.organisationId
-        def error = checkExistingAbnNumber(orgId,abn)
+
+        String error = null
+        if (organisation.organisationId && organisation.organisationId != id) {
+            // We don't want to update the organisationId
+            error = 'Invalid organisationId supplied'
+        }
+        else {
+            error = checkExistingAbnNumber(id,abn)
+        }
         if (error) {
             result.error = error
             result.detail = error
@@ -101,6 +91,7 @@ class OrganisationService {
             if (!id) {
                 // Assign the MERIT hubId to the organisation when creating a new organisation
                 organisation.hubId = SettingService.hubConfig?.hubId
+                id = ''
             }
             def url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}organisation/$id"
             result = webService.doPost(url, organisation)
@@ -111,6 +102,28 @@ class OrganisationService {
         return result
     }
 
+    void regenerateReports(String id, List<String> organisationReportCategories = null) {
+        Map organisation = get(id)
+
+        regenerateOrganisationReports(organisation, organisationReportCategories)
+    }
+
+    private void regenerateOrganisationReports(Map organisation, List<String> reportCategories = null) {
+
+        List organisationReportConfig = organisation.config?.organisationReports
+        ReportOwner owner = new ReportOwner(
+            id:[organisationId:organisation.organisationId],
+            name:organisation.name
+        )
+        List toRegenerate = organisationReportConfig.findAll{it.category in reportCategories}
+        toRegenerate?.each {
+            ReportConfig reportConfig = new ReportConfig(it)
+            if (!reportConfig.adhoc) {
+                List relevantReports = organisation.reports?.findAll{it.category == reportConfig.category}
+                reportService.regenerateReports(relevantReports, reportConfig, owner)
+            }
+        }
+    }
 
     def isUserAdminForOrganisation(organisationId) {
         def userIsAdmin

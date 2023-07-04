@@ -7,7 +7,7 @@
     var fcConfig = {
         organisationViewUrl: "${createLink(controller:'organisation', action:'index', id:organisation.organisationId)}",
         saveAnnouncementsUrl: "${createLink(controller:'organisation', action:'saveAnnouncements', id:organisation.organisationId, params:[format:'json'])}",
-        bulkUploadAnnouncementsUrl: "${createLink(controller: 'organisation', action:'bulkUploadAnnouncements', params:[format:'json'])}",
+        bulkUploadAnnouncementsUrl: "${createLink(controller: 'organisation', id:organisation.organisationId, action:'bulkUploadAnnouncements', params:[format:'json'])}",
         returnTo: "${params.returnTo}"
         },
         here = document.location.href;

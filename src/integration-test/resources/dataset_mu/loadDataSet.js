@@ -86,7 +86,10 @@ db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entity
 db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entityId:'test_mu_2', userId:'1', accessLevel:'admin'});
 db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entityId:'test_mu_2', userId:'4', accessLevel:'editor'});
 db.userPermission.insert({entityType:'au.org.ala.ecodata.ManagementUnit', entityId:'test_mu_2', userId:'1001', accessLevel:'caseManager'});
+
 db.userPermission.insert({entityType:'au.org.ala.ecodata.Organisation', entityId:'test_organisation', userId:'1', accessLevel:'admin'});
+db.userPermission.insert({entityType:'au.org.ala.ecodata.Organisation', entityId:'test_organisation', userId:'4', accessLevel:'editor'});
+db.userPermission.insert({entityType:'au.org.ala.ecodata.Organisation', entityId:'test_organisation', userId:'1001', accessLevel:'caseManager'});
 
 
 
@@ -215,11 +218,60 @@ var activity1 = {
 db.report.insert(report1);
 db.activity.insert(activity1);
 
+createProject({name:'project org 1', projectId:"project_org1", programId:'test_program',organisationId:"test_organisation",siteId:'test_site_1', grantId:"RLP-Test-Program-Project-Org-1",
+    blog:[blog1], custom:{details:meriPlan}});
+
+var orgReport1 = {
+    "organisationId" : "test_organisation",
+    "activityType" : "RLP Core Services report",
+    "category": "Regional Capacity Services Reporting",
+    "type" : "Administrative",
+    "description" : "Core services report 1 for Test Organisation",
+    "name" : "Core services report 1",
+    "reportId" : "a02a527a-4377-40f0-86de-77ceabe6dddd",
+    "activityId" : "xyz254bf-b4fe-481c-9324-6d65d9c7c0d8",
+    "dateCreated" : ISODate("2022-06-01T01:13:26.944Z"),
+    "submissionDate" : ISODate("2022-07-15T14:00:00.000Z"),
+    "lastUpdated" : ISODate("2022-06-02T05:38:41.463Z"),
+    "fromDate" : ISODate("2023-01-01T14:00:00.000Z"),
+    "toDate" : ISODate("2023-03-31T14:00:00.000Z"),
+    "publicationStatus" : "unpublished",
+    "status" : "active",
+    "progress" : "started"
+}
+
+var activity2 = {
+    "activityId" : "xyz254bf-b4fe-481c-9324-6d65d9c7c0d8",
+    "assessment" : false,
+    "dateCreated" : ISODate("2022-06-01T14:00:00.000Z"),
+    "description" : "Core services report 1",
+    "endDate" : ISODate("2023-03-31T14:00:00.000Z"),
+    "lastUpdated" : ISODate("2022-09-04T05:38:41.470Z"),
+    "plannedEndDate" : ISODate("2022-12-31T14:00:00.000Z"),
+    "plannedStartDate" : ISODate("2022-06-30T14:00:00.000Z"),
+    "progress" : "planned",
+    "startDate" : ISODate("2023-01-01T14:00:00.000Z"),
+    "status" : "active",
+    "type" : "RLP Core Services report",
+    "formVersion" : NumberInt(1),
+    "projectStage" : "",
+    "siteId" : "",
+    "mainTheme" : ""
+}
+
+
+
+db.report.insert(orgReport1);
+db.activity.insert(activity2);
+
 addSetting('meritfielddata.rlp.cs_report.submitted.emailSubject', 'Report submitted subject');
 addSetting('meritfielddata.rlp.cs_report.submitted.emailBody', 'Report submitted body');
 addSetting('meritfielddata.rlp.cs_report.approved.emailSubject', 'Report approved subject');
 addSetting('meritfielddata.rlp.cs_report.approved.emailBody', 'Report approved body');
 addSetting('meritfielddata.rlp.cs_report.returned.emailSubject', 'Report returned subject');
 addSetting('meritfielddata.rlp.cs_report.returned.emailBody', 'Report returned body');
+
+
+
 
 

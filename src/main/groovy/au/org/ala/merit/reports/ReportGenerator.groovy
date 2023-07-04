@@ -44,7 +44,7 @@ class ReportGenerator {
         // We truncate the time to midnight to account for the fact that some older projects were
         // loaded at UTC midnight (newer ones use AEST/ADST) which causes issues with the new requirement the reports must be
         // able to be generated to a single day precision.
-        DateTime endDate = reportOwner.periodEnd.withZone(DateTimeZone.default).withTimeAtStartOfDay()
+        DateTime endDate = reportConfig.getPeriodEnd(reportOwner).withZone(DateTimeZone.default).withTimeAtStartOfDay()
 
         List<Map> reports = null
         if (reportConfig.shouldGenerateReports(reportOwner)) {
@@ -55,7 +55,7 @@ class ReportGenerator {
             } else {
                 reports = generateSingleReport(reportOwner, endDate, reportConfig, period, existingReports)
             }
-            alignEndDates(reports, reportOwner.periodEnd, reportConfig)
+            alignEndDates(reports, reportConfig.getPeriodEnd(reportOwner), reportConfig)
         }
         reports
     }
@@ -69,7 +69,7 @@ class ReportGenerator {
     private List<Map> generateSingleReport(ReportOwner reportOwner, DateTime endDate, ReportConfig reportConfig, Period period, List existingReports) {
         List<Map> reports = []
         // Single reports are aligned with the owner dates.
-        DateTime ownerStart = reportOwner.periodStart.withZone(DateTimeZone.default)
+        DateTime ownerStart = reportConfig.getPeriodStart(reportOwner).withZone(DateTimeZone.default)
         DateTime end
         DateTime start
 
@@ -179,7 +179,7 @@ class ReportGenerator {
     private List<Map> generateNonPeriodicReportsByDate(DateTime latestApprovedReportPeriodEnd, ReportOwner reportOwner, ReportConfig reportConfig, DateTime endDate, int startingSequenceNo) {
         int sequenceNo = startingSequenceNo
         List<Map> reports = []
-        DateTime startConstraint = latestApprovedReportPeriodEnd && latestApprovedReportPeriodEnd > reportOwner.periodStart ? latestApprovedReportPeriodEnd : reportOwner.periodStart
+        DateTime startConstraint = latestApprovedReportPeriodEnd && latestApprovedReportPeriodEnd > reportConfig.getPeriodStart(reportOwner) ? latestApprovedReportPeriodEnd : reportConfig.getPeriodStart(reportOwner)
         startConstraint = startConstraint.withZone(DateTimeZone.default)
 
         List<DateTime> reportEndDates = reportConfig.reportEndDates.collect { it.withZone(DateTimeZone.default) }
@@ -267,7 +267,7 @@ class ReportGenerator {
      */
     private Interval determineFirstReportInterval(ReportConfig reportConfig, ReportOwner reportOwner, DateTime periodStart) {
 
-        DateTime startConstraint = periodStart && periodStart > reportOwner.periodStart ? periodStart : reportOwner.periodStart
+        DateTime startConstraint = periodStart && periodStart > reportConfig.getPeriodStart(reportOwner) ? periodStart : reportConfig.getPeriodStart(reportOwner)
         startConstraint = startConstraint.withZone(DateTimeZone.default)
 
         Period period = reportConfig.getReportingPeriod()
