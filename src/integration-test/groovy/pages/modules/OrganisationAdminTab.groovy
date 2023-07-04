@@ -23,6 +23,7 @@ class OrganisationAdminTab extends Module{
     }
 
     def viewReportingSection() {
+        waitFor{ reportingSectionTab.displayed }
         reportingSectionTab.click()
         waitFor {
             reportingSection.displayed

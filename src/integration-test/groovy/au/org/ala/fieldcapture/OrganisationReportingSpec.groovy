@@ -2,6 +2,8 @@ package au.org.ala.fieldcapture
 
 import com.icegreen.greenmail.util.GreenMail
 import com.icegreen.greenmail.util.GreenMailUtil
+import geb.module.FormElement
+import pages.AdminTools
 import pages.Organisation
 import pages.ReportPage
 import pages.ViewReportPage
@@ -19,6 +21,10 @@ class OrganisationReportingSpec extends StubbedCasSpec {
     def setupSpec(){
         useDataSet("dataset_mu")
         greenMail.start()
+
+        loginAsAlaAdmin(browser)
+        to AdminTools
+        clearMetadata()
     }
 
     def cleanup() {
@@ -43,7 +49,7 @@ class OrganisationReportingSpec extends StubbedCasSpec {
 
     }
 
-    def "We can specify the core services reporting frequency"() {
+    def "We can enable reporting for an organisation and specify dates"() {
         setup:
         loginAsMeritAdmin(browser)
 
@@ -53,19 +59,34 @@ class OrganisationReportingSpec extends StubbedCasSpec {
         then:
         waitFor 60, {at Organisation}
 
-        waitFor 60, {
-            adminTab.click()
-        }
+        when:
+        openAdminTab()
+        def reportingSection = adminTabContent.viewReportingSection()
 
         then:
-        waitFor 20, { adminTabContent.displayed }
+        reportingSection.enableButton.module(FormElement).disabled
+        reportingSection.startDate.value() == '01-07-2023'
+        reportingSection.endDate.value() == '30-06-2028'
 
         when:
-        def reportingSection = adminTabContent.viewReportingSection()
-//        reportingSection.regionalCapacityServicesGroup = "Quarterly (First period ends 30 September 2023)"
-        reportingSection.regionalCapacityServicesGroup = "Quarterly - A (First period ends 31 March 2023)"
+        reportingSection.startDate.value('30-06-2027')
+        reportingSection.saveReportingConfiguration()
 
-        reportingSection.saveReportingGroups()
+        then:
+        waitFor 20,{
+            hasBeenReloaded()
+        }
+
+        when:
+        openAdminTab()
+        reportingSection = adminTabContent.viewReportingSection()
+
+        then:
+        reportingSection.startDate.value() == '30-06-2027'
+
+        when: "We regenerate the annual reports"
+        reportingSection.clickEnableRegeneration(1)
+        reportingSection.generateReports()
 
         then:
         waitFor 20,{
@@ -211,41 +232,32 @@ class OrganisationReportingSpec extends StubbedCasSpec {
 
         when: "Display the reporting tab, then view the approved report"
         to Organisation, orgId
+        displayReportsTab()
 
-        waitFor {
-            reportingTab.click()
-        }
-
-        then:
-        waitFor { reportsTabPane.displayed }
-
-        when: "The first report is marked as submitted"
+        then: "The first report is marked as submitted"
         reportsTabPane.reports[0].isSubmitted()
 
-        then:"The not required button is not visible"
-        !reportsTabPane.reports[1].notRequired()
+        and:"The not required button is not visible"
+        !reportsTabPane.reports[0].notRequired()
 
     }
 
-    def "The not required button is visible to a Site Admin user"() {
+    def "The withdraw approval button is visible to a Site Admin user"() {
         setup:
         loginAsMeritAdmin(browser)
 
         when: "Display the reporting tab, then view the approved report"
         to Organisation, orgId
+        displayReportsTab()
 
-        waitFor {
-            reportingTab.click()
-        }
-
-        then:
-        waitFor { reportsTabPane.displayed }
-
-        when: "The first report is marked as submitted"
+        then: "The first report is marked as submitted"
         reportsTabPane.reports[0].isSubmitted()
 
-        then:"The not required button is not visible"
-        reportsTabPane.reports[1].notRequired()
+        and:"The withdraw approval button is visible"
+        reportsTabPane.reports[0].hasWithdrawApprovalButton()
+
+        and:"The not required button is not visible"
+        !reportsTabPane.reports[0].notRequired()
 
     }
 

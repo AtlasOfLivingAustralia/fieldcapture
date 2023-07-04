@@ -2,8 +2,8 @@
     <div class="nav flex-column nav-pills col-3">
         <a class="nav-link active" data-toggle="pill" href="#edit-program-details" id="edit-program-details-tab" role="tab">Edit</a>
         <a class="nav-link" data-toggle="pill" href="#organisation-permissions" id="permissions-tab" role="tab">Permissions</a>
-        <a class="nav-link" data-toggle="pill" href="#reporting-config" id="reporting-tab" role="tab">Reporting</a>
         <g:if test="${fc.userIsAlaOrFcAdmin()}">
+            <a class="nav-link" data-toggle="pill" href="#reporting-config" id="reporting-tab" role="tab">Reporting</a>
             <a class="nav-link" data-toggle="pill" href="#config" id="configuration-tab" role="tab">Configuration</a>
         </g:if>
     </div>
@@ -38,9 +38,18 @@
             <g:render template="/admin/permissionTable" model="[loadPermissionsUrl:loadPermissionsUrl, removeUserUrl:g.createLink(controller:'organisation', action:'removeUserWithRoleFromOrganisation'), entityId:organisation.organisationId, user:user]"/>
 
         </div>
+
+        <g:if test="${fc.userIsAlaOrFcAdmin()}">
         <div class="tab-pane" id="reporting-config">
             <form>
                 <h3>Reporting configuration</h3>
+                <div class="form-group">
+                    <div class="input-group">
+                        <button id="enable-reporting" class="btn btn-success" data-bind="enable:!isReportingEnabled() && availableReportCategories.length > 0, click:enableReporting">Enable Reporting</button>
+                    </div>
+                </div>
+
+
                 <div class="form-group">
                     <label for="start-date">Start date</label>
                     <div class="input-group">
@@ -54,28 +63,23 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="regional-capacity-services-group">Regional capacity services reporting group</label>
-                    <select class="form-control" id="regional-capacity-services-group" data-bind="value:coreServicesPeriod, options:coreServicesOptions, optionsText:'label', optionsValue:'label', optionsCaption:'Please select'" data-validation-engine="validate[required]"></select>
-                </div>
-
-                <button class="btn btn-primary" data-bind="click:saveReportingConfiguration">Save</button>
+                <button class="btn btn-primary" data-bind="enable:isReportingEnabled(), click:saveReportingConfiguration">Save</button>
 
             </form>
             <hr/>
             <form class="utilities">
                 <h3>Regenerate reports</h3>
-                <p>This may need to be done if the report configuration is edited.</p>
+                <p>This will need to be done after report configuration is edited.</p>
                 <h4>Organisation report categories</h4>
-                <ul class="list-unstyled" data-bind="foreach:organisationReportCategories">
-                    <li><label class="checkbox"><input type="checkbox" data-bind="value:$data, checked:$parent.selectedOrganisationReportCategories"> <span data-bind="text:$data"></span></label></li>
+                <ul class="categories-to-regenerate list-unstyled" data-bind="foreach:organisationReportCategories">
+                    <li><label class="checkbox"><input type="checkbox" data-bind="enable:!$data.adhoc, value:$data.category, checked:$parent.selectedOrganisationReportCategories"> <span data-bind="text:$data.category"></span></label></li>
                 </ul>
 
-                <button class="btn btn-success" data-bind="click:regenerateReportsByCategory">Regenerate reports</button>
+                <button id="generate-reports" class="btn btn-success" data-bind="enable:selectedOrganisationReportCategories().length, click:regenerateReportsByCategory">Regenerate reports</button>
             </form>
 
         </div>
-        <g:if test="${fc.userIsAlaOrFcAdmin()}">
+
             <div class="tab-pane" id="config">
                 <h4 style="display:inline-block">Organisation configuration</h4> <button class="btn btn-success float-right" data-bind="click:saveOrganisationConfiguration">Save Configuration</button>
 

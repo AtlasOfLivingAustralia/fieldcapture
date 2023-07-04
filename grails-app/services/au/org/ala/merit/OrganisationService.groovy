@@ -113,9 +113,7 @@ class OrganisationService {
         List organisationReportConfig = organisation.config?.organisationReports
         ReportOwner owner = new ReportOwner(
             id:[organisationId:organisation.organisationId],
-            name:organisation.name,
-            periodStart:organisation.startDate,
-            periodEnd:organisation.endDate
+            name:organisation.name
         )
         List toRegenerate = organisationReportConfig.findAll{it.category in reportCategories}
         toRegenerate?.each {

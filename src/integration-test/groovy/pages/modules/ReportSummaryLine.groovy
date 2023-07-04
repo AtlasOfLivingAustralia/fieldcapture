@@ -36,6 +36,10 @@ class ReportSummaryLine extends Module {
         cancelReport.displayed
     }
 
+    def hasWithdrawApprovalButton() {
+        returnButton.displayed
+    }
+
     def isSubmitted() {
         $('[data-bind*="approvalTemplate"]').displayed
     }

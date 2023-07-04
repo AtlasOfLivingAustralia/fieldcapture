@@ -19,6 +19,7 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
     def reportService = Mock(ReportService)
     def activityService = Mock(ActivityService)
     def siteService = Mock(SiteService)
+    def settingService = Mock(SettingService)
 
     String adminUserId = 'admin'
     String editorUserId = 'editor'
@@ -32,6 +33,7 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         controller.userService = userService
         controller.projectService = projectService
         controller.reportService = reportService
+        controller.settingService = settingService
     }
 
     def "only the organisation projects and sites should be viewable anonymously"() {

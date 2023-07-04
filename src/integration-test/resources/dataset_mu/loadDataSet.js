@@ -224,7 +224,7 @@ createProject({name:'project org 1', projectId:"project_org1", programId:'test_p
 var orgReport1 = {
     "organisationId" : "test_organisation",
     "activityType" : "RLP Core Services report",
-    "category" : "Core Services Reporting",
+    "category": "Regional Capacity Services Reporting",
     "type" : "Administrative",
     "description" : "Core services report 1 for Test Organisation",
     "name" : "Core services report 1",

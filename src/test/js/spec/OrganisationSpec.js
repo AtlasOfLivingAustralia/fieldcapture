@@ -8,6 +8,9 @@ describe("OrganisationViewModel Spec", function () {
                     console.log("OrgDetails Test: " + orgDetails);
                 }}
         }
+        if (!$.unblockUI) {
+            $.unblockUI = function() {};
+        }
     });
     afterAll(function() {
         delete window.fcConfig;
@@ -111,7 +114,8 @@ describe("OrganisationViewModel Spec", function () {
         });
 
 
-        spyOn(bootbox, 'alert');
+        spyOn(window, 'blockUIWithMessage').and.callFake(function () {});
+        spyOn($, 'unblockUI').and.callFake(function () {});
 
         var configFromJSONEditor = JSON.stringify([{excludes:[], config: 'Test config'}]);
         model.config(configFromJSONEditor);
@@ -124,7 +128,6 @@ describe("OrganisationViewModel Spec", function () {
             contentType: 'application/json'
         };
         expect($.ajax).toHaveBeenCalledWith(expected);
-        expect(bootbox.alert).toHaveBeenCalledWith("Organisation configuration saved");
 
     });
 

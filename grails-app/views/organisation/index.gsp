@@ -76,7 +76,11 @@
     $(function () {
 
         var organisation =<fc:modelAsJavascript model="${organisation}"/>;
-        var config = _.extend({reportingConfigSelector:'#reporting-config form'}, fcConfig);
+        var availableReportCategories = <fc:modelAsJavascript model="${content.admin?.availableReportCategories}"/>;
+        var config = _.extend({
+                reportingConfigSelector:'#reporting-config form',
+                availableReportCategories:availableReportCategories,
+            }, fcConfig);
         var organisationViewModel = new OrganisationPageViewModel(organisation, config);
 
         ko.applyBindings(organisationViewModel);
