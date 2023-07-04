@@ -336,7 +336,10 @@ function MERIPlan(project, projectService, config) {
         if (!_.isArray(protocols)) {
             protocols = [];
         }
-        protocols.push({label:'Other', value:'Other'});
+        // If the protocol list doesn't contain 'Other', add it.
+        if (!_.find(protocols, function(protocol) { return protocol.value.toLowerCase() == 'other'; })) {
+            protocols.push({label:'Other', value:'Other'});
+        }
         self.monitoringProtocols(protocols);
     });
 
