@@ -868,7 +868,8 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
         declarationModalSelector: '#unlockPlan',
         meriSubmissionDeclarationSelector: '#meriSubmissionDeclaration',
         editProjectStartDate: self.canEditStartDate,
-        externalIds: self.externalIds
+        externalIds: self.externalIds,
+        canModifyMeriPlan: config.canModifyMeriPlan
     });
     self.meriPlan = new MERIPlan(project, projectService, meriPlanConfig);
 

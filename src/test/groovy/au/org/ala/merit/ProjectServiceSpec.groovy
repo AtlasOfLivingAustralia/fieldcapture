@@ -231,6 +231,23 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         result.error == "Invalid plan status"
     }
 
+    def "A plan cannot be rejected a project manager if the program is configured to require a MERIT admin to return a plan"() {
+        given:
+        def projectId = 'project1'
+        def planStatus = ProjectService.PLAN_APPROVED
+        webService.getJson(_) >> [projectId:projectId, planStatus:planStatus]
+
+        when:
+        def result = service.rejectPlan(projectId)
+
+        then:
+        1 * projectConfigurationService.getProjectConfiguration(_) >> new ProgramConfig([requireMeritAdminToReturnMeriPlan:true])
+        userService.userIsAlaOrFcAdmin() >> false
+        result.error == 'Only MERIT admins can return MERI plans for this program'
+        0 * webService.doPost(_, _)
+    }
+
+
     def "an email should be sent when a plan is submitted"() {
         given:
         def projectId = 'project1'
@@ -313,10 +330,11 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         1 * emailService.sendEmail(_,_,_,_,_) >> {actualTemplate, p , roles, actualRole, sender -> results.actualEmailTemplate = actualTemplate; results.actualRole = actualRole}
 
         when:
+        projectConfigurationService.getProjectConfiguration(project) >> programConfig
         action(service, projectId)
 
         then:
-        1 * projectConfigurationService.getProjectConfiguration(project) >> programConfig
+
         1 * webService.doPost({it.endsWith("project/"+projectId)}, _) >> [resp:[status:'ok']]
         1 * webService.getJson({it.endsWith("permissions/getMembersForProject/"+projectId)}) >> projectRoles
         userService.getCurrentUserId() >> '1234'
@@ -1547,7 +1565,6 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
 
         result == ['1':1, '2':2, '3':0]
     }
-
 
     private Map setupActivityModelForFiltering(List services) {
         Map activityModel = [name:'output', outputs:[]]

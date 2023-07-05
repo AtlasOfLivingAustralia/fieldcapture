@@ -27,7 +27,10 @@
 <div class="required">
 	<div class="form-actions">
 		<b>Grant manager actions:</b>
-		<button type="button" data-bind="click: modifyPlan"  id="modify-plan" class="btn btn-sm btn-info">Modify MERI Plan</button>
+		<button type="button" data-bind="enable:canModifyPlan, click: modifyPlan"  id="modify-plan" class="btn btn-sm btn-info">Modify MERI Plan</button>
+		<!-- ko if:!canModifyPlan -->
+			<fc:iconHelp>This program requires a MERIT administrator to modify the MERI plan</fc:iconHelp>
+		<!-- /ko -->
 		<br/><br/>
 		<ul>
 			<li>"Modify MERI Plan" will allow project administrators to edit MERI plan information. </li>

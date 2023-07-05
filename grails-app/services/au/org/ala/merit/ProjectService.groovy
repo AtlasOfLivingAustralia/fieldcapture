@@ -461,8 +461,16 @@ class ProjectService  {
         externalIds?.find{it.idType in requiredIdTypes && it.externalId}
     }
 
+    boolean requiresMERITAdminToModifyPlan(Map project) {
+        ProgramConfig config = projectConfigurationService.getProjectConfiguration(project)
+        config.requireMeritAdminToReturnMeriPlan
+    }
+
     def rejectPlan(String projectId) {
         def project = get(projectId)
+        if (requiresMERITAdminToModifyPlan(project) && !userService.userIsAlaOrFcAdmin()) {
+            return [error: 'Only MERIT admins can return MERI plans for this program']
+        }
         if (project.planStatus in [PLAN_SUBMITTED, PLAN_APPROVED]) {
             def resp = update(projectId, [planStatus:PLAN_NOT_APPROVED])
             if (resp.resp && !resp.resp.error) {
