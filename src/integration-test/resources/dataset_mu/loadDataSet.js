@@ -170,8 +170,17 @@ createMu({name:'test mu <script>alert("MU")</script>', managementUnitId:"test_mu
 
 addSetting('meritfielddata.rlp.cs_report.submitted.emailSubject', 'Report submitted subject');
 addSetting('meritfielddata.rlp.cs_report.submitted.emailBody', 'Report submitted body');
-addSetting('meritfielddata.rlp.cs_report.submitted.emailSubject', 'Report approved subject');
-addSetting('meritfielddata.rlp.cs_report.submitted.emailBody', 'Report approved body');
+addSetting('meritfielddata.rlp.cs_report.approved.emailSubject', 'Report approved subject');
+addSetting('meritfielddata.rlp.cs_report.approved.emailBody', 'Report approved body');
+addSetting('meritfielddata.rlp.cs_report.returned.emailSubject', 'Report approved subject');
+addSetting('meritfielddata.rlp.cs_report.returned.emailBody', 'Report approved body');
+
+addSetting('meritorganisation_report.submitted.emailSubject', 'Organisation report submitted subject');
+addSetting('meritorganisation_report.submitted.emailBody', 'Organisation report submitted body');
+addSetting('meritorganisation_report.approved.emailSubject', 'Organisation report approved subject');
+addSetting('meritorganisation_report.approved.emailBody', 'Organisation report approved body');
+addSetting('meritorganisation_report.returned.emailSubject', 'Organisation report returned subject');
+addSetting('meritorganisation_report.returned.emailBody', 'Organisation report returned body');
 
 
 loadActivityForms();

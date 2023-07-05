@@ -9,6 +9,7 @@ import pages.ReportPage
 import pages.ViewReportPage
 import spock.lang.Shared
 
+import javax.mail.Message
 import javax.mail.internet.MimeMessage
 
 class OrganisationReportingSpec extends StubbedCasSpec {
@@ -20,19 +21,22 @@ class OrganisationReportingSpec extends StubbedCasSpec {
 
     def setupSpec(){
         useDataSet("dataset_mu")
-        greenMail.start()
 
         loginAsAlaAdmin(browser)
         to AdminTools
         clearMetadata()
     }
 
-    def cleanup() {
+    def cleanupSpec() {
         waitFor {
             logout(browser)
         }
         greenMail.stop()
 
+    }
+
+    def cleanup() {
+        greenMail.stop() // Clear message buffer
     }
 
     def "Organisation reports are displaying in the reporting tab"() {
@@ -104,18 +108,11 @@ class OrganisationReportingSpec extends StubbedCasSpec {
     def "A user with the admin role can complete Organisation reports,and submit them"() {
         setup:
         loginAsUser('1', browser)
+        greenMail.start()
 
         when:
         to Organisation, orgId
-
-        waitFor 20 ,{
-            reportingTab.click()
-        }
-
-        then:
-        waitFor 60, { reportsTabPane.displayed }
-
-        when:
+        displayReportsTab()
         reportsTabPane.reports[0].edit()
 
         then:
@@ -158,45 +155,44 @@ class OrganisationReportingSpec extends StubbedCasSpec {
         then:
         reportsTabPane.reports[0].isSubmitted()
 
-//        temp comment out, still investigating the issue
-//        waitFor 20, {
-//            MimeMessage[] messages = greenMail.getReceivedMessages()
-//            messages?.length == 1
-//            messages[0].getSubject() == "Report submitted subject"
-//            GreenMailUtil.getBody(messages[0]) == "<p>Report submitted body</p>"
-//        }
+        waitFor 20, {
+            MimeMessage[] messages = greenMail.getReceivedMessages()
+            messages?.length == 1
+            messages[0].getSubject() == "Organisation report submitted subject"
+            GreenMailUtil.getBody(messages[0]) == "<p>Organisation report submitted body</p>"
+        }
 
     }
 
     def "A user with the grant manager role can approve and return reports"() {
         setup:
         loginAsGrantManager(browser)
+        greenMail.start()
 
         when:
         to Organisation, orgId
+        displayReportsTab()
 
-        waitFor 20, {
-            reportingTab.click()
-        }
-
-        then:
-        waitFor { reportsTabPane.displayed }
-
-        when: "The first report is marked as submitted"
+        then: "The first report is marked as submitted"
         reportsTabPane.reports[0].isSubmitted()
 
-        and:
+        when:
         reportsTabPane.reports[0].approve()
 
         then:
         waitFor {hasBeenReloaded()}
 
         when:
-        reportingTab.click()
-        waitFor { reportsTabPane.displayed }
+        displayReportsTab()
 
         then:
         reportsTabPane.reports[0].isApproved()
+        waitFor 20, {
+            MimeMessage[] messages = greenMail.getReceivedMessages()
+            messages?.length == 2 // Email is sent to user and copied to grant manager
+            messages[0].getSubject() == "Organisation report approved subject"
+            GreenMailUtil.getBody(messages[0]) == "<p>Organisation report approved body</p>"
+        }
 
     }
 
