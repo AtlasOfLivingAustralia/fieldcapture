@@ -965,6 +965,7 @@ var config=
         ],
         "navigationMode": "returnToProject",
         "supportsMeriPlanHistory": true,
+        "requireMeritAdminToReturnMeriPlan":true,
         "meriPlanContents": [
             {
                 "template": "name",

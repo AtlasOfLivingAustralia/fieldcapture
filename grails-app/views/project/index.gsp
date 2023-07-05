@@ -317,12 +317,14 @@ var config = {
     config.programObjectives = <fc:modelAsJavascript model="${config.program?.config?.objectives ?: []}"/>
     config.programActivities = <fc:modelAsJavascript model="${config.program?.config?.activities?.collect { it.name } ?: []}"/>
     config.excludeFinancialYearData = ${config.program?.config?.excludeFinancialYearData ?: false};
+    config.canModifyMeriPlan = ${projectContent.admin.canModifyMeriPlan};;
 
     project.mapFeatures =  $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
     var viewModel = new ProjectPageViewModel(project, project.sites, project.activities || [], organisations, userRoles, config);
     viewModel.loadPrograms(programs);
     ko.applyBindings(viewModel);
     window.validateProjectEndDate = viewModel.validateProjectEndDate;
+
     var options = {
                 storageKey:PROJECT_RISKS_KEY,
                 autoSaveIntervalInSeconds:${grailsApplication.config.getProperty('fieldcapture.autoSaveIntervalInSeconds', Integer, 60)},

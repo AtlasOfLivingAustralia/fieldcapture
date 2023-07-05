@@ -124,7 +124,11 @@ function MERIPlan(project, projectService, config) {
         }
     };
 
+    self.canModifyPlan = config.canModifyMeriPlan;
     self.modifyPlan = function () {
+        if (!self.canModifyPlan) {
+            return;
+        }
         projectService.modifyPlan();
     };
     self.canEditStartDate = config.editProjectStartDate;
