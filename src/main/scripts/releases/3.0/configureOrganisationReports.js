@@ -43,7 +43,8 @@ if (db.setting.findOne({key: setting.key})) {
 
 db.report.update({
     status: {$ne: 'deleted'},
-    organisationId: {$exists: true}
+    organisationId: {$exists: true},
+    type : "Performance Management Framework - Self Assessment"
 }, {$set: {category: PERFORMANCE_MANAGEMENT_FRAMEWORK_CATEGORY}}, {multi: true});
 let reports = db.report.find({status: {$ne: 'deleted'}, organisationId: {$exists: true}});
 while (reports.hasNext()) {
