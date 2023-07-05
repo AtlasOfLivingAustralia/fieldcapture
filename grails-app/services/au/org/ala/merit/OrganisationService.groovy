@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.config.EmailTemplate
 import au.org.ala.merit.config.ReportConfig
 import au.org.ala.merit.reports.ReportOwner
 import org.joda.time.DateTime
@@ -254,66 +255,36 @@ class OrganisationService {
         reportService.findReportsForOrganisation(organisation.organisationId)
     }
 
-    def calculateDueDate(reportConfig, DateTime monthEndDate) {
-        if (!reportConfig.businessDaysToCompleteReport) {
-            return monthEndDate
-        }
-        int i = 0
-        def dueDate = monthEndDate.withZone(DateTimeZone.default).minusDays(1) // The date range for reports is UTC and goes to the fist millisecond of the new month.
-        while (i<reportConfig.businessDaysToCompleteReport) {
-
-            dueDate = dueDate.plusDays(1)
-            if (dueDate.getDayOfWeek() < DateTimeConstants.SATURDAY) {
-                i++
-            }
-        }
-        return dueDate.withZone(DateTimeZone.UTC)
+    Map submitReport(String programId, String reportId) {
+        Map reportData = setupReportLifeCycleChange(programId, reportId)
+        return reportService.submitReport(reportId, reportData.reportActivities, reportData.organisation, reportData.members, EmailTemplate.ORGANISATION_REPORT_SUBMITTED_EMAIL_TEMPLATE)
     }
 
-    Map submitReport(String organisationId, String reportId) {
-
-        Map organisation = get(organisationId)
-        Map resp = reportService.submit(reportId)
-
-        Map report = reportService.get(reportId)
-
-        if (!resp.error) {
-            emailService.sendOrganisationReportSubmittedEmail(organisationId, [organisation:organisation, report:report])
-        }
-        else {
-            return [success:false, error:resp.error]
-        }
-        return [success:true]
+    Map approveReport(String programId, String reportId, String reason) {
+        Map reportData = setupReportLifeCycleChange(programId, reportId)
+        return reportService.approveReport(reportId, reportData.reportActivities, reason, reportData.organisation, reportData.members, EmailTemplate.ORGANISATION_REPORT_APPROVED_EMAIL_TEMPLATE)
     }
 
-    Map approveReport(String organisationId, String reportId, String reason) {
-        Map organisation = get(organisationId)
-        Map resp = reportService.approve(reportId, reason)
+    def rejectReport(String programId, String reportId, String reason, List categories) {
+        Map reportData = setupReportLifeCycleChange(programId, reportId)
 
-        Map report = reportService.get(reportId)
-
-        if (!resp.error) {
-            emailService.sendOrganisationReportApprovedEmail(organisationId, [organisation:organisation, report:report, reason: reason])
-        }
-        else {
-            return [success:false, error:resp.error]
-        }
-        return [success:true]
+        return reportService.rejectReport(reportId, reportData.reportActivities, reason, categories, reportData.organisation, reportData.members, EmailTemplate.ORGANISATION_REPORT_RETURNED_EMAIL_TEMPLATE)
     }
 
-    def rejectReport(String organisationId, String reportId, String reason, List categories) {
+    /**
+     * Performs the common setup required for a report lifecycle state change (e.g. submit/approve/return)
+     * @param organisationId the ID of the program that owns the report
+     * @param reportId The report about to undergo a change.
+     * @return a Map with keys [organisation, reportActivities, programMembers]
+     */
+    private Map setupReportLifeCycleChange(String organisationId, String reportId) {
         Map organisation = get(organisationId)
-        Map resp = reportService.reject(reportId, categories, reason)
-
+        List members = getMembersOfOrganisation(organisationId)
         Map report = reportService.get(reportId)
+        // All MU reports are of type "Single Activity" at the moment.
+        List reportActivities = [report.activityId]
 
-        if (!resp.error) {
-            emailService.sendOrganisationReportRejectedEmail(organisationId, [organisation:organisation, report:report, reason:reason, reasonCategories:categories])
-        }
-        else {
-            return [success:false, error:resp.error]
-        }
-        return [success:true]
+        [organisation:organisation, reportActivities:reportActivities, members:members]
     }
 
     Map getAbnDetails(String abnNumber){
