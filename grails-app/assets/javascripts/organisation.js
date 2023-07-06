@@ -1,3 +1,5 @@
+//= require tab-init.js
+//= require reportService
 /**
  * Knockout view model for organisation pages.
  * @param props JSON/javascript representation of the organisation.
@@ -16,35 +18,35 @@ OrganisationViewModel = function (props, options) {
     var config = _.extend({}, defaults, options);
 
     var orgTypesMap = {
-    aquarium:'Aquarium',
-    archive:'Archive',
-    botanicGarden:'Botanic Garden',
-    conservation:'Conservation',
-    fieldStation:'Field Station',
-    government:'Government',
-    governmentDepartment:'Government Department',
-    herbarium:'Herbarium',
-    historicalSociety:'Historical Society',
-    horticulturalInstitution:'Horticultural Institution',
-    independentExpert:'Independent Expert',
-    industry:'Industry',
-    laboratory:'Laboratory',
-    library:'Library',
-    management:'Management',
-    museum:'Museum',
-    natureEducationCenter:'Nature Education Center',
-    nonUniversityCollege:'Non-University College',
-    park:'Park',
-    repository:'Repository',
-    researchInstitute:'Research Institute',
-    school:'School',
-    scienceCenter:'Science Center',
-    society:'Society',
-    university:'University',
-    voluntaryObserver:'Voluntary Observer',
-    zoo:'Zoo'
+        aquarium:'Aquarium',
+        archive:'Archive',
+        botanicGarden:'Botanic Garden',
+        conservation:'Conservation',
+        fieldStation:'Field Station',
+        government:'Government',
+        governmentDepartment:'Government Department',
+        herbarium:'Herbarium',
+        historicalSociety:'Historical Society',
+        horticulturalInstitution:'Horticultural Institution',
+        independentExpert:'Independent Expert',
+        industry:'Industry',
+        laboratory:'Laboratory',
+        library:'Library',
+        management:'Management',
+        museum:'Museum',
+        natureEducationCenter:'Nature Education Center',
+        nonUniversityCollege:'Non-University College',
+        park:'Park',
+        repository:'Repository',
+        researchInstitute:'Research Institute',
+        school:'School',
+        scienceCenter:'Science Center',
+        society:'Society',
+        university:'University',
+        voluntaryObserver:'Voluntary Observer',
+        zoo:'Zoo'
     };
-    
+
     self.organisationId = props.organisationId;
     self.orgType = ko.observable(props.orgType);
     self.orgTypeDisplayOnly = ko.computed(function() {
@@ -63,21 +65,8 @@ OrganisationViewModel = function (props, options) {
 
     self.projects = props.projects;
 
-    self.deleteOrganisation = function() {
-        if (window.confirm("Delete this organisation?  Are you sure?")) {
-            $.post(config.organisationDeleteUrl).complete(function() {
-                    window.location = fcConfig.organisationListUrl;
-                }
-            );
-        };
-    };
-
     self.editDescription = function() {
         editWithMarkdown('Edit organisation description', self.description);
-    };
-
-    self.editOrganisation = function() {
-       window.location = fcConfig.organisationEditUrl;
     };
 
     self.transients = self.transients || {};
@@ -125,14 +114,14 @@ OrganisationViewModel = function (props, options) {
         if ($(config.abnSelector).validationEngine()) {
             var abn = self.abn;
             $.get(config.prepopulateAbnUrl, {abn:abn, contentType:'application/json'}).done(function (orgDetails) {
-                    if (orgDetails.error === "invalid"){
-                        bootbox.alert("Abn Number is invalid");
-                    }else{
-                        self.name(orgDetails.name);
-                    }
+                if (orgDetails.error === "invalid"){
+                    bootbox.alert("Abn Number is invalid");
+                }else{
+                    self.name(orgDetails.name);
+                }
             }).fail(function () {
                 bootbox.alert("Abn Web Service is failed to lookup abn name. Please press ok to continue to create organisation");
-                 self.name(" ");
+                self.name(" ");
             });
 
         }
@@ -153,6 +142,195 @@ OrganisationViewModel = function (props, options) {
             self.addLink(link.role, link.url);
         });
     }
+
+    return self;
+
+};
+
+
+OrganisationPageViewModel = function (props, options) {
+    var self = $.extend(this, new Documents(options));
+
+    var reportService = new ReportService(options)
+
+    var defaults = {
+        validationContainerSelector: '.validationEngineContainer',
+    };
+
+    var config = props.config || {};
+    self.config = ko.observable(vkbeautify.json(config));
+
+    self.availableReportCategories = _.flatten(_.map(options.availableReportCategories || {}, function(reports, label) {
+        return reports;
+    }));
+
+    self.organisationReportCategories = ko.computed(function() {
+        return config.organisationReports || [];
+    });
+
+    var parsedConfig = function(suppressAlert) {
+        var currentConfig = null;
+        try {
+            currentConfig = JSON.parse(self.config());
+        }
+        catch (e) {
+            if (!suppressAlert) {
+                bootbox.alert("The configuration is invalid. Please fix the configuration and try again.");
+            }
+        }
+        return currentConfig;
+    }
+
+    self.isReportingEnabled = ko.computed(function() {
+        var currentConfig = parsedConfig(true);
+        if (!currentConfig) {
+            return false;
+        }
+        if (self.availableReportCategories.length > 0) {
+            return _.find(currentConfig.organisationReports || [], function(reportCategory) {
+                return reportCategory.category == self.availableReportCategories[0].category;
+            });
+        }
+        return false;
+    });
+    self.enableReporting = function() {
+        if (self.isReportingEnabled()) {
+            return;
+        }
+        var currentConfig = parsedConfig();
+        if (!currentConfig) {
+            return;
+        }
+        if (!currentConfig.organisationReports) {
+            currentConfig.organisationReports = [];
+        }
+        // We want to put the reports at the front of the configuration so the (for some organisations) existing
+        // performance management reports are at the end.
+        for (var i=0; i<self.availableReportCategories.length; i++) {
+            currentConfig.organisationReports.splice(i, 0, self.availableReportCategories[i]);
+        }
+        self.config(vkbeautify.json(currentConfig));
+        setStartAndEndDateDefaults();
+    };
+
+    self.startDate = ko.observable().extend({simpleDate:false});
+    self.endDate = ko.observable().extend({simpleDate:false});
+    self.reportingEnabled = ko.observable();
+    self.selectedOrganisationReportCategories = ko.observableArray();
+
+    var setStartAndEndDateDefaults = function() {
+        var currentConfig = parsedConfig();
+        if (!currentConfig || !currentConfig.organisationReports || currentConfig.organisationReports.length == 0) {
+            return;
+        }
+        var periodStart = null;
+        var periodEnd = null;
+        for (var i=0; i<currentConfig.organisationReports.length; i++) {
+            if (currentConfig.organisationReports[i].periodStart) {
+                periodStart = currentConfig.organisationReports[i].periodStart;
+            }
+            if (currentConfig.organisationReports[i].periodEnd) {
+                periodEnd = currentConfig.organisationReports[i].periodEnd;
+            }
+        }
+        self.startDate(periodStart);
+        self.endDate(periodEnd);
+    };
+    setStartAndEndDateDefaults();
+
+    self.saveReportingConfiguration = function() {
+
+        if ($(options.reportingConfigSelector).validationEngine('validate')) {
+
+            var currentConfig = parsedConfig();
+            if (!currentConfig) {
+                return;
+            }
+
+            _.each(currentConfig.organisationReports, function(reportCategory) {
+                reportCategory.periodStart = self.startDate();
+                reportCategory.periodEnd = self.endDate();
+            });
+
+            blockUIWithMessage("Saving configuration...");
+            self.saveConfig(currentConfig).done(function() {
+                blockUIWithMessage("Configuration saved.  Reloading page...");
+                window.location.reload();
+            });
+        }
+    };
+
+    self.regenerateReportsByCategory = function() {
+        blockUIWithMessage("Regenerating reports...");
+        var data = JSON.stringify({organisationReportCategories:self.selectedOrganisationReportCategories()});
+        reportService.regenerateReports(data,options.regenerateOrganisationReportsUrl);
+    };
+
+    var tabs = {
+        'admin': {
+            initialiser: function () {
+                populatePermissionsTable();
+                $(options.reportingConfigSelector).validationEngine();
+            }
+        }
+    };
+
+    self.initialise = function() {
+        $.fn.dataTable.moment( 'dd-MM-yyyy' );
+        initialiseTabs(tabs, {tabSelector:'#orgTabs.nav a', tabStorageKey:'selected-organisation-tab'});
+    };
+
+    self.organisationId = props.organisationId;
+    self.description = ko.observable(props.description).extend({markdown:true});
+    self.abn = ko.observable(props.abn);
+    self.url = ko.observable(props.url);
+
+    self.deleteOrganisation = function() {
+        if (window.confirm("Delete this organisation?  Are you sure?")) {
+            $.post(options.organisationDeleteUrl).complete(function() {
+                    window.location = fcConfig.organisationListUrl;
+                }
+            );
+        };
+    };
+
+    self.editOrganisation = function() {
+       window.location = fcConfig.organisationEditUrl;
+    };
+
+    self.saveOrganisationConfiguration = function() {
+        var currentConfig = parsedConfig();
+        if (!currentConfig) {
+            return;
+        }
+        blockUIWithMessage("Saving configuration...");
+        return self.saveConfig(currentConfig).done(function (data) {
+            blockUIWithMessage("Configuration saved...");
+            setTimeout($.unblockUI, 1000);
+        });
+
+    };
+
+    self.saveConfig = function(config) {
+        var json = {
+            config: config,
+            abn: self.abn()
+        };
+        return saveOrganisation(json);
+    };
+
+
+    var saveOrganisation = function(json) {
+        return $.ajax({
+            url: options.organisationSaveUrl,
+            type: 'POST',
+            data: JSON.stringify(json),
+            dataType:'json',
+            contentType: 'application/json'
+        }).fail(function() {
+            bootbox.alert("Save failed");
+        });
+    };
 
     return self;
 

@@ -18,9 +18,12 @@
             organisationDeleteUrl: '${g.createLink(action:"ajaxDelete", id:"${organisation.organisationId}")}',
             organisationEditUrl: '${g.createLink(action:"edit", id:"${organisation.organisationId}")}',
             organisationListUrl: '${g.createLink(action:"list")}',
-            organisationViewUrl: '${g.createLink(action:"index", id:"${organisation.organisationId}")}',
-            viewReportUrl: "${g.createLink(action:'viewOrganisationReport')}",
-            editReportUrl: "${g.createLink(action:'editOrganisationReport')}",
+            organisationSaveUrl: "${createLink(action:'ajaxUpdate', id:organisation.organisationId)}",
+            organisationViewUrl: '${g.createLink(action:"index", id:organisation.organisationId)}',
+            viewReportUrl: "${g.createLink(action:'viewOrganisationReport', id:organisation.organisationId)}",
+            editReportUrl: "${g.createLink(action:'editOrganisationReport', id:organisation.organisationId)}",
+            resetReportUrl: "${createLink(action:'resetReport', id:organisation.organisationId)}",
+            regenerateOrganisationReportsUrl: "${createLink(action:"regenerateOrganisationReports", id:organisation.organisationId)}",
             reportPDFUrl: "${g.createLink(action:'performanceReportPDF')}",
             organisationMembersUrl: "${loadPermissionsUrl}",
             imageLocation:"${assetPath(src:'/')}",
@@ -52,9 +55,10 @@
     <div id="organisationDetails"  class="clearfix" style="display:none;">
 
         <g:render template="/shared/flashScopeMessage"/>
-        <ul class="nav nav-tabs" id="orgTabs" role="tabList">
+        <ul id="orgTabs" class="nav nav-tabs" data-tabs="tabs">
             <fc:tabList tabs="${content}"/>
         </ul>
+
         <div class="tab-content" id="tabContent">
             <fc:tabContent tabs="${content}"/>
         </div>
@@ -72,9 +76,15 @@
     $(function () {
 
         var organisation =<fc:modelAsJavascript model="${organisation}"/>;
-        var organisationViewModel = new OrganisationViewModel(organisation);
+        var availableReportCategories = <fc:modelAsJavascript model="${content.admin?.availableReportCategories}"/>;
+        var config = _.extend({
+                reportingConfigSelector:'#reporting-config form',
+                availableReportCategories:availableReportCategories,
+            }, fcConfig);
+        var organisationViewModel = new OrganisationPageViewModel(organisation, config);
 
         ko.applyBindings(organisationViewModel);
+        organisationViewModel.initialise();
         $('#loading').hide();
         $('#organisationDetails').show({complete:function() {
             if (organisationViewModel.mainImageUrl()) {

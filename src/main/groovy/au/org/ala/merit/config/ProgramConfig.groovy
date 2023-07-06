@@ -128,6 +128,11 @@ class ProgramConfig implements Map {
         !config.excludes || !config.excludes.contains(content.toString())
     }
 
+    /**
+     * This flag contruls whether a grant/project manager can return a meri plan to a project officer for further work
+     * or whether a MERIT admin needs to return it. */
+    boolean requireMeritAdminToReturnMeriPlan = false
+
 }
 
 

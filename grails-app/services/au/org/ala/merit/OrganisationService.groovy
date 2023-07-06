@@ -1,5 +1,8 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.config.EmailTemplate
+import au.org.ala.merit.config.ReportConfig
+import au.org.ala.merit.reports.ReportOwner
 import org.joda.time.DateTime
 import org.joda.time.DateTimeConstants
 import org.joda.time.DateTimeZone
@@ -47,52 +50,40 @@ class OrganisationService {
         organisation
     }
 
-    def getByName(orgName) {
-        // The result of the service call will be a JSONArray if it's successful
-        return list().list.find({ it.name == orgName })
-    }
-
-    def getNameFromId(orgId) {
-        // The result of the service call will be a JSONArray if it's successful
-        return orgId ? list().list.find({ it.organisationId == orgId })?.name : ''
-    }
-
     def list() {
         metadataService.organisationList()
     }
-    Map getOrgByAbn(String abnNumber){
+
+    Map findOrgByAbn(String abnNumber) {
         return list().list.find({ it.abn == abnNumber }) as Map
     }
 
-    String checkExistingAbnNumber(String organisationId, String abnNumber){
+    String checkExistingAbnNumber(String organisationId, String abnNumber) {
         String error = null
-        boolean creating = !organisationId
+        // We are allowing a blank ABN for now, this rule may change
+        if (abnNumber) {
+            Map organisation = findOrgByAbn(abnNumber)
 
-        Map orgList = getOrgByAbn(abnNumber)
-
-        if (orgList == null) {
-            error
-        }else{
-            if (!creating){
-                if(orgList.organisationId == organisationId && orgList.abn == abnNumber) {
-                    error
-                }else if (orgList.organisationId != organisationId && orgList.abn == abnNumber) {
-                    error = "Abn Number is not unique"
-                }
-            }else{
-                if (orgList.abn == abnNumber){
-                    error = "Abn Number is not unique"
-                }
+            if (organisation && organisation.organisationId != organisationId) {
+                error = "Abn Number is not unique"
             }
         }
+
         return error
     }
 
     Map update(String id, Map organisation) {
         Map result = [:]
         String abn = organisation.abn
-        String orgId = organisation.organisationId
-        def error = checkExistingAbnNumber(orgId,abn)
+
+        String error = null
+        if (organisation.organisationId && organisation.organisationId != id) {
+            // We don't want to update the organisationId
+            error = 'Invalid organisationId supplied'
+        }
+        else {
+            error = checkExistingAbnNumber(id,abn)
+        }
         if (error) {
             result.error = error
             result.detail = error
@@ -101,6 +92,7 @@ class OrganisationService {
             if (!id) {
                 // Assign the MERIT hubId to the organisation when creating a new organisation
                 organisation.hubId = SettingService.hubConfig?.hubId
+                id = ''
             }
             def url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}organisation/$id"
             result = webService.doPost(url, organisation)
@@ -111,6 +103,28 @@ class OrganisationService {
         return result
     }
 
+    void regenerateReports(String id, List<String> organisationReportCategories = null) {
+        Map organisation = get(id)
+
+        regenerateOrganisationReports(organisation, organisationReportCategories)
+    }
+
+    private void regenerateOrganisationReports(Map organisation, List<String> reportCategories = null) {
+
+        List organisationReportConfig = organisation.config?.organisationReports
+        ReportOwner owner = new ReportOwner(
+            id:[organisationId:organisation.organisationId],
+            name:organisation.name
+        )
+        List toRegenerate = organisationReportConfig.findAll{it.category in reportCategories}
+        toRegenerate?.each {
+            ReportConfig reportConfig = new ReportConfig(it)
+            if (!reportConfig.adhoc) {
+                List relevantReports = organisation.reports?.findAll{it.category == reportConfig.category}
+                reportService.regenerateReports(relevantReports, reportConfig, owner)
+            }
+        }
+    }
 
     def isUserAdminForOrganisation(organisationId) {
         def userIsAdmin
@@ -241,66 +255,36 @@ class OrganisationService {
         reportService.findReportsForOrganisation(organisation.organisationId)
     }
 
-    def calculateDueDate(reportConfig, DateTime monthEndDate) {
-        if (!reportConfig.businessDaysToCompleteReport) {
-            return monthEndDate
-        }
-        int i = 0
-        def dueDate = monthEndDate.withZone(DateTimeZone.default).minusDays(1) // The date range for reports is UTC and goes to the fist millisecond of the new month.
-        while (i<reportConfig.businessDaysToCompleteReport) {
-
-            dueDate = dueDate.plusDays(1)
-            if (dueDate.getDayOfWeek() < DateTimeConstants.SATURDAY) {
-                i++
-            }
-        }
-        return dueDate.withZone(DateTimeZone.UTC)
+    Map submitReport(String programId, String reportId) {
+        Map reportData = setupReportLifeCycleChange(programId, reportId)
+        return reportService.submitReport(reportId, reportData.reportActivities, reportData.organisation, reportData.members, EmailTemplate.ORGANISATION_REPORT_SUBMITTED_EMAIL_TEMPLATE)
     }
 
-    Map submitReport(String organisationId, String reportId) {
-
-        Map organisation = get(organisationId)
-        Map resp = reportService.submit(reportId)
-
-        Map report = reportService.get(reportId)
-
-        if (!resp.error) {
-            emailService.sendOrganisationReportSubmittedEmail(organisationId, [organisation:organisation, report:report])
-        }
-        else {
-            return [success:false, error:resp.error]
-        }
-        return [success:true]
+    Map approveReport(String programId, String reportId, String reason) {
+        Map reportData = setupReportLifeCycleChange(programId, reportId)
+        return reportService.approveReport(reportId, reportData.reportActivities, reason, reportData.organisation, reportData.members, EmailTemplate.ORGANISATION_REPORT_APPROVED_EMAIL_TEMPLATE)
     }
 
-    Map approveReport(String organisationId, String reportId, String reason) {
-        Map organisation = get(organisationId)
-        Map resp = reportService.approve(reportId, reason)
+    def rejectReport(String programId, String reportId, String reason, List categories) {
+        Map reportData = setupReportLifeCycleChange(programId, reportId)
 
-        Map report = reportService.get(reportId)
-
-        if (!resp.error) {
-            emailService.sendOrganisationReportApprovedEmail(organisationId, [organisation:organisation, report:report, reason: reason])
-        }
-        else {
-            return [success:false, error:resp.error]
-        }
-        return [success:true]
+        return reportService.rejectReport(reportId, reportData.reportActivities, reason, categories, reportData.organisation, reportData.members, EmailTemplate.ORGANISATION_REPORT_RETURNED_EMAIL_TEMPLATE)
     }
 
-    def rejectReport(String organisationId, String reportId, String reason, List categories) {
+    /**
+     * Performs the common setup required for a report lifecycle state change (e.g. submit/approve/return)
+     * @param organisationId the ID of the program that owns the report
+     * @param reportId The report about to undergo a change.
+     * @return a Map with keys [organisation, reportActivities, programMembers]
+     */
+    private Map setupReportLifeCycleChange(String organisationId, String reportId) {
         Map organisation = get(organisationId)
-        Map resp = reportService.reject(reportId, categories, reason)
-
+        List members = getMembersOfOrganisation(organisationId)
         Map report = reportService.get(reportId)
+        // All MU reports are of type "Single Activity" at the moment.
+        List reportActivities = [report.activityId]
 
-        if (!resp.error) {
-            emailService.sendOrganisationReportRejectedEmail(organisationId, [organisation:organisation, report:report, reason:reason, reasonCategories:categories])
-        }
-        else {
-            return [success:false, error:resp.error]
-        }
-        return [success:true]
+        [organisation:organisation, reportActivities:reportActivities, members:members]
     }
 
     Map getAbnDetails(String abnNumber){

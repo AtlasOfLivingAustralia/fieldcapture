@@ -27,6 +27,9 @@ class ReportService {
     public static final String REPORT_ACTIVITY_TYPE = 'RLP Core Services annual report'
     public static final String OUTPUT_TYPE = 'RLP - Core services annual report'
 
+    public static final String PERFORMANCE_MANAGEMENT_REPORT = 'Performance Management Framework - Self Assessment'
+
+
     static enum ReportMode {
         VIEW,
         EDIT,
@@ -114,6 +117,10 @@ class ReportService {
     }
 
     void regenerateReports(List existingReports, ReportConfig reportConfig, ReportOwner reportOwner) {
+        if (reportConfig.adhoc) {
+            log.warn("Cannot regenerate ${reportConfig.category} reports as they are adhoc")
+            return
+        }
         // Ensure the reports are sorted in Date order
         existingReports = (existingReports?:[]).sort{it.toDate}
 
@@ -892,21 +899,29 @@ class ReportService {
         activityService.unlock(report.activityId)
     }
 
+    /** This is to handle the legacy performance management report which has a custom rendering template */
+    private boolean isCustomReportType(Map report) {
+        return report.type == PERFORMANCE_MANAGEMENT_REPORT
+    }
+
     Map activityReportModel(String reportId, ReportMode mode, Integer formVersion = null) {
         Map report = get(reportId)
+        Map model = [report: report]
 
-        Map activity = activityService.get(report.activityId)
-        Map model = activityService.getActivityMetadata(activity.type, formVersion ?: activity.formVersion)
-        model.report = report
-        model.activity = activity
-        model.themes = []
-        model.locked = activity.lock != null
-
-        if (mode == ReportMode.EDIT) {
-            model.editable = canEdit(userService.currentUserId, report, activity)
+        if (!isCustomReportType(report)) {
+            Map activity = activityService.get(report.activityId)
+            model += activityService.getActivityMetadata(activity.type, formVersion ?: activity.formVersion)
+            model.activity = activity
+            model.themes = []
+            model.locked = activity.lock != null
         }
         else if (mode == ReportMode.PRINT) {
             model.printView = true
+        }
+        // Custom report types don't necessarily have an associated activity but the canEdit only uses that
+        // to see if the activity is locked so passing null is OK
+        if (mode == ReportMode.EDIT) {
+            model.editable = canEdit(userService.currentUserId, report, model.activity)
         }
 
         model
@@ -920,7 +935,7 @@ class ReportService {
         }
 
         // If we are using pessimistic locking, the report is not editable if another user holds a lock on the activity.
-        return !activity.lock || (activity.lock.userId == userId)
+        return !(activity?.lock) || (activity.lock.userId == userId)
 
     }
 

@@ -19,6 +19,9 @@
     </div>
 </g:else>
 
+<!-- ko stopBinding:true -->
+<g:render template="/shared/categorizedReporting"/>
+
 <asset:script>
 $(function() {
     var projects = fcConfig.projects;

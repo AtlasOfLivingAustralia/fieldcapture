@@ -47,20 +47,42 @@ function updateActivity(report, userId)  {
 }
 
 function addProjectPermission(userId, projectId, accessLevel, adminUserId) {
+    addPermission(userId, projectId, accessLevel, 'au.org.ala.ecodata.Project', adminUserId);
+}
+
+function addPermission(userId, entityId, accessLevel, entityType, adminUserId) {
     var userPermission = {
         userId:userId,
-        entityType:'au.org.ala.ecodata.Project',
-        entityId:projectId,
+        entityType:entityType,
+        entityId:entityId,
         accessLevel:accessLevel
     };
-    if (db.userPermission.findOne({userId:userId, entityId:projectId})) {
-        print("Not adding permission for user: "+userId+" to entity: "+projectId+", permission already exists");
+    if (db.userPermission.findOne({userId:userId, entityId:entityId})) {
+        print("Not adding permission for user: "+userId+" to entity: "+entityId+", permission already exists");
     }
     else {
+        print("Adding permission for user: "+userId+" to entity: "+entityId+" of type: "+entityType);
         db.userPermission.insert(userPermission);
-        var id = db.userPermission.findOne({userId:userId, entityId:projectId})._id;
-        audit(userPermission, id, 'au.org.ala.ecodata.UserPermission', adminUserId, projectId);
+        var id = db.userPermission.findOne({userId:userId, entityId:entityId})._id;
+        audit(userPermission, id, 'au.org.ala.ecodata.UserPermission', adminUserId, entityId);
     }
 
+}
 
+
+function restoreRemovedPermissions(userId, removalDate, adminUserId) {
+    let messages = db.auditMessage.find(
+        {'entity.userId':userId,
+            userId:'<anon>',
+            entityType:'au.org.ala.ecodata.UserPermission',
+            date:{$gt:ISODate(removalDate)},
+            eventType:"Delete"
+        });
+    while (messages.hasNext()) {
+        let message = messages.next();
+        let permission = message.entity;
+
+        addProjectPermission(userId, permission.entityId, permission.accessLevel, permission.entityType, adminUserId);
+
+    }
 }

@@ -1,9 +1,9 @@
-load('../../../utils/uuid.js');
-load('../../../utils/audit.js');
-load('../../../utils/program.js');
+load('../../utils/uuid.js');
+load('../../utils/audit.js');
+load('../../utils/program.js');
 var userId = '';
 
-const serviceFormName = "RLP Output Report - Review";
+const serviceFormName = "RDP Output Report";
 function addService(newServiceName, legacyId, sectionName) {
     let outputs = [
         {
@@ -35,13 +35,23 @@ function addService(newServiceName, legacyId, sectionName) {
         }]
     }
 }
-addService("Habitat Condition Assessment Survey", NumberInt(42), "RLP - Habitat condition assessment");
+addService("Habitat Condition Assessment Survey", NumberInt(42), "RDP - Habitat condition assessment");
 
 
 const newScores = [
     {
+        serviceId: 1,
+        formSection:  'RDP - Baseline data',
+        scores: [
+            {
+                label: 'Number of baseline datasets synthesised and finalised',
+                path: 'data.tba'
+            }
+        ]
+    },
+    {
         serviceId: 10,
-        formSection:  'RLP - Establishing ex-situ breeding programs',
+        formSection:  'RDP - Establishing ex-situ breeding programs',
         scores: [
             {
                 label: 'Number of captive breeding and release, translocation, or re-introduction programs established',
@@ -55,7 +65,7 @@ const newScores = [
     },
     {
         serviceId: 34,
-        formSection:  'RLP - Debris removal',
+        formSection:  'RDP - Debris removal',
         scores: [
             {
                 label: 'Area (ha) of debris removal - initial',
@@ -77,7 +87,7 @@ const newScores = [
     },
     {
         serviceId: 7,
-        formSection:  'RLP - Erosion Management',
+        formSection:  'RDP - Erosion Management',
         scores: [
             {
                 label: 'Area (ha) of erosion control - initial',
@@ -99,7 +109,7 @@ const newScores = [
     },
     {
         serviceId: 8,
-        formSection:  'RLP - Establishing Agreements',
+        formSection:  'RDP - Establishing Agreements',
         scores: [
             {
                 label: 'Area (ha) covered by conservation agreements established',
@@ -113,7 +123,7 @@ const newScores = [
     },
     {
         serviceId: 9,
-        formSection:  'RLP - Maintaining feral free enclosures',
+        formSection:  'RDP - Maintaining feral free enclosures',
         scores: [
             {
                 label: 'Number of pest animal-free enclosures - initial',
@@ -135,7 +145,7 @@ const newScores = [
     },
     {
         serviceId: 12,
-        formSection:  'RLP - Farm Management Survey',
+        formSection:  'RDP - Farm Management Survey',
         scores: [
             {
                 label: 'Number of farm management surveys conducted - baseline',
@@ -149,7 +159,7 @@ const newScores = [
     },
     {
         serviceId: 13,
-        formSection:  'RLP - Fauna surveys',
+        formSection:  'RDP - Fauna surveys',
         scores: [
             {
                 label: 'Number of fauna surveys conducted - baseline',
@@ -162,8 +172,8 @@ const newScores = [
         ]
     },
     {
-        serviceId: 14,
-        formSection:  'RLP - Flora surveys',
+        serviceId: 15,
+        formSection:  'RDP - Flora surveys',
         scores: [
             {
                 label: 'Number of flora surveys conducted - baseline',
@@ -177,7 +187,7 @@ const newScores = [
     },
     {
         serviceId: 16,
-        formSection:  'RLP - Habitat augmentation',
+        formSection:  'RDP - Habitat augmentation',
         scores: [
             {
                 label: 'Area (ha) of augmentation - initial',
@@ -199,7 +209,7 @@ const newScores = [
     },
     {
         serviceId: 42,
-        formSection:  'RLP - Habitat condition assessment',
+        formSection:  'RDP - Habitat condition assessment',
         scores: [
             {
                 label: 'Number of habitat condition assessment surveys conducted - baseline',
@@ -213,7 +223,7 @@ const newScores = [
     },
     {
         serviceId: 17,
-        formSection:  'RLP - Identifying sites',
+        formSection:  'RDP - Identifying sites',
         scores: [
             {
                 label: 'Number of potential sites assessed',
@@ -223,7 +233,7 @@ const newScores = [
     },
     {
         serviceId: 14,
-        formSection:  'RLP - Fire management',
+        formSection:  'RDP - Fire management',
         scores: [
             {
                 label: 'Area (ha) treated by fire management action/s - initial',
@@ -237,7 +247,7 @@ const newScores = [
     },
     {
         serviceId: 18,
-        formSection:  'RLP - Improving hydrological regimes',
+        formSection:  'RDP - Improving hydrological regimes',
         scores: [
             {
                 label: 'Number of treatments implemented to improve site eco-hydrology - initial',
@@ -251,7 +261,7 @@ const newScores = [
     },
     {
         serviceId: 19,
-        formSection:  'RLP - Improving land management practices',
+        formSection:  'RDP - Improving land management practices',
         scores: [
             {
                 label: 'Area (ha) covered by practice change - initial',
@@ -265,7 +275,7 @@ const newScores = [
     },
     {
         serviceId: 20,
-        formSection:  'RLP - Managing disease',
+        formSection:  'RDP - Managing disease',
         scores: [
             {
                 label: 'Area (ha) for disease treatment/prevention - initial',
@@ -287,7 +297,7 @@ const newScores = [
     },
     {
         serviceId: 23,
-        formSection:  'RLP - Pest animal survey',
+        formSection:  'RDP - Pest animal survey',
         scores: [
             {
                 label: 'Number of pest animal surveys conducted - baseline',
@@ -301,7 +311,7 @@ const newScores = [
     },
     {
         serviceId: 26,
-        formSection:  'RLP - Remediating riparian and aquatic areas',
+        formSection:  'RDP - Remediating riparian and aquatic areas',
         scores: [
             {
                 label: 'Number of structures installed to promote aquatic health',
@@ -327,7 +337,7 @@ const newScores = [
     },
     {
         serviceId: 28,
-        formSection:  'RLP - Revegetating habitat',
+        formSection:  'RDP - Revegetating habitat',
         scores: [
             {
                 label: 'Area (ha) of habitat revegetated - initial',
@@ -359,7 +369,7 @@ const newScores = [
     },
     {
         serviceId: 24,
-        formSection:  'RLP - Plant survival survey',
+        formSection:  'RDP - Plant survival survey',
         scores: [
             {
                 label: 'Number of seed germination/plant survival surveys completed - indicator',
@@ -369,7 +379,7 @@ const newScores = [
     },
     {
         serviceId: 35,
-        formSection:  'RLP - Site preparation',
+        formSection:  'RDP - Site preparation',
         scores: [
             {
                 label: 'Length (km) of site preparation',
@@ -379,7 +389,7 @@ const newScores = [
     },
     {
         serviceId: 32,
-        formSection:  'RLP - Water quality survey',
+        formSection:  'RDP - Water quality survey',
         scores: [
             {
                 label: 'Number of water quality surveys conducted - baseline',
@@ -393,7 +403,7 @@ const newScores = [
     },
     {
         serviceId: 33,
-        formSection:  'RLP - Weed distribution survey',
+        formSection:  'RDP - Weed distribution survey',
         scores: [
             {
                 label: 'Number of weed distribution surveys conducted - baseline',
@@ -407,7 +417,7 @@ const newScores = [
     },
     {
         serviceId: 31,
-        formSection:  'RLP - Emergency Interventions',
+        formSection:  'RDP - Emergency Interventions',
         scores: [
             {
                 label: 'Number of interventions - initial',
@@ -421,21 +431,25 @@ const newScores = [
     },
     {
         serviceId: 30,
-        formSection:  'RLP - Soil testing',
+        formSection:  'RDP - Soil testing',
         scores: [
             {
                 label: 'Number of soil tests conducted - baseline',
-                path: 'data.tba'
+                path: 'data.tba',
+                filterValue: "Baseline",
+                filterPath: "data.tba.baselineOrIndicator",
             },
             {
                 label: 'Number of soil tests conducted - indicator',
-                path: 'data.tba'
+                path: 'data.tba',
+                filterValue: "Indicator",
+                filterPath: "data.tba.baselineOrIndicator",
             }
         ]
     },
     {
         serviceId: 18,
-        formSection:  'RLP - Improving hydrological regimes',
+        formSection:  'RDP - Improving hydrological regimes',
         scores: [
             {
                 label: 'Number of treatments implemented to improve site eco-hydrology - initial',
@@ -449,7 +463,7 @@ const newScores = [
     },
     {
         serviceId: 29,
-        formSection:  'RLP - Skills and knowledge survey',
+        formSection:  'RDP - Skills and knowledge survey',
         scores: [
             {
                 label: 'Number of skills and knowledge surveys conducted - baseline',
@@ -461,24 +475,37 @@ const newScores = [
             }
         ]
     }
-]
+];
 
 for (let i=0; i<newScores.length; i++) {
+    let service = db.service.findOne({legacyId: newScores[i].serviceId});
     for (let j=0; j<newScores[i].scores.length; j++) {
         let score = db.score.findOne({label: newScores[i].scores[j].label});
 
+        let aggregation =
+             [{
+                property: newScores[i].scores[j].path,
+                type: 'SUM'
+            }];
         let config = {
             filter: {
-                propertyName: 'name',
+                property: 'name',
                 filterValue: newScores[i].formSection,
                 type: 'filter'
-            },
-            childAggregations: [
-                {
-                    property: newScores[i].scores[j].path,
-                    type: 'SUM'
-                }
-            ]
+            }
+        }
+        if (newScores[i].scores[j].filterPath) {
+            config.childAggregations = [{
+                filter: {
+                    property: newScores[i].scores[j].filterPath,
+                    filterValue: newScores[i].scores[j].filterValue,
+                    type:"filter"
+                },
+                childAggregations: aggregation
+            }]
+        }
+        else {
+            config.childAggregations = aggregation;
         }
         if (!score) {
             // Insert the score
@@ -487,15 +514,108 @@ for (let i=0; i<newScores.length; i++) {
                 label: newScores[i].scores[j].label,
                 status: 'active',
                 isOutputTarget: true,
-                category: 'New program',
-                configuration: config,
+                category: 'RLP and Bushfire Recovery',
+                outputType: service.name,
+                configuration: {childAggregations: [config]},
                 dateCreated: ISODate(),
                 lastUpdated: ISODate()
             };
             db.score.insertOne(score);
         } else {
-            db.score.update({_id: score._id}, {$set: {configuration: config, serviceId: newScores[i].serviceId}});
+            db.score.update(
+                {_id: score._id},
+                {$set: {
+                    configuration: {childAggregations: [config]}, serviceId: newScores[i].serviceId,
+                    category:'RLP and Bushfire Recovery',
+                    outputType: service.name
+                }});
         }
+    }
+}
+
+const existingScores = [
+    {
+        serviceId: 2, // communication materials
+        formSection: 'RDP - Communication materials',
+        rlpFormSection: 'RLP - Communication materials',
+        scores: [
+             'Number of communication materials published'
+        ]
+    },
+    {
+        serviceId: 3, // community / stakeholder engagement
+        formSection: 'RDP - Community engagement',
+        rlpFormSection: 'RLP - Community engagement',
+        scores: [
+           'Number of field days',
+            'Number of training / workshop events',
+            'Number of on-ground trials / demonstrations'
+        ]
+    },
+    {
+        serviceId: 4, // controlling access
+        formSection: 'RDP - Controlling access',
+        rlpFormSection: 'RLP - Controlling access',
+        scores: [
+            'Number of structures installed'
+        ]
+    },
+    {
+        serviceId: 5,
+        formSection: 'RDP - Pest animal management',
+        rlpFormSection: 'RLP - Pest animal management',
+        scores: [
+            'Area (ha) treated for pest animals - initial',
+            'Area (ha) treated for pest animals - follow-up',
+            'Length (km) treated for pest animals - follow-up',
+            'Length (km) treated for pest animals - initial'
+        ]
+    },
+    {
+        serviceId: 27,
+        formSection: 'RDP - Weed treatment',
+        rlpFormSection: 'RLP - Weed treatment',
+        scores: [
+            'Area (ha) treated for weeds - initial',
+            'Area (ha) treated for weeds - follow-up',
+            'Length (km) treated for weeds - initial',
+            'Length (km) treated for weeds - follow-up'
+        ]
+    },
+];
+
+for (let i=0; i<existingScores.length; i++) {
+    let service = db.service.findOne({legacyId: existingScores[i].serviceId});
+    for (let j=0; j<existingScores[i].scores.length; j++) {
+        let score = db.score.findOne({label: existingScores[i].scores[j]});
+
+        if (!score) {
+            throw "Cannot find score with label: " + existingScores[i].scores[j];
+        }
+
+        let foundRlp = false;
+        let foundRdp = false;
+        for (let k=0; k<score.configuration.childAggregations.length; k++) {
+            if (score.configuration.childAggregations[k].filter && score.configuration.childAggregations[k].filter.filterValue === existingScores[i].rlpFormSection) {
+                foundRlp = score.configuration.childAggregations[k];
+            }
+            if (score.configuration.childAggregations[k].filter && score.configuration.childAggregations[k].filter.filterValue === existingScores[i].formSection) {
+                foundRdp = score.configuration.childAggregations[k];
+            }
+        }
+        if (!foundRlp) {
+            throw "Cannot find RLP form section to copy to RDP "+existingScores[i].rlpFormSection+' for score '+existingScores[i].scores[j].label;
+        }
+        if (!foundRdp) {
+            let rdpConfig = Object.assign({}, foundRlp);
+            rdpConfig.filter = Object.assign ({}, foundRlp.filter);
+            rdpConfig.filter.filterValue = existingScores[i].formSection;
+            score.configuration.childAggregations.push(rdpConfig);
+        }
+        else {
+            foundRdp.childAggregations = foundRlp.childAggregations;
+        }
+        db.score.updateOne({_id: score._id}, {$set: {configuration: score.configuration, outputType: service.name}});
     }
 }
 
@@ -508,7 +628,7 @@ var config=
             "programServices": [
                 {
                     serviceId: 1,
-                    serviceTargetLabels: [ 'Number of baseline data sets collected and/or synthesised' ]
+                    serviceTargetLabels: [ 'Number of baseline datasets synthesised and finalised' ]
                 },
                 {
                     serviceId: 2,
@@ -662,7 +782,7 @@ var config=
                     ]
                 },
                 {
-                    serviceId: 27,
+                    serviceId: 27, // Weed treatment
                     serviceTargetLabels: [
                         'Area (ha) treated for weeds - initial',
                         'Area (ha) treated for weeds - follow-up',
@@ -770,7 +890,7 @@ var config=
                 "reportingPeriodInMonths": 3,
                 "description": "",
                 "category": "Outputs Reporting",
-                "activityType": "RLP Output Report - Review",
+                "activityType": "RDP Output Report",
                 "canSubmitDuringReportingPeriod": true,
                 "label": "Quarter"
 
@@ -845,6 +965,7 @@ var config=
         ],
         "navigationMode": "returnToProject",
         "supportsMeriPlanHistory": true,
+        "requireMeritAdminToReturnMeriPlan":true,
         "meriPlanContents": [
             {
                 "template": "name",
@@ -972,70 +1093,52 @@ var config=
             }
         ],
         keyThreatCodes: [
-            "Climate change adaptation",
-            "Comprehensive regenerative agricultural practices",
-            "Farm Production management",
-            "Fencing",
-            "Feral animal management",
-            "Fire management",
-            "Food security",
-            "Ground cover management",
-            "Improving market access opportunities through sustainability credentials",
-            "Livestock",
-            "Native vegetation management",
-            "Soil Management",
-            "Water management",
-            "Weeding",
-            "Native fauna - Competition",
-            "Native fauna - predation",
-            "Habitat loss - Dieback/senescence",
-            "Habitat loss - Habitat fragmentation",
-            "Habitat loss - Land clearing",
-            "Habitat loss - Breeding place disturbance",
-            "Habitat loss - Feeding habitat loss/interference",
-            "Habitat loss - Loss of critical ecosystem service supporting habitat",
-            "Land management practices - Domestic grazing/stock impacts",
-            "Land management practices - Runoff",
-            "Land management practices - Excessive fertiliser use",
-            "Land management practices - changes to hydrology and aquatic systems",
-            "Land management practices - excess recharge of groundwater",
-            "Land management practices – Excess use (or over use) of surface water or groundwater resources",
-            "Weeds - Control/spraying",
-            "Weeds - Competition",
-            "Weeds - Spread of weeds from surrounding areas",
-            "Weeds - Introduction of new weed",
-            "Low population numbers",
-            "Low habitat area",
-            "Pest - competition/exclusion",
-            "Pest - predation",
-            "Pest - habitat degradation",
-            "Pest - Disease transmission",
-            "Pest - Introduction of new pest animals",
-            "Lack of protection for ecological assets during fire control activities",
-            "Lack of/inappropriate fire regime",
+            "Climate Change - Changed flooding regime",
+            "Climate Change - Changed rainfall patterns",
+            "Climate Change - Sea level rises",
+            "Climate Change - Unexpected seasonal/temperature extremes",
             "Disease/pathogens - Areas that are infected",
             "Disease/pathogens - Possible infection of disease free areas",
+            "Fire - Inappropriate fire regime",
+            "Fire - Lack of protection for ecological assets during fire control activities",
+            "Genetics - bottleneck/inbreeding",
+            "Habitat loss - Breeding place disturbance",
+            "Habitat loss - Dieback/senescence",
+            "Habitat loss - Feeding habitat loss/interference",
+            "Habitat loss - Habitat fragmentation",
+            "Habitat loss - Land clearing",
+            "Habitat loss - Loss of critical ecosystem service supporting habitat",
+            "Human interference - Fish and harvesting aquatic resources (commercial)",
+            "Human interference - Flow-on effects of housing development",
+            "Human interference - Illegal activities",
+            "Human interference - Industrial development",
+            "Human interference - Land use intensification",
+            "Human interference - Recreational fishing",
+            "Human interference - Recreational pressures",
+            "Human interference - Road/vehicle strike",
+            "Land management practices - changes to hydrology and aquatic systems",
+            "Land management practices - Domestic grazing/stock impacts",
+            "Land management practices - excess recharge of groundwater",
+            "Land management practices - Excess use (or over-use) of surface water or groundwater resources",
+            "Land management practices - Excessive fertiliser use",
+            "Land management practices – inappropriate ground cover management",
+            "Land management practices - Runoff",
+            "Native fauna - Competition",
+            "Native fauna - predation",
+            "Pest - competition/exclusion",
+            "Pest - Disease transmission",
+            "Pest - habitat degradation",
+            "Pest - Introduction of new pest animals",
+            "Pest - Predation",
             "Pollution - Chemical",
             "Pollution - Eutrophication/algal blooms",
             "Pollution - Inappropriate waste disposal",
             "Pollution - Sediment",
-            "Climate Change - Sea level rises",
-            "Climate Change - Unexpected seasonal/temperature extremes",
-            "Climate Change - Changed flooding regime",
-            "Climate Change - Changed rainfall patterns",
-            "Climate Change - Wildfire",
-            "Genetic bottleneck/inbreeding",
-            "Data deficiency/lack of ecological data",
-            "Human interference - flow-on effects of housing development",
-            "Human interference - Road/vehicle strike",
-            "Human interference - Recreational pressures",
-            "Human interference - Illegal activities",
-            "Human interference - Fish and harvesting aquatic resources (commercial)",
-            "Human interference - Recreational fishing",
-            "Human interference - lack of strategic and statutory planning consideration for ecological assets",
-            "Human interference - Lack of knowledge and understanding",
-            "Human interference - land use intensification",
-            "Human interference - industrial development"
+            "Population size/range - Low habitat area",
+            "Population size/range - Low population numbers",
+            "Weeds - Competition",
+            "Weeds - Introduction of new weed",
+            "Weeds - Spread of weeds from surrounding areas"
         ],
         priorityPlaces: [
             "Australian Alps – NSW/ACT/VIC",
@@ -1366,7 +1469,7 @@ var outcomes = [
     }
 
 ];
-let programName = "Project Services Review Group";
+let programName = "Regional Delivery Partners";
 var program = createOrFindProgram(programName);
 
 program.config = config;
@@ -1392,23 +1495,37 @@ for (let i=0; i<s.length; i++) {
         else {
             let found = false;
             for (let k=0; k<service.outputs.length; k++) {
-                if (service.outputs[k].formName == 'RLP Output Report - Review') {
-                    found = true;
+                if (service.outputs[k].formName == 'RDP Output Report') {
+                    found = service.outputs[k];
                 }
+            }
+            let match = null;
+            for (let l=0; l<newScores.length; l++) {
+                if (newScores[l].serviceId == s[i].serviceId) {
+                    match = newScores[l];
+                }
+            }
+            if (!match) {
+                for (let l=0; l<existingScores.length; l++) {
+                    if (existingScores[l].serviceId == s[i].serviceId) {
+                        match = existingScores[l];
+                    }
+                }
+            }
+            if (!match) {
+                throw "Can't find form section for score "+score.label;
             }
             if (!found) {
-                let sectionName = service.outputs[0] ? service.outputs[0].sectionName : '';
-                if (sectionName == '') {
-                    print("No sectionName for service "+service.legacyId);
-                }
                 service.outputs.push({
-                    // TODO - this needs to be updated to match the new form
-                    // when it's built
-                    formName: 'RLP Output Report - Review',
-                    sectionName: sectionName
+                    formName: 'RDP Output Report',
+                    sectionName: match.formSection
                 });
-                db.service.replaceOne({legacyId:s[i].serviceId}, service);
+
             }
+            else {
+                found.sectionName = match.formSection;
+            }
+            db.service.replaceOne({legacyId:s[i].serviceId}, service);
         }
     }
     delete s[i].serviceTargetLabels;
@@ -1460,7 +1577,7 @@ let services = db.service.find();
 while (services.hasNext()) {
     let service = services.next();
 
-    // if the service.name matches a case insentive regex of "survey"
+    // if the service.name matches a case insensitive regex of "survey"
     // then add the "Survey" category
     if (service.name.match(/survey/i) || service.legacyId == 30 || service.legacyId == 1) {
         // Add the Survey category to the service if it doesn't already have it

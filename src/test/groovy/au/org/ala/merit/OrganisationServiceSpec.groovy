@@ -218,8 +218,51 @@ class OrganisationServiceSpec extends Specification implements ServiceUnitTest<O
 		service.update("", [name:"Organisation 1"])
 
 		then:
-		1 * metadataService.organisationList() >> [list:[]]
 		1 * webService.doPost({it.endsWith('organisation/')}, [name:"Organisation 1", hubId:"merit"])
+		1 * metadataService.clearOrganisationList()
+	}
+
+	def "An organisation can be saved with a null / blank ABN"() {
+		setup:
+		SettingService.setHubConfig(new HubSettings(hubId:"merit"))
+
+		when:
+		service.update("", [name:"Organisation 1"])
+
+		then:
+		1 * webService.doPost({it.endsWith('organisation/')}, [name:"Organisation 1", hubId:"merit"])
+	}
+
+	def "An ABN will be validated for uniqueness, if supplied"() {
+		setup:
+		SettingService.setHubConfig(new HubSettings(hubId:"merit"))
+
+		when: "The ABN exists on another organisation"
+		Map result = service.update("o2", [name:"Organisation 1", abn:"134566778"])
+
+		then: "A validation error will be returned and no update will occur"
+		1 * metadataService.organisationList() >> [list:[[organisationId:"1", abn:"134566778"]]]
+		result.error != null
+		0 * webService.doPost({it.endsWith('organisation/o2')}, [abn:"134566778", name:"Organisation 1", hubId:"merit"])
+
+		when: "The ABN exists on the current organisation"
+		result = service.update("o2", [name:"Organisation 1", abn:"134566778"])
+
+		then: "The update will succeed"
+		1 * metadataService.organisationList() >> [list:[[organisationId:"o2", abn:"134566778"]]]
+		1 * webService.doPost({it.endsWith('organisation/o2')}, [abn:"134566778", name:"Organisation 1"])
+
+	}
+
+	def "If an organisationId is included in update props, if it's different to the id an error will be returned"() {
+		setup:
+		SettingService.setHubConfig(new HubSettings(hubId:"merit"))
+
+		when: "The ABN exists on another organisation"
+		Map result = service.update("o2", [name:"Organisation 1", abn:"134566778", organisationId:"o1"])
+
+		then:
+		result.error != null
 	}
 
 	static int activityId = 0

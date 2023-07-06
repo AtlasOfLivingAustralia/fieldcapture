@@ -1,9 +1,10 @@
 package pages
 
 import geb.Page
+import pages.modules.OrganisationReports
 import pages.modules.OrganisationAdminTab
 
-class Organisation extends Page{
+class Organisation extends ReloadablePage {
     static url = 'organisation/index'
 
     static at = { $('#organisationDetails').displayed }
@@ -11,13 +12,17 @@ class Organisation extends Page{
     static content = {
         name {$('h2')}
         aboutTab{$('a#about-tab',0)}
-        adminTab{$('a#admin-tab')}
-        adminTabContent { module OrganisationAdminTab }
+        adminTab(required: false) { $('#admin-tab') }
+        adminTabContent(required: false)  { module OrganisationAdminTab }
         orgName { $('.header-text') }
         orgDescription { $('span#orgDescription') }
         orgAbn {$('span#orgAbn')}
         projectTab {$("#projects-tab")}
         projectContent {$("#projectList tbody tr td")}
+        reportingTab(required: false) { $('#projects-tab') }
+        sitesTab {$("#sites-tab")}
+        reportsTabPane(required:false) { $('#reporting-content').module(OrganisationReports)}
+        reportDeclaration { $('#declaration') }
     }
 
     void edit() {
@@ -28,6 +33,26 @@ class Organisation extends Page{
         adminTabContent.editButton.click()
     }
 
+    def openAdminTab() {
+        waitFor {adminTab.displayed}
+        adminTab.click()
+        waitFor 10, { adminTabContent.displayed }
+    }
+
+    void displayReportsTab() {
+        waitFor {reportingTab.displayed}
+        reportingTab.click()
+        waitFor 60, { reportsTabPane.displayed }
+        reportsTabPane
+    }
+
+    def acceptTerms() {
+        $('#declaration [name="acceptTerms"]').value(true)
+    }
+
+    def submitDeclaration() {
+        $('#declaration [data-bind*="submitReport"]').click()
+    }
 }
 class EditOrganisation extends Page{
     static url = 'organisation/edit' // requires a program id parameter
