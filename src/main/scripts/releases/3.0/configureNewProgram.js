@@ -4,6 +4,9 @@ load('../../utils/program.js');
 var userId = '';
 
 const serviceFormName = "RDP Output Report";
+const annualReportFormName = "New Program Annual Report";
+const outcomes1ReportFormName = "New Program Outcomes 1 Report";
+const outcomes2ReportFormName = "New Program Outcomes 2 Report";
 function addService(newServiceName, legacyId, sectionName) {
     let outputs = [
         {
@@ -890,7 +893,7 @@ var config=
                 "reportingPeriodInMonths": 3,
                 "description": "",
                 "category": "Outputs Reporting",
-                "activityType": "RDP Output Report",
+                "activityType": serviceFormName,
                 "canSubmitDuringReportingPeriod": true,
                 "label": "Quarter"
 
@@ -903,7 +906,8 @@ var config=
                 "reportingPeriodInMonths": 12,
                 "description": "",
                 "category": "Annual Progress Reporting",
-                "activityType": "RLP Annual Report",
+                "activityType": annualReportFormName,
+                "description": "This report is still being developed.  _Please do not reporting until the new report is ready for use._,",
                 "label": "Annual"
             },
             {
@@ -915,11 +919,11 @@ var config=
                 "alignToOwnerStart":true,
                 "alignToOwnerEnd":true,
                 "multiple": false,
-                "description": "Before beginning Outcomes Report 1, please go to the Data set summary tab and complete a form for each data set collected for this project. Help with completing this form can be found in Section 10 of the [RLP MERIT User Guide](http://www.nrm.gov.au/my-project/monitoring-and-reporting-plan/merit)",
+                "description": "This report is still being developed.  _Please do not reporting until the new report is ready for use._,",
                 "maximumOwnerDurationInMonths": 36,
                 "category": "Outcomes Report 1",
                 "reportsAlignedToCalendar": false,
-                "activityType": "RLP Short term project outcomes",
+                "activityType": outcomes1ReportFormName,
                 "label":"Outcomes Report 1"
             },
             {
@@ -929,12 +933,12 @@ var config=
                 "reportNameFormat": "Outcomes Report 1",
                 "reportingPeriodInMonths": 36,
                 "multiple": false,
-                "description": "Before beginning Outcomes Report 1, please go to the Data set summary tab and complete a form for each data set collected for this project. Help with completing this form can be found in Section 10 of the [RLP MERIT User Guide](http://www.nrm.gov.au/my-project/monitoring-and-reporting-plan/merit)",
+                "description": "This report is still being developed.  _Please do not reporting until the new report is ready for use._,",
                 "maximumOwnerDurationInMonths": 48,
                 "calendarAlignmentMonth": 7,
                 "category": "Outcomes Report",
                 "reportsAlignedToCalendar": true,
-                "activityType": "RLP Short term project outcomes",
+                "activityType": outcomes1ReportFormName,
                 "label": "Outcomes Report 1"
             },
             {
@@ -944,9 +948,9 @@ var config=
                 "reportNameFormat": "Outcomes Report 1",
                 "reportingPeriodInMonths": 36,
                 "multiple": false,
-                "description": "Before beginning Outcomes Report 1, please go to the Data set summary tab and complete a form for each data set collected for this project. Help with completing this form can be found in Section 10 of the [RLP MERIT User Guide](http://www.nrm.gov.au/my-project/monitoring-and-reporting-plan/merit)",
+                "description": "This report is still being developed.  _Please do not reporting until the new report is ready for use._,",
                 "category": "Outcomes Report 1",
-                "activityType": "RLP Short term project outcomes",
+                "activityType": outcomes1ReportFormName,
                 "label": "Outcomes Report 1"
             },
             {
@@ -957,9 +961,9 @@ var config=
                 "alignToOwnerStart":true,
                 "alignToOwnerEnd":true,
                 "multiple": false,
-                "description": "Before beginning Outcomes Report 1, please go to the Data set summary tab and complete a form for each data set collected for this project. Help with completing this form can be found in Section 10 of the [RLP MERIT User Guide](http://www.nrm.gov.au/my-project/monitoring-and-reporting-plan/merit)",
+                "description": "This report is still being developed.  _Please do not reporting until the new report is ready for use._,",
                 "category": "Outcomes Report 2",
-                "activityType": "RLP Short term project outcomes",
+                "activityType": outcomes2ReportFormName,
                 "label": "Outcomes Report 2"
             }
         ],
@@ -1590,3 +1594,63 @@ while (services.hasNext()) {
         }
     }
 }
+
+
+var blankReportTemplate = function(name, templateName, category) {
+    return {
+        dateCreated: ISODate(),
+        minOptionalSectionsCompleted: 1,
+        supportsSites: false,
+        lastUpdated: ISODate(),
+        external: false,
+        supportsPhotoPoints: false,
+        publicationStatus: 'published',
+        name: name,
+        sections: [
+            {
+                collapsedByDefault: false,
+                template: {
+                    modelName: name,
+                    dataModel: [],
+                    viewModel: [{
+                        type: 'row', items: [{
+                            type: "literal",
+                            source: "<h4>This report is in development</h4>"
+                        }]
+                    }],
+                    title: name
+                },
+                templateName: templateName,
+                optional: false,
+                name: name
+            }
+        ],
+        type: 'Report',
+        category: category,
+        status: 'active',
+        formVersion: 1,
+    };
+};
+const reports = [
+    {name: "New Program Annual Report", templateName: "newProgramAnnualReport", category: 'Annual Report'},
+    {
+        name: "New Program Outcomes 1 Report ",
+        templateName: "newProgramOutcomes1Report",
+        category: "Outcomes 1 Report"
+    },
+    {
+        name: "New Program Outcomes 2 Report ",
+        templateName: "newProgramOutcomes2Report",
+        category: "Outcomes 2 Report"
+    }
+];
+for (let i = 0; i < reports.length; i++) {
+    let reportConfig = reports[i];
+    let report = db.activityForm.findOne({name: reportConfig.name});
+    if (!report) {
+
+        let template = blankReportTemplate(reportConfig.name, reportConfig.templateName, reportConfig.category);
+        db.activityForm.insertOne(template);
+    }
+}
+

@@ -11,6 +11,7 @@ const reportConfig = {
             "reportDescriptionFormat": "Regional capacity services report %d for %4$s",
             "reportNameFormat": "Regional capacity report %d",
             "reportingPeriodInMonths": 3,
+            "minimumReportDurationInDays": 1,
             "label": "Quarterly",
             "category": "Regional Capacity Services Reporting",
             "activityType": "Regional Capacity Services Report"
@@ -18,17 +19,54 @@ const reportConfig = {
         {
             "periodStart": "2023-06-30T14:00:00Z",
             "periodEnd": "2028-06-29T14:00:00Z",
+            "firstReportingPeriodEnd":"2024-06-30T14:00:00Z",
             "reportType": "Administrative",
             "reportDescriptionFormat": "Regional capacity annual report %d for %4$s",
             "reportNameFormat": "Regional capacity annual report %d",
             "reportingPeriodInMonths": 12,
+            "minimumReportDurationInDays": 1,
             "label": "Annual",
-            "description": "The core services annual report is being updated for the 21/22 financial year.  _Please do not commence annual reporting until the new report is ready for use._",
+            "description": "The Regional Capacity Services Annual Report is in development.  _Please do not commence annual reporting until the new report is ready for use._",
             "category": "Regional Capacity Services Annual Reporting",
-            "activityType": "RLP Core Services annual report"
+            "activityType": "Regional Capacity Services Annual Report"
         }
     ]
 };
+
+var annualReportContents =  {
+    dateCreated: ISODate(),
+    minOptionalSectionsCompleted: 1,
+    supportsSites: false,
+    lastUpdated: ISODate(),
+    external: false,
+    supportsPhotoPoints: false,
+    publicationStatus: 'published',
+    name: 'Regional Capacity Services Annual Report',
+    sections: [
+        {
+            collapsedByDefault: false,
+            template: {
+                modelName: 'Regional Capacity Services Annual Report',
+                dataModel: [],
+                viewModel: [ { type: 'row', items: [Array] } ],
+                title: 'Regional Capacity Services Annual Report'
+            },
+            templateName: 'regionalCapacityServicesAnnualReport',
+            optional: false,
+            name: 'Regional Capacity Services Annual Report'
+        }
+    ],
+    type: 'Report',
+    category: 'Regional Capacity Services Annual Report',
+    status: 'active',
+    formVersion: 1,
+};
+let annualReport = db.activityForm.find({name: annualReportContents.name});
+if (!annualReport) {
+    db.activityForm.insertOne(annualReportContents);
+}
+
+
 var setting = {
     key: 'meritorganisation.availableReportsConfig',
     value: JSON.stringify(reportConfig),
