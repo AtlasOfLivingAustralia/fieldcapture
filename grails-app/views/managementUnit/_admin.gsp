@@ -36,11 +36,6 @@
             <div class="tab-pane" id="managementUnit-permissions">
                 <h4>Add Permissions</h4>
 
-                <div class="row-fluid">
-                    <div class="span6 alert alert-info">
-                        Any user access assigned to this management unit will automatically be applied to all projects run under this management unit.
-                    </div>
-                </div>
                 <g:render template="/admin/addPermissions"
                           model="[addUserUrl: g.createLink(controller: 'managementUnit', action: 'addUserAsRoleToManagementUnit'), entityType: 'au.org.ala.ecodata.ManagementUnit', entityId: mu.managementUnitId]"/>
 

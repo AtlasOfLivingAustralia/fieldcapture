@@ -41,11 +41,6 @@
         <div class="tab-pane" id="program-permissions">
             <h4>Add Permissions</h4>
 
-            <div class="row-fluid">
-                <div class="span6 alert alert-info">
-                    Any user access assigned to this program will automatically be applied to all projects run under this program.
-                </div>
-            </div>
             <g:render template="/admin/addPermissions"
                       model="[addUserUrl: g.createLink(controller: 'program', action: 'addUserAsRoleToProgram'), entityType: 'au.org.ala.ecodata.Program', entityId: program.programId]"/>
 
