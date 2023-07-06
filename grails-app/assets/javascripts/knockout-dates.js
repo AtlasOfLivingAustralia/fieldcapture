@@ -521,8 +521,8 @@ ko.extenders.async = function(computedDeferred, initialValue) {
 
 ko.bindingHandlers.fileUploadNoImage = {
     init: function(element, options) {
-
-        var defaults = {autoUpload:true};
+        var dropzone = $(element).parent();
+        var defaults = {autoUpload:true, dropZone: dropzone};
         var settings = {};
         $.extend(settings, defaults, options());
         $(element).fileupload(settings);
