@@ -29,11 +29,6 @@
         <div class="tab-pane" id="organisation-permissions">
             <h4>Add Permissions</h4>
 
-            <div class="row">
-                <div class="ml-3 col-sm-6 alert alert-primary">
-                    Any user access assigned to this organisation will automatically be applied to all projects managed by this organisation.
-                </div>
-            </div>
             <g:render template="/admin/addPermissions" model="[addUserUrl:g.createLink(controller:'organisation', action:'addUserAsRoleToOrganisation'), entityType:'au.org.ala.ecodata.Organisation', entityId:organisation.organisationId]"/>
             <g:render template="/admin/permissionTable" model="[loadPermissionsUrl:loadPermissionsUrl, removeUserUrl:g.createLink(controller:'organisation', action:'removeUserWithRoleFromOrganisation'), entityId:organisation.organisationId, user:user]"/>
 
