@@ -151,6 +151,93 @@ OrganisationViewModel = function (props, options) {
 OrganisationPageViewModel = function (props, options) {
     var self = $.extend(this, new Documents(options));
 
+    self.organisationId = props.organisationId;
+    self.description = ko.observable(props.description).extend({markdown:true});
+    self.abn = ko.observable(props.abn);
+    self.url = ko.observable(props.url);
+    self.name = props.name;
+
+
+    var tabs = {
+        'about': {
+            initialiser: function() {
+                if (self.mainImageUrl()) {
+                    $('#carousel').sliderPro({
+                        width: '100%',
+                        height: 'auto',
+                        autoHeight: true,
+                        arrows: false, // at the moment we only support 1 image
+                        buttons: false,
+                        waitForLayers: true,
+                        fade: true,
+                        autoplay: false,
+                        autoScaleLayers: false,
+                        touchSwipe: false // at the moment we only support 1 image
+                    });
+                }
+            }
+        },
+        'dashboard': {
+            initialiser: function() {
+                var SELECTED_REPORT_KEY = 'selectedOrganisationReport';
+                var selectedReport = amplify.store(SELECTED_REPORT_KEY);
+                var $dashboardType = $('#dashboardType');
+                // This check is to prevent errors when a particular organisation is missing a report or the user
+                // permission set if different when viewing different organisations.
+                if (!$dashboardType.find('option[value='+selectedReport+']')[0]) {
+                    selectedReport = 'dashboard';
+                }
+                $dashboardType.val(selectedReport);
+                $dashboardType.change(function(e) {
+                    var $content = $('#dashboard-content');
+                    var $loading = $('.loading-message');
+                    $content.hide();
+                    $loading.show();
+
+                    var reportType = $dashboardType.val();
+
+                    $.get(fcConfig.dashboardUrl, {report:reportType}).done(function(data) {
+                        $content.html(data);
+                        $loading.hide();
+                        $content.show();
+                        $('#dashboard-content .helphover').popover({animation: true, trigger:'hover', container:'body'});
+                        amplify.store(SELECTED_REPORT_KEY, reportType);
+                    });
+
+                }).trigger('change');
+            }
+        },
+        'sites': {
+            initialiser: function () {
+                generateMap(['organisationFacet:' + self.name], false, {includeLegend: false});
+            }
+        },
+        'admin': {
+            initialiser: function () {
+                populatePermissionsTable();
+                $(options.reportingConfigSelector).validationEngine();
+            }
+        }
+    };
+
+    self.initialise = function() {
+        $.fn.dataTable.moment( 'dd-MM-yyyy' );
+        initialiseTabs(tabs, {tabSelector:'#orgTabs.nav a', tabStorageKey:'selected-organisation-tab'});
+    };
+
+    self.deleteOrganisation = function() {
+        if (window.confirm("Delete this organisation?  Are you sure?")) {
+            $.post(options.organisationDeleteUrl).complete(function() {
+                    window.location = fcConfig.organisationListUrl;
+                }
+            );
+        };
+    };
+
+    self.editOrganisation = function() {
+       window.location = fcConfig.organisationEditUrl;
+    };
+
     var reportService = new ReportService(options)
 
     var defaults = {
@@ -264,38 +351,6 @@ OrganisationPageViewModel = function (props, options) {
         blockUIWithMessage("Regenerating reports...");
         var data = JSON.stringify({organisationReportCategories:self.selectedOrganisationReportCategories()});
         reportService.regenerateReports(data,options.regenerateOrganisationReportsUrl);
-    };
-
-    var tabs = {
-        'admin': {
-            initialiser: function () {
-                populatePermissionsTable();
-                $(options.reportingConfigSelector).validationEngine();
-            }
-        }
-    };
-
-    self.initialise = function() {
-        $.fn.dataTable.moment( 'dd-MM-yyyy' );
-        initialiseTabs(tabs, {tabSelector:'#orgTabs.nav a', tabStorageKey:'selected-organisation-tab'});
-    };
-
-    self.organisationId = props.organisationId;
-    self.description = ko.observable(props.description).extend({markdown:true});
-    self.abn = ko.observable(props.abn);
-    self.url = ko.observable(props.url);
-
-    self.deleteOrganisation = function() {
-        if (window.confirm("Delete this organisation?  Are you sure?")) {
-            $.post(options.organisationDeleteUrl).complete(function() {
-                    window.location = fcConfig.organisationListUrl;
-                }
-            );
-        };
-    };
-
-    self.editOrganisation = function() {
-       window.location = fcConfig.organisationEditUrl;
     };
 
     self.saveOrganisationConfiguration = function() {

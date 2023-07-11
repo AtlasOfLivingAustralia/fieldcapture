@@ -86,76 +86,7 @@
         ko.applyBindings(organisationViewModel);
         organisationViewModel.initialise();
         $('#loading').hide();
-        $('#organisationDetails').show({complete:function() {
-            if (organisationViewModel.mainImageUrl()) {
-            $( '#carousel' ).sliderPro({
-                width: '100%',
-                height: 'auto',
-                autoHeight: true,
-                arrows: false, // at the moment we only support 1 image
-                buttons: false,
-                waitForLayers: true,
-                fade: true,
-                autoplay: false,
-                autoScaleLayers: false,
-                touchSwipe:false // at the moment we only support 1 image
-            });
-        }
-        }});
-
-        var SELECTED_REPORT_KEY = 'selectedOrganisationReport';
-        var selectedReport = amplify.store(SELECTED_REPORT_KEY);
-        var $dashboardType = $('#dashboardType');
-        // This check is to prevent errors when a particular organisation is missing a report or the user
-        // permission set if different when viewing different organisations.
-        if (!$dashboardType.find('option[value='+selectedReport+']')[0]) {
-           selectedReport = 'dashboard';
-        }
-        $dashboardType.val(selectedReport);
-        $dashboardType.change(function(e) {
-            var $content = $('#dashboard-content');
-            var $loading = $('.loading-message');
-            $content.hide();
-            $loading.show();
-
-            var reportType = $dashboardType.val();
-
-            $.get(fcConfig.dashboardUrl, {report:reportType}).done(function(data) {
-                $content.html(data);
-                $loading.hide();
-                $content.show();
-                $('#dashboard-content .helphover').popover({animation: true, trigger:'hover', container:'body'});
-                amplify.store(SELECTED_REPORT_KEY, reportType);
-            });
-
-        }).trigger('change');
-
-        var organisationTabStorageKey = 'organisation-page-tab';
-        var initialisedSites = false;
-        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-            var tab = e.currentTarget.hash;
-            amplify.store(organisationTabStorageKey, tab);
-            if (!initialisedSites && tab == '#sites') { // Google maps doesn't initialise well unless it is visible.
-                generateMap(['organisationFacet:'+organisation.name], false, {includeLegend:false});
-                initialisedSites = true;
-            }
-        });
-
-        var storedTab = window.location.hash;
-        if (!storedTab) {
-            storedTab = amplify.store(organisationTabStorageKey);
-        }
-
-        if (storedTab) {
-            var $tab = $(storedTab + '-tab');
-            if ($tab[0]) {
-                $tab.tab('show');
-            }
-        }
-
-    <g:if test="${content.admin.visible}">
-        populatePermissionsTable(fcConfig.organisationMembersUrl);
-    </g:if>
+        $('#organisationDetails').show();
     });
 
 </asset:script>
