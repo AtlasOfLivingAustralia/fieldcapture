@@ -6801,704 +6801,7 @@
       "name": "RDP - Fauna survey",
       "description": null
     },
-    {
-      "collapsedByDefault": false,
-      "template": {
-        "dataModel": [
-          {
-            "dataType": "text",
-            "name": "participationIndividualsOrGroups",
-            "constraints": [
-              "Individuals",
-              "Groups"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "participationIndividualNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
-              }
-            ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "participationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "firstNationIndividualNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
-              }
-            ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "firstNationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "text",
-            "name": "participationDetails",
-            "validate": "maxSize[3000]"
-          },
-          {
-            "columns": [
-              {
-                "dataType": "text",
-                "name": "initialOrFollowup",
-                "constraints": [
-                  "Initial",
-                  "Follow-up"
-                ],
-                "validate": "required"
-              },
 
-              {
-                "columns": [
-                  {
-                    "dataType": "feature",
-                    "name": "sitesTreated"
-                  },
-                  {
-                    "computed": {
-                      "expression": "$geom.areaHa(sitesTreated)"
-                    },
-                    "dataType": "number",
-                    "name": "calculatedAreaTreatedHa",
-                    "units": "ha",
-                    "decimalPlaces": 3,
-                    "behaviour": [
-                      {
-                        "condition": "areaInvoicedTreatedHa > 0",
-                        "type": "conditional_validation",
-                        "value": {
-                          "message": "The managed area must be mapped",
-                          "validate": "required,min[0.0001]"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "computed": {
-                      "expression": "$geom.lengthKm(sitesTreated)"
-                    },
-                    "dataType": "number",
-                    "name": "calculatedLengthTreatedKm",
-                    "units": "km",
-                    "decimalPlaces": 3,
-                    "behaviour": [
-                      {
-                        "condition": "lengthTreatedKm > 0",
-                        "type": "conditional_validation",
-                        "value": {
-                          "message": "The managed length must be mapped",
-                          "validate": "required,min[0.0001]"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "defaultValue": {
-                      "type": "computed",
-                      "expression": "calculatedAreaTreatedHa"
-                    },
-                    "dataType": "number",
-                    "name": "areaTreatedHa",
-                    "units": "ha",
-                    "decimalPlaces": 3,
-                    "validate": "required,min[0]"
-                  },
-                  {
-                    "defaultValue": {
-                      "type": "computed",
-                      "expression": "calculatedLengthTreatedKm"
-                    },
-                    "dataType": "number",
-                    "name": "lengthTreatedKm",
-                    "units": "km",
-                    "decimalPlaces": 3,
-                    "validate": "required,min[0]"
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "mappingNotAlignedReason",
-                    "constraints": [
-                      "Mapped area simplifies more complex area/s where work was undertaken during this period",
-                      "Other"
-                    ],
-                    "validate": "required",
-                    "behaviour": [
-                      {
-                        "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1))",
-                        "type": "visible"
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "mappingNotAlignedComments",
-                    "validate": "required,maxSize[300]",
-                    "behaviour": [
-                      {
-                        "type": "visible",
-                        "condition": "\"Other\" == mappingNotAlignedReason"
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "document",
-                    "name": "extraMappingDetails",
-                    "validate": "required",
-                    "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
-                    "behaviour": [
-                      {
-                        "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1)) or roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedTreatedHa, 2)",
-                        "type": "visible"
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "areaInvoicedTreatedHa",
-                    "units": "ha",
-                    "decimalPlaces": 3,
-                    "validate": [
-                      {
-                        "rule": "min[0]"
-                      },
-                      {
-                        "rule": "max",
-                        "param": {
-                          "type": "computed",
-                          "expression": "areaTreatedHa"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "invoicedNotActualReason",
-                    "constraints": [
-                      "Work was undertaken over a greater area than will be invoiced for",
-                      "Other"
-                    ],
-                    "validate": "required",
-                    "behaviour": [
-                      {
-                        "condition": "roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedTreatedHa, 2)",
-                        "type": "visible"
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "invoicedNotActualComments",
-                    "behaviour": [
-                      {
-                        "type": "visible",
-                        "condition": "\"Other\" == invoicedNotActualReason"
-                      }
-                    ],
-                    "validate": "required,maxSize[300]"
-                  },
-                  {
-                    "defaultValue": {
-                      "type": "computed",
-                      "expression": "$geom.lengthKm(sitesTreated)"
-                    },
-                    "dataType": "number",
-                    "name": "lengthTreatedKm",
-                    "units": "km",
-                    "decimalPlaces": 3,
-                    "validate": [
-                      {
-                        "rule": "min",
-                        "param": {
-                          "type": "computed",
-                          "expression": "$geom.lengthKm(sitesTreated)*0.9"
-                        }
-                      },
-                      {
-                        "rule": "max",
-                        "param": {
-                          "type": "computed",
-                          "expression": "$geom.lengthKm(sitesTreated)*1.1"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "fireManagementType",
-                    "description": "",
-                    "constraints": [
-                      "Cultural burn",
-                      "Ecological burn",
-                      "Grading",
-                      "Hazard reduction burn",
-                      "Herbicide",
-                      "Slashing",
-                      "Other"
-                    ],
-                    "validate": "required"
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "otherFireManagementType",
-                    "behaviour": [
-                      {
-                        "condition": "fireManagementType == \"Other\"",
-                        "type": "enable"
-                      }
-                    ],
-                    "validate": "required,maxSize[100]"
-                  },
-                  {
-                    "dataType": "feature",
-                    "name": "sitesBenefittedByFireAction"
-                  },
-                  {
-                    "computed": {
-                      "expression": "$geom.areaHa(sitesBenefittedByFireAction)"
-                    },
-                    "dataType": "number",
-                    "name": "areaBenefittedByFireActionHa"
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "evidenceOfBenefit",
-                    "validate": "maxSize[300]"
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "investmentPrioritiesActivityRelates",
-                    "description": "",
-                    "validate": "required,maxSize[300]"
-                  },
-                  {
-                    "name": "outcomeStatementPrePop",
-                    "dataType": "text",
-                    "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
-                    "validate": "required",
-                    "constraints": {
-                      "textProperty": "description",
-                      "valueProperty": "description",
-                      "type": "pre-populated",
-                      "config": {
-                        "source": {
-                          "context-path": "owner.custom.details.outcomes.shortTermOutcomes"
-                        }
-                      }
-                    }
-                  }
-                ],
-                "dataType": "list",
-                "name": "fireManagementDetails"
-              }
-            ],
-            "dataType": "list",
-            "name": "areasControlled"
-          },
-          {
-            "dataType": "text",
-            "name": "comments",
-            "validate": "maxSize[1500]"
-          },
-          {
-            "dataType": "image",
-            "name": "photographicEvidence"
-          },
-          {
-            "dataType": "boolean",
-            "name": "dataUploaded",
-            "description": ""
-          },
-          {
-            "dataType": "text",
-            "name": "projectAssuranceDetails",
-            "description": ""
-          },
-          {
-            "dataType": "list",
-            "name": "assuranceDocuments",
-            "columns": [
-              {
-                "dataType": "document",
-                "name": "attachments",
-                "description": "Please attach any Evidence of Service Delivery here"
-              }
-            ]
-          }
-        ],
-        "modelName": "RDP - Fire management",
-        "title": "Implementing fire management actions",
-        "viewModel": [
-          {
-            "columns": [
-              {
-                "width": "10%",
-                "source": "participationIndividualsOrGroups",
-                "title": "Individuals or groups?",
-                "type": "selectOne"
-              },
-              {
-                "width": "20%",
-                "type": "col",
-                "title": "Total Number of people delivering this service",
-                "items": [
-                  {
-                    "source": "participationIndividualNumber",
-                    "type": "number"
-                  },
-                  {
-                    "source": "participationGroupNumber",
-                    "type": "selectOne"
-                  }
-                ]
-              },
-              {
-                "type": "col",
-                "width": "20%",
-                "title": "Total Number of First Nations people delivering this service ",
-                "items": [
-                  {
-                    "source": "firstNationIndividualNumber",
-                    "type": "number"
-                  },
-                  {
-                    "source": "firstNationGroupNumber",
-                    "type": "selectOne"
-                  }
-                ]
-              },
-              {
-                "source": "participationDetails",
-                "rows": 4,
-                "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
-                "type": "textarea"
-              }
-            ],
-            "userAddedRows": false,
-            "disableTableUpload": false,
-            "source": "",
-            "type": "table"
-          },
-
-          {
-            "type": "section",
-            "items": [
-              {
-                "addRowText": "Add a new controlled area",
-                "userAddedRows": true,
-                "source": "areasControlled",
-                "type": "repeat",
-                "items": [
-                  {
-                    "type": "row",
-                    "css": "border-bottom",
-                    "items": [
-                      {
-                        "preLabel": "Initial or follow-up?",
-                        "css": "span3",
-                        "source": "initialOrFollowup",
-                        "type": "selectOne"
-                      }
-                    ]
-                  },
-
-                  {
-                    "columns": [
-                      {
-                        "width": "10%",
-                        "title": "Site/s treated by fire management action",
-                        "type": "col",
-                        "items": [
-                          {
-                            "source": "sitesTreated",
-                            "type": "feature"
-                          },
-                          {
-                            "source": "calculatedAreaTreatedHa",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            },
-                            "readonly": "readonly"
-                          },
-                          {
-                            "source": "calculatedLengthTreatedKm",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            },
-                            "readonly": "readonly"
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "Please attach mapping details",
-                                "source": "extraMappingDetails",
-                                "type": "document"
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "width": "20%",
-                        "type": "col",
-                        "title": "Actual area (ha) / length (km) treated by managment action",
-                        "helpText": "Enter the amount you will invoice for during this reporting period.",
-                        "items": [
-                          {
-                            "source": "areaTreatedHa",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            }
-                          },
-                          {
-                            "source": "lengthTreatedKm",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            }
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "Reason for actual being different to mapped amount",
-                                "source": "mappingNotAlignedReason",
-                                "type": "selectOne"
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
-                                "source": "mappingNotAlignedComments",
-                                "type": "textarea",
-                                "rows": 5
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "width": "15%",
-                        "type": "col",
-                        "title": "Invoiced area (ha) treated by management action",
-                        "helpText": "Enter the amount you will invoice for during this reporting period.",
-                        "items": [
-                          {
-                            "source": "areaInvoicedTreatedHa",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            }
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "Reason for invoiced amount being different to actual amount",
-                                "source": "invoicedNotActualReason",
-                                "type": "selectOne"
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
-                                "source": "invoicedNotActualComments",
-                                "type": "textarea",
-                                "rows": 5
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "width": "10%",
-                        "title": "Type of fire management action",
-                        "type": "col",
-                        "items": [
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "fireManagementType",
-                                "type": "select2"
-                              }
-                            ]
-                          },
-                          {
-                            "source": "otherFireManagementType",
-                            "type": "text"
-                          }
-                        ]
-                      },
-                      {
-                        "width": "15%",
-                        "type": "col",
-                        "title": "Please map any off-site area/s if they benefitted from this fire management action",
-                        "items": [
-                          {
-                            "source": "sitesBenefittedByFireAction",
-                            "type": "feature",
-                            "title": "Please map any off-site area/s if they benefitted from this fire management action"
-                          },
-                          {
-                            "source": "areaBenefittedByFireActionHa",
-                            "type": "number",
-                            "readonly": "readonly",
-                            "title": "Area (ha) protected by fire management action"
-                          }
-                        ]
-                      },
-                      {
-                        "width": "15%",
-                        "source": "evidenceOfBenefit",
-                        "type": "textarea",
-                        "rows": 3,
-                        "title": "If off-site area was mapped please provide a description on the evidence available to reflect this benefit"
-                      },
-                      {
-                        "width": "15%",
-                        "source": "investmentPrioritiesActivityRelates",
-                        "title": "Which investment priority does this activity relate to?",
-                        "type": "text"
-                      },
-                      {
-                        "width": "15%",
-                        "source": "outcomeStatementPrePop",
-                        "type": "select2Many",
-                        "title": "Which outcome statement/s relates to this survey?"
-                      }
-                    ],
-                    "userAddedRows": true,
-                    "source": "fireManagementDetails",
-                    "type": "table"
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "preLabel": "Optionally attach photos",
-                    "source": "photographicEvidence",
-                    "type": "image"
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "preLabel": "Clarification, if needed",
-                    "type": "textarea",
-                    "rows": 4,
-                    "css": "span8",
-                    "source": "comments",
-                    "placeholder": "Clarification comments include information for your project manager about the service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
-                  },
-                  {
-                    "preLabel": "Data have been uploaded",
-                    "source": "dataUploaded",
-                    "type": "boolean"
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "preLabel": "",
-                    "source": "projectAssuranceDetails",
-                    "type": "textarea",
-                    "rows": 4,
-                    "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
-                  }
-                ]
-              },
-              {
-                "type": "table",
-                "source": "assuranceDocuments",
-                "userAddedRows": true,
-                "disableTableUpload": true,
-                "columns": [
-                  {
-                    "title": "Attached documents",
-                    "source": "attachments",
-                    "type": "document"
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "modelName": null,
-      "templateName": "rdpFireManagement",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": "Fire management actions",
-      "collapsibleHeading": null,
-      "name": "RDP - Fire management",
-      "description": null
-    },
     {
       "collapsedByDefault": false,
       "template": {
@@ -9876,6 +9179,704 @@
                 ],
                 "validate": "required"
               },
+
+              {
+                "columns": [
+                  {
+                    "dataType": "feature",
+                    "name": "sitesTreated"
+                  },
+                  {
+                    "computed": {
+                      "expression": "$geom.areaHa(sitesTreated)"
+                    },
+                    "dataType": "number",
+                    "name": "calculatedAreaTreatedHa",
+                    "units": "ha",
+                    "decimalPlaces": 3,
+                    "behaviour": [
+                      {
+                        "condition": "areaInvoicedTreatedHa > 0",
+                        "type": "conditional_validation",
+                        "value": {
+                          "message": "The managed area must be mapped",
+                          "validate": "required,min[0.0001]"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "computed": {
+                      "expression": "$geom.lengthKm(sitesTreated)"
+                    },
+                    "dataType": "number",
+                    "name": "calculatedLengthTreatedKm",
+                    "units": "km",
+                    "decimalPlaces": 3,
+                    "behaviour": [
+                      {
+                        "condition": "lengthTreatedKm > 0",
+                        "type": "conditional_validation",
+                        "value": {
+                          "message": "The managed length must be mapped",
+                          "validate": "required,min[0.0001]"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "defaultValue": {
+                      "type": "computed",
+                      "expression": "calculatedAreaTreatedHa"
+                    },
+                    "dataType": "number",
+                    "name": "areaTreatedHa",
+                    "units": "ha",
+                    "decimalPlaces": 3,
+                    "validate": "required,min[0]"
+                  },
+                  {
+                    "defaultValue": {
+                      "type": "computed",
+                      "expression": "calculatedLengthTreatedKm"
+                    },
+                    "dataType": "number",
+                    "name": "lengthTreatedKm",
+                    "units": "km",
+                    "decimalPlaces": 3,
+                    "validate": "required,min[0]"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "mappingNotAlignedReason",
+                    "constraints": [
+                      "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                      "Other"
+                    ],
+                    "validate": "required",
+                    "behaviour": [
+                      {
+                        "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1))",
+                        "type": "visible"
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "mappingNotAlignedComments",
+                    "validate": "required,maxSize[300]",
+                    "behaviour": [
+                      {
+                        "type": "visible",
+                        "condition": "\"Other\" == mappingNotAlignedReason"
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "document",
+                    "name": "extraMappingDetails",
+                    "validate": "required",
+                    "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                    "behaviour": [
+                      {
+                        "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1)) or roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedTreatedHa, 2)",
+                        "type": "visible"
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "areaInvoicedTreatedHa",
+                    "units": "ha",
+                    "decimalPlaces": 3,
+                    "validate": [
+                      {
+                        "rule": "min[0]"
+                      },
+                      {
+                        "rule": "max",
+                        "param": {
+                          "type": "computed",
+                          "expression": "areaTreatedHa"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "invoicedNotActualReason",
+                    "constraints": [
+                      "Work was undertaken over a greater area than will be invoiced for",
+                      "Other"
+                    ],
+                    "validate": "required",
+                    "behaviour": [
+                      {
+                        "condition": "roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedTreatedHa, 2)",
+                        "type": "visible"
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "invoicedNotActualComments",
+                    "behaviour": [
+                      {
+                        "type": "visible",
+                        "condition": "\"Other\" == invoicedNotActualReason"
+                      }
+                    ],
+                    "validate": "required,maxSize[300]"
+                  },
+                  {
+                    "defaultValue": {
+                      "type": "computed",
+                      "expression": "$geom.lengthKm(sitesTreated)"
+                    },
+                    "dataType": "number",
+                    "name": "lengthTreatedKm",
+                    "units": "km",
+                    "decimalPlaces": 3,
+                    "validate": [
+                      {
+                        "rule": "min",
+                        "param": {
+                          "type": "computed",
+                          "expression": "$geom.lengthKm(sitesTreated)*0.9"
+                        }
+                      },
+                      {
+                        "rule": "max",
+                        "param": {
+                          "type": "computed",
+                          "expression": "$geom.lengthKm(sitesTreated)*1.1"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "fireManagementType",
+                    "description": "",
+                    "constraints": [
+                      "Cultural burn",
+                      "Ecological burn",
+                      "Grading",
+                      "Hazard reduction burn",
+                      "Herbicide",
+                      "Slashing",
+                      "Other"
+                    ],
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "otherFireManagementType",
+                    "behaviour": [
+                      {
+                        "condition": "fireManagementType == \"Other\"",
+                        "type": "enable"
+                      }
+                    ],
+                    "validate": "required,maxSize[100]"
+                  },
+                  {
+                    "dataType": "feature",
+                    "name": "sitesBenefittedByFireAction"
+                  },
+                  {
+                    "computed": {
+                      "expression": "$geom.areaHa(sitesBenefittedByFireAction)"
+                    },
+                    "dataType": "number",
+                    "name": "areaBenefittedByFireActionHa"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "evidenceOfBenefit",
+                    "validate": "maxSize[300]"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "investmentPrioritiesActivityRelates",
+                    "description": "",
+                    "validate": "required,maxSize[300]"
+                  },
+                  {
+                    "name": "outcomeStatementPrePop",
+                    "dataType": "text",
+                    "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "description",
+                      "valueProperty": "description",
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "context-path": "owner.custom.details.outcomes.shortTermOutcomes"
+                        }
+                      }
+                    }
+                  }
+                ],
+                "dataType": "list",
+                "name": "fireManagementDetails"
+              }
+            ],
+            "dataType": "list",
+            "name": "areasControlled"
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[1500]"
+          },
+          {
+            "dataType": "image",
+            "name": "photographicEvidence"
+          },
+          {
+            "dataType": "boolean",
+            "name": "dataUploaded",
+            "description": ""
+          },
+          {
+            "dataType": "text",
+            "name": "projectAssuranceDetails",
+            "description": ""
+          },
+          {
+            "dataType": "list",
+            "name": "assuranceDocuments",
+            "columns": [
+              {
+                "dataType": "document",
+                "name": "attachments",
+                "description": "Please attach any Evidence of Service Delivery here"
+              }
+            ]
+          }
+        ],
+        "modelName": "RDP - Fire management",
+        "title": "Implementing fire management actions",
+        "viewModel": [
+          {
+            "columns": [
+              {
+                "width": "10%",
+                "source": "participationIndividualsOrGroups",
+                "title": "Individuals or groups?",
+                "type": "selectOne"
+              },
+              {
+                "width": "20%",
+                "type": "col",
+                "title": "Total Number of people delivering this service",
+                "items": [
+                  {
+                    "source": "participationIndividualNumber",
+                    "type": "number"
+                  },
+                  {
+                    "source": "participationGroupNumber",
+                    "type": "selectOne"
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "width": "20%",
+                "title": "Total Number of First Nations people delivering this service ",
+                "items": [
+                  {
+                    "source": "firstNationIndividualNumber",
+                    "type": "number"
+                  },
+                  {
+                    "source": "firstNationGroupNumber",
+                    "type": "selectOne"
+                  }
+                ]
+              },
+              {
+                "source": "participationDetails",
+                "rows": 4,
+                "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                "type": "textarea"
+              }
+            ],
+            "userAddedRows": false,
+            "disableTableUpload": false,
+            "source": "",
+            "type": "table"
+          },
+
+          {
+            "type": "section",
+            "items": [
+              {
+                "addRowText": "Add a new controlled area",
+                "userAddedRows": true,
+                "source": "areasControlled",
+                "type": "repeat",
+                "items": [
+                  {
+                    "type": "row",
+                    "css": "border-bottom",
+                    "items": [
+                      {
+                        "preLabel": "Initial or follow-up?",
+                        "css": "span3",
+                        "source": "initialOrFollowup",
+                        "type": "selectOne"
+                      }
+                    ]
+                  },
+
+                  {
+                    "columns": [
+                      {
+                        "width": "10%",
+                        "title": "Site/s treated by fire management action",
+                        "type": "col",
+                        "items": [
+                          {
+                            "source": "sitesTreated",
+                            "type": "feature"
+                          },
+                          {
+                            "source": "calculatedAreaTreatedHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            },
+                            "readonly": "readonly"
+                          },
+                          {
+                            "source": "calculatedLengthTreatedKm",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            },
+                            "readonly": "readonly"
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Please attach mapping details",
+                                "source": "extraMappingDetails",
+                                "type": "document"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "width": "20%",
+                        "type": "col",
+                        "title": "Actual area (ha) / length (km) treated by managment action",
+                        "helpText": "Enter the amount you will invoice for during this reporting period.",
+                        "items": [
+                          {
+                            "source": "areaTreatedHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          },
+                          {
+                            "source": "lengthTreatedKm",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Reason for actual being different to mapped amount",
+                                "source": "mappingNotAlignedReason",
+                                "type": "selectOne"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                                "source": "mappingNotAlignedComments",
+                                "type": "textarea",
+                                "rows": 5
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "width": "15%",
+                        "type": "col",
+                        "title": "Invoiced area (ha) treated by management action",
+                        "helpText": "Enter the amount you will invoice for during this reporting period.",
+                        "items": [
+                          {
+                            "source": "areaInvoicedTreatedHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Reason for invoiced amount being different to actual amount",
+                                "source": "invoicedNotActualReason",
+                                "type": "selectOne"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                                "source": "invoicedNotActualComments",
+                                "type": "textarea",
+                                "rows": 5
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "width": "10%",
+                        "title": "Type of fire management action",
+                        "type": "col",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "fireManagementType",
+                                "type": "select2"
+                              }
+                            ]
+                          },
+                          {
+                            "source": "otherFireManagementType",
+                            "type": "text"
+                          }
+                        ]
+                      },
+                      {
+                        "width": "15%",
+                        "type": "col",
+                        "title": "Please map any off-site area/s if they benefitted from this fire management action",
+                        "items": [
+                          {
+                            "source": "sitesBenefittedByFireAction",
+                            "type": "feature",
+                            "title": "Please map any off-site area/s if they benefitted from this fire management action"
+                          },
+                          {
+                            "source": "areaBenefittedByFireActionHa",
+                            "type": "number",
+                            "readonly": "readonly",
+                            "title": "Area (ha) protected by fire management action"
+                          }
+                        ]
+                      },
+                      {
+                        "width": "15%",
+                        "source": "evidenceOfBenefit",
+                        "type": "textarea",
+                        "rows": 3,
+                        "title": "If off-site area was mapped please provide a description on the evidence available to reflect this benefit"
+                      },
+                      {
+                        "width": "15%",
+                        "source": "investmentPrioritiesActivityRelates",
+                        "title": "Which investment priority does this activity relate to?",
+                        "type": "text"
+                      },
+                      {
+                        "width": "15%",
+                        "source": "outcomeStatementPrePop",
+                        "type": "select2Many",
+                        "title": "Which outcome statement/s relates to this survey?"
+                      }
+                    ],
+                    "userAddedRows": true,
+                    "source": "fireManagementDetails",
+                    "type": "table"
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "preLabel": "Optionally attach photos",
+                    "source": "photographicEvidence",
+                    "type": "image"
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "preLabel": "Clarification, if needed",
+                    "type": "textarea",
+                    "rows": 4,
+                    "css": "span8",
+                    "source": "comments",
+                    "placeholder": "Clarification comments include information for your project manager about the service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "type": "literal",
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                  },
+                  {
+                    "preLabel": "Data have been uploaded",
+                    "source": "dataUploaded",
+                    "type": "boolean"
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "preLabel": "",
+                    "source": "projectAssuranceDetails",
+                    "type": "textarea",
+                    "rows": 4,
+                    "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
+                  }
+                ]
+              },
+              {
+                "type": "table",
+                "source": "assuranceDocuments",
+                "userAddedRows": true,
+                "disableTableUpload": true,
+                "columns": [
+                  {
+                    "title": "Attached documents",
+                    "source": "attachments",
+                    "type": "document"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "modelName": null,
+      "templateName": "rdpFireManagement",
+      "optional": true,
+      "optionalQuestionText": null,
+      "title": "Fire management actions",
+      "collapsibleHeading": null,
+      "name": "RDP - Fire management",
+      "description": null
+    },
+    {
+      "collapsedByDefault": false,
+      "template": {
+        "dataModel": [
+          {
+            "dataType": "text",
+            "name": "participationIndividualsOrGroups",
+            "constraints": [
+              "Individuals",
+              "Groups"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "participationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "participationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "firstNationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "firstNationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "participationDetails",
+            "validate": "maxSize[3000]"
+          },
+          {
+            "columns": [
+              {
+                "dataType": "text",
+                "name": "initialOrFollowup",
+                "constraints": [
+                  "Initial",
+                  "Follow-up"
+                ],
+                "validate": "required"
+              },
               {
                 "columns": [
                   {
@@ -10531,7 +10532,36 @@
             "name": "participationDetails",
             "validate": "maxSize[3000]"
           },
-
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[1500]"
+          },
+          {
+            "dataType": "image",
+            "name": "photographicEvidence"
+          },
+          {
+            "dataType": "boolean",
+            "name": "dataUploaded",
+            "description": ""
+          },
+          {
+            "dataType": "text",
+            "name": "projectAssuranceDetails",
+            "description": ""
+          },
+          {
+            "dataType": "list",
+            "name": "assuranceDocuments",
+            "columns": [
+              {
+                "dataType": "document",
+                "name": "attachments",
+                "description": "Please attach any Evidence of Service Delivery here"
+              }
+            ]
+          },
           {
             "columns": [
               {
@@ -11485,6 +11515,36 @@
             ],
             "dataType": "list",
             "name": "areasControlled"
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[1500]"
+          },
+          {
+            "dataType": "image",
+            "name": "photographicEvidence"
+          },
+          {
+            "dataType": "boolean",
+            "name": "dataUploaded",
+            "description": ""
+          },
+          {
+            "dataType": "text",
+            "name": "projectAssuranceDetails",
+            "description": ""
+          },
+          {
+            "dataType": "list",
+            "name": "assuranceDocuments",
+            "columns": [
+              {
+                "dataType": "document",
+                "name": "attachments",
+                "description": "Please attach any Evidence of Service Delivery here"
+              }
+            ]
           }
         ],
         "modelName": "RDP - Disease management",
@@ -11761,7 +11821,6 @@
                   }
                 ]
               },
-
               {
                 "type": "row",
                 "items": [
