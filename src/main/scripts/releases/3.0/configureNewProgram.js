@@ -895,7 +895,8 @@ var config=
                 "category": "Outputs Reporting",
                 "activityType": serviceFormName,
                 "canSubmitDuringReportingPeriod": true,
-                "label": "Quarter"
+                "label": "Quarter",
+                "minimumReportDurationInDays": 1
 
             },
             {
@@ -908,7 +909,8 @@ var config=
                 "category": "Annual Progress Reporting",
                 "activityType": annualReportFormName,
                 "description": "This report is still being developed.  _Please do not reporting until the new report is ready for use._,",
-                "label": "Annual"
+                "label": "Annual",
+                "minimumReportDurationInDays": 1
             },
             {
                 "reportType": "Single",
