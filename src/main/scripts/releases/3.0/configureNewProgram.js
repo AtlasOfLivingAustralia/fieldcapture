@@ -887,7 +887,7 @@ var config=
         "projectReports": [
             {
                 "reportType": "Activity",
-                "firstReportingPeriodEnd": "2021-06-30T14:00:00Z",
+                "reportsAlignedToCalendar": true,
                 "reportDescriptionFormat": "Year %5$s - %6$s %7$d Outputs Report",
                 "reportNameFormat": "Year %5$s - %6$s %7$d Outputs Report",
                 "reportingPeriodInMonths": 3,
@@ -899,7 +899,7 @@ var config=
 
             },
             {
-                "firstReportingPeriodEnd": "2021-06-30T14:00:00Z",
+                "firstReportingPeriodEnd": "2024-06-30T14:00:00Z",
                 "reportType": "Administrative",
                 "reportDescriptionFormat": "Annual Progress Report %2$tY - %3$tY for %4$s",
                 "reportNameFormat": "Annual Progress Report %2$tY - %3$tY",
