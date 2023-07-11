@@ -14934,6 +14934,78 @@
       "template": {
         "dataModel": [
           {
+            "dataType": "text",
+            "name": "participationIndividualsOrGroups",
+            "constraints": [
+              "Individuals",
+              "Groups"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "participationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "participationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "firstNationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "firstNationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "participationDetails",
+            "validate": "maxSize[3000]"
+          },
+          {
             "columns": [
               {
                 "dataType": "text",
@@ -15127,6 +15199,40 @@
                 "validate": "maxSize[300]"
               },
               {
+                "name": "outcomeStatementPrePop",
+                "dataType": "text",
+                "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
+                "validate": "required",
+                "constraints": {
+                  "textProperty": "description",
+                  "valueProperty": "description",
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "context-path": "owner.custom.details.outcomes.shortTermOutcomes"
+                    }
+                  }
+                }
+              },
+              {
+                "dataType": "text",
+                "name": "investmentPrioritiesActivityRelates",
+                "description": "",
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "date",
+                "name": "activitiesStartDate",
+                "description": "",
+                "validate": "required"
+              },
+              {
+                "dataType": "date",
+                "name": "activitiesEndDate",
+                "description": "",
+                "validate": "required"
+              },
+              {
                 "columns": [
                   {
                     "dataType": "species",
@@ -15139,18 +15245,6 @@
                     "dataType": "text",
                     "name": "typeOfRevegetationActivity",
                     "validate": "required,maxSize[100]"
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "numberOfDaysCollectingSeed",
-                    "description": "Number of days should be calculated as number of days by number of people (eg. 4.5 days by 3 people is 13.5 days)",
-                    "validate": "required,min[0]"
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "numberOfDaysPropagatingPlants",
-                    "description": "Number of days should be calculated as number of days by number of people (eg. 4.5 days by 3 people is 13.5 days)",
-                    "validate": "required,min[0]"
                   },
                   {
                     "dataType": "text",
@@ -15170,15 +15264,6 @@
                     "name": "threatenedEcologicalCommunity",
                     "description": "This free text field allows multiple TECs to be entered. They should be written as listed in EPBC, and separated by ';'",
                     "validate": "maxSize[100]"
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "individualsOrKilogramsOfSeed",
-                    "constraints": [
-                      "Individuals",
-                      "Kilograms of seed"
-                    ],
-                    "validate": "required"
                   },
                   {
                     "dataType": "number",
@@ -15208,6 +15293,11 @@
             "name": "photographicEvidence"
           },
           {
+            "dataType": "boolean",
+            "name": "dataUploaded",
+            "description": ""
+          },
+          {
             "dataType": "text",
             "name": "projectAssuranceDetails",
             "description": ""
@@ -15227,6 +15317,56 @@
         "modelName": "RDP - Revegetating habitat",
         "title": "Revegetating habitat",
         "viewModel": [
+          {
+            "columns": [
+              {
+                "width": "10%",
+                "source": "participationIndividualsOrGroups",
+                "title": "Individuals or groups?",
+                "type": "selectOne"
+              },
+              {
+                "width": "20%",
+                "type": "col",
+                "title": "Total Number of people delivering this service",
+                "items": [
+                  {
+                    "source": "participationIndividualNumber",
+                    "type": "number"
+                  },
+                  {
+                    "source": "participationGroupNumber",
+                    "type": "selectOne"
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "width": "20%",
+                "title": "Total Number of First Nations people delivering this service ",
+                "items": [
+                  {
+                    "source": "firstNationIndividualNumber",
+                    "type": "number"
+                  },
+                  {
+                    "source": "firstNationGroupNumber",
+                    "type": "selectOne"
+                  }
+                ]
+              },
+              {
+                "source": "participationDetails",
+                "rows": 4,
+                "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                "type": "textarea"
+              }
+            ],
+            "userAddedRows": false,
+            "disableTableUpload": false,
+            "source": "",
+            "type": "table"
+          },
           {
             "type": "section",
             "items": [
@@ -15395,6 +15535,35 @@
                     "type": "row",
                     "items": [
                       {
+                        "preLabel": "Which outcome statement/s relates to this survey?",
+                        "css": "span3",
+                        "source": "outcomeStatementPrePop",
+                        "type": "select2Many"
+                      },
+                      {
+                        "preLabel": "Which investment priority does this activity relate to?",
+                        "css": "span3",
+                        "source": "investmentPrioritiesActivityRelates",
+                        "type": "text"
+                      },
+                      {
+                        "preLabel": "Activities Start Date",
+                        "css": "span2",
+                        "source": "activitiesStartDate",
+                        "type": "date"
+                      },
+                      {
+                        "preLabel": "Activities End Date",
+                        "css": "span2",
+                        "source": "activitiesEndDate",
+                        "type": "date"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
                         "preLabel": "Please map any off-site area/s if they benefitted from this  revegetation activity",
                         "css": "span3",
                         "source": "offSiteBenefitSites",
@@ -15420,44 +15589,26 @@
                       {
                         "width": "20%",
                         "source": "species",
-                        "title": "Species",
+                        "title": "Target Plant Species",
                         "type": "speciesSelect"
                       },
                       {
-                        "width": "5%",
-                        "source": "numberOfDaysCollectingSeed",
-                        "title": "Number of days collecting seed",
-                        "type": "number"
-                      },
-                      {
-                        "width": "5%",
-                        "source": "numberOfDaysPropagatingPlants",
-                        "title": "Number of days propagating plants",
-                        "type": "number"
-                      },
-                      {
-                        "width": "15%",
+                        "width": "10%",
                         "source": "revegetationMethod",
                         "title": "Planting method",
                         "type": "selectOne"
                       },
                       {
-                        "width": "15%",
+                        "width": "20%",
                         "source": "typeOfRevegetationActivity",
                         "title": "Type of revegetation activity",
                         "type": "text"
                       },
                       {
-                        "width": "15%",
+                        "width": "20%",
                         "source": "threatenedEcologicalCommunity",
                         "title": "Threatened ecological community (if applicable)",
                         "type": "text"
-                      },
-                      {
-                        "width": "10%",
-                        "source": "individualsOrKilogramsOfSeed",
-                        "title": "Individuals / kilograms",
-                        "type": "selectOne"
                       },
                       {
                         "width": "10%",
@@ -15507,6 +15658,11 @@
                   {
                     "type": "literal",
                     "source": "<p><b>Available Evidence</b></p>This field is mandatory for all <u>Environment</u> projects but optional for Agriculture projects. This field identifies what evidence you have available for this service and where the evidence is stored. This helps the Department and Service Providers during future assurance activities. Refer to the <a href=\"http://nrm.gov.au/publications/rlp-merit-user-guide\" target=\"_evidence\">Evidence Guide</a> for details of the types of acceptable evidence."
+                  },
+                  {
+                    "preLabel": "Data have been uploaded",
+                    "source": "dataUploaded",
+                    "type": "boolean"
                   }
                 ]
               },
