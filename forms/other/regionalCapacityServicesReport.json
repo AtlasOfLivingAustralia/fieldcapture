@@ -489,7 +489,7 @@
             "type": "row",
             "items": [
               {
-                "css": "span6",
+                "rows": 4,
                 "type": "selectOne",
                 "source": "indigenousTargetMeasuresOnTrack",
                 "preLabel": "Q5. Are you on track to deliver the target measures identified in your Indigenous Participation Plan?"
