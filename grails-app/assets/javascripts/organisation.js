@@ -216,6 +216,17 @@ OrganisationPageViewModel = function (props, options) {
             initialiser: function () {
                 populatePermissionsTable();
                 $(options.reportingConfigSelector).validationEngine();
+                var adminTabStateStorageKey = 'organisation-admin-tab-state'
+                // remember state of admin nav (vertical tabs)
+                $('#admin a.nav-link').on('shown.bs.tab', function (e) {
+                    var tab = e.currentTarget.hash;
+                    amplify.store(adminTabStateStorageKey, tab);
+                });
+                var storedAdminTab = amplify.store(adminTabStateStorageKey);
+                // restore state if saved
+                if (storedAdminTab) {
+                    $(storedAdminTab + "-tab").tab('show');
+                }
             }
         }
     };

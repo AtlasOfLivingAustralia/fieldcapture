@@ -1,10 +1,10 @@
 <div class="row">
     <div class="nav flex-column nav-pills col-3">
         <a class="nav-link active" data-toggle="pill" href="#edit-program-details" id="edit-program-details-tab" role="tab">Edit</a>
-        <a class="nav-link" data-toggle="pill" href="#organisation-permissions" id="permissions-tab" role="tab">Permissions</a>
+        <a class="nav-link" data-toggle="pill" href="#organisation-permissions" id="organisation-permissions-tab" role="tab">Permissions</a>
         <g:if test="${fc.userIsAlaOrFcAdmin()}">
-            <a class="nav-link" data-toggle="pill" href="#reporting-config" id="reporting-tab" role="tab">Reporting</a>
-            <a class="nav-link" data-toggle="pill" href="#config" id="configuration-tab" role="tab">Configuration</a>
+            <a class="nav-link" data-toggle="pill" href="#reporting-config" id="reporting-config-tab" role="tab">Reporting</a>
+            <a class="nav-link" data-toggle="pill" href="#config" id="config-tab" role="tab">Configuration</a>
         </g:if>
     </div>
 
