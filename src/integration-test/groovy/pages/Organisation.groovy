@@ -17,11 +17,10 @@ class Organisation extends ReloadablePage {
         orgName { $('.header-text') }
         orgDescription { $('span#orgDescription') }
         orgAbn {$('span#orgAbn')}
-        projectTab {$("#projects-tab")}
         projectContent {$("#projectList tbody tr td")}
         reportingTab(required: false) { $('#projects-tab') }
         sitesTab {$("#sites-tab")}
-        reportsTabPane(required:false) { $('#reporting-content').module(OrganisationReports)}
+        reportsTabPane(required:false) { module(OrganisationReports)}
         reportDeclaration { $('#declaration') }
     }
 

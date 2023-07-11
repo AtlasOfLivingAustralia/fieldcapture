@@ -14,7 +14,7 @@ class OrganisationServiceSpec extends Specification implements ServiceUnitTest<O
 	def activityService = Mock(ActivityService)
     def projectService = Mock(ProjectService)
 	def webService = Mock(WebService)
-	def reportService = Stub(ReportService)
+	def reportService = Mock(ReportService)
 	def userService = Mock(UserService)
 	def metadataService = Mock(MetadataService)
 	AbnLookupService abnLookupService = Mock(AbnLookupService)
@@ -263,6 +263,17 @@ class OrganisationServiceSpec extends Specification implements ServiceUnitTest<O
 
 		then:
 		result.error != null
+	}
+
+	def "The service can cancel a report (mark it as Not Required)"() {
+		when:
+		service.cancelReport("o1", "r1", "Testing")
+
+		then:
+		1 * webService.getJson({it.endsWith('organisation/o1?view=')}) >> [organisationId:"o1"]
+		1 * reportService.get("r1") >> [reportId:"r1", organisationId:"o1", activityId:'a1']
+		1 * reportService.cancelReport("r1", ['a1'], "Testing", [organisationId:"o1", projects:[], reports:null], [])
+		1 * webService.getJson({it.endsWith('permissions/getMembersForOrganisation/o1')}) >> []
 	}
 
 	static int activityId = 0

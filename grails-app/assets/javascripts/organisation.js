@@ -207,6 +207,9 @@ OrganisationPageViewModel = function (props, options) {
                 }).trigger('change');
             }
         },
+        'projects': {
+            initialiser: function() {}
+        },
         'sites': {
             initialiser: function () {
                 generateMap(['organisationFacet:' + self.name], false, {includeLegend: false});

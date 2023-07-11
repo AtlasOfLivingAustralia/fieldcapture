@@ -38,6 +38,8 @@
             submitReportUrl: '${g.createLink( action:'ajaxSubmitReport', id:"${organisation.organisationId}")}',
             approveReportUrl: '${g.createLink( action:'ajaxApproveReport', id:"${organisation.organisationId}")}',
             rejectReportUrl: '${g.createLink( action:'ajaxRejectReport', id:"${organisation.organisationId}")}',
+            cancelReportUrl: "${createLink(action:'ajaxCancelReport', id:organisation.organisationId)}/",
+
             returnTo: '${g.createLink(action:'index', id:"${organisation.organisationId}")}',
             dashboardCategoryUrl: "${g.createLink(controller: 'report', action: 'activityOutputs', params: [fq:'organisationFacet:'+organisation.name])}",
             reportOwner: {organisationId:'${organisation.organisationId}'},

@@ -9,10 +9,10 @@ class OrganisationAdminTab extends Module{
         editButton{$('[data-bind="click:editOrganisation"]')}
         deleteButton{ $('[data-bind="click:deleteOrganisation"]')}
 
-        configTab(required:false) { $('#configuration-tab')}
+        configTab(required:false) { $('#config-tab')}
         config(required:false) { $('#config').module OrganisationConfigModule }
 
-        reportingSectionTab(required:false) { $('#reporting-tab') }
+        reportingSectionTab(required:false) { $('#reporting-config-tab') }
         reportingSection(required:false) { $('#reporting-config').module OrganisationAdminReportSection }
 
     }
