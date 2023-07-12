@@ -25,10 +25,9 @@ class Organisation extends ReloadablePage {
     }
 
     void edit() {
-        waitFor {adminTab.displayed}
-        adminTab.click()
-        waitFor 10, { adminTabContent.displayed }
-        waitFor 10, { adminTabContent.editButton.displayed }
+        openAdminTab()
+        adminTabContent.viewEditSection()
+
         adminTabContent.editButton.click()
     }
 
