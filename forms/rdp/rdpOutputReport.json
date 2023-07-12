@@ -9442,6 +9442,14 @@
             "name": "areasControlled"
           },
           {
+            "name": "fireMgmtCountHeader",
+            "type": "number",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "count(areasControlled, \"outcomeStatementPrePop\")"
+            }
+          },
+          {
             "dataType": "text",
             "name": "comments",
             "validate": "maxSize[1500]"
@@ -9525,272 +9533,272 @@
             "source": "",
             "type": "table"
           },
-
           {
-            "type": "section",
+            "preLabel": "Number of Fire Management Actions surveys conducted:",
+            "noEdit": true,
+            "type": "number",
+            "source": "fireMgmtCountHeader"
+          },
+          {
+            "addRowText": "Add a new controlled area",
+            "userAddedRows": true,
+            "source": "areasControlled",
+            "type": "repeat",
             "items": [
               {
-                "addRowText": "Add a new controlled area",
-                "userAddedRows": true,
-                "source": "areasControlled",
-                "type": "repeat",
+                "type": "row",
+                "css": "border-bottom",
                 "items": [
                   {
-                    "type": "row",
-                    "css": "border-bottom",
+                    "preLabel": "Initial or follow-up?",
+                    "css": "span3",
+                    "source": "initialOrFollowup",
+                    "type": "selectOne"
+                  }
+                ]
+              },
+
+              {
+                "columns": [
+                  {
+                    "width": "10%",
+                    "title": "Site/s treated by fire management action",
+                    "type": "col",
                     "items": [
                       {
-                        "preLabel": "Initial or follow-up?",
-                        "css": "span3",
-                        "source": "initialOrFollowup",
-                        "type": "selectOne"
+                        "source": "sitesTreated",
+                        "type": "feature"
+                      },
+                      {
+                        "source": "calculatedAreaTreatedHa",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        },
+                        "readonly": "readonly"
+                      },
+                      {
+                        "source": "calculatedLengthTreatedKm",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        },
+                        "readonly": "readonly"
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Please attach mapping details",
+                            "source": "extraMappingDetails",
+                            "type": "document"
+                          }
+                        ]
                       }
                     ]
                   },
-
                   {
-                    "columns": [
+                    "width": "20%",
+                    "type": "col",
+                    "title": "Actual area (ha) / length (km) treated by managment action",
+                    "helpText": "Enter the amount you will invoice for during this reporting period.",
+                    "items": [
                       {
-                        "width": "10%",
-                        "title": "Site/s treated by fire management action",
-                        "type": "col",
+                        "source": "areaTreatedHa",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      },
+                      {
+                        "source": "lengthTreatedKm",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      },
+                      {
+                        "type": "row",
                         "items": [
                           {
-                            "source": "sitesTreated",
-                            "type": "feature"
-                          },
-                          {
-                            "source": "calculatedAreaTreatedHa",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            },
-                            "readonly": "readonly"
-                          },
-                          {
-                            "source": "calculatedLengthTreatedKm",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            },
-                            "readonly": "readonly"
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "Please attach mapping details",
-                                "source": "extraMappingDetails",
-                                "type": "document"
-                              }
-                            ]
+                            "preLabel": "Reason for actual being different to mapped amount",
+                            "source": "mappingNotAlignedReason",
+                            "type": "selectOne"
                           }
                         ]
                       },
                       {
-                        "width": "20%",
-                        "type": "col",
-                        "title": "Actual area (ha) / length (km) treated by managment action",
-                        "helpText": "Enter the amount you will invoice for during this reporting period.",
+                        "type": "row",
                         "items": [
                           {
-                            "source": "areaTreatedHa",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            }
-                          },
-                          {
-                            "source": "lengthTreatedKm",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            }
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "Reason for actual being different to mapped amount",
-                                "source": "mappingNotAlignedReason",
-                                "type": "selectOne"
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
-                                "source": "mappingNotAlignedComments",
-                                "type": "textarea",
-                                "rows": 5
-                              }
-                            ]
+                            "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                            "source": "mappingNotAlignedComments",
+                            "type": "textarea",
+                            "rows": 5
                           }
                         ]
-                      },
-                      {
-                        "width": "15%",
-                        "type": "col",
-                        "title": "Invoiced area (ha) treated by management action",
-                        "helpText": "Enter the amount you will invoice for during this reporting period.",
-                        "items": [
-                          {
-                            "source": "areaInvoicedTreatedHa",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            }
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "Reason for invoiced amount being different to actual amount",
-                                "source": "invoicedNotActualReason",
-                                "type": "selectOne"
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
-                                "source": "invoicedNotActualComments",
-                                "type": "textarea",
-                                "rows": 5
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "width": "10%",
-                        "title": "Type of fire management action",
-                        "type": "col",
-                        "items": [
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "fireManagementType",
-                                "type": "select2"
-                              }
-                            ]
-                          },
-                          {
-                            "source": "otherFireManagementType",
-                            "type": "text"
-                          }
-                        ]
-                      },
-                      {
-                        "width": "15%",
-                        "type": "col",
-                        "title": "Please map any off-site area/s if they benefitted from this fire management action",
-                        "items": [
-                          {
-                            "source": "sitesBenefittedByFireAction",
-                            "type": "feature",
-                            "title": "Please map any off-site area/s if they benefitted from this fire management action"
-                          },
-                          {
-                            "source": "areaBenefittedByFireActionHa",
-                            "type": "number",
-                            "readonly": "readonly",
-                            "title": "Area (ha) protected by fire management action"
-                          }
-                        ]
-                      },
-                      {
-                        "width": "15%",
-                        "source": "evidenceOfBenefit",
-                        "type": "textarea",
-                        "rows": 3,
-                        "title": "If off-site area was mapped please provide a description on the evidence available to reflect this benefit"
-                      },
-                      {
-                        "width": "15%",
-                        "source": "investmentPrioritiesActivityRelates",
-                        "title": "Which investment priority does this activity relate to?",
-                        "type": "text"
-                      },
-                      {
-                        "width": "15%",
-                        "source": "outcomeStatementPrePop",
-                        "type": "select2Many",
-                        "title": "Which outcome statement/s relates to this survey?"
                       }
-                    ],
-                    "userAddedRows": true,
-                    "source": "fireManagementDetails",
-                    "type": "table"
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "preLabel": "Optionally attach photos",
-                    "source": "photographicEvidence",
-                    "type": "image"
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "preLabel": "Clarification, if needed",
-                    "type": "textarea",
-                    "rows": 4,
-                    "css": "span8",
-                    "source": "comments",
-                    "placeholder": "Clarification comments include information for your project manager about the service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    ]
                   },
                   {
-                    "preLabel": "Data have been uploaded",
-                    "source": "dataUploaded",
-                    "type": "boolean"
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
+                    "width": "15%",
+                    "type": "col",
+                    "title": "Invoiced area (ha) treated by management action",
+                    "helpText": "Enter the amount you will invoice for during this reporting period.",
+                    "items": [
+                      {
+                        "source": "areaInvoicedTreatedHa",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Reason for invoiced amount being different to actual amount",
+                            "source": "invoicedNotActualReason",
+                            "type": "selectOne"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                            "source": "invoicedNotActualComments",
+                            "type": "textarea",
+                            "rows": 5
+                          }
+                        ]
+                      }
+                    ]
+                  },
                   {
-                    "preLabel": "",
-                    "source": "projectAssuranceDetails",
+                    "width": "10%",
+                    "title": "Type of fire management action",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "fireManagementType",
+                            "type": "select2"
+                          }
+                        ]
+                      },
+                      {
+                        "source": "otherFireManagementType",
+                        "type": "text"
+                      }
+                    ]
+                  },
+                  {
+                    "width": "15%",
+                    "type": "col",
+                    "title": "Please map any off-site area/s if they benefitted from this fire management action",
+                    "items": [
+                      {
+                        "source": "sitesBenefittedByFireAction",
+                        "type": "feature",
+                        "title": "Please map any off-site area/s if they benefitted from this fire management action"
+                      },
+                      {
+                        "source": "areaBenefittedByFireActionHa",
+                        "type": "number",
+                        "readonly": "readonly",
+                        "title": "Area (ha) protected by fire management action"
+                      }
+                    ]
+                  },
+                  {
+                    "width": "15%",
+                    "source": "evidenceOfBenefit",
                     "type": "textarea",
-                    "rows": 4,
-                    "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
+                    "rows": 3,
+                    "title": "If off-site area was mapped please provide a description on the evidence available to reflect this benefit"
+                  },
+                  {
+                    "width": "15%",
+                    "source": "investmentPrioritiesActivityRelates",
+                    "title": "Which investment priority does this activity relate to?",
+                    "type": "text"
+                  },
+                  {
+                    "width": "15%",
+                    "source": "outcomeStatementPrePop",
+                    "type": "select2Many",
+                    "title": "Which outcome statement/s relates to this survey?"
                   }
-                ]
+                ],
+                "userAddedRows": true,
+                "source": "fireManagementDetails",
+                "type": "table"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Optionally attach photos",
+                "source": "photographicEvidence",
+                "type": "image"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Clarification, if needed",
+                "type": "textarea",
+                "rows": 4,
+                "css": "span8",
+                "source": "comments",
+                "placeholder": "Clarification comments include information for your project manager about the service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
               },
               {
-                "type": "table",
-                "source": "assuranceDocuments",
-                "userAddedRows": true,
-                "disableTableUpload": true,
-                "columns": [
-                  {
-                    "title": "Attached documents",
-                    "source": "attachments",
-                    "type": "document"
-                  }
-                ]
+                "preLabel": "Data have been uploaded",
+                "source": "dataUploaded",
+                "type": "boolean"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "",
+                "source": "projectAssuranceDetails",
+                "type": "textarea",
+                "rows": 4,
+                "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
+              }
+            ]
+          },
+          {
+            "type": "table",
+            "source": "assuranceDocuments",
+            "userAddedRows": true,
+            "disableTableUpload": true,
+            "columns": [
+              {
+                "title": "Attached documents",
+                "source": "attachments",
+                "type": "document"
               }
             ]
           }
