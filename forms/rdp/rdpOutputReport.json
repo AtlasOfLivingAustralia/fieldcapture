@@ -1871,7 +1871,6 @@
                 ],
                 "validate": "required"
               },
-
               {
                 "columns": [
                   {
@@ -2202,6 +2201,14 @@
             "name": "areasControlled"
           },
           {
+            "name": "pestSurveyCountHeader",
+            "type": "number",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "count(areasControlled, \"outcomeStatementPrePop\")"
+            }
+          },
+          {
             "dataType": "text",
             "name": "comments",
             "validate": "maxSize[1500]"
@@ -2286,382 +2293,383 @@
             "type": "table"
           },
           {
-            "type": "section",
+            "preLabel": "Number of Pest Animals surveys conducted:",
+            "noEdit": true,
+            "type": "number",
+            "source": "pestSurveyCountHeader"
+          },
+          {
+            "addRowText": "Add a new controlled area",
+            "userAddedRows": true,
+            "source": "areasControlled",
+            "type": "repeat",
             "items": [
               {
-                "addRowText": "Add a new controlled area",
-                "userAddedRows": true,
-                "source": "areasControlled",
-                "type": "repeat",
+                "type": "row",
+                "css": "border-bottom",
                 "items": [
                   {
-                    "type": "row",
-                    "css": "border-bottom",
+                    "preLabel": "Initial or follow-up control?",
+                    "css": "span3",
+                    "source": "initialOrFollowup",
+                    "type": "selectOne"
+                  }
+                ]
+              },
+              {
+                "columns": [
+                  {
+                    "width": "20%",
+                    "type": "col",
+                    "title": "Site/s where pest control was undertaken",
+                    "helpText": "",
                     "items": [
                       {
-                        "preLabel": "Initial or follow-up control?",
-                        "css": "span3",
-                        "source": "initialOrFollowup",
-                        "type": "selectOne"
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "site",
+                            "type": "feature"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "siteCalculatedAreaHa",
+                            "type": "number",
+                            "readonly": true,
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "siteCalculatedLengthKm",
+                            "type": "number",
+                            "readonly": true,
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Please attach mapping details",
+                            "source": "extraMappingDetails",
+                            "type": "document"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+
+                  {
+                    "width": "25%",
+                    "type": "col",
+                    "title": "Actual area (ha) / length (km) treated for pest animals",
+                    "helpText": "Manually enter correct figure for this reporting period if different to mapped value.",
+                    "items": [
+
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "",
+                            "source": "areaControlledHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Reason for actual area being different to mapped amount",
+                            "source": "mappingNotAlignedReason",
+                            "type": "selectOne"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "placeholder": "Please enter the reason/s the mapping area didn't align with the invoiced amount",
+                            "source": "mappingNotAlignedComments",
+                            "type": "textarea",
+                            "rows": 5
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "",
+                            "source": "lengthControlledKm",
+                            "type": "number",
+                            "validate": "required",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Reason for actual length being different to mapped amount",
+                            "source": "mappingLengthNotAlignedReason",
+                            "type": "selectOne"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "placeholder": "Please enter the reason/s the mapping length didn't align with the invoiced amount",
+                            "source": "mappingLengthNotAlignedComments",
+                            "type": "textarea",
+                            "rows": 5
+                          }
+                        ]
+                      }
+                    ]
+                  },
+
+                  {
+                    "width": "25%",
+                    "type": "col",
+                    "title": "Invoiced area (ha) / length (km) treated for pest animals",
+                    "helpText": "Enter the amount you will invoice for during this reporting period.",
+                    "items": [
+
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "",
+                            "helpText": "",
+                            "source": "areaInvoicedHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Reason for invoiced amount being different to actual amount",
+                            "source": "invoicedNotActualReason",
+                            "type": "selectOne"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                            "source": "invoicedNotActualComments",
+                            "type": "textarea",
+                            "rows": 5
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "",
+                            "helpText": "",
+                            "source": "lengthInvoicedKm",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Reason for invoiced amount being different to actual amount",
+                            "source": "invoicedLengthNotActualReason",
+                            "type": "selectOne"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                            "source": "invoicedLengthNotActualComments",
+                            "type": "textarea",
+                            "rows": 5
+                          }
+                        ]
                       }
                     ]
                   },
                   {
+                    "width": "15%",
+                    "source": "noStructuresInstalled",
+                    "title": "Number of structures installed/maintained",
+                    "type": "number"
+                  },
+                  {
+                    "width": "15%",
+                    "source": "invoiceLocationsStructures",
+                    "title": "Invoiced number of locations where structures were installed/maintained",
+                    "type": "number"
+                  }
+                ],
+                "userAddedRows": true,
+                "source": "controllingPestAnimalBaselineTable",
+                "type": "table"
+              },
+
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "addRowText": "Add a species",
                     "columns": [
                       {
-                        "width": "20%",
-                        "type": "col",
-                        "title": "Site/s where pest control was undertaken",
-                        "helpText": "",
-                        "items": [
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "site",
-                                "type": "feature"
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "siteCalculatedAreaHa",
-                                "type": "number",
-                                "readonly": true,
-                                "displayOptions": {
-                                  "displayUnits": true
-                                }
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "siteCalculatedLengthKm",
-                                "type": "number",
-                                "readonly": true,
-                                "displayOptions": {
-                                  "displayUnits": true
-                                }
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "Please attach mapping details",
-                                "source": "extraMappingDetails",
-                                "type": "document"
-                              }
-                            ]
-                          }
-                        ]
+                        "width": "15%",
+                        "source": "pestSpecies",
+                        "title": "Target pest species",
+                        "type": "speciesSelect"
                       },
-
                       {
-                        "width": "25%",
-                        "type": "col",
-                        "title": "Actual area (ha) / length (km) treated for pest animals",
-                        "helpText": "Manually enter correct figure for this reporting period if different to mapped value.",
-                        "items": [
-
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "",
-                                "source": "areaControlledHa",
-                                "type": "number",
-                                "displayOptions": {
-                                  "displayUnits": true
-                                }
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "Reason for actual area being different to mapped amount",
-                                "source": "mappingNotAlignedReason",
-                                "type": "selectOne"
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "placeholder": "Please enter the reason/s the mapping area didn't align with the invoiced amount",
-                                "source": "mappingNotAlignedComments",
-                                "type": "textarea",
-                                "rows": 5
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "",
-                                "source": "lengthControlledKm",
-                                "type": "number",
-                                "validate": "required",
-                                "displayOptions": {
-                                  "displayUnits": true
-                                }
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "Reason for actual length being different to mapped amount",
-                                "source": "mappingLengthNotAlignedReason",
-                                "type": "selectOne"
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "placeholder": "Please enter the reason/s the mapping length didn't align with the invoiced amount",
-                                "source": "mappingLengthNotAlignedComments",
-                                "type": "textarea",
-                                "rows": 5
-                              }
-                            ]
-                          }
-                        ]
+                        "width": "10%",
+                        "source": "pestManagementMethod",
+                        "title": "Type of control",
+                        "type": "selectOne"
                       },
-
                       {
-                        "width": "25%",
-                        "type": "col",
-                        "title": "Invoiced area (ha) / length (km) treated for pest animals",
-                        "helpText": "Enter the amount you will invoice for during this reporting period.",
-                        "items": [
-
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "",
-                                "helpText": "",
-                                "source": "areaInvoicedHa",
-                                "type": "number",
-                                "displayOptions": {
-                                  "displayUnits": true
-                                }
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "Reason for invoiced amount being different to actual amount",
-                                "source": "invoicedNotActualReason",
-                                "type": "selectOne"
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
-                                "source": "invoicedNotActualComments",
-                                "type": "textarea",
-                                "rows": 5
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "",
-                                "helpText": "",
-                                "source": "lengthInvoicedKm",
-                                "type": "number",
-                                "displayOptions": {
-                                  "displayUnits": true
-                                }
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "Reason for invoiced amount being different to actual amount",
-                                "source": "invoicedLengthNotActualReason",
-                                "type": "selectOne"
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
-                                "source": "invoicedLengthNotActualComments",
-                                "type": "textarea",
-                                "rows": 5
-                              }
-                            ]
-                          }
-                        ]
+                        "width": "10%",
+                        "source": "otherManagementMethod",
+                        "title": "Type of control (if other)",
+                        "type": "text"
                       },
                       {
                         "width": "15%",
-                        "source": "noStructuresInstalled",
-                        "title": "Number of structures installed/maintained",
+                        "source": "treatmentObjective",
+                        "title": "Treatment objective",
+                        "type": "textarea"
+                      },
+                      {
+                        "width": "10%",
+                        "source": "individualsOrColonies",
+                        "title": "Individuals or colonies?",
+                        "type": "selectOne"
+                      },
+                      {
+                        "width": "10%",
+                        "source": "individualsOrColoniesRemoved",
+                        "title": "Number of individuals or colonies removed / destroyed",
                         "type": "number"
                       },
                       {
                         "width": "15%",
-                        "source": "invoiceLocationsStructures",
-                        "title": "Invoiced number of locations where structures were installed/maintained",
-                        "type": "number"
+                        "source": "investmentPrioritiesActivityRelates",
+                        "title": "Which investment priority does this activity relate to?",
+                        "type": "text"
+                      },
+                      {
+                        "width": "15%",
+                        "source": "outcomeStatementPrePop",
+                        "type": "select2Many",
+                        "title": "Which outcome statement/s relates to this survey?"
                       }
                     ],
                     "userAddedRows": true,
-                    "source": "controllingPestAnimalBaselineTable",
+                    "source": "pestAnimalsControlled",
                     "type": "table"
-                  },
-
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "addRowText": "Add a species",
-                        "columns": [
-                          {
-                            "width": "15%",
-                            "source": "pestSpecies",
-                            "title": "Target pest species",
-                            "type": "speciesSelect"
-                          },
-                          {
-                            "width": "10%",
-                            "source": "pestManagementMethod",
-                            "title": "Type of control",
-                            "type": "selectOne"
-                          },
-                          {
-                            "width": "10%",
-                            "source": "otherManagementMethod",
-                            "title": "Type of control (if other)",
-                            "type": "text"
-                          },
-                          {
-                            "width": "15%",
-                            "source": "treatmentObjective",
-                            "title": "Treatment objective",
-                            "type": "textarea"
-                          },
-                          {
-                            "width": "10%",
-                            "source": "individualsOrColonies",
-                            "title": "Individuals or colonies?",
-                            "type": "selectOne"
-                          },
-                          {
-                            "width": "10%",
-                            "source": "individualsOrColoniesRemoved",
-                            "title": "Number of individuals or colonies removed / destroyed",
-                            "type": "number"
-                          },
-                          {
-                            "width": "15%",
-                            "source": "investmentPrioritiesActivityRelates",
-                            "title": "Which investment priority does this activity relate to?",
-                            "type": "text"
-                          },
-                          {
-                            "width": "15%",
-                            "source": "outcomeStatementPrePop",
-                            "type": "select2Many",
-                            "title": "Which outcome statement/s relates to this survey?"
-                          }
-                        ],
-                        "userAddedRows": true,
-                        "source": "pestAnimalsControlled",
-                        "type": "table"
-                      }
-                    ]
                   }
                 ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Optionally attach photos",
+                "source": "photographicEvidence",
+                "type": "image"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Clarification, if needed",
+                "type": "textarea",
+                "rows": 4,
+                "css": "span8",
+                "source": "comments",
+                "placeholder": "Clarification comments include information for your project manager about the service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
               },
               {
-                "type": "row",
-                "items": [
-                  {
-                    "preLabel": "Optionally attach photos",
-                    "source": "photographicEvidence",
-                    "type": "image"
-                  }
-                ]
-              },
+                "preLabel": "Data have been uploaded",
+                "source": "dataUploaded",
+                "type": "boolean"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
               {
-                "type": "row",
-                "items": [
-                  {
-                    "preLabel": "Clarification, if needed",
-                    "type": "textarea",
-                    "rows": 4,
-                    "css": "span8",
-                    "source": "comments",
-                    "placeholder": "Clarification comments include information for your project manager about the service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
-                  }
-                ]
-              },
+                "preLabel": "",
+                "source": "projectAssuranceDetails",
+                "type": "textarea",
+                "rows": 4,
+                "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
+              }
+            ]
+          },
+          {
+            "type": "table",
+            "source": "assuranceDocuments",
+            "userAddedRows": true,
+            "disableTableUpload": true,
+            "columns": [
               {
-                "type": "row",
-                "items": [
-                  {
-                    "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
-                  },
-                  {
-                    "preLabel": "Data have been uploaded",
-                    "source": "dataUploaded",
-                    "type": "boolean"
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "preLabel": "",
-                    "source": "projectAssuranceDetails",
-                    "type": "textarea",
-                    "rows": 4,
-                    "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
-                  }
-                ]
-              },
-              {
-                "type": "table",
-                "source": "assuranceDocuments",
-                "userAddedRows": true,
-                "disableTableUpload": true,
-                "columns": [
-                  {
-                    "title": "Attached documents",
-                    "source": "attachments",
-                    "type": "document"
-                  }
-                ]
+                "title": "Attached documents",
+                "source": "attachments",
+                "type": "document"
               }
             ]
           }
@@ -5897,7 +5905,6 @@
                 "source": "farmSurveys",
                 "type": "repeat",
                 "items": [
-
                   {
                     "type": "table",
                     "source": "surveyBaselineDetails",
