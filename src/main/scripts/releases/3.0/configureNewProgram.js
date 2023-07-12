@@ -887,7 +887,7 @@ var config=
         "projectReports": [
             {
                 "reportType": "Activity",
-                "firstReportingPeriodEnd": "2021-06-30T14:00:00Z",
+                "reportsAlignedToCalendar": true,
                 "reportDescriptionFormat": "Year %5$s - %6$s %7$d Outputs Report",
                 "reportNameFormat": "Year %5$s - %6$s %7$d Outputs Report",
                 "reportingPeriodInMonths": 3,
@@ -895,11 +895,12 @@ var config=
                 "category": "Outputs Reporting",
                 "activityType": serviceFormName,
                 "canSubmitDuringReportingPeriod": true,
-                "label": "Quarter"
+                "label": "Quarter",
+                "minimumReportDurationInDays": 1
 
             },
             {
-                "firstReportingPeriodEnd": "2021-06-30T14:00:00Z",
+                "firstReportingPeriodEnd": "2024-06-30T14:00:00Z",
                 "reportType": "Administrative",
                 "reportDescriptionFormat": "Annual Progress Report %2$tY - %3$tY for %4$s",
                 "reportNameFormat": "Annual Progress Report %2$tY - %3$tY",
@@ -908,7 +909,8 @@ var config=
                 "category": "Annual Progress Reporting",
                 "activityType": annualReportFormName,
                 "description": "This report is still being developed.  _Please do not reporting until the new report is ready for use._,",
-                "label": "Annual"
+                "label": "Annual",
+                "minimumReportDurationInDays": 1
             },
             {
                 "reportType": "Single",
