@@ -559,6 +559,24 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
 
     }
 
+    def "Reports can be marked as Not Required"() {
+        setup:
+        String organisationId = "o1"
+        Map data = [
+            reportId:'r1',
+            reason:'Test reason'
+        ]
+        when:
+        request.method = "POST"
+        params.id = organisationId
+        request.JSON = data
+        controller.ajaxCancelReport()
+
+        then:
+        1 * organisationService.cancelReport(organisationId, data.reportId, data.reason) >> [success:true]
+        response.json == [success:true]
+    }
+
     private Map testOrganisation(String id="", boolean includeReports) {
         Map org = [organisationId:id, name:'name', description:'description', config:[:], inheritedConfig:[:]]
         if (includeReports) {

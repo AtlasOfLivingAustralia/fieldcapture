@@ -18,7 +18,8 @@ class OrganisationReports extends Module {
                 return []
             }
         }
-        reportDeclaration { $('#declaration') }
+        reasonModal(required:false) { $('#reason-modal') }
+        notRequiredReason(required:false) { $('#reason-modal [id="reason"]') }
     }
 
     def acceptTerms() {
@@ -30,6 +31,18 @@ class OrganisationReports extends Module {
 
     def showAllReports() {
         $('.hide-future-reports').module(Checkbox).check()
+    }
+
+    def cancellationReason(String reason) {
+
+        waitFor { notRequiredReason.displayed }
+        notRequiredReason.value('reason')
+    }
+
+    def confirmCancellation() {
+        def confirmButton =  $('#reason-modal [data-bind*="submit"]')
+        waitFor 10, { confirmButton.displayed }
+        confirmButton.click()
     }
 
 

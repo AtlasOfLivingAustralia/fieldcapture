@@ -45,8 +45,8 @@ class ImportProjectsSpec extends StubbedCasSpec {
         to Organisation, 'test_organisation'
 
         then:
-        waitFor {projectTab.displayed}
-        projectTab.click()
+        waitFor {reportingTab.displayed}
+        reportingTab.click()
 
         and:
         waitFor {
@@ -88,8 +88,8 @@ class ImportProjectsSpec extends StubbedCasSpec {
         to Organisation, 'test_organisation'
 
         then:
-        waitFor {projectTab.displayed}
-        projectTab.click()
+        waitFor {reportingTab.displayed}
+        reportingTab.click()
 
         and:
         waitFor {

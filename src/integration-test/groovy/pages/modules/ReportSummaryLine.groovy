@@ -47,7 +47,11 @@ class ReportSummaryLine extends Module {
     def isApproved() {
         def approvedBadge = $('.report-status .badge-success')
         approvedBadge.size() && approvedBadge.displayed && approvedBadge.text() == 'Report approved'
+    }
 
+    def isCancelled() {
+        def cancelledBadge = $('.report-status .badge-danger')
+        cancelledBadge.size() && cancelledBadge.displayed && cancelledBadge.text() == 'Report not required'
     }
 
     def submit() {
@@ -65,4 +69,6 @@ class ReportSummaryLine extends Module {
     def cancelReport() {
         cancelReport.click()
     }
+
+
 }

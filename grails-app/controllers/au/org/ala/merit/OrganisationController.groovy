@@ -11,7 +11,11 @@ import org.apache.http.HttpStatus
  */
 class OrganisationController {
 
-    static allowedMethods = [ajaxDelete: "POST", delete:"POST", ajaxUpdate: "POST", prepopulateAbn:"GET"]
+    static allowedMethods = [
+        ajaxDelete: "POST", delete:"POST", ajaxUpdate: "POST", prepopulateAbn:"GET",
+        ajaxApproveReport: "POST", ajaxRejectReport: "POST", ajaxCancelReport: "POST",
+        ajaxSubmitReport: "POST"
+    ]
 
     def organisationService, searchService, documentService, userService, roleService, commonService, webService
     def activityService, metadataService, projectService, excelImportService, reportService, pdfConverterService, authService
@@ -626,6 +630,16 @@ class OrganisationController {
         def reportDetails = request.JSON
 
         def result = organisationService.rejectReport(id, reportDetails.reportId, reportDetails.reason, reportDetails.categories)
+
+        render result as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'siteAdmin')
+    def ajaxCancelReport(String id) {
+
+        def reportDetails = request.JSON
+
+        def result = organisationService.cancelReport(id, reportDetails.reportId, reportDetails.reason)
 
         render result as JSON
     }

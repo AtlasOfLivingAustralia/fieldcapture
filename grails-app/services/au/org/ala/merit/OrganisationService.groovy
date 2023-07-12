@@ -3,11 +3,7 @@ package au.org.ala.merit
 import au.org.ala.merit.config.EmailTemplate
 import au.org.ala.merit.config.ReportConfig
 import au.org.ala.merit.reports.ReportOwner
-import org.joda.time.DateTime
-import org.joda.time.DateTimeConstants
-import org.joda.time.DateTimeZone
 import org.joda.time.Period
-
 
 /**
  * Extends the plugin OrganisationService to provide Green Army reporting capability.
@@ -255,20 +251,26 @@ class OrganisationService {
         reportService.findReportsForOrganisation(organisation.organisationId)
     }
 
-    Map submitReport(String programId, String reportId) {
-        Map reportData = setupReportLifeCycleChange(programId, reportId)
+    Map submitReport(String organisationId, String reportId) {
+        Map reportData = setupReportLifeCycleChange(organisationId, reportId)
         return reportService.submitReport(reportId, reportData.reportActivities, reportData.organisation, reportData.members, EmailTemplate.ORGANISATION_REPORT_SUBMITTED_EMAIL_TEMPLATE)
     }
 
-    Map approveReport(String programId, String reportId, String reason) {
-        Map reportData = setupReportLifeCycleChange(programId, reportId)
+    Map approveReport(String organisationId, String reportId, String reason) {
+        Map reportData = setupReportLifeCycleChange(organisationId, reportId)
         return reportService.approveReport(reportId, reportData.reportActivities, reason, reportData.organisation, reportData.members, EmailTemplate.ORGANISATION_REPORT_APPROVED_EMAIL_TEMPLATE)
     }
 
-    def rejectReport(String programId, String reportId, String reason, List categories) {
-        Map reportData = setupReportLifeCycleChange(programId, reportId)
+    def rejectReport(String organisationId, String reportId, String reason, List categories) {
+        Map reportData = setupReportLifeCycleChange(organisationId, reportId)
 
         return reportService.rejectReport(reportId, reportData.reportActivities, reason, categories, reportData.organisation, reportData.members, EmailTemplate.ORGANISATION_REPORT_RETURNED_EMAIL_TEMPLATE)
+    }
+
+    def cancelReport(String organisationId, String reportId, String reason) {
+        Map reportData = setupReportLifeCycleChange(organisationId, reportId)
+
+        return reportService.cancelReport(reportId, reportData.reportActivities, reason, reportData.organisation, reportData.members)
     }
 
     /**

@@ -6,15 +6,23 @@ class OrganisationAdminTab extends Module{
 
     static content = {
 
-        editButton{$('[data-bind="click:editOrganisation"]')}
+        editButton{ $('[data-bind="click:editOrganisation"]')}
         deleteButton{ $('[data-bind="click:deleteOrganisation"]')}
 
-        configTab(required:false) { $('#configuration-tab')}
+        editTab { $('#edit-program-details-tab') }
+
+        configTab(required:false) { $('#config-tab')}
         config(required:false) { $('#config').module OrganisationConfigModule }
 
-        reportingSectionTab(required:false) { $('#reporting-tab') }
+        reportingSectionTab(required:false) { $('#reporting-config-tab') }
         reportingSection(required:false) { $('#reporting-config').module OrganisationAdminReportSection }
 
+    }
+
+    def viewEditSection() {
+        waitFor { editTab.displayed }
+        editTab.click()
+        waitFor { editButton.displayed }
     }
 
     def openConfig() {

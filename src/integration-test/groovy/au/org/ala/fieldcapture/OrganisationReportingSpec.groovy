@@ -73,7 +73,7 @@ class OrganisationReportingSpec extends StubbedCasSpec {
         reportingSection.endDate.value() == '30-06-2028'
 
         when:
-        reportingSection.startDate.value('30-06-2027')
+        reportingSection.startDate.value('30-07-2022')
         reportingSection.saveReportingConfiguration()
 
         then:
@@ -86,9 +86,10 @@ class OrganisationReportingSpec extends StubbedCasSpec {
         reportingSection = adminTabContent.viewReportingSection()
 
         then:
-        reportingSection.startDate.value() == '30-06-2027'
+        reportingSection.startDate.value() == '30-07-2022'
 
         when: "We regenerate the annual reports"
+        reportingSection.clickEnableRegeneration(0)
         reportingSection.clickEnableRegeneration(1)
         reportingSection.generateReports()
 
@@ -255,6 +256,32 @@ class OrganisationReportingSpec extends StubbedCasSpec {
         and:"The not required button is not visible"
         !reportsTabPane.reports[0].notRequired()
 
+    }
+
+    def "A report can be marked as Not Required"() {
+        setup:
+        loginAsMeritAdmin(browser)
+
+        when: "Display the reporting tab, then view the approved report"
+        to Organisation, orgId
+        displayReportsTab()
+        reportsTabPane.reports[1].cancelReport()
+
+        then:
+        waitFor {
+            reportsTabPane.reasonModal.displayed
+        }
+
+        when: "the site admin enters the reason and confirm the cancellation"
+        reportsTabPane.cancellationReason("Test reason")
+        reportsTabPane.confirmCancellation()
+
+
+        then:
+        waitFor { hasBeenReloaded() }
+
+        and:
+        reportsTabPane.reports[1].isCancelled()
     }
 
 }

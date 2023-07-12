@@ -19,7 +19,7 @@ class OrganisationProjectSpec extends StubbedCasSpec {
 
         then:
         waitFor {at Organisation}
-        projectTab.click()
+        reportingTab.click()
 
         and:
         waitFor {
