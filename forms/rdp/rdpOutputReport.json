@@ -1260,232 +1260,365 @@
       "template": {
         "dataModel": [
           {
+            "dataType": "text",
+            "name": "participationIndividualsOrGroups",
+            "constraints": [
+              "Individuals",
+              "Groups"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "participationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "participationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "firstNationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "firstNationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "participationDetails",
+            "validate": "maxSize[3000]"
+          },
+          {
             "columns": [
               {
-                "dataType": "number",
-                "name": "numberInstalled",
-                "validate": "required,min[0]"
-              },
-              {
-                "dataType": "feature",
-                "name": "sitesInstalled"
-              },
-              {
-                "computed": {
-                  "expression": "$geom.areaHa(sitesInstalled)"
-                },
-                "dataType": "number",
-                "decimalPlaces": 3,
-                "name": "sitesInstalledCalculatedAreaHa",
-                "units": "ha",
-                "behaviour": [
+                "columns": [
                   {
-                    "condition": "areaInvoicedHa > 0",
-                    "type": "conditional_validation",
-                    "value": {
-                      "message": "The controlled area must be mapped",
-                      "validate": "required,min[0.0001]"
-                    }
-                  }
-                ]
-              },
-              {
-                "computed": {
-                  "expression": "$geom.lengthKm(sitesInstalled)"
-                },
-                "dataType": "number",
-                "decimalPlaces": 3,
-                "name": "sitesInstalledCalculatedLengthKm",
-                "units": "km",
-                "behaviour": [
-                  {
-                    "condition": "lengthInvoicedKm > 0",
-                    "type": "conditional_validation",
-                    "value": {
-                      "message": "The length controlled must be mapped",
-                      "validate": "required,min[0.001]"
-                    }
-                  }
-                ]
-              },
-              {
-                "dataType": "document",
-                "name": "extraMappingDetails",
-                "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
-                "behaviour": [
-                  {
-                    "condition": "not (within(areaInstalledHa, sitesInstalledCalculatedAreaHa, 0.1) and within(lengthInstalledKm, sitesInstalledCalculatedLengthKm, 0.1)) or roundTo(areaInstalledHa, 2) != roundTo(areaInvoicedHa, 2) or roundTo(lengthInstalledKm, 2) != roundTo(lengthInvoicedKm, 2)",
-                    "type": "visible"
-                  }
-                ],
-                "validate": "required"
-              },
-              {
-                "defaultValue": {
-                  "expression": "$geom.areaHa(sitesInstalled)",
-                  "type": "computed"
-                },
-                "dataType": "number",
-                "name": "areaInstalledHa",
-                "decimalPlaces": 3,
-                "units": "ha",
-                "validate": "required,min[0]"
-              },
-              {
-                "defaultValue": {
-                  "expression": "$geom.lengthKm(sitesInstalled)",
-                  "type": "computed"
-                },
-                "dataType": "number",
-                "name": "lengthInstalledKm",
-                "decimalPlaces": 3,
-                "units": "km",
-                "validate": "required,min[0]"
-              },
-              {
-                "dataType": "number",
-                "name": "areaInvoicedHa",
-                "decimalPlaces": 3,
-                "units": "ha",
-                "validate": [
-                  {
-                    "rule": "required"
+                    "dataType": "number",
+                    "name": "numberInstalled",
+                    "validate": "required,min[0]"
                   },
                   {
-                    "rule": "min[0]"
+                    "dataType": "feature",
+                    "name": "sitesInstalled"
                   },
                   {
-                    "param": {
-                      "expression": "areaInstalledHa",
+                    "computed": {
+                      "expression": "$geom.areaHa(sitesInstalled)"
+                    },
+                    "dataType": "number",
+                    "decimalPlaces": 3,
+                    "name": "sitesInstalledCalculatedAreaHa",
+                    "units": "ha",
+                    "behaviour": [
+                      {
+                        "condition": "areaInvoicedHa > 0",
+                        "type": "conditional_validation",
+                        "value": {
+                          "message": "The controlled area must be mapped",
+                          "validate": "required,min[0.0001]"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "computed": {
+                      "expression": "$geom.lengthKm(sitesInstalled)"
+                    },
+                    "dataType": "number",
+                    "decimalPlaces": 3,
+                    "name": "sitesInstalledCalculatedLengthKm",
+                    "units": "km",
+                    "behaviour": [
+                      {
+                        "condition": "lengthInvoicedKm > 0",
+                        "type": "conditional_validation",
+                        "value": {
+                          "message": "The length controlled must be mapped",
+                          "validate": "required,min[0.001]"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "document",
+                    "name": "extraMappingDetails",
+                    "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                    "behaviour": [
+                      {
+                        "condition": "not (within(areaInstalledHa, sitesInstalledCalculatedAreaHa, 0.1) and within(lengthInstalledKm, sitesInstalledCalculatedLengthKm, 0.1)) or roundTo(areaInstalledHa, 2) != roundTo(areaInvoicedHa, 2) or roundTo(lengthInstalledKm, 2) != roundTo(lengthInvoicedKm, 2)",
+                        "type": "visible"
+                      }
+                    ],
+                    "validate": "required"
+                  },
+                  {
+                    "defaultValue": {
+                      "expression": "$geom.areaHa(sitesInstalled)",
                       "type": "computed"
                     },
-                    "rule": "max"
-                  }
-                ]
-              },
-              {
-                "dataType": "number",
-                "name": "lengthInvoicedKm",
-                "decimalPlaces": 3,
-                "units": "km",
-                "validate": [
-                  {
-                    "rule": "required"
+                    "dataType": "number",
+                    "name": "areaInstalledHa",
+                    "decimalPlaces": 3,
+                    "units": "ha",
+                    "validate": "required,min[0]"
                   },
                   {
-                    "rule": "min[0]"
-                  },
-                  {
-                    "param": {
-                      "expression": "lengthInstalledKm",
+                    "defaultValue": {
+                      "expression": "$geom.lengthKm(sitesInstalled)",
                       "type": "computed"
                     },
-                    "rule": "max"
-                  }
-                ]
-              },
-              {
-                "dataType": "text",
-                "name": "mappingNotAlignedReason",
-                "behaviour": [
+                    "dataType": "number",
+                    "name": "lengthInstalledKm",
+                    "decimalPlaces": 3,
+                    "units": "km",
+                    "validate": "required,min[0]"
+                  },
                   {
-                    "condition": "not (within(areaInstalledHa, sitesInstalledCalculatedAreaHa, 0.1) and within(lengthInstalledKm, sitesInstalledCalculatedLengthKm, 0.1))",
-                    "type": "visible"
-                  }
-                ],
-                "constraints": [
-                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
-                  "Other"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "text",
-                "name": "mappingNotAlignedComments",
-                "behaviour": [
+                    "dataType": "number",
+                    "name": "areaInvoicedHa",
+                    "decimalPlaces": 3,
+                    "units": "ha",
+                    "validate": [
+                      {
+                        "rule": "required"
+                      },
+                      {
+                        "rule": "min[0]"
+                      },
+                      {
+                        "param": {
+                          "expression": "areaInstalledHa",
+                          "type": "computed"
+                        },
+                        "rule": "max"
+                      }
+                    ]
+                  },
                   {
-                    "condition": "\"Other\" == mappingNotAlignedReason",
-                    "type": "visible"
-                  }
-                ],
-                "validate": "required,maxSize[300]"
-              },
-              {
-                "dataType": "text",
-                "name": "invoicedNotActualReason",
-                "behaviour": [
+                    "dataType": "number",
+                    "name": "lengthInvoicedKm",
+                    "decimalPlaces": 3,
+                    "units": "km",
+                    "validate": [
+                      {
+                        "rule": "required"
+                      },
+                      {
+                        "rule": "min[0]"
+                      },
+                      {
+                        "param": {
+                          "expression": "lengthInstalledKm",
+                          "type": "computed"
+                        },
+                        "rule": "max"
+                      }
+                    ]
+                  },
                   {
-                    "condition": "roundTo(areaInstalledHa, 2) != roundTo(areaInvoicedHa, 2) or roundTo(lengthInstalledKm, 2) != roundTo(lengthInvoicedKm, 2)",
-                    "type": "visible"
-                  }
-                ],
-                "constraints": [
-                  "Work was undertaken over a greater area than will be invoiced for",
-                  "Other"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "text",
-                "name": "invoicedNotActualComments",
-                "behaviour": [
+                    "dataType": "text",
+                    "name": "mappingNotAlignedReason",
+                    "behaviour": [
+                      {
+                        "condition": "not (within(areaInstalledHa, sitesInstalledCalculatedAreaHa, 0.1) and within(lengthInstalledKm, sitesInstalledCalculatedLengthKm, 0.1))",
+                        "type": "visible"
+                      }
+                    ],
+                    "constraints": [
+                      "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                      "Other"
+                    ],
+                    "validate": "required"
+                  },
                   {
-                    "condition": "\"Other\" == invoicedNotActualReason",
-                    "type": "visible"
-                  }
-                ],
-                "validate": "required,maxSize[300]"
-              },
-              {
-                "dataType": "feature",
-                "name": "protectedSites"
-              },
-              {
-                "defaultValue": {
-                  "expression": "$geom.areaHa(protectedSites)",
-                  "type": "computed"
-                },
-                "dataType": "number",
-                "name": "areaProtectedHa",
-                "decimalPlaces": 3,
-                "units": "ha"
-              },
-              {
-                "dataType": "text",
-                "name": "accessControlType",
-                "description": "",
-                "constraints": [
-                  "Boardwalks",
-                  "Bollards & barriers",
-                  "Constructed parking bays",
-                  "Fencing, styles, gates & grids",
-                  "Formed traffic ways",
-                  "Signage",
-                  "Other"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "text",
-                "name": "otherAccessControlType",
-                "description": "Please specify the type of access control if Other (specify in notes) was selected in the Type of Access Control Installed column.",
-                "behaviour": [
+                    "dataType": "text",
+                    "name": "mappingNotAlignedComments",
+                    "behaviour": [
+                      {
+                        "condition": "\"Other\" == mappingNotAlignedReason",
+                        "type": "visible"
+                      }
+                    ],
+                    "validate": "required,maxSize[300]"
+                  },
                   {
-                    "condition": "accessControlType == \"Other\"",
-                    "type": "enable"
+                    "dataType": "text",
+                    "name": "invoicedNotActualReason",
+                    "behaviour": [
+                      {
+                        "condition": "roundTo(areaInstalledHa, 2) != roundTo(areaInvoicedHa, 2) or roundTo(lengthInstalledKm, 2) != roundTo(lengthInvoicedKm, 2)",
+                        "type": "visible"
+                      }
+                    ],
+                    "constraints": [
+                      "Work was undertaken over a greater area than will be invoiced for",
+                      "Other"
+                    ],
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "invoicedNotActualComments",
+                    "behaviour": [
+                      {
+                        "condition": "\"Other\" == invoicedNotActualReason",
+                        "type": "visible"
+                      }
+                    ],
+                    "validate": "required,maxSize[300]"
+                  },
+                  {
+                    "name": "outcomeStatementPrePop",
+                    "dataType": "text",
+                    "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "description",
+                      "valueProperty": "description",
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "context-path": "owner.custom.details.outcomes.shortTermOutcomes"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "name": "investmentPriorities2",
+                    "dataType": "stringList",
+                    "validate": "required",
+                    "constraints": {
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "params": [
+                            {
+                              "expression": "owner.projectId",
+                              "name": "id",
+                              "type": "computed"
+                            }
+                          ],
+                          "url": "/project/listProjectInvestmentPriorities/"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "otherInvestmentPriority",
+                    "behaviour": [
+                      {
+                        "type": "enable",
+                        "condition": "\"Other\" in investmentPriorities2"
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "feature",
+                    "name": "protectedSites"
+                  },
+                  {
+                    "defaultValue": {
+                      "expression": "$geom.areaHa(protectedSites)",
+                      "type": "computed"
+                    },
+                    "dataType": "number",
+                    "name": "areaProtectedHa",
+                    "decimalPlaces": 3,
+                    "units": "ha"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "accessControlType",
+                    "description": "",
+                    "constraints": [
+                      "Boardwalks",
+                      "Bollards & barriers",
+                      "Constructed parking bays",
+                      "Fencing, styles, gates & grids",
+                      "Formed traffic ways",
+                      "Signage",
+                      "Other"
+                    ],
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "otherAccessControlType",
+                    "description": "Please specify the type of access control if Other (specify in notes) was selected in the Type of Access Control Installed column.",
+                    "behaviour": [
+                      {
+                        "condition": "accessControlType == \"Other\"",
+                        "type": "enable"
+                      }
+                    ],
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "controlObjective",
+                    "description": "What is your access control method? and/or What do you intend to achieve by using your structure/s?",
+                    "validate": "required,maxSize[300]"
                   }
                 ],
-                "validate": "required"
-              },
-              {
-                "dataType": "text",
-                "name": "controlObjective",
-                "description": "What is your access control method? and/or What do you intend to achieve by using your structure/s?",
-                "validate": "required,maxSize[300]"
+                "dataType": "list",
+                "name": "accessControlDetails"
               }
             ],
             "dataType": "list",
-            "name": "accessControlDetails"
+            "name": "controllingAccessSurveys",
+            "minSize": 1
+          },
+          {
+            "name": "surveyCountHeader",
+            "type": "number",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "count(controllingAccessSurveys, \"numberInstalled\")"
+            }
           },
           {
             "dataType": "text",
@@ -1495,6 +1628,11 @@
           {
             "dataType": "image",
             "name": "photographicEvidence"
+          },
+          {
+            "dataType": "boolean",
+            "name": "dataUploaded",
+            "description": ""
           },
           {
             "dataType": "text",
@@ -1517,199 +1655,241 @@
         "title": "Controlling access",
         "viewModel": [
           {
+            "columns": [
+              {
+                "width": "10%",
+                "source": "participationIndividualsOrGroups",
+                "title": "Individuals or groups?",
+                "type": "selectOne"
+              },
+              {
+                "width": "20%",
+                "type": "col",
+                "title": "Total Number of people delivering this service",
+                "items": [
+                  {
+                    "source": "participationIndividualNumber",
+                    "type": "number"
+                  },
+                  {
+                    "source": "participationGroupNumber",
+                    "type": "selectOne"
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "width": "20%",
+                "title": "Total Number of First Nations people delivering this service ",
+                "items": [
+                  {
+                    "source": "firstNationIndividualNumber",
+                    "type": "number"
+                  },
+                  {
+                    "source": "firstNationGroupNumber",
+                    "type": "selectOne"
+                  }
+                ]
+              },
+              {
+                "source": "participationDetails",
+                "rows": 4,
+                "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                "type": "textarea"
+              }
+            ],
+            "userAddedRows": false,
+            "disableTableUpload": false,
+            "source": "",
+            "type": "table"
+          },
+          {
             "type": "section",
             "items": [
               {
-                "columns": [
-                  {
-                    "width": "5%",
-                    "source": "numberInstalled",
-                    "type": "number",
-                    "title": "Number of structures installed"
-                  },
-                  {
-                    "width": "10%",
-                    "type": "col",
-                    "title": "Site/s where access has been controlled",
-                    "items": [
-                      {
-                        "source": "sitesInstalled",
-                        "type": "feature"
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "readonly": true,
-                            "source": "sitesInstalledCalculatedAreaHa",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "readonly": true,
-                            "source": "sitesInstalledCalculatedLengthKm",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "preLabel": "Please attach mapping details",
-                            "source": "extraMappingDetails",
-                            "type": "document"
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "helpText": "May be changed manually if different to the calculated areas",
-                    "width": "15%",
-                    "type": "col",
-                    "title": "Actual length (km) / area (ha) where access has been controlled",
-                    "items": [
-                      {
-                        "source": "areaInstalledHa",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
-                      },
-                      {
-                        "source": "lengthInstalledKm",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "preLabel": "Reason for actual being different to mapped amount",
-                            "source": "mappingNotAlignedReason",
-                            "type": "selectOne"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
-                            "source": "mappingNotAlignedComments",
-                            "type": "textarea",
-                            "rows": 5
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "helpText": "May be changed manually if different to the calculated areas",
-                    "width": "15%",
-                    "type": "col",
-                    "title": "Area (ha) / Length (km) invoiced",
-                    "items": [
-                      {
-                        "source": "areaInvoicedHa",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
-                      },
-                      {
-                        "source": "lengthInvoicedKm",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "preLabel": "Reason for invoiced amount being different to actual amount",
-                            "source": "invoicedNotActualReason",
-                            "type": "selectOne"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
-                            "source": "invoicedNotActualComments",
-                            "type": "textarea",
-                            "rows": 5
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "width": "10%",
-                    "type": "col",
-                    "title": "Site/s protected by access control structures",
-                    "items": [
-                      {
-                        "source": "protectedSites",
-                        "type": "feature"
-                      },
-                      {
-                        "source": "areaProtectedHa",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "width": "20%",
-                    "type": "col",
-                    "title": "Type of access control installed",
-                    "items": [
-                      {
-                        "source": "accessControlType",
-                        "type": "select2"
-                      },
-                      {
-                        "source": "otherAccessControlType",
-                        "type": "text"
-                      }
-                    ]
-                  },
-                  {
-                    "width": "25%",
-                    "source": "controlObjective",
-                    "title": "Control objective",
-                    "type": "textarea",
-                    "rows": 5
-                  }
-                ],
+                "preLabel": "Number of Controlling Access surveys conducted:",
+                "noEdit": true,
+                "type": "number",
+                "source": "surveyCountHeader"
+              },
+              {
+                "addRowText": "New survey site",
                 "userAddedRows": true,
-                "source": "accessControlDetails",
-                "type": "table"
+                "source": "controllingAccessSurveys",
+                "type": "repeat",
+                "items": [
+                  {
+                    "columns": [
+                      {
+                        "width": "5%",
+                        "source": "numberInstalled",
+                        "type": "number",
+                        "title": "Number of structures installed"
+                      },
+                      {
+                        "width": "10%",
+                        "type": "col",
+                        "title": "Site/s where access has been controlled",
+                        "items": [
+                          {
+                            "source": "sitesInstalled",
+                            "type": "feature"
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "readonly": true,
+                                "source": "sitesInstalledCalculatedAreaHa",
+                                "type": "number",
+                                "displayOptions": {
+                                  "displayUnits": true
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "readonly": true,
+                                "source": "sitesInstalledCalculatedLengthKm",
+                                "type": "number",
+                                "displayOptions": {
+                                  "displayUnits": true
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Please attach mapping details",
+                                "source": "extraMappingDetails",
+                                "type": "document"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "helpText": "May be changed manually if different to the calculated areas",
+                        "width": "15%",
+                        "type": "col",
+                        "title": "Actual length (km) / area (ha) where access has been controlled",
+                        "items": [
+                          {
+                            "source": "areaInstalledHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          },
+                          {
+                            "source": "lengthInstalledKm",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Reason for actual being different to mapped amount",
+                                "source": "mappingNotAlignedReason",
+                                "type": "selectOne"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                                "source": "mappingNotAlignedComments",
+                                "type": "textarea",
+                                "rows": 5
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "source": "outcomeStatementPrePop",
+                        "type": "select2Many",
+                        "width": "10%",
+                        "title": "Which outcome statement/s relates to this survey?"
+                      },
+                      {
+                        "width": "15%",
+                        "type": "col",
+                        "title": "Which investment priority does this activity relate to?",
+                        "items": [
+                          {
+                            "source": "investmentPriorities2",
+                            "type": "select2Many"
+                          },
+                          {
+                            "source": "otherInvestmentPriority",
+                            "type": "text"
+                          }
+                        ]
+                      },
+                      {
+                        "width": "10%",
+                        "type": "col",
+                        "title": "Site/s protected by access control structures",
+                        "items": [
+                          {
+                            "source": "protectedSites",
+                            "type": "feature"
+                          },
+                          {
+                            "source": "areaProtectedHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "width": "20%",
+                        "type": "col",
+                        "title": "Type of access control installed",
+                        "items": [
+                          {
+                            "source": "accessControlType",
+                            "type": "select2"
+                          },
+                          {
+                            "source": "otherAccessControlType",
+                            "type": "text"
+                          }
+                        ]
+                      },
+                      {
+                        "width": "25%",
+                        "source": "controlObjective",
+                        "title": "Control objective",
+                        "type": "textarea",
+                        "rows": 5
+                      }
+                    ],
+                    "userAddedRows": true,
+                    "source": "accessControlDetails",
+                    "type": "table"
+                  }
+                ]
               },
               {
                 "type": "row",
                 "items": [
                   {
-                    "preLabel": "Optionally attach photos of the access control work performed",
+                    "preLabel": "Optionally attach photos",
                     "source": "photographicEvidence",
                     "type": "image"
                   }
@@ -1724,7 +1904,7 @@
                     "rows": 4,
                     "css": "span8",
                     "source": "comments",
-                    "placeholder": "Clarification comments include points for follow up with the project manager about this service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
+                    "placeholder": "Clarification comments include information for your project manager about the service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
                   }
                 ]
               },
@@ -1733,7 +1913,12 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all <u>Environment</u> projects but optional for Agriculture projects. This field identifies what evidence you have available for this service and where the evidence is stored. This helps the Department and Service Providers during future assurance activities. Refer to the <a href=\"http://nrm.gov.au/publications/rlp-merit-user-guide\" target=\"_evidence\">Evidence Guide</a> for details of the types of acceptable evidence."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                  },
+                  {
+                    "preLabel": "Data have been uploaded",
+                    "source": "dataUploaded",
+                    "type": "boolean"
                   }
                 ]
               },
@@ -5247,6 +5432,78 @@
         "modelName": "RDP - Farm Management Survey",
         "dataModel": [
           {
+            "dataType": "text",
+            "name": "participationIndividualsOrGroups",
+            "constraints": [
+              "Individuals",
+              "Groups"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "participationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "participationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "firstNationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "firstNationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "participationDetails",
+            "validate": "maxSize[3000]"
+          },
+          {
             "columns": [
               {
                 "dataType": "list",
@@ -5364,78 +5621,6 @@
             "dataType": "list",
             "name": "farmSurveys",
             "minSize": 1
-          },
-          {
-            "dataType": "text",
-            "name": "participationIndividualsOrGroups",
-            "constraints": [
-              "Individuals",
-              "Groups"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "participationIndividualNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
-              }
-            ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "participationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "firstNationIndividualNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
-              }
-            ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "firstNationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "text",
-            "name": "participationDetails",
-            "validate": "maxSize[3000]"
           },
           {
             "name": "surveyCountHeader",
