@@ -162,7 +162,7 @@ const newScores = [
     },
     {
         serviceId: 13,
-        formSection:  'RDP - Fauna surveys',
+        formSection:  'RDP - Fauna survey',
         scores: [
             {
                 label: 'Number of fauna surveys conducted - baseline',
@@ -176,7 +176,7 @@ const newScores = [
     },
     {
         serviceId: 15,
-        formSection:  'RDP - Flora surveys',
+        formSection:  'RDP - Flora survey',
         scores: [
             {
                 label: 'Number of flora surveys conducted - baseline',
@@ -278,7 +278,7 @@ const newScores = [
     },
     {
         serviceId: 20,
-        formSection:  'RDP - Managing disease',
+        formSection:  'RDP - Disease management',
         scores: [
             {
                 label: 'Area (ha) for disease treatment/prevention - initial',
@@ -354,7 +354,7 @@ const newScores = [
     },
     {
         serviceId: 36,
-        formSection:  'Seed Collecting - Bushfire Program',
+        formSection:  'RDP - Seed Collection',
         scores: [
             {
                 label: 'Amount (grams)/number of seeds/cuttings collected',
