@@ -1873,7 +1873,8 @@
               },
               {
                 "dataType": "feature",
-                "name": "site"
+                "name": "site",
+                "validate": "required"
               },
               {
                 "dataType": "number",
@@ -7283,10 +7284,10 @@
                 ],
                 "validate": "required"
               },
-
               {
                 "dataType": "feature",
-                "name": "sitesOfAugmentation"
+                "name": "sitesOfAugmentation",
+                "validate": "required"
               },
               {
                 "dataType": "number",
@@ -8180,7 +8181,12 @@
                 "columns": [
                   {
                     "dataType": "feature",
-                    "name": "sitesTreated"
+                    "name": "sitesTreated",
+                    "validate": [
+                      {
+                        "rule": "required"
+                      }
+                    ]
                   },
                   {
                     "computed": {
@@ -8229,7 +8235,14 @@
                     "name": "areaTreatedHa",
                     "units": "ha",
                     "decimalPlaces": 3,
-                    "validate": "required,min[0]"
+                    "validate": [
+                      {
+                        "rule": "required"
+                      },
+                      {
+                        "rule": "min[0]"
+                      }
+                    ]
                   },
                   {
                     "dataType": "text",
@@ -8281,6 +8294,9 @@
                     "units": "ha",
                     "decimalPlaces": 3,
                     "validate": [
+                      {
+                        "rule": "required"
+                      },
                       {
                         "rule": "min[0]"
                       },
@@ -8891,7 +8907,8 @@
                 "columns": [
                   {
                     "dataType": "feature",
-                    "name": "sitesTreated"
+                    "name": "sitesTreated",
+                    "validate": "required"
                   },
                   {
                     "computed": {
@@ -8997,6 +9014,9 @@
                     "units": "ha",
                     "decimalPlaces": 3,
                     "validate": [
+                      {
+                        "rule": "required"
+                      },
                       {
                         "rule": "min[0]"
                       },
@@ -9290,7 +9310,7 @@
                     ]
                   },
                   {
-                    "width": "20%",
+                    "width": "10%",
                     "type": "col",
                     "title": "Actual area (ha) / length (km) treated by managment action",
                     "helpText": "Enter the amount you will invoice for during this reporting period.",
@@ -9333,7 +9353,7 @@
                     ]
                   },
                   {
-                    "width": "15%",
+                    "width": "10%",
                     "type": "col",
                     "title": "Invoiced area (ha) treated by management action",
                     "helpText": "Enter the amount you will invoice for during this reporting period.",
@@ -9596,7 +9616,8 @@
                 "columns": [
                   {
                     "dataType": "feature",
-                    "name": "improvedSites"
+                    "name": "improvedSites",
+                    "validate": "required"
                   },
                   {
                     "computed": {
@@ -9966,11 +9987,11 @@
                         ]
                       }
                     ],
-                    "title": "Site/s where hydrological regimes are being improved"
+                    "title": "Site/s where hydrological regimes have been improved"
                   },
                   {
                     "width": "10%",
-                    "title": "Actual area (ha) / length (km) covering the hydrological regime change",
+                    "title": "Actual area (ha) / length (km) where the hydrological regimes have benn improved",
                     "type": "col",
                     "items": [
                       {
@@ -10022,7 +10043,7 @@
                   },
                   {
                     "width": "10%",
-                    "title": "Invoiced area (ha) covering the hydrological regime change",
+                    "title": "Invoiced area (ha) where the hydrological regimes have been improved",
                     "type": "col",
                     "items": [
                       {
@@ -10062,7 +10083,7 @@
                   },
                   {
                     "width": "20%",
-                    "title": "Type of treatment implemented to improve eco-hydrological management",
+                    "title": "Type of treatment implemented to improve eco-hydrological treatment",
                     "type": "col",
                     "items": [
                       {
@@ -10686,7 +10707,7 @@
                     "helpText": "Enter the amount you will invoice for during this reporting period.",
                     "width": "10%",
                     "type": "col",
-                    "title": "Actual area (ha) covered by practice change",
+                    "title": "Actual area (ha) / length (km) covered by practice change",
                     "items": [
                       {
                         "source": "areaImplementedHa",
@@ -11406,7 +11427,7 @@
                     "helpText": "Enter the amount you will invoice for during this reporting period.",
                     "width": "10%",
                     "type": "col",
-                    "title": "Actual area (ha) where disease has been managed",
+                    "title": "Actual area (ha) / length (km) where disease has been managed",
                     "items": [
                       {
                         "source": "areaTreatedHa",
@@ -11449,7 +11470,7 @@
                     "helpText": "Enter the amount you will invoice for during this reporting period.",
                     "width": "10%",
                     "type": "col",
-                    "title": "Invoiced area (ha) treated for disease",
+                    "title": "Invoiced area (ha) where disease has been managed",
                     "items": [
                       {
                         "source": "areaTreatedInvoicedHa",
@@ -14978,7 +14999,7 @@
                   {
                     "width": "10%",
                     "source": "numberPlanted",
-                    "title": "Number planted",
+                    "title": "Numbers planted",
                     "type": "number"
                   },
                   {
