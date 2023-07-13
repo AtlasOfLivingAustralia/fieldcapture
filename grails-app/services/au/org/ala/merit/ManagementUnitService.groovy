@@ -140,54 +140,7 @@ class ManagementUnitService {
         return mu?.blog?:[]
     }
 
-    /**
-     * Get scores of each program in the given management unit
-     * @param managementUnitId
-     * @param programIds
-     * @param approvedActivitiesOnly
-     * @return [programId: serviceScores]
-     */
-    Map serviceScores(String managementUnitId, Map programGroups, boolean approvedActivitiesOnly = true) {
-        List<Map> allServices = metadataService.getProjectServices()
-        List scoreIds = allServices.collect{it.scores?.collect{score -> score.scoreId}}.flatten()
 
-        def results = [:]
-
-        for(Map.Entry programGroup in programGroups) {
-            List programIdFacets = programGroup.value.collect{"programId:${it.programId}"}
-            List facets = ["managementUnitId:${managementUnitId}"] + programIdFacets
-            Map scoreResults = reportService.targetsForScoreIds(scoreIds, facets, approvedActivitiesOnly)
-
-            List deliveredServices = []
-            allServices.each { Map service ->
-                Map copy = [:]
-                copy.putAll(service)
-                copy.scores = []
-                service.scores?.each { score ->
-                    Map copiedScore = [:]
-                    copiedScore.putAll(score)
-                    Map result = scoreResults?.scores?.find{it.scoreId == score.scoreId}
-
-                    copiedScore.target = result?.target ?: 0
-                    copiedScore.result = result?.result ?: [result:0, count:0]
-
-                    // We only want to report on services that are going to be delivered by this program.
-                    if (copiedScore.target) {
-                        copy.scores << copiedScore
-                    }
-
-                }
-                if (copy.scores) {
-                    deliveredServices << copy
-                }
-
-            }
-
-            results[programGroup.key]=deliveredServices
-        }
-        results
-
-    }
 
 
     void regenerateReports(String id, List<String> managementUnitReportCategories = null, List<String> projectReportCategories = null) {
