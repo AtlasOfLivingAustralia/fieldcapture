@@ -1872,245 +1872,500 @@
                 "validate": "required"
               },
               {
-                "columns": [
-                  {
-                    "dataType": "feature",
-                    "name": "site"
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "siteCalculatedAreaHa",
-                    "computed": {
-                      "expression": "$geom.areaHa(site)"
-                    },
-                    "units": "ha",
-                    "decimalPlaces": 3,
-                    "behaviour": [
-                      {
-                        "condition": "areaInvoicedHa > 0",
-                        "type": "conditional_validation",
-                        "value": {
-                          "message": "The controlled area must be mapped",
-                          "validate": "required,min[0.0001]"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "siteCalculatedLengthKm",
-                    "computed": {
-                      "expression": "$geom.lengthKm(site)"
-                    },
-                    "units": "km",
-                    "decimalPlaces": 3,
-                    "behaviour": [
-                      {
-                        "condition": "lengthInvoicedKm > 0",
-                        "type": "conditional_validation",
-                        "value": {
-                          "message": "The controlled length must be mapped",
-                          "validate": "required,min[0.0001]"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "areaControlledHa",
-                    "validate": "required,min[0]",
-                    "units": "ha",
-                    "decimalPlaces": 3,
-                    "defaultValue": {
-                      "type": "computed",
-                      "expression": "$geom.areaHa(site)"
-                    }
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "lengthControlledKm",
-                    "validate": "required,min[0]",
-                    "units": "km",
-                    "decimalPlaces": 3,
-                    "defaultValue": {
-                      "type": "computed",
-                      "expression": "$geom.lengthKm(site)"
-                    }
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "areaInvoicedHa",
-                    "units": "ha",
-                    "decimalPlaces": 3,
-                    "validate": [
-                      {
-                        "rule": "required"
-                      },
-                      {
-                        "rule": "min[0]"
-                      },
-                      {
-                        "rule": "max",
-                        "param": {
-                          "type": "computed",
-                          "expression": "areaControlledHa"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "lengthInvoicedKm",
-                    "units": "km",
-                    "decimalPlaces": 3,
-                    "validate": [
-                      {
-                        "rule": "required"
-                      },
-                      {
-                        "rule": "min[0]"
-                      },
-                      {
-                        "rule": "max",
-                        "param": {
-                          "type": "computed",
-                          "expression": "lengthControlledKm"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "mappingNotAlignedReason",
-                    "constraints": [
-                      "Mapped area simplifies more complex area/s where work was undertaken during this period",
-                      "Other"
-                    ],
-                    "validate": "required",
-                    "behaviour": [
-                      {
-                        "condition": "not (within(areaControlledHa, siteCalculatedAreaHa, 0.1))",
-                        "type": "if"
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "mappingNotAlignedComments",
-                    "validate": "required,maxSize[300]",
-                    "behaviour": [
-                      {
-                        "type": "if",
-                        "condition": "not within(areaControlledHa, siteCalculatedAreaHa, 0.1) and \"Other\" == mappingNotAlignedReason"
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "mappingLengthNotAlignedReason",
-                    "constraints": [
-                      "Mapped area simplifies more complex length/s where work was undertaken during this period",
-                      "Other"
-                    ],
-                    "validate": "required",
-                    "behaviour": [
-                      {
-                        "condition": "not (within(lengthControlledKm, siteCalculatedLengthKm, 0.1))",
-                        "type": "if"
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "mappingLengthNotAlignedComments",
-                    "validate": "required,maxSize[300]",
-                    "behaviour": [
-                      {
-                        "type": "if",
-                        "condition": "not (within(lengthControlledKm, siteCalculatedLengthKm, 0.1)) and \"Other\" == mappingLengthNotAlignedReason"
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "invoicedNotActualReason",
-                    "constraints": [
-                      "Work was undertaken over a greater area than will be invoiced for",
-                      "Other"
-                    ],
-                    "validate": "required",
-                    "behaviour": [
-                      {
-                        "condition": "roundTo(areaControlledHa, 2) != roundTo(areaInvoicedHa, 2)",
-                        "type": "if"
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "invoicedNotActualComments",
-                    "behaviour": [
-                      {
-                        "type": "if",
-                        "condition": "roundTo(areaControlledHa, 2) != roundTo(areaInvoicedHa, 2) and \"Other\" == invoicedNotActualReason"
-                      }
-                    ],
-                    "validate": "required,maxSize[300]"
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "invoicedLengthNotActualReason",
-                    "constraints": [
-                      "Work was undertaken over a greater length than will be invoiced for",
-                      "Other"
-                    ],
-                    "validate": "required",
-                    "behaviour": [
-                      {
-                        "condition": "roundTo(lengthControlledKm, 2) != roundTo(lengthInvoicedKm, 2)",
-                        "type": "if"
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "invoicedLengthNotActualComments",
-                    "behaviour": [
-                      {
-                        "type": "if",
-                        "condition": "roundTo(lengthControlledKm, 2) != roundTo(lengthInvoicedKm, 2) and \"Other\" == invoicedLengthNotActualReason"
-                      }
-                    ],
-                    "validate": "required,maxSize[300]"
-                  },
-                  {
-                    "dataType": "document",
-                    "name": "extraMappingDetails",
-                    "validate": "required",
-                    "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
-                    "behaviour": [
-                      {
-                        "condition": "not (within(areaControlledHa, siteCalculatedAreaHa, 0.1) and within(lengthControlledKm, siteCalculatedLengthKm, 0.1)) or roundTo(areaControlledHa, 2) != roundTo(areaInvoicedHa, 2)",
-                        "type": "if"
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "noStructuresInstalled",
-                    "validate": "required"
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "invoiceLocationsStructures",
-                    "validate": "required"
-                  }
-
-                ],
-                "dataType": "list",
-                "name": "controllingPestAnimalBaselineTable"
+                "dataType": "feature",
+                "name": "site",
+                "validate": "required"
               },
-
+              {
+                "dataType": "number",
+                "name": "siteCalculatedAreaHa",
+                "computed": {
+                  "expression": "$geom.areaHa(site)"
+                },
+                "units": "ha",
+                "decimalPlaces": 3,
+                "behaviour": [
+                  {
+                    "condition": "areaInvoicedHa > 0",
+                    "type": "conditional_validation",
+                    "value": {
+                      "message": "The controlled area must be mapped",
+                      "validate": "required,min[0.0001]"
+                    }
+                  }
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "siteCalculatedLengthKm",
+                "computed": {
+                  "expression": "$geom.lengthKm(site)"
+                },
+                "units": "km",
+                "decimalPlaces": 3,
+                "behaviour": [
+                  {
+                    "condition": "lengthInvoicedKm > 0",
+                    "type": "conditional_validation",
+                    "value": {
+                      "message": "The controlled length must be mapped",
+                      "validate": "required,min[0.0001]"
+                    }
+                  }
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "areaControlledHa",
+                "validate": "required,min[0]",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "$geom.areaHa(site)"
+                }
+              },
+              {
+                "dataType": "number",
+                "name": "lengthControlledKm",
+                "validate": "required,min[0]",
+                "units": "km",
+                "decimalPlaces": 3,
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "$geom.lengthKm(site)"
+                }
+              },
+              {
+                "dataType": "number",
+                "name": "areaInvoicedHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "rule": "max",
+                    "param": {
+                      "type": "computed",
+                      "expression": "areaControlledHa"
+                    }
+                  }
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "lengthInvoicedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "rule": "max",
+                    "param": {
+                      "type": "computed",
+                      "expression": "lengthControlledKm"
+                    }
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedReason",
+                "constraints": [
+                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaControlledHa, siteCalculatedAreaHa, 0.1))",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedComments",
+                "validate": "required,maxSize[300]",
+                "behaviour": [
+                  {
+                    "type": "if",
+                    "condition": "not within(areaControlledHa, siteCalculatedAreaHa, 0.1) and \"Other\" == mappingNotAlignedReason"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingLengthNotAlignedReason",
+                "constraints": [
+                  "Mapped area simplifies more complex length/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "not (within(lengthControlledKm, siteCalculatedLengthKm, 0.1))",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingLengthNotAlignedComments",
+                "validate": "required,maxSize[300]",
+                "behaviour": [
+                  {
+                    "type": "if",
+                    "condition": "not (within(lengthControlledKm, siteCalculatedLengthKm, 0.1)) and \"Other\" == mappingLengthNotAlignedReason"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedNotActualReason",
+                "constraints": [
+                  "Work was undertaken over a greater area than will be invoiced for",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "roundTo(areaControlledHa, 2) != roundTo(areaInvoicedHa, 2)",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedNotActualComments",
+                "behaviour": [
+                  {
+                    "type": "if",
+                    "condition": "roundTo(areaControlledHa, 2) != roundTo(areaInvoicedHa, 2) and \"Other\" == invoicedNotActualReason"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedLengthNotActualReason",
+                "constraints": [
+                  "Work was undertaken over a greater length than will be invoiced for",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "roundTo(lengthControlledKm, 2) != roundTo(lengthInvoicedKm, 2)",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedLengthNotActualComments",
+                "behaviour": [
+                  {
+                    "type": "if",
+                    "condition": "roundTo(lengthControlledKm, 2) != roundTo(lengthInvoicedKm, 2) and \"Other\" == invoicedLengthNotActualReason"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "document",
+                "name": "extraMappingDetails",
+                "validate": "required",
+                "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaControlledHa, siteCalculatedAreaHa, 0.1) and within(lengthControlledKm, siteCalculatedLengthKm, 0.1)) or roundTo(areaControlledHa, 2) != roundTo(areaInvoicedHa, 2)",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "areaControlledHa",
+                "validate": "required,min[0]",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "$geom.areaHa(site)"
+                }
+              },
+              {
+                "dataType": "number",
+                "name": "lengthControlledKm",
+                "validate": "required,min[0]",
+                "units": "km",
+                "decimalPlaces": 3,
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "$geom.lengthKm(site)"
+                }
+              },
+              {
+                "dataType": "number",
+                "name": "areaInvoicedHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "rule": "max",
+                    "param": {
+                      "type": "computed",
+                      "expression": "areaControlledHa"
+                    }
+                  }
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "lengthInvoicedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "rule": "max",
+                    "param": {
+                      "type": "computed",
+                      "expression": "lengthControlledKm"
+                    }
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedReason",
+                "constraints": [
+                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaControlledHa, siteCalculatedAreaHa, 0.1))",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedComments",
+                "validate": "required,maxSize[300]",
+                "behaviour": [
+                  {
+                    "type": "if",
+                    "condition": "not within(areaControlledHa, siteCalculatedAreaHa, 0.1) and \"Other\" == mappingNotAlignedReason"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingLengthNotAlignedReason",
+                "constraints": [
+                  "Mapped area simplifies more complex length/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "not (within(lengthControlledKm, siteCalculatedLengthKm, 0.1))",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingLengthNotAlignedComments",
+                "validate": "required,maxSize[300]",
+                "behaviour": [
+                  {
+                    "type": "if",
+                    "condition": "not (within(lengthControlledKm, siteCalculatedLengthKm, 0.1)) and \"Other\" == mappingLengthNotAlignedReason"
+                  }
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "areaInvoicedHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "rule": "max",
+                    "param": {
+                      "type": "computed",
+                      "expression": "areaControlledHa"
+                    }
+                  }
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "lengthInvoicedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "rule": "max",
+                    "param": {
+                      "type": "computed",
+                      "expression": "lengthControlledKm"
+                    }
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedReason",
+                "constraints": [
+                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaControlledHa, siteCalculatedAreaHa, 0.1))",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedComments",
+                "validate": "required,maxSize[300]",
+                "behaviour": [
+                  {
+                    "type": "if",
+                    "condition": "not within(areaControlledHa, siteCalculatedAreaHa, 0.1) and \"Other\" == mappingNotAlignedReason"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingLengthNotAlignedReason",
+                "constraints": [
+                  "Mapped area simplifies more complex length/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "not (within(lengthControlledKm, siteCalculatedLengthKm, 0.1))",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingLengthNotAlignedComments",
+                "validate": "required,maxSize[300]",
+                "behaviour": [
+                  {
+                    "type": "if",
+                    "condition": "not (within(lengthControlledKm, siteCalculatedLengthKm, 0.1)) and \"Other\" == mappingLengthNotAlignedReason"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedNotActualReason",
+                "constraints": [
+                  "Work was undertaken over a greater area than will be invoiced for",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "roundTo(areaControlledHa, 2) != roundTo(areaInvoicedHa, 2)",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedNotActualComments",
+                "behaviour": [
+                  {
+                    "type": "if",
+                    "condition": "roundTo(areaControlledHa, 2) != roundTo(areaInvoicedHa, 2) and \"Other\" == invoicedNotActualReason"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedLengthNotActualReason",
+                "constraints": [
+                  "Work was undertaken over a greater length than will be invoiced for",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "roundTo(lengthControlledKm, 2) != roundTo(lengthInvoicedKm, 2)",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedLengthNotActualComments",
+                "behaviour": [
+                  {
+                    "type": "if",
+                    "condition": "roundTo(lengthControlledKm, 2) != roundTo(lengthInvoicedKm, 2) and \"Other\" == invoicedLengthNotActualReason"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "number",
+                "name": "noStructuresInstalled",
+                "validate": "required"
+              },
+              {
+                "dataType": "number",
+                "name": "invoiceLocationsStructures",
+                "validate": "required"
+              },
               {
                 "columns": [
                   {
@@ -2327,19 +2582,20 @@
                 ]
               },
               {
-                "columns": [
+                "type": "row",
+                "css": "border-bottom",
+                "items": [
                   {
-                    "width": "20%",
                     "type": "col",
-                    "title": "Site/s where pest control was undertaken",
-                    "helpText": "",
+                    "css": "span2 col-border-right",
                     "items": [
                       {
                         "type": "row",
                         "items": [
                           {
                             "source": "site",
-                            "type": "feature"
+                            "type": "feature",
+                            "preLabel": "Site/s where pest control was undertaken"
                           }
                         ]
                       },
@@ -2381,19 +2637,15 @@
                       }
                     ]
                   },
-
                   {
-                    "width": "25%",
                     "type": "col",
-                    "title": "Actual area (ha) / length (km) treated for pest animals",
-                    "helpText": "Manually enter correct figure for this reporting period if different to mapped value.",
+                    "css": "span3 col-border-right",
                     "items": [
-
                       {
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "",
+                            "preLabel": "Actual area (ha) treated for pest animals",
                             "source": "areaControlledHa",
                             "type": "number",
                             "displayOptions": {
@@ -2427,7 +2679,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "",
+                            "preLabel": "Actual length (km) treated for pest animals",
                             "source": "lengthControlledKm",
                             "type": "number",
                             "validate": "required",
@@ -2460,19 +2712,15 @@
                       }
                     ]
                   },
-
                   {
-                    "width": "25%",
                     "type": "col",
-                    "title": "Invoiced area (ha) / length (km) treated for pest animals",
-                    "helpText": "Enter the amount you will invoice for during this reporting period.",
+                    "css": "span3 col-border-right",
                     "items": [
-
                       {
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "",
+                            "preLabel": "Invoiced area (ha) treated for pest animals",
                             "helpText": "",
                             "source": "areaInvoicedHa",
                             "type": "number",
@@ -2507,7 +2755,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "",
+                            "preLabel": "Invoiced length (km) treated for pest animals",
                             "helpText": "",
                             "source": "lengthInvoicedKm",
                             "type": "number",
@@ -2541,23 +2789,39 @@
                     ]
                   },
                   {
-                    "width": "15%",
-                    "source": "noStructuresInstalled",
-                    "title": "Number of structures installed/maintained",
-                    "type": "number"
+                    "type": "col",
+                    "css": "span2 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "noStructuresInstalled",
+                            "preLabel": "Number of structures installed/maintained",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
                   },
                   {
-                    "width": "15%",
-                    "source": "invoiceLocationsStructures",
-                    "title": "Invoiced number of locations where structures were installed/maintained",
-                    "type": "number"
+                    "type": "col",
+                    "css": "span2 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "invoiceLocationsStructures",
+                            "preLabel": "Invoiced number of locations where structures were installed/maintained",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
                   }
-                ],
-                "userAddedRows": true,
-                "source": "controllingPestAnimalBaselineTable",
-                "type": "table"
+                ]
               },
-
               {
                 "type": "row",
                 "items": [
@@ -7060,248 +7324,239 @@
                 ],
                 "validate": "required"
               },
-
               {
-                "columns": [
-                  {
-                    "dataType": "feature",
-                    "name": "sitesOfAugmentation"
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "siteCalculatedAreaHa",
-                    "computed": {
-                      "expression": "$geom.areaHa(sitesOfAugmentation)"
-                    },
-                    "units": "ha",
-                    "decimalPlaces": 3,
-                    "behaviour": [
-                      {
-                        "condition": "areaInvoicedHa > 0",
-                        "type": "conditional_validation",
-                        "value": {
-                          "message": "The controlled area must be mapped",
-                          "validate": "required,min[0.0001]"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "siteCalculatedLengthKm",
-                    "computed": {
-                      "expression": "$geom.lengthKm(sitesOfAugmentation)"
-                    },
-                    "units": "km",
-                    "decimalPlaces": 3,
-                    "behaviour": [
-                      {
-                        "condition": "lengthInvoicedKm > 0",
-                        "type": "conditional_validation",
-                        "value": {
-                          "message": "The controlled length must be mapped",
-                          "validate": "required,min[0.0001]"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "areaControlledHa",
-                    "validate": "required,min[0]",
-                    "units": "ha",
-                    "decimalPlaces": 3,
-                    "defaultValue": {
-                      "type": "computed",
-                      "expression": "$geom.areaHa(sitesOfAugmentation)"
-                    }
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "lengthControlledKm",
-                    "validate": "required,min[0]",
-                    "units": "km",
-                    "decimalPlaces": 3,
-                    "defaultValue": {
-                      "type": "computed",
-                      "expression": "$geom.lengthKm(sitesOfAugmentation)"
-                    }
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "areaInvoicedHa",
-                    "units": "ha",
-                    "decimalPlaces": 3,
-                    "validate": [
-                      {
-                        "rule": "required"
-                      },
-                      {
-                        "rule": "min[0]"
-                      },
-                      {
-                        "rule": "max",
-                        "param": {
-                          "type": "computed",
-                          "expression": "areaControlledHa"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "lengthInvoicedKm",
-                    "units": "km",
-                    "decimalPlaces": 3,
-                    "validate": [
-                      {
-                        "rule": "required"
-                      },
-                      {
-                        "rule": "min[0]"
-                      },
-                      {
-                        "rule": "max",
-                        "param": {
-                          "type": "computed",
-                          "expression": "lengthControlledKm"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "mappingNotAlignedReason",
-                    "constraints": [
-                      "Mapped area simplifies more complex area/s where work was undertaken during this period",
-                      "Other"
-                    ],
-                    "validate": "required",
-                    "behaviour": [
-                      {
-                        "condition": "not (within(areaControlledHa, siteCalculatedAreaHa, 0.1))",
-                        "type": "if"
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "mappingNotAlignedComments",
-                    "validate": "required,maxSize[300]",
-                    "behaviour": [
-                      {
-                        "type": "if",
-                        "condition": "not within(areaControlledHa, siteCalculatedAreaHa, 0.1) and \"Other\" == mappingNotAlignedReason"
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "mappingLengthNotAlignedReason",
-                    "constraints": [
-                      "Mapped area simplifies more complex length/s where work was undertaken during this period",
-                      "Other"
-                    ],
-                    "validate": "required",
-                    "behaviour": [
-                      {
-                        "condition": "not (within(lengthControlledKm, siteCalculatedLengthKm, 0.1))",
-                        "type": "if"
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "mappingLengthNotAlignedComments",
-                    "validate": "required,maxSize[300]",
-                    "behaviour": [
-                      {
-                        "type": "if",
-                        "condition": "not (within(lengthControlledKm, siteCalculatedLengthKm, 0.1)) and \"Other\" == mappingLengthNotAlignedReason"
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "invoicedNotActualReason",
-                    "constraints": [
-                      "Work was undertaken over a greater area than will be invoiced for",
-                      "Other"
-                    ],
-                    "validate": "required",
-                    "behaviour": [
-                      {
-                        "condition": "roundTo(areaControlledHa, 2) != roundTo(areaInvoicedHa, 2)",
-                        "type": "if"
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "invoicedNotActualComments",
-                    "behaviour": [
-                      {
-                        "type": "if",
-                        "condition": "roundTo(areaControlledHa, 2) != roundTo(areaInvoicedHa, 2) and \"Other\" == invoicedNotActualReason"
-                      }
-                    ],
-                    "validate": "required,maxSize[300]"
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "invoicedLengthNotActualReason",
-                    "constraints": [
-                      "Work was undertaken over a greater length than will be invoiced for",
-                      "Other"
-                    ],
-                    "validate": "required",
-                    "behaviour": [
-                      {
-                        "condition": "roundTo(lengthControlledKm, 2) != roundTo(lengthInvoicedKm, 2)",
-                        "type": "if"
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "invoicedLengthNotActualComments",
-                    "behaviour": [
-                      {
-                        "type": "if",
-                        "condition": "roundTo(lengthControlledKm, 2) != roundTo(lengthInvoicedKm, 2) and \"Other\" == invoicedLengthNotActualReason"
-                      }
-                    ],
-                    "validate": "required,maxSize[300]"
-                  },
-                  {
-                    "dataType": "document",
-                    "name": "extraMappingDetails",
-                    "validate": "required",
-                    "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
-                    "behaviour": [
-                      {
-                        "condition": "not (within(areaControlledHa, siteCalculatedAreaHa, 0.1) and within(lengthControlledKm, siteCalculatedLengthKm, 0.1)) or roundTo(areaControlledHa, 2) != roundTo(areaInvoicedHa, 2)",
-                        "type": "if"
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "noStructuresInstalled",
-                    "validate": "required"
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "invoiceLocationsStructures",
-                    "validate": "required"
-                  }
-
-                ],
-                "dataType": "list",
-                "name": "habitatAugmentationBaselineTable"
+                "dataType": "feature",
+                "name": "sitesOfAugmentation",
+                "validate": "required"
               },
-
-
+              {
+                "dataType": "number",
+                "name": "siteCalculatedAreaHa",
+                "computed": {
+                  "expression": "$geom.areaHa(sitesOfAugmentation)"
+                },
+                "units": "ha",
+                "decimalPlaces": 3,
+                "behaviour": [
+                  {
+                    "condition": "areaInvoicedHa > 0",
+                    "type": "conditional_validation",
+                    "value": {
+                      "message": "The controlled area must be mapped",
+                      "validate": "required,min[0.0001]"
+                    }
+                  }
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "siteCalculatedLengthKm",
+                "computed": {
+                  "expression": "$geom.lengthKm(sitesOfAugmentation)"
+                },
+                "units": "km",
+                "decimalPlaces": 3,
+                "behaviour": [
+                  {
+                    "condition": "lengthInvoicedKm > 0",
+                    "type": "conditional_validation",
+                    "value": {
+                      "message": "The controlled length must be mapped",
+                      "validate": "required,min[0.0001]"
+                    }
+                  }
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "areaControlledHa",
+                "validate": "required,min[0]",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "$geom.areaHa(sitesOfAugmentation)"
+                }
+              },
+              {
+                "dataType": "number",
+                "name": "lengthControlledKm",
+                "validate": "required,min[0]",
+                "units": "km",
+                "decimalPlaces": 3,
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "$geom.lengthKm(sitesOfAugmentation)"
+                }
+              },
+              {
+                "dataType": "number",
+                "name": "areaInvoicedHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "rule": "max",
+                    "param": {
+                      "type": "computed",
+                      "expression": "areaControlledHa"
+                    }
+                  }
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "lengthInvoicedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "rule": "max",
+                    "param": {
+                      "type": "computed",
+                      "expression": "lengthControlledKm"
+                    }
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedReason",
+                "constraints": [
+                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaControlledHa, siteCalculatedAreaHa, 0.1))",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedComments",
+                "validate": "required,maxSize[300]",
+                "behaviour": [
+                  {
+                    "type": "if",
+                    "condition": "not within(areaControlledHa, siteCalculatedAreaHa, 0.1) and \"Other\" == mappingNotAlignedReason"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingLengthNotAlignedReason",
+                "constraints": [
+                  "Mapped area simplifies more complex length/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "not (within(lengthControlledKm, siteCalculatedLengthKm, 0.1))",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingLengthNotAlignedComments",
+                "validate": "required,maxSize[300]",
+                "behaviour": [
+                  {
+                    "type": "if",
+                    "condition": "not (within(lengthControlledKm, siteCalculatedLengthKm, 0.1)) and \"Other\" == mappingLengthNotAlignedReason"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedNotActualReason",
+                "constraints": [
+                  "Work was undertaken over a greater area than will be invoiced for",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "roundTo(areaControlledHa, 2) != roundTo(areaInvoicedHa, 2)",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedNotActualComments",
+                "behaviour": [
+                  {
+                    "type": "if",
+                    "condition": "roundTo(areaControlledHa, 2) != roundTo(areaInvoicedHa, 2) and \"Other\" == invoicedNotActualReason"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedLengthNotActualReason",
+                "constraints": [
+                  "Work was undertaken over a greater length than will be invoiced for",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "roundTo(lengthControlledKm, 2) != roundTo(lengthInvoicedKm, 2)",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedLengthNotActualComments",
+                "behaviour": [
+                  {
+                    "type": "if",
+                    "condition": "roundTo(lengthControlledKm, 2) != roundTo(lengthInvoicedKm, 2) and \"Other\" == invoicedLengthNotActualReason"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "document",
+                "name": "extraMappingDetails",
+                "validate": "required",
+                "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaControlledHa, siteCalculatedAreaHa, 0.1) and within(lengthControlledKm, siteCalculatedLengthKm, 0.1)) or roundTo(areaControlledHa, 2) != roundTo(areaInvoicedHa, 2)",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "noStructuresInstalled",
+                "validate": "required"
+              },
+              {
+                "dataType": "number",
+                "name": "invoiceLocationsStructures",
+                "validate": "required"
+              },
               {
                 "columns": [
                   {
@@ -7522,21 +7777,21 @@
                   }
                 ]
               },
-
               {
-                "columns": [
+                "type": "row",
+                "css": "border-bottom",
+                "items": [
                   {
-                    "width": "20%",
                     "type": "col",
-                    "title": "Site/s of habitat augmentation",
-                    "helpText": "",
+                    "css": "span2 col-border-right",
                     "items": [
                       {
                         "type": "row",
                         "items": [
                           {
                             "source": "sitesOfAugmentation",
-                            "type": "feature"
+                            "type": "feature",
+                            "preLabel": "Site/s of habitat augmentation"
                           }
                         ]
                       },
@@ -7578,19 +7833,15 @@
                       }
                     ]
                   },
-
                   {
-                    "width": "25%",
                     "type": "col",
-                    "title": "Actual area (ha) / length (km) treated for pest animals",
-                    "helpText": "Manually enter correct figure for this reporting period if different to mapped value.",
+                    "css": "span2 col-border-right",
                     "items": [
-
                       {
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "",
+                            "preLabel": "Actual area (ha) of habitat augmentation",
                             "source": "areaControlledHa",
                             "type": "number",
                             "displayOptions": {
@@ -7624,7 +7875,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "",
+                            "preLabel": "Actual length (km) of habitat augmentation",
                             "source": "lengthControlledKm",
                             "type": "number",
                             "validate": "required",
@@ -7658,18 +7909,15 @@
                     ]
                   },
                   {
-                    "width": "25%",
                     "type": "col",
-                    "title": "Invoiced area (ha) / length (km) treated for pest animals",
-                    "helpText": "Enter the amount you will invoice for during this reporting period.",
+                    "css": "span2 col-border-right",
                     "items": [
-
                       {
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "",
-                            "helpText": "",
+                            "preLabel": "Invoiced area (ha) treated of habitat augmentation",
+                            "helpText": "Enter the amount you will invoice for during this reporting period.",
                             "source": "areaInvoicedHa",
                             "type": "number",
                             "displayOptions": {
@@ -7703,7 +7951,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "",
+                            "preLabel": "Invoiced length (km) treated of habitat augmentation",
                             "helpText": "",
                             "source": "lengthInvoicedKm",
                             "type": "number",
@@ -7737,23 +7985,39 @@
                     ]
                   },
                   {
-                    "width": "15%",
-                    "source": "noStructuresInstalled",
-                    "title": "Number of structures installed/maintained",
-                    "type": "number"
+                    "type": "col",
+                    "css": "span2 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "noStructuresInstalled",
+                            "preLabel": "Number of structures installed/maintained",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
                   },
                   {
-                    "width": "15%",
-                    "source": "invoiceLocationsStructures",
-                    "title": "Invoiced number of locations where structures were installed/maintained",
-                    "type": "number"
+                    "type": "col",
+                    "css": "span2 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "invoiceLocationsStructures",
+                            "preLabel": "Invoiced number of locations where structures were installed/maintained",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
                   }
-                ],
-                "userAddedRows": false,
-                "source": "habitatAugmentationBaselineTable",
-                "type": "table"
+                ]
               },
-
               {
                 "columns": [
                   {
@@ -7925,35 +8189,33 @@
           {
             "columns": [
               {
-                "columns": [
-                  {
-                    "dataType": "number",
-                    "name": "numberOfSitesIdentifiedPrioritised",
-                    "validate": "required,min[0]"
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "sitesHaveBeenIdentified",
-                    "description": "",
-                    "validate": "required,maxSize[300]"
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "methodsUsedToIdentify",
-                    "description": "",
-                    "validate": "required,maxSize[300]"
-                  },
-                  {
+                "dataType": "number",
+                "name": "numberOfSitesIdentifiedPrioritised",
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "sitesHaveBeenIdentified",
+                "description": "",
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "text",
+                "name": "methodsUsedToIdentify",
+                "description": "",
+                "validate": "required,maxSize[300]"
+              },
+              {
                     "name": "relatedOutcomes",
-                    "dataType": "text",
-                    "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
-                    "validate": "required",
-                    "constraints": {
+                "dataType": "text",
+                "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
+                "validate": "required",
+                "constraints": {
                       "textProperty": "label",
                       "valueProperty": "label",
-                      "type": "pre-populated",
-                      "config": {
-                        "source": {
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
                           "url": "/project/outcomesByScores",
                           "params": [{
                             "expression": "owner.projectId",
@@ -7965,19 +8227,26 @@
                             "type": "computed"
                           }
                           ]
-                        }
-                      }
                     }
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "investmentPrioritiesActivityRelates",
-                    "description": "",
-                    "validate": "required,maxSize[300]"
-                  },
+                  }
+                }
+              },
+              {
+                "dataType": "text",
+                "name": "investmentPrioritiesActivityRelates",
+                "description": "",
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "columns": [
                   {
                     "dataType": "feature",
-                    "name": "sitesTreated"
+                    "name": "sitesTreated",
+                    "validate": [
+                      {
+                        "rule": "required"
+                      }
+                    ]
                   },
                   {
                     "computed": {
@@ -8026,7 +8295,14 @@
                     "name": "areaTreatedHa",
                     "units": "ha",
                     "decimalPlaces": 3,
-                    "validate": "required,min[0]"
+                    "validate": [
+                      {
+                        "rule": "required"
+                      },
+                      {
+                        "rule": "min[0]"
+                      }
+                    ]
                   },
                   {
                     "dataType": "text",
@@ -8078,6 +8354,9 @@
                     "units": "ha",
                     "decimalPlaces": 3,
                     "validate": [
+                      {
+                        "rule": "required"
+                      },
                       {
                         "rule": "min[0]"
                       },
@@ -8335,39 +8614,95 @@
                 "type": "repeat",
                 "items": [
                   {
+                    "type": "row",
+                    "css": "border-bottom",
+                    "items": [
+                      {
+                        "type": "col",
+                        "css": "span2 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "numberOfSitesIdentifiedPrioritised",
+                                "type": "number",
+                                "preLabel": "Number of potential sites identified and prioritised"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "css": "span3 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "sitesHaveBeenIdentified",
+                                "preLabel": "What sites have been identified?",
+                                "type": "text"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "css": "span2 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "methodsUsedToIdentify",
+                                "preLabel": "What method/s were used to identify and prioritise?",
+                                "type": "text"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "css": "span2 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                        "source": "relatedOutcomes",
+                                "type": "select2Many",
+                                "preLabel": "Which outcome statement/s relates to this survey?"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "css": "span3 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "investmentPrioritiesActivityRelates",
+                                "preLabel": "Which investment priority does this activity relate to?",
+                                "type": "text"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
                     "columns": [
                       {
-                        "width": "10%",
-                        "source": "numberOfSitesIdentifiedPrioritised",
-                        "title": "Number of potential sites identified and prioritised",
-                        "type": "number"
-                      },
-                      {
-                        "width": "10%",
-                        "source": "sitesHaveBeenIdentified",
-                        "title": "What sites have been identified?",
-                        "type": "text"
-                      },
-                      {
-                        "width": "15%",
-                        "source": "methodsUsedToIdentify",
-                        "title": "What method/s were used to identify and prioritise?",
-                        "type": "text"
-                      },
-                      {
-                        "source": "relatedOutcomes",
-                        "type": "select2Many",
-                        "width": "10%",
-                        "title": "Which outcome statement/s relates to this survey?"
-                      },
-                      {
-                        "width": "15%",
-                        "source": "investmentPrioritiesActivityRelates",
-                        "title": "Which investment priority does this activity relate to?",
-                        "type": "text"
-                      },
-                      {
-                        "width": "10%",
+                        "width": "25%",
                         "title": "Identified and prioritised sites",
                         "type": "col",
                         "items": [
@@ -8404,13 +8739,13 @@
                         ]
                       },
                       {
-                        "width": "10%",
+                        "width": "25%",
                         "source": "identifiedSitesName",
                         "title": "Name of identified and prioritised site/s",
                         "type": "text"
                       },
                       {
-                        "width": "10%",
+                        "width": "25%",
                         "type": "col",
                         "title": "Assessed sites",
                         "helpText": "",
@@ -8453,7 +8788,7 @@
                         ]
                       },
                       {
-                        "width": "10%",
+                        "width": "25%",
                         "source": "assessedSitesName",
                         "title": "Name of assessed site/s",
                         "type": "text"
@@ -8632,7 +8967,8 @@
                 "columns": [
                   {
                     "dataType": "feature",
-                    "name": "sitesTreated"
+                    "name": "sitesTreated",
+                    "validate": "required"
                   },
                   {
                     "computed": {
@@ -8738,6 +9074,9 @@
                     "units": "ha",
                     "decimalPlaces": 3,
                     "validate": [
+                      {
+                        "rule": "required"
+                      },
                       {
                         "rule": "min[0]"
                       },
@@ -9041,7 +9380,7 @@
                     ]
                   },
                   {
-                    "width": "20%",
+                    "width": "10%",
                     "type": "col",
                     "title": "Actual area (ha) / length (km) treated by managment action",
                     "helpText": "Enter the amount you will invoice for during this reporting period.",
@@ -9084,7 +9423,7 @@
                     ]
                   },
                   {
-                    "width": "15%",
+                    "width": "10%",
                     "type": "col",
                     "title": "Invoiced area (ha) treated by management action",
                     "helpText": "Enter the amount you will invoice for during this reporting period.",
@@ -9347,7 +9686,8 @@
                 "columns": [
                   {
                     "dataType": "feature",
-                    "name": "improvedSites"
+                    "name": "improvedSites",
+                    "validate": "required"
                   },
                   {
                     "computed": {
@@ -9727,11 +10067,11 @@
                         ]
                       }
                     ],
-                    "title": "Site/s where hydrological regimes are being improved"
+                    "title": "Site/s where hydrological regimes have been improved"
                   },
                   {
                     "width": "10%",
-                    "title": "Actual area (ha) / length (km) covering the hydrological regime change",
+                    "title": "Actual area (ha) / length (km) where the hydrological regimes have benn improved",
                     "type": "col",
                     "items": [
                       {
@@ -9783,7 +10123,7 @@
                   },
                   {
                     "width": "10%",
-                    "title": "Invoiced area (ha) covering the hydrological regime change",
+                    "title": "Invoiced area (ha) where the hydrological regimes have been improved",
                     "type": "col",
                     "items": [
                       {
@@ -9823,7 +10163,7 @@
                   },
                   {
                     "width": "20%",
-                    "title": "Type of treatment implemented to improve eco-hydrological management",
+                    "title": "Type of treatment implemented to improve eco-hydrological treatment",
                     "type": "col",
                     "items": [
                       {
@@ -10457,7 +10797,7 @@
                     "helpText": "Enter the amount you will invoice for during this reporting period.",
                     "width": "10%",
                     "type": "col",
-                    "title": "Actual area (ha) covered by practice change",
+                    "title": "Actual area (ha) / length (km) covered by practice change",
                     "items": [
                       {
                         "source": "areaImplementedHa",
@@ -11187,7 +11527,7 @@
                     "helpText": "Enter the amount you will invoice for during this reporting period.",
                     "width": "10%",
                     "type": "col",
-                    "title": "Actual area (ha) where disease has been managed",
+                    "title": "Actual area (ha) / length (km) where disease has been managed",
                     "items": [
                       {
                         "source": "areaTreatedHa",
@@ -11230,7 +11570,7 @@
                     "helpText": "Enter the amount you will invoice for during this reporting period.",
                     "width": "10%",
                     "type": "col",
-                    "title": "Invoiced area (ha) treated for disease",
+                    "title": "Invoiced area (ha) where disease has been managed",
                     "items": [
                       {
                         "source": "areaTreatedInvoicedHa",
@@ -14779,7 +15119,7 @@
                   {
                     "width": "10%",
                     "source": "numberPlanted",
-                    "title": "Number planted",
+                    "title": "Numbers planted",
                     "type": "number"
                   },
                   {
