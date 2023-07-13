@@ -8765,46 +8765,46 @@
           {
             "columns": [
               {
-                "columns": [
-                  {
-                    "dataType": "number",
-                    "name": "numberOfSitesIdentifiedPrioritised",
-                    "validate": "required,min[0]"
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "sitesHaveBeenIdentified",
-                    "description": "",
-                    "validate": "required,maxSize[300]"
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "methodsUsedToIdentify",
-                    "description": "",
-                    "validate": "required,maxSize[300]"
-                  },
-                  {
-                    "name": "outcomeStatementPrePop",
-                    "dataType": "text",
-                    "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
-                    "validate": "required",
-                    "constraints": {
-                      "textProperty": "description",
-                      "valueProperty": "description",
-                      "type": "pre-populated",
-                      "config": {
-                        "source": {
-                          "context-path": "owner.custom.details.outcomes.shortTermOutcomes"
-                        }
-                      }
+                "dataType": "number",
+                "name": "numberOfSitesIdentifiedPrioritised",
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "sitesHaveBeenIdentified",
+                "description": "",
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "text",
+                "name": "methodsUsedToIdentify",
+                "description": "",
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "name": "outcomeStatementPrePop",
+                "dataType": "text",
+                "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
+                "validate": "required",
+                "constraints": {
+                  "textProperty": "description",
+                  "valueProperty": "description",
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "context-path": "owner.custom.details.outcomes.shortTermOutcomes"
                     }
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "investmentPrioritiesActivityRelates",
-                    "description": "",
-                    "validate": "required,maxSize[300]"
-                  },
+                  }
+                }
+              },
+              {
+                "dataType": "text",
+                "name": "investmentPrioritiesActivityRelates",
+                "description": "",
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "columns": [
                   {
                     "dataType": "feature",
                     "name": "sitesTreated"
@@ -9165,39 +9165,95 @@
                 "type": "repeat",
                 "items": [
                   {
+                    "type": "row",
+                    "css": "border-bottom",
+                    "items": [
+                      {
+                        "type": "col",
+                        "css": "span2 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "numberOfSitesIdentifiedPrioritised",
+                                "type": "number",
+                                "preLabel": "Number of potential sites identified and prioritised"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "css": "span3 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "sitesHaveBeenIdentified",
+                                "preLabel": "What sites have been identified?",
+                                "type": "text"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "css": "span2 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "methodsUsedToIdentify",
+                                "preLabel": "What method/s were used to identify and prioritise?",
+                                "type": "text"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "css": "span2 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "outcomeStatementPrePop",
+                                "type": "select2Many",
+                                "preLabel": "Which outcome statement/s relates to this survey?"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "css": "span3 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "investmentPrioritiesActivityRelates",
+                                "preLabel": "Which investment priority does this activity relate to?",
+                                "type": "text"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
                     "columns": [
                       {
-                        "width": "10%",
-                        "source": "numberOfSitesIdentifiedPrioritised",
-                        "title": "Number of potential sites identified and prioritised",
-                        "type": "number"
-                      },
-                      {
-                        "width": "10%",
-                        "source": "sitesHaveBeenIdentified",
-                        "title": "What sites have been identified?",
-                        "type": "text"
-                      },
-                      {
-                        "width": "15%",
-                        "source": "methodsUsedToIdentify",
-                        "title": "What method/s were used to identify and prioritise?",
-                        "type": "text"
-                      },
-                      {
-                        "source": "outcomeStatementPrePop",
-                        "type": "select2Many",
-                        "width": "10%",
-                        "title": "Which outcome statement/s relates to this survey?"
-                      },
-                      {
-                        "width": "15%",
-                        "source": "investmentPrioritiesActivityRelates",
-                        "title": "Which investment priority does this activity relate to?",
-                        "type": "text"
-                      },
-                      {
-                        "width": "10%",
+                        "width": "25%",
                         "title": "Identified and prioritised sites",
                         "type": "col",
                         "items": [
@@ -9234,13 +9290,13 @@
                         ]
                       },
                       {
-                        "width": "10%",
+                        "width": "25%",
                         "source": "identifiedSitesName",
                         "title": "Name of identified and prioritised site/s",
                         "type": "text"
                       },
                       {
-                        "width": "10%",
+                        "width": "25%",
                         "type": "col",
                         "title": "Assessed sites",
                         "helpText": "",
@@ -9283,7 +9339,7 @@
                         ]
                       },
                       {
-                        "width": "10%",
+                        "width": "25%",
                         "source": "assessedSitesName",
                         "title": "Name of assessed site/s",
                         "type": "text"
