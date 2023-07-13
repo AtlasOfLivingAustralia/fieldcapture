@@ -663,7 +663,7 @@
                 "validate": "required,maxSize[500]"
               },
               {
-                "name": "outcomeStatementPrePop",
+                "name": "relatedOutcomes",
                 "dataType": "text",
                 "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
                 "validate": "required",
@@ -762,7 +762,7 @@
                     "title": "Briefly describe the baseline you have established under this service and its purpose."
                   },
                   {
-                    "source": "outcomeStatementPrePop",
+                    "source": "relatedOutcomes",
                     "type": "select2Many",
                     "width": "25%",
                     "title": "Which outcome statement/s aligns with this Baseline Dataset?"
@@ -2177,17 +2177,27 @@
                     "validate": "required,maxSize[300]"
                   },
                   {
-                    "name": "outcomeStatementPrePop",
+                    "name": "relatedOutcomes",
                     "dataType": "text",
                     "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
                     "validate": "required",
                     "constraints": {
-                      "textProperty": "description",
-                      "valueProperty": "description",
+                      "textProperty": "label",
+                      "valueProperty": "label",
                       "type": "pre-populated",
                       "config": {
                         "source": {
-                          "context-path": "owner.custom.details.outcomes.shortTermOutcomes"
+                          "url": "/project/outcomesByScores",
+                          "params": [{
+                            "expression": "owner.projectId",
+                            "name": "id",
+                            "type": "computed"
+                          }, {
+                            "expression": "scores",
+                            "name": "scoreIds",
+                            "type": "computed"
+                          }
+                          ]
                         }
                       }
                     }
@@ -2205,7 +2215,7 @@
             "type": "number",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(areasControlled, \"outcomeStatementPrePop\")"
+              "expression": "count(areasControlled, \"relatedOutcomes\")"
             }
           },
           {
@@ -2598,7 +2608,7 @@
                       },
                       {
                         "width": "15%",
-                        "source": "outcomeStatementPrePop",
+                        "source": "relatedOutcomes",
                         "type": "select2Many",
                         "title": "Which outcome statement/s relates to this survey?"
                       }
@@ -5032,17 +5042,27 @@
                     }
                   },
                   {
-                    "name": "outcomeStatementPrePop",
+                    "name": "relatedOutcomes",
                     "dataType": "text",
                     "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
                     "validate": "required",
                     "constraints": {
-                      "textProperty": "description",
-                      "valueProperty": "description",
+                      "textProperty": "label",
+                      "valueProperty": "label",
                       "type": "pre-populated",
                       "config": {
                         "source": {
-                          "context-path": "owner.custom.details.outcomes.shortTermOutcomes"
+                          "url": "/project/outcomesByScores",
+                          "params": [{
+                            "expression": "owner.projectId",
+                            "name": "id",
+                            "type": "computed"
+                          }, {
+                            "expression": "scores",
+                            "name": "scoreIds",
+                            "type": "computed"
+                          }
+                          ]
                         }
                       }
                     }
@@ -5303,7 +5323,7 @@
                         "title": "What Dataset supports this?"
                       },
                       {
-                        "source": "outcomeStatementPrePop",
+                        "source": "relatedOutcomes",
                         "type": "select2Many",
                         "width": "10%",
                         "title": "Which outcome statement/s relates to this survey?"
@@ -5546,17 +5566,27 @@
                     }
                   },
                   {
-                    "name": "outcomeStatementPrePop",
+                    "name": "relatedOutcomes",
                     "dataType": "text",
                     "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
                     "validate": "required",
                     "constraints": {
-                      "textProperty": "description",
-                      "valueProperty": "description",
+                      "textProperty": "label",
+                      "valueProperty": "label",
                       "type": "pre-populated",
                       "config": {
                         "source": {
-                          "context-path": "owner.custom.details.outcomes.shortTermOutcomes"
+                          "url": "/project/outcomesByScores",
+                          "params": [{
+                            "expression": "owner.projectId",
+                            "name": "id",
+                            "type": "computed"
+                          }, {
+                            "expression": "scores",
+                            "name": "scoreIds",
+                            "type": "computed"
+                          }
+                          ]
                         }
                       }
                     }
@@ -5943,7 +5973,7 @@
                         "title": "What Dataset supports this?"
                       },
                       {
-                        "source": "outcomeStatementPrePop",
+                        "source": "relatedOutcomes",
                         "type": "select2Many",
                         "width": "15%",
                         "title": "Which outcome statement/s relates to this survey?"
@@ -6299,17 +6329,27 @@
                     }
                   },
                   {
-                    "name": "outcomeStatementPrePop",
+                    "name": "relatedOutcomes",
                     "dataType": "text",
                     "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
                     "validate": "required",
                     "constraints": {
-                      "textProperty": "description",
-                      "valueProperty": "description",
+                      "textProperty": "label",
+                      "valueProperty": "label",
                       "type": "pre-populated",
                       "config": {
                         "source": {
-                          "context-path": "owner.custom.details.outcomes.shortTermOutcomes"
+                          "url": "/project/outcomesByScores",
+                          "params": [{
+                            "expression": "owner.projectId",
+                            "name": "id",
+                            "type": "computed"
+                          }, {
+                            "expression": "scores",
+                            "name": "scoreIds",
+                            "type": "computed"
+                          }
+                          ]
                         }
                       }
                     }
@@ -6696,7 +6736,7 @@
                         "title": "What Dataset supports this?"
                       },
                       {
-                        "source": "outcomeStatementPrePop",
+                        "source": "relatedOutcomes",
                         "type": "select2Many",
                         "width": "15%",
                         "title": "Which outcome statement/s relates to this survey?"
@@ -7333,17 +7373,27 @@
                     "validate": "required,maxSize[300]"
                   },
                   {
-                    "name": "outcomeStatementPrePop",
+                    "name": "relatedOutcomes",
                     "dataType": "text",
                     "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
                     "validate": "required",
                     "constraints": {
-                      "textProperty": "description",
-                      "valueProperty": "description",
+                      "textProperty": "label",
+                      "valueProperty": "label",
                       "type": "pre-populated",
                       "config": {
                         "source": {
-                          "context-path": "owner.custom.details.outcomes.shortTermOutcomes"
+                          "url": "/project/outcomesByScores",
+                          "params": [{
+                            "expression": "owner.projectId",
+                            "name": "id",
+                            "type": "computed"
+                          }, {
+                            "expression": "scores",
+                            "name": "scoreIds",
+                            "type": "computed"
+                          }
+                          ]
                         }
                       }
                     }
@@ -7361,7 +7411,7 @@
             "type": "number",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(areasControlled, \"outcomeStatementPrePop\")"
+              "expression": "count(areasControlled, \"relatedOutcomes\")"
             }
           },
           {
@@ -7782,7 +7832,7 @@
                   },
                   {
                     "width": "15%",
-                    "source": "outcomeStatementPrePop",
+                    "source": "relatedOutcomes",
                     "type": "select2Many",
                     "title": "Which outcome statement/s relates to this survey?"
                   }
@@ -7894,17 +7944,27 @@
                     "validate": "required,maxSize[300]"
                   },
                   {
-                    "name": "outcomeStatementPrePop",
+                    "name": "relatedOutcomes",
                     "dataType": "text",
                     "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
                     "validate": "required",
                     "constraints": {
-                      "textProperty": "description",
-                      "valueProperty": "description",
+                      "textProperty": "label",
+                      "valueProperty": "label",
                       "type": "pre-populated",
                       "config": {
                         "source": {
-                          "context-path": "owner.custom.details.outcomes.shortTermOutcomes"
+                          "url": "/project/outcomesByScores",
+                          "params": [{
+                            "expression": "owner.projectId",
+                            "name": "id",
+                            "type": "computed"
+                          }, {
+                            "expression": "scores",
+                            "name": "scoreIds",
+                            "type": "computed"
+                          }
+                          ]
                         }
                       }
                     }
@@ -8295,7 +8355,7 @@
                         "type": "text"
                       },
                       {
-                        "source": "outcomeStatementPrePop",
+                        "source": "relatedOutcomes",
                         "type": "select2Many",
                         "width": "10%",
                         "title": "Which outcome statement/s relates to this survey?"
@@ -8791,17 +8851,27 @@
                     "validate": "required,maxSize[300]"
                   },
                   {
-                    "name": "outcomeStatementPrePop",
+                    "name": "relatedOutcomes",
                     "dataType": "text",
                     "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
                     "validate": "required",
                     "constraints": {
-                      "textProperty": "description",
-                      "valueProperty": "description",
+                      "textProperty": "label",
+                      "valueProperty": "label",
                       "type": "pre-populated",
                       "config": {
                         "source": {
-                          "context-path": "owner.custom.details.outcomes.shortTermOutcomes"
+                          "url": "/project/outcomesByScores",
+                          "params": [{
+                            "expression": "owner.projectId",
+                            "name": "id",
+                            "type": "computed"
+                          }, {
+                            "expression": "scores",
+                            "name": "scoreIds",
+                            "type": "computed"
+                          }
+                          ]
                         }
                       }
                     }
@@ -8819,7 +8889,7 @@
             "type": "number",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(areasControlled, \"outcomeStatementPrePop\")"
+              "expression": "count(areasControlled, \"relatedOutcomes\")"
             }
           },
           {
@@ -9102,7 +9172,7 @@
                   },
                   {
                     "width": "15%",
-                    "source": "outcomeStatementPrePop",
+                    "source": "relatedOutcomes",
                     "type": "select2Many",
                     "title": "Which outcome statement/s relates to this survey?"
                   }
@@ -9460,17 +9530,27 @@
                     "validate": "required,maxSize[300]"
                   },
                   {
-                    "name": "outcomeStatementPrePop",
+                    "name": "relatedOutcomes",
                     "dataType": "text",
                     "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
                     "validate": "required",
                     "constraints": {
-                      "textProperty": "description",
-                      "valueProperty": "description",
+                      "textProperty": "label",
+                      "valueProperty": "label",
                       "type": "pre-populated",
                       "config": {
                         "source": {
-                          "context-path": "owner.custom.details.outcomes.shortTermOutcomes"
+                          "url": "/project/outcomesByScores",
+                          "params": [{
+                            "expression": "owner.projectId",
+                            "name": "id",
+                            "type": "computed"
+                          }, {
+                            "expression": "scores",
+                            "name": "scoreIds",
+                            "type": "computed"
+                          }
+                          ]
                         }
                       }
                     }
@@ -9488,7 +9568,7 @@
             "type": "number",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(areasControlled, \"outcomeStatementPrePop\")"
+              "expression": "count(areasControlled, \"relatedOutcomes\")"
             }
           },
           {
@@ -9776,7 +9856,7 @@
                   },
                   {
                     "width": "15%",
-                    "source": "outcomeStatementPrePop",
+                    "source": "relatedOutcomes",
                     "type": "select2Many",
                     "title": "Which outcome statement/s relates to this survey?"
                   }
@@ -10214,17 +10294,27 @@
                     "validate": "required,maxSize[300]"
                   },
                   {
-                    "name": "outcomeStatementPrePop",
+                    "name": "relatedOutcomes",
                     "dataType": "text",
                     "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
                     "validate": "required",
                     "constraints": {
-                      "textProperty": "description",
-                      "valueProperty": "description",
+                      "textProperty": "label",
+                      "valueProperty": "label",
                       "type": "pre-populated",
                       "config": {
                         "source": {
-                          "context-path": "owner.custom.details.outcomes.shortTermOutcomes"
+                          "url": "/project/outcomesByScores",
+                          "params": [{
+                            "expression": "owner.projectId",
+                            "name": "id",
+                            "type": "computed"
+                          }, {
+                            "expression": "scores",
+                            "name": "scoreIds",
+                            "type": "computed"
+                          }
+                          ]
                         }
                       }
                     }
@@ -10242,7 +10332,7 @@
             "type": "number",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(areasControlled, \"outcomeStatementPrePop\")"
+              "expression": "count(areasControlled, \"relatedOutcomes\")"
             }
           }
         ],
@@ -10506,7 +10596,7 @@
                   },
                   {
                     "width": "15%",
-                    "source": "outcomeStatementPrePop",
+                    "source": "relatedOutcomes",
                     "type": "select2Many",
                     "title": "Which outcome statement/s relates to this survey?"
                   }
@@ -10905,17 +10995,27 @@
                     "validate": "required,maxSize[300]"
                   },
                   {
-                    "name": "outcomeStatementPrePop",
+                    "name": "relatedOutcomes",
                     "dataType": "text",
                     "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
                     "validate": "required",
                     "constraints": {
-                      "textProperty": "description",
-                      "valueProperty": "description",
+                      "textProperty": "label",
+                      "valueProperty": "label",
                       "type": "pre-populated",
                       "config": {
                         "source": {
-                          "context-path": "owner.custom.details.outcomes.shortTermOutcomes"
+                          "url": "/project/outcomesByScores",
+                          "params": [{
+                            "expression": "owner.projectId",
+                            "name": "id",
+                            "type": "computed"
+                          }, {
+                            "expression": "scores",
+                            "name": "scoreIds",
+                            "type": "computed"
+                          }
+                          ]
                         }
                       }
                     }
@@ -10933,7 +11033,7 @@
             "type": "number",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(areasControlled, \"outcomeStatementPrePop\")"
+              "expression": "count(areasControlled, \"relatedOutcomes\")"
             }
           },
           {
@@ -11233,7 +11333,7 @@
                   },
                   {
                     "width": "10%",
-                    "source": "outcomeStatementPrePop",
+                    "source": "relatedOutcomes",
                     "type": "select2Many",
                     "title": "Which outcome statement/s relates to this survey?"
                   }
@@ -11429,17 +11529,27 @@
                     }
                   },
                   {
-                    "name": "outcomeStatementPrePop",
+                    "name": "relatedOutcomes",
                     "dataType": "text",
                     "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
                     "validate": "required",
                     "constraints": {
-                      "textProperty": "description",
-                      "valueProperty": "description",
+                      "textProperty": "label",
+                      "valueProperty": "label",
                       "type": "pre-populated",
                       "config": {
                         "source": {
-                          "context-path": "owner.custom.details.outcomes.shortTermOutcomes"
+                          "url": "/project/outcomesByScores",
+                          "params": [{
+                            "expression": "owner.projectId",
+                            "name": "id",
+                            "type": "computed"
+                          }, {
+                            "expression": "scores",
+                            "name": "scoreIds",
+                            "type": "computed"
+                          }
+                          ]
                         }
                       }
                     }
@@ -11827,7 +11937,7 @@
                         "title": "What Dataset supports this?"
                       },
                       {
-                        "source": "outcomeStatementPrePop",
+                        "source": "relatedOutcomes",
                         "type": "select2Many",
                         "width": "15%",
                         "title": "Which outcome statement/s relates to this survey?"
@@ -12188,17 +12298,27 @@
                     }
                   },
                   {
-                    "name": "outcomeStatementPrePop",
+                    "name": "relatedOutcomes",
                     "dataType": "text",
                     "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
                     "validate": "required",
                     "constraints": {
-                      "textProperty": "description",
-                      "valueProperty": "description",
+                      "textProperty": "label",
+                      "valueProperty": "label",
                       "type": "pre-populated",
                       "config": {
                         "source": {
-                          "context-path": "owner.custom.details.outcomes.shortTermOutcomes"
+                          "url": "/project/outcomesByScores",
+                          "params": [{
+                            "expression": "owner.projectId",
+                            "name": "id",
+                            "type": "computed"
+                          }, {
+                            "expression": "scores",
+                            "name": "scoreIds",
+                            "type": "computed"
+                          }
+                          ]
                         }
                       }
                     }
@@ -12586,7 +12706,7 @@
                         "title": "What Dataset supports this?"
                       },
                       {
-                        "source": "outcomeStatementPrePop",
+                        "source": "relatedOutcomes",
                         "type": "select2Many",
                         "width": "15%",
                         "title": "Which outcome statement/s relates to this survey?"
@@ -14234,7 +14354,7 @@
                 "validate": "maxSize[300]"
               },
               {
-                "name": "outcomeStatementPrePop",
+                "name": "relatedOutcomes",
                 "dataType": "text",
                 "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
                 "validate": "required",
@@ -14583,7 +14703,7 @@
                   {
                     "preLabel": "Which outcome statement/s relates to this survey?",
                     "css": "span3",
-                    "source": "outcomeStatementPrePop",
+                    "source": "relatedOutcomes",
                     "type": "select2Many"
                   },
                   {
@@ -15663,17 +15783,27 @@
                     }
                   },
                   {
-                    "name": "outcomeStatementPrePop",
+                    "name": "relatedOutcomes",
                     "dataType": "text",
                     "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
                     "validate": "required",
                     "constraints": {
-                      "textProperty": "description",
-                      "valueProperty": "description",
+                      "textProperty": "label",
+                      "valueProperty": "label",
                       "type": "pre-populated",
                       "config": {
                         "source": {
-                          "context-path": "owner.custom.details.outcomes.shortTermOutcomes"
+                          "url": "/project/outcomesByScores",
+                          "params": [{
+                            "expression": "owner.projectId",
+                            "name": "id",
+                            "type": "computed"
+                          }, {
+                            "expression": "scores",
+                            "name": "scoreIds",
+                            "type": "computed"
+                          }
+                          ]
                         }
                       }
                     }
@@ -16001,7 +16131,7 @@
                         "title": "What Dataset supports this?"
                       },
                       {
-                        "source": "outcomeStatementPrePop",
+                        "source": "relatedOutcomes",
                         "type": "select2Many",
                         "width": "10%",
                         "title": "Which outcome statement/s relates to this survey?"
@@ -16847,17 +16977,27 @@
                     }
                   },
                   {
-                    "name": "outcomeStatementPrePop",
+                    "name": "relatedOutcomes",
                     "dataType": "text",
                     "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
                     "validate": "required",
                     "constraints": {
-                      "textProperty": "description",
-                      "valueProperty": "description",
+                      "textProperty": "label",
+                      "valueProperty": "label",
                       "type": "pre-populated",
                       "config": {
                         "source": {
-                          "context-path": "owner.custom.details.outcomes.shortTermOutcomes"
+                          "url": "/project/outcomesByScores",
+                          "params": [{
+                            "expression": "owner.projectId",
+                            "name": "id",
+                            "type": "computed"
+                          }, {
+                            "expression": "scores",
+                            "name": "scoreIds",
+                            "type": "computed"
+                          }
+                          ]
                         }
                       }
                     }
@@ -17245,7 +17385,7 @@
                         "title": "What Dataset supports?"
                       },
                       {
-                        "source": "outcomeStatementPrePop",
+                        "source": "relatedOutcomes",
                         "type": "select2Many",
                         "width": "15%",
                         "title": "Which outcome statement/s relates to this survey?"
@@ -17572,17 +17712,27 @@
                     }
                   },
                   {
-                    "name": "outcomeStatementPrePop",
+                    "name": "relatedOutcomes",
                     "dataType": "text",
                     "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
                     "validate": "required",
                     "constraints": {
-                      "textProperty": "description",
-                      "valueProperty": "description",
+                      "textProperty": "label",
+                      "valueProperty": "label",
                       "type": "pre-populated",
                       "config": {
                         "source": {
-                          "context-path": "owner.custom.details.outcomes.shortTermOutcomes"
+                          "url": "/project/outcomesByScores",
+                          "params": [{
+                            "expression": "owner.projectId",
+                            "name": "id",
+                            "type": "computed"
+                          }, {
+                            "expression": "scores",
+                            "name": "scoreIds",
+                            "type": "computed"
+                          }
+                          ]
                         }
                       }
                     }
@@ -17970,7 +18120,7 @@
                         "title": "What Dataset supports?"
                       },
                       {
-                        "source": "outcomeStatementPrePop",
+                        "source": "relatedOutcomes",
                         "type": "select2Many",
                         "width": "15%",
                         "title": "Which outcome statement/s relates to this survey?"

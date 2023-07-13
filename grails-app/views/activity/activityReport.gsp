@@ -253,8 +253,10 @@
                 config.featureCollection = context.featureCollection;
                 config.namespace = blockId;
 
+                var outputContext = _.extend({}, context, config.outputContext || {});
+
                 config = _.extend({}, outputModelConfig, config);
-                master.createAndBindOutput(output, context, config);
+                master.createAndBindOutput(output, outputContext, config);
 
                 </g:if>
 
