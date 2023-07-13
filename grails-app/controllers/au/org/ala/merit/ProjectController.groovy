@@ -875,6 +875,13 @@ class ProjectController {
         Map model = reportService.activityReportModel(reportId, mode, formVersion)
         model.metaModel = projectService.filterOutputModel(model.metaModel, project, model.activity)
 
+        model.outputModels.each { k, v ->
+            if (v.scores) {
+                Map outputConfig = model.metaModel.outputConfig.find {it.outputName == k}
+                outputConfig?.outputContext = new JSONObject([scores:v.scores])
+            }
+        }
+
         model.context = new HashMap(project)
         model.returnTo = g.createLink(action:'exitReport', id:projectId, params:[reportId:reportId])
         model.contextViewUrl = g.createLink(action:'index', id:projectId)
@@ -1081,6 +1088,22 @@ class ProjectController {
         List<String> categories = forms?.collect{
             [label:g.message(code:it.category, default:it.category.capitalize()), value:it.category]}?.unique()?.sort({it.label})
         render categories as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'editor')
+    def outcomesByScores(String id) {
+        List scoreIds = params.getList('scoreIds')
+        if (!scoreIds) {
+            respond HttpStatus.SC_BAD_REQUEST
+        }
+
+        List result = projectService.outcomesByScores(id, scoreIds)
+        result = result?.collect {
+            List outcomes = new ArrayList(it)  // JSONArray quotes strings when joined so we need to work with a normal List
+            String label = new ArrayList(outcomes).join(',')
+            [label:label, value:outcomes]
+        }
+        render result as JSON
     }
 
     private def error(String message, String projectId) {

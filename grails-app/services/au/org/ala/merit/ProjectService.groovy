@@ -1645,6 +1645,7 @@ class ProjectService  {
             // The values to be filtered can come from either project services or activities in the MERI plan.
             selectedForProject = getProjectServices(project, config)
 
+
             if (!selectedForProject) {
                 serviceOutputs = config.activities?.collect{it.output}.findAll()
                 selectedForProject = getProjectActivities(project, config)
@@ -1666,6 +1667,21 @@ class ProjectService  {
             }
         }
         filteredModel
+    }
+
+    List outcomesByScores(String projectId, List scoreIds) {
+
+        Map project = get(projectId)
+        List outcomes = []
+        scoreIds.each { String scoreId ->
+            Map target = project.outputTargets?.find{it.scoreId == scoreId}
+            target?.outcomeTargets?.each { Map outcomeTarget ->
+                if (outcomeTarget.relatedOutcomes) {
+                    outcomes << outcomeTarget.relatedOutcomes.sort() // Otherwise "unique" won't filter out of order entries
+                }
+            }
+        }
+        outcomes?.unique()
     }
 
     /**
