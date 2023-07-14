@@ -256,17 +256,17 @@ environments {
     development {
         grails.logging.jul.usebridge = true
         server.port = 8087
-        grails.host = "http://devt.ala.org.au"
+        grails.host = "http://localhost"
         serverName = "${grails.host}:${server.port}"
         grails.serverURL = serverName
         layout.skin = "nrm"
         security.cas.appServerName = serverName
         security.cas.contextPath =
-        ecodata.baseUrl = 'http://devt.ala.org.au:8080/ws/'
+        ecodata.baseUrl = 'http://localhost:8080/ws/'
         upload.images.url = grails.serverURL+'/image/'
         emailFilter = /[A-Z0-9._%-]+@csiro\.au|chris\.godwin\.ala@gmail.com/
         logging.dir = '.'
-        ecodata.service.url = 'http://devt.ala.org.au:8080/ws'
+        ecodata.service.url = 'http://localhost:8080/ws'
         espSupportEmail='ESPmonitoring@environment.gov.au'
     }
     test {
