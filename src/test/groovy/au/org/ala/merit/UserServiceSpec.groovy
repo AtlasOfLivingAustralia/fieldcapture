@@ -129,7 +129,7 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
 
         // Mock the cache manager for this test so we can ensure the call to clear the cache was made.
         GrailsCache cache = Mock(GrailsCache)
-        cache.getAllKeys() >> [[simpleKey:email]]
+        cache.getAllKeys() >> [[simpleKey:[userId:email]]]
         GrailsCacheManager cacheManager = Mock(GrailsCacheManager)
         cacheManager.getCache(_) >> cache
         service.grailsCacheManager = cacheManager
@@ -140,7 +140,7 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         then:
         1 * authService.getUserForEmailAddress(email) >> null
         result == null
-        1 * cache.evict([simpleKey:email])
+        1 * cache.evict([simpleKey:[userId:email]])
 
     }
 
