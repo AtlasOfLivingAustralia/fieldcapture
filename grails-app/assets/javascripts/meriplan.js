@@ -875,6 +875,7 @@ function DetailsViewModel(o, project, budgetHeaders, risks, allServices, selecte
             successMessage: 'MERI Plan saved',
             preventNavigationIfDirty:true,
             defaultDirtyFlag:ko.dirtyFlag,
+            dirtyFlagRateLimitMs: 500,
             healthCheckUrl:config.healthCheckUrl
         });
 };
@@ -945,6 +946,13 @@ function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPerio
                 self.orphanedOutcomes(orphanedOutcomes);
                 return _.union(selectableOutcomes, orphanedOutcomes);
             });
+
+            self.toJSON = function() {
+                return {
+                    target: self.target(),
+                    relatedOutcomes: self.relatedOutcomes()
+                };
+            }
         }
 
         self.scoreId = outputTarget.scoreId;
@@ -969,7 +977,6 @@ function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPerio
         self.periodTargets = _.map(forecastPeriods, function (period) {
 
             var existingPeriodTarget = _.find(outputTarget.periodTargets, function(periodTarget) {
-                return periodTarget.period == period;
                 return periodTarget.period == period;
             });
             var target = existingPeriodTarget ? existingPeriodTarget.target : 0;
@@ -1017,7 +1024,7 @@ function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPerio
                 scoreId: self.scoreId,
                 target: self.target(),
                 periodTargets: ko.mapping.toJS(self.periodTargets),
-                outcomeTargets: ko.mapping.toJS(self.outcomeTargets, {ignore:['availableOutcomes', 'orphanedOutcomes', 'orphanedOutcomesError']})
+                outcomeTargets: _.map(self.outcomeTargets(), function(outcomeTarget) { return outcomeTarget.toJSON(); })
             }
         }
     };
