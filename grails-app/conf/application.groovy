@@ -247,6 +247,12 @@ security {
         requiredClaims = ["sub", "iat", "exp", "jti", "client_id"]
     }
 }
+
+webservice.jwt = true
+webservice['jwt-scopes'] = "ala/internal users/read ala/attrs users/read ecodata/write_test ecodata/read_test"
+webservice['client-id']='changeMe'
+webservice['client-secret'] = 'changeMe'
+
 pdfbox.fontcache="/data/${appName}/cache/"
 
 // Markdown configuration to match behaviour of the JavaScript editor.
