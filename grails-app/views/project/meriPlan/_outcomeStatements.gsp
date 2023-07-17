@@ -44,7 +44,7 @@
             </td>
         </g:if>
         <td class="remove">
-            <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()">
+            <span data-bind="if: $index() >= ${(minimumNumberOfOutcomes != null) ? minimumNumberOfOutcomes : 1} && !$parent.isProjectDetailsLocked()">
                 <i class="fa fa-remove" data-bind="click: $parent.remove${outcomeType.capitalize()}TermOutcome"></i>
             </span>
         </td>
