@@ -632,7 +632,7 @@ class UserService {
             def userDetailsCache = grailsCacheManager.getCache(USER_DETAILS_CACHE_REGION)
             if (userDetailsCache?.metaClass.respondsTo(userDetailsCache, "getAllKeys")) {
                 userDetailsCache.allKeys.each {key ->
-                    if (key.simpleKey == email) {
+                    if (key.simpleKey?.userId == email) {
                         log.info("Evicting userDetailsCache cache entry for user: "+email)
                         userDetailsCache.evict(key)
                     }

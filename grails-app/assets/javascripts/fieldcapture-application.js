@@ -200,6 +200,7 @@ function autoSaveModel(viewModel, saveUrl, options) {
         pageExitMessage: 'You have unsaved data.  If you leave the page this data will be lost.',
         preventNavigationIfDirty: false,
         defaultDirtyFlag:ko.simpleDirtyFlag,
+        dirtyFlagRateLimitMs: 0, // If ko.dirtyFlag is used (rather than ko.simpleDirtyFlag), this is the rate limit in ms for detecting changes.
         healthCheckUrl:fcConfig  && fcConfig.healthCheckUrl
     };
     var config = $.extend(defaults, options);
@@ -266,7 +267,7 @@ function autoSaveModel(viewModel, saveUrl, options) {
     };
 
     if (typeof viewModel.dirtyFlag === 'undefined') {
-        viewModel.dirtyFlag = config.defaultDirtyFlag(viewModel);
+        viewModel.dirtyFlag = config.defaultDirtyFlag(viewModel, false, options.dirtyFlagRateLimitMs);
     }
     viewModel.dirtyFlag.isDirty.subscribe(
         function() {
