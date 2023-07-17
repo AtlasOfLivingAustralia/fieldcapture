@@ -409,19 +409,42 @@ function MERIPlan(project, projectService, config) {
     self.removeSecondaryOutcome = function (outcome) {
         self.meriPlan().outcomes.secondaryOutcomes.remove(outcome);
     };
-    self.addMidTermOutcome = function () {
-        var index = self.meriPlan().outcomes.midTermOutcomes().length + 1;
-        self.meriPlan().outcomes.midTermOutcomes.push(new SingleAssetOutcomeViewModel({code:'MT'+index}));
-    };
+
+    function removeOutcomeStatement(outcomeStatementList, outcomeToRemove) {
+        var outcomeRemovalWarning = 'Deleting this outcome statement may impact other sections of the MERI Plan. Are you sure you want to delete it?';
+        if (config.useServiceOutcomesModel) {
+            bootbox.confirm(outcomeRemovalWarning, function(result) {
+                if (result) {
+                    outcomeStatementList.remove(outcomeToRemove);
+                }
+            });
+        }
+        else {
+            self.meriPlan().outcomes.midTermOutcomes.remove(outcome);
+        }
+    }
     self.removeMidTermOutcome = function (outcome) {
-        self.meriPlan().outcomes.midTermOutcomes.remove(outcome);
-    };
-    self.addShortTermOutcome = function () {
-        var index = self.meriPlan().outcomes.shortTermOutcomes().length + 1;
-        self.meriPlan().outcomes.shortTermOutcomes.push(new SingleAssetOutcomeViewModel({code:'ST'+index}));
+        removeOutcomeStatement(self.meriPlan().outcomes.midTermOutcomes, outcome);
     };
     self.removeShortTermOutcome = function (outcome) {
-        self.meriPlan().outcomes.shortTermOutcomes.remove(outcome);
+        removeOutcomeStatement(self.meriPlan().outcomes.shortTermOutcomes, outcome);
+    };
+
+    function addOutcomeStatement(outcomeStatementList, codePrefix) {
+        var outcomesList = outcomeStatementList();
+        var index = outcomesList.length + 1;
+        var code = codePrefix+index;
+        while (_.find(outcomesList, function(outcome) { return outcome.code == code; })) {
+            index++;
+            code = codePrefix+index;
+        }
+        outcomeStatementList.push(new SingleAssetOutcomeViewModel({code:code}));
+    }
+    self.addMidTermOutcome = function () {
+        addOutcomeStatement(self.meriPlan().outcomes.midTermOutcomes, 'MT');
+    };
+    self.addShortTermOutcome = function () {
+        addOutcomeStatement(self.meriPlan().outcomes.shortTermOutcomes, 'ST');
     };
 
     self.addAsset = function() {

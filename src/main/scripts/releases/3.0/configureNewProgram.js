@@ -1063,7 +1063,7 @@ var config=
                 "model": {
                     "approachHeading": "Monitoring method",
                     "indicatorHeading": "Monitoring methodology",
-                    "baselineHelpText": "Describe the project baseline to be established",
+                    "baselineHelpText": "Describe the project baseline to be established, or the baseline data that currently exists",
                     "baselineServiceHelpText": "Select the relevant Project Service(s)/Target measure(s) that will be used to support the development of the baseline",
                     "monitoringServiceHelpText": "Select the relevant Project Services(s)/Target measure(s) that will be used to support ongoing monitoring",
                     "baselineMethodHelpText": "EMSA modules mandatory unless exemption agreed to by the Department. Where an exemption has been provided the user can then select \"Other\"",
