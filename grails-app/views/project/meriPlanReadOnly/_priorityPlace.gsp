@@ -3,7 +3,8 @@
 </g:if>
 <div class="priority-place row">
     <div class="col-sm-8">
-        Does this project directly support a priority place?
+        ${priorityPlaceLabel ?: 'Does this project directly support a priority place?'}
+        <g:if test="${priorityPlaceHelpText}"><fc:iconHelp>${priorityPlaceHelpText}</fc:iconHelp></g:if>
     </div>
     <div class="col-sm-4">
         <span data-bind="text:details.supportsPriorityPlace"></span>

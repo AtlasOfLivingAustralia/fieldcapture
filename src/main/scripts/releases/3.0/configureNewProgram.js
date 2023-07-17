@@ -1062,6 +1062,7 @@ var config=
             {
                 "template": "extendedKeyThreats",
                 "model": {
+                    "title":"Key threat(s) and/or key threatening processes",
                     "threatHelpText":"Describe the key threats or key threatening processes to the investment priority",
                     "evidenceHelpText": "List evidence that will be retained to demonstrate delivery of this service. Refer to Evidence Guide and Project Service Summaries for guidance",
                     "interventionHelpText":"Describe the proposed method to address the threat or threatening process",
