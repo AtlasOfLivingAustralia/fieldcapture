@@ -152,11 +152,13 @@ const newScores = [
         scores: [
             {
                 label: 'Number of farm management surveys conducted - baseline',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Number of farm management surveys conducted - indicator',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Indicator']
             }
         ]
     },
@@ -166,11 +168,13 @@ const newScores = [
         scores: [
             {
                 label: 'Number of fauna surveys conducted - baseline',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Number of fauna surveys conducted - indicator',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Indicator']
             }
         ]
     },
@@ -180,11 +184,13 @@ const newScores = [
         scores: [
             {
                 label: 'Number of flora surveys conducted - baseline',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Number of flora surveys conducted - indicator',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Indicator']
             }
         ]
     },
@@ -216,11 +222,13 @@ const newScores = [
         scores: [
             {
                 label: 'Number of habitat condition assessment surveys conducted - baseline',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Number of habitat condition assessment surveys conducted - indicator',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Indicator']
             }
         ]
     },
@@ -304,11 +312,13 @@ const newScores = [
         scores: [
             {
                 label: 'Number of pest animal surveys conducted - baseline',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Number of pest animal surveys conducted - indicator',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Indicator']
             }
         ]
     },
@@ -376,7 +386,8 @@ const newScores = [
         scores: [
             {
                 label: 'Number of seed germination/plant survival surveys completed - indicator',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Indicator']
             }
         ]
     },
@@ -396,11 +407,13 @@ const newScores = [
         scores: [
             {
                 label: 'Number of water quality surveys conducted - baseline',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Number of water quality surveys conducted - indicator',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Indicator']
             }
         ]
     },
@@ -410,11 +423,13 @@ const newScores = [
         scores: [
             {
                 label: 'Number of weed distribution surveys conducted - baseline',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Number of weed distribution surveys conducted - indicator',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Indicator']
             }
         ]
     },
@@ -441,12 +456,14 @@ const newScores = [
                 path: 'data.tba',
                 filterValue: "Baseline",
                 filterPath: "data.tba.baselineOrIndicator",
+                tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Number of soil tests conducted - indicator',
                 path: 'data.tba',
                 filterValue: "Indicator",
                 filterPath: "data.tba.baselineOrIndicator",
+            tags: ['Survey', 'Indicator']
             }
         ]
     },
@@ -470,11 +487,13 @@ const newScores = [
         scores: [
             {
                 label: 'Number of skills and knowledge surveys conducted - baseline',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Number of skills and knowledge surveys conducted - indicator',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Indicator']
             }
         ]
     }
@@ -523,14 +542,20 @@ for (let i=0; i<newScores.length; i++) {
                 dateCreated: ISODate(),
                 lastUpdated: ISODate()
             };
+            if (newScores[i].scores[j].tags) {
+                score.tags = newScores[i].scores[j].tags;
+            }
             db.score.insertOne(score);
         } else {
+            var tags = newScores[i].scores[j].tags;
+
             db.score.update(
                 {_id: score._id},
                 {$set: {
                     configuration: {childAggregations: [config]}, serviceId: newScores[i].serviceId,
                     category:'RLP and Bushfire Recovery',
-                    outputType: service.name
+                    outputType: service.name,
+                    tags:tags
                 }});
         }
     }

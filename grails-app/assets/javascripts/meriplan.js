@@ -673,7 +673,10 @@ function ReadOnlyMeriPlan(project, projectService, config) {
     }
     self.allTargetMeasures = _.sortBy(self.allTargetMeasures, 'label');
     self.monitoringTargetMeasures = _.filter(self.allTargetMeasures, function(targetMeasure) {
-        return targetMeasure.service.service.categories && targetMeasure.service.service.categories.indexOf('Survey') >= 0;
+        return targetMeasure.score.tags && targetMeasure.score.tags.indexOf('Indicator') >= 0;
+    });
+    self.baselineTargetMeasures = _.filter(self.allTargetMeasures, function(targetMeasure) {
+        return targetMeasure.score.tags && targetMeasure.score.tags.indexOf('Baseline') >= 0;
     });
     /**
      * This function allows the UI to convert an array of scoreIds into the same labels
