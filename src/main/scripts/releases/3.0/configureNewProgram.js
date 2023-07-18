@@ -152,11 +152,13 @@ const newScores = [
         scores: [
             {
                 label: 'Number of farm management surveys conducted - baseline',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Number of farm management surveys conducted - indicator',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Indicator']
             }
         ]
     },
@@ -166,11 +168,13 @@ const newScores = [
         scores: [
             {
                 label: 'Number of fauna surveys conducted - baseline',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Number of fauna surveys conducted - indicator',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Indicator']
             }
         ]
     },
@@ -180,11 +184,13 @@ const newScores = [
         scores: [
             {
                 label: 'Number of flora surveys conducted - baseline',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Number of flora surveys conducted - indicator',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Indicator']
             }
         ]
     },
@@ -216,11 +222,13 @@ const newScores = [
         scores: [
             {
                 label: 'Number of habitat condition assessment surveys conducted - baseline',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Number of habitat condition assessment surveys conducted - indicator',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Indicator']
             }
         ]
     },
@@ -304,11 +312,13 @@ const newScores = [
         scores: [
             {
                 label: 'Number of pest animal surveys conducted - baseline',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Number of pest animal surveys conducted - indicator',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Indicator']
             }
         ]
     },
@@ -376,7 +386,8 @@ const newScores = [
         scores: [
             {
                 label: 'Number of seed germination/plant survival surveys completed - indicator',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Indicator']
             }
         ]
     },
@@ -396,11 +407,13 @@ const newScores = [
         scores: [
             {
                 label: 'Number of water quality surveys conducted - baseline',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Number of water quality surveys conducted - indicator',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Indicator']
             }
         ]
     },
@@ -410,11 +423,13 @@ const newScores = [
         scores: [
             {
                 label: 'Number of weed distribution surveys conducted - baseline',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Number of weed distribution surveys conducted - indicator',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Indicator']
             }
         ]
     },
@@ -441,12 +456,14 @@ const newScores = [
                 path: 'data.tba',
                 filterValue: "Baseline",
                 filterPath: "data.tba.baselineOrIndicator",
+                tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Number of soil tests conducted - indicator',
                 path: 'data.tba',
                 filterValue: "Indicator",
                 filterPath: "data.tba.baselineOrIndicator",
+            tags: ['Survey', 'Indicator']
             }
         ]
     },
@@ -470,11 +487,13 @@ const newScores = [
         scores: [
             {
                 label: 'Number of skills and knowledge surveys conducted - baseline',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Number of skills and knowledge surveys conducted - indicator',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Indicator']
             }
         ]
     }
@@ -523,14 +542,20 @@ for (let i=0; i<newScores.length; i++) {
                 dateCreated: ISODate(),
                 lastUpdated: ISODate()
             };
+            if (newScores[i].scores[j].tags) {
+                score.tags = newScores[i].scores[j].tags;
+            }
             db.score.insertOne(score);
         } else {
+            var tags = newScores[i].scores[j].tags;
+
             db.score.update(
                 {_id: score._id},
                 {$set: {
                     configuration: {childAggregations: [config]}, serviceId: newScores[i].serviceId,
                     category:'RLP and Bushfire Recovery',
-                    outputType: service.name
+                    outputType: service.name,
+                    tags:tags
                 }});
         }
     }
@@ -980,7 +1005,11 @@ var config=
                 }
             },
             {
-                "template": "priorityPlace"
+                "template": "priorityPlace",
+                "model": {
+                    "priorityPlaceLabel":"Does this project directly support a priority place?",
+                    "priorityPlaceHelpText":"Priority places recognises that some threatened species share the same habitat, and that place-based action can support protection and recovery of more than one species."
+                }
             },
             {
                 "template": "indigenousInvolvement"
@@ -1017,7 +1046,8 @@ var config=
                     "subtitle": "Medium-term outcome statement/s",
                     "title": "Project Outcomes",
                     "extendedOutcomes": true,
-                    "helpText":"Projects more than 3 years in duration must set medium-term Project outcomes achievable at project completion. Ensure proposed outcomes are measurable with consideration to the baseline and proposed monitoring regime"
+                    "helpText":"Projects more than 3 years in duration must set medium-term Project outcomes achievable at project completion. Ensure proposed outcomes are measurable with consideration to the baseline and proposed monitoring regime",
+                    "minimumNumberOfOutcomes": 0
                 }
             },
             {
@@ -1032,6 +1062,7 @@ var config=
             {
                 "template": "extendedKeyThreats",
                 "model": {
+                    "title":"Key threat(s) and/or key threatening processes",
                     "threatHelpText":"Describe the key threats or key threatening processes to the investment priority",
                     "evidenceHelpText": "List evidence that will be retained to demonstrate delivery of this service. Refer to Evidence Guide and Project Service Summaries for guidance",
                     "interventionHelpText":"Describe the proposed method to address the threat or threatening process",
@@ -1058,7 +1089,7 @@ var config=
                 "model": {
                     "approachHeading": "Monitoring method",
                     "indicatorHeading": "Monitoring methodology",
-                    "baselineHelpText": "Describe the project baseline to be established",
+                    "baselineHelpText": "Describe the project baseline to be established, or the baseline data that currently exists",
                     "baselineServiceHelpText": "Select the relevant Project Service(s)/Target measure(s) that will be used to support the development of the baseline",
                     "monitoringServiceHelpText": "Select the relevant Project Services(s)/Target measure(s) that will be used to support ongoing monitoring",
                     "baselineMethodHelpText": "EMSA modules mandatory unless exemption agreed to by the Department. Where an exemption has been provided the user can then select \"Other\"",
@@ -1099,52 +1130,52 @@ var config=
             }
         ],
         keyThreatCodes: [
-            "Climate Change - Changed flooding regime",
-            "Climate Change - Changed rainfall patterns",
-            "Climate Change - Sea level rises",
-            "Climate Change - Unexpected seasonal/temperature extremes",
-            "Disease/pathogens - Areas that are infected",
-            "Disease/pathogens - Possible infection of disease free areas",
-            "Fire - Inappropriate fire regime",
-            "Fire - Lack of protection for ecological assets during fire control activities",
-            "Genetics - bottleneck/inbreeding",
-            "Habitat loss - Breeding place disturbance",
-            "Habitat loss - Dieback/senescence",
-            "Habitat loss - Feeding habitat loss/interference",
-            "Habitat loss - Habitat fragmentation",
-            "Habitat loss - Land clearing",
-            "Habitat loss - Loss of critical ecosystem service supporting habitat",
-            "Human interference - Fish and harvesting aquatic resources (commercial)",
-            "Human interference - Flow-on effects of housing development",
-            "Human interference - Illegal activities",
-            "Human interference - Industrial development",
-            "Human interference - Land use intensification",
-            "Human interference - Recreational fishing",
-            "Human interference - Recreational pressures",
-            "Human interference - Road/vehicle strike",
-            "Land management practices - changes to hydrology and aquatic systems",
-            "Land management practices - Domestic grazing/stock impacts",
-            "Land management practices - excess recharge of groundwater",
-            "Land management practices - Excess use (or over-use) of surface water or groundwater resources",
-            "Land management practices - Excessive fertiliser use",
-            "Land management practices – inappropriate ground cover management",
-            "Land management practices - Runoff",
-            "Native fauna - Competition",
-            "Native fauna - predation",
-            "Pest - competition/exclusion",
-            "Pest - Disease transmission",
-            "Pest - habitat degradation",
-            "Pest - Introduction of new pest animals",
-            "Pest - Predation",
-            "Pollution - Chemical",
-            "Pollution - Eutrophication/algal blooms",
-            "Pollution - Inappropriate waste disposal",
-            "Pollution - Sediment",
-            "Population size/range - Low habitat area",
-            "Population size/range - Low population numbers",
-            "Weeds - Competition",
-            "Weeds - Introduction of new weed",
-            "Weeds - Spread of weeds from surrounding areas"
+            'Climate Change - Changed flooding regime',
+            'Climate Change - Changed rainfall patterns',
+            'Climate Change - Sea level rises',
+            'Climate Change - Unexpected seasonal/temperature extremes',
+            'Disease/pathogens - Areas that are infected',
+            'Disease/pathogens - Possible infection of disease free areas',
+            'Fire - Inappropriate fire regime',
+            'Fire - Lack of protection for ecological assets during fire control activities',
+            'Genetics - Bottleneck/inbreeding',
+            'Habitat loss - Breeding place disturbance',
+            'Habitat loss - Dieback/senescence',
+            'Habitat loss - Feeding habitat loss/interference',
+            'Habitat loss - Habitat fragmentation',
+            'Habitat loss - Land clearing',
+            'Habitat loss - Loss of critical ecosystem service supporting habitat',
+            'Human interference - Fish and harvesting aquatic resources (commercial)',
+            'Human interference - Flow-on effects of housing development',
+            'Human interference - Illegal activities',
+            'Human interference - Industrial development',
+            'Human interference - Land use intensification',
+            'Human interference - Recreational fishing',
+            'Human interference - Recreational pressures',
+            'Human interference - Road/vehicle strike',
+            'Land management practices - Changes to hydrology and aquatic systems',
+            'Land management practices - Domestic grazing/stock impacts',
+            'Land management practices - Excess recharge of groundwater',
+            'Land management practices - Excess use (or over-use) of surface water or groundwater resources',
+            'Land management practices - Excessive fertiliser use',
+            'Land management practices - Inappropriate ground cover management',
+            'Land management practices - Runoff',
+            'Native fauna - Competition',
+            'Native fauna - Predation',
+            'Pest - Competition/exclusion',
+            'Pest - Disease transmission',
+            'Pest - Habitat degradation',
+            'Pest - Introduction of new pest animals',
+            'Pest - Predation',
+            'Pollution - Chemical',
+            'Pollution - Eutrophication/algal blooms',
+            'Pollution - Inappropriate waste disposal',
+            'Pollution - Sediment ',
+            'Population size/range - Low habitat area',
+            'Population size/range - Low population numbers',
+            'Weeds - Competition',
+            'Weeds - Introduction of new weed',
+            'Weeds - Spread of weeds from surrounding areas'
         ],
         priorityPlaces: [
             "Australian Alps – NSW/ACT/VIC",
@@ -1239,7 +1270,7 @@ var outcomes = [
         type: "medium"
     },
     {
-        "outcome": "1.  Species and Landscapes (Medium term): Threatened species -Increased leadership and/or participation of First Nations people in the management and recovery of threatened species",
+        "outcome": "1.  Species and Landscapes (Medium term): Threatened species - Increased leadership and/or participation of First Nations people in the management and recovery of threatened species",
         category: "Threatened Species",
         type: "medium"
     },
@@ -1253,6 +1284,7 @@ var outcomes = [
         category: "Threatened Species",
         type: "medium"
     },
+
     {
         "outcome": "1.  Species and Landscapes (Medium term): Threatened Ecological Communities and priority places - Increased leadership and/or participation of First Nations people in the management and recovery of threatened ecological communities and priority places",
         category: "Threatened Species",
@@ -1269,7 +1301,7 @@ var outcomes = [
         type: "medium"
     },
     {
-        "outcome": "2. World Heritage Protection (Medium term): Managing Threats -Threats from disease have been reduced",
+        "outcome": "2. World Heritage Protection (Medium term): Managing Threats - Threats from disease have been reduced",
         category: "World Heritage",
         type: "medium"
     },
@@ -1279,12 +1311,12 @@ var outcomes = [
         type: "medium"
     },
     {
-        "outcome": "2. World Heritage Protection (Medium term): Improving land management practices and protecting habitat -Threats from inappropriate fire management are reduced",
+        "outcome": "2. World Heritage Protection (Medium term): Improving land management practices and protecting habitat - Threats from inappropriate fire management are reduced",
         category: "Threatened Species",
         type: "medium"
     },
     {
-        "outcome": "2. World Heritage Protection (Medium term): Improving land management practices and protecting habitat -Threats from inappropriate management of human impacts, climate change and extreme events are reduced",
+        "outcome": "2. World Heritage Protection (Medium term): Improving land management practices and protecting habitat - Threats from inappropriate management of human impacts, climate change and extreme events are reduced",
         category: "World Heritage",
         type: "medium"
     },
@@ -1344,134 +1376,134 @@ var outcomes = [
         type: "medium"
     },
     {
-        "outcome": "1.  Species and Landscapes (Short term): Managing Threats - Pest predator an competitor species have been controlled or are under active, long-term control programs",
-        "type": "short",
-        "category": "Threatened Species"
+        outcome: '1.  Species and Landscapes (Short term): Managing Threats - Pest predator an competitor species have been controlled or are under active, long-term control programs',
+        type: 'short',
+        category: 'Threatened Species'
     },
     {
-        "outcome": "1.  Species and Landscapes (Short term): Managing Threats - Threats from disease have been contained, reduced or excluded",
-        "type": "short",
-        "category": "Threatened Species"
+        outcome: '1.  Species and Landscapes (Short term): Managing Threats - Threats from disease have been contained, reduced or excluded',
+        type: 'short',
+        category: 'Threatened Species'
     },
     {
-        "outcome": "1.  Species and Landscapes (Short term): Improving habitat - Land management practices have improved",
-        "type": "short",
-        "category": "Threatened Species"
+        outcome: '1.  Species and Landscapes (Short term): Improving habitat - Land management practices have improved',
+        type: 'short',
+        category: 'Threatened Species'
     },
     {
-        "outcome": "1.  Species and Landscapes (Short term): Improving habitat - Quality of (TS/TECs) habitat has improved",
-        "type": "short",
-        "category": "Threatened Species"
+        outcome: '1.  Species and Landscapes (Short term): Improving habitat - Quality of (TS/TECs) habitat has improved',
+        type: 'short',
+        category: 'Threatened Species'
     },
     {
-        "outcome": "1.  Species and Landscapes (Short term): Improving habitat - Area/Extent of (TS/TECs) habitat has increased",
-        "type": "short",
-        "category": "Threatened Species"
+        outcome: '1.  Species and Landscapes (Short term): Improving habitat - Area/Extent of (TS/TECs) habitat has increased',
+        type: 'short',
+        category: 'Threatened Species'
     },
     {
-        "outcome": "1.  Species and Landscapes (Short term): Improving habitat - Increased connectivity between patches",
-        "type": "short",
-        "category": "Threatened Species"
+        outcome: '1.  Species and Landscapes (Short term): Improving habitat - Increased connectivity between patches',
+        type: 'short',
+        category: 'Threatened Species'
     },
     {
-        "outcome": "1.  Species and Landscapes (Short term): Improving habitat - Quality of breeding and foraging habitat is improved",
-        "type": "short",
-        "category": "Threatened Species"
+        outcome: '1.  Species and Landscapes (Short term): Improving habitat - Quality of breeding and foraging habitat is improved   ',
+        type: 'short',
+        category: 'Threatened Species'
     },
     {
-        "outcome": "1.  Species and Landscapes (Short term): Creating insurance populations - Existing populations have been protected",
-        "type": "short",
-        "category": "Threatened Species"
+        outcome: '1.  Species and Landscapes (Short term): Creating insurance populations - Existing populations have been protected',
+        type: 'short',
+        category: 'Threatened Species'
     },
     {
-        "outcome": "1.  Species and Landscapes (Short term): Creating insurance populations - Re-introductions have enhanced wild populations",
-        "type": "short",
-        "category": "Threatened Species"
+        outcome: '1.  Species and Landscapes (Short term): Creating insurance populations - Re-introductions have enhanced wild populations',
+        type: 'short',
+        category: 'Threatened Species'
     },
     {
-        "outcome": "1.  Species and Landscapes (Short term): Climate adaption and resilience - Climate change resilience and adaptive capacity actions underway",
-        "type": "short",
-        "category": "Threatened Species"
+        outcome: '1.  Species and Landscapes (Short term): Climate adaption and resilience - Climate change resilience and adaptive capacity actions underway',
+        type: 'short',
+        category: 'Threatened Species'
     },
     {
-        "outcome": "1.  Species and Landscapes (Short term): First Nations People and community involvement - First Nations people are leading and/or participating in recovery activities",
-        "type": "short",
-        "category": "Threatened Species"
+        outcome: '1.  Species and Landscapes (Short term): First Nations People and community involvement - First Nations people are leading and/or participating in recovery activities',
+        type: 'short',
+        category: 'Threatened Species'
     },
     {
-        "outcome": "2. World Heritage Protection (Short term): Managing threats - Pest predator and competitor species have been controlled",
-        "type": "short",
-        "category": "World Heritage"
+        outcome: '2. World Heritage Protection (Short term): Managing threats - Pest predator and competitor species have been controlled',
+        type: 'short',
+        category: 'World Heritage'
     },
     {
-        "outcome": "2. World Heritage Protection (Short term): Managing threats -Threats from disease have been contained or reduced",
-        "type": "short",
-        "category": "World Heritage"
+        outcome: '2. World Heritage Protection (Short term): Managing threats -Threats from disease have been contained or reduced',
+        type: 'short',
+        category: 'World Heritage'
     },
     {
-        "outcome": "2. World Heritage Protection (Short term): Improving land management practices and protecting habitat - Inappropriate fire regimes have been reduced or halted",
-        "type": "short",
-        "category": "World Heritage"
+        outcome: '2. World Heritage Protection (Short term): Improving land management practices and protecting habitat - Inappropriate fire regimes have been reduced or halted',
+        type: 'short',
+        category: 'World Heritage'
     },
     {
-        "outcome": "2. World Heritage Protection (Short term): Improving land management practices and protecting habitat - Land management practices have improved (within and around heritage properties)",
-        "type": "short",
-        "category": "World Heritage"
+        outcome: '2. World Heritage Protection (Short term): Improving land management practices and protecting habitat - Land management practices have improved (within and around heritage properties)',
+        type: 'short',
+        category: 'World Heritage'
     },
     {
-        "outcome": "2. World Heritage Protection (Short term): Improving land management practices and protecting habitat - Actions to reduce nutrient levels have been implemented, and nutrient levels are beginning to stabilise/improve",
-        "type": "short",
-        "category": "World Heritage"
+        outcome: '2. World Heritage Protection (Short term): Improving land management practices and protecting habitat - Actions to reduce nutrient levels have been implemented, and nutrient levels are beginning to stabilise/improve ',
+        type: 'short',
+        category: 'World Heritage'
     },
     {
-        "outcome": "2. World Heritage Protection (Short term): Climate adaption and resilience - Climate change resilience and adaptive capacity actions underway",
-        "type": "short",
-        "category": "World Heritage"
+        outcome: '2. World Heritage Protection (Short term): Climate adaption and resilience - Climate change resilience and adaptive capacity actions underway',
+        type: 'short',
+        category: 'World Heritage'
     },
     {
-        "outcome": "2. World Heritage Protection (Short term): First Nations People and community involvement - First Nations people are leading and/or participating in management and protection activities",
-        "type": "short",
-        "category": "World Heritage"
+        outcome: '2. World Heritage Protection (Short term): First Nations People and community involvement - First Nations people are leading and/or participating in management and protection activities',
+        type: 'short',
+        category: 'World Heritage'
     },
     {
-        "outcome": "3. Ramsar Wetland Protection (Short term): Managing threats -  Inappropriate land management practices have decreased within the catchment",
-        "type": "short",
-        "category": "Ramsar"
+        outcome: '3. Ramsar Wetland Protection (Short term): Managing threats -  Inappropriate land management practices have decreased within the catchment',
+        type: 'short',
+        category: 'Ramsar'
     },
     {
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Managing Threats - Pest predator and competitor species have been controlled",
-        "type": "short",
-        "category": "Ramsar"
+        outcome: '3. Ramsar Wetland Protection (Short term): Managing Threats - Pest predator and competitor species have been controlled ',
+        type: 'short',
+        category: 'Ramsar'
     },
     {
-        "outcome": "3. Ramsar Wetland Protection (Medium term):  Managing Threats - Appropriate fire management regimes within and external to site",
-        "type": "short",
-        "category": "Ramsar"
+        outcome: '3. Ramsar Wetland Protection (Short term):  Managing Threats - Appropriate fire management regimes within and external to site',
+        type: 'short',
+        category: 'Ramsar'
     },
     {
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Protecting and Improving Habitat - Area and quality of suitable wetland habitat has increased and/or is maintained",
-        "type": "short",
-        "category": "Ramsar"
+        outcome: '3. Ramsar Wetland Protection (Short term): Protecting and Improving Habitat - Area and quality of suitable wetland habitat has increased and/or is maintained',
+        type: 'short',
+        category: 'Ramsar'
     },
     {
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Protecting and Improving Habitat - Water quality has been stabilised and/or improved",
-        "type": "short",
-        "category": "Ramsar"
+        outcome: '3. Ramsar Wetland Protection (Short term): Protecting and Improving Habitat - Water quality has been stabilised and/or improved  ',
+        type: 'short',
+        category: 'Ramsar'
     },
     {
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Protecting and Improving Habitat - Improved access control to protect sensitive species and habitats",
-        "type": "short",
-        "category": "Ramsar"
+        outcome: '3. Ramsar Wetland Protection (Short term): Protecting and Improving Habitat - Improved access control to protect sensitive species and habitats',
+        type: 'short',
+        category: 'Ramsar'
     },
     {
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Climate adaption and resilience -Climate change resilience and adaptive capacity actions underway to improve and/or maintain the ecological character of Ramsar sites",
-        "type": "short",
-        "category": "Ramsar"
+        outcome: '3. Ramsar Wetland Protection (Short term): Climate adaption and resilience - Climate change resilience and adaptive capacity actions underway to improve and/or maintain the ecological character of Ramsar sites ',
+        type: 'short',
+        category: 'Ramsar'
     },
     {
-        "outcome": "3. Ramsar Wetland Protection (Medium term): First Nations People and community involvement -First Nations people are leading and/or participating in restoration, maintenance and protection activities",
-        "type": "short",
-        "category": "Ramsar"
+        outcome: '3. Ramsar Wetland Protection (Short term): First Nations People and community involvement - First Nations people are leading and/or participating in restoration, maintenance and protection activities',
+        type: 'short',
+        category: 'Ramsar'
     }
 
 ];
