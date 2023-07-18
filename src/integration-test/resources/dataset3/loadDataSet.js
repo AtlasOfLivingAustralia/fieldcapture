@@ -1207,9 +1207,9 @@ db.setting.insert({
     "version": NumberInt(0)
 });
 // Load scores used by RLP services to enable their selection in the MERI plan.
-createProjectNumberBaselineDataSets({"scoreId": "score_42"});
+createProjectNumberBaselineDataSets({"scoreId": "score_42", tags:["Baseline", "Indicator"]});
 createProjectNumberOfCommunicationMaterialsPublished({"scoreId": "score_43"});
-createProjectWeedAreaSurveyedHaDefault({"scoreId": "score_44"});
+createProjectWeedAreaSurveyedHaDefault({"scoreId": "score_44", tags:["Baseline", "Indicator"]});
 
 //Advancing Pest Animal and Weed Control Solutions - Pipeline
 config.meriPlanContents = [

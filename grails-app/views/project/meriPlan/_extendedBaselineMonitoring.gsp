@@ -44,7 +44,7 @@
                     multiple="true"
                     class="form-control form-control-sm"
                     data-validation-engine="validate[required]"
-                    data-bind="options:$root.monitoringTargetMeasures, optionsText:'label', optionsValue:'scoreId', multiSelect2:{value:relatedTargetMeasures, preserveColumnWidth:20}, disable: monitoringDataStatus() != 'Needs to be collected' || $root.isProjectDetailsLocked()"></select>
+                    data-bind="options:$root.baselineTargetMeasures, optionsText:'label', optionsValue:'scoreId', multiSelect2:{value:relatedTargetMeasures, preserveColumnWidth:20}, disable: monitoringDataStatus() != 'Needs to be collected' || $root.isProjectDetailsLocked()"></select>
         </td>
         <td class="baseline-method">
             <select multiple="multiple"

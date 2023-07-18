@@ -3,7 +3,9 @@
 </g:if>
 <div class="priority-place row">
     <div class="col-md-8">
-        <label class="required" for="supports-priority-place">Does this project directly support a priority place?</label>
+        <label class="required" for="supports-priority-place">${priorityPlaceLabel ?: 'Does this project directly support a priority place?'}
+        <g:if test="${priorityPlaceHelpText}"><fc:iconHelp>${priorityPlaceHelpText}</fc:iconHelp></g:if>
+        </label>
     </div>
     <div class="col-md-4">
         <select id="supports-priority-place" class="form-control form-control-sm"

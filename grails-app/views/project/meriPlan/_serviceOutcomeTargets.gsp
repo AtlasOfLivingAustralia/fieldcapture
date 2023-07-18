@@ -5,7 +5,7 @@
     <thead>
     <tr>
         <th class="index"></th>
-        <th class="required service">${serviceName ?: "Service"}</th>
+        <th class="required service">${serviceName ?: "Project Service"}</th>
         <th class="required score">Target measure</th>
         <th></th>
     </tr>
