@@ -37,7 +37,7 @@ class AccessExpirySpec extends StubbedCasSpec {
 
 
         when: "We administratively trigger the access expiry process in ecodata"
-        browser.go('http://devt.ala.org.au:8080/admin/triggerAccessExpiryJob')
+        browser.go('http://localhost:8080/admin/triggerAccessExpiryJob')
 
         then: "An email is sent to inform user 2 their access had been removed, and a warning is sent to user 1 that their access will soon be removed"
         waitFor 20, {
@@ -68,7 +68,7 @@ class AccessExpirySpec extends StubbedCasSpec {
 
         when: "We re-trigger the access expiry process in ecodata"
         greenMail.purgeEmailFromAllMailboxes()
-        browser.go('http://devt.ala.org.au:8080/admin/triggerAccessExpiryJob')
+        browser.go('http://localhost:8080/admin/triggerAccessExpiryJob')
         Thread.sleep(2000) // Wait to ensure that if an email was sent it would have arrived.
 
         then:
