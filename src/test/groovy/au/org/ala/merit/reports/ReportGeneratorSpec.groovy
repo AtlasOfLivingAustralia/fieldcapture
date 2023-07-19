@@ -647,7 +647,7 @@ class ReportGeneratorSpec extends Specification {
         reports[7].fromDate == '2023-03-31T13:00:00Z'
         reports[7].toDate == '2023-06-30T14:00:00Z'
     }
-/** Temporarily commenting out to test the CI build on the report generation refactor
+
     def "Reports can be selectively generated based on the duration of the project/owner"(Integer maximumOwnerDurationInMonths, Integer minimumOwnerDurationInMonths, String periodStart, String periodEnd, Integer expectedReportCount) {
         setup:
         ReportGenerator generator = new ReportGenerator()
@@ -685,7 +685,7 @@ class ReportGeneratorSpec extends Specification {
         null                         | 12                          | '2021-06-30T14:00:00Z' | '2022-06-29T14:00:00Z' | 0
 
     }
-*/
+
     def "We produce an outcomes 1 report covering between 2-3 years ending on June 30"(String periodStart, String expectedReportEndDate) {
         setup:
         ReportGenerator generator = new ReportGenerator()

@@ -199,11 +199,13 @@ class ReportConfig {
             return false
         }
         Period ownerPeriod = new Interval(getPeriodStart(reportOwner), getPeriodEnd(reportOwner)).toPeriod(PeriodType.months())
-
-        println "Minimum: ${minimumOwnerDurationInMonths}, maximum: ${maximumOwnerDurationInMonths}, duration: ${ownerPeriod.months}"
-
-
-        return !((minimumOwnerDurationInMonths && (ownerPeriod.months <= minimumOwnerDurationInMonths)) ||  // If we've specified a minimum period and the owner duration is less than the period OR
+        // WARNING!  This code depends on the fact that the final day of a project ends at midnight due to the
+        // way the project date picker sends the date with time = 00:00:00
+        // Because of this, a project from: 1 July 2023 (Time = 00:00:00) to 30 June 2024 (Time = 00:00:00) is
+        // treated as 1 year, but the duration in months will be 11.  If the same project ends on 1 July 2024, the
+        // duration will be 12 months.  This is why neither the minimum or maximum duration includes an equal to in the
+        // configuration, but means you need to be careful when using minimumOwnerDurationInMonths and maximumOwnerDurationInMonths
+        return !((minimumOwnerDurationInMonths && (ownerPeriod.months < minimumOwnerDurationInMonths)) ||  // If we've specified a minimum period and the owner duration is less than the period OR
                 (maximumOwnerDurationInMonths && (ownerPeriod.months > maximumOwnerDurationInMonths)) ||   // We've specified a maximum period and the owner duration is greater than the period OR
                 (onlyGenerateReportsForDatesBefore && reportOwner.periodStart.isAfter(getOnlyGenerateReportsForDatesBefore())))  // We've specified to generate reports for owners with start dates before a certain date and the owner start date is after that date
     }
