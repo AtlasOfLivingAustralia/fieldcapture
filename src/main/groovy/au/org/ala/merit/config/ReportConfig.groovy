@@ -195,9 +195,15 @@ class ReportConfig {
      * @return true if this configuration should be used to generated reports for the supplied owner.
      */
     boolean shouldGenerateReports(ReportOwner reportOwner) {
+        if (adhoc) {
+            return false
+        }
         Period ownerPeriod = new Interval(getPeriodStart(reportOwner), getPeriodEnd(reportOwner)).toPeriod(PeriodType.months())
 
-        return !((minimumOwnerDurationInMonths && (ownerPeriod.months < minimumOwnerDurationInMonths)) ||  // If we've specified a minimum period and the owner duration is less than the period OR
+        println "Minimum: ${minimumOwnerDurationInMonths}, maximum: ${maximumOwnerDurationInMonths}, duration: ${ownerPeriod.months}"
+
+
+        return !((minimumOwnerDurationInMonths && (ownerPeriod.months <= minimumOwnerDurationInMonths)) ||  // If we've specified a minimum period and the owner duration is less than the period OR
                 (maximumOwnerDurationInMonths && (ownerPeriod.months > maximumOwnerDurationInMonths)) ||   // We've specified a maximum period and the owner duration is greater than the period OR
                 (onlyGenerateReportsForDatesBefore && reportOwner.periodStart.isAfter(getOnlyGenerateReportsForDatesBefore())))  // We've specified to generate reports for owners with start dates before a certain date and the owner start date is after that date
     }

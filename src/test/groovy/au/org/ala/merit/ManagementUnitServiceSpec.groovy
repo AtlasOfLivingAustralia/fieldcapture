@@ -117,8 +117,7 @@ class ManagementUnitServiceSpec extends Specification implements ServiceUnitTest
         1 * webService.getJson({it.endsWith("/managementUnit/$managementUnitId")}) >> managementUnit
         1 * userService.isUserAdminForManagementUnit(_, managementUnitId) >> true
         1 * reportService.findReportsForManagementUnit(managementUnitId) >> managementUnit.reports
-        1 * reportService.regenerateReports(_, {it.category == 'c2'}, {it.id.managementUnitId == managementUnitId})
-        0 * reportService.regenerateReports(_, _, {it.id.managementUnitId == managementUnitId})
+        1 * reportService.regenerateAll([], {it.size() == 3}, {it.id.managementUnitId == managementUnitId}, ['c2'])
 
         1 * webService.getJson({it.endsWith("/managementUnit/$managementUnitId/projects?view=flat")}) >> [projects:[[projectId:'p1'], [projectId:'p2']]]
 

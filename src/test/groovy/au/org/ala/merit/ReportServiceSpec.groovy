@@ -58,7 +58,7 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
                 periodEnd:project.plannedEndDate
         )
 
-        service.regenerateReports(project.reports ?: [], reportConfig, reportOwner)
+        service.regenerateReports(project.reports ?: [], [reportConfig], reportOwner)
     }
 
     def project(plannedStartDate = '2014-12-31T13:00:00Z', plannedEndDate = '2016-12-31T23:59:59Z') {
