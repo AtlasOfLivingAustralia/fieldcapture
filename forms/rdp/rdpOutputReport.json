@@ -16962,82 +16962,164 @@
                 "validate": "required,maxSize[300]"
               },
               {
-                "dataType": "number",
-                "name": "numberOfDaysPreparingSite",
-                "description": "Number of days should be calculated as number of days by number of people (eg. 4.5 days by 3 people is 13.5 days)",
-                "validate": "required,min[0]"
-              },
-              {
-                "dataType": "stringList",
-                "name": "industryType",
-                "constraints": [
-                  "Broad acre cropping",
-                  "Dairy",
-                  "Environmental",
-                  "Horticulture",
-                  "Grazing",
-                  "Fisheries",
-                  "Aquaculture",
-                  "Other"
-                ]
-              },
-              {
-                "dataType": "text",
-                "name": "actionType",
+                "dataType": "date",
+                "name": "activitiesStartDate",
                 "description": "",
-                "constraints": [
-                  "Basal bark spraying",
-                  "Biological agents",
-                  "Cut stump",
-                  "Cut and swab",
-                  "Dozing",
-                  "Felling",
-                  "Fire",
-                  "Foliar spraying",
-                  "Grubbing/chipping",
-                  "Hand pulling",
-                  "Moisture and nutrient control",
-                  "Mowing",
-                  "Other earthworks",
-                  "Overplanting",
-                  "Pushing",
-                  "Slashing",
-                  "Spot spraying",
-                  "Splatter gun",
-                  "Stem injection",
-                  "Stem scraper",
-                  "Wick applicators",
-                  "Other"
-                ],
                 "validate": "required"
               },
               {
-                "dataType": "text",
-                "name": "otherActionType",
-                "description": "This field may be used to list multiple preparation activities. This list of activities need to be separated with a ';'",
-                "behaviour": [
+                "dataType": "date",
+                "name": "activitiesEndDate",
+                "description": "",
+                "validate": "required"
+              },
+              {
+                "columns": [
                   {
-                    "condition": "actionType == \"Other\"",
-                    "type": "enable"
+                    "dataType": "number",
+                    "name": "numberOfDaysPreparingSite",
+                    "description": "Number of days should be calculated as number of days by number of people (eg. 4.5 days by 3 people is 13.5 days)",
+                    "validate": "required,min[0]"
+                  },
+                  {
+                    "dataType": "stringList",
+                    "name": "industryType",
+                    "constraints": [
+                      "Broad acre cropping",
+                      "Dairy",
+                      "Environmental",
+                      "Horticulture",
+                      "Grazing",
+                      "Fisheries",
+                      "Aquaculture",
+                      "Other"
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "actionType",
+                    "description": "",
+                    "constraints": [
+                      "Basal bark spraying",
+                      "Biological agents",
+                      "Cut stump",
+                      "Cut and swab",
+                      "Dozing",
+                      "Felling",
+                      "Fire",
+                      "Foliar spraying",
+                      "Grubbing/chipping",
+                      "Hand pulling",
+                      "Moisture and nutrient control",
+                      "Mowing",
+                      "Other earthworks",
+                      "Overplanting",
+                      "Pushing",
+                      "Slashing",
+                      "Spot spraying",
+                      "Splatter gun",
+                      "Stem injection",
+                      "Stem scraper",
+                      "Wick applicators",
+                      "Other"
+                    ],
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "otherActionType",
+                    "description": "This field may be used to list multiple preparation activities. This list of activities need to be separated with a ';'",
+                    "behaviour": [
+                      {
+                        "condition": "actionType == \"Other\"",
+                        "type": "enable"
+                      }
+                    ],
+                    "validate": "required,maxSize[100]"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "purposeOfSitePreparation",
+                    "description": "Please provide a brief description of how the work will benefit the area",
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "threatenedEcologicalCommunity",
+                    "description": "This free text field allows multiple TECs to be entered. They should be written as listed in EPBC, and separated by commas",
+                    "validate": "maxSize[100]"
+                  },
+                  {
+                    "name": "relatedOutcomes",
+                    "dataType": "text",
+                    "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "label",
+                      "valueProperty": "label",
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "url": "/project/outcomesByScores",
+                          "params": [{
+                            "expression": "owner.projectId",
+                            "name": "id",
+                            "type": "computed"
+                          }, {
+                            "expression": "scores",
+                            "name": "scoreIds",
+                            "type": "computed"
+                          }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "name": "investmentPriorities2",
+                    "dataType": "stringList",
+                    "validate": "required",
+                    "constraints": {
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "params": [
+                            {
+                              "expression": "owner.projectId",
+                              "name": "id",
+                              "type": "computed"
+                            }
+                          ],
+                          "url": "/project/listProjectInvestmentPriorities/"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "otherInvestmentPriority",
+                    "behaviour": [
+                      {
+                        "type": "enable",
+                        "condition": "\"Other\" in investmentPriorities2"
+                      }
+                    ]
                   }
                 ],
-                "validate": "required,maxSize[100]"
-              },
-              {
-                "dataType": "text",
-                "name": "purposeOfSitePreparation",
-                "description": "Please provide a brief description of how the work will benefit the area",
-                "validate": "required"
-              },
-              {
-                "dataType": "text",
-                "name": "threatenedEcologicalCommunity",
-                "description": "This free text field allows multiple TECs to be entered. They should be written as listed in EPBC, and separated by commas",
-                "validate": "maxSize[100]"
+                "dataType": "list",
+                "name": "sitePreparationDetails"
               }
             ],
             "dataType": "list",
-            "name": "sitePreparationDetails"
+            "name": "areasControlled"
+          },
+          {
+            "name": "sitePrepCountHeader",
+            "type": "number",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "count(areasControlled, \"threatenedEcologicalCommunity\")"
+            }
           },
           {
             "dataType": "text",
@@ -17124,34 +17206,60 @@
             "type": "table"
           },
           {
-            "type": "section",
+            "preLabel": "Number of Site Preparation surveys conducted:",
+            "noEdit": true,
+            "type": "number",
+            "source": "sitePrepCountHeader"
+          },
+          {
+            "addRowText": "Add a new controlled area",
+            "userAddedRows": true,
+            "source": "areasControlled",
+            "type": "repeat",
             "items": [
               {
-                "columns": [
+                "type": "row",
+                "css": "border-bottom",
+                "items": [
                   {
-                    "width": "10%",
                     "type": "col",
-                    "title": "Site/s where preparation was undertaken",
+                    "css": "span2 col-border-right",
                     "items": [
                       {
-                        "source": "sitesPrepared",
-                        "type": "feature"
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "sitesPrepared",
+                            "type": "feature",
+                            "preLabel": "Site/s where pest control was undertaken"
+                          }
+                        ]
                       },
                       {
-                        "readonly": "readonly",
-                        "source": "calculatedAreaPreparedHa",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "calculatedAreaPreparedHa",
+                            "type": "number",
+                            "readonly": true,
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
                       },
                       {
-                        "readonly": "readonly",
-                        "source": "calculatedLengthPreparedKm",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "calculatedLengthPreparedKm",
+                            "type": "number",
+                            "readonly": true,
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
                       },
                       {
                         "type": "row",
@@ -17166,24 +17274,34 @@
                     ]
                   },
                   {
-                    "helpText": "Enter the amount you will invoice for during this reporting period.",
-                    "width": "15%",
                     "type": "col",
-                    "title": "Actual area (ha) / length (km) of site preparation",
+                    "css": "span3 col-border-right",
                     "items": [
                       {
-                        "source": "areaPreparedHa",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Actual area (ha) / length (km) of site preparation",
+                            "helpText": "Enter the amount you will invoice for during this reporting period.",
+                            "source": "areaPreparedHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
                       },
                       {
-                        "source": "lengthPreparedKm",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "lengthPreparedKm",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
                       },
                       {
                         "type": "row",
@@ -17201,25 +17319,29 @@
                           {
                             "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
                             "source": "mappingNotAlignedComments",
-                            "type": "textarea",
-                            "rows": 5
+                            "type": "textarea"
                           }
                         ]
                       }
                     ]
                   },
                   {
-                    "helpText": "Enter the amount you will invoice for during this reporting period.",
-                    "width": "15%",
                     "type": "col",
-                    "title": "Invoiced area (ha) of site preparation",
+                    "css": "span3 col-border-right",
                     "items": [
                       {
-                        "source": "areaPreparedInvoicedHa",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Invoiced area (ha) of site preparation",
+                            "helpText": "Enter the amount you will invoice for during this reporting period.",
+                            "source": "areaPreparedInvoicedHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
                       },
                       {
                         "type": "row",
@@ -17237,13 +17359,48 @@
                           {
                             "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
                             "source": "invoicedNotActualComments",
-                            "type": "textarea",
-                            "rows": 5
+                            "type": "textarea"
                           }
                         ]
                       }
                     ]
                   },
+                  {
+                    "type": "col",
+                    "css": "span2 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Activities start date",
+                            "source": "activitiesStartDate",
+                            "type": "date"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span2 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Activities end date",
+                            "source": "activitiesEndDate",
+                            "type": "date"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "columns": [
                   {
                     "width": "10%",
                     "source": "numberOfDaysPreparingSite",
@@ -17284,89 +17441,111 @@
                     "type": "textarea"
                   },
                   {
-                    "width": "15%",
+                    "width": "20%",
                     "source": "threatenedEcologicalCommunity",
                     "title": "Threatened ecological community (if applicable)",
                     "type": "text"
+                  },
+                  {
+                    "source": "relatedOutcomes",
+                    "type": "select2Many",
+                    "width": "15%",
+                    "title": "Which outcome statement/s relates to this survey?"
+                  },
+                  {
+                    "width": "15%",
+                    "type": "col",
+                    "title": "Which investment priority does this activity relate to?",
+                    "items": [
+                      {
+                        "source": "investmentPriorities2",
+                        "type": "select2Many"
+                      },
+                      {
+                        "source": "otherInvestmentPriority",
+                        "type": "text"
+                      }
+                    ]
                   }
                 ],
                 "userAddedRows": true,
                 "source": "sitePreparationDetails",
                 "type": "table"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Optionally attach photos",
+                "source": "photographicEvidence",
+                "type": "image"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Clarification, if needed",
+                "type": "textarea",
+                "rows": 4,
+                "css": "span8",
+                "source": "comments",
+                "placeholder": "Clarification comments include information for your project manager about the service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
               },
               {
-                "type": "row",
-                "items": [
-                  {
-                    "preLabel": "Optionally attach photos",
-                    "source": "photographicEvidence",
-                    "type": "image"
-                  }
-                ]
-              },
+                "preLabel": "Data have been uploaded",
+                "source": "dataUploaded",
+                "type": "boolean"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
               {
-                "type": "row",
-                "items": [
-                  {
-                    "preLabel": "Clarification, if needed",
-                    "type": "textarea",
-                    "rows": 4,
-                    "css": "span8",
-                    "source": "comments",
-                    "placeholder": "Clarification comments include information for your project manager about the service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
-                  }
-                ]
-              },
+                "preLabel": "",
+                "source": "projectAssuranceDetails",
+                "type": "textarea",
+                "rows": 4,
+                "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
               {
-                "type": "row",
-                "items": [
-                  {
-                    "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
-                  },
-                  {
-                    "preLabel": "Data have been uploaded",
-                    "source": "dataUploaded",
-                    "type": "boolean"
-                  }
-                ]
-              },
+                "type": "literal",
+                "source": "<p><b>Evidence of Service Delivery</b></p>This field is mandatory for all <u>Agriculture</u> projects as part of the invoicing process, as well as any environment projects where you have been notified as undergoing an <u>audit or quarterly assurance check</u>. The field allows you to attach evidence against a specific service."
+              }
+            ]
+          },
+          {
+            "type": "table",
+            "source": "assuranceDocuments",
+            "userAddedRows": true,
+            "disableTableUpload": true,
+            "columns": [
               {
-                "type": "row",
-                "items": [
-                  {
-                    "preLabel": "",
-                    "source": "projectAssuranceDetails",
-                    "type": "textarea",
-                    "rows": 4,
-                    "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "type": "literal",
-                    "source": "<p><b>Evidence of Service Delivery</b></p>This field is mandatory for all <u>Agriculture</u> projects as part of the invoicing process, as well as any environment projects where you have been notified as undergoing an <u>audit or quarterly assurance check</u>. The field allows you to attach evidence against a specific service."
-                  }
-                ]
-              },
-              {
-                "type": "table",
-                "source": "assuranceDocuments",
-                "userAddedRows": true,
-                "disableTableUpload": true,
-                "columns": [
-                  {
-                    "title": "Attached documents",
-                    "source": "attachments",
-                    "type": "document"
-                  }
-                ]
+                "title": "Attached documents",
+                "source": "attachments",
+                "type": "document"
               }
             ]
           }
+
         ]
       },
       "modelName": null,
