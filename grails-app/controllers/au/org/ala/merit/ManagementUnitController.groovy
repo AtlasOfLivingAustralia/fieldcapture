@@ -106,7 +106,7 @@ class ManagementUnitController {
                     servicesDashboard:[visible: managementUnitVisible],
                     displayedPrograms:displayedPrograms
                     ],
-         projects: [label: 'MU Reporting', visible: canViewNonPublicTabs, stopBinding: false, type:'tab', mu:mu, reports: mu.reports, reportOrder:reportOrder, hideDueDate:true, displayedPrograms:displayedPrograms],
+         projects: [label: 'MU Reporting', template:"/shared/projectListByProgram", visible: canViewNonPublicTabs, stopBinding: false, type:'tab', mu:mu, reports: mu.reports, reportOrder:reportOrder, hideDueDate:true, displayedPrograms:displayedPrograms],
          sites   : [label: 'MU Sites', visible: canViewNonPublicTabs, stopBinding: true, type:'tab'],
          admin   : [label: 'MU Admin', visible: hasAdminOrSiteReadOnlyAccess, type: 'tab', mu:mu]
         ]

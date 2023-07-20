@@ -3,6 +3,7 @@ package au.org.ala.merit
 import au.org.ala.merit.command.EditOrganisationReportCommand
 import au.org.ala.merit.command.SaveReportDataCommand
 import au.org.ala.merit.command.ViewOrganisationReportCommand
+import au.org.ala.merit.util.ProjectGroupingHelper
 import grails.converters.JSON
 import org.apache.http.HttpStatus
 
@@ -20,6 +21,7 @@ class OrganisationController {
     def organisationService, searchService, documentService, userService, roleService, commonService, webService
     def activityService, metadataService, projectService, excelImportService, reportService, pdfConverterService, authService
     SettingService settingService
+    ProjectGroupingHelper projectGroupingHelper
 
     def list() {}
 
@@ -93,8 +95,14 @@ class OrganisationController {
 
         List adHocReportTypes =[ [type: ReportService.PERFORMANCE_MANAGEMENT_REPORT]]
 
-        [about     : [label: 'About', visible: true, stopBinding: false, type:'tab'],
-         projects : [label: 'Reporting', visible: true, stopBinding:true, default:!reportingVisible, type: 'tab', reports:organisation.reports, adHocReportTypes:adHocReportTypes, reportOrder:reportOrder, hideDueDate:true],
+        // This is a configuration option that controls how we group and display the projects on the
+        // management unit page.
+        List projects = organisation.projects ?: []
+        List programGroups = organisation.config?.programGroups ?: []
+        Map projectGroups = projectGroupingHelper.groupProjectsByProgram(projects, programGroups, ["organisationId:"+organisation.organisationId], true)
+
+        [about     : [label: 'About', visible: true, stopBinding: false, type:'tab', displayedPrograms:projectGroups.displayedPrograms, servicesDashboard:[visible:true]],
+         projects : [label: 'Reporting', template:"/shared/projectListByProgram", visible: true, stopBinding:true, default:!reportingVisible, type: 'tab', reports:organisation.reports, adHocReportTypes:adHocReportTypes, reportOrder:reportOrder, hideDueDate:true, displayedPrograms:projectGroups.displayedPrograms],
          sites     : [label: 'Sites', visible: true, type: 'tab', stopBinding:true, projectCount:organisation.projects?.size()?:0, showShapefileDownload:hasAdminAccess],
          dashboard : [label: 'Dashboard', visible: true, stopBinding:true, type: 'tab', template:'/shared/dashboard', reports:dashboardReports],
          admin     : [label: 'Admin', visible: hasAdminAccess, type: 'tab', template:'admin', showEditAnnoucements:showEditAnnoucements, availableReportCategories:availableReportCategories]]

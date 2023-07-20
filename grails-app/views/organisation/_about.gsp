@@ -24,3 +24,8 @@
         <p>ABN: <span id="orgAbn">${organisation.abn}</span></p>
     </div>
 </div>
+
+<g:render template="/shared/projectsByProgram"
+          model="${[primaryOutcomesTitle:'The organisation is addressing these primary outcomes',
+                    secondaryOutcomesTitle:'The organisation is addressing these secondary outcomes']}"
+/>
