@@ -48,7 +48,8 @@ const newScores = [
         scores: [
             {
                 label: 'Number of baseline datasets synthesised and finalised',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Baseline', 'Indicator']
             }
         ]
     },
@@ -933,7 +934,7 @@ var config=
                 "description": "",
                 "category": "Annual Progress Reporting",
                 "activityType": annualReportFormName,
-                "description": "This report is still being developed.  _Please do not reporting until the new report is ready for use._,",
+                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._,",
                 "label": "Annual",
                 "minimumReportDurationInDays": 1
             },
@@ -946,8 +947,8 @@ var config=
                 "alignToOwnerStart":true,
                 "alignToOwnerEnd":true,
                 "multiple": false,
-                "description": "This report is still being developed.  _Please do not reporting until the new report is ready for use._,",
-                "maximumOwnerDurationInMonths": 36,
+                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._,",
+                "maximumOwnerDurationInMonths": 35,
                 "category": "Outcomes Report 1",
                 "reportsAlignedToCalendar": false,
                 "activityType": outcomes1ReportFormName,
@@ -956,12 +957,24 @@ var config=
             {
                 "reportType": "Single",
                 "reportDescriptionFormat": "Outcomes Report 1 for %4$s",
-                "minimumOwnerDurationInMonths": 37,
+                "minimumOwnerDurationInMonths": 36,
+                "maximumOwnerDurationInMonths": 47,
+                "reportNameFormat": "Outcomes Report 1",
+                "reportingPeriodInMonths": 24,
+                "multiple": false,
+                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._,",
+                "category": "Outcomes Report 1",
+                "activityType": outcomes1ReportFormName,
+                "label": "Outcomes Report 1"
+            },
+            {
+                "reportType": "Single",
+                "reportDescriptionFormat": "Outcomes Report 1 for %4$s",
                 "reportNameFormat": "Outcomes Report 1",
                 "reportingPeriodInMonths": 36,
                 "multiple": false,
-                "description": "This report is still being developed.  _Please do not reporting until the new report is ready for use._,",
-                "maximumOwnerDurationInMonths": 48,
+                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._,",
+                "minimumOwnerDurationInMonths": 48,
                 "calendarAlignmentMonth": 7,
                 "category": "Outcomes Report",
                 "reportsAlignedToCalendar": true,
@@ -970,25 +983,13 @@ var config=
             },
             {
                 "reportType": "Single",
-                "reportDescriptionFormat": "Outcomes Report 1 for %4$s",
-                "minimumOwnerDurationInMonths": 49,
-                "reportNameFormat": "Outcomes Report 1",
-                "reportingPeriodInMonths": 36,
-                "multiple": false,
-                "description": "This report is still being developed.  _Please do not reporting until the new report is ready for use._,",
-                "category": "Outcomes Report 1",
-                "activityType": outcomes1ReportFormName,
-                "label": "Outcomes Report 1"
-            },
-            {
-                "reportType": "Single",
-                "reportDescriptionFormat": "Outcomes Report 1 for %4$s",
+                "reportDescriptionFormat": "Outcomes Report 2 for %4$s",
                 "minimumOwnerDurationInMonths": 36,
                 "reportNameFormat": "Outcomes Report 2",
                 "alignToOwnerStart":true,
                 "alignToOwnerEnd":true,
                 "multiple": false,
-                "description": "This report is still being developed.  _Please do not reporting until the new report is ready for use._,",
+                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._,",
                 "category": "Outcomes Report 2",
                 "activityType": outcomes2ReportFormName,
                 "label": "Outcomes Report 2"

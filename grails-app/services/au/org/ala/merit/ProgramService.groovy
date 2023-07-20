@@ -158,19 +158,14 @@ class ProgramService {
 
     private void regenerateProgramReports(Map program, List<String> reportCategories = null) {
 
-        List programReportConfig = program.config?.programReports
+        List programReportConfig = program.config?.programReports?.collect{new ReportConfig(it)}
         ReportOwner owner = new ReportOwner(
                 id:[programId:program.programId],
                 name:program.name,
                 periodStart:program.startDate,
                 periodEnd:program.endDate
         )
-        List toRegenerate = programReportConfig.findAll{it.category in reportCategories}
-        toRegenerate?.each {
-            ReportConfig reportConfig = new ReportConfig(it)
-            List relevantReports = program.reports?.findAll{it.category == reportConfig.category}
-            reportService.regenerateReports(relevantReports, reportConfig, owner)
-        }
+        reportService.regenerateAll(program.reports, programReportConfig, owner, reportCategories)
     }
 
     private void regenerateProjectReports(Map program, List<String> reportCategories = null) {
