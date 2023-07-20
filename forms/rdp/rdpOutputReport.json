@@ -16393,48 +16393,207 @@
                 "validate": "required,min[0]"
               },
               {
-                "dataType": "species",
-                "name": "species",
+                "dataType": "date",
+                "name": "activitiesStartDate",
+                "description": "",
                 "validate": "required"
               },
               {
-                "name": "noOfDaysSeedCollected",
-                "dataType": "number"
+                "dataType": "date",
+                "name": "activitiesEndDate",
+                "description": "",
+                "validate": "required"
+              },
+              {
+                "name": "relatedOutcomes",
+                "dataType": "text",
+                "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
+                "validate": "required",
+                "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "label",
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "url": "/project/outcomesByScores",
+                      "params": [{
+                        "expression": "owner.projectId",
+                        "name": "id",
+                        "type": "computed"
+                      }, {
+                        "expression": "scores",
+                        "name": "scoreIds",
+                        "type": "computed"
+                      }
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "name": "investmentPriorities2",
+                "dataType": "stringList",
+                "validate": "required",
+                "constraints": {
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "params": [
+                        {
+                          "expression": "owner.projectId",
+                          "name": "id",
+                          "type": "computed"
+                        }
+                      ],
+                      "url": "/project/listProjectInvestmentPriorities/"
+                    }
+                  }
+                }
               },
               {
                 "dataType": "text",
-                "name": "inKgSeedCollected",
+                "name": "otherInvestmentPriority",
+                "behaviour": [
+                  {
+                    "type": "enable",
+                    "condition": "\"Other\" in investmentPriorities2"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "activityType",
                 "constraints": [
-                  "Individuals",
-                  "Kilograms"
+                  "Collecting",
+                  "Storing",
+                  "Propagating"
                 ],
                 "validate": "required"
               },
               {
-                "dataType": "number",
-                "name": "amountSeedCollected",
-                "decimalPlaces": 5
-              },
-              {
-                "dataType": "number",
-                "name": "numberOfSourcePlants"
+                "dataType": "text",
+                "name": "activityPurpose",
+                "validate": "required"
               },
               {
                 "dataType": "text",
-                "name": "storingFacility"
+                "name": "materialType",
+                "constraints": [
+                  "Seeds",
+                  "Plant cuttings"
+                ],
+                "validate": "required"
               },
               {
-                "dataType": "number",
-                "name": "noOfPlantsPropogated"
-              },
-              {
-                "dataType": "text",
-                "name": "threatEcoCommunity",
-                "validate": "maxSize[100]"
+                "columns": [
+                  {
+                    "dataType": "text",
+                    "name": "inKgSeedCollected",
+                    "constraints": [
+                      "Individuals",
+                      "Kilograms"
+                    ],
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "amountSeedCollected",
+                    "decimalPlaces": 5
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "otherSeedSources"
+                  },
+                  {
+                    "name": "noOfDaysPropagating",
+                    "dataType": "number"
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "numberOfSourcePlants"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "storingFacility"
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "noOfPlantsPropogated"
+                  },
+                  {
+                    "dataType": "feature",
+                    "name": "siteSeedSourced"
+                  },
+                  {
+                    "computed": {
+                      "expression": "$geom.areaHa(siteSeedSourced)"
+                    },
+                    "dataType": "number",
+                    "decimalPlaces": 3,
+                    "name": "siteSeedSourcedCalculatedAreaHa",
+                    "units": "ha",
+                    "behaviour": [
+                      {
+                        "condition": "areaInvoicedHa > 0",
+                        "type": "conditional_validation",
+                        "value": {
+                          "message": "The controlled area must be mapped",
+                          "validate": "required,min[0.0001]"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "computed": {
+                      "expression": "$geom.lengthKm(siteSeedSourced)"
+                    },
+                    "dataType": "number",
+                    "decimalPlaces": 3,
+                    "name": "siteSeedSourcedCalculatedLengthKm",
+                    "units": "km",
+                    "behaviour": [
+                      {
+                        "condition": "lengthInvoicedKm > 0",
+                        "type": "conditional_validation",
+                        "value": {
+                          "message": "The length controlled must be mapped",
+                          "validate": "required,min[0.001]"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "document",
+                    "name": "extraMappingDetails",
+                    "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                    "behaviour": [
+                      {
+                        "condition": "not (within(areaInstalledHa, siteSeedSourcedCalculatedAreaHa, 0.1) and within(lengthInstalledKm, siteSeedSourcedCalculatedLengthKm, 0.1)) or roundTo(areaInstalledHa, 2) != roundTo(areaInvoicedHa, 2) or roundTo(lengthInstalledKm, 2) != roundTo(lengthInvoicedKm, 2)",
+                        "type": "visible"
+                      }
+                    ],
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "threatEcoCommunity",
+                    "validate": "maxSize[100]"
+                  }
+                ],
+                "dataType": "list",
+                "name": "seedCollectionDetails"
               }
             ],
             "dataType": "list",
-            "name": "seedCollectionDetails"
+            "name": "areasControlled"
+          },
+          {
+            "name": "siteSeedCountHeader",
+            "type": "number",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "count(areasControlled, \"threatEcoCommunity\")"
+            }
           },
           {
             "computed": {
@@ -16535,85 +16694,179 @@
             "type": "table"
           },
           {
-            "type": "section",
+            "preLabel": "Number of Seed Collection surveys conducted:",
+            "noEdit": true,
+            "type": "number",
+            "source": "siteSeedCountHeader"
+          },
+          {
+            "addRowText": "New area of seed collection",
+            "userAddedRows": true,
+            "source": "areasControlled",
+            "type": "repeat",
             "items": [
               {
-                "columns": [
+                "type": "row",
+                "css": "border-bottom",
+                "items": [
                   {
-                    "width": "5%",
+                    "preLabel": "Initial or maintenance activity?",
+                    "css": "span3",
                     "source": "initialOrMaintenance",
-                    "title": "Initial or Maintenance activity?",
+                    "type": "selectOne"
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "css": "border-bottom",
+                "items": [
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Site/s being revegetated",
+                            "source": "siteSeedCollected",
+                            "type": "feature"
+                          }
+                        ]
+                      },
+                      {
+                        "source": "calculatedAreaHabitatRevegetedHa",
+                        "type": "number",
+                        "readonly": true,
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      },
+                      {
+                        "source": "calculatedLengthHabitatRevegetedKm",
+                        "type": "number",
+                        "readonly": true,
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Actual area (ha) / length (km) of habitat revegetated",
+                            "helpText": "Manually enter correct figure for this reporting period if different to mapped value.",
+                            "source": "areaHabitatRevegetedHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "lengthHabitatRevegetedKm",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Which outcome statement/s relates to this survey?",
+                            "source": "relatedOutcomes",
+                            "type": "select2Many"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Which investment priority does this activity relate to?",
+                            "source": "investmentPriorities2",
+                            "type": "select2Many"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "otherInvestmentPriority",
+                            "type": "text"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "preLabel": "Activities start date",
+                    "css": "span2",
+                    "source": "activitiesStartDate",
+                    "type": "date"
+                  },
+                  {
+                    "preLabel": "Activities end date",
+                    "css": "span2",
+                    "source": "activitiesEndDate",
+                    "type": "date"
+                  },
+                  {
+                    "preLabel": "Type of activity",
+                    "css": "span2",
+                    "source": "activityType",
                     "type": "selectOne"
                   },
                   {
-                    "width": "5%",
-                    "type": "col",
-                    "title": "Site/s where collection was undertaken",
-                    "items": [
-                      {
-                        "source": "siteSeedCollected",
-                        "type": "feature"
-                      },
-                      {
-                        "readonly": "readonly",
-                        "source": "calculatedAreaHabitatRevegetedHa",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
-                      },
-                      {
-                        "readonly": "readonly",
-                        "source": "calculatedLengthHabitatRevegetedKm",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
-                      }
-                    ]
+                    "preLabel": "Purpose of activity",
+                    "css": "span2",
+                    "source": "activityPurpose",
+                    "type": "text"
                   },
+                  {
+                    "preLabel": "Type of material collected/stored or propagated",
+                    "css": "span2",
+                    "source": "materialType",
+                    "type": "selectOne"
+                  }
+                ]
+              },
+              {
+                "columns": [
                   {
                     "width": "10%",
-                    "type": "col",
-                    "title": "Area (ha) of habitat revegated",
-                    "items": [
-                      {
-                        "source": "areaHabitatRevegetedHa",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "width": "10%",
-                    "type": "col",
-                    "title": "Length (km) of habitat revegeted",
-                    "items": [
-                      {
-                        "source": "lengthHabitatRevegetedKm",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "width": "7%",
-                    "source": "species",
-                    "title": "Species",
-                    "type": "speciesSelect"
-                  },
-                  {
-                    "width": "7%",
-                    "source": "noOfDaysSeedCollected",
-                    "title": "Number of days collecting Seed",
-                    "type": "number"
-                  },
-                  {
-                    "width": "7%",
                     "source": "inKgSeedCollected",
                     "title": "Individuals / Kilograms collected",
                     "type": "selectOne"
@@ -16625,34 +16878,98 @@
                     "type": "number"
                   },
                   {
+                    "width": "15%",
+                    "source": "otherSeedSources",
+                    "title": "Other seed sources (if applicable)",
+                    "type": "textarea"
+                  },
+                  {
                     "width": "7%",
                     "source": "numberOfSourcePlants",
                     "title": "Number of Source plants",
                     "type": "number"
                   },
                   {
-                    "width": "12%",
+                    "width": "15%",
                     "source": "storingFacility",
-                    "title": "Storing facility",
+                    "title": "Name of storing facility",
                     "type": "textarea"
                   },
                   {
-                    "width": "12%",
+                    "width": "9%",
                     "source": "noOfPlantsPropogated",
                     "title": "Number of plants propogated",
                     "type": "number"
                   },
                   {
-                    "width": "12%",
+                    "width": "7%",
+                    "source": "noOfDaysPropagating",
+                    "title": "Number of days propagating",
+                    "type": "number"
+                  },
+                  {
+                    "width": "15%",
+                    "type": "col",
+                    "title": "Site/s where the seeds/plant cuttings were sourced from",
+                    "items": [
+                      {
+                        "source": "siteSeedSourced",
+                        "type": "feature"
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "readonly": true,
+                            "source": "siteSeedSourcedCalculatedAreaHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "readonly": true,
+                            "source": "siteSeedSourcedCalculatedLengthKm",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Please attach mapping details",
+                            "source": "extraMappingDetails",
+                            "type": "document"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "width": "15%",
                     "source": "threatEcoCommunity",
-                    "title": "Threatened ecological community (if applicable)",
+                    "title": "Threatened ecological communities (if applicable)",
                     "type": "textarea"
                   }
                 ],
                 "userAddedRows": true,
                 "source": "seedCollectionDetails",
                 "type": "table"
-              },
+              }
+            ]
+          },
+          {
+            "type": "section",
+            "items": [
               {
                 "type": "row",
                 "items": [
@@ -16964,6 +17281,12 @@
               {
                 "dataType": "date",
                 "name": "activitiesStartDate",
+                "description": "",
+                "validate": "required"
+              },
+              {
+                "dataType": "date",
+                "name": "activitiesEndDate",
                 "description": "",
                 "validate": "required"
               },
