@@ -409,19 +409,42 @@ function MERIPlan(project, projectService, config) {
     self.removeSecondaryOutcome = function (outcome) {
         self.meriPlan().outcomes.secondaryOutcomes.remove(outcome);
     };
-    self.addMidTermOutcome = function () {
-        var index = self.meriPlan().outcomes.midTermOutcomes().length + 1;
-        self.meriPlan().outcomes.midTermOutcomes.push(new SingleAssetOutcomeViewModel({code:'MT'+index}));
-    };
+
+    function removeOutcomeStatement(outcomeStatementList, outcomeToRemove) {
+        var outcomeRemovalWarning = 'Deleting this outcome statement may impact other sections of the MERI Plan. Are you sure you want to delete it?';
+        if (config.useServiceOutcomesModel) {
+            bootbox.confirm(outcomeRemovalWarning, function(result) {
+                if (result) {
+                    outcomeStatementList.remove(outcomeToRemove);
+                }
+            });
+        }
+        else {
+            self.meriPlan().outcomes.midTermOutcomes.remove(outcome);
+        }
+    }
     self.removeMidTermOutcome = function (outcome) {
-        self.meriPlan().outcomes.midTermOutcomes.remove(outcome);
-    };
-    self.addShortTermOutcome = function () {
-        var index = self.meriPlan().outcomes.shortTermOutcomes().length + 1;
-        self.meriPlan().outcomes.shortTermOutcomes.push(new SingleAssetOutcomeViewModel({code:'ST'+index}));
+        removeOutcomeStatement(self.meriPlan().outcomes.midTermOutcomes, outcome);
     };
     self.removeShortTermOutcome = function (outcome) {
-        self.meriPlan().outcomes.shortTermOutcomes.remove(outcome);
+        removeOutcomeStatement(self.meriPlan().outcomes.shortTermOutcomes, outcome);
+    };
+
+    function addOutcomeStatement(outcomeStatementList, codePrefix) {
+        var outcomesList = outcomeStatementList();
+        var index = outcomesList.length + 1;
+        var code = codePrefix+index;
+        while (_.find(outcomesList, function(outcome) { return outcome.code == code; })) {
+            index++;
+            code = codePrefix+index;
+        }
+        outcomeStatementList.push(new SingleAssetOutcomeViewModel({code:code}));
+    }
+    self.addMidTermOutcome = function () {
+        addOutcomeStatement(self.meriPlan().outcomes.midTermOutcomes, 'MT');
+    };
+    self.addShortTermOutcome = function () {
+        addOutcomeStatement(self.meriPlan().outcomes.shortTermOutcomes, 'ST');
     };
 
     self.addAsset = function() {
@@ -650,7 +673,10 @@ function ReadOnlyMeriPlan(project, projectService, config) {
     }
     self.allTargetMeasures = _.sortBy(self.allTargetMeasures, 'label');
     self.monitoringTargetMeasures = _.filter(self.allTargetMeasures, function(targetMeasure) {
-        return targetMeasure.service.service.categories && targetMeasure.service.service.categories.indexOf('Survey') >= 0;
+        return targetMeasure.score.tags && targetMeasure.score.tags.indexOf('Indicator') >= 0;
+    });
+    self.baselineTargetMeasures = _.filter(self.allTargetMeasures, function(targetMeasure) {
+        return targetMeasure.score.tags && targetMeasure.score.tags.indexOf('Baseline') >= 0;
     });
     /**
      * This function allows the UI to convert an array of scoreIds into the same labels
@@ -875,6 +901,7 @@ function DetailsViewModel(o, project, budgetHeaders, risks, allServices, selecte
             successMessage: 'MERI Plan saved',
             preventNavigationIfDirty:true,
             defaultDirtyFlag:ko.dirtyFlag,
+            dirtyFlagRateLimitMs: 500,
             healthCheckUrl:config.healthCheckUrl
         });
 };
@@ -945,6 +972,13 @@ function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPerio
                 self.orphanedOutcomes(orphanedOutcomes);
                 return _.union(selectableOutcomes, orphanedOutcomes);
             });
+
+            self.toJSON = function() {
+                return {
+                    target: self.target(),
+                    relatedOutcomes: self.relatedOutcomes()
+                };
+            }
         }
 
         self.scoreId = outputTarget.scoreId;
@@ -969,7 +1003,6 @@ function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPerio
         self.periodTargets = _.map(forecastPeriods, function (period) {
 
             var existingPeriodTarget = _.find(outputTarget.periodTargets, function(periodTarget) {
-                return periodTarget.period == period;
                 return periodTarget.period == period;
             });
             var target = existingPeriodTarget ? existingPeriodTarget.target : 0;
@@ -1017,7 +1050,7 @@ function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPerio
                 scoreId: self.scoreId,
                 target: self.target(),
                 periodTargets: ko.mapping.toJS(self.periodTargets),
-                outcomeTargets: ko.mapping.toJS(self.outcomeTargets, {ignore:['availableOutcomes', 'orphanedOutcomes', 'orphanedOutcomesError']})
+                outcomeTargets: _.map(self.outcomeTargets(), function(outcomeTarget) { return outcomeTarget.toJSON(); })
             }
         }
     };

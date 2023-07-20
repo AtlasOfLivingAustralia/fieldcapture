@@ -94,7 +94,7 @@
                             ignoreCookie="true"
                             loginReturnToUrl="${createLink(controller:'home', action:'login', absolute:true)}"
                             logoutReturnToUrl="${grailsApplication.config.getProperty('grails.serverURL')}/"
-                            logoutUrl="${createLink(controller: 'logout', action: 'logout')}"
+                            logoutUrl="${createLink(uri:'/logout')}"
                             cssClass="btn btn-small btn-inverse btn-login"/>
                 </div>
 
