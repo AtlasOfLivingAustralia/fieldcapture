@@ -48,7 +48,8 @@ const newScores = [
         scores: [
             {
                 label: 'Number of baseline datasets synthesised and finalised',
-                path: 'data.tba'
+                path: 'data.tba',
+                tags: ['Survey', 'Baseline', 'Indicator']
             }
         ]
     },
