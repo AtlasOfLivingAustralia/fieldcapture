@@ -895,12 +895,11 @@ class ProjectService  {
      * (due to those dates not being known) and the dates being updated after more than one reporting period has passed.
      * (e.g the 2nd report has data against correct dates, so we dont' want to move this, instead we delete the first report).
      */
-    private void generateProjectReports(Map reportConfig, Map project, ReportGenerationOptions options) {
+    private void generateProjectReports(String category, List<Map> reportConfig, Map project, ReportGenerationOptions options) {
         if (canRegenerateReports(project)) {
             ReportOwner reportOwner = projectReportOwner(project)
-            ReportConfig rc = new ReportConfig(reportConfig)
-
-            List reportsOfType = project.reports?.findAll{it.category == reportConfig.category}?.sort{it.toDate}
+            List<ReportConfig> configs = reportConfig.collect{new ReportConfig(it)}
+            List reportsOfType = project.reports?.findAll{it.category == category}?.sort{it.toDate}
 
             if (options.includeSubmittedAndApprovedReports) {
                 int index = 0
@@ -921,11 +920,11 @@ class ProjectService  {
 
                     }
                 }
-                reportService.regenerateReports(reportsOfType, rc, reportOwner, index-1)
+                reportService.regenerateReports(reportsOfType, configs, reportOwner, index-1)
             }
             else {
                 // Regenerate reports starting from the first unsubmitted report
-                reportService.regenerateReports(reportsOfType, rc, reportOwner)
+                reportService.regenerateReports(reportsOfType, configs, reportOwner)
             }
         }
     }
@@ -966,10 +965,10 @@ class ProjectService  {
         def programConfig = getProgramConfiguration(project)
 
         if (programConfig.projectReports) {
-
-            programConfig.projectReports.each {reportConfig ->
-                if (!categoriesToRegenerate || reportConfig.category in categoriesToRegenerate) {
-                    generateProjectReports(reportConfig, project, options)
+            Map<String, List<Map>> groupedConfiguration = programConfig.projectReports.groupBy{ it.category }
+            groupedConfiguration.each { String category, List reportConfig ->
+                if (!categoriesToRegenerate || category in categoriesToRegenerate) {
+                    generateProjectReports(category, reportConfig, project, options)
                 }
 
             }

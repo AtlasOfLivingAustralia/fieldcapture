@@ -38,7 +38,7 @@ class RisksServiceSpec extends Specification implements ServiceUnitTest<RisksSer
         1 * settingService.getSettingText(SettingPageType.RISKS_LAST_CHECK_TIME) >> lastCheckDate
         1 * searchService.allProjects([fq:"_query:(risks.dateUpdated:[${lastCheckDate} TO ${now}])"]) >> projectSearchResults
         projects.size() * projectService.sendEmail(_, _, RoleService.PROJECT_ADMIN_ROLE, "MERIT@environment.gov.au",
-                [project:[:], reportUrl:"http://devt.ala.org.au:8087/project/projectReport/null?fromDate=${lastCheckDate}&toDate=${now}&sections=Project+risks+changes&orientation=portrait"])
+                [project:[:], reportUrl:"http://localhost:8087/project/projectReport/null?fromDate=${lastCheckDate}&toDate=${now}&sections=Project+risks+changes&orientation=portrait"])
         1 * settingService.setSettingText(SettingPageType.RISKS_LAST_CHECK_TIME, now)
 
         where:
@@ -64,7 +64,7 @@ class RisksServiceSpec extends Specification implements ServiceUnitTest<RisksSer
         1 * settingService.getSettingText(SettingPageType.RISKS_LAST_CHECK_TIME) >> ""
         1 * searchService.allProjects([fq:"_query:(risks.dateUpdated:[${expectedLastCheckDate} TO ${now}])"]) >> projectSearchResults
         projects.size() * projectService.sendEmail(_, _, RoleService.PROJECT_ADMIN_ROLE, "MERIT@environment.gov.au",
-                [project:[:], reportUrl:"http://devt.ala.org.au:8087/project/projectReport/null?fromDate=${expectedLastCheckDate}&toDate=${now}&sections=Project+risks+changes&orientation=portrait"])
+                [project:[:], reportUrl:"http://localhost:8087/project/projectReport/null?fromDate=${expectedLastCheckDate}&toDate=${now}&sections=Project+risks+changes&orientation=portrait"])
         1 * settingService.setSettingText(SettingPageType.RISKS_LAST_CHECK_TIME, now)
     }
 

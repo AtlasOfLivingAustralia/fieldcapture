@@ -150,21 +150,19 @@ class ManagementUnitService {
         regenerateProjectReports(managementUnit, projectReportCategories)
     }
 
-    private void regenerateManagementUnitReports(Map managementUnit, List<String> reportCategories = null) {
-
-        List managementUnitReportConfig = managementUnit.config?.managementUnitReports
+    private void regenerateManagementUnitReports(Map managementUnit, List<String> reportCategories) {
+        if (!reportCategories) {
+            log.info("No categories specified for management unit reports. Skipping regeneration.")
+            return
+        }
+        List managementUnitReportConfig = managementUnit.config?.managementUnitReports?.collect{new ReportConfig(it)}
         ReportOwner owner = new ReportOwner(
                 id:[managementUnitId:managementUnit.managementUnitId],
                 name:managementUnit.name,
                 periodStart:managementUnit.startDate,
                 periodEnd:managementUnit.endDate
         )
-        List toRegenerate = managementUnitReportConfig.findAll{it.category in reportCategories}
-        toRegenerate?.each {
-            ReportConfig reportConfig = new ReportConfig(it)
-            List relevantReports = managementUnit.reports?.findAll{it.category == reportConfig.category}
-            reportService.regenerateReports(relevantReports, reportConfig, owner)
-        }
+        reportService.regenerateAll(managementUnit.reports, managementUnitReportConfig, owner, reportCategories)
     }
 
     private void regenerateProjectReports(Map managementUnit, List<String> reportCategories = null) {

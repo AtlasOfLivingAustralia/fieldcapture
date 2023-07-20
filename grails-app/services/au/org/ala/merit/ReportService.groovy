@@ -50,7 +50,7 @@ class ReportService {
     def grailsLinkGenerator
     def emailService
 
-    void regenerateReports(List existingReports, ReportConfig reportConfig, ReportOwner reportOwner, int startFromReportIndex) {
+    void regenerateReports(List existingReports, List<ReportConfig> reportConfig, ReportOwner reportOwner, int startFromReportIndex) {
 
         int index = startFromReportIndex
         DateTime latestApprovedReportPeriodEnd = null
@@ -60,7 +60,11 @@ class ReportService {
         index++ // Start at the report after the submitted/approved one (or index 0 if none was found)
 
         int sequenceNo = index + 1
-        List reports = new ReportGenerator().generateReports(reportConfig, reportOwner, sequenceNo, latestApprovedReportPeriodEnd, existingReports)
+        ReportGenerator reportGenerator = new ReportGenerator()
+        List reports = []
+        reportConfig.each {
+            reports += reportGenerator.generateReports(it, reportOwner, sequenceNo, latestApprovedReportPeriodEnd, existingReports) ?: []
+        }
 
         for (Map report: reports) {
             // Update or create new reports
@@ -86,7 +90,7 @@ class ReportService {
         }
     }
 
-    void regenerateReport(Map report, Map existingReport) {
+    private void regenerateReport(Map report, Map existingReport) {
         log.info("name: " + existingReport.name + " - " + report.name)
         log.info("fromDate: " + existingReport.fromDate + " - " + report.fromDate)
         log.info("toDate: " + existingReport.toDate + " - " + report.toDate)
@@ -116,11 +120,23 @@ class ReportService {
         }
     }
 
-    void regenerateReports(List existingReports, ReportConfig reportConfig, ReportOwner reportOwner) {
-        if (reportConfig.adhoc) {
-            log.warn("Cannot regenerate ${reportConfig.category} reports as they are adhoc")
-            return
+    /**
+     * Regenerates all reports for the supplied categories.
+     * @param existingReports Any existing reports that need to be updated.
+     * @param reportConfig The report configuration
+     * @param reportOwner The report owner
+     * @param categoriesToRegenerate The categories to regenerate. If null then all categories will be regenerated.
+     */
+    void regenerateAll(List existingReports, List<ReportConfig> reportConfig, ReportOwner reportOwner, List<String> categoriesToRegenerate = null) {
+        Map<String, List> toRegenerate = reportConfig.findAll{it.category in categoriesToRegenerate}?.groupBy{it.category}
+        toRegenerate?.each { category, reportConfigs ->
+            List relevantReports = existingReports?.findAll{it.category == category}
+            regenerateReports(relevantReports, reportConfigs, reportOwner)
         }
+    }
+
+    void regenerateReports(List existingReports, List<ReportConfig> reportConfig, ReportOwner reportOwner) {
+
         // Ensure the reports are sorted in Date order
         existingReports = (existingReports?:[]).sort{it.toDate}
 

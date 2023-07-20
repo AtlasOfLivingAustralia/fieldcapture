@@ -224,8 +224,7 @@ user.registration.url = "${auth.baseUrl}/userdetails/registration/createAccount"
 security {
     cas {
         enabled = false
-        appServerName = 'http://devt.ala.org.au:8087' // or similar, up to the request path part
-        // service = 'http://devt.ala.org.au:8080' // optional, if set it will always be used as the return path from CAS
+        appServerName = 'http://localhost:8087' // or similar, up to the request path part
         casServerUrlPrefix = "${auth.baseUrl}/cas"
         loginUrl = "${auth.baseUrl}/cas/login"
         logoutUrl = "${auth.baseUrl}/cas/logout"
@@ -277,7 +276,7 @@ environments {
     }
     test {
         server.port = "8087"
-        grails.host = "http://devt.ala.org.au"
+        grails.host = "http://localhost"
         serverName = "${grails.host}:${server.port}"
         grails.serverURL = serverName
         layout.skin = "nrm"
@@ -286,7 +285,7 @@ environments {
         wiremock.port = 8018
         security.oidc.discoveryUri = "http://localhost:${wiremock.port}/cas/oidc/.well-known"
         security.oidc.allowUnsignedIdTokens = true
-        def casBaseUrl = "http://devt.ala.org.au:${wiremock.port}"
+        def casBaseUrl = "http://localhost:${wiremock.port}"
 
         security.cas.appServerName=serverName
         security.cas.contextPath=
@@ -299,9 +298,10 @@ environments {
         logging.dir = '.'
         upload.images.path = '/tmp'
         upload.images.url = grails.serverURL+'/image/'
-        ecodata.baseUrl = 'http://devt.ala.org.au:8080/ws/'
-        ecodata.service.url = 'http://devt.ala.org.au:8080/ws'
-        pdfgen.baseURL = "http://devt.ala.org.au:${wiremock.port}/"
+        ecodata.baseUrl = 'http://localhost:8080/ws/'
+        ecodata.service.url = 'http://localhost:8080/ws'
+        pdfgen.baseURL = "http://localhost:${wiremock.port}/"
+        lists.baseURL = "http://localhost:${wiremock.port}"
         abn.abnUrl= "http://localhost:${wiremock.port}/json/AbnDetails.aspx?abn="
         abn.abnLookupToken = "123456"
         api_key='testapikey'
