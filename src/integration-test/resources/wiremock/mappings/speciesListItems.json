@@ -1,0 +1,15 @@
+{
+  "request": {
+    "urlPattern": "/ws/speciesListItems/.*",
+    "method": "GET"
+  },
+  "response" : {
+    "status": 200,
+    "jsonBody": [{
+      "id":1,
+      "commonName":"Koala",
+      "name":"Phascolarctos cinereus",
+      "scientificName":"Phascolarctos cinereus"
+    }]
+  }
+}

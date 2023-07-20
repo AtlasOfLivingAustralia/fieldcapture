@@ -54,7 +54,7 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
         }
 
         // Configure the client
-        configureFor("devt.ala.org.au", testConfig.wiremock.port)
+        configureFor("localhost", testConfig.wiremock.port)
     }
 
     def cleanupSpec() {

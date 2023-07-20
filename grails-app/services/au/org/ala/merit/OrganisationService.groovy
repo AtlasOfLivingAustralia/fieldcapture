@@ -107,19 +107,12 @@ class OrganisationService {
 
     private void regenerateOrganisationReports(Map organisation, List<String> reportCategories = null) {
 
-        List organisationReportConfig = organisation.config?.organisationReports
         ReportOwner owner = new ReportOwner(
             id:[organisationId:organisation.organisationId],
             name:organisation.name
         )
-        List toRegenerate = organisationReportConfig.findAll{it.category in reportCategories}
-        toRegenerate?.each {
-            ReportConfig reportConfig = new ReportConfig(it)
-            if (!reportConfig.adhoc) {
-                List relevantReports = organisation.reports?.findAll{it.category == reportConfig.category}
-                reportService.regenerateReports(relevantReports, reportConfig, owner)
-            }
-        }
+        List organisationReportConfig = organisation.config?.organisationReports?.collect{new ReportConfig(it)}
+        reportService.regenerateAll(organisation.reports, organisationReportConfig, owner, reportCategories)
     }
 
     def isUserAdminForOrganisation(organisationId) {

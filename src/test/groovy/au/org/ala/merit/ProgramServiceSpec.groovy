@@ -120,8 +120,7 @@ class ProgramServiceSpec extends Specification implements AutowiredTest{
         then:
         1 * webService.getJson({it.endsWith("/program/$programId")}) >> program
         1 * reportService.findReportsForProgram(programId) >> program.reports
-        1 * reportService.regenerateReports(_, {it.category == 'c2'}, {it.id.programId == programId})
-        0 * reportService.regenerateReports(_, _, {it.id.programId == programId})
+        1 * reportService.regenerateAll([], {it.size() == 3}, {it.id.programId == programId}, ['c2'])
 
         1 * webService.getJson({it.endsWith("/program/$programId/projects?view=flat")}) >> [projects:[[projectId:'p1'], [projectId:'p2']]]
 
