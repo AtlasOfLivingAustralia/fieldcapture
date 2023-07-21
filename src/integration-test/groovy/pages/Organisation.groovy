@@ -17,7 +17,7 @@ class Organisation extends ReloadablePage {
         orgName { $('.header-text') }
         orgDescription { $('span#orgDescription') }
         orgAbn {$('span#orgAbn')}
-        projectContent {$(".project-wrapper tbody tr td")}
+        projectContent {$("#projects .projects-wrapper tbody tr td")}
         reportingTab(required: false) { $('#projects-tab') }
         sitesTab {$("#sites-tab")}
         reportsTabPane(required:false) { module(OrganisationReports)}
