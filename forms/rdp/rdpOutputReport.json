@@ -4953,6 +4953,24 @@
             "columns": [
               {
                 "dataType": "text",
+                "name": "activityType",
+                "constraints": [
+                  "Captive Breeding",
+                  "Release"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "activityPermit",
+                "constraints": [
+                  "Yes",
+                  "No"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
                 "name": "inSituExSitu",
                 "constraints": [
                   "Ex-situ",
@@ -4975,48 +4993,106 @@
                 "validate": "required"
               },
               {
-                "dataType": "number",
-                "name": "numberOfDaysMaintainingBreedingPrograms",
-                "description": "Number of days should be calculated as number of days by number of people (eg. 4.5 days by 3 people is 13.5 days)",
-                "validate": "required,min[0]"
-              },
-              {
                 "dataType": "feature",
-                "name": "sitesOfBreedingProgram",
+                "name": "sitesOfAreaSource",
                 "description": "Number of days should be calculated as number of days by number of people (eg. 4.5 days by 3 people is 13.5 days)"
               },
               {
                 "defaultValue": {
                   "type": "computed",
-                  "expression": "$geom.areaHa(sitesOfBreedingProgram)"
+                  "expression": "$geom.areaHa(sitesOfAreaSource)"
                 },
                 "dataType": "number",
-                "name": "areaOfEnclosureHa",
+                "name": "areaOfSourceHa",
                 "validate": [
                   {
                     "rule": "min",
                     "param": {
                       "type": "computed",
-                      "expression": "$geom.areaHa(sitesOfBreedingProgram)*0.9"
+                      "expression": "$geom.areaHa(sitesOfAreaSource)*0.9"
                     }
                   },
                   {
                     "rule": "max",
                     "param": {
                       "type": "computed",
-                      "expression": "$geom.areaHa(sitesOfBreedingProgram)*1.1"
+                      "expression": "$geom.areaHa(sitesOfAreaSource)*1.1"
                     }
                   }
                 ]
               },
               {
+                "dataType": "feature",
+                "name": "sitesOfAreaRelease",
+                "description": "Number of days should be calculated as number of days by number of people (eg. 4.5 days by 3 people is 13.5 days)"
+              },
+              {
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "$geom.areaHa(sitesOfAreaRelease)"
+                },
+                "dataType": "number",
+                "name": "areaOfReleaseHa",
+                "validate": [
+                  {
+                    "rule": "min",
+                    "param": {
+                      "type": "computed",
+                      "expression": "$geom.areaHa(sitesOfAreaRelease)*0.9"
+                    }
+                  },
+                  {
+                    "rule": "max",
+                    "param": {
+                      "type": "computed",
+                      "expression": "$geom.areaHa(sitesOfAreaRelease)*1.1"
+                    }
+                  }
+                ]
+              },
+              {
+                "dataType": "date",
+                "name": "activitiesStartDate",
+                "description": "",
+                "validate": "required"
+              },
+              {
+                "dataType": "date",
+                "name": "activitiesEndDate",
+                "description": "",
+                "validate": "required"
+              },
+              {
                 "columns": [
                   {
-                    "dataType": "species",
-                    "name": "targetSpecies",
-                    "dwcAttribute": "scientificName",
-                    "description": "The threatened species targeted by the breeding program",
-                    "validate": "required"
+                    "name": "investmentPriorities2",
+                    "dataType": "stringList",
+                    "validate": "required",
+                    "constraints": {
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "params": [
+                            {
+                              "expression": "owner.projectId",
+                              "name": "id",
+                              "type": "computed"
+                            }
+                          ],
+                          "url": "/project/listProjectInvestmentPriorities/"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "otherInvestmentPriority",
+                    "behaviour": [
+                      {
+                        "type": "enable",
+                        "condition": "\"Other\" in investmentPriorities2"
+                      }
+                    ]
                   },
                   {
                     "dataType": "text",
@@ -5064,6 +5140,65 @@
                     "dataType": "number",
                     "name": "numberOfIndividualsReleased",
                     "validate": "required,min[0]"
+                  },
+                  {
+                    "name": "projectBaseline",
+                    "dataType": "text",
+                    "description": "Select the relevant Project Baseline as listed in the Monitoring Methodology section of the MERI Plan.",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "baseline",
+                      "valueProperty": "method",
+                      "type": "pre-populated",
+                      "excludePath": "projectBaseline",
+                      "config": {
+                        "source": {
+                          "context-path": "owner.custom.details.baseline.rows"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "name": "datasetSupports",
+                    "dataType": "text",
+                    "description": "This section will require the Data Set Name so the Metadata fields in the Data Set Summary tab should be filled out before the Outcome Report is due. More than one dataset if relevant for this Project Baseline could be selected.",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "name",
+                      "valueProperty": "dataSetId",
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "context-path": "owner.custom.dataSets"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "name": "relatedOutcomes",
+                    "dataType": "text",
+                    "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "label",
+                      "valueProperty": "label",
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "url": "/project/outcomesByScores",
+                          "params": [{
+                            "expression": "owner.projectId",
+                            "name": "id",
+                            "type": "computed"
+                          }, {
+                            "expression": "scores",
+                            "name": "scoreIds",
+                            "type": "computed"
+                          }
+                          ]
+                        }
+                      }
+                    }
                   }
                 ],
                 "dataType": "list",
@@ -5072,6 +5207,14 @@
             ],
             "dataType": "list",
             "name": "breedingProgramDetails"
+          },
+          {
+            "name": "surveyCountHeader",
+            "type": "number",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "count(breedingProgramDetails, \"numberOfIndividualsReleased\")"
+            }
           },
           {
             "dataType": "text",
@@ -5106,6 +5249,12 @@
             "type": "section",
             "items": [
               {
+                "preLabel": "Number of establishing and maintaining breeding programs surveys conducted:",
+                "noEdit": true,
+                "type": "number",
+                "source": "surveyCountHeader"
+              },
+              {
                 "addRowText": "Add a new breeding area",
                 "userAddedRows": true,
                 "source": "breedingProgramDetails",
@@ -5115,45 +5264,140 @@
                     "type": "row",
                     "items": [
                       {
+                        "preLabel": "Type of activity",
+                        "css": "span3",
+                        "source": "activityType",
+                        "type": "selectOne"
+                      },
+                      {
+                        "preLabel": "Were permits obtained to support this activity?",
+                        "css": "span3",
+                        "source": "activityPermit",
+                        "type": "selectOne"
+                      },
+                      {
                         "preLabel": "Ex-situ / In-situ",
                         "css": "span3",
                         "source": "inSituExSitu",
                         "type": "selectOne"
                       },
                       {
-                        "preLabel": "Is this a newly established or maintained breeding program?",
+                        "preLabel": "Is this an established or maintained activity?",
                         "css": "span3",
                         "source": "newOrMaintained",
                         "type": "selectOne"
-                      },
-                      {
-                        "preLabel": "Number of breeding sites created",
-                        "css": "span3",
-                        "source": "numberOfSitesCreated",
-                        "type": "number"
                       }
                     ]
                   },
                   {
                     "type": "row",
+                    "css": "border-bottom",
                     "items": [
                       {
-                        "preLabel": "Number of days maintaining breeding program",
-                        "css": "span3",
-                        "source": "numberOfDaysMaintainingBreedingPrograms",
-                        "type": "number"
+                        "type": "col",
+                        "css": "span2 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Number of sites",
+                                "source": "numberOfSitesCreated",
+                                "type": "number"
+                              }
+                            ]
+                          }
+                        ]
                       },
                       {
-                        "preLabel": "Site/s of breeding program",
-                        "css": "span3",
-                        "source": "sitesOfBreedingProgram",
-                        "type": "feature"
+                        "type": "col",
+                        "css": "span3 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Area of source site",
+                                "source": "sitesOfAreaSource",
+                                "type": "feature"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "areaOfSourceHa",
+                                "type": "number",
+                                "displayOptions": {
+                                  "displayUnits": true
+                                },
+                                "readonly": "readonly"
+                              }
+                            ]
+                          }
+                        ]
                       },
                       {
-                        "preLabel": "Area (ha) of feral-free enclosures established or maintained",
-                        "css": "span3",
-                        "source": "areaOfEnclosureHa",
-                        "type": "number"
+                        "type": "col",
+                        "css": "span3 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Area of release site",
+                                "source": "sitesOfAreaRelease",
+                                "type": "feature"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "areaOfReleaseHa",
+                                "type": "number",
+                                "displayOptions": {
+                                  "displayUnits": true
+                                },
+                                "readonly": "readonly"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "css": "span2 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Activities start date",
+                                "source": "activitiesStartDate",
+                                "type": "date"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "css": "span2 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Activities end date",
+                                "source": "activitiesEndDate",
+                                "type": "date"
+                              }
+                            ]
+                          }
+                        ]
                       }
                     ]
                   },
@@ -5161,25 +5405,22 @@
                     "addRowText": "Add a species",
                     "columns": [
                       {
-                        "width": "30%",
-                        "source": "targetSpecies",
-                        "title": "Targeted threatened species",
-                        "type": "speciesSelect"
-                      },
-                      {
-                        "width": "15%",
-                        "source": "breedingTechnique",
-                        "type": "select2",
-                        "title": "Technique of breeding program"
-                      },
-                      {
                         "width": "20%",
-                        "source": "otherBreedingTechnique",
-                        "type": "text",
-                        "title": "Technique of breeding program (if Other)"
+                        "type": "col",
+                        "title": "Which investment priority does this activity relate to?",
+                        "items": [
+                          {
+                            "source": "investmentPriorities2",
+                            "type": "select2Many"
+                          },
+                          {
+                            "source": "otherInvestmentPriority",
+                            "type": "text"
+                          }
+                        ]
                       },
                       {
-                        "width": "15%",
+                        "width": "10%",
                         "source": "individualsOrGroups",
                         "type": "selectOne",
                         "title": "Individuals or groups?"
@@ -5187,14 +5428,47 @@
                       {
                         "width": "10%",
                         "source": "numberOfIndividualsOrGroups",
-                        "title": "Number of groups / individuals in breeding program",
+                        "title": "Number of groups / individuals",
                         "type": "number"
                       },
                       {
                         "width": "10%",
                         "source": "numberOfIndividualsReleased",
-                        "title": "Number of individuals released or established in the wild",
+                        "title": "Number of animals bred, died (pre-release), released, translocated, or re-introduced",
                         "type": "number"
+                      },
+                      {
+                        "width": "20%",
+                        "type": "col",
+                        "title": "Technique used",
+                        "items": [
+                          {
+                            "source": "breedingTechnique",
+                            "type": "select2"
+                          },
+                          {
+                            "source": "otherBreedingTechnique",
+                            "type": "text"
+                          }
+                        ]
+                      },
+                      {
+                        "source": "projectBaseline",
+                        "type": "selectOne",
+                        "width": "10%",
+                        "title": "Which Project Baseline relates to this survey?"
+                      },
+                      {
+                        "source": "datasetSupports",
+                        "type": "select2Many",
+                        "width": "10%",
+                        "title": "What Dataset supports this?"
+                      },
+                      {
+                        "source": "relatedOutcomes",
+                        "type": "select2Many",
+                        "width": "10%",
+                        "title": "Which outcome statement/s relates to this survey?"
                       }
                     ],
                     "userAddedRows": true,
