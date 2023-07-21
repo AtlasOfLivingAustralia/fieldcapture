@@ -41,7 +41,11 @@ class CreateOrEditOrganisationSpec extends StubbedCasSpec {
 
         then:
         waitFor (10){ at Organisation}
-        aboutTab.click()
+
+        when:
+        openAboutTab()
+
+        then:
         orgName.text() == "THE TRUSTEE FOR PSS FUND Test"
         waitFor {orgDescription.displayed }
         orgDescription.text() == "Test Organisation Description test"
@@ -66,7 +70,6 @@ class CreateOrEditOrganisationSpec extends StubbedCasSpec {
         details.isNameReadOnly() == true
 
         when:
-
         details.abn = "66666666666"
         waitFor {details.prePopulateABN.displayed}
         details.description = "Test Organisation Description test"
@@ -74,8 +77,11 @@ class CreateOrEditOrganisationSpec extends StubbedCasSpec {
 
         then:
         waitFor (10){ at Organisation}
-        aboutTab.click()
-        waitFor {orgDescription.displayed }
+
+        when:
+        openAboutTab()
+
+        then:
         orgDescription.text() == "Test Organisation Description test"
         waitFor {orgAbn.displayed }
         orgAbn.text() == "66666666666"
@@ -106,7 +112,11 @@ class CreateOrEditOrganisationSpec extends StubbedCasSpec {
 
         then:
         waitFor { at Organisation}
-        aboutTab.click()
+
+        when:
+        openAboutTab()
+
+        then:
         orgName.text() == "Test Organisation Test 2 <script>alert('Test')</script>"
         waitFor {orgDescription.displayed }
         orgDescription.text() == "Test Organisation Description test"

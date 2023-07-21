@@ -24,6 +24,12 @@ class Organisation extends ReloadablePage {
         reportDeclaration { $('#declaration') }
     }
 
+    void openAboutTab() {
+        waitFor { aboutTab.displayed }
+        aboutTab.click()
+        waitFor { orgDescription.displayed }
+    }
+
     void edit() {
         openAdminTab()
         adminTabContent.viewEditSection()
