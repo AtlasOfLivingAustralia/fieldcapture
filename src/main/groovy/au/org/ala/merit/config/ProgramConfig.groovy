@@ -40,7 +40,7 @@ class ProgramConfig implements Map {
     }
 
     ProgramConfig(Map config) {
-        this.config = new HashMap(config)
+        this.config = new HashMap(config ?: [:])
     }
 
     ProjectTemplate getProjectTemplate() {

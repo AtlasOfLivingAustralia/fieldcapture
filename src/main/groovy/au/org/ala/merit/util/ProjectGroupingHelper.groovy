@@ -4,6 +4,9 @@ import au.org.ala.merit.MetadataService
 import au.org.ala.merit.ProgramService
 import au.org.ala.merit.ProjectService
 import au.org.ala.merit.ReportService
+import au.org.ala.merit.config.ProgramConfig
+import au.org.ala.merit.config.ProgramServiceConfig
+import au.org.ala.merit.config.ServiceConfig
 import org.springframework.beans.factory.annotation.Autowired
 
 /**
@@ -37,7 +40,7 @@ class ProjectGroupingHelper {
         // Now group the projects according to the program configuration.
         Map projectsByCategory = groupProjects(projects, programsByCategory)
 
-        Map servicesWithScores = serviceScores(reportQueryFacets, programsByCategory, approvedActivitiesOnly)
+        Map servicesWithScores = serviceScores(reportQueryFacets, programsByCategory, programs, approvedActivitiesOnly)
 
         List displayedPrograms = []
         // Aggregate the outcomes addressed by all projects in each program group
@@ -126,22 +129,35 @@ class ProjectGroupingHelper {
     }
 
     /**
-     * Get scores of each program in the given management unit
-     * @param managementUnitId
-     * @param programIds
-     * @param approvedActivitiesOnly
+     * Get scores of each program in the groups
      * @return [programId: serviceScores]
      */
-    Map serviceScores(List reportQueryFacets, Map programGroups, boolean approvedActivitiesOnly = true) {
+    private Map serviceScores(List reportQueryFacets, Map programGroups, List programs, boolean approvedActivitiesOnly = true) {
         List<Map> allServices = metadataService.getProjectServices()
-        List scoreIds = allServices.collect{it.scores?.collect{score -> score.scoreId}}.flatten()
 
         def results = [:]
 
         for(Map.Entry programGroup in programGroups) {
-            List programIdFacets = programGroup.value.collect{"programId:${it.programId}"}
+            List programsForGroup = programGroup.value
+            List programIdFacets = programsForGroup.collect{"programId:${it.programId}"}
+
+            List programScores = []
+            programsForGroup.each { Map program ->
+                ProgramServiceConfig config = new ProgramConfig(program.config).getProgramServices()
+                println "Processing program ${program.name}"
+                for (ServiceConfig serviceConfig in config?.programServices) {
+                    if (serviceConfig.serviceTargets) {
+                        programScores.addAll(serviceConfig.serviceTargets)
+                    }
+                    else {
+                        Map service = allServices.find({it.id == serviceConfig.serviceId})
+                        programScores.addAll(service?.scores?.collect{score -> score.scoreId})
+                    }
+                }
+            }
+            programScores = programScores.unique()
             List facets = reportQueryFacets + programIdFacets
-            Map scoreResults = reportService.targetsForScoreIds(scoreIds, facets, approvedActivitiesOnly)
+            Map scoreResults = reportService.targetsForScoreIds(programScores, facets, approvedActivitiesOnly)
 
             List deliveredServices = []
             allServices.each { Map service ->
