@@ -16,7 +16,7 @@
 </div>
 
 <div data-bind="visible:description">
-    <div class="col-sm-12 card customCard">
+    <div class="card customCard">
         <div class="card-title">About ${organisation.name?.encodeAsHTML()}</div>
 
         <span id="orgDescription" data-bind="html:description.markdownToHtml()"></span>

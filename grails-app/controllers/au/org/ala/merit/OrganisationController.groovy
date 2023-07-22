@@ -101,10 +101,10 @@ class OrganisationController {
         List programGroups = organisation.config?.programGroups ?: []
         Map projectGroups = projectGroupingHelper.groupProjectsByProgram(projects, programGroups, ["organisationId:"+organisation.organisationId], true)
 
-        [about     : [label: 'About', visible: true, stopBinding: false, type:'tab', displayedPrograms:projectGroups.displayedPrograms, servicesDashboard:[visible:true]],
-         projects : [label: 'Reporting', template:"/shared/projectListByProgram", visible: true, stopBinding:true, default:!reportingVisible, type: 'tab', reports:organisation.reports, adHocReportTypes:adHocReportTypes, reportOrder:reportOrder, hideDueDate:true, displayedPrograms:projectGroups.displayedPrograms],
-         sites     : [label: 'Sites', visible: true, type: 'tab', stopBinding:true, projectCount:organisation.projects?.size()?:0, showShapefileDownload:hasAdminAccess],
-         dashboard : [label: 'Dashboard', visible: true, stopBinding:true, type: 'tab', template:'/shared/dashboard', reports:dashboardReports],
+        [about     : [label: 'About', visible: true, stopBinding: false, type:'tab', default:!reportingVisible, displayedPrograms:projectGroups.displayedPrograms, servicesDashboard:[visible:true]],
+         projects : [label: 'Reporting', template:"/shared/projectListByProgram", visible: reportingVisible, stopBinding:true, default:reportingVisible, type: 'tab', reports:organisation.reports, adHocReportTypes:adHocReportTypes, reportOrder:reportOrder, hideDueDate:true, displayedPrograms:projectGroups.displayedPrograms],
+         sites     : [label: 'Sites', visible: reportingVisible, type: 'tab', stopBinding:true, projectCount:organisation.projects?.size()?:0, showShapefileDownload:hasAdminAccess],
+         dashboard : [label: 'Dashboard', visible: reportingVisible, stopBinding:true, type: 'tab', template:'/shared/dashboard', reports:dashboardReports],
          admin     : [label: 'Admin', visible: hasAdminAccess, type: 'tab', template:'admin', showEditAnnoucements:showEditAnnoucements, availableReportCategories:availableReportCategories]]
 
     }

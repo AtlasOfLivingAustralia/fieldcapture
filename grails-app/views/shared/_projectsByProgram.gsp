@@ -1,5 +1,5 @@
+<g:if test="${displayedPrograms}">
 <div class="projects-wrapper d-none d-md-block">
-    <hr/>
     <div class="well-title">Programs</div>
 
     <ul class="nav nav-tabs" id="programs-tab" >
@@ -86,3 +86,4 @@
         </g:each>
     </div>
 </div>
+</g:if>
