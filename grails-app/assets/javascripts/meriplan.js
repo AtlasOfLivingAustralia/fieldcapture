@@ -880,6 +880,7 @@ function DetailsViewModel(o, project, budgetHeaders, risks, allServices, selecte
             jsData.name = self.name();
             tmp.details.serviceIds = serviceData.serviceIds;
             delete tmp.details.services;
+            delete tmp.details.serviceOutcomes;
         }
 
         var json = JSON.stringify(jsData, function (key, value) {
