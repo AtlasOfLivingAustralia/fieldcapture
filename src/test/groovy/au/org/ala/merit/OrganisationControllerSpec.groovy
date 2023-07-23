@@ -133,11 +133,11 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         model.content.admin.visible == false
     }
 
-    def "the about tab is the default if there are no reports"() {
+    def "the about tab is the default if the user is not an admin"() {
         setup:
         def testOrg = testOrganisation(false)
         organisationService.get(_,_) >> testOrg
-        setupOrganisationAdmin()
+
 
         when:
         def model = controller.index('id')
@@ -153,7 +153,7 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         numDefault == 1
     }
 
-    def "the reporting tab is the default if there are reports"() {
+    def "the reporting tab is the default if the user is an admin"() {
         setup:
         def testOrg = testOrganisation(true)
         organisationService.get(_,_) >> testOrg
