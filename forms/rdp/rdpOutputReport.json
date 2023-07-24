@@ -10014,10 +10014,34 @@
                 }
               },
               {
+                "name": "investmentPriorities2",
+                "dataType": "stringList",
+                "validate": "required",
+                "constraints": {
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "params": [
+                        {
+                          "expression": "owner.projectId",
+                          "name": "id",
+                          "type": "computed"
+                        }
+                      ],
+                      "url": "/project/listProjectInvestmentPriorities/"
+                    }
+                  }
+                }
+              },
+              {
                 "dataType": "text",
-                "name": "investmentPrioritiesActivityRelates",
-                "description": "",
-                "validate": "required,maxSize[300]"
+                "name": "otherInvestmentPriority",
+                "behaviour": [
+                  {
+                    "type": "enable",
+                    "condition": "\"Other\" in investmentPriorities2"
+                  }
+                ]
               },
               {
                 "columns": [
@@ -10471,8 +10495,17 @@
                             "type": "row",
                             "items": [
                               {
-                                "source": "investmentPrioritiesActivityRelates",
+                                "source": "investmentPriorities2",
                                 "preLabel": "Which investment priority does this activity relate to?",
+                                "type": "select2Many"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "otherInvestmentPriority",
                                 "type": "text"
                               }
                             ]
