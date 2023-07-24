@@ -106,6 +106,39 @@ class OrganisationReportingSpec extends StubbedCasSpec {
 
     }
 
+    def "A user with the editor role can complete Organisation reports, but not submit them"() {
+        setup:
+        loginAsUser('4', browser)
+        greenMail.start()
+
+        when:
+        to Organisation, orgId
+        displayReportsTab()
+        reportsTabPane.reports[1].edit()
+
+        then:
+        waitFor { at ReportPage }
+
+        when: "Complete the report and mark as complete"
+        field("coreServicesRequirementsMet").value('Met Core Services requirements')
+        field("whsRequirementsMet").value('Met requirements')
+        markAsComplete()
+        save()
+        exitReport()
+
+        then:
+        waitFor 60, {at Organisation}
+
+        then:
+        waitFor { reportsTabPane.displayed }
+
+        then:
+        waitFor 30, {
+            reportsTabPane.reports[1].markedAsComplete()
+            !reportsTabPane.reports[1].canBeSubmitted()
+        }
+    }
+
     def "A user with the admin role can complete Organisation reports,and submit them"() {
         setup:
         loginAsUser('1', browser)

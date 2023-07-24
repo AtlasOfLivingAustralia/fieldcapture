@@ -114,8 +114,6 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         model.content.admin.visible == true
     }
 
-    // The organisation editor role isn't fully supported yet
-    @Ignore
     def "all tabs expect the admin tab are visible to organisation editors"() {
         setup:
         def testOrg = testOrganisation(true)

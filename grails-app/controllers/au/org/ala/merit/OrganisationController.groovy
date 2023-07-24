@@ -65,8 +65,9 @@ class OrganisationController {
         def members = organisationService.getMembersOfOrganisation(organisation.organisationId)
         def orgRole = members.find { it.userId == user?.userId } ?: [:]
         def hasAdminAccess = userService.userIsSiteAdmin() || orgRole.role == RoleService.PROJECT_ADMIN_ROLE
+        def hasEditorAccess =  hasAdminAccess || orgRole.role == RoleService.PROJECT_EDITOR_ROLE
 
-        def reportingVisible = hasAdminAccess || userService.userHasReadOnlyAccess()
+        def reportingVisible = hasEditorAccess || userService.userHasReadOnlyAccess()
 
         def dashboardReports = [[name:'dashboard', label:'Activity Outputs']]
 
@@ -131,7 +132,7 @@ class OrganisationController {
         render result as JSON
     }
 
-    @PreAuthorise(accessLevel = 'admin')
+    @PreAuthorise(accessLevel = 'editor')
     def edit(String id) {
 
         def organisation = organisationService.get(id)
@@ -504,7 +505,7 @@ class OrganisationController {
         }
     }
 
-    @PreAuthorise(accessLevel = 'admin', redirectController = 'organisation')
+    @PreAuthorise(accessLevel = 'editor', redirectController = 'organisation')
     def editOrganisationReport(EditOrganisationReportCommand cmd) {
         if (cmd.hasErrors()) {
             error(cmd.errors.toString(), cmd.id)
@@ -519,7 +520,7 @@ class OrganisationController {
         }
     }
 
-    @PreAuthorise(accessLevel = 'admin')
+    @PreAuthorise(accessLevel = 'editor')
     def saveReport(SaveReportDataCommand saveReportDataCommand) {
         Map result
         if (saveReportDataCommand.report?.organisationId != params.id) {
