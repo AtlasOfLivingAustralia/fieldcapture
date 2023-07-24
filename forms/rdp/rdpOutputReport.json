@@ -12509,10 +12509,34 @@
                     "validate": "maxSize[300]"
                   },
                   {
+                    "name": "investmentPriorities2",
+                    "dataType": "stringList",
+                    "validate": "required",
+                    "constraints": {
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "params": [
+                            {
+                              "expression": "owner.projectId",
+                              "name": "id",
+                              "type": "computed"
+                            }
+                          ],
+                          "url": "/project/listProjectInvestmentPriorities/"
+                        }
+                      }
+                    }
+                  },
+                  {
                     "dataType": "text",
-                    "name": "investmentPrioritiesActivityRelates",
-                    "description": "",
-                    "validate": "required,maxSize[300]"
+                    "name": "otherInvestmentPriority",
+                    "behaviour": [
+                      {
+                        "type": "enable",
+                        "condition": "\"Other\" in investmentPriorities2"
+                      }
+                    ]
                   },
                   {
                     "name": "relatedOutcomes",
@@ -12811,9 +12835,18 @@
                   },
                   {
                     "width": "15%",
-                    "source": "investmentPrioritiesActivityRelates",
+                    "type": "col",
                     "title": "Which investment priority does this activity relate to?",
-                    "type": "text"
+                    "items": [
+                      {
+                        "source": "investmentPriorities2",
+                        "type": "select2Many"
+                      },
+                      {
+                        "source": "otherInvestmentPriority",
+                        "type": "text"
+                      }
+                    ]
                   },
                   {
                     "width": "15%",
