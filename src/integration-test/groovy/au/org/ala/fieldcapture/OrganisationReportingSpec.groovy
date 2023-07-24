@@ -298,7 +298,7 @@ class OrganisationReportingSpec extends StubbedCasSpec {
         when: "Display the reporting tab, then view the approved report"
         to Organisation, orgId
         displayReportsTab()
-        reportsTabPane.reports[1].cancelReport()
+        reportsTabPane.reports[2].cancelReport()
 
         then:
         waitFor {
@@ -314,7 +314,7 @@ class OrganisationReportingSpec extends StubbedCasSpec {
         waitFor { hasBeenReloaded() }
 
         and:
-        reportsTabPane.reports[1].isCancelled()
+        reportsTabPane.reports[2].isCancelled()
     }
 
 }
