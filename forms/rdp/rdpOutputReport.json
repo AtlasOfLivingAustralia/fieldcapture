@@ -2631,10 +2631,34 @@
                     "validate": "required"
                   },
                   {
+                    "name": "investmentPriorities2",
+                    "dataType": "stringList",
+                    "validate": "required",
+                    "constraints": {
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "params": [
+                            {
+                              "expression": "owner.projectId",
+                              "name": "id",
+                              "type": "computed"
+                            }
+                          ],
+                          "url": "/project/listProjectInvestmentPriorities/"
+                        }
+                      }
+                    }
+                  },
+                  {
                     "dataType": "text",
-                    "name": "investmentPrioritiesActivityRelates",
-                    "description": "",
-                    "validate": "required,maxSize[300]"
+                    "name": "otherInvestmentPriority",
+                    "behaviour": [
+                      {
+                        "type": "enable",
+                        "condition": "\"Other\" in investmentPriorities2"
+                      }
+                    ]
                   },
                   {
                     "name": "relatedOutcomes",
@@ -3071,9 +3095,18 @@
                       },
                       {
                         "width": "15%",
-                        "source": "investmentPrioritiesActivityRelates",
+                        "type": "col",
                         "title": "Which investment priority does this activity relate to?",
-                        "type": "text"
+                        "items": [
+                          {
+                            "source": "investmentPriorities2",
+                            "type": "select2Many"
+                          },
+                          {
+                            "source": "otherInvestmentPriority",
+                            "type": "text"
+                          }
+                        ]
                       },
                       {
                         "width": "15%",
@@ -4953,6 +4986,24 @@
             "columns": [
               {
                 "dataType": "text",
+                "name": "activityType",
+                "constraints": [
+                  "Captive Breeding",
+                  "Release"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "activityPermit",
+                "constraints": [
+                  "Yes",
+                  "No"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
                 "name": "inSituExSitu",
                 "constraints": [
                   "Ex-situ",
@@ -4975,48 +5026,106 @@
                 "validate": "required"
               },
               {
-                "dataType": "number",
-                "name": "numberOfDaysMaintainingBreedingPrograms",
-                "description": "Number of days should be calculated as number of days by number of people (eg. 4.5 days by 3 people is 13.5 days)",
-                "validate": "required,min[0]"
-              },
-              {
                 "dataType": "feature",
-                "name": "sitesOfBreedingProgram",
+                "name": "sitesOfAreaSource",
                 "description": "Number of days should be calculated as number of days by number of people (eg. 4.5 days by 3 people is 13.5 days)"
               },
               {
                 "defaultValue": {
                   "type": "computed",
-                  "expression": "$geom.areaHa(sitesOfBreedingProgram)"
+                  "expression": "$geom.areaHa(sitesOfAreaSource)"
                 },
                 "dataType": "number",
-                "name": "areaOfEnclosureHa",
+                "name": "areaOfSourceHa",
                 "validate": [
                   {
                     "rule": "min",
                     "param": {
                       "type": "computed",
-                      "expression": "$geom.areaHa(sitesOfBreedingProgram)*0.9"
+                      "expression": "$geom.areaHa(sitesOfAreaSource)*0.9"
                     }
                   },
                   {
                     "rule": "max",
                     "param": {
                       "type": "computed",
-                      "expression": "$geom.areaHa(sitesOfBreedingProgram)*1.1"
+                      "expression": "$geom.areaHa(sitesOfAreaSource)*1.1"
                     }
                   }
                 ]
               },
               {
+                "dataType": "feature",
+                "name": "sitesOfAreaRelease",
+                "description": "Number of days should be calculated as number of days by number of people (eg. 4.5 days by 3 people is 13.5 days)"
+              },
+              {
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "$geom.areaHa(sitesOfAreaRelease)"
+                },
+                "dataType": "number",
+                "name": "areaOfReleaseHa",
+                "validate": [
+                  {
+                    "rule": "min",
+                    "param": {
+                      "type": "computed",
+                      "expression": "$geom.areaHa(sitesOfAreaRelease)*0.9"
+                    }
+                  },
+                  {
+                    "rule": "max",
+                    "param": {
+                      "type": "computed",
+                      "expression": "$geom.areaHa(sitesOfAreaRelease)*1.1"
+                    }
+                  }
+                ]
+              },
+              {
+                "dataType": "date",
+                "name": "activitiesStartDate",
+                "description": "",
+                "validate": "required"
+              },
+              {
+                "dataType": "date",
+                "name": "activitiesEndDate",
+                "description": "",
+                "validate": "required"
+              },
+              {
                 "columns": [
                   {
-                    "dataType": "species",
-                    "name": "targetSpecies",
-                    "dwcAttribute": "scientificName",
-                    "description": "The threatened species targeted by the breeding program",
-                    "validate": "required"
+                    "name": "investmentPriorities2",
+                    "dataType": "stringList",
+                    "validate": "required",
+                    "constraints": {
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "params": [
+                            {
+                              "expression": "owner.projectId",
+                              "name": "id",
+                              "type": "computed"
+                            }
+                          ],
+                          "url": "/project/listProjectInvestmentPriorities/"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "otherInvestmentPriority",
+                    "behaviour": [
+                      {
+                        "type": "enable",
+                        "condition": "\"Other\" in investmentPriorities2"
+                      }
+                    ]
                   },
                   {
                     "dataType": "text",
@@ -5064,6 +5173,65 @@
                     "dataType": "number",
                     "name": "numberOfIndividualsReleased",
                     "validate": "required,min[0]"
+                  },
+                  {
+                    "name": "projectBaseline",
+                    "dataType": "text",
+                    "description": "Select the relevant Project Baseline as listed in the Monitoring Methodology section of the MERI Plan.",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "baseline",
+                      "valueProperty": "method",
+                      "type": "pre-populated",
+                      "excludePath": "projectBaseline",
+                      "config": {
+                        "source": {
+                          "context-path": "owner.custom.details.baseline.rows"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "name": "datasetSupports",
+                    "dataType": "text",
+                    "description": "This section will require the Data Set Name so the Metadata fields in the Data Set Summary tab should be filled out before the Outcome Report is due. More than one dataset if relevant for this Project Baseline could be selected.",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "name",
+                      "valueProperty": "dataSetId",
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "context-path": "owner.custom.dataSets"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "name": "relatedOutcomes",
+                    "dataType": "text",
+                    "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "label",
+                      "valueProperty": "label",
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "url": "/project/outcomesByScores",
+                          "params": [{
+                            "expression": "owner.projectId",
+                            "name": "id",
+                            "type": "computed"
+                          }, {
+                            "expression": "scores",
+                            "name": "scoreIds",
+                            "type": "computed"
+                          }
+                          ]
+                        }
+                      }
+                    }
                   }
                 ],
                 "dataType": "list",
@@ -5072,6 +5240,14 @@
             ],
             "dataType": "list",
             "name": "breedingProgramDetails"
+          },
+          {
+            "name": "surveyCountHeader",
+            "type": "number",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "count(breedingProgramDetails, \"numberOfIndividualsReleased\")"
+            }
           },
           {
             "dataType": "text",
@@ -5106,6 +5282,12 @@
             "type": "section",
             "items": [
               {
+                "preLabel": "Number of establishing and maintaining breeding programs surveys conducted:",
+                "noEdit": true,
+                "type": "number",
+                "source": "surveyCountHeader"
+              },
+              {
                 "addRowText": "Add a new breeding area",
                 "userAddedRows": true,
                 "source": "breedingProgramDetails",
@@ -5115,45 +5297,140 @@
                     "type": "row",
                     "items": [
                       {
+                        "preLabel": "Type of activity",
+                        "css": "span3",
+                        "source": "activityType",
+                        "type": "selectOne"
+                      },
+                      {
+                        "preLabel": "Were permits obtained to support this activity?",
+                        "css": "span3",
+                        "source": "activityPermit",
+                        "type": "selectOne"
+                      },
+                      {
                         "preLabel": "Ex-situ / In-situ",
                         "css": "span3",
                         "source": "inSituExSitu",
                         "type": "selectOne"
                       },
                       {
-                        "preLabel": "Is this a newly established or maintained breeding program?",
+                        "preLabel": "Is this an established or maintained activity?",
                         "css": "span3",
                         "source": "newOrMaintained",
                         "type": "selectOne"
-                      },
-                      {
-                        "preLabel": "Number of breeding sites created",
-                        "css": "span3",
-                        "source": "numberOfSitesCreated",
-                        "type": "number"
                       }
                     ]
                   },
                   {
                     "type": "row",
+                    "css": "border-bottom",
                     "items": [
                       {
-                        "preLabel": "Number of days maintaining breeding program",
-                        "css": "span3",
-                        "source": "numberOfDaysMaintainingBreedingPrograms",
-                        "type": "number"
+                        "type": "col",
+                        "css": "span2 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Number of sites",
+                                "source": "numberOfSitesCreated",
+                                "type": "number"
+                              }
+                            ]
+                          }
+                        ]
                       },
                       {
-                        "preLabel": "Site/s of breeding program",
-                        "css": "span3",
-                        "source": "sitesOfBreedingProgram",
-                        "type": "feature"
+                        "type": "col",
+                        "css": "span3 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Area of source site",
+                                "source": "sitesOfAreaSource",
+                                "type": "feature"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "areaOfSourceHa",
+                                "type": "number",
+                                "displayOptions": {
+                                  "displayUnits": true
+                                },
+                                "readonly": "readonly"
+                              }
+                            ]
+                          }
+                        ]
                       },
                       {
-                        "preLabel": "Area (ha) of feral-free enclosures established or maintained",
-                        "css": "span3",
-                        "source": "areaOfEnclosureHa",
-                        "type": "number"
+                        "type": "col",
+                        "css": "span3 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Area of release site",
+                                "source": "sitesOfAreaRelease",
+                                "type": "feature"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "areaOfReleaseHa",
+                                "type": "number",
+                                "displayOptions": {
+                                  "displayUnits": true
+                                },
+                                "readonly": "readonly"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "css": "span2 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Activities start date",
+                                "source": "activitiesStartDate",
+                                "type": "date"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "css": "span2 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Activities end date",
+                                "source": "activitiesEndDate",
+                                "type": "date"
+                              }
+                            ]
+                          }
+                        ]
                       }
                     ]
                   },
@@ -5161,25 +5438,22 @@
                     "addRowText": "Add a species",
                     "columns": [
                       {
-                        "width": "30%",
-                        "source": "targetSpecies",
-                        "title": "Targeted threatened species",
-                        "type": "speciesSelect"
-                      },
-                      {
-                        "width": "15%",
-                        "source": "breedingTechnique",
-                        "type": "select2",
-                        "title": "Technique of breeding program"
-                      },
-                      {
                         "width": "20%",
-                        "source": "otherBreedingTechnique",
-                        "type": "text",
-                        "title": "Technique of breeding program (if Other)"
+                        "type": "col",
+                        "title": "Which investment priority does this activity relate to?",
+                        "items": [
+                          {
+                            "source": "investmentPriorities2",
+                            "type": "select2Many"
+                          },
+                          {
+                            "source": "otherInvestmentPriority",
+                            "type": "text"
+                          }
+                        ]
                       },
                       {
-                        "width": "15%",
+                        "width": "10%",
                         "source": "individualsOrGroups",
                         "type": "selectOne",
                         "title": "Individuals or groups?"
@@ -5187,14 +5461,47 @@
                       {
                         "width": "10%",
                         "source": "numberOfIndividualsOrGroups",
-                        "title": "Number of groups / individuals in breeding program",
+                        "title": "Number of groups / individuals",
                         "type": "number"
                       },
                       {
                         "width": "10%",
                         "source": "numberOfIndividualsReleased",
-                        "title": "Number of individuals released or established in the wild",
+                        "title": "Number of animals bred, died (pre-release), released, translocated, or re-introduced",
                         "type": "number"
+                      },
+                      {
+                        "width": "20%",
+                        "type": "col",
+                        "title": "Technique used",
+                        "items": [
+                          {
+                            "source": "breedingTechnique",
+                            "type": "select2"
+                          },
+                          {
+                            "source": "otherBreedingTechnique",
+                            "type": "text"
+                          }
+                        ]
+                      },
+                      {
+                        "source": "projectBaseline",
+                        "type": "selectOne",
+                        "width": "10%",
+                        "title": "Which Project Baseline relates to this survey?"
+                      },
+                      {
+                        "source": "datasetSupports",
+                        "type": "select2Many",
+                        "width": "10%",
+                        "title": "What Dataset supports this?"
+                      },
+                      {
+                        "source": "relatedOutcomes",
+                        "type": "select2Many",
+                        "width": "10%",
+                        "title": "Which outcome statement/s relates to this survey?"
                       }
                     ],
                     "userAddedRows": true,
@@ -8788,6 +9095,871 @@
       "title": "Habitat augmentation",
       "collapsibleHeading": null,
       "name": "RDP - Habitat augmentation",
+      "description": null
+    },
+    {
+      "collapsedByDefault": false,
+      "template": {
+        "dataModel": [
+          {
+            "columns": [
+              {
+                "columns": [
+                  {
+                    "dataType": "species",
+                    "name": "species",
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "habitatCondition",
+                    "description": "",
+                    "validate": "required,maxSize[300]"
+                  },
+                  {
+                    "name": "investmentPriorities2",
+                    "dataType": "stringList",
+                    "validate": "required",
+                    "constraints": {
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "params": [
+                            {
+                              "expression": "owner.projectId",
+                              "name": "id",
+                              "type": "computed"
+                            }
+                          ],
+                          "url": "/project/listProjectInvestmentPriorities/"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "otherInvestmentPriority",
+                    "behaviour": [
+                      {
+                        "type": "enable",
+                        "condition": "\"Other\" in investmentPriorities2"
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "stringList",
+                    "name": "ternSurveyTechnique",
+                    "validate": "required",
+                    "constraints": [
+                      "Tern Survey Technique 1",
+                      "Tern Survey Technique 1",
+                      "Tern Survey Technique 1",
+                      "Other"
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "description": "Please describe the survey technique if other was selected.",
+                    "name": "otherTernSurveyTechnique",
+                    "behaviour": [
+                      {
+                        "condition": "ternSurveyTechnique == \"Other\"",
+                        "type": "enable_and_clear"
+                      }
+                    ],
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "surveyMethodology",
+                    "description": "Survey Methodology",
+                    "validate": "required,maxSize[3000]"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "surveyObjective",
+                    "description": "Survey Objective",
+                    "validate": "required,maxSize[3000]"
+                  }
+                ],
+                "dataType": "list",
+                "name": "habitatConditionBaselineTable"
+              },
+              {
+                "dataType": "text",
+                "name": "baselineOrIndicatorSurvey",
+                "description": "",
+                "constraints": [
+                  "Baseline",
+                  "Indicator"
+                ],
+                "validate": "required"
+              },
+              {
+                "name": "projectBaseline",
+                "dataType": "text",
+                "description": "Select the relevant Project Baseline as listed in the Monitoring Methodology section of the MERI Plan.",
+                "validate": "required",
+                "constraints": {
+                  "textProperty": "baseline",
+                  "valueProperty": "method",
+                  "type": "pre-populated",
+                  "excludePath": "projectBaseline",
+                  "config": {
+                    "source": {
+                      "context-path": "owner.custom.details.baseline.rows"
+                    }
+                  }
+                }
+              },
+              {
+                "name": "datasetSupports",
+                "dataType": "text",
+                "description": "This section will require the Data Set Name so the Metadata fields in the Data Set Summary tab should be filled out before the Outcome Report is due. More than one dataset if relevant for this Project Baseline could be selected.",
+                "validate": "required",
+                "constraints": {
+                  "textProperty": "name",
+                  "valueProperty": "dataSetId",
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "context-path": "owner.custom.dataSets"
+                    }
+                  }
+                }
+              },
+              {
+                "name": "relatedOutcomes",
+                "dataType": "text",
+                "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
+                "validate": "required",
+                "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "label",
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "url": "/project/outcomesByScores",
+                      "params": [{
+                        "expression": "owner.projectId",
+                        "name": "id",
+                        "type": "computed"
+                      }, {
+                        "expression": "scores",
+                        "name": "scoreIds",
+                        "type": "computed"
+                      }
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "dataType": "date",
+                "name": "activitiesStartDate",
+                "description": "",
+                "validate": "required"
+              },
+              {
+                "dataType": "date",
+                "name": "activitiesEndDate",
+                "description": "",
+                "validate": "required"
+              },
+              {
+                "dataType": "feature",
+                "name": "sitesTreated"
+              },
+              {
+                "computed": {
+                  "expression": "$geom.areaHa(sitesTreated)"
+                },
+                "dataType": "number",
+                "name": "calculatedAreaTreatedHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "behaviour": [
+                  {
+                    "condition": "areaInvoicedTreatedHa > 0",
+                    "type": "conditional_validation",
+                    "value": {
+                      "message": "The managed area must be mapped",
+                      "validate": "required,min[0.0001]"
+                    }
+                  }
+                ]
+              },
+              {
+                "computed": {
+                  "expression": "$geom.lengthKm(sitesTreated)"
+                },
+                "dataType": "number",
+                "name": "calculatedLengthTreatedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "behaviour": [
+                  {
+                    "condition": "lengthTreatedKm > 0",
+                    "type": "conditional_validation",
+                    "value": {
+                      "message": "The managed length must be mapped",
+                      "validate": "required,min[0.0001]"
+                    }
+                  }
+                ]
+              },
+              {
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "calculatedAreaTreatedHa"
+                },
+                "dataType": "number",
+                "name": "areaTreatedHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedReason",
+                "constraints": [
+                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1))",
+                    "type": "visible"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedComments",
+                "validate": "required,maxSize[300]",
+                "behaviour": [
+                  {
+                    "type": "visible",
+                    "condition": "\"Other\" == mappingNotAlignedReason"
+                  }
+                ]
+              },
+              {
+                "dataType": "document",
+                "name": "extraMappingDetails",
+                "validate": "required",
+                "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                "behaviour": [
+                  {
+                    "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1)) or roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedTreatedHa, 2)",
+                    "type": "visible"
+                  }
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "areaInvoicedTreatedHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "rule": "max",
+                    "param": {
+                      "type": "computed",
+                      "expression": "areaTreatedHa"
+                    }
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedNotActualReason",
+                "constraints": [
+                  "Work was undertaken over a greater area than will be invoiced for",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedTreatedHa, 2)",
+                    "type": "visible"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedNotActualComments",
+                "behaviour": [
+                  {
+                    "type": "visible",
+                    "condition": "\"Other\" == invoicedNotActualReason"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "$geom.lengthKm(sitesTreated)"
+                },
+                "dataType": "number",
+                "name": "lengthTreatedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "min",
+                    "param": {
+                      "type": "computed",
+                      "expression": "$geom.lengthKm(sitesTreated)*0.9"
+                    }
+                  },
+                  {
+                    "rule": "max",
+                    "param": {
+                      "type": "computed",
+                      "expression": "$geom.lengthKm(sitesTreated)*1.1"
+                    }
+                  }
+                ]
+              }
+            ],
+            "dataType": "list",
+            "name": "faunaSurveys",
+            "minSize": 1
+          },
+          {
+            "dataType": "text",
+            "name": "participationIndividualsOrGroups",
+            "constraints": [
+              "Individuals",
+              "Groups"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "participationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "participationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "firstNationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "firstNationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "participationDetails",
+            "validate": "maxSize[3000]"
+          },
+          {
+            "name": "surveyCountHeader",
+            "type": "number",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "count(faunaSurveys, \"baselineOrIndicatorSurvey\")"
+            }
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[1500]"
+          },
+          {
+            "dataType": "image",
+            "name": "photographicEvidence"
+          },
+          {
+            "dataType": "boolean",
+            "name": "dataUploaded",
+            "description": ""
+          },
+          {
+            "dataType": "text",
+            "name": "projectAssuranceDetails",
+            "description": ""
+          },
+          {
+            "dataType": "list",
+            "name": "assuranceDocuments",
+            "columns": [
+              {
+                "dataType": "document",
+                "name": "attachments",
+                "description": "Please attach any Evidence of Service Delivery here"
+              }
+            ]
+          }
+        ],
+        "modelName": "RDP - Habitat condition assessment",
+        "title": "Habitat condition assessment",
+        "viewModel": [
+          {
+            "type": "section",
+            "items": [
+              {
+                "columns": [
+                  {
+                    "width": "10%",
+                    "source": "participationIndividualsOrGroups",
+                    "title": "Individuals or groups?",
+                    "type": "selectOne"
+                  },
+                  {
+                    "width": "20%",
+                    "type": "col",
+                    "title": "Total Number of people delivering this service",
+                    "items": [
+                      {
+                        "source": "participationIndividualNumber",
+                        "type": "number"
+                      },
+                      {
+                        "source": "participationGroupNumber",
+                        "type": "selectOne"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "width": "20%",
+                    "title": "Total Number of First Nations people delivering this service ",
+                    "items": [
+                      {
+                        "source": "firstNationIndividualNumber",
+                        "type": "number"
+                      },
+                      {
+                        "source": "firstNationGroupNumber",
+                        "type": "selectOne"
+                      }
+                    ]
+                  },
+                  {
+                    "source": "participationDetails",
+                    "rows": 4,
+                    "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                    "type": "textarea"
+                  }
+                ],
+                "userAddedRows": false,
+                "disableTableUpload": false,
+                "source": "",
+                "type": "table"
+              },
+              {
+                "preLabel": "Number of Habitat Condition Assessment surveys conducted:",
+                "noEdit": true,
+                "type": "number",
+                "source": "surveyCountHeader"
+              },
+              {
+                "addRowText": "New survey site",
+                "userAddedRows": true,
+                "source": "faunaSurveys",
+                "type": "repeat",
+                "items": [
+                  {
+                    "type": "row",
+                    "css": "border-bottom",
+                    "items": [
+                      {
+                        "type": "col",
+                        "css": "span3 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "baselineOrIndicatorSurvey",
+                                "type": "selectOne",
+                                "preLabel": "Baseline survey or indicator (follow-up) survey?"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "css": "span3 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "projectBaseline",
+                                "type": "selectOne",
+                                "preLabel": "Which Project Baseline relates to this survey?"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "css": "span3 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "datasetSupports",
+                                "type": "select2Many",
+                                "preLabel": "What Dataset supports this?"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "css": "span3 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "relatedOutcomes",
+                                "type": "select2Many",
+                                "preLabel": "Which outcome statement/s relates to this survey?"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "css": "span3 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Activities start date",
+                                "source": "activitiesStartDate",
+                                "type": "date"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "css": "span3 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Activities end date",
+                                "source": "activitiesEndDate",
+                                "type": "date"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "css": "span3 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Sites surveyed for habitat condition assessment",
+                                "source": "sitesTreated",
+                                "type": "feature"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "calculatedAreaTreatedHa",
+                                "type": "number",
+                                "displayOptions": {
+                                  "displayUnits": true
+                                },
+                                "readonly": "readonly"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "calculatedLengthTreatedKm",
+                                "type": "number",
+                                "displayOptions": {
+                                  "displayUnits": true
+                                },
+                                "readonly": "readonly"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Please attach mapping details",
+                                "source": "extraMappingDetails",
+                                "type": "document"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "css": "span3 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Actual area (ha) / length (km) covered by habitatat condition assessment survey",
+                                "source": "areaTreatedHa",
+                                "type": "number",
+                                "displayOptions": {
+                                  "displayUnits": true
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "lengthTreatedKm",
+                                "type": "number",
+                                "displayOptions": {
+                                  "displayUnits": true
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Reason for actual being different to mapped amount",
+                                "source": "mappingNotAlignedReason",
+                                "type": "selectOne"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                                "source": "mappingNotAlignedComments",
+                                "type": "textarea",
+                                "rows": 5
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "columns": [
+                      {
+                        "width": "20%",
+                        "source": "species",
+                        "title": "Type of habitat",
+                        "type": "speciesSelect"
+                      },
+                      {
+                        "width": "15%",
+                        "source": "habitatCondition",
+                        "title": "Condition of habitat",
+                        "type": "text"
+                      },
+                      {
+                        "width": "15%",
+                        "type": "col",
+                        "title": "Which investment priority does this activity relate to?",
+                        "items": [
+                          {
+                            "source": "investmentPriorities2",
+                            "type": "select2Many"
+                          },
+                          {
+                            "source": "otherInvestmentPriority",
+                            "type": "text"
+                          }
+                        ]
+                      },
+                      {
+                        "width": "10%",
+                        "title": "Survey Technique",
+                        "source": "ternSurveyTechnique",
+                        "type": "selectOne"
+                      },
+                      {
+                        "width": "10%",
+                        "title": "Survey Technique (if Other)",
+                        "source": "otherTernSurveyTechnique",
+                        "type": "text"
+                      },
+                      {
+                        "width": "15%",
+                        "source": "surveyMethodology",
+                        "title": "Survey Methodology",
+                        "type": "text"
+                      },
+                      {
+                        "width": "15%",
+                        "source": "surveyObjective",
+                        "title": "Survey Objective",
+                        "type": "text"
+                      }
+                    ],
+                    "userAddedRows": true,
+                    "disableTableUpload": true,
+                    "source": "habitatConditionBaselineTable",
+                    "type": "table"
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "preLabel": "Optionally attach photos",
+                    "source": "photographicEvidence",
+                    "type": "image"
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "preLabel": "Clarification, if needed",
+                    "type": "textarea",
+                    "rows": 4,
+                    "css": "span8",
+                    "source": "comments",
+                    "placeholder": "Clarification comments include information for your project manager about the service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "type": "literal",
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                  },
+                  {
+                    "preLabel": "Data have been uploaded",
+                    "source": "dataUploaded",
+                    "type": "boolean"
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "preLabel": "",
+                    "source": "projectAssuranceDetails",
+                    "type": "textarea",
+                    "rows": 4,
+                    "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "type": "literal",
+                    "source": "<p><b>Evidence of Service Delivery</b></p>This field is mandatory for all <u>Agriculture</u> projects as part of the invoicing process, as well as any environment projects where you have been notified as undergoing an <u>audit or quarterly assurance check</u>. The field allows you to attach evidence against a specific service."
+                  }
+                ]
+              },
+              {
+                "type": "table",
+                "source": "assuranceDocuments",
+                "userAddedRows": true,
+                "disableTableUpload": true,
+                "columns": [
+                  {
+                    "title": "Attached documents",
+                    "source": "attachments",
+                    "type": "document"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "modelName": null,
+      "templateName": "rdpHabitatConditionAssessmentSurvey",
+      "optional": true,
+      "optionalQuestionText": null,
+      "title": "Habitat condition assessment",
+      "collapsibleHeading": null,
+      "name": "RDP - Habitat condition assessment",
       "description": null
     },
     {
@@ -16393,48 +17565,207 @@
                 "validate": "required,min[0]"
               },
               {
-                "dataType": "species",
-                "name": "species",
+                "dataType": "date",
+                "name": "activitiesStartDate",
+                "description": "",
                 "validate": "required"
               },
               {
-                "name": "noOfDaysSeedCollected",
-                "dataType": "number"
+                "dataType": "date",
+                "name": "activitiesEndDate",
+                "description": "",
+                "validate": "required"
+              },
+              {
+                "name": "relatedOutcomes",
+                "dataType": "text",
+                "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
+                "validate": "required",
+                "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "label",
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "url": "/project/outcomesByScores",
+                      "params": [{
+                        "expression": "owner.projectId",
+                        "name": "id",
+                        "type": "computed"
+                      }, {
+                        "expression": "scores",
+                        "name": "scoreIds",
+                        "type": "computed"
+                      }
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "name": "investmentPriorities2",
+                "dataType": "stringList",
+                "validate": "required",
+                "constraints": {
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "params": [
+                        {
+                          "expression": "owner.projectId",
+                          "name": "id",
+                          "type": "computed"
+                        }
+                      ],
+                      "url": "/project/listProjectInvestmentPriorities/"
+                    }
+                  }
+                }
               },
               {
                 "dataType": "text",
-                "name": "inKgSeedCollected",
+                "name": "otherInvestmentPriority",
+                "behaviour": [
+                  {
+                    "type": "enable",
+                    "condition": "\"Other\" in investmentPriorities2"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "activityType",
                 "constraints": [
-                  "Individuals",
-                  "Kilograms"
+                  "Collecting",
+                  "Storing",
+                  "Propagating"
                 ],
                 "validate": "required"
               },
               {
-                "dataType": "number",
-                "name": "amountSeedCollected",
-                "decimalPlaces": 5
-              },
-              {
-                "dataType": "number",
-                "name": "numberOfSourcePlants"
+                "dataType": "text",
+                "name": "activityPurpose",
+                "validate": "required"
               },
               {
                 "dataType": "text",
-                "name": "storingFacility"
+                "name": "materialType",
+                "constraints": [
+                  "Seeds",
+                  "Plant cuttings"
+                ],
+                "validate": "required"
               },
               {
-                "dataType": "number",
-                "name": "noOfPlantsPropogated"
-              },
-              {
-                "dataType": "text",
-                "name": "threatEcoCommunity",
-                "validate": "maxSize[100]"
+                "columns": [
+                  {
+                    "dataType": "text",
+                    "name": "inKgSeedCollected",
+                    "constraints": [
+                      "Individuals",
+                      "Kilograms"
+                    ],
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "amountSeedCollected",
+                    "decimalPlaces": 5
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "otherSeedSources"
+                  },
+                  {
+                    "name": "noOfDaysPropagating",
+                    "dataType": "number"
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "numberOfSourcePlants"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "storingFacility"
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "noOfPlantsPropogated"
+                  },
+                  {
+                    "dataType": "feature",
+                    "name": "siteSeedSourced"
+                  },
+                  {
+                    "computed": {
+                      "expression": "$geom.areaHa(siteSeedSourced)"
+                    },
+                    "dataType": "number",
+                    "decimalPlaces": 3,
+                    "name": "siteSeedSourcedCalculatedAreaHa",
+                    "units": "ha",
+                    "behaviour": [
+                      {
+                        "condition": "areaInvoicedHa > 0",
+                        "type": "conditional_validation",
+                        "value": {
+                          "message": "The controlled area must be mapped",
+                          "validate": "required,min[0.0001]"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "computed": {
+                      "expression": "$geom.lengthKm(siteSeedSourced)"
+                    },
+                    "dataType": "number",
+                    "decimalPlaces": 3,
+                    "name": "siteSeedSourcedCalculatedLengthKm",
+                    "units": "km",
+                    "behaviour": [
+                      {
+                        "condition": "lengthInvoicedKm > 0",
+                        "type": "conditional_validation",
+                        "value": {
+                          "message": "The length controlled must be mapped",
+                          "validate": "required,min[0.001]"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "document",
+                    "name": "extraMappingDetails",
+                    "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                    "behaviour": [
+                      {
+                        "condition": "not (within(areaInstalledHa, siteSeedSourcedCalculatedAreaHa, 0.1) and within(lengthInstalledKm, siteSeedSourcedCalculatedLengthKm, 0.1)) or roundTo(areaInstalledHa, 2) != roundTo(areaInvoicedHa, 2) or roundTo(lengthInstalledKm, 2) != roundTo(lengthInvoicedKm, 2)",
+                        "type": "visible"
+                      }
+                    ],
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "threatEcoCommunity",
+                    "validate": "maxSize[100]"
+                  }
+                ],
+                "dataType": "list",
+                "name": "seedCollectionDetails"
               }
             ],
             "dataType": "list",
-            "name": "seedCollectionDetails"
+            "name": "areasControlled"
+          },
+          {
+            "name": "siteSeedCountHeader",
+            "type": "number",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "count(areasControlled, \"threatEcoCommunity\")"
+            }
           },
           {
             "computed": {
@@ -16535,85 +17866,179 @@
             "type": "table"
           },
           {
-            "type": "section",
+            "preLabel": "Number of Seed Collection surveys conducted:",
+            "noEdit": true,
+            "type": "number",
+            "source": "siteSeedCountHeader"
+          },
+          {
+            "addRowText": "New area of seed collection",
+            "userAddedRows": true,
+            "source": "areasControlled",
+            "type": "repeat",
             "items": [
               {
-                "columns": [
+                "type": "row",
+                "css": "border-bottom",
+                "items": [
                   {
-                    "width": "5%",
+                    "preLabel": "Initial or maintenance activity?",
+                    "css": "span3",
                     "source": "initialOrMaintenance",
-                    "title": "Initial or Maintenance activity?",
+                    "type": "selectOne"
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "css": "border-bottom",
+                "items": [
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Site/s being revegetated",
+                            "source": "siteSeedCollected",
+                            "type": "feature"
+                          }
+                        ]
+                      },
+                      {
+                        "source": "calculatedAreaHabitatRevegetedHa",
+                        "type": "number",
+                        "readonly": true,
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      },
+                      {
+                        "source": "calculatedLengthHabitatRevegetedKm",
+                        "type": "number",
+                        "readonly": true,
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Actual area (ha) / length (km) of habitat revegetated",
+                            "helpText": "Manually enter correct figure for this reporting period if different to mapped value.",
+                            "source": "areaHabitatRevegetedHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "lengthHabitatRevegetedKm",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Which outcome statement/s relates to this survey?",
+                            "source": "relatedOutcomes",
+                            "type": "select2Many"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Which investment priority does this activity relate to?",
+                            "source": "investmentPriorities2",
+                            "type": "select2Many"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "otherInvestmentPriority",
+                            "type": "text"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "preLabel": "Activities start date",
+                    "css": "span2",
+                    "source": "activitiesStartDate",
+                    "type": "date"
+                  },
+                  {
+                    "preLabel": "Activities end date",
+                    "css": "span2",
+                    "source": "activitiesEndDate",
+                    "type": "date"
+                  },
+                  {
+                    "preLabel": "Type of activity",
+                    "css": "span2",
+                    "source": "activityType",
                     "type": "selectOne"
                   },
                   {
-                    "width": "5%",
-                    "type": "col",
-                    "title": "Site/s where collection was undertaken",
-                    "items": [
-                      {
-                        "source": "siteSeedCollected",
-                        "type": "feature"
-                      },
-                      {
-                        "readonly": "readonly",
-                        "source": "calculatedAreaHabitatRevegetedHa",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
-                      },
-                      {
-                        "readonly": "readonly",
-                        "source": "calculatedLengthHabitatRevegetedKm",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
-                      }
-                    ]
+                    "preLabel": "Purpose of activity",
+                    "css": "span2",
+                    "source": "activityPurpose",
+                    "type": "text"
                   },
+                  {
+                    "preLabel": "Type of material collected/stored or propagated",
+                    "css": "span2",
+                    "source": "materialType",
+                    "type": "selectOne"
+                  }
+                ]
+              },
+              {
+                "columns": [
                   {
                     "width": "10%",
-                    "type": "col",
-                    "title": "Area (ha) of habitat revegated",
-                    "items": [
-                      {
-                        "source": "areaHabitatRevegetedHa",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "width": "10%",
-                    "type": "col",
-                    "title": "Length (km) of habitat revegeted",
-                    "items": [
-                      {
-                        "source": "lengthHabitatRevegetedKm",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "width": "7%",
-                    "source": "species",
-                    "title": "Species",
-                    "type": "speciesSelect"
-                  },
-                  {
-                    "width": "7%",
-                    "source": "noOfDaysSeedCollected",
-                    "title": "Number of days collecting Seed",
-                    "type": "number"
-                  },
-                  {
-                    "width": "7%",
                     "source": "inKgSeedCollected",
                     "title": "Individuals / Kilograms collected",
                     "type": "selectOne"
@@ -16625,34 +18050,98 @@
                     "type": "number"
                   },
                   {
+                    "width": "15%",
+                    "source": "otherSeedSources",
+                    "title": "Other seed sources (if applicable)",
+                    "type": "textarea"
+                  },
+                  {
                     "width": "7%",
                     "source": "numberOfSourcePlants",
                     "title": "Number of Source plants",
                     "type": "number"
                   },
                   {
-                    "width": "12%",
+                    "width": "15%",
                     "source": "storingFacility",
-                    "title": "Storing facility",
+                    "title": "Name of storing facility",
                     "type": "textarea"
                   },
                   {
-                    "width": "12%",
+                    "width": "9%",
                     "source": "noOfPlantsPropogated",
                     "title": "Number of plants propogated",
                     "type": "number"
                   },
                   {
-                    "width": "12%",
+                    "width": "7%",
+                    "source": "noOfDaysPropagating",
+                    "title": "Number of days propagating",
+                    "type": "number"
+                  },
+                  {
+                    "width": "15%",
+                    "type": "col",
+                    "title": "Site/s where the seeds/plant cuttings were sourced from",
+                    "items": [
+                      {
+                        "source": "siteSeedSourced",
+                        "type": "feature"
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "readonly": true,
+                            "source": "siteSeedSourcedCalculatedAreaHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "readonly": true,
+                            "source": "siteSeedSourcedCalculatedLengthKm",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Please attach mapping details",
+                            "source": "extraMappingDetails",
+                            "type": "document"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "width": "15%",
                     "source": "threatEcoCommunity",
-                    "title": "Threatened ecological community (if applicable)",
+                    "title": "Threatened ecological communities (if applicable)",
                     "type": "textarea"
                   }
                 ],
                 "userAddedRows": true,
                 "source": "seedCollectionDetails",
                 "type": "table"
-              },
+              }
+            ]
+          },
+          {
+            "type": "section",
+            "items": [
               {
                 "type": "row",
                 "items": [
@@ -16964,6 +18453,12 @@
               {
                 "dataType": "date",
                 "name": "activitiesStartDate",
+                "description": "",
+                "validate": "required"
+              },
+              {
+                "dataType": "date",
+                "name": "activitiesEndDate",
                 "description": "",
                 "validate": "required"
               },
