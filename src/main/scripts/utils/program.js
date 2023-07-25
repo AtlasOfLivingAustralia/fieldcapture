@@ -44,7 +44,7 @@ function createProgram(name, parentId) {
         dateCreated: now,
         lastUpdated: now,
         status:'active',
-        parent: parentId || null,
+        parent: parentId ? DBRef("program", parentId) : null,
     }
     db.program.insert(program);
 
