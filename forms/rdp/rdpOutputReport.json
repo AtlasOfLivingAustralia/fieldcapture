@@ -760,7 +760,7 @@
                     "source": "datasetSupports",
                     "type": "select2Many",
                     "width": "15%",
-                    "title": "What Dataset supports this Project Baseline?"
+                    "title": "What dataset supports this Project Baseline?"
                   },
                   {
                     "preLabel": "",
@@ -5086,13 +5086,13 @@
               {
                 "dataType": "date",
                 "name": "activitiesStartDate",
-                "description": "",
+                "description": "Specific the dates these events were held on",
                 "validate": "required"
               },
               {
                 "dataType": "date",
                 "name": "activitiesEndDate",
-                "description": "",
+                "description": "Specific the dates these events were held on",
                 "validate": "required"
               },
               {
@@ -5489,13 +5489,13 @@
                         "source": "projectBaseline",
                         "type": "selectOne",
                         "width": "10%",
-                        "title": "Which Project Baseline relates to this survey?"
+                        "title": "Which project baseline relates to this survey?"
                       },
                       {
                         "source": "datasetSupports",
                         "type": "select2Many",
                         "width": "10%",
-                        "title": "What Dataset supports this?"
+                        "title": "What dataset supports this?"
                       },
                       {
                         "source": "relatedOutcomes",
@@ -6169,13 +6169,13 @@
                   {
                     "dataType": "date",
                     "name": "activitiesStartDate",
-                    "description": "",
+                    "description": "Specific the dates these events were held on",
                     "validate": "required"
                   },
                   {
                     "dataType": "date",
                     "name": "activitiesEndDate",
-                    "description": "",
+                    "description": "Specific the dates these events were held on",
                     "validate": "required"
                   },
                   {
@@ -6183,15 +6183,15 @@
                     "name": "ternSurveyTechnique",
                     "validate": "required",
                     "constraints": [
-                      "Tern Survey Technique 1",
-                      "Tern Survey Technique 1",
-                      "Tern Survey Technique 1",
+                      "Tern Survey technique 1",
+                      "Tern Survey technique 1",
+                      "Tern Survey technique 1",
                       "Other"
                     ]
                   },
                   {
                     "dataType": "text",
-                    "description": "Please describe the survey technique if other was selected.",
+                    "description": "Please describe the Survey technique if other was selected.",
                     "name": "otherTernSurveyTechnique",
                     "behaviour": [
                       {
@@ -6204,13 +6204,13 @@
                   {
                     "dataType": "text",
                     "name": "surveyMethodology",
-                    "description": "Survey Methodology",
+                    "description": "Provide more details on what is being done",
                     "validate": "required,maxSize[3000]"
                   },
                   {
                     "dataType": "text",
                     "name": "surveyObjective",
-                    "description": "Survey Objective",
+                    "description": "How will the information obtained from the survey be used",
                     "validate": "required,maxSize[3000]"
                   }
                 ]
@@ -6341,13 +6341,13 @@
                         "source": "projectBaseline",
                         "type": "selectOne",
                         "width": "8%",
-                        "title": "Which Project Baseline relates to this survey?"
+                        "title": "Which project baseline relates to this survey?"
                       },
                       {
                         "source": "datasetSupports",
                         "type": "select2Many",
                         "width": "10%",
-                        "title": "What Dataset supports this?"
+                        "title": "What dataset supports this?"
                       },
                       {
                         "source": "relatedOutcomes",
@@ -6369,13 +6369,13 @@
                       },
                       {
                         "width": "10%",
-                        "title": "Survey Technique",
+                        "title": "Survey technique",
                         "source": "ternSurveyTechnique",
                         "type": "selectOne"
                       },
                       {
                         "width": "10%",
-                        "title": "Survey Technique (if Other)",
+                        "title": "Survey technique (if Other)",
                         "source": "otherTernSurveyTechnique",
                         "type": "textarea"
                       },
@@ -6383,14 +6383,14 @@
                         "width": "12%",
                         "rows": 4,
                         "source": "surveyMethodology",
-                        "title": "Survey Methodology",
+                        "title": "Survey methodology",
                         "type": "textarea"
                       },
                       {
                         "width": "12%",
                         "rows": 4,
                         "source": "surveyObjective",
-                        "title": "Survey Objective",
+                        "title": "Survey objective",
                         "type": "textarea"
                       }
                     ]
@@ -6513,15 +6513,15 @@
                     "name": "ternSurveyTechnique",
                     "validate": "required",
                     "constraints": [
-                      "Tern Survey Technique 1",
-                      "Tern Survey Technique 1",
-                      "Tern Survey Technique 1",
+                      "Tern Survey technique 1",
+                      "Tern Survey technique 1",
+                      "Tern Survey technique 1",
                       "Other"
                     ]
                   },
                   {
                     "dataType": "text",
-                    "description": "Please describe the survey technique if other was selected.",
+                    "description": "Please describe the Survey technique if other was selected.",
                     "name": "otherTernSurveyTechnique",
                     "behaviour": [
                       {
@@ -6534,13 +6534,13 @@
                   {
                     "dataType": "text",
                     "name": "surveyMethodology",
-                    "description": "Survey Methodology",
+                    "description": "Provide more details on what is being done",
                     "validate": "required,maxSize[3000]"
                   },
                   {
                     "dataType": "text",
                     "name": "surveyObjective",
-                    "description": "Survey Objective",
+                    "description": "How will the information obtained from the survey be used",
                     "validate": "required,maxSize[3000]"
                   }
                 ],
@@ -6619,13 +6619,13 @@
               {
                 "dataType": "date",
                 "name": "activitiesStartDate",
-                "description": "",
+                "description": "Specific the dates these events were held on",
                 "validate": "required"
               },
               {
                 "dataType": "date",
                 "name": "activitiesEndDate",
-                "description": "",
+                "description": "Specific the dates these events were held on",
                 "validate": "required"
               },
               {
@@ -7003,7 +7003,7 @@
                               {
                                 "source": "projectBaseline",
                                 "type": "selectOne",
-                                "preLabel": "Which Project Baseline relates to this survey?"
+                                "preLabel": "Which project baseline relates to this survey?"
                               }
                             ]
                           }
@@ -7019,7 +7019,7 @@
                               {
                                 "source": "datasetSupports",
                                 "type": "select2Many",
-                                "preLabel": "What Dataset supports this?"
+                                "preLabel": "What dataset supports this?"
                               }
                             ]
                           }
@@ -7201,26 +7201,26 @@
                       },
                       {
                         "width": "10%",
-                        "title": "Survey Technique",
+                        "title": "Survey technique",
                         "source": "ternSurveyTechnique",
                         "type": "selectOne"
                       },
                       {
                         "width": "10%",
-                        "title": "Survey Technique (if Other)",
+                        "title": "Survey technique (if Other)",
                         "source": "otherTernSurveyTechnique",
                         "type": "text"
                       },
                       {
                         "width": "15%",
                         "source": "surveyMethodology",
-                        "title": "Survey Methodology",
+                        "title": "Survey methodology",
                         "type": "text"
                       },
                       {
                         "width": "15%",
                         "source": "surveyObjective",
-                        "title": "Survey Objective",
+                        "title": "Survey objective",
                         "type": "text"
                       }
                     ],
@@ -7353,15 +7353,15 @@
                     "name": "ternSurveyTechnique",
                     "validate": "required",
                     "constraints": [
-                      "Tern Survey Technique 1",
-                      "Tern Survey Technique 1",
-                      "Tern Survey Technique 1",
+                      "Tern Survey technique 1",
+                      "Tern Survey technique 1",
+                      "Tern Survey technique 1",
                       "Other"
                     ]
                   },
                   {
                     "dataType": "text",
-                    "description": "Please describe the survey technique if other was selected.",
+                    "description": "Please describe the Survey technique if other was selected.",
                     "name": "otherTernSurveyTechnique",
                     "behaviour": [
                       {
@@ -7374,13 +7374,13 @@
                   {
                     "dataType": "text",
                     "name": "surveyMethodology",
-                    "description": "Survey Methodology",
+                    "description": "Provide more details on what is being done",
                     "validate": "required,maxSize[3000]"
                   },
                   {
                     "dataType": "text",
                     "name": "surveyObjective",
-                    "description": "Survey Objective",
+                    "description": "How will the information obtained from the survey be used",
                     "validate": "required,maxSize[3000]"
                   }
                 ],
@@ -7459,13 +7459,13 @@
               {
                 "dataType": "date",
                 "name": "activitiesStartDate",
-                "description": "",
+                "description": "Specific the dates these events were held on",
                 "validate": "required"
               },
               {
                 "dataType": "date",
                 "name": "activitiesEndDate",
-                "description": "",
+                "description": "Specific the dates these events were held on",
                 "validate": "required"
               },
               {
@@ -7843,7 +7843,7 @@
                               {
                                 "source": "projectBaseline",
                                 "type": "selectOne",
-                                "preLabel": "Which Project Baseline relates to this survey?"
+                                "preLabel": "Which project baseline relates to this survey?"
                               }
                             ]
                           }
@@ -7859,7 +7859,7 @@
                               {
                                 "source": "datasetSupports",
                                 "type": "select2Many",
-                                "preLabel": "What Dataset supports this?"
+                                "preLabel": "What dataset supports this?"
                               }
                             ]
                           }
@@ -8047,26 +8047,26 @@
                       },
                       {
                         "width": "10%",
-                        "title": "Survey Technique",
+                        "title": "Survey technique",
                         "source": "ternSurveyTechnique",
                         "type": "selectOne"
                       },
                       {
                         "width": "10%",
-                        "title": "Survey Technique (if Other)",
+                        "title": "Survey technique (if Other)",
                         "source": "otherTernSurveyTechnique",
                         "type": "text"
                       },
                       {
                         "width": "15%",
                         "source": "surveyMethodology",
-                        "title": "Survey Methodology",
+                        "title": "Survey methodology",
                         "type": "text"
                       },
                       {
                         "width": "15%",
                         "source": "surveyObjective",
-                        "title": "Survey Objective",
+                        "title": "Survey objective",
                         "type": "text"
                       }
                     ],
@@ -8479,13 +8479,13 @@
                   {
                     "dataType": "date",
                     "name": "activitiesStartDate",
-                    "description": "",
+                    "description": "Specific the dates these events were held on",
                     "validate": "required"
                   },
                   {
                     "dataType": "date",
                     "name": "activitiesEndDate",
-                    "description": "",
+                    "description": "Specific the dates these events were held on",
                     "validate": "required"
                   },
                   {
@@ -9151,15 +9151,15 @@
                     "name": "ternSurveyTechnique",
                     "validate": "required",
                     "constraints": [
-                      "Tern Survey Technique 1",
-                      "Tern Survey Technique 1",
-                      "Tern Survey Technique 1",
+                      "Tern Survey technique 1",
+                      "Tern Survey technique 1",
+                      "Tern Survey technique 1",
                       "Other"
                     ]
                   },
                   {
                     "dataType": "text",
-                    "description": "Please describe the survey technique if other was selected.",
+                    "description": "Please describe the Survey technique if other was selected.",
                     "name": "otherTernSurveyTechnique",
                     "behaviour": [
                       {
@@ -9257,13 +9257,13 @@
               {
                 "dataType": "date",
                 "name": "activitiesStartDate",
-                "description": "",
+                "description": "Specific the dates these events were held on",
                 "validate": "required"
               },
               {
                 "dataType": "date",
                 "name": "activitiesEndDate",
-                "description": "",
+                "description": "Specific the dates these events were held on",
                 "validate": "required"
               },
               {
@@ -9642,7 +9642,7 @@
                               {
                                 "source": "projectBaseline",
                                 "type": "selectOne",
-                                "preLabel": "Which Project Baseline relates to this survey?"
+                                "preLabel": "Which project baseline relates to this survey?"
                               }
                             ]
                           }
@@ -9658,7 +9658,7 @@
                               {
                                 "source": "datasetSupports",
                                 "type": "select2Many",
-                                "preLabel": "What Dataset supports this?"
+                                "preLabel": "What dataset supports this?"
                               }
                             ]
                           }
@@ -9849,26 +9849,26 @@
                       },
                       {
                         "width": "10%",
-                        "title": "Survey Technique",
+                        "title": "Survey technique",
                         "source": "ternSurveyTechnique",
                         "type": "selectOne"
                       },
                       {
                         "width": "10%",
-                        "title": "Survey Technique (if Other)",
+                        "title": "Survey technique (if Other)",
                         "source": "otherTernSurveyTechnique",
                         "type": "text"
                       },
                       {
                         "width": "15%",
                         "source": "surveyMethodology",
-                        "title": "Survey Methodology",
+                        "title": "Survey methodology",
                         "type": "text"
                       },
                       {
                         "width": "15%",
                         "source": "surveyObjective",
-                        "title": "Survey Objective",
+                        "title": "Survey objective",
                         "type": "text"
                       }
                     ],
@@ -13737,15 +13737,15 @@
                     "name": "ternSurveyTechnique",
                     "validate": "required",
                     "constraints": [
-                      "Tern Survey Technique 1",
-                      "Tern Survey Technique 1",
-                      "Tern Survey Technique 1",
+                      "Tern Survey technique 1",
+                      "Tern Survey technique 1",
+                      "Tern Survey technique 1",
                       "Other"
                     ]
                   },
                   {
                     "dataType": "text",
-                    "description": "Please describe the survey technique if other was selected.",
+                    "description": "Please describe the Survey technique if other was selected.",
                     "name": "otherTernSurveyTechnique",
                     "behaviour": [
                       {
@@ -13758,13 +13758,13 @@
                   {
                     "dataType": "text",
                     "name": "surveyMethodology",
-                    "description": "Survey Methodology",
+                    "description": "Provide more details on what is being done",
                     "validate": "required,maxSize[3000]"
                   },
                   {
                     "dataType": "text",
                     "name": "surveyObjective",
-                    "description": "Survey Objective",
+                    "description": "How will the information obtained from the survey be used",
                     "validate": "required,maxSize[3000]"
                   }
                 ],
@@ -13843,13 +13843,13 @@
               {
                 "dataType": "date",
                 "name": "activitiesStartDate",
-                "description": "",
+                "description": "Specific the dates these events were held on",
                 "validate": "required"
               },
               {
                 "dataType": "date",
                 "name": "activitiesEndDate",
-                "description": "",
+                "description": "Specific the dates these events were held on",
                 "validate": "required"
               },
               {
@@ -14227,7 +14227,7 @@
                               {
                                 "source": "projectBaseline",
                                 "type": "selectOne",
-                                "preLabel": "Which Project Baseline relates to this survey?"
+                                "preLabel": "Which project baseline relates to this survey?"
                               }
                             ]
                           }
@@ -14243,7 +14243,7 @@
                               {
                                 "source": "datasetSupports",
                                 "type": "select2Many",
-                                "preLabel": "What Dataset supports this?"
+                                "preLabel": "What dataset supports this?"
                               }
                             ]
                           }
@@ -14425,26 +14425,26 @@
                       },
                       {
                         "width": "10%",
-                        "title": "Survey Technique",
+                        "title": "Survey technique",
                         "source": "ternSurveyTechnique",
                         "type": "selectOne"
                       },
                       {
                         "width": "15%",
-                        "title": "Survey Technique (if Other)",
+                        "title": "Survey technique (if Other)",
                         "source": "otherTernSurveyTechnique",
                         "type": "text"
                       },
                       {
                         "width": "15%",
                         "source": "surveyMethodology",
-                        "title": "Survey Methodology",
+                        "title": "Survey methodology",
                         "type": "text"
                       },
                       {
                         "width": "15%",
                         "source": "surveyObjective",
-                        "title": "Survey Objective",
+                        "title": "Survey objective",
                         "type": "text"
                       }
                     ],
@@ -14541,15 +14541,15 @@
                 "name": "ternSurveyTechnique",
                 "validate": "required",
                 "constraints": [
-                  "Tern Survey Technique 1",
-                  "Tern Survey Technique 1",
-                  "Tern Survey Technique 1",
+                  "Tern Survey technique 1",
+                  "Tern Survey technique 1",
+                  "Tern Survey technique 1",
                   "Other"
                 ]
               },
               {
                 "dataType": "text",
-                "description": "Please describe the survey technique if other was selected.",
+                "description": "Please describe the Survey technique if other was selected.",
                 "name": "otherTernSurveyTechnique",
                 "behaviour": [
                   {
@@ -14562,13 +14562,13 @@
               {
                 "dataType": "text",
                 "name": "surveyMethodology",
-                "description": "Survey Methodology",
+                "description": "Provide more details on what is being done",
                 "validate": "required,maxSize[3000]"
               },
               {
                 "dataType": "text",
                 "name": "surveyObjective",
-                "description": "Survey Objective",
+                "description": "How will the information obtained from the survey be used",
                 "validate": "required,maxSize[3000]"
               },
 
@@ -14684,13 +14684,13 @@
               {
                 "dataType": "date",
                 "name": "activitiesStartDate",
-                "description": "",
+                "description": "Specific the dates these events were held on",
                 "validate": "required"
               },
               {
                 "dataType": "date",
                 "name": "activitiesEndDate",
-                "description": "",
+                "description": "Specific the dates these events were held on",
                 "validate": "required"
               },
               {
@@ -15068,7 +15068,7 @@
                               {
                                 "source": "projectBaseline",
                                 "type": "selectOne",
-                                "preLabel": "Which Project Baseline relates to this survey?"
+                                "preLabel": "Which project baseline relates to this survey?"
                               }
                             ]
                           }
@@ -15084,7 +15084,7 @@
                               {
                                 "source": "datasetSupports",
                                 "type": "select2Many",
-                                "preLabel": "What Dataset supports this?"
+                                "preLabel": "What dataset supports this?"
                               }
                             ]
                           }
@@ -15250,7 +15250,7 @@
                             "type": "row",
                             "items": [
                               {
-                                "preLabel": "Survey Technique",
+                                "preLabel": "Survey technique",
                                 "source": "ternSurveyTechnique",
                                 "type": "selectOne"
                               }
@@ -15266,7 +15266,7 @@
                             "type": "row",
                             "items": [
                               {
-                                "preLabel": "Survey Technique (if Other)",
+                                "preLabel": "Survey technique (if Other)",
                                 "source": "otherTernSurveyTechnique",
                                 "type": "text"
                               }
@@ -15283,7 +15283,7 @@
                             "items": [
                               {
                                 "source": "surveyMethodology",
-                                "preLabel": "Survey Methodology",
+                                "preLabel": "Survey methodology",
                                 "type": "text"
                               }
                             ]
@@ -15299,7 +15299,7 @@
                             "items": [
                               {
                                 "source": "surveyObjective",
-                                "preLabel": "Survey Objective",
+                                "preLabel": "Survey objective",
                                 "type": "text"
                               }
                             ]
@@ -17122,13 +17122,13 @@
               {
                 "dataType": "date",
                 "name": "activitiesStartDate",
-                "description": "",
+                "description": "Specific the dates these events were held on",
                 "validate": "required"
               },
               {
                 "dataType": "date",
                 "name": "activitiesEndDate",
-                "description": "",
+                "description": "Specific the dates these events were held on",
                 "validate": "required"
               },
               {
@@ -18623,13 +18623,13 @@
               {
                 "dataType": "date",
                 "name": "activitiesStartDate",
-                "description": "",
+                "description": "Specific the dates these events were held on",
                 "validate": "required"
               },
               {
                 "dataType": "date",
                 "name": "activitiesEndDate",
-                "description": "",
+                "description": "Specific the dates these events were held on",
                 "validate": "required"
               },
               {
@@ -19306,13 +19306,13 @@
                   {
                     "dataType": "date",
                     "name": "activitiesStartDate",
-                    "description": "",
+                    "description": "Specific the dates these events were held on",
                     "validate": "required"
                   },
                   {
                     "dataType": "date",
                     "name": "activitiesEndDate",
-                    "description": "",
+                    "description": "Specific the dates these events were held on",
                     "validate": "required"
                   },
                   {
@@ -19321,9 +19321,9 @@
                     "name": "ternSurveyTechnique",
                     "validate": "required",
                     "constraints": [
-                      "Tern Survey Technique 1",
-                      "Tern Survey Technique 1",
-                      "Tern Survey Technique 1",
+                      "Tern Survey technique 1",
+                      "Tern Survey technique 1",
+                      "Tern Survey technique 1",
                       "Other"
                     ]
                   },
@@ -19334,7 +19334,7 @@
                   },
                   {
                     "dataType": "text",
-                    "description": "Please describe the survey technique if other was selected.",
+                    "description": "Please describe the Survey technique if other was selected.",
                     "name": "otherTernSurveyTechnique",
                     "behaviour": [
                       {
@@ -19347,13 +19347,13 @@
                   {
                     "dataType": "text",
                     "name": "surveyMethodology",
-                    "description": "Survey Methodology",
+                    "description": "Provide more details on what is being done",
                     "validate": "required,maxSize[3000]"
                   },
                   {
                     "dataType": "text",
                     "name": "surveyObjective",
-                    "description": "Survey Objective",
+                    "description": "How will the information obtained from the survey be used",
                     "validate": "required,maxSize[3000]"
                   }
                 ]
@@ -19389,15 +19389,15 @@
                 "name": "ternSurveyTechnique",
                 "validate": "required",
                 "constraints": [
-                  "Tern Survey Technique 1",
-                  "Tern Survey Technique 1",
-                  "Tern Survey Technique 1",
+                  "Tern Survey technique 1",
+                  "Tern Survey technique 1",
+                  "Tern Survey technique 1",
                   "Other"
                 ]
               },
               {
                 "dataType": "text",
-                "description": "Please describe the survey technique if other was selected.",
+                "description": "Please describe the Survey technique if other was selected.",
                 "name": "otherTernSurveyTechnique",
                 "behaviour": [
                   {
@@ -19410,13 +19410,13 @@
               {
                 "dataType": "text",
                 "name": "surveyMethodology",
-                "description": "Survey Methodology",
+                "description": "Provide more details on what is being done",
                 "validate": "required,maxSize[3000]"
               },
               {
                 "dataType": "text",
                 "name": "surveyObjective",
-                "description": "Survey Objective",
+                "description": "How will the information obtained from the survey be used",
                 "validate": "required,maxSize[3000]"
               }
             ],
@@ -19617,13 +19617,13 @@
                         "source": "projectBaseline",
                         "type": "selectOne",
                         "width": "10%",
-                        "title": "Which Project Baseline relates to this survey?"
+                        "title": "Which project baseline relates to this survey?"
                       },
                       {
                         "source": "datasetSupports",
                         "type": "select2Many",
                         "width": "10%",
-                        "title": "What Dataset supports this?"
+                        "title": "What dataset supports this?"
                       },
                       {
                         "source": "relatedOutcomes",
@@ -19651,13 +19651,13 @@
                       },
                       {
                         "width": "10%",
-                        "title": "Survey Technique",
+                        "title": "Survey technique",
                         "source": "ternSurveyTechnique",
                         "type": "selectOne"
                       },
                       {
                         "width": "10%",
-                        "title": "Survey Technique (if Other)",
+                        "title": "Survey technique (if Other)",
                         "source": "otherTernSurveyTechnique",
                         "type": "textarea"
                       },
@@ -19665,14 +19665,14 @@
                         "width": "10%",
                         "rows": 4,
                         "source": "surveyMethodology",
-                        "title": "Survey Methodology",
+                        "title": "Survey methodology",
                         "type": "textarea"
                       },
                       {
                         "width": "10%",
                         "rows": 4,
                         "source": "surveyObjective",
-                        "title": "Survey Objective",
+                        "title": "Survey objective",
                         "type": "textarea"
                       }
                     ]
@@ -20392,15 +20392,15 @@
                     "name": "ternSurveyTechnique",
                     "validate": "required",
                     "constraints": [
-                      "Tern Survey Technique 1",
-                      "Tern Survey Technique 1",
-                      "Tern Survey Technique 1",
+                      "Tern Survey technique 1",
+                      "Tern Survey technique 1",
+                      "Tern Survey technique 1",
                       "Other"
                     ]
                   },
                   {
                     "dataType": "text",
-                    "description": "Please describe the survey technique if other was selected.",
+                    "description": "Please describe the Survey technique if other was selected.",
                     "name": "otherTernSurveyTechnique",
                     "behaviour": [
                       {
@@ -20413,13 +20413,13 @@
                   {
                     "dataType": "text",
                     "name": "surveyMethodology",
-                    "description": "Survey Methodology",
+                    "description": "Provide more details on what is being done",
                     "validate": "required,maxSize[3000]"
                   },
                   {
                     "dataType": "text",
                     "name": "surveyObjective",
-                    "description": "Survey Objective",
+                    "description": "How will the information obtained from the survey be used",
                     "validate": "required,maxSize[3000]"
                   }
                 ],
@@ -20498,18 +20498,19 @@
               {
                 "dataType": "date",
                 "name": "activitiesStartDate",
-                "description": "",
+                "description": "Specific the dates these events were held on",
                 "validate": "required"
               },
               {
                 "dataType": "date",
                 "name": "activitiesEndDate",
-                "description": "",
+                "description": "Specific the dates these events were held on",
                 "validate": "required"
               },
               {
                 "dataType": "feature",
-                "name": "sitesTreated"
+                "name": "sitesTreated",
+                "description": "Manually enter correct figure for this reporting period if different to mapped value"
               },
               {
                 "computed": {
@@ -20882,7 +20883,7 @@
                               {
                                 "source": "projectBaseline",
                                 "type": "selectOne",
-                                "preLabel": "Which Project Baseline relates to this survey?"
+                                "preLabel": "Which project baseline relates to this survey?"
                               }
                             ]
                           }
@@ -20960,7 +20961,7 @@
                             "type": "row",
                             "items": [
                               {
-                                "preLabel": "Sites where Water Quality surveys were conducted",
+                                "preLabel": "Sites where water quality surveys were conducted",
                                 "source": "sitesTreated",
                                 "type": "feature"
                               }
@@ -21012,7 +21013,7 @@
                             "type": "row",
                             "items": [
                               {
-                                "preLabel": "Actual area (ha) covered by Water Quality surveys",
+                                "preLabel": "Actual area (ha) covered by water quality surveys",
                                 "source": "areaTreatedHa",
                                 "type": "number",
                                 "displayOptions": {
@@ -21074,26 +21075,26 @@
                       },
                       {
                         "width": "15%",
-                        "title": "Survey Technique",
+                        "title": "Survey technique",
                         "source": "ternSurveyTechnique",
                         "type": "selectOne"
                       },
                       {
                         "width": "15%",
-                        "title": "Survey Technique (if Other)",
+                        "title": "Survey technique (if Other)",
                         "source": "otherTernSurveyTechnique",
                         "type": "text"
                       },
                       {
                         "width": "20%",
                         "source": "surveyMethodology",
-                        "title": "Survey Methodology",
+                        "title": "Survey methodology",
                         "type": "text"
                       },
                       {
                         "width": "20%",
                         "source": "surveyObjective",
-                        "title": "Survey Objective",
+                        "title": "Survey objective",
                         "type": "text"
                       }
                     ],
@@ -21257,13 +21258,13 @@
               {
                 "dataType": "date",
                 "name": "activitiesStartDate",
-                "description": "",
+                "description": "Specific the dates these events were held on",
                 "validate": "required"
               },
               {
                 "dataType": "date",
                 "name": "activitiesEndDate",
-                "description": "",
+                "description": "Specific the dates these events were held on",
                 "validate": "required"
               },
               {
@@ -21504,13 +21505,13 @@
                   {
                     "dataType": "date",
                     "name": "activitiesStartDate",
-                    "description": "",
+                    "description": "Specific the dates these events were held on",
                     "validate": "required"
                   },
                   {
                     "dataType": "date",
                     "name": "activitiesEndDate",
-                    "description": "",
+                    "description": "Specific the dates these events were held on",
                     "validate": "required"
                   },
                   {
@@ -21892,7 +21893,7 @@
                               {
                                 "source": "projectBaseline",
                                 "type": "selectOne",
-                                "preLabel": "Which Project Baseline relates to this survey?"
+                                "preLabel": "Which project baseline relates to this survey?"
                               }
                             ]
                           }
@@ -21908,7 +21909,7 @@
                               {
                                 "source": "datasetSupports",
                                 "type": "select2Many",
-                                "preLabel": "What Dataset supports this?"
+                                "preLabel": "What dataset supports this?"
                               }
                             ]
                           }
@@ -22080,13 +22081,13 @@
                         "source": "projectBaseline",
                         "type": "selectOne",
                         "width": "10%",
-                        "title": "Which Project Baseline relates to this survey?"
+                        "title": "Which project baseline relates to this survey?"
                       },
                       {
                         "source": "datasetSupports",
                         "type": "select2Many",
                         "width": "15%",
-                        "title": "What Dataset supports?"
+                        "title": "What dataset supports?"
                       },
                       {
                         "source": "relatedOutcomes",
