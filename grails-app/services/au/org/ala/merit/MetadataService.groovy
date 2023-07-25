@@ -319,6 +319,7 @@ class MetadataService {
 
     @Cacheable("serviceList")
     List<Map> getProjectServices() {
+        println "MetadataService::getProjectServices - cache miss.  Loading services from ecodata..."
         String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "metadata/services"
         Map result = webService.getJson2(url)
 
