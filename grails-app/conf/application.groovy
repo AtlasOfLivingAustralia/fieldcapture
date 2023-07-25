@@ -5,6 +5,7 @@ import grails.util.Environment
  \******************************************************************************/
 def appName = 'fieldcapture'
 def ENV_NAME = "${appName.toUpperCase()}_CONFIG"
+environments.dev.config.locatations = "~/data/${appName}/config/${appName}-config.properties"
 default_config = "/data/${appName}/config/${appName}-config.properties"
 if(!grails.config.locations || !(grails.config.locations instanceof List)) {
     grails.config.locations = []
@@ -204,7 +205,6 @@ abn.abnLookupToken = "Insert abn Token here"
 abn.abnUrl= "https://abr.business.gov.au/json/AbnDetails.aspx?abn="
 
 esp.activities.admin = 'ESP Annual Report Submission'
-reports.filterableActivityTypes = ['RLP Output Report', 'Wildlife Recovery Progress Report - WRR']
 reports.initialScrollPositionDelay = 1000
 risks.scheduleCheckingPeriod = 7
 grails.mail.poolSize = 1
@@ -217,6 +217,7 @@ grails {
         }
     }
 }
+ehcache.directory = '/data/fieldcapture/ehcache'
 
 auth.baseUrl = 'https://auth-test.ala.org.au'
 userDetails.url = "${auth.baseUrl}/userdetails/"
@@ -273,6 +274,7 @@ environments {
         logging.dir = '.'
         ecodata.service.url = 'http://localhost:8080/ws'
         espSupportEmail='ESPmonitoring@environment.gov.au'
+        ehcache.directory = './ehcache'
     }
     test {
         server.port = "8087"
@@ -281,12 +283,11 @@ environments {
         grails.serverURL = serverName
         layout.skin = "nrm"
         app.default.hub='merit'
-        runWithNoExternalConfig = true
         wiremock.port = 8018
         security.oidc.discoveryUri = "http://localhost:${wiremock.port}/cas/oidc/.well-known"
         security.oidc.allowUnsignedIdTokens = true
         def casBaseUrl = "http://localhost:${wiremock.port}"
-
+        ehcache.directory = './ehcache'
         security.cas.appServerName=serverName
         security.cas.contextPath=
         security.cas.casServerName="${casBaseUrl}"
@@ -305,17 +306,8 @@ environments {
         abn.abnUrl= "http://localhost:${wiremock.port}/json/AbnDetails.aspx?abn="
         abn.abnLookupToken = "123456"
         api_key='testapikey'
-        grails.cache.config = {
-            diskStore {
-                path '/tmp'
-            }
-            defaultCache {
-                overflowToDisk false
-            }
-        }
         spatial.baseUrl = "http://localhost:${wiremock.port}"
         spatial.layersUrl = spatial.baseUrl + "/ws"
-        reports.filterableActivityTypes = ['RLP Output Report', 'Wildlife Recovery Progress Report - WRR', 'Progress Report']
         grails.mail.port = 3025 // com.icegreen.greenmail.util.ServerSetupTest.SMTP.port
     }
     production {

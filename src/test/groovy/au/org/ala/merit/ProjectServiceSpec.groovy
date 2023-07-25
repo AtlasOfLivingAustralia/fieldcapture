@@ -48,7 +48,6 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         au.org.ala.merit.ActivityService realService = new au.org.ala.merit.ActivityService()
         activityService.defaultDescription(_ as Map) >> {Map activity -> realService.defaultDescription(activity) }
         grailsApplication.config.ecodata.baseUrl = ''
-        grailsApplication.config.reports.filterableActivityTypes = ['output']
         service.reportService = reportService
         service.userService = userService
         service.metadataService = metadataService
