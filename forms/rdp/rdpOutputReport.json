@@ -9172,13 +9172,13 @@
                   {
                     "dataType": "text",
                     "name": "surveyMethodology",
-                    "description": "Survey Methodology",
+                    "description": "Provide more details on what is being done",
                     "validate": "required,maxSize[3000]"
                   },
                   {
                     "dataType": "text",
                     "name": "surveyObjective",
-                    "description": "Survey Objective",
+                    "description": "How will the information obtained from the survey be used",
                     "validate": "required,maxSize[3000]"
                   }
                 ],
@@ -9268,7 +9268,8 @@
               },
               {
                 "dataType": "feature",
-                "name": "sitesTreated"
+                "name": "sitesTreated",
+                "description": "Manually enter correct figure for this reporting period if different to mapped value"
               },
               {
                 "computed": {
@@ -17727,6 +17728,32 @@
                 "validate": "required"
               },
               {
+                "name": "relatedOutcomes",
+                "dataType": "text",
+                "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
+                "validate": "required",
+                "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "label",
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "url": "/project/outcomesByScores",
+                      "params": [{
+                        "expression": "owner.projectId",
+                        "name": "id",
+                        "type": "computed"
+                      }, {
+                        "expression": "scores",
+                        "name": "scoreIds",
+                        "type": "computed"
+                      }
+                      ]
+                    }
+                  }
+                }
+              },
+              {
                 "dataType": "feature",
                 "name": "siteSeedCollected",
                 "validate": "required"
@@ -17762,53 +17789,16 @@
                 "validate": "required,min[0]"
               },
               {
-                "defaultValue": {
-                  "expression": "calculatedLengthHabitatRevegetedKm",
-                  "type": "computed"
-                },
-                "dataType": "number",
-                "name": "lengthHabitatRevegetedKm",
-                "units": "km",
-                "decimalPlaces": 3,
-                "validate": "required,min[0]"
-              },
-              {
                 "dataType": "date",
                 "name": "activitiesStartDate",
-                "description": "",
+                "description": "Specific the dates these events were held on",
                 "validate": "required"
               },
               {
                 "dataType": "date",
                 "name": "activitiesEndDate",
-                "description": "",
+                "description": "Specific the dates these events were held on",
                 "validate": "required"
-              },
-              {
-                "name": "relatedOutcomes",
-                "dataType": "text",
-                "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
-                "validate": "required",
-                "constraints": {
-                  "textProperty": "label",
-                  "valueProperty": "label",
-                  "type": "pre-populated",
-                  "config": {
-                    "source": {
-                      "url": "/project/outcomesByScores",
-                      "params": [{
-                        "expression": "owner.projectId",
-                        "name": "id",
-                        "type": "computed"
-                      }, {
-                        "expression": "scores",
-                        "name": "scoreIds",
-                        "type": "computed"
-                      }
-                      ]
-                    }
-                  }
-                }
               },
               {
                 "name": "investmentPriorities2",
@@ -18090,17 +18080,21 @@
                 "css": "border-bottom",
                 "items": [
                   {
-                    "preLabel": "Initial or maintenance activity?",
-                    "css": "span3",
-                    "source": "initialOrMaintenance",
-                    "type": "selectOne"
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "css": "border-bottom",
-                "items": [
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Initial or maintenance activity?",
+                            "source": "initialOrMaintenance",
+                            "type": "selectOne"
+                          }
+                        ]
+                      }
+                    ]
+                  },
                   {
                     "type": "col",
                     "css": "span3 col-border-right",
@@ -18109,7 +18103,23 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Site/s being revegetated",
+                            "preLabel": "Which outcome statement/s relates to this survey?",
+                            "source": "relatedOutcomes",
+                            "type": "select2Many"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Site/s where collection/propagation was undertaken",
                             "source": "siteSeedCollected",
                             "type": "feature"
                           }
@@ -18130,54 +18140,6 @@
                         "displayOptions": {
                           "displayUnits": true
                         }
-                      }
-                    ]
-                  },
-                  {
-                    "type": "col",
-                    "css": "span3 col-border-right",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "preLabel": "Actual area (ha) / length (km) of habitat revegetated",
-                            "helpText": "Manually enter correct figure for this reporting period if different to mapped value.",
-                            "source": "areaHabitatRevegetedHa",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "lengthHabitatRevegetedKm",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            }
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "col",
-                    "css": "span3 col-border-right",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "preLabel": "Which outcome statement/s relates to this survey?",
-                            "source": "relatedOutcomes",
-                            "type": "select2Many"
-                          }
-                        ]
                       }
                     ]
                   },
@@ -18266,7 +18228,7 @@
                   {
                     "width": "7%",
                     "source": "numberOfSourcePlants",
-                    "title": "Number of Source plants",
+                    "title": "Number of source plants",
                     "type": "number"
                   },
                   {
