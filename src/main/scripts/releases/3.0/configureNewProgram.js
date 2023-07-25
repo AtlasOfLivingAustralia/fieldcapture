@@ -3,10 +3,10 @@ load('../../utils/audit.js');
 load('../../utils/program.js');
 var userId = '';
 
-const serviceFormName = "RDP Output Report";
-const annualReportFormName = "New Program Annual Report";
-const outcomes1ReportFormName = "New Program Outcomes 1 Report";
-const outcomes2ReportFormName = "New Program Outcomes 2 Report";
+const serviceFormName = "NHT Output Report";
+const annualReportFormName = "NHT Annual Report";
+const outcomes1ReportFormName = "NHT Outcomes 1 Report";
+const outcomes2ReportFormName = "NHT Outcomes 2 Report";
 function addService(newServiceName, legacyId, sectionName) {
     let outputs = [
         {
@@ -38,13 +38,13 @@ function addService(newServiceName, legacyId, sectionName) {
         }]
     }
 }
-addService("Habitat Condition Assessment Survey", NumberInt(42), "RDP - Habitat condition assessment");
+addService("Habitat Condition Assessment Survey", NumberInt(42), "NHT - Habitat condition assessment");
 
 
 const newScores = [
     {
         serviceId: 1,
-        formSection:  'RDP - Baseline data',
+        formSection:  'NHT - Baseline data',
         scores: [
             {
                 label: 'Number of baseline datasets synthesised and finalised',
@@ -55,7 +55,7 @@ const newScores = [
     },
     {
         serviceId: 10,
-        formSection:  'RDP - Establishing ex-situ breeding programs',
+        formSection:  'NHT - Establishing ex-situ breeding programs',
         scores: [
             {
                 label: 'Number of captive breeding and release, translocation, or re-introduction programs established',
@@ -69,7 +69,7 @@ const newScores = [
     },
     {
         serviceId: 34,
-        formSection:  'RDP - Debris removal',
+        formSection:  'NHT - Debris removal',
         scores: [
             {
                 label: 'Area (ha) of debris removal - initial',
@@ -91,7 +91,7 @@ const newScores = [
     },
     {
         serviceId: 7,
-        formSection:  'RDP - Erosion Management',
+        formSection:  'NHT - Erosion Management',
         scores: [
             {
                 label: 'Area (ha) of erosion control - initial',
@@ -113,7 +113,7 @@ const newScores = [
     },
     {
         serviceId: 8,
-        formSection:  'RDP - Establishing Agreements',
+        formSection:  'NHT - Establishing Agreements',
         scores: [
             {
                 label: 'Area (ha) covered by conservation agreements established',
@@ -127,7 +127,7 @@ const newScores = [
     },
     {
         serviceId: 9,
-        formSection:  'RDP - Maintaining feral free enclosures',
+        formSection:  'NHT - Maintaining feral free enclosures',
         scores: [
             {
                 label: 'Number of pest animal-free enclosures - initial',
@@ -149,7 +149,7 @@ const newScores = [
     },
     {
         serviceId: 12,
-        formSection:  'RDP - Farm Management Survey',
+        formSection:  'NHT - Farm Management Survey',
         scores: [
             {
                 label: 'Number of farm management surveys conducted - baseline',
@@ -165,7 +165,7 @@ const newScores = [
     },
     {
         serviceId: 13,
-        formSection:  'RDP - Fauna survey',
+        formSection:  'NHT - Fauna survey',
         scores: [
             {
                 label: 'Number of fauna surveys conducted - baseline',
@@ -181,7 +181,7 @@ const newScores = [
     },
     {
         serviceId: 15,
-        formSection:  'RDP - Flora survey',
+        formSection:  'NHT - Flora survey',
         scores: [
             {
                 label: 'Number of flora surveys conducted - baseline',
@@ -197,7 +197,7 @@ const newScores = [
     },
     {
         serviceId: 16,
-        formSection:  'RDP - Habitat augmentation',
+        formSection:  'NHT - Habitat augmentation',
         scores: [
             {
                 label: 'Area (ha) of augmentation - initial',
@@ -219,7 +219,7 @@ const newScores = [
     },
     {
         serviceId: 42,
-        formSection:  'RDP - Habitat condition assessment',
+        formSection:  'NHT - Habitat condition assessment',
         scores: [
             {
                 label: 'Number of habitat condition assessment surveys conducted - baseline',
@@ -235,7 +235,7 @@ const newScores = [
     },
     {
         serviceId: 17,
-        formSection:  'RDP - Identifying sites',
+        formSection:  'NHT - Identifying sites',
         scores: [
             {
                 label: 'Number of potential sites assessed',
@@ -245,7 +245,7 @@ const newScores = [
     },
     {
         serviceId: 14,
-        formSection:  'RDP - Fire management',
+        formSection:  'NHT - Fire management',
         scores: [
             {
                 label: 'Area (ha) treated by fire management action/s - initial',
@@ -259,7 +259,7 @@ const newScores = [
     },
     {
         serviceId: 18,
-        formSection:  'RDP - Improving hydrological regimes',
+        formSection:  'NHT - Improving hydrological regimes',
         scores: [
             {
                 label: 'Number of treatments implemented to improve site eco-hydrology - initial',
@@ -273,7 +273,7 @@ const newScores = [
     },
     {
         serviceId: 19,
-        formSection:  'RDP - Improving land management practices',
+        formSection:  'NHT - Improving land management practices',
         scores: [
             {
                 label: 'Area (ha) covered by practice change - initial',
@@ -287,7 +287,7 @@ const newScores = [
     },
     {
         serviceId: 20,
-        formSection:  'RDP - Disease management',
+        formSection:  'NHT - Disease management',
         scores: [
             {
                 label: 'Area (ha) for disease treatment/prevention - initial',
@@ -309,7 +309,7 @@ const newScores = [
     },
     {
         serviceId: 23,
-        formSection:  'RDP - Pest animal survey',
+        formSection:  'NHT - Pest animal survey',
         scores: [
             {
                 label: 'Number of pest animal surveys conducted - baseline',
@@ -325,7 +325,7 @@ const newScores = [
     },
     {
         serviceId: 26,
-        formSection:  'RDP - Remediating riparian and aquatic areas',
+        formSection:  'NHT - Remediating riparian and aquatic areas',
         scores: [
             {
                 label: 'Number of structures installed to promote aquatic health',
@@ -351,7 +351,7 @@ const newScores = [
     },
     {
         serviceId: 28,
-        formSection:  'RDP - Revegetating habitat',
+        formSection:  'NHT - Revegetating habitat',
         scores: [
             {
                 label: 'Area (ha) of habitat revegetated - initial',
@@ -365,7 +365,7 @@ const newScores = [
     },
     {
         serviceId: 36,
-        formSection:  'RDP - Seed Collection',
+        formSection:  'NHT - Seed Collection',
         scores: [
             {
                 label: 'Amount (grams)/number of seeds/cuttings collected',
@@ -383,7 +383,7 @@ const newScores = [
     },
     {
         serviceId: 24,
-        formSection:  'RDP - Plant survival survey',
+        formSection:  'NHT - Plant survival survey',
         scores: [
             {
                 label: 'Number of seed germination/plant survival surveys completed - indicator',
@@ -394,7 +394,7 @@ const newScores = [
     },
     {
         serviceId: 35,
-        formSection:  'RDP - Site preparation',
+        formSection:  'NHT - Site preparation',
         scores: [
             {
                 label: 'Length (km) of site preparation',
@@ -404,7 +404,7 @@ const newScores = [
     },
     {
         serviceId: 32,
-        formSection:  'RDP - Water quality survey',
+        formSection:  'NHT - Water quality survey',
         scores: [
             {
                 label: 'Number of water quality surveys conducted - baseline',
@@ -420,7 +420,7 @@ const newScores = [
     },
     {
         serviceId: 33,
-        formSection:  'RDP - Weed distribution survey',
+        formSection:  'NHT - Weed distribution survey',
         scores: [
             {
                 label: 'Number of weed distribution surveys conducted - baseline',
@@ -436,7 +436,7 @@ const newScores = [
     },
     {
         serviceId: 31,
-        formSection:  'RDP - Emergency Interventions',
+        formSection:  'NHT - Emergency Interventions',
         scores: [
             {
                 label: 'Number of interventions - initial',
@@ -450,7 +450,7 @@ const newScores = [
     },
     {
         serviceId: 30,
-        formSection:  'RDP - Soil testing',
+        formSection:  'NHT - Soil testing',
         scores: [
             {
                 label: 'Number of soil tests conducted - baseline',
@@ -470,7 +470,7 @@ const newScores = [
     },
     {
         serviceId: 18,
-        formSection:  'RDP - Improving hydrological regimes',
+        formSection:  'NHT - Improving hydrological regimes',
         scores: [
             {
                 label: 'Number of treatments implemented to improve site eco-hydrology - initial',
@@ -484,7 +484,7 @@ const newScores = [
     },
     {
         serviceId: 29,
-        formSection:  'RDP - Skills and knowledge survey',
+        formSection:  'NHT - Skills and knowledge survey',
         scores: [
             {
                 label: 'Number of skills and knowledge surveys conducted - baseline',
@@ -565,7 +565,7 @@ for (let i=0; i<newScores.length; i++) {
 const existingScores = [
     {
         serviceId: 2, // communication materials
-        formSection: 'RDP - Communication materials',
+        formSection: 'NHT - Communication materials',
         rlpFormSection: 'RLP - Communication materials',
         scores: [
              'Number of communication materials published'
@@ -573,7 +573,7 @@ const existingScores = [
     },
     {
         serviceId: 3, // community / stakeholder engagement
-        formSection: 'RDP - Community engagement',
+        formSection: 'NHT - Community engagement',
         rlpFormSection: 'RLP - Community engagement',
         scores: [
            'Number of field days',
@@ -583,7 +583,7 @@ const existingScores = [
     },
     {
         serviceId: 4, // controlling access
-        formSection: 'RDP - Controlling access',
+        formSection: 'NHT - Controlling access',
         rlpFormSection: 'RLP - Controlling access',
         scores: [
             'Number of structures installed'
@@ -591,7 +591,7 @@ const existingScores = [
     },
     {
         serviceId: 5,
-        formSection: 'RDP - Pest animal management',
+        formSection: 'NHT - Pest animal management',
         rlpFormSection: 'RLP - Pest animal management',
         scores: [
             'Area (ha) treated for pest animals - initial',
@@ -602,7 +602,7 @@ const existingScores = [
     },
     {
         serviceId: 27,
-        formSection: 'RDP - Weed treatment',
+        formSection: 'NHT - Weed treatment',
         rlpFormSection: 'RLP - Weed treatment',
         scores: [
             'Area (ha) treated for weeds - initial',
@@ -623,26 +623,26 @@ for (let i=0; i<existingScores.length; i++) {
         }
 
         let foundRlp = false;
-        let foundRdp = false;
+        let foundNht = false;
         for (let k=0; k<score.configuration.childAggregations.length; k++) {
             if (score.configuration.childAggregations[k].filter && score.configuration.childAggregations[k].filter.filterValue === existingScores[i].rlpFormSection) {
                 foundRlp = score.configuration.childAggregations[k];
             }
             if (score.configuration.childAggregations[k].filter && score.configuration.childAggregations[k].filter.filterValue === existingScores[i].formSection) {
-                foundRdp = score.configuration.childAggregations[k];
+                foundNht = score.configuration.childAggregations[k];
             }
         }
         if (!foundRlp) {
-            throw "Cannot find RLP form section to copy to RDP "+existingScores[i].rlpFormSection+' for score '+existingScores[i].scores[j].label;
+            throw "Cannot find RLP form section to copy to NHT "+existingScores[i].rlpFormSection+' for score '+existingScores[i].scores[j].label;
         }
-        if (!foundRdp) {
-            let rdpConfig = Object.assign({}, foundRlp);
-            rdpConfig.filter = Object.assign ({}, foundRlp.filter);
-            rdpConfig.filter.filterValue = existingScores[i].formSection;
-            score.configuration.childAggregations.push(rdpConfig);
+        if (!foundNht) {
+            let nhtConfig = Object.assign({}, foundRlp);
+            nhtConfig.filter = Object.assign ({}, foundRlp.filter);
+            nhtConfig.filter.filterValue = existingScores[i].formSection;
+            score.configuration.childAggregations.push(nhtConfig);
         }
         else {
-            foundRdp.childAggregations = foundRlp.childAggregations;
+            foundNht.childAggregations = foundRlp.childAggregations;
         }
         db.score.updateOne({_id: score._id}, {$set: {configuration: score.configuration, outputType: service.name}});
     }
@@ -1508,9 +1508,9 @@ var outcomes = [
     }
 
 ];
-let programName = "Regional Delivery Partners";
+let programName = "National Heritage Trust";
 var program = createOrFindProgram(programName);
-
+program.acronym = "NHT";
 program.config = config;
 program.outcomes = outcomes;
 //program.priorities = priorities;
@@ -1534,7 +1534,7 @@ for (let i=0; i<s.length; i++) {
         else {
             let found = false;
             for (let k=0; k<service.outputs.length; k++) {
-                if (service.outputs[k].formName == 'RDP Output Report') {
+                if (service.outputs[k].formName == 'NHT Output Report') {
                     found = service.outputs[k];
                 }
             }
@@ -1556,7 +1556,7 @@ for (let i=0; i<s.length; i++) {
             }
             if (!found) {
                 service.outputs.push({
-                    formName: 'RDP Output Report',
+                    formName: 'NHT Output Report',
                     sectionName: match.formSection
                 });
 
@@ -1572,6 +1572,13 @@ for (let i=0; i<s.length; i++) {
 
 db.program.replaceOne({programId: program.programId}, program);
 
+let subProgramName = "Recovery Actions for Species and Landscapes";
+var subProgram = createOrFindProgram(subProgramName);
+subProgram.parentProgramId = program._id;
+subProgram.config = config;
+subProgram.outcomes = outcomes;
+
+db.program.replaceOne({programId: subProgram.programId}, subProgram);
 
 // Add labels and output mapping for services used by the new program
 var programLabels = {};
@@ -1667,15 +1674,15 @@ var blankReportTemplate = function(name, templateName, category) {
     };
 };
 const reports = [
-    {name: "New Program Annual Report", templateName: "newProgramAnnualReport", category: 'Annual Report'},
+    {name: "NHT Annual Report", templateName: "nhtProgramAnnualReport", category: 'Annual Report'},
     {
-        name: "New Program Outcomes 1 Report ",
-        templateName: "newProgramOutcomes1Report",
+        name: "NHT Outcomes 1 Report ",
+        templateName: "nhtProgramOutcomes1Report",
         category: "Outcomes 1 Report"
     },
     {
-        name: "New Program Outcomes 2 Report ",
-        templateName: "newProgramOutcomes2Report",
+        name: "NHT Outcomes 2 Report ",
+        templateName: "nhtProgramOutcomes2Report",
         category: "Outcomes 2 Report"
     }
 ];

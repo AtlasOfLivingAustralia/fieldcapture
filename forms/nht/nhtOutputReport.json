@@ -9,16 +9,16 @@
   "supportsPhotoPoints": false,
   "publicationStatus": "published",
   "gmsId": null,
-  "name": "RDP Output Report",
+  "name": "NHT Output Report",
   "sections": [
     {
       "collapsedByDefault": false,
       "template": {
-        "name": "RDP - Communications",
+        "name": "NHT - Communications",
         "title": "Communications",
         "dataModel": [
           {
-            "name": "rdpCommunications",
+            "name": "nhtCommunications",
             "dataType": "text",
             "description": "This <u>does not</u> include communication activities undertaken under the 'Communication Materials' Project Service or regional capacity service. All Communication Materials must correctly acknowledge Australian Government funding.",
             "validate": "required",
@@ -33,7 +33,7 @@
             "validate": "required,maxSize[300]",
             "behaviour": [
               {
-                "condition": "rdpCommunications == \"Yes\"",
+                "condition": "nhtCommunications == \"Yes\"",
                 "type": "enable"
               }
             ]
@@ -46,7 +46,7 @@
               {
                 "css": "span6",
                 "type": "selectOne",
-                "source": "rdpCommunications",
+                "source": "nhtCommunications",
                 "preLabel": "During this reporting period was any communication material developed and published?"
               }
             ]
@@ -64,19 +64,19 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpOutputCommunications",
+      "templateName": "nhtOutputCommunications",
       "optional": false,
       "optionalQuestionText": null,
-      "title": "RDP - Communications",
+      "title": "NHT - Communications",
       "collapsibleHeading": null,
-      "name": "RDP - Communications",
+      "name": "NHT - Communications",
       "description": null
     },
     {
       "collapsedByDefault": false,
       "template": {
         "title": "Engagement activities or events, to the Community, which are directly relevant to delivery of Project",
-        "modelName": "RDP - Project Engagements",
+        "modelName": "NHT - Project Engagements",
         "dataModel": [
           {
             "dataType": "list",
@@ -178,19 +178,19 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpProjectEngagements",
+      "templateName": "nhtProjectEngagements",
       "optional": false,
       "optionalQuestionText": null,
-      "title": "RDP - Project Engagements",
+      "title": "NHT - Project Engagements",
       "collapsibleHeading": null,
-      "name": "RDP - Project Engagements",
+      "name": "NHT - Project Engagements",
       "description": null
     },
     {
       "collapsedByDefault": false,
       "template": {
         "title": "Coordinate Projects and MERI",
-        "modelName": "RDP - Coordinate",
+        "modelName": "NHT - Coordinate",
         "dataModel": [
           {
             "name": "undergoneReview",
@@ -407,18 +407,18 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpCoordinate",
+      "templateName": "nhtCoordinate",
       "optional": false,
       "optionalQuestionText": null,
-      "title": "RDP - Coordinate",
+      "title": "NHT - Coordinate",
       "collapsibleHeading": null,
-      "name": "RDP - Coordinate",
+      "name": "NHT - Coordinate",
       "description": null
     },
     {
       "collapsedByDefault": false,
       "template": {
-        "name": "RDP - Project Commencement",
+        "name": "NHT - Project Commencement",
         "title": "Project Commencement",
         "dataModel": [
 
@@ -436,18 +436,18 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpProjectCommencement",
+      "templateName": "nhtProjectCommencement",
       "optional": false,
       "optionalQuestionText": null,
-      "title": "RDP - Project Commencement",
+      "title": "NHT - Project Commencement",
       "collapsibleHeading": null,
-      "name": "RDP - Project Commencement",
+      "name": "NHT - Project Commencement",
       "description": null
     },
     {
       "collapsedByDefault": false,
       "template": {
-        "name": "RDP - Project WHS",
+        "name": "NHT - Project WHS",
         "title": "Project WHS Risk Register",
         "dataModel": [
           {
@@ -601,19 +601,19 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpProjectWHS",
+      "templateName": "nhtProjectWHS",
       "optional": false,
       "optionalQuestionText": null,
-      "title": "RDP - Project WHS",
+      "title": "NHT - Project WHS",
       "collapsibleHeading": null,
-      "name": "RDP - Project WHS",
+      "name": "NHT - Project WHS",
       "description": null
     },
     {
       "collapsedByDefault": false,
       "template": {
         "title": "Synthesising and finalising baseline data",
-        "modelName": "RDP - Baseline data",
+        "modelName": "NHT - Baseline data",
         "dataModel": [
           {
             "dataType": "list",
@@ -837,12 +837,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpBaselineData",
+      "templateName": "nhtBaselineData",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Collecting, or synthesising baseline data",
       "collapsibleHeading": null,
-      "name": "RDP - Baseline data",
+      "name": "NHT - Baseline data",
       "description": null
     },
     {
@@ -916,7 +916,7 @@
             ]
           }
         ],
-        "modelName": "RDP - Communication Materials",
+        "modelName": "NHT - Communication Materials",
         "title": "Communication Materials",
         "viewModel": [
           {
@@ -1023,12 +1023,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpCommunicationMaterials",
+      "templateName": "nhtCommunicationMaterials",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Communication materials",
       "collapsibleHeading": null,
-      "name": "RDP - Communication materials",
+      "name": "NHT - Communication materials",
       "description": null
     },
     {
@@ -1125,7 +1125,7 @@
             ]
           }
         ],
-        "modelName": "RDP - Community engagement",
+        "modelName": "NHT - Community engagement",
         "title": "Community/stakeholder engagement",
         "viewModel": [
           {
@@ -1257,12 +1257,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpCommunityEngagement",
+      "templateName": "nhtCommunityEngagement",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Community/stakeholder engagement",
       "collapsibleHeading": null,
-      "name": "RDP - Community engagement",
+      "name": "NHT - Community engagement",
       "description": null
     },
     {
@@ -1671,7 +1671,7 @@
             ]
           }
         ],
-        "modelName": "RDP - Controlling access",
+        "modelName": "NHT - Controlling access",
         "title": "Controlling access",
         "viewModel": [
           {
@@ -1981,12 +1981,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpControllingAccess",
+      "templateName": "nhtControllingAccess",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Controlling access",
       "collapsibleHeading": null,
-      "name": "RDP - Controlling access",
+      "name": "NHT - Controlling access",
       "description": null
     },
     {
@@ -2733,7 +2733,7 @@
             ]
           }
         ],
-        "modelName": "RDP - Pest animal management",
+        "modelName": "NHT - Pest animal management",
         "title": "Controlling pest animals",
         "viewModel": [
           {
@@ -3188,12 +3188,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpPestAnimalManagement",
+      "templateName": "nhtPestAnimalManagement",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Controlling pest animals",
       "collapsibleHeading": null,
-      "name": "RDP - Pest animal management",
+      "name": "NHT - Pest animal management",
       "description": null
     },
     {
@@ -3577,7 +3577,7 @@
             ]
           }
         ],
-        "modelName": "RDP - Debris removal",
+        "modelName": "NHT - Debris removal",
         "title": "Debris removal",
         "viewModel": [
           {
@@ -3913,12 +3913,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpDebrisRemoval",
+      "templateName": "nhtDebrisRemoval",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Debris removal",
       "collapsibleHeading": null,
-      "name": "RDP - Debris removal",
+      "name": "NHT - Debris removal",
       "description": null
     },
     {
@@ -4203,7 +4203,7 @@
             ]
           }
         ],
-        "modelName": "RDP - Erosion Management",
+        "modelName": "NHT - Erosion Management",
         "title": "Erosion management",
         "viewModel": [
           {
@@ -4494,12 +4494,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpErosionManagement",
+      "templateName": "nhtErosionManagement",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Erosion management",
       "collapsibleHeading": null,
-      "name": "RDP - Erosion Management",
+      "name": "NHT - Erosion Management",
       "description": null
     },
     {
@@ -4710,7 +4710,7 @@
             ]
           }
         ],
-        "modelName": "RDP - Maintaining feral free enclosures",
+        "modelName": "NHT - Maintaining feral free enclosures",
         "title": "Establishing and maintaining feral-free enclosures",
         "viewModel": [
           {
@@ -4970,12 +4970,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpFeralFreeEnclosures",
+      "templateName": "nhtFeralFreeEnclosures",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Establishing and maintaining feral-free enclosures",
       "collapsibleHeading": null,
-      "name": "RDP - Maintaining feral free enclosures",
+      "name": "NHT - Maintaining feral free enclosures",
       "description": null
     },
     {
@@ -5275,7 +5275,7 @@
             ]
           }
         ],
-        "modelName": "RDP - Establishing ex-situ breeding programs",
+        "modelName": "NHT - Establishing ex-situ breeding programs",
         "title": "Establishing and maintaining breeding programs",
         "viewModel": [
           {
@@ -5581,12 +5581,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpExSituBreedingSites",
+      "templateName": "nhtExSituBreedingSites",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Establishing ex-situ breeding program",
       "collapsibleHeading": null,
-      "name": "RDP - Establishing ex-situ breeding programs",
+      "name": "NHT - Establishing ex-situ breeding programs",
       "description": null
     },
     {
@@ -5786,7 +5786,7 @@
             ]
           }
         ],
-        "modelName": "RDP - Establishing Agreements",
+        "modelName": "NHT - Establishing Agreements",
         "title": "Establishing and maintaining agreements",
         "viewModel": [
           {
@@ -6005,19 +6005,19 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpEstablishingAgreements",
+      "templateName": "nhtEstablishingAgreements",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Establishing and maintaining agreements",
       "collapsibleHeading": null,
-      "name": "RDP - Establishing Agreements",
+      "name": "NHT - Establishing Agreements",
       "description": null
     },
     {
       "collapsedByDefault": false,
       "template": {
         "title": "Farm management surveys",
-        "modelName": "RDP - Farm Management Survey",
+        "modelName": "NHT - Farm Management Survey",
         "dataModel": [
           {
             "dataType": "text",
@@ -6473,12 +6473,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpFarmManagementSurvey",
+      "templateName": "nhtFarmManagementSurvey",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Farm management survey",
       "collapsibleHeading": null,
-      "name": "RDP - Farm Management Survey",
+      "name": "NHT - Farm Management Survey",
       "description": null
     },
     {
@@ -6905,7 +6905,7 @@
             ]
           }
         ],
-        "modelName": "RDP - Fauna survey",
+        "modelName": "NHT - Fauna survey",
         "title": "Fauna survey",
         "viewModel": [
           {
@@ -7307,12 +7307,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpFaunaSurvey",
+      "templateName": "nhtFaunaSurvey",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Fauna survey",
       "collapsibleHeading": null,
-      "name": "RDP - Fauna survey",
+      "name": "NHT - Fauna survey",
       "description": null
     },
 
@@ -7745,7 +7745,7 @@
             ]
           }
         ],
-        "modelName": "RDP - Flora survey",
+        "modelName": "NHT - Flora survey",
         "title": "Flora survey",
         "viewModel": [
           {
@@ -8144,12 +8144,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpFloraSurvey",
+      "templateName": "nhtFloraSurvey",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Flora survey",
       "collapsibleHeading": null,
-      "name": "RDP - Flora survey",
+      "name": "NHT - Flora survey",
       "description": null
     },
     {
@@ -8617,7 +8617,7 @@
             ]
           }
         ],
-        "modelName": "RDP - Habitat augmentation",
+        "modelName": "NHT - Habitat augmentation",
         "title": "Habitat augmentation",
         "viewModel": [
           {
@@ -9089,12 +9089,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpHabitatAugmentation",
+      "templateName": "nhtHabitatAugmentation",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Habitat augmentation",
       "collapsibleHeading": null,
-      "name": "RDP - Habitat augmentation",
+      "name": "NHT - Habitat augmentation",
       "description": null
     },
     {
@@ -9544,7 +9544,7 @@
             ]
           }
         ],
-        "modelName": "RDP - Habitat condition assessment",
+        "modelName": "NHT - Habitat condition assessment",
         "title": "Habitat condition assessment",
         "viewModel": [
           {
@@ -9955,19 +9955,19 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpHabitatConditionAssessmentSurvey",
+      "templateName": "nhtHabitatConditionAssessmentSurvey",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Habitat condition assessment",
       "collapsibleHeading": null,
-      "name": "RDP - Habitat condition assessment",
+      "name": "NHT - Habitat condition assessment",
       "description": null
     },
     {
       "collapsedByDefault": false,
       "template": {
         "title": "Identifying the location of potential sites",
-        "modelName": "RDP - Identifying sites",
+        "modelName": "NHT - Identifying sites",
         "dataModel": [
           {
             "columns": [
@@ -10683,12 +10683,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpIdentifyingSites",
+      "templateName": "nhtIdentifyingSites",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Identifying the location of potential sites",
       "collapsibleHeading": null,
-      "name": "RDP - Identifying sites",
+      "name": "NHT - Identifying sites",
       "description": null
     },
     {
@@ -11102,7 +11102,7 @@
             ]
           }
         ],
-        "modelName": "RDP - Fire management",
+        "modelName": "NHT - Fire management",
         "title": "Implementing fire management actions",
         "viewModel": [
           {
@@ -11436,12 +11436,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpFireManagement",
+      "templateName": "nhtFireManagement",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Fire management actions",
       "collapsibleHeading": null,
-      "name": "RDP - Fire management",
+      "name": "NHT - Fire management",
       "description": null
     },
     {
@@ -11815,7 +11815,7 @@
             ]
           }
         ],
-        "modelName": "RDP - Improving hydrological regimes",
+        "modelName": "NHT - Improving hydrological regimes",
         "title": "Improving hydrological regimes",
         "viewModel": [
           {
@@ -12154,12 +12154,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpImprovingHydrologicalRegimes",
+      "templateName": "nhtImprovingHydrologicalRegimes",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Improving hydrological regimes",
       "collapsibleHeading": null,
-      "name": "RDP - Improving hydrological regimes",
+      "name": "NHT - Improving hydrological regimes",
       "description": null
     },
     {
@@ -12582,7 +12582,7 @@
             }
           }
         ],
-        "modelName": "RDP - Improving land management practices",
+        "modelName": "NHT - Improving land management practices",
         "title": "Improving land management practices",
         "viewModel": [
           {
@@ -12927,12 +12927,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpLandManagementPractices",
+      "templateName": "nhtLandManagementPractices",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Improving land management practices",
       "collapsibleHeading": null,
-      "name": "RDP - Improving land management practices",
+      "name": "NHT - Improving land management practices",
       "description": null
     },
     {
@@ -13346,7 +13346,7 @@
             ]
           }
         ],
-        "modelName": "RDP - Disease management",
+        "modelName": "NHT - Disease management",
         "title": "Managing disease",
         "viewModel": [
           {
@@ -13697,12 +13697,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpDiseaseManagement",
+      "templateName": "nhtDiseaseManagement",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Managing disease",
       "collapsibleHeading": null,
-      "name": "RDP - Disease management",
+      "name": "NHT - Disease management",
       "description": null
     },
     {
@@ -14129,7 +14129,7 @@
             ]
           }
         ],
-        "modelName": "RDP - Pest animal survey",
+        "modelName": "NHT - Pest animal survey",
         "title": "Pest animal survey",
         "viewModel": [
           {
@@ -14522,12 +14522,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpPestAnimalSurvey",
+      "templateName": "nhtPestAnimalSurvey",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Pest animal survey",
       "collapsibleHeading": null,
-      "name": "RDP - Pest animal survey",
+      "name": "NHT - Pest animal survey",
       "description": null
     },
     {
@@ -14970,7 +14970,7 @@
             ]
           }
         ],
-        "modelName": "RDP - Plant survival survey",
+        "modelName": "NHT - Plant survival survey",
         "title": "Plant survival survey",
         "viewModel": [
           {
@@ -15427,12 +15427,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpPlantSurvivalSurvey",
+      "templateName": "nhtPlantSurvivalSurvey",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Plant survival survey",
       "collapsibleHeading": null,
-      "name": "RDP - Plant survival survey",
+      "name": "NHT - Plant survival survey",
       "description": null
     },
     {
@@ -15696,7 +15696,7 @@
             ]
           }
         ],
-        "modelName": "RDP - Remediating riparian and aquatic areas",
+        "modelName": "NHT - Remediating riparian and aquatic areas",
         "title": "Remediating riparian and aquatic areas",
         "viewModel": [
           {
@@ -15960,12 +15960,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpRemediatingRiparianAndAquaticAreas",
+      "templateName": "nhtRemediatingRiparianAndAquaticAreas",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Remediating riparian and aquatic areas",
       "collapsibleHeading": null,
-      "name": "RDP - Remediating riparian and aquatic areas",
+      "name": "NHT - Remediating riparian and aquatic areas",
       "description": null
     },
     {
@@ -16389,7 +16389,7 @@
             ]
           }
         ],
-        "modelName": "RDP - Weed treatment",
+        "modelName": "NHT - Weed treatment",
         "title": "Removing weeds",
         "viewModel": [
           {
@@ -16786,12 +16786,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpWeedTreatment",
+      "templateName": "nhtWeedTreatment",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Removing weeds",
       "collapsibleHeading": null,
-      "name": "RDP - Weed treatment",
+      "name": "NHT - Weed treatment",
       "description": null
     },
     {
@@ -17221,7 +17221,7 @@
             ]
           }
         ],
-        "modelName": "RDP - Revegetating habitat",
+        "modelName": "NHT - Revegetating habitat",
         "title": "Revegetating habitat",
         "viewModel": [
           {
@@ -17632,12 +17632,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpRevegetatingHabitat",
+      "templateName": "nhtRevegetatingHabitat",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Revegetating habitat",
       "collapsibleHeading": null,
-      "name": "RDP - Revegetating habitat",
+      "name": "NHT - Revegetating habitat",
       "description": null
     },
     {
@@ -18010,7 +18010,7 @@
             ]
           }
         ],
-        "modelName": "RDP - Seed Collection",
+        "modelName": "NHT - Seed Collection",
         "title": "Seed Collecting",
         "viewModel": [
           {
@@ -18393,7 +18393,7 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "RDP - Seed Collection",
+      "name": "NHT - Seed Collection",
       "description": null
     },
     {
@@ -18817,7 +18817,7 @@
             ]
           }
         ],
-        "modelName": "RDP - Site preparation",
+        "modelName": "NHT - Site preparation",
         "title": "Site preparation",
         "viewModel": [
           {
@@ -19214,19 +19214,19 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpSitePreparation",
+      "templateName": "nhtSitePreparation",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Site preparation",
       "collapsibleHeading": null,
-      "name": "RDP - Site preparation",
+      "name": "NHT - Site preparation",
       "description": null
     },
     {
       "collapsedByDefault": false,
       "template": {
         "title": "Skills and knowledge survey",
-        "modelName": "RDP - Skills and knowledge survey",
+        "modelName": "NHT - Skills and knowledge survey",
         "dataModel": [
           {
             "columns": [
@@ -19755,12 +19755,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpSkillsAndKnowledgeSurvey",
+      "templateName": "nhtSkillsAndKnowledgeSurvey",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Skills and knowledge survey",
       "collapsibleHeading": null,
-      "name": "RDP - Skills and knowledge survey",
+      "name": "NHT - Skills and knowledge survey",
       "description": null
     },
     {
@@ -19883,7 +19883,7 @@
             ]
           }
         ],
-        "modelName": "RDP - Soil testing",
+        "modelName": "NHT - Soil testing",
         "title": "Soil testing",
         "viewModel": [
           {
@@ -20020,12 +20020,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpSoilTesting",
+      "templateName": "nhtSoilTesting",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Soil testing",
       "collapsibleHeading": null,
-      "name": "RDP - Soil testing",
+      "name": "NHT - Soil testing",
       "description": null
     },
     {
@@ -20187,7 +20187,7 @@
             ]
           }
         ],
-        "modelName": "RDP - Emergency Interventions",
+        "modelName": "NHT - Emergency Interventions",
         "title": "Undertaking emergency interventions to prevent extinctions",
         "viewModel": [
           {
@@ -20345,12 +20345,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpEmergencyInterventions",
+      "templateName": "nhtEmergencyInterventions",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Undertaking emergency interventions to prevent extinctions",
       "collapsibleHeading": null,
-      "name": "RDP - Emergency Interventions",
+      "name": "NHT - Emergency Interventions",
       "description": null
     },
     {
@@ -20785,7 +20785,7 @@
             ]
           }
         ],
-        "modelName": "RDP - Water quality survey",
+        "modelName": "NHT - Water quality survey",
         "title": "Water quality survey",
         "viewModel": [
           {
@@ -21172,12 +21172,12 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpWaterQualitySurvey",
+      "templateName": "nhtWaterQualitySurvey",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Water quality survey",
       "collapsibleHeading": null,
-      "name": "RDP - Water quality survey",
+      "name": "NHT - Water quality survey",
       "description": null
     },
     {
@@ -21795,7 +21795,7 @@
             ]
           }
         ],
-        "modelName": "RDP - Weed distribution survey",
+        "modelName": "NHT - Weed distribution survey",
         "title": "Weed distribution survey",
         "viewModel": [
           {
@@ -22261,17 +22261,17 @@
         ]
       },
       "modelName": null,
-      "templateName": "rdpWeedDistributionSurvey",
+      "templateName": "nhtWeedDistributionSurvey",
       "optional": true,
       "optionalQuestionText": null,
       "title": "Weed distribution survey",
       "collapsibleHeading": null,
-      "name": "RDP - Weed distribution survey",
+      "name": "NHT - Weed distribution survey",
       "description": null
     }
   ],
   "type": "Report",
-  "category": "RDP Reports",
+  "category": "NHT Reports",
   "status": "active",
   "lastUpdatedUserId": "56575",
   "description": null,
