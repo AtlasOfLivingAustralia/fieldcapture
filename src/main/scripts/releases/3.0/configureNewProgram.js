@@ -1574,7 +1574,7 @@ db.program.replaceOne({programId: program.programId}, program);
 
 let subProgramName = "Recovery Actions for Species and Landscapes";
 var subProgram = createOrFindProgram(subProgramName);
-subProgram.parentProgramId = program._id;
+subProgram.parent = DBRef("program", program._id);
 subProgram.config = config;
 subProgram.outcomes = outcomes;
 
