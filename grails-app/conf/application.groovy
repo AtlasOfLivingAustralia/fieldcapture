@@ -5,7 +5,7 @@ import grails.util.Environment
  \******************************************************************************/
 def appName = 'fieldcapture'
 def ENV_NAME = "${appName.toUpperCase()}_CONFIG"
-environments.dev.config.locatations = "~/data/${appName}/config/${appName}-config.properties"
+environments.development.grails.config.locations = ["~/data/${appName}/config/${appName}-config.properties"]
 default_config = "/data/${appName}/config/${appName}-config.properties"
 if(!grails.config.locations || !(grails.config.locations instanceof List)) {
     grails.config.locations = []
