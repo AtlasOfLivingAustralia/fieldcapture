@@ -70,7 +70,6 @@
     </div>
 </div>
 
-<g:render template="/shared/declaration" model="${[declarationType:au.org.ala.merit.SettingPageType.ORGANISATION_DECLARATION]}"/>
 <g:render template="/shared/reportRejectionModal"/>
 
 <asset:script>

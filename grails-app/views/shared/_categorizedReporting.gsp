@@ -54,9 +54,10 @@
             <button class="btn btn-success btn-sm" data-bind="enable:complete,click:submitReport"
                     title="The reporting form must be marked as complete before this report can be submitted.">Submit report</button>
         </p>
-        <span class="badge p-1 text-white badge-info" data-bind="if:progress() == 'started'">Reporting form incomplete</span>
-        <span class="badge p-1 text-white badge-success" data-bind="if:progress() == 'finished'">Reporting form complete</span>
+
     </g:if>
+    <span class="badge p-1 text-white badge-info" data-bind="if:progress() == 'started'">Reporting form incomplete</span>
+    <span class="badge p-1 text-white badge-success" data-bind="if:progress() == 'finished'">Reporting form complete</span>
     <g:if test="${fc.userIsAlaOrFcAdmin()}">
         <div class="mt-2" data-bind="visible:!hasData()">
             <p>

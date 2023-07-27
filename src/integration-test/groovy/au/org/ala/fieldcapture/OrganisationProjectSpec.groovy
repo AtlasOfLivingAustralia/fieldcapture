@@ -23,7 +23,7 @@ class OrganisationProjectSpec extends StubbedCasSpec {
 
         and:
         waitFor {
-            projectContent[1].text() == "Project Script Injection <script>alert('Test')</script>"
+            projectContent[3].text() == "Project Script Injection <script>alert('Test')</script>"
         }
     }
 

@@ -1,0 +1,40 @@
+
+.outcomes .outcome-wrapper {
+    padding-left: 2px;
+    padding-right: 2px;
+}
+.outcome {
+    border: 1px solid lightgrey;
+    border-radius:4px;
+    width: 100%;
+    padding: 10px;
+
+}
+
+.outcomes.secondary {
+    font-size: small;
+}
+
+.outcomes.primary .outcome.targeted {
+    background: #D9EDF6;
+}
+
+.outcomes.secondary .outcome.targeted {
+    background: #D9EDF699;
+}
+
+
+#projectOverviewList th {
+    white-space: normal;
+}
+
+.projects-wrapper {
+    margin-top: 10px;
+}
+
+
+/** Get rid of extra padding inside tabs when dataTables is applied */
+.dataTables_wrapper.container-fluid {
+    padding-left:0;
+    padding-right:0;
+}

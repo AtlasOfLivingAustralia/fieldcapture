@@ -550,6 +550,15 @@ class UserService {
         return results?.userIsAdmin
     }
 
+    def isUserEditorForOrganisation(String userId, String organisationId) {
+        if (userIsSiteAdmin()) {
+            return true
+        }
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/isUserEditorForOrganisation?organisationId=${organisationId}&userId=${userId}"
+        def results = webService.getJson(url)
+        return results?.userIsEditor
+    }
+
     def isUserGrantManagerForOrganisation(userId, organisationId) {
         def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/isUserGrantManagerForOrganisation?organisationId=${organisationId}&userId=${userId}"
         def results = webService.getJson(url)
@@ -563,8 +572,9 @@ class UserService {
                     case RoleService.GRANT_MANAGER_ROLE:
                         return isUserGrantManagerForOrganisation(userId, id)
                     case RoleService.PROJECT_ADMIN_ROLE:
-                    case RoleService.PROJECT_EDITOR_ROLE: // Editor role is not supported for organisations so we check for admin
                         return isUserAdminForOrganisation(userId, id)
+                    case RoleService.PROJECT_EDITOR_ROLE:
+                        return isUserEditorForOrganisation(userId, id)
                     default:
                         return false
                 }

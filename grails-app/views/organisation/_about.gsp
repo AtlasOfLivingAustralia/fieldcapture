@@ -16,7 +16,7 @@
 </div>
 
 <div data-bind="visible:description">
-    <div class="col-sm-12 card customCard">
+    <div class="card customCard">
         <div class="card-title">About ${organisation.name?.encodeAsHTML()}</div>
 
         <span id="orgDescription" data-bind="html:description.markdownToHtml()"></span>
@@ -24,3 +24,8 @@
         <p>ABN: <span id="orgAbn">${organisation.abn}</span></p>
     </div>
 </div>
+
+<g:render template="/shared/projectsByProgram"
+          model="${[primaryOutcomesTitle:'The organisation is addressing these primary outcomes',
+                    secondaryOutcomesTitle:'The organisation is addressing these secondary outcomes']}"
+/>

@@ -1,31 +1,41 @@
 package au.org.ala.merit
 
 import au.org.ala.merit.command.SaveReportDataCommand
+import au.org.ala.merit.util.ProjectGroupingHelper
 import grails.converters.JSON
 import org.apache.http.HttpStatus
 import org.grails.plugins.excelimport.ExcelImportService
 import org.springframework.mock.web.MockMultipartFile
+import spock.lang.Ignore
 import spock.lang.Specification
 import grails.testing.web.controllers.ControllerUnitTest
 
 class OrganisationControllerSpec extends Specification implements ControllerUnitTest<OrganisationController>{
 
-    def organisationService = Mock(OrganisationService)
-    def searchService = Stub(SearchService)
-    def documentService = Mock(DocumentService)
-    def roleService = Stub(RoleService)
-    def userService = Stub(UserService)
-    def projectService = Mock(ProjectService)
-    def reportService = Mock(ReportService)
-    def activityService = Mock(ActivityService)
-    def siteService = Mock(SiteService)
-    def settingService = Mock(SettingService)
+    OrganisationService organisationService = Mock(OrganisationService)
+    SearchService searchService = Stub(SearchService)
+    DocumentService documentService = Mock(DocumentService)
+    RoleService roleService = Stub(RoleService)
+    UserService userService = Stub(UserService)
+    ProjectService projectService = Mock(ProjectService)
+    ReportService reportService = Mock(ReportService)
+    ActivityService activityService = Mock(ActivityService)
+    SiteService siteService = Mock(SiteService)
+    SettingService settingService = Mock(SettingService)
+    MetadataService metadataService = Mock(MetadataService)
+    ProgramService programService = Mock(ProgramService)
 
     String adminUserId = 'admin'
     String editorUserId = 'editor'
     String grantManagerUserId = 'grantManager'
 
     def setup() {
+        ProjectGroupingHelper projectGroupingHelper = new ProjectGroupingHelper()
+        projectGroupingHelper.programService = programService
+        projectGroupingHelper.metadataService = metadataService
+        projectGroupingHelper.reportService = reportService
+        projectGroupingHelper.projectService = projectService
+        controller.projectGroupingHelper = projectGroupingHelper
         controller.organisationService = organisationService
         controller.searchService = searchService
         controller.documentService = documentService
@@ -36,7 +46,7 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         controller.settingService = settingService
     }
 
-    def "only the organisation projects and sites should be viewable anonymously"() {
+    def "only the about tab should be viewable anonymously"() {
         setup:
         setupAnonymousUser()
         def testOrg = testOrganisation(true)
@@ -47,9 +57,9 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
 
         then:
         model.organisation == testOrg
-        model.content.projects.visible == true
-        model.content.sites.visible == true
-        model.content.dashboard.visible == true
+        model.content.projects.visible == false
+        model.content.sites.visible == false
+        model.content.dashboard.visible == false
         model.content.admin.visible == false
     }
 
@@ -121,17 +131,17 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         model.content.admin.visible == false
     }
 
-    def "the project tab is the default if there are no reports"() {
+    def "the about tab is the default if the user is not an admin"() {
         setup:
         def testOrg = testOrganisation(false)
         organisationService.get(_,_) >> testOrg
-        setupOrganisationAdmin()
+
 
         when:
         def model = controller.index('id')
 
         then:
-        model.content.projects.default == true
+        model.content.about.default == true
         def numDefault = 0
         model.content.each { k, v ->
             if (v.default) {
@@ -141,11 +151,11 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         numDefault == 1
     }
 
-    def "the project tab is the default if the reports are not shown"() {
+    def "the reporting tab is the default if the user is an admin"() {
         setup:
         def testOrg = testOrganisation(true)
         organisationService.get(_,_) >> testOrg
-        setupOrganisationEditor()
+        setupOrganisationAdmin()
 
         when:
         def model = controller.index('id')
@@ -178,8 +188,9 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
     def "all reports should be available to organisation admins"() {
         setup:
         def testOrg = testOrganisation(true)
-        testOrg.projects = [[projectId:'1234', associatedProgram:'Program 1']]
+        testOrg.projects = [[programId:'p1'], [programId:'p2'], [programId:'p3']]
         organisationService.get(_,_) >> testOrg
+        testOrg.config = [:]
         setupOrganisationAdmin()
 
         when: "the organisation page is viewed"
@@ -190,7 +201,8 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         model.content.dashboard.reports.find{it.name == 'dashboard'} != null
         model.content.dashboard.reports.find{it.name == 'announcements'} != null
 
-
+        and:
+        1 * programService.get(['p1', 'p2', 'p3'] as String[]) >> [[name:'Program 1', programId:'p1'], [name:'Program 2', programId:'p2'], [name:'Program 3', programId:'p3']]
     }
 
     def "an anonymous user cannot bulk edit project announcements"() {

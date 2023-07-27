@@ -3,6 +3,7 @@ package au.org.ala.merit
 import au.org.ala.merit.command.EditOrganisationReportCommand
 import au.org.ala.merit.command.SaveReportDataCommand
 import au.org.ala.merit.command.ViewOrganisationReportCommand
+import au.org.ala.merit.util.ProjectGroupingHelper
 import grails.converters.JSON
 import org.apache.http.HttpStatus
 
@@ -20,6 +21,7 @@ class OrganisationController {
     def organisationService, searchService, documentService, userService, roleService, commonService, webService
     def activityService, metadataService, projectService, excelImportService, reportService, pdfConverterService, authService
     SettingService settingService
+    ProjectGroupingHelper projectGroupingHelper
 
     def list() {}
 
@@ -63,8 +65,9 @@ class OrganisationController {
         def members = organisationService.getMembersOfOrganisation(organisation.organisationId)
         def orgRole = members.find { it.userId == user?.userId } ?: [:]
         def hasAdminAccess = userService.userIsSiteAdmin() || orgRole.role == RoleService.PROJECT_ADMIN_ROLE
+        def hasEditorAccess =  hasAdminAccess || orgRole.role == RoleService.PROJECT_EDITOR_ROLE
 
-        def reportingVisible = (organisation.reports && (hasAdminAccess || userService.userHasReadOnlyAccess())) || userService.userIsAlaOrFcAdmin()
+        def reportingVisible = hasEditorAccess || userService.userHasReadOnlyAccess()
 
         def dashboardReports = [[name:'dashboard', label:'Activity Outputs']]
 
@@ -93,10 +96,16 @@ class OrganisationController {
 
         List adHocReportTypes =[ [type: ReportService.PERFORMANCE_MANAGEMENT_REPORT]]
 
-        [about     : [label: 'About', visible: true, stopBinding: false, type:'tab'],
-         projects : [label: 'Reporting', visible: true, stopBinding:true, default:!reportingVisible, type: 'tab', reports:organisation.reports, adHocReportTypes:adHocReportTypes, reportOrder:reportOrder, hideDueDate:true],
-         sites     : [label: 'Sites', visible: true, type: 'tab', stopBinding:true, projectCount:organisation.projects?.size()?:0, showShapefileDownload:hasAdminAccess],
-         dashboard : [label: 'Dashboard', visible: true, stopBinding:true, type: 'tab', template:'/shared/dashboard', reports:dashboardReports],
+        // This is a configuration option that controls how we group and display the projects on the
+        // management unit page.
+        List projects = organisation.projects ?: []
+        List programGroups = organisation.config?.programGroups ?: []
+        Map projectGroups = projectGroupingHelper.groupProjectsByProgram(projects, programGroups, ["organisationId:"+organisation.organisationId], true)
+
+        [about     : [label: 'About', visible: true, stopBinding: false, type:'tab', default:!reportingVisible, displayedPrograms:projectGroups.displayedPrograms, servicesDashboard:[visible:true]],
+         projects : [label: 'Reporting', template:"/shared/projectListByProgram", visible: reportingVisible, stopBinding:true, default:reportingVisible, type: 'tab', reports:organisation.reports, adHocReportTypes:adHocReportTypes, reportOrder:reportOrder, hideDueDate:true, displayedPrograms:projectGroups.displayedPrograms],
+         sites     : [label: 'Sites', visible: reportingVisible, type: 'tab', stopBinding:true, projectCount:organisation.projects?.size()?:0, showShapefileDownload:hasAdminAccess],
+         dashboard : [label: 'Dashboard', visible: reportingVisible, stopBinding:true, type: 'tab', template:'/shared/dashboard', reports:dashboardReports],
          admin     : [label: 'Admin', visible: hasAdminAccess, type: 'tab', template:'admin', showEditAnnoucements:showEditAnnoucements, availableReportCategories:availableReportCategories]]
 
     }
@@ -123,7 +132,7 @@ class OrganisationController {
         render result as JSON
     }
 
-    @PreAuthorise(accessLevel = 'admin')
+    @PreAuthorise(accessLevel = 'editor')
     def edit(String id) {
 
         def organisation = organisationService.get(id)
@@ -496,7 +505,7 @@ class OrganisationController {
         }
     }
 
-    @PreAuthorise(accessLevel = 'admin', redirectController = 'organisation')
+    @PreAuthorise(accessLevel = 'editor', redirectController = 'organisation')
     def editOrganisationReport(EditOrganisationReportCommand cmd) {
         if (cmd.hasErrors()) {
             error(cmd.errors.toString(), cmd.id)
@@ -511,7 +520,7 @@ class OrganisationController {
         }
     }
 
-    @PreAuthorise(accessLevel = 'admin')
+    @PreAuthorise(accessLevel = 'editor')
     def saveReport(SaveReportDataCommand saveReportDataCommand) {
         Map result
         if (saveReportDataCommand.report?.organisationId != params.id) {
