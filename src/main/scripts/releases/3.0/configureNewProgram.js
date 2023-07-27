@@ -931,10 +931,9 @@ var config=
                 "reportDescriptionFormat": "Annual Progress Report %2$tY - %3$tY for %4$s",
                 "reportNameFormat": "Annual Progress Report %2$tY - %3$tY",
                 "reportingPeriodInMonths": 12,
-                "description": "",
                 "category": "Annual Progress Reporting",
                 "activityType": annualReportFormName,
-                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._,",
+                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._",
                 "label": "Annual",
                 "minimumReportDurationInDays": 1
             },
@@ -947,7 +946,7 @@ var config=
                 "alignToOwnerStart":true,
                 "alignToOwnerEnd":true,
                 "multiple": false,
-                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._,",
+                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._",
                 "maximumOwnerDurationInMonths": 35,
                 "category": "Outcomes Report 1",
                 "reportsAlignedToCalendar": false,
@@ -962,7 +961,7 @@ var config=
                 "reportNameFormat": "Outcomes Report 1",
                 "reportingPeriodInMonths": 24,
                 "multiple": false,
-                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._,",
+                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._",
                 "category": "Outcomes Report 1",
                 "activityType": outcomes1ReportFormName,
                 "label": "Outcomes Report 1"
@@ -973,7 +972,7 @@ var config=
                 "reportNameFormat": "Outcomes Report 1",
                 "reportingPeriodInMonths": 36,
                 "multiple": false,
-                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._,",
+                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._",
                 "minimumOwnerDurationInMonths": 48,
                 "calendarAlignmentMonth": 7,
                 "category": "Outcomes Report",
@@ -989,7 +988,7 @@ var config=
                 "alignToOwnerStart":true,
                 "alignToOwnerEnd":true,
                 "multiple": false,
-                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._,",
+                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._",
                 "category": "Outcomes Report 2",
                 "activityType": outcomes2ReportFormName,
                 "label": "Outcomes Report 2"
@@ -1641,7 +1640,7 @@ while (services.hasNext()) {
 var blankReportTemplate = function(name, templateName, category) {
     return {
         dateCreated: ISODate(),
-        minOptionalSectionsCompleted: 1,
+        minOptionalSectionsCompleted: NumberInt(1),
         supportsSites: false,
         lastUpdated: ISODate(),
         external: false,
@@ -1670,18 +1669,18 @@ var blankReportTemplate = function(name, templateName, category) {
         type: 'Report',
         category: category,
         status: 'active',
-        formVersion: 1,
+        formVersion: NumberInt(1),
     };
 };
 const reports = [
     {name: "NHT Annual Report", templateName: "nhtProgramAnnualReport", category: 'Annual Report'},
     {
-        name: "NHT Outcomes 1 Report ",
+        name: outcomes1ReportFormName,
         templateName: "nhtProgramOutcomes1Report",
         category: "Outcomes 1 Report"
     },
     {
-        name: "NHT Outcomes 2 Report ",
+        name: outcomes2ReportFormName,
         templateName: "nhtProgramOutcomes2Report",
         category: "Outcomes 2 Report"
     }
