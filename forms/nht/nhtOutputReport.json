@@ -773,7 +773,7 @@
                   },
                   {
                     "source": "relatedOutcomes",
-                    "type": "select2Many",
+                    "type": "selectOne",
                     "width": "25%",
                     "title": "Which outcome statement/s aligns with this Baseline Dataset?"
                   }
@@ -1839,7 +1839,7 @@
                       },
                       {
                         "source": "relatedOutcomes",
-                        "type": "select2Many",
+                        "type": "selectOne",
                         "width": "10%",
                         "title": "Which outcome statement/s relates to this survey?"
                       },
@@ -3111,7 +3111,7 @@
                       {
                         "width": "15%",
                         "source": "relatedOutcomes",
-                        "type": "select2Many",
+                        "type": "selectOne",
                         "title": "Which outcome statement/s relates to this survey?"
                       }
                     ],
@@ -3771,7 +3771,7 @@
                       },
                       {
                         "source": "relatedOutcomes",
-                        "type": "select2Many",
+                        "type": "selectOne",
                         "width": "10%",
                         "title": "Which outcome statement/s relates to this survey?"
                       },
@@ -5499,7 +5499,7 @@
                       },
                       {
                         "source": "relatedOutcomes",
-                        "type": "select2Many",
+                        "type": "selectOne",
                         "width": "10%",
                         "title": "Which outcome statement/s relates to this survey?"
                       }
@@ -6351,7 +6351,7 @@
                       },
                       {
                         "source": "relatedOutcomes",
-                        "type": "select2Many",
+                        "type": "selectOne",
                         "width": "10%",
                         "title": "Which outcome statement/s relates to this survey?"
                       },
@@ -7034,7 +7034,7 @@
                             "items": [
                               {
                                 "source": "relatedOutcomes",
-                                "type": "select2Many",
+                                "type": "selectOne",
                                 "preLabel": "Which outcome statement/s relates to this survey?"
                               }
                             ]
@@ -7874,7 +7874,7 @@
                             "items": [
                               {
                                 "source": "relatedOutcomes",
-                                "type": "select2Many",
+                                "type": "selectOne",
                                 "preLabel": "Which outcome statement/s relates to this survey?"
                               }
                             ]
@@ -9014,7 +9014,7 @@
                   {
                     "width": "15%",
                     "source": "relatedOutcomes",
-                    "type": "select2Many",
+                    "type": "selectOne",
                     "title": "Which outcome statement/s relates to this survey?"
                   }
                 ],
@@ -9673,7 +9673,7 @@
                             "items": [
                               {
                                 "source": "relatedOutcomes",
-                                "type": "select2Many",
+                                "type": "selectOne",
                                 "preLabel": "Which outcome statement/s relates to this survey?"
                               }
                             ]
@@ -10481,7 +10481,7 @@
                             "items": [
                               {
                                 "source": "relatedOutcomes",
-                                "type": "select2Many",
+                                "type": "selectOne",
                                 "preLabel": "Which outcome statement/s relates to this survey?"
                               }
                             ]
@@ -11361,7 +11361,7 @@
                   {
                     "width": "15%",
                     "source": "relatedOutcomes",
-                    "type": "select2Many",
+                    "type": "selectOne",
                     "title": "Which outcome statement/s relates to this survey?"
                   }
                 ],
@@ -12079,7 +12079,7 @@
                   {
                     "width": "15%",
                     "source": "relatedOutcomes",
-                    "type": "select2Many",
+                    "type": "selectOne",
                     "title": "Which outcome statement/s relates to this survey?"
                   }
                 ],
@@ -12852,7 +12852,7 @@
                   {
                     "width": "15%",
                     "source": "relatedOutcomes",
-                    "type": "select2Many",
+                    "type": "selectOne",
                     "title": "Which outcome statement/s relates to this survey?"
                   }
                 ],
@@ -13622,7 +13622,7 @@
                   {
                     "width": "10%",
                     "source": "relatedOutcomes",
-                    "type": "select2Many",
+                    "type": "selectOne",
                     "title": "Which outcome statement/s relates to this survey?"
                   }
                 ],
@@ -14258,7 +14258,7 @@
                             "items": [
                               {
                                 "source": "relatedOutcomes",
-                                "type": "select2Many",
+                                "type": "selectOne",
                                 "preLabel": "Which outcome statement/s relates to this survey?"
                               }
                             ]
@@ -15099,7 +15099,7 @@
                             "items": [
                               {
                                 "source": "relatedOutcomes",
-                                "type": "select2Many",
+                                "type": "selectOne",
                                 "preLabel": "Which outcome statement/s relates to this survey?"
                               }
                             ]
@@ -16637,7 +16637,7 @@
                             "items": [
                               {
                                 "source": "relatedOutcomes",
-                                "type": "select2Many",
+                                "type": "selectOne",
                                 "preLabel": "Which outcome statement/s relates to this survey?"
                               }
                             ]
@@ -17473,7 +17473,7 @@
                     "preLabel": "Which outcome statement/s relates to this survey?",
                     "css": "span3",
                     "source": "relatedOutcomes",
-                    "type": "select2Many"
+                    "type": "selectOne"
                   },
                   {
                     "preLabel": "Activities start date",
@@ -18105,7 +18105,7 @@
                           {
                             "preLabel": "Which outcome statement/s relates to this survey?",
                             "source": "relatedOutcomes",
-                            "type": "select2Many"
+                            "type": "selectOne"
                           }
                         ]
                       }
@@ -19113,7 +19113,7 @@
                   },
                   {
                     "source": "relatedOutcomes",
-                    "type": "select2Many",
+                    "type": "selectOne",
                     "width": "15%",
                     "title": "Which outcome statement/s relates to this survey?"
                   },
@@ -19627,7 +19627,7 @@
                       },
                       {
                         "source": "relatedOutcomes",
-                        "type": "select2Many",
+                        "type": "selectOne",
                         "width": "10%",
                         "title": "Which outcome statement/s relates to this survey?"
                       },
@@ -20914,7 +20914,7 @@
                             "items": [
                               {
                                 "source": "relatedOutcomes",
-                                "type": "select2Many",
+                                "type": "selectOne",
                                 "preLabel": "Which outcome statement/s relates to this survey?"
                               }
                             ]
@@ -21924,7 +21924,7 @@
                             "items": [
                               {
                                 "source": "relatedOutcomes",
-                                "type": "select2Many",
+                                "type": "selectOne",
                                 "preLabel": "Which outcome statement/s relates to this survey?"
                               }
                             ]
@@ -22091,7 +22091,7 @@
                       },
                       {
                         "source": "relatedOutcomes",
-                        "type": "select2Many",
+                        "type": "selectOne",
                         "width": "15%",
                         "title": "Which outcome statement/s relates to this survey?"
                       },
