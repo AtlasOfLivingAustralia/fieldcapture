@@ -144,6 +144,7 @@
               {
                 "type": "table",
                 "source": "engagementDetails",
+                "title": "<b>Please list community engagement activities undertaken, including the title, description, and the number of participants for each activity undertaken in this reporting period, if any.</b>",
                 "userAddedRows": true,
                 "columns": [
                   {
