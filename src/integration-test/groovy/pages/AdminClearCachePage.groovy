@@ -30,18 +30,24 @@ class AdminClearCachePage extends ReloadablePage {
     void clearProgramListCache() {
         if (programListCache.displayed) {
             programListCache.click()
+
+            waitFor { hasBeenReloaded() }
         }
     }
 
     void clearServiceListCache() {
         if (serviceListCache.displayed) {
             serviceListCache.click()
+
+            waitFor { hasBeenReloaded() }
         }
     }
 
     void clearProtocolListCache() {
         if (protocolListCache.displayed) {
             protocolListCache.click()
+
+            waitFor { hasBeenReloaded() }
         }
     }
 }

@@ -264,10 +264,10 @@ class ProgramService {
     }
 
     List<Map> getPrimaryOutcomes(Map program) {
-        program?.outcomes.findAll {it.type != OUTCOME_TYPE_SECONDARY_ONLY}
+        program?.outcomes.findAll {it.type == OUTCOME_TYPE_PRIMARY_ONLY || !it.type}
     }
     List<Map> getSecondaryOutcomes(Map program) {
-        program?.outcomes.findAll {it.type != OUTCOME_TYPE_PRIMARY_ONLY}
+        program?.outcomes.findAll {it.type == OUTCOME_TYPE_SECONDARY_ONLY || !it.type}
     }
 
     @Cacheable("programList")

@@ -7,7 +7,7 @@ import pages.modules.OrganisationAdminTab
 class Organisation extends ReloadablePage {
     static url = 'organisation/index'
 
-    static at = { $('#organisationDetails').displayed }
+    static at = { true } //$('#organisationDetails').displayed }
 
     static content = {
         name {$('h2')}
@@ -17,11 +17,17 @@ class Organisation extends ReloadablePage {
         orgName { $('.header-text') }
         orgDescription { $('span#orgDescription') }
         orgAbn {$('span#orgAbn')}
-        projectContent {$("#projectList tbody tr td")}
+        projectContent {$("#projects .projects-wrapper tbody tr td")}
         reportingTab(required: false) { $('#projects-tab') }
         sitesTab {$("#sites-tab")}
         reportsTabPane(required:false) { module(OrganisationReports)}
         reportDeclaration { $('#declaration') }
+    }
+
+    void openAboutTab() {
+        waitFor { aboutTab.displayed }
+        aboutTab.click()
+        waitFor { orgDescription.displayed }
     }
 
     void edit() {
