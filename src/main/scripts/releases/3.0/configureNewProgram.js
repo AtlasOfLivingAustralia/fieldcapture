@@ -549,7 +549,9 @@ for (let i=0; i<newScores.length; i++) {
             db.score.insertOne(score);
         } else {
             var tags = newScores[i].scores[j].tags;
-
+            if (!tags) {
+                tags = null;
+            }
             db.score.update(
                 {_id: score._id},
                 {$set: {
