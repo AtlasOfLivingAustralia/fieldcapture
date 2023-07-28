@@ -248,7 +248,7 @@ security {
     }
 }
 
-webservice.jwt = true
+webservice.jwt = false
 webservice['jwt-scopes'] = "ala/internal users/read ala/attrs users/read ecodata/write_test ecodata/read_test"
 webservice['client-id']='changeMe'
 webservice['client-secret'] = 'changeMe'
