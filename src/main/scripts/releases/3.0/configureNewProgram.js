@@ -48,7 +48,7 @@ const newScores = [
         scores: [
             {
                 label: 'Number of baseline datasets synthesised and finalised',
-                path: 'data.tba',
+                path: 'data.numberBaselineDataSets',
                 tags: ['Survey', 'Baseline', 'Indicator']
             }
         ]
@@ -59,11 +59,17 @@ const newScores = [
         scores: [
             {
                 label: 'Number of captive breeding and release, translocation, or re-introduction programs established',
-                path: 'data.tba'
+                path: 'data.numberOfCaptiveBreeding',
+                filterValue: "Newly established",
+                filterPath: "data.breedingProgramDetails.newOrMaintained",
+                tags: ['Survey', 'Baseline', 'Indicator']
             },
             {
                 label: 'Number of captive breeding and release, translocation, or re-introduction programs maintained',
-                path: 'data.tba'
+                path: 'data.numberOfCaptiveBreeding',
+                filterValue: "Maintained",
+                filterPath: "data.breedingProgramDetails.newOrMaintained",
+                tags: ['Survey', 'Baseline', 'Indicator']
             }
         ]
     },
@@ -73,19 +79,31 @@ const newScores = [
         scores: [
             {
                 label: 'Area (ha) of debris removal - initial',
-                path: 'data.tba'
+                path: 'data.debrisRemovalSurveys.debrisRemovalDetails.debrisRemovedHa',
+                filterValue: "Initial",
+                filterPath: "data.debrisRemovalSurveys.debrisRemovalDetails.initialOrFollowup",
+                tags: ['Survey', 'Baseline', 'Indicator']
             },
             {
                 label: 'Area (ha) of debris removal - follow-up',
-                path: 'data.tba'
+                path: 'data.debrisRemovalSurveys.debrisRemovalDetails.debrisRemovedHa',
+                filterValue: 'Follow-up',
+                filterPath: "data.debrisRemovalSurveys.debrisRemovalDetails.initialOrFollowup",
+                tags: ['Survey', 'Baseline', 'Indicator']
             },
             {
                 label: 'Length (km) of debris removal - initial',
-                path: 'data.tba'
+                path: 'data.debrisRemovalSurveys.debrisRemovalDetails.debrisRemovedKm',
+                filterValue: 'Initial',
+                filterPath: "data.debrisRemovalSurveys.debrisRemovalDetails.initialOrFollowup",
+                tags: ['Survey', 'Baseline', 'Indicator']
             },
             {
                 label: 'Length (km) of debris removal - follow-up',
-                path: 'data.tba'
+                path: 'data.debrisRemovalSurveys.debrisRemovalDetails.debrisRemovedKm',
+                filterValue: 'Follow-up',
+                filterPath: "data.debrisRemovalSurveys.debrisRemovalDetails.initialOrFollowup",
+                tags: ['Survey', 'Baseline', 'Indicator']
             }
         ]
     },
@@ -153,12 +171,16 @@ const newScores = [
         scores: [
             {
                 label: 'Number of farm management surveys conducted - baseline',
-                path: 'data.tba',
+                path: 'data.numberFarmManagementSurveysConducted',
+                filterValue: "Baseline",
+                filterPath: "data.farmSurveys.surveyBaselineDetails.baselineOrIndicatorSurvey",
                 tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Number of farm management surveys conducted - indicator',
-                path: 'data.tba',
+                path: 'data.numberFarmManagementSurveysConducted',
+                filterValue: "Indicator",
+                filterPath: "data.farmSurveys.surveyBaselineDetails.baselineOrIndicatorSurvey",
                 tags: ['Survey', 'Indicator']
             }
         ]
@@ -169,12 +191,16 @@ const newScores = [
         scores: [
             {
                 label: 'Number of fauna surveys conducted - baseline',
-                path: 'data.tba',
+                path: 'data.numberFaunaSurveysConducted',
+                filterValue: "Baseline",
+                filterPath: "data.faunaSurveys.baselineOrIndicatorSurvey",
                 tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Number of fauna surveys conducted - indicator',
-                path: 'data.tba',
+                path: 'data.numberFaunaSurveysConducted',
+                filterValue: "Indicator",
+                filterPath: "data.faunaSurveys.baselineOrIndicatorSurvey",
                 tags: ['Survey', 'Indicator']
             }
         ]
@@ -185,12 +211,16 @@ const newScores = [
         scores: [
             {
                 label: 'Number of flora surveys conducted - baseline',
-                path: 'data.tba',
+                path: 'data.numberFloraSurveysConducted',
+                filterValue: "Baseline",
+                filterPath: "data.floraSurveys.baselineOrIndicatorSurvey",
                 tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Number of flora surveys conducted - indicator',
-                path: 'data.tba',
+                path: 'data.numberFloraSurveysConducted',
+                filterValue: "Indicator",
+                filterPath: "data.floraSurveys.baselineOrIndicatorSurvey",
                 tags: ['Survey', 'Indicator']
             }
         ]
@@ -201,19 +231,31 @@ const newScores = [
         scores: [
             {
                 label: 'Area (ha) of augmentation - initial',
-                path: 'data.tba'
+                path: 'data.habitatAugmentationAreas.areaImplementedHa',
+                filterValue: 'Initial',
+                filterPath: "data.habitatAugmentationAreas.initialOrMaintained",
+                tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Area (ha) of augmentation - maintained',
-                path: 'data.tba'
+                path: 'data.habitatAugmentationAreas.areaImplementedHa',
+                filterValue: "Maintained",
+                filterPath: "data.habitatAugmentationAreas.initialOrMaintained",
+                tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Number of locations where structures installed - initial',
-                path: 'data.tba'
+                path: 'data.habitatAugmentationAreas.noStructuresInstalled',
+                filterValue: 'Initial',
+                filterPath: "data.habitatAugmentationAreas.initialOrMaintained",
+                tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Number of locations where structures installed - maintained',
-                path: 'data.tba'
+                path: 'data.habitatAugmentationAreas.noStructuresInstalled',
+                filterValue: "Maintained",
+                filterPath: "data.habitatAugmentationAreas.initialOrMaintained",
+                tags: ['Survey', 'Baseline']
             }
         ]
     },
@@ -223,12 +265,16 @@ const newScores = [
         scores: [
             {
                 label: 'Number of habitat condition assessment surveys conducted - baseline',
-                path: 'data.tba',
+                path: 'data.numberHabitatConditionAssessmentSurveysConducted',
+                filterValue: "Baseline",
+                filterPath: "data.conditionAssessmentSurveys.baselineOrIndicatorSurvey",
                 tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Number of habitat condition assessment surveys conducted - indicator',
-                path: 'data.tba',
+                path: 'data.numberHabitatConditionAssessmentSurveysConducted',
+                filterValue: "Indicator",
+                filterPath: "data.conditionAssessmentSurveys.baselineOrIndicatorSurvey",
                 tags: ['Survey', 'Indicator']
             }
         ]
@@ -239,7 +285,7 @@ const newScores = [
         scores: [
             {
                 label: 'Number of potential sites assessed',
-                path: 'data.tba'
+                path: 'data.potentialSiteSurveys.numberPotentialSitesAssessed',
             }
         ]
     },
@@ -263,11 +309,17 @@ const newScores = [
         scores: [
             {
                 label: 'Number of treatments implemented to improve site eco-hydrology - initial',
-                path: 'data.tba'
+                path: 'data.numberEcoHydroTreatments',
+                filterValue: "Initial",
+                filterPath: "data.hydroAreasControlled.initialOrFollowup",
+                tags: ['Survey', 'Baseline', 'Indicator', 'Initial']
             },
             {
                 label: 'Number of treatments implemented to improve site eco-hydrology - follow-up',
-                path: 'data.tba'
+                path: 'data.numberEcoHydroTreatments',
+                filterValue: 'Follow-up',
+                filterPath: "data.hydroAreasControlled.initialOrFollowup",
+                tags: ['Survey', 'Baseline', 'Indicator', 'Initial']
             }
         ]
     },
@@ -277,11 +329,17 @@ const newScores = [
         scores: [
             {
                 label: 'Area (ha) covered by practice change - initial',
-                path: 'data.tba'
+                path: 'data.landManagementControlledArea.landManagementDetails.areaImplementedHa',
+                filterValue: 'Initial',
+                filterPath: "data.landManagementControlledArea.initialOrFollowup",
+                tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Area (ha) covered by practice change - follow-up',
-                path: 'data.tba'
+                path: 'data.landManagementControlledArea.landManagementDetails.areaImplementedHa',
+                filterValue: 'Follow-up',
+                filterPath: "data.landManagementControlledArea.initialOrFollowup",
+                tags: ['Survey', 'Baseline']
             }
         ]
     },
@@ -291,19 +349,31 @@ const newScores = [
         scores: [
             {
                 label: 'Area (ha) for disease treatment/prevention - initial',
-                path: 'data.tba'
+                path: 'data.diseaseManagementAreasControlled.diseaseManagementDetails.areaTreatedHa',
+                filterValue: 'Initial',
+                filterPath: "data.diseaseManagementAreasControlled.initialOrFollowup",
+                tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Area (ha) for disease treatment/prevention - follow-up',
-                path: 'data.tba'
+                path: 'data.diseaseManagementAreasControlled.diseaseManagementDetails.areaTreatedHa',
+                filterValue: 'Follow-up',
+                filterPath: "data.diseaseManagementAreasControlled.initialOrFollowup",
+                tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Length (km) for disease treatment/prevention - initial',
-                path: 'data.tba'
+                path: 'data.diseaseManagementAreasControlled.diseaseManagementDetails.lengthTreatedKm',
+                filterValue: 'Initial',
+                filterPath: "data.diseaseManagementAreasControlled.initialOrFollowup",
+                tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Length (km) for disease treatment/prevention - follow-up',
-                path: 'data.tba'
+                path: 'data.diseaseManagementAreasControlled.diseaseManagementDetails.lengthTreatedKm',
+                filterValue: 'Follow-up',
+                filterPath: "data.diseaseManagementAreasControlled.initialOrFollowup",
+                tags: ['Survey', 'Baseline']
             }
         ]
     },
@@ -313,12 +383,16 @@ const newScores = [
         scores: [
             {
                 label: 'Number of pest animal surveys conducted - baseline',
-                path: 'data.tba',
+                path: 'data.numberPestAnimalSurveysConducted',
+                filterValue: "Baseline",
+                filterPath: "data.pestAnimalSurveys.baselineOrIndicatorSurvey",
                 tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Number of pest animal surveys conducted - indicator',
-                path: 'data.tba',
+                path: 'data.numberPestAnimalSurveysConducted',
+                filterValue: "Indicator",
+                filterPath: "data.pestAnimalSurveys.baselineOrIndicatorSurvey",
                 tags: ['Survey', 'Indicator']
             }
         ]
@@ -355,11 +429,17 @@ const newScores = [
         scores: [
             {
                 label: 'Area (ha) of habitat revegetated - initial',
-                path: 'data.tba'
+                path: 'data.revegetationArea.siteCalculatedAreaHa',
+                filterValue: "Initial",
+                filterPath: "data.revegetationArea.initialOrMaintenance",
+                tags: ['Survey', 'Baseline', 'Indicator', 'Initial']
             },
             {
                 label: 'Area (ha) of habitat revegetated - maintained',
-                path: 'data.tba'
+                path: 'data.revegetationArea.siteCalculatedAreaHa',
+                filterValue: "Maintenance",
+                filterPath: "data.revegetationArea.initialOrMaintenance",
+                tags: ['Survey', 'Baseline', 'Indicator', 'Initial']
             }
         ]
     },
@@ -369,15 +449,15 @@ const newScores = [
         scores: [
             {
                 label: 'Amount (grams)/number of seeds/cuttings collected',
-                path: 'data.tba'
+                path: 'data.areasOfSeedCollection.seedCollectionDetails.amountSeedCollected'
             },
             {
                 label: 'Number of days propagating',
-                path: 'data.tba'
+                path: 'data.areasOfSeedCollection.seedCollectionDetails.noOfDaysPropagating'
             },
             {
                 label: 'Number of plants propagated',
-                path: 'data.tba'
+                path: 'data.areasOfSeedCollection.seedCollectionDetails.noOfPlantsPropogated'
             }
         ]
     },
@@ -387,7 +467,7 @@ const newScores = [
         scores: [
             {
                 label: 'Number of seed germination/plant survival surveys completed - indicator',
-                path: 'data.tba',
+                path: 'data.numberPlantSurvivalSurveys',
                 tags: ['Survey', 'Indicator']
             }
         ]
@@ -397,8 +477,14 @@ const newScores = [
         formSection:  'NHT - Site preparation',
         scores: [
             {
+                label: 'Area (ha) of site preparation',
+                path: 'data.sitePreparationAreasControlled.areaPreparedHa',
+                tags: ['Survey', 'Baseline']
+            },
+            {
                 label: 'Length (km) of site preparation',
-                path: 'data.tba'
+                path: 'data.sitePreparationAreasControlled.lengthPreparedKm',
+                tags: ['Survey', 'Baseline']
             }
         ]
     },
@@ -408,12 +494,16 @@ const newScores = [
         scores: [
             {
                 label: 'Number of water quality surveys conducted - baseline',
-                path: 'data.tba',
+                path: 'data.numberWaterQualitySurveyConducted',
+                filterValue: "Baseline",
+                filterPath: "data.waterQualitySurveys.baselineOrIndicatorSurvey",
                 tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Number of water quality surveys conducted - indicator',
-                path: 'data.tba',
+                path: 'data.numberWaterQualitySurveyConducted',
+                filterValue: "Indicator",
+                filterPath: "data.waterQualitySurveys.baselineOrIndicatorSurvey",
                 tags: ['Survey', 'Indicator']
             }
         ]
@@ -424,12 +514,16 @@ const newScores = [
         scores: [
             {
                 label: 'Number of weed distribution surveys conducted - baseline',
-                path: 'data.tba',
+                path: 'data.numberWeedDistributionSurveysConducted',
+                filterValue: "Baseline",
+                filterPath: "data.weedDistSurveys.baselineOrIndicatorSurvey",
                 tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Number of weed distribution surveys conducted - indicator',
-                path: 'data.tba',
+                path: 'data.numberWeedDistributionSurveysConducted',
+                filterValue: "Indicator",
+                filterPath: "data.weedDistSurveys.baselineOrIndicatorSurvey",
                 tags: ['Survey', 'Indicator']
             }
         ]
@@ -469,31 +563,21 @@ const newScores = [
         ]
     },
     {
-        serviceId: 18,
-        formSection:  'NHT - Improving hydrological regimes',
-        scores: [
-            {
-                label: 'Number of treatments implemented to improve site eco-hydrology - initial',
-                path: 'data.tba'
-            },
-            {
-                label: 'Number of treatments implemented to improve site eco-hydrology - follow-up',
-                path: 'data.tba'
-            }
-        ]
-    },
-    {
         serviceId: 29,
         formSection:  'NHT - Skills and knowledge survey',
         scores: [
             {
                 label: 'Number of skills and knowledge surveys conducted - baseline',
-                path: 'data.tba',
+                path: 'data.numberSkillsKnowledgeSurveysConducted',
+                filterValue: "Baseline",
+                filterPath: "data.skillsKnowledgeSurveys.skillsKnowledgeSurveyBaselineDetails.baselineOrIndicator",
                 tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Number of skills and knowledge surveys conducted - indicator',
-                path: 'data.tba',
+                path: 'data.numberSkillsKnowledgeSurveysConducted',
+                filterValue: "Indicator",
+                filterPath: "data.skillsKnowledgeSurveys.skillsKnowledgeSurveyBaselineDetails.baselineOrIndicator",
                 tags: ['Survey', 'Indicator']
             }
         ]

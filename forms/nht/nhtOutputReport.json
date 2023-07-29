@@ -632,7 +632,7 @@
                 "validate": "required",
                 "constraints": {
                   "textProperty": "baseline",
-                  "valueProperty": "method",
+                  "valueProperty": "baseline",
                   "type": "pre-populated",
                   "excludePath": "baselineDetails.projectBaseline",
                   "config": {
@@ -697,7 +697,7 @@
             ]
           },
           {
-            "name": "baselineNameCountHeader",
+            "name": "numberBaselineDataSets",
             "type": "number",
             "decimalPlaces": 0,
             "computed": {
@@ -738,7 +738,7 @@
                 "preLabel": "Total number of baseline datasets synthesised and finalised:",
                 "noEdit": true,
                 "type": "number",
-                "source": "baselineNameCountHeader"
+                "source": "numberBaselineDataSets"
               },
               {
                 "type": "table",
@@ -851,6 +851,78 @@
       "template": {
         "dataModel": [
           {
+            "dataType": "text",
+            "name": "participationIndividualsOrGroups",
+            "constraints": [
+              "Individuals",
+              "Groups"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "participationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "participationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "firstNationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "firstNationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "participationDetails",
+            "validate": "maxSize[3000]"
+          },
+          {
             "columns": [
               {
                 "dataType": "text",
@@ -901,6 +973,15 @@
             "validate": "maxSize[1500]"
           },
           {
+            "dataType": "image",
+            "name": "photographicEvidence"
+          },
+          {
+            "dataType": "boolean",
+            "name": "dataUploaded",
+            "description": ""
+          },
+          {
             "dataType": "text",
             "name": "projectAssuranceDetails",
             "description": ""
@@ -920,6 +1001,56 @@
         "modelName": "NHT - Communication Materials",
         "title": "Communication Materials",
         "viewModel": [
+          {
+            "columns": [
+              {
+                "width": "10%",
+                "source": "participationIndividualsOrGroups",
+                "title": "Individuals or groups?",
+                "type": "selectOne"
+              },
+              {
+                "width": "20%",
+                "type": "col",
+                "title": "Total Number of people delivering this service",
+                "items": [
+                  {
+                    "source": "participationIndividualNumber",
+                    "type": "number"
+                  },
+                  {
+                    "source": "participationGroupNumber",
+                    "type": "selectOne"
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "width": "20%",
+                "title": "Total Number of First Nations people delivering this service ",
+                "items": [
+                  {
+                    "source": "firstNationIndividualNumber",
+                    "type": "number"
+                  },
+                  {
+                    "source": "firstNationGroupNumber",
+                    "type": "selectOne"
+                  }
+                ]
+              },
+              {
+                "source": "participationDetails",
+                "rows": 4,
+                "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                "type": "textarea"
+              }
+            ],
+            "userAddedRows": false,
+            "disableTableUpload": false,
+            "source": "",
+            "type": "table"
+          },
           {
             "type": "section",
             "items": [
@@ -967,12 +1098,22 @@
                 "type": "row",
                 "items": [
                   {
+                    "preLabel": "Optionally attach photos",
+                    "source": "photographicEvidence",
+                    "type": "image"
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
                     "preLabel": "Clarification, if needed",
                     "type": "textarea",
                     "rows": 4,
                     "css": "span8",
                     "source": "comments",
-                    "placeholder": "Clarification comments include information for your project manager about the service like:\n• any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
+                    "placeholder": "Clarification comments include information for your project manager about the service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
                   }
                 ]
               },
@@ -981,7 +1122,12 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please attach any evidence you have available for this service and/or provide information (e.g. links) to where the evidence is stored. This field will help the Department and Service Providers during assurance activities or audits. Refer to the Evidence Guide for details of the types of acceptable evidence."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                  },
+                  {
+                    "preLabel": "Data have been uploaded",
+                    "source": "dataUploaded",
+                    "type": "boolean"
                   }
                 ]
               },
@@ -3322,7 +3468,7 @@
                         "condition": "debrisRemovedKm > 0",
                         "type": "conditional_validation",
                         "value": {
-                          "message": "The cleared length must be mapped",
+                          "message": "",
                           "validate": "required,min[0.0001]"
                         }
                       }
@@ -4219,7 +4365,7 @@
                     "type": "selectOne"
                   },
                   {
-                    "width": "5%",
+                    "width": "10%",
                     "title": "Site/s where erosion is evident",
                     "type": "col",
                     "items": [
@@ -4237,7 +4383,7 @@
                     ]
                   },
                   {
-                    "width": "6%",
+                    "width": "10%",
                     "type": "col",
                     "title": "Site/s of erosion control",
                     "items": [
@@ -4275,7 +4421,7 @@
                   },
                   {
                     "helpText": "Manually enter correct figure for this reporting period if different to mapped value.",
-                    "width": "17%",
+                    "width": "13%",
                     "type": "col",
                     "title": "Actual area (ha) / length (km) of erosion control",
                     "items": [
@@ -4366,7 +4512,7 @@
                     "type": "number"
                   },
                   {
-                    "width": "20%",
+                    "width": "15%",
                     "type": "col",
                     "title": "Type of treatment method",
                     "items": [
@@ -5026,64 +5172,38 @@
                 "name": "numberOfSitesCreated",
                 "validate": "required"
               },
+
               {
                 "dataType": "feature",
-                "name": "sitesOfAreaSource",
+                "name": "sitesOfBreedingProgram",
                 "description": "Number of days should be calculated as number of days by number of people (eg. 4.5 days by 3 people is 13.5 days)"
               },
               {
                 "defaultValue": {
                   "type": "computed",
-                  "expression": "$geom.areaHa(sitesOfAreaSource)"
+                  "expression": "$geom.areaHa(sitesOfBreedingProgram)"
                 },
                 "dataType": "number",
-                "name": "areaOfSourceHa",
+                "name": "areaOfEnclosureHa",
                 "validate": [
                   {
                     "rule": "min",
                     "param": {
                       "type": "computed",
-                      "expression": "$geom.areaHa(sitesOfAreaSource)*0.9"
+                      "expression": "$geom.areaHa(sitesOfBreedingProgram)*0.9"
                     }
                   },
                   {
                     "rule": "max",
                     "param": {
                       "type": "computed",
-                      "expression": "$geom.areaHa(sitesOfAreaSource)*1.1"
+                      "expression": "$geom.areaHa(sitesOfBreedingProgram)*1.1"
                     }
                   }
                 ]
               },
-              {
-                "dataType": "feature",
-                "name": "sitesOfAreaRelease",
-                "description": "Number of days should be calculated as number of days by number of people (eg. 4.5 days by 3 people is 13.5 days)"
-              },
-              {
-                "defaultValue": {
-                  "type": "computed",
-                  "expression": "$geom.areaHa(sitesOfAreaRelease)"
-                },
-                "dataType": "number",
-                "name": "areaOfReleaseHa",
-                "validate": [
-                  {
-                    "rule": "min",
-                    "param": {
-                      "type": "computed",
-                      "expression": "$geom.areaHa(sitesOfAreaRelease)*0.9"
-                    }
-                  },
-                  {
-                    "rule": "max",
-                    "param": {
-                      "type": "computed",
-                      "expression": "$geom.areaHa(sitesOfAreaRelease)*1.1"
-                    }
-                  }
-                ]
-              },
+
+
               {
                 "dataType": "date",
                 "name": "activitiesStartDate",
@@ -5182,7 +5302,7 @@
                     "validate": "required",
                     "constraints": {
                       "textProperty": "baseline",
-                      "valueProperty": "method",
+                      "valueProperty": "code",
                       "type": "pre-populated",
                       "excludePath": "projectBaseline",
                       "config": {
@@ -5243,7 +5363,7 @@
             "name": "breedingProgramDetails"
           },
           {
-            "name": "surveyCountHeader",
+            "name": "numberOfCaptiveBreeding",
             "type": "number",
             "decimalPlaces": 0,
             "computed": {
@@ -5283,10 +5403,10 @@
             "type": "section",
             "items": [
               {
-                "preLabel": "Number of establishing and maintaining breeding programs surveys conducted:",
+                "preLabel": "Number of establishing and maintaining breeding programs surveys conducted:xxx",
                 "noEdit": true,
                 "type": "number",
-                "source": "surveyCountHeader"
+                "source": "numberOfCaptiveBreeding"
               },
               {
                 "addRowText": "Add a new breeding area",
@@ -5325,6 +5445,23 @@
                   },
                   {
                     "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "Site/s of breeding program",
+                        "css": "span3",
+                        "source": "sitesOfBreedingProgram",
+                        "type": "feature"
+                      },
+                      {
+                        "preLabel": "Area (ha) of feral-free enclosures established or maintained",
+                        "css": "span3",
+                        "source": "areaOfEnclosureHa",
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
                     "css": "border-bottom",
                     "items": [
                       {
@@ -5343,64 +5480,8 @@
                           }
                         ]
                       },
-                      {
-                        "type": "col",
-                        "css": "span3 col-border-right",
-                        "items": [
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "Area of source site",
-                                "source": "sitesOfAreaSource",
-                                "type": "feature"
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "areaOfSourceHa",
-                                "type": "number",
-                                "displayOptions": {
-                                  "displayUnits": true
-                                },
-                                "readonly": "readonly"
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "type": "col",
-                        "css": "span3 col-border-right",
-                        "items": [
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "Area of release site",
-                                "source": "sitesOfAreaRelease",
-                                "type": "feature"
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "areaOfReleaseHa",
-                                "type": "number",
-                                "displayOptions": {
-                                  "displayUnits": true
-                                },
-                                "readonly": "readonly"
-                              }
-                            ]
-                          }
-                        ]
-                      },
+
+
                       {
                         "type": "col",
                         "css": "span2 col-border-right",
@@ -6115,7 +6196,7 @@
                     "validate": "required",
                     "constraints": {
                       "textProperty": "baseline",
-                      "valueProperty": "method",
+                      "valueProperty": "code",
                       "type": "pre-populated",
                       "excludePath": "projectBaseline",
                       "config": {
@@ -6222,7 +6303,7 @@
             "minSize": 1
           },
           {
-            "name": "surveyCountHeader",
+            "name": "numberFarmManagementSurveysConducted",
             "type": "number",
             "decimalPlaces": 0,
             "computed": {
@@ -6318,7 +6399,7 @@
                 "preLabel": "Number of Farm Management surveys conducted:",
                 "noEdit": true,
                 "type": "number",
-                "source": "surveyCountHeader"
+                "source": "numberFarmManagementSurveysConducted"
               },
               {
                 "addRowText": "New survey site",
@@ -6565,7 +6646,7 @@
                 "validate": "required",
                 "constraints": {
                   "textProperty": "baseline",
-                  "valueProperty": "method",
+                  "valueProperty": "code",
                   "type": "pre-populated",
                   "excludePath": "projectBaseline",
                   "config": {
@@ -6868,7 +6949,7 @@
             "validate": "maxSize[3000]"
           },
           {
-            "name": "surveyCountHeader",
+            "name": "numberFaunaSurveysConducted",
             "type": "number",
             "decimalPlaces": 0,
             "computed": {
@@ -6966,7 +7047,7 @@
                 "preLabel": "Number of Fauna surveys conducted:",
                 "noEdit": true,
                 "type": "number",
-                "source": "surveyCountHeader"
+                "source": "numberFaunaSurveysConducted"
               },
               {
                 "addRowText": "New survey site",
@@ -7405,7 +7486,7 @@
                 "validate": "required",
                 "constraints": {
                   "textProperty": "baseline",
-                  "valueProperty": "method",
+                  "valueProperty": "code",
                   "type": "pre-populated",
                   "excludePath": "projectBaseline",
                   "config": {
@@ -7708,7 +7789,7 @@
             "validate": "maxSize[3000]"
           },
           {
-            "name": "surveyCountHeader",
+            "name": "numberFloraSurveysConducted",
             "type": "number",
             "decimalPlaces": 0,
             "computed": {
@@ -7806,7 +7887,7 @@
                 "preLabel": "Number of Flora surveys conducted:",
                 "noEdit": true,
                 "type": "number",
-                "source": "surveyCountHeader"
+                "source": "numberFloraSurveysConducted"
               },
               {
                 "addRowText": "New survey site",
@@ -8244,68 +8325,106 @@
               },
               {
                 "dataType": "feature",
-                "name": "sitesOfAugmentation",
+                "name": "implementationSite"
+              },
+              {
+                "computed": {
+                  "expression": "$geom.areaHa(implementationSite)"
+                },
+                "dataType": "number",
+                "name": "calculatedAreaImplementedHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "behaviour": [
+                  {
+                    "condition": "areaImplementedInvoicedHa > 0",
+                    "type": "conditional_validation",
+                    "value": {
+                      "message": "The area must be mapped",
+                      "validate": "required,min[0.0001]"
+                    }
+                  }
+                ]
+              },
+              {
+                "computed": {
+                  "expression": "$geom.lengthKm(implementationSite)"
+                },
+                "dataType": "number",
+                "name": "calculatedLengthImplementedKm",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "behaviour": [
+                  {
+                    "condition": "lengthImplementedKm > 0",
+                    "type": "conditional_validation",
+                    "value": {
+                      "message": "The length must be mapped",
+                      "validate": "required,min[0.0001]"
+                    }
+                  }
+                ]
+              },
+              {
+                "defaultValue": {
+                  "expression": "$geom.areaHa(implementationSite)",
+                  "type": "computed"
+                },
+                "dataType": "number",
+                "name": "areaImplementedHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "validate": "required,min[0]"
+              },
+              {
+                "defaultValue": {
+                  "expression": "$geom.lengthKm(implementationSite)",
+                  "type": "computed"
+                },
+                "dataType": "number",
+                "name": "lengthImplementedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedReason",
+                "behaviour": [
+                  {
+                    "condition": "not (within(calculatedAreaImplementedHa, areaImplementedHa, 0.1))",
+                    "type": "visible"
+                  }
+                ],
+                "constraints": [
+                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                  "Other"
+                ],
                 "validate": "required"
               },
               {
-                "dataType": "number",
-                "name": "siteCalculatedAreaHa",
-                "computed": {
-                  "expression": "$geom.areaHa(sitesOfAugmentation)"
-                },
-                "units": "ha",
-                "decimalPlaces": 3,
+                "dataType": "text",
+                "name": "mappingNotAlignedComments"
+              ,
                 "behaviour": [
                   {
-                    "condition": "areaInvoicedHa > 0",
-                    "type": "conditional_validation",
-                    "value": {
-                      "message": "The controlled area must be mapped",
-                      "validate": "required,min[0.0001]"
-                    }
+                    "condition": "\"Other\" == mappingNotAlignedReason",
+                    "type": "visible"
                   }
-                ]
+                ],
+                "validate": "required,maxSize[300]"
               },
               {
-                "dataType": "number",
-                "name": "siteCalculatedLengthKm",
-                "computed": {
-                  "expression": "$geom.lengthKm(sitesOfAugmentation)"
-                },
-                "units": "km",
-                "decimalPlaces": 3,
+                "dataType": "document",
+                "name": "extraMappingDetails",
+                "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "lengthInvoicedKm > 0",
-                    "type": "conditional_validation",
-                    "value": {
-                      "message": "The controlled length must be mapped",
-                      "validate": "required,min[0.0001]"
-                    }
+                    "condition": "not (within(calculatedAreaImplementedHa, areaImplementedHa, 0.1)) or roundTo(areaImplementedHa, 2) != roundTo(areaImplementedInvoicedHa, 2)",
+                    "type": "visible"
                   }
-                ]
-              },
-              {
-                "dataType": "number",
-                "name": "areaControlledHa",
-                "validate": "required,min[0]",
-                "units": "ha",
-                "decimalPlaces": 3,
-                "defaultValue": {
-                  "type": "computed",
-                  "expression": "$geom.areaHa(sitesOfAugmentation)"
-                }
-              },
-              {
-                "dataType": "number",
-                "name": "lengthControlledKm",
-                "validate": "required,min[0]",
-                "units": "km",
-                "decimalPlaces": 3,
-                "defaultValue": {
-                  "type": "computed",
-                  "expression": "$geom.lengthKm(sitesOfAugmentation)"
-                }
+                ],
+                "validate": "required"
               },
               {
                 "dataType": "number",
@@ -8346,58 +8465,6 @@
                       "type": "computed",
                       "expression": "lengthControlledKm"
                     }
-                  }
-                ]
-              },
-              {
-                "dataType": "text",
-                "name": "mappingNotAlignedReason",
-                "constraints": [
-                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
-                  "Other"
-                ],
-                "validate": "required",
-                "behaviour": [
-                  {
-                    "condition": "not (within(areaControlledHa, siteCalculatedAreaHa, 0.1))",
-                    "type": "if"
-                  }
-                ]
-              },
-              {
-                "dataType": "text",
-                "name": "mappingNotAlignedComments",
-                "validate": "required,maxSize[300]",
-                "behaviour": [
-                  {
-                    "type": "if",
-                    "condition": "not within(areaControlledHa, siteCalculatedAreaHa, 0.1) and \"Other\" == mappingNotAlignedReason"
-                  }
-                ]
-              },
-              {
-                "dataType": "text",
-                "name": "mappingLengthNotAlignedReason",
-                "constraints": [
-                  "Mapped area simplifies more complex length/s where work was undertaken during this period",
-                  "Other"
-                ],
-                "validate": "required",
-                "behaviour": [
-                  {
-                    "condition": "not (within(lengthControlledKm, siteCalculatedLengthKm, 0.1))",
-                    "type": "if"
-                  }
-                ]
-              },
-              {
-                "dataType": "text",
-                "name": "mappingLengthNotAlignedComments",
-                "validate": "required,maxSize[300]",
-                "behaviour": [
-                  {
-                    "type": "if",
-                    "condition": "not (within(lengthControlledKm, siteCalculatedLengthKm, 0.1)) and \"Other\" == mappingLengthNotAlignedReason"
                   }
                 ]
               },
@@ -8577,14 +8644,14 @@
               }
             ],
             "dataType": "list",
-            "name": "areasControlled"
+            "name": "habitatAugmentationAreas"
           },
           {
             "name": "habitatSurveyCountHeader",
             "type": "number",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(areasControlled, \"relatedOutcomes\")"
+              "expression": "count(habitatAugmentationAreas, \"relatedOutcomes\")"
             }
           },
           {
@@ -8680,7 +8747,7 @@
           {
             "addRowText": "Add a new controlled area",
             "userAddedRows": true,
-            "source": "areasControlled",
+            "source": "habitatAugmentationAreas",
             "type": "repeat",
             "items": [
               {
@@ -8707,7 +8774,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "sitesOfAugmentation",
+                            "source": "implementationSite",
                             "type": "feature",
                             "preLabel": "Site/s of habitat augmentation"
                           }
@@ -8717,7 +8784,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "siteCalculatedAreaHa",
+                            "source": "calculatedAreaImplementedHa",
                             "type": "number",
                             "readonly": true,
                             "displayOptions": {
@@ -8730,7 +8797,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "siteCalculatedLengthKm",
+                            "source": "calculatedLengthImplementedKm",
                             "type": "number",
                             "readonly": true,
                             "displayOptions": {
@@ -8759,8 +8826,9 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Actual area (ha) of habitat augmentation",
-                            "source": "areaControlledHa",
+                            "preLabel": "Actual area (ha) / length (km) of habitat augmentation",
+                            "helpText": "Manually enter correct figure for this reporting period if different to mapped value.",
+                            "source": "areaImplementedHa",
                             "type": "number",
                             "displayOptions": {
                               "displayUnits": true
@@ -8772,29 +8840,8 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Reason for actual area being different to mapped amount",
-                            "source": "mappingNotAlignedReason",
-                            "type": "selectOne"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "placeholder": "Please enter the reason/s the mapping area didn't align with the invoiced amount",
-                            "source": "mappingNotAlignedComments",
-                            "type": "textarea",
-                            "rows": 5
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "preLabel": "Actual length (km) of habitat augmentation",
-                            "source": "lengthControlledKm",
+                            "preLabel": "",
+                            "source": "lengthImplementedKm",
                             "type": "number",
                             "validate": "required",
                             "displayOptions": {
@@ -8807,8 +8854,8 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Reason for actual length being different to mapped amount",
-                            "source": "mappingLengthNotAlignedReason",
+                            "preLabel": "Reason for actual being different to mapped amount",
+                            "source": "mappingNotAlignedReason",
                             "type": "selectOne"
                           }
                         ]
@@ -8817,8 +8864,8 @@
                         "type": "row",
                         "items": [
                           {
-                            "placeholder": "Please enter the reason/s the mapping length didn't align with the invoiced amount",
-                            "source": "mappingLengthNotAlignedComments",
+                            "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                            "source": "mappingNotAlignedComments",
                             "type": "textarea",
                             "rows": 5
                           }
@@ -8834,7 +8881,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Invoiced area (ha) treated of habitat augmentation",
+                            "preLabel": "Invoiced area (ha) / length (km) treated of habitat augmentation",
                             "helpText": "Enter the amount you will invoice for during this reporting period.",
                             "source": "areaInvoicedHa",
                             "type": "number",
@@ -8869,7 +8916,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Invoiced length (km) treated of habitat augmentation",
+                            "preLabel": "",
                             "helpText": "",
                             "source": "lengthInvoicedKm",
                             "type": "number",
@@ -9203,7 +9250,7 @@
                 "validate": "required",
                 "constraints": {
                   "textProperty": "baseline",
-                  "valueProperty": "method",
+                  "valueProperty": "code",
                   "type": "pre-populated",
                   "excludePath": "projectBaseline",
                   "config": {
@@ -9431,7 +9478,7 @@
               }
             ],
             "dataType": "list",
-            "name": "faunaSurveys",
+            "name": "conditionAssessmentSurveys",
             "minSize": 1
           },
           {
@@ -9507,11 +9554,11 @@
             "validate": "maxSize[3000]"
           },
           {
-            "name": "surveyCountHeader",
+            "name": "numberHabitatConditionAssessmentSurveysConducted",
             "type": "number",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(faunaSurveys, \"baselineOrIndicatorSurvey\")"
+              "expression": "count(conditionAssessmentSurveys, \"baselineOrIndicatorSurvey\")"
             }
           },
           {
@@ -9605,12 +9652,12 @@
                 "preLabel": "Number of Habitat Condition Assessment surveys conducted:",
                 "noEdit": true,
                 "type": "number",
-                "source": "surveyCountHeader"
+                "source": "numberHabitatConditionAssessmentSurveysConducted"
               },
               {
                 "addRowText": "New survey site",
                 "userAddedRows": true,
-                "source": "faunaSurveys",
+                "source": "conditionAssessmentSurveys",
                 "type": "repeat",
                 "items": [
                   {
@@ -9974,7 +10021,7 @@
             "columns": [
               {
                 "dataType": "number",
-                "name": "numberOfSitesIdentifiedPrioritised",
+                "name": "numberPotentialSitesAssessed",
                 "validate": "required,min[0]"
               },
               {
@@ -10317,7 +10364,7 @@
             "validate": "maxSize[3000]"
           },
           {
-            "name": "surveyCountHeader",
+            "name": "numberPotentialSitesConducted",
             "type": "number",
             "decimalPlaces": 0,
             "computed": {
@@ -10413,7 +10460,7 @@
                 "preLabel": "Number of Potential sites conducted:",
                 "noEdit": true,
                 "type": "number",
-                "source": "surveyCountHeader"
+                "source": "numberPotentialSitesConducted"
               },
               {
                 "addRowText": "New survey site",
@@ -10433,7 +10480,7 @@
                             "type": "row",
                             "items": [
                               {
-                                "source": "numberOfSitesIdentifiedPrioritised",
+                                "source": "numberPotentialSitesAssessed",
                                 "type": "number",
                                 "preLabel": "Number of potential sites identified and prioritised"
                               }
@@ -11775,14 +11822,14 @@
               }
             ],
             "dataType": "list",
-            "name": "areasControlled"
+            "name": "hydroAreasControlled"
           },
           {
-            "name": "hydroSurveyCountHeader",
+            "name": "numberEcoHydroTreatments",
             "type": "number",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(areasControlled, \"relatedOutcomes\")"
+              "expression": "count(hydroAreasControlled, \"relatedOutcomes\")"
             }
           },
           {
@@ -11873,12 +11920,12 @@
             "preLabel": "Number of Hydrological Regimes surveys conducted:",
             "noEdit": true,
             "type": "number",
-            "source": "hydroSurveyCountHeader"
+            "source": "numberEcoHydroTreatments"
           },
           {
             "addRowText": "Add a new controlled area",
             "userAddedRows": true,
-            "source": "areasControlled",
+            "source": "hydroAreasControlled",
             "type": "repeat",
             "items": [
               {
@@ -12364,7 +12411,8 @@
                   },
                   {
                     "dataType": "text",
-                    "name": "mappingNotAlignedComments",
+                    "name": "mappingNotAlignedComments"
+                  ,
                     "behaviour": [
                       {
                         "condition": "\"Other\" == mappingNotAlignedReason",
@@ -12385,6 +12433,7 @@
                     ],
                     "validate": "required"
                   },
+
                   {
                     "dataType": "number",
                     "name": "areaImplementedInvoicedHa",
@@ -12572,14 +12621,14 @@
               }
             ],
             "dataType": "list",
-            "name": "areasControlled"
+            "name": "landManagementControlledArea"
           },
           {
             "name": "landMgmtSurveyCountHeader",
             "type": "number",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(areasControlled, \"relatedOutcomes\")"
+              "expression": "count(landManagementControlledArea, \"relatedOutcomes\")"
             }
           }
         ],
@@ -12645,7 +12694,7 @@
           {
             "addRowText": "Add a new controlled area",
             "userAddedRows": true,
-            "source": "areasControlled",
+            "source": "landManagementControlledArea",
             "type": "repeat",
             "items": [
               {
@@ -13306,14 +13355,14 @@
               }
             ],
             "dataType": "list",
-            "name": "areasControlled"
+            "name": "diseaseManagementAreasControlled"
           },
           {
             "name": "diseaseSurveyCountHeader",
             "type": "number",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(areasControlled, \"relatedOutcomes\")"
+              "expression": "count(diseaseManagementAreasControlled, \"relatedOutcomes\")"
             }
           },
           {
@@ -13409,7 +13458,7 @@
           {
             "addRowText": "Add a new controlled area",
             "userAddedRows": true,
-            "source": "areasControlled",
+            "source": "diseaseManagementAreasControlled",
             "type": "repeat",
             "items": [
               {
@@ -13789,7 +13838,7 @@
                 "validate": "required",
                 "constraints": {
                   "textProperty": "baseline",
-                  "valueProperty": "method",
+                  "valueProperty": "code",
                   "type": "pre-populated",
                   "excludePath": "projectBaseline",
                   "config": {
@@ -14016,7 +14065,7 @@
               }
             ],
             "dataType": "list",
-            "name": "pestSurveys",
+            "name": "pestAnimalSurveys",
             "minSize": 1
           },
           {
@@ -14092,11 +14141,11 @@
             "validate": "maxSize[3000]"
           },
           {
-            "name": "surveyCountHeader",
+            "name": "numberPestAnimalSurveysConducted",
             "type": "number",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(pestSurveys, \"baselineOrIndicatorSurvey\")"
+              "expression": "count(pestAnimalSurveys, \"baselineOrIndicatorSurvey\")"
             }
           },
           {
@@ -14190,12 +14239,12 @@
                 "preLabel": "Number of Pest Animal surveys conducted:",
                 "noEdit": true,
                 "type": "number",
-                "source": "surveyCountHeader"
+                "source": "numberPestAnimalSurveysConducted"
               },
               {
                 "addRowText": "New survey site",
                 "userAddedRows": true,
-                "source": "pestSurveys",
+                "source": "pestAnimalSurveys",
                 "type": "repeat",
                 "items": [
                   {
@@ -14630,7 +14679,7 @@
                 "validate": "required",
                 "constraints": {
                   "textProperty": "baseline",
-                  "valueProperty": "method",
+                  "valueProperty": "code",
                   "type": "pre-populated",
                   "excludePath": "projectBaseline",
                   "config": {
@@ -14933,7 +14982,7 @@
             "validate": "maxSize[3000]"
           },
           {
-            "name": "surveyCountHeader",
+            "name": "numberPlantSurvivalSurveys",
             "type": "number",
             "decimalPlaces": 0,
             "computed": {
@@ -15028,10 +15077,10 @@
                 "type": "table"
               },
               {
-                "preLabel": "Number of surveys completed:",
+                "preLabel": "Number of Plant Survival surveys completed:",
                 "noEdit": true,
                 "type": "number",
-                "source": "surveyCountHeader"
+                "source": "numberPlantSurvivalSurveys"
               },
               {
                 "addRowText": "New survey site",
@@ -17956,14 +18005,14 @@
               }
             ],
             "dataType": "list",
-            "name": "areasControlled"
+            "name": "areasOfSeedCollection"
           },
           {
             "name": "siteSeedCountHeader",
             "type": "number",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(areasControlled, \"threatEcoCommunity\")"
+              "expression": "count(areasOfSeedCollection, \"threatEcoCommunity\")"
             }
           },
           {
@@ -18073,7 +18122,7 @@
           {
             "addRowText": "New area of seed collection",
             "userAddedRows": true,
-            "source": "areasControlled",
+            "source": "areasOfSeedCollection",
             "type": "repeat",
             "items": [
               {
@@ -18777,14 +18826,14 @@
               }
             ],
             "dataType": "list",
-            "name": "areasControlled"
+            "name": "sitePreparationAreasControlled"
           },
           {
             "name": "sitePrepCountHeader",
             "type": "number",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(areasControlled, \"threatenedEcologicalCommunity\")"
+              "expression": "count(sitePreparationAreasControlled, \"threatenedEcologicalCommunity\")"
             }
           },
           {
@@ -18880,7 +18929,7 @@
           {
             "addRowText": "Add a new controlled area",
             "userAddedRows": true,
-            "source": "areasControlled",
+            "source": "sitePreparationAreasControlled",
             "type": "repeat",
             "items": [
               {
@@ -18897,7 +18946,7 @@
                           {
                             "source": "sitesPrepared",
                             "type": "feature",
-                            "preLabel": "Site/s where pest control was undertaken"
+                            "preLabel": "Site/s where preparation was undertaken"
                           }
                         ]
                       },
@@ -19237,7 +19286,7 @@
                 "columns": [
                   {
                     "dataType": "text",
-                    "name": "baselineOrIndicatorSkillsKnowledgeSurvey",
+                    "name": "baselineOrIndicator",
                     "description": "",
                     "constraints": [
                       "Baseline",
@@ -19252,7 +19301,7 @@
                     "validate": "required",
                     "constraints": {
                       "textProperty": "baseline",
-                      "valueProperty": "method",
+                      "valueProperty": "code",
                       "type": "pre-populated",
                       "excludePath": "projectBaseline",
                       "config": {
@@ -19497,11 +19546,11 @@
             "validate": "maxSize[3000]"
           },
           {
-            "name": "surveyCountHeader",
+            "name": "numberSkillsKnowledgeSurveysConducted",
             "type": "number",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(skillsKnowledgeSurveys, \"baselineOrIndicatorSkillsKnowledgeSurvey\")"
+              "expression": "count(skillsKnowledgeSurveys, \"baselineOrIndicator\")"
             }
           },
           {
@@ -19593,7 +19642,7 @@
                 "preLabel": "Number of Skills and Knowledge surveys conducted:",
                 "noEdit": true,
                 "type": "number",
-                "source": "surveyCountHeader"
+                "source": "numberSkillsKnowledgeSurveysConducted"
               },
               {
                 "addRowText": "New survey site",
@@ -19609,7 +19658,7 @@
                     "disableTableUpload": true,
                     "columns": [
                       {
-                        "source": "baselineOrIndicatorSkillsKnowledgeSurvey",
+                        "source": "baselineOrIndicator",
                         "type": "selectOne",
                         "width": "10%",
                         "title": "Baseline survey or indicator (follow-up) survey?"
@@ -20444,7 +20493,7 @@
                 "validate": "required",
                 "constraints": {
                   "textProperty": "baseline",
-                  "valueProperty": "method",
+                  "valueProperty": "code",
                   "type": "pre-populated",
                   "excludePath": "projectBaseline",
                   "config": {
@@ -20748,7 +20797,7 @@
             "validate": "maxSize[3000]"
           },
           {
-            "name": "surveyCountHeader",
+            "name": "numberWaterQualitySurveyConducted",
             "type": "number",
             "decimalPlaces": 0,
             "computed": {
@@ -20846,7 +20895,7 @@
                 "preLabel": "Number of Water Quality surveys conducted:",
                 "noEdit": true,
                 "type": "number",
-                "source": "surveyCountHeader"
+                "source": "numberWaterQualitySurveyConducted"
               },
               {
                 "addRowText": "New survey site",
@@ -21204,7 +21253,7 @@
                 "validate": "required",
                 "constraints": {
                   "textProperty": "baseline",
-                  "valueProperty": "method",
+                  "valueProperty": "code",
                   "type": "pre-populated",
                   "excludePath": "projectBaseline",
                   "config": {
@@ -21451,7 +21500,7 @@
                     "validate": "required",
                     "constraints": {
                       "textProperty": "baseline",
-                      "valueProperty": "method",
+                      "valueProperty": "code",
                       "type": "pre-populated",
                       "excludePath": "projectBaseline",
                       "config": {
@@ -21758,7 +21807,7 @@
             "validate": "maxSize[3000]"
           },
           {
-            "name": "surveyCountHeader",
+            "name": "numberWeedDistributionSurveysConducted",
             "type": "number",
             "decimalPlaces": 0,
             "computed": {
@@ -21856,7 +21905,7 @@
                 "preLabel": "Number of Weed Distribution surveys conducted:",
                 "noEdit": true,
                 "type": "number",
-                "source": "surveyCountHeader"
+                "source": "numberWeedDistributionSurveysConducted"
               },
               {
                 "addRowText": "New survey site",
