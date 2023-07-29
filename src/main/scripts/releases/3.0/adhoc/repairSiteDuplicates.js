@@ -1,22 +1,22 @@
 load('../../../utils/audit.js')
-var adminUserId = ''
+var adminUserId = '1493'
 
 var site = db.site.findOne({siteId:'cf6fb5b0-69e2-45a7-8a00-01b92f635db9'});
 
 var reportActivityId = 'af4474c1-abf1-427f-b60b-8b15d3d3912b';
 var controllingAccess = db.output.findOne({activityId:reportActivityId, name:/Controlling/});
-doWithFeatureArray(controllingAccess, controllingAccess.data.accessControlDetails, 'sitesInstalled');
-doWithFeatureArray(controllingAccess, controllingAccess.data.accessControlDetails, 'protectedSites');
+doWithFeatureArray(controllingAccess, controllingAccess.data.accessControlDetails, 'sitesInstalled', 3);
+doWithFeatureArray(controllingAccess, controllingAccess.data.accessControlDetails, 'protectedSites', 1);
 
 var managementPlanDevelopment = db.output.findOne({activityId:reportActivityId, name:/Management plan/});
-doWithFeatureArray(managementPlanDevelopment, managementPlanDevelopment.data.managementPlans, 'sitesCoveredByPlan');
+doWithFeatureArray(managementPlanDevelopment, managementPlanDevelopment.data.managementPlans, 'sitesCoveredByPlan', 2);
 
 var improvingLandManagement = db.output.findOne({activityId:reportActivityId, name:/Improving land management/});
-doWithFeatureArray(improvingLandManagement, improvingLandManagement.data.landManagementDetails, 'implementationSite');
+doWithFeatureArray(improvingLandManagement, improvingLandManagement.data.landManagementDetails, 'implementationSite', 2);
 
-function doWithFeatureArray(output, featureArray, sitePath) {
+function doWithFeatureArray(output, featureArray, sitePath, maxFeatures) {
 
-    for (var i = 0; i < featureArray.length; i++) {
+    for (var i = 0; i < maxFeatures; i++) {
         if (!featureArray[i][sitePath]) {
             continue;
         }
