@@ -8324,13 +8324,13 @@
                         "type": "text"
                       },
                       {
-                        "width": "15%",
+                        "width": "20%",
                         "source": "surveyMethodology",
                         "title": "Survey methodology",
                         "type": "text"
                       },
                       {
-                        "width": "15%",
+                        "width": "20%",
                         "source": "surveyObjective",
                         "title": "Survey objective",
                         "type": "text"
