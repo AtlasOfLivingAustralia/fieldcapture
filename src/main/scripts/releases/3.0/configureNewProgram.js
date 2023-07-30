@@ -149,19 +149,25 @@ const newScores = [
         scores: [
             {
                 label: 'Number of pest animal-free enclosures - initial',
-                path: 'data.tba'
+                path: 'data.enclosureDetails.numberOfEnclosures',
+                filterValue: "Newly established",
+                filterPath: "data.enclosureDetails.newOrMaintained",
+                tags: ['Survey', 'Baseline', 'Indicator']
             },
             {
                 label: 'Number of pest animal-free enclosures - maintained',
-                path: 'data.tba'
+                path: 'data.enclosureDetails.numberOfEnclosures',
+                filterValue: "Maintained",
+                filterPath: "data.enclosureDetails.newOrMaintained",
+                tags: ['Survey', 'Baseline', 'Indicator']
             },
             {
                 label: 'Number of days maintaining pest animal-free enclosures',
-                path: 'data.tba'
+                path: 'data.enclosureDetails.daysSpentOnMaintenanceOfEnclosures'
             },
             {
                 label: 'Area (ha) of pest animal-free enclosure',
-                path: 'data.tba'
+                path: 'data.enclosureDetails.areaOfEnclosuresHa'
             }
         ]
     },

@@ -4863,6 +4863,78 @@
       "template": {
         "dataModel": [
           {
+            "dataType": "text",
+            "name": "participationIndividualsOrGroups",
+            "constraints": [
+              "Individuals",
+              "Groups"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "participationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "participationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "firstNationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "firstNationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "participationDetails",
+            "validate": "maxSize[3000]"
+          },
+          {
             "columns": [
               {
                 "dataType": "text",
@@ -5006,6 +5078,62 @@
               {
                 "columns": [
                   {
+                    "name": "relatedOutcomes",
+                    "dataType": "text",
+                    "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "label",
+                      "valueProperty": "label",
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "url": "/project/outcomesByScores",
+                          "params": [{
+                            "expression": "owner.projectId",
+                            "name": "id",
+                            "type": "computed"
+                          }, {
+                            "expression": "scores",
+                            "name": "scoreIds",
+                            "type": "computed"
+                          }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "name": "investmentPriorities2",
+                    "dataType": "stringList",
+                    "validate": "required",
+                    "constraints": {
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "params": [
+                            {
+                              "expression": "owner.projectId",
+                              "name": "id",
+                              "type": "computed"
+                            }
+                          ],
+                          "url": "/project/listProjectInvestmentPriorities/"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "otherInvestmentPriority",
+                    "behaviour": [
+                      {
+                        "type": "enable",
+                        "condition": "\"Other\" in investmentPriorities2"
+                      }
+                    ]
+                  },
+                  {
                     "dataType": "species",
                     "name": "protectedSpecies",
                     "dwcAttribute": "scientificName",
@@ -5050,6 +5178,11 @@
             "name": "photographicEvidence"
           },
           {
+            "dataType": "boolean",
+            "name": "dataUploaded",
+            "description": ""
+          },
+          {
             "dataType": "text",
             "name": "projectAssuranceDetails",
             "description": ""
@@ -5070,6 +5203,56 @@
         "title": "Establishing and maintaining feral-free enclosures",
         "viewModel": [
           {
+            "columns": [
+              {
+                "width": "10%",
+                "source": "participationIndividualsOrGroups",
+                "title": "Individuals or groups?",
+                "type": "selectOne"
+              },
+              {
+                "width": "20%",
+                "type": "col",
+                "title": "Total Number of people delivering this service",
+                "items": [
+                  {
+                    "source": "participationIndividualNumber",
+                    "type": "number"
+                  },
+                  {
+                    "source": "participationGroupNumber",
+                    "type": "selectOne"
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "width": "20%",
+                "title": "Total Number of First Nations people delivering this service ",
+                "items": [
+                  {
+                    "source": "firstNationIndividualNumber",
+                    "type": "number"
+                  },
+                  {
+                    "source": "firstNationGroupNumber",
+                    "type": "selectOne"
+                  }
+                ]
+              },
+              {
+                "source": "participationDetails",
+                "rows": 4,
+                "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                "type": "textarea"
+              }
+            ],
+            "userAddedRows": false,
+            "disableTableUpload": false,
+            "source": "",
+            "type": "table"
+          },
+          {
             "type": "section",
             "items": [
               {
@@ -5089,13 +5272,13 @@
                         "type": "selectOne"
                       },
                       {
-                        "preLabel": "Number of feral free enclosures",
+                        "preLabel": "Number of pest animal-free enclosures",
                         "css": "span3",
                         "source": "numberOfEnclosures",
                         "type": "number"
                       },
                       {
-                        "preLabel": "Number of days maintaining feral-free enclosures",
+                        "preLabel": "Number of days maintaining pest animal-free enclosures",
                         "css": "span3",
                         "source": "daysSpentOnMaintenanceOfEnclosures",
                         "type": "number"
@@ -5113,7 +5296,7 @@
                             "type": "row",
                             "items": [
                               {
-                                "preLabel": "Site/s of feral free enclosures",
+                                "preLabel": "Site/s (ha) of pest animal-free enclosure",
                                 "source": "siteOfEnclosures",
                                 "type": "feature"
                               }
@@ -5147,7 +5330,7 @@
                             "type": "row",
                             "items": [
                               {
-                                "preLabel": "Actual area (ha) of feral-free enclosures",
+                                "preLabel": "Actual area (ha) of pest animal-free enclosure",
                                 "source": "areaOfEnclosuresHa",
                                 "type": "number",
                                 "displayOptions": {
@@ -5187,7 +5370,7 @@
                             "type": "row",
                             "items": [
                               {
-                                "preLabel": "Invoiced area (ha) of feral-free enclosures",
+                                "preLabel": "Invoiced area (ha) of pest animal-free enclosure",
                                 "source": "areaInvoicedHa",
                                 "type": "number",
                                 "displayOptions": {
@@ -5225,15 +5408,36 @@
                     "addRowText": "Add a species",
                     "columns": [
                       {
-                        "width": "35%",
+                        "source": "relatedOutcomes",
+                        "type": "selectOne",
+                        "width": "15%",
+                        "title": "Which outcome statement/s relates to this survey?"
+                      },
+                      {
+                        "width": "20%",
+                        "type": "col",
+                        "title": "Which investment priority does this activity relate to?",
+                        "items": [
+                          {
+                            "source": "investmentPriorities2",
+                            "type": "select2Many"
+                          },
+                          {
+                            "source": "otherInvestmentPriority",
+                            "type": "text"
+                          }
+                        ]
+                      },
+                      {
+                        "width": "20%",
                         "source": "protectedSpecies",
                         "title": "Targeted species being protected",
                         "type": "speciesSelect"
                       },
                       {
-                        "width": "40%",
+                        "width": "20%",
                         "source": "targetFeralSpecies",
-                        "title": "Targeted feral species being controlled",
+                        "title": "Targeted pest animal species being controlled",
                         "type": "text"
                       },
                       {
@@ -5245,7 +5449,7 @@
                       {
                         "width": "10%",
                         "source": "numberOfPopulationsOrIndividualsProtected",
-                        "title": "Number of populations (or individuals) protected within feral free enclosures",
+                        "title": "Number of populations (or individuals) within pest animal-free enclosures",
                         "type": "number"
                       }
                     ],
@@ -5283,7 +5487,12 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please attach any evidence you have available for this service and/or provide information (e.g. links) to where the evidence is stored. This field will help the Department and Service Providers during assurance activities or audits. Refer to the Evidence Guide for details of the types of acceptable evidence."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                  },
+                  {
+                    "preLabel": "Data have been uploaded",
+                    "source": "dataUploaded",
+                    "type": "boolean"
                   }
                 ]
               },
