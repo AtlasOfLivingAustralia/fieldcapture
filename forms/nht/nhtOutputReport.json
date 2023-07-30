@@ -20027,26 +20027,161 @@
       "template": {
         "dataModel": [
           {
+            "dataType": "text",
+            "name": "participationIndividualsOrGroups",
+            "constraints": [
+              "Individuals",
+              "Groups"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "participationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "participationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "firstNationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "firstNationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "participationDetails",
+            "validate": "maxSize[3000]"
+          },
+          {
+            "dataType": "text",
+            "name": "baselineOrIndicator",
+            "description": "",
+            "constraints": [
+              "Baseline",
+              "Indicator"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "numberOfSoilTests",
+            "validate": "required,min[0]"
+          },
+          {
             "columns": [
               {
+                "name": "relatedOutcomes",
                 "dataType": "text",
-                "name": "initialOrFollowup",
-                "constraints": [
-                  "Initial",
-                  "Follow-up"
-                ],
+                "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
+                "validate": "required",
+                "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "label",
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "url": "/project/outcomesByScores",
+                      "params": [{
+                        "expression": "owner.projectId",
+                        "name": "id",
+                        "type": "computed"
+                      }, {
+                        "expression": "scores",
+                        "name": "scoreIds",
+                        "type": "computed"
+                      }
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "name": "investmentPriorities2",
+                "dataType": "stringList",
+                "validate": "required",
+                "constraints": {
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "params": [
+                        {
+                          "expression": "owner.projectId",
+                          "name": "id",
+                          "type": "computed"
+                        }
+                      ],
+                      "url": "/project/listProjectInvestmentPriorities/"
+                    }
+                  }
+                }
+              },
+              {
+                "dataType": "text",
+                "name": "otherInvestmentPriority",
+                "behaviour": [
+                  {
+                    "type": "enable",
+                    "condition": "\"Other\" in investmentPriorities2"
+                  }
+                ]
+              },
+              {
+                "dataType": "date",
+                "name": "activitiesStartDate",
+                "description": "Specific the dates these events were held on",
                 "validate": "required"
               },
               {
-                "dataType": "number",
-                "name": "numberOfSoilTests",
-                "validate": "required,min[0]"
-              },
-              {
-                "dataType": "text",
-                "name": "dateRange",
-                "description": "What time of year (eg. Dates by dd/mm/yyyyy, Months, Season/s)",
-                "validate": "required,maxSize[100]"
+                "dataType": "date",
+                "name": "activitiesEndDate",
+                "description": "Specific the dates these events were held on",
+                "validate": "required"
               },
               {
                 "dataType": "feature",
@@ -20111,6 +20246,12 @@
                 "name": "testingObjective",
                 "description": "How will the infromation obtained from the tests be used",
                 "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "text",
+                "name": "testingDepth",
+                "description": "",
+                "validate": "required,maxSize[300]"
               }
             ],
             "dataType": "list",
@@ -20124,6 +20265,11 @@
           {
             "dataType": "image",
             "name": "photographicEvidence"
+          },
+          {
+            "dataType": "boolean",
+            "name": "dataUploaded",
+            "description": ""
           },
           {
             "dataType": "text",
@@ -20146,32 +20292,109 @@
         "title": "Soil testing",
         "viewModel": [
           {
+            "columns": [
+              {
+                "width": "10%",
+                "source": "participationIndividualsOrGroups",
+                "title": "Individuals or groups?",
+                "type": "selectOne"
+              },
+              {
+                "width": "20%",
+                "type": "col",
+                "title": "Total Number of people delivering this service",
+                "items": [
+                  {
+                    "source": "participationIndividualNumber",
+                    "type": "number"
+                  },
+                  {
+                    "source": "participationGroupNumber",
+                    "type": "selectOne"
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "width": "20%",
+                "title": "Total Number of First Nations people delivering this service ",
+                "items": [
+                  {
+                    "source": "firstNationIndividualNumber",
+                    "type": "number"
+                  },
+                  {
+                    "source": "firstNationGroupNumber",
+                    "type": "selectOne"
+                  }
+                ]
+              },
+              {
+                "source": "participationDetails",
+                "rows": 4,
+                "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                "type": "textarea"
+              }
+            ],
+            "userAddedRows": false,
+            "disableTableUpload": false,
+            "source": "",
+            "type": "table"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Baseline survey or indicator (follow-up) survey?",
+                "css": "span3",
+                "source": "baselineOrIndicator",
+                "type": "selectOne"
+              },
+              {
+                "preLabel": "Number of soil tests conducted in targeted areas",
+                "css": "span2",
+                "source": "numberOfSoilTests",
+                "type": "number"
+              }
+            ]
+          },
+          {
             "type": "section",
             "items": [
               {
                 "columns": [
                   {
+                    "source": "relatedOutcomes",
+                    "type": "selectOne",
                     "width": "15%",
-                    "source": "initialOrFollowup",
-                    "title": "Initial or follow-up activity?",
-                    "type": "selectOne"
+                    "title": "Which outcome statement/s relates to this survey?"
                   },
                   {
-                    "dataType": "text",
-                    "name": "comment",
-                    "validate": "maxSize[1500]"
+                    "width": "15%",
+                    "type": "col",
+                    "title": "Which investment priority does this activity relate to?",
+                    "items": [
+                      {
+                        "source": "investmentPriorities2",
+                        "type": "select2Many"
+                      },
+                      {
+                        "source": "otherInvestmentPriority",
+                        "type": "text"
+                      }
+                    ]
                   },
                   {
-                    "width": "10%",
-                    "source": "numberOfSoilTests",
-                    "type": "number",
-                    "title": "Number of soil tests conducted in targeted areas"
+                    "title": "Activities start date",
+                    "source": "activitiesStartDate",
+                    "type": "date",
+                    "width": "10%"
                   },
                   {
-                    "width": "10%",
-                    "source": "dateRange",
-                    "title": "Date range",
-                    "type": "text"
+                    "title": "Activities end date",
+                    "source": "activitiesEndDate",
+                    "type": "date",
+                    "width": "10%"
                   },
                   {
                     "width": "5%",
@@ -20186,21 +20409,27 @@
                     "title": "Area (ha) where soil tests were conducted"
                   },
                   {
-                    "width": "10%",
+                    "width": "5%",
                     "source": "lengthTestedKm",
                     "type": "number",
                     "title": "Length (km) where soil tests were conducted"
                   },
                   {
-                    "width": "18%",
+                    "width": "10%",
                     "source": "testingTechnique",
                     "title": "Testing technique",
                     "type": "textarea"
                   },
                   {
-                    "width": "22%",
+                    "width": "10%",
                     "source": "testingObjective",
                     "title": "Testing objective",
+                    "type": "textarea"
+                  },
+                  {
+                    "width": "10%",
+                    "source": "testingDepth",
+                    "title": "Testing depth",
                     "type": "textarea"
                   }
                 ],
@@ -20236,7 +20465,12 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please attach any evidence you have available for this service and/or provide information (e.g. links) to where the evidence is stored. This field will help the Department and Service Providers during assurance activities or audits. Refer to the Evidence Guide for details of the types of acceptable evidence."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                  },
+                  {
+                    "preLabel": "Data have been uploaded",
+                    "source": "dataUploaded",
+                    "type": "boolean"
                   }
                 ]
               },

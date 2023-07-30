@@ -548,16 +548,16 @@ const newScores = [
         scores: [
             {
                 label: 'Number of soil tests conducted - baseline',
-                path: 'data.tba',
+                path: 'data.numberOfSoilTests',
                 filterValue: "Baseline",
-                filterPath: "data.tba.baselineOrIndicator",
+                filterPath: "data.baselineOrIndicator",
                 tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Number of soil tests conducted - indicator',
-                path: 'data.tba',
+                path: 'data.numberOfSoilTests',
                 filterValue: "Indicator",
-                filterPath: "data.tba.baselineOrIndicator",
+                filterPath: "data.baselineOrIndicator",
             tags: ['Survey', 'Indicator']
             }
         ]
@@ -662,7 +662,7 @@ const existingScores = [
         formSection: 'NHT - Community engagement',
         rlpFormSection: 'RLP - Community engagement',
         scores: [
-           'Number of field days',
+            'Number of field days',
             'Number of training / workshop events',
             'Number of on-ground trials / demonstrations'
         ]
