@@ -147,11 +147,17 @@ const newScores = [
         scores: [
             {
                 label: 'Area (ha) covered by conservation agreements established',
-                path: 'data.tba'
+                path: 'data.areaCoveredByAgreementsHa',
+                filterValue: "Established",
+                filterPath: "data.establishedOrImplementation",
+                tags: ['Survey', 'Baseline', 'Indicator']
             },
             {
                 label: 'Area (ha) where implementation activities conducted (implementation/stewardship)',
-                path: 'data.tba'
+                path: 'data.areaCoveredByAgreementsHa',
+                filterValue: 'Implementation',
+                filterPath: "data.establishedOrImplementation",
+                tags: ['Survey', 'Baseline', 'Indicator']
             }
         ]
     },

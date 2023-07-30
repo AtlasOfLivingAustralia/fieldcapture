@@ -6404,6 +6404,206 @@
       "template": {
         "dataModel": [
           {
+            "dataType": "text",
+            "name": "participationIndividualsOrGroups",
+            "constraints": [
+              "Individuals",
+              "Groups"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "participationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "participationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "firstNationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "firstNationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "participationDetails",
+            "validate": "maxSize[3000]"
+          },
+          {
+            "dataType": "text",
+            "name": "establishedOrImplementation",
+            "constraints": [
+              "Established",
+              "Implementation"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "feature",
+            "name": "agreementSites"
+          },
+          {
+            "computed": {
+              "expression": "$geom.areaHa(agreementSites)"
+            },
+            "dataType": "number",
+            "name": "calculatedAreaCoveredByAgreementsHa",
+            "units": "ha",
+            "decimalPlaces": 3,
+            "behaviour": [
+              {
+                "condition": "areaOfCoveredByAgreementsInvoicedHa > 0",
+                "type": "conditional_validation",
+                "value": {
+                  "message": "The area must be mapped",
+                  "validate": "required,min[0.0001]"
+                }
+              }
+            ]
+          },
+          {
+            "defaultValue": {
+              "expression": "calculatedAreaCoveredByAgreementsHa",
+              "type": "computed"
+            },
+            "dataType": "number",
+            "name": "areaCoveredByAgreementsHa",
+            "units": "ha",
+            "decimalPlaces": 3,
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "mappingNotAlignedReason",
+            "behaviour": [
+              {
+                "condition": "not (within(areaCoveredByAgreementsHa, calculatedAreaCoveredByAgreementsHa, 0.1))",
+                "type": "visible"
+              }
+            ],
+            "constraints": [
+              "Mapped area simplifies more complex area/s where work was undertaken during this period",
+              "Other"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "mappingNotAlignedComments",
+            "behaviour": [
+              {
+                "condition": "\"Other\" == mappingNotAlignedReason",
+                "type": "visible"
+              }
+            ],
+            "validate": "required,maxSize[300]"
+          },
+          {
+            "dataType": "number",
+            "name": "areaOfCoveredByAgreementsInvoicedHa",
+            "units": "ha",
+            "decimalPlaces": 3,
+            "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
+              {
+                "param": {
+                  "expression": "areaCoveredByAgreementsHa",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ]
+          },
+          {
+            "dataType": "document",
+            "name": "extraMappingDetails",
+            "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+            "behaviour": [
+              {
+                "condition": "not (within(calculatedAreaCoveredByAgreementsHa, areaCoveredByAgreementsHa, 0.1)) or roundTo(areaCoveredByAgreementsHa, 2) != roundTo(areaOfCoveredByAgreementsInvoicedHa, 2)",
+                "type": "visible"
+              }
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "invoicedNotActualReason",
+            "behaviour": [
+              {
+                "condition": "roundTo(areaOfCoveredByAgreementsInvoicedHa, 2) != roundTo(areaCoveredByAgreementsHa, 2)",
+                "type": "visible"
+              }
+            ],
+            "constraints": [
+              "Work was undertaken over a greater area than will be invoiced for",
+              "Other"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "invoicedNotActualComments",
+            "behaviour": [
+              {
+                "condition": "\"Other\" == invoicedNotActualReason",
+                "type": "visible"
+              }
+            ],
+            "validate": "required,maxSize[300]"
+          },
+          {
             "columns": [
               {
                 "dataType": "text",
@@ -6432,15 +6632,6 @@
                 "validate": "required,maxSize[300]"
               },
               {
-                "dataType": "text",
-                "name": "establishedOrMaintained",
-                "constraints": [
-                  "Established",
-                  "Maintained"
-                ],
-                "validate": "required"
-              },
-              {
                 "dataType": "number",
                 "name": "numberOfAgreements",
                 "validate": "required,min[0]"
@@ -6452,122 +6643,79 @@
                 "validate": "required,min[0]"
               },
               {
-                "dataType": "feature",
-                "name": "agreementSites"
+                "name": "relatedOutcomes",
+                "dataType": "text",
+                "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
+                "validate": "required",
+                "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "label",
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "url": "/project/outcomesByScores",
+                      "params": [{
+                        "expression": "owner.projectId",
+                        "name": "id",
+                        "type": "computed"
+                      }, {
+                        "expression": "scores",
+                        "name": "scoreIds",
+                        "type": "computed"
+                      }
+                      ]
+                    }
+                  }
+                }
               },
               {
-                "computed": {
-                  "expression": "$geom.areaHa(agreementSites)"
-                },
-                "dataType": "number",
-                "name": "calculatedAreaCoveredByAgreementsHa",
-                "units": "ha",
-                "decimalPlaces": 3,
+                "name": "investmentPriorities2",
+                "dataType": "stringList",
+                "validate": "required",
+                "constraints": {
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "params": [
+                        {
+                          "expression": "owner.projectId",
+                          "name": "id",
+                          "type": "computed"
+                        }
+                      ],
+                      "url": "/project/listProjectInvestmentPriorities/"
+                    }
+                  }
+                }
+              },
+              {
+                "dataType": "text",
+                "name": "otherInvestmentPriority",
                 "behaviour": [
                   {
-                    "condition": "areaOfCoveredByAgreementsInvoicedHa > 0",
-                    "type": "conditional_validation",
-                    "value": {
-                      "message": "The area must be mapped",
-                      "validate": "required,min[0.0001]"
-                    }
+                    "type": "enable",
+                    "condition": "\"Other\" in investmentPriorities2"
                   }
                 ]
               },
               {
-                "defaultValue": {
-                  "expression": "calculatedAreaCoveredByAgreementsHa",
-                  "type": "computed"
-                },
                 "dataType": "number",
-                "name": "areaCoveredByAgreementsHa",
-                "units": "ha",
-                "decimalPlaces": 3,
+                "name": "yearsOfTheAgreement",
                 "validate": "required,min[0]"
               },
               {
                 "dataType": "text",
-                "name": "mappingNotAlignedReason",
-                "behaviour": [
-                  {
-                    "condition": "not (within(areaCoveredByAgreementsHa, calculatedAreaCoveredByAgreementsHa, 0.1))",
-                    "type": "visible"
-                  }
-                ],
-                "constraints": [
-                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
-                  "Other"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "text",
-                "name": "mappingNotAlignedComments",
-                "behaviour": [
-                  {
-                    "condition": "\"Other\" == mappingNotAlignedReason",
-                    "type": "visible"
-                  }
-                ],
+                "name": "agreementPurpose",
                 "validate": "required,maxSize[300]"
               },
               {
-                "dataType": "number",
-                "name": "areaOfCoveredByAgreementsInvoicedHa",
-                "units": "ha",
-                "decimalPlaces": 3,
-                "validate": [
-                  {
-                    "rule": "required"
-                  },
-                  {
-                    "rule": "min[0]"
-                  },
-                  {
-                    "param": {
-                      "expression": "areaCoveredByAgreementsHa",
-                      "type": "computed"
-                    },
-                    "rule": "max"
-                  }
-                ]
-              },
-              {
-                "dataType": "document",
-                "name": "extraMappingDetails",
-                "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
-                "behaviour": [
-                  {
-                    "condition": "not (within(calculatedAreaCoveredByAgreementsHa, areaCoveredByAgreementsHa, 0.1)) or roundTo(areaCoveredByAgreementsHa, 2) != roundTo(areaOfCoveredByAgreementsInvoicedHa, 2)",
-                    "type": "visible"
-                  }
-                ],
-                "validate": "required"
+                "dataType": "text",
+                "name": "agreementMadeWith",
+                "validate": "required,maxSize[300]"
               },
               {
                 "dataType": "text",
-                "name": "invoicedNotActualReason",
-                "behaviour": [
-                  {
-                    "condition": "roundTo(areaOfCoveredByAgreementsInvoicedHa, 2) != roundTo(areaCoveredByAgreementsHa, 2)",
-                    "type": "visible"
-                  }
-                ],
-                "constraints": [
-                  "Work was undertaken over a greater area than will be invoiced for",
-                  "Other"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "text",
-                "name": "invoicedNotActualComments",
-                "behaviour": [
-                  {
-                    "condition": "\"Other\" == invoicedNotActualReason",
-                    "type": "visible"
-                  }
-                ],
+                "name": "implementationType",
                 "validate": "required,maxSize[300]"
               }
             ],
@@ -6578,6 +6726,15 @@
             "dataType": "text",
             "name": "comments",
             "validate": "maxSize[1500]"
+          },
+          {
+            "dataType": "image",
+            "name": "photographicEvidence"
+          },
+          {
+            "dataType": "boolean",
+            "name": "dataUploaded",
+            "description": ""
           },
           {
             "dataType": "text",
@@ -6600,70 +6757,104 @@
         "title": "Establishing and maintaining agreements",
         "viewModel": [
           {
+            "columns": [
+              {
+                "width": "10%",
+                "source": "participationIndividualsOrGroups",
+                "title": "Individuals or groups?",
+                "type": "selectOne"
+              },
+              {
+                "width": "20%",
+                "type": "col",
+                "title": "Total Number of people delivering this service",
+                "items": [
+                  {
+                    "source": "participationIndividualNumber",
+                    "type": "number"
+                  },
+                  {
+                    "source": "participationGroupNumber",
+                    "type": "selectOne"
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "width": "20%",
+                "title": "Total Number of First Nations people delivering this service ",
+                "items": [
+                  {
+                    "source": "firstNationIndividualNumber",
+                    "type": "number"
+                  },
+                  {
+                    "source": "firstNationGroupNumber",
+                    "type": "selectOne"
+                  }
+                ]
+              },
+              {
+                "source": "participationDetails",
+                "rows": 4,
+                "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                "type": "textarea"
+              }
+            ],
+            "userAddedRows": false,
+            "disableTableUpload": false,
+            "source": "",
+            "type": "table"
+          },
+          {
             "type": "section",
             "items": [
               {
-                "columns": [
+                "type": "row",
+                "css": "border-bottom",
+                "items": [
                   {
-                    "width": "20%",
-                    "title": "Agreement type",
                     "type": "col",
+                    "css": "span3 col-border-right",
                     "items": [
                       {
                         "type": "row",
                         "items": [
                           {
-                            "source": "agreementType",
-                            "type": "select2"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "otherAgreementType",
-                            "title": "Other agreement type",
-                            "type": "textarea"
+                            "source": "establishedOrImplementation",
+                            "type": "selectOne",
+                            "preLabel": "Established or implementation?"
                           }
                         ]
                       }
                     ]
                   },
                   {
-                    "width": "10%",
-                    "source": "establishedOrMaintained",
-                    "type": "selectOne",
-                    "title": "Established or maintained?"
-                  },
-                  {
-                    "width": "10%",
-                    "source": "numberOfAgreements",
-                    "type": "number",
-                    "title": "Number of agreements"
-                  },
-                  {
-                    "width": "10%",
-                    "source": "numberOfDaysMaintainingAgreements",
-                    "type": "number",
-                    "title": "Number of days maintaining agreements (if applicable)"
-                  },
-                  {
-                    "width": "20%",
-                    "title": "Site/s where agreements were established",
                     "type": "col",
+                    "css": "span3 col-border-right",
                     "items": [
                       {
-                        "source": "agreementSites",
-                        "type": "feature"
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Site/s where agreements were established",
+                            "source": "agreementSites",
+                            "type": "feature"
+                          }
+                        ]
                       },
                       {
-                        "readonly": "readonly",
-                        "source": "calculatedAreaCoveredByAgreementsHa",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
+                        "type": "row",
+                        "items": [
+                          {
+                            "readonly": "readonly",
+                            "source": "calculatedAreaCoveredByAgreementsHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
                       },
                       {
                         "type": "row",
@@ -6678,17 +6869,22 @@
                     ]
                   },
                   {
-                    "helpText": "Enter the actual amount during this reporting period.",
-                    "width": "15%",
                     "type": "col",
-                    "title": "Actual area (ha) of site/s agreements",
+                    "css": "span3 col-border-right",
                     "items": [
                       {
-                        "source": "areaCoveredByAgreementsHa",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
+                        "type": "row",
+                        "items": [
+                          {
+                            "helpText": "Enter the actual amount during this reporting period.",
+                            "preLabel": "Actual area (ha) of site/s agreements",
+                            "source": "areaCoveredByAgreementsHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
                       },
                       {
                         "type": "row",
@@ -6706,25 +6902,29 @@
                           {
                             "placeholder": "Please enter the reason/s the actual didn't align with the agreed amount",
                             "source": "mappingNotAlignedComments",
-                            "type": "textarea",
-                            "rows": 5
+                            "type": "textarea"
                           }
                         ]
                       }
                     ]
                   },
                   {
-                    "helpText": "Enter the amount you will invoice for during this reporting period.",
-                    "width": "15%",
                     "type": "col",
-                    "title": "Invoiced area (ha) of site/s agreements",
+                    "css": "span3 col-border-right",
                     "items": [
                       {
-                        "source": "areaOfCoveredByAgreementsInvoicedHa",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
+                        "type": "row",
+                        "items": [
+                          {
+                            "helpText": "Enter the amount you will invoice for during this reporting period.",
+                            "preLabel": "Invoiced area (ha) of site/s agreements",
+                            "source": "areaOfCoveredByAgreementsInvoicedHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
                       },
                       {
                         "type": "row",
@@ -6749,10 +6949,107 @@
                       }
                     ]
                   }
+                ]
+              },
+              {
+                "columns": [
+                  {
+                    "width": "15%",
+                    "title": "Type of agreement",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "agreementType",
+                            "type": "select2"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "otherAgreementType",
+                            "title": "Type of Agreement (if other)",
+                            "type": "textarea"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "width": "10%",
+                    "source": "numberOfAgreements",
+                    "type": "number",
+                    "title": "Number of conservation agreements established"
+                  },
+                  {
+                    "width": "10%",
+                    "source": "numberOfDaysMaintainingAgreements",
+                    "type": "number",
+                    "title": "Number of days maintaining agreements (if applicable)"
+                  },
+                  {
+                    "source": "relatedOutcomes",
+                    "type": "selectOne",
+                    "width": "10%",
+                    "title": "Which outcome statement/s relates to this survey?"
+                  },
+                  {
+                    "width": "10%",
+                    "type": "col",
+                    "title": "Which investment priority does this activity relate to?",
+                    "items": [
+                      {
+                        "source": "investmentPriorities2",
+                        "type": "select2Many"
+                      },
+                      {
+                        "source": "otherInvestmentPriority",
+                        "type": "text"
+                      }
+                    ]
+                  },
+                  {
+                    "width": "5%",
+                    "source": "yearsOfTheAgreement",
+                    "type": "number",
+                    "title": "Length (years of the agreement)"
+                  },
+                  {
+                    "width": "15%",
+                    "source": "agreementPurpose",
+                    "title": "Purpose of agreement",
+                    "type": "textarea"
+                  },
+                  {
+                    "width": "10%",
+                    "source": "agreementMadeWith",
+                    "title": "Who the agreement was made with?",
+                    "type": "textarea"
+                  },
+                  {
+                    "width": "10%",
+                    "source": "implementationType",
+                    "title": "Types of implementation/stewardship activities undertaken",
+                    "type": "textarea"
+                  }
                 ],
                 "userAddedRows": true,
                 "source": "agreements",
                 "type": "table"
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "preLabel": "Optionally attach photos",
+                    "source": "photographicEvidence",
+                    "type": "image"
+                  }
+                ]
               },
               {
                 "type": "row",
@@ -6772,7 +7069,12 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please attach any evidence you have available for this service and/or provide information (e.g. links) to where the evidence is stored. This field will help the Department and Service Providers during assurance activities or audits. Refer to the Evidence Guide for details of the types of acceptable evidence."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                  },
+                  {
+                    "preLabel": "Data have been uploaded",
+                    "source": "dataUploaded",
+                    "type": "boolean"
                   }
                 ]
               },
@@ -20763,7 +21065,7 @@
               {
                 "dataType": "text",
                 "name": "testingObjective",
-                "description": "How will the infromation obtained from the tests be used",
+                "description": "How will the information obtained from the tests be used",
                 "validate": "required,maxSize[300]"
               },
               {
