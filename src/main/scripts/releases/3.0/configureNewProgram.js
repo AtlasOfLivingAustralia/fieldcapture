@@ -427,23 +427,35 @@ const newScores = [
         scores: [
             {
                 label: 'Number of structures installed to promote aquatic health',
-                path: 'data.tba'
+                path: 'data.remediationDetails.numberOfStructuresInstalled'
             },
             {
                 label: 'Area (ha) of remediation of riparian/aquatic areas - initial',
-                path: 'data.tba'
+                path: 'data.areaRemediatedHa',
+                filterValue: 'Initial',
+                filterPath: "data.initialOrFollowup",
+                tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Area (ha) of remediation of riparian/aquatic areas - follow-up',
-                path: 'data.tba'
+                path: 'data.areaRemediatedHa',
+                filterValue: 'Follow-up',
+                filterPath: "data.initialOrFollowup",
+                tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Length (km) of remediation of riparian/aquatic areas - initial',
-                path: 'data.tba'
+                path: 'data.lengthRemediatedKm',
+                filterValue: 'Initial',
+                filterPath: "data.initialOrFollowup",
+                tags: ['Survey', 'Baseline']
             },
             {
                 label: 'Length (km) of remediation of riparian/aquatic areas - follow-up',
-                path: 'data.tba'
+                path: 'data.lengthRemediatedKm',
+                filterValue: 'Follow-up',
+                filterPath: "data.initialOrFollowup",
+                tags: ['Survey', 'Baseline']
             }
         ]
     },

@@ -16520,184 +16520,352 @@
       "template": {
         "dataModel": [
           {
+            "dataType": "text",
+            "name": "participationIndividualsOrGroups",
+            "constraints": [
+              "Individuals",
+              "Groups"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "participationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "participationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "firstNationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "firstNationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "participationDetails",
+            "validate": "maxSize[3000]"
+          },
+          {
+            "dataType": "text",
+            "name": "initialOrFollowup",
+            "constraints": [
+              "Initial",
+              "Follow-up"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "feature",
+            "name": "sitesRemediated"
+          },
+          {
+            "computed": {
+              "expression": "$geom.areaHa(sitesRemediated)"
+            },
+            "dataType": "number",
+            "name": "calculatedAreaRemediatedHa",
+            "units": "ha",
+            "decimalPlaces": 3,
+            "behaviour": [
+              {
+                "condition": "areaRemediatedInvoicedHa > 0",
+                "type": "conditional_validation",
+                "value": {
+                  "message": "The remediated area must be mapped",
+                  "validate": "required,min[0.0001]"
+                }
+              }
+            ]
+          },
+          {
+            "computed": {
+              "expression": "$geom.lengthKm(sitesRemediated)"
+            },
+            "dataType": "number",
+            "name": "calculatedLengthRemediatedKm",
+            "units": "km",
+            "decimalPlaces": 3,
+            "behaviour": [
+              {
+                "condition": "lengthRemediatedInvoicedKm > 0",
+                "type": "conditional_validation",
+                "value": {
+                  "message": "The remediated length must be mapped",
+                  "validate": "required,min[0.0001]"
+                }
+              }
+            ]
+          },
+          {
+            "defaultValue": {
+              "expression": "calculatedAreaRemediatedHa",
+              "type": "computed"
+            },
+            "dataType": "number",
+            "name": "areaRemediatedHa",
+            "units": "ha",
+            "decimalPlaces": 3,
+            "validate": "required,min[0]"
+          },
+          {
+            "defaultValue": {
+              "expression": "calculatedLengthRemediatedKm",
+              "type": "computed"
+            },
+            "dataType": "number",
+            "name": "lengthRemediatedKm",
+            "units": "km",
+            "decimalPlaces": 3,
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "mappingNotAlignedReason",
+            "behaviour": [
+              {
+                "condition": "not (within(calculatedAreaRemediatedHa, areaRemediatedHa, 0.1) and within(calculatedLengthRemediatedKm, lengthRemediatedKm, 0.1))",
+                "type": "visible"
+              }
+            ],
+            "constraints": [
+              "Mapped area simplifies more complex area/s where work was undertaken during this period",
+              "Other"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "mappingNotAlignedComments",
+            "behaviour": [
+              {
+                "condition": "\"Other\" == mappingNotAlignedReason",
+                "type": "visible"
+              }
+            ],
+            "validate": "required,maxSize[300]"
+          },
+          {
+            "dataType": "document",
+            "name": "extraMappingDetails",
+            "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+            "behaviour": [
+              {
+                "condition": "not (within(calculatedAreaRemediatedHa, areaRemediatedHa, 0.1) and within(calculatedLengthRemediatedKm, lengthRemediatedKm, 0.1)) or roundTo(areaRemediatedHa, 2) != roundTo(areaRemediatedInvoicedHa, 2) or roundTo(lengthRemediatedKm, 2) != roundTo(lengthRemediatedInvoicedKm, 2)",
+                "type": "visible"
+              }
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "areaRemediatedInvoicedHa",
+            "units": "ha",
+            "decimalPlaces": 3,
+            "validate": [
+              {
+                "rule": "min[0]"
+              },
+              {
+                "param": {
+                  "expression": "areaRemediatedHa",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ]
+          },
+          {
+            "dataType": "number",
+            "name": "lengthRemediatedInvoicedKm",
+            "units": "km",
+            "decimalPlaces": 3,
+            "validate": [
+              {
+                "rule": "min[0]"
+              },
+              {
+                "param": {
+                  "expression": "lengthRemediatedKm",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "invoicedNotActualReason",
+            "behaviour": [
+              {
+                "condition": "roundTo(areaRemediatedHa, 2) != roundTo(areaRemediatedInvoicedHa, 2) or roundTo(lengthRemediatedKm, 2) != roundTo(lengthRemediatedInvoicedKm, 2)",
+                "type": "visible"
+              }
+            ],
+            "constraints": [
+              "Work was undertaken over a greater area than will be invoiced for",
+              "Other"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "invoicedNotActualComments",
+            "behaviour": [
+              {
+                "condition": "\"Other\" == invoicedNotActualReason",
+                "type": "visible"
+              }
+            ],
+            "validate": "required,maxSize[300]"
+          },
+
+          {
             "columns": [
               {
+                "name": "relatedOutcomes",
                 "dataType": "text",
-                "name": "initialOrFollowup",
-                "constraints": [
-                  "Initial",
-                  "Follow-up"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "feature",
-                "name": "sitesRemediated"
-              },
-              {
-                "computed": {
-                  "expression": "$geom.areaHa(sitesRemediated)"
-                },
-                "dataType": "number",
-                "name": "calculatedAreaRemediatedHa",
-                "units": "ha",
-                "decimalPlaces": 3,
-                "behaviour": [
-                  {
-                    "condition": "areaRemediatedInvoicedHa > 0",
-                    "type": "conditional_validation",
-                    "value": {
-                      "message": "The remediated area must be mapped",
-                      "validate": "required,min[0.0001]"
+                "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
+                "validate": "required",
+                "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "label",
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "url": "/project/outcomesByScores",
+                      "params": [{
+                        "expression": "owner.projectId",
+                        "name": "id",
+                        "type": "computed"
+                      }, {
+                        "expression": "scores",
+                        "name": "scoreIds",
+                        "type": "computed"
+                      }
+                      ]
                     }
                   }
-                ]
+                }
               },
               {
-                "computed": {
-                  "expression": "$geom.lengthKm(sitesRemediated)"
-                },
-                "dataType": "number",
-                "name": "calculatedLengthRemediatedKm",
-                "units": "km",
-                "decimalPlaces": 3,
-                "behaviour": [
-                  {
-                    "condition": "lengthRemediatedInvoicedKm > 0",
-                    "type": "conditional_validation",
-                    "value": {
-                      "message": "The remediated length must be mapped",
-                      "validate": "required,min[0.0001]"
+                "name": "investmentPriorities2",
+                "dataType": "stringList",
+                "validate": "required",
+                "constraints": {
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "params": [
+                        {
+                          "expression": "owner.projectId",
+                          "name": "id",
+                          "type": "computed"
+                        }
+                      ],
+                      "url": "/project/listProjectInvestmentPriorities/"
                     }
                   }
-                ]
-              },
-              {
-                "defaultValue": {
-                  "expression": "calculatedAreaRemediatedHa",
-                  "type": "computed"
-                },
-                "dataType": "number",
-                "name": "areaRemediatedHa",
-                "units": "ha",
-                "decimalPlaces": 3,
-                "validate": "required,min[0]"
-              },
-              {
-                "defaultValue": {
-                  "expression": "calculatedLengthRemediatedKm",
-                  "type": "computed"
-                },
-                "dataType": "number",
-                "name": "lengthRemediatedKm",
-                "units": "km",
-                "decimalPlaces": 3,
-                "validate": "required,min[0]"
+                }
               },
               {
                 "dataType": "text",
-                "name": "mappingNotAlignedReason",
+                "name": "otherInvestmentPriority",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedAreaRemediatedHa, areaRemediatedHa, 0.1) and within(calculatedLengthRemediatedKm, lengthRemediatedKm, 0.1))",
-                    "type": "visible"
-                  }
-                ],
-                "constraints": [
-                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
-                  "Other"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "text",
-                "name": "mappingNotAlignedComments",
-                "behaviour": [
-                  {
-                    "condition": "\"Other\" == mappingNotAlignedReason",
-                    "type": "visible"
-                  }
-                ],
-                "validate": "required,maxSize[300]"
-              },
-              {
-                "dataType": "document",
-                "name": "extraMappingDetails",
-                "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
-                "behaviour": [
-                  {
-                    "condition": "not (within(calculatedAreaRemediatedHa, areaRemediatedHa, 0.1) and within(calculatedLengthRemediatedKm, lengthRemediatedKm, 0.1)) or roundTo(areaRemediatedHa, 2) != roundTo(areaRemediatedInvoicedHa, 2) or roundTo(lengthRemediatedKm, 2) != roundTo(lengthRemediatedInvoicedKm, 2)",
-                    "type": "visible"
-                  }
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "number",
-                "name": "areaRemediatedInvoicedHa",
-                "units": "ha",
-                "decimalPlaces": 3,
-                "validate": [
-                  {
-                    "rule": "min[0]"
-                  },
-                  {
-                    "param": {
-                      "expression": "areaRemediatedHa",
-                      "type": "computed"
-                    },
-                    "rule": "max"
+                    "type": "enable",
+                    "condition": "\"Other\" in investmentPriorities2"
                   }
                 ]
               },
               {
-                "dataType": "number",
-                "name": "lengthRemediatedInvoicedKm",
-                "units": "km",
-                "decimalPlaces": 3,
-                "validate": [
-                  {
-                    "rule": "min[0]"
-                  },
-                  {
-                    "param": {
-                      "expression": "lengthRemediatedKm",
-                      "type": "computed"
-                    },
-                    "rule": "max"
-                  }
-                ]
-              },
-              {
-                "dataType": "text",
-                "name": "invoicedNotActualReason",
-                "behaviour": [
-                  {
-                    "condition": "roundTo(areaRemediatedHa, 2) != roundTo(areaRemediatedInvoicedHa, 2) or roundTo(lengthRemediatedKm, 2) != roundTo(lengthRemediatedInvoicedKm, 2)",
-                    "type": "visible"
-                  }
-                ],
-                "constraints": [
-                  "Work was undertaken over a greater area than will be invoiced for",
-                  "Other"
-                ],
+                "dataType": "date",
+                "name": "activitiesStartDate",
+                "description": "Specific the dates these events were held on",
                 "validate": "required"
               },
               {
-                "dataType": "text",
-                "name": "invoicedNotActualComments",
-                "behaviour": [
-                  {
-                    "condition": "\"Other\" == invoicedNotActualReason",
-                    "type": "visible"
-                  }
-                ],
-                "validate": "required,maxSize[300]"
+                "dataType": "date",
+                "name": "activitiesEndDate",
+                "description": "Specific the dates these events were held on",
+                "validate": "required"
               },
               {
                 "dataType": "number",
                 "name": "numberOfStructuresInstalled",
                 "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "typesOfStructuresInstalled",
+                "description": "",
+                "constraints": [
+                  "Access control",
+                  "Bank grooming",
+                  "Flow gauging stations",
+                  "Fords",
+                  "Culverts",
+                  "Revegetation",
+                  "Weirs",
+                  "Other"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "otherStructuresType",
+                "behaviour": [
+                  {
+                    "condition": "typesOfStructuresInstalled == \"Other\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": "required,maxSize[100]"
               },
               {
                 "dataType": "text",
@@ -16760,6 +16928,11 @@
             "name": "photographicEvidence"
           },
           {
+            "dataType": "boolean",
+            "name": "dataUploaded",
+            "description": ""
+          },
+          {
             "dataType": "text",
             "name": "projectAssuranceDetails",
             "description": ""
@@ -16780,40 +16953,117 @@
         "title": "Remediating riparian and aquatic areas",
         "viewModel": [
           {
+            "columns": [
+              {
+                "width": "10%",
+                "source": "participationIndividualsOrGroups",
+                "title": "Individuals or groups?",
+                "type": "selectOne"
+              },
+              {
+                "width": "20%",
+                "type": "col",
+                "title": "Total Number of people delivering this service",
+                "items": [
+                  {
+                    "source": "participationIndividualNumber",
+                    "type": "number"
+                  },
+                  {
+                    "source": "participationGroupNumber",
+                    "type": "selectOne"
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "width": "20%",
+                "title": "Total Number of First Nations people delivering this service ",
+                "items": [
+                  {
+                    "source": "firstNationIndividualNumber",
+                    "type": "number"
+                  },
+                  {
+                    "source": "firstNationGroupNumber",
+                    "type": "selectOne"
+                  }
+                ]
+              },
+              {
+                "source": "participationDetails",
+                "rows": 4,
+                "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                "type": "textarea"
+              }
+            ],
+            "userAddedRows": false,
+            "disableTableUpload": false,
+            "source": "",
+            "type": "table"
+          },
+          {
             "type": "section",
             "items": [
               {
-                "columns": [
+                "type": "row",
+                "css": "border-bottom",
+                "items": [
                   {
-                    "width": "10%",
-                    "source": "initialOrFollowup",
-                    "title": "Initial / Followup control",
-                    "type": "selectOne"
-                  },
-                  {
-                    "width": "10%",
                     "type": "col",
-                    "title": "Site/s covered by remediation",
+                    "css": "span3 col-border-right",
                     "items": [
                       {
-                        "source": "sitesRemediated",
-                        "type": "feature"
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "initialOrFollowup",
+                            "type": "selectOne",
+                            "preLabel": "Initial or follow-up?"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "sitesRemediated",
+                            "type": "feature",
+                            "preLabel": "Site/s covered by remediation"
+                          }
+                        ]
                       },
                       {
-                        "readonly": "readonly",
-                        "source": "calculatedAreaRemediatedHa",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "calculatedAreaRemediatedHa",
+                            "type": "number",
+                            "readonly": true,
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
                       },
                       {
-                        "readonly": "readonly",
-                        "source": "calculatedLengthRemediatedKm",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "calculatedLengthRemediatedKm",
+                            "type": "number",
+                            "readonly": true,
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
                       },
                       {
                         "type": "row",
@@ -16828,24 +17078,34 @@
                     ]
                   },
                   {
-                    "helpText": "Enter the amount you will invoice for during this reporting period.",
-                    "width": "17%",
                     "type": "col",
-                    "title": "Actual area (ha) / length (km) being remediated",
+                    "css": "span3 col-border-right",
                     "items": [
                       {
-                        "source": "areaRemediatedHa",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
+                        "type": "row",
+                        "items": [
+                          {
+                            "helpText": "Enter the amount you will invoice for during this reporting period.",
+                            "preLabel": "Actual area (ha) / length (km) being remediated",
+                            "source": "areaRemediatedHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
                       },
                       {
-                        "source": "lengthRemediatedKm",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "lengthRemediatedKm",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
                       },
                       {
                         "type": "row",
@@ -16856,39 +17116,38 @@
                             "type": "selectOne"
                           }
                         ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "helpText": "Enter the amount you will invoice for during this reporting period.",
+                            "preLabel": "Invoiced area (ha) / length (km) being remediated",
+                            "source": "areaRemediatedInvoicedHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
                       },
                       {
                         "type": "row",
                         "items": [
                           {
-                            "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
-                            "source": "mappingNotAlignedComments",
-                            "type": "textarea",
-                            "rows": 5
+                            "source": "lengthRemediatedInvoicedKm",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
                           }
                         ]
-                      }
-                    ]
-                  },
-                  {
-                    "helpText": "Enter the amount you will invoice for during this reporting period.",
-                    "width": "17%",
-                    "type": "col",
-                    "title": "Invoiced area (ha) / length (km) being remediated",
-                    "items": [
-                      {
-                        "source": "areaRemediatedInvoicedHa",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
-                      },
-                      {
-                        "source": "lengthRemediatedInvoicedKm",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
                       },
                       {
                         "type": "row",
@@ -16906,12 +17165,49 @@
                           {
                             "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
                             "source": "invoicedNotActualComments",
-                            "type": "textarea",
-                            "rows": 5
+                            "type": "textarea"
                           }
                         ]
                       }
                     ]
+                  }
+                ]
+              },
+
+              {
+                "columns": [
+                  {
+                    "source": "relatedOutcomes",
+                    "type": "selectOne",
+                    "width": "10%",
+                    "title": "Which outcome statement/s relates to this survey?"
+                  },
+                  {
+                    "width": "15%",
+                    "type": "col",
+                    "title": "Which investment priority does this activity relate to?",
+                    "items": [
+                      {
+                        "source": "investmentPriorities2",
+                        "type": "select2Many"
+                      },
+                      {
+                        "source": "otherInvestmentPriority",
+                        "type": "text"
+                      }
+                    ]
+                  },
+                  {
+                    "title": "Activities start date",
+                    "source": "activitiesStartDate",
+                    "type": "date",
+                    "width": "10%"
+                  },
+                  {
+                    "title": "Activities end date",
+                    "source": "activitiesEndDate",
+                    "type": "date",
+                    "width": "10%"
                   },
                   {
                     "width": "10%",
@@ -16920,7 +17216,28 @@
                     "title": "Number of structures installed"
                   },
                   {
-                    "width": "17%",
+                    "width": "15%",
+                    "type": "col",
+                    "title": "Type of structures installed",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "typesOfStructuresInstalled",
+                            "type": "select2"
+                          }
+                        ]
+                      },
+                      {
+                        "source": "otherStructuresType",
+                        "placeholder": "Type of structures (if Other)",
+                        "type": "text"
+                      }
+                    ]
+                  },
+                  {
+                    "width": "15%",
                     "type": "col",
                     "title": "Type of remediation",
                     "items": [
@@ -16941,7 +17258,7 @@
                     ]
                   },
                   {
-                    "width": "17%",
+                    "width": "15%",
                     "type": "col",
                     "title": "Please identify any area/s that have shown evidence of off-site benefits",
                     "items": [
@@ -16997,7 +17314,12 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all <u>Environment</u> projects but optional for Agriculture projects. This field identifies what evidence you have available for this service and where the evidence is stored. This helps the Department and Service Providers during future assurance activities. Refer to the <a href=\"http://nrm.gov.au/publications/rlp-merit-user-guide\" target=\"_evidence\">Evidence Guide</a> for details of the types of acceptable evidence."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                  },
+                  {
+                    "preLabel": "Data have been uploaded",
+                    "source": "dataUploaded",
+                    "type": "boolean"
                   }
                 ]
               },
