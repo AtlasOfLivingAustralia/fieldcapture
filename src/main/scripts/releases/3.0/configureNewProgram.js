@@ -113,19 +113,31 @@ const newScores = [
         scores: [
             {
                 label: 'Area (ha) of erosion control - initial',
-                path: 'data.tba'
+                path: 'data.areaOfErosionControlHa',
+                filterValue: "Initial",
+                filterPath: "data.initialOrFollowup",
+                tags: ['Survey', 'Baseline', 'Indicator']
             },
             {
                 label: 'Area (ha) of erosion control - follow-up',
-                path: 'data.tba'
+                path: 'data.areaOfErosionControlHa',
+                filterValue: 'Follow-up',
+                filterPath: "data.initialOrFollowup",
+                tags: ['Survey', 'Baseline', 'Indicator']
             },
             {
                 label: 'Length (km) of stream/coastline treated for erosion - initial',
-                path: 'data.tba'
+                path: 'data.lengthOfErosionControlKm',
+                filterValue: "Initial",
+                filterPath: "data.initialOrFollowup",
+                tags: ['Survey', 'Baseline', 'Indicator']
             },
             {
                 label: 'Length (km) of stream/coastline treated for erosion - follow-up',
-                path: 'data.tba'
+                path: 'data.lengthOfErosionControlKm',
+                filterValue: 'Follow-up',
+                filterPath: "data.initialOrFollowup",
+                tags: ['Survey', 'Baseline', 'Indicator']
             }
         ]
     },
