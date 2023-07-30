@@ -61,15 +61,13 @@ const newScores = [
                 label: 'Number of captive breeding and release, translocation, or re-introduction programs established',
                 path: 'data.numberOfCaptiveBreeding',
                 filterValue: "Newly established",
-                filterPath: "data.breedingProgramDetails.newOrMaintained",
-                tags: ['Survey', 'Baseline', 'Indicator']
+                filterPath: "data.breedingProgramDetails.newOrMaintained"
             },
             {
                 label: 'Number of captive breeding and release, translocation, or re-introduction programs maintained',
                 path: 'data.numberOfCaptiveBreeding',
                 filterValue: "Maintained",
-                filterPath: "data.breedingProgramDetails.newOrMaintained",
-                tags: ['Survey', 'Baseline', 'Indicator']
+                filterPath: "data.breedingProgramDetails.newOrMaintained"
             }
         ]
     },
@@ -81,29 +79,25 @@ const newScores = [
                 label: 'Area (ha) of debris removal - initial',
                 path: 'data.debrisRemovalSurveys.debrisRemovalDetails.debrisRemovedHa',
                 filterValue: "Initial",
-                filterPath: "data.debrisRemovalSurveys.debrisRemovalDetails.initialOrFollowup",
-                tags: ['Survey', 'Baseline', 'Indicator']
+                filterPath: "data.debrisRemovalSurveys.debrisRemovalDetails.initialOrFollowup"
             },
             {
                 label: 'Area (ha) of debris removal - follow-up',
                 path: 'data.debrisRemovalSurveys.debrisRemovalDetails.debrisRemovedHa',
                 filterValue: 'Follow-up',
-                filterPath: "data.debrisRemovalSurveys.debrisRemovalDetails.initialOrFollowup",
-                tags: ['Survey', 'Baseline', 'Indicator']
+                filterPath: "data.debrisRemovalSurveys.debrisRemovalDetails.initialOrFollowup"
             },
             {
                 label: 'Length (km) of debris removal - initial',
                 path: 'data.debrisRemovalSurveys.debrisRemovalDetails.debrisRemovedKm',
                 filterValue: 'Initial',
-                filterPath: "data.debrisRemovalSurveys.debrisRemovalDetails.initialOrFollowup",
-                tags: ['Survey', 'Baseline', 'Indicator']
+                filterPath: "data.debrisRemovalSurveys.debrisRemovalDetails.initialOrFollowup"
             },
             {
                 label: 'Length (km) of debris removal - follow-up',
                 path: 'data.debrisRemovalSurveys.debrisRemovalDetails.debrisRemovedKm',
                 filterValue: 'Follow-up',
-                filterPath: "data.debrisRemovalSurveys.debrisRemovalDetails.initialOrFollowup",
-                tags: ['Survey', 'Baseline', 'Indicator']
+                filterPath: "data.debrisRemovalSurveys.debrisRemovalDetails.initialOrFollowup"
             }
         ]
     },
@@ -115,29 +109,25 @@ const newScores = [
                 label: 'Area (ha) of erosion control - initial',
                 path: 'data.areaOfErosionControlHa',
                 filterValue: "Initial",
-                filterPath: "data.initialOrFollowup",
-                tags: ['Survey', 'Baseline', 'Indicator']
+                filterPath: "data.initialOrFollowup"
             },
             {
                 label: 'Area (ha) of erosion control - follow-up',
                 path: 'data.areaOfErosionControlHa',
                 filterValue: 'Follow-up',
-                filterPath: "data.initialOrFollowup",
-                tags: ['Survey', 'Baseline', 'Indicator']
+                filterPath: "data.initialOrFollowup"
             },
             {
                 label: 'Length (km) of stream/coastline treated for erosion - initial',
                 path: 'data.lengthOfErosionControlKm',
                 filterValue: "Initial",
-                filterPath: "data.initialOrFollowup",
-                tags: ['Survey', 'Baseline', 'Indicator']
+                filterPath: "data.initialOrFollowup"
             },
             {
                 label: 'Length (km) of stream/coastline treated for erosion - follow-up',
                 path: 'data.lengthOfErosionControlKm',
                 filterValue: 'Follow-up',
-                filterPath: "data.initialOrFollowup",
-                tags: ['Survey', 'Baseline', 'Indicator']
+                filterPath: "data.initialOrFollowup"
             }
         ]
     },
@@ -149,15 +139,13 @@ const newScores = [
                 label: 'Area (ha) covered by conservation agreements established',
                 path: 'data.areaCoveredByAgreementsHa',
                 filterValue: "Established",
-                filterPath: "data.establishedOrImplementation",
-                tags: ['Survey', 'Baseline', 'Indicator']
+                filterPath: "data.establishedOrImplementation"
             },
             {
                 label: 'Area (ha) where implementation activities conducted (implementation/stewardship)',
                 path: 'data.areaCoveredByAgreementsHa',
                 filterValue: 'Implementation',
-                filterPath: "data.establishedOrImplementation",
-                tags: ['Survey', 'Baseline', 'Indicator']
+                filterPath: "data.establishedOrImplementation"
             }
         ]
     },
@@ -169,15 +157,13 @@ const newScores = [
                 label: 'Number of pest animal-free enclosures - initial',
                 path: 'data.enclosureDetails.numberOfEnclosures',
                 filterValue: "Newly established",
-                filterPath: "data.enclosureDetails.newOrMaintained",
-                tags: ['Survey', 'Baseline', 'Indicator']
+                filterPath: "data.enclosureDetails.newOrMaintained"
             },
             {
                 label: 'Number of pest animal-free enclosures - maintained',
                 path: 'data.enclosureDetails.numberOfEnclosures',
                 filterValue: "Maintained",
-                filterPath: "data.enclosureDetails.newOrMaintained",
-                tags: ['Survey', 'Baseline', 'Indicator']
+                filterPath: "data.enclosureDetails.newOrMaintained"
             },
             {
                 label: 'Number of days maintaining pest animal-free enclosures',
@@ -257,29 +243,25 @@ const newScores = [
                 label: 'Area (ha) of augmentation - initial',
                 path: 'data.habitatAugmentationAreas.areaImplementedHa',
                 filterValue: 'Initial',
-                filterPath: "data.habitatAugmentationAreas.initialOrMaintained",
-                tags: ['Survey', 'Baseline']
+                filterPath: "data.habitatAugmentationAreas.initialOrMaintained"
             },
             {
                 label: 'Area (ha) of augmentation - maintained',
                 path: 'data.habitatAugmentationAreas.areaImplementedHa',
                 filterValue: "Maintained",
-                filterPath: "data.habitatAugmentationAreas.initialOrMaintained",
-                tags: ['Survey', 'Baseline']
+                filterPath: "data.habitatAugmentationAreas.initialOrMaintained"
             },
             {
                 label: 'Number of locations where structures installed - initial',
                 path: 'data.habitatAugmentationAreas.noStructuresInstalled',
                 filterValue: 'Initial',
-                filterPath: "data.habitatAugmentationAreas.initialOrMaintained",
-                tags: ['Survey', 'Baseline']
+                filterPath: "data.habitatAugmentationAreas.initialOrMaintained"
             },
             {
                 label: 'Number of locations where structures installed - maintained',
                 path: 'data.habitatAugmentationAreas.noStructuresInstalled',
                 filterValue: "Maintained",
-                filterPath: "data.habitatAugmentationAreas.initialOrMaintained",
-                tags: ['Survey', 'Baseline']
+                filterPath: "data.habitatAugmentationAreas.initialOrMaintained"
             }
         ]
     },
@@ -335,15 +317,13 @@ const newScores = [
                 label: 'Number of treatments implemented to improve site eco-hydrology - initial',
                 path: 'data.numberEcoHydroTreatments',
                 filterValue: "Initial",
-                filterPath: "data.hydroAreasControlled.initialOrFollowup",
-                tags: ['Survey', 'Baseline', 'Indicator', 'Initial']
+                filterPath: "data.hydroAreasControlled.initialOrFollowup"
             },
             {
                 label: 'Number of treatments implemented to improve site eco-hydrology - follow-up',
                 path: 'data.numberEcoHydroTreatments',
                 filterValue: 'Follow-up',
-                filterPath: "data.hydroAreasControlled.initialOrFollowup",
-                tags: ['Survey', 'Baseline', 'Indicator', 'Initial']
+                filterPath: "data.hydroAreasControlled.initialOrFollowup"
             }
         ]
     },
@@ -355,15 +335,13 @@ const newScores = [
                 label: 'Area (ha) covered by practice change - initial',
                 path: 'data.landManagementControlledArea.landManagementDetails.areaImplementedHa',
                 filterValue: 'Initial',
-                filterPath: "data.landManagementControlledArea.initialOrFollowup",
-                tags: ['Survey', 'Baseline']
+                filterPath: "data.landManagementControlledArea.initialOrFollowup"
             },
             {
                 label: 'Area (ha) covered by practice change - follow-up',
                 path: 'data.landManagementControlledArea.landManagementDetails.areaImplementedHa',
                 filterValue: 'Follow-up',
-                filterPath: "data.landManagementControlledArea.initialOrFollowup",
-                tags: ['Survey', 'Baseline']
+                filterPath: "data.landManagementControlledArea.initialOrFollowup"
             }
         ]
     },
@@ -375,29 +353,25 @@ const newScores = [
                 label: 'Area (ha) for disease treatment/prevention - initial',
                 path: 'data.diseaseManagementAreasControlled.diseaseManagementDetails.areaTreatedHa',
                 filterValue: 'Initial',
-                filterPath: "data.diseaseManagementAreasControlled.initialOrFollowup",
-                tags: ['Survey', 'Baseline']
+                filterPath: "data.diseaseManagementAreasControlled.initialOrFollowup"
             },
             {
                 label: 'Area (ha) for disease treatment/prevention - follow-up',
                 path: 'data.diseaseManagementAreasControlled.diseaseManagementDetails.areaTreatedHa',
                 filterValue: 'Follow-up',
-                filterPath: "data.diseaseManagementAreasControlled.initialOrFollowup",
-                tags: ['Survey', 'Baseline']
+                filterPath: "data.diseaseManagementAreasControlled.initialOrFollowup"
             },
             {
                 label: 'Length (km) for disease treatment/prevention - initial',
                 path: 'data.diseaseManagementAreasControlled.diseaseManagementDetails.lengthTreatedKm',
                 filterValue: 'Initial',
-                filterPath: "data.diseaseManagementAreasControlled.initialOrFollowup",
-                tags: ['Survey', 'Baseline']
+                filterPath: "data.diseaseManagementAreasControlled.initialOrFollowup"
             },
             {
                 label: 'Length (km) for disease treatment/prevention - follow-up',
                 path: 'data.diseaseManagementAreasControlled.diseaseManagementDetails.lengthTreatedKm',
                 filterValue: 'Follow-up',
-                filterPath: "data.diseaseManagementAreasControlled.initialOrFollowup",
-                tags: ['Survey', 'Baseline']
+                filterPath: "data.diseaseManagementAreasControlled.initialOrFollowup"
             }
         ]
     },
@@ -433,29 +407,25 @@ const newScores = [
                 label: 'Area (ha) of remediation of riparian/aquatic areas - initial',
                 path: 'data.areaRemediatedHa',
                 filterValue: 'Initial',
-                filterPath: "data.initialOrFollowup",
-                tags: ['Survey', 'Baseline']
+                filterPath: "data.initialOrFollowup"
             },
             {
                 label: 'Area (ha) of remediation of riparian/aquatic areas - follow-up',
                 path: 'data.areaRemediatedHa',
                 filterValue: 'Follow-up',
-                filterPath: "data.initialOrFollowup",
-                tags: ['Survey', 'Baseline']
+                filterPath: "data.initialOrFollowup"
             },
             {
                 label: 'Length (km) of remediation of riparian/aquatic areas - initial',
                 path: 'data.lengthRemediatedKm',
                 filterValue: 'Initial',
-                filterPath: "data.initialOrFollowup",
-                tags: ['Survey', 'Baseline']
+                filterPath: "data.initialOrFollowup"
             },
             {
                 label: 'Length (km) of remediation of riparian/aquatic areas - follow-up',
                 path: 'data.lengthRemediatedKm',
                 filterValue: 'Follow-up',
-                filterPath: "data.initialOrFollowup",
-                tags: ['Survey', 'Baseline']
+                filterPath: "data.initialOrFollowup"
             }
         ]
     },
@@ -467,15 +437,13 @@ const newScores = [
                 label: 'Area (ha) of habitat revegetated - initial',
                 path: 'data.revegetationArea.siteCalculatedAreaHa',
                 filterValue: "Initial",
-                filterPath: "data.revegetationArea.initialOrMaintenance",
-                tags: ['Survey', 'Baseline', 'Indicator', 'Initial']
+                filterPath: "data.revegetationArea.initialOrMaintenance"
             },
             {
                 label: 'Area (ha) of habitat revegetated - maintained',
                 path: 'data.revegetationArea.siteCalculatedAreaHa',
                 filterValue: "Maintenance",
-                filterPath: "data.revegetationArea.initialOrMaintenance",
-                tags: ['Survey', 'Baseline', 'Indicator', 'Initial']
+                filterPath: "data.revegetationArea.initialOrMaintenance"
             }
         ]
     },
@@ -514,13 +482,11 @@ const newScores = [
         scores: [
             {
                 label: 'Area (ha) of site preparation',
-                path: 'data.sitePreparationAreasControlled.areaPreparedHa',
-                tags: ['Survey', 'Baseline']
+                path: 'data.sitePreparationAreasControlled.areaPreparedHa'
             },
             {
                 label: 'Length (km) of site preparation',
-                path: 'data.sitePreparationAreasControlled.lengthPreparedKm',
-                tags: ['Survey', 'Baseline']
+                path: 'data.sitePreparationAreasControlled.lengthPreparedKm'
             }
         ]
     },
