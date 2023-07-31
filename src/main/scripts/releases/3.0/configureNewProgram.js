@@ -536,11 +536,15 @@ const newScores = [
         scores: [
             {
                 label: 'Number of interventions - initial',
-                path: 'data.tba'
+                path: 'data.interventionDetails.numberOfInterventions',
+                filterValue: 'Initial',
+                filterPath: "data.interventionDetails.initialOrFollowup"
             },
             {
                 label: 'Number of interventions - follow-up',
-                path: 'data.tba'
+                path: 'data.interventionDetails.numberOfInterventions',
+                filterValue: 'Follow-up',
+                filterPath: "data.interventionDetails.initialOrFollowup"
             }
         ]
     },

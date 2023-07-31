@@ -6129,7 +6129,7 @@
             "name": "breedingProgramDetails"
           },
           {
-            "name": "numberOfCaptiveBreeding",
+            "name": "numberOfBreedingProgramsSurveysConducted",
             "type": "number",
             "decimalPlaces": 0,
             "computed": {
@@ -6172,7 +6172,7 @@
                 "preLabel": "Number of establishing and maintaining breeding programs surveys conducted:",
                 "noEdit": true,
                 "type": "number",
-                "source": "numberOfCaptiveBreeding"
+                "source": "numberOfBreedingProgramsSurveysConducted"
               },
               {
                 "addRowText": "Add a new breeding area",
@@ -21752,6 +21752,78 @@
       "template": {
         "dataModel": [
           {
+            "dataType": "text",
+            "name": "participationIndividualsOrGroups",
+            "constraints": [
+              "Individuals",
+              "Groups"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "participationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "participationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "firstNationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "firstNationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "participationDetails",
+            "validate": "maxSize[3000]"
+          },
+          {
             "columns": [
               {
                 "dataType": "text",
@@ -21820,6 +21892,35 @@
                 ]
               },
               {
+                "dataType": "feature",
+                "name": "relocationSite",
+                "description": "If translocation is required please map site"
+              },
+              {
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "$geom.areaHa(relocationSite)"
+                },
+                "dataType": "number",
+                "name": "areaOfRelocationSiteHa",
+                "validate": [
+                  {
+                    "rule": "min",
+                    "param": {
+                      "type": "computed",
+                      "expression": "$geom.areaHa(relocationSite)*0.9"
+                    }
+                  },
+                  {
+                    "rule": "max",
+                    "param": {
+                      "type": "computed",
+                      "expression": "$geom.areaHa(relocationSite)*1.1"
+                    }
+                  }
+                ]
+              },
+              {
                 "dataType": "text",
                 "name": "purposeOfIntervention",
                 "description": "This field may be used to list What type of intervention is required. A list of multiple interventions need to be separated with a ';'.",
@@ -21828,54 +21929,91 @@
               {
                 "columns": [
                   {
+                    "dataType": "date",
+                    "name": "activitiesStartDate",
+                    "description": "Specific the dates these events were held on",
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "date",
+                    "name": "activitiesEndDate",
+                    "description": "Specific the dates these events were held on",
+                    "validate": "required"
+                  },
+                  {
+                    "name": "relatedOutcomes",
+                    "dataType": "text",
+                    "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "label",
+                      "valueProperty": "label",
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "url": "/project/outcomesByScores",
+                          "params": [{
+                            "expression": "owner.projectId",
+                            "name": "id",
+                            "type": "computed"
+                          }, {
+                            "expression": "scores",
+                            "name": "scoreIds",
+                            "type": "computed"
+                          }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "name": "investmentPriorities2",
+                    "dataType": "stringList",
+                    "validate": "required",
+                    "constraints": {
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "params": [
+                            {
+                              "expression": "owner.projectId",
+                              "name": "id",
+                              "type": "computed"
+                            }
+                          ],
+                          "url": "/project/listProjectInvestmentPriorities/"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "otherInvestmentPriority",
+                    "behaviour": [
+                      {
+                        "type": "enable",
+                        "condition": "\"Other\" in investmentPriorities2"
+                      }
+                    ]
+                  },
+                  {
                     "dataType": "species",
                     "name": "species",
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "participationIndividualsOrGroups",
+                    "constraints": [
+                      "Individuals",
+                      "Groups"
+                    ],
                     "validate": "required"
                   },
                   {
                     "dataType": "number",
                     "name": "numberOfIndividualsInvolved",
                     "validate": "required,min[0]"
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "numberOfDaysPerformingInterventions",
-                    "description": "Number of days should be calculated as number of days by number of people (eg. 4.5 days by 3 people is 13.5 days)",
-                    "validate": "required,min[0]"
-                  },
-                  {
-                    "dataType": "feature",
-                    "name": "relocationSite",
-                    "description": "If translocation is required please map site"
-                  },
-                  {
-                    "defaultValue": {
-                      "type": "computed",
-                      "expression": "$geom.areaHa(relocationSite)"
-                    },
-                    "dataType": "number",
-                    "name": "areaOfRelocationSiteHa",
-                    "validate": [
-                      {
-                        "rule": "min",
-                        "param": {
-                          "type": "computed",
-                          "expression": "$geom.areaHa(relocationSite)*0.9"
-                        }
-                      },
-                      {
-                        "rule": "max",
-                        "param": {
-                          "type": "computed",
-                          "expression": "$geom.areaHa(relocationSite)*1.1"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "comment",
-                    "validate": "maxSize[1500]"
                   }
                 ],
                 "dataType": "list",
@@ -21886,8 +22024,18 @@
             "name": "interventionDetails"
           },
           {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[1500]"
+          },
+          {
             "dataType": "image",
             "name": "photographicEvidence"
+          },
+          {
+            "dataType": "boolean",
+            "name": "dataUploaded",
+            "description": ""
           },
           {
             "dataType": "text",
@@ -21910,6 +22058,56 @@
         "title": "Undertaking emergency interventions to prevent extinctions",
         "viewModel": [
           {
+            "columns": [
+              {
+                "width": "10%",
+                "source": "participationIndividualsOrGroups",
+                "title": "Individuals or groups?",
+                "type": "selectOne"
+              },
+              {
+                "width": "20%",
+                "type": "col",
+                "title": "Total Number of people delivering this service",
+                "items": [
+                  {
+                    "source": "participationIndividualNumber",
+                    "type": "number"
+                  },
+                  {
+                    "source": "participationGroupNumber",
+                    "type": "selectOne"
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "width": "20%",
+                "title": "Total Number of First Nations people delivering this service ",
+                "items": [
+                  {
+                    "source": "firstNationIndividualNumber",
+                    "type": "number"
+                  },
+                  {
+                    "source": "firstNationGroupNumber",
+                    "type": "selectOne"
+                  }
+                ]
+              },
+              {
+                "source": "participationDetails",
+                "rows": 4,
+                "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                "type": "textarea"
+              }
+            ],
+            "userAddedRows": false,
+            "disableTableUpload": false,
+            "source": "",
+            "type": "table"
+          },
+          {
             "type": "section",
             "items": [
               {
@@ -21923,7 +22121,7 @@
                     "items": [
                       {
                         "preLabel": "Initial or follow-up activity?",
-                        "css": "span3",
+                        "css": "span2",
                         "source": "initialOrFollowup",
                         "type": "selectOne"
                       },
@@ -21939,20 +22137,32 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "Site/s where emergency interventions were undertaken",
-                        "css": "span3",
+                        "preLabel": "Site/s where interventions occurred (source site)",
+                        "css": "span2",
                         "source": "siteOfIntervention",
                         "type": "feature"
                       },
                       {
-                        "preLabel": "Area (ha) where emergency interventions were undertaken",
+                        "preLabel": "Actual area (ha) where interventions occurred",
                         "css": "span2",
                         "source": "areaOfInterventionHa",
                         "type": "number"
                       },
                       {
-                        "preLabel": "Type and goal or intervention",
-                        "css": "span5",
+                        "preLabel": "Actual area (ha) where interventions were relocated to (release site)",
+                        "css": "span2",
+                        "source": "relocationSite",
+                        "type": "feature"
+                      },
+                      {
+                        "preLabel": "Actual area (ha) where interventions occurred",
+                        "css": "span2",
+                        "source": "areaOfRelocationSiteHa",
+                        "type": "number"
+                      },
+                      {
+                        "preLabel": "Type and goal of intervention",
+                        "css": "span3",
                         "source": "purposeOfIntervention",
                         "type": "textarea",
                         "rows": 3
@@ -21962,42 +22172,55 @@
                   {
                     "columns": [
                       {
-                        "width": "30%",
+                        "title": "Activities start date",
+                        "source": "activitiesStartDate",
+                        "type": "date",
+                        "width": "10%"
+                      },
+                      {
+                        "title": "Activities end date",
+                        "source": "activitiesEndDate",
+                        "type": "date",
+                        "width": "10%"
+                      },
+                      {
+                        "width": "15%",
+                        "source": "relatedOutcomes",
+                        "type": "selectOne",
+                        "title": "Which outcome statement/s relates to this survey?"
+                      },
+                      {
+                        "width": "20%",
+                        "type": "col",
+                        "title": "Which investment priority does this activity relate to?",
+                        "items": [
+                          {
+                            "source": "investmentPriorities2",
+                            "type": "select2Many"
+                          },
+                          {
+                            "source": "otherInvestmentPriority",
+                            "type": "text"
+                          }
+                        ]
+                      },
+                      {
+                        "width": "25%",
                         "source": "species",
                         "title": "Targeted species",
                         "type": "speciesSelect"
                       },
                       {
                         "width": "10%",
+                        "source": "participationIndividualsOrGroups",
+                        "title": "Group or individual",
+                        "type": "selectOne"
+                      },
+                      {
+                        "width": "10%",
                         "source": "numberOfIndividualsInvolved",
                         "type": "number",
-                        "title": "Number of individuals involved"
-                      },
-                      {
-                        "width": "10%",
-                        "source": "numberOfDaysPerformingInterventions",
-                        "type": "number",
-                        "title": "Time (days) of intervention"
-                      },
-                      {
-                        "width": "10%",
-                        "source": "relocationSite",
-                        "type": "feature",
-                        "title": "Site/s where emergency interventions were relocated to"
-                      },
-                      {
-                        "width": "10%",
-                        "source": "areaOfRelocationSiteHa",
-                        "type": "number",
-                        "title": "Area (ha) where emergency interventions were relocated to"
-                      },
-                      {
-                        "width": "30%",
-                        "source": "comment",
-                        "type": "textarea",
-                        "title": "Clarification, if needed",
-                        "rows": 3,
-                        "placeholder": "Clarification comments include information for your project manager about the service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
+                        "title": "Number of groups / individuals"
                       }
                     ],
                     "userAddedRows": true,
@@ -22020,8 +22243,26 @@
                 "type": "row",
                 "items": [
                   {
+                    "preLabel": "Clarification, if needed",
+                    "type": "textarea",
+                    "rows": 4,
+                    "css": "span8",
+                    "source": "comments",
+                    "placeholder": "Clarification comments include information for your project manager about the service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please attach any evidence you have available for this service and/or provide information (e.g. links) to where the evidence is stored. This field will help the Department and Service Providers during assurance activities or audits. Refer to the Evidence Guide for details of the types of acceptable evidence."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                  },
+                  {
+                    "preLabel": "Data have been uploaded",
+                    "source": "dataUploaded",
+                    "type": "boolean"
                   }
                 ]
               },
