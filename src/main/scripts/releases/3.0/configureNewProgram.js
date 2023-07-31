@@ -54,6 +54,20 @@ const newScores = [
         ]
     },
     {
+        serviceId: 4,
+        formSection: 'NHT - Controlling access',
+        scores: [
+            {
+                label: 'Area (ha) of structures installed that control access',
+                path: 'data.tba',
+            },
+            {
+                label: 'Length (km) of structures installed that control access',
+                path: 'data.tba',
+            }
+        ]
+    },
+    {
         serviceId: 10,
         formSection:  'NHT - Establishing ex-situ breeding programs',
         scores: [
@@ -765,7 +779,9 @@ var config=
                 {
                     serviceId: 4,
                     serviceTargetLabels: [
-                        'Number of structures installed'
+                        'Number of structures installed',
+                        'Area (ha) of structures installed that control access',
+                        'Length (km) of structures installed that control access'
                     ]
                 },
                 {
