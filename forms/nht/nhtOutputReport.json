@@ -5899,39 +5899,72 @@
               },
               {
                 "dataType": "number",
-                "name": "numberOfSitesCreated",
+                "name": "numberOfCaptiveBreeding",
                 "validate": "required"
               },
 
               {
                 "dataType": "feature",
-                "name": "sitesOfBreedingProgram",
-                "description": "Number of days should be calculated as number of days by number of people (eg. 4.5 days by 3 people is 13.5 days)"
+                "name": "areaOfSourceSite"
               },
               {
                 "defaultValue": {
-                  "type": "computed",
-                  "expression": "$geom.areaHa(sitesOfBreedingProgram)"
+                  "expression": "$geom.areaHa(areaOfSourceSite)",
+                  "type": "computed"
                 },
                 "dataType": "number",
-                "name": "areaOfEnclosureHa",
-                "validate": [
+                "name": "areaOfSourceSiteAreaHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "validate": "min[0]"
+              },
+              {
+                "dataType": "feature",
+                "name": "areaOfReleaseSite"
+              },
+              {
+                "computed": {
+                  "expression": "$geom.areaHa(areaOfReleaseSite)"
+                },
+                "dataType": "number",
+                "name": "calculatedAreaOfReleaseSiteHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "behaviour": [
                   {
-                    "rule": "min",
-                    "param": {
-                      "type": "computed",
-                      "expression": "$geom.areaHa(sitesOfBreedingProgram)*0.9"
-                    }
-                  },
-                  {
-                    "rule": "max",
-                    "param": {
-                      "type": "computed",
-                      "expression": "$geom.areaHa(sitesOfBreedingProgram)*1.1"
+                    "condition": "areaOfErosionControlInvoicedHa > 0",
+                    "type": "conditional_validation",
+                    "value": {
+                      "message": "The controlled area must be mapped",
+                      "validate": "required,min[0.0001]"
                     }
                   }
                 ]
               },
+
+              {
+                "defaultValue": {
+                  "expression": "$geom.areaHa(areaOfReleaseSite)",
+                  "type": "computed"
+                },
+                "dataType": "number",
+                "name": "areaOfErosionControlHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "validate": "required,min[0]"
+              },
+              {
+                "defaultValue": {
+                  "expression": "$geom.lengthKm(areaOfReleaseSite)",
+                  "type": "computed"
+                },
+                "dataType": "number",
+                "name": "lengthOfErosionControlKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "validate": "required,min[0]"
+              },
+
               {
                 "dataType": "date",
                 "name": "activitiesStartDate",
@@ -6021,6 +6054,11 @@
                   {
                     "dataType": "number",
                     "name": "numberOfIndividualsReleased",
+                    "validate": "required,min[0]"
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "numberOfAdnimalDiedPreReleased",
                     "validate": "required,min[0]"
                   },
                   {
@@ -6131,7 +6169,7 @@
             "type": "section",
             "items": [
               {
-                "preLabel": "Number of establishing and maintaining breeding programs surveys conducted:xxx",
+                "preLabel": "Number of establishing and maintaining breeding programs surveys conducted:",
                 "noEdit": true,
                 "type": "number",
                 "source": "numberOfCaptiveBreeding"
@@ -6173,23 +6211,6 @@
                   },
                   {
                     "type": "row",
-                    "items": [
-                      {
-                        "preLabel": "Site/s of breeding program",
-                        "css": "span3",
-                        "source": "sitesOfBreedingProgram",
-                        "type": "feature"
-                      },
-                      {
-                        "preLabel": "Area (ha) of feral-free enclosures established or maintained",
-                        "css": "span3",
-                        "source": "areaOfEnclosureHa",
-                        "type": "number"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
                     "css": "border-bottom",
                     "items": [
                       {
@@ -6200,16 +6221,72 @@
                             "type": "row",
                             "items": [
                               {
-                                "preLabel": "Number of sites",
-                                "source": "numberOfSitesCreated",
+                                "preLabel": "Number of captive breeding, releases, translocation or re-introduction sites established or maintained",
+                                "source": "numberOfCaptiveBreeding",
                                 "type": "number"
                               }
                             ]
                           }
                         ]
                       },
-
-
+                      {
+                        "type": "col",
+                        "css": "span2 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "areaOfSourceSite",
+                                "type": "feature",
+                                "preLabel": "Site/s of captive breeding, pre-translocation capture (source site)"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "areaOfSourceSiteAreaHa",
+                                "type": "number",
+                                "readonly": true,
+                                "displayOptions": {
+                                  "displayUnits": true
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "css": "span2 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "areaOfReleaseSite",
+                                "type": "feature",
+                                "preLabel": " Site/s of release of captive breeding, re-introduced or translocated animals (release site)"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "readonly": "readonly",
+                                "source": "calculatedAreaOfReleaseSiteHa",
+                                "type": "number",
+                                "displayOptions": {
+                                  "displayUnits": true
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      },
                       {
                         "type": "col",
                         "css": "span2 col-border-right",
@@ -6250,7 +6327,7 @@
                       {
                         "width": "20%",
                         "type": "col",
-                        "title": "Which investment priority does this activity relate to?",
+                        "title": "Investment priority species",
                         "items": [
                           {
                             "source": "investmentPriorities2",
@@ -6277,11 +6354,17 @@
                       {
                         "width": "10%",
                         "source": "numberOfIndividualsReleased",
+                        "title": "Number of individuals released, translocated, or re-introduced to the wild",
+                        "type": "number"
+                      },
+                      {
+                        "width": "10%",
+                        "source": "numberOfAdnimalDiedPreReleased",
                         "title": "Number of animals bred, died (pre-release), released, translocated, or re-introduced",
                         "type": "number"
                       },
                       {
-                        "width": "20%",
+                        "width": "10%",
                         "type": "col",
                         "title": "Technique used",
                         "items": [

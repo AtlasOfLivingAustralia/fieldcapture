@@ -59,13 +59,13 @@ const newScores = [
         scores: [
             {
                 label: 'Number of captive breeding and release, translocation, or re-introduction programs established',
-                path: 'data.numberOfCaptiveBreeding',
+                path: 'data.breedingProgramDetails.numberOfCaptiveBreeding',
                 filterValue: "Newly established",
                 filterPath: "data.breedingProgramDetails.newOrMaintained"
             },
             {
                 label: 'Number of captive breeding and release, translocation, or re-introduction programs maintained',
-                path: 'data.numberOfCaptiveBreeding',
+                path: 'data.breedingProgramDetails.numberOfCaptiveBreeding',
                 filterValue: "Maintained",
                 filterPath: "data.breedingProgramDetails.newOrMaintained"
             }
