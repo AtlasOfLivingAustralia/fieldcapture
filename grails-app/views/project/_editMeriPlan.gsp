@@ -33,8 +33,12 @@
 		<!-- /ko -->
 		<br/><br/>
 		<ul>
-			<li>"Modify MERI Plan" will allow project administrators to edit MERI plan information. </li>
-			<li>Modifying the MERI plan will change the state of the project to "Not approved".</li>
+			<!-- ko if:canModifyPlan -->
+			<li>Pressing "Modify MERI Plan" will allow project administrators to edit MERI plan information. </li>
+			<!-- /ko -->
+			<!-- ko if: !canModifyPlan -->
+			<li>This program requires a MERIT administrator to modify the MERI plan</li>
+			<!-- /ko -->
 		</ul>
 	</div>
 </div>
