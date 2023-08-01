@@ -336,16 +336,18 @@ function MERIPlan(project, projectService, config) {
     self.keyThreatCodes = config.keyThreatCodes || [];
     self.priorityPlaces = config.priorityPlaces || [];
     self.monitoringProtocols = ko.observableArray();
-    projectService.getMonitoringProtocols().done(function(protocols) {
-        if (!_.isArray(protocols)) {
-            protocols = [];
-        }
-        // If the protocol list doesn't contain 'Other', add it.
-        if (!_.find(protocols, function(protocol) { return protocol.value.toLowerCase() == 'other'; })) {
-            protocols.push({label:'Other', value:'Other'});
-        }
-        self.monitoringProtocols(protocols);
-    });
+    if (config.useServiceOutcomesModel) {
+        projectService.getMonitoringProtocols().done(function(protocols) {
+            if (!_.isArray(protocols)) {
+                protocols = [];
+            }
+            // If the protocol list doesn't contain 'Other', add it.
+            if (!_.find(protocols, function(protocol) { return protocol.value.toLowerCase() == 'other'; })) {
+                protocols.push({label:'Other', value:'Other'});
+            }
+            self.monitoringProtocols(protocols);
+        });
+    }
 
     self.addBudget = function () {
         self.meriPlan().budget.rows.push(new BudgetRowViewModel({}, periods));
