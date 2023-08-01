@@ -59,11 +59,15 @@ const newScores = [
         scores: [
             {
                 label: 'Area (ha) of structures installed that control access',
-                path: 'data.tba',
+                path: 'data.controllingAccessSurveys.accessControlDetails.areaInstalledHa',
             },
             {
                 label: 'Length (km) of structures installed that control access',
-                path: 'data.tba',
+                path: 'data.controllingAccessSurveys.accessControlDetails.lengthInstalledKm',
+            },
+            {
+                label: 'Number of structures installed',
+                path: 'data.controllingAccessSurveys.accessControlDetails.numberInstalled',
             }
         ]
     },

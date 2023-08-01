@@ -2152,7 +2152,7 @@
                       },
                       {
                         "helpText": "May be changed manually if different to the calculated areas",
-                        "width": "15%",
+                        "width": "10%",
                         "type": "col",
                         "title": "Actual length (km) / area (ha) where access has been controlled",
                         "items": [
@@ -2186,6 +2186,49 @@
                               {
                                 "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
                                 "source": "mappingNotAlignedComments",
+                                "type": "textarea",
+                                "rows": 5
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "helpText": "Enter the amount you will invoice for during this reporting period.",
+                        "width": "10%",
+                        "type": "col",
+                        "title": "Invoiced area (ha)/length (km) where access has been controlled",
+                        "items": [
+                          {
+                            "source": "areaInvoicedHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          },
+                          {
+                            "source": "lengthInvoicedKm",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Reason for invoiced amount being different to actual amount",
+                                "source": "invoicedNotActualReason",
+                                "type": "selectOne"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                                "source": "invoicedNotActualComments",
                                 "type": "textarea",
                                 "rows": 5
                               }
@@ -2233,7 +2276,7 @@
                         ]
                       },
                       {
-                        "width": "20%",
+                        "width": "10%",
                         "type": "col",
                         "title": "Type of access control installed",
                         "items": [
@@ -2248,7 +2291,7 @@
                         ]
                       },
                       {
-                        "width": "25%",
+                        "width": "20%",
                         "source": "controlObjective",
                         "title": "Control objective",
                         "type": "textarea",
@@ -5908,15 +5951,23 @@
                 "name": "areaOfSourceSite"
               },
               {
-                "defaultValue": {
-                  "expression": "$geom.areaHa(areaOfSourceSite)",
-                  "type": "computed"
+                "computed": {
+                  "expression": "$geom.areaHa(areaOfSourceSite)"
                 },
                 "dataType": "number",
                 "name": "areaOfSourceSiteAreaHa",
                 "units": "ha",
                 "decimalPlaces": 3,
-                "validate": "min[0]"
+                "behaviour": [
+                  {
+                    "condition": "areaOfErosionControlInvoicedHa > 0",
+                    "type": "conditional_validation",
+                    "value": {
+                      "message": "The controlled area must be mapped",
+                      "validate": "required,min[0.0001]"
+                    }
+                  }
+                ]
               },
               {
                 "dataType": "feature",
@@ -5941,30 +5992,6 @@
                   }
                 ]
               },
-
-              {
-                "defaultValue": {
-                  "expression": "$geom.areaHa(areaOfReleaseSite)",
-                  "type": "computed"
-                },
-                "dataType": "number",
-                "name": "areaOfErosionControlHa",
-                "units": "ha",
-                "decimalPlaces": 3,
-                "validate": "required,min[0]"
-              },
-              {
-                "defaultValue": {
-                  "expression": "$geom.lengthKm(areaOfReleaseSite)",
-                  "type": "computed"
-                },
-                "dataType": "number",
-                "name": "lengthOfErosionControlKm",
-                "units": "km",
-                "decimalPlaces": 3,
-                "validate": "required,min[0]"
-              },
-
               {
                 "dataType": "date",
                 "name": "activitiesStartDate",
@@ -7983,6 +8010,11 @@
                     }
                   }
                 ]
+              },
+              {
+                "dataType": "number",
+                "name": "numberOfSurveyInvoice",
+                "validate": "required,min[0]"
               }
             ],
             "dataType": "list",
@@ -8367,6 +8399,22 @@
                                 "source": "mappingNotAlignedComments",
                                 "type": "textarea",
                                 "rows": 5
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "css": "span3 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "How may surveys will you be invoicing for?",
+                                "source": "numberOfSurveyInvoice",
+                                "type": "number"
                               }
                             ]
                           }
@@ -8823,6 +8871,11 @@
                     }
                   }
                 ]
+              },
+              {
+                "dataType": "number",
+                "name": "numberOfSurveyInvoice",
+                "validate": "required,min[0]"
               }
             ],
             "dataType": "list",
@@ -9207,6 +9260,22 @@
                                 "source": "mappingNotAlignedComments",
                                 "type": "textarea",
                                 "rows": 5
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "css": "span3 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "How many surveys will you be invoicing for?",
+                                "source": "numberOfSurveyInvoice",
+                                "type": "number"
                               }
                             ]
                           }
@@ -15175,6 +15244,11 @@
                     }
                   }
                 ]
+              },
+              {
+                "dataType": "number",
+                "name": "numberOfSurveyInvoice",
+                "validate": "required,min[0]"
               }
             ],
             "dataType": "list",
@@ -15559,6 +15633,22 @@
                                 "source": "mappingNotAlignedComments",
                                 "type": "textarea",
                                 "rows": 5
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "css": "span3 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "How many surveys will you be invoicing for?",
+                                "source": "numberOfSurveyInvoice",
+                                "type": "number"
                               }
                             ]
                           }
@@ -21340,6 +21430,11 @@
             "validate": "required,min[0]"
           },
           {
+            "dataType": "number",
+            "name": "numberOfSoilTestInvoice",
+            "validate": "required,min[0]"
+          },
+          {
             "columns": [
               {
                 "name": "relatedOutcomes",
@@ -21580,6 +21675,12 @@
                 "preLabel": "Number of soil tests conducted in targeted areas",
                 "css": "span2",
                 "source": "numberOfSoilTests",
+                "type": "number"
+              },
+              {
+                "preLabel": "How many soil tests will you be invoicing for?",
+                "css": "span2",
+                "source": "numberOfSoilTestInvoice",
                 "type": "number"
               }
             ]
@@ -22628,6 +22729,11 @@
                     }
                   }
                 ]
+              },
+              {
+                "dataType": "number",
+                "name": "numberOfSurveyInvoice",
+                "validate": "required,min[0]"
               }
             ],
             "dataType": "list",
@@ -23012,6 +23118,22 @@
                                 "source": "mappingNotAlignedComments",
                                 "type": "textarea",
                                 "rows": 5
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "css": "span3 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "How many surveys will you be invoicing for?",
+                                "source": "numberOfSurveyInvoice",
+                                "type": "number"
                               }
                             ]
                           }
@@ -23638,6 +23760,11 @@
                 ],
                 "dataType": "list",
                 "name": "surveyBaselineTable"
+              },
+              {
+                "dataType": "number",
+                "name": "numberOfSurveyInvoice",
+                "validate": "required,min[0]"
               }
             ],
             "dataType": "list",
@@ -24022,6 +24149,22 @@
                                 "source": "mappingNotAlignedComments",
                                 "type": "textarea",
                                 "rows": 5
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "css": "span3 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "How many surveys will you be invoicing for?",
+                                "source": "numberOfSurveyInvoice",
+                                "type": "number"
                               }
                             ]
                           }
