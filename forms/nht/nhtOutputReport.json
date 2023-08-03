@@ -3805,6 +3805,27 @@
                     ]
                   },
                   {
+                    "dataType": "number",
+                    "name": "areaOfRemovedDebrisInvoicedKm",
+                    "decimalPlaces": 3,
+                    "units": "km",
+                    "validate": [
+                      {
+                        "rule": "required"
+                      },
+                      {
+                        "rule": "min[0]"
+                      },
+                      {
+                        "param": {
+                          "expression": "debrisRemovedKm",
+                          "type": "computed"
+                        },
+                        "rule": "max"
+                      }
+                    ]
+                  },
+                  {
                     "dataType": "text",
                     "name": "invoicedNotActualReason",
                     "constraints": [
@@ -3814,7 +3835,7 @@
                     "validate": "required",
                     "behaviour": [
                       {
-                        "condition": "roundTo(debrisRemovedHa, 2) != roundTo(areaOfRemovedDebrisInvoicedHa, 2)",
+                        "condition": "roundTo(debrisRemovedHa, 2) != roundTo(areaOfRemovedDebrisInvoicedHa, 2) or roundTo(debrisRemovedKm, 2) != roundTo(areaOfRemovedDebrisInvoicedKm, 2)",
                         "type": "visible"
                       }
                     ]
@@ -4140,6 +4161,13 @@
                         "items": [
                           {
                             "source": "areaOfRemovedDebrisInvoicedHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          },
+                          {
+                            "source": "areaOfRemovedDebrisInvoicedKm",
                             "type": "number",
                             "displayOptions": {
                               "displayUnits": true
@@ -12888,11 +12916,32 @@
                     ]
                   },
                   {
+                    "dataType": "number",
+                    "name": "areaInvoicedKm",
+                    "units": "km",
+                    "decimalPlaces": 3,
+                    "validate": [
+                      {
+                        "rule": "required"
+                      },
+                      {
+                        "rule": "min[0]"
+                      },
+                      {
+                        "param": {
+                          "expression": "lengthOfRegimeChangeKm",
+                          "type": "computed"
+                        },
+                        "rule": "max"
+                      }
+                    ]
+                  },
+                  {
                     "dataType": "text",
                     "name": "invoicedNotActualReason",
                     "behaviour": [
                       {
-                        "condition": "roundTo(areaCoveringRegimeChangeHa, 2) != roundTo(areaInvoicedHa, 2)",
+                        "condition": "roundTo(areaCoveringRegimeChangeHa, 2) != roundTo(areaInvoicedHa, 2) or roundTo(lengthOfRegimeChangeKm, 2) != roundTo(areaInvoicedKm, 2)",
                         "type": "visible"
                       }
                     ],
@@ -13234,6 +13283,18 @@
                         "items": [
                           {
                             "source": "areaInvoicedHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "areaInvoicedKm",
                             "type": "number",
                             "displayOptions": {
                               "displayUnits": true
@@ -13627,7 +13688,25 @@
                       },
                       {
                         "param": {
-                          "expression": "areaImplementedHa",
+                          "expression": "lengthOfErosionControlKm",
+                          "type": "computed"
+                        },
+                        "rule": "max"
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "areaImplementedInvoicedKm",
+                    "units": "ha",
+                    "decimalPlaces": 3,
+                    "validate": [
+                      {
+                        "rule": "min[0]"
+                      },
+                      {
+                        "param": {
+                          "expression": "lengthImplementedKm",
                           "type": "computed"
                         },
                         "rule": "max"
@@ -13639,7 +13718,7 @@
                     "name": "invoicedNotActualReason",
                     "behaviour": [
                       {
-                        "condition": "roundTo(areaImplementedHa, 2) != roundTo(areaImplementedInvoicedHa, 2)",
+                        "condition": "roundTo(areaImplementedHa, 2) != roundTo(areaImplementedInvoicedHa, 2) or roundTo(lengthImplementedKm, 2) != roundTo(areaImplementedInvoicedKm, 2)",
                         "type": "visible"
                       }
                     ],
@@ -13982,6 +14061,13 @@
                     "items": [
                       {
                         "source": "areaImplementedInvoicedHa",
+                        "type": "number",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      },
+                      {
+                        "source": "areaImplementedInvoicedKm",
                         "type": "number",
                         "displayOptions": {
                           "displayUnits": true
@@ -14379,11 +14465,32 @@
                     ]
                   },
                   {
+                    "dataType": "number",
+                    "name": "areaTreatedInvoicedKm",
+                    "units": "km",
+                    "decimalPlaces": 3,
+                    "validate": [
+                      {
+                        "rule": "required"
+                      },
+                      {
+                        "rule": "min[0]"
+                      },
+                      {
+                        "param": {
+                          "expression": "lengthTreatedKm",
+                          "type": "computed"
+                        },
+                        "rule": "max"
+                      }
+                    ]
+                  },
+                  {
                     "dataType": "text",
                     "name": "invoicedNotActualReason",
                     "behaviour": [
                       {
-                        "condition": "roundTo(areaTreatedHa, 2) != roundTo(areaTreatedInvoicedHa, 2)",
+                        "condition": "roundTo(areaTreatedHa, 2) != roundTo(areaTreatedInvoicedHa, 2) or roundTo(lengthTreatedKm, 2) != roundTo(areaTreatedInvoicedKm, 2)",
                         "type": "visible"
                       }
                     ],
@@ -14749,6 +14856,18 @@
                         "displayOptions": {
                           "displayUnits": true
                         }
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "areaTreatedInvoicedKm",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
                       },
                       {
                         "type": "row",
@@ -18541,6 +18660,28 @@
                   }
                 ]
               },
+
+              {
+                "dataType": "number",
+                "name": "areaInvoicedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "lengthRevegetatedKm",
+                      "type": "computed"
+                    },
+                    "rule": "max"
+                  }
+                ]
+              },
               {
                 "dataType": "text",
                 "name": "mappingNotAlignedReason",
@@ -18577,7 +18718,7 @@
                 "validate": "required",
                 "behaviour": [
                   {
-                    "condition": "roundTo(areaRevegetatedHa, 2) != roundTo(areaInvoicedHa, 2)",
+                    "condition": "roundTo(areaRevegetatedHa, 2) != roundTo(areaInvoicedHa, 2) or roundTo(lengthRevegetatedKm, 2) != roundTo(areaInvoicedKm, 2)",
                     "type": "visible"
                   }
                 ]
@@ -18985,6 +19126,18 @@
                             "source": "areaInvoicedHa",
                             "type": "number",
                             "validate": "required",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "areaInvoicedKm",
+                            "type": "number",
                             "displayOptions": {
                               "displayUnits": true
                             }
@@ -20170,11 +20323,32 @@
                 ]
               },
               {
+                "dataType": "number",
+                "name": "areaPreparedInvoicedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "lengthPreparedKm",
+                      "type": "computed"
+                    },
+                    "rule": "max"
+                  }
+                ]
+              },
+              {
                 "dataType": "text",
                 "name": "invoicedNotActualReason",
                 "behaviour": [
                   {
-                    "condition": "roundTo(areaPreparedHa, 2) != roundTo(areaPreparedInvoicedHa, 2)",
+                    "condition": "roundTo(areaPreparedHa, 2) != roundTo(areaPreparedInvoicedHa, 2) or roundTo(lengthPreparedKm, 2) != roundTo(areaPreparedInvoicedKm, 2)",
                     "type": "visible"
                   }
                 ],
@@ -20576,6 +20750,18 @@
                             "preLabel": "Invoiced area (ha) of site preparation",
                             "helpText": "Enter the amount you will invoice for during this reporting period.",
                             "source": "areaPreparedInvoicedHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "areaPreparedInvoicedKm",
                             "type": "number",
                             "displayOptions": {
                               "displayUnits": true
