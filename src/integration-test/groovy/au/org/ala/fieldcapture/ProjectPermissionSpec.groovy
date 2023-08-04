@@ -33,21 +33,21 @@ class ProjectPermissionSpec extends StubbedCasSpec {
         waitFor {
             adminContent.projectAccess.permissions.size() == 4
         }
-        adminContent.projectAccess.findPermissionForUserByUserName('user2@user.com').roleText == "Admin"
+        adminContent.projectAccess.findPermissionForUserByRole('admin').roleText == "Admin"
 
         when: "We change user 2 to an editor"
-        adminContent.projectAccess.findPermissionForUserByUserName('user2@user.com').updateRole('editor')
+        adminContent.projectAccess.findPermissionForUserByRole('editor').updateRole('editor')
 
         and: "Confirm we want to change the role"
         okBootbox()
 
         then:
         waitFor {
-            adminContent.projectAccess.findPermissionForUserByUserName('user2@user.com').roleText == "Editor"
+            adminContent.projectAccess.findPermissionForUserByRole('Editor').roleText == "Editor"
         }
 
         when: "We delete the new permission"
-        adminContent.projectAccess.findPermissionForUserByUserName('user2@user.com').remove()
+        adminContent.projectAccess.findPermissionForUserByRole('editor').remove()
 
         and: "Confirm we want to remove the role"
         okBootbox()
@@ -56,7 +56,7 @@ class ProjectPermissionSpec extends StubbedCasSpec {
         waitFor {
             adminContent.projectAccess.permissions.size() == 3
         }
-        !adminContent.projectAccess.findPermissionForUserByUserName('user2@user.com')
+        !adminContent.projectAccess.findPermissionForUserByRole('editor')
 
     }
 

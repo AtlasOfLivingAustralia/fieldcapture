@@ -23,7 +23,7 @@ class PermissionsAdminModule extends Module {
         permissions.find{it.userId == userId}
     }
 
-    PermissionsTableRow findPermissionForUserByUserName(String userName) {
-        permissions.find{it.userName == userName}
+    PermissionsTableRow findPermissionForUserByRole(String role) {
+        permissions.find{it.role == role}
     }
 }
