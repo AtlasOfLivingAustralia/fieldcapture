@@ -4,7 +4,7 @@
         <table class="table table-condensed" id="existingMembersTable" style="">
             <thead>
             <tr>
-                <g:if test="${fc.userIsAlaAdmin()}">
+                <g:if test="${fc.userIsSiteAdmin() || isAdmin || user.isAdmin}">
                     <th width="10%">User&nbsp;Id</th>
                 </g:if>
                 <th>User&nbsp;Name</th>
@@ -17,7 +17,7 @@
             </thead>
             <tbody class="membersTbody">
             <tr class="hide d-none permission">
-                <g:if test="${fc.userIsAlaAdmin()}">
+                <g:if test="${fc.userIsSiteAdmin() || isAdmin || user.isAdmin}">
                     <td class="memUserId"></td>
                 </g:if>
                 <td class="memUserName"></td>

@@ -12,8 +12,7 @@ class ProjectPermissionSpec extends StubbedCasSpec {
         logout(browser)
     }
 
-    //temp comment until it local test is fixed(chromedriver issue)
-    /*def "a grant manager can add and modify user roles for a project"() {
+    def "a grant manager can add and modify user roles for a project"() {
 
         setup:
         String projectId = '1'
@@ -59,7 +58,7 @@ class ProjectPermissionSpec extends StubbedCasSpec {
         }
         !adminContent.projectAccess.findPermissionForUser('2')
 
-    }*/
+    }
 
     def "an admin cannot add a user as a grant manager, but change change an editor to an admin"() {
 
