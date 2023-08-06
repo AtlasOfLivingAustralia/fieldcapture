@@ -73,6 +73,7 @@ Run MERIT with additonal parameters:
 Note the leading colon before the bootRun task - this is required as when inplace=true gradle is configured in a multi-project build configuration.
 
 # MacOS Catalina
+(This is only relevant to versions of MERIT prior to 3.0.  From 3.0, MERIT will look for development config in $HOME/data/)
 if you getting this error in MacOS
 ```
 unable to create directory data/fieldcature/ehcache
