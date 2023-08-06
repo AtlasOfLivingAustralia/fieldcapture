@@ -10,7 +10,7 @@ It is currently in use by the Australian Government Department of the environmen
 
 ## General Information
 ### Technologies
-* Grails framework 4.0.10
+* Grails framework 5.x
 * Knockout JS
 * Bootstap 4
 
