@@ -350,7 +350,17 @@ OrganisationPageViewModel = function (props, options) {
 
             _.each(currentConfig.organisationReports, function(reportCategory) {
                 reportCategory.periodStart = self.startDate();
-                reportCategory.periodEnd = self.endDate();
+
+                // The end date will be set to midnight at the start of the day because the datepicker
+                // isn't supplying the time.  This causes issues with the display of the end date of the final
+                // report because the final report end date is fudged because project end dates are a day early.
+                // Setting a time of 23:59:59 fixes this.
+                var periodEnd = moment(self.endDate());
+                periodEnd.set('hour', 23);
+                periodEnd.set('minute', 59);
+                periodEnd.set('second', 59);
+
+                reportCategory.periodEnd = periodEnd.toDate().toISOStringNoMillis();
             });
 
             blockUIWithMessage("Saving configuration...");
