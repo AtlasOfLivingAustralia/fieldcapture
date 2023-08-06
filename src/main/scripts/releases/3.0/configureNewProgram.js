@@ -64,10 +64,6 @@ const newScores = [
             {
                 label: 'Length (km) of structures installed that control access',
                 path: 'data.controllingAccessSurveys.accessControlDetails.lengthInstalledKm',
-            },
-            {
-                label: 'Number of structures installed',
-                path: 'data.controllingAccessSurveys.accessControlDetails.numberInstalled',
             }
         ]
     },
@@ -1201,7 +1197,8 @@ var config=
                 "model": {
                     "approachHeading": "Monitoring method",
                     "indicatorHeading": "Monitoring methodology",
-                    "baselineHelpText": "Describe the project baseline to be established, or the baseline data that currently exists",
+                    "baselineDataHelpText": "Existing baseline data needs to be based on best practice methods and be compatible with the EMSA protocols.",
+                    "baselineDataDescriptionHelpText": "Describe the project baseline to be established, or the baseline data that currently exists",
                     "baselineServiceHelpText": "Select the relevant Project Service(s)/Target measure(s) that will be used to support the development of the baseline",
                     "monitoringServiceHelpText": "Select the relevant Project Services(s)/Target measure(s) that will be used to support ongoing monitoring",
                     "baselineMethodHelpText": "EMSA modules mandatory unless exemption agreed to by the Department. Where an exemption has been provided the user can then select \"Other\"",
