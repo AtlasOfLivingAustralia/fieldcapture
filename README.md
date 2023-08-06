@@ -6,7 +6,7 @@ Grails 4: [![Build Status](https://travis-ci.com/AtlasOfLivingAustralia/fieldcap
 
 ## About
 MERIT is a web application designed to collect and store planning, monitoring and reporting data associated with natural resource management projects.
-It is currently in use by the Australian Government Department of the environment and energy. 
+It is currently in use by the Australian Government. 
 
 ## General Information
 ### Technologies
