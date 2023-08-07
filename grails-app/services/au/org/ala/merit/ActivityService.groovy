@@ -26,7 +26,7 @@ class ActivityService {
     static final String REDUCED_STAGE_REPORT_ACTIVITY_TYPE = 'Stage Report'
     static final String ALG_PROGRESS_REPORT = '25th Anniversary Landcare Grants - Progress Report'
     static final String ALG_FINAL_REPORT = '25th Anniversary Landcare Grants - Final Report'
-    static final String MONITORING_PROTOCOL_FORM_TYPE = 'Protocol'
+    static final String MONITORING_PROTOCOL_FORM_TYPE = 'EMSA'
     private static def PROGRESS = [PROGRESS_PLANNED, PROGRESS_STARTED, PROGRESS_FINISHED, PROGRESS_CANCELLED, PROGRESS_DEFERRED]
 
     public static Comparator<String> PROGRESS_COMPARATOR = {a,b -> PROGRESS.indexOf(a) <=> PROGRESS.indexOf(b)}
