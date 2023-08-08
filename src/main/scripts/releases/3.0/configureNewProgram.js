@@ -996,7 +996,7 @@ var config=
             ]
 
         },
-        "visibility": "public",
+        "visibility": "private",
         "requiresActivityLocking": true,
         "projectTemplate": "rlp",
         "activityPeriodDescriptor": "Outputs report #",
