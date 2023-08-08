@@ -51,24 +51,16 @@ class ProgramControllerSpec extends Specification implements ControllerUnitTest<
         model.reportHeaderTemplate == '/program/rlpProgramReportHeader'
     }
 
-    def "unauthenticated users should only see the program overview"() {
+    def "unauthenticated users cannot see the program page"() {
         setup:
         String programId = 'p1'
         userService.getUser() >> null
-        programService.get(programId) >> [programId:programId, name:"test"]
-        programService.getProgramProjects(programId) >>[projects:[]]
-        userService.getMembersOfProgram(programId) >> [members:[]]
-        managementUnitService.get(programId) >> []
 
         when:
         Map model = controller.index(programId)
 
         then:
-        model.content.size() == 4
-        model.content.about.visible == true
-        model.content.projects.visible == false
-        model.content.sites.visible == false
-        model.content.admin.visible == false
+        response.redirectUrl == '/home'
 
     }
 
@@ -84,6 +76,7 @@ class ProgramControllerSpec extends Specification implements ControllerUnitTest<
         Map model = controller.index(programId)
 
         then:
+        2 * userService.userIsSiteAdmin() >> true
         1 * userService.canEditProgramBlog("u1", programId) >> true
         1 * userService.canUserViewNonPublicProgramInformation("u1", programId) >> true
 
@@ -238,7 +231,7 @@ class ProgramControllerSpec extends Specification implements ControllerUnitTest<
         Map model = controller.index(programId)
 
         then: "Should be true"
-
+        2 * userService.userIsSiteAdmin() >> true
         model.program.blog[0].programId == "test_program"
 
     }

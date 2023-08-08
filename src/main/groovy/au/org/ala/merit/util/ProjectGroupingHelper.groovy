@@ -65,16 +65,19 @@ class ProjectGroupingHelper {
         // Group programs according to their hierarchy under the configured groups.
         programs?.each { Map program ->
             boolean categorized = false
-            programGroups.each { String programId ->
-                if (programService.isInProgramHierarchy(program, programId)) {
-                    programsByCategory[programId] << program
-                    categorized = true
+            if (programService.canViewProgram(program)) {
+                programGroups.each { String programId ->
+                    if (programService.isInProgramHierarchy(program, programId)) {
+                        programsByCategory[programId] << program
+                        categorized = true
+                    }
+                }
+                // This project doesn't fall into a group specified by the config so create a new group for it.
+                if (!categorized) {
+                    programsByCategory[program.programId] << program
                 }
             }
-            // This project doesn't fall into a group specified by the config so create a new group for it.
-            if (!categorized) {
-                programsByCategory[program.programId] << program
-            }
+
         }
         programsByCategory
     }
@@ -86,7 +89,12 @@ class ProjectGroupingHelper {
             Map.Entry categoryGroup = programsByCategory.find{ String k, List v ->
                 v && v.find{project.programId == it.programId}
             }
-            projectsByCategory[categoryGroup.key] << project
+            // Programs configured as "private" won't have be in the programsByCategory map.
+            // Projects in programs configured as "private" should not be displayed.
+            if (categoryGroup) {
+                projectsByCategory[categoryGroup.key] << project
+            }
+
         }
         projectsByCategory
     }

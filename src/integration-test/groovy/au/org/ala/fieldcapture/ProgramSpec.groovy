@@ -12,9 +12,9 @@ class ProgramSpec extends StubbedCasSpec {
         logout(browser)
     }
 
-    def "As a user, I can view a RLP program "() {
+    def "As an admin user, I can view a RLP program "() {
         setup:
-        loginAsUser('1', browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to ProgramPage, 'test_program'
