@@ -263,6 +263,10 @@ class ProgramService {
         parent && parent.programId == programId
     }
 
+    boolean canViewProgram(Map program) {
+        program.config?.visibility != 'private' || userService.userIsSiteAdmin()
+    }
+
     List<Map> getPrimaryOutcomes(Map program) {
         program?.outcomes.findAll {it.type == OUTCOME_TYPE_PRIMARY_ONLY || !it.type}
     }

@@ -30,7 +30,7 @@ class ProjectGroupingHelperSpec extends Specification {
         Map p4 = [programId:'p4'] // This program will be uncategorized as it doesn't fall into the p1 or p3 hierarchy
 
         List projects = [[projectId:'p1', programId:'p1'], [projectId:'p2', programId:'p2'], [projectId:'p3', programId:'p3'], [projectId:'p4', programId:'p4']]
-
+        programService.canViewProgram(_) >> true
 
         when: "We group the programs by the configured groupings"
         Map<String, List> groupedPrograms = projectGroupingHelper.groupPrograms([p1, p2, p3, p4], [p1.programId, p3.programId])

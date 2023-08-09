@@ -19,7 +19,7 @@ class ProgramBlogSpec extends StubbedCasSpec {
 
     def "As a admin, I can view/edit/create/delete blogs in a given program "() {
         setup:
-        loginAsUser('1', browser)
+        loginAsMeritAdmin(browser)
 
         when:
         to ProgramBlogPage
