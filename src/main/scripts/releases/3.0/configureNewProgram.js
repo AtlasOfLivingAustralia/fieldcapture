@@ -1616,7 +1616,7 @@ var outcomes = [
     }
 
 ];
-let programName = "National Heritage Trust";
+let programName = "Natural Heritage Trust";
 var program = createOrFindProgram(programName);
 program.acronym = "NHT";
 program.config = config;
