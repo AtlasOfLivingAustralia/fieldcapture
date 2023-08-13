@@ -56,6 +56,20 @@ class ProjectController {
                 config:config], view: 'espOverview'
     }
 
+    /**
+     * Programs can be marked as private which will restricts the ability to view the project
+     * page to users named in the Project Access section or who have a role on the MERIT hub.
+     * An additional flag can control whether users with read only access on the MERIT hub
+     * can see the project.
+     */
+    private static boolean canUserViewProject(def user, Map programConfig) {
+        boolean canView = true // By default, even un-authenticated users can view at least the project overview
+        if (programConfig?.visibility == 'private') {
+            canView = programConfig?.readOnlyUsersCanViewWhenPrivate ? user?.hasViewAccess : user?.isEditor
+        }
+        canView
+    }
+
     def index(String id) {
 
         def user = userService.getUser()
@@ -67,12 +81,12 @@ class ProjectController {
             user.hasViewAccess = projectService.canUserViewProject(user.userId, id) ?: false
         }
         def project = projectService.get(id, user,'all')
-        Map config
+        Map config = null
         if (project && !project.error) {
             config = projectService.getProgramConfiguration(project)
         }
 
-        if (!project || project.error || (config?.visibility == 'private' && !user?.hasViewAccess)) {
+        if (!project || project.error || !canUserViewProject(user, config)) {
             flash.message = "Project not found with id: ${id}"
             if (project?.error) {
                 flash.message += "<br/>${project.error}"

@@ -129,10 +129,15 @@ class ProgramConfig implements Map {
     }
 
     /**
-     * This flag contruls whether a grant/project manager can return a meri plan to a project officer for further work
+     * This flag controls whether a grant/project manager can return a meri plan to a project officer for further work
      * or whether a MERIT admin needs to return it. */
     boolean requireMeritAdminToReturnMeriPlan = false
 
+    /** This flag controls whether projects under this program are visible by users without directly assigned access or an elevated role in the MERIT hub */
+    String visibility = "public"
+
+    /** This flag controls whether a user with the MERIT read only role can view projects when the visibility is set to "private" */
+    boolean readOnlyUsersCanViewWhenPrivate = false
 }
 
 
