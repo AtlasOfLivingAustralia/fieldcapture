@@ -43,14 +43,11 @@ class ImportProjectsSpec extends StubbedCasSpec {
 
         when:
         to Organisation, 'test_organisation'
+        displayReportsTab()
 
         then:
-        waitFor {projectTab.displayed}
-        projectTab.click()
-
-        and:
         waitFor {
-            $("#projectList tbody tr td .badge.badge-info").text() == 'APPLICATION'
+            projectContent[6].text() == 'APPLICATION'
         }
 
     }
@@ -83,19 +80,14 @@ class ImportProjectsSpec extends StubbedCasSpec {
         rows2.size() == 3
 
         when:
-        logout(browser)
-        loginAsUser('1', browser)
         to Organisation, 'test_organisation'
+        displayReportsTab()
 
         then:
-        waitFor {projectTab.displayed}
-        projectTab.click()
-
-        and:
         waitFor {
-            $("#projectList tbody tr td .badge.badge-info").size() == 2
-            $("#projectList tbody tr td .badge.badge-info")[0].text() == 'APPLICATION'
-            $("#projectList tbody tr td .badge.badge-info")[1].text() == 'APPLICATION'
+            $("#projects tbody tr td .badge.badge-info").size() == 2
+            $("#projects tbody tr td .badge.badge-info")[0].text() == 'APPLICATION'
+            $("#projects tbody tr td .badge.badge-info")[1].text() == 'APPLICATION'
         }
     }
 

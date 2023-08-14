@@ -542,9 +542,21 @@ class UserService {
     }
 
     def isUserAdminForOrganisation(userId, organisationId) {
+        if (userIsSiteAdmin()) {
+            return true
+        }
         def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/isUserAdminForOrganisation?organisationId=${organisationId}&userId=${userId}"
         def results = webService.getJson(url)
         return results?.userIsAdmin
+    }
+
+    def isUserEditorForOrganisation(String userId, String organisationId) {
+        if (userIsSiteAdmin()) {
+            return true
+        }
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/isUserEditorForOrganisation?organisationId=${organisationId}&userId=${userId}"
+        def results = webService.getJson(url)
+        return results?.userIsEditor
     }
 
     def isUserGrantManagerForOrganisation(userId, organisationId) {
@@ -556,6 +568,16 @@ class UserService {
     boolean checkRole(String userId, String role, String id, String entityType) {
         switch (entityType) {
             case ORGANISATION:
+                switch (role) {
+                    case RoleService.GRANT_MANAGER_ROLE:
+                        return isUserGrantManagerForOrganisation(userId, id)
+                    case RoleService.PROJECT_ADMIN_ROLE:
+                        return isUserAdminForOrganisation(userId, id)
+                    case RoleService.PROJECT_EDITOR_ROLE:
+                        return isUserEditorForOrganisation(userId, id)
+                    default:
+                        return false
+                }
                 break
 
             case PROGRAM:
@@ -620,7 +642,7 @@ class UserService {
             def userDetailsCache = grailsCacheManager.getCache(USER_DETAILS_CACHE_REGION)
             if (userDetailsCache?.metaClass.respondsTo(userDetailsCache, "getAllKeys")) {
                 userDetailsCache.allKeys.each {key ->
-                    if (key.simpleKey == email) {
+                    if (key.simpleKey?.userId == email) {
                         log.info("Evicting userDetailsCache cache entry for user: "+email)
                         userDetailsCache.evict(key)
                     }

@@ -27,6 +27,9 @@ class ReportService {
     public static final String REPORT_ACTIVITY_TYPE = 'RLP Core Services annual report'
     public static final String OUTPUT_TYPE = 'RLP - Core services annual report'
 
+    public static final String PERFORMANCE_MANAGEMENT_REPORT = 'Performance Management Framework - Self Assessment'
+
+
     static enum ReportMode {
         VIEW,
         EDIT,
@@ -47,7 +50,7 @@ class ReportService {
     def grailsLinkGenerator
     def emailService
 
-    void regenerateReports(List existingReports, ReportConfig reportConfig, ReportOwner reportOwner, int startFromReportIndex) {
+    void regenerateReports(List existingReports, List<ReportConfig> reportConfig, ReportOwner reportOwner, int startFromReportIndex) {
 
         int index = startFromReportIndex
         DateTime latestApprovedReportPeriodEnd = null
@@ -57,7 +60,11 @@ class ReportService {
         index++ // Start at the report after the submitted/approved one (or index 0 if none was found)
 
         int sequenceNo = index + 1
-        List reports = new ReportGenerator().generateReports(reportConfig, reportOwner, sequenceNo, latestApprovedReportPeriodEnd, existingReports)
+        ReportGenerator reportGenerator = new ReportGenerator()
+        List reports = []
+        reportConfig.each {
+            reports += reportGenerator.generateReports(it, reportOwner, sequenceNo, latestApprovedReportPeriodEnd, existingReports) ?: []
+        }
 
         for (Map report: reports) {
             // Update or create new reports
@@ -83,7 +90,7 @@ class ReportService {
         }
     }
 
-    void regenerateReport(Map report, Map existingReport) {
+    private void regenerateReport(Map report, Map existingReport) {
         log.info("name: " + existingReport.name + " - " + report.name)
         log.info("fromDate: " + existingReport.fromDate + " - " + report.fromDate)
         log.info("toDate: " + existingReport.toDate + " - " + report.toDate)
@@ -113,7 +120,23 @@ class ReportService {
         }
     }
 
-    void regenerateReports(List existingReports, ReportConfig reportConfig, ReportOwner reportOwner) {
+    /**
+     * Regenerates all reports for the supplied categories.
+     * @param existingReports Any existing reports that need to be updated.
+     * @param reportConfig The report configuration
+     * @param reportOwner The report owner
+     * @param categoriesToRegenerate The categories to regenerate. If null then all categories will be regenerated.
+     */
+    void regenerateAll(List existingReports, List<ReportConfig> reportConfig, ReportOwner reportOwner, List<String> categoriesToRegenerate = null) {
+        Map<String, List> toRegenerate = reportConfig.findAll{it.category in categoriesToRegenerate}?.groupBy{it.category}
+        toRegenerate?.each { category, reportConfigs ->
+            List relevantReports = existingReports?.findAll{it.category == category}
+            regenerateReports(relevantReports, reportConfigs, reportOwner)
+        }
+    }
+
+    void regenerateReports(List existingReports, List<ReportConfig> reportConfig, ReportOwner reportOwner) {
+
         // Ensure the reports are sorted in Date order
         existingReports = (existingReports?:[]).sort{it.toDate}
 
@@ -892,21 +915,29 @@ class ReportService {
         activityService.unlock(report.activityId)
     }
 
+    /** This is to handle the legacy performance management report which has a custom rendering template */
+    private boolean isCustomReportType(Map report) {
+        return report.type == PERFORMANCE_MANAGEMENT_REPORT
+    }
+
     Map activityReportModel(String reportId, ReportMode mode, Integer formVersion = null) {
         Map report = get(reportId)
+        Map model = [report: report]
 
-        Map activity = activityService.get(report.activityId)
-        Map model = activityService.getActivityMetadata(activity.type, formVersion ?: activity.formVersion)
-        model.report = report
-        model.activity = activity
-        model.themes = []
-        model.locked = activity.lock != null
-
-        if (mode == ReportMode.EDIT) {
-            model.editable = canEdit(userService.currentUserId, report, activity)
+        if (!isCustomReportType(report)) {
+            Map activity = activityService.get(report.activityId)
+            model += activityService.getActivityMetadata(activity.type, formVersion ?: activity.formVersion)
+            model.activity = activity
+            model.themes = []
+            model.locked = activity.lock != null
         }
         else if (mode == ReportMode.PRINT) {
             model.printView = true
+        }
+        // Custom report types don't necessarily have an associated activity but the canEdit only uses that
+        // to see if the activity is locked so passing null is OK
+        if (mode == ReportMode.EDIT) {
+            model.editable = canEdit(userService.currentUserId, report, model.activity)
         }
 
         model
@@ -920,7 +951,7 @@ class ReportService {
         }
 
         // If we are using pessimistic locking, the report is not editable if another user holds a lock on the activity.
-        return !activity.lock || (activity.lock.userId == userId)
+        return !(activity?.lock) || (activity.lock.userId == userId)
 
     }
 

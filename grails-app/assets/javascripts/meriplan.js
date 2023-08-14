@@ -74,7 +74,7 @@ function MERIPlan(project, projectService, config) {
 
         // Detach the old DetailsViewModel from the autosave / window listener routine.
         self.meriPlan().cancelAutosave();
-        self.meriPlan(new DetailsViewModel(meriPlan, projectInfo, periods, self.risks, config));
+        self.meriPlan(new DetailsViewModel(meriPlan, projectInfo, periods, self.risks, self.allTargetMeasures, self.selectedTargetMeasures, config));
         if (meriPlan.serviceTargets && meriPlan.serviceTargets.length > 0) {
             self.meriPlan().services.services([]); // Remove the empty row loaded by default.
         }
@@ -124,7 +124,11 @@ function MERIPlan(project, projectService, config) {
         }
     };
 
+    self.canModifyPlan = config.canModifyMeriPlan;
     self.modifyPlan = function () {
+        if (!self.canModifyPlan) {
+            return;
+        }
         projectService.modifyPlan();
     };
     self.canEditStartDate = config.editProjectStartDate;
@@ -286,6 +290,7 @@ function MERIPlan(project, projectService, config) {
 
     /**
      * Returns a list of distinct asset categories available for this project.
+     * Returns a list of distinct asset categories available for this project.
      * @param filter (optional) if supplied, only categories in this array will be returned.
      */
     self.assetCategories = function(filter) {
@@ -328,6 +333,21 @@ function MERIPlan(project, projectService, config) {
         'Migratory Species', 'Ramsar Wetland', 'World Heritage area', 'Community awareness/participation in NRM', 'Indigenous Cultural Values',
         'Indigenous Ecological Knowledge', 'Remnant Vegetation', 'Aquatic and Coastal systems including wetlands', 'Not Applicable'];
     self.controls = ['Yes', 'No'];
+    self.keyThreatCodes = config.keyThreatCodes || [];
+    self.priorityPlaces = config.priorityPlaces || [];
+    self.monitoringProtocols = ko.observableArray();
+    if (config.useServiceOutcomesModel) {
+        projectService.getMonitoringProtocols().done(function(protocols) {
+            if (!_.isArray(protocols)) {
+                protocols = [];
+            }
+            // If the protocol list doesn't contain 'Other', add it.
+            if (!_.find(protocols, function(protocol) { return protocol.value.toLowerCase() == 'other'; })) {
+                protocols.push({label:'Other', value:'Other'});
+            }
+            self.monitoringProtocols(protocols);
+        });
+    }
 
     self.addBudget = function () {
         self.meriPlan().budget.rows.push(new BudgetRowViewModel({}, periods));
@@ -340,7 +360,7 @@ function MERIPlan(project, projectService, config) {
         self.meriPlan().objectives.rows.push(new GenericRowViewModel());
     };
     self.addOutcome = function () {
-        self.meriPlan().objectives.rows1.push(new OutcomeRowViewModel());
+        self.meriPlan().objectives.rows1.push(new SingleAssetOutcomeViewModel());
     };
     self.removeObjectives = function (row) {
         self.meriPlan().objectives.rows.remove(row);
@@ -349,12 +369,20 @@ function MERIPlan(project, projectService, config) {
         self.meriPlan().objectives.rows1.remove(row);
     };
     self.addNationalAndRegionalPriorities = function () {
-        self.meriPlan().priorities.rows.push(new GenericRowViewModel());
+        self.meriPlan().priorities.addRow();
     };
     self.removeNationalAndRegionalPriorities = function (row) {
         self.meriPlan().priorities.rows.remove(row);
     };
 
+    /** Called by the extendedBaselineMonitoring page to associate a new monitoring indicator with a baseline */
+    self.addMonitoringIndicator = function(baseline) {
+        var code = baseline.code();
+        self.meriPlan().monitoring.rows.push(self.meriPlan().monitoring.newRow({relatedBaseline:code}));
+    }
+    self.removeMonitoringIndicator = function(row) {
+        self.meriPlan().monitoring.removeRow(row);
+    }
     self.addKEQ = function () {
         self.meriPlan().keq.rows.push(new GenericRowViewModel());
     };
@@ -383,17 +411,42 @@ function MERIPlan(project, projectService, config) {
     self.removeSecondaryOutcome = function (outcome) {
         self.meriPlan().outcomes.secondaryOutcomes.remove(outcome);
     };
-    self.addMidTermOutcome = function () {
-        self.meriPlan().outcomes.midTermOutcomes.push(new OutcomeRowViewModel());
-    };
+
+    function removeOutcomeStatement(outcomeStatementList, outcomeToRemove) {
+        var outcomeRemovalWarning = 'Deleting this outcome statement may impact other sections of the MERI Plan. Are you sure you want to delete it?';
+        if (config.useServiceOutcomesModel) {
+            bootbox.confirm(outcomeRemovalWarning, function(result) {
+                if (result) {
+                    outcomeStatementList.remove(outcomeToRemove);
+                }
+            });
+        }
+        else {
+            self.meriPlan().outcomes.midTermOutcomes.remove(outcome);
+        }
+    }
     self.removeMidTermOutcome = function (outcome) {
-        self.meriPlan().outcomes.midTermOutcomes.remove(outcome);
-    };
-    self.addShortTermOutcome = function () {
-        self.meriPlan().outcomes.shortTermOutcomes.push(new OutcomeRowViewModel());
+        removeOutcomeStatement(self.meriPlan().outcomes.midTermOutcomes, outcome);
     };
     self.removeShortTermOutcome = function (outcome) {
-        self.meriPlan().outcomes.shortTermOutcomes.remove(outcome);
+        removeOutcomeStatement(self.meriPlan().outcomes.shortTermOutcomes, outcome);
+    };
+
+    function addOutcomeStatement(outcomeStatementList, codePrefix) {
+        var outcomesList = outcomeStatementList();
+        var index = outcomesList.length + 1;
+        var code = codePrefix+index;
+        while (_.find(outcomesList, function(outcome) { return outcome.code == code; })) {
+            index++;
+            code = codePrefix+index;
+        }
+        outcomeStatementList.push(new SingleAssetOutcomeViewModel({code:code}));
+    }
+    self.addMidTermOutcome = function () {
+        addOutcomeStatement(self.meriPlan().outcomes.midTermOutcomes, 'MT');
+    };
+    self.addShortTermOutcome = function () {
+        addOutcomeStatement(self.meriPlan().outcomes.shortTermOutcomes, 'ST');
     };
 
     self.addAsset = function() {
@@ -415,6 +468,21 @@ function MERIPlan(project, projectService, config) {
     self.saveProjectDetails = function(){
         self.saveMeriPlan(false);
     };
+
+
+    self.selectedOutcomes = ko.pureComputed(function() {
+        var outcomes = [];
+        outcomes = outcomes.concat(self.meriPlan().outcomes.midTermOutcomes());
+        outcomes = outcomes.concat(self.meriPlan().outcomes.shortTermOutcomes());
+        return outcomes;
+    }).extend({rateLimit:200});
+
+    /** Used by the UI to render the outcome description alongside the code */
+    self.renderOutcome = function(outcome) {
+        var outcome2 = _.find(self.selectedOutcomes(), function(outcome1) {return outcome1.code == outcome.text});
+        var description = outcome2 && outcome2.description();
+        return $('<span><strong>'+outcome.text+'</strong> - ' + (description || '<i>No outcome statement supplied</i>') +'</span>');
+    }
 
     // Save project details
     self.saveMeriPlan = function(enableSubmit){
@@ -588,9 +656,53 @@ function ReadOnlyMeriPlan(project, projectService, config) {
         riskModel = meritRiskModel();
     }
 
+    // List of service / target measure
+    self.allTargetMeasures = [];
+    var services = config.services || [];
+    for (var i=0; i<services.length; i++) {
+        if (services[i].scores) {
+            for (var j=0; j<services[i].scores.length; j++) {
+                self.allTargetMeasures.push( {
+                    label:services[i].name+' - '+services[i].scores[j].label,
+                    serviceId:services[i].id,
+                    scoreId:services[i].scores[j].scoreId,
+                    service:services[i],
+                    score:services[i].scores[j],
+                    value:services[i].scores[j].scoreId
+                });
+            }
+        }
+    }
+    self.allTargetMeasures = _.sortBy(self.allTargetMeasures, 'label');
+    self.monitoringTargetMeasures = _.filter(self.allTargetMeasures, function(targetMeasure) {
+        return targetMeasure.score.tags && targetMeasure.score.tags.indexOf('Indicator') >= 0;
+    });
+    self.baselineTargetMeasures = _.filter(self.allTargetMeasures, function(targetMeasure) {
+        return targetMeasure.score.tags && targetMeasure.score.tags.indexOf('Baseline') >= 0;
+    });
+    /**
+     * This function allows the UI to convert an array of scoreIds into the same labels
+     * that are used in the editable version of the MERI plan.
+     * @param scoreIds {Array} An array of scoreIds
+     * @returns {string} A string containing the labels for the scoreIds
+     */
+    self.targetMeasureLabels = function(scoreIds) {
+        var result = '';
+        scoreIds = ko.utils.unwrapObservable(scoreIds);
+        for (var i=0; i<scoreIds.length; i++) {
+            var scoreId = scoreIds[i];
+            for (var j=0; j<self.allTargetMeasures.length; j++) {
+                if (self.allTargetMeasures[j].scoreId == scoreId) {
+                    result = result + self.allTargetMeasures[j].label;
+                }
+            }
+        }
+        return result;
+    }
 
     _.extend(self, new Risks(project.risks, riskModel, disableFlag, config.risksStorageKey));
-    var details = new DetailsViewModel(project.custom.details, project, self.periods, self.risks, config);
+    self.selectedTargetMeasures = ko.observableArray();
+    var details = new DetailsViewModel(project.custom.details, project, self.periods, self.risks, self.allTargetMeasures, self.selectedTargetMeasures, config);
     self.meriPlan = ko.observable(details);
     self.detailsLastUpdated = ko.observable(project.custom.details.lastUpdated).extend({simpleDate: true});
     self.isAgricultureProject = ko.computed(function () {
@@ -603,13 +715,99 @@ function ReadOnlyMeriPlan(project, projectService, config) {
     });
 
 
+    function processServicesAndOutcomes(services, outcomes, serviceOutcomeMap) {
+        services = services || [];
+        outcomes = outcomes || [];
+        for (var j=0; j<services.length; j++) {
+            var service = services[j];
+            if (service) {
+                if (!serviceOutcomeMap[service]) {
+                    serviceOutcomeMap[service] = {};
+                }
+                for (var k = 0; k < outcomes.length; k++) {
+                    if (outcomes[k]) {
+                        serviceOutcomeMap[service][outcomes[k]] = true;
+                    }
+                }
+            }
+        }
+    }
+    /** All parts of the model able to specify services are collected together here */
+    self.selectedServiceWatcher = ko.computed(function() {
+
+        var services = [];
+        var serviceOutcomeMap = {};
+        var threats = self.meriPlan().threats.rows();
+        for (var i=0; i<threats.length; i++) {
+            var s = threats[i].relatedTargetMeasures();
+            var o = threats[i].relatedOutcomes();
+            processServicesAndOutcomes(s, o, serviceOutcomeMap);
+        }
+
+
+        var baseLineOutcomeMap = {}; // Tracks the outcomes related to each baseline
+        var baselines = self.meriPlan().baseline.rows();
+        for (var i=0; i<baselines.length; i++) {
+            baseLineOutcomeMap[baselines[i].code()] = baselines[i].relatedOutcomes();
+            processServicesAndOutcomes(baselines[i].relatedTargetMeasures(), baselines[i].relatedOutcomes(), serviceOutcomeMap);
+        }
+
+        var monitoring = self.meriPlan().monitoring.rows();
+        for (var i=0; i<monitoring.length; i++) {
+            // The outcome related to this monitoring indicator depends on the related baseline
+            var monitoringOutcomes = baseLineOutcomeMap[monitoring[i].relatedBaseline()];
+            processServicesAndOutcomes(monitoring[i].relatedTargetMeasures(), monitoringOutcomes, serviceOutcomeMap);
+        }
+
+        for (var prop in serviceOutcomeMap) {
+            var service = _.find(self.selectedTargetMeasures(), function(selectedService) {
+                return selectedService.scoreId == prop;
+            });
+            var newService = false;
+            if (!service) {
+                var serviceAndTarget = _.find(self.allTargetMeasures, function(target) {
+                    return target.scoreId == prop;
+                });
+                service = {scoreId:prop, serviceAndTarget: serviceAndTarget, outcomes:ko.observableArray()};
+                newService = true;
+            }
+            var outcomes = [];
+            for (var outcome in serviceOutcomeMap[prop]) {
+                outcomes.push(outcome);
+            }
+            service.outcomes(outcomes);
+            if (newService) {
+                self.selectedTargetMeasures.push(service);
+            }
+        }
+
+        _.each(self.selectedTargetMeasures(), function(selectedService) {
+            if (!serviceOutcomeMap[selectedService.scoreId]) {
+                self.selectedTargetMeasures.remove(selectedService)
+            }
+        });
+
+        return services;
+    }).extend({rateLimit:config.targetMeasureUpdateLimit || 1000});
+    self.monitoringIndicators = function(code) {
+        var relatedIndicators = _.filter(self.meriPlan().monitoring.rows(), function(row) {
+            return row.relatedBaseline() == ko.utils.unwrapObservable(code);
+        });
+        return relatedIndicators;
+    }
 };
 
-function DetailsViewModel(o, project, budgetHeaders, risks, config) {
+function DetailsViewModel(o, project, budgetHeaders, risks, allServices, selectedTargetMeasures, config) {
     var self = this;
     var period = budgetHeaders;
     if (config.useRlpTemplate) {
-        self.services = new ServicesViewModel(o.serviceIds, config.services, project.outputTargets, period);
+        if (config.useServiceOutcomesModel) {
+            self.serviceOutcomes = new ServiceOutcomeTargetsViewModel(o.serviceIds, project.outputTargets, budgetHeaders, allServices, selectedTargetMeasures);
+        }
+        else {
+            self.services = new ServicesViewModel(o.serviceIds, config.services, project.outputTargets, budgetHeaders);
+        }
+
         self.description = ko.observable(project.description);
         self.name = ko.observable(project.name);
         self.programName = config.programName;
@@ -630,19 +828,25 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
     self.keq = new GenericViewModel(o.keq);
     self.objectives = new ObjectiveViewModel(o.objectives, config.programObjectives || []); // Used in original MERI plan template
     self.outcomes = new OutcomesViewModel(o.outcomes, {outcomes:project.outcomes, priorities:project.priorities}); // Use in new MERI plan template
-    self.priorities = new GenericViewModel(o.priorities);
+    self.priorities = new GenericViewModel(o.priorities, ['data1', 'data2', 'data3', 'documentUrl']);
     self.implementation = new ImplementationViewModel(o.implementation);
     self.partnership = new GenericViewModel(o.partnership, ['data1', 'data2', 'data3', 'otherOrganisationType']);
     self.lastUpdated = o.lastUpdated ? o.lastUpdated : moment().format();
     self.budget = new BudgetViewModel(o.budget, period);
     self.adaptiveManagement = ko.observable(o.adaptiveManagement);
     self.rationale = ko.observable(o.rationale);
-    self.baseline = new GenericViewModel(o.baseline, ['baseline', 'method']);
-    self.threats = new GenericViewModel(o.threats, ['threat', 'intervention']);
+    self.baseline = new GenericViewModel(o.baseline, ['code', 'monitoringDataStatus', 'baseline',  'method', 'evidence'], 'B', ['relatedTargetMeasures', 'relatedOutcomes', 'protocols']);
+    self.threats = new GenericViewModel(o.threats, ['threatCode', 'threat', 'intervention', 'evidence'], 'KT',['relatedTargetMeasures', 'relatedOutcomes']);
     self.consultation = ko.observable(o.consultation);
     self.communityEngagement = ko.observable(o.communityEngagement);
     self.threatToNativeSpecies = new GenericViewModel(o.threatToNativeSpecies, ['couldBethreatToSpecies', 'details']);
     self.threatControlMethod = new GenericViewModel(o.threatControlMethod, ['currentControlMethod', 'hasBeenSuccessful', 'methodType', 'details']);
+    self.monitoring = new GenericViewModel(o.monitoring, ['relatedBaseline', 'data1', 'data2', 'evidence'], null, ['relatedTargetMeasures', 'protocols']);
+    self.supportsPriorityPlace = ko.observable(o.supportsPriorityPlace);
+    self.supportedPriorityPlaces = ko.observableArray(o.supportedPriorityPlaces);
+    self.indigenousInvolved = ko.observable(o.indigenousInvolved);
+    self.indigenousInvolvementType = ko.observable(o.indigenousInvolvementType);
+    self.indigenousInvolvementComment = ko.observable(o.indigenousInvolvementComment);
 
     var row = [];
     o.events ? row = o.events : row.push(ko.mapping.toJS(new EventsRowViewModel()));
@@ -671,13 +875,14 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
         // For compatibility with other projects, move the targets to the top level of the data structure, if they
         // are in the MERI plan.
         if (config.useRlpTemplate) {
-            var serviceData = tmp.details.services.toJSON();
+            var serviceData = config.useServiceOutcomesModel ? tmp.details.serviceOutcomes.toJSON() : tmp.details.services.toJSON();
 
             jsData.outputTargets = serviceData.targets;
             jsData.description = self.description();
             jsData.name = self.name();
             tmp.details.serviceIds = serviceData.serviceIds;
             delete tmp.details.services;
+            delete tmp.details.serviceOutcomes;
         }
 
         var json = JSON.stringify(jsData, function (key, value) {
@@ -699,9 +904,217 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
             successMessage: 'MERI Plan saved',
             preventNavigationIfDirty:true,
             defaultDirtyFlag:ko.dirtyFlag,
+            dirtyFlagRateLimitMs: 500,
             healthCheckUrl:config.healthCheckUrl
         });
 };
+/** Removes nulls from arrays after toJSON is called */
+function outcomesToJSON(outcomeArray) {
+    return _.filter(_.map(outcomeArray, function (outcome) {
+        if (_.isFunction(outcome.toJSON)) {
+            return outcome.toJSON();
+        }
+        else {
+            return ko.toJS(outcome);
+        }
+
+    }), function(outcome) { return outcome != null});
+};
+
+function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPeriods, allServices, selectedTargetMeasures) {
+
+
+    var self = this;
+    self.forecastPeriods = forecastPeriods;
+    self.outcomeTargets = ko.observableArray();
+
+    self.addOutcomeTarget = function(outputTarget) {
+        self.outcomeTargets.push(new Targets(outputTarget));
+    }
+
+    self.removeOutcomeTarget = function(target) {
+        self.outcomeTargets.remove(target);
+    }
+
+    function Targets(outputTarget) {
+        var self = this;
+
+        function availableOutcomes(target) {
+            var outcomes = [];
+
+            // If we aren't orphaned, we should only be able to select from outcomes that have been
+            // linked to target measures elsewhere in the MERI plan.
+            if (self.selectedTargetMeasure()) {
+                outcomes = outcomes.concat(self.selectedTargetMeasure().outcomes());
+            }
+
+            // If we are orphaned, we need to include the previous selection so it doesn't disappear.
+            var selectedOutcomes = _.flatten(_.map(self.outcomeTargets(), function (outcomeTarget) {
+                if (target == outcomeTarget) {
+                    return [];
+                }
+                return outcomeTarget.relatedOutcomes();
+            }));
+
+            return _.difference(outcomes, selectedOutcomes);
+        }
+
+        function ServiceOutcomesTarget(target) {
+            var self = this;
+            target = target || {};
+            self.target = ko.observable(target.target);
+            self.relatedOutcomes = ko.observableArray(target.relatedOutcomes);
+            self.orphanedOutcomes = ko.observableArray();
+            self.orphanedOutcomesError = function() {
+                return 'The outcomes '+self.orphanedOutcomes().join(', ')+' are no longer linked to a target measure and should be removed from this target.';
+            }
+            self.availableOutcomes = ko.computed(function() {
+                var selectableOutcomes = availableOutcomes(self);
+                var selectedOutcomes = self.relatedOutcomes();
+                var orphanedOutcomes = _.difference(selectedOutcomes, selectableOutcomes)
+                self.orphanedOutcomes(orphanedOutcomes);
+                return _.union(selectableOutcomes, orphanedOutcomes);
+            });
+
+            self.toJSON = function() {
+                return {
+                    target: self.target(),
+                    relatedOutcomes: self.relatedOutcomes()
+                };
+            }
+        }
+
+        self.scoreId = outputTarget.scoreId;
+        var scoreInfo = _.find(allServices, function(serviceTarget) {
+            return serviceTarget.scoreId == outputTarget.scoreId;
+        });
+        self.serviceId = scoreInfo ? scoreInfo.serviceId : null;
+        self.scoreLabel = scoreInfo ? scoreInfo.score.label : "Unsupported target measure";
+        self.serviceLabel = scoreInfo ? scoreInfo.service.name : "Unsupported service";
+
+        self.selectedTargetMeasure = ko.computed(function() {
+            return _.find(selectedTargetMeasures(), function(service) {
+                return self.scoreId == service.scoreId;
+            });
+        });
+
+        // Used to trigger a validation error if this target is removed from all other sections of the MERI plan
+        self.orphaned = ko.pureComputed(function() {
+            return !self.selectedTargetMeasure();
+        });
+
+        self.periodTargets = _.map(forecastPeriods, function (period) {
+
+            var existingPeriodTarget = _.find(outputTarget.periodTargets, function(periodTarget) {
+                return periodTarget.period == period;
+            });
+            var target = existingPeriodTarget ? existingPeriodTarget.target : 0;
+            return {period: period, target: ko.observable(target)};
+        });
+
+        // This needs to be declared before it's populated due to a reliance on the availableOutcomes function
+        // which references this array.
+        self.outcomeTargets = ko.observableArray();
+        self.outcomeTargets(_.map(outputTarget.outcomeTargets || {}, function(outcomeTarget) {
+            return new ServiceOutcomesTarget(outcomeTarget);
+        }));
+        if (self.outcomeTargets().length == 0) {
+            self.outcomeTargets.push(new ServiceOutcomesTarget());
+        }
+
+        self.target = ko.pureComputed(function() {
+           var target = 0;
+           for (var i=0; i<self.outcomeTargets().length; i++) {
+               target += Number(self.outcomeTargets()[i].target()) || 0;
+           }
+           return target;
+        });
+
+        self.availableOutcomes = ko.computed(function() {
+            return availableOutcomes();
+        });
+
+        self.addOutcomeTarget = function() {
+            self.outcomeTargets.push(new ServiceOutcomesTarget(self.scoreId, self.availableOutcomes));
+        };
+
+        self.removeOutcomeTarget = function(outcomeTarget) {
+            self.outcomeTargets.remove(outcomeTarget);
+        };
+
+        self.hasData = function() {
+            return _.find(self.outcomeTargets(), function(outcomeTarget) {
+                return (outcomeTarget.target() && outcomeTarget.target() != 0);
+            });
+        };
+
+        self.toJSON = function() {
+            return {
+                scoreId: self.scoreId,
+                target: self.target(),
+                periodTargets: ko.mapping.toJS(self.periodTargets),
+                outcomeTargets: _.map(self.outcomeTargets(), function(outcomeTarget) { return outcomeTarget.toJSON(); })
+            }
+        }
+    };
+
+    self.targetRemoved = function(target) {
+        var outcomeTarget = _.find(self.outcomeTargets(), function(outcomeTarget) {
+            return target.scoreId == outcomeTarget.scoreId;
+        });
+        if (!outcomeTarget.hasData()) {
+            self.removeOutcomeTarget(outcomeTarget);
+        }
+    };
+
+    self.targetAdded = function(target) {
+        var outputTarget = {
+            scoreId: target.scoreId,
+            outcomeTargets:[
+                { relatedOutcomes:target.outcomes() }
+            ]
+        };
+        self.addOutcomeTarget(outputTarget);
+    };
+
+    self.toJSON = function() {
+        return {
+            targets:_.map(self.outcomeTargets(), function(outcomeTarget) {
+                return outcomeTarget.toJSON();
+            }),
+            serviceIds:_.uniq(_.map(self.outcomeTargets(), function(outcomeTarget) {
+                return outcomeTarget.serviceId;
+            }))
+        };
+    };
+
+    for (var i=0;i<(outputTargets || []).length; i++) {
+        self.addOutcomeTarget(outputTargets[i]);
+    }
+
+    selectedTargetMeasures.subscribe(function(targetMeasures) {
+
+        var added = _.filter(targetMeasures, function(selectedService) {
+            var found = _.find(self.outcomeTargets(), function(outcomeTarget) {
+                return outcomeTarget.scoreId == selectedService.scoreId;
+            });
+            return !found;
+        });
+        for (var i=0; i<added.length; i++) {
+            self.targetAdded(added[i]);
+        }
+        var removed = _.filter(self.outcomeTargets(), function(outcomeTarget) {
+            var found = _.find(targetMeasures, function(selectedService) {
+                return outcomeTarget.scoreId == selectedService.scoreId;
+            });
+            return !found;
+        });
+        for (var i=0; i<removed.length; i++) {
+            self.targetRemoved(removed[i]);
+        }
+    });
+
+}
 
 /**
  * The view model responsible for managing the selection of project services and their output targets.
@@ -922,7 +1335,6 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
         });
     };
 
-
     // Populate the model from existing data.
     for (var i = 0; i < outputTargets.length; i++) {
 
@@ -966,30 +1378,48 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
 
 
 
-function GenericViewModel(o, propertyNames) {
+function GenericViewModel(o, propertyNames, codePrefix, arrayPropertyNames, numDefaultRows) {
     var self = this;
+
+    if (numDefaultRows === undefined) {
+        numDefaultRows = 1;
+    }
     if (!o) o = {};
     self.description = ko.observable(o.description);
     self.newRow = function (row) {
-        return new GenericRowViewModel(row, propertyNames)
+        return new GenericRowViewModel(row, propertyNames, arrayPropertyNames)
     };
-    var row = [];
-    o.rows ? row = o.rows : row.push(ko.mapping.toJS(self.newRow()));
 
+    function newObj() {
+        var obj = {};
+        if (codePrefix) {
+            obj.code = codePrefix + (self.rows().length+1);
+        }
+        return obj;
+    }
+    self.rows = ko.observableArray();
 
-    self.rows = ko.observableArray($.map(row, function (obj, i) {
-        return self.newRow(obj);
-    }));
     self.addRow = function () {
-        self.rows.push(self.newRow());
+        self.rows.push(self.newRow(newObj()));
     };
     self.removeRow = function (row) {
         self.rows.remove(row);
     };
 
+    if (!o.rows) {
+        o.rows = [];
+        for (var i=0; i<numDefaultRows; i++) {
+            self.addRow();
+        }
+    }
+    else {
+        _.each(o.rows, function (obj) {
+            self.rows.push(self.newRow(obj));
+        });
+    }
 };
 
-function GenericRowViewModel(o, propertyNames) {
+function GenericRowViewModel(o, propertyNames, arrayPropertyNames) {
     var self = this;
     if (!o) o = {};
     if (!propertyNames || propertyNames.length == 0) {
@@ -997,6 +1427,11 @@ function GenericRowViewModel(o, propertyNames) {
     }
     for (var i = 0; i < propertyNames.length; i++) {
         self[propertyNames[i]] = ko.observable(o[propertyNames[i]]);
+    }
+    if (arrayPropertyNames) {
+        for (var i = 0; i < arrayPropertyNames.length; i++) {
+            self[arrayPropertyNames[i]] = ko.observableArray(o[arrayPropertyNames[i]]);
+        }
     }
 };
 
@@ -1011,10 +1446,10 @@ function ObjectiveViewModel(o, programObjectives) {
     }));
 
     var row1 = [];
-    o.rows1 ? row1 = o.rows1 : row1.push(ko.mapping.toJS(new OutcomeRowViewModel()));
+    o.rows1 ? row1 = o.rows1 : row1.push(ko.mapping.toJS(new SingleAssetOutcomeViewModel()));
     self.rows1 = ko.observableArray(_.map(row1, function (obj, i) {
-        return new OutcomeRowViewModel(obj);
-    }));
+        return new SingleAssetOutcomeViewModel(obj);
+    })).extend({removeNullsOnSave:true});
 
     /**
      * This pure computed observable provides a mapping from a simple array of selected program objectives to
@@ -1038,7 +1473,7 @@ function ObjectiveViewModel(o, programObjectives) {
 
             for (var i=0; i<values.length; i++) {
                 if (self.rows1().length <= i) {
-                    self.rows1.push(new OutcomeRowViewModel({description:values[i]}));
+                    self.rows1.push(new SingleAssetOutcomeViewModel({description:values[i]}));
                 }
                 else {
                     self.rows1()[i].description(values[i]);
@@ -1064,7 +1499,10 @@ function ObjectiveViewModel(o, programObjectives) {
         });
     }
     self.toJSON = function () {
-        var js = ko.mapping.toJS(self, {ignore:['simpleObjectives']});
+        var js = {
+            rows1: outcomesToJSON(self.rows1()),
+            rows: ko.toJS(self.rows())
+        }
         if (self.simpleObjectives.otherChecked && self.simpleObjectives.otherChecked() && self.simpleObjectives.otherValue()) {
             js.rows1.push({description:self.simpleObjectives.otherValue(), assets:[]});
         }
@@ -1082,10 +1520,6 @@ function OutcomesViewModel(outcomes, config) {
     if (!outcomes) {
         outcomes = {};
     }
-    var outcomeToViewModel = function (outcome) {
-        return new OutcomeRowViewModel(outcome);
-    };
-
     if (!outcomes.primaryOutcome) {
         outcomes.primaryOutcome = {
             description: null, asset: ''
@@ -1093,7 +1527,7 @@ function OutcomesViewModel(outcomes, config) {
     }
     if (!outcomes.shortTermOutcomes) {
         outcomes.shortTermOutcomes = [{
-            description: null, assets: []
+            code:"ST1", description: null, assets: []
         }];
     }
     if (!outcomes.secondaryOutcomes) {
@@ -1113,16 +1547,17 @@ function OutcomesViewModel(outcomes, config) {
      *
      * @param outcomes the list of available outcomes to be filtered.  Outcomes are defined by a program.
      * @param type the type to filter.  Outcomes matching the supplied type will be returned
+     * @param includeUntyped if true, outcomes with no type will be included in the result.
      */
-    function filterByType(outcomes, type) {
+    function filterByType(outcomes, type, includeUntyped) {
         return _.filter(outcomes, function (outcome) {
-            return !outcome.type || outcome.type == type;
+            return (includeUntyped && !outcome.type) || outcome.type == type;
         })
     }
 
     /** Selects outcomes of the supplied type and returns an array of strings to use for user selection */
-    function selectableOutcomes(outcomes, type) {
-        var selected = filterByType(outcomes, type);
+    function selectableOutcomes(outcomes, type, includeUntyped) {
+        var selected = filterByType(outcomes, type, includeUntyped);
         return _.map(selected, function (outcome) {
             return outcome.outcome;
         });
@@ -1130,13 +1565,17 @@ function OutcomesViewModel(outcomes, config) {
 
     var PRIMARY_OUTCOMES = 'primary';
     var SECONDARY_OUTCOMES = 'secondary';
-    self.selectablePrimaryOutcomes = selectableOutcomes(config.outcomes, PRIMARY_OUTCOMES);
-    self.selectableSecondaryOutcomes = selectableOutcomes(config.outcomes, SECONDARY_OUTCOMES);
+    var MEDIUM_TERM_OUTCOMES = 'medium';
+    var SHORT_TERM_OUTCOMES = 'short';
+    self.selectablePrimaryOutcomes = selectableOutcomes(config.outcomes, PRIMARY_OUTCOMES, true);
+    self.selectableSecondaryOutcomes = selectableOutcomes(config.outcomes, SECONDARY_OUTCOMES, true);
+    self.selectableMidTermOutcomes = selectableOutcomes(config.outcomes, MEDIUM_TERM_OUTCOMES, false);
+    self.selectableShortTermOutcomes = selectableOutcomes(config.outcomes, SHORT_TERM_OUTCOMES, false);
 
     // If the program has specified a default primary outcome, and the project has not yet selected an outcome,
     // set the default.
     if (!outcomes.primaryOutcome.description) {
-        var defaultOutcome = _.find(filterByType(config.outcomes, PRIMARY_OUTCOMES), function (outcome) {
+        var defaultOutcome = _.find(filterByType(config.outcomes, PRIMARY_OUTCOMES, true), function (outcome) {
             return outcome.default == true;
         });
         if (defaultOutcome) {
@@ -1205,23 +1644,50 @@ function OutcomesViewModel(outcomes, config) {
         return new SingleAssetOutcomeViewModel(outcome)
     }));
     self.shortTermOutcomes = ko.observableArray(_.map(outcomes.shortTermOutcomes || [], function (outcome) {
-        return new SingleAssetOutcomeViewModel(outcome)
+        return new SingleAssetOutcomeViewModel(outcome);
     }));
-    self.midTermOutcomes = ko.observableArray(_.map(outcomes.midTermOutcomes || [], outcomeToViewModel));
+    self.midTermOutcomes = ko.observableArray(_.map(outcomes.midTermOutcomes || [], function (outcome) {
+        return new SingleAssetOutcomeViewModel(outcome);
+    }));
     self.otherOutcomes = ko.observableArray(outcomes.otherOutcomes);
 
+    self.selectedPrimaryAndSecondaryPriorities = ko.pureComputed(function() {
+        var priorities = [];
+        if (self.primaryOutcome.assets && self.primaryOutcome.assets().length > 0) {
+            priorities = priorities.concat(self.primaryOutcome.assets());
+        }
+        if (self.secondaryOutcomes() && self.secondaryOutcomes().length > 0) {
+            for (var i=0; i<self.secondaryOutcomes().length; i++) {
+                if (self.secondaryOutcomes()[i].assets && self.secondaryOutcomes()[i].assets().length > 0) {
+                    priorities = priorities.concat(self.secondaryOutcomes()[i].assets());
+                }
+            }
+
+        }
+
+        return priorities;
+    }).extend({ rateLimit: 50 });
+
     self.toJSON = function () {
-        // Exclude the computed used by the view model
-        var excludes = ['primaryOutcomeSupportsMultiplePriorities', 'selectablePrimaryOutcomes', 'selectableSecondaryOutcomes'];
-        return ko.mapping.toJS(self, {ignore:excludes});
+        // Calls toJSON on each outcome and strips out nulls from the resulting array.
+        return {
+            primaryOutcome: self.primaryOutcome.toJSON(),
+            secondaryOutcomes: outcomesToJSON(self.secondaryOutcomes()),
+            shortTermOutcomes: outcomesToJSON(self.shortTermOutcomes()),
+            midTermOutcomes: outcomesToJSON(self.midTermOutcomes()),
+            otherOutcomes: self.otherOutcomes()
+        }
     }
 }
 
 
+/** Supports Methodology and Project Design and Delivery sections */
 function ImplementationViewModel(o) {
     var self = this;
     if (!o) o = {};
     self.description = ko.observable(o.description);
+
+
 };
 
 function EventsRowViewModel(o) {
@@ -1236,13 +1702,10 @@ function EventsRowViewModel(o) {
     self.grantAnnouncementDate = ko.observable(o.grantAnnouncementDate);
 };
 
-function OutcomeRowViewModel(o, programObjectives) {
-    var self = this;
-    if (!o) o = {};
-    self.description = ko.observable(o.description);
-    if (!o.assets) o.assets = [];
-    self.assets = ko.observableArray(o.assets);
-};
+function links() {
+    fromOutcome = ko.observable();
+    toOutcome = ko.observable();
+}
 
 function AssetViewModel(asset) {
     var self = this;
@@ -1256,13 +1719,16 @@ function AssetViewModel(asset) {
 function SingleAssetOutcomeViewModel(o) {
     var self = this;
     if (!o) o = {};
+
+    self.code = o.code;
     self.description = ko.observable(o.description);
     if (!o.assets || !_.isArray(o.assets)) o.assets = [];
     self.assets = ko.observableArray(o.assets);
 
     self.asset = ko.pureComputed({
         read: function () {
-            if (self.assets().length == 0) {
+            var assets = self.assets();
+            if (!assets || assets.length == 0) {
                 return undefined;
             }
             return self.assets()[0];
@@ -1275,13 +1741,23 @@ function SingleAssetOutcomeViewModel(o) {
     self.description.subscribe(function () {
         self.assets([]);
     });
+
+    self.relatedOutcome = ko.observable(o.relatedOutcome);
+
     self.toJSON = function () {
-        if (!self.description() && self.assets.length == 0) {
-            return {};
+        // If the user hasn't entered any data, return null.
+        // The code is auto-populated so is not included in
+        // the comparison.
+        if (!self.description() &&
+            self.assets().length == 0 &&
+            !self.relatedOutcome()) {
+            return null;
         }
         return {
+            code:self.code,
             description: self.description(),
-            assets: self.assets()
+            assets: self.assets(),
+            relatedOutcome: self.relatedOutcome()
         }
     };
 };

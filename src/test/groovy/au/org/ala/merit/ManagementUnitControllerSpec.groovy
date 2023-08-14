@@ -2,6 +2,7 @@ package au.org.ala.merit
 
 import au.org.ala.merit.command.SaveReportDataCommand
 import au.org.ala.merit.hub.HubSettings
+import au.org.ala.merit.util.ProjectGroupingHelper
 import org.apache.http.HttpStatus
 import spock.lang.Specification
 import grails.testing.web.controllers.ControllerUnitTest
@@ -15,12 +16,19 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
     RoleService roleService = Mock(RoleService)
     ProgramService programService = Mock(ProgramService)
     ProjectService projectService = Mock(ProjectService)
+    MetadataService metadataService = Mock(MetadataService)
 
     String adminUserId = 'admin'
     String editorUserId = 'editor'
     String grantManagerUserId = 'grantManager'
 
     def setup() {
+        ProjectGroupingHelper projectGroupingHelper = new ProjectGroupingHelper()
+        projectGroupingHelper.programService = programService
+        projectGroupingHelper.metadataService = metadataService
+        projectGroupingHelper.reportService = reportService
+        projectGroupingHelper.projectService = projectService
+        controller.projectGroupingHelper = projectGroupingHelper
         controller.managementUnitService = managementUnitService
         controller.reportService = reportService
         controller.roleService = roleService
@@ -41,10 +49,16 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
         Map managementUnit = testManagementUnit(managementUnitId, true)
 
         when:
-        controller.viewReport(managementUnitId, reportId)
+        params.id = managementUnitId
+        params.reportId = reportId
+        params.reportService = reportService
+        params.managementUnitService = managementUnitService
+        params.activityService = activityService
+        controller.viewReport()
 
         then:
-        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.VIEW, null) >> [:]
+        1 * managementUnitService.get(managementUnitId) >> managementUnit
+        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.VIEW, null) >> [editable:true, report:[reportId:reportId, managementUnitId:managementUnitId]]
         view == '/activity/activityReportView'
         model.context == managementUnit
         model.contextViewUrl == '/managementUnit/index/'+managementUnitId
@@ -189,7 +203,6 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
         then:
         1 * managementUnitService.getProjects(managementUnitId) >> [projects:[[programId:'p1'], [programId:'p2'], [programId:'p3']]]
         1 * programService.get(['p1', 'p2', 'p3'] as String[]) >> [[name:'Program 1', programId:'p1'], [name:'Program 2', programId:'p2'], [name:'Program 3', programId:'p3']]
-        1 * managementUnitService.serviceScores(managementUnitId, _, true) >> [:]
         model.managementUnit.programs.collect{it.name} == ['Program 3', 'Program 2', 'Program 1']
     }
 
@@ -198,14 +211,20 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
         setupManagementUnitAdmin()
         String managementUnitId = 'p1'
         String reportId = 'r1'
-        Map program = testManagementUnit(managementUnitId, true)
+        Map mu = testManagementUnit(managementUnitId, true)
 
         when:
-        controller.editReport(managementUnitId, reportId)
+        params.id = managementUnitId
+        params.reportId = reportId
+        params.reportService = reportService
+        params.managementUnitService = managementUnitService
+        params.activityService = activityService
+
+        controller.editReport()
         then:
-        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> [editable:true]
+        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> [editable:true,  report:[reportId:reportId, managementUnitId:managementUnitId]]
         view == '/activity/activityReport'
-        model.context == program
+        model.context == mu
         model.contextViewUrl == '/managementUnit/index/'+managementUnitId
         model.reportHeaderTemplate == '/managementUnit/managementUnitReportHeader'
     }
@@ -219,8 +238,14 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
         managementUnit.config.requiresActivityLocking = true
 
         when:
-        reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> [editable:false]
-        controller.editReport(managementUnitId, reportId)
+        reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> [editable:false,  report:[reportId:reportId, managementUnitId:managementUnitId]]
+        params.id = managementUnitId
+        params.reportId = reportId
+        params.reportService = reportService
+        params.managementUnitService = managementUnitService
+        params.activityService = activityService
+
+        controller.editReport()
 
         then: "the report activity should not be locked"
         0 * reportService.lockForEditing(_)
@@ -238,10 +263,17 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
 
         when:
         managementUnit.config.requiresActivityLocking = true
-        controller.editReport(managementUnitId, reportId)
+        params.id = managementUnitId
+        params.reportId = reportId
+        params.reportService = reportService
+        params.managementUnitService = managementUnitService
+        params.activityService = activityService
+
+        controller.editReport()
         then:
+        1 * managementUnitService.get(managementUnitId) >> managementUnit
         1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> [report:managementUnit.reports[0], editable:true]
-        1 * reportService.lockForEditing(managementUnit.reports[0])
+        1 * reportService.lockForEditing(managementUnit.reports[0]) >> [locked:true]
         view == '/activity/activityReport'
     }
 
@@ -369,38 +401,6 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
         response.json.features == []
     }
 
-    def "The management unit can specify the program groupings for producing the aggregate displays of outcomes, projects and dashboards"() {
-        setup:
-        Map p1 = [programId:'p1']
-        Map p2 = [programId:'p2', parent:p1]
-        Map p3 = [programId:'p3']
-        Map p4 = [programId:'p4'] // This program will be uncategorized as it doesn't fall into the p1 or p3 hierarchy
-
-        List projects = [[projectId:'p1', programId:'p1'], [projectId:'p2', programId:'p2'], [projectId:'p3', programId:'p3'], [projectId:'p4', programId:'p4']]
-
-
-        when: "We group the programs by the configured groupings"
-        Map<String, List> groupedPrograms = controller.groupPrograms([p1, p2, p3, p4], [p1.programId, p3.programId])
-
-        then:
-        1 * programService.isInProgramHierarchy(p1, 'p1') >> true
-        1 * programService.isInProgramHierarchy(p2, 'p1') >> true
-        1 * programService.isInProgramHierarchy(p3, 'p1') >> false
-        1 * programService.isInProgramHierarchy(p3, 'p3') >> true
-        1 * programService.isInProgramHierarchy(p4, 'p1') >> false
-        1 * programService.isInProgramHierarchy(p4, 'p3') >> false
-
-        and:
-        groupedPrograms == ['p1':[p1, p2], 'p3':[p3], 'p4':[p4]]
-
-        when: "We group the projects by the configured groupings"
-        Map<String, List> groupedProjects = controller.groupProjects(projects, groupedPrograms)
-
-        then:
-        groupedProjects == ['p1':[projects[0], projects[1]], 'p3':[projects[2]], 'p4':[projects[3]]]
-
-    }
-
     def "The management unit controller supports the display of program outcomes that are targeted by projects in that management unit"() {
         setup:
         String managementUnitId = 'mu1'
@@ -418,6 +418,7 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
         Map model = controller.index(managementUnitId)
 
         then:
+        1 * programService.canViewProgram(program) >> true
         1 * programService.getPrimaryOutcomes(program) >> [[outcome:"Outcome 1", shortDescription:"o1"], [outcome:"Outcome 2", shortDescription:"o2"], [outcome:"Outcome 3", shortDescription:"o3", type:"primary"]]
         1 * programService.getSecondaryOutcomes(program) >> [[outcome:"Outcome 1", shortDescription:"o1"], [outcome:"Outcome 2", shortDescription:"o2"], [outcome:"Outcome 4", shortDescription:"o4", type:"secondary"]]
         1 * userService.isUserAdminForManagementUnit(userId, managementUnitId) >> false
@@ -433,7 +434,7 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
     private Map testManagementUnit(String id, boolean includeReports) {
         Map program = [managementUnitId:id, name:'name', config:[:], config:[:]]
         if (includeReports) {
-            program.reports = [[type:'report1', reportId:'r1', activityId:'a1'], [type:'report1', reportId:'r2', activityId:'a2']]
+            program.reports = [[type:'report1', reportId:'r1', activityId:'a1', 'managementUnitId':id], [type:'report1', reportId:'r2', activityId:'a2', 'managementUnitId':id]]
         }
         managementUnitService.get(id) >> program
         userService.getMembersOfManagementUnit() >> [

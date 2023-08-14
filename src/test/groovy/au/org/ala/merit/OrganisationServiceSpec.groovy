@@ -14,7 +14,7 @@ class OrganisationServiceSpec extends Specification implements ServiceUnitTest<O
 	def activityService = Mock(ActivityService)
     def projectService = Mock(ProjectService)
 	def webService = Mock(WebService)
-	def reportService = Stub(ReportService)
+	def reportService = Mock(ReportService)
 	def userService = Mock(UserService)
 	def metadataService = Mock(MetadataService)
 	AbnLookupService abnLookupService = Mock(AbnLookupService)
@@ -99,38 +99,6 @@ class OrganisationServiceSpec extends Specification implements ServiceUnitTest<O
         projects.sort{it.projectId} == (organisationProjects + serviceProviderProjects).sort{it.projectId}
 
     }
-
-	def "User permissions on an organisation should cascade to the organisations projects"() {
-
-		setup:
-		String orgId = '1234'
-		Map organisation = [organisationId:orgId, name:'name', description:'description']
-		List organisationProjects = ['5', '6', '7', '8', '9'].collect{[projectId:it, name:'p'+it, isMERIT:(Integer.parseInt(it) %2 == 0)]}
-
-		webService.getJson(_) >> organisation
-		projectService.search([organisationId:orgId, view:'enhanced', isMERIT:true]) >> [resp:[projects:organisationProjects]]
-		projectService.search([orgIdSvcProvider:orgId, view:'enhanced', isMERIT:true]) >> [resp:[projects:[]]]
-
-		String userId = 'u1'
-
-		when: "A user is added as admin to the organisation"
-		service.addUserAsRoleToOrganisation(userId, orgId, 'admin')
-
-		then: "the user should be added to the organisation and only the MERIT projects run by the organisation"
-		1 * userService.addUserAsRoleToOrganisation(userId, orgId, 'admin')
-		1 * userService.addUserAsRoleToProject(userId, '6', 'admin')
-		1 * userService.addUserAsRoleToProject(userId, '8', 'admin')
-		0 * userService._
-
-		when:"A user is removed as admin to the organisation"
-		service.removeUserWithRoleFromOrganisation(userId, orgId, 'admin')
-
-		then: "the user should be removed from the organisation and only the MERIT projects run by the organisation"
-		1 * userService.removeUserWithRoleFromOrganisation(userId, orgId, 'admin')
-		1 * userService.removeUserWithRole('6', userId, 'admin')
-		1 * userService.removeUserWithRole('8', userId, 'admin')
-		0 * userService._
-	}
 
 	def "Checking if abn already exist in db"(){
 		setup:
@@ -250,8 +218,62 @@ class OrganisationServiceSpec extends Specification implements ServiceUnitTest<O
 		service.update("", [name:"Organisation 1"])
 
 		then:
-		1 * metadataService.organisationList() >> [list:[]]
 		1 * webService.doPost({it.endsWith('organisation/')}, [name:"Organisation 1", hubId:"merit"])
+		1 * metadataService.clearOrganisationList()
+	}
+
+	def "An organisation can be saved with a null / blank ABN"() {
+		setup:
+		SettingService.setHubConfig(new HubSettings(hubId:"merit"))
+
+		when:
+		service.update("", [name:"Organisation 1"])
+
+		then:
+		1 * webService.doPost({it.endsWith('organisation/')}, [name:"Organisation 1", hubId:"merit"])
+	}
+
+	def "An ABN will be validated for uniqueness, if supplied"() {
+		setup:
+		SettingService.setHubConfig(new HubSettings(hubId:"merit"))
+
+		when: "The ABN exists on another organisation"
+		Map result = service.update("o2", [name:"Organisation 1", abn:"134566778"])
+
+		then: "A validation error will be returned and no update will occur"
+		1 * metadataService.organisationList() >> [list:[[organisationId:"1", abn:"134566778"]]]
+		result.error != null
+		0 * webService.doPost({it.endsWith('organisation/o2')}, [abn:"134566778", name:"Organisation 1", hubId:"merit"])
+
+		when: "The ABN exists on the current organisation"
+		result = service.update("o2", [name:"Organisation 1", abn:"134566778"])
+
+		then: "The update will succeed"
+		1 * metadataService.organisationList() >> [list:[[organisationId:"o2", abn:"134566778"]]]
+		1 * webService.doPost({it.endsWith('organisation/o2')}, [abn:"134566778", name:"Organisation 1"])
+
+	}
+
+	def "If an organisationId is included in update props, if it's different to the id an error will be returned"() {
+		setup:
+		SettingService.setHubConfig(new HubSettings(hubId:"merit"))
+
+		when: "The ABN exists on another organisation"
+		Map result = service.update("o2", [name:"Organisation 1", abn:"134566778", organisationId:"o1"])
+
+		then:
+		result.error != null
+	}
+
+	def "The service can cancel a report (mark it as Not Required)"() {
+		when:
+		service.cancelReport("o1", "r1", "Testing")
+
+		then:
+		1 * webService.getJson({it.endsWith('organisation/o1?view=')}) >> [organisationId:"o1"]
+		1 * reportService.get("r1") >> [reportId:"r1", organisationId:"o1", activityId:'a1']
+		1 * reportService.cancelReport("r1", ['a1'], "Testing", [organisationId:"o1", projects:[], reports:null], [])
+		1 * webService.getJson({it.endsWith('permissions/getMembersForOrganisation/o1')}) >> []
 	}
 
 	static int activityId = 0

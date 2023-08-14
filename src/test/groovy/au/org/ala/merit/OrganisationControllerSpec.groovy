@@ -1,30 +1,52 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.command.SaveReportDataCommand
+import au.org.ala.merit.util.ProjectGroupingHelper
 import grails.converters.JSON
+import org.apache.http.HttpStatus
 import org.grails.plugins.excelimport.ExcelImportService
 import org.springframework.mock.web.MockMultipartFile
+import spock.lang.Ignore
 import spock.lang.Specification
 import grails.testing.web.controllers.ControllerUnitTest
 
 class OrganisationControllerSpec extends Specification implements ControllerUnitTest<OrganisationController>{
 
-    def organisationService = Mock(OrganisationService)
-    def searchService = Stub(SearchService)
-    def documentService = Mock(DocumentService)
-    def roleService = Stub(RoleService)
-    def userService = Stub(UserService)
-    def projectService = Mock(ProjectService)
+    OrganisationService organisationService = Mock(OrganisationService)
+    SearchService searchService = Stub(SearchService)
+    DocumentService documentService = Mock(DocumentService)
+    RoleService roleService = Stub(RoleService)
+    UserService userService = Stub(UserService)
+    ProjectService projectService = Mock(ProjectService)
+    ReportService reportService = Mock(ReportService)
+    ActivityService activityService = Mock(ActivityService)
+    SiteService siteService = Mock(SiteService)
+    SettingService settingService = Mock(SettingService)
+    MetadataService metadataService = Mock(MetadataService)
+    ProgramService programService = Mock(ProgramService)
+
+    String adminUserId = 'admin'
+    String editorUserId = 'editor'
+    String grantManagerUserId = 'grantManager'
 
     def setup() {
+        ProjectGroupingHelper projectGroupingHelper = new ProjectGroupingHelper()
+        projectGroupingHelper.programService = programService
+        projectGroupingHelper.metadataService = metadataService
+        projectGroupingHelper.reportService = reportService
+        projectGroupingHelper.projectService = projectService
+        controller.projectGroupingHelper = projectGroupingHelper
         controller.organisationService = organisationService
         controller.searchService = searchService
         controller.documentService = documentService
         controller.roleService = roleService
         controller.userService = userService
         controller.projectService = projectService
+        controller.reportService = reportService
+        controller.settingService = settingService
     }
 
-    def "only the organisation projects and sites should be viewable anonymously"() {
+    def "only the about tab should be viewable anonymously"() {
         setup:
         setupAnonymousUser()
         def testOrg = testOrganisation(true)
@@ -35,9 +57,9 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
 
         then:
         model.organisation == testOrg
-        model.content.projects.visible == true
-        model.content.sites.visible == true
-        model.content.dashboard.visible == true
+        model.content.projects.visible == false
+        model.content.sites.visible == false
+        model.content.dashboard.visible == false
         model.content.admin.visible == false
     }
 
@@ -109,17 +131,17 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         model.content.admin.visible == false
     }
 
-    def "the project tab is the default if there are no reports"() {
+    def "the about tab is the default if the user is not an admin"() {
         setup:
         def testOrg = testOrganisation(false)
         organisationService.get(_,_) >> testOrg
-        setupOrganisationAdmin()
+
 
         when:
         def model = controller.index('id')
 
         then:
-        model.content.projects.default == true
+        model.content.about.default == true
         def numDefault = 0
         model.content.each { k, v ->
             if (v.default) {
@@ -129,11 +151,11 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         numDefault == 1
     }
 
-    def "the project tab is the default if the reports are not shown"() {
+    def "the reporting tab is the default if the user is an admin"() {
         setup:
         def testOrg = testOrganisation(true)
         organisationService.get(_,_) >> testOrg
-        setupOrganisationEditor()
+        setupOrganisationAdmin()
 
         when:
         def model = controller.index('id')
@@ -166,8 +188,9 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
     def "all reports should be available to organisation admins"() {
         setup:
         def testOrg = testOrganisation(true)
-        testOrg.projects = [[projectId:'1234', associatedProgram:'Program 1']]
+        testOrg.projects = [[programId:'p1'], [programId:'p2'], [programId:'p3']]
         organisationService.get(_,_) >> testOrg
+        testOrg.config = [:]
         setupOrganisationAdmin()
 
         when: "the organisation page is viewed"
@@ -178,7 +201,8 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         model.content.dashboard.reports.find{it.name == 'dashboard'} != null
         model.content.dashboard.reports.find{it.name == 'announcements'} != null
 
-
+        and:
+        1 * programService.get(['p1', 'p2', 'p3'] as String[]) >> [[name:'Program 1', programId:'p1'], [name:'Program 2', programId:'p2'], [name:'Program 3', programId:'p3']]
     }
 
     def "an anonymous user cannot bulk edit project announcements"() {
@@ -236,7 +260,7 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
 
     def "an organisation admin can bulk edit project announcements"() {
         setup:
-        def testOrg = testOrganisation(true)
+        def testOrg = testOrganisation('id',true)
         testOrg.projects = [[projectId:'1234', associatedProgram:'Program 1']]
         organisationService.get(_,_) >> testOrg
         setupOrganisationAdmin()
@@ -307,7 +331,7 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
 
     def "an organisation admin can save project announcements"() {
         setup:
-        def testOrg = testOrganisation(true)
+        def testOrg = testOrganisation('id',true)
         testOrg.projects = [[projectId:'1234', associatedProgram:'Program 1']]
         organisationService.get(_,_) >> testOrg
         projectService.get('1') >> [projectId:'1', custom:[details:[:]]]
@@ -329,12 +353,14 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
 
     def "A blank announcement should be returned for a project with no announcements to make it easier for the user"() {
         setup:
-        def testOrg = testOrganisation(true)
-        organisationService.get(_,_) >> testOrg
-        def projectsWithAnnouncements = projectsWithAnnouncements(3)
-        projectsWithAnnouncements[1].custom.details.events = []
+        def testOrg = testOrganisation('id',true)
 
-        searchService.allProjects(_, _) >> [hits:[hits:projectsWithAnnouncements.collect {[_source:it]}]]
+        organisationService.get(_,_) >> testOrg
+        def projects = projectsWithAnnouncements(3)
+        projects[1].custom.details.events = []
+        projects[0].status = 'completed' // only active projects should have their announcements returned
+        testOrg.projects = projects
+
         setupOrganisationAdmin()
 
         when:
@@ -343,15 +369,15 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
 
         then:
         response.status == 200
-        model.projectList.size() == 3
-        model.events.size() == 21
+        model.projectList.size() == 2
+        model.events.size() == 11
 
     }
 
 
     def "The list of announcements for an organisation can be downloaded as a spreadsheet"() {
         setup:
-        def testOrg = testOrganisation(true)
+        def testOrg = testOrganisation('id', true)
         organisationService.get(_,_) >> testOrg
         def projectsWithAnnouncements = projectsWithAnnouncements(3)
 
@@ -411,11 +437,168 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         response.json.size() == 10
     }
 
-    private Map testOrganisation(boolean includeReports) {
-        def org = [organisationId:'id', name:'name', description:'description']
+    def "when editing a organisation report, the model will be customized for organisation reporting"() {
+        setup:
+        setupOrganisationAdmin()
+        String organisationId = 'id'
+        String reportId = 'r1'
+        Map program = testOrganisation(organisationId,true)
+
+        when:
+        params.id = organisationId
+        params.reportId = reportId
+        // Normally grails would use dependency injection for this but that doesn't happen in controller unit tests
+        // So we are faking it via params.
+        params.reportService = reportService
+        params.organisationService = organisationService
+        controller.editOrganisationReport()
+
+        then:
+        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> [editable:true, report:[reportId:reportId, organisationId:organisationId]]
+        view == '/activity/activityReport'
+        model.context == program
+        model.contextViewUrl == '/organisation/index/'+organisationId
+        model.reportHeaderTemplate == '/organisation/organisationReportHeader'
+    }
+
+    def "if a report is not editable, the organisation controller should present the report view instead"() {
+        setup:
+        setupOrganisationAdmin()
+        String organisationId = 'p1'
+        String reportId = 'r1'
+        Map organisation = testOrganisation(organisationId, true)
+        organisation.config.requiresActivityLocking = true
+
+        when:
+        params.id = organisationId
+        params.reportId = reportId
+        // Normally grails would use dependency injection for this but that doesn't happen in controller unit tests
+        // So we are faking it via params.
+        params.reportService = reportService
+        params.organisationService = organisationService
+        controller.editOrganisationReport()
+
+        then: "the report activity should not be locked"
+        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> [editable:false, report:[reportId:reportId, organisationId:organisationId]]
+        0 * reportService.lockForEditing(_)
+
+        and: "the user should be redirected to the report view"
+        response.redirectUrl == '/organisation/viewReport/'+organisationId+"?reportId="+reportId+"&attemptedEdit=true"
+    }
+
+    def "if the organisation uses pessimistic locking for reports, the report activity should be locked when the report is edited"() {
+        setup:
+        setupOrganisationAdmin()
+        String organisationId = 'p1'
+        String reportId = 'r1'
+        Map organisation = testOrganisation(organisationId, true)
+
+        when:
+        organisation.config.requiresActivityLocking = true
+        params.id = organisationId
+        params.reportId = reportId
+        // Normally grails would use dependency injection for this but that doesn't happen in controller unit tests
+        // So we are faking it via params.
+        params.reportService = reportService
+        params.organisationService = organisationService
+        controller.editOrganisationReport()
+
+        then:
+        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> [report:organisation.reports[0], editable:true]
+        1 * reportService.lockForEditing(organisation.reports[0]) >> [locked:true]
+        view == '/activity/activityReport'
+    }
+
+    def "report data shouldn't be saved if the managementUnitId of the report doesn't match the managementUnitId checked by the annotation"() {
+        setup:
+        Map props = [
+                activityId:'a1',
+                activity:[
+                        test1:'test'
+                ],
+                reportId:'r1',
+                reportService:reportService,
+                activityService: activityService
+
+        ]
+        reportService.get(props.reportId) >> [organisationId:'o1']
+        SaveReportDataCommand cmd = new SaveReportDataCommand(props)
+
+        when:
+        request.method = "POST"
+        params.id = 'o2'
+        controller.saveReport(cmd)
+
+        then:
+        response.json.error != null
+        response.json.status == HttpStatus.SC_UNAUTHORIZED
+    }
+
+    def "report data can be saved"() {
+        setup:
+        String organisationId = 'o1'
+        String reportId = 'r1'
+        String activityId = 'a1'
+        Map props = [
+                activityId:activityId,
+                activity:[
+                        test1:'test'
+                ],
+                reportId:reportId,
+                reportService:reportService,
+                activityService: activityService
+
+        ]
+        reportService.get(props.reportId) >> [organisationId:organisationId, reportId:reportId, activityId:props.activityId]
+
+        when:
+        request.method = "POST"
+        params.id = organisationId
+        params.reportId = reportId
+        params.activityId = props.activityId
+        params.activity = props
+        // Normally grails would use dependency injection for this but that doesn't happen in controller unit tests
+        params.reportService = reportService
+        params.activityService = activityService
+        params.siteService = siteService
+
+        controller.saveReport()
+
+        then:
+        1 * activityService.get(activityId) >> [activityId:activityId]
+        1 * activityService.update(activityId, props) >> [success:true]
+        response.json.success == true
+
+    }
+
+    def "Reports can be marked as Not Required"() {
+        setup:
+        String organisationId = "o1"
+        Map data = [
+            reportId:'r1',
+            reason:'Test reason'
+        ]
+        when:
+        request.method = "POST"
+        params.id = organisationId
+        request.JSON = data
+        controller.ajaxCancelReport()
+
+        then:
+        1 * organisationService.cancelReport(organisationId, data.reportId, data.reason) >> [success:true]
+        response.json == [success:true]
+    }
+
+    private Map testOrganisation(String id="", boolean includeReports) {
+        Map org = [organisationId:id, name:'name', description:'description', config:[:], inheritedConfig:[:]]
         if (includeReports) {
-            org.reports = [[type:'report1'], [type:'report1']]
+            org.reports = [[type:'report1', reportId:'r1', activityId:'a1', organisationId:id], [type:'report1', reportId:'r2', activityId:'a2', organisationId:id]]
         }
+        organisationService.get(id) >> org
+        userService.getMembersOfProgram() >> [
+            [userId:adminUserId, role:RoleService.PROJECT_ADMIN_ROLE],
+            [userId:editorUserId, role:RoleService.PROJECT_EDITOR_ROLE],
+            [userId:grantManagerUserId, role:RoleService.GRANT_MANAGER_ROLE]]
         return org
     }
 
@@ -466,13 +649,13 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         List projects = []
         def annoucementsCount = 0
         for (int i=0; i<projectCount; i++) {
-            projects << [projectId:'project'+i, name:'Project '+i, grantId:'Grant '+i, custom:[details:[events:buildAnnouncements(10, annoucementsCount)]]]
+            projects << [status:'active', projectId:'project'+i, name:'Project '+i, grantId:'Grant '+i, custom:[details:[events:buildAnnouncements(10, annoucementsCount)]]]
             annoucementsCount+=10
         }
         return projects
     }
 
-    def buildAnnouncements(howMany, startIndex) {
+    private def buildAnnouncements(howMany, startIndex) {
         def announcements = []
         for (int i=startIndex; i<howMany+startIndex; i++) {
             announcements << [projectId:'project'+i, grantId:'Grant '+i, name:'Project '+i, eventName:'Event '+i, eventDescription:'Description '+i, eventDate:"2015-06-${i%30+1}T00:00:00Z".toString(), funding:i, grantAnnouncementDate:"2015-${i%12+1}-${i%28+1}T00:00:00Z".toString(), eventType:'Non-funding op']

@@ -79,7 +79,7 @@
                 if (email) {
                     // first check email address is a valid user
                     $.get("${g.createLink(controller:'user',action:'checkEmailExists')}?email=" + email).done(function(data) {
-                        if (data && /^\d+$/.test(data)) {
+                        if (data) {
                             addUserWithRole( data, role, entityId, expiryDate);
                         } else {
                             var $clone = $('.bbAlert1').clone();

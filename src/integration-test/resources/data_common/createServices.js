@@ -5,7 +5,7 @@ if (db.service.count() == 0) {
             "outputs": [{"formName": "RLP Output Report", "sectionName": "RLP - Baseline data"}],
             "name": "Collecting, or synthesising baseline data",
             "id": 1,
-            "categories": ["Project initiation activities"]
+            "categories": ["Project initiation activities", "Survey"]
         },
         {
             "outputs": [{"formName": "RLP Output Report", "sectionName": "RLP - Communication materials"}],
@@ -249,7 +249,7 @@ if (db.service.count() == 0) {
             "outputs": [{"formName": "RLP Output Report", "sectionName": "RLP - Weed distribution survey"}],
             "name": "Weed distribution survey",
             "id": 33,
-            "categories": ["Monitoring activities"]
+            "categories": ["Monitoring activities", "Survey"]
         },
         {
             "outputs": [{"formName": "RLP Output Report", "sectionName": "Cultural value survey and/or assessment"}],

@@ -19,11 +19,33 @@ class OrganisationProjectSpec extends StubbedCasSpec {
 
         then:
         waitFor {at Organisation}
-        projectTab.click()
+        reportingTab.click()
 
         and:
         waitFor {
-            projectContent[1].text() == "Project Script Injection <script>alert('Test')</script>"
+            projectContent[3].text() == "Project Script Injection <script>alert('Test')</script>"
         }
+    }
+
+    void "Can setup organisation configuration in the admin tab"() {
+
+        setup:
+        loginAsMeritAdmin(browser)
+
+        when:
+        to Organisation, orgId
+
+        then:
+        waitFor {at Organisation}
+
+        openAdminTab()
+        adminTabContent.openConfig()
+
+        when:
+        adminTabContent.config.config = '{ "visibility": "public" }'
+        adminTabContent.config.save()
+
+        then:
+        adminTab.displayed == true
     }
 }

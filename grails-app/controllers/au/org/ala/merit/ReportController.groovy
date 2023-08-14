@@ -504,26 +504,6 @@ class ReportController {
 
     }
 
-    /**
-     * Provides a way for the pdf generation service to callback into MERIT without requiring user credentials.
-     * (It uses an IP filter / API Key instead).
-     */
-    @RequireApiKey
-    def meriPlanReportCallback(MeriPlanReportCommand meriPlanReportCommand) {
-        if (pdfGenerationService.authorizePDF(request)) {
-            Map model = meriPlanReportCommand.meriPlanReportModel()
-            if (!model.errors) {
-                render view:'/project/meriPlanReport', model:model
-            }
-            else {
-                render status: HttpStatus.SC_NOT_FOUND
-            }
-        }
-        else {
-            render status:HttpStatus.SC_UNAUTHORIZED
-        }
-    }
-
     private def reef2050PlanActionReportPDF(Reef2050PlanActionReportCommand command) {
         boolean approvedActivitiesOnly =  userService.userIsAlaOrFcAdmin() ? command.approvedActivitiesOnly : true
         Map reportUrlConfig = [controller: 'report', action: 'reef2050PlanActionReportCallback', absolute: true, params:[approvedActivitiesOnly:approvedActivitiesOnly, periodEnd:command.periodEnd, type:command.type]]

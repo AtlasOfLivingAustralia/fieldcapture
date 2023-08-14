@@ -1,5 +1,6 @@
 /*
 *= require slider-pro/css/slider-pro.css
+*= require projects-by-program
 *= require_self
 */
 
@@ -60,7 +61,7 @@
 }
 
 .input-group input {
-    margin-left: -0.98rem;
+    margin-left: 0;
 }
 #dashboardType {
     width: 300px;
@@ -91,4 +92,8 @@
 
 #selectedYear {
     width: 200px;
+}
+
+input.dateControl {
+    max-width: 300px !important;
 }

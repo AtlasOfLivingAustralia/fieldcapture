@@ -9,6 +9,6 @@
     "headers": {
       "Content-Type": "application/json"
     },
-    "body": "{\"userName\":\"user.{{request.query.userName}}@nowhere.com.au\", \"userId\":\"{{request.query.userName}}\"}"
+    "body": "{\"userName\":\"user.{{request.query.userName}}@nowhere.com.au\", \"email\":\"user.{{request.query.userName}}@nowhere.com.au\", \"userId\":\"{{request.query.userName}}\"}"
   }
 }

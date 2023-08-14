@@ -140,6 +140,7 @@ createOrganisation({
     url:'http://www.ala.org.au',
     acronym:'TSTORG'
 })
+db.userPermission.insert({entityType:'au.org.ala.ecodata.Organisation', entityId:'test_organisation_1', userId:'1', accessLevel:'admin'});
 
 createMu({name:'test mu <script>alert("MU")</script>', managementUnitId:"test_mu_1",managementUnitSiteId:'test_site_1'});
 

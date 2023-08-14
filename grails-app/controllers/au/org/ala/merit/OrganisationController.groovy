@@ -1,18 +1,27 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.command.EditOrganisationReportCommand
+import au.org.ala.merit.command.SaveReportDataCommand
+import au.org.ala.merit.command.ViewOrganisationReportCommand
+import au.org.ala.merit.util.ProjectGroupingHelper
 import grails.converters.JSON
-import org.joda.time.Duration
-import org.joda.time.Period
-import org.joda.time.Weeks
+import org.apache.http.HttpStatus
+
 /**
  * Extends the plugin OrganisationController to support Green Army project reporting.
  */
 class OrganisationController {
 
-    static allowedMethods = [ajaxDelete: "POST", delete:"POST", ajaxUpdate: "POST", prepopulateAbn:"GET"]
+    static allowedMethods = [
+        ajaxDelete: "POST", delete:"POST", ajaxUpdate: "POST", prepopulateAbn:"GET",
+        ajaxApproveReport: "POST", ajaxRejectReport: "POST", ajaxCancelReport: "POST",
+        ajaxSubmitReport: "POST"
+    ]
 
     def organisationService, searchService, documentService, userService, roleService, commonService, webService
     def activityService, metadataService, projectService, excelImportService, reportService, pdfConverterService, authService
+    SettingService settingService
+    ProjectGroupingHelper projectGroupingHelper
 
     def list() {}
 
@@ -56,14 +65,25 @@ class OrganisationController {
         def members = organisationService.getMembersOfOrganisation(organisation.organisationId)
         def orgRole = members.find { it.userId == user?.userId } ?: [:]
         def hasAdminAccess = userService.userIsSiteAdmin() || orgRole.role == RoleService.PROJECT_ADMIN_ROLE
+        def hasEditorAccess =  hasAdminAccess || orgRole.role == RoleService.PROJECT_EDITOR_ROLE
 
-        def reportingVisible = organisation.state && ((organisation.reports && (hasAdminAccess || userService.userHasReadOnlyAccess())) || userService.userIsAlaOrFcAdmin())
+        def reportingVisible = hasEditorAccess || userService.userHasReadOnlyAccess()
 
         def dashboardReports = [[name:'dashboard', label:'Activity Outputs']]
+
+        Map availableReportCategories = null
         if (hasAdminAccess) {
             dashboardReports += [name:'announcements', label:'Announcements']
+            availableReportCategories = settingService.getJson(SettingPageType.ORGANISATION_REPORT_CONFIG)
         }
+
+        List reportOrder = null
         if (reportingVisible) {
+            // TODO change me to use the configuration once it's been decided how that
+            // is going to work.
+            reportOrder = organisation.config?.organisationReports?.collect{[category:it.category, description:it.description, rejectionReasonCategoryOptions:it.rejectionReasonCategoryOptions?:[]]} ?: []
+            reportOrder = reportOrder.unique({it.category})
+
             // We need at least one finished report to show data.
             if (organisation.reports?.find{it.progress == 'finished'}) {
                 dashboardReports += [name: 'performanceAssessmentSummary', label: 'Performance Assessment Summary']
@@ -72,16 +92,25 @@ class OrganisationController {
             }
         }
 
-        List adHocReportTypes =[ [type:'Performance Management Framework - Self Assessment']]
+        boolean showEditAnnoucements = organisation.projects?.find{Status.isActive(it.status)}
 
-        [about     : [label: 'About', visible: true, stopBinding: false, type:'tab'],
-         reporting : [label: 'Reporting', visible: reportingVisible, stopBinding:true, template:'/shared/reporting', default:reportingVisible, type: 'tab', reports:organisation.reports, adHocReportTypes:adHocReportTypes],
-         projects  : [label: 'Projects', visible: true, default:!reportingVisible, stopBinding:true, type: 'tab'],
-         sites     : [label: 'Sites', visible: true, type: 'tab', stopBinding:true, projectCount:organisation.projects?.size()?:0, showShapefileDownload:hasAdminAccess],
-         dashboard : [label: 'Dashboard', visible: true, stopBinding:true, type: 'tab', template:'/shared/dashboard', reports:dashboardReports],
-         admin     : [label: 'Admin', visible: hasAdminAccess, type: 'tab', showEditAnnoucements:organisation.projects?.size()]]
+        List adHocReportTypes =[ [type: ReportService.PERFORMANCE_MANAGEMENT_REPORT]]
+
+        // This is a configuration option that controls how we group and display the projects on the
+        // management unit page.
+        List projects = organisation.projects ?: []
+        List programGroups = organisation.config?.programGroups ?: []
+        Map projectGroups = projectGroupingHelper.groupProjectsByProgram(projects, programGroups, ["organisationId:"+organisation.organisationId], true)
+
+        [about     : [label: 'About', visible: true, stopBinding: false, type:'tab', default:!reportingVisible, displayedPrograms:projectGroups.displayedPrograms, servicesDashboard:[visible:true]],
+         projects : [label: 'Reporting', template:"/shared/projectListByProgram", visible: reportingVisible, stopBinding:true, default:reportingVisible, type: 'tab', reports:organisation.reports, adHocReportTypes:adHocReportTypes, reportOrder:reportOrder, hideDueDate:true, displayedPrograms:projectGroups.displayedPrograms],
+         sites     : [label: 'Sites', visible: reportingVisible, type: 'tab', stopBinding:true, projectCount:organisation.projects?.size()?:0, showShapefileDownload:hasAdminAccess],
+         dashboard : [label: 'Dashboard', visible: reportingVisible, stopBinding:true, type: 'tab', template:'/shared/dashboard', reports:dashboardReports],
+         admin     : [label: 'Admin', visible: hasAdminAccess, type: 'tab', template:'admin', showEditAnnoucements:showEditAnnoucements, availableReportCategories:availableReportCategories]]
+
     }
 
+    @PreAuthorise(accessLevel = 'siteAdmin')
     def create() {
         [organisation:[:], isNameEditable: true]
     }
@@ -90,7 +119,8 @@ class OrganisationController {
      * and name using abn web service.
      * @render result as json format.
      */
-    def prepopulateAbn(){
+    @PreAuthorise(accessLevel = 'admin')
+    def prepopulateAbn() {
         Map result=[:]
         Map requestParameter = params
         String abnNumber = requestParameter.abn
@@ -102,6 +132,7 @@ class OrganisationController {
         render result as JSON
     }
 
+    @PreAuthorise(accessLevel = 'editor')
     def edit(String id) {
 
         def organisation = organisationService.get(id)
@@ -122,36 +153,32 @@ class OrganisationController {
         }
     }
 
-    def delete(String id) {
-        if (organisationService.isUserAdminForOrganisation(id)) {
-            organisationService.update(id, [status: 'deleted'])
-        }
-        else {
-            flash.message = 'You do not have permission to perform that action'
-        }
-        redirect action: 'list'
-    }
-
+    @PreAuthorise(accessLevel = 'siteAdmin')
     def ajaxDelete(String id) {
 
-        if (organisationService.isUserAdminForOrganisation(id)) {
-            def result = organisationService.update(id, [status: 'deleted'])
+        def result = organisationService.update(id, [status: 'deleted'])
+        respond result
 
-            respond result
-        }
-        else {
-            render status:403, text:'You do not have permission to perform that action'
-        }
     }
 
-    def ajaxUpdate() {
-        def organisationDetails = request.JSON
+    @PreAuthorise(accessLevel = 'siteAdmin')
+    def ajaxCreate() {
+        Map organisationDetails = request.JSON
+        createOrUpdateOrganisation(null, organisationDetails)
+    }
 
+    @PreAuthorise(accessLevel = 'admin')
+    def ajaxUpdate(String id) {
+        Map organisationDetails = request.JSON
+        createOrUpdateOrganisation(id, organisationDetails)
+    }
+
+    private void createOrUpdateOrganisation(String organisationId, Map organisationDetails) {
         def documents = organisationDetails.remove('documents')
         def links = organisationDetails.remove('links')
-        def result = organisationService.update(organisationDetails.organisationId?:'', organisationDetails)
+        def result = organisationService.update(organisationId, organisationDetails)
 
-        def organisationId = organisationDetails.organisationId?:result.resp?.organisationId
+        organisationId = organisationId?:result.resp?.organisationId
         if (documents && !result.error) {
             documents.each { doc ->
                 doc.organisationId = organisationId
@@ -177,6 +204,7 @@ class OrganisationController {
      * by an organisation.
      * @param id the organisationId of the organisation.
      */
+    @PreAuthorise(accessLevel = 'admin')
     def downloadShapefile(String id) {
 
         def userId = userService.getCurrentUserId()
@@ -202,6 +230,7 @@ class OrganisationController {
         }
     }
 
+    @PreAuthorise(accessLevel = 'admin')
     def getMembersForOrganisation(String id) {
         def adminUserId = userService.getCurrentUserId()
 
@@ -220,6 +249,7 @@ class OrganisationController {
         }
     }
 
+    @PreAuthorise(accessLevel = 'admin')
     def addUserAsRoleToOrganisation() {
         String userId = params.userId
         String organisationId = params.entityId
@@ -238,6 +268,7 @@ class OrganisationController {
         }
     }
 
+    @PreAuthorise(accessLevel = 'admin')
     def removeUserWithRoleFromOrganisation() {
         String userId = params.userId
         String role = params.role
@@ -276,6 +307,7 @@ class OrganisationController {
      * Presents a page which allows the user to edit the events/announcements for all of the projects managed by
      * this organisation at once.
      */
+    @PreAuthorise(accessLevel = 'admin')
     def editAnnouncements(String id) {
 
         def organisation = id ? organisationService.get(id, 'flat') : null
@@ -301,30 +333,35 @@ class OrganisationController {
     }
 
     private List findOrganisationAnnouncements(organisation) {
-        def queryParams = [max: 1500, fq: ['organisationFacet:' + organisation.name]]
-        queryParams.query = "docType:project"
-        def results = searchService.allProjects(queryParams, queryParams.query)
-        def projects = results?.hits?.hits?.collect { it._source }
+        List projects = organisation.projects
+        if (!projects) {
+            def queryParams = [max: 1500, fq: ['organisationFacet:' + organisation.name]]
+            queryParams.query = "docType:project"
+            def results = searchService.allProjects(queryParams, queryParams.query)
+            projects = results?.hits?.hits?.collect { it._source }
+        }
 
         def announcements = []
         projects.each { project ->
-            if (project.custom?.details?.events) {
-                project.custom.details.events.each { event ->
-                    announcements << [projectId: project.projectId, grantId: project.grantId, name: project.name, planStatus: project.planStatus, eventDate: event.scheduledDate, eventName: event.name, eventType: event.type, eventDescription: event.description, grantAnnouncementDate: event.grantAnnouncementDate, funding: event.funding]
+            if (Status.isActive(project.status)) {
+                if (project.custom?.details?.events) {
+                    project.custom.details.events.each { event ->
+                        announcements << [projectId: project.projectId, grantId: project.grantId, name: project.name, planStatus: project.planStatus, eventDate: event.scheduledDate, eventName: event.name, eventType: event.type, eventDescription: event.description, grantAnnouncementDate: event.grantAnnouncementDate, funding: event.funding]
+                    }
+                } else {
+                    // Add a blank row to make it easier to add announcements for that project. (so the user
+                    // doesn't have to select the project name which could be from a long list).
+                    announcements << [projectId: project.projectId, grantId: project.grantId, name: project.name, planStatus: project.planStatus, eventDate: '', eventName: '', eventDescription: '', eventType: '', funding: '', grantAnnouncementDate:'']
                 }
-            } else {
-                // Add a blank row to make it easier to add announcements for that project. (so the user
-                // doesn't have to select the project name which could be from a long list).
-                announcements << [projectId: project.projectId, grantId: project.grantId, name: project.name, planStatus: project.planStatus, eventDate: '', eventName: '', eventDescription: '', eventType: '', funding: '', grantAnnouncementDate:'']
             }
         }
         announcements
-
     }
 
     /**
      * Bulk saves the edits to project events/announcements.
      */
+    @PreAuthorise(accessLevel = 'admin')
     def saveAnnouncements(String id) {
 
         def organisation = id ? organisationService.get(id, 'flat') : null
@@ -356,6 +393,7 @@ class OrganisationController {
         respond(resp)
     }
 
+    @PreAuthorise(accessLevel = 'admin')
     def downloadAnnouncementsTemplate(String id) {
 
         def organisation = id ? organisationService.get(id, 'flat') : null
@@ -370,7 +408,8 @@ class OrganisationController {
         new AnnouncementsMapper(excelImportService).announcementsToExcel(response, announcements)
     }
 
-    def bulkUploadAnnouncements() {
+    @PreAuthorise(accessLevel = 'admin')
+    def bulkUploadAnnouncements(String id) {
         if (request.respondsTo('getFile')) {
             def file = request.getFile('announcementsTemplate')
             if (file) {
@@ -383,6 +422,7 @@ class OrganisationController {
         respond status:400, text: 'Missing file'
     }
 
+    @PreAuthorise(accessLevel = 'admin')
     def report(String id) {
 
         def organisation = organisationService.get(id, 'all')
@@ -442,28 +482,73 @@ class OrganisationController {
                        outputModels:outputModels]
     }
 
+    @PreAuthorise(accessLevel = 'admin')
+    def getAdHocReportTypes(String id) {
 
-    def getAdHocReportTypes(String projectId) {
-
-        def supportedTypes = organisationService.getSupportedAdHocReports(projectId)
+        def supportedTypes = organisationService.getSupportedAdHocReports(id)
         render supportedTypes as JSON
 
     }
 
-    def viewOrganisationReport(String reportId) {
-        viewOrEditOrganisationReport(reportId, false)
+    @PreAuthorise(accessLevel = 'readOnly')
+    def viewOrganisationReport(ViewOrganisationReportCommand cmd) {
+        if (cmd.hasErrors()) {
+            error(cmd.errors.toString(), cmd.id)
+            return
+        }
+
+        if (cmd.report.type == ReportService.PERFORMANCE_MANAGEMENT_REPORT) {
+            viewOrEditOrganisationReport(cmd.report, false)
+        }
+        else {
+            render model:cmd.model, view:'/activity/activityReportView'
+        }
     }
 
-    def editOrganisationReport(String reportId) {
-        viewOrEditOrganisationReport(reportId, true)
+    @PreAuthorise(accessLevel = 'editor', redirectController = 'organisation')
+    def editOrganisationReport(EditOrganisationReportCommand cmd) {
+        if (cmd.hasErrors()) {
+            error(cmd.errors.toString(), cmd.id)
+            return
+        }
+
+        if (cmd.report.type ==  ReportService.PERFORMANCE_MANAGEMENT_REPORT) {
+            viewOrEditOrganisationReport(cmd.report, true)
+        }
+        else {
+            cmd.processEdit(this)
+        }
     }
 
-    private def viewOrEditOrganisationReport(String reportId, Boolean edit) {
-        Map report = reportService.get(reportId)
+    @PreAuthorise(accessLevel = 'editor')
+    def saveReport(SaveReportDataCommand saveReportDataCommand) {
+        Map result
+        if (saveReportDataCommand.report?.organisationId != params.id) {
+            result = [status:HttpStatus.SC_UNAUTHORIZED, error:"You do not have permission to save this report: check if the report belongs to this management unit: " + params?.id ]
+        }
+        else {
+            result = saveReportDataCommand.save()
+        }
+
+        render result as JSON
+
+    }
+
+    @PreAuthorise(accessLevel = 'admin')
+    def resetReport(String id, String reportId) {
+        if (!id || !reportId) {
+            error('An invalid report was selected', id)
+            return
+        }
+        Map result = reportService.reset(reportId)
+        render result as JSON
+    }
+
+    private def viewOrEditOrganisationReport(Map report, Boolean edit) {
         int version = report.toDate < "2017-01-01T00:00:00Z" ? 1 : 2
         Map organisation = organisationService.get(report.organisationId)
         if (organisationService.isUserAdminForOrganisation(report.organisationId)) {
-            Map model = reportService.performanceReportModel(reportId, version)
+            Map model = reportService.performanceReportModel(report.reportId, version)
             model.state = organisation.state ?: 'Unknown'
             model.organisation = organisation
 
@@ -502,7 +587,7 @@ class OrganisationController {
         }
     }
 
-
+    @PreAuthorise(accessLevel = 'admin')
     def createAdHocReport(String id) {
 
         Map report = request.getJSON()
@@ -520,12 +605,9 @@ class OrganisationController {
 
     }
 
+    @PreAuthorise(accessLevel = 'admin')
     def ajaxSubmitReport(String id) {
 
-        if (!organisationService.isUserAdminForOrganisation(id)) {
-            render status:401, message:'No permission to submit report'
-            return
-        }
         def reportDetails = request.JSON
 
         def result = organisationService.submitReport(id, reportDetails.reportId)
@@ -533,6 +615,7 @@ class OrganisationController {
         render result as JSON
     }
 
+    @PreAuthorise(accessLevel = 'caseManager')
     def ajaxApproveReport(String id) {
 
         if (!organisationService.isUserGrantManagerForOrganisation(id)) {
@@ -546,6 +629,7 @@ class OrganisationController {
         render result as JSON
     }
 
+    @PreAuthorise(accessLevel = 'caseManager')
     def ajaxRejectReport(String id) {
 
         if (!organisationService.isUserGrantManagerForOrganisation(id)) {
@@ -559,49 +643,38 @@ class OrganisationController {
         render result as JSON
     }
 
+    @PreAuthorise(accessLevel = 'siteAdmin')
+    def ajaxCancelReport(String id) {
 
+        def reportDetails = request.JSON
 
-    private void updateActivities(project, errors, plannedStartDate, plannedEndDate) {
-        def activitiesWithDefaultDates = project.activities.findAll {
+        def result = organisationService.cancelReport(id, reportDetails.reportId, reportDetails.reason)
 
-            if (it.plannedStartDate == project.plannedStartDate && it.plannedEndDate == project.plannedEndDate) {
-                return true
-            }
-            def actStart = DateUtils.parse(it.plannedStartDate)
-            def actEnd = DateUtils.parse(it.plannedEndDate)
+        render result as JSON
+    }
 
-            return new Duration(actStart, actEnd).isLongerThan(Weeks.weeks(19).toStandardDuration())
+    @PreAuthorise(accessLevel = 'caseManager')
+    def regenerateOrganisationReports(String id) {
+        Map resp
+        if (!id) {
+            resp = [status: HttpStatus.SC_NOT_FOUND]
+        }
+        else {
+            Map categoriesToRegenerate = request.JSON
+            organisationService.regenerateReports(id, categoriesToRegenerate?.organisationReportCategories)
+            resp = [status:HttpStatus.SC_OK]
+        }
+        render resp as JSON
+    }
+
+    private def error(String message, String organisationId) {
+        flash.message = message
+        if (organisationId) {
+            redirect(action: 'index', id: organisationId)
+        }
+        else {
+            redirect(controller:'home', action:'publicHome')
         }
 
-        def modifiedActivities = project.activities.findAll {
-            !(it.activityId in activitiesWithDefaultDates.collect { a -> a.activityId })
-        }
-
-        if (modifiedActivities) {
-            errors << "${project.grantId}: Number of activities with non-default dates: ${modifiedActivities.size()}"
-        }
-
-
-        if (modifiedActivities) {
-            modifiedActivities.each {
-                if (it.plannedStartDate < plannedStartDate) {
-                    errors << "${project.grantId}: Activity ${it.description} starts before contract date: ${it.plannedStartDate}, ${plannedStartDate}"
-                }
-                if (it.plannedEndDate > plannedEndDate) {
-                    errors << "${project.grantId}: Activity ${it.description} ends after contract end date: ${it.plannedEndDate}, ${plannedEndDate}"
-                }
-                if (it.plannedEndDate < plannedStartDate) {
-                    errors << "${project.grantId}: Activity ${it.description} ends before contract start date: ${it.plannedEndDate}, ${plannedStartDate}"
-                }
-            }
-
-        }
-
-        if (activitiesWithDefaultDates) {
-            // Update the dates of the works activities that haven't been modified from the original defaults.
-            def activityIds = activitiesWithDefaultDates.collect { it.activityId }
-            activityService.bulkUpdateActivities(activityIds, [plannedStartDate: plannedStartDate, plannedEndDate: plannedEndDate])
-        }
-        projectService.createReportingActivitiesForProject(project.projectId, [[period: Period.months(1), type: 'Green Army - Monthly project status report']])
     }
 }

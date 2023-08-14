@@ -158,19 +158,14 @@ class ProgramService {
 
     private void regenerateProgramReports(Map program, List<String> reportCategories = null) {
 
-        List programReportConfig = program.config?.programReports
+        List programReportConfig = program.config?.programReports?.collect{new ReportConfig(it)}
         ReportOwner owner = new ReportOwner(
                 id:[programId:program.programId],
                 name:program.name,
                 periodStart:program.startDate,
                 periodEnd:program.endDate
         )
-        List toRegenerate = programReportConfig.findAll{it.category in reportCategories}
-        toRegenerate?.each {
-            ReportConfig reportConfig = new ReportConfig(it)
-            List relevantReports = program.reports?.findAll{it.category == reportConfig.category}
-            reportService.regenerateReports(relevantReports, reportConfig, owner)
-        }
+        reportService.regenerateAll(program.reports, programReportConfig, owner, reportCategories)
     }
 
     private void regenerateProjectReports(Map program, List<String> reportCategories = null) {
@@ -232,27 +227,17 @@ class ProgramService {
 
     /**
      * Adds a user with the supplied role to the identified program.
-     * Adds the same user with the same role to all of the program's projects.
      *
      * @param userId the id of the user to add permissions for.
      * @param programId the program to add permissions for.
      * @param role the role to assign to the user.
      */
-    def addUserAsRoleToProgram(String userId, String programId, String role) {
-
-        Map resp = userService.addUserAsRoleToProgram(userId, programId, role)
-        Map projects = getProgramProjects(programId)
-        projects?.projects?.each { project ->
-            if (project.isMERIT) {
-                userService.addUserAsRoleToProject(userId, project.projectId, role)
-            }
-        }
-        resp
+    Map addUserAsRoleToProgram(String userId, String programId, String role) {
+        userService.addUserAsRoleToProgram(userId, programId, role)
     }
 
     /**
      * Removes the user access with the supplied role from the identified program.
-     * Removes the same user from all of the program's projects.
      *
      * @param userId the id of the user to remove permissions for.
      * @param programId the program to remove permissions for.
@@ -260,12 +245,6 @@ class ProgramService {
      */
     def removeUserWithRoleFromProgram(String userId, String programId, String role) {
         userService.removeUserWithRoleFromProgram(userId, programId, role)
-        Map projects = getProgramProjects(programId)
-        projects?.projects?.each { project ->
-            if (project.isMERIT) {
-                userService.removeUserWithRole(project.projectId, userId, role)
-            }
-        }
     }
 
     /**
@@ -284,11 +263,15 @@ class ProgramService {
         parent && parent.programId == programId
     }
 
+    boolean canViewProgram(Map program) {
+        program.config?.visibility != 'private' || userService.userIsSiteAdmin()
+    }
+
     List<Map> getPrimaryOutcomes(Map program) {
-        program?.outcomes.findAll {it.type != OUTCOME_TYPE_SECONDARY_ONLY}
+        program?.outcomes.findAll {it.type == OUTCOME_TYPE_PRIMARY_ONLY || !it.type}
     }
     List<Map> getSecondaryOutcomes(Map program) {
-        program?.outcomes.findAll {it.type != OUTCOME_TYPE_PRIMARY_ONLY}
+        program?.outcomes.findAll {it.type == OUTCOME_TYPE_SECONDARY_ONLY || !it.type}
     }
 
     @Cacheable("programList")

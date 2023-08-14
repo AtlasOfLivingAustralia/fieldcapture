@@ -1,0 +1,1 @@
+db.report.updateMany({type:'Performance Management Framework - Self Assessment'}, {$set:{category:'Performance Management Framework'}}, {multi:true});

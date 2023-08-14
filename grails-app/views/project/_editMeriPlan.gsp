@@ -27,11 +27,18 @@
 <div class="required">
 	<div class="form-actions">
 		<b>Grant manager actions:</b>
-		<button type="button" data-bind="click: modifyPlan"  id="modify-plan" class="btn btn-sm btn-info">Modify MERI Plan</button>
+		<button type="button" data-bind="enable:canModifyPlan, click: modifyPlan"  id="modify-plan" class="btn btn-sm btn-info">Modify MERI Plan</button>
+		<!-- ko if:!canModifyPlan -->
+			<fc:iconHelp>This program requires a MERIT administrator to modify the MERI plan</fc:iconHelp>
+		<!-- /ko -->
 		<br/><br/>
 		<ul>
-			<li>"Modify MERI Plan" will allow project administrators to edit MERI plan information. </li>
-			<li>Modifying the MERI plan will change the state of the project to "Not approved".</li>
+			<!-- ko if:canModifyPlan -->
+			<li>Pressing "Modify MERI Plan" will allow project administrators to edit MERI plan information. </li>
+			<!-- /ko -->
+			<!-- ko if: !canModifyPlan -->
+			<li>This program requires a MERIT administrator to modify the MERI plan</li>
+			<!-- /ko -->
 		</ul>
 	</div>
 </div>
@@ -146,7 +153,7 @@
 				<br/>
 				<button type="button" data-bind="click: saveProjectDetails, disable: isProjectDetailsLocked()" class="btn btn-sm btn-primary">Save changes</button>
 				<button type="button" class="btn btn-sm btn-danger" data-bind="click: cancelProjectDetailsEdits">Cancel</button>
-				<button type="button" class="btn btn-sm btn-info" data-bind="click: meriPlanPDF">Generate PDF</button>
+				<button type="button" class="btn btn-sm btn-info" data-bind="click: meriPlanPDF">Display Printable MERI Plan</button>
 
 				<!--  Admin - submit to approval. -->
 				<g:if test="${user?.isAdmin}">
@@ -187,7 +194,7 @@
 		<b>From: </b><span data-bind="text: plannedStartDate.formattedDate"></span>  <b>To: </b> <span data-bind="text: plannedEndDate.formattedDate"></span>
 	</div>
 
-	<g:render template="${meriPlanTemplate}" model="${[config:config]}"/>
+	<g:render template="${meriPlanTemplate}" model="${[config:config, mode : au.org.ala.merit.ReportService.ReportMode.EDIT.name()]}"/>
 
 </g:if>
 
@@ -204,7 +211,7 @@
 
 			<button type="button" data-bind="click: saveProjectDetails, disable: isProjectDetailsLocked()" class="btn btn-sm btn-primary">Save changes</button>
 			<button type="button" class="btn btn-sm btn-danger" data-bind="click: cancelProjectDetailsEdits">Cancel</button>
-			<g:if test="${projectContent.details.visible}"><button type="button" class="btn btn-sm btn-info" data-bind="click: meriPlanPDF">Generate PDF</button></g:if>
+			<g:if test="${projectContent.details.visible}"><button type="button" class="btn btn-sm btn-info" data-bind="click: meriPlanPDF">Display Printable MERI Plan</button></g:if>
 
 			<!--  Admin - submit to approval. -->
 			<g:if test="${user?.isAdmin}">

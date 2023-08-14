@@ -12,8 +12,7 @@ class ProgramController {
 
     static allowedMethods = [regenerateProgramReports: "POST", listOfAllPrograms:'GET' ,ajaxDelete: "POST", delete: "POST", ajaxUpdate: "POST"]
 
-    def programService, searchService, documentService, userService, roleService, commonService, webService, siteService
-    ProjectService projectService
+    def programService, documentService, userService, roleService, commonService, webService, siteService
     ReportService reportService
     ActivityService activityService
     PdfGenerationService pdfGenerationService
@@ -26,7 +25,7 @@ class ProgramController {
             program = programService.get(id)
         }
 
-        if (!program || program.error) {
+        if (!program || program.error || !userService.userIsSiteAdmin()) {
             programNotFound(id, program)
         } else {
             def roles = roleService.getRoles()

@@ -4,8 +4,10 @@ import asset.pipeline.AssetPipelineConfigHolder
 import au.org.ala.ecodata.forms.TemplateFileAssetResolver
 import au.org.ala.merit.SessionLogger
 import grails.boot.GrailsApp
+import grails.boot.config.GrailsApplicationPostProcessor
 import grails.boot.config.GrailsAutoConfiguration
 import grails.converters.JSON
+import grails.core.GrailsApplication
 import grails.util.BuildSettings
 import grails.util.Environment
 import groovy.util.logging.Slf4j
@@ -14,9 +16,13 @@ import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean
+import org.springframework.context.annotation.Bean
 
 @Slf4j
 class Application extends GrailsAutoConfiguration {
+
+    private static final String EHCACHE_DIRECTORY_CONFIG_ITEM = "ehcache.directory"
+    private static final String DEFAULT_EHCACHE_DIRECTORY = "./ehcache"
 
     static void main(String[] args) {
         GrailsApp.run(Application, args)
@@ -24,6 +30,7 @@ class Application extends GrailsAutoConfiguration {
 
     @Override
     Closure doWithSpring() {
+
         return {
             log.info("doWithSpring....")
             sessionLogger(new ServletListenerRegistrationBean(new SessionLogger()))
@@ -53,5 +60,23 @@ class Application extends GrailsAutoConfiguration {
     void onShutdown(Map<String, Object> event) {
         log.info("Shutting down - destroying the cache manager")
         applicationContext.grailsCacheManager.destroy()
+    }
+
+    @Bean
+    GrailsApplicationPostProcessor grailsApplicationPostProcessor() {
+
+        // We are overriding the GrailsApplicationPostProcessor because we need a lifecycle hook after
+        // the configuration has been read, but before the plugin lifecycle bean initialisation has started.
+        // This is because the grails ehcache plugin only supports configuration via XML files and the
+        // cache directory store can only be configured via an environment variable.
+        // To keep the configuration in one place, we are reading the config, and setting the system property
+        // so it can be read during cache initialisation.
+        return new GrailsApplicationPostProcessor( this, applicationContext, classes() as Class[]) {
+            @Override
+            protected void customizeGrailsApplication(GrailsApplication grailsApplication) {
+                System.setProperty(EHCACHE_DIRECTORY_CONFIG_ITEM, grailsApplication.config.getProperty(EHCACHE_DIRECTORY_CONFIG_ITEM, DEFAULT_EHCACHE_DIRECTORY))
+            }
+
+        }
     }
 }

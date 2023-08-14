@@ -116,4 +116,23 @@ var ReportService = function(config) {
 
         return history;
     };
+
+    self.regenerateReports = function(data,url) {
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: data,
+            dataType:'json',
+            contentType: 'application/json'
+        }).done(function() {
+            blockUIWithMessage("Reports successfully regenerated, reloading page...");
+            setTimeout(function(){
+                window.location.reload();
+            }, 1000);
+        }).fail(function() {
+            bootbox.alert("Failed to regenerate organisation reports");
+            $.unblockUI();
+        });
+
+    };
 }

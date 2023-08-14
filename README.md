@@ -6,11 +6,11 @@ Grails 4: [![Build Status](https://travis-ci.com/AtlasOfLivingAustralia/fieldcap
 
 ## About
 MERIT is a web application designed to collect and store planning, monitoring and reporting data associated with natural resource management projects.
-It is currently in use by the Australian Government Department of the environment and energy. 
+It is currently in use by the Australian Government. 
 
 ## General Information
 ### Technologies
-* Grails framework 4.0.10
+* Grails framework 5.x
 * Knockout JS
 * Bootstap 4
 
@@ -73,6 +73,7 @@ Run MERIT with additonal parameters:
 Note the leading colon before the bootRun task - this is required as when inplace=true gradle is configured in a multi-project build configuration.
 
 # MacOS Catalina
+(This is only relevant to versions of MERIT prior to 3.0.  From 3.0, MERIT will look for development config in $HOME/data/)
 if you getting this error in MacOS
 ```
 unable to create directory data/fieldcature/ehcache

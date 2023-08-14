@@ -4,7 +4,7 @@ import geb.Module
 
 class PermissionsTableRow extends Module {
     static content = {
-        userIdCell {$(".memUserId")}
+        userIdCell(required:false) {$(".memUserId")}
         userName{ $(".memUserName")}
         role { $ (".memUserRole")}
         emailAddress(required: false) { $(".emailAddress")}
@@ -15,6 +15,9 @@ class PermissionsTableRow extends Module {
     }
     String getUserId() {
         userIdCell.text()
+    }
+    String getDisplayName() {
+        userName.text()
     }
 
     String getRoleText() {

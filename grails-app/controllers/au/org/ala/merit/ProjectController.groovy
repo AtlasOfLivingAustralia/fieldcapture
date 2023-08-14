@@ -56,6 +56,20 @@ class ProjectController {
                 config:config], view: 'espOverview'
     }
 
+    /**
+     * Programs can be marked as private which will restricts the ability to view the project
+     * page to users named in the Project Access section or who have a role on the MERIT hub.
+     * An additional flag can control whether users with read only access on the MERIT hub
+     * can see the project.
+     */
+    private static boolean canUserViewProject(def user, Map programConfig) {
+        boolean canView = true // By default, even un-authenticated users can view at least the project overview
+        if (programConfig?.visibility == 'private') {
+            canView = programConfig?.readOnlyUsersCanViewWhenPrivate ? user?.hasViewAccess : user?.isEditor
+        }
+        canView
+    }
+
     def index(String id) {
 
         def user = userService.getUser()
@@ -67,12 +81,12 @@ class ProjectController {
             user.hasViewAccess = projectService.canUserViewProject(user.userId, id) ?: false
         }
         def project = projectService.get(id, user,'all')
-        Map config
+        Map config = null
         if (project && !project.error) {
             config = projectService.getProgramConfiguration(project)
         }
 
-        if (!project || project.error || (config?.visibility == 'private' && !user?.hasViewAccess)) {
+        if (!project || project.error || !canUserViewProject(user, config)) {
             flash.message = "Project not found with id: ${id}"
             if (project?.error) {
                 flash.message += "<br/>${project.error}"
@@ -140,6 +154,7 @@ class ProjectController {
         project.hasApprovedOrSubmittedReports = reportService.includesSubmittedOrApprovedReports(project.reports)
         boolean canRegenerateReports = projectService.canRegenerateReports(project)
         def meriPlanVisible = config.includesContent(ProgramConfig.ProjectContent.MERI_PLAN)
+        boolean canModifyMeriPlan = config.requireMeritAdminToReturnMeriPlan ?  userService.userIsAlaOrFcAdmin() : user?.isCaseManager
         def risksAndThreatsVisible = config.includesContent(ProgramConfig.ProjectContent.RISKS_AND_THREATS) && user?.hasViewAccess
         def canViewRisks = risksAndThreatsVisible && (user?.hasViewAccess || user?.isEditor)
         def meriPlanEnabled = user?.hasViewAccess || ((project.associatedProgram == 'National Landcare Programme' && project.associatedSubProgram == 'Regional Funding'))
@@ -177,7 +192,7 @@ class ProjectController {
                      site           : [label: 'Sites', visible: config.includesContent(ProgramConfig.ProjectContent.SITES), disabled: !user?.hasViewAccess, editable:user?.isEditor, type: 'tab', template:'projectSites'],
                      dashboard      : [label: 'Dashboard', visible: config.includesContent(ProgramConfig.ProjectContent.DASHBOARD), disabled: !user?.hasViewAccess, type: 'tab'],
                      datasets       : [label: 'Data set summary', visible: datasetsVisible, template: '/project/dataset/dataSets', type:'tab'],
-                     admin          : [label: 'Admin', visible: adminTabVisible, user:user, type: 'tab', template:'projectAdmin', project:project, canChangeProjectDates: canChangeProjectDates, minimumProjectEndDate:minimumProjectEndDate, showMERIActivityWarning:true, showAnnouncementsTab: showAnnouncementsTab, showSpecies:true, meriPlanTemplate:MERI_PLAN_TEMPLATE, showMeriPlanHistory:showMeriPlanHistory, requireMeriPlanApprovalReason:Boolean.valueOf(config.supportsMeriPlanHistory),  config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage', canRegenerateReports: canRegenerateReports]]
+                     admin          : [label: 'Admin', visible: adminTabVisible, user:user, type: 'tab', template:'projectAdmin', project:project, canChangeProjectDates: canChangeProjectDates, minimumProjectEndDate:minimumProjectEndDate, showMERIActivityWarning:true, showAnnouncementsTab: showAnnouncementsTab, showSpecies:true, meriPlanTemplate:MERI_PLAN_TEMPLATE, showMeriPlanHistory:showMeriPlanHistory, requireMeriPlanApprovalReason:Boolean.valueOf(config.supportsMeriPlanHistory),  config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage', canRegenerateReports: canRegenerateReports, canModifyMeriPlan: canModifyMeriPlan]]
 
         if (template == MERI_ONLY_TEMPLATE) {
             model = [details:model.details]
@@ -209,7 +224,8 @@ class ProjectController {
             boolean reportsVisible = config.includesContent(ProgramConfig.ProjectContent.REPORTING) && userHasViewAccess
             Map reportingTab = [label: 'Reporting', visible:reportsVisible, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true, services: config.services, scores:scores, hideDueDate:true, isAdmin:user?.isAdmin, isGrantManager:user?.isCaseManager]
             if (reportingTab.visible) {
-                reportingTab.reportOrder = config?.projectReports?.collect{[category:it.category, description:it.description, banner:it.banner, rejectionReasonCategoryOptions:it.rejectionReasonCategoryOptions?:[]]} ?: []
+                reportingTab.reportOrder = config?.projectReports?.collect{
+                    [category:it.category, description:it.description, banner:it.banner, rejectionReasonCategoryOptions:it.rejectionReasonCategoryOptions?:[]]}?.unique({it.category}) ?: []
                 project.reports?.each { Map report ->
                     ReportConfig reportConfig = ((ProgramConfig)config).findProjectReportConfigForReport(report)
                     report.isAdjustable = reportConfig?.isAdjustable()
@@ -631,15 +647,6 @@ class ProjectController {
         }
     }
 
-    @PreAuthorise(accessLevel = 'admin')
-    def meriPlanPDF(String id) {
-        Map reportUrlConfig = [controller: 'report', action: 'meriPlanReportCallback', id: id, absolute: true]
-        boolean result = pdfGenerationService.generatePDF(reportUrlConfig, [:], response)
-        if (!result) {
-            render view: '/error', model: [error: "An error occurred generating the MERI plan report."]
-        }
-    }
-
     /**
      * Accepts a MERI Plan as an attached file and attempts to convert it into a format compatible with
      * MERIT.
@@ -882,6 +889,13 @@ class ProjectController {
         Map model = reportService.activityReportModel(reportId, mode, formVersion)
         model.metaModel = projectService.filterOutputModel(model.metaModel, project, model.activity)
 
+        model.outputModels.each { k, v ->
+            if (v.scores) {
+                Map outputConfig = model.metaModel.outputConfig.find {it.outputName == k}
+                outputConfig?.outputContext = new JSONObject([scores:v.scores])
+            }
+        }
+
         model.context = new HashMap(project)
         model.returnTo = g.createLink(action:'exitReport', id:projectId, params:[reportId:reportId])
         model.contextViewUrl = g.createLink(action:'index', id:projectId)
@@ -1079,6 +1093,31 @@ class ProjectController {
     @PreAuthorise(accessLevel = 'editor')
     def projectPrioritiesByOutcomeType(String id) {
         render projectService.projectPrioritiesByOutcomeType(id) as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'editor')
+    def monitoringProtocolFormCategories() {
+        List<Map> forms = activityService.monitoringProtocolForms()
+
+        List<String> categories = forms?.collect{
+            [label:g.message(code:it.category, default:it.category.capitalize()), value:it.category]}?.unique()?.sort({it.label})
+        render categories as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'editor')
+    def outcomesByScores(String id) {
+        List scoreIds = params.getList('scoreIds')
+        if (!scoreIds) {
+            respond HttpStatus.SC_BAD_REQUEST
+        }
+
+        List result = projectService.outcomesByScores(id, scoreIds)
+        result = result?.collect {
+            List outcomes = new ArrayList(it)  // JSONArray quotes strings when joined so we need to work with a normal List
+            String label = new ArrayList(outcomes).join(',')
+            [label:label, value:outcomes]
+        }
+        render result as JSON
     }
 
     private def error(String message, String projectId) {

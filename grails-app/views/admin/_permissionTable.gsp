@@ -4,7 +4,9 @@
         <table class="table table-condensed" id="existingMembersTable" style="">
             <thead>
             <tr>
-                <th width="10%">User&nbsp;Id</th>
+                <g:if test="${fc.userIsAlaOrFcAdmin()}">
+                    <th width="10%">User&nbsp;Id</th>
+                </g:if>
                 <th>User&nbsp;Name</th>
                 <th width="15%">Role</th>
                 <g:if test="${fc.userIsSiteAdmin() || isAdmin || user.isAdmin}">
@@ -15,7 +17,9 @@
             </thead>
             <tbody class="membersTbody">
             <tr class="hide d-none permission">
-                <td class="memUserId"></td>
+                <g:if test="${fc.userIsAlaOrFcAdmin()}">
+                    <td class="memUserId"></td>
+                </g:if>
                 <td class="memUserName"></td>
                 <td class="memUserRole"><span style="white-space: nowrap">&nbsp;</span><g:render template="/admin/userRolesSelect" model="[roles:roles, hide:true]"/></td>
                 <g:if test="${fc.userIsSiteAdmin() || isAdmin || user.isAdmin}">
@@ -116,7 +120,7 @@
                     var role = $($this).parent().data("role");
 
                     var message;
-                    if (userId == ${user?.userId}) {
+                    if (userId == '${user?.userId}') {
                         message = "<span class='label label-important'>Important</span><p><b>If you proceed you may need assistance to get your access back.</b></p><p>Are you sure you want to remove your access to this project?</p>";
                     }
                     else {
@@ -151,7 +155,7 @@
                     var userId = $(this).attr('id'); // Couldn't get $(el).data('userId') to work for some reason
 
                     var message;
-                    if (userId == ${user?.userId}) {
+                    if (userId == '${user?.userId}') {
                         message = "<span class='label label-important'>Important</span><p><b>If you modify your access level you may need assistance to get it back.</b></p><p>Are you sure you want to change your access to this project from " + currentRole + " to " + decodeCamelCase(role)+"?</p>";
                     }
                     else {

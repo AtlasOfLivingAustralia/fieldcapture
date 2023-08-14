@@ -5,6 +5,7 @@ import grails.util.Environment
  \******************************************************************************/
 def appName = 'fieldcapture'
 def ENV_NAME = "${appName.toUpperCase()}_CONFIG"
+environments.development.grails.config.locations = ["~/data/${appName}/config/${appName}-config.properties"]
 default_config = "/data/${appName}/config/${appName}-config.properties"
 if(!grails.config.locations || !(grails.config.locations instanceof List)) {
     grails.config.locations = []
@@ -204,7 +205,6 @@ abn.abnLookupToken = "Insert abn Token here"
 abn.abnUrl= "https://abr.business.gov.au/json/AbnDetails.aspx?abn="
 
 esp.activities.admin = 'ESP Annual Report Submission'
-reports.filterableActivityTypes = ['RLP Output Report', 'Wildlife Recovery Progress Report - WRR']
 reports.initialScrollPositionDelay = 1000
 risks.scheduleCheckingPeriod = 7
 grails.mail.poolSize = 1
@@ -217,6 +217,7 @@ grails {
         }
     }
 }
+ehcache.directory = '/data/fieldcapture/ehcache'
 
 auth.baseUrl = 'https://auth-test.ala.org.au'
 userDetails.url = "${auth.baseUrl}/userdetails/"
@@ -224,8 +225,7 @@ user.registration.url = "${auth.baseUrl}/userdetails/registration/createAccount"
 security {
     cas {
         enabled = false
-        appServerName = 'http://devt.ala.org.au:8087' // or similar, up to the request path part
-        // service = 'http://devt.ala.org.au:8080' // optional, if set it will always be used as the return path from CAS
+        appServerName = 'http://localhost:8087' // or similar, up to the request path part
         casServerUrlPrefix = "${auth.baseUrl}/cas"
         loginUrl = "${auth.baseUrl}/cas/login"
         logoutUrl = "${auth.baseUrl}/cas/logout"
@@ -247,6 +247,12 @@ security {
         requiredClaims = ["sub", "iat", "exp", "jti", "client_id"]
     }
 }
+
+webservice.jwt = false
+webservice['jwt-scopes'] = "ala/internal users/read ala/attrs users/read ecodata/write_test ecodata/read_test"
+webservice['client-id']='changeMe'
+webservice['client-secret'] = 'changeMe'
+
 pdfbox.fontcache="/data/${appName}/cache/"
 
 // Markdown configuration to match behaviour of the JavaScript editor.
@@ -256,32 +262,33 @@ environments {
     development {
         grails.logging.jul.usebridge = true
         server.port = 8087
-        grails.host = "http://devt.ala.org.au"
+        grails.host = "http://localhost"
         serverName = "${grails.host}:${server.port}"
         grails.serverURL = serverName
         layout.skin = "nrm"
         security.cas.appServerName = serverName
         security.cas.contextPath =
-        ecodata.baseUrl = 'http://devt.ala.org.au:8080/ws/'
+        ecodata.baseUrl = 'http://localhost:8080/ws/'
         upload.images.url = grails.serverURL+'/image/'
+        upload.images.path = "~/data/${appName}/images/"
         emailFilter = /[A-Z0-9._%-]+@csiro\.au|chris\.godwin\.ala@gmail.com/
         logging.dir = '.'
-        ecodata.service.url = 'http://devt.ala.org.au:8080/ws'
+        ecodata.service.url = 'http://localhost:8080/ws'
         espSupportEmail='ESPmonitoring@environment.gov.au'
+        ehcache.directory = './ehcache'
     }
     test {
         server.port = "8087"
-        grails.host = "http://devt.ala.org.au"
+        grails.host = "http://localhost"
         serverName = "${grails.host}:${server.port}"
         grails.serverURL = serverName
         layout.skin = "nrm"
         app.default.hub='merit'
-        runWithNoExternalConfig = true
         wiremock.port = 8018
         security.oidc.discoveryUri = "http://localhost:${wiremock.port}/cas/oidc/.well-known"
         security.oidc.allowUnsignedIdTokens = true
-        def casBaseUrl = "http://devt.ala.org.au:${wiremock.port}"
-
+        def casBaseUrl = "http://localhost:${wiremock.port}"
+        ehcache.directory = './ehcache'
         security.cas.appServerName=serverName
         security.cas.contextPath=
         security.cas.casServerName="${casBaseUrl}"
@@ -293,23 +300,15 @@ environments {
         logging.dir = '.'
         upload.images.path = '/tmp'
         upload.images.url = grails.serverURL+'/image/'
-        ecodata.baseUrl = 'http://devt.ala.org.au:8080/ws/'
-        ecodata.service.url = 'http://devt.ala.org.au:8080/ws'
-        pdfgen.baseURL = "http://devt.ala.org.au:${wiremock.port}/"
+        ecodata.baseUrl = 'http://localhost:8080/ws/'
+        ecodata.service.url = 'http://localhost:8080/ws'
+        pdfgen.baseURL = "http://localhost:${wiremock.port}/"
+        lists.baseURL = "http://localhost:${wiremock.port}"
         abn.abnUrl= "http://localhost:${wiremock.port}/json/AbnDetails.aspx?abn="
         abn.abnLookupToken = "123456"
         api_key='testapikey'
-        grails.cache.config = {
-            diskStore {
-                path '/tmp'
-            }
-            defaultCache {
-                overflowToDisk false
-            }
-        }
         spatial.baseUrl = "http://localhost:${wiremock.port}"
         spatial.layersUrl = spatial.baseUrl + "/ws"
-        reports.filterableActivityTypes = ['RLP Output Report', 'Wildlife Recovery Progress Report - WRR', 'Progress Report']
         grails.mail.port = 3025 // com.icegreen.greenmail.util.ServerSetupTest.SMTP.port
     }
     production {

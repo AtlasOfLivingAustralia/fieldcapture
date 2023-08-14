@@ -97,7 +97,14 @@ enum SettingPageType {
     ACCESS_ROLE_EXPIRED_EMAIL_BODY('roleExpiredEmailBody', 'The body of the email sent to a user when their elevated access has expired','permissionexpiry.expired.email.body'),
     ACCESS_WARNING_EXPIRED_EMAIL_SUBJECT('roleWarningEmailSubject', 'The subject of the email sent to a user when their elevated access will expire 1 month from now','permissionwarning.expiry.email.subject'),
     ACCESS_WARNING_EXPIRED_EMAIL_BODY('roleWarningEmailBody', 'The body of the email sent to a user when their elevated access will expire 1 month from now','permissionwarning.expiry.email.body'),
-    PDF_INSTRUCTIONS('pdfInstructions', 'Instructions on how to generate a PDF document from a web page', 'pdfInstructions')
+    PDF_INSTRUCTIONS('pdfInstructions', 'Instructions on how to generate a PDF document from a web page', 'pdfInstructions'),
+    ORGANISATION_REPORT_SUBMITTED_EMAIL_SUBJECT('organisationReportSubmittedEmailSubject', 'Organisation Report submitted email subject line text', 'organisation_report.submitted.emailSubject'),
+    ORGANISATION_REPORT_SUBMITTED_EMAIL_BODY('organisationReportSubmittedEmailBody', 'Organisation Report submitted email body text', 'organisation_report.submitted.emailBody'),
+    ORGANISATION_REPORT_APPROVED_EMAIL_SUBJECT('organisationReportApprovedEmailSubject', 'Organisation Report approved email subject line text', 'organisation_report.approved.emailSubject'),
+    ORGANISATION_REPORT_APPROVED_EMAIL_BODY('organisationReportApprovedEmailBody', 'Organisation Report approved email body text', 'organisation_report.approved.emailBody'),
+    ORGANISATION_REPORT_RETURNED_EMAIL_SUBJECT('organisationReportReturnedEmailSubject', 'Organisation Report returned email subject line text', 'organisation_report.returned.emailSubject'),
+    ORGANISATION_REPORT_RETURNED_EMAIL_BODY('organisationReportReturnedEmailBody', 'Organisation Report returned email body text', 'organisation_report.returned.emailBody'),
+    ORGANISATION_REPORT_CONFIG('organisationReportConfig', 'Report configuration options for organisations', 'organisation.availableReportsConfig')
     String name
     String title
     String key

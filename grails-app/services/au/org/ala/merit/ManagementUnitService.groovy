@@ -140,54 +140,7 @@ class ManagementUnitService {
         return mu?.blog?:[]
     }
 
-    /**
-     * Get scores of each program in the given management unit
-     * @param managementUnitId
-     * @param programIds
-     * @param approvedActivitiesOnly
-     * @return [programId: serviceScores]
-     */
-    Map serviceScores(String managementUnitId, Map programGroups, boolean approvedActivitiesOnly = true) {
-        List<Map> allServices = metadataService.getProjectServices()
-        List scoreIds = allServices.collect{it.scores?.collect{score -> score.scoreId}}.flatten()
 
-        def results = [:]
-
-        for(Map.Entry programGroup in programGroups) {
-            List programIdFacets = programGroup.value.collect{"programId:${it.programId}"}
-            List facets = ["managementUnitId:${managementUnitId}"] + programIdFacets
-            Map scoreResults = reportService.targetsForScoreIds(scoreIds, facets, approvedActivitiesOnly)
-
-            List deliveredServices = []
-            allServices.each { Map service ->
-                Map copy = [:]
-                copy.putAll(service)
-                copy.scores = []
-                service.scores?.each { score ->
-                    Map copiedScore = [:]
-                    copiedScore.putAll(score)
-                    Map result = scoreResults?.scores?.find{it.scoreId == score.scoreId}
-
-                    copiedScore.target = result?.target ?: 0
-                    copiedScore.result = result?.result ?: [result:0, count:0]
-
-                    // We only want to report on services that are going to be delivered by this program.
-                    if (copiedScore.target) {
-                        copy.scores << copiedScore
-                    }
-
-                }
-                if (copy.scores) {
-                    deliveredServices << copy
-                }
-
-            }
-
-            results[programGroup.key]=deliveredServices
-        }
-        results
-
-    }
 
 
     void regenerateReports(String id, List<String> managementUnitReportCategories = null, List<String> projectReportCategories = null) {
@@ -197,21 +150,19 @@ class ManagementUnitService {
         regenerateProjectReports(managementUnit, projectReportCategories)
     }
 
-    private void regenerateManagementUnitReports(Map managementUnit, List<String> reportCategories = null) {
-
-        List managementUnitReportConfig = managementUnit.config?.managementUnitReports
+    private void regenerateManagementUnitReports(Map managementUnit, List<String> reportCategories) {
+        if (!reportCategories) {
+            log.info("No categories specified for management unit reports. Skipping regeneration.")
+            return
+        }
+        List managementUnitReportConfig = managementUnit.config?.managementUnitReports?.collect{new ReportConfig(it)}
         ReportOwner owner = new ReportOwner(
                 id:[managementUnitId:managementUnit.managementUnitId],
                 name:managementUnit.name,
                 periodStart:managementUnit.startDate,
                 periodEnd:managementUnit.endDate
         )
-        List toRegenerate = managementUnitReportConfig.findAll{it.category in reportCategories}
-        toRegenerate?.each {
-            ReportConfig reportConfig = new ReportConfig(it)
-            List relevantReports = managementUnit.reports?.findAll{it.category == reportConfig.category}
-            reportService.regenerateReports(relevantReports, reportConfig, owner)
-        }
+        reportService.regenerateAll(managementUnit.reports, managementUnitReportConfig, owner, reportCategories)
     }
 
     private void regenerateProjectReports(Map managementUnit, List<String> reportCategories = null) {
@@ -272,26 +223,17 @@ class ManagementUnitService {
 
     /**
      * Adds a user with the supplied role to the identified management unit.
-     * Adds the same user with the same role to all of the management unit's projects.
      *
      * @param userId the id of the user to add permissions for.
      * @param managementUnitId the management unit to add permissions for.
      * @param role the role to assign to the user.
      */
-    def addUserAsRoleToManagementUnit(String userId, String managementUnitId, String role) {
-        Map resp = userService.addUserAsRoleToManagementUnit(userId, managementUnitId, role)
-        Map projects = getProjects(managementUnitId)
-        projects?.projects?.each { project ->
-            if (project.isMERIT) {
-                userService.addUserAsRoleToProject(userId, project.projectId, role)
-            }
-        }
-        resp
+    Map addUserAsRoleToManagementUnit(String userId, String managementUnitId, String role) {
+        userService.addUserAsRoleToManagementUnit(userId, managementUnitId, role)
     }
 
     /**
      * Removes the user access with the supplied role from the identified management unit.
-     * Removes the same user from all of the management unit's projects.
      *
      * @param userId the id of the user to remove permissions for.
      * @param managementUnitId the management unit to remove permissions for.
@@ -299,12 +241,6 @@ class ManagementUnitService {
      */
     def removeUserWithRoleFromManagementUnit(String userId, String managementUnitId, String role) {
         userService.removeUserWithRoleFromManagementUnit(userId, managementUnitId, role)
-        Map projects = getProjects(managementUnitId)
-        projects?.projects?.each { project ->
-            if (project.isMERIT) {
-                userService.removeUserWithRole(project.projectId, userId, role)
-            }
-        }
     }
 
     /**

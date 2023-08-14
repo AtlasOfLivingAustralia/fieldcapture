@@ -1,6 +1,11 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.command.EditManagementUnitReportCommand
+import au.org.ala.merit.command.ManagementUnitReportCommand
+import au.org.ala.merit.command.PrintManagementUnitReportCommand
 import au.org.ala.merit.command.SaveReportDataCommand
+import au.org.ala.merit.command.ViewManagementUnitReportCommand
+import au.org.ala.merit.util.ProjectGroupingHelper
 import grails.converters.JSON
 import grails.core.GrailsApplication
 import grails.plugin.cache.Cacheable
@@ -26,6 +31,7 @@ class ManagementUnitController {
     ActivityService activityService
     PdfGenerationService pdfGenerationService
     ProjectService projectService
+    ProjectGroupingHelper projectGroupingHelper
 
     GrailsApplication grailsApplication
     LinkGenerator grailsLinkGenerator
@@ -84,41 +90,14 @@ class ManagementUnitController {
         // management unit page.
         List programGroups = mu.config?.programGroups ?: []
 
-        // Fetch related programs
-        if (projects) {
-            // We may be aggregating on a parent program that doesn't directly have any projects (for example
-            // all of the projects are under a sub-program)
-            String[] programIds = (projects.collect{it.programId} + programGroups).unique()
-            List programs = programService.get(programIds)
-            // This reverse alphabetical order is to satisfy a request to always
-            // display the RLP first.
-            mu.programs = programs?.sort{it.name}?.reverse()
-            mu.projects = projects
-        }
-
-        LinkedHashMap programsByCategory = groupPrograms(mu.programs, programGroups)
-        // Now group the projects according to the program configuration.
-        Map projectsByCategory = groupProjects(mu.projects, programsByCategory)
-
         // If the program is not visible, there is no point showing the dashboard or sites as both of these rely on
         // data in the search index to produce.
         boolean managementUnitVisible = mu.config?.visibility != 'private'
 
-        Map servicesWithScores = [:]
-        if (managementUnitVisible) {
-            // Produce aggregate dashboards for each of the configured program groups
-            servicesWithScores = managementUnitService.serviceScores(mu.managementUnitId, programsByCategory, !hasAdminOrSiteReadOnlyAccess)
-        }
-
-        List displayedPrograms = []
-        // Aggregate the outcomes addressed by all projects in each program group
-        projectsByCategory.each { String programId, List projectsInProgramGroup ->
-            Map program = mu.programs.find{it.programId == programId}
-
-            List primaryOutcomes = findTargetedPrimaryOutcomes(program, projectsInProgramGroup)
-            List secondaryOutcomes = findTargetedSecondaryOutcomes(program, projectsInProgramGroup)
-            displayedPrograms << [program:program, projects: projectsInProgramGroup, servicesWithScores:servicesWithScores[programId], primaryOutcomes:primaryOutcomes, secondaryOutcomes:secondaryOutcomes]
-        }
+        Map projectGroups = projectGroupingHelper.groupProjectsByProgram(projects, programGroups, ["managementUnitId:"+mu.managementUnitId], hasAdminOrSiteReadOnlyAccess)
+        mu.programs = projectGroups.programs
+        mu.projects = projects
+        List displayedPrograms = projectGroups.displayedPrograms
 
         List reportOrder = mu.config?.managementUnitReports?.collect{[category:it.category, description:it.description, rejectionReasonCategoryOptions:it.rejectionReasonCategoryOptions?:[]]} ?: []
 
@@ -127,87 +106,12 @@ class ManagementUnitController {
                     servicesDashboard:[visible: managementUnitVisible],
                     displayedPrograms:displayedPrograms
                     ],
-         projects: [label: 'MU Reporting', visible: canViewNonPublicTabs, stopBinding: false, type:'tab', mu:mu, reports: mu.reports, reportOrder:reportOrder, hideDueDate:true, displayedPrograms:displayedPrograms],
+         projects: [label: 'MU Reporting', template:"/shared/projectListByProgram", visible: canViewNonPublicTabs, stopBinding: false, type:'tab', mu:mu, reports: mu.reports, reportOrder:reportOrder, hideDueDate:true, displayedPrograms:displayedPrograms],
          sites   : [label: 'MU Sites', visible: canViewNonPublicTabs, stopBinding: true, type:'tab'],
          admin   : [label: 'MU Admin', visible: hasAdminOrSiteReadOnlyAccess, type: 'tab', mu:mu]
         ]
 
     }
-
-    /**
-     * This method will group programs based on whether they or a parent program falls into
-     * one of the configured program groups.
-     * Programs that don't fall into a group will result in the creation of a new group.
-     */
-    private LinkedHashMap<String, List> groupPrograms(List programs, List programGroups) {
-        Map programsByCategory = new LinkedHashMap().withDefault{[]} // LinkedHashMap is to preserve the order specified by programGroups
-        // Group programs according to their hierarchy under the configured groups.
-        programs?.each { Map program ->
-            boolean categorized = false
-            programGroups.each { String programId ->
-                if (programService.isInProgramHierarchy(program, programId)) {
-                    programsByCategory[programId] << program
-                    categorized = true
-                }
-            }
-            // This project doesn't fall into a group specified by the config so create a new group for it.
-            if (!categorized) {
-                programsByCategory[program.programId] << program
-            }
-        }
-        programsByCategory
-    }
-
-    private Map<String, List> groupProjects(List projects, Map programsByCategory) {
-
-        Map projectsByCategory = [:].withDefault{[]}
-        projects.each { Map project ->
-            Map.Entry categoryGroup = programsByCategory.find{ String k, List v ->
-                v && v.find{project.programId == it.programId}
-            }
-            projectsByCategory[categoryGroup.key] << project
-        }
-        projectsByCategory
-    }
-
-
-    /**
-     * Returns a list of program primary outcomes, with an extra entry (targeted) specifying whether any project
-     * has targeted that outcome as the primary outcome of the project.
-     * @param program the program.
-     * @param projects all projects run under the program in the management unit
-     */
-    private List findTargetedPrimaryOutcomes(Map program, List projects) {
-        List outcomes = programService.getPrimaryOutcomes(program).collect{[outcome:it.outcome, shortDescription:it.shortDescription]}
-        for(Map project in projects){
-            String outcome = projectService.getPrimaryOutcome(project)
-            if (outcome){
-                Map oc =  outcomes.find {it.outcome == outcome}
-                if (oc) {
-                    oc['targeted'] = true // at least one project is targeting this outcome as the primary outcome.
-                }
-            }
-        }
-        outcomes
-    }
-
-    /**
-     * Returns a list of program primary outcomes, with an extra entry (targeted) specifying whether any project
-     * has targeted that outcome as the primary outcome of the project.
-     * @param program the program.
-     * @param projects all projects run under the program in the management unit
-     */
-    private List findTargetedSecondaryOutcomes(Map program, List projects) {
-        List outcomes = programService.getSecondaryOutcomes(program).collect{[outcome:it.outcome, shortDescription:it.shortDescription]}
-        for(Map project in projects){
-            List projectOutcomes = projectService.getSecondaryOutcomes(project)
-            outcomes.findAll { it.outcome in projectOutcomes }.each {
-                it['targeted'] = true
-            }
-        }
-        outcomes
-    }
-
 
     @PreAuthorise(accessLevel='siteAdmin')
     def create() {
@@ -222,28 +126,6 @@ class ManagementUnitController {
             managementUnitNotFound(id, mu)
         } else {
             [mu: mu, isNameEditable:userService.userIsAlaOrFcAdmin()]
-        }
-    }
-
-    @PreAuthorise(accessLevel='siteAdmin')
-    def delete(String id) {
-        if (userService.isUserAdminForProgram(id)) {
-            programService.update(id, [status: 'deleted'])
-        } else {
-            flash.message = 'You do not have permission to perform that action'
-        }
-        redirect action: 'list'
-    }
-
-    @PreAuthorise(accessLevel='siteAdmin')
-    def ajaxDelete(String id) {
-
-        if (userService.isUserAdminForProgram(id)) {
-            def result = programService.update(id, [status: 'deleted'])
-
-            respond result
-        } else {
-            render status: 403, text: 'You do not have permission to perform that action'
         }
     }
 
@@ -333,25 +215,12 @@ class ManagementUnitController {
     }
 
     @PreAuthorise(accessLevel = 'editor', redirectController = 'managementUnit')
-    def editReport(String id, String reportId) {
-        if (!id || !reportId) {
-            error('An invalid report was selected for data entry', id)
+    def editReport(EditManagementUnitReportCommand cmd) {
+        if (cmd.hasErrors()) {
+            error(cmd.errors.toString(), cmd.id)
             return
         }
-
-        Map model = activityReportModel(id, reportId, ReportMode.EDIT, params.getInt('formVersion', null))
-
-        if (!model.editable) {
-            redirect action:'viewReport', id:id, params:[reportId:reportId, attemptedEdit:true]
-        }
-        else {
-            if (model.config.requiresActivityLocking) {
-                Map result = reportService.lockForEditing(model.report)
-                model.locked = true
-            }
-            model.saveReportUrl = createLink(controller:'managementUnit', action:'saveReport', id:id, params:[reportId:reportId])
-            render model:model, view:'/activity/activityReport'
-        }
+        cmd.processEdit(this)
     }
 
     @PreAuthorise(accessLevel = 'admin')
@@ -384,15 +253,13 @@ class ManagementUnitController {
     }
 
     @PreAuthorise(accessLevel = 'readOnly', redirectController = 'managementUnit')
-    def viewReport(String id, String reportId) {
-        if (!id || !reportId) {
-            error('An invalid report was selected for viewing', id)
+    def viewReport(ViewManagementUnitReportCommand cmd) {
+        if (cmd.hasErrors()) {
+            error(cmd.errors.toString(), cmd.id)
             return
         }
 
-        Map model = activityReportModel(id, reportId, ReportMode.VIEW)
-
-        render model:model, view:'/activity/activityReportView'
+        render model:cmd.model, view:'/activity/activityReportView'
     }
 
     @PreAuthorise(accessLevel = 'readOnly', redirectController = 'managementUnit')
@@ -419,11 +286,10 @@ class ManagementUnitController {
      * be converted into PDF.
      * @param id the project id
      */
-    def viewReportCallback(String id, String reportId) {
+    def viewReportCallback(PrintManagementUnitReportCommand cmd) {
 
         if (pdfGenerationService.authorizePDF(request)) {
-            Map model = activityReportModel(id, reportId, ReportMode.PRINT)
-            render view:'/activity/activityReportView', model:model
+            render view:'/activity/activityReportView', model:cmd.model
         }
         else {
             render status:HttpStatus.SC_UNAUTHORIZED

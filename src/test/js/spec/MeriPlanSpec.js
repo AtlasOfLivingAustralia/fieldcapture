@@ -3,6 +3,42 @@ describe("Loading the MERI plan is handled correctly", function () {
     var meriPlanData;
 
     beforeAll(function () {
+        config = {
+            useRlpTemplate:true,
+            healthCheckUrl:'testing',
+            services: [{
+                    id:1, name:"Service 1", service:{categories:[]}, scores:[{scoreId:"1", label:"Score 1"}]
+                }, {
+                    id:2, name:"Service 2", service:{categories:[]}, scores:[{scoreId:"2", label:"Score 2"}, {scoreId:"3", label:"Score 3"}]
+                }
+            ]
+        };
+        outputTargets = [{
+            "scoreId": "1",
+            "target": 6,
+            "periodTargets": [
+                {"period": "2018/2019", "target": "1"},
+                {"period": "2019/2020", "target": "2"},
+                {"period": "2020/2021", "target": "3"},
+                {"period": "2021/2022", "target": "4"},
+                {"period": "2022/2023", "target": "5"}],
+            "outcomeTargets": [
+                {"relatedOutcomes":["ST1"], "target": "1"},
+                {"relatedOutcomes":["MT1"], "target": "2"},
+                {"relatedOutcomes":["MT2"], "target": "3"}
+            ]
+        }];
+        risks = {
+            "rows": [{
+                "threat": "Natural Environment",
+                "description": "Testing description",
+                "likelihood": "Unlikely",
+                "consequence": "High",
+                "riskRating": "High",
+                "currentControl": "Testing control",
+                "residualRisk": "Medium"
+            }]
+        };
         meriPlanData = {
             "outcomes": {
                 "primaryOutcome": {
@@ -20,15 +56,26 @@ describe("Loading the MERI plan is handled correctly", function () {
                     "assets": ["Secondary asset 3"]
                 }],
                 "shortTermOutcomes": [{
+                    "code":"ST1",
                     "description": "Short term outcome 1",
-                    "assets": []
+                    "assets": [],
+                    "relatedOutcome":"Program short term outcome 1"
                 }, {"description": "Short term outcome 2", "assets": []}],
                 "midTermOutcomes": [{
+                    "code":"MT1",
                     "description": "Medium term outcome 1",
-                    "assets": []
-                }, {"description": "Medium term outcome 2", "assets": []}, {
+                    "assets": [],
+                    "relatedOutcome":"Program mid term outcome 1"
+                }, {
+                    "code":"MT2",
+                    "description": "Medium term outcome 2",
+                    "assets": [],
+                    "relatedOutcome":"Program mid term outcome 2"
+                }, {
+                    "code":"MT3",
                     "description": "Medium term outcome 3",
-                    "assets": []
+                    "assets": [],
+                    "relatedOutcome":"Program mid term outcome 2"
                 }]
             },
             "description": "This is the project description",
@@ -45,12 +92,61 @@ describe("Loading the MERI plan is handled correctly", function () {
             "rationale": "This is the project rationale",
             "projectMethodology": "This is the project methodology",
             "baseline": {
-                "rows": [{"baseline": "Baseline 1", "method": "Baseline method 1"}, {
+                "rows": [{
+                    "code":"B1",
+                    "baseline": "Baseline 1",
+                    "method": "Baseline method 1",
+                    "relatedOutcomes":["ST1"],
+                    "relatedTargetMeasures":["1"],
+                    "protocol":"p1"
+                }, {
+                    "code":"B2",
                     "baseline": "Baseline 2",
-                    "method": "Baseline method 2"
-                }, {"baseline": "Baseline 3", "method": "Baseline method 3"}, {
+                    "method": "Baseline method 2",
+                    "relatedOutcomes":["MT1"],
+                    "relatedTargetMeasures":[],
+                    "protocol":"p2"
+                }, {
+                    "code":"B3",
+                    "baseline": "Baseline 3",
+                    "method": "Baseline method 3",
+                    "relatedOutcomes":["MT2"],
+                    "relatedTargetMeasures":[],
+                    "protocol":"p3"
+                }, {
+                    "code":"B4",
                     "baseline": "Baseline 4",
-                    "method": "Baseline method 4"
+                    "method": "Baseline method 4",
+                    "relatedOutcomes":["MT3"],
+                    "relatedTargetMeasures":[],
+                    "protocol":"p4"
+                }]
+            },
+            "monitoring": {
+                "rows": [{
+                    "relatedBaseline":"B1",
+                    "data1":"Monitoring methodology 1",
+                    "data2":"Monitoring indicator 1",
+                    "evidence":"Evidence 1",
+                    "relatedTargetMeasures":[]
+                },{
+                    "relatedBaseline":"B2",
+                    "data1":"Monitoring methodology 2",
+                    "data2":"Monitoring indicator 2",
+                    "evidence":"Evidence 2",
+                    "relatedTargetMeasures":[]
+                },{
+                    "relatedBaseline":"B3",
+                    "data1":"Monitoring methodology 3",
+                    "data2":"Monitoring indicator 3",
+                    "evidence":"Evidence 3",
+                    "relatedTargetMeasures":[]
+                },{
+                    "relatedBaseline":"B4",
+                    "data1":"Monitoring methodology 4",
+                    "data2":"Monitoring indicator 4",
+                    "evidence":"Evidence 4",
+                    "relatedTargetMeasures":[]
                 }]
             },
             "keq": {
@@ -68,28 +164,7 @@ describe("Loading the MERI plan is handled correctly", function () {
                 }, {"data1": "Document 2", "data2": "Section 2", "data3": "Alignment 2"}]
             },
             "serviceIds": [1],
-            "outputTargets": [{
-                "scoreId": "f8c42b45-f4b8-4001-8ab7-80d9d945b059",
-                "target": "100",
-                "periodTargets": [{"period": "2018/2019", "target": "1"}, {
-                    "period": "2019/2020",
-                    "target": "2"
-                }, {"period": "2020/2021", "target": "3"}, {
-                    "period": "2021/2022",
-                    "target": "4"
-                }, {"period": "2022/2023", "target": "5"}]
-            }],
-            "risks": {
-                "rows": [{
-                    "threat": "Natural Environment",
-                    "description": "Testing description",
-                    "likelihood": "Unlikely",
-                    "consequence": "High",
-                    "riskRating": "High",
-                    "currentControl": "Testing control",
-                    "residualRisk": "Medium"
-                }]
-            }
+
         };
 
         window.fcConfig = {
@@ -122,7 +197,7 @@ describe("Loading the MERI plan is handled correctly", function () {
         };
         var projectService = new ProjectService(project, {});
 
-        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'});
+        var viewModel = new MERIPlan(project, projectService, config);
 
         viewModel.meriPlanUploadComplete({}, {result:{meriPlan:meriPlanData, messages:[]}});
         var meriPlanViewModel = viewModel.meriPlan();
@@ -141,7 +216,7 @@ describe("Loading the MERI plan is handled correctly", function () {
         };
         var projectService = new ProjectService(project, {});
 
-        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'});
+        var viewModel = new MERIPlan(project, projectService, config);
 
         var serviceTarget = {
             serviceId:1,
@@ -175,7 +250,7 @@ describe("Loading the MERI plan is handled correctly", function () {
         };
         var projectService = new ProjectService(project, {});
 
-        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'});
+        var viewModel = new MERIPlan(project, projectService, config);
 
         var serviceTarget = {
             serviceId:1,
@@ -203,7 +278,7 @@ describe("Loading the MERI plan is handled correctly", function () {
         };
         var projectService = new ProjectService(project, {});
 
-        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'});
+        var viewModel = new MERIPlan(project, projectService, config);
 
         var serviceTarget = {
             serviceId:1,
@@ -263,7 +338,7 @@ describe("Loading the MERI plan is handled correctly", function () {
         };
         var projectService = new ProjectService(project, {});
 
-        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing', programObjectives:['objective 1', 'objective 2']});
+        var viewModel = new MERIPlan(project, projectService, _.extend({programObjectives:['objective 1', 'objective 2']}, config));
 
         var objectivesModel = viewModel.meriPlan().objectives;
 
@@ -301,7 +376,7 @@ describe("Loading the MERI plan is handled correctly", function () {
             plannedEndDate:'2021-06-30T00:00:00Z'
         };
         var projectService = new ProjectService(project, {});
-        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing', programObjectives:['objective 1', 'objective 2']});
+        var viewModel = new MERIPlan(project, projectService, _.extend({programObjectives:['objective 1', 'objective 2']}, config));
 
         var objectivesModel = viewModel.meriPlan().objectives;
         objectivesModel.simpleObjectives(["objective 1", "objective 2"]);
@@ -345,7 +420,7 @@ describe("Loading the MERI plan is handled correctly", function () {
             }
         };
         var projectService = new ProjectService(project, {});
-        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing', programObjectives:['objective 1', 'objective 2']});
+        var viewModel = new MERIPlan(project, projectService, _.extend({programObjectives:['objective 1', 'objective 2']}, config));
 
         var objectivesModel = viewModel.meriPlan().objectives;
         expect(objectivesModel.simpleObjectives.otherChecked()).toBeTrue();
@@ -382,7 +457,7 @@ describe("Loading the MERI plan is handled correctly", function () {
             }
         };
         var projectService = new ProjectService(project, {});
-        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'});
+        var viewModel = new MERIPlan(project, projectService, config);
 
         var objectivesModel = viewModel.meriPlan().objectives;
         expect(objectivesModel.simpleObjectives.otherChecked).toBeUndefined();
@@ -413,7 +488,7 @@ describe("Loading the MERI plan is handled correctly", function () {
             }
         };
         var projectService = new ProjectService(project, {});
-        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'});
+        var viewModel = new MERIPlan(project, projectService, config);
         var meriPlan = viewModel.meriPlan();
 
         expect(meriPlan.assets().length).toEqual(1);
@@ -441,11 +516,9 @@ describe("Loading the MERI plan is handled correctly", function () {
                 }
             }
         };
-        var services = [
-            {id:1, name:"Service 1", scores:[{scoreId:1}]}, {id:2, name:"Service 2", scores:[{scoreId:2}]}
-        ];
+
         var projectService = new ProjectService(project, {});
-        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'});
+        var viewModel = new MERIPlan(project, projectService, config);
         var serialized = JSON.parse(viewModel.meriPlan().modelAsJSON());
 
         var savedMeriPlan = serialized.custom.details;
@@ -453,7 +526,7 @@ describe("Loading the MERI plan is handled correctly", function () {
 
         project.custom.details.serviceIds = [1,2];
         project.outputTargets = [{scoreId:1}, {scoreId:2}];
-        viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing', services:services});
+        viewModel = new MERIPlan(project, projectService, config);
         serialized = JSON.parse(viewModel.meriPlan().modelAsJSON());
         savedMeriPlan = serialized.custom.details;
         expect(savedMeriPlan.serviceIds).toEqual([1,2]);
@@ -479,7 +552,7 @@ describe("Loading the MERI plan is handled correctly", function () {
         var serialized = JSON.parse(viewModel.meriPlan().modelAsJSON());
 
         var savedMeriPlan = serialized.custom.details;
-        expect(savedMeriPlan.outcomes.primaryOutcome).toEqual({});
+        expect(savedMeriPlan.outcomes.primaryOutcome).toBeNull();
 
     });
 
@@ -642,7 +715,7 @@ describe("Loading the MERI plan is handled correctly", function () {
         var viewModel = new OutcomesViewModel({}, options);
 
         var serialized = JSON.parse(JSON.stringify(viewModel));
-        expect(serialized).toEqual({"primaryOutcome":{"description":"Outcome 2","assets":[]},"secondaryOutcomes":[{}],"shortTermOutcomes":[{}],"midTermOutcomes":[], otherOutcomes:[]});
+        expect(serialized).toEqual({"primaryOutcome":{"description":"Outcome 2","assets":[]},"secondaryOutcomes":[],"shortTermOutcomes":[],"midTermOutcomes":[], otherOutcomes:[]});
 
     });
 
@@ -714,7 +787,7 @@ describe("Loading the MERI plan is handled correctly", function () {
 
     });
 
-    it("", function() {
+    it("Can manage MERI plan partnership information", function() {
         var project = {
             plannedStartDate: '2018-07-01T00:00:00Z',
             plannedEndDate: '2021-06-30T00:00:00Z',
@@ -743,6 +816,49 @@ describe("Loading the MERI plan is handled correctly", function () {
         viewModel.removePartnership(viewModel.meriPlan().partnership.rows()[2]);
         var serialized = JSON.stringify(ko.mapping.toJS(viewModel.meriPlan().partnership));
         expect(JSON.parse(serialized)).toEqual(project.custom.details.partnership);
+
+    });
+
+    it('Can manage relationships between service target measures and outcomes', function () {
+
+        let project = {
+            plannedStartDate:'2018-07-01T00:00:00Z',
+            plannedEndDate:'2023-06-30T00:00:00Z',
+            custom:{details:meriPlanData},
+            outputTargets: outputTargets
+        };
+
+        let projectService = new ProjectService(project, {})
+        let viewModel = new MERIPlan(project, projectService, _.extend({targetMeasureUpdateLimit:0, useServiceOutcomesModel:true}, config));
+        let meriPlan = viewModel.meriPlan();
+
+        const results = meriPlan.serviceOutcomes.toJSON();
+        expect(results.serviceIds).toEqual([1]);
+        expect(results.targets).toEqual(project.outputTargets);
+
+        meriPlan.baseline.rows()[1].relatedTargetMeasures(["3"]);
+        viewModel.selectedServiceWatcher(); // Because this computed is throttled to 1/s we need to manually force it in the test
+        expect(meriPlan.serviceOutcomes.outcomeTargets().length).toEqual(2);
+        let newOutcomeTarget = meriPlan.serviceOutcomes.outcomeTargets()[1];
+        expect(newOutcomeTarget.scoreId).toEqual("3")
+        expect(newOutcomeTarget.serviceLabel).toEqual("Service 2");
+        expect(newOutcomeTarget.scoreLabel).toEqual("Score 3");
+        expect(newOutcomeTarget.orphaned()).toBeFalse();
+        expect(newOutcomeTarget.outcomeTargets().length).toEqual(1);
+        expect(newOutcomeTarget.outcomeTargets()[0].relatedOutcomes()).toEqual(["MT1"]);
+        expect(newOutcomeTarget.availableOutcomes()).toEqual([]);
+
+        meriPlan.threats.rows()[0].relatedOutcomes(["ST1", "MT1"]);
+        meriPlan.threats.rows()[0].relatedTargetMeasures(["2"]);
+        viewModel.selectedServiceWatcher();
+        expect(meriPlan.serviceOutcomes.outcomeTargets().length).toEqual(3);
+        newOutcomeTarget = meriPlan.serviceOutcomes.outcomeTargets()[2];
+        expect(newOutcomeTarget.scoreId).toEqual("2")
+        expect(newOutcomeTarget.serviceLabel).toEqual("Service 2");
+        expect(newOutcomeTarget.scoreLabel).toEqual("Score 2");
+        expect(newOutcomeTarget.orphaned()).toBeFalse();
+        expect(newOutcomeTarget.outcomeTargets().length).toEqual(1);
+        expect(newOutcomeTarget.outcomeTargets()[0].relatedOutcomes()).toEqual(["ST1", "MT1"]);
 
     });
 

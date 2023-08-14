@@ -118,7 +118,7 @@ class FieldcaptureFunctionalTest extends GebReportingSpec {
 
     def logoutViaUrl(browser) {
         String serverUrl = (testConfig.baseUrl instanceof String) ? testConfig.baseUrl : testConfig.grails.serverURL
-        String logoutUrl = "${serverUrl}/logout/logout?appUrl=${serverUrl}/"
+        String logoutUrl = "${serverUrl}/logout?url=${serverUrl}/"
         browser.go logoutUrl
     }
 

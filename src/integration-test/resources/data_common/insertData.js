@@ -12,6 +12,7 @@ load('../data/scoreDefaults.js');
 load('../data/activityDefaults.js');
 load('../data/outputDefaults.js');
 load('../data_common/createServices.js');
+load('../data/organisation.js');
 
 
 function createProject(projectProperties) {
@@ -38,7 +39,10 @@ function createOrganisation(organisationProperties){
     if (!organisationProperties.hubId) {
         organisationProperties.hubId = "merit";
     }
-    db.organisation.insert(organisationProperties)
+
+    var org = orgDefaults.create()
+    assign(organisationProperties,org)
+    db.organisation.insert(org)
 }
 
 function createMu(muProperties) {
@@ -192,6 +196,35 @@ function loadActivityForms() {
             db.activity.update({activityId: form.activityId},{$set: {formVersion:NumberInt(form.formVersion)}})
         }
     });
+
+    // Insert protocol forms into activityForm collection
+    var forms = [{
+        "name": "Protocol 1",
+        "type":"EMSA",
+        "category":"Category 1",
+        "externalId": NumberInt(1),
+        "formVersion": NumberInt(1),
+        "publicationStatus":"published"
+    }, {
+        "name": "Protocol 2",
+        "type":"EMSA",
+        "category":"Category 2",
+        "externalId": NumberInt(2),
+
+        "formVersion": NumberInt(1),
+        "publicationStatus":"published"
+    }, {
+        "name": "Protocol 3",
+        "type":"EMSA",
+        "category":"Category 3",
+        "externalId": NumberInt(3),
+        "formVersion": NumberInt(1),
+        "publicationStatus":"published"
+
+    }];
+    for (let i= 0; i < forms.length; i++) {
+        db.activityForm.insert(forms[i]);
+    }
 }
 
 

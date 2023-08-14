@@ -8,7 +8,7 @@
 //= require blog
 //= require leaflet-heatmap/heatmap.js
 //= require leaflet-heatmap/leaflet-heatmap.js
-
+//= require reportService
 
 
 /**
@@ -171,6 +171,8 @@ var ManagementUnitPageViewModel = function(props, options) {
     }
     _.extend(self, new ManagementUnitViewModel(props, options));
 
+    var reportService = new ReportService(options)
+
     var config = props.config || {};
     var priorities = props.priorities || [];
 
@@ -266,11 +268,8 @@ var ManagementUnitPageViewModel = function(props, options) {
             blockUIWithMessage("Saving configuration...");
             self.saveConfig(config).done(function() {
                 blockUIWithMessage("Regenerating reports...");
-                self.regenerateReports([coreServicesReportCategory], [projectOutputReportCategory]).done(function() {
-                    options.$window.location.reload();
-                }).fail(function() {
-                    $.unblockUI();
-                });
+                var data = JSON.stringify({managementUnitReportCategories:[coreServicesReportCategory], projectReportCategories:[projectOutputReportCategory]});
+                reportService.regenerateReports(data,options.regenerateManagementUnitReportsUrl);
             });
         }
     };
@@ -298,29 +297,8 @@ var ManagementUnitPageViewModel = function(props, options) {
 
     self.regenerateReportsByCategory = function() {
         blockUIWithMessage("Regenerating reports...");
-        self.regenerateReports(self.selectedManagementUnitReportCategories(), self.selectedProjectReportCategories()).done(function() {
-            blockUIWithMessage("Reports successfully regenerated, reloading page...");
-            setTimeout(function(){
-                window.location.reload();
-            }, 1000);
-
-        }).fail(function() {
-            $.unblockUI();
-        });
-    };
-
-    self.regenerateReports = function(managementUnitReportCategories, projectReportCategories) {
-        var data = JSON.stringify({managementUnitReportCategories:managementUnitReportCategories, projectReportCategories:projectReportCategories});
-        return $.ajax({
-            url: options.regenerateManagementUnitReportsUrl,
-            type: 'POST',
-            data: data,
-            dataType:'json',
-            contentType: 'application/json'
-        }).fail(function() {
-            bootbox.alert("Failed to regenerate management unit reports");
-        });
-
+        var data = JSON.stringify({managementUnitReportCategories:self.selectedManagementUnitReportCategories(), projectReportCategories:self.selectedProjectReportCategories()});
+        reportService.regenerateReports(data,options.regenerateManagementUnitReportsUrl);
     };
 
     self.saveManagementUnitConfiguration = function() {

@@ -1,3 +1,4 @@
+<%@ page import="au.org.ala.merit.ReportService" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -41,7 +42,7 @@
 <body>
 <div class="container">
     <g:render template="${headerTemplate}" model="${[project:project]}"/>
-    <g:render template="${meriPlanTemplate}" model="${[project: project]}"/>
+    <g:render template="${meriPlanTemplate}" model="${[project: project, mode: au.org.ala.merit.ReportService.ReportMode.PRINT.name()]}"/>
     <asset:script>
     $(function() {
         var project = <fc:modelAsJavascript model="${project}"/>;
@@ -59,6 +60,7 @@
         config.programObjectives = <fc:modelAsJavascript model="${config.program?.config?.objectives ?: []}"/>;
         config.programActivities = <fc:modelAsJavascript model="${config.program?.config?.activities?.collect{it.name} ?: []}"/>;
         config.excludeFinancialYearData = ${config.program?.config?.excludeFinancialYearData ?: false};
+        config.useServiceOutcomesModel = ${config.program?.config?.meriPlanContents?.find{it.template == 'serviceOutcomeTargets'} != null};
         var viewModel = new ReadOnlyMeriPlan(project, new ProjectService(project, config), config);
         viewModel.name = project.name;
         viewModel.description = project.description;
@@ -66,8 +68,10 @@
     });
     </asset:script>
 </div>
+<g:render template="/shared/pdfInstructions"/>
 <asset:javascript src="common-bs4.js"/>
 <asset:javascript src="projects.js"/>
 <asset:deferredScripts/>
+<asset:javascript src="print-instructions.js"/>
 </body>
 </html>
