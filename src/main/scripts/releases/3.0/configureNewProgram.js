@@ -39,6 +39,8 @@ function addService(newServiceName, legacyId, sectionName) {
     }
 }
 addService("Habitat Condition Assessment Survey", NumberInt(42), "NHT - Habitat condition assessment");
+addService("Sustainable Agriculture Facilitators", NumberInt(43), "NHT - Sustainable agriculture facilitators");
+addService("First Nations Australians Cultural Practices", NumberInt(44), "NHT - First nations australians cultural practices");
 
 
 const newScores = [
@@ -601,6 +603,26 @@ const newScores = [
                 tags: ['Survey', 'Indicator']
             }
         ]
+    },
+    {
+        serviceId: 43,
+        formSection:  'NHT - Sustainable agriculture facilitators',
+        scores: [
+            {
+                label: 'Number of FTEs invoiced for',
+                path: 'data.sustainableAgricultureFacilitators.numberOfFteInvoicedFor',
+            }
+        ]
+    },
+    {
+        serviceId: 44,
+        formSection:  'NHT - First nations australians cultural practices',
+        scores: [
+            {
+                label: 'Number of days conducting cultural practices',
+                path: 'data.firstNationAreasControlled.noDaysConductingCulturalPractices',
+            }
+        ]
     }
 ];
 
@@ -991,6 +1013,18 @@ var config=
                         'Amount (grams)/number of seeds/cuttings collected',
                         'Number of days propagating',
                         'Number of plants propagated'
+                    ]
+                },
+                {
+                    serviceId: 43,
+                    serviceTargetLabels: [
+                        'Number of FTEs invoiced for'
+                    ]
+                },
+                {
+                    serviceId: 44,
+                    serviceTargetLabels: [
+                        'Number of days conducting cultural practices'
                     ]
                 }
             ]

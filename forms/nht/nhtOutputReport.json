@@ -8586,7 +8586,836 @@
       "name": "NHT - Fauna survey",
       "description": null
     },
+    {
+      "collapsedByDefault": false,
+      "template": {
+        "dataModel": [
+          {
+            "dataType": "text",
+            "name": "participationIndividualsOrGroups",
+            "constraints": [
+              "Individuals",
+              "Groups"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "participationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "participationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "firstNationIndividualNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "text",
+            "name": "firstNationGroupNumber",
+            "behaviour": [
+              {
+                "condition": "participationIndividualsOrGroups == \"Groups\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "1-10",
+              "11-20",
+              "21-30",
+              "31-40",
+              "41-50"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "participationDetails",
+            "validate": "maxSize[3000]"
+          },
+          {
+            "columns": [
+              {
+                "dataType": "number",
+                "name": "noDaysConductingCulturalPractices",
+                "description": "",
+                "validate": "required"
+              },
+              {
+                "dataType": "number",
+                "name": "noDaysConductingCulturalPracticesInvoiced",
+                "description": "",
+                "validate": "required"
+              },
+              {
+                "dataType": "number",
+                "name": "noOfParticipants",
+                "description": "",
+                "validate": "required"
+              },
+              {
+                "dataType": "number",
+                "name": "noOfFirstNationsParticipants",
+                "description": "",
+                "validate": "required"
+              },
+              {
+                "dataType": "date",
+                "name": "activitiesStartDate",
+                "description": "Specific the dates these events were held on",
+                "validate": "required"
+              },
+              {
+                "dataType": "date",
+                "name": "activitiesEndDate",
+                "description": "",
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "siteVisit",
+                "constraints": [
+                  "Single",
+                  "Multiple"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "number",
+                "name": "noOfSitesActivityOccurred",
+                "description": "",
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "typeOfSite",
+                "constraints": [
+                  "Sacred",
+                  "Food source",
+                  "Ceremonial",
+                  "Other"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "otherTypeOfSite",
+                "description": "",
+                "behaviour": [
+                  {
+                    "condition": "typeOfSite == \"Other\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": "required,maxSize[100]"
+              },
+              {
+                "dataType": "feature",
+                "name": "sitesPrepared"
+              },
+              {
+                "computed": {
+                  "expression": "$geom.areaHa(sitesPrepared)"
+                },
+                "dataType": "number",
+                "name": "calculatedAreaPreparedHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "behaviour": [
+                  {
+                    "condition": "areaPreparedInvoicedHa > 0",
+                    "type": "conditional_validation",
+                    "value": {
+                      "message": "The prepared area must be mapped",
+                      "validate": "required,min[0.0001]"
+                    }
+                  }
+                ]
+              },
+              {
+                "computed": {
+                  "expression": "$geom.lengthKm(sitesPrepared)"
+                },
+                "dataType": "number",
+                "name": "calculatedLengthPreparedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "behaviour": [
+                  {
+                    "condition": "lengthPreparedKm > 0",
+                    "type": "conditional_validation",
+                    "value": {
+                      "message": "The prepared length must be mapped",
+                      "validate": "required,min[0.0001]"
+                    }
+                  }
+                ]
+              },
+              {
+                "defaultValue": {
+                  "expression": "calculatedAreaPreparedHa",
+                  "type": "computed"
+                },
+                "dataType": "number",
+                "name": "areaPreparedHa",
+                "decimalPlaces": 3,
+                "units": "ha",
+                "validate": "required,min[0]"
+              },
+              {
+                "defaultValue": {
+                  "expression": "calculatedLengthPreparedKm",
+                  "type": "computed"
+                },
+                "dataType": "number",
+                "name": "lengthPreparedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedReason",
+                "behaviour": [
+                  {
+                    "condition": "not (within(calculatedAreaPreparedHa, areaPreparedHa, 0.1))",
+                    "type": "visible"
+                  }
+                ],
+                "constraints": [
+                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedComments",
+                "behaviour": [
+                  {
+                    "condition": "\"Other\" == mappingNotAlignedReason",
+                    "type": "visible"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "document",
+                "name": "extraMappingDetails",
+                "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                "behaviour": [
+                  {
+                    "condition": "not (within(calculatedAreaPreparedHa, areaPreparedHa, 0.1)) or roundTo(areaPreparedHa, 2) != roundTo(areaPreparedInvoicedHa, 2)",
+                    "type": "visible"
+                  }
+                ],
+                "validate": "required"
+              },
+              {
+                "columns": [
+                  {
+                    "dataType": "text",
+                    "name": "activityTypeUndertaken",
+                    "constraints": [
+                      "Survey",
+                      "Site management",
+                      "Assessment",
+                      "Cultural event",
+                      "Curation",
+                      "Other"
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "otherActivityTypeUndertaken",
+                    "description": "",
+                    "behaviour": [
+                      {
+                        "condition": "activityTypeUndertaken == \"Other\"",
+                        "type": "enable"
+                      }
+                    ],
+                    "validate": "required,maxSize[100]"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "purposeOfActivity",
+                    "description": "",
+                    "validate": "required,maxSize[300]"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "activityDescription",
+                    "description": "",
+                    "validate": "required,maxSize[300]"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "surveyObjective",
+                    "description": "",
+                    "validate": "required,maxSize[300]"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "surveyTechnique",
+                    "description": "",
+                    "validate": "required,maxSize[300]"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "siteCondition",
+                    "constraints": [
+                      "Poor",
+                      "Fair",
+                      "Good",
+                      "Excellent"
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "siteConditionDetails",
+                    "description": "",
+                    "validate": "required,maxSize[300]"
+                  }
+                ],
+                "dataType": "list",
+                "name": "firstNationsDetails"
+              }
+            ],
+            "dataType": "list",
+            "name": "firstNationAreasControlled"
+          },
+          {
+            "name": "sitePrepCountHeader",
+            "type": "number",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "count(firstNationAreasControlled, \"threatenedEcologicalCommunity\")"
+            }
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[1500]"
+          },
+          {
+            "dataType": "image",
+            "name": "photographicEvidence"
+          },
+          {
+            "dataType": "boolean",
+            "name": "dataUploaded",
+            "description": ""
+          },
+          {
+            "dataType": "text",
+            "name": "projectAssuranceDetails",
+            "description": ""
+          },
+          {
+            "dataType": "list",
+            "name": "assuranceDocuments",
+            "columns": [
+              {
+                "dataType": "document",
+                "name": "attachments",
+                "description": "Please attach any Evidence of Service Delivery here"
+              }
+            ]
+          }
+        ],
+        "modelName": "NHT - First nations australians cultural practices",
+        "title": "First Nations Australians Cultural Practices",
+        "viewModel": [
+          {
+            "columns": [
+              {
+                "width": "10%",
+                "source": "participationIndividualsOrGroups",
+                "title": "Individuals or groups?",
+                "type": "selectOne"
+              },
+              {
+                "width": "20%",
+                "type": "col",
+                "title": "Total Number of people delivering this service",
+                "items": [
+                  {
+                    "source": "participationIndividualNumber",
+                    "type": "number"
+                  },
+                  {
+                    "source": "participationGroupNumber",
+                    "type": "selectOne"
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "width": "20%",
+                "title": "Total Number of First Nations people delivering this service ",
+                "items": [
+                  {
+                    "source": "firstNationIndividualNumber",
+                    "type": "number"
+                  },
+                  {
+                    "source": "firstNationGroupNumber",
+                    "type": "selectOne"
+                  }
+                ]
+              },
+              {
+                "source": "participationDetails",
+                "rows": 4,
+                "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                "type": "textarea"
+              }
+            ],
+            "userAddedRows": false,
+            "disableTableUpload": false,
+            "source": "",
+            "type": "table"
+          },
+          {
+            "addRowText": "Add a new controlled area",
+            "userAddedRows": true,
+            "source": "firstNationAreasControlled",
+            "type": "repeat",
+            "items": [
+              {
+                "type": "row",
+                "css": "border-bottom",
+                "items": [
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Number of days conducting cultural practices",
+                            "source": "noDaysConductingCulturalPractices",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Number of days conducting cultural practices invoiced for",
+                            "source": "noDaysConductingCulturalPracticesInvoiced",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Number of participants",
+                            "source": "noOfParticipants",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Number of first nations participants",
+                            "source": "noOfFirstNationsParticipants",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Activities start date",
+                            "source": "activitiesStartDate",
+                            "type": "date"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Activities end date",
+                            "source": "activitiesEndDate",
+                            "type": "date"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Site Visit",
+                            "source": "siteVisit",
+                            "type": "selectOne"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Number of sites where activity occurred",
+                            "source": "noOfSitesActivityOccurred",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Type of site",
+                            "source": "typeOfSite",
+                            "type": "selectOne"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Type of site (If Other)",
+                            "source": "otherTypeOfSite",
+                            "type": "text"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "sitesPrepared",
+                            "type": "feature",
+                            "preLabel": "Site/s where activity was undertaken"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "calculatedAreaPreparedHa",
+                            "type": "number",
+                            "readonly": true,
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "calculatedLengthPreparedKm",
+                            "type": "number",
+                            "readonly": true,
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Please attach mapping details",
+                            "source": "extraMappingDetails",
+                            "type": "document"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Actual area (ha) / length (km) where activity has been undertaken",
+                            "helpText": "Manually enter correct figure for this reporting period if different to mapped value",
+                            "source": "areaPreparedHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "lengthPreparedKm",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Reason for actual being different to mapped amount",
+                            "source": "mappingNotAlignedReason",
+                            "type": "selectOne"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                            "source": "mappingNotAlignedComments",
+                            "type": "textarea"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "columns": [
+                  {
+                    "width": "10%",
+                    "source": "activityTypeUndertaken",
+                    "title": "Type of activity undertaken",
+                    "type": "selectOne"
+                  },
+                  {
+                    "width": "10%",
+                    "source": "otherActivityTypeUndertaken",
+                    "title": "Type of activity(If other)",
+                    "type": "selectOne"
+                  },
+                  {
+                    "width": "10%",
+                    "source": "purposeOfActivity",
+                    "title": "Purpose of activity",
+                    "type": "textarea"
+                  },
+                  {
+                    "width": "15%",
+                    "source": "activityDescription",
+                    "title": "Detailed description of activity",
+                    "type": "textarea"
+                  },
+                  {
+                    "width": "15%",
+                    "source": "surveyObjective",
+                    "title": "Survey/assessment objective (if applicable)",
+                    "type": "textarea"
+                  },
+                  {
+                    "width": "15%",
+                    "source": "surveyTechnique",
+                    "title": "Survey/assessment technique (if applicable)",
+                    "type": "textarea"
+                  },
+                  {
+                    "width": "10%",
+                    "source": "siteCondition",
+                    "title": "Site condition (if applicable)",
+                    "type": "selectOne"
+                  },
+                  {
+                    "width": "15%",
+                    "source": "siteConditionDetails",
+                    "title": "Site condition further details (if applicable)",
+                    "type": "textarea"
+                  }
+                ],
+                "userAddedRows": true,
+                "source": "firstNationsDetails",
+                "type": "table"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Optionally attach photos",
+                "source": "photographicEvidence",
+                "type": "image"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Clarification, if needed",
+                "type": "textarea",
+                "rows": 4,
+                "css": "span8",
+                "source": "comments",
+                "placeholder": "Clarification comments include information for your project manager about the service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+              },
+              {
+                "preLabel": "Data have been uploaded",
+                "source": "dataUploaded",
+                "type": "boolean"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "",
+                "source": "projectAssuranceDetails",
+                "type": "textarea",
+                "rows": 4,
+                "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<p><b>Evidence of Service Delivery</b></p>This field is mandatory for all <u>Agriculture</u> projects as part of the invoicing process, as well as any environment projects where you have been notified as undergoing an <u>audit or quarterly assurance check</u>. The field allows you to attach evidence against a specific service."
+              }
+            ]
+          },
+          {
+            "type": "table",
+            "source": "assuranceDocuments",
+            "userAddedRows": true,
+            "disableTableUpload": true,
+            "columns": [
+              {
+                "title": "Attached documents",
+                "source": "attachments",
+                "type": "document"
+              }
+            ]
+          }
 
+        ]
+      },
+      "modelName": null,
+      "templateName": "nhtFirstNation",
+      "optional": true,
+      "optionalQuestionText": null,
+      "title": "First Nations Australians Cultural Practices",
+      "collapsibleHeading": null,
+      "name": "NHT - First nations australians cultural practices",
+      "description": null
+    },
     {
       "collapsedByDefault": false,
       "template": {
@@ -20696,7 +21525,7 @@
                         "items": [
                           {
                             "preLabel": "Actual area (ha) / length (km) of site preparation",
-                            "helpText": "Enter the amount you will invoice for during this reporting period.",
+                            "helpText": "Manually enter correct figure for this reporting period if different to mapped value",
                             "source": "areaPreparedHa",
                             "type": "number",
                             "displayOptions": {
