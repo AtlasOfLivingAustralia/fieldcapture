@@ -8440,7 +8440,7 @@
                             "type": "row",
                             "items": [
                               {
-                                "preLabel": "How may surveys will you be invoicing for?",
+                                "preLabel": "How many surveys will you be invoicing for?",
                                 "source": "numberOfSurveyInvoice",
                                 "type": "number"
                               }
@@ -8467,7 +8467,7 @@
                       {
                         "width": "10%",
                         "source": "numberOfIndividualsOrGroups",
-                        "title": "Number of groups / individuals in flora survey",
+                        "title": "Number of groups / individuals in fauna survey",
                         "type": "number"
                       },
                       {
@@ -21354,14 +21354,14 @@
               }
             ],
             "dataType": "list",
-            "name": "sitePreparationAreasControlled"
+            "name": "sitePreparationDetails"
           },
           {
             "name": "sitePrepCountHeader",
             "type": "number",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(sitePreparationAreasControlled, \"threatenedEcologicalCommunity\")"
+              "expression": "count(sitePreparationDetails, \"threatenedEcologicalCommunity\")"
             }
           },
           {
@@ -21457,7 +21457,7 @@
           {
             "addRowText": "Add a new controlled area",
             "userAddedRows": true,
-            "source": "sitePreparationAreasControlled",
+            "source": "sitePreparationDetails",
             "type": "repeat",
             "items": [
               {
@@ -22524,25 +22524,39 @@
                 "name": "sitesTested"
               },
               {
-                "defaultValue": {
-                  "type": "computed",
+                "computed": {
                   "expression": "$geom.areaHa(sitesTested)"
                 },
                 "dataType": "number",
                 "name": "areaTestedHa",
-                "validate": [
+                "units": "ha",
+                "decimalPlaces": 3,
+                "behaviour": [
                   {
-                    "rule": "min",
-                    "param": {
-                      "type": "computed",
-                      "expression": "$geom.areaHa(sitesTested)*0.9"
+                    "condition": "areaTestedChangeHa > 0",
+                    "type": "conditional_validation",
+                    "value": {
+                      "message": "",
+                      "validate": "required,min[0.0001]"
                     }
-                  },
+                  }
+                ]
+              },
+              {
+                "computed": {
+                  "expression": "$geom.lengthKm(sitesTested)"
+                },
+                "dataType": "number",
+                "name": "lengthTestedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "behaviour": [
                   {
-                    "rule": "max",
-                    "param": {
-                      "type": "computed",
-                      "expression": "$geom.areaHa(sitesTested)*1.1"
+                    "condition": "lengthTestedChangeKm > 0",
+                    "type": "conditional_validation",
+                    "value": {
+                      "message": "",
+                      "validate": "required,min[0.0001]"
                     }
                   }
                 ]
@@ -22550,26 +22564,24 @@
               {
                 "defaultValue": {
                   "type": "computed",
-                  "expression": "$geom.lengthKm(sitesTested)"
+                  "expression": "areaTestedHa"
                 },
                 "dataType": "number",
-                "name": "lengthTestedKm",
-                "validate": [
-                  {
-                    "rule": "min",
-                    "param": {
-                      "type": "computed",
-                      "expression": "$geom.lengthKm(sitesTested)*0.9"
-                    }
-                  },
-                  {
-                    "rule": "max",
-                    "param": {
-                      "type": "computed",
-                      "expression": "$geom.lengthKm(sitesTested)*1.1"
-                    }
-                  }
-                ]
+                "name": "areaTestedChangeHa",
+                "validate": "min[0]",
+                "decimalPlaces": 3,
+                "units": "ha"
+              },
+              {
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "lengthTestedKm"
+                },
+                "dataType": "number",
+                "name": "lengthTestedChangeKm",
+                "validate": "min[0]",
+                "decimalPlaces": 3,
+                "units": "km"
               },
               {
                 "dataType": "text",
@@ -22739,22 +22751,73 @@
                     "width": "10%"
                   },
                   {
-                    "width": "5%",
-                    "source": "sitesTested",
-                    "type": "feature",
-                    "title": "Project site/s where soil tests were conducted"
-                  },
-                  {
                     "width": "10%",
-                    "source": "areaTestedHa",
-                    "type": "number",
-                    "title": "Area (ha) where soil tests were conducted"
+                    "type": "col",
+                    "title": "Project site/s where soil tests were conducted",
+                    "items": [
+                      {
+                        "type": "feature",
+                        "source": "sitesTested"
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "type": "number",
+                            "source": "areaTestedHa",
+                            "displayOptions": {
+                              "displayUnits": true
+                            },
+                            "readonly": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "type": "number",
+                            "source": "lengthTestedKm",
+                            "displayOptions": {
+                              "displayUnits": true
+                            },
+                            "readonly": true
+                          }
+                        ]
+                      }
+                    ]
                   },
                   {
-                    "width": "5%",
-                    "source": "lengthTestedKm",
-                    "type": "number",
-                    "title": "Length (km) where soil tests were conducted"
+                    "width": "15%",
+                    "title": "Actual Area (ha) / length (km) where soil tests were conducted",
+                    "helpText": "Manually enter correct figure if different to mapped value.",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "areaTestedChangeHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "lengthTestedChangeKm",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      }
+                    ]
                   },
                   {
                     "width": "10%",

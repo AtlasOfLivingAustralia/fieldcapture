@@ -13091,25 +13091,39 @@
                 "name": "sitesTested"
               },
               {
-                "defaultValue": {
-                  "type": "computed",
+                "computed": {
                   "expression": "$geom.areaHa(sitesTested)"
                 },
                 "dataType": "number",
                 "name": "areaTestedHa",
-                "validate": [
+                "units": "ha",
+                "decimalPlaces": 3,
+                "behaviour": [
                   {
-                    "rule": "min",
-                    "param": {
-                      "type": "computed",
-                      "expression": "$geom.areaHa(sitesTested)*0.9"
+                    "condition": "areaTestedChangeHa > 0",
+                    "type": "conditional_validation",
+                    "value": {
+                      "message": "",
+                      "validate": "required,min[0.0001]"
                     }
-                  },
+                  }
+                ]
+              },
+              {
+                "computed": {
+                  "expression": "$geom.lengthKm(sitesTested)"
+                },
+                "dataType": "number",
+                "name": "lengthTestedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "behaviour": [
                   {
-                    "rule": "max",
-                    "param": {
-                      "type": "computed",
-                      "expression": "$geom.areaHa(sitesTested)*1.1"
+                    "condition": "lengthTestedChangeKm > 0",
+                    "type": "conditional_validation",
+                    "value": {
+                      "message": "",
+                      "validate": "required,min[0.0001]"
                     }
                   }
                 ]
@@ -13117,26 +13131,24 @@
               {
                 "defaultValue": {
                   "type": "computed",
-                  "expression": "$geom.lengthKm(sitesTested)"
+                  "expression": "areaTestedHa"
                 },
                 "dataType": "number",
-                "name": "lengthTestedKm",
-                "validate": [
-                  {
-                    "rule": "min",
-                    "param": {
-                      "type": "computed",
-                      "expression": "$geom.lengthKm(sitesTested)*0.9"
-                    }
-                  },
-                  {
-                    "rule": "max",
-                    "param": {
-                      "type": "computed",
-                      "expression": "$geom.lengthKm(sitesTested)*1.1"
-                    }
-                  }
-                ]
+                "name": "areaTestedChangeHa",
+                "validate": "min[0]",
+                "decimalPlaces": 3,
+                "units": "ha"
+              },
+              {
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "lengthTestedKm"
+                },
+                "dataType": "number",
+                "name": "lengthTestedChangeKm",
+                "validate": "min[0]",
+                "decimalPlaces": 3,
+                "units": "km"
               },
               {
                 "dataType": "text",
@@ -13195,11 +13207,6 @@
                     "type": "selectOne"
                   },
                   {
-                    "dataType": "text",
-                    "name": "comment",
-                    "validate": "maxSize[1500]"
-                  },
-                  {
                     "width": "10%",
                     "source": "numberOfSoilTests",
                     "type": "number",
@@ -13212,22 +13219,73 @@
                     "type": "text"
                   },
                   {
-                    "width": "5%",
-                    "source": "sitesTested",
-                    "type": "feature",
-                    "title": "Project site/s where soil tests were conducted"
+                    "width": "10%",
+                    "type": "col",
+                    "title": "Project site/s where soil tests were conducted",
+                    "items": [
+                      {
+                        "type": "feature",
+                        "source": "sitesTested"
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "type": "number",
+                            "source": "areaTestedHa",
+                            "displayOptions": {
+                              "displayUnits": true
+                            },
+                            "readonly": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "type": "number",
+                            "source": "lengthTestedKm",
+                            "displayOptions": {
+                              "displayUnits": true
+                            },
+                            "readonly": true
+                          }
+                        ]
+                      }
+                    ]
                   },
                   {
-                    "width": "10%",
-                    "source": "areaTestedHa",
-                    "type": "number",
-                    "title": "Area (ha) where soil tests were conducted"
-                  },
-                  {
-                    "width": "10%",
-                    "source": "lengthTestedKm",
-                    "type": "number",
-                    "title": "Length (km) where soil tests were conducted"
+                    "width": "15%",
+                    "title": "Actual Area (ha) / length (km) where soil tests were conducted",
+                    "helpText": "Manually enter correct figure if different to mapped value.",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "areaTestedChangeHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "lengthTestedChangeKm",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      }
+                    ]
                   },
                   {
                     "width": "18%",

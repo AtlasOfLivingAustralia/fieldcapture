@@ -9968,52 +9968,39 @@
                 "name": "sitesTested"
               },
               {
-                "defaultValue": {
-                  "type": "computed",
+                "computed": {
                   "expression": "$geom.areaHa(sitesTested)"
                 },
                 "dataType": "number",
                 "name": "areaTestedHa",
-                "units": "Ha",
-                "validate": [
+                "units": "ha",
+                "decimalPlaces": 3,
+                "behaviour": [
                   {
-                    "rule": "min",
-                    "param": {
-                      "type": "computed",
-                      "expression": "$geom.areaHa(sitesTested)*0.9"
-                    }
-                  },
-                  {
-                    "rule": "max",
-                    "param": {
-                      "type": "computed",
-                      "expression": "$geom.areaHa(sitesTested)*1.1"
+                    "condition": "areaTestedChangeHa > 0",
+                    "type": "conditional_validation",
+                    "value": {
+                      "message": "",
+                      "validate": "required,min[0.0001]"
                     }
                   }
                 ]
               },
               {
-                "defaultValue": {
-                  "type": "computed",
+                "computed": {
                   "expression": "$geom.lengthKm(sitesTested)"
                 },
                 "dataType": "number",
                 "name": "lengthTestedKm",
-                "units": "Km",
-                "validate": [
+                "units": "km",
+                "decimalPlaces": 3,
+                "behaviour": [
                   {
-                    "rule": "min",
-                    "param": {
-                      "type": "computed",
-                      "expression": "$geom.lengthKm(sitesTested)*0.9",
-                      "errorMessages": "Please Select"
-                    }
-                  },
-                  {
-                    "rule": "max",
-                    "param": {
-                      "type": "computed",
-                      "expression": "$geom.lengthKm(sitesTested)*1.1"
+                    "condition": "lengthTestedChangeKm > 0",
+                    "type": "conditional_validation",
+                    "value": {
+                      "message": "",
+                      "validate": "required,min[0.0001]"
                     }
                   }
                 ]
