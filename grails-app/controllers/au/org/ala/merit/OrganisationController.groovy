@@ -587,6 +587,44 @@ class OrganisationController {
         }
     }
 
+    @PreAuthorise(accessLevel = 'readOnly')
+    def printableReport(String id, String reportId) {
+        Map report = reportService.get(reportId)
+        Map model = [:]
+        if (report.type == ReportService.PERFORMANCE_MANAGEMENT_REPORT) {
+            model = performanceReportModel(id, report, ReportService.ReportMode.PRINT)
+        } else {
+            model = activityReportModel(id, reportId, ReportService.ReportMode.PRINT)
+        }
+
+        render view:model.view, model:model
+
+    }
+
+    private Map performanceReportModel(String organisationId, Map report, ReportService.ReportMode mode, Integer formVersion = null) {
+        Map organisation = organisationService.get(organisationId)
+        int version = report.toDate < "2017-01-01T00:00:00Z" ? 1 : 2
+        Map model = reportService.performanceReportModel(report.reportId, version)
+        model.state = organisation.state ?: 'Unknown'
+        model.organisation = organisation
+        model.printView = true
+        model.view = '/report/performanceReportView'
+        model
+    }
+
+    private Map activityReportModel(String organisationId, String reportId, ReportService.ReportMode mode, Integer formVersion = null) {
+        Map organisation = organisationService.get(organisationId)
+        Map model = reportService.activityReportModel(reportId, mode, formVersion)
+        model.context = organisation
+        model.returnTo = createLink(action:'index', id:organisationId)
+        model.contextViewUrl = model.returnTo
+        model.reportHeaderTemplate = '/organisation/managementUnitReportHeader'
+        model.config = organisation.config
+        model.view = '/activity/activityReportView'
+        model
+    }
+
+
     @PreAuthorise(accessLevel = 'admin')
     def createAdHocReport(String id) {
 

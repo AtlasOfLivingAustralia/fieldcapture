@@ -281,6 +281,13 @@ class ManagementUnitController {
         }
     }
 
+    @PreAuthorise(accessLevel = 'readOnly')
+    def printableReport(String id, String reportId) {
+        Map model = activityReportModel(id, reportId, ReportMode.PRINT)
+
+        render view:'/activity/activityReportView', model:model
+    }
+
     /**
      * This is designed as a callback from the PDF generation service.  It produces a HTML report that will
      * be converted into PDF.
