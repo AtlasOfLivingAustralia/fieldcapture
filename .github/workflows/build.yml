@@ -30,7 +30,7 @@ jobs:
         with:
           node-version: 16
 
-      - run: npm config set //npm.pkg.github.com/:_authToken NODE_AUTH_TOKEN
+      - run: npm config set //npm.pkg.github.com/:_authToken $NODE_AUTH_TOKEN
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
