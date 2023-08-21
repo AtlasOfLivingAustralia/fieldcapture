@@ -31,6 +31,9 @@ jobs:
           node-version: 16
 
       - run: npm install
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v1.0.6
 
