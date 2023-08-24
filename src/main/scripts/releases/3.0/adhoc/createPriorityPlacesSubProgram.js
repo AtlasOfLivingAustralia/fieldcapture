@@ -8,7 +8,7 @@ let programName = "Saving Native Species";
 var parentProgram = createOrFindProgram(programName);
 
 let refProgram = "Priority Species";
-var subprograms = ["Wild Horses"]
+var subprograms = ["Priority Places"]
 
 subprograms.forEach(function (subProgram) {
     var now = ISODate();
@@ -522,7 +522,7 @@ var outcomes = [
         "type": "secondary",
         "category": "environment",
         "supportsMultiplePrioritiesAsSecondary": true,
-        "outcome": "1. By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
+        "outcome": "1. By 2024, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
     },
     {
         "priorities": [
@@ -535,7 +535,7 @@ var outcomes = [
         "shortDescription": "Threatened Species Strategy",
         "category": "environment",
         "supportsMultiplePrioritiesAsSecondary": true,
-        "outcome": "2. By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved."
+        "outcome": "2. By 2024, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved."
     },
     {
         "priorities": [
@@ -548,7 +548,7 @@ var outcomes = [
         "type": "secondary",
         "category": "environment",
         "supportsMultiplePrioritiesAsSecondary": true,
-        "outcome": "3. By 2023, invasive species management has reduced threats to the natural heritage Outstanding Universal Value of World Heritage properties through the implementation of priority actions."
+        "outcome": "3. By 2024, invasive species management has reduced threats to the natural heritage Outstanding Universal Value of World Heritage properties through the implementation of priority actions."
     },
     {
         "priorities": [
@@ -561,7 +561,7 @@ var outcomes = [
         "type": "secondary",
         "category": "environment",
         "supportsMultiplePrioritiesAsSecondary": true,
-        "outcome": "4. By 2023, the implementation of priority actions is leading to an improvement in the condition of EPBC Act listed Threatened Ecological Communities."
+        "outcome": "4. By 2024, the implementation of priority actions is leading to an improvement in the condition of EPBC Act listed Threatened Ecological Communities."
     },
     {
         "priorities": [
@@ -574,7 +574,7 @@ var outcomes = [
         "type": "secondary",
         "category": "agriculture",
         "supportsMultiplePrioritiesAsSecondary": true,
-        "outcome": "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
+        "outcome": "5. By 2024, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
     },
     {
         "priorities": [
@@ -586,7 +586,20 @@ var outcomes = [
         "type": "secondary",
         "category": "agriculture",
         "supportsMultiplePrioritiesAsSecondary": true,
-        "outcome": "6. By 2023, there is an increase in the capacity of agriculture systems to adapt to significant changes in climate and market demands for information on provenance and sustainable production."
+        "outcome": "6. By 2024, there is an increase in the capacity of agriculture systems to adapt to significant changes in climate and market demands for information on provenance and sustainable production."
+    },
+    {
+        "priorities": [
+            {
+                "category": "Improve the condition for all priority places"
+            }
+        ],
+        "targeted": true,
+        "shortDescription": "Soil Condition",
+        "type": "secondary",
+        "category": "agriculture",
+        "supportsMultiplePrioritiesAsSecondary": true,
+        "outcome": "7. Improve the condition for all priority places"
     }
 ]
 
