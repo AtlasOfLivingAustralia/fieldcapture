@@ -8,7 +8,7 @@ let programName = "Saving Native Species";
 var parentProgram = createOrFindProgram(programName);
 
 let refProgram = "Habitat Restoration Projects - Grants";
-var subprograms = ["Practical Action for Priority Threatened Species"]
+var subprograms = ["Priority Species"]
 
 subprograms.forEach(function (subProgram) {
     var now = ISODate();
