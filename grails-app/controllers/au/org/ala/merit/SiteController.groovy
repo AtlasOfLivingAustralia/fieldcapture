@@ -46,6 +46,7 @@ class SiteController {
             if (!isUserMemberOfSiteProjects(site)) {
                 flash.message = "Access denied: User does not have permission to view site: ${id}"
                 redirect(controller:'home', action:'index')
+                return
             }
 
             List userProjects = site.projects?.findAll { projectService.canUserViewProject(user?.userId, it.projectId) }
@@ -138,6 +139,23 @@ class SiteController {
         if (resp.status != 200) {
             render view:'/error', model:[error:resp.error]
         }
+    }
+
+    /** Returns geojon for a site */
+    def geojson(String id) {
+        Map site = siteService.get(id)
+        if (!site) {
+            respond status:HttpStatus.SC_NOT_FOUND
+            return
+        }
+        if (!isUserMemberOfSiteProjects(site)) {
+            respond status:HttpStatus.SC_UNAUTHORIZED
+            return
+        }
+
+        Map resp = siteService.getSiteGeoJson(site.siteId)
+        resp = resp?.resp ?: resp // Render the geojson directly if successful, otherwise render the ecodata response including the status
+        render resp as JSON
     }
 
     @PreAuthorise(accessLevel = 'editor')
