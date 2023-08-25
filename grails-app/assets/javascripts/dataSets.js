@@ -89,6 +89,8 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     self.methodDescription = ko.observable(dataSet.methodDescription);
     self.collectionApp = ko.observable(dataSet.collectionApp);
     self.location = ko.observable(dataSet.location);
+    self.siteId = ko.observable(dataSet.siteId);
+    self.siteUrl = options.viewSiteUrl + dataSet.siteId;
     self.startDate = ko.observable(dataSet.startDate).extend({simpleDate:false});
     self.endDate = ko.observable(dataSet.endDate).extend({simpleDate:false});
     self.endDate.subscribe(function (endDate) {
@@ -133,7 +135,7 @@ var DataSetViewModel = function(dataSet, projectService, options) {
 
         if (valid) {
             var dataSet = ko.mapping.toJS(self,
-                {ignore: ['grantId', 'projectName', 'programName', 'validate', 'save', 'cancel', 'investmentOtherSelected']});
+                {ignore: ['grantId', 'projectName', 'programName', 'validate', 'save', 'cancel', 'investmentOtherSelected', 'siteUrl']});
             projectService.saveDataSet(dataSet).done(function() {
                 // return to project
                 window.location.href = config.returnToUrl;

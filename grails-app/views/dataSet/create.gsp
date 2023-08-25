@@ -9,6 +9,7 @@
         var fcConfig = {
             serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
             dataSetUpdateUrl: "${createLink(action:'save', id:projectId)}",
+            viewSiteUrl: "${createLink(controller: 'site', action:'index')}",
             returnToUrl: "${g.createLink(controller:'project', action:'index', id:projectId)}"
         };
     </script>
