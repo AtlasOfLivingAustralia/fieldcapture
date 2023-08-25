@@ -98,10 +98,10 @@
         (For biophysical/ecological surveys where an app was not used, and where there are no sensitivities in providing a location).
         </label>
         <div class="col-sm-7">
-            <!-- ko if:!dataSetId -->
+            <!-- ko if:!siteId() -->
             <span data-bind="text:location"></span>
             <!-- /ko -->
-            <!-- ko if:dataSetId -->
+            <!-- ko if:siteId() -->
             <span> <a data-bind="attr:{href:siteUrl}" target="_blank">Spatial data has been supplied for this data set</a></span>
             <!-- /ko -->
         </div>
