@@ -2,6 +2,7 @@ package au.org.ala.fieldcapture
 
 import com.icegreen.greenmail.util.GreenMail
 import com.icegreen.greenmail.util.GreenMailUtil
+import pages.ProjectDownloadReport
 import pages.ProjectIndex
 import pages.RlpProjectPage
 import pages.ReportPage
@@ -234,6 +235,40 @@ class RlpReportingSpec extends StubbedCasSpec {
 
         and:"The not required button is not visible to the editor"
         !projectReports.reports[0].notRequired()
+    }
+
+    def "A PDF can be genreated from report tab"() {
+        setup:
+        String projectId = '1'
+        loginAsUser('1', browser)
+
+        when:
+        to RlpProjectPage, projectId
+
+        then:
+        waitFor { at RlpProjectPage }
+
+        when:
+        reportingTab.click()
+
+        then:
+        waitFor { projectReports.displayed }
+
+        when:
+        projectReports.reports[0].downloadReport()
+
+        then:
+        withWindow("print-report", {
+            at ProjectDownloadReport
+            waitFor {
+                printInstructions.displayed
+            }
+            closePrintInstructions()
+            waitFor {
+                !printInstructions.displayed
+            }
+        })
+
     }
 
     def "A project admin can submit the report"() {
