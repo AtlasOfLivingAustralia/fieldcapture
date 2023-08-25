@@ -528,16 +528,17 @@ class ReportController {
     }
 
     def reef2050PlanActionReport(Reef2050PlanActionReportCommand command) {
-        if (command.format == 'pdf') {
-            reef2050PlanActionReportPDF(command)
-        }
-        else if (command.format == 'dashboard') {
+        Map model = [:]
+        if (command.format == 'dashboard') {
             Reef2050PlanActionReportSummaryCommand summary = new Reef2050PlanActionReportSummaryCommand(activityService: command.activityService, approvedActivitiesOnly:  command.approvedActivitiesOnly)
-            Map model = [reportConfig:summary.reportSummary().collect{it.toMap()}, approvedActivitiesOnly: command.approvedActivitiesOnly]
+            model = [reportConfig:summary.reportSummary().collect{it.toMap()}, approvedActivitiesOnly: command.approvedActivitiesOnly]
             render model: model, view: 'reef2050PlanAdminDashboardReport'
         }
         else {
-            Map model = command.produceReport()
+            model = command.produceReport()
+            if (command.format == 'pdf') {
+                model.printView = true
+            }
             render model:model, view: 'reef2050PlanActionReportPrintable'
         }
     }
