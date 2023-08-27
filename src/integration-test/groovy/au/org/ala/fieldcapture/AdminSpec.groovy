@@ -4,6 +4,7 @@ import au.org.ala.merit.SettingPageType
 import com.icegreen.greenmail.util.GreenMail
 import pages.AdminReportsPage
 import pages.MERITAdministrationPage
+import pages.Reef2050PlanActionDownloadReport
 import spock.lang.Shared
 
 import javax.mail.internet.MimeMessage
@@ -109,4 +110,41 @@ class AdminSpec extends StubbedCasSpec {
         }
 
     }
+
+
+    def "a PDF can be generated for Reef 2050 Plan Action Report"() {
+        setup:
+        loginAsMeritAdmin(browser)
+        String fromDate = "10/10/2020"
+        String toDate = "10/10/2021"
+
+        when:
+        to MERITAdministrationPage
+
+        then:
+        at MERITAdministrationPage
+
+        when:
+        administration.administratorReport.click()
+
+        then:
+        waitFor {at AdminReportsPage}
+
+        when:"generates PDF"
+        generateReef2050Pdf()
+
+        then:
+        withWindow("reef2050PlanActionReport", {
+            at Reef2050PlanActionDownloadReport
+            waitFor {
+                printInstructions.displayed
+            }
+            closePrintInstructions()
+            waitFor {
+                !printInstructions.displayed
+            }
+        })
+
+    }
+
 }

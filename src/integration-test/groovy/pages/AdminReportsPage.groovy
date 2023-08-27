@@ -16,6 +16,8 @@ class AdminReportsPage extends Page {
         muReportDownloadLink(required:false) {$('a#muReportDownloadLink')}
         startDate{$("#fromDate")}
         endDate{$("#toDate")}
+        reportFormats { $('#reportFormats')}
+        viewReportBtn(required:false) {$('#viewReportBtn')}
 
     }
 
@@ -33,6 +35,11 @@ class AdminReportsPage extends Page {
         startDate = fromDate
         endDate = toDate
         downloadReportSummaryBtn.click()
+    }
+
+    def generateReef2050Pdf() {
+        reportFormats = "pdf"
+        viewReportBtn.click()
     }
 
 }

@@ -227,7 +227,7 @@ class ManagementUnitReportingSpec extends StubbedCasSpec {
     }
 
 
-    def "A PDF can be genreated from report tab"() {
+    def "A PDF can be generated from report tab"() {
         setup:
         String managementUnitId = 'test_mu'
         loginAsUser('1', browser)
