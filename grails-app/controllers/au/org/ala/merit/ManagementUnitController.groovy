@@ -262,27 +262,12 @@ class ManagementUnitController {
         render model:cmd.model, view:'/activity/activityReportView'
     }
 
-    @PreAuthorise(accessLevel = 'readOnly', redirectController = 'managementUnit')
-    def reportPDF(String id, String reportId) {
-
+    @PreAuthorise(accessLevel = 'readOnly')
+    def printableReport(String id, String reportId) {
         if (!id || !reportId) {
             error('An invalid report was selected for download', id)
             return
         }
-        Map reportUrlConfig = [action: 'viewReportCallback', id: id, params:[reportId:reportId]]
-
-        Map pdfGenParams = [:]
-        if (params.orientation) {
-            pdfGenParams.orientation = params.orientation
-        }
-        boolean result = pdfGenerationService.generatePDF(reportUrlConfig, pdfGenParams, response)
-        if (!result) {
-            render view: '/error', model: [error: "An error occurred generating the project report."]
-        }
-    }
-
-    @PreAuthorise(accessLevel = 'readOnly')
-    def printableReport(String id, String reportId) {
         Map model = activityReportModel(id, reportId, ReportMode.PRINT)
 
         render view:'/activity/activityReportView', model:model

@@ -828,25 +828,6 @@ class ProjectController {
         chain(action:'editReport', id:id, params:[reportId:reportId])
     }
 
-    @PreAuthorise(accessLevel = 'readOnly')
-    def reportPDF(String id, String reportId) {
-        if (!id || !reportId || !projectService.doesReportBelongToProject(id, reportId)) {
-            error('An invalid report was selected for download', id)
-            return
-        }
-
-        Map reportUrlConfig = [action: 'viewReportCallback', id: id, params:[reportId:reportId]]
-
-        Map pdfGenParams = [:]
-        if (params.orientation) {
-            pdfGenParams.orientation = params.orientation
-        }
-        boolean result = pdfGenerationService.generatePDF(reportUrlConfig, pdfGenParams, response)
-        if (!result) {
-            render view: '/error', model: [error: "An error occurred generating the project report."]
-        }
-    }
-
     @PreAuthorise(accessLevel = 'admin')
     def resetReport(String id, String reportId) {
         if (!id || !reportId || !projectService.doesReportBelongToProject(id, reportId)) {

@@ -567,26 +567,6 @@ class OrganisationController {
         }
     }
 
-    def performanceReportPDF(String reportId) {
-        Map report = reportService.get(reportId)
-
-        if (organisationService.isUserAdminForOrganisation(report.organisationId)) {
-
-            int version = report.toDate < "2017-01-01T00:00:00Z" ? 1 : 2
-            Map model = reportService.performanceReportModel(reportId, version)
-            model.edit = false
-
-            String page = g.include(controller:'organisation', action:'viewOrganisationReport', id:reportId, params:[reportId:reportId])
-
-            response.setContentType('application/pdf')
-            pdfConverterService.convertToPDF(page, response.outputStream)
-        }
-        else {
-            flash.message = "You don't have permission to view the report"
-            chain(action:'index', id: report.organisationId)
-        }
-    }
-
     @PreAuthorise(accessLevel = 'readOnly')
     def printableReport(String id, String reportId) {
         Map report = reportService.get(reportId)

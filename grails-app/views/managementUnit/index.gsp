@@ -12,7 +12,6 @@
             viewReportUrl: '${createLink(action:"viewReport", id:managementUnit.managementUnitId)}',
             editReportUrl: "${createLink(action:"editReport", id:managementUnit.managementUnitId)}",
             resetReportUrl: "${createLink(action:'resetReport', id:managementUnit.managementUnitId)}",
-            %{--reportPDFUrl: "${createLink(action:"reportPDF", id:managementUnit.managementUnitId)}",--}%
             reportPDFUrl: "${createLink(action:"printableReport", id:managementUnit.managementUnitId)}",
             approveReportUrl: "${createLink(action:"ajaxApproveReport", id:managementUnit.managementUnitId)}",
             submitReportUrl: "${createLink(action:"ajaxSubmitReport", id:managementUnit.managementUnitId)}",
