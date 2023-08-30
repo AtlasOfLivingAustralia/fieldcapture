@@ -145,11 +145,13 @@ class SiteController {
     def geojson(String id) {
         Map site = siteService.get(id)
         if (!site) {
-            respond status:HttpStatus.SC_NOT_FOUND
+            Map resp = [status:HttpStatus.SC_NOT_FOUND]
+            render resp as JSON
             return
         }
         if (!isUserMemberOfSiteProjects(site)) {
-            respond status:HttpStatus.SC_UNAUTHORIZED
+            Map resp = [status:HttpStatus.SC_UNAUTHORIZED]
+            render resp as JSON
             return
         }
 

@@ -203,6 +203,7 @@ function loadActivityForms() {
         "type":"EMSA",
         "category":"Category 1",
         "externalId": NumberInt(1),
+        "external":true,
         "formVersion": NumberInt(1),
         "publicationStatus":"published"
     }, {
@@ -210,7 +211,7 @@ function loadActivityForms() {
         "type":"EMSA",
         "category":"Category 2",
         "externalId": NumberInt(2),
-
+        "external":true,
         "formVersion": NumberInt(1),
         "publicationStatus":"published"
     }, {
@@ -218,6 +219,7 @@ function loadActivityForms() {
         "type":"EMSA",
         "category":"Category 3",
         "externalId": NumberInt(3),
+        "external":true,
         "formVersion": NumberInt(1),
         "publicationStatus":"published"
 

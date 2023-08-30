@@ -200,7 +200,7 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
 
     def oidcLogin(Map userDetails, Browser browser) {
         setupOidcAuthForUser(userDetails)
-        browser.go "${getConfig().baseUrl}login"
+        browser.go "${browser.getConfig().baseUrl}login"
     }
 
     /**
