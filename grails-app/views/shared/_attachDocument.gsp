@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header" style="flex-direction:column;">
                 <h4 class="modal-title" id="title">Attach Document</h4>
-                <label class="col-form-label row-cols-sm-1" style="font-size: small"><g:message code="attach.document.subtitle"/>
+                <label class="col-form-label row-cols-sm-1" style="font-size: small"><g:message code="attach.document.subtitle"/><a href="https://www.dcceew.gov.au/environment/environmental-information-data/information-policy/sensitive-ecological-data-access-and-management-policy" target="_blank"> <g:message code="attach.document.subtitle.link"/></a>
                 <fc:iconHelp helpTextCode="attach.document.help"></fc:iconHelp></label>
             </div>
             <div class="modal-body validationContainer" id="documentForm">
