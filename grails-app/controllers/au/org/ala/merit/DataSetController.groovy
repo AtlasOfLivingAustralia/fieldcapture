@@ -47,11 +47,26 @@ class DataSetController {
         if (!priorities) {
             priorities = ['n/a']
         }
-        if (priorities){
-            priorities << 'Other'
+
+
+        List outcomeGroups = []
+        List projectServices = projectService.getProjectServices(project)
+        project.outputTargets?.each { Map outputTarget ->
+            if (outputTarget.outcomeTargets) {
+                Map service = projectServices.find{it.scores?.find{score -> score.scoreId == outputTarget.scoreId}}
+                outputTarget.outcomeTargets.each {
+                    outcomeGroups << [
+                            scoreId:outputTarget.scoreId,
+                            serviceId: service.id,
+                            service: service.name,
+                            outcomes:it.relatedOutcomes,
+                            label:service.name+" "+it.relatedOutcomes
+                    ]
+                }
+            }
         }
 
-        [projectId:projectId, programName:programName, priorities:priorities, outcomes: outcomes, project:project]
+        [projectId:projectId, programName:programName, priorities:priorities, outcomes: outcomes, project:project, projectOutcomes:outcomeGroups]
     }
 
     // Note that authorization is done against a project, so the project id must be supplied to the method.

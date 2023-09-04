@@ -14,6 +14,7 @@
         };
     </script>
     <asset:stylesheet src="common-bs4.css"/>
+    <asset:stylesheet src="select2/4.0.3/css/select2.css"/>
     <asset:stylesheet src="dataSets.css"/>
 
 </head>
@@ -43,11 +44,14 @@
 
 <asset:javascript src="common-bs4.js"/>
 <asset:javascript src="projectService.js"/>
+<asset:javascript src="select2/js/select2.full.js"/>
+<asset:javascript src="forms-knockout-bindings.js"/>
 <asset:javascript src="dataSets.js"/>
 <script>
     var project = {};
     var projectService = new ProjectService(project, fcConfig);
     var config = _.extend(fcConfig, {endDateSelector:"#endDate"});
+    config.projectOutcomes = <fc:modelAsJavascript model="${projectOutcomes}"/>;
     var viewModel = new DataSetViewModel({}, projectService, config);
     ko.applyBindings(viewModel);
 </script>

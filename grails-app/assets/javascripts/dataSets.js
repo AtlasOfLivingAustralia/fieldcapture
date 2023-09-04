@@ -60,6 +60,7 @@ var DataSetViewModel = function(dataSet, projectService, options) {
 
     dataSet = dataSet || {};
     self.dataSetId = dataSet.dataSetId;
+    self.surveyId = dataSet.surveyId; // Data set summaries created by a submission from the Monitor app will have a surveyId
     self.name = ko.observable(dataSet.name );
     self.grantId = dataSet.grantId;
     self.projectName = dataSet.projectName;
@@ -79,12 +80,23 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     });
 
     self.type = ko.observable(dataSet.type);
+    self.otherDataSetType = ko.observable(dataSet.otherDataSetType);
     self.term = ko.observable(dataSet.term);
-
+    self.serviceAndOutcomes = ko.observable(_.find(options.projectOutcomes || [], function(outcome) {
+        return outcome.serviceId == dataSet.serviceId && _.isEqual(outcome.outcomes, dataSet.projectOutcomes);
+    }));
+    self.projectOutcomeList = ko.observableArray(options.projectOutcomes);
+    self.serviceId = ko.computed(function() {
+        return self.serviceAndOutcomes() && self.serviceAndOutcomes().serviceId;
+    });
+    self.projectOutcomes = ko.computed(function() {
+        return self.serviceAndOutcomes() && self.serviceAndOutcomes().outcomes;
+    });
     if (dataSet.measurementTypes && !_.isArray(dataSet.measurementTypes)) {
         dataSet.measurementTypes = [dataSet.measurementTypes];
     }
     self.measurementTypes = ko.observableArray(dataSet.measurementTypes);
+    self.otherMeasurementType = ko.observable(dataSet.otherMeasurementType);
     self.methods = ko.observableArray(dataSet.methods);
     self.methodDescription = ko.observable(dataSet.methodDescription);
     self.collectionApp = ko.observable(dataSet.collectionApp);
@@ -101,16 +113,14 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     });
     self.addition = ko.observable(dataSet.addition);
     self.threatenedSpeciesIndex = ko.observable(dataSet.threatenedSpeciesIndex);
-    self.collectorType = ko.observable(dataSet.collectorType);
-    self.qa = ko.observable(dataSet.qa);
-    self.published = ko.observable(dataSet.published);
-    self.storageType = ko.observable(dataSet.storageType);
+    self.threatenedSpeciesIndexUploadDate = ko.observable(dataSet.threatenedSpeciesIndexUploadDate).extend({simpleDate:false});
     self.publicationUrl = ko.observable(dataSet.publicationUrl);
     self.format = ko.observable(dataSet.format);
     if (dataSet.sensitivities && !_.isArray(dataSet.sensitivities)) {
         dataSet.sensitivities = [dataSet.sensitivities];
     }
     self.sensitivities = ko.observableArray(dataSet.sensitivities);
+    self.otherSensitivity = ko.observableArray(dataSet.otherSensitivity);
     self.owner = ko.observable(dataSet.owner);
     self.custodian = ko.observable(dataSet.custodian);
     self.progress = ko.observable(dataSet.progress);
@@ -126,6 +136,8 @@ var DataSetViewModel = function(dataSet, projectService, options) {
         }
     });
 
+    self.isAutoCreated = dataSet.surveyId != null;
+
     self.validate = function() {
         return $(config.validationContainerSelector).validationEngine('validate');
     }
@@ -135,7 +147,7 @@ var DataSetViewModel = function(dataSet, projectService, options) {
 
         if (valid) {
             var dataSet = ko.mapping.toJS(self,
-                {ignore: ['grantId', 'projectName', 'programName', 'validate', 'save', 'cancel', 'investmentOtherSelected', 'siteUrl']});
+                {ignore: ['grantId', 'projectName', 'programName', 'validate', 'save', 'cancel', 'investmentOtherSelected', 'siteUrl', 'isAutoCreated', 'serviceAndOutcomes']});
             projectService.saveDataSet(dataSet).done(function() {
                 // return to project
                 window.location.href = config.returnToUrl;
