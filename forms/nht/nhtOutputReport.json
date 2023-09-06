@@ -117,14 +117,20 @@
             "validate": "maxSize[1500]"
           },
           {
-            "dataType": "text",
-            "name": "projectAssuranceDetails",
+            "dataType": "boolean",
+            "name": "dataUploaded",
             "description": ""
           },
           {
-            "dataType": "boolean",
-            "name": "booleanField",
-            "description": ""
+            "name": "projectAssuranceDetails",
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -295,14 +301,20 @@
             "validate": "maxSize[1500]"
           },
           {
-            "dataType": "text",
-            "name": "projectAssuranceDetails",
+            "dataType": "boolean",
+            "name": "dataUploaded",
             "description": ""
           },
           {
-            "dataType": "boolean",
-            "name": "booleanField",
-            "description": ""
+            "name": "projectAssuranceDetails",
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -710,14 +722,20 @@
             "validate": "maxSize[1500]"
           },
           {
-            "dataType": "text",
-            "name": "projectAssuranceDetails",
+            "dataType": "boolean",
+            "name": "dataUploaded",
             "description": ""
           },
           {
-            "dataType": "boolean",
-            "name": "booleanField",
-            "description": ""
+            "name": "projectAssuranceDetails",
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -798,11 +816,11 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please attach any evidence you have available for this service and/or provide information (e.g. links) to where the evidence is stored. This field will help the Department and Service Providers during assurance activities or audits. Refer to the Evidence Guide for details of the types of acceptable evidence."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
-                    "source": "booleanField",
+                    "source": "dataUploaded",
                     "type": "boolean"
                   }
                 ]
@@ -979,12 +997,18 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": ""
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
           },
           {
-            "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -1012,7 +1036,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total Number of people delivering this service",
+                "title": "Total number of people delivering this service",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -1027,7 +1051,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total Number of First Nations people delivering this service ",
+                "title": "Total number of First Nations people delivering this service ",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -1122,7 +1146,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -1140,15 +1164,6 @@
                     "type": "textarea",
                     "rows": 4,
                     "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "type": "literal",
-                    "source": "<p><b>Evidence of Service Delivery</b></p>This field is mandatory for all <u>Agriculture</u> projects as part of the invoicing process, as well as any environment projects where you have been notified as undergoing an <u>audit or quarterly assurance check</u>. The field allows you to attach evidence against a specific service."
                   }
                 ]
               },
@@ -1386,12 +1401,18 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": ""
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
           },
           {
-            "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -1422,7 +1443,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total Number of people delivering this service",
+                    "title": "Total number of people delivering this service",
                     "items": [
                       {
                         "source": "participationIndividualNumber",
@@ -1437,7 +1458,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total Number of First Nations people delivering this service ",
+                    "title": "Total number of First Nations people delivering this service ",
                     "items": [
                       {
                         "source": "firstNationIndividualNumber",
@@ -1565,7 +1586,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -1583,15 +1604,6 @@
                     "type": "textarea",
                     "rows": 4,
                     "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "type": "literal",
-                    "source": "<p><b>Evidence of Service Delivery</b></p>This field is mandatory for all <u>Agriculture</u> projects as part of the invoicing process, as well as any environment projects where you have been notified as undergoing an <u>audit or quarterly assurance check</u>. The field allows you to attach evidence against a specific service."
                   }
                 ]
               },
@@ -2008,12 +2020,18 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": ""
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
           },
           {
-            "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -2041,7 +2059,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total Number of people delivering this service",
+                "title": "Total number of people delivering this service",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -2056,7 +2074,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total Number of First Nations people delivering this service ",
+                "title": "Total number of First Nations people delivering this service ",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -2332,7 +2350,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -2350,15 +2368,6 @@
                     "type": "textarea",
                     "rows": 4,
                     "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "type": "literal",
-                    "source": "<p><b>Evidence of Service Delivery</b></p>This field is mandatory for all <u>Agriculture</u> projects as part of the invoicing process, as well as any environment projects where you have been notified as undergoing an <u>audit or quarterly assurance check</u>. The field allows you to attach evidence against a specific service."
                   }
                 ]
               },
@@ -3113,12 +3122,18 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": ""
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
           },
           {
-            "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -3146,7 +3161,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total Number of people delivering this service",
+                "title": "Total number of people delivering this service",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -3161,7 +3176,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total Number of First Nations people delivering this service ",
+                "title": "Total number of First Nations people delivering this service ",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -3550,7 +3565,7 @@
             "items": [
               {
                 "type": "literal",
-                "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
               },
               {
                 "preLabel": "Data have been uploaded",
@@ -3978,12 +3993,18 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": ""
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
           },
           {
-            "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -4011,7 +4032,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total Number of people delivering this service",
+                "title": "Total number of people delivering this service",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -4026,7 +4047,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total Number of First Nations people delivering this service ",
+                "title": "Total number of First Nations people delivering this service ",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -4292,7 +4313,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -4310,15 +4331,6 @@
                     "type": "textarea",
                     "rows": 4,
                     "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "type": "literal",
-                    "source": "<p><b>Evidence of Service Delivery</b></p>This field is mandatory for all <u>Agriculture</u> projects as part of the invoicing process, as well as any environment projects where you have been notified as undergoing an <u>audit or quarterly assurance check</u>. The field allows you to attach evidence against a specific service."
                   }
                 ]
               },
@@ -4766,12 +4778,18 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": ""
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
           },
           {
-            "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -4799,7 +4817,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total Number of people delivering this service",
+                "title": "Total number of people delivering this service",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -4814,7 +4832,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total Number of First Nations people delivering this service ",
+                "title": "Total number of First Nations people delivering this service ",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -5185,7 +5203,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -5203,15 +5221,6 @@
                     "type": "textarea",
                     "rows": 4,
                     "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "type": "literal",
-                    "source": "<p><b>Evidence of Service Delivery</b></p>This field is mandatory for all <u>Agriculture</u> projects as part of the invoicing process, as well as any environment projects where you have been notified as undergoing an <u>audit or quarterly assurance check</u>. The field allows you to attach evidence against a specific service."
                   }
                 ]
               },
@@ -5563,12 +5572,18 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": ""
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
           },
           {
-            "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -5596,7 +5611,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total Number of people delivering this service",
+                "title": "Total number of people delivering this service",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -5611,7 +5626,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total Number of First Nations people delivering this service ",
+                "title": "Total number of First Nations people delivering this service ",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -5870,7 +5885,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -5888,15 +5903,6 @@
                     "type": "textarea",
                     "rows": 4,
                     "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "type": "literal",
-                    "source": "<p><b>Evidence of Service Delivery</b></p>This field is mandatory for all <u>Agriculture</u> projects as part of the invoicing process, as well as any environment projects where you have been notified as undergoing an <u>audit or quarterly assurance check</u>. The field allows you to attach evidence against a specific service."
                   }
                 ]
               },
@@ -6201,9 +6207,20 @@
             "name": "photographicEvidence"
           },
           {
-            "dataType": "text",
+            "dataType": "boolean",
+            "name": "dataUploaded",
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
+          },
+          {
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -6486,7 +6503,12 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please attach any evidence you have available for this service and/or provide information (e.g. links) to where the evidence is stored. This field will help the Department and Service Providers during assurance activities or audits. Refer to the Evidence Guide for details of the types of acceptable evidence."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
+                  },
+                  {
+                    "preLabel": "Data have been uploaded",
+                    "source": "dataUploaded",
+                    "type": "boolean"
                   }
                 ]
               },
@@ -6499,15 +6521,6 @@
                     "type": "textarea",
                     "rows": 4,
                     "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "type": "literal",
-                    "source": "<p><b>Evidence of Service Delivery</b></p>This field is mandatory for all <u>Agriculture</u> projects as part of the invoicing process, as well as any environment projects where you have been notified as undergoing an <u>audit or quarterly assurance check</u>. The field allows you to attach evidence against a specific service."
                   }
                 ]
               },
@@ -6872,12 +6885,18 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": ""
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
           },
           {
-            "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -6905,7 +6924,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total Number of people delivering this service",
+                "title": "Total number of people delivering this service",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -6920,7 +6939,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total Number of First Nations people delivering this service ",
+                "title": "Total number of First Nations people delivering this service ",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -7207,7 +7226,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -7225,15 +7244,6 @@
                     "type": "textarea",
                     "rows": 4,
                     "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "type": "literal",
-                    "source": "<p><b>Evidence of Service Delivery</b></p>This field is mandatory for all <u>Agriculture</u> projects as part of the invoicing process, as well as any environment projects where you have been notified as undergoing an <u>audit or quarterly assurance check</u>. The field allows you to attach evidence against a specific service."
                   }
                 ]
               },
@@ -7490,12 +7500,18 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": ""
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
           },
           {
-            "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -7524,7 +7540,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total Number of people delivering this service",
+                    "title": "Total number of people delivering this service",
                     "items": [
                       {
                         "source": "participationIndividualNumber",
@@ -7539,7 +7555,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total Number of First Nations people delivering this service ",
+                    "title": "Total number of First Nations people delivering this service ",
                     "items": [
                       {
                         "source": "firstNationIndividualNumber",
@@ -7675,7 +7691,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -7693,15 +7709,6 @@
                     "type": "textarea",
                     "rows": 4,
                     "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "type": "literal",
-                    "source": "<p><b>Evidence of Service Delivery</b></p>This field is mandatory for all <u>Agriculture</u> projects as part of the invoicing process, as well as any environment projects where you have been notified as undergoing an <u>audit or quarterly assurance check</u>. The field allows you to attach evidence against a specific service."
                   }
                 ]
               },
@@ -8141,12 +8148,18 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": ""
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
           },
           {
-            "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -8177,7 +8190,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total Number of people delivering this service",
+                    "title": "Total number of people delivering this service",
                     "items": [
                       {
                         "source": "participationIndividualNumber",
@@ -8192,7 +8205,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total Number of First Nations people delivering this service ",
+                    "title": "Total number of First Nations people delivering this service ",
                     "items": [
                       {
                         "source": "firstNationIndividualNumber",
@@ -8530,7 +8543,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -8548,15 +8561,6 @@
                     "type": "textarea",
                     "rows": 4,
                     "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "type": "literal",
-                    "source": "<p><b>Evidence of Service Delivery</b></p>This field is mandatory for all <u>Agriculture</u> projects as part of the invoicing process, as well as any environment projects where you have been notified as undergoing an <u>audit or quarterly assurance check</u>. The field allows you to attach evidence against a specific service."
                   }
                 ]
               },
@@ -8934,12 +8938,18 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": ""
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
           },
           {
-            "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -8967,7 +8977,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total Number of people delivering this service",
+                "title": "Total number of people delivering this service",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -8982,7 +8992,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total Number of First Nations people delivering this service ",
+                "title": "Total number of First Nations people delivering this service ",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -9361,7 +9371,7 @@
             "items": [
               {
                 "type": "literal",
-                "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
               },
               {
                 "preLabel": "Data have been uploaded",
@@ -9379,15 +9389,6 @@
                 "type": "textarea",
                 "rows": 4,
                 "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "type": "literal",
-                "source": "<p><b>Evidence of Service Delivery</b></p>This field is mandatory for all <u>Agriculture</u> projects as part of the invoicing process, as well as any environment projects where you have been notified as undergoing an <u>audit or quarterly assurance check</u>. The field allows you to attach evidence against a specific service."
               }
             ]
           },
@@ -9831,12 +9832,18 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": ""
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
           },
           {
-            "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -9867,7 +9874,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total Number of people delivering this service",
+                    "title": "Total number of people delivering this service",
                     "items": [
                       {
                         "source": "participationIndividualNumber",
@@ -9882,7 +9889,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total Number of First Nations people delivering this service ",
+                    "title": "Total number of First Nations people delivering this service ",
                     "items": [
                       {
                         "source": "firstNationIndividualNumber",
@@ -10226,7 +10233,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -10705,12 +10712,18 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": ""
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
           },
           {
-            "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -10738,7 +10751,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total Number of people delivering this service",
+                "title": "Total number of people delivering this service",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -10753,7 +10766,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total Number of First Nations people delivering this service ",
+                "title": "Total number of First Nations people delivering this service ",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -11139,7 +11152,7 @@
             "items": [
               {
                 "type": "literal",
-                "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
               },
               {
                 "preLabel": "Data have been uploaded",
@@ -11612,12 +11625,18 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": ""
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
           },
           {
-            "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -11648,7 +11667,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total Number of people delivering this service",
+                    "title": "Total number of people delivering this service",
                     "items": [
                       {
                         "source": "participationIndividualNumber",
@@ -11663,7 +11682,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total Number of First Nations people delivering this service ",
+                    "title": "Total number of First Nations people delivering this service ",
                     "items": [
                       {
                         "source": "firstNationIndividualNumber",
@@ -11994,7 +12013,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -12012,15 +12031,6 @@
                     "type": "textarea",
                     "rows": 4,
                     "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "type": "literal",
-                    "source": "<p><b>Evidence of Service Delivery</b></p>This field is mandatory for all <u>Agriculture</u> projects as part of the invoicing process, as well as any environment projects where you have been notified as undergoing an <u>audit or quarterly assurance check</u>. The field allows you to attach evidence against a specific service."
                   }
                 ]
               },
@@ -12422,12 +12432,18 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": ""
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
           },
           {
-            "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -12456,7 +12472,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total Number of people delivering this service",
+                    "title": "Total number of people delivering this service",
                     "items": [
                       {
                         "source": "participationIndividualNumber",
@@ -12471,7 +12487,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total Number of First Nations people delivering this service ",
+                    "title": "Total number of First Nations people delivering this service ",
                     "items": [
                       {
                         "source": "firstNationIndividualNumber",
@@ -12731,7 +12747,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -13170,12 +13186,18 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": ""
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
           },
           {
-            "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -13203,7 +13225,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total Number of people delivering this service",
+                "title": "Total number of people delivering this service",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -13218,7 +13240,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total Number of First Nations people delivering this service ",
+                "title": "Total number of First Nations people delivering this service ",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -13486,7 +13508,7 @@
             "items": [
               {
                 "type": "literal",
-                "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
               },
               {
                 "preLabel": "Data have been uploaded",
@@ -13904,12 +13926,18 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": ""
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
           },
           {
-            "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -13937,7 +13965,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total Number of people delivering this service",
+                "title": "Total number of people delivering this service",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -13952,7 +13980,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total Number of First Nations people delivering this service ",
+                "title": "Total number of First Nations people delivering this service ",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -14237,7 +14265,7 @@
             "items": [
               {
                 "type": "literal",
-                "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
               },
               {
                 "preLabel": "Data have been uploaded",
@@ -14370,12 +14398,18 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": ""
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
           },
           {
-            "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -14736,7 +14770,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total Number of people delivering this service",
+                "title": "Total number of people delivering this service",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -14751,7 +14785,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total Number of First Nations people delivering this service ",
+                "title": "Total number of First Nations people delivering this service ",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -15037,7 +15071,7 @@
             "items": [
               {
                 "type": "literal",
-                "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
               },
               {
                 "preLabel": "Data have been uploaded",
@@ -15495,12 +15529,18 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": ""
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
           },
           {
-            "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -15528,7 +15568,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total Number of people delivering this service",
+                "title": "Total number of people delivering this service",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -15543,7 +15583,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total Number of First Nations people delivering this service ",
+                "title": "Total number of First Nations people delivering this service ",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -15840,7 +15880,7 @@
             "items": [
               {
                 "type": "literal",
-                "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
               },
               {
                 "preLabel": "Data have been uploaded",
@@ -16295,12 +16335,18 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": ""
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
           },
           {
-            "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -16331,7 +16377,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total Number of people delivering this service",
+                    "title": "Total number of people delivering this service",
                     "items": [
                       {
                         "source": "participationIndividualNumber",
@@ -16346,7 +16392,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total Number of First Nations people delivering this service ",
+                    "title": "Total number of First Nations people delivering this service ",
                     "items": [
                       {
                         "source": "firstNationIndividualNumber",
@@ -16684,7 +16730,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -17152,12 +17198,18 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": ""
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
           },
           {
-            "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -17188,7 +17240,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total Number of people delivering this service",
+                    "title": "Total number of people delivering this service",
                     "items": [
                       {
                         "source": "participationIndividualNumber",
@@ -17203,7 +17255,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total Number of First Nations people delivering this service ",
+                    "title": "Total number of First Nations people delivering this service ",
                     "items": [
                       {
                         "source": "firstNationIndividualNumber",
@@ -17589,7 +17641,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -18051,12 +18103,18 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": ""
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
           },
           {
-            "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -18084,7 +18142,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total Number of people delivering this service",
+                "title": "Total number of people delivering this service",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -18099,7 +18157,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total Number of First Nations people delivering this service ",
+                "title": "Total number of First Nations people delivering this service ",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -18435,7 +18493,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -18453,15 +18511,6 @@
                     "type": "textarea",
                     "rows": 4,
                     "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "type": "literal",
-                    "source": "<p><b>Evidence of Service Delivery</b></p>This field is mandatory for all <u>Agriculture</u> projects as part of the invoicing process, as well as any environment projects where you have been notified as undergoing an <u>audit or quarterly assurance check</u>. The field allows you to attach evidence against a specific service."
                   }
                 ]
               },
@@ -18893,12 +18942,18 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": ""
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
           },
           {
-            "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -18929,7 +18984,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total Number of people delivering this service",
+                    "title": "Total number of people delivering this service",
                     "items": [
                       {
                         "source": "participationIndividualNumber",
@@ -18944,7 +18999,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total Number of First Nations people delivering this service ",
+                    "title": "Total number of First Nations people delivering this service ",
                     "items": [
                       {
                         "source": "firstNationIndividualNumber",
@@ -19261,7 +19316,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -19279,15 +19334,6 @@
                     "type": "textarea",
                     "rows": 4,
                     "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "type": "literal",
-                    "source": "<p><b>Evidence of Service Delivery</b></p>This field is mandatory for all <u>Agriculture</u> projects as part of the invoicing process, as well as any environment projects where you have been notified as undergoing an <u>audit or quarterly assurance check</u>. The field allows you to attach evidence against a specific service."
                   }
                 ]
               },
@@ -19747,12 +19793,18 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": ""
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
           },
           {
-            "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -19780,7 +19832,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total Number of people delivering this service",
+                "title": "Total number of people delivering this service",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -19795,7 +19847,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total Number of First Nations people delivering this service ",
+                "title": "Total number of First Nations people delivering this service ",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -20143,7 +20195,7 @@
             "items": [
               {
                 "type": "literal",
-                "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please attach any evidence you have available for this service and/or provide information (e.g. links) to where the evidence is stored. This field will help the Department and Service Providers during assurance activities or audits. Refer to the Evidence Guide for details of the types of acceptable evidence."
+                "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
               },
               {
                 "preLabel": "Data have been uploaded",
@@ -20161,15 +20213,6 @@
                 "type": "textarea",
                 "rows": 4,
                 "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "type": "literal",
-                "source": "<p><b>Evidence of Service Delivery</b></p>This field is mandatory for all <u>Agriculture</u> projects as part of the invoicing process, as well as any environment projects where you have been notified as undergoing an <u>audit or quarterly assurance check</u>. The field allows you to attach evidence against a specific service."
               }
             ]
           },
@@ -20548,12 +20591,18 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": ""
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
           },
           {
-            "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -20581,7 +20630,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total Number of people delivering this service",
+                "title": "Total number of people delivering this service",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -20596,7 +20645,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total Number of First Nations people delivering this service ",
+                "title": "Total number of First Nations people delivering this service ",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -20897,7 +20946,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -20915,15 +20964,6 @@
                     "type": "textarea",
                     "rows": 4,
                     "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "type": "literal",
-                    "source": "<p><b>Evidence of Service Delivery</b></p>This field is mandatory for all <u>Agriculture</u> projects as part of the invoicing process, as well as any environment projects where you have been notified as undergoing an <u>audit or quarterly assurance check</u>. The field allows you to attach evidence against a specific service."
                   }
                 ]
               },
@@ -21376,12 +21416,18 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": ""
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
           },
           {
-            "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -21409,7 +21455,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total Number of people delivering this service",
+                "title": "Total number of people delivering this service",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -21424,7 +21470,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total Number of First Nations people delivering this service ",
+                "title": "Total number of First Nations people delivering this service ",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -21757,7 +21803,7 @@
             "items": [
               {
                 "type": "literal",
-                "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
               },
               {
                 "preLabel": "Data have been uploaded",
@@ -21775,15 +21821,6 @@
                 "type": "textarea",
                 "rows": 4,
                 "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "type": "literal",
-                "source": "<p><b>Evidence of Service Delivery</b></p>This field is mandatory for all <u>Agriculture</u> projects as part of the invoicing process, as well as any environment projects where you have been notified as undergoing an <u>audit or quarterly assurance check</u>. The field allows you to attach evidence against a specific service."
               }
             ]
           },
@@ -22105,12 +22142,18 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": ""
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
           },
           {
-            "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -22139,7 +22182,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total Number of people delivering this service",
+                    "title": "Total number of people delivering this service",
                     "items": [
                       {
                         "source": "participationIndividualNumber",
@@ -22154,7 +22197,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total Number of First Nations people delivering this service ",
+                    "title": "Total number of First Nations people delivering this service ",
                     "items": [
                       {
                         "source": "firstNationIndividualNumber",
@@ -22297,7 +22340,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -22315,15 +22358,6 @@
                     "type": "textarea",
                     "rows": 4,
                     "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "type": "literal",
-                    "source": "<p><b>Evidence of Service Delivery</b></p>This field is mandatory for all <u>Agriculture</u> projects as part of the invoicing process, as well as any environment projects where you have been notified as undergoing an <u>audit or quarterly assurance check</u>. The field allows you to attach evidence against a specific service."
                   }
                 ]
               },
@@ -22617,12 +22651,18 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": ""
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
           },
           {
-            "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -22650,7 +22690,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total Number of people delivering this service",
+                "title": "Total number of people delivering this service",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -22665,7 +22705,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total Number of First Nations people delivering this service ",
+                "title": "Total number of First Nations people delivering this service ",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -22870,7 +22910,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -22888,15 +22928,6 @@
                     "type": "textarea",
                     "rows": 4,
                     "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "type": "literal",
-                    "source": "<p><b>Evidence of Service Delivery</b></p>This field is mandatory for all <u>Agriculture</u> projects as part of the invoicing process, as well as any environment projects where you have been notified as undergoing an <u>audit or quarterly assurance check</u>. The field allows you to attach evidence against a specific service."
                   }
                 ]
               },
@@ -23214,12 +23245,18 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": ""
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
           },
           {
-            "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -23247,7 +23284,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total Number of people delivering this service",
+                "title": "Total number of people delivering this service",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -23262,7 +23299,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total Number of First Nations people delivering this service ",
+                "title": "Total number of First Nations people delivering this service ",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -23436,7 +23473,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -23454,15 +23491,6 @@
                     "type": "textarea",
                     "rows": 4,
                     "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "type": "literal",
-                    "source": "<p><b>Evidence of Service Delivery</b></p>This field is mandatory for all <u>Agriculture</u> projects as part of the invoicing process, as well as any environment projects where you have been notified as undergoing an <u>audit or quarterly assurance check</u>. The field allows you to attach evidence against a specific service."
                   }
                 ]
               },
@@ -23910,12 +23938,18 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": ""
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
           },
           {
-            "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -23946,7 +23980,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total Number of people delivering this service",
+                    "title": "Total number of people delivering this service",
                     "items": [
                       {
                         "source": "participationIndividualNumber",
@@ -23961,7 +23995,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total Number of First Nations people delivering this service ",
+                    "title": "Total number of First Nations people delivering this service ",
                     "items": [
                       {
                         "source": "firstNationIndividualNumber",
@@ -24293,7 +24327,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -24941,12 +24975,18 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": ""
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
           },
           {
-            "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -24977,7 +25017,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total Number of people delivering this service",
+                    "title": "Total number of people delivering this service",
                     "items": [
                       {
                         "source": "participationIndividualNumber",
@@ -24992,7 +25032,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total Number of First Nations people delivering this service ",
+                    "title": "Total number of First Nations people delivering this service ",
                     "items": [
                       {
                         "source": "firstNationIndividualNumber",
@@ -25403,7 +25443,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -25535,9 +25575,18 @@
                 "validate": "required,min[0]"
               },
               {
+                "dataType": "text",
+                "name": "fullOrPartTime",
+                "constraints": [
+                  "Full-time",
+                  "Part-time"
+                ],
+                "validate": "required"
+              },
+              {
                 "dataType": "number",
                 "name": "numberOfFteEachPos",
-                "description": "",
+                "description": "Note: Full-time recorded as 1. Part-time recorded as 0.6, 0.5 or 0.25",
                 "validate": "required,min[0]"
               },
               {
@@ -25558,12 +25607,27 @@
               {
                 "name": "yesPositionVacant",
                 "dataType": "text",
+                "constraints": [
+                  "Yes",
+                  "No"
+                ],
                 "behaviour": [
                   {
                     "condition": "wasPositionVacant == \"Yes\"",
                     "type": "enable"
                   }
                 ]
+              },
+              {
+                "dataType": "text",
+                "name": "noRecruitmentProcess",
+                "behaviour": [
+                  {
+                    "condition": "yesPositionVacant == \"No\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": "maxSize[300]"
               },
               {
                 "dataType": "date",
@@ -25631,12 +25695,18 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": ""
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
           },
           {
-            "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "dataUploaded == true",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -25664,7 +25734,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total Number of people delivering this service",
+                "title": "Total number of people delivering this service",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -25679,7 +25749,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total Number of First Nations people delivering this service ",
+                "title": "Total number of First Nations people delivering this service ",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -25704,6 +25774,15 @@
             "type": "table"
           },
           {
+            "type": "row",
+            "items": [
+              {
+                "source": "<b>Please note to add a row for the different employment category and FTE.</b>",
+                "type": "literal"
+              }
+            ]
+          },
+          {
             "type": "section",
             "items": [
               {
@@ -25712,13 +25791,19 @@
                     "width": "5%",
                     "width": "5%",
                     "source": "numberOfSaf",
-                    "title": "Number of sustainable agriculture facilitators (SAFs)",
+                    "title": "Number of Sustainable Agriculture Facilitators (SAFs)",
                     "type": "number"
                   },
                   {
                     "width": "5%",
+                    "source": "fullOrPartTime",
+                    "title": "Full time or part-time employment",
+                    "type": "selectOne"
+                  },
+                  {
+                    "width": "5%",
                     "source": "numberOfFteEachPos",
-                    "title": "Full-time employment (FTE) of each position",
+                    "title": "FTE of each position",
                     "type": "number"
                   },
                   {
@@ -25728,15 +25813,21 @@
                     "type": "number"
                   },
                   {
-                    "width": "10%",
+                    "width": "5%",
                     "source": "wasPositionVacant",
                     "title": "Was the position(s) vacant for any amount of time during the reporting period (not including leave)",
                     "type": "selectOne"
                   },
                   {
-                    "width": "10%",
+                    "width": "5%",
                     "source": "yesPositionVacant",
                     "title": "If yes, is there a recruitment process being run?",
+                    "type": "selectOne"
+                  },
+                  {
+                    "width": "10%",
+                    "source": "noRecruitmentProcess",
+                    "title": "If no, what are the reasons?",
                     "type": "text"
                   },
                   {
@@ -25752,13 +25843,13 @@
                     "type": "text"
                   },
                   {
-                    "width": "10%",
+                    "width": "5%",
                     "source": "deliveryOrSubcontractorEmployed",
                     "title": "Is the position employed by delivery partner or subcontractor?",
                     "type": "selectOne"
                   },
                   {
-                    "width": "10%",
+                    "width": "5%",
                     "source": "subcontractorEmployed",
                     "title": "If employed by subcontractor, please provide name of subcontractor",
                     "type": "text"
@@ -25829,7 +25920,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -25842,20 +25933,10 @@
                 "type": "row",
                 "items": [
                   {
-                    "preLabel": "",
                     "source": "projectAssuranceDetails",
                     "type": "textarea",
                     "rows": 4,
                     "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "type": "literal",
-                    "source": "<p><b>Evidence of Service Delivery</b></p>This field is mandatory for all <u>Agriculture</u> projects as part of the invoicing process, as well as any environment projects where you have been notified as undergoing an <u>audit or quarterly assurance check</u>. The field allows you to attach evidence against a specific service."
                   }
                 ]
               },

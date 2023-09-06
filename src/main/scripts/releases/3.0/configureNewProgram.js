@@ -498,11 +498,11 @@ const newScores = [
         scores: [
             {
                 label: 'Area (ha) of site preparation',
-                path: 'data.sitePreparationAreasControlled.areaPreparedHa'
+                path: 'data.sitePreparationDetails.areaPreparedHa'
             },
             {
                 label: 'Length (km) of site preparation',
-                path: 'data.sitePreparationAreasControlled.lengthPreparedKm'
+                path: 'data.sitePreparationDetails.lengthPreparedKm'
             }
         ]
     },
