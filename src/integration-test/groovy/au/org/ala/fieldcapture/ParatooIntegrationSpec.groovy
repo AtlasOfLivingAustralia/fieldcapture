@@ -32,12 +32,13 @@ class ParatooIntegrationSpec extends StubbedCasSpec implements GrailsUnitTest {
         setup:
         String token = tokenForUser('1')
         Map mintCollectionIdPayload = [
-                projectId:'monitorProject',
-                protocol: [
-                        id: 2, // Protocol 23 used to obtain representative data for this functional test
-                        version: 1
-                ],
+
                 surveyId: [
+                        projectId:'monitorProject',
+                        protocol: [
+                                id: "guid-1", // Protocol 23 used to obtain representative data for this functional test
+                                version: 1
+                        ],
                         surveyType: 'soil-pit-characterisation-full',
                         time: '2023-08-28T00:34:13.100Z',
                         randNum: 46390249
@@ -46,7 +47,7 @@ class ParatooIntegrationSpec extends StubbedCasSpec implements GrailsUnitTest {
         Map collectionPayload = [
                 projectId:'monitorProject',
                 protocol: [
-                        id: 2,
+                        id: "guid-1",
                         version: 1
                 ],
                 userId: '1',
