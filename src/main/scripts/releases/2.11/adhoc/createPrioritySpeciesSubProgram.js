@@ -35,129 +35,113 @@ var projectConfig = {
             {
                 "template": "name",
                 "model": {
-                    "helpTextHeading": "A succinct overview of the project: (i) what will be done and (ii) why it will be done",
-                    "maxSize": "150",
-                    "placeholder": "[Free text; limit response to 150 characters)]",
-                    "explanation": ""
+                    "tableFormatting": true
                 }
+            },
+            {
+                "template": "priorityPlace",
+                "model": {
+                    "priorityPlaceHelpText": "Priority places recognises that some threatened species share the same habitat, and that place-based action can support protection and recovery of more than one species.",
+                    "priorityPlaceLabel": "Does this project directly support a priority place?"
+                }
+            },
+            {
+                "template": "indigenousInvolvement"
             },
             {
                 "template": "description",
                 "model": {
-                    "helpTextHeading": "A succinct overview of the project: (i) what will be done and (ii) why it will be done",
+                    "tableFormatting": true,
                     "maxSize": "1000",
-                    "placeholder": "[Free text; limit response to 1000 characters (approx. 150 words)]",
-                    "explanation": " Please provide a short succinct description of this project. The description should state what will be done and why it will be done. This project description will be publicly visible on the project overview page in MERIT"
+                    "placeholder": "Please provide a short description of this project. This project description will be visible on the project overview page in MERIT [Free text; limit response to 1000 characters (approx. 150 words)]"
                 }
             },
             {
                 "template": "programOutcome",
                 "model": {
-                    "helpTextPrimaryOutcome": ""
-                }
-            },
-            {
-                "template": "additionalOutcomes"
-            },
-            {
-                "template": "activities",
-                "model": {
-                    "includeOther": true,
-                    "noneSelectedMessage": "No priority actions have been nominated for this project",
-                    "singleSelection": false,
-                    "title": "Project Actions",
-                    "explanation": "Please select from the lists of priority action applicable to this project. If the priority action is not listed and ‘other’ is selected, please provide details of the ‘other’ priority within the space provided"
+                    "maximumPriorities": "1000",
+                    "priorityHelpText": "Enter the primary investment priority for the primary outcome, noting only one can be selected."
                 }
             },
             {
                 "template": "outcomeStatements",
                 "model": {
-                    "helpText": "Outcomes statements should: (i) clearly describe the intent of the project, specifically the benefit or change that the project is expected to deliver by June 2026; (ii) be expressed as a SMART statement (Specific, Measurable, Attainable, Realistic and Time-bound); and (iii) ensure that the outcomes are measurable with consideration to the monitoring methodology provided below.",
-                    "subtitle": "Please provide outcome statements.",
-                    "placeholder": "[Free text; limit response to 500 characters]",
-                    "title": "Project Outcome"
+                    "outcomeType": "short",
+                    "helpText": "Outline the degree of impact having undertaken the services for up to three years. Ensure the outcomes are measurable with consideration to the baseline and proposed monitoring regime",
+                    "subtitle": "Short-term outcome statement/s",
+                    "extendedOutcomes": true
                 }
             },
             {
-                "template": "keyThreats",
+                "template": "extendedKeyThreats",
                 "model": {
-                    "threatHelpText": "The key threats (or key threatening processes) that your project will be addressing",
-                    "interventionHelpText": "Describe the proposed interventions to address the threat and how this will deliver on the project outcome",
-                    "placeholder": "[Free text; limit response to 500 characters]",
-                    "title": "Key Threats",
-                    "explanation": "Describe the key threat(s) and/or key threatening processes impacting project assets that the project will be addressing."
+                    "servicesHelpText": "Project Services/Target measures selected in this section will be pre-populated into the Project services and targets and Project service forecasts tables",
+                    "threatHelpText": "Describe the key threats or key threatening processes to the investment priority",
+                    "evidenceHelpText": "List evidence that will be retained to demonstrate delivery of this service. Refer to Evidence Guide and Project Service Summaries for guidance",
+                    "interventionHelpText": "Describe the proposed method to address the threat or threatening process",
+                    "title": "Key threat(s) and/or key threatening processes"
                 }
             },
             {
                 "template": "projectMethodology",
                 "model": {
+                    "helpText": "Include all those conditions or factors that are sufficient to guarantee the success of the project, for example, on ground activities were not impacted by adverse weather conditions. Ensure what’s documented here aligns to those assumptions documented within the Project Logic.",
                     "maxSize": "4000",
-                    "title": "Project Methodology",
-                    "explanation": "The methodology should describe how each project service (i.e., action) will be implemented to achieve outcomes and why that specific approach or technique was chosen. The methodology could include the location, partner/s involvement and outputs. The methodology should clearly link to the outcome statement. At least one method for each project outcome should be identified.",
-                    "tableHeading": "Describe how each project activity will be implemented.",
-                    "placeHolder": "[Free text; limit response to 4000 characters (approx. 650 words)]"
-                }
-            },
-            {
-                "template": "monitoringBaseline",
-                "model": {
-                    "baselineMethodHelpText": "Describe the project baseline (s) units of measure or data which will be used to report progress towards this project’s outcome and the monitoring design",
-                    "titleHelpText": "Describe the project baseline(s) units of measure or data which will be used to report progress towards this project’s outcomes and the monitoring design. Refer to the Regional Land Partnerships Evaluation Plan which provides guidance on baselines and the monitoring indicators for each outcome. Note, other monitoring indicators can also be used."
-                }
-            },
-            {
-                "template": "monitoringIndicators",
-                "model": {
-                    "approachHeading": "Describe the project monitoring indicator(s) approach",
-                    "indicatorHeading": "Identify the project monitoring indicator(s)",
-                    "indicatorHelpText": "List the indicators of project success that will be monitored. Indicators should link back to the outcome statements and, in most cases, will be quantitative and expressed as a numerical measurable. Where relevant, qualitative indicators can be used. Indicators should measure both project outputs (e.g., area (ha) of rabbit control, length (km) of predator proof fencing) and change the project is aiming to achieve (e.g., change in abundance of X threatened species at Y location, change in vegetation cover (%) etc.)",
-                    "approachHelpText": "Briefly describe the method that will be used to monitor the indicator (including timing of monitoring, who will collect/collate/analyse, data, etc)",
-                    "indicatorPlaceHolder": "[Free text]",
-                    "approachPlaceHolder": "[Free text]",
-                    "title": "Project Monitoring Indicators"
-                }
-            },
-            {
-                "template": "adaptiveManagement",
-                "model": {
-                    "title": "Project Review, Evaluation and Improvement Methodology and Approach",
-                    "explanation": "Outline the methods and processes that will enable adaptive management during the lifetime of this project"
-                }
-            },
-            {
-                "template": "nationalAndRegionalPlans",
-                "model": {
-                    "documentNameHelpText": "List the name of the Recovery Plan or Conservation Advice for species listed under the Environment Protection and Biodiversity Conservation Act 1999 (if applicable), or state recovery plan.",
-                    "explanation": "Explain how the project aligns with national and/or state species recovery plans and strategies."
-                }
-            },
-            {
-                "template": "serviceTargets",
-                "model": {
-                    "showTargetDate": true,
-                    "totalHelpText": "The overall total of Project Activities to be delivered during the project delivery period. This total is not necessarily the sum of the minimum annual targets set out for the activities.",
-                    "title": "Activities and Targets Table",
-                    "serviceName": "Activities"
+                    "tableHeading": "Project delivery assumptions (4000 character limit [approx. 650 words])"
                 }
             },
             {
                 "template": "projectPartnerships",
                 "model": {
-                    "namePlaceHolder": "[Free text]",
-                    "helpTextPartnerNature": "If partnership with an organisation: provide the name of the organisation and the role they will play/how you will support them. If partnering with community groups or members of the public: indicate each group or individual you will engage with",
-                    "partnershipPlaceHolder": "[Free text]"
+                    "helpTextHeading": "Note: Not limited to key subcontractors.",
+                    "helpTextPartnerName": "Insert name of project partner. To be a project partner, they need to be actively involved in the planning or delivery of the project"
                 }
             },
             {
-                "template": "meriBudget",
+                "template": "extendedBaselineMonitoring",
                 "model": {
-                    "itemName": "Budget item",
-                    "showThemeColumn": false,
-                    "showActivityColumn": false,
-                    "explanation": "Please detail how project funding will be allocated to project services (action) by species, if more than one species is benefitting from the project. Expenditure should align with the approved project grant application (including the amount identified for project reporting and administration). Each action should be identified as a different line item",
-                    "projectHeadingHelpText": "Planned budget expenditure for each service (action) by species",
-                    "hideHelpText": true
+                    "approachHeading": "Monitoring method",
+                    "indicatorHeading": "Monitoring methodology",
+                    "monitoringServiceHelpText": "Select the relevant Project Services(s)/Target measure(s) that will be used to support ongoing monitoring",
+                    "baselineDataDescriptionHelpText": "Describe the project baseline to be established, or the baseline data that currently exists",
+                    "baselineMethodHelpText": "EMSA modules mandatory unless exemption agreed to by the Department. Where an exemption has been provided the user can then select \"Other\"",
+                    "baselineDataHelpText": "Existing baseline data needs to be based on best practice methods and be compatible with the EMSA protocols.",
+                    "approachHelpText": "EMSA modules mandatory unless exemption agreed to by the Department. Where an exemption has been provided the user can then select \"Other\"",
+                    "titleHelpText": "Describe the Project Baseline(s) and ongoing monitoring which will be used to report progress towards this projects outcome(s).  Project Services/Target measures selected in this section will be pre-populated into the Project services and targets and Project service forecasts tables",
+                    "evidenceHelpText": "List evidence that will be retained to demonstrate delivery of this service. Refer to Evidence Guide and Project Service Summaries for guidance",
+                    "baselineServiceHelpText": "Select the relevant Project Service(s)/Target measure(s) that will be used to support the development of the baseline",
+                    "newIndicatorText": "New monitoring indicator"
                 }
+            },
+            {
+                "template": "projectReview",
+                "model": {
+                    "title": "Project review, improvement and evaluation methodology and approach (3000 character limit [approximately 500 words])"
+                }
+            },
+            {
+                "template": "nationalAndRegionalPlans",
+                "model": {
+                    "includeUrl": true,
+                    "headingTitle": "Conservation and management plans"
+                }
+            },
+            {
+                "template": "serviceOutcomeTargets",
+                "model": {
+                    "titleHelpText": "Service and Target measure fields pre-populated through the Project Service/Target Measure/s to address threats field and Monitoring methodology sections",
+                    "title": "Project services and targets",
+                    "serviceName": "Service"
+                }
+            },
+            {
+                "template": "serviceForecasts",
+                "model": {
+                    "titleHelpText": "Service and Target measure fields pre-populated through the Project Service/Target Measure/s to address threats field and Monitoring methodology sections"
+                },
+                "excludedModes": [
+                    "PRINT"
+                ]
             }
         ],
         "excludes": [],
@@ -411,12 +395,18 @@ var projectConfig = {
                 }
             ]
         },
-        "visibility": "public",
-        "organisationRelationship": "Service Provider",
-        "excludeFinancialYearData": true,
         "requiresActivityLocking": true,
         "projectTemplate": "rlp",
         "activityPeriodDescriptor": "Outputs report #",
+        "requireMeritAdminToReturnMeriPlan": true,
+        "emailTemplates": {
+            "reportSubmittedEmailTemplate": "RLP_REPORT_SUBMITTED_EMAIL_TEMPLATE",
+            "reportReturnedEmailTemplate": "RLP_REPORT_RETURNED_EMAIL_TEMPLATE",
+            "planApprovedEmailTemplate": "RLP_PLAN_APPROVED_EMAIL_TEMPLATE",
+            "planReturnedEmailTemplate": "RLP_PLAN_RETURNED_EMAIL_TEMPLATE",
+            "reportApprovedEmailTemplate": "RLP_REPORT_APPROVED_EMAIL_TEMPLATE",
+            "planSubmittedEmailTemplate": "RLP_PLAN_SUBMITTED_EMAIL_TEMPLATE"
+        },
         "meriPlanTemplate": "configurableMeriPlan",
         "riskAndThreatTypes": [
             "Performance",
@@ -437,7 +427,7 @@ var projectConfig = {
                 "minimumReportDurationInDays": 3,
                 "label": "Semester",
                 "category": "Progress Reports",
-                "activityType": "Priority Threatened Species Progress Report",
+                "activityType": "Priority Threatened Species Progress Reportx",
                 "reportsAlignedToCalendar": true,
                 "canSubmitDuringReportingPeriod": true
             },
@@ -452,78 +442,83 @@ var projectConfig = {
                 "label": "Final Report",
                 "category": "Final Report",
                 "reportsAlignedToCalendar": false,
-                "activityType": "Priority Threatened Species Final Report",
+                "activityType": "Priority Threatened Species Final Reportx",
                 "alignToOwnerStart": true
             }
         ],
-        "activities": [
-            {
-                "name": "Herbivore and/or predator control"
-            },
-            {
-                "name": "Weed control and/or revegetation"
-            },
-            {
-                "name": "Fire management and planning"
-            },
-            {
-                "name": "Species and ecological community specific interventions"
-            },
-            {
-                "name": "Traditional Owner led healing of country"
-            },
-            {
-                "name": "Erosion control"
-            },
-            {
-                "name": "Refugia management"
-            }
+        "keyThreatCodes": [
+            "Climate Change - Changed flooding regime",
+            "Climate Change - Changed rainfall patterns",
+            "Climate Change - Sea level rises",
+            "Climate Change - Unexpected seasonal/temperature extremes",
+            "Disease/pathogens - Areas that are infected",
+            "Disease/pathogens - Possible infection of disease free areas",
+            "Fire - Inappropriate fire regime",
+            "Fire - Lack of protection for ecological assets during fire control activities",
+            "Genetics - Bottleneck/inbreeding",
+            "Habitat loss - Breeding place disturbance",
+            "Habitat loss - Dieback/senescence",
+            "Habitat loss - Feeding habitat loss/interference",
+            "Habitat loss - Habitat fragmentation",
+            "Habitat loss - Land clearing",
+            "Habitat loss - Loss of critical ecosystem service supporting habitat",
+            "Human interference - Fish and harvesting aquatic resources (commercial)",
+            "Human interference - Flow-on effects of housing development",
+            "Human interference - Illegal activities",
+            "Human interference - Industrial development",
+            "Human interference - Land use intensification",
+            "Human interference - Recreational fishing",
+            "Human interference - Recreational pressures",
+            "Human interference - Road/vehicle strike",
+            "Land management practices - Changes to hydrology and aquatic systems",
+            "Land management practices - Domestic grazing/stock impacts",
+            "Land management practices - Excess recharge of groundwater",
+            "Land management practices - Excess use (or over-use) of surface water or groundwater resources",
+            "Land management practices - Excessive fertiliser use",
+            "Land management practices - Inappropriate ground cover management",
+            "Land management practices - Runoff",
+            "Native fauna - Competition",
+            "Native fauna - Predation",
+            "Pest - Competition/exclusion",
+            "Pest - Disease transmission",
+            "Pest - Habitat degradation",
+            "Pest - Introduction of new pest animals",
+            "Pest - Predation",
+            "Pollution - Chemical",
+            "Pollution - Eutrophication/algal blooms",
+            "Pollution - Inappropriate waste disposal",
+            "Pollution - Sediment ",
+            "Population size/range - Low habitat area",
+            "Population size/range - Low population numbers",
+            "Weeds - Competition",
+            "Weeds - Introduction of new weed",
+            "Weeds - Spread of weeds from surrounding areas"
         ],
         "navigationMode": "returnToProject",
-        "objectives": [
-            "Prevent extinction and limit decline of native species",
-            "Reduce immediate suffering of native animals directly impacted by the fires",
-            "Maximise chances of long-term recovery of native species and communities",
-            "Ensure learning and continual improvement is core of the response"
+        "priorityPlaces": [
+            "Australian Alps – NSW/ACT/VIC",
+            "Brigalow Country – QLD",
+            "Bruny Island – TAS",
+            "Christmas Island – External Territory",
+            "Eastern Forests of Far North Queensland – QLD",
+            "Fitz-Stirlings – WA",
+            "French Island – VIC",
+            "Giant Kelp Ecological Community – TAS",
+            "Greater Blue Mountains – NSW",
+            "Kakadu & West Arnhem – NT",
+            "Kangaroo Island – SA",
+            "MacDonnell Ranges – NT",
+            "Mallee Birds Ecological Community – VIC/SA/NSW",
+            "Midlands region of central Tasmanian – TAS",
+            "Norfolk Island – External Territory",
+            "Raine Island – Queensland",
+            "Remnant WA Wheatbelt Woodlands – WA",
+            "South East Coastal Ranges – NSW/VIC",
+            "Southern Plains, including the Western Victorian volcanic plain and karst springs – VIC/SA",
+            "Yampi Sounds and surrounds – WA"
         ],
-        "supportedServiceIds": [
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-            17,
-            18,
-            19,
-            20,
-            21,
-            22,
-            23,
-            24,
-            25,
-            26,
-            27,
-            28,
-            29,
-            30,
-            31,
-            32,
-            33,
-            34,
-            35,
-            36
-        ]
+        "supportsParatoo": true,
+        "supportsMeriPlanHistory": true
     },
     priorities: [
         {
@@ -1320,10 +1315,6 @@ var projectConfig = {
         },
         {
             "category": "Priority Threatened Species Primary",
-            "priority": "Eremophila subangustifolia"
-        },
-        {
-            "category": "Priority Threatened Species Primary",
             "priority": "Foote's Grevillea Grevillea calliantha"
         },
         {
@@ -1361,14 +1352,6 @@ var projectConfig = {
         {
             "category": "Priority Threatened Species Primary",
             "priority": "Native Guava Rhodomyrtus psidioides"
-        },
-        {
-            "category": "Priority Threatened Species Primary",
-            "priority": "Pimelea cremnophila"
-        },
-        {
-            "category": "Priority Threatened Species Primary",
-            "priority": "Pimelea venosa"
         },
         {
             "category": "Priority Threatened Species Primary",
@@ -1416,7 +1399,7 @@ var projectConfig = {
         },
         {
             "category": "Priority Threatened Species Primary",
-            "priority": "Gorge Rice-flower, Pimelelea cremnophila"
+            "priority": "Gorge Rice-flower, Pimelea cremnophila"
         },
         {
             "category": "Priority Threatened Species Primary",
@@ -1886,12 +1869,12 @@ var outcomes = [
         "type": "primary",
         "category": "environment",
         "supportsMultiplePrioritiesAsSecondary": true,
-        "outcome": "All priority species are on track for improved trajectory"
+        "outcome": "1.  Species and Landscapes (Long term): Threatened Species (TS) - The trajectory of species targeted under the Threatened Species Action Plan 2022-2032 and other EPBC Act listed Species is improved"
     },
     {
         "priorities": [
             {
-                "category": "Target 3"
+                "category": ""
             }
         ],
         "targeted": true,
