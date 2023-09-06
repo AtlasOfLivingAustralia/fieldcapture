@@ -122,7 +122,7 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     self.sizeInKB = ko.observable(dataSet.sizeInKB);
     self.sizeUnknown = ko.observable(dataSet.sizeUnknown);
     self.sensitivities = ko.observableArray(dataSet.sensitivities);
-    self.otherSensitivity = ko.observableArray(dataSet.otherSensitivity);
+    self.otherSensitivity = ko.observable(dataSet.otherSensitivity);
     self.owner = ko.observable(dataSet.owner);
     self.custodian = ko.observable(dataSet.custodian);
     self.progress = ko.observable(dataSet.progress);
@@ -149,7 +149,7 @@ var DataSetViewModel = function(dataSet, projectService, options) {
 
         if (valid) {
             var dataSet = ko.mapping.toJS(self,
-                {ignore: ['grantId', 'projectName', 'programName', 'validate', 'save', 'cancel', 'investmentOtherSelected', 'siteUrl', 'isAutoCreated', 'serviceAndOutcomes']});
+                {ignore: ['grantId', 'projectName', 'programName', 'validate', 'save', 'cancel', 'investmentOtherSelected', 'siteUrl', 'isAutoCreated', 'serviceAndOutcomes', 'projectOutcomeList']});
             projectService.saveDataSet(dataSet).done(function() {
                 // return to project
                 window.location.href = config.returnToUrl;
