@@ -253,13 +253,13 @@
         </div>
     </div>
     <div class="form-group row">
-        <label for="publicationUrl" class="col-sm-5 col-form-label">21. Please provide the location/system of where the dataset is held. If possible, provide a URL of the published location. If stored internally by your organisation, write ‘stored internally’.</label>
+        <label for="publicationUrl" class="col-sm-5 col-form-label">17. Please provide the location/system of where the dataset is held. If possible, provide a URL of the published location. If stored internally by your organisation, write ‘stored internally’.</label>
         <div class="col-sm-7">
             <input type="text"  class="form-control" id="publicationUrl" placeholder="" data-bind="value:publicationUrl">
         </div>
     </div>
     <div class="form-group row">
-        <label for="format" class="col-sm-5 col-form-label required">22. What format is the dataset?</label>
+        <label for="format" class="col-sm-5 col-form-label required">18. What format is the dataset?</label>
         <div class="col-sm-7">
             <select class="form-control" id="format" data-validation-engine="validate[required]" data-bind="value:format">
                 <option></option>
@@ -277,8 +277,27 @@
         </div>
     </div>
 
+
     <div class="form-group row">
-        <label for="sensitivities" class="col-sm-5 col-form-label required">23. Are there any sensitivities in the dataset?</label>
+        <div class="col-sm-5">
+            <label for="sizeinkb" class="col-form-label required">19. What is the size of the dataset (KB)?</label>
+            <p>If you don't know the size, check the 'Unknown' checkbox</p>
+        </div>
+
+        <div class="col-sm-3">
+            <input type="number" class="form-control" id="sizeinkb" placeholder="" data-validation-engine="validate[required]" data-bind="enable:!sizeUnknown(), value:sizeInKB">
+
+        </div>
+        <div class="col-sm-4">
+            <div class="form-check">
+                <input id="sizeUnknown" type="checkbox" class="form-check-input" data-bind="checked:sizeUnknown">
+                <label for="sizeUnknown" class="form-check-label">Unknown</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="sensitivities" class="col-sm-5 col-form-label required">20. Are there any sensitivities in the dataset?</label>
         <div class="col-sm-7">
             <select class="form-control" multiple="multiple" id="sensitivities" data-validation-engine="validate[required]" data-bind="selectedOptions:sensitivities">
                 <option>No</option>
@@ -298,7 +317,7 @@
 
     <div class="form-group row">
         <div class="col-sm-5">
-            <label for="owner" class="col-form-label required">24. Primary source of data (organisation that owns or maintains the dataset)</label>
+            <label for="owner" class="col-form-label required">21. Primary source of data (organisation that owns or maintains the dataset)</label>
             <p>Please include the organisation name, physical address, email address and phone number where possible. Do not include any details of individual officers</p>
         </div>
 
@@ -310,7 +329,7 @@
 
     <div class="form-group row">
         <div class="col-sm-5 col-form-label">
-            <label for="custodian" class="required">25. Dataset custodian (name of organisation to obtain access to dataset)</label>
+            <label for="custodian" class="required">22. Dataset custodian (name of organisation to obtain access to dataset)</label>
             <p>Please include the organisation name, physical address, email address and phone number where possible. Do not include any details of individual officers.</p>
         </div>
         <div class="col-sm-7">

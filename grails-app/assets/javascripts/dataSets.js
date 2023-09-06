@@ -119,6 +119,8 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     if (dataSet.sensitivities && !_.isArray(dataSet.sensitivities)) {
         dataSet.sensitivities = [dataSet.sensitivities];
     }
+    self.sizeInKB = ko.observable(dataSet.sizeInKB);
+    self.sizeUnknown = ko.observable(dataSet.sizeUnknown);
     self.sensitivities = ko.observableArray(dataSet.sensitivities);
     self.otherSensitivity = ko.observableArray(dataSet.otherSensitivity);
     self.owner = ko.observable(dataSet.owner);
