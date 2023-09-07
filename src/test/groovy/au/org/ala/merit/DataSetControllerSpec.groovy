@@ -39,7 +39,7 @@ class DataSetControllerSpec extends Specification implements ControllerUnitTest<
         1 * projectService.getAllProjectOutcomes(project) >> ["1", "2"]
         1 * projectService.listProjectInvestmentPriorities(project) >> ["p1"]
 
-        model == [project:project, projectId:'p1', programName:"program 1", priorities:["p1", "Other"], outcomes:["1", "2"]]
+        model == [project:project, projectId:'p1', programName:"program 1", priorities:["p1"], outcomes:["1", "2"], projectOutcomes:[]]
     }
 
     void "If the project cannot be found when editing a dataset, a 404 is returned"() {
@@ -77,7 +77,7 @@ class DataSetControllerSpec extends Specification implements ControllerUnitTest<
         1 * projectService.getAllProjectOutcomes(project) >> ["1", "2"]
         1 * projectService.listProjectInvestmentPriorities(project) >> ["p1"]
 
-        model == [project:project, projectId:'p1', programName:"program 1", priorities:["p1", "Other"], outcomes:["1", "2"], dataSet:existingDataSets[1]]
+        model == [project:project, projectId:'p1', programName:"program 1", priorities:["p1"], outcomes:["1", "2"], projectOutcomes:[], dataSet:existingDataSets[1]]
     }
 
     void "The save method delegates to the projectService"() {
@@ -135,6 +135,6 @@ class DataSetControllerSpec extends Specification implements ControllerUnitTest<
         1 * projectService.getAllProjectOutcomes(project) >> ["1", "2"]
         1 * projectService.listProjectInvestmentPriorities(project) >> ["p1"]
 
-        model == [project:project, projectId:'p1', programName:"program 1", priorities:["p1", "Other"], outcomes:["1", "2"], dataSet:existingDataSets[1]]
+        model == [project:project, projectId:'p1', programName:"program 1", priorities:["p1"], outcomes:["1", "2"], projectOutcomes:[], dataSet:existingDataSets[1]]
     }
 }

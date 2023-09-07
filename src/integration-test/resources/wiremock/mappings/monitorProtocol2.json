@@ -1,0 +1,108 @@
+{
+  "request": {
+    "urlPath": "/monitor/protocols/2",
+    "method": "GET"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "content-Type": "application/json"
+    },
+    "jsonBody": {
+      "data": {
+        "id": 2,
+        "attributes": {
+          "identifier": "068d17e8-e042-ae42-1e42-d004fa2ef759",
+          "name": "Soil Site Observation and Pit Characterisation",
+          "module": "Soils",
+          "endpointPrefix": "/soil-pit-characterisation-fulls",
+          "version": 1,
+          "description": "",
+          "isWritable": true,
+          "workflow": [
+            {
+              "modelName": "plot-layout"
+            },
+            {
+              "modelName": "plot-visit"
+            },
+            {
+              "modelName": "soil-pit-characterisation-full",
+              "overrideDisplayName": "Soil Pit Location",
+              "usesCustomComponent": true
+            },
+            {
+              "modelName": "soil-landform-element",
+              "overrideDisplayName": "Land Form Element",
+              "usesCustomComponent": true
+            },
+            {
+              "modelName": "soil-land-surface-phenomena",
+              "overrideDisplayName": "Land Surface Phenomena & Soil Development",
+              "usesCustomComponent": true
+            },
+            {
+              "multiple": true,
+              "required": false,
+              "modelName": "microrelief-observation",
+              "defaultHidden": true,
+              "usesCustomComponent": true
+            },
+            {
+              "multiple": true,
+              "required": false,
+              "modelName": "erosion-observation",
+              "defaultHidden": true,
+              "usesCustomComponent": true
+            },
+            {
+              "multiple": true,
+              "required": false,
+              "modelName": "surface-coarse-fragments-observation",
+              "defaultHidden": true
+            },
+            {
+              "required": false,
+              "modelName": "rock-outcrop-observation",
+              "defaultHidden": true
+            },
+            {
+              "modelName": "soil-pit-observation"
+            },
+            {
+              "multiple": true,
+              "modelName": "soil-horizon-observation",
+              "usesCustomComponent": true,
+              "newInstanceForRelationOnAttributes": [
+                "mottles",
+                "coarse_fragments",
+                "structure",
+                "segregation",
+                "voids",
+                "pans",
+                "cutans",
+                "roots"
+              ]
+            },
+            {
+              "modelName": "soil-classification",
+              "newInstanceForRelationOnAttributes": [
+                "asc"
+              ]
+            },
+            {
+              "multiple": true,
+              "modelName": "soil-horizon-sample",
+              "usesCustomComponent": true
+            }
+          ],
+          "isHidden": false,
+          "next_prot_suggestion": "068d17e8-e042-ae42-1e42-d0065d7ec2e4",
+          "createdAt": "2023-08-16T02:59:43.946Z",
+          "updatedAt": "2023-08-16T02:59:43.946Z"
+        }
+      },
+      "meta": {}
+    }
+  }
+}

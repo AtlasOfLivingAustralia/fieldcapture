@@ -1475,13 +1475,36 @@ config.priorityPlaces = [
     "Priority place 3"
 ];
 config.excludeFinancialYearData = false;
-
+config.supportsParatoo = true;
 createProgram({programId: "outcomeMeriPlan", name: "Outcome MERI Plan", description: "", config: config});
 createProject({projectId: "outcomeMeriPlanProject", name: "Outcome MERI Plan project", programId: "outcomeMeriPlan"});
-
 db.userPermission.insert({
     entityType: 'au.org.ala.ecodata.Project',
     entityId: "outcomeMeriPlanProject",
+    userId: '1',
+    accessLevel: 'admin'
+});
+const monitorProject = {
+    projectId: "monitorProject",
+    name: "Testing monitor integration",
+    programId: "outcomeMeriPlan",
+    custom: {
+        details: {
+            baseline: {
+                    rows: [
+                        {
+                            protocols:['Category 1', 'Category 2']
+                        }
+                    ]
+                }
+            }
+        }
+    };
+
+createProject(monitorProject);
+db.userPermission.insert({
+    entityType: 'au.org.ala.ecodata.Project',
+    entityId: "monitorProject",
     userId: '1',
     accessLevel: 'admin'
 });
