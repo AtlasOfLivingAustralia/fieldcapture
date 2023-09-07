@@ -14,7 +14,7 @@ class ParatooIntegrationSpec extends StubbedCasSpec implements GrailsUnitTest {
 
     WebService webService
 
-    def setupSpec(){
+    def setupSpec() {
         useDataSet("dataset3")
     }
 
@@ -31,33 +31,63 @@ class ParatooIntegrationSpec extends StubbedCasSpec implements GrailsUnitTest {
 
         setup:
         String token = tokenForUser('1')
+        Map plotSelectionsPayload = [
+
+                "data": [
+                        "plot_name"                 : [
+                                "state"        : "CT",
+                                "program"      : "NLP",
+                                "bioregion"    : "ARC",
+                                "unique_digits": "6060"
+                        ],
+                        "plot_label"                : "string",
+                        "recommended_location"      : [
+                                "lat": 0,
+                                "lng": 0
+                        ],
+                        "recommended_location_point": "C",
+                        "uuid"                      : "string",
+                        "comment"                   : "string",
+                        "createdBy"                 : 0,
+                        "updatedBy"                 : 0
+                ]
+
+        ]
         Map mintCollectionIdPayload = [
 
                 surveyId: [
-                        projectId:'monitorProject',
-                        protocol: [
-                                id: "guid-1", // Protocol 23 used to obtain representative data for this functional test
+                        projectId : 'monitorProject',
+                        protocol  : [
+                                id     : "guid-1", // Protocol 23 used to obtain representative data for this functional test
                                 version: 1
                         ],
                         surveyType: 'soil-pit-characterisation-full',
-                        time: '2023-08-28T00:34:13.100Z',
-                        randNum: 46390249
+                        time      : '2023-08-28T00:34:13.100Z',
+                        randNum   : 46390249
                 ]
         ]
         Map collectionPayload = [
-                projectId:'monitorProject',
-                protocol: [
-                        id: "guid-1",
+                projectId: 'monitorProject',
+                protocol : [
+                        id     : "guid-1",
                         version: 1
                 ],
-                userId: '1',
-                eventTime:'2023-08-28T00:28:15.272Z'
+                userId   : '1',
+                eventTime: '2023-08-28T00:28:15.272Z'
         ]
 
         when:
-        String url = testConfig.ecodata.baseUrl+'paratoo/mintCollectionId'
+        String url = testConfig.ecodata.baseUrl + 'paratoo/plot-selections'
         Map headers = ["Authorization": "Bearer ${token}"]
-        Map resp = webService.post(url, mintCollectionIdPayload, null, ContentType.APPLICATION_JSON, false, false, headers)
+        Map resp = webService.post(url, plotSelectionsPayload, null, ContentType.APPLICATION_JSON, false, false, headers)
+
+        then:
+        resp.statusCode == HttpStatus.SC_OK
+
+        when:
+        url = testConfig.ecodata.baseUrl + 'paratoo/mintCollectionId'
+        headers = ["Authorization": "Bearer ${token}"]
+        resp = webService.post(url, mintCollectionIdPayload, null, ContentType.APPLICATION_JSON, false, false, headers)
 
         String orgMintedIdentifier = resp.resp.orgMintedIdentifier
 
@@ -68,13 +98,12 @@ class ParatooIntegrationSpec extends StubbedCasSpec implements GrailsUnitTest {
 
         when:
         collectionPayload.mintedCollectionId = orgMintedIdentifier
-        url = testConfig.ecodata.baseUrl+'/paratoo/collection'
+        url = testConfig.ecodata.baseUrl + '/paratoo/collection'
         resp = webService.post(url, collectionPayload, null, ContentType.APPLICATION_JSON, false, false, headers)
 
         then:
         resp.statusCode == HttpStatus.SC_OK
         resp.resp.success == true
-
 
 
     }
