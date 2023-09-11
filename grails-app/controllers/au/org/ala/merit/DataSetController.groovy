@@ -75,7 +75,6 @@ class DataSetController {
         }
 
         List projectProtocols = projectService.listProjectProtocols(project).collect{
-            println it
             [label:it.name, value:it.externalId]
         }
 
