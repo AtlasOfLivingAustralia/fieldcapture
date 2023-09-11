@@ -13,7 +13,7 @@ import javax.persistence.Transient
  * It can use the current project information or retrieve project data from an audit message if the audit
  * message id is supplied.
  */
-class MeriPlanReportCommand implements Validateable{
+class MeriPlanChangesReportCommand implements Validateable{
 
     static String RLP_MERI_PLAN_TEMPLATE = "rlpMeriPlan"
 
@@ -42,10 +42,13 @@ class MeriPlanReportCommand implements Validateable{
      * If validation fails or the project is not found a map with keys statusCode:<int>, error:<errors object>
      * will be returned.
      */
-    Map meriPlanReportModel() {
+    Map meriPlanChangesReportModel() {
+
         if (!validate()) {
             return [statusCode:HttpStatus.SC_UNPROCESSABLE_ENTITY, error:getErrors()]
         }
+        Map original = null
+        Map changed = null
         Map project, content
         if (documentId) {
             content = projectService.getApprovedMeriPlanProject(documentId)
@@ -57,8 +60,10 @@ class MeriPlanReportCommand implements Validateable{
                 project.remove("sites")
             }
         }
+        original = project = content?.project
+        changed = projectService.get(id, 'all')
 
-        Map model
+        Map model = [project:content?.project]
         if (!project) {
             errors.reject("Project not found")
             model = [statusCode: HttpStatus.SC_NOT_FOUND, error:getErrors()]
@@ -68,21 +73,23 @@ class MeriPlanReportCommand implements Validateable{
 
             project?.referenceDocument = content?.referenceDocument
             project?.dateApproved = content?.dateApproved
-            /*
-              Pre-2020 the project template was determined differently,
-              the historical MERI plan function was only enabled on RLP projects during that time.
-              For this issue(github 2748) it is sensible to default the RLP template.
-            */
-            String meriPlanTemplate = config?.meriPlanTemplate ?: RLP_MERI_PLAN_TEMPLATE
-            model = [project:content?.project,
+
+
+
+            [project:content?.project,
                      config:config,
-                     headerTemplate:'/project/'+meriPlanTemplate+'Header',
-                     meriPlanTemplate:'/project/'+meriPlanTemplate+'View',
+                     headerTemplate:'/project/configurableMeriPlanHeader',
+                     meriPlanTemplate:'/project/configurableMeriPlanChangesView',
+                     meriPlanOriginalTemplate:'/project/configurableMeriPlanOriginalView',
+                     meriPlanChangesTemplate:'/project/configurableMeriPlanChangesView',
                      themes:metadataService.getThemesForProject(project),
+                     original:original,
+                     changed:changed,
+                     projectComparison:[project:content?.project, original:original, changed:changed],
                      user:[isAdmin:true]]
+
         }
 
-        model
     }
 
 }

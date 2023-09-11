@@ -888,6 +888,41 @@ class FCTagLib {
         out << '<span class="diff"></span>'
     }
 
+    def renderComparisonNewVersion = { attrs ->
+
+        List original = attrs.original
+        List changed = attrs.changed
+        int i = attrs.i
+        if (attrs.property) {
+            String property = attrs.property
+
+            out << '<span class="original hide">'
+            if (original && original.size() > i) {
+                out << original[i][property]
+            }
+            out << '</span>'
+            out << '<span class="changed hide">'
+            if (changed && changed.size() > i) {
+                out << changed[i][property]
+            }
+            out << '</span>'
+            out << '<span class="diff"></span>'
+        } else {
+            out << '<span class="original hide">'
+            if (original && original.size() > i) {
+                out << original[i]
+            }
+            out << '</span>'
+            out << '<span class="changed hide">'
+            if (changed && changed.size() > i) {
+                out << changed[i]
+            }
+            out << '</span>'
+            out << '<span class="diff"></span>'
+        }
+
+    }
+
     def status = { attrs ->
         String statusClass
         switch (attrs.status?.toLowerCase()) {

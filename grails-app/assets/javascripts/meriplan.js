@@ -33,6 +33,7 @@ function MERIPlan(project, projectService, config) {
         }
     }
     ReadOnlyMeriPlan.apply(this, [project, projectService, config]);
+    ReadOnlyMeriPlanOriginal.apply(this, [project, projectService, config]);
 
     self.approvedPlans = ko.observableArray();
 
@@ -208,6 +209,12 @@ function MERIPlan(project, projectService, config) {
     self.meriPlanPDF = function() {
         var url = config.meriPlanPDFUrl;
         window.open(url,'meri-plan-report');
+    };
+
+    self.meriPlanChanges = function() {
+        alert("meriPlanChanges!!!");
+        var url = config.meriPlanChangesUrl;
+        window.open(url,'meri-planchanges-report');
     };
 
     self.unlockPlanForCorrection = function () {
@@ -606,7 +613,7 @@ function MERIPlan(project, projectService, config) {
     };
 }
 
-function ReadOnlyMeriPlan(project, projectService, config) {
+function ReadOnlyMeriPlan(project, projectService, config, original, changed) {
     var self = this;
     if (!project.custom) {
         project.custom = {};
@@ -704,6 +711,16 @@ function ReadOnlyMeriPlan(project, projectService, config) {
     self.selectedTargetMeasures = ko.observableArray();
     var details = new DetailsViewModel(project.custom.details, project, self.periods, self.risks, self.allTargetMeasures, self.selectedTargetMeasures, config);
     self.meriPlan = ko.observable(details);
+
+    // var detailsOriginal = new DetailsViewModel(original.custom.details, original, self.periods, self.risks, self.allTargetMeasures, self.selectedTargetMeasures, config);
+    // self.meriPlanOriginal = ko.observable(detailsOriginal);
+
+    if (changed) {
+        var changedDetails = new ChangedDetailsViewModel(changed.custom.details, project, self.periods, self.risks, self.allTargetMeasures, self.selectedTargetMeasures, config);
+        self.meriPlanChanged = ko.observable(changedDetails);
+    }
+
+
     self.detailsLastUpdated = ko.observable(project.custom.details.lastUpdated).extend({simpleDate: true});
     self.isAgricultureProject = ko.computed(function () {
         var agricultureOutcomeStartIndex = 4;
@@ -791,6 +808,197 @@ function ReadOnlyMeriPlan(project, projectService, config) {
     }).extend({rateLimit:config.targetMeasureUpdateLimit || 1000});
     self.monitoringIndicators = function(code) {
         var relatedIndicators = _.filter(self.meriPlan().monitoring.rows(), function(row) {
+            return row.relatedBaseline() == ko.utils.unwrapObservable(code);
+        });
+        return relatedIndicators;
+    }
+};
+
+function ReadOnlyMeriPlanOriginal(project, projectService, config) {
+    var self = this;
+    if (!project.custom) {
+        project.custom = {};
+    }
+    if (!project.custom.details) {
+        project.custom.details = {};
+    }
+
+    self.periods = projectService.getBudgetHeaders(project);
+
+    self.plannedStartDate = ko.observable(project.plannedStartDate).extend({simpleDate: false});
+    self.plannedEndDate = ko.observable(project.plannedEndDate).extend({simpleDate: false});
+
+    self.meriPlanStatus = ko.pureComputed(function () {
+        var result = {
+            text: 'This plan is not yet approved',
+            badgeClass: 'badge-warning'
+        };
+        if (projectService.isCompletedOrTerminated()) {
+            if (projectService.isUnlockedForDataCorrection()) {
+                result = {text: 'The plan has been unlocked for data correction', badgeClass: 'badge-warning'};
+            } else {
+                if (projectService.isTerminated()){
+                    result = {text: 'This project is ' + project.status.toLowerCase(), badgeClass: 'badge-danger'};
+                }else{
+                    result = {text: 'This project is ' + project.status.toLowerCase(), badgeClass: 'badge-info'};
+                }
+            }
+        } else {
+            if (projectService.isApproved()) {
+                result = {text: 'This plan has been approved', badgeClass: 'badge-success'};
+            } else if (projectService.isSubmitted()) {
+                result = {text: 'This plan has been submitted for approval', badgeClass: 'badge-info'};
+            }
+        }
+        return result;
+    });
+
+    var disableFlag = ko.observable(false);
+    self.isProjectDetailsLocked = ko.computed(function () {
+        return projectService.isProjectDetailsLocked();
+    });
+    var riskModel;
+    if (config.useRlpRisksModel) {
+        riskModel = rlpRiskModel();
+    } else {
+        riskModel = meritRiskModel();
+    }
+
+    // List of service / target measure
+    self.allTargetMeasures = [];
+    var services = config.services || [];
+    for (var i=0; i<services.length; i++) {
+        if (services[i].scores) {
+            for (var j=0; j<services[i].scores.length; j++) {
+                self.allTargetMeasures.push( {
+                    label:services[i].name+' - '+services[i].scores[j].label,
+                    serviceId:services[i].id,
+                    scoreId:services[i].scores[j].scoreId,
+                    service:services[i],
+                    score:services[i].scores[j],
+                    value:services[i].scores[j].scoreId
+                });
+            }
+        }
+    }
+    self.allTargetMeasures = _.sortBy(self.allTargetMeasures, 'label');
+    self.monitoringTargetMeasures = _.filter(self.allTargetMeasures, function(targetMeasure) {
+        return targetMeasure.score.tags && targetMeasure.score.tags.indexOf('Indicator') >= 0;
+    });
+    self.baselineTargetMeasures = _.filter(self.allTargetMeasures, function(targetMeasure) {
+        return targetMeasure.score.tags && targetMeasure.score.tags.indexOf('Baseline') >= 0;
+    });
+    /**
+     * This function allows the UI to convert an array of scoreIds into the same labels
+     * that are used in the editable version of the MERI plan.
+     * @param scoreIds {Array} An array of scoreIds
+     * @returns {string} A string containing the labels for the scoreIds
+     */
+    self.targetMeasureLabels = function(scoreIds) {
+        var result = '';
+        scoreIds = ko.utils.unwrapObservable(scoreIds);
+        for (var i=0; i<scoreIds.length; i++) {
+            var scoreId = scoreIds[i];
+            for (var j=0; j<self.allTargetMeasures.length; j++) {
+                if (self.allTargetMeasures[j].scoreId == scoreId) {
+                    result = result + self.allTargetMeasures[j].label;
+                }
+            }
+        }
+        return result;
+    }
+
+    _.extend(self, new Risks(project.risks, riskModel, disableFlag, config.risksStorageKey));
+    self.selectedTargetMeasures = ko.observableArray();
+    var details = new DetailsViewModel(project.custom.details, project, self.periods, self.risks, self.allTargetMeasures, self.selectedTargetMeasures, config);
+    self.meriPlanOriginal = ko.observable(details);
+    self.detailsLastUpdated = ko.observable(project.custom.details.lastUpdated).extend({simpleDate: true});
+    self.isAgricultureProject = ko.computed(function () {
+        var agricultureOutcomeStartIndex = 4;
+        var selectedPrimaryOutcome = self.meriPlanOriginal().outcomes.primaryOutcome.description();
+        var selectedOutcomeIndex = _.findIndex(project.outcomes, function (outcome) {
+            return outcome.outcome == selectedPrimaryOutcome;
+        });
+        return selectedOutcomeIndex >= agricultureOutcomeStartIndex;
+    });
+
+
+    function processServicesAndOutcomes(services, outcomes, serviceOutcomeMap) {
+        services = services || [];
+        outcomes = outcomes || [];
+        for (var j=0; j<services.length; j++) {
+            var service = services[j];
+            if (service) {
+                if (!serviceOutcomeMap[service]) {
+                    serviceOutcomeMap[service] = {};
+                }
+                for (var k = 0; k < outcomes.length; k++) {
+                    if (outcomes[k]) {
+                        serviceOutcomeMap[service][outcomes[k]] = true;
+                    }
+                }
+            }
+        }
+    }
+    /** All parts of the model able to specify services are collected together here */
+    self.selectedServiceWatcher = ko.computed(function() {
+
+        var services = [];
+        var serviceOutcomeMap = {};
+        var threats = self.meriPlanOriginal().threats.rows();
+        for (var i=0; i<threats.length; i++) {
+            var s = threats[i].relatedTargetMeasures();
+            var o = threats[i].relatedOutcomes();
+            processServicesAndOutcomes(s, o, serviceOutcomeMap);
+        }
+
+
+        var baseLineOutcomeMap = {}; // Tracks the outcomes related to each baseline
+        var baselines = self.meriPlanOriginal().baseline.rows();
+        for (var i=0; i<baselines.length; i++) {
+            baseLineOutcomeMap[baselines[i].code()] = baselines[i].relatedOutcomes();
+            processServicesAndOutcomes(baselines[i].relatedTargetMeasures(), baselines[i].relatedOutcomes(), serviceOutcomeMap);
+        }
+
+        var monitoring = self.meriPlanOriginal().monitoring.rows();
+        for (var i=0; i<monitoring.length; i++) {
+            // The outcome related to this monitoring indicator depends on the related baseline
+            var monitoringOutcomes = baseLineOutcomeMap[monitoring[i].relatedBaseline()];
+            processServicesAndOutcomes(monitoring[i].relatedTargetMeasures(), monitoringOutcomes, serviceOutcomeMap);
+        }
+
+        for (var prop in serviceOutcomeMap) {
+            var service = _.find(self.selectedTargetMeasures(), function(selectedService) {
+                return selectedService.scoreId == prop;
+            });
+            var newService = false;
+            if (!service) {
+                var serviceAndTarget = _.find(self.allTargetMeasures, function(target) {
+                    return target.scoreId == prop;
+                });
+                service = {scoreId:prop, serviceAndTarget: serviceAndTarget, outcomes:ko.observableArray()};
+                newService = true;
+            }
+            var outcomes = [];
+            for (var outcome in serviceOutcomeMap[prop]) {
+                outcomes.push(outcome);
+            }
+            service.outcomes(outcomes);
+            if (newService) {
+                self.selectedTargetMeasures.push(service);
+            }
+        }
+
+        _.each(self.selectedTargetMeasures(), function(selectedService) {
+            if (!serviceOutcomeMap[selectedService.scoreId]) {
+                self.selectedTargetMeasures.remove(selectedService)
+            }
+        });
+
+        return services;
+    }).extend({rateLimit:config.targetMeasureUpdateLimit || 1000});
+    self.monitoringIndicators = function(code) {
+        var relatedIndicators = _.filter(self.meriPlanOriginal().monitoring.rows(), function(row) {
             return row.relatedBaseline() == ko.utils.unwrapObservable(code);
         });
         return relatedIndicators;
@@ -908,6 +1116,119 @@ function DetailsViewModel(o, project, budgetHeaders, risks, allServices, selecte
             healthCheckUrl:config.healthCheckUrl
         });
 };
+
+function ChangedDetailsViewModel(o, project, budgetHeaders, risks, allServices, selectedTargetMeasures, config) {
+    var self = this;
+    var period = budgetHeaders;
+    if (config.useRlpTemplate) {
+        if (config.useServiceOutcomesModel) {
+            self.serviceOutcomes = new ServiceOutcomeTargetsViewModel(o.serviceIds, project.outputTargets, budgetHeaders, allServices, selectedTargetMeasures);
+        }
+        else {
+            self.services = new ServicesViewModel(o.serviceIds, config.services, project.outputTargets, budgetHeaders);
+        }
+
+        self.description = ko.observable(o.description);
+        self.name = ko.observable(o.name);
+        self.programName = config.programName;
+        self.projectEvaluationApproach = ko.observable(o.projectEvaluationApproach);
+        self.relatedProjects = ko.observable(o.relatedProjects);
+        // Initialise with 2 KEQ rows
+        if (!o.keq) {
+            o.keq = {
+                rows: new Array(2)
+            }
+        }
+    }
+    self.activities = new ActivitiesViewModel(o.activities, config.programActivities || []);
+    self.status = ko.observable(o.status);
+    self.obligations = ko.observable(o.obligations);
+    self.policies = ko.observable(o.policies);
+    self.caseStudy = ko.observable(o.caseStudy ? o.caseStudy : false);
+    self.keq = new GenericViewModel(o.keq);
+    self.objectives = new ObjectiveViewModel(o.objectives, config.programObjectives || []); // Used in original MERI plan template
+    self.outcomes = new OutcomesViewModel(o.outcomes, {outcomes:project.outcomes, priorities:project.priorities}); // Use in new MERI plan template
+    self.priorities = new GenericViewModel(o.priorities, ['data1', 'data2', 'data3', 'documentUrl']);
+    self.implementation = new ImplementationViewModel(o.implementation);
+    self.partnership = new GenericViewModel(o.partnership, ['data1', 'data2', 'data3', 'otherOrganisationType']);
+    self.lastUpdated = o.lastUpdated ? o.lastUpdated : moment().format();
+    self.budget = new BudgetViewModel(o.budget, period);
+    self.adaptiveManagement = ko.observable(o.adaptiveManagement);
+    self.rationale = ko.observable(o.rationale);
+    self.baseline = new GenericViewModel(o.baseline, ['code', 'monitoringDataStatus', 'baseline',  'method', 'evidence'], 'B', ['relatedTargetMeasures', 'relatedOutcomes', 'protocols']);
+    self.threats = new GenericViewModel(o.threats, ['threatCode', 'threat', 'intervention', 'evidence'], 'KT',['relatedTargetMeasures', 'relatedOutcomes']);
+    self.consultation = ko.observable(o.consultation);
+    self.communityEngagement = ko.observable(o.communityEngagement);
+    self.threatToNativeSpecies = new GenericViewModel(o.threatToNativeSpecies, ['couldBethreatToSpecies', 'details']);
+    self.threatControlMethod = new GenericViewModel(o.threatControlMethod, ['currentControlMethod', 'hasBeenSuccessful', 'methodType', 'details']);
+    self.monitoring = new GenericViewModel(o.monitoring, ['relatedBaseline', 'data1', 'data2', 'evidence'], null, ['relatedTargetMeasures', 'protocols']);
+    self.supportsPriorityPlace = ko.observable(o.supportsPriorityPlace);
+    self.supportedPriorityPlaces = ko.observableArray(o.supportedPriorityPlaces);
+    self.indigenousInvolved = ko.observable(o.indigenousInvolved);
+    self.indigenousInvolvementType = ko.observable(o.indigenousInvolvementType);
+    self.indigenousInvolvementComment = ko.observable(o.indigenousInvolvementComment);
+
+    var row = [];
+    o.events ? row = o.events : row.push(ko.mapping.toJS(new EventsRowViewModel()));
+    self.events = ko.observableArray(_.map(row, function (obj, i) {
+        return new EventsRowViewModel(obj);
+    }));
+
+    self.assets = ko.observableArray(_.map(o.assets || [{}], function(asset) {
+        return new AssetViewModel(asset);
+    }));
+
+    self.modelAsJSON = function () {
+        var tmp = {};
+        tmp.details = ko.mapping.toJS(self);
+        if (tmp.details.outcomes) {
+            if (tmp.details.outcomes.selectablePrimaryOutcomes) {
+                delete tmp.details.outcomes.selectablePrimaryOutcomes; // This is for dropdown population and shouldn't be saved.
+            }
+            if (tmp.details.outcomes.selectableSecondaryOutcomes) {
+                delete tmp.details.outcomes.selectableSecondaryOutcomes; // This is for dropdown population and shouldn't be saved.
+            }
+        }
+
+        var jsData = {"custom": tmp};
+
+        // For compatibility with other projects, move the targets to the top level of the data structure, if they
+        // are in the MERI plan.
+        if (config.useRlpTemplate) {
+            var serviceData = config.useServiceOutcomesModel ? tmp.details.serviceOutcomes.toJSON() : tmp.details.services.toJSON();
+
+            jsData.outputTargets = serviceData.targets;
+            jsData.description = self.description();
+            jsData.name = self.name();
+            tmp.details.serviceIds = serviceData.serviceIds;
+            delete tmp.details.services;
+            delete tmp.details.serviceOutcomes;
+        }
+
+        var json = JSON.stringify(jsData, function (key, value) {
+            return value === undefined ? "" : value;
+        });
+        return json;
+    };
+
+    autoSaveModel(
+        self,
+        config.projectUpdateUrl,
+        {
+            storageKey:config.meriStorageKey || 'meriPlan-'+project.projectId,
+            autoSaveIntervalInSeconds:config.autoSaveIntervalInSeconds || 60,
+            restoredDataWarningSelector:'#restoredData',
+            resultsMessageSelector:'.save-details-result-placeholder',
+            timeoutMessageSelector:'#timeoutMessage',
+            errorMessage:"Failed to save MERI Plan: ",
+            successMessage: 'MERI Plan saved',
+            preventNavigationIfDirty:true,
+            defaultDirtyFlag:ko.dirtyFlag,
+            dirtyFlagRateLimitMs: 500,
+            healthCheckUrl:config.healthCheckUrl
+        });
+};
+
 /** Removes nulls from arrays after toJSON is called */
 function outcomesToJSON(outcomeArray) {
     return _.filter(_.map(outcomeArray, function (outcome) {

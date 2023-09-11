@@ -55,6 +55,8 @@
                 projectReportUrl: "${createLink(controller:'project', action:'projectReport', id:project.projectId)}",
                 projectReportPDFUrl: "${createLink(controller:'project', action:'projectReportPDF', id:project.projectId)}",
                 meriPlanPDFUrl: "${createLink(controller:'project', action:'viewMeriPlan', id:project.projectId)}",
+                meriPlanChangesUrl: "${createLink(controller:'project', action:'viewMeriPlanChanges', id:project.projectId)}",
+                viewMeriPlanChangesUrl: "${createLink(controller:'project', action:"viewMeriPlanChanges", id:project.projectId)}",
                 sitesPhotoPointsUrl: "${createLink(controller:'project', action:'projectSitePhotos', id:project.projectId)}",
                 organisationSearchUrl: "${createLink(controller: 'organisation', action: 'search')}",
                 submitReportUrl: "${createLink(controller: 'project', action: 'ajaxSubmitReport', id:project.projectId)}/",
@@ -259,6 +261,8 @@
 
 var config = {
     meriPlanPDFUrl: fcConfig.meriPlanPDFUrl,
+    meriPlanChangesUrl: fcConfig.meriPlanChangesUrl,
+    viewMeriPlanChangesUrl: fcConfig.viewMeriPlanChangesUrl,
     saveTargetsUrl: fcConfig.projectUpdateUrl,
     documentUpdateUrl: fcConfig.documentUpdateUrl,
     projectUpdateUrl: fcConfig.projectUpdateUrl,
