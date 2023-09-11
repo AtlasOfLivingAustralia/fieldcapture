@@ -97,7 +97,17 @@ class ParatooIntegrationSpec extends StubbedCasSpec implements GrailsUnitTest {
         orgMintedIdentifier != null
 
         when:
-        collectionPayload.mintedCollectionId = orgMintedIdentifier
+        url = testConfig.ecodata.baseUrl + 'paratoo/pdp/monitorProject/guid-1/write'
+
+        headers = ["Authorization": "Bearer ${token}"]
+        resp = webService.get(url, null, ContentType.APPLICATION_JSON, false, false, headers)
+
+        then:
+        resp.statusCode == HttpStatus.SC_OK
+        resp.resp.isAuthorised == true
+
+        when:
+        collectionPayload.orgMintedIdentifier = orgMintedIdentifier
         url = testConfig.ecodata.baseUrl + '/paratoo/collection'
         resp = webService.post(url, collectionPayload, null, ContentType.APPLICATION_JSON, false, false, headers)
 

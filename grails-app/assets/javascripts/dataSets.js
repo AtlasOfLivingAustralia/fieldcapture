@@ -79,12 +79,16 @@ var DataSetViewModel = function(dataSet, projectService, options) {
         }
     });
 
+    self.projectBaselines = options.projectBaselines;
     self.type = ko.observable(dataSet.type);
+    self.projectBaseline = ko.observable(dataSet.projectBaseline);
     self.otherDataSetType = ko.observable(dataSet.otherDataSetType);
     self.term = ko.observable(dataSet.term);
     self.serviceAndOutcomes = ko.observable(_.find(options.projectOutcomes || [], function(outcome) {
         return outcome.serviceId == dataSet.serviceId && _.isEqual(outcome.outcomes, dataSet.projectOutcomes);
     }));
+    self.projectProtocols = config.projectProtocols;
+    self.protocol = ko.observable(dataSet.protocol);
     self.projectOutcomeList = ko.observableArray(options.projectOutcomes);
     self.serviceId = ko.computed(function() {
         return self.serviceAndOutcomes() && self.serviceAndOutcomes().serviceId;
@@ -149,7 +153,7 @@ var DataSetViewModel = function(dataSet, projectService, options) {
 
         if (valid) {
             var dataSet = ko.mapping.toJS(self,
-                {ignore: ['grantId', 'projectName', 'programName', 'validate', 'save', 'cancel', 'investmentOtherSelected', 'siteUrl', 'isAutoCreated', 'serviceAndOutcomes', 'projectOutcomeList']});
+                {ignore: ['grantId', 'projectName', 'programName', 'validate', 'save', 'cancel', 'investmentOtherSelected', 'siteUrl', 'isAutoCreated', 'serviceAndOutcomes', 'projectOutcomeList', 'projectBaselines', 'projectProtocols']});
             projectService.saveDataSet(dataSet).done(function() {
                 // return to project
                 window.location.href = config.returnToUrl;

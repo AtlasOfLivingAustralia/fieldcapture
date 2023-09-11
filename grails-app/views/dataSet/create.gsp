@@ -52,6 +52,8 @@
     var projectService = new ProjectService(project, fcConfig);
     var config = _.extend(fcConfig, {endDateSelector:"#endDate"});
     config.projectOutcomes = <fc:modelAsJavascript model="${projectOutcomes}"/>;
+    config.projectBaselines = <fc:modelAsJavascript model="${projectBaselines}"/>;
+    config.projectProtocols = <fc:modelAsJavascript model="${projectProtocols}"/>;
     var viewModel = new DataSetViewModel({}, projectService, config);
     ko.applyBindings(viewModel);
 </script>

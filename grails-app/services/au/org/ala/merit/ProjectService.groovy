@@ -1951,6 +1951,19 @@ class ProjectService  {
         project?.custom?.details?.assets?.collect{it.description}?.findAll{it}
     }
 
+    List listProjectBaselines(Map project) {
+        project?.custom?.details?.baseline?.rows
+    }
+
+    List listProjectProtocols(Map project) {
+        List<Map> forms = activityService.monitoringProtocolForms()
+        List baselineProtocols = project?.custom?.details?.baseline?.rows?.collect{it.protocols}?.flatten() ?:[]
+        List monitoringProtocols = project?.custom?.details?.monitoring?.rows?.collect{it.protocols}?.flatten() ?:[]
+
+        List modules = (baselineProtocols + monitoringProtocols).unique().findAll{it}
+        forms?.findAll{it.category in modules}
+    }
+
     /**
      * Returns a map with key=<project priority>, value=<Ag or Env>
      * The map is used to determine whether the priority is associated with

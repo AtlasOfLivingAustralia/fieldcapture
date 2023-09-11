@@ -66,7 +66,20 @@ class DataSetController {
             }
         }
 
-        [projectId:projectId, programName:programName, priorities:priorities, outcomes: outcomes, project:project, projectOutcomes:outcomeGroups]
+        List projectBaselines = projectService.listProjectBaselines(project)
+        projectBaselines = projectBaselines?.collect{
+            // Only projects used the 2023 revision of the MERI plan will have a code attribute for their baselines
+            String label = it.code ? it.code + ' - '+ it.baseline : it.baseline
+            String value = it.code ?: it.baseline
+            [label:label, value: value]
+        }
+
+        List projectProtocols = projectService.listProjectProtocols(project).collect{
+            println it
+            [label:it.name, value:it.externalId]
+        }
+
+        [projectId:projectId, programName:programName, priorities:priorities, outcomes: outcomes, project:project, projectOutcomes:outcomeGroups, projectBaselines:projectBaselines, projectProtocols:projectProtocols]
     }
 
     // Note that authorization is done against a project, so the project id must be supplied to the method.
