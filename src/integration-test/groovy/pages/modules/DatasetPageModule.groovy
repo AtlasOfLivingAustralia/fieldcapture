@@ -11,6 +11,8 @@ class DatasetPageModule extends Module{
         investmentPriorities {$('#investmentPriority')}
         serviceAndOutcomes {$('#projectOutcomes')}
         type{$("#type")}
+        projectBaseline{ $('#projectBaseline')}
+        protocol{$('#protocol')}
         measurementTypes {$("#measurementTypes")}
         methods {$("#methods")}
         methodDescription  {$("#methodDescription")}
