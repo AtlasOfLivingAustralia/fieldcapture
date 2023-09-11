@@ -28,10 +28,14 @@ It is currently in use by the Australian Government.
 This configuration file largely specifies URLs to MERIT dependencies.  See https://github.com/AtlasOfLivingAustralia/fieldcapture/wiki/MERIT-Dependencies for information about these.
 Note that you will need to obtain an ALA API key to use ALA services and a Google Maps API key and specify them in this file.
 
+npm / nodejs are used to run javascript unit tests.  There is a dependency on the ecodata-client-plugin for some javascript which is published to github packages which requires an access token to read.
+
 * Install npm and nodejs (see https://www.npmjs.com/get-npm)
+* Authenticate to github packages using your github username and access token setup for package:read
 * Install the node dependencies for MERIT.  Note these are currently only used for testing.
 
 ```
+npm login --scope=@atlasoflivingaustralia --auth-type=legacy --registry=https://npm.pkg.github.com
 npm install
 npm install -g karma
 ```

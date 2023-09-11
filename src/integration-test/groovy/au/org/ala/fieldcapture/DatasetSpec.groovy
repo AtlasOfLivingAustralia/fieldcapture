@@ -33,9 +33,7 @@ class DatasetSpec extends StubbedCasSpec{
         def dataSet = datasetContent
         dataSet.title = "Title"
         dataSet.programOutcome = "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
-        dataSet.investmentPriorities = ["Soil acidification", "Other"]
-        dataSet.otherInvestmentPriority = "Other Priority"
-        dataSet.term = "Short-term outcome statement"
+        dataSet.investmentPriorities = ["Soil acidification"]
         dataSet.type = "Baseline dataset associated with a project outcome"
         dataSet.measurementTypes = ["Soil erosion"]
         dataSet.methods = ["Genetic sampling", "Area sampling"]
@@ -46,10 +44,6 @@ class DatasetSpec extends StubbedCasSpec{
         dataSet.endDate ="21-01-2022"
         dataSet.addition = "Yes"
         dataSet.threatenedSpeciesIndex = "Yes"
-        dataSet.collectorType = "University researcher"
-        dataSet.qa = "Yes"
-        dataSet.published = "Yes"
-        dataSet.storageType = "Aurion"
         dataSet.publicationUrl = "url"
         dataSet.format = "JSON"
         dataSet.sensitivities =["Commercially sensitive", "Ecologically sensitive"]
@@ -96,9 +90,7 @@ class DatasetSpec extends StubbedCasSpec{
         def set = datasetContent
         set.title == "Title"
         set.programOutcome == "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
-        set.investmentPriorities == ["Soil acidification", "Other"]
-        set.otherInvestmentPriority == "Other Priority"
-        set.term == "Short-term outcome statement"
+        set.investmentPriorities == ["Soil acidification"]
         set.type == "Baseline dataset associated with a project outcome"
         set.measurementTypes == ["Soil erosion"]
         set.methods == ["Genetic sampling", "Area sampling"]
@@ -109,17 +101,12 @@ class DatasetSpec extends StubbedCasSpec{
         set.endDate =="21-01-2022"
         set.addition == "Yes"
         set.threatenedSpeciesIndex == "Yes"
-        set.collectorType == "University researcher"
-        set.qa == "Yes"
-        set.published == "Yes"
-        set.storageType == "Aurion"
-        set.publicationUrl == "url"
         set.format == "JSON"
         set.sensitivities ==["Commercially sensitive", "Ecologically sensitive"]
         set.dataOwner == "data owner"
         set.custodian == "custodian"
-        set.dataCollectionOngoing.size() == 1
-        set.dataCollectionOngoingChecked.size() == 0
+        !set.dataCollectionOngoing.checked
+
 
         when:
         cancel()
@@ -175,8 +162,7 @@ class DatasetSpec extends StubbedCasSpec{
 
         def set = datasetContent
         set.title == "Title"
-        set.dataCollectionOngoing.size() == 1
-        set.dataCollectionOngoingChecked.size() == 0
+        !set.dataCollectionOngoing.checked
 
         when:
         set.markCompleted.click()
@@ -190,8 +176,7 @@ class DatasetSpec extends StubbedCasSpec{
         when:
         set.title = "Title"
         set.programOutcome = "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
-        set.investmentPriorities = ["Soil acidification", "Other"]
-        set.otherInvestmentPriority = "Other Priority"
+        set.investmentPriorities = ["Soil acidification"]
         set.type = "Baseline dataset associated with a project outcome"
         set.measurementTypes = ["Soil erosion"]
         set.methods = ["Genetic sampling", "Area sampling"]
@@ -202,16 +187,13 @@ class DatasetSpec extends StubbedCasSpec{
         set.endDate ="21-01-2022"
         set.addition = "Yes"
         set.threatenedSpeciesIndex = "Yes"
-        set.collectorType = "University researcher"
-        set.qa = "Yes"
-        set.published = "Yes"
-        set.storageType = "Aurion"
-        set.publicationUrl = "url"
         set.format = "JSON"
         set.sensitivities =["Commercially sensitive", "Ecologically sensitive"]
         set.dataOwner = "data owner"
         set.custodian = "custodian"
-
+        set.publicationUrl = "https://www.ala.org.au"
+        set.threatenedSpeciesDateOfUpload = '21-01-2021'
+        set.dataSetSize = '200'
         set.createButton.click()
 
         then:

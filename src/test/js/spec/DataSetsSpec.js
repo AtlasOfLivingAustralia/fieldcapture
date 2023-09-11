@@ -79,21 +79,18 @@ describe("The data set summaries view models behave correctly", function () {
                 "Surveying - Fauna, Flora"
             ],
             "format" : "Excel",
-            "published" : "No",
             "sensitivities" : [
                 "No"
             ],
             "type" : "Project progress dataset that is tracking change against an established project baseline dataset",
             "collectionApp" : "Test app",
-            "collectorType" : "Other",
-            "qa" : "Yes",
             "dataSetId" : "9bbed216-c3d4-4346-912b-0127a4bb53b9",
             "name" : "Test data set",
             "measurementTypes" : [
                 "Abundance"
             ],
-            "storageType" : "Stored internally",
             "location" : "Test",
+            "siteId": null,
             "programOutcome" : "2. By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved.",
             "publicationUrl" : "https://test.com.au",
             "startDate" : "2020-11-30T13:00:00Z",
@@ -101,8 +98,21 @@ describe("The data set summaries view models behave correctly", function () {
             "threatenedSpeciesIndex" : "Yes",
             "progress" : "started",
             "markedAsFinished": false,
-            "term": "Short-term outcome statement",
-            "dataCollectionOngoing": false
+            "dataCollectionOngoing": false,
+            "serviceId":"1",
+            "projectOutcomes":["MT1", "ST1"],
+            "surveyId": {
+                "survey-type":'test',
+                "randNum": 1234,
+                "time":"2023-06-30T00:00:00.000Z"
+            },
+            "term":null,
+            "otherMeasurementType":null,
+            "threatenedSpeciesIndexUploadDate":'',
+            "sizeUnknown": false,
+            "otherSensitivity":null,
+            "otherDataSetType":null,
+            "sizeInKB": 205
         };
     }
 
@@ -110,7 +120,13 @@ describe("The data set summaries view models behave correctly", function () {
     it("The DataSetViewModel can manipulate data set data for the purposes of the Data set edit/create pages", function () {
         var config = {
             returnToUrl: '/project/1',
-            validationContainerSelector: '.validationEngineContainer'
+            validationContainerSelector: '.validationEngineContainer',
+            projectOutcomes: [
+                {
+                    "serviceId":"1",
+                    "outcomes": ["MT1", "ST1"]
+                }
+            ]
         };
 
         var dataSetsVM = new DataSetViewModel(dataSet(), projectService, config);
