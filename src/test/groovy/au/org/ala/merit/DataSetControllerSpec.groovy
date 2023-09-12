@@ -44,7 +44,7 @@ class DataSetControllerSpec extends Specification implements ControllerUnitTest<
         model == [project:project, projectId:'p1', programName:"program 1",
                   priorities:["p1"], outcomes:["1", "2"], projectOutcomes:[],
                     projectBaselines:[[label:"b1 - a baseline", value:"b1"]],
-                    projectProtocols:[[label:"p1", value:"p1"]]]
+                    projectProtocols:[[label:"p1", value:"p1"], [label:'Other', value:'other']]]
 
     }
 
@@ -89,7 +89,7 @@ class DataSetControllerSpec extends Specification implements ControllerUnitTest<
         model == [project:project, projectId:'p1', programName:"program 1", priorities:["p1"],
                   outcomes:["1", "2"], projectOutcomes:[], dataSet:existingDataSets[1],
                   projectBaselines:[[label:"b1 - a baseline", value:"b1"]],
-                  projectProtocols:[[label:"p1", value:"p1"]]]
+                  projectProtocols:[[label:"p1", value:"p1"], [label:'Other', value:'other']]]
     }
 
     void "The save method delegates to the projectService"() {
@@ -153,6 +153,6 @@ class DataSetControllerSpec extends Specification implements ControllerUnitTest<
         model == [project:project, projectId:'p1', programName:"program 1", priorities:["p1"],
                   outcomes:["1", "2"], projectOutcomes:[], dataSet:existingDataSets[1],
                   projectBaselines:[[label:"b1 - a baseline", value:"b1"]],
-                  projectProtocols:[[label:"p1", value:"p1"]]]
+                  projectProtocols:[[label:"p1", value:"p1"], [label:'Other', value:'other']]]
     }
 }
