@@ -74,7 +74,7 @@ class MeriPlanReportCommand implements Validateable{
               For this issue(github 2748) it is sensible to default the RLP template.
             */
             String meriPlanTemplate = config?.meriPlanTemplate ?: RLP_MERI_PLAN_TEMPLATE
-            model = [project:content?.project,
+            model = [project:project,
                      config:config,
                      headerTemplate:'/project/'+meriPlanTemplate+'Header',
                      meriPlanTemplate:'/project/'+meriPlanTemplate+'View',
