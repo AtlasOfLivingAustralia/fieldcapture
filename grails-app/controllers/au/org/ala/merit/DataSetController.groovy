@@ -77,6 +77,7 @@ class DataSetController {
         List projectProtocols = projectService.listProjectProtocols(project).collect{
             [label:it.name, value:it.externalId]
         }
+        projectProtocols << [label:'Other', value:'other']
 
         [projectId:projectId, programName:programName, priorities:priorities, outcomes: outcomes, project:project, projectOutcomes:outcomeGroups, projectBaselines:projectBaselines, projectProtocols:projectProtocols]
     }

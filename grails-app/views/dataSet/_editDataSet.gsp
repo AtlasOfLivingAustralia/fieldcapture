@@ -97,8 +97,6 @@
         </div>
     </div>
 
-%{--    Not every project will have the option to select EMSA protocols --}%
-    <!-- ko if:projectProtocols().length > 0 -->
     <div class="form-group row">
         <label for="protocol" class="col-sm-5 col-form-label required">9a. What EMSA protocol was used when collecting the data?</label>
         <div class="col-sm-7">
@@ -106,7 +104,6 @@
             </select>
         </div>
     </div>
-    <!-- /ko -->
 
     <div class="form-group row">
         <label for="measurementTypes" class="col-sm-5 col-form-label required">9b. What types of measurements or observations does the dataset include? <br/>To select more than one answer, hold down the ‘CTRL’ button whilst selecting an option from the drop-down list</label>

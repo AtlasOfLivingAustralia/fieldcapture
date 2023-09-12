@@ -106,7 +106,7 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     self.collectionApp = ko.observable(dataSet.collectionApp);
     self.location = ko.observable(dataSet.location);
     self.siteId = ko.observable(dataSet.siteId);
-    self.siteUrl = options.viewSiteUrl + dataSet.siteId;
+    self.siteUrl = options.viewSiteUrl + '/' + dataSet.siteId;
     self.startDate = ko.observable(dataSet.startDate).extend({simpleDate:false});
     self.endDate = ko.observable(dataSet.endDate).extend({simpleDate:false});
     self.endDate.subscribe(function (endDate) {
