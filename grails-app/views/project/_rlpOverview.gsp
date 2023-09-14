@@ -125,7 +125,7 @@
                         <tr>
                             <th></th>
                             <th class="outcome">Outcomes</th>
-                            <th class="priority">Primary Investment Priority</th>
+                            <th class="priority">Investment Priority</th>
                         </tr>
                         </thead>
                         <tbody>
