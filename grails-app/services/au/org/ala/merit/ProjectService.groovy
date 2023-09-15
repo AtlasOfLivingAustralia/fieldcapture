@@ -1669,8 +1669,11 @@ class ProjectService  {
     }
 
     List outcomesByScores(String projectId, List scoreIds) {
-
         Map project = get(projectId)
+        outcomesByScores(project, scoreIds)
+    }
+
+    List outcomesByScores(Map project, List scoreIds) {
         List outcomes = []
         scoreIds.each { String scoreId ->
             Map target = project.outputTargets?.find{it.scoreId == scoreId}
