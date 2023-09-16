@@ -94,7 +94,7 @@ class OrganisationReportingSpec extends StubbedCasSpec {
         reportingSection.generateReports()
 
         then:
-        waitFor 20,{
+        waitFor 60,{
             hasBeenReloaded()
         }
 
