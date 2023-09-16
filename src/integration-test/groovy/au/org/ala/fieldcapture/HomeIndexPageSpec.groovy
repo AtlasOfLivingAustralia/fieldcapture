@@ -15,19 +15,13 @@ class HomeIndexPageSpec extends StubbedCasSpec {
 
     def "Display total number of projects and scores Ha in the homepage"(){
 
-        setup:
+        setup: "Clear the home page statistics cache to ensure they are calculated using the dataset used by this test"
         loginAsAlaAdmin(browser)
-
-        when:
         to AdminTools
         clearMetadata()
         reindex()
         to AdminClearCachePage
-
-        then:
-        waitFor {$("#homePageStatistics").displayed}
-        $("#homePageStatistics").click()
-        waitFor{hasBeenReloaded()}
+        clearHomePageStatistics()
 
         when:
         to HomePage

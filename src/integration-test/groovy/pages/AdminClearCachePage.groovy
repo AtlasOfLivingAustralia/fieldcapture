@@ -25,6 +25,9 @@ class AdminClearCachePage extends ReloadablePage {
     void clearHomePageStatistics(){
         waitFor {homePageStatistics.displayed}
         homePageStatistics.click()
+
+        waitFor{hasBeenReloaded()}
+        at AdminClearCachePage  // Reset at check
     }
 
     void clearProgramListCache() {
@@ -32,6 +35,7 @@ class AdminClearCachePage extends ReloadablePage {
             programListCache.click()
 
             waitFor { hasBeenReloaded() }
+            at AdminClearCachePage  // Reset at check
         }
     }
 
@@ -40,6 +44,7 @@ class AdminClearCachePage extends ReloadablePage {
             serviceListCache.click()
 
             waitFor { hasBeenReloaded() }
+            at AdminClearCachePage  // Reset at check
         }
     }
 
@@ -48,6 +53,7 @@ class AdminClearCachePage extends ReloadablePage {
             protocolListCache.click()
 
             waitFor { hasBeenReloaded() }
+            at AdminClearCachePage  // Reset at check
         }
     }
 }
