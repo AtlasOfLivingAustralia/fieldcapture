@@ -20,6 +20,8 @@ class HomeIndexPageSpec extends StubbedCasSpec {
         to AdminTools
         clearMetadata()
         reindex()
+        // Give the re-index time to finish before proceeding
+        Thread.sleep(30000)
         to AdminClearCachePage
         clearHomePageStatistics()
         waitFor{hasBeenReloaded()}
