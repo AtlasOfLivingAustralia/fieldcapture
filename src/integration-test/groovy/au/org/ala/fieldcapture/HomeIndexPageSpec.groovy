@@ -22,8 +22,6 @@ class HomeIndexPageSpec extends StubbedCasSpec {
         reindex()
         to AdminClearCachePage
         clearHomePageStatistics()
-
-        then:
         waitFor{hasBeenReloaded()}
 
         when:
