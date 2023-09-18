@@ -56,8 +56,8 @@ class SiteController {
             if (params.projectId) {
                 selectedProject = userProjects.find{it.projectId == params.projectId}
             }
-            else if (userProjects.size() == 1) {
-                selectedProject = userProjects[0]
+            else if (userProjects.size() >= 1) {
+                selectedProject = userProjects[0] // Just pick a random project for context if navigation wasn't from the project.
             }
 
             // Filter visible activities to those the user has access to.
