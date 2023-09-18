@@ -15,31 +15,16 @@
         </g:if>
     </tr>
     </thead>
-    <tbody data-bind="foreach : ${indictorSelectorExpression?:'details.objectives.rows'}">
+    <tbody>
+    <g:set var="max" value="${Math.max(project.custom.details.monitoring?.rows.size(), changed.custom.details.monitoring?.rows?.size()?:0)}"/>
+    <g:each in="${(0..<1)}" var="i">
     <tr>
-        <td class="index"><span data-bind="text: $index()+1"></span></td>
-        <td class="baseline"><span data-bind="text:data1"></span></td>
-        <g:if test="${extendedMonitoring}">
-            <td class="monitoring-service">
-                <span data-bind="text:$root.targetMeasureLabels(relatedTargetMeasures)"></span>
-            </td>
-        </g:if>
-        <td class="monitoring-method">
-        <g:if test="${extendedMonitoring}">
-            <span data-bind="text:protocols"></span>
-            <br/>
-            <span data-bind="visible:_.contains(protocols(), 'Other'), text: data2"></span>
-
-        </g:if>
-        <g:else>
-            <span data-bind="text:data2"></span>
-        </g:else>
-        </td>
-        <g:if test="${extendedMonitoring}">
-            <td class="monitoring-evidence">
-                <span class="textarea-view" data-bind="text:evidence"></span>
-            </td>
-        </g:if>
+        <td class="index"><span data-bind="text: ${i}+1"></span></td>
+        <td class="baseline"><fc:renderComparisonMonitoring changed="${changed.custom.details.monitoring.rows ?: []}" i="${i}" code="${code}" original="${project.custom.details.monitoring.rows ?: []}" property="data1"/></td>
+        <td class="monitoring-service"><fc:renderComparisonMonitoring changed="${changed.custom.details.monitoring.rows ?: []}" i="${i}" code="${code}" original="${project.custom.details.monitoring.rows ?: []}" property="relatedTargetMeasures"/></td>
+        <td class="monitoring-method"><fc:renderComparisonMonitoring changed="${changed.custom.details.monitoring.rows ?: []}" i="${i}" code="${code}" original="${project.custom.details.monitoring.rows ?: []}" property="protocols"/></td>
+        <td class="monitoring-evidence"><fc:renderComparisonMonitoring changed="${changed.custom.details.monitoring.rows ?: []}" i="${i}" code="${code}" original="${project.custom.details.monitoring.rows ?: []}" property="evidence"/></td>
     </tr>
+    </g:each>
     </tbody>
 </table>

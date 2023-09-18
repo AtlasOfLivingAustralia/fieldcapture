@@ -588,9 +588,13 @@ class MeriPlanSpec extends StubbedCasSpec {
         when:
         waitFor { openMeriPlan.toggleMeriPlanHistory.click() }
 
-        then:
+        then:"Open a history of the approved meri plan"
         openMeriPlan.meriPlanHistory.size() == 1
-        waitFor { openMeriPlan.meriPlanHistory.open[0].click() }
+        $(".fa-external-link").click()
+
+        and:"View meri plan comparison"
+        $(".fa-code-fork").click()
+
 
         when:
         overviewTab.click()

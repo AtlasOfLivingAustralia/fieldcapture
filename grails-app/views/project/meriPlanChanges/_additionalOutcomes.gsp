@@ -8,8 +8,8 @@
     </thead>
     <tbody>
     <tr>
-        <td class="outcome-priority" id="secondaryOutcomes">
-            <span>
+        <td class="outcome-priority">
+            <span id="additional-benefits">
                 <g:set var="max" value="${Math.max(project.custom.details.outcomes?.secondaryOutcomes?.size(), changed.custom.details.outcomes?.secondaryOutcomes?.size()?:0)}"/>
                 <g:each in="${(0..<max)}" var="i">
                     <span><fc:renderComparison changed="${changed.custom.details.outcomes.secondaryOutcomes ?: []}" i="${i}" original="${project.custom.details.outcomes.secondaryOutcomes ?: []}" property="description"/></span>
@@ -17,7 +17,7 @@
             </span>
         </td>
         <td>
-            <span id="secondaryAssets">
+            <span id="secondary-assets">
                 <g:set var="max" value="${Math.max(project.custom.details.outcomes?.secondaryOutcomes?.assets?.size(), changed.custom.details.outcomes?.secondaryOutcomes?.assets?.size()?:0)}"/>
                 <g:each in="${(0..<max)}" var="i">
                     <span><fc:renderComparison changed="${changed.custom.details.outcomes.secondaryOutcomes ?: []}" i="${i}" original="${project.custom.details.outcomes.secondaryOutcomes ?: []}" property="assets"/></span>

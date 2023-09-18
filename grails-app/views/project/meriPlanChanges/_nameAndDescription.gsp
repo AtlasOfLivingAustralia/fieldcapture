@@ -3,7 +3,7 @@
 <table class="table">
     <thead>
     <tr>
-        <th>Project name xx</th>
+        <th>Project name</th>
     </tr>
     </thead>
     <tbody>

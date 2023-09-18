@@ -7,8 +7,6 @@
         <g:if test="${priorityPlaceHelpText}"><fc:iconHelp>${priorityPlaceHelpText}</fc:iconHelp></g:if>
     </div>
     <div class="col-sm-4">
-
-%{--        <span data-bind="text:details.supportsPriorityPlace">sassdf</span>--}%
         <span style="display: none" class="original" data-bind="text:details.supportsPriorityPlace"></span>
         <span style="display: none" class="changed" data-bind="text:detailsChanged.supportsPriorityPlace"></span>
         <span wrap class="diff1"></span>
@@ -16,19 +14,14 @@
     </div>
 </div>
 
-%{--<g:if test="${changed.custom.details.supportsPriorityPlace != 'No'}">--}%
+
     <!-- ko if:detailsChanged.supportsPriorityPlace() == 'Yes' -->
 <div class="row">
-
-
     <div class="col-sm-8">Please select the supported priority places</div>
     <div class="col-sm-4">
-%{--        <span data-bind="text:detailsChanged.supportedPriorityPlaces"></span>--}%
         <span style="display: none" class="original" data-bind="text:details.supportedPriorityPlaces"></span>
         <span style="display: none" class="changed" data-bind="text:detailsChanged.supportedPriorityPlaces"></span>
         <span wrap class="diff1"></span>
     </div>
-
 </div>
     <!-- /ko -->
-%{--</g:if>--}%

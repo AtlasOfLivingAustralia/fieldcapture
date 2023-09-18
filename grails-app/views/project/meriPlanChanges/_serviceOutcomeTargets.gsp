@@ -1,7 +1,6 @@
-<!-- ko with:details.serviceOutcomes -->
 <h4>${title ?: "Project services and outcome targets"}</h4>
 
-<table class="table service-outcomes-targets-view">
+<table class="table service-outcomes-targets-view service-outcome-changed">
     <thead>
     <tr>
     <tr>
@@ -10,14 +9,17 @@
         <th class="score required">Target measure</th>
     </tr>
     </thead>
-    <tbody data-bind="foreach : outcomeTargets">
+    <tbody>
+    <g:set var="max" value="${Math.max(changed.outputTargets.size(), project.outputTargets.size()?:0)}"/>
+    <g:each in="${(0..<max)}" var="i">
+
     <tr class="service-target">
-        <td class="index"><span data-bind="text:$index()+1"></span></td>
+        <td class="index"><span data-bind="text:${i}+1"></span></td>
         <td class="service">
-            <span data-bind="text:serviceLabel"></span>
+            <fc:renderComparisonOutputType changed="${changed.outputTargets ?: []}" i="${i}" original="${project.outputTargets ?: []}" property="scoreId"/>
         </td>
         <td class="score">
-            <span data-bind="text:scoreLabel"></span>
+            <fc:renderComparisonScoreLabel changed="${changed.outputTargets ?: []}" i="${i}" original="${project.outputTargets ?: []}" property="scoreId"/>
         </td>
     </tr>
     <tr>
@@ -25,18 +27,15 @@
         <th>Project Outcome/s</th>
         <th>Target</th>
     </tr>
-    <!-- ko foreach:outcomeTargets -->
     <tr class="outcome-target">
         <td class="index"></td>
         <td class="service">
-            <span data-bind="text:relatedOutcomes"></span>
+            <fc:renderComparison changed="${changed.outputTargets.outcomeTargets ?: []}" i="${i}" original="${project.outputTargets.outcomeTargets ?: []}" property="relatedOutcomes"/>
         </td>
         <td class="score">
-            <span data-bind="text:target"></span>
+            <fc:renderComparison changed="${changed.outputTargets.outcomeTargets ?: []}" i="${i}" original="${project.outputTargets.outcomeTargets ?: []}" property="target"/>
         </td>
     </tr>
-    <!-- /ko -->
+    </g:each>
     </tbody>
 </table>
-
-<!-- /ko -->
