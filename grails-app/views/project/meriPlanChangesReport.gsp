@@ -43,13 +43,12 @@
 <body>
 <div class="container">
     <g:render template="${headerTemplate}" model="${[project: project]}"/>
-    <g:render template="${meriPlanChangesTemplate}" model="${[project: project, mode: au.org.ala.merit.ReportService.ReportMode.PRINT.name(), original:original, changed:changed]}"/>
+    <g:render template="${meriPlanChangesTemplate}" model="${[project: project, mode: au.org.ala.merit.ReportService.ReportMode.PRINT.name(), changed:changed]}"/>
     <asset:script>
 
     $(function() {
 
         var project = <fc:modelAsJavascript model="${project}"/>;
-        var original = <fc:modelAsJavascript model="${original}"/>;
         var changed = <fc:modelAsJavascript model="${changed}"/>;
 
         var config = [];
@@ -68,7 +67,7 @@
         config.excludeFinancialYearData = ${config.program?.config?.excludeFinancialYearData ?: false};
         config.useServiceOutcomesModel = ${config.program?.config?.meriPlanContents?.find{it.template == 'serviceOutcomeTargets'} != null};
 
-        var viewModel = new ReadOnlyMeriPlan(project, new ProjectService(project, config), config, original, changed);
+        var viewModel = new ReadOnlyMeriPlan(project, new ProjectService(project, config), config, changed);
         viewModel.name = project.name;
         viewModel.description = project.description;
         ko.applyBindings(viewModel, document.getElementById('meriplan-changes'))

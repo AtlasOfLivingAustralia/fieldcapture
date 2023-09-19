@@ -1,6 +1,6 @@
 package au.org.ala.merit.command
 
-
+import au.org.ala.merit.DocumentService
 import au.org.ala.merit.MetadataService
 import au.org.ala.merit.ProjectService
 import grails.validation.Validateable
@@ -22,6 +22,9 @@ class MeriPlanChangesReportCommand implements Validateable{
 
     @Transient
     MetadataService metadataService
+
+    @Transient
+    DocumentService documentService
 
     /** The project id to display the MERI Plan report for */
     String id
@@ -47,45 +50,34 @@ class MeriPlanChangesReportCommand implements Validateable{
         if (!validate()) {
             return [statusCode:HttpStatus.SC_UNPROCESSABLE_ENTITY, error:getErrors()]
         }
-        Map original = null
-        Map changed = null
-        Map project, content
+
+        Map project, content, changed, model
         if (documentId) {
             content = projectService.getApprovedMeriPlanProject(documentId)
             project = content?.project
+        } else {
+            Map result = documentService.search(projectId:id, role:'approval', labels:'MERI')
+            List documents = result?.documents ?: []
+            def res = documents.get(documents.size()-1)
+            content = projectService.getApprovedMeriPlanProject(res.documentId)
+            project = content?.project
         }
-        else {
-            project = projectService.get(id, 'all')
-            if (project != null){
-                project.remove("sites")
-            }
-        }
-        original = project = content?.project
-        changed = projectService.get(id, 'all')
 
-        Map model = [project:content?.project]
         if (!project) {
             errors.reject("Project not found")
             model = [statusCode: HttpStatus.SC_NOT_FOUND, error:getErrors()]
-        }
-        else {
+        } else {
             Map config = projectService.getProgramConfiguration(project)
+            changed = projectService.get(id, 'all')
 
             project?.referenceDocument = content?.referenceDocument
             project?.dateApproved = content?.dateApproved
 
-
-
             [project:content?.project,
                      config:config,
                      headerTemplate:'/project/configurableMeriPlanHeader',
-                     meriPlanTemplate:'/project/configurableMeriPlanChangesView',
-                     meriPlanOriginalTemplate:'/project/configurableMeriPlanOriginalView',
                      meriPlanChangesTemplate:'/project/configurableMeriPlanChangesView',
-                     themes:metadataService.getThemesForProject(project),
-                     original:original,
                      changed:changed,
-                     projectComparison:[project:content?.project, original:original, changed:changed],
                      user:[isAdmin:true]]
 
         }

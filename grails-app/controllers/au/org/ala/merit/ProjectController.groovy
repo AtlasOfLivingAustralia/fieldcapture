@@ -161,6 +161,7 @@ class ProjectController {
         def meriPlanEnabled = user?.hasViewAccess || ((project.associatedProgram == 'National Landcare Programme' && project.associatedSubProgram == 'Regional Funding'))
         def meriPlanVisibleToUser = project.planStatus == 'approved' || user?.isAdmin || user?.isCaseManager || user?.hasViewAccess
         boolean userHasViewAccess = user?.hasViewAccess ?: false
+        boolean isNewMeriPlan = config.newMeriPlan
 
         def publicImages = project.documents.findAll {
             it.public == true && it.thirdPartyConsentDeclarationMade == true && it.type == 'image'
@@ -243,6 +244,7 @@ class ProjectController {
             rlpModel.admin.hidePrograms = true
             rlpModel.admin.showAnnouncementsTab = false
             rlpModel.admin.risksAndThreatsVisible = risksAndThreatsVisible
+            rlpModel.admin.isNewMeriPlan = isNewMeriPlan
 
             model = buildRLPTargetsModel(rlpModel, project)
         }

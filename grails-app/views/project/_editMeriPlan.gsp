@@ -112,7 +112,15 @@
 			<td class="approver"><span data-bind="text:userDisplayName"></span></td>
 			<td class="report-actions">
 				<a target="_meriPlan" data-bind="attr:{href:openMeriPlanUrl}"><i class="fa fa-external-link" title="Open"></i></a>
-				<a target="_meriPlan" data-bind="attr:{href:openMeriPlanChangesUrl}"><i class="fa fa fa-code-fork" title="View Changes"></i></a>
+				<g:if test="${isNewMeriPlan}">
+					<a target="_meriPlan" data-bind="attr:{href:openMeriPlanChangesUrl}"><i class="fa fa fa-code-fork" title="View Changes"></i></a>
+				</g:if>
+				<g:else>
+					<a class="btn btn-container btn-sm disabled-icon">
+						<i class="fa fa fa-code-fork" title="View Changes"></i>
+					</a>
+				</g:else>
+
 				<g:if test="${fc.userIsAlaOrFcAdmin()}">
 					<a class="btn btn-container btn-sm pull-right" href="javascript:void(0)" title="Delete"
 					   data-bind="click:$parent.deleteApproval"><i class="fa fa-remove" style="color:red;"></i>
@@ -156,7 +164,7 @@
 				<button type="button" data-bind="click: saveProjectDetails, disable: isProjectDetailsLocked()" class="btn btn-sm btn-primary">Save changes</button>
 				<button type="button" class="btn btn-sm btn-danger" data-bind="click: cancelProjectDetailsEdits">Cancel</button>
 				<button type="button" class="btn btn-sm btn-info" data-bind="click: meriPlanPDF">Display Printable MERI Plan</button>
-				<button type="button" class="btn btn-sm btn-info" data-bind="click: meriPlanChanges">Display MERI Plan Changes</button>
+				<button type="button" class="btn btn-sm btn-info" data-bind="click: meriPlanChanges">Compare with the latest approved MERI Plan</button>
 
 				<!--  Admin - submit to approval. -->
 				<g:if test="${user?.isAdmin}">

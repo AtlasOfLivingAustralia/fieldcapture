@@ -211,7 +211,6 @@ function MERIPlan(project, projectService, config) {
     };
 
     self.meriPlanChanges = function() {
-        alert("meriPlanChanges!!!");
         var url = config.meriPlanChangesUrl;
         window.open(url,'meri-planchanges-report');
     };
@@ -612,7 +611,7 @@ function MERIPlan(project, projectService, config) {
     };
 }
 
-function ReadOnlyMeriPlan(project, projectService, config, original, changed) {
+function ReadOnlyMeriPlan(project, projectService, config, changed) {
     var self = this;
     if (!project.custom) {
         project.custom = {};
@@ -711,14 +710,10 @@ function ReadOnlyMeriPlan(project, projectService, config, original, changed) {
     var details = new DetailsViewModel(project.custom.details, project, self.periods, self.risks, self.allTargetMeasures, self.selectedTargetMeasures, config);
     self.meriPlan = ko.observable(details);
 
-    // var detailsOriginal = new DetailsViewModel(original.custom.details, original, self.periods, self.risks, self.allTargetMeasures, self.selectedTargetMeasures, config);
-    // self.meriPlanOriginal = ko.observable(detailsOriginal);
-
     if (changed) {
         var changedDetails = new ChangedDetailsViewModel(changed.custom.details, project, self.periods, self.risks, self.allTargetMeasures, self.selectedTargetMeasures, config);
         self.meriPlanChanged = ko.observable(changedDetails);
     }
-
 
     self.detailsLastUpdated = ko.observable(project.custom.details.lastUpdated).extend({simpleDate: true});
     self.isAgricultureProject = ko.computed(function () {
