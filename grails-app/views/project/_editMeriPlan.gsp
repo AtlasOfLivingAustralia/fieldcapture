@@ -164,7 +164,9 @@
 				<button type="button" data-bind="click: saveProjectDetails, disable: isProjectDetailsLocked()" class="btn btn-sm btn-primary">Save changes</button>
 				<button type="button" class="btn btn-sm btn-danger" data-bind="click: cancelProjectDetailsEdits">Cancel</button>
 				<button type="button" class="btn btn-sm btn-info" data-bind="click: meriPlanPDF">Display Printable MERI Plan</button>
-				<button type="button" class="btn btn-sm btn-info" data-bind="click: meriPlanChanges">Compare with the latest approved MERI Plan</button>
+				<g:if test="${isNewMeriPlan}">
+					<button type="button" class="btn btn-sm btn-info" data-bind="click: meriPlanChanges">Compare with the latest approved MERI Plan</button>
+				</g:if>
 
 				<!--  Admin - submit to approval. -->
 				<g:if test="${user?.isAdmin}">

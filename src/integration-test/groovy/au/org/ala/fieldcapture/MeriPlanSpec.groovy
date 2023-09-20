@@ -605,4 +605,23 @@ class MeriPlanSpec extends StubbedCasSpec {
         and:
         overview.projectStatus[1].text() == 'ACTIVE'
     }
+
+    def "Compare current MERI Plan with the latest approved MERI plan"() {
+        setup:
+        String projectId = 'meri1'
+        loginAsUser('1', browser)
+
+        when:
+        to RlpProjectPage, projectId
+
+        then:
+        waitFor { at RlpProjectPage }
+
+        when:
+        def editableMeriPlan = openMeriPlanEditTab()
+        editableMeriPlan.compareMeriPlanChanges()
+
+        then:
+        overviewTab.click()
+    }
 }

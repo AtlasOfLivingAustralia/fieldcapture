@@ -874,33 +874,20 @@ class FCTagLib {
         List original = attrs.original
         List changed = attrs.changed
         int i = attrs.i
-        if (attrs.property) {
-            String property = attrs.property
+        String property = attrs.property
 
-            out << '<span class="original hide">'
-            if (original && original.size() > i) {
-                out << original[i][property]
-            }
-            out << '</span>'
-            out << '<span class="changed hide">'
-            if (changed && changed.size() > i) {
-                out << changed[i][property]
-            }
-            out << '</span>'
-            out << '<span class="diff"></span>'
-        } else {
-            out << '<span class="original hide">'
-            if (original && original.size() > i) {
-                out << original[i]
-            }
-            out << '</span>'
-            out << '<span class="changed hide">'
-            if (changed && changed.size() > i) {
-                out << changed[i]
-            }
-            out << '</span>'
-            out << '<span class="diff"></span>'
+        out << '<span class="original hide">'
+        if (original && original.size() > i) {
+            (attrs.property) ? out << original[i][property] : out << original[i]
         }
+        out << '</span>'
+        out << '<span class="changed hide">'
+        if (changed && changed.size() > i) {
+            (attrs.property) ? out << changed[i][property] : out << changed[i]
+        }
+        out << '</span>'
+        out << '<span class="diff"></span>'
+
     }
 
     def renderComparisonMonitoring = { attrs ->
@@ -926,7 +913,6 @@ class FCTagLib {
                 resultChangedMonitoringList = monitoring
             }
         }
-
 
         out << '<span class="original hide">'
         if (resultOrigMonitoringList && resultOrigMonitoringList.size() > i) {
@@ -994,7 +980,7 @@ class FCTagLib {
             out << '</span>'
 
         } catch(Exception e) {
-            System.out.println("\nException caught");
+            log.debug "\n Changed index is greater than the original"
         }
 
         out << '<span class="changed hide">'

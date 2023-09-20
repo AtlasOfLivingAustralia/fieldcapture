@@ -305,6 +305,7 @@ class EditableMeriPlan extends Module {
         floatingSaveButton { $('#floating-save [data-bind*="saveProjectDetails"]') }
         saveButton { $('.form-actions [data-bind*="saveProjectDetails"]').first() }
         pdfButton { $('.btn[data-bind*="meriPlanPDF"]').first() }
+        meriPlanChanges { $('.btn[data-bind*="meriPlanChanges"]').first() }
         saveAndSubmitChanges { $('button.saveAndSubmitChanges').first() }
         approveButton(required:false){ $('[data-bind*="approvePlan"]') }
         rejectButton(required:false) { $('[data-bind*="rejectPlan"]') }
@@ -403,6 +404,10 @@ class EditableMeriPlan extends Module {
 
     void generatePDF() {
         pdfButton.click()
+    }
+
+    void compareMeriPlanChanges() {
+        meriPlanChanges.click()
     }
 
     List checkedObjectives() {
