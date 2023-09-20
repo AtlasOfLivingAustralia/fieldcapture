@@ -7,6 +7,27 @@ var protocolConfig = {
         startDatePath:'attributes.vegetation_mapping_survey.data.attributes.start_date_time',
         endDatePath: null,
         surveyIdPath: 'attributes.vegetation_mapping_survey.data.attributes.surveyId'
+    },
+    'floristics-veg-survey-lite': {
+        apiEndpoint:'floristics-veg-survey-lites',
+        usesPlotLayout:true,
+        startDatePath: 'attributes.start_date_time',
+        endDatePath: 'attributes.end_date_time',
+        surveyIdPath: 'attributes.surveyId'
+    },
+    'floristics-veg-survey-fulls': {
+        apiEndpoint:'floristics-veg-survey-fulls',
+        usesPlotLayout:true,
+        startDatePath: 'attributes.start_date_time',
+        endDatePath: 'attributes.end_date_time',
+        surveyIdPath: 'attributes.surveyId'
+    },
+    'photopoints-survey': {
+        apiEndpoint:'photopoints-surveys',
+        usesPlotLayout:true,
+        startDatePath: 'attributes.start_date_time',
+        endDatePath: 'attributes.end_date_time',
+        surveyIdPath: 'attributes.surveyId'
     }
 };
 
