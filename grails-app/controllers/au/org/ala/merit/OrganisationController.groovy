@@ -584,30 +584,6 @@ class OrganisationController {
         }
     }
 
-    private Map performanceReportModel(String organisationId, Map report, ReportService.ReportMode mode, Integer formVersion = null) {
-        Map organisation = organisationService.get(organisationId)
-        int version = report.toDate < "2017-01-01T00:00:00Z" ? 1 : 2
-        Map model = reportService.performanceReportModel(report.reportId, version)
-        model.state = organisation.state ?: 'Unknown'
-        model.organisation = organisation
-        model.printView = true
-        model.view = '/report/performanceReportView'
-        model
-    }
-
-    private Map activityReportModel(String organisationId, String reportId, ReportService.ReportMode mode, Integer formVersion = null) {
-        Map organisation = organisationService.get(organisationId)
-        Map model = reportService.activityReportModel(reportId, mode, formVersion)
-        model.context = organisation
-        model.returnTo = createLink(action:'index', id:organisationId)
-        model.contextViewUrl = model.returnTo
-        model.reportHeaderTemplate = '/organisation/organisationReportHeader'
-        model.config = organisation.config
-        model.view = '/activity/activityReportView'
-        model
-    }
-
-
     @PreAuthorise(accessLevel = 'admin')
     def createAdHocReport(String id) {
 

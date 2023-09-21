@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.command.PrintProgramReportCommand
 import au.org.ala.merit.command.SaveReportDataCommand
 import grails.converters.JSON
 import org.apache.http.HttpStatus
@@ -15,7 +16,6 @@ class ProgramController {
     def programService, documentService, userService, roleService, commonService, webService, siteService
     ReportService reportService
     ActivityService activityService
-    PdfGenerationService pdfGenerationService
     BlogService blogService
     ManagementUnitService managementUnitService
 
@@ -337,30 +337,14 @@ class ProgramController {
     }
 
     @PreAuthorise(accessLevel = 'readOnly')
-    def printableReport(String id, String reportId) {
-        if (!id || !reportId) {
-            error('An invalid report was selected for download', id)
+    def printProgramReport(PrintProgramReportCommand cmd) {
+        if (cmd.hasErrors()) {
+            error(cmd.errors.toString(), cmd.id)
             return
         }
-        Map model = activityReportModel(id, reportId, ReportMode.PRINT)
 
-        render view:'/activity/activityReportView', model:model
-    }
+        render model:cmd.model, view:'/activity/activityReportView'
 
-    /**
-     * This is designed as a callback from the PDF generation service.  It produces a HTML report that will
-     * be converted into PDF.
-     * @param id the project id
-     */
-    def viewReportCallback(String id, String reportId) {
-
-        if (pdfGenerationService.authorizePDF(request)) {
-            Map model = activityReportModel(id, reportId, ReportMode.PRINT)
-            render view:'/activity/activityReportView', model:model
-        }
-        else {
-            render status:HttpStatus.SC_UNAUTHORIZED
-        }
     }
 
     @PreAuthorise(accessLevel = 'editor')
