@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import au.org.ala.merit.command.EditOrganisationReportCommand
+import au.org.ala.merit.command.PrintOrganisationReportCommand
 import au.org.ala.merit.command.SaveReportDataCommand
 import au.org.ala.merit.command.ViewOrganisationReportCommand
 import au.org.ala.merit.util.ProjectGroupingHelper
@@ -498,7 +499,22 @@ class OrganisationController {
         }
 
         if (cmd.report.type == ReportService.PERFORMANCE_MANAGEMENT_REPORT) {
-            viewOrEditOrganisationReport(cmd.report, false)
+            viewOrEditOrganisationReport(cmd.model, false)
+        }
+        else {
+            render model:cmd.model, view:'/activity/activityReportView'
+        }
+    }
+
+    @PreAuthorise(accessLevel = 'readOnly')
+    def printOrganisationReport(PrintOrganisationReportCommand cmd) {
+        if (cmd.hasErrors()) {
+            error(cmd.errors.toString(), cmd.id)
+            return
+        }
+
+        if (cmd.report.type == ReportService.PERFORMANCE_MANAGEMENT_REPORT) {
+            viewOrEditOrganisationReport(cmd.model, false)
         }
         else {
             render model:cmd.model, view:'/activity/activityReportView'
@@ -544,19 +560,20 @@ class OrganisationController {
         render result as JSON
     }
 
-    private def viewOrEditOrganisationReport(Map report, Boolean edit) {
-        int version = report.toDate < "2017-01-01T00:00:00Z" ? 1 : 2
-        Map organisation = organisationService.get(report.organisationId)
-        if (organisationService.isUserAdminForOrganisation(report.organisationId)) {
-            Map model = reportService.performanceReportModel(report.reportId, version)
+    private def viewOrEditOrganisationReport(Map cmdModel, Boolean edit) {
+        int version = cmdModel.report.toDate < "2017-01-01T00:00:00Z" ? 1 : 2
+        Map organisation = organisationService.get(cmdModel.report.organisationId)
+        if (organisationService.isUserAdminForOrganisation(cmdModel.report.organisationId)) {
+            Map model = reportService.performanceReportModel(cmdModel.report.reportId, version)
             model.state = organisation.state ?: 'Unknown'
             model.organisation = organisation
-
             if (reportService.excludesNotApproved(model.report)) {
                 model.submittingUserName = authService.getUserForUserId(model.report.submittedBy)?.displayName ?: 'Unknown user'
                 model.submissionDate = DateUtils.displayFormatWithTime(model.report.dateSubmitted)
                 edit = false
             }
+
+            model.printView = (cmdModel.printView) ? cmdModel.printView : false
             String view = edit ? '/report/performanceReport' : '/report/performanceReportView'
 
             render view: view, model:model
@@ -565,20 +582,6 @@ class OrganisationController {
             flash.message = "You don't have permission to edit the report"
             chain(action:'index', id: report.organisationId)
         }
-    }
-
-    @PreAuthorise(accessLevel = 'readOnly')
-    def printableReport(String id, String reportId) {
-        Map report = reportService.get(reportId)
-        Map model = [:]
-        if (report.type == ReportService.PERFORMANCE_MANAGEMENT_REPORT) {
-            model = performanceReportModel(id, report, ReportService.ReportMode.PRINT)
-        } else {
-            model = activityReportModel(id, reportId, ReportService.ReportMode.PRINT)
-        }
-
-        render view:model.view, model:model
-
     }
 
     private Map performanceReportModel(String organisationId, Map report, ReportService.ReportMode mode, Integer formVersion = null) {
@@ -598,7 +601,7 @@ class OrganisationController {
         model.context = organisation
         model.returnTo = createLink(action:'index', id:organisationId)
         model.contextViewUrl = model.returnTo
-        model.reportHeaderTemplate = '/organisation/managementUnitReportHeader'
+        model.reportHeaderTemplate = '/organisation/organisationReportHeader'
         model.config = organisation.config
         model.view = '/activity/activityReportView'
         model
