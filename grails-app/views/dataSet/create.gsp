@@ -55,7 +55,7 @@
     config.projectBaselines = <fc:modelAsJavascript model="${projectBaselines}"/>;
     config.projectProtocols = <fc:modelAsJavascript model="${projectProtocols}"/>;
     var viewModel = new DataSetViewModel({}, projectService, config);
-    $.fn.select2.defaults.set( "theme", "bootstrap4" );
+    $.fn.select2.defaults.set( "theme", "bootstrap" );
     ko.applyBindings(viewModel);
 </script>
 <asset:deferredScripts/>

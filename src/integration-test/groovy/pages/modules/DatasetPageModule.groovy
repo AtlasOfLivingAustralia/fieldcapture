@@ -28,8 +28,6 @@ class DatasetPageModule extends Module{
         format {$("#format")}
         dataSetSize {$('#sizeinkb')}
         sensitivities {$("#sensitivities")}
-        dataOwner {$("#owner")}
-        custodian {$("#custodian")}
         dataCollectionOngoing{$("#dataCollectionOngoing").module(Checkbox)}
 
         markCompleted(required: false) {$('[data-bind*="checked:markedAsFinished"]')}

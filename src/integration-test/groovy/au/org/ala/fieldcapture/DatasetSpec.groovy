@@ -1,5 +1,6 @@
 package au.org.ala.fieldcapture
 
+import geb.module.FormElement
 import pages.DatasetPage
 import pages.RlpProjectPage
 import spock.lang.Stepwise
@@ -35,6 +36,12 @@ class DatasetSpec extends StubbedCasSpec{
         dataSet.programOutcome = "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
         dataSet.investmentPriorities = ["Soil acidification"]
         dataSet.type = "Baseline dataset associated with a project outcome"
+        dataSet.protocol = "other"
+
+        then:
+        waitFor {dataSet.measurementTypes.module(FormElement).enabled}
+
+        when:
         dataSet.measurementTypes = ["Soil erosion"]
         dataSet.methods = ["Genetic sampling", "Area sampling"]
         dataSet.methodDescription = "Method description"
@@ -47,8 +54,6 @@ class DatasetSpec extends StubbedCasSpec{
         dataSet.publicationUrl = "url"
         dataSet.format = "JSON"
         dataSet.sensitivities =["Commercially sensitive", "Ecologically sensitive"]
-        dataSet.dataOwner = "data owner"
-        dataSet.custodian = "custodian"
 
         dataSet.createButton.click()
 
@@ -91,6 +96,7 @@ class DatasetSpec extends StubbedCasSpec{
         set.title == "Title"
         set.programOutcome == "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
         set.investmentPriorities == ["Soil acidification"]
+        set.protocol == "other"
         set.type == "Baseline dataset associated with a project outcome"
         set.measurementTypes == ["Soil erosion"]
         set.methods == ["Genetic sampling", "Area sampling"]
@@ -103,8 +109,6 @@ class DatasetSpec extends StubbedCasSpec{
         set.threatenedSpeciesIndex == "Yes"
         set.format == "JSON"
         set.sensitivities ==["Commercially sensitive", "Ecologically sensitive"]
-        set.dataOwner == "data owner"
-        set.custodian == "custodian"
         !set.dataCollectionOngoing.checked
 
 
@@ -180,9 +184,6 @@ class DatasetSpec extends StubbedCasSpec{
         set.type = "Baseline dataset associated with a project outcome"
         set.projectBaseline = 'b1'
         set.protocol = 'guid-1'
-        set.measurementTypes = ["Soil erosion"]
-        set.methods = ["Genetic sampling", "Area sampling"]
-        set.methodDescription = "Method description"
         set.collectionApp = "Collection App"
         set.location = "Location"
         set.startDate ="21-01-2021"
@@ -191,8 +192,6 @@ class DatasetSpec extends StubbedCasSpec{
         set.threatenedSpeciesIndex = "Yes"
         set.format = "JSON"
         set.sensitivities =["Commercially sensitive", "Ecologically sensitive"]
-        set.dataOwner = "data owner"
-        set.custodian = "custodian"
         set.publicationUrl = "https://www.ala.org.au"
         set.threatenedSpeciesDateOfUpload = '21-01-2021'
         set.dataSetSize = '200'
