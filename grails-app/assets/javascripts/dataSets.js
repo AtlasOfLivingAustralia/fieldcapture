@@ -127,8 +127,6 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     self.sizeUnknown = ko.observable(dataSet.sizeUnknown);
     self.sensitivities = ko.observableArray(dataSet.sensitivities);
     self.otherSensitivity = ko.observable(dataSet.otherSensitivity);
-    self.owner = ko.observable(dataSet.owner);
-    self.custodian = ko.observable(dataSet.custodian);
     self.progress = ko.observable(dataSet.progress);
     self.markedAsFinished = ko.observable(dataSet.progress === 'finished');
     self.markedAsFinished.subscribe(function (finished) {

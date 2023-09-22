@@ -14,7 +14,7 @@
         };
     </script>
     <asset:stylesheet src="common-bs4.css"/>
-    <asset:stylesheet src="select2/4.0.3/css/select2.css"/>
+    <asset:stylesheet src="select2-theme-bootstrap4/select2-bootstrap.css"/>
     <asset:stylesheet src="dataSets.css"/>
 
 </head>
@@ -56,6 +56,7 @@
     config.projectBaselines = <fc:modelAsJavascript model="${projectBaselines}"/>;
     config.projectProtocols = <fc:modelAsJavascript model="${projectProtocols}"/>;
     var viewModel = new DataSetViewModel(dataSet, projectService, fcConfig);
+    $.fn.select2.defaults.set( "theme", "bootstrap" );
     ko.applyBindings(viewModel);
 </script>
 <asset:deferredScripts/>
