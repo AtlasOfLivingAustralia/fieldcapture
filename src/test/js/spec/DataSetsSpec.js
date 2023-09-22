@@ -69,9 +69,7 @@ describe("The data set summaries view models behave correctly", function () {
 
     function dataSet() {
         return {
-            "owner" : "Test",
             "methodDescription" : "Test method",
-            "custodian" : "Test",
             "investmentPriorities" : ["Botaurus poiciloptilus (Australasian Bittern)", "Other"],
             "otherInvestmentPriority": "Test",
             "endDate" : "2020-12-02T13:00:00Z",
