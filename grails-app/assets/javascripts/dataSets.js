@@ -103,6 +103,12 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     self.otherMeasurementType = ko.observable(dataSet.otherMeasurementType);
     self.methods = ko.observableArray(dataSet.methods);
     self.methodDescription = ko.observable(dataSet.methodDescription);
+    self.protocol.subscribe(function(protocol) {
+        if (protocol && protocol != 'other') {
+            self.methodDescription('See EMSA Protocols Manual: https://www.tern.org.au/emsa-protocols-manual');
+        }
+    });
+
     self.collectionApp = ko.observable(dataSet.collectionApp);
     self.location = ko.observable(dataSet.location);
     self.siteId = ko.observable(dataSet.siteId);
@@ -120,11 +126,21 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     self.threatenedSpeciesIndexUploadDate = ko.observable(dataSet.threatenedSpeciesIndexUploadDate).extend({simpleDate:false});
     self.publicationUrl = ko.observable(dataSet.publicationUrl);
     self.format = ko.observable(dataSet.format);
+    self.collectionApp.subscribe(function(collectionApp) {
+        if (collectionApp == 'Monitor') {
+            self.format('Database Table');
+            self.location('Biodiversity Data Respository (URL pending)');
+        }
+    });
+
     if (dataSet.sensitivities && !_.isArray(dataSet.sensitivities)) {
         dataSet.sensitivities = [dataSet.sensitivities];
     }
     self.sizeInKB = ko.observable(dataSet.sizeInKB);
     self.sizeUnknown = ko.observable(dataSet.sizeUnknown);
+    self.format.subscribe(function(format) {
+        self.sizeUnknown(['Database Table', 'Database View', 'ESRI REST'].indexOf(format) >=0);
+    });
     self.sensitivities = ko.observableArray(dataSet.sensitivities);
     self.otherSensitivity = ko.observable(dataSet.otherSensitivity);
     self.progress = ko.observable(dataSet.progress);
