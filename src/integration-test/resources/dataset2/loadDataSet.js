@@ -8,7 +8,7 @@ createProgram({});
 var config = {
     projectTemplate: "rlp",
     meriPlanTemplate: "configurableMeriPlan",
-    newMeriPlan: true,
+    supportsMeriPlanComparison: true,
     meriPlanContents: [
         {
             "template": "objectivesList"

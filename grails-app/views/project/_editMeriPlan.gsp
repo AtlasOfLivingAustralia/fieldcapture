@@ -112,7 +112,7 @@
 			<td class="approver"><span data-bind="text:userDisplayName"></span></td>
 			<td class="report-actions">
 				<a target="_meriPlan" data-bind="attr:{href:openMeriPlanUrl}"><i class="fa fa-external-link" title="Open"></i></a>
-				<g:if test="${isNewMeriPlan}">
+				<g:if test="${showMeriPlanComparison}">
 					<a target="_meriPlan" data-bind="attr:{href:openMeriPlanChangesUrl}"><i class="fa fa fa-code-fork" title="View Changes"></i></a>
 				</g:if>
 				<g:else>
@@ -164,7 +164,7 @@
 				<button type="button" data-bind="click: saveProjectDetails, disable: isProjectDetailsLocked()" class="btn btn-sm btn-primary">Save changes</button>
 				<button type="button" class="btn btn-sm btn-danger" data-bind="click: cancelProjectDetailsEdits">Cancel</button>
 				<button type="button" class="btn btn-sm btn-info" data-bind="click: meriPlanPDF">Display Printable MERI Plan</button>
-				<g:if test="${isNewMeriPlan}">
+				<g:if test="${showMeriPlanComparison}">
 					<button type="button" class="btn btn-sm btn-info" data-bind="click: meriPlanChanges">Compare with the latest approved MERI Plan</button>
 				</g:if>
 
