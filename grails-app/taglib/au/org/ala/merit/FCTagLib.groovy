@@ -890,6 +890,36 @@ class FCTagLib {
 
     }
 
+    def renderComparisonList = { attrs ->
+
+        List original = attrs.original
+        List changed = attrs.changed
+        int i = attrs.i
+        String property = attrs.property
+
+        out << '<span class="original hide">'
+        if (original && original.size() > i) {
+            if (original[i][property]?[0] instanceof List) {
+                out << original[i][property][0].collect{it}.join(',')
+            } else {
+                out << original[i][property][0]
+            }
+
+        }
+        out << '</span>'
+        out << '<span class="changed hide">'
+        if (changed && changed.size() > i) {
+            if (changed[i][property]?[0] instanceof List) {
+                out << changed[i][property][0].collect{it}.join(',')
+            } else {
+                out << changed[i][property][0]
+            }
+        }
+        out << '</span>'
+        out << '<span class="diff"></span>'
+
+    }
+
     def renderComparisonMonitoring = { attrs ->
 
         String code = attrs.code
@@ -919,7 +949,11 @@ class FCTagLib {
             if (property == 'relatedTargetMeasures') {
                 out << getScoreLabels(resultOrigMonitoringList[property]).labels
             } else {
-                out << resultOrigMonitoringList[property]
+                if (resultOrigMonitoringList[property] instanceof List) {
+                    out << resultOrigMonitoringList[property].collect{it}.join(',')
+                } else {
+                    out << resultOrigMonitoringList[property]
+                }
             }
 
         }
@@ -930,7 +964,11 @@ class FCTagLib {
             if (property == 'relatedTargetMeasures') {
                 out << getScoreLabels(resultChangedMonitoringList[property]).labels
             } else {
-                out << resultChangedMonitoringList[property]
+                if (resultChangedMonitoringList[property] instanceof List) {
+                    out << resultChangedMonitoringList[property].collect{it}.join(',')
+                } else {
+                    out << resultChangedMonitoringList[property]
+                }
             }
 
         }

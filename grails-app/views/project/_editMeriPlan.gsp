@@ -111,13 +111,17 @@
 			<td class="comments" data-bind="text:reason"></td>
 			<td class="approver"><span data-bind="text:userDisplayName"></span></td>
 			<td class="report-actions">
-				<a target="_meriPlan" data-bind="attr:{href:openMeriPlanUrl}"><i class="fa fa-external-link" title="Open"></i></a>
+				<a class="btn btn-container btn-sm" target="_meriPlan" data-bind="attr:{href:openMeriPlanUrl}">
+					<i class="fa fa-external-link" title="Open">
+					</i></a>
 				<g:if test="${showMeriPlanComparison}">
-					<a target="_meriPlan" data-bind="attr:{href:openMeriPlanChangesUrl}"><i class="fa fa fa-code-fork" title="View Changes"></i></a>
+					<a class="btn btn-container btn-sm" target="_meriPlan" data-bind="attr:{href:openMeriPlanChangesUrl}">
+						<i class="fa fa-code-fork" title="View Changes"></i>
+					</a>
 				</g:if>
 				<g:else>
-					<a class="btn btn-container btn-sm disabled-icon">
-						<i class="fa fa fa-code-fork" title="View Changes"></i>
+					<a class="btn btn-container btn-sm" class="btn btn-container btn-sm disabled-icon">
+						<i class="fa fa-code-fork" title="View Changes"></i>
 					</a>
 				</g:else>
 

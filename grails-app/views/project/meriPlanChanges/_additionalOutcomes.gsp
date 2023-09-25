@@ -20,7 +20,7 @@
             <span id="secondary-assets">
                 <g:set var="max" value="${Math.max(project.custom.details.outcomes?.secondaryOutcomes?.assets?.size(), changed.custom.details.outcomes?.secondaryOutcomes?.assets?.size()?:0)}"/>
                 <g:each in="${(0..<max)}" var="i">
-                    <span><fc:renderComparison changed="${changed.custom.details.outcomes.secondaryOutcomes ?: []}" i="${i}" original="${project.custom.details.outcomes.secondaryOutcomes ?: []}" property="assets"/></span>
+                    <span><fc:renderComparisonList changed="${changed.custom.details.outcomes.secondaryOutcomes ?: []}" i="${i}" original="${project.custom.details.outcomes.secondaryOutcomes ?: []}" property="assets"/></span>
                 </g:each>
             </span>
         </td>

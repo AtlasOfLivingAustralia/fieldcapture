@@ -1,5 +1,4 @@
 <div id="meriplan-changes" class="meri-plan space-after" data-bind="let:{details:meriPlan(), detailsChanged:meriPlanChanged()}">
-    MERI-PLAN CHANGES TESTING
 <g:each var="content" in="${config?.meriPlanContents}">
     <div class="row">
         <div class="col-sm-12 p-3">

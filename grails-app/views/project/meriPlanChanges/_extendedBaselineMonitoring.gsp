@@ -26,7 +26,7 @@
         <td class="monitoring-data required"><fc:renderComparison changed="${changed.custom.details.baseline.rows ?: []}" i="${i}" original="${project.custom.details.baseline.rows ?: []}" property="monitoringDataStatus"/> </td>
         <td class="baseline"><fc:renderComparison changed="${changed.custom.details.baseline.rows ?: []}" i="${i}" original="${project.custom.details.baseline.rows ?: []}" property="baseline"/> </td>
         <td class="service"><fc:renderComparisonScoreLabel changed="${changed.custom.details.baseline.rows ?: []}" i="${i}" original="${project.custom.details.baseline.rows ?: []}" property="relatedTargetMeasures"/> </td>
-        <td class="baseline-method"><fc:renderComparison changed="${changed.custom.details.baseline.rows ?: []}" i="${i}" original="${project.custom.details.baseline.rows ?: []}" property="protocols"/> </td>
+        <td class="baseline-method"><fc:renderComparisonList changed="${changed.custom.details.baseline.rows ?: []}" i="${i}" original="${project.custom.details.baseline.rows ?: []}" property="protocols"/> </td>
         <td class="evidence"><fc:renderComparison changed="${changed.custom.details.baseline.rows ?: []}" i="${i}" original="${project.custom.details.baseline.rows ?: []}" property="evidence"/> </td>
     </tr>
     <tr><td class="code"></td><th colspan="7"> Monitoring indicators </th></tr>

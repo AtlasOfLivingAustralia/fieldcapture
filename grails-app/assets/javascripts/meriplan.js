@@ -711,7 +711,7 @@ function ReadOnlyMeriPlan(project, projectService, config, changed) {
     self.meriPlan = ko.observable(details);
 
     if (changed) {
-        var changedDetails = new ChangedDetailsViewModel(changed.custom.details, project, self.periods, self.risks, self.allTargetMeasures, self.selectedTargetMeasures, config);
+        var changedDetails = new DetailsViewModel(changed.custom.details, project, self.periods, self.risks, self.allTargetMeasures, self.selectedTargetMeasures, config);
         self.meriPlanChanged = ko.observable(changedDetails);
     }
 
@@ -821,118 +821,6 @@ function DetailsViewModel(o, project, budgetHeaders, risks, allServices, selecte
 
         self.description = ko.observable(project.description);
         self.name = ko.observable(project.name);
-        self.programName = config.programName;
-        self.projectEvaluationApproach = ko.observable(o.projectEvaluationApproach);
-        self.relatedProjects = ko.observable(o.relatedProjects);
-        // Initialise with 2 KEQ rows
-        if (!o.keq) {
-            o.keq = {
-                rows: new Array(2)
-            }
-        }
-    }
-    self.activities = new ActivitiesViewModel(o.activities, config.programActivities || []);
-    self.status = ko.observable(o.status);
-    self.obligations = ko.observable(o.obligations);
-    self.policies = ko.observable(o.policies);
-    self.caseStudy = ko.observable(o.caseStudy ? o.caseStudy : false);
-    self.keq = new GenericViewModel(o.keq);
-    self.objectives = new ObjectiveViewModel(o.objectives, config.programObjectives || []); // Used in original MERI plan template
-    self.outcomes = new OutcomesViewModel(o.outcomes, {outcomes:project.outcomes, priorities:project.priorities}); // Use in new MERI plan template
-    self.priorities = new GenericViewModel(o.priorities, ['data1', 'data2', 'data3', 'documentUrl']);
-    self.implementation = new ImplementationViewModel(o.implementation);
-    self.partnership = new GenericViewModel(o.partnership, ['data1', 'data2', 'data3', 'otherOrganisationType']);
-    self.lastUpdated = o.lastUpdated ? o.lastUpdated : moment().format();
-    self.budget = new BudgetViewModel(o.budget, period);
-    self.adaptiveManagement = ko.observable(o.adaptiveManagement);
-    self.rationale = ko.observable(o.rationale);
-    self.baseline = new GenericViewModel(o.baseline, ['code', 'monitoringDataStatus', 'baseline',  'method', 'evidence'], 'B', ['relatedTargetMeasures', 'relatedOutcomes', 'protocols']);
-    self.threats = new GenericViewModel(o.threats, ['threatCode', 'threat', 'intervention', 'evidence'], 'KT',['relatedTargetMeasures', 'relatedOutcomes']);
-    self.consultation = ko.observable(o.consultation);
-    self.communityEngagement = ko.observable(o.communityEngagement);
-    self.threatToNativeSpecies = new GenericViewModel(o.threatToNativeSpecies, ['couldBethreatToSpecies', 'details']);
-    self.threatControlMethod = new GenericViewModel(o.threatControlMethod, ['currentControlMethod', 'hasBeenSuccessful', 'methodType', 'details']);
-    self.monitoring = new GenericViewModel(o.monitoring, ['relatedBaseline', 'data1', 'data2', 'evidence'], null, ['relatedTargetMeasures', 'protocols']);
-    self.supportsPriorityPlace = ko.observable(o.supportsPriorityPlace);
-    self.supportedPriorityPlaces = ko.observableArray(o.supportedPriorityPlaces);
-    self.indigenousInvolved = ko.observable(o.indigenousInvolved);
-    self.indigenousInvolvementType = ko.observable(o.indigenousInvolvementType);
-    self.indigenousInvolvementComment = ko.observable(o.indigenousInvolvementComment);
-
-    var row = [];
-    o.events ? row = o.events : row.push(ko.mapping.toJS(new EventsRowViewModel()));
-    self.events = ko.observableArray(_.map(row, function (obj, i) {
-        return new EventsRowViewModel(obj);
-    }));
-
-    self.assets = ko.observableArray(_.map(o.assets || [{}], function(asset) {
-        return new AssetViewModel(asset);
-    }));
-
-    self.modelAsJSON = function () {
-        var tmp = {};
-        tmp.details = ko.mapping.toJS(self);
-        if (tmp.details.outcomes) {
-            if (tmp.details.outcomes.selectablePrimaryOutcomes) {
-                delete tmp.details.outcomes.selectablePrimaryOutcomes; // This is for dropdown population and shouldn't be saved.
-            }
-            if (tmp.details.outcomes.selectableSecondaryOutcomes) {
-                delete tmp.details.outcomes.selectableSecondaryOutcomes; // This is for dropdown population and shouldn't be saved.
-            }
-        }
-
-        var jsData = {"custom": tmp};
-
-        // For compatibility with other projects, move the targets to the top level of the data structure, if they
-        // are in the MERI plan.
-        if (config.useRlpTemplate) {
-            var serviceData = config.useServiceOutcomesModel ? tmp.details.serviceOutcomes.toJSON() : tmp.details.services.toJSON();
-
-            jsData.outputTargets = serviceData.targets;
-            jsData.description = self.description();
-            jsData.name = self.name();
-            tmp.details.serviceIds = serviceData.serviceIds;
-            delete tmp.details.services;
-            delete tmp.details.serviceOutcomes;
-        }
-
-        var json = JSON.stringify(jsData, function (key, value) {
-            return value === undefined ? "" : value;
-        });
-        return json;
-    };
-
-    autoSaveModel(
-        self,
-        config.projectUpdateUrl,
-        {
-            storageKey:config.meriStorageKey || 'meriPlan-'+project.projectId,
-            autoSaveIntervalInSeconds:config.autoSaveIntervalInSeconds || 60,
-            restoredDataWarningSelector:'#restoredData',
-            resultsMessageSelector:'.save-details-result-placeholder',
-            timeoutMessageSelector:'#timeoutMessage',
-            errorMessage:"Failed to save MERI Plan: ",
-            successMessage: 'MERI Plan saved',
-            preventNavigationIfDirty:true,
-            defaultDirtyFlag:ko.dirtyFlag,
-            dirtyFlagRateLimitMs: 500,
-            healthCheckUrl:config.healthCheckUrl
-        });
-};
-
-function ChangedDetailsViewModel(o, project, budgetHeaders, risks, allServices, selectedTargetMeasures, config) {
-    var self = this;
-    var period = budgetHeaders;
-    if (config.useRlpTemplate) {
-        if (config.useServiceOutcomesModel) {
-            self.serviceOutcomes = new ServiceOutcomeTargetsViewModel(o.serviceIds, project.outputTargets, budgetHeaders, allServices, selectedTargetMeasures);
-        }
-        else {
-            self.services = new ServicesViewModel(o.serviceIds, config.services, project.outputTargets, budgetHeaders);
-        }
-
-        self.description = ko.observable(o.description);
-        self.name = ko.observable(o.name);
         self.programName = config.programName;
         self.projectEvaluationApproach = ko.observable(o.projectEvaluationApproach);
         self.relatedProjects = ko.observable(o.relatedProjects);
