@@ -129,7 +129,7 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     self.collectionApp.subscribe(function(collectionApp) {
         if (collectionApp == 'Monitor') {
             self.format('Database Table');
-            self.location('Biodiversity Data Repository (URL pending)');
+            self.publicationUrl('Biodiversity Data Repository (URL pending)');
         }
     });
 
