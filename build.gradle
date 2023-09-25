@@ -150,6 +150,7 @@ dependencies {
     implementation "commons-io:commons-io:2.6"
     implementation "org.seleniumhq.selenium:selenium-chrome-driver:3.14.0"
     implementation "com.bertramlabs.plugins:asset-pipeline-grails:$assetPipelineVersion"
+    implementation group: 'com.googlecode.owasp-java-html-sanitizer', name: 'owasp-java-html-sanitizer', version: '20220608.1'
 
     compileOnly "io.micronaut:micronaut-inject-groovy"
     console "org.grails:grails-console"
