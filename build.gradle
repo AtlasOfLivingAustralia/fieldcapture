@@ -244,9 +244,10 @@ clientDependencies {
         'underscore'('1.12.1') {
             include 'underscore.js'
         }
+        'datatables.net'("1.13.6")
         'datatables.net-bs4'("1.13.6")
-        "datatables.net-buttons-dt"("1.7.1")
-        'datatables.net-buttons-bs4'("1.7.1")
+        "datatables.net-buttons-dt"("2.4.2")
+        'datatables.net-buttons-bs4'("2.4.2")
         '@danielfarrell/bootstrap-combobox'('1.1.8', transitive:false)
         'fancybox'('3.0.1')
         "fuelux"("3.17.2", transitive:false)
