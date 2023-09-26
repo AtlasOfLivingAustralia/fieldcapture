@@ -99,7 +99,7 @@
                 monitoringProtocolsUrl:"${createLink(action:'monitoringProtocolFormCategories', id: project.projectId)}"
 
             },
-            here = window.location.href;
+            here = "${createLink(action:'index', id: project.projectId)}";
 
         fcConfig.project = <fc:renderProject project="${project}"/>;
     </script>
