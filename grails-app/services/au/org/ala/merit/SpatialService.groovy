@@ -26,7 +26,7 @@ class SpatialService {
     Integer deleteFromSpatialPortal(String pid) {
         String url = "${grailsApplication.config.getProperty('spatial.layersUrl')}${DELETE_SHAPE_PATH}/$pid"
 
-        webService.doDelete(url)
+        webService.doDelete(url, true)
     }
 
     /**
@@ -41,10 +41,9 @@ class SpatialService {
      * attributes of that feature. eg. [shp_id: <shapefileId>, "0":[attribute1:<value>, attribute2:<value>, etc], "1":[attribute1:<value>, attribute2:<value>, etc]]]
      */
     Map uploadShapefile(MultipartFile shapefile) {
-        String userId = userService.getCurrentUserId()
-        String url = "${grailsApplication.config.getProperty('spatial.layersUrl')}${UPLOAD_SHAPE_PATH}?user_id=${userId}&api_key=${grailsApplication.config.getProperty('api_key')}"
+        String url = "${grailsApplication.config.getProperty('spatial.layersUrl')}${UPLOAD_SHAPE_PATH}"
 
-        webService.postMultipart(url, [:], shapefile)
+        webService.postMultipart(url, [:], shapefile, 'files', true)
     }
 
     /**
@@ -62,11 +61,11 @@ class SpatialService {
         String baseUrl = "${grailsApplication.config.getProperty('spatial.layersUrl')}${UPLOAD_SHAPE_PATH}"
         String userId = userService.getCurrentUserId()
 
-        Map site = [name:objectName, description: objectDescription, user_id:userId, api_key:grailsApplication.config.getProperty('api_key')]
+        Map site = [name:objectName, description: objectDescription, user_id:userId]
 
         String url = "${baseUrl}/${shapeFileId}/${featureId}"
 
-        webService.doPost(url, site)
+        webService.doPost(url, site, true)
     }
 
     /**
