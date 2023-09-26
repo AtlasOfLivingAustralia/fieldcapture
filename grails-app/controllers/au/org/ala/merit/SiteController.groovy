@@ -258,10 +258,10 @@ class SiteController {
     }
 
     def siteUpload() {
-        String projectId = params.projectId
+        String projectId = params.id ?: params.projectId
         if (!projectService.canUserEditProject(userService.getCurrentUserId(), projectId)) {
-            flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${params.projectId}"
-            redirect(controller:'project', action:'index', id: params.projectId)
+            flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${projectId}"
+            redirect(controller:'project', action:'index', id: projectId)
         }
         else if (request.respondsTo('getFile')) {
 
@@ -275,23 +275,23 @@ class SiteController {
                     break
                 case 'kmz':
                     uploadKmz(projectId, file)
-                    redirect(controller:'project', id:params.projectId)
+                    redirect(controller:'project', id:projectId)
                     return
                 case 'kml':
                     uploadKml(projectId, file)
-                    redirect(controller:'project', id:params.projectId)
+                    redirect(controller:'project', id:projectId)
                     return
                 default:
                     flash.message = "Unsupported file type.  Please attach a shapefile, kmz or kml file"
-                    result = [view:'upload', model:[projectId: projectId, returnTo:params.returnTo]]
+                    result = [view:'upload', model:[projectId: projectId]]
             }
 
-            result.model.putAll([projectId: projectId, returnTo:params.returnTo])
+            result.model.putAll([projectId: projectId])
             render result
 
         }
         else {
-            render view:'upload', model:[projectId: projectId, returnTo:params.returnTo]
+            render view:'upload', model:[projectId: projectId]
         }
     }
 
@@ -340,7 +340,7 @@ class SiteController {
             def message ='There was an error uploading the shapefile.  Please send an email to support for further assistance.'
 
             flash.message = "An error was encountered when processing the shapefile: ${message}"
-            return [view:'upload', model:[projectId: projectId, returnTo:params.returnTo]]
+            return [view:'upload', model:[projectId: projectId]]
         }
     }
 
