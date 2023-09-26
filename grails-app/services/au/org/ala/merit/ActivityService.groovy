@@ -290,7 +290,7 @@ class ActivityService {
 
         Map resp = activityFormService.searchActivityForms(criteria)
         List<Map> forms = resp?.resp ?: []
-        forms = forms.collect{[externalId:it.externalId, name:it.name, formVersion:it.formVersion, category:it.category]}
+        forms = forms.collect{[externalIds:it.externalIds, externalId:it.externalIds?.find{it.idType?.name == "MONITOR_PROTOCOL_GUID"}?.externalId, name:it.name, formVersion:it.formVersion, category:it.category]}
 
         forms
     }

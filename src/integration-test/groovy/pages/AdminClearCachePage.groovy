@@ -25,6 +25,8 @@ class AdminClearCachePage extends ReloadablePage {
     void clearHomePageStatistics(){
         waitFor {homePageStatistics.displayed}
         homePageStatistics.click()
+
+        waitFor{hasBeenReloaded()}
     }
 
     void clearProgramListCache() {

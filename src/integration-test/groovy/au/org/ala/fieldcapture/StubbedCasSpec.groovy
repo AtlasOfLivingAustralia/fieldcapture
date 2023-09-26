@@ -150,6 +150,9 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
         }
         catch (StaleElementReferenceException e) { // Do nothing, backdrop was already detached
         }
+        catch (NullPointerException e) {
+            // Do nothing, backdrop was already detached and destroyed before we selected it
+        }
         catch (WebDriverException e) {
             // We are now seeing WebDriverException instead of StateElementReferenceException in some cases
         }
