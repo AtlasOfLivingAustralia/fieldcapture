@@ -69,9 +69,7 @@ describe("The data set summaries view models behave correctly", function () {
 
     function dataSet() {
         return {
-            "owner" : "Test",
             "methodDescription" : "Test method",
-            "custodian" : "Test",
             "investmentPriorities" : ["Botaurus poiciloptilus (Australasian Bittern)", "Other"],
             "otherInvestmentPriority": "Test",
             "endDate" : "2020-12-02T13:00:00Z",
@@ -83,6 +81,7 @@ describe("The data set summaries view models behave correctly", function () {
                 "No"
             ],
             "type" : "Project progress dataset that is tracking change against an established project baseline dataset",
+            "projectBaseline": "b1",
             "collectionApp" : "Test app",
             "dataSetId" : "9bbed216-c3d4-4346-912b-0127a4bb53b9",
             "name" : "Test data set",
@@ -112,7 +111,8 @@ describe("The data set summaries view models behave correctly", function () {
             "sizeUnknown": false,
             "otherSensitivity":null,
             "otherDataSetType":null,
-            "sizeInKB": 205
+            "sizeInKB": 205,
+            "protocol":"guid-1"
         };
     }
 

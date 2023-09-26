@@ -24,14 +24,11 @@ class ProjectExplorerSpec extends StubbedCasSpec {
         expectedProjects.add("Grants project")
         expectedProjects.add("project application")
 
-        when:
-        to AdminTools
-
-        then:
-        at AdminTools
 
         when: "Reindex to ensure the project explorer will have predictable data"
+        to AdminTools
         reindex()
+
         and: "Logout so the rest of the test is run as an unauthenticated user"
         logout(browser)
         to ProjectExplorer
@@ -75,7 +72,7 @@ class ProjectExplorerSpec extends StubbedCasSpec {
 
         then:
         waitFor { hasBeenReloaded() }
-        projects.size() == 1
+        waitFor { projects.size() == 1 }
 
         when: "We expand the project to view the details"
         projects[0].toggle()

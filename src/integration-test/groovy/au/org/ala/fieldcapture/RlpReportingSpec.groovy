@@ -570,6 +570,7 @@ class RlpReportingSpec extends StubbedCasSpec {
 
         then:
         waitFor 30, { hasBeenReloaded() }
+        at ProjectIndex // Reset at check time and check correct page has been reloaded.
 
         and: "List of reports will be displayed"
         waitFor {
