@@ -1054,6 +1054,13 @@ createProject({
                 otherOutcomes: ["Partnerships and engagement is built between stakeholders responsible for managing natural resources",
                     "More primary producers adopt risk management practices to improve their sustainability and resilience",
                     "More primary producers and agricultural communities are experimenting with adaptive or transformative NRM practices, systems and approaches that link and contribute to building drought resilience"]
+            },
+            baseline: {
+                rows: [
+                    {
+                        code:'b1', baseline:'baseline 1', protocols:['Category 1', 'Category 2']
+                    }
+                ]
             }
         }
     }
@@ -1475,13 +1482,36 @@ config.priorityPlaces = [
     "Priority place 3"
 ];
 config.excludeFinancialYearData = false;
-
+config.supportsParatoo = true;
 createProgram({programId: "outcomeMeriPlan", name: "Outcome MERI Plan", description: "", config: config});
 createProject({projectId: "outcomeMeriPlanProject", name: "Outcome MERI Plan project", programId: "outcomeMeriPlan"});
-
 db.userPermission.insert({
     entityType: 'au.org.ala.ecodata.Project',
     entityId: "outcomeMeriPlanProject",
+    userId: '1',
+    accessLevel: 'admin'
+});
+const monitorProject = {
+    projectId: "monitorProject",
+    name: "Testing monitor integration",
+    programId: "outcomeMeriPlan",
+    custom: {
+        details: {
+            baseline: {
+                    rows: [
+                        {
+                            code:'b1', baseline:'baseline 1', protocols:['Category 1', 'Category 2']
+                        }
+                    ]
+                }
+            }
+        }
+    };
+
+createProject(monitorProject);
+db.userPermission.insert({
+    entityType: 'au.org.ala.ecodata.Project',
+    entityId: "monitorProject",
     userId: '1',
     accessLevel: 'admin'
 });

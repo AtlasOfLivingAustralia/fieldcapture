@@ -495,7 +495,7 @@ var config = {
             //Page loading indicator.
 			$('.spinner').hide();
         	$('.tab-content').fadeIn();
-        	$('.programId').select2({theme: "bootstrap4"});
+        	$('.programId').select2({theme: "bootstrap"});
 
         	new LockService({unlockUrl:fcConfig.unlockActivityUrl}).unlockAll();
 

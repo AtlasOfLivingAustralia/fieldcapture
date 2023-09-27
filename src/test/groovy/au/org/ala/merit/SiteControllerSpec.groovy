@@ -110,4 +110,22 @@ class SiteControllerSpec extends Specification implements ControllerUnitTest<Sit
         response.json == [progress:[total:1, uploaded:0, errors:[]], message:"success"]
     }
 
+    def "the site controller can return site data as geojson"() {
+        setup:
+        String siteId = 's1'
+        Map site = [siteId:siteId, name:"Site 1", projects:[[projectId:'p1', name:'Project 1']], extent:[geometry:[type:"Point", coordinates:[1,2]]]]
+        Map siteGeoJson = [type:"Feature", geometry:[type:"Point", coordinates:[1,2]], properties:[siteId:siteId, name:"Site 1", projects:[[projectId:'p1', name:'Project 1']]]]
+
+        when:
+        controller.geojson(siteId)
+
+        then:
+        1 * siteService.get(siteId) >> site
+        1 * userService.getCurrentUserId() >> 'u1'
+        1 * projectService.canUserEditProject('u1', 'p1') >> true
+        1 * siteService.getSiteGeoJson(siteId) >> [status:200, resp:siteGeoJson]
+
+        response.json == siteGeoJson
+    }
+
 }

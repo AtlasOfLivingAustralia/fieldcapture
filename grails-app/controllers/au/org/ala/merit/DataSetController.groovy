@@ -47,11 +47,39 @@ class DataSetController {
         if (!priorities) {
             priorities = ['n/a']
         }
-        if (priorities){
-            priorities << 'Other'
+
+
+        List outcomeGroups = []
+        List projectServices = projectService.getProjectServices(project)
+        project.outputTargets?.each { Map outputTarget ->
+            if (outputTarget.outcomeTargets) {
+                Map service = projectServices.find{it.scores?.find{score -> score.scoreId == outputTarget.scoreId}}
+                outputTarget.outcomeTargets.each {
+                    outcomeGroups << [
+                            scoreId:outputTarget.scoreId,
+                            serviceId: service.id,
+                            service: service.name,
+                            outcomes:it.relatedOutcomes,
+                            label:service.name+" "+it.relatedOutcomes
+                    ]
+                }
+            }
         }
 
-        [projectId:projectId, programName:programName, priorities:priorities, outcomes: outcomes, project:project]
+        List projectBaselines = projectService.listProjectBaselines(project)
+        projectBaselines = projectBaselines?.collect{
+            // Only projects used the 2023 revision of the MERI plan will have a code attribute for their baselines
+            String label = it.code ? it.code + ' - '+ it.baseline : it.baseline
+            String value = it.code ?: it.baseline
+            [label:label, value: value]
+        }
+
+        List projectProtocols = projectService.listProjectProtocols(project).collect{
+            [label:it.name, value:it.externalId]
+        }
+        projectProtocols << [label:'Other', value:'other']
+
+        [projectId:projectId, programName:programName, priorities:priorities, outcomes: outcomes, project:project, projectOutcomes:outcomeGroups, projectBaselines:projectBaselines, projectProtocols:projectProtocols]
     }
 
     // Note that authorization is done against a project, so the project id must be supplied to the method.

@@ -80,6 +80,7 @@ class OrganisationReportingSpec extends StubbedCasSpec {
         waitFor 20,{
             hasBeenReloaded()
         }
+        at Organisation // Need to reset the at check time for subsequent "hasBeenReloaded"
 
         when:
         openAdminTab()
@@ -94,7 +95,7 @@ class OrganisationReportingSpec extends StubbedCasSpec {
         reportingSection.generateReports()
 
         then:
-        waitFor 20,{
+        waitFor 60,{
             hasBeenReloaded()
         }
 

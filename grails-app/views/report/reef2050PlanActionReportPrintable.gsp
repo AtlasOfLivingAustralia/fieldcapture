@@ -24,7 +24,7 @@
 
     <h3>Reef 2050 Plan Action Reporting</h3>
     <g:if test="${reportText}">
-        <markdown:renderHtml text="${reportText}"/>
+        <fc:markdownToHtml text="${reportText}"/>
     </g:if>
     <g:else>
         <g:if test="${!actions}">

@@ -9,10 +9,12 @@
         var fcConfig = {
             serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
             dataSetUpdateUrl: "${createLink(action:'save', id:projectId)}",
+            viewSiteUrl: "${createLink(controller: 'site', action:'index')}",
             returnToUrl: "${g.createLink(controller:'project', action:'index', id:projectId)}"
         };
     </script>
     <asset:stylesheet src="common-bs4.css"/>
+    <asset:stylesheet src="select2-theme-bootstrap4/select2-bootstrap.css"/>
     <asset:stylesheet src="dataSets.css"/>
 
 </head>
@@ -42,12 +44,18 @@
 
 <asset:javascript src="common-bs4.js"/>
 <asset:javascript src="projectService.js"/>
+<asset:javascript src="select2/js/select2.full.js"/>
+<asset:javascript src="forms-knockout-bindings.js"/>
 <asset:javascript src="dataSets.js"/>
 <script>
     var project = {};
     var projectService = new ProjectService(project, fcConfig);
     var config = _.extend(fcConfig, {endDateSelector:"#endDate"});
+    config.projectOutcomes = <fc:modelAsJavascript model="${projectOutcomes}"/>;
+    config.projectBaselines = <fc:modelAsJavascript model="${projectBaselines}"/>;
+    config.projectProtocols = <fc:modelAsJavascript model="${projectProtocols}"/>;
     var viewModel = new DataSetViewModel({}, projectService, config);
+    $.fn.select2.defaults.set( "theme", "bootstrap" );
     ko.applyBindings(viewModel);
 </script>
 <asset:deferredScripts/>

@@ -18,6 +18,7 @@
 //= require fieldcapture-application
 //= require healthCheck
 //= require knockout-utils
+//= require utils
 //= require knockout-dates
 //= require knockout-custom-bindings
 //= require wmd/wmd.js
