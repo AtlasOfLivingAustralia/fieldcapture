@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import au.org.ala.merit.command.EditOrganisationReportCommand
+import au.org.ala.merit.command.PrintOrganisationReportCommand
 import au.org.ala.merit.command.SaveReportDataCommand
 import au.org.ala.merit.command.ViewOrganisationReportCommand
 import au.org.ala.merit.util.ProjectGroupingHelper
@@ -498,7 +499,22 @@ class OrganisationController {
         }
 
         if (cmd.report.type == ReportService.PERFORMANCE_MANAGEMENT_REPORT) {
-            viewOrEditOrganisationReport(cmd.report, false)
+            viewOrEditOrganisationReport(cmd.model, false)
+        }
+        else {
+            render model:cmd.model, view:'/activity/activityReportView'
+        }
+    }
+
+    @PreAuthorise(accessLevel = 'readOnly')
+    def printOrganisationReport(PrintOrganisationReportCommand cmd) {
+        if (cmd.hasErrors()) {
+            error(cmd.errors.toString(), cmd.id)
+            return
+        }
+
+        if (cmd.report.type == ReportService.PERFORMANCE_MANAGEMENT_REPORT) {
+            viewOrEditOrganisationReport(cmd.model, false)
         }
         else {
             render model:cmd.model, view:'/activity/activityReportView'
@@ -544,45 +560,26 @@ class OrganisationController {
         render result as JSON
     }
 
-    private def viewOrEditOrganisationReport(Map report, Boolean edit) {
-        int version = report.toDate < "2017-01-01T00:00:00Z" ? 1 : 2
-        Map organisation = organisationService.get(report.organisationId)
-        if (organisationService.isUserAdminForOrganisation(report.organisationId)) {
-            Map model = reportService.performanceReportModel(report.reportId, version)
+    private def viewOrEditOrganisationReport(Map cmdModel, Boolean edit) {
+        int version = cmdModel.report.toDate < "2017-01-01T00:00:00Z" ? 1 : 2
+        Map organisation = organisationService.get(cmdModel.report.organisationId)
+        if (organisationService.isUserAdminForOrganisation(cmdModel.report.organisationId)) {
+            Map model = reportService.performanceReportModel(cmdModel.report.reportId, version)
             model.state = organisation.state ?: 'Unknown'
             model.organisation = organisation
-
             if (reportService.excludesNotApproved(model.report)) {
                 model.submittingUserName = authService.getUserForUserId(model.report.submittedBy)?.displayName ?: 'Unknown user'
                 model.submissionDate = DateUtils.displayFormatWithTime(model.report.dateSubmitted)
                 edit = false
             }
+
+            model.printView = (cmdModel.printView) ? cmdModel.printView : false
             String view = edit ? '/report/performanceReport' : '/report/performanceReportView'
 
             render view: view, model:model
         }
         else {
             flash.message = "You don't have permission to edit the report"
-            chain(action:'index', id: report.organisationId)
-        }
-    }
-
-    def performanceReportPDF(String reportId) {
-        Map report = reportService.get(reportId)
-
-        if (organisationService.isUserAdminForOrganisation(report.organisationId)) {
-
-            int version = report.toDate < "2017-01-01T00:00:00Z" ? 1 : 2
-            Map model = reportService.performanceReportModel(reportId, version)
-            model.edit = false
-
-            String page = g.include(controller:'organisation', action:'viewOrganisationReport', id:reportId, params:[reportId:reportId])
-
-            response.setContentType('application/pdf')
-            pdfConverterService.convertToPDF(page, response.outputStream)
-        }
-        else {
-            flash.message = "You don't have permission to view the report"
             chain(action:'index', id: report.organisationId)
         }
     }

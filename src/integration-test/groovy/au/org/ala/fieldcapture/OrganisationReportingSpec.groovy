@@ -5,6 +5,7 @@ import com.icegreen.greenmail.util.GreenMailUtil
 import geb.module.FormElement
 import pages.AdminTools
 import pages.Organisation
+import pages.OrganisationDownloadReport
 import pages.ReportPage
 import pages.ViewReportPage
 import spock.lang.Shared
@@ -197,6 +198,36 @@ class OrganisationReportingSpec extends StubbedCasSpec {
             GreenMailUtil.getBody(messages[0]) == "<p>Organisation report submitted body</p>"
         }
 
+    }
+
+    def "A PDF can be generated from report tab"() {
+        setup:
+        loginAsReadOnlyUser(browser)
+
+        when:
+        to Organisation, orgId
+
+        waitFor {
+            reportingTab.click()
+        }
+
+        then:
+        waitFor { reportsTabPane.displayed }
+
+        when:
+        reportsTabPane.reports[0].downloadReport()
+
+        then:
+        withWindow("print-report", {
+            at OrganisationDownloadReport
+            waitFor {
+                printInstructions.displayed
+            }
+            closePrintInstructions()
+            waitFor {
+                !printInstructions.displayed
+            }
+        })
     }
 
     def "A user with the grant manager role can approve and return reports"() {

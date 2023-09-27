@@ -452,7 +452,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         String reportId = 'r1'
 
         when:
-        controller.reportPDF(projectId, reportId)
+        controller.printableReport(projectId, reportId)
 
         then:
         1 * projectService.doesReportBelongToProject(projectId, reportId) >> false

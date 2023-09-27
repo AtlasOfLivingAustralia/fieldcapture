@@ -249,6 +249,23 @@ var orgReport1 = {
     "progress" : "started"
 }
 
+var orgPerfReport = {
+    "reportId" : "a02a527a-4377-40f0-86de-8eabe6weeknd",
+    "dateCreated" : ISODate("2016-06-22T01:13:26.944Z"),
+    "lastUpdated" : ISODate("2017-07-16T05:38:41.463Z"),
+    "type" : "Performance Management Framework - Self Assessment",
+    "organisationId" : "test_organisation",
+    "name" : "2015 / 2016 Performance Management Framework - Self Assessment",
+    "publicationStatus" : "unpublished",
+    "status" : "active",
+    "progress" : "finished",
+    "fromDate" : ISODate("2015-07-01T14:00:00.000Z"),
+    "toDate" : ISODate("2016-07-01T14:00:00.000Z"),
+    "dueDate" : ISODate("2016-08-15T14:00:00.000Z"),
+    "submissionDate" : ISODate("2016-07-01T14:00:00.000Z"),
+    "category": "Performance Management Framework"
+}
+
 var activity2 = {
     "activityId" : "xyz254bf-b4fe-481c-9324-6d65d9c7c0d8",
     "assessment" : false,
@@ -271,6 +288,7 @@ var activity2 = {
 
 
 db.report.insert(orgReport1);
+db.report.insert(orgPerfReport);
 db.activity.insert(activity2);
 
 addSetting('meritfielddata.rlp.cs_report.submitted.emailSubject', 'Report submitted subject');

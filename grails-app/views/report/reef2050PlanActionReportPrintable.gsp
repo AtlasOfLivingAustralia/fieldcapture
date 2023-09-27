@@ -142,6 +142,11 @@
     </div>
     </g:else>
 </div>
-
+<g:if test="${printView}">
+    <asset:javascript src="print-instructions.js"/>
+    <g:render template="/shared/pdfInstructions"/>
+</g:if>
+<asset:javascript src="common-bs4.js"/>
+<asset:deferredScripts/>
 </body>
 </html>
