@@ -31,7 +31,7 @@ class ProjectController {
     static String MERI_PLAN_TEMPLATE = "meriPlan"
 
     def projectService, metadataService, commonService, activityService, userService, webService, roleService
-    def siteService, documentService, reportService, blogService, pdfGenerationService
+    def siteService, documentService, reportService, blogService
     GrailsApplication grailsApplication
 
     private def espOverview(Map project, Map user, ProgramConfig config) {
@@ -633,20 +633,6 @@ class ProjectController {
         projectSummaryReportCommand()
     }
 
-    @PreAuthorise(accessLevel = 'admin')
-    def projectReportPDF(String id) {
-
-        Map reportUrlConfig = [controller: 'report', action: 'projectReportCallback', id: id, absolute: true, params: [fromStage: params.fromStage, toStage: params.toStage, sections: params.sections]]
-        Map pdfGenParams = [:]
-        if (params.orientation == 'landscape') {
-            pdfGenParams.options = '-O landscape'
-        }
-        boolean result = pdfGenerationService.generatePDF(reportUrlConfig, pdfGenParams, response)
-        if (!result) {
-            render view: '/error', model: [error: "An error occurred generating the project report."]
-        }
-    }
-
     /**
      * Accepts a MERI Plan as an attached file and attempts to convert it into a format compatible with
      * MERIT.
@@ -836,23 +822,6 @@ class ProjectController {
         }
         Map result = reportService.reset(reportId)
         render result as JSON
-    }
-
-    /**
-     * This is designed as a callback from the PDF generation service.  It produces a HTML report that will
-     * be converted into PDF.
-     * @param id the project id
-     */
-    def viewReportCallback(String id, String reportId) {
-
-        if (pdfGenerationService.authorizePDF(request)) {
-            Map model = activityReportModel(id, reportId, ReportMode.PRINT)
-
-            render view:'/activity/activityReportView', model:model
-        }
-        else {
-            render status:HttpStatus.SC_UNAUTHORIZED
-        }
     }
 
     @PreAuthorise(accessLevel = 'readOnly', redirectController = "home")
