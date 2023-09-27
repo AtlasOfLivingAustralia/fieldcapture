@@ -138,6 +138,9 @@ class ProgramConfig implements Map {
 
     /** This flag controls whether a user with the MERIT read only role can view projects when the visibility is set to "private" */
     boolean readOnlyUsersCanViewWhenPrivate = false
+
+    /** This flag controls whether the project is using the new meri plan template(2023) */
+    boolean supportsMeriPlanComparison = false
 }
 
 

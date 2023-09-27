@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.command.MeriPlanChangesReportCommand
 import au.org.ala.merit.command.MeriPlanReportCommand
 import au.org.ala.merit.command.ProjectSummaryReportCommand
 import au.org.ala.merit.command.ReportCommand
@@ -161,6 +162,7 @@ class ProjectController {
         def meriPlanEnabled = user?.hasViewAccess || ((project.associatedProgram == 'National Landcare Programme' && project.associatedSubProgram == 'Regional Funding'))
         def meriPlanVisibleToUser = project.planStatus == 'approved' || user?.isAdmin || user?.isCaseManager || user?.hasViewAccess
         boolean userHasViewAccess = user?.hasViewAccess ?: false
+        boolean showMeriPlanComparison = config.supportsMeriPlanComparison
 
         def publicImages = project.documents.findAll {
             it.public == true && it.thirdPartyConsentDeclarationMade == true && it.type == 'image'
@@ -243,6 +245,7 @@ class ProjectController {
             rlpModel.admin.hidePrograms = true
             rlpModel.admin.showAnnouncementsTab = false
             rlpModel.admin.risksAndThreatsVisible = risksAndThreatsVisible
+            rlpModel.admin.showMeriPlanComparison = showMeriPlanComparison
 
             model = buildRLPTargetsModel(rlpModel, project)
         }
@@ -1098,6 +1101,24 @@ class ProjectController {
             Map model = meriPlanReportCommand.meriPlanReportModel()
             if (!model.error) {
                 render view:'/project/meriPlanReport', model:model
+            }
+            else {
+                render status: HttpStatus.SC_NOT_FOUND
+            }
+        }
+    }
+
+    @PreAuthorise(accessLevel = 'admin')
+    def viewMeriPlanChanges(MeriPlanChangesReportCommand meriPlanChangesReportCommand) {
+        Map model
+        // Only grant/project managers can view historical MERI plans.
+        if (meriPlanChangesReportCommand.documentId && !userService.userIsSiteAdmin()) {
+            render status:HttpStatus.SC_UNAUTHORIZED
+        }
+        else {
+            model = meriPlanChangesReportCommand.meriPlanChangesReportModel()
+            if (!model.error) {
+                render view:'/project/meriPlanChangesReport', model:model
             }
             else {
                 render status: HttpStatus.SC_NOT_FOUND

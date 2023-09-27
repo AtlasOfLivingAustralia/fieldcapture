@@ -210,6 +210,11 @@ function MERIPlan(project, projectService, config) {
         window.open(url,'meri-plan-report');
     };
 
+    self.meriPlanChanges = function() {
+        var url = config.meriPlanChangesUrl;
+        window.open(url,'meri-planchanges-report');
+    };
+
     self.unlockPlanForCorrection = function () {
 
         var $declaration = $(config.declarationModalSelector);
@@ -606,7 +611,7 @@ function MERIPlan(project, projectService, config) {
     };
 }
 
-function ReadOnlyMeriPlan(project, projectService, config) {
+function ReadOnlyMeriPlan(project, projectService, config, changed) {
     var self = this;
     if (!project.custom) {
         project.custom = {};
@@ -704,6 +709,12 @@ function ReadOnlyMeriPlan(project, projectService, config) {
     self.selectedTargetMeasures = ko.observableArray();
     var details = new DetailsViewModel(project.custom.details, project, self.periods, self.risks, self.allTargetMeasures, self.selectedTargetMeasures, config);
     self.meriPlan = ko.observable(details);
+
+    if (changed) {
+        var changedDetails = new DetailsViewModel(changed.custom.details, project, self.periods, self.risks, self.allTargetMeasures, self.selectedTargetMeasures, config);
+        self.meriPlanChanged = ko.observable(changedDetails);
+    }
+
     self.detailsLastUpdated = ko.observable(project.custom.details.lastUpdated).extend({simpleDate: true});
     self.isAgricultureProject = ko.computed(function () {
         var agricultureOutcomeStartIndex = 4;
@@ -908,6 +919,7 @@ function DetailsViewModel(o, project, budgetHeaders, risks, allServices, selecte
             healthCheckUrl:config.healthCheckUrl
         });
 };
+
 /** Removes nulls from arrays after toJSON is called */
 function outcomesToJSON(outcomeArray) {
     return _.filter(_.map(outcomeArray, function (outcome) {

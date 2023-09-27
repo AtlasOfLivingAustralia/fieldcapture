@@ -26,6 +26,7 @@ class FCTagLib {
     def settingService
     MarkdownService markdownService
     AuthService authService
+    MetadataService metadataService
 
     /** Allow simple formatting, links and text within p and divs by default */
     def policy = (Sanitizers.FORMATTING & Sanitizers.LINKS & Sanitizers.BLOCKS) & new HtmlPolicyBuilder().allowTextIn("p", "div").toFactory()
@@ -888,15 +889,157 @@ class FCTagLib {
 
         out << '<span class="original hide">'
         if (original && original.size() > i) {
-            out << original[i][property]
+            (attrs.property) ? out << original[i][property] : out << original[i]
         }
         out << '</span>'
         out << '<span class="changed hide">'
         if (changed && changed.size() > i) {
-            out << changed[i][property]
+            (attrs.property) ? out << changed[i][property] : out << changed[i]
         }
         out << '</span>'
         out << '<span class="diff"></span>'
+
+    }
+
+    def renderComparisonList = { attrs ->
+
+        List original = attrs.original
+        List changed = attrs.changed
+        int i = attrs.i
+        String property = attrs.property
+
+        out << '<span class="original hide">'
+        if (original && original.size() > i) {
+            if (original[i][property]?[0] instanceof List) {
+                out << original[i][property][0].collect{it}.join(',')
+            } else {
+                out << original[i][property][0]
+            }
+
+        }
+        out << '</span>'
+        out << '<span class="changed hide">'
+        if (changed && changed.size() > i) {
+            if (changed[i][property]?[0] instanceof List) {
+                out << changed[i][property][0].collect{it}.join(',')
+            } else {
+                out << changed[i][property][0]
+            }
+        }
+        out << '</span>'
+        out << '<span class="diff"></span>'
+
+    }
+
+    def renderComparisonMonitoring = { attrs ->
+
+        String code = attrs.code
+        List original = attrs.original
+        List changed = attrs.changed
+        int i = attrs.i
+        String property = attrs.property
+
+        def origMonitoringList = original
+        def resultOrigMonitoringList = []
+        for (def monitoring : origMonitoringList) {
+            if (code && code == monitoring.relatedBaseline) {
+                resultOrigMonitoringList = monitoring
+            }
+        }
+
+        def changedMonitoringList = changed
+        def resultChangedMonitoringList = []
+        for (def monitoring : changedMonitoringList) {
+            if (code && code == monitoring.relatedBaseline) {
+                resultChangedMonitoringList = monitoring
+            }
+        }
+
+        out << '<span class="original hide">'
+        if (resultOrigMonitoringList && resultOrigMonitoringList.size() > i) {
+            if (property == 'relatedTargetMeasures') {
+                out << getScoreLabels(resultOrigMonitoringList[property]).labels
+            } else {
+                if (resultOrigMonitoringList[property] instanceof List) {
+                    out << resultOrigMonitoringList[property].collect{it}.join(',')
+                } else {
+                    out << resultOrigMonitoringList[property]
+                }
+            }
+
+        }
+        out << '</span>'
+
+        out << '<span class="changed hide">'
+        if (resultChangedMonitoringList && resultChangedMonitoringList.size() > i) {
+            if (property == 'relatedTargetMeasures') {
+                out << getScoreLabels(resultChangedMonitoringList[property]).labels
+            } else {
+                if (resultChangedMonitoringList[property] instanceof List) {
+                    out << resultChangedMonitoringList[property].collect{it}.join(',')
+                } else {
+                    out << resultChangedMonitoringList[property]
+                }
+            }
+
+        }
+        out << '</span>'
+        out << '<span class="diff"></span>'
+    }
+
+    def renderComparisonScoreLabel = { attrs ->
+
+        List original = attrs.original
+        List changed = attrs.changed
+        int i = attrs.i
+        String property = attrs.property
+
+        try {
+            out << '<span class="original hide">'
+            if (original && original.size() > i) {
+                out << getScoreLabels(original[i][property]).labels
+            }
+            out << '</span>'
+        } catch(Exception e) {
+            log.debug "\n Changed index is greater than the original"
+        }
+
+        out << '<span class="changed hide">'
+        if (changed && changed.size() > i) {
+            out << getScoreLabels(changed[i][property]).labels
+        }
+        out << '</span>'
+
+        out << '<span class="diff"></span>'
+
+    }
+
+    def renderComparisonOutputType = { attrs ->
+
+        List original = attrs.original
+        List changed = attrs.changed
+        int i = attrs.i
+        String property = attrs.property
+
+        try {
+            out << '<span class="original hide">'
+            if (original && original.size() > i) {
+                out << getScoreLabels(original[i][property]).outputTypes
+            }
+            out << '</span>'
+
+        } catch(Exception e) {
+            log.debug "\n Changed index is greater than the original"
+        }
+
+        out << '<span class="changed hide">'
+        if (changed && changed.size() > i) {
+            out << getScoreLabels(changed[i][property]).outputTypes
+        }
+        out << '</span>'
+
+        out << '<span class="diff"></span>'
+
     }
 
     def status = { attrs ->
@@ -1011,5 +1154,30 @@ class FCTagLib {
                 log.warn("Dropping attributes $attributeNames from $tagName in $imageId.$metadataName")
             }
         }, null)
+    }
+
+    private Map getScoreLabels(def scoreIds) {
+        List<Map> scores = metadataService.getOutputTargetScores()
+        List outputTypes = []
+        List labels = []
+        if (scoreIds instanceof List) {
+            for (String scoreId : scoreIds) {
+                scores.each {
+                    if (scoreId == it.scoreId) {
+                        outputTypes.add(it.outputType)
+                        labels.add(it.label)
+                    }
+                }
+            }
+        } else {
+            scores.each {
+                if (scoreIds == it.scoreId) {
+                    outputTypes.add(it.outputType)
+                    labels.add(it.label)
+                }
+            }
+        }
+
+        return [outputTypes:outputTypes.join(","), labels:labels.join(",")]
     }
 }
