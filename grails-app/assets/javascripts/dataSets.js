@@ -81,7 +81,7 @@ var DataSetViewModel = function(dataSet, projectService, options) {
 
     self.projectBaselines = options.projectBaselines;
     self.type = ko.observable(dataSet.type);
-    self.projectBaseline = ko.observable(dataSet.projectBaseline);
+    self.baselines = ko.observableArray(dataSet.baselines);
     self.otherDataSetType = ko.observable(dataSet.otherDataSetType);
     self.term = ko.observable(dataSet.term);
     self.serviceAndOutcomes = ko.observable(_.find(options.projectOutcomes || [], function(outcome) {

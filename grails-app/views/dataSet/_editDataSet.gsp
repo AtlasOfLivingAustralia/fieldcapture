@@ -93,7 +93,7 @@
     <div class="form-group row">
         <label for="projectBaseline" class="col-sm-5 col-form-label required">8b. Which project baseline does this data set relate to or describe?</label>
         <div class="col-sm-7">
-            <select class="form-control" id="projectBaseline" data-validation-engine="validate[required]" data-bind="options:projectBaselines, optionsText:'label', optionsValue:'value', optionsCaption:'Please select...', value:projectBaseline"></select>
+            <select multiple="multiple" class="form-control" id="projectBaseline" data-validation-engine="validate[required]" data-bind="options:projectBaselines, optionsText:'label', optionsValue:'value', optionsCaption:'Please select...', multiSelect2:{value:baselines}"></select>
         </div>
     </div>
 
