@@ -35,7 +35,6 @@ class SiteControllerSpec extends Specification implements ControllerUnitTest<Sit
         when:
         request.addFile(shapefile)
         params.projectId = projectId
-        params.returnTo = "returnTo"
 
         controller.siteUpload()
 
@@ -47,7 +46,6 @@ class SiteControllerSpec extends Specification implements ControllerUnitTest<Sit
         model.shapeFileId == shapefileId
         model.attributeNames == ['a1', 'a2']
         model.shapes == [[id:"0", values:[a1:"v1", a2:"v2"]]]
-        model.returnTo == params.returnTo
     }
 
     def "the site controller checks the user can edit the supplied project before allowing a site upload"() {

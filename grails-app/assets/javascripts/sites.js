@@ -1159,7 +1159,7 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
     };
     this.editSite = function (site) {
         if (site.type != 'compound') {
-            var url = fcConfig.siteEditUrl + '/' + site.siteId + '?returnTo=' + encodeURIComponent(fcConfig.returnTo);
+            var url = fcConfig.siteEditUrl + '/' + site.siteId;
             document.location.href = url;
         }
         else {
@@ -1184,7 +1184,7 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
         });
     };
     this.viewSite = function (site) {
-        var url = fcConfig.siteViewUrl + '/' + site.siteId + '?returnTo=' + encodeURIComponent(fcConfig.returnTo);
+        var url = fcConfig.siteViewUrl + '/' + site.siteId;
         if (projectId) {
             url += '&projectId='+projectId;
         }
