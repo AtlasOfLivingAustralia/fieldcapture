@@ -182,7 +182,7 @@ class DatasetSpec extends StubbedCasSpec{
         set.programOutcome = "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
         set.investmentPriorities = ["Soil acidification"]
         set.type = "Baseline dataset associated with a project outcome"
-        set.projectBaseline = 'b1'
+        set.baselines = ['b1']
         set.protocol = 'guid-1'
         set.collectionApp = "Collection App"
         set.location = "Location"

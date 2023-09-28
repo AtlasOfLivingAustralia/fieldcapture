@@ -81,7 +81,7 @@ describe("The data set summaries view models behave correctly", function () {
                 "No"
             ],
             "type" : "Project progress dataset that is tracking change against an established project baseline dataset",
-            "projectBaseline": "b1",
+            "baselines": ["b1"],
             "collectionApp" : "Test app",
             "dataSetId" : "9bbed216-c3d4-4346-912b-0127a4bb53b9",
             "name" : "Test data set",
