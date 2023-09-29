@@ -16306,7 +16306,7 @@
                       },
                       {
                         "dataType": "text",
-                        "name": "surveyMethodology",
+                        "name": "surveyMethodologySpecies",
                         "description": "Provide more details on what is being done",
                         "validate": "required,maxSize[3000]"
                       },
@@ -17114,7 +17114,7 @@
                           },
                           {
                             "width": "15%",
-                            "source": "surveyMethodology",
+                            "source": "surveyMethodologySpecies",
                             "title": "Survey methodology",
                             "type": "text"
                           },
