@@ -871,6 +871,7 @@
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
+            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
             "constraints": [
               "Individuals",
               "Groups"
@@ -898,6 +899,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -927,6 +929,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -1030,13 +1033,14 @@
               {
                 "width": "10%",
                 "source": "participationIndividualsOrGroups",
-                "title": "Individuals or groups?",
+                "title": " Are individuals or groups delivering this service?",
                 "type": "selectOne"
               },
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service",
+                "title": "Total number of people delivering this service <br>(including First Nations people)",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -1052,6 +1056,7 @@
                 "type": "col",
                 "width": "20%",
                 "title": "Total number of First Nations people delivering this service ",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -1066,7 +1071,8 @@
               {
                 "source": "participationDetails",
                 "rows": 4,
-                "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
                 "type": "textarea"
               }
             ],
@@ -1200,6 +1206,7 @@
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
+            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
             "constraints": [
               "Individuals",
               "Groups"
@@ -1227,6 +1234,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -1256,6 +1264,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -1437,13 +1446,14 @@
                   {
                     "width": "10%",
                     "source": "participationIndividualsOrGroups",
-                    "title": "Individuals or groups?",
+                    "title": " Are individuals or groups delivering this service?",
                     "type": "selectOne"
                   },
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total number of people delivering this service",
+                    "title": "Total number of people delivering this service <br>(including First Nations people)",
+                    "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                     "items": [
                       {
                         "source": "participationIndividualNumber",
@@ -1459,6 +1469,7 @@
                     "type": "col",
                     "width": "20%",
                     "title": "Total number of First Nations people delivering this service ",
+                    "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                     "items": [
                       {
                         "source": "firstNationIndividualNumber",
@@ -1473,7 +1484,8 @@
                   {
                     "source": "participationDetails",
                     "rows": 4,
-                    "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                    "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                    "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
                     "type": "textarea"
                   }
                 ],
@@ -1640,6 +1652,7 @@
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
+            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
             "constraints": [
               "Individuals",
               "Groups"
@@ -1667,6 +1680,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -1696,6 +1710,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -2053,13 +2068,14 @@
               {
                 "width": "10%",
                 "source": "participationIndividualsOrGroups",
-                "title": "Individuals or groups?",
+                "title": " Are individuals or groups delivering this service?",
                 "type": "selectOne"
               },
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service",
+                "title": "Total number of people delivering this service <br>(including First Nations people)",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -2075,6 +2091,7 @@
                 "type": "col",
                 "width": "20%",
                 "title": "Total number of First Nations people delivering this service ",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -2089,7 +2106,8 @@
               {
                 "source": "participationDetails",
                 "rows": 4,
-                "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
                 "type": "textarea"
               }
             ],
@@ -2404,6 +2422,7 @@
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
+            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
             "constraints": [
               "Individuals",
               "Groups"
@@ -2431,6 +2450,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -2460,6 +2480,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -3151,13 +3172,14 @@
               {
                 "width": "10%",
                 "source": "participationIndividualsOrGroups",
-                "title": "Individuals or groups?",
+                "title": " Are individuals or groups delivering this service?",
                 "type": "selectOne"
               },
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total Number of people delivering this service",
+                "title": "Total number of people delivering this service <br>(including First Nations people)",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -3172,7 +3194,8 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total Number of First Nations people delivering this service ",
+                "title": "Total number of First Nations people delivering this service ",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -3187,7 +3210,8 @@
               {
                 "source": "participationDetails",
                 "rows": 4,
-                "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
                 "type": "textarea"
               }
             ],
@@ -3613,6 +3637,7 @@
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
+            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
             "constraints": [
               "Individuals",
               "Groups"
@@ -3640,6 +3665,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -3669,6 +3695,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -4022,13 +4049,14 @@
               {
                 "width": "10%",
                 "source": "participationIndividualsOrGroups",
-                "title": "Individuals or groups?",
+                "title": " Are individuals or groups delivering this service?",
                 "type": "selectOne"
               },
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service",
+                "title": "Total number of people delivering this service <br>(including First Nations people)",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -4044,6 +4072,7 @@
                 "type": "col",
                 "width": "20%",
                 "title": "Total number of First Nations people delivering this service ",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -4058,7 +4087,8 @@
               {
                 "source": "participationDetails",
                 "rows": 4,
-                "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
                 "type": "textarea"
               }
             ],
@@ -4363,6 +4393,7 @@
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
+            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
             "constraints": [
               "Individuals",
               "Groups"
@@ -4390,6 +4421,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -4419,6 +4451,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -4807,13 +4840,14 @@
               {
                 "width": "10%",
                 "source": "participationIndividualsOrGroups",
-                "title": "Individuals or groups?",
+                "title": " Are individuals or groups delivering this service?",
                 "type": "selectOne"
               },
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service",
+                "title": "Total number of people delivering this service <br>(including First Nations people)",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -4829,6 +4863,7 @@
                 "type": "col",
                 "width": "20%",
                 "title": "Total number of First Nations people delivering this service ",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -4843,7 +4878,8 @@
               {
                 "source": "participationDetails",
                 "rows": 4,
-                "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
                 "type": "textarea"
               }
             ],
@@ -5253,6 +5289,7 @@
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
+            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
             "constraints": [
               "Individuals",
               "Groups"
@@ -5280,6 +5317,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -5309,6 +5347,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -5601,13 +5640,14 @@
               {
                 "width": "10%",
                 "source": "participationIndividualsOrGroups",
-                "title": "Individuals or groups?",
+                "title": " Are individuals or groups delivering this service?",
                 "type": "selectOne"
               },
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service",
+                "title": "Total number of people delivering this service <br>(including First Nations people)",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -5623,6 +5663,7 @@
                 "type": "col",
                 "width": "20%",
                 "title": "Total number of First Nations people delivering this service ",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -5637,7 +5678,8 @@
               {
                 "source": "participationDetails",
                 "rows": 4,
-                "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
                 "type": "textarea"
               }
             ],
@@ -6553,6 +6595,7 @@
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
+            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
             "constraints": [
               "Individuals",
               "Groups"
@@ -6580,6 +6623,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -6609,6 +6653,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -6914,13 +6959,14 @@
               {
                 "width": "10%",
                 "source": "participationIndividualsOrGroups",
-                "title": "Individuals or groups?",
+                "title": "Are individuals or groups delivering this service?",
                 "type": "selectOne"
               },
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service",
+                "title": "Total number of people delivering this service <br>(including First Nations people)",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -6936,6 +6982,7 @@
                 "type": "col",
                 "width": "20%",
                 "title": "Total number of First Nations people delivering this service ",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -6950,7 +6997,8 @@
               {
                 "source": "participationDetails",
                 "rows": 4,
-                "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
                 "type": "textarea"
               }
             ],
@@ -7278,6 +7326,7 @@
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
+            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
             "constraints": [
               "Individuals",
               "Groups"
@@ -7305,6 +7354,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -7334,6 +7384,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -7530,13 +7581,14 @@
                   {
                     "width": "10%",
                     "source": "participationIndividualsOrGroups",
-                    "title": "Individuals or groups?",
+                    "title": "Are individuals or groups delivering this service?",
                     "type": "selectOne"
                   },
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total number of people delivering this service",
+                    "title": "Total number of people delivering this service <br>(including First Nations people)",
+                    "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                     "items": [
                       {
                         "source": "participationIndividualNumber",
@@ -7552,6 +7604,7 @@
                     "type": "col",
                     "width": "20%",
                     "title": "Total number of First Nations people delivering this service ",
+                    "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                     "items": [
                       {
                         "source": "firstNationIndividualNumber",
@@ -7566,7 +7619,8 @@
                   {
                     "source": "participationDetails",
                     "rows": 4,
-                    "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                    "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                    "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
                     "type": "textarea"
                   }
                 ],
@@ -8147,6 +8201,7 @@
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
+            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
             "constraints": [
               "Individuals",
               "Groups"
@@ -8174,6 +8229,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -8203,6 +8259,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -8275,13 +8332,14 @@
                   {
                     "width": "10%",
                     "source": "participationIndividualsOrGroups",
-                    "title": "Individuals or groups?",
+                    "title": "Are individuals or groups delivering this service?",
                     "type": "selectOne"
                   },
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total Number of people delivering this service",
+                    "title": "Total number of people delivering this service <br>(including First Nations people)",
+                    "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                     "items": [
                       {
                         "source": "participationIndividualNumber",
@@ -8296,7 +8354,8 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total Number of First Nations people delivering this service ",
+                    "title": "Total number of First Nations people delivering this service ",
+                    "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                     "items": [
                       {
                         "source": "firstNationIndividualNumber",
@@ -8311,7 +8370,8 @@
                   {
                     "source": "participationDetails",
                     "rows": 4,
-                    "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                    "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                    "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
                     "type": "textarea"
                   }
                 ],
@@ -8758,6 +8818,7 @@
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
+            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
             "constraints": [
               "Individuals",
               "Groups"
@@ -8785,6 +8846,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -8814,6 +8876,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -9132,13 +9195,14 @@
               {
                 "width": "10%",
                 "source": "participationIndividualsOrGroups",
-                "title": "Individuals or groups?",
+                "title": "Are individuals or groups delivering this service?",
                 "type": "selectOne"
               },
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service",
+                "title": "Total number of people delivering this service <br>(including First Nations people)",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -9153,7 +9217,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total number of First Nations people delivering this service ",
+                "title": "Total number of First Nations people delivering this service",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -9168,7 +9232,8 @@
               {
                 "source": "participationDetails",
                 "rows": 4,
-                "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
                 "type": "textarea"
               }
             ],
@@ -9961,6 +10026,7 @@
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
+            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
             "constraints": [
               "Individuals",
               "Groups"
@@ -9988,6 +10054,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -10017,6 +10084,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -10089,13 +10157,14 @@
                   {
                     "width": "10%",
                     "source": "participationIndividualsOrGroups",
-                    "title": "Individuals or groups?",
+                    "title": "Are individuals or groups delivering this service?",
                     "type": "selectOne"
                   },
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total Number of people delivering this service",
+                    "title": "Total number of people delivering this service <br>(including First Nations people)",
+                    "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                     "items": [
                       {
                         "source": "participationIndividualNumber",
@@ -10110,7 +10179,8 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total Number of First Nations people delivering this service ",
+                    "title": "Total number of First Nations people delivering this service ",
+                    "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                     "items": [
                       {
                         "source": "firstNationIndividualNumber",
@@ -10125,7 +10195,8 @@
                   {
                     "source": "participationDetails",
                     "rows": 4,
-                    "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                    "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                    "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
                     "type": "textarea"
                   }
                 ],
@@ -10500,7 +10571,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -10555,6 +10626,7 @@
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
+            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
             "constraints": [
               "Individuals",
               "Groups"
@@ -10582,6 +10654,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -10611,6 +10684,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -11012,13 +11086,14 @@
               {
                 "width": "10%",
                 "source": "participationIndividualsOrGroups",
-                "title": "Individuals or groups?",
+                "title": "Are individuals or groups delivering this service?",
                 "type": "selectOne"
               },
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service",
+                "title": "Total number of people delivering this service <br>(including First Nations people)",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -11034,6 +11109,7 @@
                 "type": "col",
                 "width": "20%",
                 "title": "Total number of First Nations people delivering this service ",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -11048,7 +11124,8 @@
               {
                 "source": "participationDetails",
                 "rows": 4,
-                "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
                 "type": "textarea"
               }
             ],
@@ -11803,6 +11880,7 @@
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
+            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
             "constraints": [
               "Individuals",
               "Groups"
@@ -11830,6 +11908,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -11859,6 +11938,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -11928,13 +12008,14 @@
                   {
                     "width": "10%",
                     "source": "participationIndividualsOrGroups",
-                    "title": "Individuals or groups?",
+                    "title": "Are individuals or groups delivering this service?",
                     "type": "selectOne"
                   },
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total number of people delivering this service",
+                    "title": "Total number of people delivering this service <br>(including First Nations people)",
+                    "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                     "items": [
                       {
                         "source": "participationIndividualNumber",
@@ -11950,6 +12031,7 @@
                     "type": "col",
                     "width": "20%",
                     "title": "Total number of First Nations people delivering this service ",
+                    "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                     "items": [
                       {
                         "source": "firstNationIndividualNumber",
@@ -11964,7 +12046,8 @@
                   {
                     "source": "participationDetails",
                     "rows": 4,
-                    "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                    "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                    "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
                     "type": "textarea"
                   }
                 ],
@@ -12610,6 +12693,7 @@
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
+            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
             "constraints": [
               "Individuals",
               "Groups"
@@ -12637,6 +12721,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -12666,6 +12751,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -12733,13 +12819,14 @@
                   {
                     "width": "10%",
                     "source": "participationIndividualsOrGroups",
-                    "title": "Individuals or groups?",
+                    "title": "Are individuals or groups delivering this service?",
                     "type": "selectOne"
                   },
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total number of people delivering this service",
+                    "title": "Total number of people delivering this service <br>(including First Nations people)",
+                    "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                     "items": [
                       {
                         "source": "participationIndividualNumber",
@@ -12755,6 +12842,7 @@
                     "type": "col",
                     "width": "20%",
                     "title": "Total number of First Nations people delivering this service ",
+                    "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                     "items": [
                       {
                         "source": "firstNationIndividualNumber",
@@ -12769,7 +12857,8 @@
                   {
                     "source": "participationDetails",
                     "rows": 4,
-                    "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                    "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                    "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
                     "type": "textarea"
                   }
                 ],
@@ -13068,6 +13157,7 @@
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
+            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
             "constraints": [
               "Individuals",
               "Groups"
@@ -13095,6 +13185,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -13124,6 +13215,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -13486,13 +13578,14 @@
               {
                 "width": "10%",
                 "source": "participationIndividualsOrGroups",
-                "title": "Individuals or groups?",
+                "title": "Are individuals or groups delivering this service?",
                 "type": "selectOne"
               },
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service",
+                "title": "Total number of people delivering this service <br>(including First Nations people)",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -13508,6 +13601,7 @@
                 "type": "col",
                 "width": "20%",
                 "title": "Total number of First Nations people delivering this service ",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -13522,7 +13616,8 @@
               {
                 "source": "participationDetails",
                 "rows": 4,
-                "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
                 "type": "textarea"
               }
             ],
@@ -13827,6 +13922,7 @@
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
+            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
             "constraints": [
               "Individuals",
               "Groups"
@@ -13854,6 +13950,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -13883,6 +13980,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -14226,13 +14324,14 @@
               {
                 "width": "10%",
                 "source": "participationIndividualsOrGroups",
-                "title": "Individuals or groups?",
+                "title": "Are individuals or groups delivering this service?",
                 "type": "selectOne"
               },
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service",
+                "title": "Total number of people delivering this service <br>(including First Nations people)",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -14248,6 +14347,7 @@
                 "type": "col",
                 "width": "20%",
                 "title": "Total number of First Nations people delivering this service ",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -14262,7 +14362,8 @@
               {
                 "source": "participationDetails",
                 "rows": 4,
-                "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
                 "type": "textarea"
               }
             ],
@@ -14584,6 +14685,7 @@
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
+            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
             "constraints": [
               "Individuals",
               "Groups"
@@ -14611,6 +14713,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -14640,6 +14743,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -15031,13 +15135,14 @@
               {
                 "width": "10%",
                 "source": "participationIndividualsOrGroups",
-                "title": "Individuals or groups?",
+                "title": "Are individuals or groups delivering this service?",
                 "type": "selectOne"
               },
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service",
+                "title": "Total number of people delivering this service <br>(including First Nations people)",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -15053,6 +15158,7 @@
                 "type": "col",
                 "width": "20%",
                 "title": "Total number of First Nations people delivering this service ",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -15067,7 +15173,8 @@
               {
                 "source": "participationDetails",
                 "rows": 4,
-                "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
                 "type": "textarea"
               }
             ],
@@ -15390,6 +15497,7 @@
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
+            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
             "constraints": [
               "Individuals",
               "Groups"
@@ -15417,6 +15525,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -15446,6 +15555,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -15829,13 +15939,14 @@
               {
                 "width": "10%",
                 "source": "participationIndividualsOrGroups",
-                "title": "Individuals or groups?",
+                "title": "Are individuals or groups delivering this service?",
                 "type": "selectOne"
               },
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service",
+                "title": "Total number of people delivering this service <br>(including First Nations people)",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -15851,6 +15962,7 @@
                 "type": "col",
                 "width": "20%",
                 "title": "Total number of First Nations people delivering this service ",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -15865,7 +15977,8 @@
               {
                 "source": "participationDetails",
                 "rows": 4,
-                "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
                 "type": "textarea"
               }
             ],
@@ -16605,6 +16718,7 @@
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
+            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
             "constraints": [
               "Individuals",
               "Groups"
@@ -16632,6 +16746,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -16661,6 +16776,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -16733,13 +16849,14 @@
                   {
                     "width": "10%",
                     "source": "participationIndividualsOrGroups",
-                    "title": "Individuals or groups?",
+                    "title": "Are individuals or groups delivering this service?",
                     "type": "selectOne"
                   },
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total Number of people delivering this service",
+                    "title": "Total number of people delivering this service <br>(including First Nations people)",
+                    "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                     "items": [
                       {
                         "source": "participationIndividualNumber",
@@ -16754,7 +16871,8 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total Number of First Nations people delivering this service ",
+                    "title": "Total number of First Nations people delivering this service ",
+                    "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                     "items": [
                       {
                         "source": "firstNationIndividualNumber",
@@ -16769,7 +16887,8 @@
                   {
                     "source": "participationDetails",
                     "rows": 4,
-                    "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                    "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                    "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
                     "type": "textarea"
                   }
                 ],
@@ -17091,7 +17210,7 @@
                           {
                             "width": "10%",
                             "source": "individualsOrGroups",
-                            "title": "Individuals or groups?",
+                            "title": "Are individuals or groups delivering this service?",
                             "type": "selectOne"
                           },
                           {
@@ -17607,6 +17726,7 @@
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
+            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
             "constraints": [
               "Individuals",
               "Groups"
@@ -17634,6 +17754,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -17663,6 +17784,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -17735,13 +17857,14 @@
                   {
                     "width": "10%",
                     "source": "participationIndividualsOrGroups",
-                    "title": "Individuals or groups?",
+                    "title": "Are individuals or groups delivering this service?",
                     "type": "selectOne"
                   },
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total Number of people delivering this service",
+                    "title": "Total number of people delivering this service <br>(including First Nations people)",
+                    "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                     "items": [
                       {
                         "source": "participationIndividualNumber",
@@ -17756,7 +17879,8 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total Number of First Nations people delivering this service ",
+                    "title": "Total number of First Nations people delivering this service ",
+                    "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                     "items": [
                       {
                         "source": "firstNationIndividualNumber",
@@ -17771,7 +17895,8 @@
                   {
                     "source": "participationDetails",
                     "rows": 4,
-                    "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                    "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                    "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
                     "type": "textarea"
                   }
                 ],
@@ -18218,6 +18343,7 @@
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
+            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
             "constraints": [
               "Individuals",
               "Groups"
@@ -18245,6 +18371,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -18274,6 +18401,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -18659,13 +18787,14 @@
               {
                 "width": "10%",
                 "source": "participationIndividualsOrGroups",
-                "title": "Individuals or groups?",
+                "title": "Are individuals or groups delivering this service?",
                 "type": "selectOne"
               },
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service",
+                "title": "Total number of people delivering this service <br>(including First Nations people)",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -18681,6 +18810,7 @@
                 "type": "col",
                 "width": "20%",
                 "title": "Total number of First Nations people delivering this service ",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -18695,7 +18825,8 @@
               {
                 "source": "participationDetails",
                 "rows": 4,
-                "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
                 "type": "textarea"
               }
             ],
@@ -19376,6 +19507,7 @@
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
+            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
             "constraints": [
               "Individuals",
               "Groups"
@@ -19403,6 +19535,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -19432,6 +19565,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -19501,13 +19635,14 @@
                   {
                     "width": "10%",
                     "source": "participationIndividualsOrGroups",
-                    "title": "Individuals or groups?",
+                    "title": "Are individuals or groups delivering this service?",
                     "type": "selectOne"
                   },
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total number of people delivering this service",
+                    "title": "Total number of people delivering this service <br>(including First Nations people)",
+                    "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                     "items": [
                       {
                         "source": "participationIndividualNumber",
@@ -19523,6 +19658,7 @@
                     "type": "col",
                     "width": "20%",
                     "title": "Total number of First Nations people delivering this service ",
+                    "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                     "items": [
                       {
                         "source": "firstNationIndividualNumber",
@@ -19537,7 +19673,8 @@
                   {
                     "source": "participationDetails",
                     "rows": 4,
-                    "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                    "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                    "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
                     "type": "textarea"
                   }
                 ],
@@ -19893,6 +20030,7 @@
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
+            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
             "constraints": [
               "Individuals",
               "Groups"
@@ -19920,6 +20058,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -19949,6 +20088,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -20349,13 +20489,14 @@
               {
                 "width": "10%",
                 "source": "participationIndividualsOrGroups",
-                "title": "Individuals or groups?",
+                "title": "Are individuals or groups delivering this service?",
                 "type": "selectOne"
               },
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service",
+                "title": "Total number of people delivering this service <br>(including First Nations people)",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -20371,6 +20512,7 @@
                 "type": "col",
                 "width": "20%",
                 "title": "Total number of First Nations people delivering this service ",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -20385,7 +20527,8 @@
               {
                 "source": "participationDetails",
                 "rows": 4,
-                "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
                 "type": "textarea"
               }
             ],
@@ -20770,6 +20913,7 @@
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
+            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
             "constraints": [
               "Individuals",
               "Groups"
@@ -20797,6 +20941,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -20826,6 +20971,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -21147,13 +21293,14 @@
               {
                 "width": "10%",
                 "source": "participationIndividualsOrGroups",
-                "title": "Individuals or groups?",
+                "title": "Are individuals or groups delivering this service?",
                 "type": "selectOne"
               },
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service",
+                "title": "Total number of people delivering this service <br>(including First Nations people)",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -21169,6 +21316,7 @@
                 "type": "col",
                 "width": "20%",
                 "title": "Total number of First Nations people delivering this service ",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -21183,7 +21331,8 @@
               {
                 "source": "participationDetails",
                 "rows": 4,
-                "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
                 "type": "textarea"
               }
             ],
@@ -21523,6 +21672,7 @@
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
+            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
             "constraints": [
               "Individuals",
               "Groups"
@@ -21550,6 +21700,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -21579,6 +21730,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -21972,13 +22124,14 @@
               {
                 "width": "10%",
                 "source": "participationIndividualsOrGroups",
-                "title": "Individuals or groups?",
+                "title": "Are individuals or groups delivering this service?",
                 "type": "selectOne"
               },
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service",
+                "title": "Total number of people delivering this service <br>(including First Nations people)",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -21994,6 +22147,7 @@
                 "type": "col",
                 "width": "20%",
                 "title": "Total number of First Nations people delivering this service ",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -22008,7 +22162,8 @@
               {
                 "source": "participationDetails",
                 "rows": 4,
-                "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
                 "type": "textarea"
               }
             ],
@@ -22576,6 +22731,7 @@
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
+            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
             "constraints": [
               "Individuals",
               "Groups"
@@ -22603,6 +22759,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -22632,6 +22789,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -22699,13 +22857,14 @@
                   {
                     "width": "10%",
                     "source": "participationIndividualsOrGroups",
-                    "title": "Individuals or groups?",
+                    "title": "Are individuals or groups delivering this service?",
                     "type": "selectOne"
                   },
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total number of people delivering this service",
+                    "title": "Total number of people delivering this service <br>(including First Nations people)",
+                    "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                     "items": [
                       {
                         "source": "participationIndividualNumber",
@@ -22721,6 +22880,7 @@
                     "type": "col",
                     "width": "20%",
                     "title": "Total number of First Nations people delivering this service ",
+                    "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                     "items": [
                       {
                         "source": "firstNationIndividualNumber",
@@ -22735,7 +22895,8 @@
                   {
                     "source": "participationDetails",
                     "rows": 4,
-                    "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                    "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                    "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
                     "type": "textarea"
                   }
                 ],
@@ -22917,6 +23078,7 @@
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
+            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
             "constraints": [
               "Individuals",
               "Groups"
@@ -22944,6 +23106,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -22973,6 +23136,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -23207,13 +23371,14 @@
               {
                 "width": "10%",
                 "source": "participationIndividualsOrGroups",
-                "title": "Individuals or groups?",
+                "title": "Are individuals or groups delivering this service?",
                 "type": "selectOne"
               },
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service",
+                "title": "Total number of people delivering this service <br>(including First Nations people)",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -23229,6 +23394,7 @@
                 "type": "col",
                 "width": "20%",
                 "title": "Total number of First Nations people delivering this service ",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -23243,7 +23409,8 @@
               {
                 "source": "participationDetails",
                 "rows": 4,
-                "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
                 "type": "textarea"
               }
             ],
@@ -23487,6 +23654,7 @@
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
+            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
             "constraints": [
               "Individuals",
               "Groups"
@@ -23514,6 +23682,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -23543,6 +23712,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -23737,6 +23907,7 @@
                   {
                     "dataType": "text",
                     "name": "participationIndividualsOrGroups",
+                    "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
                     "constraints": [
                       "Individuals",
                       "Groups"
@@ -23801,13 +23972,14 @@
               {
                 "width": "10%",
                 "source": "participationIndividualsOrGroups",
-                "title": "Individuals or groups?",
+                "title": "Are individuals or groups delivering this service?",
                 "type": "selectOne"
               },
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service",
+                "title": "Total number of people delivering this service <br>(including First Nations people)",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -23823,6 +23995,7 @@
                 "type": "col",
                 "width": "20%",
                 "title": "Total number of First Nations people delivering this service ",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -23837,7 +24010,8 @@
               {
                 "source": "participationDetails",
                 "rows": 4,
-                "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
                 "type": "textarea"
               }
             ],
@@ -24372,6 +24546,7 @@
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
+            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
             "constraints": [
               "Individuals",
               "Groups"
@@ -24399,6 +24574,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -24428,6 +24604,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -24497,13 +24674,14 @@
                   {
                     "width": "10%",
                     "source": "participationIndividualsOrGroups",
-                    "title": "Individuals or groups?",
+                    "title": "Are individuals or groups delivering this service?",
                     "type": "selectOne"
                   },
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total number of people delivering this service",
+                    "title": "Total number of people delivering this service <br>(including First Nations people)",
+                    "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                     "items": [
                       {
                         "source": "participationIndividualNumber",
@@ -24519,6 +24697,7 @@
                     "type": "col",
                     "width": "20%",
                     "title": "Total number of First Nations people delivering this service ",
+                    "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                     "items": [
                       {
                         "source": "firstNationIndividualNumber",
@@ -24533,7 +24712,8 @@
                   {
                     "source": "participationDetails",
                     "rows": 4,
-                    "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                    "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                    "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
                     "type": "textarea"
                   }
                 ],
@@ -25280,6 +25460,7 @@
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
+            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
             "constraints": [
               "Individuals",
               "Groups"
@@ -25307,6 +25488,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -25336,6 +25518,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -25408,13 +25591,14 @@
                   {
                     "width": "10%",
                     "source": "participationIndividualsOrGroups",
-                    "title": "Individuals or groups?",
+                    "title": "Are individuals or groups delivering this service?",
                     "type": "selectOne"
                   },
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total Number of people delivering this service",
+                    "title": "Total number of people delivering this service <br>(including First Nations people)",
+                    "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                     "items": [
                       {
                         "source": "participationIndividualNumber",
@@ -25429,7 +25613,8 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total Number of First Nations people delivering this service ",
+                    "title": "Total number of First Nations people delivering this service ",
+                    "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                     "items": [
                       {
                         "source": "firstNationIndividualNumber",
@@ -25444,7 +25629,8 @@
                   {
                     "source": "participationDetails",
                     "rows": 4,
-                    "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                    "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                    "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
                     "type": "textarea"
                   }
                 ],
@@ -25772,7 +25958,7 @@
                           {
                             "width": "15%",
                             "source": "individualsOrGroups",
-                            "title": "Individuals or groups?",
+                            "title": "Are individuals or groups delivering this service?",
                             "type": "selectOne"
                           },
                           {
@@ -25873,6 +26059,7 @@
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
+            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
             "constraints": [
               "Individuals",
               "Groups"
@@ -25900,6 +26087,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -25929,6 +26117,7 @@
               }
             ],
             "constraints": [
+              "0",
               "1-10",
               "11-20",
               "21-30",
@@ -26104,13 +26293,14 @@
               {
                 "width": "10%",
                 "source": "participationIndividualsOrGroups",
-                "title": "Individuals or groups?",
+                "title": "Are individuals or groups delivering this service?",
                 "type": "selectOne"
               },
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service",
+                "title": "Total number of people delivering this service <br>(including First Nations people)",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "participationIndividualNumber",
@@ -26126,6 +26316,7 @@
                 "type": "col",
                 "width": "20%",
                 "title": "Total number of First Nations people delivering this service ",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                 "items": [
                   {
                     "source": "firstNationIndividualNumber",
@@ -26140,7 +26331,8 @@
               {
                 "source": "participationDetails",
                 "rows": 4,
-                "title": "If no First Nations people participated in the delivery of this service, what are the reasons?<br> If there was participation, please provide details.",
+                "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
                 "type": "textarea"
               }
             ],
@@ -26233,7 +26425,7 @@
                   {
                     "width": "5%",
                     "source": "totalPeopleDelivering",
-                    "title": "Total number of people delivering this service (including First Nations people)",
+                    "title": "Total number of people delivering this service <br>(including First Nations people)",
                     "type": "number"
                   },
                   {
