@@ -506,7 +506,13 @@ subProgram.config = {
         "model": {
             "titleHelpText":"Service and Target measure fields pre-populated through the Project Service/Target Measure/s to address threats field and Monitoring methodology sections"
         }
-
+    },
+    {
+        "template": "attachmentRdpFooter",
+        "model": {
+            "heading": "MERI Attachments",
+            "attachmentText": "Please attach Project logic to your MERI plan using the documents function on the Admin tab.  A \"Document type\" of \"Project Logic\" should be selected when uploading the document."
+        }
     }
 ],
     keyThreatCodes: [
