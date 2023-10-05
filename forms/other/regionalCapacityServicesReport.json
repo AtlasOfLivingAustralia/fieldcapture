@@ -511,7 +511,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "Q5b. Please confirm that you have reported via the IPPRS this period.",
+                "preLabel": "Q5b. Please confirm that you have reported via the IPPRS this period, and this report has been uploaded to the documents tab in MERIT.",
                 "source": "reportedToIpprs",
                 "type": "boolean"
               }
