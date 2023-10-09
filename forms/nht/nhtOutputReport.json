@@ -1,13 +1,15 @@
 {
-  "id": "62b005e698aff40faac38c16",
-  "dateCreated": "2022-06-20T05:30:14Z",
+  "id": "64bf6c1ac9126a73736284ff",
+  "dateCreated": "2023-07-25T06:30:50Z",
   "minOptionalSectionsCompleted": 0,
   "supportsSites": true,
-  "lastUpdated": "2023-03-16T12:49:16Z",
+  "lastUpdated": "2023-10-04T11:46:09Z",
   "createdUserId": "1493",
+  "external": false,
   "activationDate": null,
   "supportsPhotoPoints": false,
   "publicationStatus": "published",
+  "externalIds": null,
   "gmsId": null,
   "name": "NHT Output Report",
   "sections": [
@@ -433,9 +435,7 @@
       "template": {
         "name": "NHT - Project Commencement",
         "title": "Project Commencement",
-        "dataModel": [
-
-        ],
+        "dataModel": [],
         "viewModel": [
           {
             "type": "row",
@@ -467,7 +467,7 @@
             "name": "undergoneWhsReview",
             "dataType": "text",
             "validate": "required",
-            "description":"The WHS risk register for project services must be reviewed and updated where new risks are identified, or control measures have changed.",
+            "description": "The WHS risk register for project services must be reviewed and updated where new risks are identified, or control measures have changed.",
             "constraints": [
               "Yes",
               "No"
@@ -488,7 +488,7 @@
             "name": "hasNotifiableIncident",
             "dataType": "text",
             "validate": "required",
-            "description":"A WHS Notifiable incident is defined within Work Health and Safety Act (Cth) 2011 Part 3 – Incident Notification. (https://www.legislation.gov.au/Details/C2018C00293). Refer to Deed of Standing offer clause 42 Work Health and Safety for further information on these requirements.",
+            "description": "A WHS Notifiable incident is defined within Work Health and Safety Act (Cth) 2011 Part 3 – Incident Notification. (https://www.legislation.gov.au/Details/C2018C00293). Refer to Deed of Standing offer clause 42 Work Health and Safety for further information on these requirements.",
             "constraints": [
               "Yes",
               "No"
@@ -512,7 +512,7 @@
             "name": "hasVerifiedSubContractors",
             "dataType": "text",
             "validate": "required",
-            "description":"If there have been no current or new subcontracting arrangement during this reporting period, please report as Not Applicable. Refer to Deed of standing offer clause 20 Subcontracting and 42 Work Health and Safety for further information on these requirements.",
+            "description": "If there have been no current or new subcontracting arrangement during this reporting period, please report as Not Applicable. Refer to Deed of standing offer clause 20 Subcontracting and 42 Work Health and Safety for further information on these requirements.",
             "constraints": [
               "Yes",
               "No",
@@ -687,15 +687,17 @@
                   "config": {
                     "source": {
                       "url": "/project/outcomesByScores",
-                      "params": [{
-                        "expression": "owner.projectId",
-                        "name": "id",
-                        "type": "computed"
-                      }, {
-                        "expression": "scores",
-                        "name": "scoreIds",
-                        "type": "computed"
-                      }
+                      "params": [
+                        {
+                          "expression": "owner.projectId",
+                          "name": "id",
+                          "type": "computed"
+                        },
+                        {
+                          "expression": "scores",
+                          "name": "scoreIds",
+                          "type": "computed"
+                        }
                       ]
                     }
                   }
@@ -1350,15 +1352,17 @@
                   "config": {
                     "source": {
                       "url": "/project/outcomesByScores",
-                      "params": [{
-                        "expression": "owner.projectId",
-                        "name": "id",
-                        "type": "computed"
-                      }, {
-                        "expression": "scores",
-                        "name": "scoreIds",
-                        "type": "computed"
-                      }
+                      "params": [
+                        {
+                          "expression": "owner.projectId",
+                          "name": "id",
+                          "type": "computed"
+                        },
+                        {
+                          "expression": "scores",
+                          "name": "scoreIds",
+                          "type": "computed"
+                        }
                       ]
                     }
                   }
@@ -1915,15 +1919,17 @@
                       "config": {
                         "source": {
                           "url": "/project/outcomesByScores",
-                          "params": [{
-                            "expression": "owner.projectId",
-                            "name": "id",
-                            "type": "computed"
-                          }, {
-                            "expression": "scores",
-                            "name": "scoreIds",
-                            "type": "computed"
-                          }
+                          "params": [
+                            {
+                              "expression": "owner.projectId",
+                              "name": "id",
+                              "type": "computed"
+                            },
+                            {
+                              "expression": "scores",
+                              "name": "scoreIds",
+                              "type": "computed"
+                            }
                           ]
                         }
                       }
@@ -3901,15 +3907,17 @@
                       "config": {
                         "source": {
                           "url": "/project/outcomesByScores",
-                          "params": [{
-                            "expression": "owner.projectId",
-                            "name": "id",
-                            "type": "computed"
-                          }, {
-                            "expression": "scores",
-                            "name": "scoreIds",
-                            "type": "computed"
-                          }
+                          "params": [
+                            {
+                              "expression": "owner.projectId",
+                              "name": "id",
+                              "type": "computed"
+                            },
+                            {
+                              "expression": "scores",
+                              "name": "scoreIds",
+                              "type": "computed"
+                            }
                           ]
                         }
                       }
@@ -4673,15 +4681,17 @@
                   "config": {
                     "source": {
                       "url": "/project/outcomesByScores",
-                      "params": [{
-                        "expression": "owner.projectId",
-                        "name": "id",
-                        "type": "computed"
-                      }, {
-                        "expression": "scores",
-                        "name": "scoreIds",
-                        "type": "computed"
-                      }
+                      "params": [
+                        {
+                          "expression": "owner.projectId",
+                          "name": "id",
+                          "type": "computed"
+                        },
+                        {
+                          "expression": "scores",
+                          "name": "scoreIds",
+                          "type": "computed"
+                        }
                       ]
                     }
                   }
@@ -5516,15 +5526,17 @@
                       "config": {
                         "source": {
                           "url": "/project/outcomesByScores",
-                          "params": [{
-                            "expression": "owner.projectId",
-                            "name": "id",
-                            "type": "computed"
-                          }, {
-                            "expression": "scores",
-                            "name": "scoreIds",
-                            "type": "computed"
-                          }
+                          "params": [
+                            {
+                              "expression": "owner.projectId",
+                              "name": "id",
+                              "type": "computed"
+                            },
+                            {
+                              "expression": "scores",
+                              "name": "scoreIds",
+                              "type": "computed"
+                            }
                           ]
                         }
                       }
@@ -6017,7 +6029,6 @@
                 "name": "numberOfCaptiveBreeding",
                 "validate": "required"
               },
-
               {
                 "dataType": "feature",
                 "name": "areaOfSourceSite"
@@ -6205,15 +6216,17 @@
                       "config": {
                         "source": {
                           "url": "/project/outcomesByScores",
-                          "params": [{
-                            "expression": "owner.projectId",
-                            "name": "id",
-                            "type": "computed"
-                          }, {
-                            "expression": "scores",
-                            "name": "scoreIds",
-                            "type": "computed"
-                          }
+                          "params": [
+                            {
+                              "expression": "owner.projectId",
+                              "name": "id",
+                              "type": "computed"
+                            },
+                            {
+                              "expression": "scores",
+                              "name": "scoreIds",
+                              "type": "computed"
+                            }
                           ]
                         }
                       }
@@ -6846,15 +6859,17 @@
                   "config": {
                     "source": {
                       "url": "/project/outcomesByScores",
-                      "params": [{
-                        "expression": "owner.projectId",
-                        "name": "id",
-                        "type": "computed"
-                      }, {
-                        "expression": "scores",
-                        "name": "scoreIds",
-                        "type": "computed"
-                      }
+                      "params": [
+                        {
+                          "expression": "owner.projectId",
+                          "name": "id",
+                          "type": "computed"
+                        },
+                        {
+                          "expression": "scores",
+                          "name": "scoreIds",
+                          "type": "computed"
+                        }
                       ]
                     }
                   }
@@ -8065,7 +8080,6 @@
                               }
                             ]
                           },
-
                           {
                             "type": "col",
                             "css": "span3 col-border-right",
@@ -10208,7 +10222,6 @@
               }
             ]
           }
-
         ]
       },
       "modelName": null,
@@ -10968,7 +10981,6 @@
                               }
                             ]
                           },
-
                           {
                             "type": "col",
                             "css": "span3 col-border-right",
@@ -11281,7 +11293,6 @@
       "collapsedByDefault": false,
       "template": {
         "dataModel": [
-
           {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
@@ -11357,7 +11368,6 @@
             "name": "participationDetails",
             "validate": "maxSize[3000]"
           },
-
           {
             "columns": [
               {
@@ -11450,8 +11460,7 @@
               },
               {
                 "dataType": "text",
-                "name": "mappingNotAlignedComments"
-              ,
+                "name": "mappingNotAlignedComments",
                 "behaviour": [
                   {
                     "condition": "\"Other\" == mappingNotAlignedReason",
@@ -11670,15 +11679,17 @@
                       "config": {
                         "source": {
                           "url": "/project/outcomesByScores",
-                          "params": [{
-                            "expression": "owner.projectId",
-                            "name": "id",
-                            "type": "computed"
-                          }, {
-                            "expression": "scores",
-                            "name": "scoreIds",
-                            "type": "computed"
-                          }
+                          "params": [
+                            {
+                              "expression": "owner.projectId",
+                              "name": "id",
+                              "type": "computed"
+                            },
+                            {
+                              "expression": "scores",
+                              "name": "scoreIds",
+                              "type": "computed"
+                            }
                           ]
                         }
                       }
@@ -12343,15 +12354,17 @@
                   "config": {
                     "source": {
                       "url": "/project/outcomesByScores",
-                      "params": [{
-                        "expression": "owner.projectId",
-                        "name": "id",
-                        "type": "computed"
-                      }, {
-                        "expression": "scores",
-                        "name": "scoreIds",
-                        "type": "computed"
-                      }
+                      "params": [
+                        {
+                          "expression": "owner.projectId",
+                          "name": "id",
+                          "type": "computed"
+                        },
+                        {
+                          "expression": "scores",
+                          "name": "scoreIds",
+                          "type": "computed"
+                        }
                       ]
                     }
                   }
@@ -13106,15 +13119,17 @@
                   "config": {
                     "source": {
                       "url": "/project/outcomesByScores",
-                      "params": [{
-                        "expression": "owner.projectId",
-                        "name": "id",
-                        "type": "computed"
-                      }, {
-                        "expression": "scores",
-                        "name": "scoreIds",
-                        "type": "computed"
-                      }
+                      "params": [
+                        {
+                          "expression": "owner.projectId",
+                          "name": "id",
+                          "type": "computed"
+                        },
+                        {
+                          "expression": "scores",
+                          "name": "scoreIds",
+                          "type": "computed"
+                        }
                       ]
                     }
                   }
@@ -13899,7 +13914,6 @@
                 ],
                 "validate": "required"
               },
-
               {
                 "columns": [
                   {
@@ -14162,15 +14176,17 @@
                       "config": {
                         "source": {
                           "url": "/project/outcomesByScores",
-                          "params": [{
-                            "expression": "owner.projectId",
-                            "name": "id",
-                            "type": "computed"
-                          }, {
-                            "expression": "scores",
-                            "name": "scoreIds",
-                            "type": "computed"
-                          }
+                          "params": [
+                            {
+                              "expression": "owner.projectId",
+                              "name": "id",
+                              "type": "computed"
+                            },
+                            {
+                              "expression": "scores",
+                              "name": "scoreIds",
+                              "type": "computed"
+                            }
                           ]
                         }
                       }
@@ -14309,7 +14325,6 @@
                   }
                 ]
               },
-
               {
                 "columns": [
                   {
@@ -14908,15 +14923,17 @@
                       "config": {
                         "source": {
                           "url": "/project/outcomesByScores",
-                          "params": [{
-                            "expression": "owner.projectId",
-                            "name": "id",
-                            "type": "computed"
-                          }, {
-                            "expression": "scores",
-                            "name": "scoreIds",
-                            "type": "computed"
-                          }
+                          "params": [
+                            {
+                              "expression": "owner.projectId",
+                              "name": "id",
+                              "type": "computed"
+                            },
+                            {
+                              "expression": "scores",
+                              "name": "scoreIds",
+                              "type": "computed"
+                            }
                           ]
                         }
                       }
@@ -15055,7 +15072,6 @@
                   }
                 ]
               },
-
               {
                 "columns": [
                   {
@@ -15463,7 +15479,6 @@
                 ],
                 "validate": "required"
               },
-
               {
                 "columns": [
                   {
@@ -15547,8 +15562,7 @@
                   },
                   {
                     "dataType": "text",
-                    "name": "mappingNotAlignedComments"
-                  ,
+                    "name": "mappingNotAlignedComments",
                     "behaviour": [
                       {
                         "condition": "\"Other\" == mappingNotAlignedReason",
@@ -15569,7 +15583,6 @@
                     ],
                     "validate": "required"
                   },
-
                   {
                     "dataType": "number",
                     "name": "areaImplementedInvoicedHa",
@@ -15755,15 +15768,17 @@
                       "config": {
                         "source": {
                           "url": "/project/outcomesByScores",
-                          "params": [{
-                            "expression": "owner.projectId",
-                            "name": "id",
-                            "type": "computed"
-                          }, {
-                            "expression": "scores",
-                            "name": "scoreIds",
-                            "type": "computed"
-                          }
+                          "params": [
+                            {
+                              "expression": "owner.projectId",
+                              "name": "id",
+                              "type": "computed"
+                            },
+                            {
+                              "expression": "scores",
+                              "name": "scoreIds",
+                              "type": "computed"
+                            }
                           ]
                         }
                       }
@@ -15866,7 +15881,6 @@
                   }
                 ]
               },
-
               {
                 "columns": [
                   {
@@ -16228,7 +16242,6 @@
             "name": "participationDetails",
             "validate": "maxSize[3000]"
           },
-
           {
             "columns": [
               {
@@ -16523,15 +16536,17 @@
                       "config": {
                         "source": {
                           "url": "/project/outcomesByScores",
-                          "params": [{
-                            "expression": "owner.projectId",
-                            "name": "id",
-                            "type": "computed"
-                          }, {
-                            "expression": "scores",
-                            "name": "scoreIds",
-                            "type": "computed"
-                          }
+                          "params": [
+                            {
+                              "expression": "owner.projectId",
+                              "name": "id",
+                              "type": "computed"
+                            },
+                            {
+                              "expression": "scores",
+                              "name": "scoreIds",
+                              "type": "computed"
+                            }
                           ]
                         }
                       }
@@ -17712,7 +17727,6 @@
                               }
                             ]
                           },
-
                           {
                             "type": "col",
                             "css": "span3 col-border-right",
@@ -19362,7 +19376,6 @@
             ],
             "validate": "required,maxSize[300]"
           },
-
           {
             "columns": [
               {
@@ -19377,15 +19390,17 @@
                   "config": {
                     "source": {
                       "url": "/project/outcomesByScores",
-                      "params": [{
-                        "expression": "owner.projectId",
-                        "name": "id",
-                        "type": "computed"
-                      }, {
-                        "expression": "scores",
-                        "name": "scoreIds",
-                        "type": "computed"
-                      }
+                      "params": [
+                        {
+                          "expression": "owner.projectId",
+                          "name": "id",
+                          "type": "computed"
+                        },
+                        {
+                          "expression": "scores",
+                          "name": "scoreIds",
+                          "type": "computed"
+                        }
                       ]
                     }
                   }
@@ -19780,7 +19795,6 @@
                   }
                 ]
               },
-
               {
                 "columns": [
                   {
@@ -20165,15 +20179,17 @@
                   "config": {
                     "source": {
                       "url": "/project/outcomesByScores",
-                      "params": [{
-                        "expression": "owner.projectId",
-                        "name": "id",
-                        "type": "computed"
-                      }, {
-                        "expression": "scores",
-                        "name": "scoreIds",
-                        "type": "computed"
-                      }
+                      "params": [
+                        {
+                          "expression": "owner.projectId",
+                          "name": "id",
+                          "type": "computed"
+                        },
+                        {
+                          "expression": "scores",
+                          "name": "scoreIds",
+                          "type": "computed"
+                        }
                       ]
                     }
                   }
@@ -20972,7 +20988,6 @@
                   }
                 ]
               },
-
               {
                 "dataType": "number",
                 "name": "areaInvoicedKm",
@@ -21103,15 +21118,17 @@
                   "config": {
                     "source": {
                       "url": "/project/outcomesByScores",
-                      "params": [{
-                        "expression": "owner.projectId",
-                        "name": "id",
-                        "type": "computed"
-                      }, {
-                        "expression": "scores",
-                        "name": "scoreIds",
-                        "type": "computed"
-                      }
+                      "params": [
+                        {
+                          "expression": "owner.projectId",
+                          "name": "id",
+                          "type": "computed"
+                        },
+                        {
+                          "expression": "scores",
+                          "name": "scoreIds",
+                          "type": "computed"
+                        }
                       ]
                     }
                   }
@@ -21782,15 +21799,17 @@
                   "config": {
                     "source": {
                       "url": "/project/outcomesByScores",
-                      "params": [{
-                        "expression": "owner.projectId",
-                        "name": "id",
-                        "type": "computed"
-                      }, {
-                        "expression": "scores",
-                        "name": "scoreIds",
-                        "type": "computed"
-                      }
+                      "params": [
+                        {
+                          "expression": "owner.projectId",
+                          "name": "id",
+                          "type": "computed"
+                        },
+                        {
+                          "expression": "scores",
+                          "name": "scoreIds",
+                          "type": "computed"
+                        }
                       ]
                     }
                   }
@@ -22793,15 +22812,17 @@
                       "config": {
                         "source": {
                           "url": "/project/outcomesByScores",
-                          "params": [{
-                            "expression": "owner.projectId",
-                            "name": "id",
-                            "type": "computed"
-                          }, {
-                            "expression": "scores",
-                            "name": "scoreIds",
-                            "type": "computed"
-                          }
+                          "params": [
+                            {
+                              "expression": "owner.projectId",
+                              "name": "id",
+                              "type": "computed"
+                            },
+                            {
+                              "expression": "scores",
+                              "name": "scoreIds",
+                              "type": "computed"
+                            }
                           ]
                         }
                       }
@@ -23289,7 +23310,6 @@
               }
             ]
           }
-
         ]
       },
       "modelName": null,
@@ -24024,7 +24044,6 @@
                               }
                             ]
                           },
-
                           {
                             "type": "col",
                             "css": "span3 col-border-right",
@@ -24420,15 +24439,17 @@
                   "config": {
                     "source": {
                       "url": "/project/outcomesByScores",
-                      "params": [{
-                        "expression": "owner.projectId",
-                        "name": "id",
-                        "type": "computed"
-                      }, {
-                        "expression": "scores",
-                        "name": "scoreIds",
-                        "type": "computed"
-                      }
+                      "params": [
+                        {
+                          "expression": "owner.projectId",
+                          "name": "id",
+                          "type": "computed"
+                        },
+                        {
+                          "expression": "scores",
+                          "name": "scoreIds",
+                          "type": "computed"
+                        }
                       ]
                     }
                   }
@@ -25091,15 +25112,17 @@
                       "config": {
                         "source": {
                           "url": "/project/outcomesByScores",
-                          "params": [{
-                            "expression": "owner.projectId",
-                            "name": "id",
-                            "type": "computed"
-                          }, {
-                            "expression": "scores",
-                            "name": "scoreIds",
-                            "type": "computed"
-                          }
+                          "params": [
+                            {
+                              "expression": "owner.projectId",
+                              "name": "id",
+                              "type": "computed"
+                            },
+                            {
+                              "expression": "scores",
+                              "name": "scoreIds",
+                              "type": "computed"
+                            }
                           ]
                         }
                       }
@@ -25834,11 +25857,8 @@
                       "Estuary",
                       "Freshwater stream",
                       "Freshwater lake",
-                      "Ground water",
-                      "Mound springs",
                       "Saline stream",
                       "Saline lake",
-                      "Stream reach",
                       "Other"
                     ]
                   },
@@ -26198,7 +26218,6 @@
                               }
                             ]
                           },
-
                           {
                             "type": "col",
                             "css": "span3 col-border-right",
@@ -27249,7 +27268,6 @@
                               }
                             ]
                           },
-
                           {
                             "type": "col",
                             "css": "span3 col-border-right",
@@ -27862,7 +27880,6 @@
               {
                 "columns": [
                   {
-                    "width": "5%",
                     "width": "5%",
                     "source": "numberOfSaf",
                     "title": "Number of Sustainable Agriculture Facilitators (SAFs)",
