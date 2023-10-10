@@ -12216,19 +12216,117 @@
       "template": {
         "dataModel": [
           {
+            "name": "habitatConditionSurveys",
+            "dataType": "list",
+            "minSize": 1,
             "columns": [
               {
+                "name": "relatedOutcomes",
+                "dataType": "text",
+                "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
+                "validate": "required",
+                "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "value",
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "context-path": "outcomes"
+                    }
+                  }
+                }
+              },
+              {
+                "dataType": "text",
+                "name": "surveyObjective",
+                "description": "What the survey aim to capture? How will the information obtained from the survey be used?",
+                "validate": "required,maxSize[3000]"
+              },
+              {
+                "dataType": "number",
+                "name": "numberOfSurveys",
+                "validate": "required,min[1],max[1]",
+                "defaultValue": 1,
+                "readonly": true
+              },
+              {
+                "dataType": "number",
+                "name": "numberOfSurveysInvoiced",
+                "validate": "required,min[0],max[1]",
+                "defaultValue": 1
+              },
+              {
+                "dataType": "list",
+                "name": "habitatConditionDataSets",
                 "columns": [
                   {
-                    "dataType": "species",
-                    "name": "species",
-                    "validate": "required"
+                    "name": "dataSetId",
+                    "dataType": "text",
+                    "description": "This section will require the Data Set Name so the Metadata fields in the Data Set Summary tab should be filled out before the Outcome Report is due. More than one dataset if relevant for this Project Baseline could be selected.",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "name",
+                      "valueProperty": "dataSetId",
+                      "excludePath": "habitatConditionSurveys.habitatConditionDataSets.dataSetId",
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "context-path": "owner.custom.dataSets"
+                        },
+                        "filter": {
+                          "expression": "serviceId == 42 and progress == 'finished'"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "columns": [
+                      {
+                        "dataType": "species",
+                        "name": "species",
+                        "validate": "required"
+                      },
+                      {
+                        "dataType": "text",
+                        "name": "habitatCondition",
+                        "validate": "maxSize[300]"
+                      }
+                    ],
+                    "dataType": "list",
+                    "name": "habitatConditionSurveySpeciesTable"
                   },
                   {
                     "dataType": "text",
-                    "name": "habitatCondition",
+                    "name": "baselineOrIndicatorSurvey",
                     "description": "",
-                    "validate": "required,maxSize[300]"
+                    "constraints": [
+                      "Baseline",
+                      "Indicator"
+                    ],
+                    "validate": "required",
+                    "computed": {
+                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); baselineIndicatorMapping.lookupValue(x.type)"
+                    }
+                  },
+                  {
+                    "name": "projectBaselines",
+                    "dataType": "stringList",
+                    "description": "Select the relevant Project Baseline as listed in the Monitoring Methodology section of the MERI Plan.",
+                    "validate": "required",
+                    "computed": {
+                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.baselines"
+                    },
+                    "constraints": {
+                      "textProperty": "baseline",
+                      "valueProperty": "code",
+                      "type": "pre-populated",
+                      "excludePath": "projectBaselines",
+                      "config": {
+                        "source": {
+                          "context-path": "owner.custom.details.baseline.rows"
+                        }
+                      }
+                    }
                   },
                   {
                     "name": "investmentPriorities2",
@@ -12261,23 +12359,224 @@
                     ]
                   },
                   {
-                    "dataType": "stringList",
-                    "name": "ternSurveyTechnique",
+                    "dataType": "date",
+                    "name": "activitiesStartDate",
+                    "description": "Specific the dates these events were held on",
                     "validate": "required",
+                    "computed": {
+                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.startDate"
+                    }
+                  },
+                  {
+                    "dataType": "date",
+                    "name": "activitiesEndDate",
+                    "description": "Specific the dates these events were held on",
+                    "validate": "required",
+                    "computed": {
+                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.endDate"
+                    }
+                  },
+                  {
+                    "dataType": "feature",
+                    "name": "sitesTreated",
+                    "computed": {
+                      "defer": true,
+                      "source": {
+                        "url": "/site/geojson",
+                        "params": [
+                          {
+                            "expression": "x=find(owner.custom.dataSets, \"dataSetId\", dataSetId); x.siteId",
+                            "name": "id",
+                            "type": "computed",
+                            "required": true
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "computed": {
+                      "expression": "$geom.areaHa(sitesTreated)"
+                    },
+                    "dataType": "number",
+                    "name": "calculatedAreaTreatedHa",
+                    "units": "ha",
+                    "decimalPlaces": 3,
+                    "behaviour": [
+                      {
+                        "condition": "areaInvoicedTreatedHa > 0",
+                        "type": "conditional_validation",
+                        "value": {
+                          "message": "The managed area must be mapped",
+                          "validate": "required,min[0.0001]"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "computed": {
+                      "expression": "$geom.lengthKm(sitesTreated)"
+                    },
+                    "dataType": "number",
+                    "name": "calculatedLengthTreatedKm",
+                    "units": "km",
+                    "decimalPlaces": 3,
+                    "behaviour": [
+                      {
+                        "condition": "lengthTreatedKm > 0",
+                        "type": "conditional_validation",
+                        "value": {
+                          "message": "The managed length must be mapped",
+                          "validate": "required,min[0.0001]"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "defaultValue": {
+                      "type": "computed",
+                      "expression": "calculatedAreaTreatedHa"
+                    },
+                    "dataType": "number",
+                    "name": "areaTreatedHa",
+                    "units": "ha",
+                    "decimalPlaces": 3,
+                    "validate": "required,min[0]"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "mappingNotAlignedReason",
                     "constraints": [
-                      "Tern Survey technique 1",
-                      "Tern Survey technique 1",
-                      "Tern Survey technique 1",
+                      "Mapped area simplifies more complex area/s where work was undertaken during this period",
                       "Other"
+                    ],
+                    "validate": "required",
+                    "behaviour": [
+                      {
+                        "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1))",
+                        "type": "visible"
+                      }
                     ]
                   },
                   {
                     "dataType": "text",
-                    "description": "Please describe the Survey technique if other was selected.",
-                    "name": "otherTernSurveyTechnique",
+                    "name": "mappingNotAlignedComments",
+                    "validate": "required,maxSize[300]",
                     "behaviour": [
                       {
-                        "condition": "ternSurveyTechnique == \"Other\"",
+                        "type": "visible",
+                        "condition": "\"Other\" == mappingNotAlignedReason"
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "document",
+                    "name": "extraMappingDetails",
+                    "validate": "required",
+                    "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                    "behaviour": [
+                      {
+                        "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1)) or roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedTreatedHa, 2)",
+                        "type": "visible"
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "areaInvoicedTreatedHa",
+                    "units": "ha",
+                    "decimalPlaces": 3,
+                    "validate": [
+                      {
+                        "rule": "min[0]"
+                      },
+                      {
+                        "rule": "max",
+                        "param": {
+                          "type": "computed",
+                          "expression": "areaTreatedHa"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "invoicedNotActualReason",
+                    "constraints": [
+                      "Work was undertaken over a greater area than will be invoiced for",
+                      "Other"
+                    ],
+                    "validate": "required",
+                    "behaviour": [
+                      {
+                        "condition": "roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedTreatedHa, 2)",
+                        "type": "visible"
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "invoicedNotActualComments",
+                    "behaviour": [
+                      {
+                        "type": "visible",
+                        "condition": "\"Other\" == invoicedNotActualReason"
+                      }
+                    ],
+                    "validate": "required,maxSize[300]"
+                  },
+                  {
+                    "defaultValue": {
+                      "type": "computed",
+                      "expression": "$geom.lengthKm(sitesTreated)"
+                    },
+                    "dataType": "number",
+                    "name": "lengthTreatedKm",
+                    "units": "km",
+                    "decimalPlaces": 3,
+                    "validate": [
+                      {
+                        "rule": "min",
+                        "param": {
+                          "type": "computed",
+                          "expression": "$geom.lengthKm(sitesTreated)*0.9"
+                        }
+                      },
+                      {
+                        "rule": "max",
+                        "param": {
+                          "type": "computed",
+                          "expression": "$geom.lengthKm(sitesTreated)*1.1"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "description": "Select the technique used to conduct the survey. If the EMSA Application tool was not used, you should select 'Other'.",
+                    "name": "emsaProtocol",
+                    "validate": "required",
+                    "computed": {
+                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.protocol"
+                    },
+                    "constraints": {
+                      "textProperty": "label",
+                      "valueProperty": "value",
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "context-path": "owner.protocols"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "dataType": "text",
+                    "description": "Please describe the Survey technique if other was selected.",
+                    "name": "otherEmsaProtocol",
+                    "behaviour": [
+                      {
+                        "condition": "emsaProtocol == \"Other\"",
                         "type": "enable_and_clear"
                       }
                     ],
@@ -12287,267 +12586,36 @@
                     "dataType": "text",
                     "name": "surveyMethodology",
                     "description": "Provide more details on what is being done",
-                    "validate": "required,maxSize[3000]"
+                    "validate": "required,maxSize[3000]",
+                    "computed": {
+                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.methodDescription"
+                    }
                   },
                   {
                     "dataType": "text",
-                    "name": "surveyObjective",
-                    "description": "What the survey aim to capture? How will the information obtained from the survey be used?",
-                    "validate": "required,maxSize[3000]"
+                    "name": "invoicingThisActivity",
+                    "constraints": [
+                      "Yes",
+                      "No"
+                    ],
+                    "validate": "required"
                   }
                 ],
-                "dataType": "list",
-                "name": "habitatConditionBaselineTable"
-              },
-              {
-                "dataType": "text",
-                "name": "baselineOrIndicatorSurvey",
-                "description": "",
-                "constraints": [
-                  "Baseline",
-                  "Indicator"
-                ],
-                "validate": "required"
-              },
-              {
-                "name": "projectBaseline",
-                "dataType": "text",
-                "description": "Select the relevant Project Baseline as listed in the Monitoring Methodology section of the MERI Plan.",
-                "validate": "required",
-                "constraints": {
-                  "textProperty": "baseline",
-                  "valueProperty": "code",
-                  "type": "pre-populated",
-                  "excludePath": "projectBaseline",
-                  "config": {
-                    "source": {
-                      "context-path": "owner.custom.details.baseline.rows"
-                    }
-                  }
-                }
-              },
-              {
-                "name": "datasetSupports",
-                "dataType": "text",
-                "description": "This section will require the Data Set Name so the Metadata fields in the Data Set Summary tab should be filled out before the Outcome Report is due. More than one dataset if relevant for this Project Baseline could be selected.",
-                "validate": "required",
-                "constraints": {
-                  "textProperty": "name",
-                  "valueProperty": "dataSetId",
-                  "type": "pre-populated",
-                  "config": {
-                    "source": {
-                      "context-path": "owner.custom.dataSets"
-                    }
-                  }
-                }
-              },
-              {
-                "name": "relatedOutcomes",
-                "dataType": "text",
-                "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
-                "validate": "required",
-                "constraints": {
-                  "textProperty": "label",
-                  "valueProperty": "label",
-                  "type": "pre-populated",
-                  "config": {
-                    "source": {
-                      "url": "/project/outcomesByScores",
-                      "params": [
-                        {
-                          "expression": "owner.projectId",
-                          "name": "id",
-                          "type": "computed"
-                        },
-                        {
-                          "expression": "scores",
-                          "name": "scoreIds",
-                          "type": "computed"
-                        }
-                      ]
-                    }
-                  }
-                }
-              },
-              {
-                "dataType": "date",
-                "name": "activitiesStartDate",
-                "description": "Specific the dates these events were held on",
-                "validate": "required"
-              },
-              {
-                "dataType": "date",
-                "name": "activitiesEndDate",
-                "description": "Specific the dates these events were held on",
-                "validate": "required"
-              },
-              {
-                "dataType": "feature",
-                "name": "sitesTreated",
-                "description": "Manually enter correct figure for this reporting period if different to mapped value"
-              },
-              {
-                "computed": {
-                  "expression": "$geom.areaHa(sitesTreated)"
-                },
-                "dataType": "number",
-                "name": "calculatedAreaTreatedHa",
-                "units": "ha",
-                "decimalPlaces": 3,
-                "behaviour": [
-                  {
-                    "condition": "areaInvoicedTreatedHa > 0",
-                    "type": "conditional_validation",
-                    "value": {
-                      "message": "The managed area must be mapped",
-                      "validate": "required,min[0.0001]"
-                    }
-                  }
-                ]
-              },
-              {
-                "computed": {
-                  "expression": "$geom.lengthKm(sitesTreated)"
-                },
-                "dataType": "number",
-                "name": "calculatedLengthTreatedKm",
-                "units": "km",
-                "decimalPlaces": 3,
-                "behaviour": [
-                  {
-                    "condition": "lengthTreatedKm > 0",
-                    "type": "conditional_validation",
-                    "value": {
-                      "message": "The managed length must be mapped",
-                      "validate": "required,min[0.0001]"
-                    }
-                  }
-                ]
-              },
-              {
-                "defaultValue": {
-                  "type": "computed",
-                  "expression": "calculatedAreaTreatedHa"
-                },
-                "dataType": "number",
-                "name": "areaTreatedHa",
-                "units": "ha",
-                "decimalPlaces": 3,
-                "validate": "required,min[0]"
-              },
-              {
-                "dataType": "text",
-                "name": "mappingNotAlignedReason",
-                "constraints": [
-                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
-                  "Other"
-                ],
-                "validate": "required",
-                "behaviour": [
-                  {
-                    "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1))",
-                    "type": "visible"
-                  }
-                ]
-              },
-              {
-                "dataType": "text",
-                "name": "mappingNotAlignedComments",
-                "validate": "required,maxSize[300]",
-                "behaviour": [
-                  {
-                    "type": "visible",
-                    "condition": "\"Other\" == mappingNotAlignedReason"
-                  }
-                ]
-              },
-              {
-                "dataType": "document",
-                "name": "extraMappingDetails",
-                "validate": "required",
-                "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
-                "behaviour": [
-                  {
-                    "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1)) or roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedTreatedHa, 2)",
-                    "type": "visible"
-                  }
-                ]
-              },
-              {
-                "dataType": "number",
-                "name": "areaInvoicedTreatedHa",
-                "units": "ha",
-                "decimalPlaces": 3,
-                "validate": [
-                  {
-                    "rule": "min[0]"
-                  },
-                  {
-                    "rule": "max",
-                    "param": {
-                      "type": "computed",
-                      "expression": "areaTreatedHa"
-                    }
-                  }
-                ]
-              },
-              {
-                "dataType": "text",
-                "name": "invoicedNotActualReason",
-                "constraints": [
-                  "Work was undertaken over a greater area than will be invoiced for",
-                  "Other"
-                ],
-                "validate": "required",
-                "behaviour": [
-                  {
-                    "condition": "roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedTreatedHa, 2)",
-                    "type": "visible"
-                  }
-                ]
-              },
-              {
-                "dataType": "text",
-                "name": "invoicedNotActualComments",
-                "behaviour": [
-                  {
-                    "type": "visible",
-                    "condition": "\"Other\" == invoicedNotActualReason"
-                  }
-                ],
-                "validate": "required,maxSize[300]"
-              },
-              {
-                "defaultValue": {
-                  "type": "computed",
-                  "expression": "$geom.lengthKm(sitesTreated)"
-                },
-                "dataType": "number",
-                "name": "lengthTreatedKm",
-                "units": "km",
-                "decimalPlaces": 3,
-                "validate": [
-                  {
-                    "rule": "min",
-                    "param": {
-                      "type": "computed",
-                      "expression": "$geom.lengthKm(sitesTreated)*0.9"
-                    }
-                  },
-                  {
-                    "rule": "max",
-                    "param": {
-                      "type": "computed",
-                      "expression": "$geom.lengthKm(sitesTreated)*1.1"
-                    }
-                  }
-                ]
+                "minSize": 1
               }
-            ],
-            "dataType": "list",
-            "name": "conditionAssessmentSurveys",
-            "minSize": 1
+            ]
+          },
+          {
+            "dataType": "lookupTable",
+            "name": "baselineIndicatorMapping",
+            "config": {
+              "source": {
+                "literal": {
+                  "Baseline dataset associated with a project outcome": "Baseline",
+                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
+                }
+              }
+            }
           },
           {
             "dataType": "text",
@@ -12625,11 +12693,11 @@
             "validate": "maxSize[3000]"
           },
           {
-            "name": "numberHabitatConditionAssessmentSurveysConducted",
+            "name": "numberhabitatConditionSurveysConducted",
             "type": "number",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(conditionAssessmentSurveys, \"baselineOrIndicatorSurvey\")"
+              "expression": "count(habitatConditionSurveys, \"baselineOrIndicatorSurvey\")"
             }
           },
           {
@@ -12644,18 +12712,12 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
+            "description": ""
           },
           {
-            "name": "projectAssuranceDetails",
             "dataType": "text",
-            "validate": "required,maxSize[5000]",
-            "behaviour": [
-              {
-                "condition": "dataUploaded == true",
-                "type": "enable"
-              }
-            ]
+            "name": "projectAssuranceDetails",
+            "description": ""
           },
           {
             "dataType": "list",
@@ -12669,12 +12731,21 @@
             ]
           }
         ],
-        "modelName": "NHT - Habitat condition assessment",
-        "title": "Habitat condition assessment",
+        "modelName": "NHT - Habitat condition assessment survey",
+        "title": "Habitat Condition Assessment Survey",
         "viewModel": [
           {
             "type": "section",
             "items": [
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "type": "literal",
+                    "source": "<h3>Participation information</h3>"
+                  }
+                ]
+              },
               {
                 "columns": [
                   {
@@ -12729,281 +12800,369 @@
                 "type": "table"
               },
               {
-                "preLabel": "Number of Habitat Condition Assessment surveys conducted:",
-                "noEdit": true,
-                "type": "number",
-                "source": "numberHabitatConditionAssessmentSurveysConducted"
+                "type": "row",
+                "items": [
+                  {
+                    "type": "literal",
+                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li></ul>"
+                  }
+                ]
               },
               {
-                "addRowText": "New survey site",
+                "addRowText": "Add survey",
+                "removeRowText": "Delete this survey",
                 "userAddedRows": true,
-                "source": "conditionAssessmentSurveys",
+                "source": "habitatConditionSurveys",
                 "type": "repeat",
                 "items": [
                   {
                     "type": "row",
-                    "css": "border-bottom",
                     "items": [
                       {
                         "type": "col",
-                        "css": "span3 col-border-right",
                         "items": [
                           {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "baselineOrIndicatorSurvey",
-                                "type": "selectOne",
-                                "preLabel": "Baseline survey or indicator (follow-up) survey?"
-                              }
-                            ]
+                            "source": "relatedOutcomes",
+                            "type": "selectOne",
+                            "preLabel": "Which outcome statement/s relates to this survey?"
                           }
                         ]
                       },
                       {
                         "type": "col",
-                        "css": "span3 col-border-right",
                         "items": [
                           {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "projectBaseline",
-                                "type": "selectOne",
-                                "preLabel": "Which project baseline relates to this survey?"
-                              }
-                            ]
+                            "preLabel": "How many surveys were completed?",
+                            "source": "numberOfSurveys",
+                            "type": "number",
+                            "readonly": "readonly"
                           }
                         ]
                       },
                       {
                         "type": "col",
-                        "css": "span3 col-border-right",
                         "items": [
                           {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "datasetSupports",
-                                "type": "select2Many",
-                                "preLabel": "What dataset supports this?"
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "type": "col",
-                        "css": "span3 col-border-right",
-                        "items": [
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "relatedOutcomes",
-                                "type": "selectOne",
-                                "preLabel": "Which outcome statement/s relates to this survey?"
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "type": "col",
-                        "css": "span3 col-border-right",
-                        "items": [
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "Activity start date",
-                                "source": "activitiesStartDate",
-                                "type": "date"
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "type": "col",
-                        "css": "span3 col-border-right",
-                        "items": [
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "Activity end date",
-                                "source": "activitiesEndDate",
-                                "type": "date"
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "type": "col",
-                        "css": "span3 col-border-right",
-                        "items": [
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "Sites surveyed for habitat condition assessment",
-                                "source": "sitesTreated",
-                                "type": "feature"
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "calculatedAreaTreatedHa",
-                                "type": "number",
-                                "displayOptions": {
-                                  "displayUnits": true
-                                },
-                                "readonly": "readonly"
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "calculatedLengthTreatedKm",
-                                "type": "number",
-                                "displayOptions": {
-                                  "displayUnits": true
-                                },
-                                "readonly": "readonly"
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "Please attach mapping details",
-                                "source": "extraMappingDetails",
-                                "type": "document"
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "type": "col",
-                        "css": "span3 col-border-right",
-                        "items": [
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "Actual area (ha) / length (km) covered by habitatat condition assessment survey",
-                                "source": "areaTreatedHa",
-                                "type": "number",
-                                "displayOptions": {
-                                  "displayUnits": true
-                                }
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "lengthTreatedKm",
-                                "type": "number",
-                                "displayOptions": {
-                                  "displayUnits": true
-                                }
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "Reason for actual being different to mapped amount",
-                                "source": "mappingNotAlignedReason",
-                                "type": "selectOne"
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
-                                "source": "mappingNotAlignedComments",
-                                "type": "textarea",
-                                "rows": 5
-                              }
-                            ]
+                            "preLabel": "How many surveys will you be invoicing for?",
+                            "source": "numberOfSurveysInvoiced",
+                            "type": "number"
                           }
                         ]
                       }
                     ]
                   },
                   {
-                    "columns": [
+                    "type": "row",
+                    "items": [
                       {
-                        "width": "20%",
-                        "source": "species",
-                        "title": "Type of habitat",
-                        "type": "speciesSelect"
-                      },
-                      {
-                        "width": "15%",
-                        "source": "habitatCondition",
-                        "title": "Condition of habitat",
+                        "source": "surveyObjective",
+                        "preLabel": "Survey objective",
                         "type": "text"
-                      },
+                      }
+                    ]
+                  },
+                  {
+                    "type": "repeat",
+                    "source": "habitatConditionDataSets",
+                    "userAddedRows": true,
+                    "addRowText": "New data set",
+                    "removeRowText": "Delete this data set",
+                    "items": [
                       {
-                        "width": "15%",
-                        "type": "col",
-                        "title": "Which investment priority does this activity relate to?",
+                        "type": "row",
+                        "css": "border-bottom",
                         "items": [
                           {
-                            "source": "investmentPriorities2",
-                            "type": "select2Many"
-                          },
-                          {
-                            "source": "otherInvestmentPriority",
-                            "type": "text"
+                            "type": "col",
+                            "items": [
+                              {
+                                "source": "dataSetId",
+                                "type": "selectOne",
+                                "preLabel": "Please select the data set produced by this survey.  Note it must have already been entered on the Data Set Summary tab."
+                              }
+                            ]
                           }
                         ]
                       },
                       {
-                        "width": "10%",
-                        "title": "Survey technique",
-                        "source": "ternSurveyTechnique",
-                        "type": "selectOne"
+                        "type": "row",
+                        "items": [
+                          {
+                            "type": "col",
+                            "css": "span3 col-border-right",
+                            "items": [
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "source": "baselineOrIndicatorSurvey",
+                                    "type": "selectOne",
+                                    "preLabel": "Baseline survey or indicator (follow-up) survey?"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "col",
+                            "css": "span3 col-border-right",
+                            "items": [
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "source": "projectBaselines",
+                                    "type": "selectMany",
+                                    "preLabel": "Which project baseline/s relate to this survey?",
+                                    "readonly": "readonly"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "col",
+                            "css": "span3 col-border-right",
+                            "items": [
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "source": "investmentPriorities2",
+                                    "preLabel": "Which investment priority does this activity relate to?",
+                                    "type": "select2Many"
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "source": "otherInvestmentPriority",
+                                    "type": "text"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "col",
+                            "css": "span3 col-border-right",
+                            "items": [
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "preLabel": "Activity start date",
+                                    "source": "activitiesStartDate",
+                                    "type": "date"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "col",
+                            "css": "span3 col-border-right",
+                            "items": [
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "preLabel": "Activity end date",
+                                    "source": "activitiesEndDate",
+                                    "type": "date"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "col",
+                            "css": "span3 col-border-right",
+                            "items": [
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "preLabel": "Sites surveyed for habitat condition assessment surveys",
+                                    "source": "sitesTreated",
+                                    "type": "feature"
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "source": "calculatedAreaTreatedHa",
+                                    "type": "number",
+                                    "displayOptions": {
+                                      "displayUnits": true
+                                    },
+                                    "readonly": "readonly"
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "source": "calculatedLengthTreatedKm",
+                                    "type": "number",
+                                    "displayOptions": {
+                                      "displayUnits": true
+                                    },
+                                    "readonly": "readonly"
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "preLabel": "Please attach mapping details",
+                                    "source": "extraMappingDetails",
+                                    "type": "document"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "col",
+                            "css": "span3 col-border-right",
+                            "items": [
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "preLabel": "Actual area (ha) / length (km) covered by habitat condition assessment surveys",
+                                    "source": "areaTreatedHa",
+                                    "type": "number",
+                                    "displayOptions": {
+                                      "displayUnits": true
+                                    }
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "source": "lengthTreatedKm",
+                                    "type": "number",
+                                    "displayOptions": {
+                                      "displayUnits": true
+                                    }
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "preLabel": "Reason for actual being different to mapped amount",
+                                    "source": "mappingNotAlignedReason",
+                                    "type": "selectOne"
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                                    "source": "mappingNotAlignedComments",
+                                    "type": "textarea",
+                                    "rows": 5
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "col",
+                            "css": "span3 col-border-right",
+                            "items": [
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "preLabel": "Survey technique",
+                                    "source": "emsaProtocol",
+                                    "type": "selectOne",
+                                    "readonly": "readonly"
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "preLabel": "Survey technique (if Other)",
+                                    "source": "otherEmsaProtocol",
+                                    "type": "text"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "col",
+                            "css": "span3 col-border-right",
+                            "items": [
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "source": "surveyMethodology",
+                                    "preLabel": "Survey methodology",
+                                    "type": "text"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "col",
+                            "css": "span3 col-border-right",
+                            "items": [
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "source": "invoicingThisActivity",
+                                    "preLabel": "Are you invoicing for this activity in this reporting period?",
+                                    "type": "selectOne"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
                       },
                       {
-                        "width": "10%",
-                        "title": "Survey technique (if Other)",
-                        "source": "otherTernSurveyTechnique",
-                        "type": "text"
-                      },
-                      {
-                        "width": "15%",
-                        "source": "surveyMethodology",
-                        "title": "Survey methodology",
-                        "type": "text"
-                      },
-                      {
-                        "width": "15%",
-                        "source": "surveyObjective",
-                        "title": "Survey objective",
-                        "type": "text"
+                        "columns": [
+                          {
+                            "width": "60%",
+                            "source": "species",
+                            "title": "Type of habitat",
+                            "type": "speciesSelect"
+                          },
+                          {
+                            "width": "40%",
+                            "source": "habitatCondition",
+                            "title": "Condition of habitat",
+                            "type": "text"
+                          }
+                        ],
+                        "userAddedRows": true,
+                        "disableTableUpload": true,
+                        "source": "habitatConditionSurveySpeciesTable",
+                        "type": "table"
                       }
-                    ],
-                    "userAddedRows": true,
-                    "disableTableUpload": true,
-                    "source": "habitatConditionBaselineTable",
-                    "type": "table"
+                    ]
                   }
                 ]
               },
@@ -13035,7 +13194,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -24331,6 +24490,410 @@
       "template": {
         "dataModel": [
           {
+            "name": "soilTestingSurveys",
+            "dataType": "list",
+            "minSize": 1,
+            "columns": [
+              {
+                "name": "relatedOutcomes",
+                "dataType": "text",
+                "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
+                "validate": "required",
+                "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "value",
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "context-path": "outcomes"
+                    }
+                  }
+                }
+              },
+              {
+                "dataType": "text",
+                "name": "surveyObjective",
+                "description": "What the survey aim to capture? How will the information obtained from the survey be used?",
+                "validate": "required,maxSize[3000]"
+              },
+              {
+                "dataType": "number",
+                "name": "numberOfSurveys",
+                "validate": "required,min[1],max[1]",
+                "defaultValue": 1,
+                "readonly": true
+              },
+              {
+                "dataType": "number",
+                "name": "numberOfSurveysInvoiced",
+                "validate": "required,min[0],max[1]",
+                "defaultValue": 1
+              },
+              {
+                "dataType": "list",
+                "name": "soilTestingDataSets",
+                "columns": [
+                  {
+                    "name": "dataSetId",
+                    "dataType": "text",
+                    "description": "This section will require the Data Set Name so the Metadata fields in the Data Set Summary tab should be filled out before the Outcome Report is due. More than one dataset if relevant for this Project Baseline could be selected.",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "name",
+                      "valueProperty": "dataSetId",
+                      "excludePath": "soilTestingSurveys.soilTestingDataSets.dataSetId",
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "context-path": "owner.custom.dataSets"
+                        },
+                        "filter": {
+                          "expression": "serviceId == 30 and progress == 'finished'"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "baselineOrIndicatorSurvey",
+                    "description": "",
+                    "constraints": [
+                      "Baseline",
+                      "Indicator"
+                    ],
+                    "validate": "required",
+                    "computed": {
+                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); baselineIndicatorMapping.lookupValue(x.type)"
+                    }
+                  },
+                  {
+                    "name": "projectBaselines",
+                    "dataType": "stringList",
+                    "description": "Select the relevant Project Baseline as listed in the Monitoring Methodology section of the MERI Plan.",
+                    "validate": "required",
+                    "computed": {
+                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.baselines"
+                    },
+                    "constraints": {
+                      "textProperty": "baseline",
+                      "valueProperty": "code",
+                      "type": "pre-populated",
+                      "excludePath": "projectBaselines",
+                      "config": {
+                        "source": {
+                          "context-path": "owner.custom.details.baseline.rows"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "name": "investmentPriorities2",
+                    "dataType": "stringList",
+                    "validate": "required",
+                    "constraints": {
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "params": [
+                            {
+                              "expression": "owner.projectId",
+                              "name": "id",
+                              "type": "computed"
+                            }
+                          ],
+                          "url": "/project/listProjectInvestmentPriorities/"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "otherInvestmentPriority",
+                    "behaviour": [
+                      {
+                        "type": "enable",
+                        "condition": "\"Other\" in investmentPriorities2"
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "date",
+                    "name": "activitiesStartDate",
+                    "description": "Specific the dates these events were held on",
+                    "validate": "required",
+                    "computed": {
+                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.startDate"
+                    }
+                  },
+                  {
+                    "dataType": "date",
+                    "name": "activitiesEndDate",
+                    "description": "Specific the dates these events were held on",
+                    "validate": "required",
+                    "computed": {
+                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.endDate"
+                    }
+                  },
+                  {
+                    "dataType": "feature",
+                    "name": "sitesTreated",
+                    "computed": {
+                      "defer": true,
+                      "source": {
+                        "url": "/site/geojson",
+                        "params": [
+                          {
+                            "expression": "x=find(owner.custom.dataSets, \"dataSetId\", dataSetId); x.siteId",
+                            "name": "id",
+                            "type": "computed",
+                            "required": true
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "computed": {
+                      "expression": "$geom.areaHa(sitesTreated)"
+                    },
+                    "dataType": "number",
+                    "name": "calculatedAreaTreatedHa",
+                    "units": "ha",
+                    "decimalPlaces": 3,
+                    "behaviour": [
+                      {
+                        "condition": "areaInvoicedTreatedHa > 0",
+                        "type": "conditional_validation",
+                        "value": {
+                          "message": "The managed area must be mapped",
+                          "validate": "required,min[0.0001]"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "computed": {
+                      "expression": "$geom.lengthKm(sitesTreated)"
+                    },
+                    "dataType": "number",
+                    "name": "calculatedLengthTreatedKm",
+                    "units": "km",
+                    "decimalPlaces": 3,
+                    "behaviour": [
+                      {
+                        "condition": "lengthTreatedKm > 0",
+                        "type": "conditional_validation",
+                        "value": {
+                          "message": "The managed length must be mapped",
+                          "validate": "required,min[0.0001]"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "defaultValue": {
+                      "type": "computed",
+                      "expression": "calculatedAreaTreatedHa"
+                    },
+                    "dataType": "number",
+                    "name": "areaTreatedHa",
+                    "units": "ha",
+                    "decimalPlaces": 3,
+                    "validate": "required,min[0]"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "mappingNotAlignedReason",
+                    "constraints": [
+                      "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                      "Other"
+                    ],
+                    "validate": "required",
+                    "behaviour": [
+                      {
+                        "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1))",
+                        "type": "visible"
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "mappingNotAlignedComments",
+                    "validate": "required,maxSize[300]",
+                    "behaviour": [
+                      {
+                        "type": "visible",
+                        "condition": "\"Other\" == mappingNotAlignedReason"
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "document",
+                    "name": "extraMappingDetails",
+                    "validate": "required",
+                    "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                    "behaviour": [
+                      {
+                        "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1)) or roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedTreatedHa, 2)",
+                        "type": "visible"
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "areaInvoicedTreatedHa",
+                    "units": "ha",
+                    "decimalPlaces": 3,
+                    "validate": [
+                      {
+                        "rule": "min[0]"
+                      },
+                      {
+                        "rule": "max",
+                        "param": {
+                          "type": "computed",
+                          "expression": "areaTreatedHa"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "invoicedNotActualReason",
+                    "constraints": [
+                      "Work was undertaken over a greater area than will be invoiced for",
+                      "Other"
+                    ],
+                    "validate": "required",
+                    "behaviour": [
+                      {
+                        "condition": "roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedTreatedHa, 2)",
+                        "type": "visible"
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "invoicedNotActualComments",
+                    "behaviour": [
+                      {
+                        "type": "visible",
+                        "condition": "\"Other\" == invoicedNotActualReason"
+                      }
+                    ],
+                    "validate": "required,maxSize[300]"
+                  },
+                  {
+                    "defaultValue": {
+                      "type": "computed",
+                      "expression": "$geom.lengthKm(sitesTreated)"
+                    },
+                    "dataType": "number",
+                    "name": "lengthTreatedKm",
+                    "units": "km",
+                    "decimalPlaces": 3,
+                    "validate": [
+                      {
+                        "rule": "min",
+                        "param": {
+                          "type": "computed",
+                          "expression": "$geom.lengthKm(sitesTreated)*0.9"
+                        }
+                      },
+                      {
+                        "rule": "max",
+                        "param": {
+                          "type": "computed",
+                          "expression": "$geom.lengthKm(sitesTreated)*1.1"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "description": "Select the technique used to conduct the survey. If the EMSA Application tool was not used, you should select 'Other'.",
+                    "name": "emsaProtocol",
+                    "validate": "required",
+                    "computed": {
+                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.protocol"
+                    },
+                    "constraints": {
+                      "textProperty": "label",
+                      "valueProperty": "value",
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "context-path": "owner.protocols"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "dataType": "text",
+                    "description": "Please describe the Survey technique if other was selected.",
+                    "name": "otherEmsaProtocol",
+                    "behaviour": [
+                      {
+                        "condition": "emsaProtocol == \"Other\"",
+                        "type": "enable_and_clear"
+                      }
+                    ],
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "surveyMethodology",
+                    "description": "Provide more details on what is being done",
+                    "validate": "required,maxSize[3000]",
+                    "computed": {
+                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.methodDescription"
+                    }
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "invoicingThisActivity",
+                    "constraints": [
+                      "Yes",
+                      "No"
+                    ],
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "testingTechnique",
+                    "description": "What/How will these tests capture information",
+                    "validate": "required,maxSize[100]"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "testingObjective",
+                    "description": "How will the information obtained from the tests be used",
+                    "validate": "required,maxSize[300]"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "testingDepth",
+                    "description": "",
+                    "validate": "required,maxSize[300]"
+                  }
+                ],
+                "minSize": 1
+              }
+            ]
+          },
+          {
+            "dataType": "lookupTable",
+            "name": "baselineIndicatorMapping",
+            "config": {
+              "source": {
+                "literal": {
+                  "Baseline dataset associated with a project outcome": "Baseline",
+                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
+                }
+              }
+            }
+          },
+          {
             "dataType": "text",
             "name": "participationIndividualsOrGroups",
             "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report",
@@ -24406,182 +24969,12 @@
             "validate": "maxSize[3000]"
           },
           {
-            "dataType": "text",
-            "name": "baselineOrIndicator",
-            "description": "",
-            "constraints": [
-              "Baseline",
-              "Indicator"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "numberOfSoilTests",
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "number",
-            "name": "numberOfSoilTestInvoice",
-            "validate": "required,min[0]"
-          },
-          {
-            "columns": [
-              {
-                "name": "relatedOutcomes",
-                "dataType": "text",
-                "description": "More than one outcome statement/s if relevant for this Project Baseline could be selected.",
-                "validate": "required",
-                "constraints": {
-                  "textProperty": "label",
-                  "valueProperty": "label",
-                  "type": "pre-populated",
-                  "config": {
-                    "source": {
-                      "url": "/project/outcomesByScores",
-                      "params": [
-                        {
-                          "expression": "owner.projectId",
-                          "name": "id",
-                          "type": "computed"
-                        },
-                        {
-                          "expression": "scores",
-                          "name": "scoreIds",
-                          "type": "computed"
-                        }
-                      ]
-                    }
-                  }
-                }
-              },
-              {
-                "name": "investmentPriorities2",
-                "dataType": "stringList",
-                "validate": "required",
-                "constraints": {
-                  "type": "pre-populated",
-                  "config": {
-                    "source": {
-                      "params": [
-                        {
-                          "expression": "owner.projectId",
-                          "name": "id",
-                          "type": "computed"
-                        }
-                      ],
-                      "url": "/project/listProjectInvestmentPriorities/"
-                    }
-                  }
-                }
-              },
-              {
-                "dataType": "text",
-                "name": "otherInvestmentPriority",
-                "behaviour": [
-                  {
-                    "type": "enable",
-                    "condition": "\"Other\" in investmentPriorities2"
-                  }
-                ]
-              },
-              {
-                "dataType": "date",
-                "name": "activitiesStartDate",
-                "description": "Specific the dates these events were held on",
-                "validate": "required"
-              },
-              {
-                "dataType": "date",
-                "name": "activitiesEndDate",
-                "description": "Specific the dates these events were held on",
-                "validate": "required"
-              },
-              {
-                "dataType": "feature",
-                "name": "sitesTested"
-              },
-              {
-                "computed": {
-                  "expression": "$geom.areaHa(sitesTested)"
-                },
-                "dataType": "number",
-                "name": "areaTestedHa",
-                "units": "ha",
-                "decimalPlaces": 3,
-                "behaviour": [
-                  {
-                    "condition": "areaTestedChangeHa > 0",
-                    "type": "conditional_validation",
-                    "value": {
-                      "message": "",
-                      "validate": "required,min[0.0001]"
-                    }
-                  }
-                ]
-              },
-              {
-                "computed": {
-                  "expression": "$geom.lengthKm(sitesTested)"
-                },
-                "dataType": "number",
-                "name": "lengthTestedKm",
-                "units": "km",
-                "decimalPlaces": 3,
-                "behaviour": [
-                  {
-                    "condition": "lengthTestedChangeKm > 0",
-                    "type": "conditional_validation",
-                    "value": {
-                      "message": "",
-                      "validate": "required,min[0.0001]"
-                    }
-                  }
-                ]
-              },
-              {
-                "defaultValue": {
-                  "type": "computed",
-                  "expression": "areaTestedHa"
-                },
-                "dataType": "number",
-                "name": "areaTestedChangeHa",
-                "validate": "min[0]",
-                "decimalPlaces": 3,
-                "units": "ha"
-              },
-              {
-                "defaultValue": {
-                  "type": "computed",
-                  "expression": "lengthTestedKm"
-                },
-                "dataType": "number",
-                "name": "lengthTestedChangeKm",
-                "validate": "min[0]",
-                "decimalPlaces": 3,
-                "units": "km"
-              },
-              {
-                "dataType": "text",
-                "name": "testingTechnique",
-                "description": "What/How will these tests capture information",
-                "validate": "required,maxSize[100]"
-              },
-              {
-                "dataType": "text",
-                "name": "testingObjective",
-                "description": "How will the information obtained from the tests be used",
-                "validate": "required,maxSize[300]"
-              },
-              {
-                "dataType": "text",
-                "name": "testingDepth",
-                "description": "",
-                "validate": "required,maxSize[300]"
-              }
-            ],
-            "dataType": "list",
-            "name": "soilTestingDetails"
+            "name": "numbersoilTestingSurveysConducted",
+            "type": "number",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "count(soilTestingSurveys, \"baselineOrIndicatorSurvey\")"
+            }
           },
           {
             "dataType": "text",
@@ -24595,18 +24988,12 @@
           {
             "dataType": "boolean",
             "name": "dataUploaded",
-            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
+            "description": ""
           },
           {
-            "name": "projectAssuranceDetails",
             "dataType": "text",
-            "validate": "required,maxSize[5000]",
-            "behaviour": [
-              {
-                "condition": "dataUploaded == true",
-                "type": "enable"
-              }
-            ]
+            "name": "projectAssuranceDetails",
+            "description": ""
           },
           {
             "dataType": "list",
@@ -24620,142 +25007,156 @@
             ]
           }
         ],
-        "modelName": "NHT - Soil testing",
-        "title": "Soil testing",
+        "modelName": "NHT - Soil testing survey",
+        "title": "Soil Testing Survey",
         "viewModel": [
-          {
-            "columns": [
-              {
-                "width": "10%",
-                "source": "participationIndividualsOrGroups",
-                "title": "Are individuals or groups delivering this service?",
-                "type": "selectOne"
-              },
-              {
-                "width": "20%",
-                "type": "col",
-                "title": "Total number of people delivering this service <br>(including First Nations people)",
-                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
-                "items": [
-                  {
-                    "source": "participationIndividualNumber",
-                    "type": "number"
-                  },
-                  {
-                    "source": "participationGroupNumber",
-                    "type": "selectOne"
-                  }
-                ]
-              },
-              {
-                "type": "col",
-                "width": "20%",
-                "title": "Total number of First Nations people delivering this service ",
-                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
-                "items": [
-                  {
-                    "source": "firstNationIndividualNumber",
-                    "type": "number"
-                  },
-                  {
-                    "source": "firstNationGroupNumber",
-                    "type": "selectOne"
-                  }
-                ]
-              },
-              {
-                "source": "participationDetails",
-                "rows": 4,
-                "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
-                "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
-                "type": "textarea"
-              }
-            ],
-            "userAddedRows": false,
-            "disableTableUpload": false,
-            "source": "",
-            "type": "table"
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "preLabel": "Baseline survey or indicator (follow-up) survey?",
-                "css": "span3",
-                "source": "baselineOrIndicator",
-                "type": "selectOne"
-              },
-              {
-                "preLabel": "Number of soil tests conducted in targeted areas",
-                "css": "span2",
-                "source": "numberOfSoilTests",
-                "type": "number"
-              },
-              {
-                "preLabel": "How many soil tests will you be invoicing for?",
-                "css": "span2",
-                "source": "numberOfSoilTestInvoice",
-                "type": "number"
-              }
-            ]
-          },
           {
             "type": "section",
             "items": [
               {
+                "type": "row",
+                "items": [
+                  {
+                    "type": "literal",
+                    "source": "<h3>Participation information</h3>"
+                  }
+                ]
+              },
+              {
                 "columns": [
                   {
-                    "source": "relatedOutcomes",
-                    "type": "selectOne",
-                    "width": "15%",
-                    "title": "Which outcome statement/s relates to this survey?"
+                    "width": "10%",
+                    "source": "participationIndividualsOrGroups",
+                    "title": "Are individuals or groups delivering this service?",
+                    "type": "selectOne"
                   },
                   {
-                    "width": "15%",
+                    "width": "20%",
                     "type": "col",
-                    "title": "Which investment priority does this activity relate to?",
+                    "title": "Total number of people delivering this service <br>(including First Nations people)",
+                    "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
                     "items": [
                       {
-                        "source": "investmentPriorities2",
-                        "type": "select2Many"
+                        "source": "participationIndividualNumber",
+                        "type": "number"
                       },
                       {
-                        "source": "otherInvestmentPriority",
+                        "source": "participationGroupNumber",
+                        "type": "selectOne"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "width": "20%",
+                    "title": "Total number of First Nations people delivering this service ",
+                    "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row",
+                    "items": [
+                      {
+                        "source": "firstNationIndividualNumber",
+                        "type": "number"
+                      },
+                      {
+                        "source": "firstNationGroupNumber",
+                        "type": "selectOne"
+                      }
+                    ]
+                  },
+                  {
+                    "source": "participationDetails",
+                    "rows": 4,
+                    "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                    "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved",
+                    "type": "textarea"
+                  }
+                ],
+                "userAddedRows": false,
+                "disableTableUpload": false,
+                "source": "",
+                "type": "table"
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "type": "literal",
+                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li></ul>"
+                  }
+                ]
+              },
+              {
+                "addRowText": "Add survey",
+                "removeRowText": "Delete this survey",
+                "userAddedRows": true,
+                "source": "soilTestingSurveys",
+                "type": "repeat",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "type": "col",
+                        "items": [
+                          {
+                            "source": "relatedOutcomes",
+                            "type": "selectOne",
+                            "preLabel": "Which outcome statement/s relates to this survey?"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "items": [
+                          {
+                            "preLabel": "How many surveys were completed?",
+                            "source": "numberOfSurveys",
+                            "type": "number",
+                            "readonly": "readonly"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "items": [
+                          {
+                            "preLabel": "How many surveys will you be invoicing for?",
+                            "source": "numberOfSurveysInvoiced",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "source": "surveyObjective",
+                        "preLabel": "Survey objective",
                         "type": "text"
                       }
                     ]
                   },
                   {
-                    "title": "Activity start date",
-                    "source": "activitiesStartDate",
-                    "type": "date",
-                    "width": "10%"
-                  },
-                  {
-                    "title": "Activity end date",
-                    "source": "activitiesEndDate",
-                    "type": "date",
-                    "width": "10%"
-                  },
-                  {
-                    "width": "10%",
-                    "type": "col",
-                    "title": "Project site/s where soil tests were conducted",
+                    "type": "repeat",
+                    "source": "soilTestingDataSets",
+                    "userAddedRows": true,
+                    "addRowText": "New data set",
+                    "removeRowText": "Delete this data set",
                     "items": [
                       {
-                        "type": "feature",
-                        "source": "sitesTested"
-                      },
-                      {
                         "type": "row",
+                        "css": "border-bottom",
                         "items": [
                           {
-                            "type": "number",
-                            "source": "areaTestedHa",
-                            "displayOptions": {
-                              "displayUnits": true
-                            },
-                            "readonly": true
+                            "type": "col",
+                            "items": [
+                              {
+                                "source": "dataSetId",
+                                "type": "selectOne",
+                                "preLabel": "Please select the data set produced by this survey.  Note it must have already been entered on the Data Set Summary tab."
+                              }
+                            ]
                           }
                         ]
                       },
@@ -24763,71 +25164,311 @@
                         "type": "row",
                         "items": [
                           {
-                            "type": "number",
-                            "source": "lengthTestedKm",
-                            "displayOptions": {
-                              "displayUnits": true
-                            },
-                            "readonly": true
+                            "type": "col",
+                            "css": "span3 col-border-right",
+                            "items": [
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "source": "baselineOrIndicatorSurvey",
+                                    "type": "selectOne",
+                                    "preLabel": "Baseline survey or indicator (follow-up) survey?"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "col",
+                            "css": "span3 col-border-right",
+                            "items": [
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "source": "projectBaselines",
+                                    "type": "selectMany",
+                                    "preLabel": "Which project baseline/s relate to this survey?",
+                                    "readonly": "readonly"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "col",
+                            "css": "span3 col-border-right",
+                            "items": [
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "source": "investmentPriorities2",
+                                    "preLabel": "Which investment priority does this activity relate to?",
+                                    "type": "select2Many"
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "source": "otherInvestmentPriority",
+                                    "type": "text"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "col",
+                            "css": "span3 col-border-right",
+                            "items": [
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "preLabel": "Activity start date",
+                                    "source": "activitiesStartDate",
+                                    "type": "date"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "col",
+                            "css": "span3 col-border-right",
+                            "items": [
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "preLabel": "Activity end date",
+                                    "source": "activitiesEndDate",
+                                    "type": "date"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "col",
+                            "css": "span3 col-border-right",
+                            "items": [
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "preLabel": "Area (ha) / length (km) where soil tests were conducted",
+                                    "source": "sitesTreated",
+                                    "type": "feature"
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "source": "calculatedAreaTreatedHa",
+                                    "type": "number",
+                                    "displayOptions": {
+                                      "displayUnits": true
+                                    },
+                                    "readonly": "readonly"
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "source": "calculatedLengthTreatedKm",
+                                    "type": "number",
+                                    "displayOptions": {
+                                      "displayUnits": true
+                                    },
+                                    "readonly": "readonly"
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "preLabel": "Please attach mapping details",
+                                    "source": "extraMappingDetails",
+                                    "type": "document"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "col",
+                            "css": "span3 col-border-right",
+                            "items": [
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "preLabel": "Actual area (ha) / length (km) where soil tests were conducted",
+                                    "source": "areaTreatedHa",
+                                    "type": "number",
+                                    "displayOptions": {
+                                      "displayUnits": true
+                                    }
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "source": "lengthTreatedKm",
+                                    "type": "number",
+                                    "displayOptions": {
+                                      "displayUnits": true
+                                    }
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "preLabel": "Reason for actual being different to mapped amount",
+                                    "source": "mappingNotAlignedReason",
+                                    "type": "selectOne"
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                                    "source": "mappingNotAlignedComments",
+                                    "type": "textarea",
+                                    "rows": 5
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "col",
+                            "css": "span3 col-border-right",
+                            "items": [
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "preLabel": "Survey technique",
+                                    "source": "emsaProtocol",
+                                    "type": "selectOne",
+                                    "readonly": "readonly"
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "preLabel": "Survey technique (if Other)",
+                                    "source": "otherEmsaProtocol",
+                                    "type": "text"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "col",
+                            "css": "span3 col-border-right",
+                            "items": [
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "source": "surveyMethodology",
+                                    "preLabel": "Survey methodology",
+                                    "type": "text"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "col",
+                            "css": "span3 col-border-right",
+                            "items": [
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "source": "invoicingThisActivity",
+                                    "preLabel": "Are you invoicing for this activity in this reporting period?",
+                                    "type": "selectOne"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "col",
+                            "css": "span3 col-border-right",
+                            "items": [
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "source": "testingTechnique",
+                                    "preLabel": "Testing technique",
+                                    "type": "textarea"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "col",
+                            "css": "span3 col-border-right",
+                            "items": [
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "source": "testingObjective",
+                                    "preLabel": "Testing objective",
+                                    "type": "textarea"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "col",
+                            "css": "span3 col-border-right",
+                            "items": [
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "source": "testingDepth",
+                                    "preLabel": "Testing depth",
+                                    "type": "textarea"
+                                  }
+                                ]
+                              }
+                            ]
                           }
                         ]
                       }
                     ]
-                  },
-                  {
-                    "width": "15%",
-                    "title": "Actual Area (ha) / length (km) where soil tests were conducted",
-                    "helpText": "Manually enter correct figure if different to mapped value.",
-                    "type": "col",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "areaTestedChangeHa",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "lengthTestedChangeKm",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            }
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "width": "10%",
-                    "source": "testingTechnique",
-                    "title": "Testing technique",
-                    "type": "textarea"
-                  },
-                  {
-                    "width": "10%",
-                    "source": "testingObjective",
-                    "title": "Testing objective",
-                    "type": "textarea"
-                  },
-                  {
-                    "width": "10%",
-                    "source": "testingDepth",
-                    "title": "Testing depth",
-                    "type": "textarea"
                   }
-                ],
-                "userAddedRows": true,
-                "source": "soilTestingDetails",
-                "type": "table"
+                ]
               },
               {
                 "type": "row",
@@ -24857,7 +25498,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
                   },
                   {
                     "preLabel": "Data have been uploaded",
