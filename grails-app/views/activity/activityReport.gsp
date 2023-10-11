@@ -226,13 +226,15 @@
 
             var activityId = '${activity.activityId}';
             var projectId = '${activity.projectId}';
+            var documentOwner = <fc:modelAsJavascript model="${documentOwner}" default="{}"/>;
 
             var outputModelConfig = {
                 activityId: activityId,
                 projectId: projectId,
                 disablePrepop: false,
                 speciesConfig:<fc:modelAsJavascript model="${speciesConfig}"/>,
-                recoveryDataStorageKey: recoveryDataStorageKey
+                recoveryDataStorageKey: recoveryDataStorageKey,
+                documentOwner: documentOwner
             };
             outputModelConfig = _.extend(fcConfig, outputModelConfig);
 

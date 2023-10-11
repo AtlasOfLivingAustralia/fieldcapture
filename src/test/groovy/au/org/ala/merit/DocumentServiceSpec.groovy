@@ -127,7 +127,7 @@ class DocumentServiceSpec extends Specification implements AutowiredTest{
         canDelete == false
         2 * webService.getJson(_) >> [documentId:'d1', organisationId:'o2']
         2 * userService.getCurrentUserId() >> userId
-        2 * userService.isUserAdminForOrganisation(userId, 'o2') >> false
+        2 * userService.isUserEditorForOrganisation(userId, 'o2') >> false
 
         when:
         canEdit = service.canEdit(document)
@@ -138,7 +138,7 @@ class DocumentServiceSpec extends Specification implements AutowiredTest{
         canDelete == true
         2 * webService.getJson(_) >> [documentId:'d1', organisationId:'o2']
         2 * userService.getCurrentUserId() >> userId
-        2 * userService.isUserAdminForOrganisation(userId, 'o2') >> true
+        2 * userService.isUserEditorForOrganisation(userId, 'o2') >> true
     }
 
     def "only MERIT administrators edit or delete a read only document, regardless of ownership"() {

@@ -38,6 +38,8 @@ abstract class EditOrViewReportCommand implements Validateable {
             model.returnTo = linkGenerator.link(controller:entityType, action:'index', id: id)
             model.contextViewUrl = model.returnTo
             model.saveReportUrl = linkGenerator.link(controller:entityType, action:'saveReport', id:id)
+            model.documentOwner = [activityId:model.activity.activityId, reportId:reportId]
+            model.documentOwner[getEntityIdField()] = id
         }
     }
 
@@ -60,8 +62,12 @@ abstract class EditOrViewReportCommand implements Validateable {
     abstract String getHeaderTemplate()
 
     boolean isOwnedByEntity(Map report) {
-        String idField = getEntityType()+'Id'
+        String idField = getEntityIdField()
         report[idField] == id
+    }
+
+    private String getEntityIdField() {
+        getEntityType()+'Id'
     }
 
     LinkGenerator getLinkGenerator() {
