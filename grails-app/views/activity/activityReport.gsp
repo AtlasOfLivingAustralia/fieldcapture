@@ -226,7 +226,7 @@
 
             var activityId = '${activity.activityId}';
             var projectId = '${activity.projectId}';
-            var documentOwner = <fc:modelAsJavascript model="${documentOwner}" default="{}"/>;
+            var documentOwner = <fc:modelAsJavascript model="${documentOwner}" default="null"/>;
 
             var outputModelConfig = {
                 activityId: activityId,
