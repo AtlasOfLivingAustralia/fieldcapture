@@ -37,6 +37,10 @@
         <g:each in="${['RLP Outcomes', 'RLP Project Details', 'RLP Key Threats', 'RLP Services and Targets']}" var="name">
             <li><label class="checkbox"><input type="checkbox" name="tabs" value="${name.replaceAll(' ','_')}" data-validation-engine="validate[minCheckbox[1]]">${name}</label></li>
         </g:each>
+        <!-- RDP project -->
+        <g:each in="${['RDP Outcomes', 'RDP Project Details', 'RDP Key Threats', 'RDP Services and Targets']}" var="name">
+            <li><label class="checkbox"><input type="checkbox" name="tabs" value="${name.replaceAll(' ','_')}" data-validation-engine="validate[minCheckbox[1]]">${name}</label></li>
+        </g:each>
     </ul>
 
     <strong>Electorate Coord</strong><br/>
