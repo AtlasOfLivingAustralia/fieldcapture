@@ -454,7 +454,7 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         controller.editOrganisationReport()
 
         then:
-        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> [editable:true, report:[reportId:reportId, organisationId:organisationId]]
+        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> [editable:true, report:[reportId:reportId, organisationId:organisationId], activity:[activityId:'a1']]
         view == '/activity/activityReport'
         model.context == program
         model.contextViewUrl == '/organisation/index/'+organisationId
@@ -479,7 +479,7 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         controller.editOrganisationReport()
 
         then: "the report activity should not be locked"
-        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> [editable:false, report:[reportId:reportId, organisationId:organisationId]]
+        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> [editable:false, report:[reportId:reportId, organisationId:organisationId], activity:[activityId:'a1']]
         0 * reportService.lockForEditing(_)
 
         and: "the user should be redirected to the report view"
@@ -504,7 +504,7 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         controller.editOrganisationReport()
 
         then:
-        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> [report:organisation.reports[0], editable:true]
+        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> [report:organisation.reports[0], editable:true, activity:[activityId:'a1']]
         1 * reportService.lockForEditing(organisation.reports[0]) >> [locked:true]
         view == '/activity/activityReport'
     }
