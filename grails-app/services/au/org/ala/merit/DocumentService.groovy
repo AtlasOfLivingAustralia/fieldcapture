@@ -186,7 +186,7 @@ class DocumentService {
         } else if (document.programId) {
             canEdit = userService.canUserEditProgramReport(userId, document.programId)
         } else if (document.organisationId) {
-            canEdit = userService.isUserAdminForOrganisation(userId, document.organisationId)
+            canEdit = userService.isUserEditorForOrganisation(userId, document.organisationId)
         } else if (document.activityId) {
             canEdit = userService.canUserEditActivity(userId, document.activityId)
         } else if (document.managementUnitId) {
