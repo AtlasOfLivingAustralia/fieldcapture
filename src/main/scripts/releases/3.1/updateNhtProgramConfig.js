@@ -272,6 +272,7 @@ subProgram.config = {
     "activityPeriodDescriptor": "Outputs report #",
     "supportsParatoo": true,
     "supportsMeriPlanComparison": true,
+    "declarationPageType": "rdpReportDeclaration",
     "emailTemplates": {
     "reportSubmittedEmailTemplate": "RLP_REPORT_SUBMITTED_EMAIL_TEMPLATE",
         "reportReturnedEmailTemplate": "RLP_REPORT_RETURNED_EMAIL_TEMPLATE",
@@ -505,13 +506,6 @@ subProgram.config = {
         "excludedModes":["PRINT"],
         "model": {
             "titleHelpText":"Service and Target measure fields pre-populated through the Project Service/Target Measure/s to address threats field and Monitoring methodology sections"
-        }
-    },
-    {
-        "template": "attachmentRdpFooter",
-        "model": {
-            "heading": "MERI Attachments",
-            "attachmentText": "Please attach Project logic to your MERI plan using the documents function on the Admin tab.  A \"Document type\" of \"Project Logic\" should be selected when uploading the document."
         }
     }
 ],

@@ -96,8 +96,8 @@ class ProgramConfig implements Map {
         emailTemplate
     }
 
-    SettingPageType getDeclarationTemplate(declarationPageType) {
-        return SettingPageType.getForName(declarationPageType)
+    SettingPageType getDeclarationTemplate() {
+        return SettingPageType.getForName(config.declarationPageType ?: 'rlpReportDeclaration')
     }
 
 
@@ -146,8 +146,6 @@ class ProgramConfig implements Map {
     /** This flag controls whether the project is using the new meri plan template(2023) */
     boolean supportsMeriPlanComparison = false
 
-    /** This flags controls whether the declaration is for RDP or RLP **/
-    String declarationPageType = "rlpReportDeclaration"
 }
 
 
