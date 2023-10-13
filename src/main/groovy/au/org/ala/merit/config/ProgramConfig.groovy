@@ -1,6 +1,6 @@
 package au.org.ala.merit.config
 
-
+import au.org.ala.merit.SettingPageType
 import groovy.util.logging.Slf4j
 
 /**
@@ -96,6 +96,10 @@ class ProgramConfig implements Map {
         emailTemplate
     }
 
+    SettingPageType getDeclarationTemplate() {
+        return SettingPageType.getForName(config.declarationPageType ?: 'rlpReportDeclaration')
+    }
+
 
 
     boolean projectsMustStartAndEndOnContractDates
@@ -141,6 +145,7 @@ class ProgramConfig implements Map {
 
     /** This flag controls whether the project is using the new meri plan template(2023) */
     boolean supportsMeriPlanComparison = false
+
 }
 
 

@@ -272,6 +272,7 @@ subProgram.config = {
     "activityPeriodDescriptor": "Outputs report #",
     "supportsParatoo": true,
     "supportsMeriPlanComparison": true,
+    "declarationPageType": "rdpReportDeclaration",
     "emailTemplates": {
     "reportSubmittedEmailTemplate": "RLP_REPORT_SUBMITTED_EMAIL_TEMPLATE",
         "reportReturnedEmailTemplate": "RLP_REPORT_RETURNED_EMAIL_TEMPLATE",
@@ -506,7 +507,6 @@ subProgram.config = {
         "model": {
             "titleHelpText":"Service and Target measure fields pre-populated through the Project Service/Target Measure/s to address threats field and Monitoring methodology sections"
         }
-
     }
 ],
     keyThreatCodes: [
