@@ -226,7 +226,7 @@ class ProjectController {
 
             boolean reportsVisible = config.includesContent(ProgramConfig.ProjectContent.REPORTING) && userHasViewAccess
 
-            Map reportingTab = [label: 'Reporting', visible:reportsVisible, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true, services: config.services, scores:scores, hideDueDate:true, isAdmin:user?.isAdmin, isGrantManager:user?.isCaseManager, isRdpReport:showMeriPlanComparison, declarationTemplate:config.getDeclarationTemplate()]
+            Map reportingTab = [label: 'Reporting', visible:reportsVisible, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true, services: config.services, scores:scores, hideDueDate:true, isAdmin:user?.isAdmin, isGrantManager:user?.isCaseManager, declarationTemplate:config.getDeclarationTemplate()]
             if (reportingTab.visible) {
                 reportingTab.reportOrder = config?.projectReports?.collect{
                     [category:it.category, description:it.description, banner:it.banner, rejectionReasonCategoryOptions:it.rejectionReasonCategoryOptions?:[]]}?.unique({it.category}) ?: []
