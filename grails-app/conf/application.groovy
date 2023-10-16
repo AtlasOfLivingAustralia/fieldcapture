@@ -220,7 +220,8 @@ grails {
 ehcache.directory = '/data/fieldcapture/ehcache'
 
 auth.baseUrl = 'https://auth-test.ala.org.au'
-userDetails.url = "${auth.baseUrl}/userdetails/"
+userDetails.web.url = "${auth.baseUrl}/userdetails/"
+userDetails.api.url = "${auth.baseUrl}/userdetails/userDetails/"
 user.registration.url = "${auth.baseUrl}/userdetails/registration/createAccount"
 security {
     cas {
