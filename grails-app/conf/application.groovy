@@ -297,7 +297,7 @@ environments {
         security.cas.loginUrl="${security.cas.casServerUrlPrefix}/login"
         security.cas.casLoginUrl="${security.cas.casServerUrlPrefix}/login"
         security.cas.logoutUrl="${security.cas.casServerUrlPrefix}/logout"
-        userDetails.url = "${casBaseUrl}/userdetails/userDetails/"
+        userDetails.api.url = "${casBaseUrl}/userdetails/userDetails/"
         logging.dir = '.'
         upload.images.path = '/tmp'
         upload.images.url = grails.serverURL+'/image/'
