@@ -220,7 +220,8 @@ grails {
 ehcache.directory = '/data/fieldcapture/ehcache'
 
 auth.baseUrl = 'https://auth-test.ala.org.au'
-userDetails.url = "${auth.baseUrl}/userdetails/"
+userDetails.web.url = "${auth.baseUrl}/userdetails/"
+userDetails.api.url = "${auth.baseUrl}/userdetails/userDetails/"
 user.registration.url = "${auth.baseUrl}/userdetails/registration/createAccount"
 security {
     cas {
@@ -296,7 +297,7 @@ environments {
         security.cas.loginUrl="${security.cas.casServerUrlPrefix}/login"
         security.cas.casLoginUrl="${security.cas.casServerUrlPrefix}/login"
         security.cas.logoutUrl="${security.cas.casServerUrlPrefix}/logout"
-        userDetails.url = "${casBaseUrl}/userdetails/userDetails/"
+        userDetails.api.url = "${casBaseUrl}/userdetails/userDetails/"
         logging.dir = '.'
         upload.images.path = '/tmp'
         upload.images.url = grails.serverURL+'/image/'
