@@ -1440,7 +1440,7 @@
           }
         ],
         "modelName": "NHT - Community engagement",
-        "title": "Community/stakeholder engagement",
+        "title": "Community/stakeholder Engagement",
         "viewModel": [
           {
             "type": "section",
@@ -2067,7 +2067,7 @@
           }
         ],
         "modelName": "NHT - Controlling access",
-        "title": "Controlling access",
+        "title": "Controlling Access",
         "viewModel": [
           {
             "columns": [
@@ -3171,7 +3171,7 @@
           }
         ],
         "modelName": "NHT - Pest animal management",
-        "title": "Controlling pest animals",
+        "title": "Controlling Pest Animals",
         "viewModel": [
           {
             "columns": [
@@ -3256,7 +3256,7 @@
                 "items": [
                   {
                     "type": "col",
-                    "css": "span2 col-border-right",
+                    "css": "span3 col-border-right",
                     "items": [
                       {
                         "type": "row",
@@ -3459,7 +3459,7 @@
                   },
                   {
                     "type": "col",
-                    "css": "span2 col-border-right",
+                    "css": "span3 col-border-right",
                     "items": [
                       {
                         "type": "row",
@@ -3475,7 +3475,7 @@
                   },
                   {
                     "type": "col",
-                    "css": "span2 col-border-right",
+                    "css": "span3 col-border-right",
                     "items": [
                       {
                         "type": "row",
@@ -4050,7 +4050,7 @@
           }
         ],
         "modelName": "NHT - Debris removal",
-        "title": "Debris removal",
+        "title": "Debris Demoval",
         "viewModel": [
           {
             "columns": [
@@ -4843,7 +4843,7 @@
           }
         ],
         "modelName": "NHT - Erosion Management",
-        "title": "Erosion management",
+        "title": "Erosion Management",
         "viewModel": [
           {
             "columns": [
@@ -5645,7 +5645,7 @@
           }
         ],
         "modelName": "NHT - Maintaining feral free enclosures",
-        "title": "Establishing and maintaining feral-free enclosures",
+        "title": "Establishing and Maintaining Feral-Free Enclosures",
         "viewModel": [
           {
             "columns": [
@@ -6286,7 +6286,7 @@
           }
         ],
         "modelName": "NHT - Establishing ex-situ breeding programs",
-        "title": "Establishing and maintaining breeding programs",
+        "title": "Establishing and Maintaining Breeding Programs",
         "viewModel": [
           {
             "type": "section",
@@ -6967,7 +6967,7 @@
           }
         ],
         "modelName": "NHT - Establishing Agreements",
-        "title": "Establishing and maintaining agreements",
+        "title": "Establishing and Maintaining Agreements",
         "viewModel": [
           {
             "columns": [
@@ -8352,6 +8352,16 @@
                 "validate": "required,maxSize[3000]"
               },
               {
+                "dataType": "text",
+                "name": "baselineOrIndicatorSurveyTest",
+                "description": "",
+                "constraints": [
+                  "Baseline dataset associated with a project outcome",
+                  "Project progress dataset that is tracking change against an established project baseline dataset"
+                ],
+                "validate": "required"
+              },
+              {
                 "dataType": "number",
                 "name": "numberOfSurveys",
                 "validate": "required,min[1],max[1]",
@@ -8383,7 +8393,7 @@
                           "context-path": "owner.custom.dataSets"
                         },
                         "filter": {
-                          "expression": "serviceId == 13 and progress == 'finished'"
+                          "expression": "serviceId == 13 and progress == 'finished' and type == 'Baseline dataset associated with a project outcome'"
                         }
                       }
                     }
@@ -8943,6 +8953,16 @@
                             "source": "relatedOutcomes",
                             "type": "selectOne",
                             "preLabel": "Which outcome statement/s relates to this survey?"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "items": [
+                          {
+                            "source": "baselineOrIndicatorSurveyTest",
+                            "type": "selectOne",
+                            "preLabel": "Baseline survey or indicator (follow-up) survey?"
                           }
                         ]
                       },
@@ -10201,6 +10221,24 @@
       "template": {
         "dataModel": [
           {
+            "dataType": "number",
+            "name": "totalFloraSurveyIndicator",
+            "validate": "required,min[0],max[1]",
+            "defaultValue": 1
+          },
+          {
+            "dataType": "number",
+            "name": "totalFloraSurveyBaselineInvoiced",
+            "validate": "required,min[0],max[1]",
+            "defaultValue": 1
+          },
+          {
+            "dataType": "number",
+            "name": "totalFloraSurveyIndicatorInvoiced",
+            "validate": "required,min[0],max[1]",
+            "defaultValue": 1
+          },
+          {
             "name": "floraSurveys",
             "dataType": "list",
             "minSize": 1,
@@ -10700,6 +10738,16 @@
             }
           },
           {
+            "dataType": "number",
+            "name": "totalFloraSurveyBaseline",
+            "validate": "required,min[0],max[1]",
+            "decimalPlaces": 0,
+            "defaultValue": 1,
+            "computed": {
+              "expression": "count(floraSurveys, \"baselineOrIndicatorSurvey\")"
+            }
+          },
+          {
             "dataType": "text",
             "name": "comments",
             "validate": "maxSize[1500]"
@@ -10804,6 +10852,75 @@
                   {
                     "type": "literal",
                     "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li></ul>"
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "(i) Total Number of  baseline flora surveys completed for this reporting period",
+                            "source": "totalFloraSurveyBaseline",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "(ii)  Total Number of  indicator flora surveys completed for this reporting period",
+                            "source": "totalFloraSurveyIndicator",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "(iii) Total Number of baseline flora surveys invoiced for this reporting period",
+                            "source": "totalFloraSurveyBaselineInvoiced",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "(iv) Total Number of indicator flora surveys invoiced for this reporting period",
+                            "source": "totalFloraSurveyIndicatorInvoiced",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
                   }
                 ]
               },
@@ -11712,7 +11829,7 @@
           }
         ],
         "modelName": "NHT - Habitat augmentation",
-        "title": "Habitat augmentation",
+        "title": "Habitat Augmentation",
         "viewModel": [
           {
             "columns": [
@@ -14368,7 +14485,7 @@
           }
         ],
         "modelName": "NHT - Fire management",
-        "title": "Implementing fire management actions",
+        "title": "Implementing Fire Management Actions",
         "viewModel": [
           {
             "columns": [
@@ -15115,7 +15232,7 @@
           }
         ],
         "modelName": "NHT - Improving hydrological regimes",
-        "title": "Improving hydrological regimes",
+        "title": "Improving Hydrological Regimes",
         "viewModel": [
           {
             "columns": [
@@ -15924,7 +16041,7 @@
           }
         ],
         "modelName": "NHT - Improving land management practices",
-        "title": "Improving land management practices",
+        "title": "Improving Land Management Practices",
         "viewModel": [
           {
             "columns": [
@@ -16728,7 +16845,7 @@
           }
         ],
         "modelName": "NHT - Disease management",
-        "title": "Managing disease",
+        "title": "Managing Disease",
         "viewModel": [
           {
             "columns": [
@@ -19672,7 +19789,7 @@
           }
         ],
         "modelName": "NHT - Remediating riparian and aquatic areas",
-        "title": "Remediating riparian and aquatic areas",
+        "title": "Remediating Riparian and Aquatic Areas",
         "viewModel": [
           {
             "columns": [
@@ -20518,7 +20635,7 @@
           }
         ],
         "modelName": "NHT - Weed treatment",
-        "title": "Removing weeds",
+        "title": "Removing Weeds",
         "viewModel": [
           {
             "type": "section",
@@ -21376,7 +21493,7 @@
           }
         ],
         "modelName": "NHT - Revegetating habitat",
-        "title": "Revegetating habitat",
+        "title": "Revegetating Habitat",
         "viewModel": [
           {
             "columns": [
@@ -23015,7 +23132,7 @@
           }
         ],
         "modelName": "NHT - Site preparation",
-        "title": "Site preparation",
+        "title": "Site Preparation",
         "viewModel": [
           {
             "columns": [
@@ -25819,7 +25936,7 @@
           }
         ],
         "modelName": "NHT - Emergency Interventions",
-        "title": "Undertaking emergency interventions to prevent extinctions",
+        "title": "Undertaking Emergency Interventions to Prevent Extinctions",
         "viewModel": [
           {
             "columns": [
