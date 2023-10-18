@@ -103,7 +103,10 @@ class ProjectController {
             } else {
                 project.sites?.sort { it.name }
                 project.projectSite = project.sites?.find { it.siteId == project.projectSiteId }
-                def roles = roleService.getRoles()
+                List roles = roleService.getRoles()
+                if (config.supportsParatoo) {
+                    roles = roles + [RoleService.PROJECT_SURVEYOR_ROLE]
+                }
 
                 def members = projectService.getMembersForProjectId(id)
                 def admins = members.findAll { it.role == "admin" }.collect { it.userName }.join(",")
