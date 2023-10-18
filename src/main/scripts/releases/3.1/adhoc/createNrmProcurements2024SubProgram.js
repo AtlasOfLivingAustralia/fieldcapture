@@ -15,248 +15,255 @@ var config =
             "serviceFormName": serviceFormName,
             "programServices": [
                 {
-                    serviceId: 1,
-                    serviceTargetLabels: [ 'Number of baseline datasets synthesised and finalised' ]
+                    "serviceTargets": [
+                        "c3276929-b8a9-4985-a329-49b86f14018c"
+                    ],
+                    "serviceId": 1
                 },
                 {
-                    serviceId: 2,
-                    serviceTargetLabels: [ 'Number of communication materials published' ]
+                    "serviceTargets": [
+                        "69deaaf9-cdc2-439a-b684-4cffdc7f224e"
+                    ],
+                    "serviceId": 2
                 },
                 {
-                    serviceId: 3,
-                    serviceTargetLabels: [
-                        'Number of field days',
-                        'Number of training / workshop events',
-                        'Number of on-ground trials / demonstrations' ]
+                    "serviceTargets": [
+                        "1f8161bc-908b-4ec8-ab7f-edac973a657d",
+                        "88908921-1248-4a7c-b185-51c625c737e3",
+                        "fe9f1a6c-e614-489a-80fa-4d6d76f1cf95"
+                    ],
+                    "serviceId": 3
                 },
                 {
-                    serviceId: 4,
-                    serviceTargetLabels: [
-                        'Number of structures installed',
-                        'Area (ha) of structures installed that control access',
-                        'Length (km) of structures installed that control access'
-                    ]
+                    "serviceTargets": [
+                        "aa0c6b29-285e-4344-987e-dfeaf1d95648",
+                        "a9d98baa-b2ab-4428-82cf-d96185e63aa6",
+                        "c4ea5ce3-4a70-4df8-aff7-ffa929e7df61"
+                    ],
+                    "serviceId": 4
                 },
                 {
-                    serviceId: 5,
-                    serviceTargetLabels: [
-                        'Area (ha) treated for pest animals - initial',
-                        'Area (ha) treated for pest animals - follow-up',
-                        'Length (km) treated for pest animals - follow-up',
-                        'Length (km) treated for pest animals - initial'
-                    ]
+                    "serviceTargets": [
+                        "55d76c03-c89d-40fe-867b-93f7a48ff9c1",
+                        "3cbf653f-f74c-4066-81d2-e3f78268185c",
+                        "3855d565-3b77-497b-90af-addb271aa598",
+                        "5dbfb32a-5933-4d8a-9937-41f350fb5f75"
+                    ],
+                    "serviceId": 5
                 },
                 {
-                    serviceId: 7,
-                    serviceTargetLabels: [
-                        'Area (ha) of erosion control - initial',
-                        'Area (ha) of erosion control - follow-up',
-                        'Length (km) of stream/coastline treated for erosion - initial',
-                        'Length (km) of stream/coastline treated for erosion - follow-up'
-                    ]
+                    "serviceTargets": [
+                        "22771c0d-8403-433b-b468-e36dc16a1d21",
+                        "675cc878-eb80-435f-a841-d89b657fb2e3",
+                        "dd9f8fd4-b6c7-4f09-bbbf-5d721afc7677",
+                        "6f3cb6ab-5c6a-49be-9af9-9226fa751725"
+                    ],
+                    "serviceId": 7
                 },
                 {
-                    serviceId: 8,
-                    serviceTargetLabels: [
-                        'Area (ha) covered by conservation agreements established',
-                        'Area (ha) where implementation activities conducted (implementation/stewardship)'
-                    ]
+                    "serviceTargets": [
+                        "e0b4cc3e-e94a-4c97-81dc-a4cb868c2cc3",
+                        "b0bcfc54-76fa-4659-accf-276c18b50c31"
+                    ],
+                    "serviceId": 8
                 },
                 {
-                    serviceId: 9,
-                    serviceTargetLabels: [
-                        'Number of pest animal-free enclosures - initial',
-                        'Number of pest animal-free enclosures - maintained',
-                        'Number of days maintaining pest animal-free enclosures',
-                        'Area (ha) of pest animal-free enclosure'
-                    ]
+                    "serviceTargets": [
+                        "9416c9f4-48ca-4bd1-8822-cd45ebb56c58",
+                        "2409e649-2ee2-47fd-9e76-ef2ffa07a5e7",
+                        "d58f8dba-109d-4179-b130-a888cd3d303c",
+                        "01686d38-9165-4497-9648-627ef81945a7"
+                    ],
+                    "serviceId": 9
                 },
                 {
-                    serviceId: 10,
-                    serviceTargetLabels: [
-                        'Number of captive breeding and release, translocation, or re-introduction programs established',
-                        'Number of captive breeding and release, translocation, or re-introduction programs maintained'
-                    ]
+                    "serviceTargets": [
+                        "0e2f8d61-b7b4-4d2d-b07c-4fc20bbe326a",
+                        "bb506258-e907-43d3-99bd-0fe0400f654e"
+                    ],
+                    "serviceId": 10
                 },
                 {
-                    serviceId: 12,
-                    serviceTargetLabels: [
-                        'Number of farm management surveys conducted - baseline',
-                        'Number of farm management surveys conducted - indicator'
-                    ]
+                    "serviceTargets": [
+                        "3c83e639-9c19-4b31-a86f-9d2d5e78123b",
+                        "e901be5e-8336-432e-b164-f278abd7430b"
+                    ],
+                    "serviceId": 12
                 },
                 {
-                    serviceId: 13,
-                    serviceTargetLabels: [
-                        'Number of fauna surveys conducted - baseline',
-                        'Number of fauna surveys conducted - indicator'
-                    ]
+                    "serviceTargets": [
+                        "5557288b-190e-4a3f-a60b-4bdff6ca8fe8",
+                        "902df7a8-92f6-420d-9544-47d4b8cf31ca"
+                    ],
+                    "serviceId": 13
                 },
                 {
-                    serviceId: 14,
-                    serviceTargetLabels: [
-                        'Area (ha) treated by fire management action/s - initial',
-                        'Area (ha) treated by fire management action/s - follow-up'
-                    ]
+                    "serviceTargets": [
+                        "9deb3edf-50c7-4b04-a1fb-d1451eadf641",
+                        "360c8b86-360c-4ca3-b1aa-626be56f2b11"
+                    ],
+                    "serviceId": 14
                 },
                 {
-                    serviceId: 15,
-                    serviceTargetLabels: [
-                        'Number of flora surveys conducted - baseline',
-                        'Number of flora surveys conducted - indicator'
-                    ]
+                    "serviceTargets": [
+                        "7c30bc26-829e-4080-8059-27af9285113b",
+                        "158a5544-78e3-4d00-9f1b-62a85a938268"
+                    ],
+                    "serviceId": 15
                 },
                 {
-                    serviceId: 16,
-                    serviceTargetLabels: [
-                        'Area (ha) of augmentation - initial',
-                        'Area (ha) of augmentation - maintained',
-                        'Number of locations where structures installed - initial',
-                        'Number of locations where structures installed - maintained'
-                    ]
+                    "serviceTargets": [
+                        "4aa201ec-2066-40e1-a457-99daa569c8e2",
+                        "f46f096a-a274-426b-adad-702e7cf8fab7",
+                        "3b1403f3-139a-4206-b325-62ebfe05ddc4",
+                        "7cb13c22-3dcd-43e7-808d-e0e26f5c090d"
+                    ],
+                    "serviceId": 16
                 },
                 {
-                    serviceId: 18,
-                    serviceTargetLabels: [
-                        'Number of treatments implemented to improve site eco-hydrology - initial',
-                        'Number of treatments implemented to improve site eco-hydrology - follow-up'
-                    ]
+                    "serviceTargets": [
+                        "5c6db4c1-7fde-452e-8735-e52842fe6217",
+                        "41cb1e2c-59bc-4639-8bf7-fe0f528e006e"
+                    ],
+                    "serviceId": 18
                 },
                 {
-                    serviceId: 42,
-                    serviceTargetLabels: [
-                        'Number of habitat condition assessment surveys conducted - baseline',
-                        'Number of habitat condition assessment surveys conducted - indicator'
-                    ]
+                    "serviceTargets": [
+                        "4f71e00a-2d80-488d-9ce4-947e60589149",
+                        "69a2ffba-41e9-406e-8ea4-5bdeee92cbde"
+                    ],
+                    "serviceId": 42
                 },
                 {
-                    serviceId: 17,
-                    serviceTargetLabels: [ 'Number of potential sites assessed' ]
+                    "serviceTargets": [
+                        "26ea592f-ee39-4e6e-b6af-5b53fb1a5675"
+                    ],
+                    "serviceId": 17
                 },
                 {
-                    serviceId: 19,
-                    serviceTargetLabels: [
-                        'Area (ha) covered by practice change - initial',
-                        'Area (ha) covered by practice change - follow-up'
-                    ]
+                    "serviceTargets": [
+                        "3587a984-68f9-4db3-b5af-49f265d853e0",
+                        "9d2d01be-b517-4be2-a225-8b1c887e016e"
+                    ],
+                    "serviceId": 19
                 },
                 {
-                    serviceId: 20,
-                    serviceTargetLabels: [
-                        'Area (ha) for disease treatment/prevention - initial',
-                        'Area (ha) for disease treatment/prevention - follow-up',
-                        'Length (km) for disease treatment/prevention - initial',
-                        'Length (km) for disease treatment/prevention - follow-up'
-                    ]
+                    "serviceTargets": [
+                        "d0516817-5acb-46bd-9871-2696c245bad0",
+                        "7fed132d-6a38-448c-b519-381ab9e1e027",
+                        "e08dda14-360c-4b66-b8c5-eb0269c5aa44",
+                        "f3671aa7-773f-447d-9649-ba7f11dbe97a"
+                    ],
+                    "serviceId": 20
                 },
                 {
-                    serviceId: 23,
-                    serviceTargetLabels: [
-                        'Number of pest animal surveys conducted - baseline',
-                        'Number of pest animal surveys conducted - indicator'
-                    ]
+                    "serviceTargets": [
+                        "5ab2b539-a5b4-40da-a556-a2c18066345b",
+                        "36410625-05f3-42d3-b04f-a3b268498ee1"
+                    ],
+                    "serviceId": 23
                 },
                 {
-                    serviceId: 24,
-                    serviceTargetLabels: [
-                        'Number of seed germination/plant survival surveys completed - indicator'
-                    ]
+                    "serviceTargets": [
+                        "0162246b-13fd-40c9-ae26-fb767eee76f8"
+                    ],
+                    "serviceId": 24
                 },
                 {
-                    serviceId: 26,
-                    serviceTargetLabels: [
-                        'Area (ha) of remediation of riparian/aquatic areas - initial',
-                        'Area (ha) of remediation of riparian/aquatic areas - follow-up',
-                        'Length (km) of remediation of riparian/aquatic areas - initial',
-                        'Length (km) of remediation of riparian/aquatic areas - follow-up',
-                    ]
+                    "serviceTargets": [
+                        "b9e710e4-7dd3-4acc-ac2c-c69f4bcb9787",
+                        "00934509-f102-4d39-a043-7547a8ab9ac8",
+                        "1021bec7-3836-4b33-90b4-76701efd4fe3",
+                        "4dad393e-cbf7-43dd-87bb-62ea8f8afcdd"
+                    ],
+                    "serviceId": 26
                 },
                 {
-                    serviceId: 27, // Weed treatment
-                    serviceTargetLabels: [
-                        'Area (ha) treated for weeds - initial',
-                        'Area (ha) treated for weeds - follow-up',
-                        'Length (km) treated for weeds - initial',
-                        'Length (km) treated for weeds - follow-up'
-                    ]
+                    "serviceTargets": [
+                        "a516c78d-740f-463b-a1ce-5b02b8c82dd3",
+                        "4cbcb2b5-45cd-42dc-96bf-a9a181a4865b",
+                        "fbc45154-1d60-4f5e-a484-fdff514f9d51",
+                        "85191c99-f56d-46e6-9311-a58c1f37965d"
+                    ],
+                    "serviceId": 27
                 },
                 {
-                    serviceId: 28,
-                    serviceTargetLabels: [
-                        'Area (ha) of habitat revegetated - initial',
-                        'Area (ha) of habitat revegetated - maintained',
-                    ]
+                    "serviceTargets": [
+                        "3cfa82aa-0b38-49c0-be37-0fa61b5b6e3c",
+                        "91e90861-3ba7-4257-a765-6cab24c6f58a"
+                    ],
+                    "serviceId": 28
                 },
                 {
-                    serviceId: 29,
-                    serviceTargetLabels: [
-                        'Number of skills and knowledge surveys conducted - baseline',
-                        'Number of skills and knowledge surveys conducted - indicator'
-                    ]
+                    "serviceTargets": [
+                        "96be68cf-783d-452a-b8fd-3832163f95db",
+                        "e70c70fd-4f31-41dc-a4b4-07f79efc3055"
+                    ],
+                    "serviceId": 29
                 },
                 {
-                    serviceId: 30,
-                    serviceTargetLabels: [
-                        'Number of soil tests conducted - baseline',
-                        'Number of soil tests conducted - indicator',
-                    ]
+                    "serviceTargets": [
+                        "598bd978-0907-4cad-a7a6-ec5a8a8bbdc4",
+                        "d29bd931-1dd1-47c4-b456-c175099ff1df"
+                    ],
+                    "serviceId": 30
                 },
                 {
-                    serviceId: 31,
-                    serviceTargetLabels: [
-                        'Number of interventions - initial',
-                        'Number of interventions - follow-up'
-                    ]
+                    "serviceTargets": [
+                        "6db1ebd7-92c5-49f2-98b7-2faa700fd752",
+                        "524d93b4-5cd1-4d0d-b1f8-d393028220ad"
+                    ],
+                    "serviceId": 31
                 },
                 {
-                    serviceId: 32,
-                    serviceTargetLabels: [
-                        'Number of water quality surveys conducted - baseline',
-                        'Number of water quality surveys conducted - indicator'
-                    ]
+                    "serviceTargets": [
+                        "8040931a-2e6c-41be-9e92-f1035093b2ac",
+                        "5d652e6e-b719-45bf-8ae6-e9f293c24a92"
+                    ],
+                    "serviceId": 32
                 },
                 {
-                    serviceId: 33,
-                    serviceTargetLabels: [
-                        'Number of weed distribution surveys conducted - baseline',
-                        'Number of weed distribution surveys conducted - indicator'
-                    ]
+                    "serviceTargets": [
+                        "f74182bd-7a53-4157-aeb9-eda281bb0234",
+                        "e7b7bb1e-66c2-4140-90f9-9534aa46ffa3"
+                    ],
+                    "serviceId": 33
                 },
                 {
-                    serviceId: 34,
-                    serviceTargetLabels: [
-                        'Area (ha) of debris removal - initial',
-                        'Area (ha) of debris removal - follow-up',
-                        'Length (km) of debris removal - initial',
-                        'Length (km) of debris removal - follow-up'
-                    ]
+                    "serviceTargets": [
+                        "15615a70-ee60-46b8-b5e9-b33d4d88de6b",
+                        "d8dc153b-da23-4f7b-947a-89bc98338d6d",
+                        "5f762c6d-4f42-4458-9855-03c6896959c1",
+                        "5885f105-fc7d-43fd-8c26-c72938a95b76"
+                    ],
+                    "serviceId": 34
                 },
                 {
-                    serviceId: 35,
-                    serviceTargetLabels: [
-                        'Area (ha) of site preparation',
-                        'Length (km) of site preparation'
-                    ]
+                    "serviceTargets": [
+                        "dea1ff8b-f4eb-4987-8073-500bbbf97fcd",
+                        "fba17df1-d5cb-4643-987f-0626055b3c78"
+                    ],
+                    "serviceId": 35
                 },
                 {
-                    serviceId: 36,
-                    serviceTargetLabels: [
-                        'Amount (grams)/number of seeds/cuttings collected',
-                        'Number of days propagating',
-                        'Number of plants propagated'
-                    ]
+                    "serviceTargets": [
+                        "3ec07754-4a7a-46fb-a76d-553921781716",
+                        "fbc2dab8-7454-40f9-94f6-6bf258fcefff",
+                        "7186e284-0cb2-418e-a8cc-4343eb618140"
+                    ],
+                    "serviceId": 36
                 },
                 {
-                    serviceId: 43,
-                    serviceTargetLabels: [
-                        'Number of FTEs invoiced for'
-                    ]
+                    "serviceTargets": [
+                        "3d06b150-bb86-47dc-8ad8-c33a51c3e3b3"
+                    ],
+                    "serviceId": 43
                 },
                 {
-                    serviceId: 44,
-                    serviceTargetLabels: [
-                        'Number of days conducting cultural practices'
-                    ]
+                    "serviceTargets": [
+                        "b8304577-afd8-45e0-8ef4-b71ae10998f5"
+                    ],
+                    "serviceId": 44
                 }
             ]
 
