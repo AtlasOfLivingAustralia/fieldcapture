@@ -1,7 +1,7 @@
 package au.org.ala.merit.command
 
 import au.org.ala.merit.ActivityService
-import au.org.ala.merit.ReportService
+import au.org.ala.merit.PublicationStatus
 import au.org.ala.merit.reports.Reef2050PlanActionReportConfig
 import grails.converters.JSON
 import grails.testing.spring.AutowiredTest
@@ -34,7 +34,7 @@ class Reef2050PlanActionReportSummaryCommandSpec extends Specification implement
 
         then:
         1 * activityService.search( [type    : Reef2050PlanActionReportConfig.REEF_2050_PLAN_ACTION_REPORTING_2018_ACTIVITY_TYPE,
-                                     progress: ActivityService.PROGRESS_FINISHED, publicationStatus: ReportService.REPORT_APPROVED]) >> [reports:[]]
+                                     progress: ActivityService.PROGRESS_FINISHED, publicationStatus: PublicationStatus.APPROVED]) >> [reports:[]]
         reports.size() == 3
     }
 
@@ -44,7 +44,7 @@ class Reef2050PlanActionReportSummaryCommandSpec extends Specification implement
 
         then:
         1 * activityService.search( [type    : Reef2050PlanActionReportConfig.REEF_2050_PLAN_ACTION_REPORTING_2018_ACTIVITY_TYPE,
-                                     progress: ActivityService.PROGRESS_FINISHED, publicationStatus: ReportService.REPORT_APPROVED]) >> [resp:[activities:[[plannedEndDate:'2018-07-01T00:00:00Z']]]]
+                                     progress: ActivityService.PROGRESS_FINISHED, publicationStatus: PublicationStatus.APPROVED]) >> [resp:[activities:[[plannedEndDate:'2018-07-01T00:00:00Z']]]]
         reports.size() == 4
     }
 
@@ -55,7 +55,7 @@ class Reef2050PlanActionReportSummaryCommandSpec extends Specification implement
 
         then:
         1 * activityService.search( [type    : Reef2050PlanActionReportConfig.REEF_2050_PLAN_ACTION_REPORTING_2018_ACTIVITY_TYPE,
-                                     progress: ActivityService.PROGRESS_FINISHED, publicationStatus: ReportService.REPORT_APPROVED]) >> [reports:[]]
+                                     progress: ActivityService.PROGRESS_FINISHED, publicationStatus: PublicationStatus.APPROVED]) >> [reports:[]]
 
         and:
         reports[0].periodStart == null

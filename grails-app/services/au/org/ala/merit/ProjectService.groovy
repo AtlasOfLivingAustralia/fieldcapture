@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import au.org.ala.merit.config.EmailTemplate
+import au.org.ala.merit.PublicationStatus
 import au.org.ala.merit.config.ProgramConfig
 import au.org.ala.merit.config.ReportConfig
 import au.org.ala.merit.reports.ReportGenerationOptions
@@ -606,7 +607,7 @@ class ProjectService  {
         // Some projects have extra stage reports after the end date due to legacy data so this checks we've got the last stage within the project dates
         List validReports = project.reports?.findAll{it.fromDate < project.plannedEndDate ? it.fromDate : project.plannedStartDate}
 
-        List incompleteReports = (validReports?.findAll{it.publicationStatus != ReportService.REPORT_APPROVED && it.publicationStatus != ReportService.REPORT_CANCELLED})?:[]
+        List incompleteReports = (validReports?.findAll{PublicationStatus.requiresAction(it.publicationStatus)})?:[]
 
         return incompleteReports.size() ==1 && incompleteReports[0].reportId == approvedReportId
     }

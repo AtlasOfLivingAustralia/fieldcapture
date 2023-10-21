@@ -56,3 +56,13 @@ ReportStatus = {
         return status && status.toLowerCase() == this.CANCELLED;
     }
 }
+
+PublicationStatus = {
+    PUBLISHED: 'published',
+    SUBMITTED: 'pendingApproval',
+    UNPUBLISHED: '',
+
+    isReadOnly: function(status) {
+        return status && status != this.UNPUBLISHED;
+    }
+}

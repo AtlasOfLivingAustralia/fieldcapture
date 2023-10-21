@@ -3,6 +3,7 @@ package au.org.ala.merit.command
 import au.org.ala.merit.ActivityService
 import au.org.ala.merit.DateUtils
 import au.org.ala.merit.ProjectService
+import au.org.ala.merit.PublicationStatus
 import au.org.ala.merit.ReportService
 import au.org.ala.merit.SettingPageType
 import au.org.ala.merit.SettingService
@@ -109,7 +110,7 @@ class Reef2050PlanActionReportCommand extends Reef2050PlanActionReportConfig imp
                 progress:ActivityService.PROGRESS_FINISHED]
 
         if (approvedActivitiesOnly) {
-            searchCriteria.publicationStatus = ReportService.REPORT_APPROVED
+            searchCriteria.publicationStatus = PublicationStatus.APPROVED
         }
 
         Map resp

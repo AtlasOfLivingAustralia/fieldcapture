@@ -994,6 +994,7 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
         if (!site.type) {
             site.type = 'worksArea';
         }
+        site.readOnly = site.type == 'compound' || PublicationStatus.isReadOnly(site.publicationStatus);
         return site;
     });
     self.selectedSiteIds = ko.computed(function() {
