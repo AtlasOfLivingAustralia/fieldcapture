@@ -117,7 +117,7 @@ class SiteController {
             flash.message = "Access denied: User does not have <b>editor</b> permission to edit site: ${id}"
             redirect(controller:'home', action:'index')
         } else {
-            if (result.site.type == SiteService.SITE_TYPE_COMPOUND) {
+            if (SiteService.isReadOnly(result.site)) {
                 redirect(action:'index', id:id)
             }
             result
@@ -174,7 +174,7 @@ class SiteController {
         List siteIds = payload.siteIds
 
         project?.sites?.each { site ->
-            if (site.type == SiteService.SITE_TYPE_COMPOUND) {
+            if (SiteService.isReadOnly(site)) {
                 siteIds.remove(site.siteId)
             }
         }
@@ -196,7 +196,7 @@ class SiteController {
             return
         }
         Map site = siteService.get(id)
-        if (!projectService.canUserEditProject(userService.getCurrentUserId(), projectId) || site.type == SiteService.SITE_TYPE_COMPOUND) {
+        if (!projectService.canUserEditProject(userService.getCurrentUserId(), projectId) || SiteService.isReadOnly(site)) {
             render status:403, text: "Access denied: User does not have permission to edit sites for project: ${projectId}"
             return
         }
@@ -214,7 +214,7 @@ class SiteController {
     def ajaxDelete(String id) {
         // permissions check
         Map site = siteService.get(id)
-        if (!isUserMemberOfSiteProjects(site) || site.type == SiteService.SITE_TYPE_COMPOUND) {
+        if (!isUserMemberOfSiteProjects(site) || SiteService.isReadOnly(site)) {
             render status:403, text: "Access denied: User does not have permission to edit site: ${id}"
             return
         }
@@ -234,7 +234,7 @@ class SiteController {
         log.debug("Updating site: " + id)
         Map site = siteService.get(id)
         // permissions check
-        if (!isUserMemberOfSiteProjects(site) || site.type == SiteService.SITE_TYPE_COMPOUND) {
+        if (!isUserMemberOfSiteProjects(site) || SiteService.isReadOnly(site)) {
             render status:403, text: "Access denied: User does not have permission to edit site: ${id}"
             return
         }

@@ -42,7 +42,7 @@
                 </thead>
                 <tbody data-bind="foreach: sites">
                 <tr>
-                    <th><input type="checkbox" name="select-site" data-bind="checked:selected, enable:!readOnly()"></th>
+                    <th><input type="checkbox" name="select-site" data-bind="checked:selected, enable:!readOnly"></th>
                     <td>
                         <g:if test="${editable}">
                             <span>
