@@ -24,7 +24,7 @@
                 activityViewUrl: "${createLink(controller: 'activity', action: 'index')}",
                 siteCreateUrl: "${createLink(controller: 'site', action: 'createForProject', params: [projectId:project.projectId])}",
                 siteSelectUrl: "${createLink(controller: 'site', action: 'select', params:[projectId:project.projectId, returnTo:createLink(controller: 'project', action: 'index', id: project.projectId)])}",
-                siteUploadUrl: "${createLink(controller: 'site', action: 'siteUpload', params:[projectId:project.projectId, returnTo:createLink(controller: 'project', action: 'index', id: project.projectId)])}",
+                siteUploadUrl: "${createLink(controller: 'site', action: 'siteUpload', id: project.projectId)}",
                 starProjectUrl: "${createLink(controller: 'project', action: 'starProject')}",
                 addUserRoleUrl: "${createLink(controller: 'user', action: 'addUserAsRoleToProject')}",
                 removeUserWithRoleUrl: "${createLink(controller: 'user', action: 'removeUserWithRole')}",
@@ -55,6 +55,8 @@
                 projectReportUrl: "${createLink(controller:'project', action:'projectReport', id:project.projectId)}",
                 projectReportPDFUrl: "${createLink(controller:'project', action:'projectReportPDF', id:project.projectId)}",
                 meriPlanPDFUrl: "${createLink(controller:'project', action:'viewMeriPlan', id:project.projectId)}",
+                meriPlanChangesUrl: "${createLink(controller:'project', action:'viewMeriPlanChanges', id:project.projectId)}",
+                viewMeriPlanChangesUrl: "${createLink(controller:'project', action:"viewMeriPlanChanges", id:project.projectId)}",
                 sitesPhotoPointsUrl: "${createLink(controller:'project', action:'projectSitePhotos', id:project.projectId)}",
                 organisationSearchUrl: "${createLink(controller: 'organisation', action: 'search')}",
                 submitReportUrl: "${createLink(controller: 'project', action: 'ajaxSubmitReport', id:project.projectId)}/",
@@ -67,7 +69,7 @@
                 reportCreateUrl: '${g.createLink( action:'createReport', id:project.projectId)}',
                 viewReportUrl: '${createLink(action:"viewReport", id:project.projectId)}',
                 editReportUrl: "${createLink(action:"editReport", id:project.projectId)}",
-                reportPDFUrl: "${createLink(action:"reportPDF", id:project.projectId)}",
+                reportPDFUrl: "${createLink(action:"printableReport", id:project.projectId)}",
                 deleteActivitiesUrl: "${createLink(controller: 'project', action: 'ajaxDeleteReportActivities', id:project.projectId)}/",
                 submitPlanUrl: "${createLink(controller:'project', action:'ajaxSubmitPlan', id:project.projectId)}",
                 modifyPlanUrl: "${createLink(controller:'project', action:'ajaxRejectPlan', id:project.projectId)}",
@@ -99,7 +101,7 @@
                 monitoringProtocolsUrl:"${createLink(action:'monitoringProtocolFormCategories', id: project.projectId)}"
 
             },
-            here = window.location.href;
+            here = "${createLink(action:'index', id: project.projectId)}";
 
         fcConfig.project = <fc:renderProject project="${project}"/>;
     </script>
@@ -259,6 +261,8 @@
 
 var config = {
     meriPlanPDFUrl: fcConfig.meriPlanPDFUrl,
+    meriPlanChangesUrl: fcConfig.meriPlanChangesUrl,
+    viewMeriPlanChangesUrl: fcConfig.viewMeriPlanChangesUrl,
     saveTargetsUrl: fcConfig.projectUpdateUrl,
     documentUpdateUrl: fcConfig.documentUpdateUrl,
     projectUpdateUrl: fcConfig.projectUpdateUrl,
@@ -491,7 +495,7 @@ var config = {
             //Page loading indicator.
 			$('.spinner').hide();
         	$('.tab-content').fadeIn();
-        	$('.programId').select2({theme: "bootstrap4"});
+        	$('.programId').select2({theme: "bootstrap"});
 
         	new LockService({unlockUrl:fcConfig.unlockActivityUrl}).unlockAll();
 

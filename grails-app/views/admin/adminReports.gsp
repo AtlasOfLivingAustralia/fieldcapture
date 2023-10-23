@@ -81,7 +81,7 @@
         <div class="form-group row">
             <div class="col-sm-4 mr-3"></div>
             <div class="controls">
-            <button class="btn btn-sm btn-success" data-bind="click:go">View Report</button>
+            <button id="viewReportBtn" class="btn btn-sm btn-success" data-bind="click:go">View Report</button>
             </div>
         </div>
     </form>

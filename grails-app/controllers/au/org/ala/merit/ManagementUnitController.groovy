@@ -1,22 +1,15 @@
 package au.org.ala.merit
 
 import au.org.ala.merit.command.EditManagementUnitReportCommand
-import au.org.ala.merit.command.ManagementUnitReportCommand
 import au.org.ala.merit.command.PrintManagementUnitReportCommand
 import au.org.ala.merit.command.SaveReportDataCommand
 import au.org.ala.merit.command.ViewManagementUnitReportCommand
 import au.org.ala.merit.util.ProjectGroupingHelper
 import grails.converters.JSON
 import grails.core.GrailsApplication
-import grails.plugin.cache.Cacheable
 import grails.web.mapping.LinkGenerator
 import org.apache.http.HttpStatus
-
-import java.text.DateFormat
 import java.text.ParseException
-import java.text.SimpleDateFormat
-
-import static ReportService.ReportMode
 
 /**
  * Processes requests relating to MUs
@@ -29,7 +22,6 @@ class ManagementUnitController {
 
     ReportService reportService
     ActivityService activityService
-    PdfGenerationService pdfGenerationService
     ProjectService projectService
     ProjectGroupingHelper projectGroupingHelper
 
@@ -239,19 +231,6 @@ class ManagementUnitController {
         chain(action:'editReport', id:id, params:[reportId:reportId])
     }
 
-    private Map activityReportModel(String managementUnitId, String reportId, ReportMode mode, Integer formVersion = null) {
-        Map mu = managementUnitService.get(managementUnitId)
-        Map config = mu.config
-        Map model = reportService.activityReportModel(reportId, mode, formVersion)
-
-        model.context = mu
-        model.returnTo = createLink(action:'index', id:managementUnitId)
-        model.contextViewUrl = model.returnTo
-        model.reportHeaderTemplate = '/managementUnit/managementUnitReportHeader'
-        model.config = config
-        model
-    }
-
     @PreAuthorise(accessLevel = 'readOnly', redirectController = 'managementUnit')
     def viewReport(ViewManagementUnitReportCommand cmd) {
         if (cmd.hasErrors()) {
@@ -262,38 +241,15 @@ class ManagementUnitController {
         render model:cmd.model, view:'/activity/activityReportView'
     }
 
-    @PreAuthorise(accessLevel = 'readOnly', redirectController = 'managementUnit')
-    def reportPDF(String id, String reportId) {
-
-        if (!id || !reportId) {
-            error('An invalid report was selected for download', id)
+    @PreAuthorise(accessLevel = 'readOnly')
+    def printManagementUnitReport(PrintManagementUnitReportCommand cmd) {
+        if (cmd.hasErrors()) {
+            error(cmd.errors.toString(), cmd.id)
             return
         }
-        Map reportUrlConfig = [action: 'viewReportCallback', id: id, params:[reportId:reportId]]
 
-        Map pdfGenParams = [:]
-        if (params.orientation) {
-            pdfGenParams.orientation = params.orientation
-        }
-        boolean result = pdfGenerationService.generatePDF(reportUrlConfig, pdfGenParams, response)
-        if (!result) {
-            render view: '/error', model: [error: "An error occurred generating the project report."]
-        }
-    }
+        render model:cmd.model, view:'/activity/activityReportView'
 
-    /**
-     * This is designed as a callback from the PDF generation service.  It produces a HTML report that will
-     * be converted into PDF.
-     * @param id the project id
-     */
-    def viewReportCallback(PrintManagementUnitReportCommand cmd) {
-
-        if (pdfGenerationService.authorizePDF(request)) {
-            render view:'/activity/activityReportView', model:cmd.model
-        }
-        else {
-            render status:HttpStatus.SC_UNAUTHORIZED
-        }
     }
 
     @PreAuthorise(accessLevel = 'editor')

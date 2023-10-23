@@ -1669,8 +1669,11 @@ class ProjectService  {
     }
 
     List outcomesByScores(String projectId, List scoreIds) {
-
         Map project = get(projectId)
+        outcomesByScores(project, scoreIds)
+    }
+
+    List outcomesByScores(Map project, List scoreIds) {
         List outcomes = []
         scoreIds.each { String scoreId ->
             Map target = project.outputTargets?.find{it.scoreId == scoreId}
@@ -1949,6 +1952,19 @@ class ProjectService  {
     /** Returns all assets identified in the project MERI plan */
     List listProjectAssets(Map project) {
         project?.custom?.details?.assets?.collect{it.description}?.findAll{it}
+    }
+
+    List listProjectBaselines(Map project) {
+        project?.custom?.details?.baseline?.rows
+    }
+
+    List listProjectProtocols(Map project) {
+        List<Map> forms = activityService.monitoringProtocolForms()
+        List baselineProtocols = project?.custom?.details?.baseline?.rows?.collect{it.protocols}?.flatten() ?:[]
+        List monitoringProtocols = project?.custom?.details?.monitoring?.rows?.collect{it.protocols}?.flatten() ?:[]
+
+        List modules = (baselineProtocols + monitoringProtocols).unique().findAll{it}
+        forms?.findAll{it.category in modules}
     }
 
     /**

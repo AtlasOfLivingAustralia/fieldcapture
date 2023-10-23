@@ -5,7 +5,7 @@
         <div class="col-12">
             <div class="alert alert-banner">
                 <span style="font-size:${bannerConfig.fontSize?:'1.4em'}">
-                <markdown:renderHtml>${bannerConfig.message}</markdown:renderHtml>
+                <fc:markdownToHtml>${bannerConfig.message}</fc:markdownToHtml>
                 </span>
             </div>
         </div>

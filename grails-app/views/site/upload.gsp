@@ -15,10 +15,10 @@
                 sldPolgonHighlightUrl: "${grailsApplication.config.getProperty('sld.polgon.highlight.url')}",
                 saveSitesUrl: "${createLink(action: 'createSitesFromShapefile')}",
                 siteUploadProgressUrl: "${createLink(action: 'siteUploadProgress')}",
-                cancelSiteUploadUrl: "${createLink(action:'cancelSiteUpload')}"
+                cancelSiteUploadUrl: "${createLink(action:'cancelSiteUpload')}",
+                returnToUrl: "${createLink(controller: 'project', action: 'index', id: projectId)}"
 
-            },
-            returnTo = "${params.returnTo}";
+            };
     </script>
     <asset:stylesheet src="site-bs4.css"/>
 </head>
@@ -50,8 +50,7 @@
             </div>
         </g:if>
 
-        <g:uploadForm class="upload-sites" controller="site" action="siteUpload">
-            <input type="hidden" name="returnTo" value="${returnTo}">
+        <g:uploadForm class="upload-sites" controller="site" action="siteUpload" id="${projectId}">
             <input type="hidden" name="projectId" value="${projectId}">
             <label for="shapefile">Attach shape file (zip format)</label>
             <input id="shapefile" type="file" accept="application/zip, .kml, .kmz" name="shapefile"/>
@@ -186,7 +185,7 @@ $(function() {
         cancelSiteUploadUrl: fcConfig.cancelSiteUploadUrl,
         validationContainerSelector: '#sites-container',
         progressSelector: '#uploadProgress',
-        returnToUrl: '${params.returnTo}'
+        returnToUrl: fcConfig.returnToUrl
         };
 
     $('#uploadProgress').modal({backdrop:'static', show:false});

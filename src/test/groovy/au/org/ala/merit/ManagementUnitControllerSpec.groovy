@@ -58,7 +58,7 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
 
         then:
         1 * managementUnitService.get(managementUnitId) >> managementUnit
-        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.VIEW, null) >> [editable:true, report:[reportId:reportId, managementUnitId:managementUnitId]]
+        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.VIEW, null) >> [editable:true, report:[reportId:reportId, managementUnitId:managementUnitId], activity:[activityId:'a1']]
         view == '/activity/activityReportView'
         model.context == managementUnit
         model.contextViewUrl == '/managementUnit/index/'+managementUnitId
@@ -222,7 +222,7 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
 
         controller.editReport()
         then:
-        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> [editable:true,  report:[reportId:reportId, managementUnitId:managementUnitId]]
+        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> [editable:true,  report:[reportId:reportId, managementUnitId:managementUnitId], activity:[activityId:'a1']]
         view == '/activity/activityReport'
         model.context == mu
         model.contextViewUrl == '/managementUnit/index/'+managementUnitId
@@ -238,7 +238,7 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
         managementUnit.config.requiresActivityLocking = true
 
         when:
-        reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> [editable:false,  report:[reportId:reportId, managementUnitId:managementUnitId]]
+        reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> [editable:false,  report:[reportId:reportId, managementUnitId:managementUnitId], activity:[activityId:'a1']]
         params.id = managementUnitId
         params.reportId = reportId
         params.reportService = reportService
@@ -272,7 +272,7 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
         controller.editReport()
         then:
         1 * managementUnitService.get(managementUnitId) >> managementUnit
-        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> [report:managementUnit.reports[0], editable:true]
+        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> [report:managementUnit.reports[0], editable:true, activity:[activityId:'a1']]
         1 * reportService.lockForEditing(managementUnit.reports[0]) >> [locked:true]
         view == '/activity/activityReport'
     }

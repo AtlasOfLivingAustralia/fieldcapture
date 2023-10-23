@@ -38,8 +38,14 @@ class DataSetControllerSpec extends Specification implements ControllerUnitTest<
         1 * projectService.getProgramConfiguration(project) >> [program:[name:"program 1"]]
         1 * projectService.getAllProjectOutcomes(project) >> ["1", "2"]
         1 * projectService.listProjectInvestmentPriorities(project) >> ["p1"]
+        1 * projectService.listProjectProtocols(project) >> [["name":"p1", "externalId":"p1"]]
+        1 * projectService.listProjectBaselines(project) >> [["code":"b1", baseline:"a baseline"]]
 
-        model == [project:project, projectId:'p1', programName:"program 1", priorities:["p1"], outcomes:["1", "2"], projectOutcomes:[]]
+        model == [project:project, projectId:'p1', programName:"program 1",
+                  priorities:["p1"], outcomes:["1", "2"], projectOutcomes:[],
+                    projectBaselines:[[label:"b1 - a baseline", value:"b1"]],
+                    projectProtocols:[[label:"p1", value:"p1"], [label:'Other', value:'other']]]
+
     }
 
     void "If the project cannot be found when editing a dataset, a 404 is returned"() {
@@ -76,8 +82,14 @@ class DataSetControllerSpec extends Specification implements ControllerUnitTest<
         1 * projectService.getProgramConfiguration(project) >> [program:[name:"program 1"]]
         1 * projectService.getAllProjectOutcomes(project) >> ["1", "2"]
         1 * projectService.listProjectInvestmentPriorities(project) >> ["p1"]
+        1 * projectService.listProjectProtocols(project) >> [["name":"p1", "externalId":"p1"]]
+        1 * projectService.listProjectBaselines(project) >> [["code":"b1", baseline:"a baseline"]]
 
-        model == [project:project, projectId:'p1', programName:"program 1", priorities:["p1"], outcomes:["1", "2"], projectOutcomes:[], dataSet:existingDataSets[1]]
+
+        model == [project:project, projectId:'p1', programName:"program 1", priorities:["p1"],
+                  outcomes:["1", "2"], projectOutcomes:[], dataSet:existingDataSets[1],
+                  projectBaselines:[[label:"b1 - a baseline", value:"b1"]],
+                  projectProtocols:[[label:"p1", value:"p1"], [label:'Other', value:'other']]]
     }
 
     void "The save method delegates to the projectService"() {
@@ -134,7 +146,13 @@ class DataSetControllerSpec extends Specification implements ControllerUnitTest<
         1 * projectService.getProgramConfiguration(project) >> [program:[name:"program 1"]]
         1 * projectService.getAllProjectOutcomes(project) >> ["1", "2"]
         1 * projectService.listProjectInvestmentPriorities(project) >> ["p1"]
+        1 * projectService.listProjectProtocols(project) >> [["name":"p1", "externalId":"p1"]]
+        1 * projectService.listProjectBaselines(project) >> [["code":"b1", baseline:"a baseline"]]
 
-        model == [project:project, projectId:'p1', programName:"program 1", priorities:["p1"], outcomes:["1", "2"], projectOutcomes:[], dataSet:existingDataSets[1]]
+
+        model == [project:project, projectId:'p1', programName:"program 1", priorities:["p1"],
+                  outcomes:["1", "2"], projectOutcomes:[], dataSet:existingDataSets[1],
+                  projectBaselines:[[label:"b1 - a baseline", value:"b1"]],
+                  projectProtocols:[[label:"p1", value:"p1"], [label:'Other', value:'other']]]
     }
 }

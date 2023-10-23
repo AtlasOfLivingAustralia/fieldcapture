@@ -336,7 +336,10 @@ class SiteService {
 
     private Map createSite(String projectId, String name, String description, String externalId, String source, Map geometry, String geometryPid = null) {
 
-        Map values = [type:'worksArea', extent: [source: source, geometry: geometry], projects: [projectId], name: name, description: description, externalId:externalId, visibility:'private']
+        // Spatial portal is now returning a geojson of type 'Feature' instead of a geometry object
+        // support both
+        Map siteGeometry = geometry.geometry ? geometry.geometry : geometry
+        Map values = [type:'worksArea', extent: [source: source, geometry: siteGeometry], projects: [projectId], name: name, description: description, externalId:externalId, visibility:'private']
         if (geometryPid && !"null".equals(geometryPid)) {
             values.extent.geometry.pid = geometryPid
             values.extent.pid = geometryPid
@@ -384,7 +387,7 @@ class SiteService {
     }
 
     Map getSiteGeoJson(String siteId) {
-        webService.getJson2(grailsApplication.config.getProperty('ecodata.baseUrl') + 'site/' + siteId+'.geojson')
+        webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') + 'site/' + siteId+'.geojson')
     }
 
     def lookupLocationMetadataForSite(Map site) {

@@ -2,6 +2,7 @@
 import au.org.ala.merit.hub.HubAwareLinkGenerator
 import au.org.ala.merit.StatisticsFactory
 import au.org.ala.merit.CheckRisksAndThreatsTask
+import au.org.ala.merit.reports.NHTOutputReportData
 import au.org.ala.merit.util.ProjectGroupingHelper
 
 // Place your Spring DSL code here
@@ -17,4 +18,6 @@ beans = {
     checkForRisksAndThreatsTask(CheckRisksAndThreatsTask)
 
     projectGroupingHelper(ProjectGroupingHelper)
+
+    nhtOutputReportData(NHTOutputReportData)
 }

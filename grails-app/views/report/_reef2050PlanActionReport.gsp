@@ -13,7 +13,7 @@
 
 
 <g:if test="${reportText}">
-    <markdown:renderHtml text="${reportText}"/>
+    <fc:markdownToHtml text="${reportText}"/>
 </g:if>
 <g:else>
 

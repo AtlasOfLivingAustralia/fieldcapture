@@ -15,7 +15,7 @@ ProjectStatus = {
 };
 
 PROJECT_EXTERNAL_ID_TYPES =  [
-    'TECH_ONE_CODE', 'INTERNAL_ORDER_NUMBER', 'GRANT_AWARD', 'RELATED_PROJECT'
+    'TECH_ONE_CODE', 'INTERNAL_ORDER_NUMBER', 'GRANT_AWARD', 'RELATED_PROJECT', 'TECH_ONE_CONTRACT_NUMBER'
 ];
 
 /**
@@ -327,6 +327,7 @@ function ProjectService(project, options) {
                         approvedPlans.push(
                             {
                                 openMeriPlanUrl: config.viewHistoricalMeriPlanUrl+"?documentId="+meriPlan.documentId,
+                                openMeriPlanChangesUrl: config.viewMeriPlanChangesUrl+"?documentId="+meriPlan.documentId,
                                 userDisplayName:meriPlan.userDisplayName,
                                 dateApproved:convertToSimpleDate(meriPlan.date, true),
                                 reason:meriPlan.reason,

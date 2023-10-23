@@ -1054,6 +1054,13 @@ createProject({
                 otherOutcomes: ["Partnerships and engagement is built between stakeholders responsible for managing natural resources",
                     "More primary producers adopt risk management practices to improve their sustainability and resilience",
                     "More primary producers and agricultural communities are experimenting with adaptive or transformative NRM practices, systems and approaches that link and contribute to building drought resilience"]
+            },
+            baseline: {
+                rows: [
+                    {
+                        code:'b1', baseline:'baseline 1', protocols:['Category 1', 'Category 2']
+                    }
+                ]
             }
         }
     }
@@ -1493,7 +1500,7 @@ const monitorProject = {
             baseline: {
                     rows: [
                         {
-                            protocols:['Category 1', 'Category 2']
+                            code:'b1', baseline:'baseline 1', protocols:['Category 1', 'Category 2']
                         }
                     ]
                 }

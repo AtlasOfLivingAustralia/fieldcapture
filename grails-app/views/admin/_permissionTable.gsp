@@ -70,7 +70,11 @@
                             $clone.find('.memUserName').text(el.displayName);
                             $clone.find('.memUserRole select').val(el.role);
                             $clone.find('.memUserRole select').attr("id", el.userId);
-                            $clone.find('.memUserRole span').text(decodeCamelCase(el.role).replace('Case','Grant')); // TODO: i18n this
+                            var roleName = decodeCamelCase(el.role).replace('Case','Grant');
+                            if (_.isFunction(window.$i18n)) {
+                                roleName = $i18n('label.role.'+el.role, roleName);
+                            }
+                            $clone.find('.memUserRole span').text(roleName);
                             $('.membersTbody').append($clone);
                         });
                     } else {

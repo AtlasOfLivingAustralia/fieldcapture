@@ -111,21 +111,9 @@
                                         </div>
                                     </div>
                                 <!-- /ko -->
-                                <div class="row">
-                                    <label for="orientation" class="col-sm-4 col-form-label">PDF Orientation: <fc:iconHelp>If your PDF includes activities with wide tables, the Landscape setting may improve the result.  This setting has no effect on the HTML view. </fc:iconHelp></label>
-                                    <div class="col-sm-8">
-                                        <select name="orientation" id="orientation" class="form-control form-control-sm" data-bind="value:orientation">
-                                            <option value="portrait">Portrait</option>
-                                            <option value="landscape">Landscape</option>
-                                        </select>
-                                    </div>
-
-
-                                </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-sm btn-success" data-bind="click:generateProjectReportHTML">Generate Report (HTML)</button>
-                            <button type="button" class="btn btn-sm btn-warning" data-bind="click:generateProjectReportPDF">Generate Report (PDF)</button>
+                            <button type="button" class="btn btn-sm btn-success" data-bind="click:generateProjectReportHTML">Generate Report</button>
                             <button class="btn btn-sm btn-danger" data-dismiss="modal" aria-label="Cancel">Cancel</button>
                         </div>
                     </div>

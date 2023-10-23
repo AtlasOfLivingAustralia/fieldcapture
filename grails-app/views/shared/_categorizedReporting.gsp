@@ -150,7 +150,7 @@
 
             <a target="print-report" class="btn btn-container btn-sm"
                     data-bind="attr:{href:downloadUrl}, visible:viewable"><i
-                    class="fa fa-download" title="Download a PDF of this report"></i></a>
+                    class="fa fa-download" title="Display a printable version of this report"></i></a>
             <a class="btn btn-container btn-sm disabled-icon" data-bind="visible:!viewable">
                 <i class="fa fa-download" title="Please mark the report as complete before generating a PDF"></i>
             </a>

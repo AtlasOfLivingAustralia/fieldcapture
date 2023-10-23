@@ -24,7 +24,7 @@
             editReportUrl: "${g.createLink(action:'editOrganisationReport', id:organisation.organisationId)}",
             resetReportUrl: "${createLink(action:'resetReport', id:organisation.organisationId)}",
             regenerateOrganisationReportsUrl: "${createLink(action:"regenerateOrganisationReports", id:organisation.organisationId)}",
-            reportPDFUrl: "${g.createLink(action:'performanceReportPDF')}",
+            reportPDFUrl: "${createLink(action:"printOrganisationReport", id:organisation.organisationId)}",
             organisationMembersUrl: "${loadPermissionsUrl}",
             imageLocation:"${assetPath(src:'/')}",
             logoLocation:"${assetPath(src:'/filetypes')}",

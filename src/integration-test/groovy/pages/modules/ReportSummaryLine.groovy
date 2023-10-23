@@ -10,6 +10,7 @@ class ReportSummaryLine extends Module {
         toDate { $('.report-end').text() }
         editLink { $('td.report-actions [data-bind*=editUrl]')}
         viewLink { $('td.report-actions [data-bind*=viewUrl]')}
+        downloadLink { $('td.report-actions [data-bind*=downloadUrl]')}
         submitButton(required:false) { $('button[data-bind*="submitReport"]') }
         approveButton(required:false) { $('button[data-bind*=approveReport]') }
         returnButton(required:false) { $('button[data-bind*=rejectReport]') }
@@ -22,6 +23,10 @@ class ReportSummaryLine extends Module {
 
     def view() {
         viewLink.click()
+    }
+
+    def downloadReport() {
+        downloadLink.click()
     }
 
     def markedAsComplete() {

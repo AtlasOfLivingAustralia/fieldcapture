@@ -197,24 +197,6 @@
             <span data-bind="text:sensitivities"></span><span data-bind="text:otherSensitivity"></span>
         </div>
     </div>
-
-    <div class="form-group row">
-        <div class="col-sm-5">
-            <label class="col-form-label required">21. Primary source of data (organisation that owns or maintains the dataset)</label>
-        </div>
-        <div class="col-sm-7">
-            <span data-bind="text:owner"></span>
-        </div>
-    </div>
-
-    <div class="form-group row">
-        <div class="col-sm-5 col-form-label">
-            <label class="required">22. Dataset custodian (name of organisation to obtain access to dataset)</label>
-        </div>
-        <div class="col-sm-7">
-            <span data-bind="text:custodian"></span>
-        </div>
-    </div>
 </form>
 
 

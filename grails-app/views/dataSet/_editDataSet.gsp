@@ -44,7 +44,7 @@
     <div class="form-group row">
         <label for="investmentPriority" class="col-sm-5 col-form-label required">6. What primary or secondary investment priorities or assets does this dataset relate to?</label>
         <div class="col-sm-7">
-            <g:select multiple="multiple" from="${priorities}" name="investmentPriority" class="form-control" id="investmentPriority" data-validation-engine="validate[required]" data-bind="selectedOptions:investmentPriorities"/>
+            <g:select multiple="multiple" from="${priorities}" name="investmentPriority" class="form-control" id="investmentPriority" data-validation-engine="validate[required]" data-bind="multiSelect2:{value:investmentPriorities}"/>
         </div>
 
     </div>
@@ -74,7 +74,7 @@
     <!-- /ko -->
 
     <div class="form-group row">
-        <label for="type" class="col-sm-5 col-form-label required">8. Is this (a) a baseline dataset associated with a project outcome i.e. against which, change will be measured, (b) a project progress dataset that is tracking change against an established project baseline dataset or (c) a standalone, foundational dataset to inform future management interventions?</label>
+        <label for="type" class="col-sm-5 col-form-label required">8a. Is this (a) a baseline dataset associated with a project outcome i.e. against which, change will be measured, (b) a project progress dataset that is tracking change against an established project baseline dataset or (c) a standalone, foundational dataset to inform future management interventions?</label>
         <div class="col-sm-7">
             <select class="form-control" id="type" data-validation-engine="validate[required]" data-bind="value:type">
                 <option></option>
@@ -91,9 +91,24 @@
     </div>
 
     <div class="form-group row">
-        <label for="measurementTypes" class="col-sm-5 col-form-label required">9. What types of measurements or observations does the dataset include? <br/>To select more than one answer, hold down the ‘CTRL’ button whilst selecting an option from the drop-down list</label>
+        <label for="projectBaseline" class="col-sm-5 col-form-label required">8b. Which project baseline does this data set relate to or describe?</label>
         <div class="col-sm-7">
-            <select multiple="multiple" type="text" class="form-control" id="measurementTypes" data-validation-engine="validate[required]" data-bind="multiSelect2:{value:measurementTypes}">
+            <select multiple="multiple" class="form-control" id="projectBaseline" data-validation-engine="validate[required]" data-bind="options:projectBaselines, optionsText:'label', optionsValue:'value', optionsCaption:'Please select...', multiSelect2:{value:baselines}"></select>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="protocol" class="col-sm-5 col-form-label required">9a. What EMSA protocol was used when collecting the data?</label>
+        <div class="col-sm-7">
+            <select class="form-control" id="protocol" data-validation-engine="validate[required]" data-bind="options:projectProtocols, optionsText:'label', optionsValue:'value', optionsCaption:'Please select...', value:protocol">
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="measurementTypes" class="col-sm-5 col-form-label required">9b. What types of measurements or observations does the dataset include? <br/>To select more than one answer, hold down the ‘CTRL’ button whilst selecting an option from the drop-down list</label>
+        <div class="col-sm-7">
+            <select multiple="multiple" type="text" class="form-control" id="measurementTypes" data-validation-engine="validate[required]" data-bind="disable: protocol() != 'other', multiSelect2:{value:measurementTypes}">
                 <option>Abundance</option>
                 <option>Adoption - climate and market demands</option>
                 <option>Adoption - land resource management practices</option>
@@ -136,7 +151,7 @@
     <div class="form-group row">
         <label for="methods" class="col-sm-5 col-form-label required">10. Identify the method(s) used to collect the data. <br/>To select more than one answer, hold down the ‘CTRL’ button whilst selecting an option from the drop-down list</label>
         <div class="col-sm-7">
-            <select class="form-control" multiple="multiple" id="methods" data-validation-engine="validate[required]" data-bind="selectedOptions:methods">
+            <select class="form-control" multiple="multiple" id="methods" data-validation-engine="validate[required]" data-bind="disable: protocol() != 'other', multiSelect2:{value:methods}">
                 <option>Genetic sampling</option>
                 <option>Hair, track, dung sampling</option>
                 <option>Area sampling</option>
@@ -169,7 +184,7 @@
     <div class="form-group row">
         <label for="methodDescription" class="col-sm-5 col-form-label required">11. Describe the method used to collect the data in detail.</label>
         <div class="col-sm-7">
-            <textarea rows="4"  class="form-control" id="methodDescription" placeholder="" data-validation-engine="validate[required,maxSize[2000]]" data-bind="value:methodDescription"></textarea>
+            <textarea rows="4"  class="form-control" id="methodDescription" placeholder="" data-validation-engine="validate[required,maxSize[2000]]" data-bind="disable: protocol() != 'other', value:methodDescription"></textarea>
         </div>
     </div>
     <div class="form-group row">
@@ -315,27 +330,6 @@
 
     </div>
 
-    <div class="form-group row">
-        <div class="col-sm-5">
-            <label for="owner" class="col-form-label required">21. Primary source of data (organisation that owns or maintains the dataset)</label>
-            <p>Please include the organisation name, physical address, email address and phone number where possible. Do not include any details of individual officers</p>
-        </div>
-
-
-        <div class="col-sm-7">
-            <textarea rows="2" class="form-control" id="owner" placeholder="" data-validation-engine="validate[required,maxSize[200]]" data-bind="value:owner"></textarea>
-        </div>
-    </div>
-
-    <div class="form-group row">
-        <div class="col-sm-5 col-form-label">
-            <label for="custodian" class="required">22. Dataset custodian (name of organisation to obtain access to dataset)</label>
-            <p>Please include the organisation name, physical address, email address and phone number where possible. Do not include any details of individual officers.</p>
-        </div>
-        <div class="col-sm-7">
-            <textarea rows="2" class="form-control" id="custodian" placeholder="" data-validation-engine="validate[required,maxSize[300]]" data-bind="value:custodian"></textarea>
-        </div>
-    </div>
 </form>
 
 

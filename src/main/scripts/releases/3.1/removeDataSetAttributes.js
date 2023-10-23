@@ -10,6 +10,8 @@ while (projects.hasNext()) {
         delete dataSet.qa;
         delete dataSet.published;
         delete dataSet.storageType;
+        delete dataSet.custodian;
+        delete dataSet.owner;
     }
     db.project.replaceOne({_id:project._id}, project);
     audit(project, project.projectId, 'au.org.ala.ecodata.Project', adminUserId);

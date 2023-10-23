@@ -931,7 +931,7 @@ class ReportService {
             model.themes = []
             model.locked = activity.lock != null
         }
-        else if (mode == ReportMode.PRINT) {
+        if (mode == ReportMode.PRINT) {
             model.printView = true
         }
         // Custom report types don't necessarily have an associated activity but the canEdit only uses that

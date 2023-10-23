@@ -30,7 +30,7 @@ class RoleService {
     public static final String PROJECT_FC_READ_ONLY_ROLE = 'ROLE_FC_READ_ONLY'
     public static final String PROJECT_FC_OFFICER_ROLE = 'ROLE_FC_OFFICER'
     public static final String PROJECT_FC_ADMIN_ROLE = 'ROLE_FC_ADMIN'
-
+    public static final String PROJECT_SURVEYOR_ROLE = 'projectParticipant'
 
     /**
      * A check against this role will pass if the user has any hub or any Project role.  This is more of a permission
@@ -105,7 +105,7 @@ class RoleService {
     }
 
     Set getAllowedUserRoles() {
-        return new HashSet([PROJECT_ADMIN_ROLE, PROJECT_EDITOR_ROLE])
+        return new HashSet([PROJECT_ADMIN_ROLE, PROJECT_EDITOR_ROLE, PROJECT_SURVEYOR_ROLE])
     }
 
     public Set getHubRoles() {

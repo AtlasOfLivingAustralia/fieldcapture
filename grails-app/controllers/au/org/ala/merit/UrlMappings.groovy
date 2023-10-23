@@ -118,6 +118,16 @@ class UrlMappings {
             action = 'download'
         }
 
+        "/site/siteUpload/$projectId" {
+            controller = 'site'
+            action = 'upload'
+        }
+
+        "/site/upload/$projectId" {
+            controller = 'site'
+            action = 'upload'
+        }
+
         "500"(view:'/error')
         "404"(view:'/404')
         "/$hub/$controller/ws/$action/$id" {
