@@ -206,7 +206,7 @@ class ProjectController {
         else if (template == RLP_TEMPLATE) {
 
             // The RLP Project Template doesn't need site details or activities.
-            project.sites = new JSONArray(project.sites?.collect{new JSONObject([name:it.name, siteId:it.siteId, lastUpdated:it.lastUpdated, type:it.type, extent:[:]])} ?: [])
+            project.sites = new JSONArray(project.sites?.collect{new JSONObject([name:it.name, siteId:it.siteId, lastUpdated:it.lastUpdated, type:it.type, extent:[:], publicationStatus:it.publicationStatus])} ?: [])
             project.remove('activities')
             model.overview.template = 'rlpOverview'
 

@@ -42,13 +42,13 @@
                 </thead>
                 <tbody data-bind="foreach: sites">
                 <tr>
-                    <th><input type="checkbox" name="select-site" data-bind="checked:selected, enable:type != 'compound'"></th>
+                    <th><input type="checkbox" name="select-site" data-bind="checked:selected, enable:!readOnly"></th>
                     <td>
                         <g:if test="${editable}">
                             <span>
-                                <button type="button" data-bind="click:$root.editSite, visible:type != 'compound'" class="btn btn-sm btn-container"><i class="fa fa-edit" title="Edit ${wordForSite.capitalize()}"></i></button>
+                                <button type="button" data-bind="click:$root.editSite, visible:!readOnly" class="btn btn-sm btn-container"><i class="fa fa-edit" title="Edit ${wordForSite.capitalize()}"></i></button>
                                 <button type="button" data-bind="click:$root.viewSite" class="btn btn-sm btn-container"><i class="fa fa-eye" title="View ${wordForSite.capitalize()}"></i></button>
-                                <button type="button" data-bind="click:$root.deleteSite, visible:type != 'compound'" class="btn btn-sm btn-container"><i class="fa fa-remove" title="Delete ${wordForSite.capitalize()}"></i></button>
+                                <button type="button" data-bind="click:$root.deleteSite, visible:!readOnly" class="btn btn-sm btn-container"><i class="fa fa-remove" title="Delete ${wordForSite.capitalize()}"></i></button>
                             </span>
                         </g:if>
                     </td>

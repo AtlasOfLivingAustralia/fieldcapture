@@ -59,7 +59,7 @@
 
                     Site Actions:
                     <div class="btn-group">
-                        <g:if test="${site.type != au.org.ala.merit.SiteService.SITE_TYPE_COMPOUND}">
+                        <g:if test="${!au.org.ala.merit.SiteService.isReadOnly(site)}">
                             <g:link action="edit" id="${site.siteId}"><button type="button" class="btn btn-sm mr-1"><i class="fa fa-edit"></i> Edit Site</button></g:link>
                         </g:if>
 

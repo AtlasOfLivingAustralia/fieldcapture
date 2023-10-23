@@ -2,6 +2,7 @@ package au.org.ala.merit
 
 import au.org.ala.merit.config.EmailTemplate
 import au.org.ala.merit.config.ProgramConfig
+import au.org.ala.merit.PublicationStatus
 import au.org.ala.merit.config.ReportConfig
 import au.org.ala.merit.reports.ReportOwner
 import au.org.ala.web.AuthService
@@ -168,7 +169,7 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         setup:
         def project = project('2015-01-01T00:00:00Z', '2017-07-01T00:00:00Z')
         project.reports = reports()
-        project.reports[0].publicationStatus = ReportService.REPORT_APPROVED
+        project.reports[0].publicationStatus = PublicationStatus.APPROVED
         projectService.get(_, _) >> project
 
         when:
@@ -184,10 +185,10 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         setup:
         def project = project('2015-01-01T00:00:00Z', '2017-01-01T00:00:00Z')
         project.reports = reports()
-        project.reports[0].publicationStatus = ReportService.REPORT_APPROVED
-        project.reports[1].publicationStatus = ReportService.REPORT_APPROVED
-        project.reports[2].publicationStatus = ReportService.REPORT_APPROVED
-        project.reports[3].publicationStatus = ReportService.REPORT_APPROVED
+        project.reports[0].publicationStatus = PublicationStatus.APPROVED
+        project.reports[1].publicationStatus = PublicationStatus.APPROVED
+        project.reports[2].publicationStatus = PublicationStatus.APPROVED
+        project.reports[3].publicationStatus = PublicationStatus.APPROVED
 
         projectService.get(_, _) >> project
 
@@ -203,10 +204,10 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         setup:
         def project = project('2015-01-01T00:00:00Z', '2017-01-07T00:00:00Z')
         project.reports = reports()
-        project.reports[0].publicationStatus = ReportService.REPORT_APPROVED
-        project.reports[1].publicationStatus = ReportService.REPORT_APPROVED
-        project.reports[2].publicationStatus = ReportService.REPORT_APPROVED
-        project.reports[3].publicationStatus = ReportService.REPORT_APPROVED
+        project.reports[0].publicationStatus = PublicationStatus.APPROVED
+        project.reports[1].publicationStatus = PublicationStatus.APPROVED
+        project.reports[2].publicationStatus = PublicationStatus.APPROVED
+        project.reports[3].publicationStatus = PublicationStatus.APPROVED
 
         projectService.get(_, _) >> project
 
@@ -225,9 +226,9 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         setup:
         def project = project('2015-01-01T00:00:00Z', '2015-12-31T13:00:00Z')
         project.reports = reports()
-        project.reports[0].publicationStatus = ReportService.REPORT_APPROVED
-        project.reports[1].publicationStatus = ReportService.REPORT_APPROVED
-        project.reports[2].publicationStatus = ReportService.REPORT_SUBMITTED
+        project.reports[0].publicationStatus = PublicationStatus.APPROVED
+        project.reports[1].publicationStatus = PublicationStatus.APPROVED
+        project.reports[2].publicationStatus = PublicationStatus.SUBMITTED
 
         projectService.get(_, _) >> project
 
@@ -248,7 +249,7 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         setup:
         def project = project('2016-04-15T00:00:00Z', '2017-06-29T14:00:00Z') // End date extended by 6 months
         project.reports = [
-                [reportId:'1', fromDate: '2016-01-01T00:00:00Z', toDate: '2016-07-01T00:00:00Z', submissionDate: '2016-07-01T00:00:00Z', dueDate: '', type: 'Activity', name: 'Stage 1', description: "Stage 1 for project", projectId: 'p1', category:'Stage reports', publicationStatus:ReportService.REPORT_APPROVED],
+                [reportId:'1', fromDate: '2016-01-01T00:00:00Z', toDate: '2016-07-01T00:00:00Z', submissionDate: '2016-07-01T00:00:00Z', dueDate: '', type: 'Activity', name: 'Stage 1', description: "Stage 1 for project", projectId: 'p1', category:'Stage reports', publicationStatus:PublicationStatus.APPROVED],
                 [reportId:'2', fromDate: '2016-07-01T00:00:00Z', toDate: '2017-01-01T00:00:00Z', submissionDate: '2017-01-01T00:00:00Z', dueDate: '', type: 'Activity', name: 'Stage 2', description: "Stage 2 for project", projectId: 'p1', category:'Stage reports']]
         projectService.get(_, _) >> project
 

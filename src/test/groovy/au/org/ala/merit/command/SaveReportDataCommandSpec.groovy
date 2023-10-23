@@ -1,6 +1,7 @@
 package au.org.ala.merit.command
 
 import au.org.ala.merit.ActivityService
+import au.org.ala.merit.PublicationStatus
 import au.org.ala.merit.ReportService
 import au.org.ala.merit.SiteService
 import org.apache.http.HttpStatus
@@ -50,8 +51,8 @@ class SaveReportDataCommandSpec extends Specification {
                 savedData:[activityId:'a2'],
                 report:[reportId:'r2']
         ]
-        Map r1Report = [reportId:jsonData.reportId, publicationStatus:ReportService.REPORT_NOT_APPROVED, activityId:jsonData.activityId]
-        Map savedActivity = [activityId:jsonData.activityId, publicationStatus: ReportService.REPORT_NOT_APPROVED, progress:ActivityService.PROGRESS_PLANNED]
+        Map r1Report = [reportId:jsonData.reportId, publicationStatus:PublicationStatus.NOT_APPROVED, activityId:jsonData.activityId]
+        Map savedActivity = [activityId:jsonData.activityId, publicationStatus: PublicationStatus.NOT_APPROVED, progress:ActivityService.PROGRESS_PLANNED]
         reportService.get(jsonData.reportId) >> r1Report
         activityService.get(jsonData.activityId) >> savedActivity
 
@@ -73,8 +74,8 @@ class SaveReportDataCommandSpec extends Specification {
                 reportId:'r1',
                 site:[siteId:'s2']
         ]
-        Map r1Report = [reportId:jsonData.reportId, publicationStatus:ReportService.REPORT_NOT_APPROVED, activityId:jsonData.activityId]
-        Map savedActivity = [activityId:jsonData.activityId, publicationStatus: ReportService.REPORT_NOT_APPROVED, progress:ActivityService.PROGRESS_PLANNED, siteId:'s1']
+        Map r1Report = [reportId:jsonData.reportId, publicationStatus:PublicationStatus.NOT_APPROVED, activityId:jsonData.activityId]
+        Map savedActivity = [activityId:jsonData.activityId, publicationStatus: PublicationStatus.NOT_APPROVED, progress:ActivityService.PROGRESS_PLANNED, siteId:'s1']
         reportService.get(jsonData.reportId) >> r1Report
         activityService.get(jsonData.activityId) >> savedActivity
 
@@ -93,8 +94,8 @@ class SaveReportDataCommandSpec extends Specification {
                 activityId:'a2',
                 reportId:'r1'
         ]
-        Map r1Report = [reportId:jsonData.reportId, publicationStatus:ReportService.REPORT_NOT_APPROVED, activityId:'a1']
-        Map savedActivity = [activityId:jsonData.activityId, publicationStatus: ReportService.REPORT_NOT_APPROVED, progress:ActivityService.PROGRESS_PLANNED, siteId:'s1']
+        Map r1Report = [reportId:jsonData.reportId, publicationStatus:PublicationStatus.NOT_APPROVED, activityId:'a1']
+        Map savedActivity = [activityId:jsonData.activityId, publicationStatus: PublicationStatus.NOT_APPROVED, progress:ActivityService.PROGRESS_PLANNED, siteId:'s1']
         reportService.get(jsonData.reportId) >> r1Report
         activityService.get(jsonData.activityId) >> savedActivity
 
@@ -116,8 +117,8 @@ class SaveReportDataCommandSpec extends Specification {
                 ],
                 reportId:'r1'
         ]
-        Map r1Report = [reportId:jsonData.reportId, publicationStatus:ReportService.REPORT_NOT_APPROVED, activityId:jsonData.activityId]
-        Map savedActivity = [activityId:jsonData.activityId, publicationStatus: ReportService.REPORT_NOT_APPROVED, progress:ActivityService.PROGRESS_PLANNED]
+        Map r1Report = [reportId:jsonData.reportId, publicationStatus:PublicationStatus.NOT_APPROVED, activityId:jsonData.activityId]
+        Map savedActivity = [activityId:jsonData.activityId, publicationStatus: PublicationStatus.NOT_APPROVED, progress:ActivityService.PROGRESS_PLANNED]
         reportService.get(jsonData.reportId) >> r1Report
         activityService.get(jsonData.activityId) >> savedActivity
 
@@ -152,8 +153,8 @@ class SaveReportDataCommandSpec extends Specification {
                         ]
                 ]
         ]
-        Map r1Report = [reportId:jsonData.reportId, publicationStatus:ReportService.REPORT_NOT_APPROVED, activityId:jsonData.activityId]
-        Map savedActivity = [activityId:jsonData.activityId, publicationStatus: ReportService.REPORT_NOT_APPROVED, progress:ActivityService.PROGRESS_PLANNED, siteId:jsonData.site.siteId]
+        Map r1Report = [reportId:jsonData.reportId, publicationStatus:PublicationStatus.NOT_APPROVED, activityId:jsonData.activityId]
+        Map savedActivity = [activityId:jsonData.activityId, publicationStatus: PublicationStatus.NOT_APPROVED, progress:ActivityService.PROGRESS_PLANNED, siteId:jsonData.site.siteId]
         reportService.get(jsonData.reportId) >> r1Report
         activityService.get(jsonData.activityId) >> savedActivity
 
@@ -189,8 +190,8 @@ class SaveReportDataCommandSpec extends Specification {
                 ]
         ]
         String siteId = 's1'
-        Map r1Report = [reportId:jsonData.reportId, publicationStatus:ReportService.REPORT_NOT_APPROVED, activityId:jsonData.activityId]
-        Map savedActivity = [activityId:jsonData.activityId, publicationStatus: ReportService.REPORT_NOT_APPROVED, progress:ActivityService.PROGRESS_PLANNED, siteId:siteId]
+        Map r1Report = [reportId:jsonData.reportId, publicationStatus:PublicationStatus.NOT_APPROVED, activityId:jsonData.activityId]
+        Map savedActivity = [activityId:jsonData.activityId, publicationStatus: PublicationStatus.NOT_APPROVED, progress:ActivityService.PROGRESS_PLANNED, siteId:siteId]
         reportService.get(jsonData.reportId) >> r1Report
         activityService.get(jsonData.activityId) >> savedActivity
 
@@ -227,8 +228,8 @@ class SaveReportDataCommandSpec extends Specification {
         ]
 
         String siteId = 's1'
-        Map r1Report = [reportId:jsonData.reportId, publicationStatus:ReportService.REPORT_NOT_APPROVED, activityId:jsonData.activityId]
-        Map savedActivity = [activityId:jsonData.activityId, publicationStatus: ReportService.REPORT_NOT_APPROVED, progress:ActivityService.PROGRESS_PLANNED]
+        Map r1Report = [reportId:jsonData.reportId, publicationStatus:PublicationStatus.NOT_APPROVED, activityId:jsonData.activityId]
+        Map savedActivity = [activityId:jsonData.activityId, publicationStatus: PublicationStatus.NOT_APPROVED, progress:ActivityService.PROGRESS_PLANNED]
         reportService.get(jsonData.reportId) >> r1Report
         activityService.get(jsonData.activityId) >> savedActivity
 
@@ -264,8 +265,8 @@ class SaveReportDataCommandSpec extends Specification {
                 ]
         ]
 
-        Map r1Report = [reportId:jsonData.reportId, publicationStatus:ReportService.REPORT_NOT_APPROVED, activityId:jsonData.activityId]
-        Map savedActivity = [activityId:jsonData.activityId, publicationStatus: ReportService.REPORT_NOT_APPROVED, progress:ActivityService.PROGRESS_PLANNED, siteId:siteId]
+        Map r1Report = [reportId:jsonData.reportId, publicationStatus:PublicationStatus.NOT_APPROVED, activityId:jsonData.activityId]
+        Map savedActivity = [activityId:jsonData.activityId, publicationStatus: PublicationStatus.NOT_APPROVED, progress:ActivityService.PROGRESS_PLANNED, siteId:siteId]
         reportService.get(jsonData.reportId) >> r1Report
         activityService.get(jsonData.activityId) >> savedActivity
 

@@ -14,11 +14,6 @@ import org.joda.time.Period
 @Slf4j
 class ReportService {
 
-    public static final String REPORT_APPROVED = 'published'
-    public static final String REPORT_SUBMITTED = 'pendingApproval'
-    public static final String REPORT_NOT_APPROVED = 'unpublished'
-    public static final String REPORT_CANCELLED = 'cancelled'
-
     public static final int HOME_PAGE_IMAGE_SIZE = 500
 
     public static final String REPORT_TYPE_SINGLE_ACTIVITY = 'Single'
@@ -168,11 +163,11 @@ class ReportService {
     }
 
     boolean excludesNotApproved(Map report) {
-        return report.publicationStatus == REPORT_SUBMITTED || report.publicationStatus == REPORT_APPROVED || report.publicationStatus == REPORT_CANCELLED
+        return PublicationStatus.isReadOnly(report.publicationStatus)
     }
 
     boolean isApproved(Map report) {
-        return report.publicationStatus == REPORT_APPROVED
+        return PublicationStatus.isApproved(report.publicationStatus)
     }
 
     List search(Map criteria) {
@@ -887,7 +882,7 @@ class ReportService {
         Map filter = state?[type:'DISCRETE', property:'data.state']:[:]
         Map config = [groups:filter, childAggregations: aggregations, label:'Performance assessment by state']
 
-        Map searchCriteria = [type:['Performance Management Framework - Self Assessment', 'Performance Management Framework - Self Assessment v2'], publicationStatus:REPORT_APPROVED, dateProperty:'toDate', 'startDate':(year-1)+'-07-01T10:00:00Z', 'endDate':year+'-07-01T10:00:00Z']
+        Map searchCriteria = [type:['Performance Management Framework - Self Assessment', 'Performance Management Framework - Self Assessment v2'], publicationStatus:PublicationStatus.APPROVED, dateProperty:'toDate', 'startDate':(year-1)+'-07-01T10:00:00Z', 'endDate':year+'-07-01T10:00:00Z']
 
         String url =  grailsApplication.config.getProperty('ecodata.baseUrl')+"report/runReport"
 
