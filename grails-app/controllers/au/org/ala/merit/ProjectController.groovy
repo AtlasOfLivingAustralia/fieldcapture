@@ -1014,9 +1014,9 @@ class ProjectController {
 
     private boolean hasTarget(value) {
         if (value instanceof String) {
-            return value != "0"
+            return value && value != "0"
         }
-        value != 0
+        value && value != 0
     }
 
     private boolean hasFinancialYearTarget(Map targetRow) {
