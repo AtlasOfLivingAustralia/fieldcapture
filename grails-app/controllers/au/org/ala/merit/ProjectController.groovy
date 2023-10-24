@@ -998,12 +998,15 @@ class ProjectController {
     }
 
     private boolean hasTarget(value) {
-        value != 0 && value != "0"
+        if (value instanceof String) {
+            return value && value != "0"
+        }
+        value && value != 0
     }
 
     private boolean hasFinancialYearTarget(Map targetRow) {
         def financialYearTarget = targetRow.financialYearTarget
-        financialYearTarget != 0 && financialYearTarget != "0"
+        hasTarget(financialYearTarget)
     }
 
     @PreAuthorise(accessLevel ='siteAdmin')

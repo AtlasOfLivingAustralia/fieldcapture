@@ -920,6 +920,17 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         response.json == result
     }
 
+    def "The hasTarget method allows the target to be a string for historical reasons"() {
+        expect:
+        controller.hasTarget(0) == false
+        controller.hasTarget("0") == false
+        controller.hasTarget(null) == false
+        controller.hasTarget("") == false
+        controller.hasTarget(1) == true
+        controller.hasTarget("1.1") == true
+        controller.hasTarget("abc") == true // this is accepted for legacy reasons
+    }
+
     private Map stubPublicUser() {
         userServiceStub.getUser() >> null
         null
