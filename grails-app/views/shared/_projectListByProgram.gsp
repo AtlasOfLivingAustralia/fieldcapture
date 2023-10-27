@@ -1,4 +1,6 @@
-
+<g:if test="${reportsFirst}">
+    <g:render template="/shared/categorizedReportsAndDeclaration"/>
+</g:if>
 <div class="projects-wrapper d-none d-md-block">
     <g:if test="${displayedPrograms}">
         <g:each var="programDetails" status="i" in="${displayedPrograms}">
@@ -32,8 +34,6 @@
     </g:if>
 </div>
 
-<!-- ko stopBinding:true -->
-<g:render template="/shared/categorizedReporting"/>
-
-<g:render template="/shared/declaration_bs4" model="${[declarationType:au.org.ala.merit.SettingPageType.RLP_REPORT_DECLARATION]}"/>
-<!-- /ko -->
+<g:if test="${!reportsFirst}">
+    <g:render template="/shared/categorizedReportsAndDeclaration"/>
+</g:if>
