@@ -1800,7 +1800,7 @@ subprograms.forEach(function (subProgram){
     var p = {name: subProgram, programId: UUID.generate(), dateCreated: now, lastUpdate: now, parent: parent._id, status: "active"}
     var program = db.program.find({name: subProgram})
     if (!program.hasNext()) {
-        db.program.insert(p);
+        db.program.insertOne(p);
     } else {
         print("Program Already Exist: " + subProgram)
     }
@@ -1810,10 +1810,7 @@ subprograms.forEach(function (subprogram){
     var program = db.program.find({name: subprogram});
     while(program.hasNext()){
         var p = program.next();
-        p.outcomes = outcomes;
-        p.config = config;
-        p.priorities = priorities;
-        db.program.save(p);
+        db.program.updateOne({programId:p.programId}, {$set:{config:config, outcomes:outcomes, priorities:priorities}});
     }
 });
 
