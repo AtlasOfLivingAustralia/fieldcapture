@@ -1,5 +1,7 @@
 <form id="blogEntry" class="validationEngineContainer">
 
+    <h4><label class="col-form-label row-cols-sm-1" style="font-size: small"><g:message code="attach.document.subtitle"/><a href="https://www.dcceew.gov.au/environment/environmental-information-data/information-policy/sensitive-ecological-data-access-and-management-policy" target="_blank"> <g:message code="attach.document.subtitle.link"/></a>
+        <fc:iconHelp helpTextCode="attach.document.help"></fc:iconHelp></label></h4>
     <div class="form-group row required">
         <label class="control-label col-sm-3"
                for="type">Type: <fc:iconHelp>What type of entry is this?</fc:iconHelp></label>
