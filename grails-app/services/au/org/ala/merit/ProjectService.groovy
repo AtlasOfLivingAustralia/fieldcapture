@@ -1,7 +1,6 @@
 package au.org.ala.merit
 
 import au.org.ala.merit.config.EmailTemplate
-import au.org.ala.merit.PublicationStatus
 import au.org.ala.merit.config.ProgramConfig
 import au.org.ala.merit.config.ReportConfig
 import au.org.ala.merit.reports.ReportGenerationOptions
@@ -14,11 +13,7 @@ import org.apache.commons.lang.CharUtils
 import org.apache.http.HttpStatus
 import org.grails.web.json.JSONArray
 import org.grails.web.json.JSONObject
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
-import org.joda.time.Days
-import org.joda.time.Interval
-import org.joda.time.Period
+import org.joda.time.*
 
 import java.text.SimpleDateFormat
 
@@ -2095,6 +2090,10 @@ class ProjectService  {
      */
     boolean canBulkRegenerateReports(Map project) {
         return project.reports.size() > 0
+    }
+
+    List fetchDataSetRecords (String projectId, String dataSetId) {
+        webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') + "project/$projectId/dataSet/$dataSetId/records")
     }
 
 }

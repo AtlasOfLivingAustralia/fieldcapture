@@ -9,11 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired
  * Custom data for the NHT Output Report.
  */
 class NHTOutputReportData extends ReportData {
+    static final String STAGE_TO_FETCH_RECORDS = 'finished'
 
     @Autowired
     ProjectService projectService
 
     Map getContextData(Map project) {
+        project?.custom?.dataSets?.each { dataSet ->
+            if ((dataSet.progress == STAGE_TO_FETCH_RECORDS) && dataSet.dataSetId) {
+                dataSet.records = projectService.fetchDataSetRecords(project.projectId, dataSet.dataSetId)
+            }
+        }
         return [
             protocols:projectService.listProjectProtocols(project).collect {
                 [label: it.name, value: it.externalId]
