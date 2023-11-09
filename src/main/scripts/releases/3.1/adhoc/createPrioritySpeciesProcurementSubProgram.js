@@ -596,7 +596,7 @@ var outcomes = [
         "targeted": true,
         "shortDescription": "EPBC Species",
         "category": "Threatened Species",
-        "outcome": "1. The trajectory of species targeted under the Threatened Species Action Plan 2022-2032 and other EPBC Act listed Species is improved"
+        "outcome": "1.  Species and Landscapes (Long term): Threatened Species (TS) - The trajectory of species targeted under the Threatened Species Action Plan 2022-2032 and other EPBC Act listed Species is improved"
     },
     {
         "priorities": [
@@ -606,7 +606,7 @@ var outcomes = [
         ],
         "shortDescription": "New extinctions",
         "category": "Threatened Species",
-        "outcome": "2. New extinctions of plants and animals are prevented"
+        "outcome": "1.  Species and Landscapes (Long term): Threatened Species (TS) - New extinctions of plants and animals are prevented"
     },
     {
         "priorities": [
@@ -616,7 +616,29 @@ var outcomes = [
         ],
         "shortDescription": "Threatened Ecological Communities",
         "category": "Threatened Ecological Communities",
-        "outcome": "3. The condition of targeted EPBC Act listed Threatened Ecological Communities and identified priority places under the Threatened Species Action Plan 2022-2032 is improved"
+        "outcome": "1.  Species and Landscapes (Long term): Threatened Ecological Communities (TECs) and priority places - The condition of targeted EPBC Act listed Threatened Ecological Communities and identified priority places under the Threatened Species Action Plan 2022-2032 is improved"
+    },
+    {
+        "priorities": [
+            {
+                "category": "World Heritage"
+            }
+        ],
+        "shortDescription": "World Heritage",
+        "category": "World Heritage",
+        "type": "secondary",
+        "outcome": "2: World Heritage Protection (Long term): The outstanding universal value of world heritage properties listed for their natural heritage value is maintained and improved"
+    },
+    {
+        "priorities": [
+            {
+                "category": "Ramsar"
+            }
+        ],
+        "shortDescription": "Ramsar Sites",
+        "category": "Ramsar",
+        "type": "secondary",
+        "outcome": "3: Ramsar Wetland Protection (Long term): The ecological character of targeted Ramsar sites is maintained and/or improved, building resilience to climate change"
     },
     {
         "category": "Threatened Species",
@@ -626,32 +648,117 @@ var outcomes = [
     {
         "category": "Threatened Species",
         "type": "medium",
-        "outcome": "2.  Species and Landscapes (Medium term): Threatened species - Species at high risk of imminent extinction are identified and supported to persist"
+        "outcome": "1.  Species and Landscapes (Medium term): Threatened species - Species at high risk of imminent extinction are identified and supported to persist"
     },
     {
         "category": "Threatened Species",
         "type": "medium",
-        "outcome": "3.  Species and Landscapes (Medium term): Threatened species - Priority species are being assisted to strengthen reliance and adaptive capacity for climate change"
+        "outcome": "1.  Species and Landscapes (Medium term): Threatened species - Priority species are being assisted to strengthen reliance and adaptive capacity for climate change"
     },
     {
         "category": "Threatened Species",
         "type": "medium",
-        "outcome": "4.  Species and Landscapes (Medium term): Threatened species - Increased leadership and/or participation of First Nations people in the management and recovery of threatened species"
+        "outcome": "1.  Species and Landscapes (Medium term): Threatened species - Increased leadership and/or participation of First Nations people in the management and recovery of threatened species"
     },
     {
         "category": "Threatened Species",
         "type": "medium",
-        "outcome": "5.  Species and Landscapes (Medium term): Threatened Ecological Communities and priority places - The implementation of priority actions is leading to an improvement in the condition of targeted TECs and priority places"
+        "outcome": "1.  Species and Landscapes (Medium term): Threatened Ecological Communities and priority places - The implementation of priority actions is leading to an improvement in the condition of targeted TECs and priority places"
     },
     {
         "category": "Threatened Species",
         "type": "medium",
-        "outcome": "6.  Species and Landscapes (Medium term): Threatened Ecological Communities and priority places - Resilience to climate change and extreme events has been increased"
+        "outcome": "1.  Species and Landscapes (Medium term): Threatened Ecological Communities and priority places - Resilience to climate change and extreme events has been increased"
     },
     {
         "category": "Threatened Species",
         "type": "medium",
-        "outcome": "7.  Species and Landscapes (Medium term): Threatened Ecological Communities and priority places - Increased leadership and/or participation of First Nations people in the management and recovery of threatened ecological communities and priority places"
+        "outcome": "1.  Species and Landscapes (Medium term): Threatened Ecological Communities and priority places - Increased leadership and/or participation of First Nations people in the management and recovery of threatened ecological communities and priority places"
+    },
+    {
+        "category": "World Heritage",
+        "type": "medium",
+        "outcome": "2. World Heritage Protection (Medium term): Threats to the outstanding universal value of world heritage properties listed for their natural heritage value have been reduced through the implementation of priority actions"
+    },
+    {
+        "category": "World Heritage",
+        "type": "medium",
+        "outcome": "2. World Heritage Protection (Medium term): Managing Threats - Threats from climate change, extreme events and invasive species have been reduced"
+    },
+    {
+        "category": "World Heritage",
+        "type": "medium",
+        "outcome": "2. World Heritage Protection (Medium term): Managing Threats - Threats from disease have been reduced"
+    },
+    {
+        "category": "World Heritage",
+        "type": "medium",
+        "outcome": "2. World Heritage Protection (Medium term): Managing Threats - Increased leadership and/or participation of First Nations people in the management of threats to World Heritage properties"
+    },
+    {
+        "category": "Threatened Species",
+        "type": "medium",
+        "outcome": "2. World Heritage Protection (Medium term): Improving land management practices and protecting habitat - Threats from inappropriate fire management are reduced"
+    },
+    {
+        "category": "World Heritage",
+        "type": "medium",
+        "outcome": "2. World Heritage Protection (Medium term): Improving land management practices and protecting habitat - Threats from inappropriate management of human impacts, climate change and extreme events are reduced"
+    },
+    {
+        "category": "World Heritage",
+        "type": "medium",
+        "outcome": "2. World Heritage Protection (Medium term): Improving land management practices and protecting habitat - Increased leadership and/or participation of First Nations people in the management and protection of World Heritage properties"
+    },
+    {
+        "category": "Ramsar",
+        "type": "medium",
+        "outcome": "3. Ramsar Wetland Protection (Medium term): Priority actions at targeted Ramsar sites will reduce threats, restore or maintain ecological character and increase climate change resilience"
+    },
+    {
+        "category": "Ramsar",
+        "type": "medium",
+        "outcome": "3. Ramsar Wetland Protection (Medium term): Managing Threats - The critical components, processes and services of the wetland actively maintained and/or improved"
+    },
+    {
+        "category": "Ramsar",
+        "type": "medium",
+        "outcome": "3. Ramsar Wetland Protection (Medium term): Managing Threats - Absence/reduction of non-native species"
+    },
+    {
+        "category": "Ramsar",
+        "type": "medium",
+        "outcome": "3. Ramsar Wetland Protection (Medium term): Managing Threats - Increased leadership and/or participation of First Nations people in the management of threats to Ramsar sites"
+    },
+    {
+        "category": "Ramsar",
+        "type": "medium",
+        "outcome": "3. Ramsar Wetland Protection (Medium term): Managing Threats - Adaptive management planning and actions are building resilience to extreme climate events"
+    },
+    {
+        "category": "Ramsar",
+        "type": "medium",
+        "outcome": "3. Ramsar Wetland Protection (Medium term): Protecting and Improving Habitat - Wetland biota and/or abundance is maintained and improved"
+    },
+    {
+        "category": "Ramsar",
+        "type": "medium",
+        "outcome": "3. Ramsar Wetland Protection (Medium term): Protecting and Improving Habitat - Hydrological regimes have been restored and maintained"
+    },
+    {
+        "category": "Ramsar",
+        "type": "medium",
+        "outcome": "3. Ramsar Wetland Protection (Medium term): Protecting and Improving Habitat - Improved condition of wetland vegetation/habitat"
+    },
+    {
+        "category": "Ramsar",
+        "type": "medium",
+        "outcome": "3. Ramsar Wetland Protection (Medium term): Protecting and Improving Habitat - Quality of breeding, foraging and roosting habitat is improved"
+    },
+    {
+        "category": "Ramsar",
+        "type": "medium",
+        "outcome": "3. Ramsar Wetland Protection (Medium term): Protecting and Improving Habitat - Increased leadership and/or participation of First Nations people in the restoration and/or maintenance of the ecological character of Ramsar sites"
     },
     {
         "type": "short",
@@ -661,52 +768,127 @@ var outcomes = [
     {
         "type": "short",
         "category": "Threatened Species",
-        "outcome": "2.  Species and Landscapes (Short term): Managing Threats - Threats from disease have been contained, reduced or excluded"
+        "outcome": "1.  Species and Landscapes (Short term): Managing Threats - Threats from disease have been contained, reduced or excluded"
     },
     {
         "type": "short",
         "category": "Threatened Species",
-        "outcome": "3.  Species and Landscapes (Short term): Improving habitat - Land management practices have improved"
+        "outcome": "1.  Species and Landscapes (Short term): Improving habitat - Land management practices have improved"
     },
     {
         "type": "short",
         "category": "Threatened Species",
-        "outcome": "4.  Species and Landscapes (Short term): Improving habitat - Quality of (TS/TECs) habitat has improved"
+        "outcome": "1.  Species and Landscapes (Short term): Improving habitat - Quality of (TS/TECs) habitat has improved"
     },
     {
         "type": "short",
         "category": "Threatened Species",
-        "outcome": "5.  Species and Landscapes (Short term): Improving habitat - Area/Extent of (TS/TECs) habitat has increased"
+        "outcome": "1.  Species and Landscapes (Short term): Improving habitat - Area/Extent of (TS/TECs) habitat has increased"
     },
     {
         "type": "short",
         "category": "Threatened Species",
-        "outcome": "6.  Species and Landscapes (Short term): Improving habitat - Increased connectivity between patches"
+        "outcome": "1.  Species and Landscapes (Short term): Improving habitat - Increased connectivity between patches"
     },
     {
         "type": "short",
         "category": "Threatened Species",
-        "outcome": "7.  Species and Landscapes (Short term): Improving habitat - Quality of breeding and foraging habitat is improved   "
+        "outcome": "1.  Species and Landscapes (Short term): Improving habitat - Quality of breeding and foraging habitat is improved   "
     },
     {
         "type": "short",
         "category": "Threatened Species",
-        "outcome": "8.  Species and Landscapes (Short term): Creating insurance populations - Existing populations have been protected"
+        "outcome": "1.  Species and Landscapes (Short term): Creating insurance populations - Existing populations have been protected"
     },
     {
         "type": "short",
         "category": "Threatened Species",
-        "outcome": "9.  Species and Landscapes (Short term): Creating insurance populations - Re-introductions have enhanced wild populations"
+        "outcome": "1.  Species and Landscapes (Short term): Creating insurance populations - Re-introductions have enhanced wild populations"
     },
     {
         "type": "short",
         "category": "Threatened Species",
-        "outcome": "10.  Species and Landscapes (Short term): Climate adaption and resilience - Climate change resilience and adaptive capacity actions underway"
+        "outcome": "1.  Species and Landscapes (Short term): Climate adaption and resilience - Climate change resilience and adaptive capacity actions underway"
     },
     {
         "type": "short",
         "category": "Threatened Species",
-        "outcome": "11.  Species and Landscapes (Short term): First Nations People and community involvement - First Nations people are leading and/or participating in recovery activities"
+        "outcome": "1.  Species and Landscapes (Short term): First Nations People and community involvement - First Nations people are leading and/or participating in recovery activities"
+    },
+    {
+        "type": "short",
+        "category": "World Heritage",
+        "outcome": "2. World Heritage Protection (Short term): Managing threats - Pest predator and competitor species have been controlled"
+    },
+    {
+        "type": "short",
+        "category": "World Heritage",
+        "outcome": "2. World Heritage Protection (Short term): Managing threats -Threats from disease have been contained or reduced"
+    },
+    {
+        "type": "short",
+        "category": "World Heritage",
+        "outcome": "2. World Heritage Protection (Short term): Improving land management practices and protecting habitat - Inappropriate fire regimes have been reduced or halted"
+    },
+    {
+        "type": "short",
+        "category": "World Heritage",
+        "outcome": "2. World Heritage Protection (Short term): Improving land management practices and protecting habitat - Land management practices have improved (within and around heritage properties)"
+    },
+    {
+        "type": "short",
+        "category": "World Heritage",
+        "outcome": "2. World Heritage Protection (Short term): Improving land management practices and protecting habitat - Actions to reduce nutrient levels have been implemented, and nutrient levels are beginning to stabilise/improve "
+    },
+    {
+        "type": "short",
+        "category": "World Heritage",
+        "outcome": "2. World Heritage Protection (Short term): Climate adaption and resilience - Climate change resilience and adaptive capacity actions underway"
+    },
+    {
+        "type": "short",
+        "category": "World Heritage",
+        "outcome": "2. World Heritage Protection (Short term): First Nations People and community involvement - First Nations people are leading and/or participating in management and protection activities"
+    },
+    {
+        "type": "short",
+        "category": "Ramsar",
+        "outcome": "3. Ramsar Wetland Protection (Short term): Managing threats -  Inappropriate land management practices have decreased within the catchment"
+    },
+    {
+        "type": "short",
+        "category": "Ramsar",
+        "outcome": "3. Ramsar Wetland Protection (Short term): Managing Threats - Pest predator and competitor species have been controlled "
+    },
+    {
+        "type": "short",
+        "category": "Ramsar",
+        "outcome": "3. Ramsar Wetland Protection (Short term):  Managing Threats - Appropriate fire management regimes within and external to site"
+    },
+    {
+        "type": "short",
+        "category": "Ramsar",
+        "outcome": "3. Ramsar Wetland Protection (Short term): Protecting and Improving Habitat - Area and quality of suitable wetland habitat has increased and/or is maintained"
+    },
+    {
+        "type": "short",
+        "category": "Ramsar",
+        "outcome": "3. Ramsar Wetland Protection (Short term): Protecting and Improving Habitat - Water quality has been stabilised and/or improved  "
+    },
+    {
+        "type": "short",
+        "category": "Ramsar",
+        "outcome": "3. Ramsar Wetland Protection (Short term): Protecting and Improving Habitat - Improved access control to protect sensitive species and habitats"
+    },
+    {
+        "type": "short",
+        "category": "Ramsar",
+        "outcome": "3. Ramsar Wetland Protection (Short term): Climate adaption and resilience - Climate change resilience and adaptive capacity actions underway to improve and/or maintain the ecological character of Ramsar sites "
+    },
+    {
+        "type": "short",
+        "category": "Ramsar",
+        "outcome": "3. Ramsar Wetland Protection (Short term): First Nations People and community involvement - First Nations people are leading and/or participating in restoration, maintenance and protection activities"
     }
 ];
 
@@ -2030,6 +2212,10 @@ var priorities = [
     {
         "category": "Threatened Ecological Communities",
         "priority": "White Box-Yellow Box-Blakely's Red Gum Grassy Woodland and Derived Native Grassland"
+    },
+    {
+        "category": "Ramsar",
+        "priority": "Ginini Flats Wetland Complex"
     }
 ];
 
