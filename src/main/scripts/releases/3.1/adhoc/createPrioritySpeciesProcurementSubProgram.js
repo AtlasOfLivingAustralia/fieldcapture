@@ -268,7 +268,7 @@ var config =
             ]
 
         },
-        "visibility": "public",
+        "visibility": "private",
         "declarationPageType": "rdpReportDeclaration",
         "requiresActivityLocking": true,
         "supportsMeriPlanComparison": true,
