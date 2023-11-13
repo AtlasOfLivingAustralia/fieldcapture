@@ -624,11 +624,11 @@ var outcomes = [
     {
         "priorities": [
             {
-                "category": "World Heritage"
+                "category": "World Heritage Sites"
             }
         ],
         "shortDescription": "World Heritage",
-        "category": "World Heritage",
+        "category": "World Heritage Sites",
         "type": "secondary",
         "outcome": "2: World Heritage Protection (Long term): The outstanding universal value of world heritage properties listed for their natural heritage value is maintained and improved"
     },
