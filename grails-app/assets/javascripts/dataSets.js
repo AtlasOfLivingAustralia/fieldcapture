@@ -112,7 +112,7 @@ var DataSetViewModel = function(dataSet, projectService, options) {
         }
     });
 
-    self.collectionApp = ko.observable(dataSet.collectionApp);
+    self.collectionApp = ko.observable();
     self.location = ko.observable(dataSet.location);
     self.siteId = ko.observable(dataSet.siteId);
     self.siteUrl = options.viewSiteUrl + '/' + dataSet.siteId;
@@ -135,6 +135,7 @@ var DataSetViewModel = function(dataSet, projectService, options) {
             self.publicationUrl('Biodiversity Data Repository (URL pending)');
         }
     });
+    self.collectionApp(dataSet.collectionApp); // Set this after declaration to trigger the subscription above.
 
     if (dataSet.sensitivities && !_.isArray(dataSet.sensitivities)) {
         dataSet.sensitivities = [dataSet.sensitivities];
