@@ -1308,7 +1308,7 @@ var priorities = [
         }
 ];
 
-var mus = db.managementUnit.find({name:"North NRM Region"});
+var mus = db.managementUnit.find({});
 while(mus.hasNext()){
     var m = mus.next();
     db.managementUnit.updateOne({name:m.name},{$push:{"priorities": {$each : priorities}}});
