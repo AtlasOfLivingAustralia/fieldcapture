@@ -2,13 +2,11 @@ package au.org.ala.merit
 
 import au.org.ala.merit.config.EmailTemplate
 import au.org.ala.merit.config.ProgramConfig
-import au.org.ala.merit.PublicationStatus
 import au.org.ala.merit.config.ReportConfig
 import au.org.ala.merit.reports.ReportOwner
 import au.org.ala.web.AuthService
 import grails.testing.services.ServiceUnitTest
 import spock.lang.Specification
-
 /**
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
  */
@@ -489,5 +487,19 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         2 * authService.getUserForUserId(userId) >> new au.org.ala.web.UserDetails(userId:'u1', firstName:"Merit", lastName:'User')
         result.size() == 2
 
+    }
+
+
+    def "The server delegates to the ecodata to produce reports"() {
+        setup:
+        String startDate = '2020-07-01'
+        String endDate = '2020-12-31'
+        Map extras = [test:'test', entity: 'managementUnit']
+
+        when:
+        service.generateReports(startDate, endDate, extras)
+
+        then:
+        1 * webService.getJson({it.endsWith('/report/generateReportsInPeriod?startDate=2020-07-02T00:00:00Z&endDate=2021-01-01T00:00:00Z&test=test&entity=managementUnit')})
     }
 }

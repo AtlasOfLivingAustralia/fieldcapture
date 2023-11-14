@@ -109,6 +109,28 @@ class AdminSpec extends StubbedCasSpec {
             messages[0].getSubject() == "Your download is ready"
         }
 
+        when:"I clicked the Organisation Activities Report button"
+        downloadOrgReport(fromDate, toDate)
+        okBootbox()
+
+        then:
+        waitFor 20, {
+            MimeMessage[] messages = greenMail.getReceivedMessages()
+            messages?.length == 1
+            messages[0].getSubject() == "Your download is ready"
+        }
+
+        when:"I clicked the Organisation Report Status button"
+        downloadOrgReportSummary(fromDate, toDate)
+        okBootbox()
+
+        then:
+        waitFor 20, {
+            MimeMessage[] messages = greenMail.getReceivedMessages()
+            messages?.length == 2
+            messages[0].getSubject() == "Your download is ready"
+        }
+
     }
 
 
