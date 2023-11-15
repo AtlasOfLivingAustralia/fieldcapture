@@ -72,7 +72,7 @@ class AdminSpec extends StubbedCasSpec {
     def "Admin Reports"() {
         setup:
         login([userId:'1', role:"ROLE_ADMIN", email:'fc-admin@nowhere.com', firstName: "ALA", lastName:'Admin'], browser)
-        String fromDate = "10/10/2020"
+        String fromDate = "10/01/2020"
         String toDate = "10/10/2021"
 
         when:
@@ -106,7 +106,7 @@ class AdminSpec extends StubbedCasSpec {
         waitFor 20, {
             MimeMessage[] messages = greenMail.getReceivedMessages()
             messages?.length == 2
-            messages[0].getSubject() == "Your download is ready"
+            messages[1].getSubject() == "Your download is ready"
         }
 
         when:"I clicked the Organisation Activities Report button"
@@ -116,8 +116,8 @@ class AdminSpec extends StubbedCasSpec {
         then:
         waitFor 20, {
             MimeMessage[] messages = greenMail.getReceivedMessages()
-            messages?.length == 1
-            messages[0].getSubject() == "Your download is ready"
+            messages?.length == 3
+            messages[2].getSubject() == "Your download is ready"
         }
 
         when:"I clicked the Organisation Report Status button"
@@ -127,8 +127,8 @@ class AdminSpec extends StubbedCasSpec {
         then:
         waitFor 20, {
             MimeMessage[] messages = greenMail.getReceivedMessages()
-            messages?.length == 2
-            messages[0].getSubject() == "Your download is ready"
+            messages?.length == 4
+            messages[3].getSubject() == "Your download is ready"
         }
 
     }

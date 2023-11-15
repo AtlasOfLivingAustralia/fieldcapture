@@ -9,7 +9,7 @@ fi
 
 BRANCH=$3
 if [ -z $BRANCH ]; then
-    BRANCH=feature/paratoo
+    BRANCH=feature/issue3004
 fi
 
 ECODATA_LOCAL_DIR=$2

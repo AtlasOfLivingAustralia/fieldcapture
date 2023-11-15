@@ -12,8 +12,8 @@ class AdminReportsPage extends Page {
         period {$('select#reportPeriodOfManagementUnit',0)}
         downloadReportBtn(required:false) {$('a#muReportDownload')}
         downloadReportSummaryBtn(required:false) {$('a#muReportDownloadSummary')}
-        orgDownloadReportBtn(required:false) {$('a#muReportDownload')}
-        orgDownloadReportSummaryBtn(required:false) {$('a#muReportDownloadSummary')}
+        orgDownloadReportBtn(required:false) {$('a#orgReportDownload')}
+        orgDownloadReportSummaryBtn(required:false) {$('a#orgReportDownloadSummary')}
         showDownloadDetailsIcon(required:false) { $('i.showDownloadDetailsIcon')}
         muReportDownloadLink(required:false) {$('a#entityReportDownloadLink')}
         startDate{$("#muFromDate")}

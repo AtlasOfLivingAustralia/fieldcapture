@@ -176,7 +176,7 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
     }
     /** Convenience method to stub the login of a user with the CAS ROLE_ALA_ADMIN role */
     def loginAsAlaAdmin(Browser browser) {
-        login([userId:ALA_ADMIN_USER_ID, role:"ROLE_ADMIN", email: 'ala_admin@nowhere.com', firstName:"ALA", lastName:"Administrator"], browser)
+        login([userId:ALA_ADMIN_USER_ID, role:"ROLE_ADMIN", userName: 'ala_admin@nowhere.com', email: 'ala_admin@nowhere.com', firstName:"ALA", lastName:"Administrator"], browser)
     }
     /** Convenience method to stub the login of a user no special roles */
     def loginAsUser(String userId, Browser browser) {
