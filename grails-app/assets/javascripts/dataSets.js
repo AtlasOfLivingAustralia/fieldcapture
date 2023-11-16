@@ -1,3 +1,5 @@
+
+var MONITOR_APP = 'Monitor';
 /**
  * This view model backs the "Data set summary" tab that is optionally displayed on project
  * pages that support it.
@@ -26,6 +28,7 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
         this.editUrl = config.editDataSetUrl + '?dataSetId='+dataSet.dataSetId;
         this.viewUrl = config.viewDataSetUrl + '?dataSetId='+dataSet.dataSetId;
         this.name = dataSet.name;
+        this.createdIn = dataSet.collectionApp === MONITOR_APP ? MONITOR_APP : 'MERIT';
         this.progress = dataSet.progress;
         this.deleteDataSet = function() {
             bootbox.confirm("Are you sure?", function(yes) {
@@ -109,7 +112,7 @@ var DataSetViewModel = function(dataSet, projectService, options) {
         }
     });
 
-    self.collectionApp = ko.observable(dataSet.collectionApp);
+    self.collectionApp = ko.observable();
     self.location = ko.observable(dataSet.location);
     self.siteId = ko.observable(dataSet.siteId);
     self.siteUrl = options.viewSiteUrl + '/' + dataSet.siteId;
@@ -127,11 +130,12 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     self.publicationUrl = ko.observable(dataSet.publicationUrl);
     self.format = ko.observable(dataSet.format);
     self.collectionApp.subscribe(function(collectionApp) {
-        if (collectionApp == 'Monitor') {
+        if (collectionApp == MONITOR_APP) {
             self.format('Database Table');
             self.publicationUrl('Biodiversity Data Repository (URL pending)');
         }
     });
+    self.collectionApp(dataSet.collectionApp); // Set this after declaration to trigger the subscription above.
 
     if (dataSet.sensitivities && !_.isArray(dataSet.sensitivities)) {
         dataSet.sensitivities = [dataSet.sensitivities];

@@ -14,6 +14,7 @@
         <tr>
             <th class="actions">Actions</th>
             <th class="dataset-name">Title</th>
+            <th class="created-in">Created in</th>
             <th class="dataset-progress">Status</th>
         </tr>
         </thead>
@@ -31,9 +32,10 @@
                 </a>
             </td>
             <td class="dataset-name" data-bind="text:name"></td>
+            <td class="created-in" data-bind="text:createdIn"></td>
             <td><button type="button" class="btn btn-sm" data-bind="activityProgress:progress">
                 <span data-bind="text: progress"></span>
-            </button>
+                </button>
             </td>
         </tr>
         </tbody>

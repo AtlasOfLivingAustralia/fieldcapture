@@ -1,36 +1,15 @@
 load('../../../utils/uuid.js');
 load('../../../utils/audit.js');
 load('../../../utils/program.js');
-var userId = '129333';
+var userId = '';
 
-//Create the parent program
-let programName = "Saving Native Species";
-var parentProgram = createOrFindProgram(programName);
+const serviceFormName = "NHT Output Report";
+const annualReportFormName = "NHT Annual Report";
+const outcomes1ReportFormName = "NHT Outcomes 1 Report";
+const outcomes2ReportFormName = "NHT Outcomes 2 Report";
 
-let refProgram = "Threatened Species Strategy Action Plan Priority Species";
-var subprograms = ["Emergency Actions for Threatened Species"]
-
-subprograms.forEach(function (subProgram) {
-    var now = ISODate();
-    var newProgram = db.program.find({name: refProgram}).next();
-    delete newProgram._id
-    delete newProgram.programId
-    newProgram.name = subProgram
-    newProgram.programId = UUID.generate()
-    newProgram.dateCreated = now
-    newProgram.lastUpdated = now
-    newProgram.status = "active"
-    newProgram.parent = parentProgram._id
-    var program = db.program.find({name: subProgram})
-    if (!program.hasNext()) {
-        db.program.insert(newProgram);
-    } else {
-        print("Program Already Exist: " + subProgram)
-    }
-});
-
-var projectConfig = {
-    config: {
+var config =
+    {
         "meriPlanContents": [
             {
                 "template": "name",
@@ -61,6 +40,27 @@ var projectConfig = {
                 "model": {
                     "maximumPriorities": "1000",
                     "priorityHelpText": "Enter the primary investment priority for the primary outcome, noting only one can be selected."
+                }
+            },
+            {
+                "template": "additionalOutcomes",
+                "model": {
+                    "outcomePriority": "Additional outcome/s",
+                    "helpTextHeading": "If the project is not delivering additional benefits, delete the row using the 'x' in the right-most column.",
+                    "title": "Additional benefits",
+                    "priority": "Additional Investment Priorities",
+                    "priorityHelpText": "Other investment priorities that will benefit from the project.  Delete the row if there are no additional outcomes."
+                }
+            },
+            {
+                "template": "outcomeStatements",
+                "model": {
+                    "outcomeType": "mid",
+                    "helpText": "Projects more than 3 years in duration must set medium-term Project outcomes achievable at project completion. Ensure proposed outcomes are measurable with consideration to the baseline and proposed monitoring regime",
+                    "minimumNumberOfOutcomes": 0,
+                    "subtitle": "Medium-term outcome statement/s",
+                    "title": "Project Outcomes",
+                    "extendedOutcomes": true
                 }
             },
             {
@@ -142,15 +142,22 @@ var projectConfig = {
                 "excludedModes": [
                     "PRINT"
                 ]
+            },
+            {
+                "template": "attachmentFooter",
+                "model": {
+                    "heading": "MERI Attachments",
+                    "attachmentText": "Please attach Project logic to your MERI plan using the documents function on the Admin tab.  A \"Document type\" of \"Project Logic\" should be selected when uploading the document."
+                }
             }
         ],
         "excludes": [],
         "programServiceConfig": {
-            "serviceFormName": "Priority Threatened Species Progress Report",
+            "serviceFormName": "NHT Output Report",
             "programServices": [
                 {
                     "serviceTargets": [
-                        "0df7c177-2864-4a25-b420-2cf3c45ce749"
+                        "c3276929-b8a9-4985-a329-49b86f14018c"
                     ],
                     "serviceId": 1
                 },
@@ -164,18 +171,15 @@ var projectConfig = {
                     "serviceTargets": [
                         "1f8161bc-908b-4ec8-ab7f-edac973a657d",
                         "88908921-1248-4a7c-b185-51c625c737e3",
-                        "26a8213e-1770-4dc4-8f99-7e6302197504",
-                        "15a49c6f-2177-4183-9955-c7e487970171",
-                        "fe9f1a6c-e614-489a-80fa-4d6d76f1cf95",
-                        "f7089b5b-333f-4f33-b0df-f7ef88e9f683"
+                        "fe9f1a6c-e614-489a-80fa-4d6d76f1cf95"
                     ],
                     "serviceId": 3
                 },
                 {
                     "serviceTargets": [
                         "aa0c6b29-285e-4344-987e-dfeaf1d95648",
-                        "c464b652-be5e-4658-b62f-02bf1a80bcf8",
-                        "a901232d-8244-40dd-9bb7-ff9e4e9dbeac"
+                        "a9d98baa-b2ab-4428-82cf-d96185e63aa6",
+                        "c4ea5ce3-4a70-4df8-aff7-ffa929e7df61"
                     ],
                     "serviceId": 4
                 },
@@ -190,143 +194,128 @@ var projectConfig = {
                 },
                 {
                     "serviceTargets": [
-                        "d97037d2-7ee4-429b-bd26-cdcc5a269d9d",
-                        "e48faf01-72eb-479c-be9b-d2d71d254fa4"
-                    ],
-                    "serviceId": 6
-                },
-                {
-                    "serviceTargets": [
-                        "482bdf4e-6f7a-4bdf-80d5-d619ac7cdf50",
-                        "2ef32f94-14f1-4878-9eb7-c115fa18ce25"
+                        "22771c0d-8403-433b-b468-e36dc16a1d21",
+                        "675cc878-eb80-435f-a841-d89b657fb2e3",
+                        "dd9f8fd4-b6c7-4f09-bbbf-5d721afc7677",
+                        "6f3cb6ab-5c6a-49be-9af9-9226fa751725"
                     ],
                     "serviceId": 7
                 },
                 {
                     "serviceTargets": [
-                        "7709de92-0f85-490b-bc5f-2748b3db42c2",
-                        "8025b157-44d7-4283-bc1c-f40fb9b99501",
-                        "0ec5fd50-13e2-4bde-8e01-5955e7145cae"
+                        "e0b4cc3e-e94a-4c97-81dc-a4cb868c2cc3",
+                        "b0bcfc54-76fa-4659-accf-276c18b50c31"
                     ],
                     "serviceId": 8
                 },
                 {
                     "serviceTargets": [
-                        "46925c6c-e222-4f6a-8553-c69929929d10",
-                        "757d6c9e-ec24-486f-a128-acc9bfb87830",
-                        "ffa44bad-209d-414a-bc96-e8ca3c96092f"
+                        "9416c9f4-48ca-4bd1-8822-cd45ebb56c58",
+                        "2409e649-2ee2-47fd-9e76-ef2ffa07a5e7",
+                        "d58f8dba-109d-4179-b130-a888cd3d303c",
+                        "01686d38-9165-4497-9648-627ef81945a7"
                     ],
                     "serviceId": 9
                 },
                 {
                     "serviceTargets": [
-                        "edb6e94a-d781-447c-8792-5e06e5c912a8",
-                        "a3afea6e-711c-4ef2-bb20-6d2630b7ee93"
+                        "0e2f8d61-b7b4-4d2d-b07c-4fc20bbe326a",
+                        "bb506258-e907-43d3-99bd-0fe0400f654e"
                     ],
                     "serviceId": 10
                 },
                 {
                     "serviceTargets": [
-                        "607e2cd4-d7c5-4d5b-867f-c2c8e7b62948",
-                        "b7c067e3-6ae7-4e76-809a-312165b75f94"
-                    ],
-                    "serviceId": 11
-                },
-                {
-                    "serviceTargets": [
-                        "d1c10295-05e5-4265-a5f1-8a5683af2efe"
+                        "3c83e639-9c19-4b31-a86f-9d2d5e78123b",
+                        "e901be5e-8336-432e-b164-f278abd7430b"
                     ],
                     "serviceId": 12
                 },
                 {
                     "serviceTargets": [
-                        "011a161f-7275-4b5e-986e-3fe4640d0265",
-                        "3e402423-3e0b-4549-9e09-2b71329ea069"
+                        "5557288b-190e-4a3f-a60b-4bdff6ca8fe8",
+                        "902df7a8-92f6-420d-9544-47d4b8cf31ca"
                     ],
                     "serviceId": 13
                 },
                 {
                     "serviceTargets": [
-                        "c2dc6f91-ccb1-412e-99d0-a842a4ac4b03"
+                        "9deb3edf-50c7-4b04-a1fb-d1451eadf641",
+                        "360c8b86-360c-4ca3-b1aa-626be56f2b11"
                     ],
                     "serviceId": 14
                 },
                 {
                     "serviceTargets": [
-                        "def4e2af-dcad-4a15-8336-3765e6671f08",
-                        "cf3ccbf5-d031-4a22-a746-961cdefa7318"
+                        "7c30bc26-829e-4080-8059-27af9285113b",
+                        "158a5544-78e3-4d00-9f1b-62a85a938268"
                     ],
                     "serviceId": 15
                 },
                 {
                     "serviceTargets": [
-                        "c46842b6-d7b6-4917-b56f-f1b0594663fa",
-                        "ab822db5-ed79-47af-badc-5a3772dab87d"
+                        "4aa201ec-2066-40e1-a457-99daa569c8e2",
+                        "f46f096a-a274-426b-adad-702e7cf8fab7",
+                        "3b1403f3-139a-4206-b325-62ebfe05ddc4",
+                        "7cb13c22-3dcd-43e7-808d-e0e26f5c090d"
                     ],
                     "serviceId": 16
                 },
                 {
                     "serviceTargets": [
-                        "2d877a91-6312-4c44-9ae1-2494ea3e43db"
-                    ],
-                    "serviceId": 17
-                },
-                {
-                    "serviceTargets": [
-                        "d4ba13a1-00c8-4e7f-8463-36b6ea37eee6",
-                        "01ee5719-e814-43ce-a1b1-4e26063b5a6c"
+                        "5c6db4c1-7fde-452e-8735-e52842fe6217",
+                        "41cb1e2c-59bc-4639-8bf7-fe0f528e006e"
                     ],
                     "serviceId": 18
                 },
                 {
                     "serviceTargets": [
-                        "4bcab901-879a-402d-83f3-01528c6c86a5"
+                        "4f71e00a-2d80-488d-9ce4-947e60589149",
+                        "69a2ffba-41e9-406e-8ea4-5bdeee92cbde"
+                    ],
+                    "serviceId": 42
+                },
+                {
+                    "serviceTargets": [
+                        "26ea592f-ee39-4e6e-b6af-5b53fb1a5675"
+                    ],
+                    "serviceId": 17
+                },
+                {
+                    "serviceTargets": [
+                        "3587a984-68f9-4db3-b5af-49f265d853e0",
+                        "9d2d01be-b517-4be2-a225-8b1c887e016e"
                     ],
                     "serviceId": 19
                 },
                 {
                     "serviceTargets": [
-                        "45994b98-21f1-4927-a03e-3d940ac75116"
+                        "d0516817-5acb-46bd-9871-2696c245bad0",
+                        "7fed132d-6a38-448c-b519-381ab9e1e027",
+                        "e08dda14-360c-4b66-b8c5-eb0269c5aa44",
+                        "f3671aa7-773f-447d-9649-ba7f11dbe97a"
                     ],
                     "serviceId": 20
                 },
                 {
                     "serviceTargets": [
-                        "6eaa061c-b77b-4440-8e8f-7ebaa2ff6207"
-                    ],
-                    "serviceId": 21
-                },
-                {
-                    "serviceTargets": [
-                        "0e887410-a3c5-49ca-a6f5-0f2f6fae30db"
-                    ],
-                    "serviceId": 22
-                },
-                {
-                    "serviceTargets": [
-                        "725d9365-0889-4355-8a7f-a21ef260c468",
-                        "996e3dc7-1376-47ad-a941-648cbae246b4"
+                        "5ab2b539-a5b4-40da-a556-a2c18066345b",
+                        "36410625-05f3-42d3-b04f-a3b268498ee1"
                     ],
                     "serviceId": 23
                 },
                 {
                     "serviceTargets": [
-                        "0f11a699-6063-4e91-96ca-53e45cf26b80",
-                        "1144fc3d-4d31-42bd-b9fb-ab5f91db37ca"
+                        "0162246b-13fd-40c9-ae26-fb767eee76f8"
                     ],
                     "serviceId": 24
                 },
                 {
                     "serviceTargets": [
-                        "8a5dac4a-0bef-431c-b857-2085eca9ae7c",
-                        "3c2c4aaa-fd5f-43d8-a72f-3567e6dea6f4"
-                    ],
-                    "serviceId": 25
-                },
-                {
-                    "serviceTargets": [
-                        "ed30b80b-7bb9-4c04-9949-093df64d124c",
-                        "3d4f1932-7a5b-45d6-ae68-d0571860ea94"
+                        "b9e710e4-7dd3-4acc-ac2c-c69f4bcb9787",
+                        "00934509-f102-4d39-a043-7547a8ab9ac8",
+                        "1021bec7-3836-4b33-90b4-76701efd4fe3",
+                        "4dad393e-cbf7-43dd-87bb-62ea8f8afcdd"
                     ],
                     "serviceId": 26
                 },
@@ -341,61 +330,90 @@ var projectConfig = {
                 },
                 {
                     "serviceTargets": [
-                        "6ab3298e-c24b-49d8-9f86-441e71858b6a",
-                        "f23f9fb0-99ec-4fbf-ade3-b6581fe25dcf",
-                        "fd77b1b1-8234-4d06-8a02-aea6f4abb01d",
-                        "f38fbd9e-d208-4750-96ce-3c032ad37684"
+                        "3cfa82aa-0b38-49c0-be37-0fa61b5b6e3c",
+                        "91e90861-3ba7-4257-a765-6cab24c6f58a"
                     ],
                     "serviceId": 28
                 },
                 {
                     "serviceTargets": [
-                        "4f747371-fa5f-4200-ae37-6cd59d268fe8"
+                        "96be68cf-783d-452a-b8fd-3832163f95db",
+                        "e70c70fd-4f31-41dc-a4b4-07f79efc3055"
                     ],
                     "serviceId": 29
                 },
                 {
                     "serviceTargets": [
-                        "685d61e9-2ebd-4198-a83a-ac7a2fc1477a"
+                        "598bd978-0907-4cad-a7a6-ec5a8a8bbdc4",
+                        "d29bd931-1dd1-47c4-b456-c175099ff1df"
                     ],
                     "serviceId": 30
                 },
                 {
                     "serviceTargets": [
-                        "91387f2b-258d-4325-aa60-828d1acf6ac6"
+                        "6db1ebd7-92c5-49f2-98b7-2faa700fd752",
+                        "524d93b4-5cd1-4d0d-b1f8-d393028220ad"
                     ],
                     "serviceId": 31
                 },
                 {
                     "serviceTargets": [
-                        "ba3d0a20-1e4d-404a-9907-b95239499c2f",
-                        "aa92f559-6260-4947-a714-ae6b80776b47"
+                        "8040931a-2e6c-41be-9e92-f1035093b2ac",
+                        "5d652e6e-b719-45bf-8ae6-e9f293c24a92"
                     ],
                     "serviceId": 32
                 },
                 {
                     "serviceTargets": [
-                        "28dd9736-b66a-4ab4-9111-504d5cffba88",
-                        "4670a4ba-62bb-401c-a7ed-4fbd8dc5999c"
+                        "f74182bd-7a53-4157-aeb9-eda281bb0234",
+                        "e7b7bb1e-66c2-4140-90f9-9534aa46ffa3"
                     ],
                     "serviceId": 33
                 },
                 {
                     "serviceTargets": [
-                        "0f9ef068-b2f9-4e6f-9ab5-521857b036f4"
+                        "15615a70-ee60-46b8-b5e9-b33d4d88de6b",
+                        "d8dc153b-da23-4f7b-947a-89bc98338d6d",
+                        "5f762c6d-4f42-4458-9855-03c6896959c1",
+                        "5885f105-fc7d-43fd-8c26-c72938a95b76"
                     ],
                     "serviceId": 34
                 },
                 {
                     "serviceTargets": [
                         "dea1ff8b-f4eb-4987-8073-500bbbf97fcd",
-                        "d48e05f4-a1cb-40e6-a4a3-bafa86b137f0"
+                        "fba17df1-d5cb-4643-987f-0626055b3c78"
                     ],
                     "serviceId": 35
+                },
+                {
+                    "serviceTargets": [
+                        "3ec07754-4a7a-46fb-a76d-553921781716",
+                        "fbc2dab8-7454-40f9-94f6-6bf258fcefff",
+                        "7186e284-0cb2-418e-a8cc-4343eb618140"
+                    ],
+                    "serviceId": 36
+                },
+                {
+                    "serviceTargets": [
+                        "3d06b150-bb86-47dc-8ad8-c33a51c3e3b3"
+                    ],
+                    "serviceId": 43
+                },
+                {
+                    "serviceTargets": [
+                        "b8304577-afd8-45e0-8ef4-b71ae10998f5"
+                    ],
+                    "serviceId": 44
                 }
             ]
         },
+        "visibility": "public",
         "requiresActivityLocking": true,
+        "reportData": {
+            "NHT Output Report": "nhtOutputReportData"
+        },
+        "supportsMeriPlanComparison": true,
         "projectTemplate": "rlp",
         "activityPeriodDescriptor": "Outputs report #",
         "requireMeritAdminToReturnMeriPlan": true,
@@ -418,33 +436,17 @@ var projectConfig = {
         ],
         "projectReports": [
             {
-                "reportType": "Activity",
-                "firstReportingPeriodEnd": "2023-12-31T13:00:00Z",
-                "reportDescriptionFormat": "Progress Report %1d",
-                "reportNameFormat": "Progress Report %1d",
-                "reportingPeriodInMonths": 6,
-                "description": "_Please note that the reporting fields for these reports are currently being developed_",
-                "minimumReportDurationInDays": 3,
-                "label": "Semester",
-                "category": "Progress Reports",
-                "activityType": "Priority Threatened Species Progress Report",
-                "reportsAlignedToCalendar": true,
-                "canSubmitDuringReportingPeriod": true
+                "firstReportingPeriodEnd": "2024-06-30T14:00:00Z",
+                "reportType": "Administrative",
+                "reportDescriptionFormat": "Annual Progress Report %2$tY - %3$tY for %4$s",
+                "reportNameFormat": "Annual Progress Report %2$tY - %3$tY",
+                "reportingPeriodInMonths": 12,
+                "category": "Annual Progress Reporting",
+                "activityType": annualReportFormName,
+                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._",
+                "label": "Annual",
+                "minimumReportDurationInDays": 1
             },
-            {
-                "reportType": "Single",
-                "reportDescriptionFormat": "Final Report",
-                "reportNameFormat": "Final Report",
-                "reportingPeriodInMonths": 0,
-                "multiple": false,
-                "description": "_Please note that the reporting fields for these reports are currently being developed_",
-                "alignToOwnerEnd": true,
-                "label": "Final Report",
-                "category": "Final Report",
-                "reportsAlignedToCalendar": false,
-                "activityType": "Emergency Actions Threatened Species Final Report",
-                "alignToOwnerStart": true
-            }
         ],
         "keyThreatCodes": [
             "Climate Change - Changed flooding regime",
@@ -519,45 +521,370 @@ var projectConfig = {
         ],
         "supportsParatoo": true,
         "supportsMeriPlanHistory": true
-    },
+    };
 
-    priorities: [
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Pugh's Mountain Frog (Philoria pughi)"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Victorian Grassland Earless Dragon (Tympanocryptis pinguicolla)"
-        }
-    ]
-};
 
 var outcomes = [
     {
         "priorities": [
             {
-                "category": "Plants and animals extinction prevention"
+                "category": "Ecological health"
             }
         ],
         "targeted": true,
-        "shortDescription": "Prevent new extinctions of plants and animals",
-        "type": "primary",
-        "category": "environment",
-        "supportsMultiplePrioritiesAsSecondary": false,
-        "outcome": "1. Species and Landscapes (Long term): Threatened Species (TS) - New extinctions of plants and animals are prevented"
-    }
-]
+        "shortDescription": "Ecological health",
+        "category": "Ecological health",
+        "outcome": "The ecological health and condition of waterways is improved and/or repaired to benefit native plants and animals (including threatened species), threatened ecological communities, and the ecological character of Ramsar sites, in urban, outer urban /peri-urban and regional centres"
+    },
+    {
+        "priorities": [
+            {
+                "category": "River health"
+            }
+        ],
+        "targeted": true,
+        "shortDescription": "River health",
+        "category": "River health",
+        "outcome": "The health and qualities of waterways is improved and/or repaired to benefit local communities in urban, outer urban /peri-urban and regional centres."
+    },
+    {
+        "category": "Threatened Species",
+        "type": "medium",
+        "outcome": "By 30 June 2028, there is measurable repair of waterway habitats (in-stream and terrestrial) to benefit native plants and animals (including threatened species and ecological communities), and the ecological character of Ramsar sites, in urban, peri-urban and regional centres."
+    },
+    {
+        "category": "Threatened Species",
+        "type": "medium",
+        "outcome": "By 30 June 2028, there is measurable repair of water quality, hydrology and in stream connectivity to benefit native plants and animals (including threatened species and ecological communities), and the ecological character of Ramsar sites, in urban, peri-urban and regional centres."
+    },
+    {
+        "category": "Threatened Species",
+        "type": "medium",
+        "outcome": "By June 2028 there is a measurable improvement to the services provided by urban green and blue space to benefit local communities in urban, outer urban /peri-urban and regional centres."
+    },
+];
 
+var priorities = [
+    {
+        "category": "Ecological health",
+        "priority": "Saltwater Creek, Cairns"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Bulimba Creek"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Cubberla Creek"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Bremer River"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Saltwater Creek, Gold Coast"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Fig Tree Creek, Yeppoon"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Downfall Creek"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Dowse Lagoon"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "McCready's Creek, Mackay"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Slacks Creek"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Lake Macquarie"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Hawkesbury River"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Tuggerah Lakes"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Shoalhaven and Crookshaven Rivers"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Cooks River"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Canberra Waterways"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Peter Hopper Lake"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Moonee Ponds Creek"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Karaaf Wetlands"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "KooyongKoot (Tooronga Park wetland)"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Diamond Creek"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Yarra Flats"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Elster Creek"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Redan Wetlands and Yarrowee River"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Werribee River"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Darebin Creek"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Merri Creek"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Gardiners Creek"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Derwent River"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Tamar Estuary"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Onkaparinga River"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Pedler Creek"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Brownhill Creek"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Port River"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Sturt River"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Swan and Canning Rivers"
+    },
+    {
+        "category": "Ecological health",
+        "priority": "Darwin creeks (Rapid Creek, Mitchell Creek, Ludmilla Creek and Sandy Creek)"
+    },
+    {
+        "category": "River health",
+        "priority": "Saltwater Creek, Cairns"
+    },
+    {
+        "category": "River health",
+        "priority": "Bulimba Creek"
+    },
+    {
+        "category": "River health",
+        "priority": "Cubberla Creek"
+    },
+    {
+        "category": "River health",
+        "priority": "Bremer River"
+    },
+    {
+        "category": "River health",
+        "priority": "Saltwater Creek, Gold Coast"
+    },
+    {
+        "category": "River health",
+        "priority": "Fig Tree Creek, Yeppoon"
+    },
+    {
+        "category": "River health",
+        "priority": "Downfall Creek"
+    },
+    {
+        "category": "River health",
+        "priority": "Dowse Lagoon"
+    },
+    {
+        "category": "River health",
+        "priority": "McCready's Creek, Mackay"
+    },
+    {
+        "category": "River health",
+        "priority": "Slacks Creek"
+    },
+    {
+        "category": "River health",
+        "priority": "Lake Macquarie"
+    },
+    {
+        "category": "River health",
+        "priority": "Hawkesbury River"
+    },
+    {
+        "category": "River health",
+        "priority": "Tuggerah Lakes"
+    },
+    {
+        "category": "River health",
+        "priority": "Shoalhaven and Crookshaven Rivers"
+    },
+    {
+        "category": "River health",
+        "priority": "Cooks River"
+    },
+    {
+        "category": "River health",
+        "priority": "Canberra Waterways"
+    },
+    {
+        "category": "River health",
+        "priority": "Peter Hopper Lake"
+    },
+    {
+        "category": "River health",
+        "priority": "Moonee Ponds Creek"
+    },
+    {
+        "category": "River health",
+        "priority": "Karaaf Wetlands"
+    },
+    {
+        "category": "River health",
+        "priority": "KooyongKoot (Tooronga Park wetland)"
+    },
+    {
+        "category": "River health",
+        "priority": "Diamond Creek"
+    },
+    {
+        "category": "River health",
+        "priority": "Yarra Flats"
+    },
+    {
+        "category": "River health",
+        "priority": "Elster Creek"
+    },
+    {
+        "category": "River health",
+        "priority": "Redan Wetlands and Yarrowee River"
+    },
+    {
+        "category": "River health",
+        "priority": "Werribee River"
+    },
+    {
+        "category": "River health",
+        "priority": "Darebin Creek"
+    },
+    {
+        "category": "River health",
+        "priority": "Merri Creek"
+    },
+    {
+        "category": "River health",
+        "priority": "Gardiners Creek"
+    },
+    {
+        "category": "River health",
+        "priority": "Derwent River"
+    },
+    {
+        "category": "River health",
+        "priority": "Tamar Estuary"
+    },
+    {
+        "category": "River health",
+        "priority": "Onkaparinga River"
+    },
+    {
+        "category": "River health",
+        "priority": "Pedler Creek"
+    },
+    {
+        "category": "River health",
+        "priority": "Brownhill Creek"
+    },
+    {
+        "category": "River health",
+        "priority": "Port River"
+    },
+    {
+        "category": "River health",
+        "priority": "Sturt River"
+    },
+    {
+        "category": "River health",
+        "priority": "Swan and Canning Rivers"
+    },
+    {
+        "category": "River health",
+        "priority": "Darwin creeks (Rapid Creek, Mitchell Creek, Ludmilla Creek and Sandy Creek)"
+    }
+];
+
+let parentProgram = "Urban rivers";
+var subprograms = ["Urban Rivers and Catchments round one - 12 month report"]
+
+var parent = db.program.find({name: parentProgram}).next();
+subprograms.forEach(function (subProgram){
+    var now = ISODate();
+    var p = {name: subProgram, programId: UUID.generate(), dateCreated: now, lastUpdate: now, parent: parent._id, status: "active"}
+    var program = db.program.find({name: subProgram})
+    if (!program.hasNext()) {
+        db.program.insertOne(p);
+    } else {
+        print("Program Already Exist: " + subProgram)
+    }
+});
 
 subprograms.forEach(function (subprogram){
     var program = db.program.find({name: subprogram});
     while(program.hasNext()){
         var p = program.next();
-        if (p.name === "Emergency Actions for Threatened Species"){
-            p.config = projectConfig.config
-            p.priorities = projectConfig.priorities
-        }
-        db.program.save(p);
+        print("sub program ID: " + p.programId)
+        db.program.updateOne({programId:p.programId}, {$set:{config:config, outcomes:outcomes, priorities:priorities}});
     }
 });
+
+
