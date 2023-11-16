@@ -1,17 +1,16 @@
 package au.org.ala.merit
 
-import au.ala.org.ws.security.RequireApiKey
-import au.org.ala.merit.command.MeriPlanReportCommand
-import au.org.ala.merit.command.ProjectSummaryReportCommand
+
 import au.org.ala.merit.command.Reef2050PlanActionReportCommand
 import au.org.ala.merit.command.Reef2050PlanActionReportSummaryCommand
 import grails.converters.JSON
-import org.apache.http.HttpStatus
 import org.joda.time.DateTime
 import org.joda.time.Interval
 import org.joda.time.Period
 
-import static au.org.ala.merit.DashboardTagLib.*
+import java.text.ParseException
+
+import static au.org.ala.merit.DashboardTagLib.estimateHeight
 
 class ReportController {
 
@@ -516,6 +515,41 @@ class ReportController {
     def reportingHistory(String id) {
         def reportingHistory = reportService.getReportHistory(id)
         render view: '/report/_reportingHistory', model: [reportingHistory: reportingHistory]
+    }
+
+    @PreAuthorise(accessLevel='siteReadOnly')
+    def generateReportsInPeriod(){
+
+        String startDate = params.fromDate
+        String endDate = params.toDate
+
+        try{
+
+            def user = userService.getUser()
+            def extras =[:]
+            extras.summaryFlag = params.summaryFlag
+
+            String email = user.userName
+            extras.put("hubId", SettingService.hubConfig?.hubId)
+            extras.put("entity", params.entity)
+            extras.put("systemEmail", grailsApplication.config.getProperty('fieldcapture.system.email.address'))
+            extras.put("senderEmail", grailsApplication.config.getProperty('fieldcapture.system.email.address'))
+            extras.put("email", email)
+
+            String reportDownloadBaseUrl= grailsLinkGenerator.link(controller:'download',action:'get', absolute: true)
+            extras.put("reportDownloadBaseUrl", reportDownloadBaseUrl)
+
+            def resp = reportService.generateReports(startDate, endDate,extras)
+            render resp as JSON
+
+        }catch (ParseException e){
+            def message = [message: 'Error: You need to provide startDate and endDate in the format of yyyy-MM-dd ']
+            response.setContentType("application/json")
+            render message as JSON
+        }catch(Exception e){
+            def message = [message: 'Fatal: '+ e.message]
+            render message as JSON
+        }
     }
 
 }

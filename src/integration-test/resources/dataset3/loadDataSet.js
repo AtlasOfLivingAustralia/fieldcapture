@@ -1515,3 +1515,23 @@ db.userPermission.insert({
     userId: '1',
     accessLevel: 'admin'
 });
+
+createOrganisation({
+    name:'THE TRUSTEE FOR PSS FUND Test',
+    organisationId:'test_organisation',
+    status:'active', abn:'',
+    url:'http://www.ala.org.au',
+    acronym:'TSTORG', description:'THE TRUSTEE FOR PSS FUND Test'
+});
+delete report1.projectId
+var activityId = "activity2"
+report1.organisationId = 'test_organisation';
+report1.activityId = activityId;
+activity.activityId = activityId;
+output.activityId = activityId;
+outputSwan.activityId = activityId;
+
+db.report.insert(report1)
+db.activity.insert(activity1)
+db.output.insert(output);
+db.output.insert(outputSwan)

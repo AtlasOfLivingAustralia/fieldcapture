@@ -1,10 +1,8 @@
 package au.org.ala.merit
 
-
 import grails.core.GrailsApplication
 import grails.core.GrailsClass
 import grails.testing.web.GrailsWebUnitTest
-import grails.testing.web.interceptor.InterceptorUnitTest
 import grails.web.http.HttpHeaders
 import org.apache.http.HttpStatus
 import spock.lang.Specification
@@ -148,7 +146,7 @@ class AclInterceptorSpec extends Specification implements GrailsWebUnitTest {
         GrailsApplication grailsApp = Mock(GrailsApplication)
         GrailsClass grailsClass = Mock(GrailsClass)
         aclInterceptor.grailsApplication = grailsApp
-        aclInterceptor.webRequest.controllerName = "ManagementUnitController"
+        aclInterceptor.webRequest.controllerName = "ReportController"
         aclInterceptor.webRequest.actionName = "generateReportsInPeriod"
         params.id = "p1"
 
@@ -158,7 +156,7 @@ class AclInterceptorSpec extends Specification implements GrailsWebUnitTest {
         then:
         1 * aclInterceptor.grailsApplication.getArtefactByLogicalPropertyName("Controller", _) >> grailsClass
         1 * aclInterceptor.roleService.getAugmentedRoles() >> ["alaAdmin","siteAdmin","officer","siteReadOnly","readOnly"]
-        1 * grailsClass.getClazz() >> ManagementUnitController.class
+        1 * grailsClass.getClazz() >> ReportController.class
         1 * aclInterceptor.userService.getCurrentUserId() >> "test"
         1 * aclInterceptor.userService.userIsAlaOrFcAdmin() >> false
         1 * aclInterceptor.userService.userHasReadOnlyAccess() >> false

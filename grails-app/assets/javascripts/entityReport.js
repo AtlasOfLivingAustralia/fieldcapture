@@ -1,4 +1,4 @@
-function ManagementUnitReportSelectorViewModel(options) {
+function EntityReportSelectorViewModel(options) {
     var self = this;
     var config = _.defaults(options);
 
@@ -8,20 +8,20 @@ function ManagementUnitReportSelectorViewModel(options) {
     self.fromDate = ko.observable(d).extend({simpleDate:false});
     self.toDate = ko.observable(now).extend({simpleDate:false});
 
-    self.muReportDownload = function () {
+    self.entityReportDownload = function () {
         var summaryFlag = false;
-        return generateMuReport(summaryFlag)
+        return generateEntityReport(summaryFlag)
     };
 
-    self.muReportDownloadSummary = function() {
+    self.entityReportDownloadSummary = function() {
         var summaryFlag = true;
-        generateMuReport(summaryFlag);
+        generateEntityReport(summaryFlag);
     };
 
-    function generateMuReport(summaryFlag) {
+    function generateEntityReport(summaryFlag) {
         var json = {fromDate:self.fromDate(), toDate:self.toDate(), summaryFlag: summaryFlag}
         return $.ajax({
-            url: config.generateMUReportInPeriodUrl,
+            url: config.generateEntityReportInPeriodUrl,
             type: 'GET',
             data: json,
             dataType:'json',
@@ -33,7 +33,7 @@ function ManagementUnitReportSelectorViewModel(options) {
                 var details = data['details']
                 var message = data['message']
                 var detailsIcon = ' <i class="fa fa-info-circle showDownloadDetailsIcon" data-toggle="collapse" href="#downloadDetails"></i>'
-                var detailsPanel = '<div class="collapse" id="downloadDetails"><a id="muReportDownloadLink" href='+config.generateMUReportInPeriodUrl +'/' + details+'>Try this link, if you cannot get an email confirmation</a></div>'
+                var detailsPanel = '<div class="collapse" id="downloadDetails"><a id="entityReportDownloadLink" href='+config.downloadUrl +'/' + details+'>Try this link, if you cannot get an email confirmation</a></div>'
                 bootbox.alert(message + detailsIcon + detailsPanel)
             }
         }).fail(function() {

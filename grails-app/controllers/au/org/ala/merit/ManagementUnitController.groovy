@@ -9,8 +9,6 @@ import grails.converters.JSON
 import grails.core.GrailsApplication
 import grails.web.mapping.LinkGenerator
 import org.apache.http.HttpStatus
-import java.text.ParseException
-
 /**
  * Processes requests relating to MUs
  */
@@ -350,39 +348,6 @@ class ManagementUnitController {
     def managementUnitFeatures() {
         Map featureCollection = managementUnitService.managementUnitFeatures()
         render featureCollection as JSON
-    }
-
-    @PreAuthorise(accessLevel='siteReadOnly')
-    def generateReportsInPeriod(){
-
-        String startDate = params.fromDate
-        String endDate = params.toDate
-
-        try{
-
-            def user = userService.getUser()
-            def extras =[:]
-            extras.summaryFlag = params.summaryFlag
-
-            String email = user.userName
-            extras.put("systemEmail", grailsApplication.config.getProperty('fieldcapture.system.email.address'))
-            extras.put("senderEmail", grailsApplication.config.getProperty('fieldcapture.system.email.address'))
-            extras.put("email", email)
-
-            String reportDownloadBaseUrl= grailsLinkGenerator.link(controller:'download',action:'get', absolute: true)
-            extras.put("reportDownloadBaseUrl", reportDownloadBaseUrl)
-
-            def resp = managementUnitService.generateReports(startDate, endDate,extras)
-            render resp as JSON
-
-        }catch (ParseException e){
-            def message = [message: 'Error: You need to provide startDate and endDate in the format of yyyy-MM-dd ']
-            response.setContentType("application/json")
-            render message as JSON
-        }catch(Exception e){
-            def message = [message: 'Fatal: '+ e.message]
-            render message as JSON
-        }
     }
 
     /**

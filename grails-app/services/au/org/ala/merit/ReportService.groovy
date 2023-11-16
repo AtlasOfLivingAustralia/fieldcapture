@@ -9,6 +9,7 @@ import grails.plugin.cache.Cacheable
 import groovy.util.logging.Slf4j
 import org.apache.commons.io.FilenameUtils
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import org.joda.time.Period
 
 @Slf4j
@@ -979,6 +980,27 @@ class ReportService {
         }
         history.sort {it.dateChanged}
         history
+    }
+
+    /**
+     * Download [all] management unit reports in a given period
+     * @param startDate
+     * @param endDate
+     * @param emails for sending email to user
+     * @return
+     */
+    def generateReports(String startDate, String endDate, Map extras = null){
+
+        // The end date is the last day of the period (e.g. 2020-06-30) but reports will end at midnight of the next day (e.g. 2020-07-01T00:00:00)
+        // so add a day or two to achieve this.
+
+        String isoStartDate = DateUtils.format(DateUtils.parse(startDate).plusDays(1).withZone(DateTimeZone.UTC))
+        String isoEndDate = DateUtils.format(DateUtils.parse(endDate).plusDays(1).withZone(DateTimeZone.UTC))
+
+        String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}" + "report/generateReportsInPeriod?startDate=${isoStartDate}&endDate=${isoEndDate}"
+        url += '&' + extras.collect { k,v -> "$k=$v" }.join('&')
+        def resp = webService.getJson(url)
+        return resp
     }
 
 }
