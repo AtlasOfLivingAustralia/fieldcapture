@@ -28,10 +28,15 @@ function setupProgramConfig(subprograms) {
     });
 }
 
-function createOrFindProgram(name, parentId) {
+function createOrFindProgram(name, parentId, nameOfProgramToCopy) {
     var program = db.program.findOne({name:name});
     if (!program) {
-        program = createProgram(name, parentId)
+        if (nameOfProgramToCopy) {
+            program = createProgramAsCopy(name, nameOfProgramToCopy);
+        }
+        else {
+            program = createProgram(name, parentId)
+        }
     }
     return program;
 }
@@ -60,4 +65,6 @@ function createProgramAsCopy(name, nameOfProgramToCopy) {
     copy.dateCreated = now;
     copy.lastUpdated = now;
     db.program.insert(copy);
+
+    return db.program.findOne({programId:copy.programId});
 }
