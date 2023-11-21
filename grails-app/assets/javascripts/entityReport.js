@@ -4,7 +4,7 @@ function EntityReportSelectorViewModel(options) {
 
     var now = convertToSimpleDate(new Date());
     var d = new Date();
-    d.setFullYear(2018, 6, 1);
+    d.setFullYear(config.fromYear || 2018, config.fromMonth || 6, config.fromDate || 1);
     self.fromDate = ko.observable(d).extend({simpleDate:false});
     self.toDate = ko.observable(now).extend({simpleDate:false});
 

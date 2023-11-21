@@ -20,9 +20,9 @@
 <h3>Administrator Reports</h3>
 <content tag="pageTitle">Administrator Reports</content>
 
-<h4>Organisation data download:</h4>
+<h4>Performance Management Framework data download</h4>
 
-<a id="orgDataDownload" class="btn btn-sm" href="#">Download Organisation Report Data</a>
+<a id="orgDataDownload" class="btn btn-sm" href="#">Download Performance Management Framework data</a>
 
 <h4>Management unit report download:</h4>
 <form id="mu-report-selector">
@@ -173,7 +173,8 @@
 
     var optionsOrgReport = {
         generateEntityReportInPeriodUrl: "${g.createLink(controller:'report', action:'generateReportsInPeriod', params: [entity: 'organisation'])}",
-        downloadUrl: "${g.createLink(controller:"download",action:"get")}"
+        downloadUrl: "${g.createLink(controller:"download",action:"get")}",
+        fromYear: 2023
     };
     ko.applyBindings(new EntityReportSelectorViewModel(optionsOrgReport), document.getElementById('org-report-selector'));
 
