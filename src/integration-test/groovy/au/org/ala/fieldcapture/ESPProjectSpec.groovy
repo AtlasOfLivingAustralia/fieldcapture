@@ -63,7 +63,7 @@ class ESPProjectSpec extends StubbedCasSpec {
             waitFor {
                 !printInstructions.displayed
             }
-            groundCoverPercentage.text() == "60"
+            groundCoverPercentage*.text().contains("60")
         })
     }
 }

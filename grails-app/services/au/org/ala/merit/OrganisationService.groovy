@@ -24,22 +24,11 @@ class OrganisationService {
             [type: 'Performance expectations framework - self assessment worksheet', period: Period.years(1), bulkEditable: true, businessDaysToCompleteReport:5, adhoc:true]
     ]
 
-    /** Overrides the parent to add Green Army reports to the results */
     def get(String id, view = '') {
 
         String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}organisation/$id?view=$view"
         Map organisation = webService.getJson(url)
 
-        def projects = []
-        def resp = projectService.search(organisationId: id, isMERIT:true, view:'enhanced')
-        if (resp?.resp?.projects) {
-            projects += resp.resp.projects
-        }
-        resp = projectService.search(orgIdSvcProvider: id, isMERIT:true, view:'enhanced')
-        if (resp?.resp?.projects) {
-            projects += resp.resp.projects.findAll{!projects.find{project -> project.projectId == it.projectId} }
-        }
-        organisation.projects = projects
         if (view != 'flat') {
             organisation.reports = getReportsForOrganisation(organisation, getReportConfig(id))
         }
