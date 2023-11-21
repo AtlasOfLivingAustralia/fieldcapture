@@ -1532,6 +1532,6 @@ output.activityId = activityId;
 outputSwan.activityId = activityId;
 
 db.report.insert(report1)
-db.activity.insert(activity1)
+db.activity.insert(activity)
 db.output.insert(output);
 db.output.insert(outputSwan)
