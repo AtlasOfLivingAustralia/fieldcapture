@@ -2,7 +2,12 @@ load('../../../utils/uuid.js');
 load('../../../utils/program.js');
 
 var program = db.program.findOne({name: "Reef Trust"});
-var subprograms = ["Landscape Repair Program – Procurement", "Landscape Repair Program – Grants"]
+if (!program) {
+    print("Program Reef Trust does not exist.");
+    quit();
+}
+
+var subprograms = ["Landscape Repair Program - Procurement", "Landscape Repair Program - Grants"]
 var outcomes = [
     {
         "priorities": [
@@ -11,7 +16,7 @@ var outcomes = [
             }
         ],
         "category": "Threatened Species",
-        "type": "medium",
+        "type": "primary",
         "outcome": "1.  Improve water quality in the Great Barrier Reef by reducing fine sediment."
     },
     {
@@ -21,7 +26,7 @@ var outcomes = [
             }
         ],
         "category": "Threatened Species",
-        "type": "medium",
+        "type": "primary",
         "outcome": "1.  Improve water quality in the Great Barrier Reef by reducing dissolved inorganic nitrogen from agricultural sources."
     },
     {
@@ -32,7 +37,7 @@ var outcomes = [
         ],
 
         "category": "Threatened Species",
-        "type": "medium",
+        "type": "primary",
         "outcome": "1.  Improve water quality in the Great Barrier Reef by reducing particulate phosphorus from agricultural sources."
     },
     {
@@ -42,7 +47,7 @@ var outcomes = [
             }
         ],
         "category": "Threatened Species",
-        "type": "medium",
+        "type": "primary",
         "outcome": "1.  Improve water quality in the Great Barrier Reef by reducing particulate nitrogen from agricultural sources."
     }
 ];
@@ -110,14 +115,23 @@ var reports = [
         activityType: 'NHT Outcomes 1 Report'
     }
 ];
+
 for (var i = 0; i < subprograms.length; i++) {
     var subprogram = subprograms[i];
-    var mintedSubprogram = createOrFindProgram(subprogram, program._id, "Recovery Actions for Species and Landscapes")
+    var mintedSubprogram = createOrFindProgram(subprogram, program._id, "Recovery Actions for Species and Landscapes");
+    var updates = { outcomes: outcomes, priorities: priorities };
 
-    if (subprogram == "Landscape Repair Program – Procurement") {
-        db.program.updateOne({programId: mintedSubprogram.programId}, {$set: {"config.projectReports": reports, outcomes: outcomes, priorities: priorities}});
+    if(mintedSubprogram.parent && (mintedSubprogram.parent['$id'] !== program._id)) {
+        updates.parent = DBRef("program", program._id);
+        updates.parentProgramId = program._id;
     }
-    else if (subprogram === "Landscape Repair Program – Grants") {
-        db.program.updateOne({programId: mintedSubprogram.programId}, {$set: {"config.projectReports": [], outcomes: outcomes, priorities: priorities}});
+
+    if (subprogram == "Landscape Repair Program - Procurement") {
+        updates["config.projectReports"] = reports;
+        db.program.updateOne({programId: mintedSubprogram.programId}, {$set: updates});
+    }
+    else if (subprogram === "Landscape Repair Program - Grants") {
+        updates["config.projectReports"] = [];
+        db.program.updateOne({programId: mintedSubprogram.programId}, {$set: updates});
     }
 }
