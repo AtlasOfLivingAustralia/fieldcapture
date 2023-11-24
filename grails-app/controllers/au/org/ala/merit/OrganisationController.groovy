@@ -250,7 +250,7 @@ class OrganisationController {
         }
     }
 
-    @PreAuthorise(accessLevel = 'admin')
+    @PreAuthorise(accessLevel = 'admin', projectIdParam = 'entityId')
     def addUserAsRoleToOrganisation() {
         String userId = params.userId
         String organisationId = params.entityId
@@ -269,7 +269,7 @@ class OrganisationController {
         }
     }
 
-    @PreAuthorise(accessLevel = 'admin')
+    @PreAuthorise(accessLevel = 'admin', projectIdParam = 'entityId')
     def removeUserWithRoleFromOrganisation() {
         String userId = params.userId
         String role = params.role
