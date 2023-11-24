@@ -135,3 +135,25 @@ for (var i = 0; i < subprograms.length; i++) {
         db.program.updateOne({programId: mintedSubprogram.programId}, {$set: updates});
     }
 }
+
+const burdekinPriorities = [
+    'East Burdekin',
+    'Lower Burdekin',
+    'Bowen Bogie',
+    'Don',
+    'Upper Burdekin',
+    'Black',
+    'Haughton',
+    'Cape Campaspe',
+    'Belyando',
+    'Suttor'
+];
+let burdekinPriorityConfig = [];
+for (let i=0; i<burdekinPriorities.length; i++) {
+    burdekinPriorityConfig.push({
+        category: 'Ecological health',
+        priority: burdekinPriorities[i]
+    });
+}
+
+db.managementUnit.updateOne({name:"Burdekin"}, {$push:{priorities:{$each:burdekinPriorityConfig}}});
