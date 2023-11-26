@@ -529,6 +529,9 @@ var outcomes = [
         "priorities": [
             {
                 "category": "Ecological health"
+            },
+            {
+                "category": "Threatened Species"
             }
         ],
         "targeted": true,
