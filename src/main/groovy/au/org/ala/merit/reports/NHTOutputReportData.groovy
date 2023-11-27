@@ -1,5 +1,6 @@
 package au.org.ala.merit.reports
 
+import au.org.ala.merit.ActivityService
 import au.org.ala.merit.ProjectService
 import org.grails.web.json.JSONArray
 import org.grails.web.json.JSONObject
@@ -14,6 +15,15 @@ class NHTOutputReportData extends ReportData {
     ProjectService projectService
 
     Map getContextData(Map project) {
+        // Side effect - filter data sets.
+        project.custom.dataSets = new JSONArray(project.custom.dataSets?.findAll {
+            // This is a side effect and a workaround for the problem that selected outcomes
+            // are an array and the knockout binding doesn't support arrays as a value.
+            if (it.projectOutcomes) {
+                it.outcomesLabel = new ArrayList(it.projectOutcomes).join(',')
+            }
+            it.progress == ActivityService.PROGRESS_FINISHED
+        })
         return [
             protocols:projectService.listProjectProtocols(project).collect {
                 [label: it.name, value: it.externalId]
@@ -27,9 +37,10 @@ class NHTOutputReportData extends ReportData {
         if (scores) {
             List result = projectService.outcomesByScores(project, scores)
             extraData.outcomes = result?.collect {
-                List outcomes = new JSONArray(it)
-                String label = new ArrayList(outcomes).join(',')
-                new JSONObject([label:label, value:outcomes])
+                String label = new ArrayList(it).join(',')
+                // Knockout doesn't support binding arrays to select options so we need to
+                // convert it to a String.
+                new JSONObject([label:label, value:label])
             }
         }
         extraData
