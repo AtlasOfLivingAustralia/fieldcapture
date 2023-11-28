@@ -68,3 +68,33 @@ function createProgramAsCopy(name, nameOfProgramToCopy) {
 
     return db.program.findOne({programId:copy.programId});
 }
+
+/** When creating a new program, we often want to use the service labels that the NHT uses.
+ * This mechanism is a bit clunky, but for now this utility function will take the labels used by the
+ * NHT and apply them to the program with the supplied name.
+ * @param programName the name of the program to update labels for.
+ * @param programNameToCopy the name of the progam that already has the labels we want.  By default this will use the
+ * main NHT sub-program, Recovery Actions for Species and Landscapes.
+ */
+function useNhtServiceLabels(programName, programNameToCopy) {
+
+    programNameToCopy = programNameToCopy || 'Recovery Actions for Species and Landscapes';
+    var programToCopyLabels = db.program.findOne({name: programNameToCopy});
+    let program = db.program.findOne({name: programName});
+    let services = db.service.find({programLabels: {$ne: null}});
+    while (services.hasNext()) {
+        let service = services.next();
+        let label = service.programLabels[programToCopyLabels.programId];
+
+        if (!label) {
+            print("No label found for service " + service.name);
+            printjson(service);
+            throw "Help!";
+        }
+
+        service.programLabels[program.programId] = {label: label.label};
+        print("Updating label for service " + service.name + ", program "+program.name+" to " + label.label);
+
+        db.service.replaceOne({_id: service._id}, service);
+    }
+}
