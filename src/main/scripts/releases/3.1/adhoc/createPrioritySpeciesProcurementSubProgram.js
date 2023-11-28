@@ -902,7 +902,7 @@ var priorities = [
         "priority": "Adamson’s Blown-grass Lachnagrostis adamsonii"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Adamson’s Blown-grass Lachnagrostis adamsonii"
     },
     {
@@ -914,7 +914,7 @@ var priorities = [
         "priority": "Ammonite Snail Ammoniropa vigens"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Ammonite Snail Ammoniropa vigens"
     },
     {
@@ -926,7 +926,7 @@ var priorities = [
         "priority": "Angle-stemmed Myrtle Gossia gonoclada"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Angle-stemmed Myrtle Gossia gonoclada"
     },
     {
@@ -938,7 +938,7 @@ var priorities = [
         "priority": "Arckaringa Daisy Olearia arckaringensis"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Arckaringa Daisy Olearia arckaringensis"
     },
     {
@@ -950,7 +950,7 @@ var priorities = [
         "priority": "Arnhem Land Gorges Skink Bellatorias obiri"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Arnhem Land Gorges Skink Bellatorias obiri"
     },
     {
@@ -962,7 +962,7 @@ var priorities = [
         "priority": "Australasian Bittern Botaurus poiciloptilus"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Australasian Bittern Botaurus poiciloptilus"
     },
     {
@@ -974,7 +974,7 @@ var priorities = [
         "priority": "Australian Sea-lion Neophoca cinerea"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Australian Sea-lion Neophoca cinerea"
     },
     {
@@ -986,7 +986,7 @@ var priorities = [
         "priority": "Bellinger River Snapping Turtle Wollumbinia georgesi"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Bellinger River Snapping Turtle Wollumbinia georgesi"
     },
     {
@@ -998,7 +998,7 @@ var priorities = [
         "priority": "Black-eared Miner Manorina melanotis"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Black-eared Miner Manorina melanotis"
     },
     {
@@ -1010,7 +1010,7 @@ var priorities = [
         "priority": "Bolivia Hill Rice-flower, Pimelea venosa"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Bolivia Hill Rice-flower, Pimelea venosa"
     },
     {
@@ -1022,7 +1022,7 @@ var priorities = [
         "priority": "Border Ranges Lined Fern Antrophyum austroqueenslandicum"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Border Ranges Lined Fern Antrophyum austroqueenslandicum"
     },
     {
@@ -1034,7 +1034,7 @@ var priorities = [
         "priority": "Brush-tailed Rock-wallaby Petrogale penicillata"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Brush-tailed Rock-wallaby Petrogale penicillata"
     },
     {
@@ -1046,7 +1046,7 @@ var priorities = [
         "priority": "Bulberin Nut Macadamia jansenii "
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Bulberin Nut Macadamia jansenii "
     },
     {
@@ -1058,7 +1058,7 @@ var priorities = [
         "priority": "Canberra Grassland Earless Dragon Tympanocryptis lineata"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Canberra Grassland Earless Dragon Tympanocryptis lineata"
     },
     {
@@ -1070,7 +1070,7 @@ var priorities = [
         "priority": "Carnaby's Cockatoo Calyptorhynchus latirostris"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Carnaby's Cockatoo Calyptorhynchus latirostris"
     },
     {
@@ -1082,7 +1082,7 @@ var priorities = [
         "priority": "Carrington Falls Pomaderris Pomaderris walshii"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Carrington Falls Pomaderris Pomaderris walshii"
     },
     {
@@ -1094,7 +1094,7 @@ var priorities = [
         "priority": "Cauliflower Soft Coral Dendronephthya australis"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Cauliflower Soft Coral Dendronephthya australis"
     },
     {
@@ -1106,7 +1106,7 @@ var priorities = [
         "priority": "Central Rock-rat Antina Zyzomys pedunculatus"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Central Rock-rat Antina Zyzomys pedunculatus"
     },
     {
@@ -1118,7 +1118,7 @@ var priorities = [
         "priority": "Christmas Island Goshawk Accipiter hiogaster natalis"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Christmas Island Goshawk Accipiter hiogaster natalis"
     },
     {
@@ -1130,7 +1130,7 @@ var priorities = [
         "priority": "Chuditch, Western Quoll Dasyurus geoffroii"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Chuditch, Western Quoll Dasyurus geoffroii"
     },
     {
@@ -1142,7 +1142,7 @@ var priorities = [
         "priority": "Collared Delma, Adorned Delma Delma torquata"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Collared Delma, Adorned Delma Delma torquata"
     },
     {
@@ -1154,7 +1154,7 @@ var priorities = [
         "priority": "Davies' Waxflower Phebalium daviesii"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Davies' Waxflower Phebalium daviesii"
     },
     {
@@ -1166,7 +1166,7 @@ var priorities = [
         "priority": "Eastern Curlew Numenius madagascariensis"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Eastern Curlew Numenius madagascariensis"
     },
     {
@@ -1178,7 +1178,7 @@ var priorities = [
         "priority": "Eastern Quoll Dasyurus viverrinus"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Eastern Quoll Dasyurus viverrinus"
     },
     {
@@ -1190,7 +1190,7 @@ var priorities = [
         "priority": "Eltham Copper Butterfly Paralucia pyrodiscus lucida"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Eltham Copper Butterfly Paralucia pyrodiscus lucida"
     },
     {
@@ -1202,7 +1202,7 @@ var priorities = [
         "priority": "Foote's Grevillea Grevillea calliantha"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Foote's Grevillea Grevillea calliantha"
     },
     {
@@ -1214,7 +1214,7 @@ var priorities = [
         "priority": "Forked Spyridium Spyridium furculentum"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Forked Spyridium Spyridium furculentum"
     },
     {
@@ -1226,7 +1226,7 @@ var priorities = [
         "priority": "Freshwater Sawfish Pristis pristis"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Freshwater Sawfish Pristis pristis"
     },
     {
@@ -1236,9 +1236,8 @@ var priorities = [
     {
         "category": "Priority Threatened Species Primary",
         "priority": "Giant Andersonia Andersonia axilliflora"
-    },
-    {
-        "category": "Target 3",
+    },{
+        "category": "High Risk Species",
         "priority": "Giant Andersonia Andersonia axilliflora"
     },
     {
@@ -1250,7 +1249,7 @@ var priorities = [
         "priority": "Giant Gippsland Earthworm Megascolides australis"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Giant Gippsland Earthworm Megascolides australis"
     },
     {
@@ -1262,7 +1261,7 @@ var priorities = [
         "priority": "Gilbert's Potoroo Ngilkat Potorous gilbertii"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Gilbert's Potoroo Ngilkat Potorous gilbertii"
     },
     {
@@ -1274,7 +1273,7 @@ var priorities = [
         "priority": "Glenelg Freshwater Mussel Hyridella glenelgensis"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Glenelg Freshwater Mussel Hyridella glenelgensis"
     },
     {
@@ -1286,7 +1285,7 @@ var priorities = [
         "priority": "Golden-shouldered Parrot, Alwal Psephotus chrysopterygius"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Golden-shouldered Parrot, Alwal Psephotus chrysopterygius"
     },
     {
@@ -1294,7 +1293,7 @@ var priorities = [
         "priority": "Gorge Rice-flower, Pimelelea cremnophila"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Gorge Rice-flower, Pimelelea cremnophila"
     },
     {
@@ -1310,7 +1309,7 @@ var priorities = [
         "priority": "Graveside Leek-orchid Prasophyllum taphanyx"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Graveside Leek-orchid Prasophyllum taphanyx"
     },
     {
@@ -1322,7 +1321,7 @@ var priorities = [
         "priority": "Great Desert Skink, Tjakura, Warrarna, Mulyamiji Liopholis kintorei"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Great Desert Skink, Tjakura, Warrarna, Mulyamiji Liopholis kintorei"
     },
     {
@@ -1334,7 +1333,7 @@ var priorities = [
         "priority": "Greater Bilby Macrotis lagotis"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Greater Bilby Macrotis lagotis"
     },
     {
@@ -1346,7 +1345,7 @@ var priorities = [
         "priority": "Green Turtle Chelonia mydas"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Green Turtle Chelonia mydas"
     },
     {
@@ -1358,7 +1357,7 @@ var priorities = [
         "priority": "Grey Nurse Shark (eastern) Carcharias taurus"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Grey Nurse Shark (eastern) Carcharias taurus"
     },
     {
@@ -1370,18 +1369,17 @@ var priorities = [
         "priority": "Growling Grass Frog, Southern Bell Frog Litoria raniformis"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Growling Grass Frog, Southern Bell Frog Litoria raniformis"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Hooded Plover (eastern) Thinornis cucullatus cucullatus"
     },
     {
         "category": "Birds",
         "priority": "Hooded Plover (eastern) Thinornis cucullatus cucullatus"
-    },
-    {
+    },{
         "category": "Priority Threatened Species Primary",
         "priority": "Hooded Plover (eastern) Thinornis cucullatus cucullatus"
     },
@@ -1394,7 +1392,7 @@ var priorities = [
         "priority": "Imlay Mallee Eucalyptus imlayensis"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Imlay Mallee Eucalyptus imlayensis"
     },
     {
@@ -1402,7 +1400,7 @@ var priorities = [
         "priority": "Kangaroo Island Assassin Spider Zephyrarchaea austini"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Kangaroo Island Assassin Spider Zephyrarchaea austini"
     },
     {
@@ -1414,7 +1412,7 @@ var priorities = [
         "priority": "Kangaroo Island Echidna Tachyglossus aculeatus multiaculeatus"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Kangaroo Island Echidna Tachyglossus aculeatus multiaculeatus"
     },
     {
@@ -1426,7 +1424,7 @@ var priorities = [
         "priority": "King Blue-grass Dichanthium queenslandicum"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "King Blue-grass Dichanthium queenslandicum"
     },
     {
@@ -1438,7 +1436,7 @@ var priorities = [
         "priority": "King Island Brown Thornbill Acanthiza pusilla archibaldi"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "King Island Brown Thornbill Acanthiza pusilla archibaldi"
     },
     {
@@ -1450,7 +1448,7 @@ var priorities = [
         "priority": "King Island Scrubtit Acanthornis magna greeniana"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "King Island Scrubtit Acanthornis magna greeniana"
     },
     {
@@ -1462,7 +1460,7 @@ var priorities = [
         "priority": "Koala Phascolarctos cinereus"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Koala Phascolarctos cinereus"
     },
     {
@@ -1474,7 +1472,7 @@ var priorities = [
         "priority": "Kroombit Tinker Frog Taudactylus pleione"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Kroombit Tinker Frog Taudactylus pleione"
     },
     {
@@ -1486,7 +1484,7 @@ var priorities = [
         "priority": "Lax Leek Orchid Prasophyllum laxum"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Lax Leek Orchid Prasophyllum laxum"
     },
     {
@@ -1498,7 +1496,7 @@ var priorities = [
         "priority": "Leadbeater’s Possum Gymnobelideus leadbeateri"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Leadbeater’s Possum Gymnobelideus leadbeateri"
     },
     {
@@ -1514,7 +1512,7 @@ var priorities = [
         "priority": "Little Mountain Palm Lepidorrhachis mooreana"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Little Mountain Palm Lepidorrhachis mooreana"
     },
     {
@@ -1526,7 +1524,7 @@ var priorities = [
         "priority": "Lord Howe Island Phasmid Dryococelus australis"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Lord Howe Island Phasmid Dryococelus australis"
     },
     {
@@ -1538,7 +1536,7 @@ var priorities = [
         "priority": "MacDonnell Ranges Cycad Macrozamia macdonnellii"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "MacDonnell Ranges Cycad Macrozamia macdonnellii"
     },
     {
@@ -1550,7 +1548,7 @@ var priorities = [
         "priority": "Malleefowl Leipoa ocellata"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Malleefowl Leipoa ocellata"
     },
     {
@@ -1562,7 +1560,7 @@ var priorities = [
         "priority": "Margaret River Burrowing Crayfish Engaewa pseudoreducta"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Margaret River Burrowing Crayfish Engaewa pseudoreducta"
     },
     {
@@ -1574,7 +1572,7 @@ var priorities = [
         "priority": "Maugean Skate Zearaja maugeana"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Maugean Skate Zearaja maugeana"
     },
     {
@@ -1586,7 +1584,7 @@ var priorities = [
         "priority": "Mount Lidgbird Charopid Land Snail Pseudocharopa ledgbirdi"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Mount Lidgbird Charopid Land Snail Pseudocharopa ledgbirdi"
     },
     {
@@ -1598,7 +1596,7 @@ var priorities = [
         "priority": "Mountain Frog Philoria kundagungan"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Mountain Frog Philoria kundagungan"
     },
     {
@@ -1610,7 +1608,7 @@ var priorities = [
         "priority": "Mountain Pygmy-possum Burramys parvus"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Mountain Pygmy-possum Burramys parvus"
     },
     {
@@ -1622,7 +1620,7 @@ var priorities = [
         "priority": "Mountain-top Nursery-frog Cophixalus monticola"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Mountain-top Nursery-frog Cophixalus monticola"
     },
     {
@@ -1634,7 +1632,7 @@ var priorities = [
         "priority": "Murray Hardyhead Craterocephalus fluviatilis"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Murray Hardyhead Craterocephalus fluviatilis"
     },
     {
@@ -1646,7 +1644,7 @@ var priorities = [
         "priority": "Narrow-leaf Eremophila Eremophila subangustifolia"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Narrow-leaf Eremophila Eremophila subangustifolia"
     },
     {
@@ -1658,7 +1656,7 @@ var priorities = [
         "priority": "Native Guava Rhodomyrtus psidioides"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Native Guava Rhodomyrtus psidioides"
     },
     {
@@ -1670,7 +1668,7 @@ var priorities = [
         "priority": "New Holland Mouse, Pookila Pseudomys novaehollandiae"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "New Holland Mouse, Pookila Pseudomys novaehollandiae"
     },
     {
@@ -1682,7 +1680,7 @@ var priorities = [
         "priority": "Night Parrot Pezoporus occidentalis"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Night Parrot Pezoporus occidentalis"
     },
     {
@@ -1694,7 +1692,7 @@ var priorities = [
         "priority": "Noisy Scrub-bird Atrichornis clamosus"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Noisy Scrub-bird Atrichornis clamosus"
     },
     {
@@ -1706,7 +1704,7 @@ var priorities = [
         "priority": "Norfolk Island Green Parrot Cyanoramphus cookii"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Norfolk Island Green Parrot Cyanoramphus cookii"
     },
     {
@@ -1718,7 +1716,7 @@ var priorities = [
         "priority": "Northern Brushtail Possum Trichosurus vulpecula arnhemensis"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Northern Brushtail Possum Trichosurus vulpecula arnhemensis"
     },
     {
@@ -1730,7 +1728,7 @@ var priorities = [
         "priority": "Northern Hairy-nosed Wombat, Yaminon Lasiorhinus krefftii"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Northern Hairy-nosed Wombat, Yaminon Lasiorhinus krefftii"
     },
     {
@@ -1742,7 +1740,7 @@ var priorities = [
         "priority": "Northern Hopping-mouse, Woorrentinta Notomys aquilo"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Northern Hopping-mouse, Woorrentinta Notomys aquilo"
     },
     {
@@ -1754,7 +1752,7 @@ var priorities = [
         "priority": "Northern Quoll Dasyurus hallucatus"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Northern Quoll Dasyurus hallucatus"
     },
     {
@@ -1766,7 +1764,7 @@ var priorities = [
         "priority": "Numbat Myrmecobius fasciatus"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Numbat Myrmecobius fasciatus"
     },
     {
@@ -1778,7 +1776,7 @@ var priorities = [
         "priority": "Olive Ridley Turtle Lepidochelys olivacea"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Olive Ridley Turtle Lepidochelys olivacea"
     },
     {
@@ -1790,7 +1788,7 @@ var priorities = [
         "priority": "Orange-bellied Parrot Neophema chrysogaster"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Orange-bellied Parrot Neophema chrysogaster"
     },
     {
@@ -1802,7 +1800,7 @@ var priorities = [
         "priority": "Pink Underwing Moth Phyllodes imperialis smithersi"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Pink Underwing Moth Phyllodes imperialis smithersi"
     },
     {
@@ -1814,7 +1812,7 @@ var priorities = [
         "priority": "Plains-wanderer Pedionomus torquatus"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Plains-wanderer Pedionomus torquatus"
     },
     {
@@ -1826,7 +1824,7 @@ var priorities = [
         "priority": "Princess Parrot Polytelis alexandrae"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Princess Parrot Polytelis alexandrae"
     },
     {
@@ -1838,7 +1836,7 @@ var priorities = [
         "priority": "Pygmy Blue-tongue Lizard Tiliqua adelaidensis"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Pygmy Blue-tongue Lizard Tiliqua adelaidensis"
     },
     {
@@ -1850,7 +1848,7 @@ var priorities = [
         "priority": "Quokka Setonix brachyurus"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Quokka Setonix brachyurus"
     },
     {
@@ -1862,7 +1860,7 @@ var priorities = [
         "priority": "Red Goshawk Erythrotriorchis radiatus"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Red Goshawk Erythrotriorchis radiatus"
     },
     {
@@ -1874,7 +1872,7 @@ var priorities = [
         "priority": "Red Handfish Thymichthys politus"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Red Handfish Thymichthys politus"
     },
     {
@@ -1886,7 +1884,7 @@ var priorities = [
         "priority": "Red-tailed Black Cockatoo (SE) Calyptorhynchus banksii graptogyne"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Red-tailed Black Cockatoo (SE) Calyptorhynchus banksii graptogyne"
     },
     {
@@ -1898,7 +1896,7 @@ var priorities = [
         "priority": "Redfin Blue-eye Scaturiginichthys vermeilipinnis"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Redfin Blue-eye Scaturiginichthys vermeilipinnis"
     },
     {
@@ -1910,7 +1908,7 @@ var priorities = [
         "priority": "Regent Honeyeater Anthochaera phrygia"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Regent Honeyeater Anthochaera phrygia"
     },
     {
@@ -1922,7 +1920,7 @@ var priorities = [
         "priority": "Scaly-butt Mallee Eucalyptus leprophloia"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Scaly-butt Mallee Eucalyptus leprophloia"
     },
     {
@@ -1934,7 +1932,7 @@ var priorities = [
         "priority": "Short-nosed Seasnake Aipysurus apraefrontalis"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Short-nosed Seasnake Aipysurus apraefrontalis"
     },
     {
@@ -1946,7 +1944,7 @@ var priorities = [
         "priority": "Small-flowered Snottygobble Persoonia micranthera"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Small-flowered Snottygobble Persoonia micranthera"
     },
     {
@@ -1958,7 +1956,7 @@ var priorities = [
         "priority": "Smooth Davidson's Plum Davidsonia johnsonii"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Smooth Davidson's Plum Davidsonia johnsonii"
     },
     {
@@ -1970,7 +1968,7 @@ var priorities = [
         "priority": "Southern Corroboree Frog Pseudophryne corroboree"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Southern Corroboree Frog Pseudophryne corroboree"
     },
     {
@@ -1982,7 +1980,7 @@ var priorities = [
         "priority": "Spectacled Flying-fox Pteropus conspicillatus"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Spectacled Flying-fox Pteropus conspicillatus"
     },
     {
@@ -1994,7 +1992,7 @@ var priorities = [
         "priority": "Stiff Groundsel Senecio behrianus"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Stiff Groundsel Senecio behrianus"
     },
     {
@@ -2006,7 +2004,7 @@ var priorities = [
         "priority": "Stirling Range Dryandra Banksia montana"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Stirling Range Dryandra Banksia montana"
     },
     {
@@ -2018,7 +2016,7 @@ var priorities = [
         "priority": "Stocky Galaxias Galaxias tantangara"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Stocky Galaxias Galaxias tantangara"
     },
     {
@@ -2030,7 +2028,7 @@ var priorities = [
         "priority": "Swan Galaxias Galaxias fontanus"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Swan Galaxias Galaxias fontanus"
     },
     {
@@ -2042,7 +2040,7 @@ var priorities = [
         "priority": "Swift Parrot Lathamus discolor"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Swift Parrot Lathamus discolor"
     },
     {
@@ -2054,7 +2052,7 @@ var priorities = [
         "priority": "Tangled Wattle Acacia volubilis"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Tangled Wattle Acacia volubilis"
     },
     {
@@ -2066,7 +2064,7 @@ var priorities = [
         "priority": "Tasmanian Giant Freshwater Crayfish Astacopsis gouldi"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Tasmanian Giant Freshwater Crayfish Astacopsis gouldi"
     },
     {
@@ -2078,7 +2076,7 @@ var priorities = [
         "priority": "Waddy, Waddi, Waddy-wood, Birdsville Wattle Acacia peuce"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Waddy, Waddi, Waddy-wood, Birdsville Wattle Acacia peuce"
     },
     {
@@ -2090,7 +2088,7 @@ var priorities = [
         "priority": "Western Ground Parrot, Kyloring Pezoporus flaviventris"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Western Ground Parrot, Kyloring Pezoporus flaviventris"
     },
     {
@@ -2102,7 +2100,7 @@ var priorities = [
         "priority": "Western Ringtail Possum Pseudocheirus occidentalis"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Western Ringtail Possum Pseudocheirus occidentalis"
     },
     {
@@ -2114,7 +2112,7 @@ var priorities = [
         "priority": "Western Swamp Tortoise Pseudemydura umbrina"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Western Swamp Tortoise Pseudemydura umbrina"
     },
     {
@@ -2126,7 +2124,7 @@ var priorities = [
         "priority": "White-bellied Frog Anstisia alba"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "White-bellied Frog Anstisia alba"
     },
     {
@@ -2138,7 +2136,7 @@ var priorities = [
         "priority": "White-throated Grasswren, Yirlinkirrkirr Amytornis woodwardi"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "White-throated Grasswren, Yirlinkirrkirr Amytornis woodwardi"
     },
     {
@@ -2150,7 +2148,7 @@ var priorities = [
         "priority": "White's Seahorse Hippocampus whitei"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "White's Seahorse Hippocampus whitei"
     },
     {
@@ -2162,7 +2160,7 @@ var priorities = [
         "priority": "Wollemi Pine Wollemia nobilis"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Wollemi Pine Wollemia nobilis"
     },
     {
@@ -2174,7 +2172,7 @@ var priorities = [
         "priority": "Wongan Eriostemon Philotheca wonganensis"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Wongan Eriostemon Philotheca wonganensis"
     },
     {
@@ -2186,7 +2184,7 @@ var priorities = [
         "priority": "Wood Well Spyridium Spyridium fontis-woodii"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Wood Well Spyridium Spyridium fontis-woodii"
     },
     {
@@ -2198,24 +2196,8 @@ var priorities = [
         "priority": "Yinnietharra Rock-dragon Ctenophorus yinnietharra"
     },
     {
-        "category": "Target 3",
+        "category": "High Risk Species",
         "priority": "Yinnietharra Rock-dragon Ctenophorus yinnietharra"
-    },
-    {
-        "category": "Threatened Ecological Communities",
-        "priority": "Alpine Sphagnum Bogs and Associated Fens"
-    },
-    {
-        "category": "Threatened Ecological Communities",
-        "priority": "Natural Temperate Grassland of the South Eastern Highlands"
-    },
-    {
-        "category": "Threatened Ecological Communities",
-        "priority": "White Box-Yellow Box-Blakely's Red Gum Grassy Woodland and Derived Native Grassland"
-    },
-    {
-        "category": "Ramsar",
-        "priority": "Ginini Flats Wetland Complex"
     }
 ];
 
